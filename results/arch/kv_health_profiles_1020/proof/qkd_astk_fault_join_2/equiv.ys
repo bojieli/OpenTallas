@@ -1,0 +1,21 @@
+read_verilog -sv cells.v
+read_verilog gate.v
+rename qkd_astk_fault_join gate
+hierarchy -check -top gate
+proc
+flatten gate
+read_rtlil gold1.il
+cd gold
+add -wire S__q 1
+connect -set S__q q
+cd
+setattr -set keep 1 w:S__*
+select -set keep w:S__* i:* o:*
+rename -hide w:* @keep %d
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 2
+equiv_induct -seq 4
+equiv_status
+equiv_status -assert

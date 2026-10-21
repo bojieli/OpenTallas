@@ -1,0 +1,12 @@
+EQ AMMUT=0 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 0 IDX_ROOTCTL_AM PASS 
+TOPK AMMUT=0 TOPK VMX=1 DUT_RT=1 AMMUT=0 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 0 IDX_AM_TOPK PASS 
+EQ AMMUT=1 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 16296 IDX_ROOTCTL_AM FAIL 
+EQ AMMUT=2 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 24973 IDX_ROOTCTL_AM FAIL 
+EQ AMMUT=3 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 39963 IDX_ROOTCTL_AM FAIL 
+EQ AMMUT=4 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 26118 IDX_ROOTCTL_AM FAIL 
+EQ AMMUT=6 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 1055 IDX_ROOTCTL_AM FAIL 
+EQ AMMUT=7 cycles 40005 checked 39965 argmax_resp 26119 (multi-lane 10420) index_resp 26236 topk_writes 0 sel_ops 11591 share_fault 15781 ingest 547 corrupt@30235 fault_held 9768 errors 64893 IDX_ROOTCTL_AM FAIL 
+TOPK AMMUT=5 TOPK VMX=1 DUT_RT=1 AMMUT=5 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 5761 IDX_AM_TOPK FAIL 
+TOPK AMMUT=0 TOPK VMX=1 DUT_RT=0 AMMUT=0 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 5761 IDX_AM_TOPK FAIL 
+VMX=1
+IDX_ROOTCTL_AM_BENCH PASS

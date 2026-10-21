@@ -1,0 +1,25 @@
+MISMATCH add.y cycle 24 ref 000000003cb83fa0 nc 000000003e8b83fa
+MISMATCH add.y cycle 61 ref 00000000ba3cfed0 nc 00000000bc0bcfed
+MISMATCH add.y cycle 146 ref 00000000bb3d95d0 nc 00000000bc2f6574
+MISMATCH add.y cycle 279 ref 00000000bef7d44c nc 00000000beb7d44c
+MISMATCH add.y cycle 305 ref 000000003c8001c0 nc 000000003e88001c
+MISMATCH add.y cycle 352 ref 000000003da18ea8 nc 000000003ea863aa
+MISMATCH add.y cycle 368 ref 00000000395aa1c0 nc 000000003c036a87
+MISMATCH add.y cycle 427 ref 00000000be4bc4fc nc 00000000be0bc4fc
+MISMATCH add.y cycle 525 ref 000000003d718d54 nc 000000003e3c6355
+MISMATCH add.y cycle 591 ref 00000000bba74568 nc 00000000bc53a2b4
+MISMATCH add.y cycle 607 ref 000000003f4dd5dc nc 000000003f0dd5dc
+MISMATCH add.y cycle 631 ref 000000003dd30bf8 nc 000000003eb4c2fe
+MISMATCH add.y cycle 648 ref 00000000bb1c0878 nc 00000000bc27021e
+MISMATCH add.y cycle 780 ref 000000003c84eed2 nc 000000003d427769
+MISMATCH add.y cycle 817 ref 00000000bee0602c nc 00000000bea0602c
+MISMATCH add.y cycle 850 ref 00000000bc70b32c nc 00000000bd3c2ccb
+MISMATCH add.y cycle 859 ref 000000003d3db850 nc 000000003f0bdb85
+MISMATCH add.y cycle 867 ref 00000000bd9b1dac nc 00000000bd363b58
+MISMATCH add.y cycle 897 ref 000000003de8bb38 nc 000000003da8bb38
+MISMATCH add.y cycle 1006 ref 000000001830a9fe nc 0000000017e153fd
+TB_QKH_NC FAIL add errors 6647 of 900120 checks
+- /srv/opentallas-scratch/claude/kv-params4-qkh-r8-1020/results/rtl/kv_qkh_nc_safe32_1020/tb_qkh_nc32c.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 600us; walltime 10.266 s; speed 58.456 us/s
+- Verilator: cpu 10.260 s on 1 threads; allocated 9 MB

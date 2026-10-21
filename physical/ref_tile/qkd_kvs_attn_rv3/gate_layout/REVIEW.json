@@ -1,0 +1,19 @@
+{
+  "reviewer": "coordinator claude (KV-ATTN2 sub-lane of LEAD2-KV; PNGs personally viewed)",
+  "verdict": "APPROVED",
+  "gate_commit": "56f49b294c68e7f0ea6de38d1613380ed89e98d7",
+  "scope": "r16 structurally safe attention tile (registered RX validation + admission, <=16-flop kept copies), release timing RETIRE_STATIC=1/STATUS_DELAY=213. Gate WARN only util (pin-limited) and insertion guidance.",
+  "checklist": {
+    "lattice": "N/A no macros",
+    "std_cell_band": "PASS full-core rows, no islands; WAIVED util 6.4%: pin-limited (3,284 pins, N 1,080 at 0.192 um); mass at W output / N RX faces",
+    "pin_spread": "PASS 3,284 pins on-track/accessible, full faces, N 1080 on 216 um = 5.0/um",
+    "clock_entry": "PASS S-centre ck + local spine; TT/FF pin-flop spread 39.6/37.4 ps; insertion 444.2/362.9 ps (guidance)",
+    "shape": "PASS 216 square 1:1"
+  },
+  "timing": "TT placement RC reg->reg +88.0 ps, reg->out +287.9 ps; trial GRT overflow 0 (M2 15.84%); depth 468.4 ps; reach 84.6 um / 0 violations; in->reg/reg->out/in->out 0",
+  "fanout_evidence": "transparent census (tools/qwen_kv_die/attn_rv_1019/fanout_census.py) on the rv3 synthesized netlist: max non-tie driver 33 terminal pins (TIEHI SETN 833 split by repair_tie_fanout)",
+  "behavior_evidence": [
+    "results/rtl/kv_attn_rv_1019/r16rs_m0/verdict.log"
+  ],
+  "time": "2026-10-19T18:06:47.545028-07:00"
+}

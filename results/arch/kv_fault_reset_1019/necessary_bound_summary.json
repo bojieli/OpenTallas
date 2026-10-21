@@ -1,0 +1,169 @@
+{
+ "schema": "codex.kv_reset_geometric_necessary.v1",
+ "qualified_release": false,
+ "source_manifest_sha256": "929165b61e68743475afba8ca639348863e352db7e8f7bae25ae3b1fbd50a870",
+ "source_manifest": "/srv/opentallas-scratch/claude/codex-kv-output-contract-1019/gen4/reset_loads_all_branches.json",
+ "load_count": 1351,
+ "existing_seed_nodes": 2751,
+ "hop_bound_um": 405,
+ "per_added_station_pin_displacement_upper_bound_um": 43.2,
+ "status_counts": {
+  "NECESSARY_BOUND_ONLY": 966,
+  "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE": 385
+ },
+ "minimum_stage_histogram": {
+  "0": 202,
+  "1": 234,
+  "2": 149,
+  "None": 385,
+  "3": 85,
+  "4": 64,
+  "12": 12,
+  "13": 9,
+  "15": 10,
+  "6": 49,
+  "7": 29,
+  "5": 61,
+  "14": 8,
+  "16": 6,
+  "19": 1,
+  "17": 3,
+  "8": 10,
+  "9": 9,
+  "10": 16,
+  "11": 7,
+  "18": 2
+ },
+ "limitations": [
+  "Seed inventory covers all existing descendants exported for relevant reset roots; no new root/clock crossing or release-calendar change considered.",
+  "No obstacle routing/placement, fanout, clock phase, reset assertion/release or source-clear propagation proof; passing this necessary geometric bound is not admission.",
+  "Added cells must bind actual native closed reset/clock views; no old load or release changed."
+ ],
+ "result_sha256": "10b7388e3a0b3f8e340c1d75b38a4eab4deabe54d688ec7994fe2503d88867ac",
+ "bad_clock_counts": {
+  "n_clk_core_c": 216,
+  "n_clk_core_EN": 74,
+  "n_clk_core_ES": 29,
+  "n_clk_core_WN": 42,
+  "n_clk_core_WS": 24
+ },
+ "bad_depth_counts": {
+  "7": 13,
+  "5": 182,
+  "4": 21,
+  "3": 38,
+  "6": 28,
+  "9": 14,
+  "2": 49,
+  "18": 1,
+  "8": 10,
+  "10": 9,
+  "1": 20
+ },
+ "representative_unroutable_at_inherited_depth": [
+  {
+   "instance": "kv_fault_19",
+   "root": "rly_rst_die_t8_42.b:('n_rst_die_t8__m', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 7,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    6123.18,
+    13024.841999999999
+   ]
+  },
+  {
+   "instance": "kv_fault_31",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    5431.9800000000005,
+    13392.042
+   ]
+  },
+  {
+   "instance": "kv_fault_32",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    5691.18,
+    12096.042
+   ]
+  },
+  {
+   "instance": "kv_fault_33",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    5712.78,
+    11966.442
+   ]
+  },
+  {
+   "instance": "kv_fault_34",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    5539.9800000000005,
+    11556.042
+   ]
+  },
+  {
+   "instance": "kv_fault_35",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    7786.38,
+    13392.042
+   ]
+  },
+  {
+   "instance": "kv_fault_36",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    7786.38,
+    13435.242
+   ]
+  },
+  {
+   "instance": "kv_fault_37",
+   "root": "host.die_rst_n:('n_rst_die_t0', 0)",
+   "clock": "n_clk_core_c",
+   "target_depth": 5,
+   "status": "NO_SEED_IN_COMPLETE_PROVIDED_RESET_TREE",
+   "minimum_new_stages_lower_bound": null,
+   "seed": null,
+   "target_xy": [
+    7786.38,
+    13478.442
+   ]
+  }
+ ]
+}

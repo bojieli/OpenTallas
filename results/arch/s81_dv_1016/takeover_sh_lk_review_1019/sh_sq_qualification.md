@@ -1,0 +1,1 @@
+SH sq record ef5587213 / auto-main4d36c47f2: CLOSED TT+16.45ps, FF+14.22ps; nativePASS147.3/110.3ps, spread54.3/52.0ps. Current owner HANDOFF signoff is TTsetup+FFhold, per ROOT correction. SS-307.54ps remains reported sensitivity; old SS/+15FF rule is superseded. This qualifies the child tile, not the seq_host_c parent. Source lineage already integrated mained7ba741f.

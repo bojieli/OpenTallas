@@ -26,7 +26,7 @@ module tb_host_program_target;
  task image(input integer t,input integer n,input integer d);reg[511:0]f;begin
   expected_target=t;expected_words=n;seen=0;seen_desc=0;gold_digest=64'h51484f5354505247^64'(t);
   f=0;f[7:0]=1;f[23:8]=16'(100+t);f[34:24]=11'(n);f[38:35]=4'(d);f[42:39]=4'(t);frame(f);tick(3);
-  if(negative==2||negative==3||negative==4)begin tick(8);if(!(fault||rxf))$fatal(1,"EXPECTED_LENGTH_OR_TARGET_FAULT");$display("PASS rejected actual invalid target/count");$finish;end
+  if(negative==2||negative==3||negative==4||negative==5)begin tick(8);if(!(fault||rxf))$fatal(1,"EXPECTED_LENGTH_OR_TARGET_FAULT");$display("PASS rejected actual invalid target/count");$finish;end
   for(integer a=0;a<n;a++)begin
    f=0;f[7:0]=2;f[18:9]=10'(a);f[82:19]=word_value(t,a);frame(f);
    gold_digest={gold_digest[56:0],gold_digest[63:57]}^word_value(t,a)^64'(a);
@@ -39,10 +39,10 @@ module tb_host_program_target;
  end endtask
  initial begin
   tick(3);rst_n=1;tick(10);
-  if(negative==1)image(3,4,0);else if(negative==2)image(3,5,0);else if(negative==3)image(14,4,0);else if(negative==4)image(13,9,0);
+  if(negative==1)image(3,4,0);else if(negative==2)image(3,5,0);else if(negative==3)image(14,4,0);else if(negative==4)image(13,9,0);else if(negative==5)image(10,76,0); // KV-HROOT F-K1: the pre-fix 76-word die cfg must fault
   else begin image(1,327,0);image(2,181,0);image(3,4,0);image(4,192,0);image(5,192,0);for(integer t=6;t<=9;t++)image(t,1024,0);
    // KVJ-G2b: the static KV die's dispatcher targets 10..13 (die cfg, link calendar, PC players, join4 beats)
-   image(10,76,0);image(11,66,0);image(12,1024,0);image(13,8,0);image(0,1024,1);end
+   image(10,77,0);image(11,66,0);image(12,1024,0);image(13,8,0);image(0,1024,1);end
   $display("PASS actual_HOST_target images%0d all14targets real4SRAM exactreplay targetboundauth footerISAonly",images);$finish;
  end
  initial begin #1000000;$fatal(1,"TIMEOUT");end

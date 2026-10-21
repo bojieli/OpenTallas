@@ -55,25 +55,6 @@
     ]
    },
    {
-    "port": "service_faults",
-    "dir": "output",
-    "width": 6,
-    "peers": [
-     "DIE:service_faults",
-     "u_cdc_pc",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_tx",
-     "u_ingest_qm",
-     "u_rank__u_adapter__g_slice_0___u_slice",
-     "u_rank__u_control__u_packet__u_rx",
-     "u_rank__u_phy__u_pad"
-    ]
-   },
-   {
     "port": "u_rank__done_cr",
     "dir": "input",
     "width": 1,
@@ -186,6 +167,44 @@
     "peers": [
      "u_ingest_qm"
     ]
+   },
+   {
+    "port": "service_faults_core",
+    "dir": "output",
+    "width": 2,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
+    ]
+   },
+   {
+    "port": "service_faults_host",
+    "dir": "output",
+    "width": 4,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_pc",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
+    ]
    }
   ],
   "bits_in": 622,
@@ -242,25 +261,6 @@
      "u_rank__u_adapter__g_slice_5___u_slice",
      "u_rank__u_adapter__g_slice_6___u_slice",
      "u_rank__u_adapter__g_slice_7___u_slice",
-     "u_rank__u_control__u_packet__u_rx",
-     "u_rank__u_phy__u_pad"
-    ]
-   },
-   {
-    "port": "service_faults",
-    "dir": "output",
-    "width": 4,
-    "peers": [
-     "DIE:service_faults",
-     "u_cdc_host",
-     "u_core_guard",
-     "u_core_order",
-     "u_core_peer",
-     "u_core_prompt",
-     "u_core_queue",
-     "u_core_tx",
-     "u_ingest_qm",
-     "u_rank__u_adapter__g_slice_0___u_slice",
      "u_rank__u_control__u_packet__u_rx",
      "u_rank__u_phy__u_pad"
     ]
@@ -369,6 +369,44 @@
     "dir": "input",
     "width": 1,
     "peers": [
+     "u_rank__u_phy__u_pad"
+    ]
+   },
+   {
+    "port": "service_faults_core",
+    "dir": "output",
+    "width": 2,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
+     "u_rank__u_phy__u_pad"
+    ]
+   },
+   {
+    "port": "service_faults_phy",
+    "dir": "output",
+    "width": 2,
+    "peers": [
+     "DIE:service_faults",
+     "u_cdc_host",
+     "u_core_guard",
+     "u_core_order",
+     "u_core_peer",
+     "u_core_prompt",
+     "u_core_queue",
+     "u_core_tx",
+     "u_ingest_qm",
+     "u_rank__u_adapter__g_slice_0___u_slice",
+     "u_rank__u_control__u_packet__u_rx",
      "u_rank__u_phy__u_pad"
     ]
    }
@@ -649,7 +687,7 @@
    {
     "port": "ctrl_completion_fault",
     "dir": "input",
-    "width": 128,
+    "width": 1,
     "peers": [
      "DIE:ctrl_completion_fault"
     ]
@@ -1119,7 +1157,7 @@
     ]
    }
   ],
-  "bits_in": 975,
+  "bits_in": 848,
   "bits_out": 463
  },
  "qkd_hr_core_order": {
@@ -3980,16 +4018,6 @@
     ]
    },
    {
-    "port": "host_upstream_quiet",
-    "dir": "output",
-    "width": 3,
-    "peers": [
-     "DIE:host_upstream_quiet",
-     "u_core_order",
-     "u_core_queue"
-    ]
-   },
-   {
     "port": "host_rst_n",
     "dir": "input",
     "width": 1,
@@ -4128,6 +4156,36 @@
     "width": 1,
     "peers": [
      "u_cdc_host"
+    ]
+   },
+   {
+    "port": "host_upstream_quiet_core",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_upstream_quiet",
+     "u_core_order",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "host_upstream_quiet_host",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_upstream_quiet",
+     "u_core_order",
+     "u_core_queue"
+    ]
+   },
+   {
+    "port": "host_upstream_quiet_ingest",
+    "dir": "output",
+    "width": 1,
+    "peers": [
+     "DIE:host_upstream_quiet",
+     "u_core_order",
+     "u_core_queue"
     ]
    }
   ],

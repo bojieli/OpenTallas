@@ -1,0 +1,9 @@
+ROOT review follow-up: guarded source model causal5
+
+Unit oth-ubuntu-3451710-1792508904 completed exit0 on ot-epyc7. All three HWIN/LEP/NH native failed-ODB diagnostic copies passed unchanged functional graph and DNT census, full functional ownership and canonical native PG proof. For EACH: new FF rejected using native CLK membership; protected unbound BUF rejected by canonical binder; PG-bound protected PLACED BUF rejected before movement with unchanged location/status; FIRM BUF rejected unchanged; unprotected PLACED BUF positively seeded inside declared owner; absent loaded Liberty rejected. No actual GPL/DPL or new physical gate was run.
+
+Actual roles use all native signal/clock pin membership, corresponding loaded Liberty pin directions, and output functions across every matching loaded library. Only exact single-input BUFFER/INVERTER or no-input CONSTANT allowed. Master name no longer grants a birth role. The source-owned seed wrapper validates the ENTIRE batch for instance DNT and movable native placement status before calling shared seed helper. HWIN private helper also rejects DNT directly. Shared tools/helpers are unchanged.
+
+Clean dependencies were extracted from git, not an ambient worktree. dependency_sha256.json pins exact clean commit28e76b629 and confirms both shared native_cell_fence.tcl and native_pg_binding.tcl match the49d base. The earlier suspected absent seed symbol is resolved: shared helper contains it. Only fixture copies remove production MODEL_ONLY first line; all three production guards remain.
+
+Retained job.log records an earlier harness preparation failure: mutable local main had moved to a different source chain without the PG helper, so initial preparation could not produce a runner and the remote command returned2. Corrected preparation explicitly pins ROOT clean28e76b629. job2.log and three causal5 logs are the completed run. No engineering pass is inferred from that first failed harness.

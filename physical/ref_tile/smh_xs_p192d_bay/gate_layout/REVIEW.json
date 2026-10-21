@@ -1,0 +1,35 @@
+{
+  "reviewer": "codex coordinator takeover2026-10-20",
+  "time": "2026-10-20T12:48:30.694872-07:00",
+  "gate_commit": "2026-10-20T09:55:37-0700",
+  "verdict": "APPROVED",
+  "geometry_sha256": "8239a57bcb3edb449883fb7f61e2079c5365e376c76b64cc35ea25b5d8c945a9",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "8239a57bcb3edb449883fb7f61e2079c5365e376c76b64cc35ea25b5d8c945a9",
+    "components": {
+      "outline": "61c0df04f81beb14289245756658391028e960db6b4a17922ff0a1a1b840cbd3",
+      "macros": "056009be0e40a66d607e1f28c8145032ea89c0454b6577da64bc4c950c19e26f",
+      "pins": "17985b0c903bbd35400f204798357f611147c9dbf8ce4192a34972465dc62831",
+      "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+    }
+  },
+  "checklist": {
+    "lattice": "PASS:11SRAM R0,43.2 origins;7ring+4xstore. ActualPNG viewed.",
+    "std_cell_band": "PASS:full-width rows and connected channels, no islands;density<=~0.6, hottest xstoreWS channel. Pin-bound30% fill.",
+    "pin_spread": "PASS:external faces81-86% spans,N/S/W;SRAMfaces<=5.1/um. TT65.3 FF53.1ps.",
+    "clock_entry": "PASS:Ncentre near register mass, one root26146sinks;TT598.5/FF472.1 insertionguidance;HM0.03.",
+    "shape": "PASS:475.2x388.8 aspect1.22;11realSRAM;exclusive bays source model399.9um max, physicalfinalreach owed."
+  },
+  "evidence": {
+    "grt_overflow": 0,
+    "native_max_loads": 32,
+    "gate_setup_ps": 28,
+    "gate_hold_ps": 37,
+    "scope": "route submission geometry only;final reach/PG/timing/function must pass",
+    "images_viewed": [
+      "physical/ref_tile/smh_xs_p192d_bay/gate_layout/floorplan.png",
+      "physical/ref_tile/smh_xs_p192d_bay/gate_layout/density.png"
+    ]
+  }
+}

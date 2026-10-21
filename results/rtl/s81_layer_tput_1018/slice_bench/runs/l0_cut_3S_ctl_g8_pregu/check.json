@@ -1,0 +1,208 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.check",
+ "replay": "/home/ubuntu/scratch/tok-s81-ctl/R_A_pregu_ks2547",
+ "run": "/home/ubuntu/scratch/tok-s81-ctl/out_R_A_pregu_ks2547",
+ "verdict_kind": "SCHEDULE",
+ "sim_pass": true,
+ "trace_mismatches": 0,
+ "partial": true,
+ "verdict": "PASS",
+ "ports": [
+  {
+   "port": "o__w_cw_seqhost_lnd",
+   "lane": "cw_seqhost",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_ht_7N_lnd",
+   "lane": "ht_7N",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [
+    140,
+    2613,
+    15453,
+    15454,
+    15473
+   ],
+   "n_unscheduled": 5,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_jw_E_l0_lnd",
+   "lane": "jw_E_l0",
+   "expected": 1,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_jw_E_l1_lnd",
+   "lane": "jw_E_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_jw_W_l0_lnd",
+   "lane": "jw_W_l0",
+   "expected": 1,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_jw_W_l1_lnd",
+   "lane": "jw_W_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_q_E_l0_lnd",
+   "lane": "q_E_l0",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_q_E_l1_lnd",
+   "lane": "q_E_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_q_W_l0_lnd",
+   "lane": "q_W_l0",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_q_W_l1_lnd",
+   "lane": "q_W_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_tvN_s_3S_lnd",
+   "lane": "tvN_s_3S",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_4S_l0_lnd",
+   "lane": "xrE_4S_l0",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_4S_l1_lnd",
+   "lane": "xrE_4S_l1",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_4S_l2_lnd",
+   "lane": "xrE_4S_l2",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_4S_l3_lnd",
+   "lane": "xrE_4S_l3",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l0_lnd",
+   "lane": "xrW_2S_l0",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l1_lnd",
+   "lane": "xrW_2S_l1",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l2_lnd",
+   "lane": "xrW_2S_l2",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l3_lnd",
+   "lane": "xrW_2S_l3",
+   "expected": 83,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  }
+ ]
+}

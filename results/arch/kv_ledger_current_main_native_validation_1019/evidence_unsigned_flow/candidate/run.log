@@ -1,0 +1,11 @@
+test_high_unsigned_actual_flow (test_kv_expand_unsigned_flow.UnsignedFlow.test_high_unsigned_actual_flow) ... ok
+test_high_unsigned_wrong_profile_refuses (test_kv_expand_unsigned_flow.UnsignedFlow.test_high_unsigned_wrong_profile_refuses) ... ok
+test_high_unsigned_missing_profile_refuses_env_override (test_kv_expand_unsigned_flow.UnsignedFlow.test_high_unsigned_missing_profile_refuses_env_override) ... ok
+test_high_unsigned_strict_missing_receipt_refuses (test_kv_expand_unsigned_flow.UnsignedFlow.test_high_unsigned_strict_missing_receipt_refuses) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.073s
+
+OK
+{"removed": 1, "added": 3, "wires": 0, "frames": {"frame": [1, 3, 0]}}
+kv_bound_netlist: 4 instances, 4 masters, 0 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []

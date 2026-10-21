@@ -11,6 +11,8 @@
 // (t[1039:1028]) = 0.  k_done (so[422]) toggles but has no reader (qkd_astk_ep_cal / ep_s do not take it).
 // Mutants: +define+KVD_ECSTMUT=1 (so fault <- k_done), 2 (q word one si bit low): must FAIL.
 module tb_qkd_ectl3_kiss_st;
+    // KV-ECTL4 2026-10-18: RL / QK = the frame's RESPONSE_LAT / QK_ISSUE_AGE (die: 80 / 91; default the unit 2 / 34)
+    parameter integer RL=2, QK=34;
     reg ck=0,rst_n=0;
     always #0.5 ck=~ck;
     reg [632:0] si=0;
@@ -24,13 +26,13 @@ module tb_qkd_ectl3_kiss_st;
     wire [1558:0] t0_a,t1_a,t0_b,t1_b;
     wire [15:0] e_a[0:3],e_b[0:3];
     wire rqv_a,rqv_b,rqvv_a,rqvv_b,f_a,f_b;wire [13:0] rqt_a,rqt_b;wire [15:0] rqe_a,rqe_b;wire [5:0] rql_a,rql_b;
-    qkd_ectl3_kiss_s #(.RESPONSE_LAT(2),.QK_ISSUE_AGE(34)) ua (
+    qkd_ectl3_kiss_s #(.RESPONSE_LAT(RL),.QK_ISSUE_AGE(QK)) ua (
         .ck({3{ck}}),.rst_n(rst_n),.cfg(cfg),.e0(e_a[0]),.e1(e_a[1]),.e2(e_a[2]),.e3(e_a[3]),
         .s0(s0),.s1(s1),.s2(s2),.s3(s3),.t0(t0_a),.t1(t1_a),.kgo(si[0]),.epoch(16'h1234),.layer(layer_cur),
         .req_valid(rqv_a),.req_t(rqt_a),.req_v(rqvv_a),.req_epoch(rqe_a),.req_layer(rql_a),
         .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),
         .fault(f_a),.si({1'b0,si}),.so(so_a));
-    qkd_ectl3_kiss_st #(.RESPONSE_LAT(2),.QK_ISSUE_AGE(34)) ub (
+    qkd_ectl3_kiss_st #(.RESPONSE_LAT(RL),.QK_ISSUE_AGE(QK)) ub (
         .ck({3{ck}}),.rst_n(rst_n),.cfg(cfg),.e0(e_b[0]),.e1(e_b[1]),.e2(e_b[2]),.e3(e_b[3]),
         .s0(s0),.s1(s1),.s2(s2),.s3(s3),.t0(t0_b),.t1(t1_b),.kgo(si[0]),.epoch(16'h1234),.layer(layer_cur),
         .req_valid(rqv_b),.req_t(rqt_b),.req_v(rqvv_b),.req_epoch(rqe_b),.req_layer(rql_b),
@@ -75,14 +77,14 @@ module tb_qkd_ectl3_kiss_st;
             rsp_epoch=16'h1234;rsp_layer=layer_cur;rsp_v=0;
             @(posedge ck);
             if(rqv_a)begin
-                rv[cyc+2]=1;response[cyc+2]=rowf(nbridge)^{32{32'($random(seed))}};tags[cyc+2]=rqt_a;nbridge=nbridge+1;kreq=kreq+1;
+                rv[cyc+RL]=1;response[cyc+RL]=rowf(nbridge)^{32{32'($random(seed))}};tags[cyc+RL]=rqt_a;nbridge=nbridge+1;kreq=kreq+1;
             end
             @(negedge ck);
         end
         end
         end
         if(mism==0 && kreq>0 && kdone>0 && qwords>0)
-            $display("PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: %0d edges, K requests %0d, k_done edges %0d, q words %0d, mut %0d",edges,kreq,kdone,qwords,`KVD_ECSTMUT);
+            $display("PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: RL %0d QK %0d, %0d edges, K requests %0d, k_done edges %0d, q words %0d, mut %0d",RL,QK,edges,kreq,kdone,qwords,`KVD_ECSTMUT);
         else $display("FAIL qkd_ectl3_kiss_st mismatches=%0d kreq=%0d kdone=%0d q=%0d mut %0d",mism,kreq,kdone,qwords,`KVD_ECSTMUT);
         $finish;
     end

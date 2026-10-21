@@ -44,7 +44,7 @@ proc ot_die_rep_fclk_fwd {net bufs depth acc_name} {
   }
 }
 
-# backward from an input iterm: {source_inst_name depth}
+# backward from an input iterm: {source_inst_name depth source_output_mterm_name}
 proc ot_die_rep_fclk_back {iterm bufs} {
   set d 0; set it $iterm
   for {set guard 0} {$guard < 10000} {incr guard} {
@@ -54,7 +54,7 @@ proc ot_die_rep_fclk_back {iterm bufs} {
     foreach x [$net getITerms] { if {[$x getIoType] eq "OUTPUT"} { set drv $x; break } }
     if {$drv eq ""} { return [list {} $d] }
     set di [$drv getInst]
-    if {![ot_die_rep_fclk_is_rep $di $bufs]} { return [list [$di getName] $d] }
+    if {![ot_die_rep_fclk_is_rep $di $bufs]} { return [list [$di getName] $d [[$drv getMTerm] getName]] }
     incr d
     set it {}
     foreach x [$di getITerms] { if {[$x getIoType] eq "INPUT" && [$x getNet] ne "NULL" && ![[$x getNet] isSpecial]} { set it $x; break } }
@@ -63,6 +63,10 @@ proc ot_die_rep_fclk_back {iterm bufs} {
   return [list {} $d]
 }
 
+# Optional producer contract: ::ot_die_rep_fclk_data_ports maps exact capture
+# master names to {data-pin-glob expected-bit-count}. Auxiliary reset/control
+# inputs are outside the forwarded data hop. Missing/untraceable declared bits
+# fail closed; depth and broadcast rules remain unchanged.
 proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R}}} {
   # Structural pairing (2026-10-17, DIE-CLOCK on S81-DV p4c: names never matter):
   #   for every fclk net F and every capture instance t reached by F (forward through new repeaters, fclk depth f):
@@ -76,7 +80,7 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
   #     no per-hop meaning there).
   #   FAIL CLOSED: fclk nets present but zero judged hops (all broadcast or no data pairs) -> the return value counts
   #     it as a violation (vacuous = fail), as do mismatches (|f - d| > 1) and broadcasts.
-  global ot_die_rep_fclk_old
+  global ot_die_rep_fclk_old ot_die_rep_fclk_data_ports
   if {![array exists ot_die_rep_fclk_old]} { error "ot_die_rep_fclk_audit: call ot_die_rep_fclk_snapshot before the repair" }
   set blk [ord::get_db_block]
   set nets {}
@@ -85,8 +89,8 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
     foreach g $globs { if {[string match $g $nm]} { lappend nets $n; break } }
   }
   set f [open $prefix.tsv w]
-  puts $f "fclk_net\tfclk_src\tcapture\tfclk_repeaters\tdata_min\tdata_max\tdata_bits\tpairing\tbroadcast\tmismatch"
-  set hops 0; set judged 0; set bad 0; set bcast_nets 0; set bcast_hops 0; set fnets 0; set examples {}
+  puts $f "fclk_net\tfclk_src\tcapture\tfclk_repeaters\tdata_min\tdata_max\tdata_bits\tpairing\tbroadcast\tmismatch\tauxiliary_inputs\tconstant_bits"
+  set hops 0; set judged 0; set bad 0; set bcast_nets 0; set bcast_hops 0; set fnets 0; set pairing_errors 0; set constant_bits 0; set examples {}
   foreach n $nets {
     set drv {}
     foreach x [$n getITerms] { if {[$x getIoType] eq "OUTPUT"} { set drv $x; break } }
@@ -102,21 +106,51 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
     dict for {load v} $acc {
       lassign $v fdepth fmterm
       set li [$blk findInst $load]
-      set same {}; set any {}
+      set same {}; set any {}; set declared {}; set selected 0; set aux 0; set const 0
+      set contract {}
+      set master [[$li getMaster] getName]
+      if {[info exists ot_die_rep_fclk_data_ports] && [dict exists $ot_die_rep_fclk_data_ports $master]} {
+        set contract [dict get $ot_die_rep_fclk_data_ports $master]
+        lassign $contract pattern expected
+        if {![string is integer -strict $expected] || $expected <= 0} { error "invalid fclk data-port contract for $master" }
+      }
       foreach it [$li getITerms] {
-        if {[$it getIoType] ne "INPUT" || [$it getNet] eq "NULL" || [[$it getNet] isSpecial]} continue
+        if {[$it getIoType] ne "INPUT"} continue
         if {[$it getMTerm] eq $fmterm} continue
-        lassign [ot_die_rep_fclk_back $it $bufs] s d
+        if {[llength $contract]} {
+          if {![string match $pattern [[$it getMTerm] getName]]} { incr aux; continue }
+          incr selected
+        }
+        if {[$it getNet] eq "NULL" || [[$it getNet] isSpecial]} continue
+        lassign [ot_die_rep_fclk_back $it $bufs] s d source_pin
         if {$s eq ""} continue
+        # Physical constant drivers are accounted payload pins, but have no
+        # switching data launch to match to the forwarded clock. Recognize the
+        # exact native tie cell AND its actual constant output, never a net name
+        # or an undriven "constant" wire. A buffer chain may end at this tie.
+        if {$source_pin ne ""} {
+          set source_inst [$blk findInst $s]
+          set source_master [[$source_inst getMaster] getName]
+          if {($source_master eq "TIEHIx1_ASAP7_75t_R" && $source_pin eq "H") ||
+              ($source_master eq "TIELOx1_ASAP7_75t_R" && $source_pin eq "L")} {
+            incr const; incr constant_bits; continue
+          }
+        }
+        lappend declared $d
         if {[dict exists $acc $s]} { set is_bcast 1 }
         if {$s eq $src} { lappend same $d } else { lappend any $d }
       }
-      if {[llength $same]} { set ds $same; set how same_source } elseif {[llength $any]} { set ds $any; set how capture_inputs } else { set ds {}; set how none }
-      lappend rows [list $load $fdepth $ds $how]
+      if {[llength $contract]} {
+        # The producer declares the complete functional data bus. Never prefer a
+        # same-source subset here: every data bit must be traced and judged.
+        set ds $declared; set how data_port_contract
+        if {$selected != $expected || [llength $ds] + $const != $expected} { incr pairing_errors; set how data_port_contract_ERROR }
+      } elseif {[llength $same]} { set ds $same; set how same_source } elseif {[llength $any]} { set ds $any; set how capture_inputs } else { set ds {}; set how none }
+      lappend rows [list $load $fdepth $ds $how $aux $const]
     }
     if {$is_bcast} { incr bcast_nets }
     foreach r $rows {
-      lassign $r load fdepth ds how
+      lassign $r load fdepth ds how aux const
       incr hops
       set dmin -1; set dmax -1; set mm 0
       if {[llength $ds]} { set dmin [tcl::mathfunc::min {*}$ds]; set dmax [tcl::mathfunc::max {*}$ds] }
@@ -127,15 +161,138 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
         set mm [expr {abs($fdepth - $dmin) > 1 || abs($fdepth - $dmax) > 1}]
         if {$mm} { incr bad; if {[llength $examples] < 20} { lappend examples "[$n getName] $src->$load fclk=$fdepth data=$dmin..$dmax" } }
       }
-      puts $f "[$n getName]\t$src\t$load\t$fdepth\t$dmin\t$dmax\t[llength $ds]\t$how\t$is_bcast\t$mm"
+      puts $f "[$n getName]\t$src\t$load\t$fdepth\t$dmin\t$dmax\t[llength $ds]\t$how\t$is_bcast\t$mm\t$aux\t$const"
     }
   }
   close $f
   set vacuous [expr {$fnets > 0 && $judged == 0}]
   set ex {}; foreach e $examples { lappend ex "\"[string map {\\ \\\\ \" \\\"} $e]\"" }
   set j [open $prefix.json w]
-  puts $j "{\"schema\": \"opentallas.die_repeaters.fclk_audit.v2\", \"rule\": \"DIE-CLOCK: per hop |fclk repeaters - data repeaters| <= 1; pairing structural (capture instance inputs, same-source preferred); broadcast fclk nets flagged, not judged; fclk present with zero judged hops = vacuous = FAIL\", \"fclk_nets\": $fnets, \"broadcast_fclk_nets\": $bcast_nets, \"hops\": $hops, \"broadcast_hops\": $bcast_hops, \"hops_judged\": $judged, \"mismatch_over_1\": $bad, \"vacuous\": $vacuous, \"verdict\": \"[expr {($bad || $vacuous || $bcast_nets) ? {FAIL} : {PASS}}]\", \"examples\": \[[join $ex {, }]\], \"tsv\": \"[file tail $prefix].tsv\"}"
+  puts $j "{\"schema\": \"opentallas.die_repeaters.fclk_audit.v3\", \"rule\": \"DIE-CLOCK: per hop |fclk repeaters - data repeaters| <= 1; pairing complete declared payload when provided (width and trace checked), otherwise capture inputs with same-source preferred; broadcast fclk nets flagged, not judged; fclk present with zero judged hops = vacuous = FAIL\", \"fclk_nets\": $fnets, \"broadcast_fclk_nets\": $bcast_nets, \"hops\": $hops, \"broadcast_hops\": $bcast_hops, \"hops_judged\": $judged, \"mismatch_over_1\": $bad, \"vacuous\": $vacuous, \"pairing_errors\": $pairing_errors, \"constant_bits\": $constant_bits, \"verdict\": \"[expr {($bad || $vacuous || $bcast_nets || $pairing_errors) ? {FAIL} : {PASS}}]\", \"examples\": \[[join $ex {, }]\], \"tsv\": \"[file tail $prefix].tsv\"}"
   close $j
-  puts "OT_DIE_REP_FCLK fclk_nets=$fnets broadcast_nets=$bcast_nets hops=$hops judged=$judged mismatch_over_1=$bad vacuous=$vacuous"; flush stdout
-  return [expr {$bad + $vacuous + $bcast_nets}]
+  puts "OT_DIE_REP_FCLK fclk_nets=$fnets broadcast_nets=$bcast_nets hops=$hops judged=$judged mismatch_over_1=$bad pairing_errors=$pairing_errors vacuous=$vacuous"; flush stdout
+  return [expr {$bad + $vacuous + $bcast_nets + $pairing_errors}]
+}
+
+# ---- forwarded-clock delay matching (DIE-S81-LEAD 2026-10-19, case_p4l3_rv: 10 of 122 hops had data deeper than the
+# forwarded clock after the spread legaliser displaced data repeaters in dense bundle channels, fclk 1-2 vs data up to 4).
+# A forwarded clock is delay-matched to its bundle: after the repair, for every judged hop whose deepest data bit is more
+# than one stage deeper than the clock, n = data_max - 1 - fclk BUFs are chained in front of the capture clock pin
+# (n only if the shallowest bit then stays within +-1; else the hop is left for the audit to fail).  Never touches data.
+proc ot_die_rep_fclk_eq_plan {fd dmin dmax} {
+  if {$dmin < 0 || $dmax < 0} { return 0 }
+  set n [expr {$dmax - 1 - $fd}]
+  if {$n <= 0} { return 0 }
+  if {$fd + $n - $dmin > 1} { return -1 }
+  return $n
+}
+
+proc ot_die_rep_fclk_equalize {prefix globs bufs} {
+  ot_die_rep_fclk_audit $prefix $globs $bufs
+  set blk [ord::get_db_block]
+  set master [[ord::get_db] findMaster [lindex $bufs 0]]
+  if {$master eq "NULL" || $master eq ""} { error "ot_die_rep_fclk_equalize: no master [lindex $bufs 0]" }
+  set f [open $prefix.tsv]; gets $f hdr; set cols [split $hdr "\t"]
+  set new {}; set hops 0; set added 0; set unfix 0; set k 0
+  while {[gets $f line] >= 0} {
+    set r [dict create]; foreach c $cols v [split $line "\t"] { dict set r $c $v }
+    if {[dict get $r broadcast] ne "0" || [dict get $r mismatch] ne "1"} { continue }
+    set n [ot_die_rep_fclk_eq_plan [dict get $r fclk_repeaters] [dict get $r data_min] [dict get $r data_max]]
+    if {$n < 0} { incr unfix; puts "OT_DIE_REP_FCLK_EQ unfixable [dict get $r fclk_net] -> [dict get $r capture]: fclk [dict get $r fclk_repeaters] data [dict get $r data_min]..[dict get $r data_max]"; continue }
+    if {$n == 0} { continue }
+    set fnet [$blk findNet [dict get $r fclk_net]]; set cap [$blk findInst [dict get $r capture]]
+    if {$fnet eq "NULL" || $cap eq "NULL"} { incr unfix; puts "OT_DIE_REP_FCLK_EQ unfixable [dict get $r fclk_net]: net/capture not found"; continue }
+    set dpin ""; foreach x [$fnet getITerms] { if {[$x getIoType] eq "OUTPUT"} { set dpin [[$x getMTerm] getName] } }
+    set it ""
+    foreach x [$cap getITerms] {
+      if {[$x getIoType] ne "INPUT" || [$x getNet] eq "NULL"} { continue }
+      lassign [ot_die_rep_fclk_back $x $bufs] s d sp
+      if {$s eq [dict get $r fclk_src] && $sp eq $dpin} { set it $x; break }
+    }
+    if {$it eq ""} { incr unfix; puts "OT_DIE_REP_FCLK_EQ unfixable [dict get $r fclk_net] -> [dict get $r capture]: no clock pin traced to [dict get $r fclk_src]/$dpin"; continue }
+    set b [$it getBBox]; set x0 [expr {([$b xMin] + [$b xMax]) / 2}]; set y0 [expr {([$b yMin] + [$b yMax]) / 2}]
+    set prev [$it getNet]
+    $it disconnect
+    for {set j 0} {$j < $n} {incr j} {
+      set nm "fclkeq_[incr k]"
+      set bi [odb::dbInst_create $blk $master $nm]
+      set nn [odb::dbNet_create $blk "${nm}_y"]
+      foreach x [$bi getITerms] {
+        set mt [$x getMTerm]
+        if {[$mt getSigType] in {POWER GROUND}} { continue }
+        if {[$x getIoType] eq "INPUT"} { $x connect $prev } elseif {[$x getIoType] eq "OUTPUT"} { $x connect $nn }
+      }
+      $bi setLocation $x0 $y0; $bi setPlacementStatus PLACED
+      lappend new $bi; set prev $nn
+    }
+    $it connect $prev
+    incr hops; incr added $n
+  }
+  close $f
+  set left 0
+  if {[llength $new]} {
+    if {[llength [info procs ot_die_rep_spread]]} { set left [ot_die_rep_spread $new [file rootname $prefix].eq_spread.json] }
+  }
+  puts "OT_DIE_REP_FCLK_EQ hops=$hops buffers=$added unfixable=$unfix unplaced=$left"; flush stdout
+  incr unfix [ot_die_rep_fclk_equalize_data $prefix.data_pre $globs $bufs]
+  return $unfix
+}
+
+# Balance the other direction as well: a wide launch face may produce a
+# shallower payload path than its clock. Add physical non-inverting buffers to
+# those declared payload bits only, never to reset/auxiliary pins. No flop,
+# protocol latency, audit threshold, or source clock arc is changed. The caller
+# still runs the original complete payload audit and post-GRT reach/STA checks.
+proc ot_die_rep_fclk_data_eq_plan {fd depth} {
+  return [expr {max(0, $fd - 1 - $depth)}]
+}
+
+proc ot_die_rep_fclk_equalize_data {prefix globs bufs} {
+  global ot_die_rep_fclk_data_ports
+  ot_die_rep_fclk_audit $prefix $globs $bufs
+  set blk [ord::get_db_block]
+  set master [[ord::get_db] findMaster [lindex $bufs 0]]
+  set f [open $prefix.tsv]; gets $f hdr; set cols [split $hdr "\t"]
+  set new {}; set added 0; set bits 0; set k 0; set unfix 0
+  while {[gets $f line] >= 0} {
+    set r [dict create]; foreach c $cols v [split $line "\t"] { dict set r $c $v }
+    if {[dict get $r broadcast] ne "0" || [dict get $r mismatch] ne "1"} { continue }
+    if {[dict get $r pairing] ne "data_port_contract"} { incr unfix; continue }
+    set cap [$blk findInst [dict get $r capture]]
+    set cm [[$cap getMaster] getName]
+    if {![info exists ot_die_rep_fclk_data_ports] || ![dict exists $ot_die_rep_fclk_data_ports $cm]} { incr unfix; continue }
+    lassign [dict get $ot_die_rep_fclk_data_ports $cm] pattern expected
+    foreach it [$cap getITerms] {
+      if {[$it getIoType] ne "INPUT" || ![string match $pattern [[$it getMTerm] getName]]} { continue }
+      if {[$it getNet] eq "NULL" || [[$it getNet] isSpecial]} { continue }
+      lassign [ot_die_rep_fclk_back $it $bufs] src depth pin
+      if {$src eq "" || $pin eq ""} { continue }
+      set sm [[[$blk findInst $src] getMaster] getName]
+      if {($sm eq "TIEHIx1_ASAP7_75t_R" && $pin eq "H") || ($sm eq "TIELOx1_ASAP7_75t_R" && $pin eq "L")} { continue }
+      set n [ot_die_rep_fclk_data_eq_plan [dict get $r fclk_repeaters] $depth]
+      if {$n == 0} { continue }
+      set b [$it getBBox]; set x0 [expr {([$b xMin] + [$b xMax]) / 2}]; set y0 [expr {([$b yMin] + [$b yMax]) / 2}]
+      set prev [$it getNet]; $it disconnect
+      for {set j 0} {$j < $n} {incr j} {
+        set nm "fclkdeq_[incr k]"
+        while {[$blk findInst $nm] ne "NULL" || [$blk findNet "${nm}_y"] ne "NULL"} { set nm "fclkdeq_[incr k]" }
+        set bi [odb::dbInst_create $blk $master $nm]
+        set nn [odb::dbNet_create $blk "${nm}_y"]
+        foreach x [$bi getITerms] {
+          if {[[$x getMTerm] getSigType] in {POWER GROUND}} { continue }
+          if {[$x getIoType] eq "INPUT"} { $x connect $prev } elseif {[$x getIoType] eq "OUTPUT"} { $x connect $nn }
+        }
+        $bi setLocation $x0 $y0; $bi setPlacementStatus PLACED
+        lappend new $bi; set prev $nn
+      }
+      $it connect $prev
+      incr bits; incr added $n
+      puts "OT_DIE_REP_FCLK_DATA_EQ capture=[dict get $r capture] pin=[[$it getMTerm] getName] old_depth=$depth buffers=$n"
+    }
+  }
+  close $f
+  set left 0
+  if {[llength $new] && [llength [info procs ot_die_rep_spread]]} { set left [ot_die_rep_spread $new $prefix.spread.json] }
+  puts "OT_DIE_REP_FCLK_DATA_EQ bits=$bits buffers=$added unfixable=$unfix unplaced=$left"; flush stdout
+  return [expr {$unfix + $left}]
 }

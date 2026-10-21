@@ -1,0 +1,41 @@
+{
+ "cell": "qfd_landh_1_EW_65x30",
+ "view": "v/qfwd_landh_1_ew_65x30-f2-9ddc1acf2/physical/ref_tile/qfwd_landh_1_ew_65x30/views/qfd_landh_1_EW_65x30",
+ "lib_cell": "qfd_landh_1_EW_65x30",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 37.9,
+ "spread_ps": 1.1,
+ "outputs": 2,
+ "inputs": 3,
+ "launch_ps": 91.9,
+ "launch_pin": "fault",
+ "capture_ps": 86.7,
+ "capture_pin": "a[0]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "case_patterns": [
+  "k0",
+  "k1",
+  "k2"
+ ],
+ "case_pins": [
+  "k0",
+  "k1",
+  "k2"
+ ],
+ "case_pins_raw_capture_ps": {
+  "k0": 226.1,
+  "k1": 227.3,
+  "k2": 196.6
+ },
+ "ff_spread_ps": 1.0,
+ "ff_launch_min_ps": 55.8,
+ "ff_hold_need_ps": -17.1,
+ "pass": true,
+ "fail_why": ""
+}

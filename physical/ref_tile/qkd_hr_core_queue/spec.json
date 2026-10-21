@@ -1,6 +1,6 @@
 {
  "name": "qkd_hr_core_queue",
- "top": "qkd_hr_core_queue",
+ "top": "qkd_hr_core_queue_fl",
  "sources": [
   "rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_queue.v",
   "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
@@ -85,7 +85,10 @@
   "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
-  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv"
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/lib/face_land/qkd_hr_core_queue_fl.sv"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -134,7 +137,7 @@
    "u_rank__image_check"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_queue (core family, one ck_core entry): members u_queue, u_marker_consumer, u_bootbarrier + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_queue (core family, one ck_core entry): members u_queue, u_marker_consumer, u_bootbarrier + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HKV-RSTCAP fl1 10-19: closed r4 native capture host_rst_n 274.0 ps > 190 (raw reset pin clears every queue member flop tile-wide; same pattern as qkd_hr_core_order 386.9). Shared face landing standard (tools/ref_tile/face_land.py, spec face_land): top qkd_hr_core_queue_fl = generated wrapper, host_rst_n drives only ot_rst_relay (async assert, release +3 edges, zero steady-state cycles); core RTL unchanged. Die: rebind qkd_hr_core_queue -> qkd_hr_core_queue_fl, startup waits +3 edges (lanes/HKV-RSTCAP.md).",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -154,7 +157,7 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.025
  },
  "pin_regs": {
   "enable": true,
@@ -162,10 +165,10 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HOSTCL",
-  "branch": "claude/kvj-a3-1017",
-  "tag": "r2",
-  "purpose": "HOST root cluster r2 child qkd_hr_core_queue (pre-route gate + route; parent qkd_host_root is CRITICAL)",
+  "owner": "Claude:HKV-RSTCAP2",
+  "branch": "claude/kv-rstcap2-1019",
+  "tag": "fl1",
+  "purpose": "HKV-RSTCAP: native capture re-route of closed qkd_hr_core_queue with the shared face landing stage (qkd_hr_core_queue_fl)",
   "benches": [
    {
     "name": "cluster_lockstep",
@@ -190,6 +193,31 @@
     "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_queue",
     "fail_regex": "CLUSTER_GATE FAIL mutant",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_queue.log"
+   },
+   {
+    "name": "face_land_m0",
+    "cmd": "python3 tools/ref_tile/face_land.py bench --spec physical/ref_tile/qkd_hr_core_queue/spec.json --out {RUN}/bench/fl_m0 --mut 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^FACE_LAND PASS top=qkd_hr_core_queue_fl mut=0 .* errors=0",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "face_land_m1",
+    "cmd": "python3 tools/ref_tile/face_land.py bench --spec physical/ref_tile/qkd_hr_core_queue/spec.json --out {RUN}/bench/fl_m1 --mut 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^FACE_LAND PASS top=qkd_hr_core_queue_fl ",
+    "fail_regex": "^FACE_LAND FAIL top=qkd_hr_core_queue_fl mut=1 ",
+    "fail_witness": "results/arch/qwen_kv_die/rstcap_1019/qkd_hr_core_queue_fl_m1.log"
    }
   ]
  },
@@ -199,5 +227,24 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "face_land": {
+  "core": "qkd_hr_core_queue",
+  "core_src": "rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_queue.v",
+  "reset_ports": [
+   "host_rst_n"
+  ],
+  "land": {},
+  "reason": "closed r4 native capture host_rst_n 274.0 ps > 190 (raw reset pin clears every queue member flop tile-wide; same pattern as qkd_hr_core_order 386.9)"
+ },
+ "reroute_reason": {
+  "kind": "native_capture",
+  "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
+  "cell": "qkd_hr_core_queue",
+  "fix": "input side: host_rst_n lands at the face in main's reset_landing (2 registered stages, ROOT-RST 10-19) and then in ot_rst_relay (face_land: async assert, release +3) -- the pin has 1 flop sink instead of the tile-wide async clear; reset release +5 tile-clock edges (scheduled constant), data latency unchanged; same outline / pin faces, core RTL unchanged"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

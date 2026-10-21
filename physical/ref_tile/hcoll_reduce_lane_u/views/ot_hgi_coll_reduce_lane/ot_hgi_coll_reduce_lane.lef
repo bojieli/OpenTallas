@@ -1,0 +1,4395 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 1000 ;
+END UNITS
+
+MACRO ot_hgi_coll_reduce_lane
+  FOREIGN ot_hgi_coll_reduce_lane 0 0 ;
+  CLASS BLOCK ;
+  SIZE 60.48 BY 60.48 ;
+  PIN add_issue
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 3.216 0.084 3.24 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 3.216 2.408 3.24 ;
+    END
+  END add_issue
+  PIN add_read_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 7.728 0.084 7.752 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 7.728 2.408 7.752 ;
+    END
+  END add_read_n
+  PIN add_valid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 3.936 60.48 3.96 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.821 3.936 60.444 3.96 ;
+    END
+  END add_valid
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 12.24 0.084 12.264 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 12.24 0.227 12.264 ;
+    END
+  END clk
+  PIN in_data[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  1.764 60.442 1.782 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  1.764 58.337 1.782 60.461 ;
+    END
+  END in_data[0]
+  PIN in_data[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  17.604 60.442 17.622 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  17.604 55.715 17.622 60.461 ;
+    END
+  END in_data[10]
+  PIN in_data[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  19.152 60.442 19.17 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  19.152 58.337 19.17 60.461 ;
+    END
+  END in_data[11]
+  PIN in_data[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  20.736 60.442 20.754 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  20.736 58.757 20.754 60.461 ;
+    END
+  END in_data[12]
+  PIN in_data[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  22.32 60.442 22.338 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  22.32 58.145 22.338 60.461 ;
+    END
+  END in_data[13]
+  PIN in_data[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  23.904 60.442 23.922 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  23.832 60.421 23.922 60.449 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  23.904 60.449 23.922 60.461 ;
+    END
+  END in_data[14]
+  PIN in_data[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  25.488 60.442 25.506 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  25.488 58.757 25.506 60.461 ;
+    END
+  END in_data[15]
+  PIN in_data[16]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  27.072 60.442 27.09 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  27.072 58.757 27.09 60.461 ;
+    END
+  END in_data[16]
+  PIN in_data[17]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  28.656 60.442 28.674 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  28.656 59.873 28.674 60.461 ;
+    END
+  END in_data[17]
+  PIN in_data[18]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  30.24 60.442 30.258 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  30.24 58.757 30.258 60.461 ;
+    END
+  END in_data[18]
+  PIN in_data[19]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  31.824 60.442 31.842 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  31.824 58.757 31.842 60.461 ;
+    END
+  END in_data[19]
+  PIN in_data[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  3.348 60.442 3.366 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  3.348 58.757 3.366 60.461 ;
+    END
+  END in_data[1]
+  PIN in_data[20]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  33.408 60.442 33.426 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  33.408 56.327 33.426 60.461 ;
+    END
+  END in_data[20]
+  PIN in_data[21]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  34.956 60.442 34.974 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  34.956 58.337 34.974 60.461 ;
+    END
+  END in_data[21]
+  PIN in_data[22]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  36.54 60.442 36.558 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  36.54 57.955 36.558 60.461 ;
+    END
+  END in_data[22]
+  PIN in_data[23]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  38.124 60.442 38.142 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  38.124 57.955 38.142 60.461 ;
+    END
+  END in_data[23]
+  PIN in_data[24]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  39.708 60.442 39.726 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  39.708 59.851 39.726 60.461 ;
+    END
+  END in_data[24]
+  PIN in_data[25]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  41.292 60.442 41.31 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  41.292 57.947 41.31 60.461 ;
+    END
+  END in_data[25]
+  PIN in_data[26]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  42.876 60.442 42.894 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  42.876 57.641 42.894 60.461 ;
+    END
+  END in_data[26]
+  PIN in_data[27]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  44.46 60.442 44.478 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  44.46 58.109 44.478 60.461 ;
+    END
+  END in_data[27]
+  PIN in_data[28]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  46.044 60.442 46.062 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  46.044 58.337 46.062 60.461 ;
+    END
+  END in_data[28]
+  PIN in_data[29]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  47.628 60.442 47.646 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  47.628 59.851 47.646 60.461 ;
+    END
+  END in_data[29]
+  PIN in_data[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  4.932 60.442 4.95 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  4.932 58.757 4.95 60.461 ;
+    END
+  END in_data[2]
+  PIN in_data[30]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  49.212 60.442 49.23 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  49.212 58.217 49.23 60.461 ;
+    END
+  END in_data[30]
+  PIN in_data[31]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  50.796 60.442 50.814 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  50.796 58.337 50.814 60.461 ;
+    END
+  END in_data[31]
+  PIN in_data[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  6.516 60.442 6.534 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  6.516 57.299 6.534 60.461 ;
+    END
+  END in_data[3]
+  PIN in_data[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  8.1 60.442 8.118 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  8.1 59.845 8.118 60.461 ;
+    END
+  END in_data[4]
+  PIN in_data[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  9.684 60.442 9.702 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  9.684 56.219 9.702 60.461 ;
+    END
+  END in_data[5]
+  PIN in_data[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  11.268 60.442 11.286 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  11.268 56.605 11.286 60.461 ;
+    END
+  END in_data[6]
+  PIN in_data[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  12.852 60.442 12.87 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  12.852 58.757 12.87 60.461 ;
+    END
+  END in_data[7]
+  PIN in_data[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  14.436 60.442 14.454 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  14.436 58.757 14.454 60.461 ;
+    END
+  END in_data[8]
+  PIN in_data[9]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  16.02 60.442 16.038 60.48 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  16.02 58.019 16.038 60.461 ;
+    END
+  END in_data[9]
+  PIN load_tag_n[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  52.368 60.396 52.392 60.48 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  52.368 58.645 52.392 60.432 ;
+    END
+  END load_tag_n[0]
+  PIN load_tag_n[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  53.952 60.396 53.976 60.48 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  53.952 59.269 53.976 60.432 ;
+    END
+  END load_tag_n[1]
+  PIN load_tag_n[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  55.536 60.396 55.56 60.48 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  55.536 58.645 55.56 60.432 ;
+    END
+  END load_tag_n[2]
+  PIN load_tag_n[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  57.12 60.396 57.144 60.48 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  57.12 58.343 57.144 60.432 ;
+    END
+  END load_tag_n[3]
+  PIN load_v_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  58.656 60.396 58.68 60.48 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  58.656 59.269 58.68 60.432 ;
+    END
+  END load_v_n
+  PIN pub_a[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  1.44 0 1.458 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  1.44 0.012 1.458 2.759 ;
+    END
+  END pub_a[0]
+  PIN pub_a[10]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  10.584 0 10.602 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  10.584 0.012 10.602 2.299 ;
+    END
+  END pub_a[10]
+  PIN pub_a[11]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  11.484 0 11.502 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  11.484 0.012 11.502 2.191 ;
+    END
+  END pub_a[11]
+  PIN pub_a[12]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  12.42 0 12.438 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  12.42 0.012 12.438 2.191 ;
+    END
+  END pub_a[12]
+  PIN pub_a[13]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  13.32 0 13.338 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  13.32 0.012 13.338 0.031 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  13.176 0.031 13.338 0.059 ;
+    END
+  END pub_a[13]
+  PIN pub_a[14]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  14.256 0 14.274 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  14.256 0.012 14.274 2.263 ;
+    END
+  END pub_a[14]
+  PIN pub_a[15]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  15.156 0 15.174 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  15.156 0.012 15.174 2.191 ;
+    END
+  END pub_a[15]
+  PIN pub_a[16]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  16.056 0 16.074 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  16.056 0.012 16.074 2.101 ;
+    END
+  END pub_a[16]
+  PIN pub_a[17]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  16.992 0 17.01 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  16.992 0.012 17.01 2.101 ;
+    END
+  END pub_a[17]
+  PIN pub_a[18]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  17.892 0 17.91 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  17.892 0.012 17.91 2.101 ;
+    END
+  END pub_a[18]
+  PIN pub_a[19]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  18.792 0 18.81 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  18.792 0.012 18.81 2.101 ;
+    END
+  END pub_a[19]
+  PIN pub_a[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  2.376 0 2.394 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  2.376 0.012 2.394 0.031 ;
+    END
+  END pub_a[1]
+  PIN pub_a[20]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  19.728 0 19.746 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  19.728 0.012 19.746 2.191 ;
+    END
+  END pub_a[20]
+  PIN pub_a[21]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  20.628 0 20.646 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  20.628 0.012 20.646 2.191 ;
+    END
+  END pub_a[21]
+  PIN pub_a[22]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  21.564 0 21.582 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  21.564 0.012 21.582 2.191 ;
+    END
+  END pub_a[22]
+  PIN pub_a[23]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  22.464 0 22.482 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  22.464 0.012 22.482 2.371 ;
+    END
+  END pub_a[23]
+  PIN pub_a[24]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  23.364 0 23.382 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  23.364 0.012 23.382 2.143 ;
+    END
+  END pub_a[24]
+  PIN pub_a[25]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  24.3 0 24.318 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  24.3 0.012 24.318 2.143 ;
+    END
+  END pub_a[25]
+  PIN pub_a[26]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  25.2 0 25.218 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  25.2 0.012 25.218 2.191 ;
+    END
+  END pub_a[26]
+  PIN pub_a[27]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  26.136 0 26.154 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  26.136 0.012 26.154 2.191 ;
+    END
+  END pub_a[27]
+  PIN pub_a[28]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  27.036 0 27.054 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  27.036 0.012 27.054 2.191 ;
+    END
+  END pub_a[28]
+  PIN pub_a[29]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  27.936 0 27.954 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  27.936 0.012 27.954 0.031 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  27.936 0.031 28.098 0.059 ;
+    END
+  END pub_a[29]
+  PIN pub_a[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  3.276 0 3.294 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  3.276 0.012 3.294 0.031 ;
+    END
+  END pub_a[2]
+  PIN pub_a[30]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  28.872 0 28.89 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  28.872 0.012 28.89 2.143 ;
+    END
+  END pub_a[30]
+  PIN pub_a[31]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  29.772 0 29.79 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  29.772 0.012 29.79 2.143 ;
+    END
+  END pub_a[31]
+  PIN pub_a[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  4.176 0 4.194 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  4.176 0.012 4.194 2.191 ;
+    END
+  END pub_a[3]
+  PIN pub_a[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  5.112 0 5.13 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  5.112 0.012 5.13 2.191 ;
+    END
+  END pub_a[4]
+  PIN pub_a[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  6.012 0 6.03 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  6.012 0.012 6.03 2.263 ;
+    END
+  END pub_a[5]
+  PIN pub_a[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  6.948 0 6.966 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  6.948 0.012 6.966 2.191 ;
+    END
+  END pub_a[6]
+  PIN pub_a[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  7.848 0 7.866 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  7.848 0.012 7.866 0.031 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  7.776 0.031 7.866 0.059 ;
+    END
+  END pub_a[7]
+  PIN pub_a[8]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  8.748 0 8.766 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  8.748 0.012 8.766 2.191 ;
+    END
+  END pub_a[8]
+  PIN pub_a[9]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT  9.684 0 9.702 0.038 ;
+    END
+    PORT
+      LAYER M3 ;
+        RECT  9.684 0.012 9.702 2.191 ;
+    END
+  END pub_a[9]
+  PIN pub_b[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  30.672 0 30.696 0.084 ;
+    END
+  END pub_b[0]
+  PIN pub_b[10]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  39.84 0 39.864 0.084 ;
+    END
+  END pub_b[10]
+  PIN pub_b[11]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  40.752 0 40.776 0.084 ;
+    END
+  END pub_b[11]
+  PIN pub_b[12]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  41.664 0 41.688 0.084 ;
+    END
+  END pub_b[12]
+  PIN pub_b[13]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  42.576 0 42.6 0.084 ;
+    END
+  END pub_b[13]
+  PIN pub_b[14]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  43.488 0 43.512 0.084 ;
+    END
+  END pub_b[14]
+  PIN pub_b[15]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  44.4 0 44.424 0.084 ;
+    END
+  END pub_b[15]
+  PIN pub_b[16]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  45.312 0 45.336 0.084 ;
+    END
+  END pub_b[16]
+  PIN pub_b[17]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  46.224 0 46.248 0.084 ;
+    END
+  END pub_b[17]
+  PIN pub_b[18]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  47.136 0 47.16 0.084 ;
+    END
+  END pub_b[18]
+  PIN pub_b[19]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  48.048 0 48.072 0.084 ;
+    END
+  END pub_b[19]
+  PIN pub_b[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  31.584 0 31.608 0.084 ;
+    END
+  END pub_b[1]
+  PIN pub_b[20]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  48.96 0 48.984 0.084 ;
+    END
+  END pub_b[20]
+  PIN pub_b[21]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  49.872 0 49.896 0.084 ;
+    END
+  END pub_b[21]
+  PIN pub_b[22]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  50.784 0 50.808 0.084 ;
+    END
+  END pub_b[22]
+  PIN pub_b[23]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  51.696 0 51.72 0.084 ;
+    END
+  END pub_b[23]
+  PIN pub_b[24]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  52.608 0 52.632 0.084 ;
+    END
+  END pub_b[24]
+  PIN pub_b[25]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  53.52 0 53.544 0.084 ;
+    END
+  END pub_b[25]
+  PIN pub_b[26]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  54.432 0 54.456 0.084 ;
+    END
+  END pub_b[26]
+  PIN pub_b[27]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  55.344 0 55.368 0.084 ;
+    END
+  END pub_b[27]
+  PIN pub_b[28]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  56.256 0 56.28 0.084 ;
+    END
+  END pub_b[28]
+  PIN pub_b[29]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  57.168 0 57.192 0.084 ;
+    END
+  END pub_b[29]
+  PIN pub_b[2]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  32.496 0 32.52 0.084 ;
+    END
+  END pub_b[2]
+  PIN pub_b[30]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  58.08 0 58.104 0.084 ;
+    END
+  END pub_b[30]
+  PIN pub_b[31]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  58.992 0 59.016 0.084 ;
+    END
+  END pub_b[31]
+  PIN pub_b[3]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  33.408 0 33.432 0.084 ;
+    END
+  END pub_b[3]
+  PIN pub_b[4]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  34.32 0 34.344 0.084 ;
+    END
+  END pub_b[4]
+  PIN pub_b[5]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  35.232 0 35.256 0.084 ;
+    END
+  END pub_b[5]
+  PIN pub_b[6]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  36.144 0 36.168 0.084 ;
+    END
+  END pub_b[6]
+  PIN pub_b[7]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  37.104 0 37.128 0.084 ;
+    END
+  END pub_b[7]
+  PIN pub_b[8]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  38.016 0 38.04 0.084 ;
+    END
+  END pub_b[8]
+  PIN pub_b[9]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT  38.928 0 38.952 0.084 ;
+    END
+  END pub_b[9]
+  PIN pub_read_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 9.744 60.48 9.768 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.245 9.744 60.444 9.768 ;
+    END
+  END pub_read_n
+  PIN pub_tag_a_n[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 15.6 60.48 15.624 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  58.705 15.6 60.444 15.624 ;
+    END
+  END pub_tag_a_n[0]
+  PIN pub_tag_a_n[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 21.456 60.48 21.48 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.245 21.456 60.444 21.48 ;
+    END
+  END pub_tag_a_n[1]
+  PIN pub_tag_a_n[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 27.312 60.48 27.336 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.245 27.312 60.444 27.336 ;
+    END
+  END pub_tag_a_n[2]
+  PIN pub_tag_a_n[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 33.168 60.48 33.192 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.281 33.168 60.444 33.192 ;
+    END
+  END pub_tag_a_n[3]
+  PIN pub_tag_b_n[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 39.024 60.48 39.048 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.245 39.024 60.444 39.048 ;
+    END
+  END pub_tag_b_n[0]
+  PIN pub_tag_b_n[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 44.832 60.48 44.856 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  59.245 44.832 60.444 44.856 ;
+    END
+  END pub_tag_b_n[1]
+  PIN pub_tag_b_n[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 50.688 60.48 50.712 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  58.705 50.688 60.444 50.712 ;
+    END
+  END pub_tag_b_n[2]
+  PIN pub_tag_b_n[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  60.396 56.544 60.48 56.568 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  58.705 56.544 60.444 56.568 ;
+    END
+  END pub_tag_b_n[3]
+  PIN read_tag_n[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 16.752 0.084 16.776 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 16.752 2.408 16.776 ;
+    END
+  END read_tag_n[0]
+  PIN read_tag_n[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 21.216 0.084 21.24 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 21.216 2.408 21.24 ;
+    END
+  END read_tag_n[1]
+  PIN read_tag_n[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 25.728 0.084 25.752 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 25.728 2.408 25.752 ;
+    END
+  END read_tag_n[2]
+  PIN read_tag_n[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 30.24 0.084 30.264 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 30.24 0.181 30.264 ;
+    END
+  END read_tag_n[3]
+  PIN rst_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 34.704 0.084 34.728 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 34.704 2.408 34.728 ;
+    END
+  END rst_n
+  PIN wb_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 39.216 0.084 39.24 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 39.216 2.365 39.24 ;
+    END
+  END wb_n
+  PIN wb_tag_n[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 43.728 0.084 43.752 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 43.728 2.408 43.752 ;
+    END
+  END wb_tag_n[0]
+  PIN wb_tag_n[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 48.24 0.084 48.264 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 48.24 2.401 48.264 ;
+    END
+  END wb_tag_n[1]
+  PIN wb_tag_n[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 52.704 0.084 52.728 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 52.704 2.329 52.728 ;
+    END
+  END wb_tag_n[2]
+  PIN wb_tag_n[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 57.216 0.084 57.24 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 57.216 2.408 57.24 ;
+    END
+  END wb_tag_n[3]
+  PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
+    PORT
+      LAYER M5 ;
+        RECT  56.592 2.151 56.712 58.329 ;
+        RECT  51.192 2.151 51.312 58.329 ;
+        RECT  45.792 2.151 45.912 58.329 ;
+        RECT  40.392 2.151 40.512 58.329 ;
+        RECT  34.992 2.151 35.112 58.329 ;
+        RECT  29.592 2.151 29.712 58.329 ;
+        RECT  24.192 2.151 24.312 58.329 ;
+        RECT  18.792 2.151 18.912 58.329 ;
+        RECT  13.392 2.151 13.512 58.329 ;
+        RECT  7.992 2.151 8.112 58.329 ;
+        RECT  2.592 2.151 2.712 58.329 ;
+    END
+  END VDD
+  PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
+    PORT
+      LAYER M5 ;
+        RECT  56.4 2.137 56.52 58.343 ;
+        RECT  51 2.137 51.12 58.343 ;
+        RECT  45.6 2.137 45.72 58.343 ;
+        RECT  40.2 2.137 40.32 58.343 ;
+        RECT  34.8 2.137 34.92 58.343 ;
+        RECT  29.4 2.137 29.52 58.343 ;
+        RECT  24 2.137 24.12 58.343 ;
+        RECT  18.6 2.137 18.72 58.343 ;
+        RECT  13.2 2.137 13.32 58.343 ;
+        RECT  7.8 2.137 7.92 58.343 ;
+        RECT  2.4 2.137 2.52 58.343 ;
+    END
+  END VSS
+  # OT_OBS_CLOSED layer=M5 d_um=1.536 added=210
+  OBS
+    LAYER RVTN ;
+     RECT  2.16 2.16 58.32 2.295 ;
+     RECT  2.16 2.565 58.32 2.835 ;
+     RECT  2.16 3.105 58.32 3.375 ;
+     RECT  2.16 3.645 58.32 3.915 ;
+     RECT  2.16 4.185 58.32 4.455 ;
+     RECT  2.16 4.725 58.32 4.995 ;
+     RECT  2.16 5.265 58.32 5.535 ;
+     RECT  2.16 5.805 58.32 6.075 ;
+     RECT  2.16 6.345 58.32 6.615 ;
+     RECT  2.16 6.885 58.32 7.155 ;
+     RECT  2.16 7.425 58.32 7.695 ;
+     RECT  2.16 7.965 58.32 8.235 ;
+     RECT  2.16 8.505 58.32 8.775 ;
+     RECT  2.16 9.045 58.32 9.315 ;
+     RECT  2.16 9.585 58.32 9.855 ;
+     RECT  2.16 10.125 58.32 10.395 ;
+     RECT  2.16 10.665 58.32 10.935 ;
+     RECT  2.16 11.205 58.32 11.475 ;
+     RECT  2.16 11.745 58.32 12.015 ;
+     RECT  2.16 12.285 58.32 12.555 ;
+     RECT  2.16 12.825 58.32 13.095 ;
+     RECT  2.16 13.365 58.32 13.635 ;
+     RECT  2.16 13.905 58.32 14.175 ;
+     RECT  2.16 14.445 58.32 14.715 ;
+     RECT  2.16 14.985 58.32 15.255 ;
+     RECT  2.16 15.525 58.32 15.795 ;
+     RECT  2.16 16.065 58.32 16.335 ;
+     RECT  2.16 16.605 58.32 16.875 ;
+     RECT  2.16 17.145 58.32 17.415 ;
+     RECT  2.16 17.685 58.32 17.955 ;
+     RECT  2.16 18.225 58.32 18.495 ;
+     RECT  2.16 18.765 58.32 19.035 ;
+     RECT  2.16 19.305 58.32 19.575 ;
+     RECT  2.16 19.845 58.32 20.115 ;
+     RECT  2.16 20.385 58.32 20.655 ;
+     RECT  2.16 20.925 58.32 21.195 ;
+     RECT  2.16 21.465 58.32 21.735 ;
+     RECT  2.16 22.005 58.32 22.275 ;
+     RECT  2.16 22.545 58.32 22.815 ;
+     RECT  2.16 23.085 58.32 23.355 ;
+     RECT  2.16 23.625 58.32 23.895 ;
+     RECT  2.16 24.165 58.32 24.435 ;
+     RECT  2.16 24.705 58.32 24.975 ;
+     RECT  2.16 25.245 58.32 25.515 ;
+     RECT  2.16 25.785 58.32 26.055 ;
+     RECT  2.16 26.325 58.32 26.595 ;
+     RECT  2.16 26.865 58.32 27.135 ;
+     RECT  2.16 27.405 58.32 27.675 ;
+     RECT  2.16 27.945 58.32 28.215 ;
+     RECT  2.16 28.485 58.32 28.755 ;
+     RECT  2.16 29.025 58.32 29.295 ;
+     RECT  2.16 29.565 58.32 29.835 ;
+     RECT  2.16 30.105 58.32 30.375 ;
+     RECT  2.16 30.645 58.32 30.915 ;
+     RECT  2.16 31.185 58.32 31.455 ;
+     RECT  2.16 31.725 58.32 31.995 ;
+     RECT  2.16 32.265 58.32 32.535 ;
+     RECT  2.16 32.805 58.32 33.075 ;
+     RECT  2.16 33.345 58.32 33.615 ;
+     RECT  2.16 33.885 58.32 34.155 ;
+     RECT  2.16 34.425 58.32 34.695 ;
+     RECT  2.16 34.965 58.32 35.235 ;
+     RECT  2.16 35.505 58.32 35.775 ;
+     RECT  2.16 36.045 58.32 36.315 ;
+     RECT  2.16 36.585 58.32 36.855 ;
+     RECT  2.16 37.125 58.32 37.395 ;
+     RECT  2.16 37.665 58.32 37.935 ;
+     RECT  2.16 38.205 58.32 38.475 ;
+     RECT  2.16 38.745 58.32 39.015 ;
+     RECT  2.16 39.285 58.32 39.555 ;
+     RECT  2.16 39.825 58.32 40.095 ;
+     RECT  2.16 40.365 58.32 40.635 ;
+     RECT  2.16 40.905 58.32 41.175 ;
+     RECT  2.16 41.445 58.32 41.715 ;
+     RECT  2.16 41.985 58.32 42.255 ;
+     RECT  2.16 42.525 58.32 42.795 ;
+     RECT  2.16 43.065 58.32 43.335 ;
+     RECT  2.16 43.605 58.32 43.875 ;
+     RECT  2.16 44.145 58.32 44.415 ;
+     RECT  2.16 44.685 58.32 44.955 ;
+     RECT  2.16 45.225 58.32 45.495 ;
+     RECT  2.16 45.765 58.32 46.035 ;
+     RECT  2.16 46.305 58.32 46.575 ;
+     RECT  2.16 46.845 58.32 47.115 ;
+     RECT  2.16 47.385 58.32 47.655 ;
+     RECT  2.16 47.925 58.32 48.195 ;
+     RECT  2.16 48.465 58.32 48.735 ;
+     RECT  2.16 49.005 58.32 49.275 ;
+     RECT  2.16 49.545 58.32 49.815 ;
+     RECT  2.16 50.085 58.32 50.355 ;
+     RECT  2.16 50.625 58.32 50.895 ;
+     RECT  2.16 51.165 58.32 51.435 ;
+     RECT  2.16 51.705 58.32 51.975 ;
+     RECT  2.16 52.245 58.32 52.515 ;
+     RECT  2.16 52.785 58.32 53.055 ;
+     RECT  2.16 53.325 58.32 53.595 ;
+     RECT  2.16 53.865 58.32 54.135 ;
+     RECT  2.16 54.405 58.32 54.675 ;
+     RECT  2.16 54.945 58.32 55.215 ;
+     RECT  2.16 55.485 58.32 55.755 ;
+     RECT  2.16 56.025 58.32 56.295 ;
+     RECT  2.16 56.565 58.32 56.835 ;
+     RECT  2.16 57.105 58.32 57.375 ;
+     RECT  2.16 57.645 58.32 57.915 ;
+     RECT  2.16 58.185 58.32 58.32 ;
+    LAYER RVTP ;
+     RECT  2.16 2.295 58.32 2.565 ;
+     RECT  2.16 2.835 58.32 3.105 ;
+     RECT  2.16 3.375 58.32 3.645 ;
+     RECT  2.16 3.915 58.32 4.185 ;
+     RECT  2.16 4.455 58.32 4.725 ;
+     RECT  2.16 4.995 58.32 5.265 ;
+     RECT  2.16 5.535 58.32 5.805 ;
+     RECT  2.16 6.075 58.32 6.345 ;
+     RECT  2.16 6.615 58.32 6.885 ;
+     RECT  2.16 7.155 58.32 7.425 ;
+     RECT  2.16 7.695 58.32 7.965 ;
+     RECT  2.16 8.235 58.32 8.505 ;
+     RECT  2.16 8.775 58.32 9.045 ;
+     RECT  2.16 9.315 58.32 9.585 ;
+     RECT  2.16 9.855 58.32 10.125 ;
+     RECT  2.16 10.395 58.32 10.665 ;
+     RECT  2.16 10.935 58.32 11.205 ;
+     RECT  2.16 11.475 58.32 11.745 ;
+     RECT  2.16 12.015 58.32 12.285 ;
+     RECT  2.16 12.555 58.32 12.825 ;
+     RECT  2.16 13.095 58.32 13.365 ;
+     RECT  2.16 13.635 58.32 13.905 ;
+     RECT  2.16 14.175 58.32 14.445 ;
+     RECT  2.16 14.715 58.32 14.985 ;
+     RECT  2.16 15.255 58.32 15.525 ;
+     RECT  2.16 15.795 58.32 16.065 ;
+     RECT  2.16 16.335 58.32 16.605 ;
+     RECT  2.16 16.875 58.32 17.145 ;
+     RECT  2.16 17.415 58.32 17.685 ;
+     RECT  2.16 17.955 58.32 18.225 ;
+     RECT  2.16 18.495 58.32 18.765 ;
+     RECT  2.16 19.035 58.32 19.305 ;
+     RECT  2.16 19.575 58.32 19.845 ;
+     RECT  2.16 20.115 58.32 20.385 ;
+     RECT  2.16 20.655 58.32 20.925 ;
+     RECT  2.16 21.195 58.32 21.465 ;
+     RECT  2.16 21.735 58.32 22.005 ;
+     RECT  2.16 22.275 58.32 22.545 ;
+     RECT  2.16 22.815 58.32 23.085 ;
+     RECT  2.16 23.355 58.32 23.625 ;
+     RECT  2.16 23.895 58.32 24.165 ;
+     RECT  2.16 24.435 58.32 24.705 ;
+     RECT  2.16 24.975 58.32 25.245 ;
+     RECT  2.16 25.515 58.32 25.785 ;
+     RECT  2.16 26.055 58.32 26.325 ;
+     RECT  2.16 26.595 58.32 26.865 ;
+     RECT  2.16 27.135 58.32 27.405 ;
+     RECT  2.16 27.675 58.32 27.945 ;
+     RECT  2.16 28.215 58.32 28.485 ;
+     RECT  2.16 28.755 58.32 29.025 ;
+     RECT  2.16 29.295 58.32 29.565 ;
+     RECT  2.16 29.835 58.32 30.105 ;
+     RECT  2.16 30.375 58.32 30.645 ;
+     RECT  2.16 30.915 58.32 31.185 ;
+     RECT  2.16 31.455 58.32 31.725 ;
+     RECT  2.16 31.995 58.32 32.265 ;
+     RECT  2.16 32.535 58.32 32.805 ;
+     RECT  2.16 33.075 58.32 33.345 ;
+     RECT  2.16 33.615 58.32 33.885 ;
+     RECT  2.16 34.155 58.32 34.425 ;
+     RECT  2.16 34.695 58.32 34.965 ;
+     RECT  2.16 35.235 58.32 35.505 ;
+     RECT  2.16 35.775 58.32 36.045 ;
+     RECT  2.16 36.315 58.32 36.585 ;
+     RECT  2.16 36.855 58.32 37.125 ;
+     RECT  2.16 37.395 58.32 37.665 ;
+     RECT  2.16 37.935 58.32 38.205 ;
+     RECT  2.16 38.475 58.32 38.745 ;
+     RECT  2.16 39.015 58.32 39.285 ;
+     RECT  2.16 39.555 58.32 39.825 ;
+     RECT  2.16 40.095 58.32 40.365 ;
+     RECT  2.16 40.635 58.32 40.905 ;
+     RECT  2.16 41.175 58.32 41.445 ;
+     RECT  2.16 41.715 58.32 41.985 ;
+     RECT  2.16 42.255 58.32 42.525 ;
+     RECT  2.16 42.795 58.32 43.065 ;
+     RECT  2.16 43.335 58.32 43.605 ;
+     RECT  2.16 43.875 58.32 44.145 ;
+     RECT  2.16 44.415 58.32 44.685 ;
+     RECT  2.16 44.955 58.32 45.225 ;
+     RECT  2.16 45.495 58.32 45.765 ;
+     RECT  2.16 46.035 58.32 46.305 ;
+     RECT  2.16 46.575 58.32 46.845 ;
+     RECT  2.16 47.115 58.32 47.385 ;
+     RECT  2.16 47.655 58.32 47.925 ;
+     RECT  2.16 48.195 58.32 48.465 ;
+     RECT  2.16 48.735 58.32 49.005 ;
+     RECT  2.16 49.275 58.32 49.545 ;
+     RECT  2.16 49.815 58.32 50.085 ;
+     RECT  2.16 50.355 58.32 50.625 ;
+     RECT  2.16 50.895 58.32 51.165 ;
+     RECT  2.16 51.435 58.32 51.705 ;
+     RECT  2.16 51.975 58.32 52.245 ;
+     RECT  2.16 52.515 58.32 52.785 ;
+     RECT  2.16 53.055 58.32 53.325 ;
+     RECT  2.16 53.595 58.32 53.865 ;
+     RECT  2.16 54.135 58.32 54.405 ;
+     RECT  2.16 54.675 58.32 54.945 ;
+     RECT  2.16 55.215 58.32 55.485 ;
+     RECT  2.16 55.755 58.32 56.025 ;
+     RECT  2.16 56.295 58.32 56.565 ;
+     RECT  2.16 56.835 58.32 57.105 ;
+     RECT  2.16 57.375 58.32 57.645 ;
+     RECT  2.16 57.915 58.32 58.185 ;
+    LAYER M1 ;
+     RECT  2.16 2.151 58.32 58.329 ;
+    LAYER M2 ;
+     RECT  1.435 2.736 2.16 2.754 ;
+     RECT  1.759 47.7 2.16 47.718 ;
+     RECT  2.371 0.036 2.579 0.054 ;
+     RECT  2.16 2.151 3.343 58.329 ;
+     RECT  3.343 2.151 3.407 58.752 ;
+     RECT  3.407 2.151 4.675 58.329 ;
+     RECT  4.675 2.151 4.955 58.752 ;
+     RECT  7.771 0.036 7.871 0.054 ;
+     RECT  8.095 59.85 8.879 59.868 ;
+     RECT  4.955 2.151 12.811 58.329 ;
+     RECT  12.811 2.151 12.875 58.752 ;
+     RECT  13.171 0.036 13.343 0.054 ;
+     RECT  12.875 2.151 14.431 58.329 ;
+     RECT  14.431 2.151 14.819 58.752 ;
+     RECT  14.819 2.151 16.447 58.329 ;
+     RECT  16.447 2.106 18.167 58.329 ;
+     RECT  18.167 2.151 20.731 58.329 ;
+     RECT  20.731 2.151 20.795 58.752 ;
+     RECT  23.827 60.426 23.927 60.444 ;
+     RECT  20.795 2.151 25.447 58.329 ;
+     RECT  25.447 2.151 25.511 58.752 ;
+     RECT  25.511 2.151 27.067 58.329 ;
+     RECT  27.067 2.151 27.275 58.752 ;
+     RECT  27.931 0.036 28.103 0.054 ;
+     RECT  28.183 59.85 28.679 59.868 ;
+     RECT  27.275 2.151 30.235 58.329 ;
+     RECT  30.235 2.151 30.371 58.752 ;
+     RECT  30.371 2.151 31.747 58.329 ;
+     RECT  31.747 2.151 31.847 58.752 ;
+     RECT  31.847 2.151 58.32 58.329 ;
+     RECT  58.32 15.462 58.739 15.48 ;
+     RECT  58.32 50.562 58.739 50.58 ;
+     RECT  58.32 56.538 58.739 56.556 ;
+     RECT  58.32 4.356 59.027 4.644 ;
+     RECT  58.32 9.792 59.279 9.81 ;
+     RECT  58.32 21.402 59.279 21.42 ;
+     RECT  58.32 27.342 59.279 27.36 ;
+     RECT  58.32 38.952 59.279 38.97 ;
+     RECT  58.32 44.892 59.279 44.91 ;
+     RECT  58.32 33.012 59.315 33.03 ;
+     RECT  59.027 4.626 59.855 4.644 ;
+    LAYER M3 ;
+     RECT  2.394 0.031 3.276 0.038 ;
+     RECT  2.376 0.038 3.294 0.059 ;
+     RECT  39.168 0.091 39.186 1.723 ;
+     RECT  46.728 0.091 46.746 1.723 ;
+     RECT  2.556 0.059 3.294 2.143 ;
+     RECT  7.776 0.059 7.794 2.143 ;
+     RECT  13.176 0.059 13.194 2.143 ;
+     RECT  39.168 1.723 39.87 2.143 ;
+     RECT  40.824 1.723 40.842 2.143 ;
+     RECT  45.324 0.091 45.342 2.143 ;
+     RECT  50.868 0.091 50.886 2.143 ;
+     RECT  56.268 1.723 56.286 2.143 ;
+     RECT  7.776 2.143 7.905 2.191 ;
+     RECT  13.176 2.143 13.305 2.191 ;
+     RECT  16.056 2.101 17.01 2.191 ;
+     RECT  17.892 2.101 18.81 2.191 ;
+     RECT  23.364 2.143 24.318 2.191 ;
+     RECT  28.08 0.059 28.098 2.191 ;
+     RECT  28.872 2.143 29.79 2.191 ;
+     RECT  30.672 1.723 30.69 2.191 ;
+     RECT  37.224 0.091 37.242 2.191 ;
+     RECT  38.124 1.723 38.142 2.191 ;
+     RECT  43.488 0.091 43.506 2.191 ;
+     RECT  44.388 1.723 44.406 2.191 ;
+     RECT  45.324 2.143 45.705 2.191 ;
+     RECT  46.728 1.723 47.142 2.191 ;
+     RECT  49.896 1.723 49.914 2.191 ;
+     RECT  50.868 2.143 51.105 2.191 ;
+     RECT  51.84 1.723 51.858 2.191 ;
+     RECT  52.704 0.571 52.722 2.191 ;
+     RECT  54.54 1.723 54.558 2.191 ;
+     RECT  55.332 0.091 55.35 2.191 ;
+     RECT  56.268 2.143 56.505 2.191 ;
+     RECT  57.348 1.723 57.366 2.191 ;
+     RECT  4.176 2.191 4.374 2.227 ;
+     RECT  5.112 2.191 5.238 2.227 ;
+     RECT  21.564 2.191 21.654 2.227 ;
+     RECT  23.364 2.191 26.154 2.227 ;
+     RECT  36.396 1.723 36.414 2.227 ;
+     RECT  37.224 2.191 38.142 2.227 ;
+     RECT  49.788 2.191 49.914 2.227 ;
+     RECT  50.868 2.191 51.858 2.227 ;
+     RECT  54.54 2.191 57.366 2.251 ;
+     RECT  4.176 2.227 5.238 2.263 ;
+     RECT  6.948 2.191 7.905 2.263 ;
+     RECT  15.156 2.191 17.01 2.263 ;
+     RECT  27.036 2.191 28.098 2.263 ;
+     RECT  28.872 2.191 30.69 2.263 ;
+     RECT  31.608 0.091 31.626 2.263 ;
+     RECT  34.668 1.723 35.334 2.263 ;
+     RECT  36.396 2.227 38.142 2.263 ;
+     RECT  39.168 2.143 40.842 2.263 ;
+     RECT  42.552 0.091 42.57 2.263 ;
+     RECT  43.488 2.191 44.406 2.263 ;
+     RECT  2.415 2.143 3.294 2.299 ;
+     RECT  4.176 2.263 6.03 2.299 ;
+     RECT  8.748 2.191 9.702 2.299 ;
+     RECT  11.484 2.191 13.305 2.335 ;
+     RECT  14.256 2.263 17.01 2.335 ;
+     RECT  27.036 2.263 31.626 2.335 ;
+     RECT  34.668 2.263 35.478 2.335 ;
+     RECT  36.396 2.263 40.842 2.335 ;
+     RECT  48.276 1.723 48.978 2.335 ;
+     RECT  49.788 2.227 51.858 2.335 ;
+     RECT  53.532 0.091 53.55 2.335 ;
+     RECT  54.54 2.251 58.086 2.335 ;
+     RECT  2.415 2.299 6.03 2.371 ;
+     RECT  6.84 2.263 7.905 2.371 ;
+     RECT  8.748 2.299 10.602 2.371 ;
+     RECT  11.484 2.335 17.01 2.371 ;
+     RECT  17.892 2.191 18.918 2.371 ;
+     RECT  23.364 2.227 26.262 2.371 ;
+     RECT  27.036 2.335 31.842 2.371 ;
+     RECT  32.796 0.091 33.462 2.371 ;
+     RECT  34.596 2.335 35.478 2.371 ;
+     RECT  36.396 2.335 40.986 2.371 ;
+     RECT  41.76 0.571 41.778 2.371 ;
+     RECT  42.552 2.263 44.406 2.371 ;
+     RECT  45.324 2.191 47.142 2.371 ;
+     RECT  48.276 2.335 51.858 2.371 ;
+     RECT  52.596 2.191 52.722 2.371 ;
+     RECT  53.532 2.335 58.086 2.371 ;
+     RECT  23.364 2.371 31.842 2.461 ;
+     RECT  32.796 2.371 47.394 2.461 ;
+     RECT  48.276 2.371 58.086 2.489 ;
+     RECT  2.415 2.371 10.602 2.497 ;
+     RECT  11.484 2.371 18.954 2.497 ;
+     RECT  21.492 2.227 21.654 2.497 ;
+     RECT  22.428 2.371 22.482 2.497 ;
+     RECT  23.364 2.461 47.394 2.525 ;
+     RECT  2.415 2.497 18.954 2.533 ;
+     RECT  19.728 2.191 20.646 2.533 ;
+     RECT  21.492 2.497 22.482 2.641 ;
+     RECT  23.364 2.525 37.17 2.641 ;
+     RECT  37.944 2.525 47.394 2.641 ;
+     RECT  48.276 2.489 49.05 2.641 ;
+     RECT  2.415 2.533 20.646 2.759 ;
+     RECT  37.944 2.641 49.05 2.759 ;
+     RECT  2.415 2.759 12.294 2.795 ;
+     RECT  13.104 2.759 20.646 2.795 ;
+     RECT  21.42 2.641 37.17 2.795 ;
+     RECT  41.328 2.759 46.638 2.795 ;
+     RECT  47.376 2.759 49.05 2.795 ;
+     RECT  49.788 2.489 58.086 2.795 ;
+     RECT  2.415 2.795 5.886 2.803 ;
+     RECT  49.788 2.795 50.13 2.831 ;
+     RECT  51.015 2.795 58.086 2.911 ;
+     RECT  45.252 2.795 46.638 3.029 ;
+     RECT  6.624 2.795 9.378 3.065 ;
+     RECT  13.104 2.795 16.506 3.101 ;
+     RECT  2.34 2.803 5.886 3.145 ;
+     RECT  18.18 2.795 20.646 3.209 ;
+     RECT  2.304 3.145 5.886 3.245 ;
+     RECT  6.66 3.065 9.378 3.299 ;
+     RECT  10.152 2.795 11.97 3.299 ;
+     RECT  13.104 3.101 13.698 3.299 ;
+     RECT  14.472 3.101 16.506 3.299 ;
+     RECT  17.244 2.795 17.442 3.299 ;
+     RECT  18.216 3.209 20.646 3.299 ;
+     RECT  21.42 2.795 32.022 3.299 ;
+     RECT  45.252 3.029 46.53 3.299 ;
+     RECT  47.88 2.795 49.05 3.301 ;
+     RECT  17.244 3.299 17.262 3.341 ;
+     RECT  18.252 3.299 20.646 3.343 ;
+     RECT  21.42 3.299 27.522 3.343 ;
+     RECT  32.976 2.795 37.17 3.343 ;
+     RECT  18.252 3.343 27.522 3.407 ;
+     RECT  13.104 3.299 13.554 3.437 ;
+     RECT  11.952 3.299 11.97 3.541 ;
+     RECT  13.104 3.437 13.497 3.541 ;
+     RECT  28.548 3.299 32.022 3.541 ;
+     RECT  32.976 3.343 37.494 3.541 ;
+     RECT  38.304 2.759 40.497 3.541 ;
+     RECT  41.328 2.795 44.442 3.541 ;
+     RECT  45.252 3.299 45.99 3.541 ;
+     RECT  2.34 3.245 5.886 3.569 ;
+     RECT  10.152 3.299 10.854 3.569 ;
+     RECT  14.508 3.299 16.506 3.569 ;
+     RECT  41.328 3.541 45.99 3.569 ;
+     RECT  47.88 3.301 49.338 3.629 ;
+     RECT  14.544 3.569 16.506 3.641 ;
+     RECT  44.424 3.569 45.897 3.641 ;
+     RECT  28.548 3.541 32.202 3.649 ;
+     RECT  32.976 3.541 40.497 3.649 ;
+     RECT  48.024 3.629 49.338 3.649 ;
+     RECT  50.112 2.831 50.13 3.649 ;
+     RECT  14.724 3.641 16.506 3.685 ;
+     RECT  48.024 3.649 50.13 3.839 ;
+     RECT  28.548 3.649 40.497 3.847 ;
+     RECT  41.328 3.569 43.686 3.847 ;
+     RECT  4.356 3.569 5.886 3.883 ;
+     RECT  50.076 3.839 50.13 3.931 ;
+     RECT  51.015 2.911 58.158 3.931 ;
+     RECT  50.076 3.931 58.158 3.955 ;
+     RECT  2.34 3.569 3.618 3.965 ;
+     RECT  4.356 3.883 6.138 3.965 ;
+     RECT  50.076 3.955 58.194 3.983 ;
+     RECT  14.724 3.685 17.01 4.081 ;
+     RECT  22.968 3.407 27.522 4.081 ;
+     RECT  4.356 3.965 4.374 4.109 ;
+     RECT  5.328 3.965 6.138 4.109 ;
+     RECT  2.34 3.965 2.826 4.145 ;
+     RECT  3.6 3.965 3.618 4.145 ;
+     RECT  7.308 3.299 9.378 4.157 ;
+     RECT  5.4 4.109 6.138 4.189 ;
+     RECT  11.952 3.541 13.497 4.189 ;
+     RECT  22.968 4.081 27.666 4.189 ;
+     RECT  11.628 4.189 13.497 4.261 ;
+     RECT  2.34 4.145 2.697 4.289 ;
+     RECT  5.4 4.189 6.822 4.289 ;
+     RECT  18.252 3.407 22.122 4.289 ;
+     RECT  44.532 3.641 45.897 4.379 ;
+     RECT  48.024 3.839 49.338 4.379 ;
+     RECT  59.004 0.091 59.022 4.379 ;
+     RECT  7.596 4.157 9.378 4.423 ;
+     RECT  10.152 3.569 10.602 4.423 ;
+     RECT  7.596 4.423 10.602 4.459 ;
+     RECT  11.484 4.261 13.497 4.459 ;
+     RECT  48.024 4.379 48.042 4.495 ;
+     RECT  28.548 3.847 43.686 4.523 ;
+     RECT  22.968 4.189 27.702 4.531 ;
+     RECT  39.96 4.523 43.686 4.531 ;
+     RECT  39.96 4.531 43.83 4.541 ;
+     RECT  47.772 4.495 48.042 4.541 ;
+     RECT  7.596 4.459 13.497 4.559 ;
+     RECT  40.104 4.541 40.497 4.559 ;
+     RECT  18.252 4.289 21.258 4.621 ;
+     RECT  22.32 4.531 27.702 4.621 ;
+     RECT  28.548 4.523 39.222 4.621 ;
+     RECT  51.015 3.983 58.194 4.649 ;
+     RECT  59.832 3.931 59.85 4.649 ;
+     RECT  10.296 4.559 13.497 4.657 ;
+     RECT  14.724 4.081 17.118 4.657 ;
+     RECT  17.964 4.621 21.258 4.657 ;
+     RECT  41.328 4.541 43.83 4.685 ;
+     RECT  51.015 4.649 56.97 4.801 ;
+     RECT  5.4 4.289 6.786 4.891 ;
+     RECT  50.076 3.983 50.094 4.891 ;
+     RECT  4.968 4.891 6.786 4.919 ;
+     RECT  10.296 4.657 21.258 4.919 ;
+     RECT  57.888 4.649 58.194 4.919 ;
+     RECT  4.968 4.919 5.418 4.928 ;
+     RECT  48.924 4.379 49.338 4.939 ;
+     RECT  50.076 4.891 50.202 4.939 ;
+     RECT  50.976 4.801 56.97 4.939 ;
+     RECT  5.4 4.928 5.418 4.955 ;
+     RECT  48.924 4.939 56.97 4.955 ;
+     RECT  48.924 4.955 53.694 4.973 ;
+     RECT  58.176 4.919 58.194 4.991 ;
+     RECT  14.328 4.919 21.258 5.035 ;
+     RECT  22.32 4.621 39.222 5.035 ;
+     RECT  6.192 4.919 6.786 5.071 ;
+     RECT  7.596 4.559 8.982 5.071 ;
+     RECT  45.252 4.379 45.897 5.071 ;
+     RECT  4.284 5.071 4.302 5.117 ;
+     RECT  48.924 4.973 52.866 5.189 ;
+     RECT  6.192 5.071 8.982 5.225 ;
+     RECT  47.916 4.541 48.042 5.323 ;
+     RECT  7.056 5.225 8.982 5.459 ;
+     RECT  47.916 5.323 48.15 5.459 ;
+     RECT  7.38 5.459 8.982 5.495 ;
+     RECT  51.015 5.189 52.866 5.495 ;
+     RECT  14.328 5.035 39.222 5.575 ;
+     RECT  48.924 5.189 50.094 5.575 ;
+     RECT  10.296 4.919 13.554 5.605 ;
+     RECT  8.964 5.495 8.982 5.611 ;
+     RECT  9.936 5.605 13.554 5.611 ;
+     RECT  14.328 5.575 39.366 5.611 ;
+     RECT  40.215 4.559 40.497 5.611 ;
+     RECT  7.38 5.495 8.097 5.693 ;
+     RECT  8.964 5.611 13.554 5.729 ;
+     RECT  48.78 5.575 50.094 5.729 ;
+     RECT  8.964 5.729 9.054 5.765 ;
+     RECT  9.792 5.729 13.554 5.765 ;
+     RECT  49.14 5.729 50.094 5.765 ;
+     RECT  14.328 5.611 40.497 5.881 ;
+     RECT  41.328 4.685 42.066 5.995 ;
+     RECT  42.876 4.685 43.83 5.995 ;
+     RECT  10.296 5.765 13.554 6.007 ;
+     RECT  14.328 5.881 40.59 6.007 ;
+     RECT  5.112 5.947 5.13 6.151 ;
+     RECT  4.5 6.151 5.13 6.241 ;
+     RECT  47.916 5.459 48.042 6.241 ;
+     RECT  4.356 6.241 5.13 6.269 ;
+     RECT  41.328 5.995 43.83 6.317 ;
+     RECT  3.456 6.235 3.474 6.421 ;
+     RECT  45.252 5.071 46.098 6.421 ;
+     RECT  51.015 5.495 51.57 6.691 ;
+     RECT  51.015 6.691 51.858 6.809 ;
+     RECT  42.876 6.317 43.83 6.845 ;
+     RECT  49.14 5.765 49.338 6.881 ;
+     RECT  3.456 6.421 3.618 6.961 ;
+     RECT  4.356 6.269 4.662 6.961 ;
+     RECT  41.328 6.317 42.066 7.087 ;
+     RECT  3.456 6.961 4.662 7.123 ;
+     RECT  3.456 7.123 4.878 7.133 ;
+     RECT  10.296 6.007 40.59 7.159 ;
+     RECT  8.964 5.765 8.982 7.195 ;
+     RECT  9.756 7.159 40.59 7.195 ;
+     RECT  41.328 7.087 42.786 7.223 ;
+     RECT  2.415 4.289 2.697 7.231 ;
+     RECT  6.192 5.225 6.21 7.231 ;
+     RECT  7.596 5.693 8.097 7.231 ;
+     RECT  8.964 7.195 40.59 7.231 ;
+     RECT  41.328 7.223 42.066 7.231 ;
+     RECT  7.596 7.231 42.066 7.259 ;
+     RECT  7.815 7.259 42.066 7.277 ;
+     RECT  3.564 7.133 4.878 7.349 ;
+     RECT  3.636 7.349 4.878 7.501 ;
+     RECT  6.012 7.231 6.21 7.591 ;
+     RECT  2.415 7.231 2.79 7.619 ;
+     RECT  53.676 4.973 53.694 7.663 ;
+     RECT  54.468 4.955 56.97 7.663 ;
+     RECT  41.328 7.277 42.066 7.691 ;
+     RECT  2.415 7.619 2.697 7.723 ;
+     RECT  6.012 7.591 6.246 7.735 ;
+     RECT  2.304 7.723 2.697 7.763 ;
+     RECT  6.012 7.735 6.858 7.771 ;
+     RECT  5.904 7.771 6.858 7.889 ;
+     RECT  3.636 7.501 5.058 8.041 ;
+     RECT  3.636 8.041 5.13 8.195 ;
+     RECT  3.636 8.195 4.878 8.203 ;
+     RECT  5.904 7.889 6.462 8.24 ;
+     RECT  7.815 7.277 40.59 8.311 ;
+     RECT  41.328 7.691 41.526 8.311 ;
+     RECT  49.212 6.881 49.338 8.395 ;
+     RECT  5.904 8.24 6.21 8.401 ;
+     RECT  45.252 6.421 46.818 8.401 ;
+     RECT  47.916 6.241 48.258 8.401 ;
+     RECT  49.032 8.395 49.338 8.509 ;
+     RECT  50.076 5.765 50.094 8.509 ;
+     RECT  52.74 5.495 52.866 8.581 ;
+     RECT  53.676 7.663 56.97 8.581 ;
+     RECT  3.456 8.203 4.878 8.735 ;
+     RECT  49.032 8.509 50.094 8.743 ;
+     RECT  51.015 6.809 51.714 8.743 ;
+     RECT  52.596 8.581 52.866 8.743 ;
+     RECT  45.252 8.401 48.258 8.779 ;
+     RECT  49.032 8.743 52.866 8.779 ;
+     RECT  7.815 8.311 41.526 8.851 ;
+     RECT  53.676 8.581 57.258 8.851 ;
+     RECT  45.252 8.779 52.866 8.879 ;
+     RECT  3.708 8.735 4.878 9.005 ;
+     RECT  58.176 8.851 58.194 9.077 ;
+     RECT  7.815 8.851 41.67 9.149 ;
+     RECT  45.252 8.879 46.17 9.239 ;
+     RECT  46.98 8.879 52.866 9.275 ;
+     RECT  45.252 9.239 45.99 9.293 ;
+     RECT  50.724 9.275 52.866 9.319 ;
+     RECT  53.676 8.851 57.33 9.319 ;
+     RECT  46.98 9.275 49.77 9.347 ;
+     RECT  25.092 9.149 41.67 9.383 ;
+     RECT  3.708 9.005 4.662 9.389 ;
+     RECT  46.98 9.347 49.158 9.661 ;
+     RECT  36.612 9.383 41.67 9.781 ;
+     RECT  43.596 6.845 43.83 9.787 ;
+     RECT  59.256 9.739 59.274 9.815 ;
+     RECT  43.236 9.787 43.83 9.824 ;
+     RECT  36.612 9.781 41.742 9.931 ;
+     RECT  43.596 9.824 43.83 9.931 ;
+     RECT  45.252 9.293 45.897 9.931 ;
+     RECT  50.724 9.319 57.33 10.093 ;
+     RECT  36.612 9.931 42.066 10.165 ;
+     RECT  43.596 9.931 44.262 10.193 ;
+     RECT  43.704 10.193 44.262 10.201 ;
+     RECT  45.036 9.931 45.897 10.291 ;
+     RECT  46.872 9.661 49.158 10.291 ;
+     RECT  50.292 10.093 57.33 10.291 ;
+     RECT  7.815 9.149 24.297 10.327 ;
+     RECT  25.092 9.383 35.874 10.327 ;
+     RECT  50.148 10.291 57.33 10.363 ;
+     RECT  43.704 10.201 44.298 10.391 ;
+     RECT  7.815 10.327 35.874 10.427 ;
+     RECT  50.076 10.363 57.33 10.471 ;
+     RECT  7.815 10.427 32.958 10.589 ;
+     RECT  50.076 10.471 57.906 10.633 ;
+     RECT  8.892 10.589 32.958 10.637 ;
+     RECT  45.036 10.291 49.158 10.705 ;
+     RECT  33.696 10.427 35.874 10.903 ;
+     RECT  36.612 10.165 42.102 10.903 ;
+     RECT  44.46 10.705 49.158 10.939 ;
+     RECT  49.932 10.633 57.906 10.939 ;
+     RECT  44.46 10.939 57.906 11.011 ;
+     RECT  33.696 10.903 42.102 11.137 ;
+     RECT  44.46 11.011 58.194 11.165 ;
+     RECT  33.696 11.137 42.822 11.281 ;
+     RECT  43.704 10.391 43.722 11.281 ;
+     RECT  7.815 10.589 8.097 11.371 ;
+     RECT  8.892 10.637 24.57 11.371 ;
+     RECT  33.696 11.281 43.722 11.371 ;
+     RECT  44.46 11.165 54.234 11.371 ;
+     RECT  7.668 11.371 24.57 11.407 ;
+     RECT  7.596 11.407 24.57 11.641 ;
+     RECT  5.688 8.401 6.21 11.659 ;
+     RECT  7.056 11.641 24.57 11.677 ;
+     RECT  6.984 11.677 24.57 11.713 ;
+     RECT  25.38 10.637 32.958 11.713 ;
+     RECT  6.984 11.713 32.958 11.749 ;
+     RECT  6.948 11.749 32.958 11.813 ;
+     RECT  3.852 9.389 4.662 11.821 ;
+     RECT  5.58 11.659 6.21 11.821 ;
+     RECT  33.696 11.371 54.234 12.019 ;
+     RECT  54.972 11.165 58.194 12.019 ;
+     RECT  25.38 11.813 32.958 12.043 ;
+     RECT  33.696 12.019 58.194 12.043 ;
+     RECT  3.852 11.821 6.21 12.181 ;
+     RECT  6.948 11.813 24.534 12.181 ;
+     RECT  25.38 12.043 58.194 12.353 ;
+     RECT  3.852 12.181 24.534 12.631 ;
+     RECT  3.852 12.631 24.57 12.829 ;
+     RECT  25.38 12.353 57.294 12.829 ;
+     RECT  3.852 12.829 57.294 13.171 ;
+     RECT  3.78 13.171 57.294 13.325 ;
+     RECT  58.068 12.353 58.194 13.739 ;
+     RECT  17.82 13.325 57.294 14.135 ;
+     RECT  3.78 13.325 17.082 14.251 ;
+     RECT  17.82 14.135 49.158 14.251 ;
+     RECT  50.04 14.135 57.294 14.251 ;
+     RECT  58.068 13.739 58.086 14.251 ;
+     RECT  3.78 14.251 49.158 14.647 ;
+     RECT  3.6 14.647 49.158 14.783 ;
+     RECT  25.02 14.783 49.158 14.881 ;
+     RECT  50.04 14.251 58.086 15.016 ;
+     RECT  3.6 14.783 24.297 15.089 ;
+     RECT  3.6 15.089 13.734 15.187 ;
+     RECT  25.02 14.881 49.266 15.457 ;
+     RECT  50.04 15.016 58.194 15.457 ;
+     RECT  2.415 7.763 2.697 15.601 ;
+     RECT  3.492 15.187 13.734 15.601 ;
+     RECT  50.04 15.457 58.734 15.629 ;
+     RECT  14.508 15.089 24.297 15.691 ;
+     RECT  25.02 15.457 49.302 15.691 ;
+     RECT  50.04 15.629 58.086 15.691 ;
+     RECT  14.508 15.691 58.086 15.869 ;
+     RECT  2.376 15.601 13.734 15.871 ;
+     RECT  14.508 15.869 24.606 15.871 ;
+     RECT  2.376 15.871 24.606 16.259 ;
+     RECT  25.344 15.869 58.086 16.601 ;
+     RECT  25.38 16.601 58.086 16.681 ;
+     RECT  2.376 16.259 19.17 16.747 ;
+     RECT  2.304 16.747 19.17 16.835 ;
+     RECT  25.38 16.681 58.194 17.069 ;
+     RECT  19.944 16.259 24.534 17.323 ;
+     RECT  25.38 17.069 58.086 17.323 ;
+     RECT  2.412 16.835 19.17 17.371 ;
+     RECT  19.944 17.323 58.086 17.371 ;
+     RECT  2.412 17.371 58.086 17.411 ;
+     RECT  2.412 17.411 42.75 17.609 ;
+     RECT  2.415 17.609 42.75 18.535 ;
+     RECT  43.524 17.411 58.086 18.535 ;
+     RECT  2.415 18.535 58.086 18.689 ;
+     RECT  20.16 18.689 58.086 18.761 ;
+     RECT  2.415 18.689 19.242 19.615 ;
+     RECT  20.16 18.761 46.422 19.615 ;
+     RECT  47.16 18.761 58.086 19.615 ;
+     RECT  2.376 19.615 19.242 19.741 ;
+     RECT  2.376 19.741 19.386 19.769 ;
+     RECT  20.16 19.615 58.086 19.805 ;
+     RECT  2.415 19.769 19.386 20.551 ;
+     RECT  20.16 19.805 42.282 20.551 ;
+     RECT  2.415 20.551 42.282 20.579 ;
+     RECT  43.164 19.805 58.086 20.587 ;
+     RECT  28.764 20.579 42.282 20.723 ;
+     RECT  28.8 20.723 42.282 21.163 ;
+     RECT  43.056 20.587 58.086 21.163 ;
+     RECT  2.415 20.579 27.918 21.211 ;
+     RECT  2.304 21.211 27.918 21.263 ;
+     RECT  59.256 21.397 59.274 21.485 ;
+     RECT  2.415 21.263 27.918 21.631 ;
+     RECT  28.8 21.163 58.086 21.631 ;
+     RECT  2.415 21.631 58.086 22.045 ;
+     RECT  2.415 22.045 58.194 22.199 ;
+     RECT  19.8 22.199 58.194 22.739 ;
+     RECT  2.415 22.199 19.062 23.161 ;
+     RECT  19.8 22.739 58.086 23.161 ;
+     RECT  2.376 23.161 58.086 23.827 ;
+     RECT  2.376 23.827 58.23 24.395 ;
+     RECT  2.415 24.395 58.23 24.665 ;
+     RECT  2.415 24.665 27.882 25.483 ;
+     RECT  28.656 24.665 58.23 25.483 ;
+     RECT  2.415 25.483 58.23 25.547 ;
+     RECT  7.704 25.547 58.23 25.583 ;
+     RECT  2.415 25.547 6.966 25.717 ;
+     RECT  2.304 25.717 6.966 25.757 ;
+     RECT  2.415 25.757 6.966 26.635 ;
+     RECT  7.815 25.583 58.23 26.635 ;
+     RECT  59.256 27.307 59.274 27.365 ;
+     RECT  2.415 26.635 58.23 30.235 ;
+     RECT  2.304 30.235 58.23 30.605 ;
+     RECT  2.415 30.605 58.23 31.531 ;
+     RECT  2.376 31.531 58.23 31.829 ;
+     RECT  59.292 33.007 59.31 33.197 ;
+     RECT  2.415 31.829 58.23 34.627 ;
+     RECT  2.304 34.627 58.23 34.733 ;
+     RECT  2.34 34.733 58.23 34.889 ;
+     RECT  2.415 34.889 58.23 35.069 ;
+     RECT  17.676 35.069 58.23 36.247 ;
+     RECT  17.604 36.247 58.23 36.317 ;
+     RECT  2.415 35.069 16.722 36.553 ;
+     RECT  2.415 36.553 16.758 37.165 ;
+     RECT  17.64 36.317 58.23 37.165 ;
+     RECT  2.415 37.165 58.23 38.011 ;
+     RECT  59.256 38.947 59.274 39.053 ;
+     RECT  2.376 38.011 58.23 39.361 ;
+     RECT  2.304 39.361 58.23 39.479 ;
+     RECT  2.376 39.479 58.23 39.749 ;
+     RECT  2.415 39.749 58.23 40.973 ;
+     RECT  39.78 40.973 58.23 41.009 ;
+     RECT  39.96 41.009 58.23 41.099 ;
+     RECT  2.415 40.973 39.042 41.549 ;
+     RECT  40.104 41.099 58.23 41.549 ;
+     RECT  40.215 41.549 58.23 42.379 ;
+     RECT  39.78 42.379 58.23 42.449 ;
+     RECT  2.415 41.549 39.006 42.955 ;
+     RECT  2.415 42.955 39.294 43.267 ;
+     RECT  40.14 42.449 58.23 43.267 ;
+     RECT  2.415 43.267 58.23 43.645 ;
+     RECT  2.304 43.645 58.23 43.757 ;
+     RECT  2.376 43.757 58.23 43.799 ;
+     RECT  34.38 43.799 58.23 43.835 ;
+     RECT  34.668 43.835 58.23 44.617 ;
+     RECT  34.56 44.617 58.23 44.725 ;
+     RECT  34.524 44.725 58.23 44.851 ;
+     RECT  2.415 43.799 33.606 44.879 ;
+     RECT  3.42 44.879 33.606 44.887 ;
+     RECT  34.416 44.851 58.23 44.887 ;
+     RECT  59.256 44.827 59.274 44.915 ;
+     RECT  3.42 44.887 58.23 45.185 ;
+     RECT  18.216 45.185 58.23 45.293 ;
+     RECT  18.324 45.293 58.23 45.419 ;
+     RECT  2.415 44.879 2.697 45.841 ;
+     RECT  3.42 45.185 17.37 45.841 ;
+     RECT  18.615 45.419 58.23 46.201 ;
+     RECT  2.415 45.841 17.37 46.309 ;
+     RECT  18.216 46.201 58.23 46.309 ;
+     RECT  2.415 46.309 58.23 46.885 ;
+     RECT  2.376 46.885 58.23 47.039 ;
+     RECT  2.376 47.039 10.998 47.695 ;
+     RECT  1.764 47.695 10.998 48.331 ;
+     RECT  11.808 47.039 58.23 48.331 ;
+     RECT  1.764 48.331 58.23 48.389 ;
+     RECT  1.764 48.389 57.762 48.659 ;
+     RECT  7.38 48.659 57.762 48.929 ;
+     RECT  1.764 48.659 6.606 48.965 ;
+     RECT  7.38 48.929 8.097 48.965 ;
+     RECT  7.704 48.965 8.097 49.001 ;
+     RECT  8.82 48.929 57.762 49.235 ;
+     RECT  1.764 48.965 5.706 49.469 ;
+     RECT  9.684 49.235 57.762 49.469 ;
+     RECT  9.684 49.469 9.774 49.577 ;
+     RECT  10.512 49.469 57.762 50.107 ;
+     RECT  10.512 50.107 58.194 50.153 ;
+     RECT  1.764 49.469 4.878 50.431 ;
+     RECT  5.688 49.469 5.706 50.431 ;
+     RECT  8.82 49.235 8.946 50.431 ;
+     RECT  9.684 49.577 9.702 50.431 ;
+     RECT  6.588 48.965 6.606 50.701 ;
+     RECT  58.716 50.557 58.734 50.717 ;
+     RECT  6.516 50.701 6.606 50.729 ;
+     RECT  7.815 49.001 8.097 50.791 ;
+     RECT  8.82 50.431 9.702 50.791 ;
+     RECT  10.512 50.153 57.798 50.971 ;
+     RECT  7.815 50.791 9.702 51.233 ;
+     RECT  10.512 50.971 58.122 51.395 ;
+     RECT  39.924 51.395 58.122 51.665 ;
+     RECT  9.684 51.233 9.702 51.883 ;
+     RECT  6.516 50.729 6.534 51.943 ;
+     RECT  40.215 51.665 58.122 51.971 ;
+     RECT  7.815 51.233 8.946 51.979 ;
+     RECT  9.684 51.883 9.738 51.979 ;
+     RECT  6.516 51.943 6.858 52.079 ;
+     RECT  7.815 51.979 9.738 52.169 ;
+     RECT  7.815 52.169 9.702 52.439 ;
+     RECT  10.512 51.395 39.186 52.547 ;
+     RECT  40.215 51.971 58.014 52.583 ;
+     RECT  10.512 52.547 38.178 52.709 ;
+     RECT  10.512 52.709 37.386 53.095 ;
+     RECT  7.815 52.439 8.946 53.159 ;
+     RECT  9.684 52.439 9.702 53.221 ;
+     RECT  10.476 53.095 37.386 53.221 ;
+     RECT  1.764 50.431 5.706 53.249 ;
+     RECT  7.815 53.159 8.874 53.321 ;
+     RECT  8.82 53.321 8.874 53.429 ;
+     RECT  9.684 53.221 37.386 53.599 ;
+     RECT  38.16 52.709 38.178 53.599 ;
+     RECT  9.684 53.599 38.178 53.627 ;
+     RECT  31.248 53.627 38.178 53.635 ;
+     RECT  39.168 52.547 39.186 53.635 ;
+     RECT  9.684 53.627 30.474 53.663 ;
+     RECT  31.248 53.635 39.186 54.131 ;
+     RECT  10.44 53.663 30.474 54.203 ;
+     RECT  31.32 54.131 39.186 54.329 ;
+     RECT  11.52 54.203 30.474 54.401 ;
+     RECT  1.764 53.249 4.878 54.427 ;
+     RECT  5.688 53.249 5.706 54.427 ;
+     RECT  1.764 54.427 5.706 54.473 ;
+     RECT  31.32 54.329 37.386 54.509 ;
+     RECT  38.16 54.329 39.186 54.509 ;
+     RECT  38.196 54.509 39.186 54.599 ;
+     RECT  37.332 54.509 37.386 54.671 ;
+     RECT  38.844 54.599 39.186 54.671 ;
+     RECT  40.215 52.583 57.762 54.707 ;
+     RECT  5.616 54.473 5.706 54.743 ;
+     RECT  8.856 53.429 8.874 54.751 ;
+     RECT  9.684 53.663 9.702 54.751 ;
+     RECT  31.32 54.509 36.558 55.175 ;
+     RECT  41.292 54.707 57.762 55.175 ;
+     RECT  42.156 55.175 57.762 55.229 ;
+     RECT  31.32 55.175 35.658 55.409 ;
+     RECT  42.192 55.229 57.762 55.409 ;
+     RECT  5.616 54.743 5.634 55.525 ;
+     RECT  42.192 55.409 57.69 55.553 ;
+     RECT  36.54 55.175 36.558 55.561 ;
+     RECT  37.332 54.671 37.35 55.561 ;
+     RECT  31.32 55.409 35.622 55.579 ;
+     RECT  11.808 54.401 30.474 55.589 ;
+     RECT  36.54 55.561 37.35 55.589 ;
+     RECT  11.88 55.589 30.474 55.679 ;
+     RECT  31.284 55.579 35.622 55.679 ;
+     RECT  17.532 55.679 17.622 55.715 ;
+     RECT  31.356 55.679 35.622 55.715 ;
+     RECT  40.215 54.707 40.554 55.759 ;
+     RECT  41.292 55.175 41.31 55.759 ;
+     RECT  31.464 55.715 35.622 55.853 ;
+     RECT  12.816 55.679 16.794 55.859 ;
+     RECT  36.576 55.589 37.35 55.859 ;
+     RECT  31.572 55.853 35.622 55.901 ;
+     RECT  31.824 55.901 35.622 55.949 ;
+     RECT  18.615 55.679 30.474 55.955 ;
+     RECT  12.816 55.859 16.722 55.985 ;
+     RECT  32.904 55.949 35.622 55.985 ;
+     RECT  18.615 55.955 19.422 56.057 ;
+     RECT  14.796 55.985 14.85 56.093 ;
+     RECT  34.452 55.985 35.622 56.093 ;
+     RECT  1.764 54.473 4.698 56.101 ;
+     RECT  15.912 55.985 16.722 56.129 ;
+     RECT  32.904 55.985 33.714 56.129 ;
+     RECT  34.56 56.093 35.622 56.129 ;
+     RECT  37.332 55.859 37.35 56.129 ;
+     RECT  42.732 55.553 57.69 56.191 ;
+     RECT  8.856 54.751 9.702 56.219 ;
+     RECT  15.984 56.129 16.722 56.219 ;
+     RECT  32.904 56.129 33.642 56.219 ;
+     RECT  34.56 56.129 35.097 56.219 ;
+     RECT  32.904 56.219 33.426 56.327 ;
+     RECT  1.764 56.101 4.734 56.371 ;
+     RECT  5.616 55.525 5.742 56.371 ;
+     RECT  16.02 56.219 16.722 56.399 ;
+     RECT  11.88 55.679 11.898 56.489 ;
+     RECT  42.732 56.191 58.122 56.489 ;
+     RECT  20.196 55.955 30.474 56.525 ;
+     RECT  58.716 56.533 58.734 56.573 ;
+     RECT  42.732 56.489 57.618 56.669 ;
+     RECT  40.215 55.759 41.31 56.903 ;
+     RECT  31.824 55.949 31.842 56.911 ;
+     RECT  31.752 56.911 31.842 56.939 ;
+     RECT  12.816 55.985 13.95 57.029 ;
+     RECT  42.876 56.669 57.618 57.029 ;
+     RECT  42.876 57.029 57.042 57.137 ;
+     RECT  1.764 56.371 5.742 57.145 ;
+     RECT  6.516 52.079 6.534 57.145 ;
+     RECT  34.815 56.219 35.097 57.181 ;
+     RECT  10.44 54.203 10.458 57.209 ;
+     RECT  1.764 57.145 6.534 57.299 ;
+     RECT  20.304 56.525 30.474 57.299 ;
+     RECT  34.815 57.181 35.19 57.299 ;
+     RECT  28.98 57.299 30.474 57.479 ;
+     RECT  20.304 57.299 28.206 57.569 ;
+     RECT  29.415 57.479 30.474 57.581 ;
+     RECT  20.304 57.569 26.082 57.605 ;
+     RECT  39.168 54.671 39.186 57.613 ;
+     RECT  42.876 57.137 46.674 57.629 ;
+     RECT  42.876 57.629 43.722 57.641 ;
+     RECT  39.06 57.613 39.186 57.649 ;
+     RECT  20.304 57.605 24.426 57.677 ;
+     RECT  40.215 56.903 40.554 57.685 ;
+     RECT  41.292 56.903 41.31 57.685 ;
+     RECT  25.38 57.605 26.082 57.713 ;
+     RECT  38.772 57.649 39.186 57.713 ;
+     RECT  27.18 57.569 28.206 57.722 ;
+     RECT  25.452 57.713 26.082 57.749 ;
+     RECT  47.412 57.137 57.042 57.749 ;
+     RECT  1.764 57.299 5.742 57.839 ;
+     RECT  20.7 57.677 24.426 57.839 ;
+     RECT  27.18 57.722 27.45 57.839 ;
+     RECT  37.908 57.649 37.926 57.839 ;
+     RECT  38.772 57.713 39.078 57.839 ;
+     RECT  44.46 57.629 46.674 57.839 ;
+     RECT  50.724 57.749 57.042 57.839 ;
+     RECT  1.764 57.839 4.734 57.875 ;
+     RECT  27.18 57.839 27.27 57.875 ;
+     RECT  47.412 57.749 49.95 57.875 ;
+     RECT  52.056 57.839 57.042 57.875 ;
+     RECT  22.068 57.839 24.426 57.911 ;
+     RECT  38.772 57.839 38.79 57.911 ;
+     RECT  43.704 57.641 43.722 57.911 ;
+     RECT  52.092 57.875 57.042 57.919 ;
+     RECT  20.7 57.839 21.042 57.947 ;
+     RECT  40.215 57.685 41.31 57.947 ;
+     RECT  20.7 57.947 20.97 57.983 ;
+     RECT  50.724 57.839 51.297 57.983 ;
+     RECT  47.484 57.875 49.95 58.013 ;
+     RECT  16.02 56.399 16.29 58.019 ;
+     RECT  1.764 57.875 4.698 58.067 ;
+     RECT  7.815 53.321 8.097 58.067 ;
+     RECT  12.816 57.029 13.497 58.067 ;
+     RECT  29.415 57.581 30.366 58.067 ;
+     RECT  34.815 57.299 35.097 58.067 ;
+     RECT  40.215 57.947 40.497 58.067 ;
+     RECT  50.796 57.983 51.297 58.067 ;
+     RECT  3.348 58.067 4.698 58.109 ;
+     RECT  22.068 57.911 24.354 58.109 ;
+     RECT  25.452 57.749 25.866 58.109 ;
+     RECT  44.46 57.839 46.062 58.109 ;
+     RECT  48.78 58.013 49.95 58.109 ;
+     RECT  52.092 57.919 57.582 58.109 ;
+     RECT  55.332 58.109 57.582 58.117 ;
+     RECT  20.772 57.983 20.97 58.145 ;
+     RECT  22.068 58.109 22.338 58.145 ;
+     RECT  23.364 58.109 24.105 58.145 ;
+     RECT  47.484 58.013 47.502 58.145 ;
+     RECT  48.78 58.109 49.23 58.145 ;
+     RECT  55.332 58.117 57.834 58.145 ;
+     RECT  56.415 58.145 57.834 58.157 ;
+     RECT  53.424 58.109 54.054 58.181 ;
+     RECT  49.104 58.145 49.23 58.217 ;
+     RECT  1.764 58.067 2.505 58.337 ;
+     RECT  7.815 58.067 7.905 58.337 ;
+     RECT  12.816 58.067 13.305 58.337 ;
+     RECT  18.615 56.057 19.17 58.337 ;
+     RECT  23.832 58.145 24.105 58.337 ;
+     RECT  29.415 58.067 29.505 58.337 ;
+     RECT  34.815 58.067 34.974 58.337 ;
+     RECT  40.215 58.067 40.305 58.337 ;
+     RECT  45.615 58.109 46.062 58.337 ;
+     RECT  50.796 58.067 51.105 58.337 ;
+     RECT  56.415 58.157 56.505 58.337 ;
+     RECT  52.38 58.109 52.398 58.685 ;
+     RECT  55.332 58.145 55.35 58.685 ;
+     RECT  4.68 58.109 4.698 58.729 ;
+     RECT  14.796 56.093 14.814 58.729 ;
+     RECT  20.772 58.145 20.79 58.729 ;
+     RECT  27.252 57.875 27.27 58.729 ;
+     RECT  31.752 56.939 31.77 58.729 ;
+     RECT  3.348 58.109 3.402 58.757 ;
+     RECT  4.68 58.729 4.95 58.757 ;
+     RECT  12.816 58.337 12.87 58.757 ;
+     RECT  14.436 58.729 14.814 58.757 ;
+     RECT  20.736 58.729 20.79 58.757 ;
+     RECT  25.452 58.109 25.506 58.757 ;
+     RECT  27.072 58.729 27.27 58.757 ;
+     RECT  30.24 58.067 30.366 58.757 ;
+     RECT  31.752 58.729 31.842 58.757 ;
+     RECT  53.424 58.181 53.442 59.309 ;
+     RECT  57.816 58.157 57.834 59.309 ;
+     RECT  28.188 57.722 28.206 59.845 ;
+     RECT  8.856 56.219 8.874 59.873 ;
+     RECT  28.188 59.845 28.674 59.873 ;
+     RECT  23.832 58.337 23.85 60.421 ;
+    LAYER M4 ;
+     RECT  0.181 30.24 2.408 30.888 ;
+     RECT  2.365 38.688 2.408 39.24 ;
+     RECT  2.401 47.856 2.408 48.264 ;
+     RECT  2.365 49.488 2.408 49.512 ;
+     RECT  2.329 52.224 2.408 52.728 ;
+     RECT  2.408 2.148 2.512 58.332 ;
+     RECT  2.512 2.418 2.704 58.062 ;
+     RECT  2.704 32.448 2.819 35.448 ;
+     RECT  2.704 16.416 2.845 18.696 ;
+     RECT  2.704 52.224 2.981 52.248 ;
+     RECT  2.704 6.24 3.485 7.128 ;
+     RECT  2.704 49.488 3.491 49.512 ;
+     RECT  2.819 32.688 3.539 35.448 ;
+     RECT  2.704 29.616 3.565 29.64 ;
+     RECT  2.845 16.416 3.58 18.168 ;
+     RECT  2.704 50.544 3.593 50.712 ;
+     RECT  3.58 16.416 3.635 17.976 ;
+     RECT  3.539 33.072 3.683 35.448 ;
+     RECT  2.704 43.776 3.697 43.8 ;
+     RECT  2.704 21.12 3.733 21.144 ;
+     RECT  2.704 47.376 3.733 47.928 ;
+     RECT  2.704 37.008 3.769 37.368 ;
+     RECT  2.704 30.864 3.805 30.888 ;
+     RECT  3.733 46.704 3.805 47.928 ;
+     RECT  3.733 21.12 3.829 21.288 ;
+     RECT  2.704 3.936 3.877 3.96 ;
+     RECT  2.704 22.848 3.877 23.4 ;
+     RECT  3.805 29.952 3.877 30.888 ;
+     RECT  3.805 46.56 3.877 47.928 ;
+     RECT  3.697 43.344 3.913 43.8 ;
+     RECT  3.877 46.512 3.913 47.928 ;
+     RECT  2.704 13.008 3.925 13.032 ;
+     RECT  2.704 53.568 3.925 53.592 ;
+     RECT  3.925 12.72 3.949 13.032 ;
+     RECT  3.877 22.848 3.949 23.64 ;
+     RECT  3.884 14.064 3.971 14.088 ;
+     RECT  3.925 53.568 3.971 54.072 ;
+     RECT  3.829 21.072 3.973 21.288 ;
+     RECT  3.913 45.648 3.985 47.928 ;
+     RECT  3.949 12.48 3.989 13.032 ;
+     RECT  3.913 55.872 3.997 55.896 ;
+     RECT  3.949 22.848 4.033 23.976 ;
+     RECT  3.683 35.28 4.165 35.448 ;
+     RECT  3.769 36.576 4.165 37.368 ;
+     RECT  2.704 38.4 4.165 41.352 ;
+     RECT  3.913 42.72 4.165 43.8 ;
+     RECT  3.697 8.496 4.211 9.384 ;
+     RECT  3.985 45.648 4.213 48.792 ;
+     RECT  4.165 11.424 4.249 11.448 ;
+     RECT  3.973 21.072 4.273 21.624 ;
+     RECT  3.683 33.072 4.307 34.104 ;
+     RECT  3.877 3.408 4.403 3.96 ;
+     RECT  4.273 5.088 4.403 5.112 ;
+     RECT  4.165 38.4 4.421 43.8 ;
+     RECT  3.485 6.24 4.46 6.696 ;
+     RECT  4.421 38.736 4.489 43.8 ;
+     RECT  4.213 45.024 4.489 48.792 ;
+     RECT  3.877 29.952 4.525 31.128 ;
+     RECT  4.211 8.496 4.745 9 ;
+     RECT  3.635 16.944 4.745 17.976 ;
+     RECT  4.033 22.848 4.813 23.64 ;
+     RECT  4.412 25.296 4.813 25.32 ;
+     RECT  3.989 12.48 4.885 12.744 ;
+     RECT  4.525 29.952 4.885 31.944 ;
+     RECT  4.813 22.752 4.921 23.64 ;
+     RECT  4.813 25.104 4.921 25.32 ;
+     RECT  4.453 28.944 4.921 28.968 ;
+     RECT  4.885 29.952 4.921 32.232 ;
+     RECT  4.921 28.944 4.933 32.232 ;
+     RECT  4.403 3.936 4.957 3.96 ;
+     RECT  4.273 20.16 4.981 21.624 ;
+     RECT  4.921 22.656 4.981 23.64 ;
+     RECT  4.981 20.16 5.027 23.64 ;
+     RECT  5.027 23.568 5.065 23.64 ;
+     RECT  4.921 25.104 5.065 26.088 ;
+     RECT  4.933 28.8 5.065 32.232 ;
+     RECT  4.46 6.192 5.101 6.696 ;
+     RECT  4.921 19.056 5.101 19.08 ;
+     RECT  5.065 27.84 5.101 32.232 ;
+     RECT  3.971 54.048 5.101 54.072 ;
+     RECT  4.489 38.736 5.137 48.792 ;
+     RECT  4.307 33.312 5.269 34.104 ;
+     RECT  5.137 38.736 5.315 49.032 ;
+     RECT  5.101 18.432 5.317 19.08 ;
+     RECT  5.027 20.16 5.317 22.536 ;
+     RECT  5.101 27.216 5.353 32.232 ;
+     RECT  3.593 50.688 5.363 50.712 ;
+     RECT  5.317 18.432 5.465 22.536 ;
+     RECT  4.885 11.952 5.497 12.744 ;
+     RECT  4.957 3.936 5.509 4.92 ;
+     RECT  5.101 5.952 5.509 6.696 ;
+     RECT  5.509 3.936 5.555 6.696 ;
+     RECT  5.497 11.952 5.569 13.032 ;
+     RECT  5.353 27.072 5.569 32.232 ;
+     RECT  5.269 33.312 5.569 34.248 ;
+     RECT  4.745 16.944 5.749 17.448 ;
+     RECT  5.465 18.432 5.749 21.528 ;
+     RECT  4.165 35.28 5.929 37.368 ;
+     RECT  5.101 14.688 5.933 14.712 ;
+     RECT  5.929 35.28 5.941 37.704 ;
+     RECT  5.315 38.736 5.941 48.792 ;
+     RECT  5.065 23.568 6.005 26.088 ;
+     RECT  5.941 35.28 6.041 48.792 ;
+     RECT  5.569 11.664 6.145 13.032 ;
+     RECT  5.749 16.944 6.185 21.528 ;
+     RECT  5.555 6.672 6.217 6.696 ;
+     RECT  6.145 11.664 6.289 13.08 ;
+     RECT  5.555 3.936 6.293 5.688 ;
+     RECT  6.041 47.136 6.329 48.552 ;
+     RECT  6.041 35.28 6.371 46.104 ;
+     RECT  6.217 6.672 6.433 7.656 ;
+     RECT  4.745 8.976 6.433 9 ;
+     RECT  6.289 11.664 6.437 13.176 ;
+     RECT  6.185 20.592 6.505 21.528 ;
+     RECT  6.185 16.944 6.649 19.272 ;
+     RECT  6.005 25.296 6.685 26.088 ;
+     RECT  5.569 27.072 6.685 34.248 ;
+     RECT  6.505 20.592 6.793 21.72 ;
+     RECT  6.793 20.592 6.865 22.488 ;
+     RECT  6.005 23.568 6.865 23.64 ;
+     RECT  6.649 15.984 7.153 19.272 ;
+     RECT  6.865 20.592 7.153 23.64 ;
+     RECT  7.153 15.984 7.333 23.64 ;
+     RECT  6.685 25.296 7.333 34.248 ;
+     RECT  6.371 35.28 7.333 37.752 ;
+     RECT  6.293 3.936 7.477 3.96 ;
+     RECT  6.329 47.136 7.585 47.976 ;
+     RECT  6.721 14.112 7.729 14.136 ;
+     RECT  7.333 15.312 7.729 23.64 ;
+     RECT  7.333 25.296 7.801 37.752 ;
+     RECT  7.477 3.936 7.808 4.152 ;
+     RECT  6.293 5.136 7.808 5.688 ;
+     RECT  6.433 6.672 7.808 9 ;
+     RECT  6.437 11.664 7.808 13.08 ;
+     RECT  7.729 14.112 7.808 23.64 ;
+     RECT  7.801 25.248 7.808 37.752 ;
+     RECT  6.371 38.736 7.808 46.104 ;
+     RECT  7.585 47.136 7.808 48.216 ;
+     RECT  5.101 54.048 7.808 54.456 ;
+     RECT  7.808 2.148 7.912 58.332 ;
+     RECT  7.912 2.418 8.104 58.062 ;
+     RECT  8.104 38.496 8.273 46.008 ;
+     RECT  8.104 33.6 8.291 37.416 ;
+     RECT  8.104 4.128 8.381 4.152 ;
+     RECT  8.104 13.872 8.489 15.768 ;
+     RECT  8.489 14.928 8.561 15.768 ;
+     RECT  8.291 33.6 8.561 37.368 ;
+     RECT  8.273 44.448 9.097 46.008 ;
+     RECT  8.104 47.136 9.097 48.168 ;
+     RECT  8.104 20.592 9.107 23.64 ;
+     RECT  9.107 20.736 9.109 23.64 ;
+     RECT  9.097 44.448 9.109 48.168 ;
+     RECT  8.104 16.944 9.133 17.976 ;
+     RECT  8.104 19.056 9.133 19.08 ;
+     RECT  8.104 25.632 9.133 32.616 ;
+     RECT  8.561 33.6 9.133 36.312 ;
+     RECT  9.133 18.96 9.173 19.08 ;
+     RECT  9.109 20.736 9.196 24.504 ;
+     RECT  9.109 44.448 9.196 49.08 ;
+     RECT  9.196 44.448 9.313 48.984 ;
+     RECT  9.277 4.272 9.421 4.296 ;
+     RECT  8.104 5.28 9.421 5.304 ;
+     RECT  8.104 10.8 9.497 12.888 ;
+     RECT  8.273 38.496 9.541 43.32 ;
+     RECT  9.313 44.4 9.541 48.984 ;
+     RECT  9.541 38.496 9.569 48.984 ;
+     RECT  9.497 10.8 9.641 12.84 ;
+     RECT  8.561 14.976 9.665 15.768 ;
+     RECT  9.133 16.752 9.665 17.976 ;
+     RECT  9.665 14.976 9.673 17.976 ;
+     RECT  9.173 18.96 9.673 18.984 ;
+     RECT  9.569 38.496 9.677 46.152 ;
+     RECT  9.133 25.632 9.709 36.312 ;
+     RECT  8.561 37.344 9.709 37.368 ;
+     RECT  9.569 47.136 9.749 48.792 ;
+     RECT  8.104 6.672 9.817 9 ;
+     RECT  9.641 10.8 9.817 12.504 ;
+     RECT  9.677 38.496 9.817 43.128 ;
+     RECT  9.817 6.672 9.821 12.504 ;
+     RECT  9.421 4.272 9.925 5.304 ;
+     RECT  9.709 25.632 9.961 37.368 ;
+     RECT  9.961 25.2 10.073 37.368 ;
+     RECT  9.925 4.272 10.141 5.64 ;
+     RECT  9.673 14.976 10.249 18.984 ;
+     RECT  9.196 20.736 10.249 24.168 ;
+     RECT  10.073 25.44 10.249 37.368 ;
+     RECT  8.489 13.872 10.325 13.896 ;
+     RECT  10.249 25.44 10.325 37.416 ;
+     RECT  10.325 28.224 10.505 37.416 ;
+     RECT  10.249 20.4 10.609 24.168 ;
+     RECT  10.141 3.936 10.613 5.64 ;
+     RECT  9.749 47.136 10.717 48.264 ;
+     RECT  10.249 14.976 10.753 19.32 ;
+     RECT  10.609 20.352 10.753 24.168 ;
+     RECT  10.613 4.272 10.837 5.64 ;
+     RECT  9.821 6.672 10.837 9.864 ;
+     RECT  9.817 38.448 10.861 43.128 ;
+     RECT  9.677 44.4 10.861 46.152 ;
+     RECT  10.837 4.272 10.883 9.864 ;
+     RECT  10.753 14.976 10.897 24.168 ;
+     RECT  10.505 28.416 10.901 37.416 ;
+     RECT  10.861 38.448 10.901 46.152 ;
+     RECT  10.901 30.912 10.969 37.416 ;
+     RECT  10.901 38.448 10.969 40.152 ;
+     RECT  10.897 14.976 11.041 24.264 ;
+     RECT  11.041 14.976 11.149 24.408 ;
+     RECT  10.969 30.912 11.153 40.152 ;
+     RECT  10.717 47.136 11.221 48.744 ;
+     RECT  10.609 50.112 11.221 50.136 ;
+     RECT  11.221 47.136 11.257 50.136 ;
+     RECT  10.901 41.376 11.293 46.152 ;
+     RECT  11.257 47.136 11.293 50.712 ;
+     RECT  11.153 38.64 11.297 40.152 ;
+     RECT  10.883 4.464 11.333 9.864 ;
+     RECT  11.153 30.912 11.333 37.416 ;
+     RECT  11.333 33.792 11.369 37.416 ;
+     RECT  9.709 51.888 11.401 51.912 ;
+     RECT  11.369 33.792 11.404 35.592 ;
+     RECT  11.149 14.496 11.473 24.408 ;
+     RECT  11.333 30.912 11.477 32.616 ;
+     RECT  11.293 41.376 11.477 50.712 ;
+     RECT  11.401 51.888 11.477 53.016 ;
+     RECT  11.477 41.376 11.549 46.152 ;
+     RECT  11.473 14.496 11.621 24.456 ;
+     RECT  9.821 11.664 11.701 12.504 ;
+     RECT  11.701 11.376 11.725 12.504 ;
+     RECT  10.325 25.44 11.797 27.192 ;
+     RECT  10.901 28.416 11.797 29.928 ;
+     RECT  11.725 10.848 11.809 12.504 ;
+     RECT  11.549 41.376 11.873 46.056 ;
+     RECT  11.477 47.136 11.977 50.712 ;
+     RECT  11.477 52.272 11.977 53.016 ;
+     RECT  8.104 54.048 11.977 54.456 ;
+     RECT  11.977 52.272 12.013 54.648 ;
+     RECT  11.809 11.664 12.085 12.504 ;
+     RECT  11.297 38.736 12.085 40.152 ;
+     RECT  11.873 41.376 12.085 43.416 ;
+     RECT  12.085 38.736 12.161 43.416 ;
+     RECT  12.161 38.736 12.233 43.368 ;
+     RECT  11.333 4.464 12.301 5.592 ;
+     RECT  11.333 6.672 12.301 9.864 ;
+     RECT  11.797 25.44 12.325 29.928 ;
+     RECT  11.477 30.912 12.325 31.272 ;
+     RECT  12.233 38.736 12.445 43.128 ;
+     RECT  12.301 4.464 12.481 9.864 ;
+     RECT  12.325 25.44 12.517 31.272 ;
+     RECT  11.477 32.256 12.517 32.616 ;
+     RECT  11.977 47.136 12.553 50.808 ;
+     RECT  12.013 52.272 12.553 55.56 ;
+     RECT  12.481 4.464 12.805 10.056 ;
+     RECT  12.517 25.44 12.805 32.616 ;
+     RECT  11.873 44.4 12.805 46.056 ;
+     RECT  12.553 47.136 12.805 55.56 ;
+     RECT  12.085 11.664 12.913 12.552 ;
+     RECT  11.621 14.688 13.021 24.456 ;
+     RECT  12.805 25.44 13.021 32.76 ;
+     RECT  12.805 4.32 13.093 10.056 ;
+     RECT  13.021 14.688 13.093 32.76 ;
+     RECT  11.404 33.792 13.093 35.448 ;
+     RECT  11.369 36.864 13.093 37.416 ;
+     RECT  12.445 38.448 13.093 43.128 ;
+     RECT  13.093 3.408 13.208 10.056 ;
+     RECT  12.913 11.664 13.208 12.6 ;
+     RECT  12.409 13.632 13.208 13.656 ;
+     RECT  13.093 14.688 13.208 35.544 ;
+     RECT  13.093 36.864 13.208 43.128 ;
+     RECT  12.805 44.4 13.208 55.56 ;
+     RECT  13.208 2.148 13.312 58.332 ;
+     RECT  13.312 2.418 13.504 58.062 ;
+     RECT  13.504 11.424 13.565 13.656 ;
+     RECT  13.504 15.792 13.637 30.936 ;
+     RECT  13.504 32.256 13.673 49.08 ;
+     RECT  13.637 28.224 13.709 30.936 ;
+     RECT  13.504 50.4 13.715 55.8 ;
+     RECT  13.709 28.32 13.853 30.936 ;
+     RECT  13.673 32.256 14.141 44.664 ;
+     RECT  13.565 13.008 14.393 13.656 ;
+     RECT  13.504 5.52 14.429 9.864 ;
+     RECT  14.429 6.624 14.501 9.864 ;
+     RECT  13.504 3.408 14.713 3.432 ;
+     RECT  13.504 4.464 14.713 4.488 ;
+     RECT  14.429 5.52 14.713 5.592 ;
+     RECT  13.853 28.608 14.713 30.936 ;
+     RECT  14.141 32.256 14.713 32.28 ;
+     RECT  14.713 3.408 14.753 5.592 ;
+     RECT  13.673 45.84 14.773 49.08 ;
+     RECT  13.565 11.424 14.857 11.976 ;
+     RECT  14.393 13.008 14.857 13.176 ;
+     RECT  13.715 50.64 14.861 55.8 ;
+     RECT  14.857 11.424 14.897 13.176 ;
+     RECT  14.861 51.744 14.969 55.8 ;
+     RECT  14.501 6.672 15.001 9.864 ;
+     RECT  14.141 33.6 15.001 44.664 ;
+     RECT  14.773 45.84 15.001 49.128 ;
+     RECT  14.861 50.64 15.001 50.712 ;
+     RECT  14.969 51.744 15.041 55.752 ;
+     RECT  15.041 51.744 15.077 55.272 ;
+     RECT  14.713 28.608 15.181 32.28 ;
+     RECT  15.181 28.608 15.253 32.328 ;
+     RECT  15.001 33.6 15.293 49.128 ;
+     RECT  15.001 6.672 15.325 9.912 ;
+     RECT  15.077 51.744 15.401 55.08 ;
+     RECT  13.637 15.792 15.443 27.192 ;
+     RECT  14.753 3.84 15.509 5.592 ;
+     RECT  15.443 15.792 15.545 24.504 ;
+     RECT  15.545 16.8 15.689 24.504 ;
+     RECT  15.293 33.888 15.725 49.128 ;
+     RECT  15.253 28.272 15.757 32.328 ;
+     RECT  15.509 4.464 15.937 5.592 ;
+     RECT  15.325 6.672 15.937 10.2 ;
+     RECT  15.725 36.864 15.941 49.128 ;
+     RECT  15.001 50.4 15.973 50.712 ;
+     RECT  15.401 51.744 15.973 55.032 ;
+     RECT  15.689 19.056 16.013 24.504 ;
+     RECT  15.941 36.864 16.085 49.08 ;
+     RECT  15.757 28.176 16.153 32.328 ;
+     RECT  16.153 28.176 16.189 32.472 ;
+     RECT  14.897 11.664 16.193 13.176 ;
+     RECT  15.937 4.464 16.549 10.2 ;
+     RECT  16.193 11.664 16.549 13.08 ;
+     RECT  15.725 33.888 16.553 35.832 ;
+     RECT  16.013 21.12 16.621 24.504 ;
+     RECT  15.443 25.536 16.621 27.192 ;
+     RECT  16.189 28.176 16.621 32.808 ;
+     RECT  16.553 33.888 16.621 35.544 ;
+     RECT  15.689 16.8 16.729 17.976 ;
+     RECT  16.013 19.056 16.729 20.04 ;
+     RECT  15.545 15.792 16.765 15.816 ;
+     RECT  16.729 16.8 16.765 20.04 ;
+     RECT  16.621 21.12 16.909 27.192 ;
+     RECT  16.621 28.176 16.909 35.544 ;
+     RECT  16.085 48.192 16.945 49.08 ;
+     RECT  15.973 50.4 16.985 55.032 ;
+     RECT  16.945 48.192 17.017 49.32 ;
+     RECT  16.985 50.4 17.017 51.24 ;
+     RECT  16.085 36.864 17.053 47.16 ;
+     RECT  16.549 4.464 17.057 13.08 ;
+     RECT  17.053 36.864 17.089 47.208 ;
+     RECT  17.017 48.192 17.089 51.24 ;
+     RECT  16.985 52.224 17.161 55.032 ;
+     RECT  17.057 4.464 17.221 4.536 ;
+     RECT  17.221 3.312 17.267 4.536 ;
+     RECT  15.325 14.256 17.273 14.28 ;
+     RECT  16.909 21.12 17.305 35.544 ;
+     RECT  17.267 3.312 17.308 4.488 ;
+     RECT  17.305 21.072 17.453 35.544 ;
+     RECT  17.453 25.488 17.593 35.544 ;
+     RECT  17.089 36.864 17.593 51.24 ;
+     RECT  16.765 15.792 17.701 20.04 ;
+     RECT  17.453 21.072 17.701 24.456 ;
+     RECT  17.057 5.52 17.809 13.08 ;
+     RECT  17.308 3.84 18.241 4.488 ;
+     RECT  17.809 5.52 18.241 13.608 ;
+     RECT  18.241 3.84 18.277 13.608 ;
+     RECT  17.593 25.488 18.457 51.24 ;
+     RECT  17.161 52.224 18.457 55.56 ;
+     RECT  18.277 3.84 18.529 13.944 ;
+     RECT  18.529 3.84 18.608 14.472 ;
+     RECT  17.701 15.792 18.608 24.456 ;
+     RECT  18.457 25.488 18.608 55.56 ;
+     RECT  18.608 2.148 18.712 58.332 ;
+     RECT  18.712 2.418 18.904 58.062 ;
+     RECT  18.904 23.088 19.073 55.56 ;
+     RECT  18.904 11.232 19.325 11.736 ;
+     RECT  19.073 25.104 19.42 55.56 ;
+     RECT  19.073 23.088 19.469 24.12 ;
+     RECT  19.42 44.4 19.541 55.56 ;
+     RECT  19.42 25.104 19.685 43.416 ;
+     RECT  19.541 44.4 19.757 51.96 ;
+     RECT  19.685 25.296 19.829 43.416 ;
+     RECT  19.829 25.296 19.901 31.176 ;
+     RECT  19.541 52.944 19.964 55.56 ;
+     RECT  19.757 44.4 19.973 50.76 ;
+     RECT  19.325 11.232 20.081 11.688 ;
+     RECT  18.904 3.696 20.149 9.912 ;
+     RECT  18.904 14.448 20.153 14.472 ;
+     RECT  19.829 32.256 20.189 43.416 ;
+     RECT  19.973 44.4 20.225 50.424 ;
+     RECT  18.904 15.792 20.257 19.656 ;
+     RECT  18.904 21.12 20.257 22.008 ;
+     RECT  20.189 33.36 20.369 43.416 ;
+     RECT  20.225 44.4 20.369 49.32 ;
+     RECT  20.149 3.696 20.509 10.68 ;
+     RECT  20.509 3.648 20.725 10.68 ;
+     RECT  19.757 51.936 20.725 51.96 ;
+     RECT  19.964 52.944 20.725 55.944 ;
+     RECT  20.041 12.768 20.801 12.792 ;
+     RECT  20.369 33.36 20.801 43.176 ;
+     RECT  20.369 44.4 20.917 48.744 ;
+     RECT  20.801 41.184 21.004 43.176 ;
+     RECT  20.725 3.408 21.013 10.68 ;
+     RECT  19.469 23.088 21.085 23.64 ;
+     RECT  19.901 25.968 21.085 31.176 ;
+     RECT  20.257 15.792 21.121 22.008 ;
+     RECT  21.085 23.088 21.121 24.456 ;
+     RECT  20.725 51.936 21.121 56.232 ;
+     RECT  21.121 51.888 21.125 56.232 ;
+     RECT  21.121 15.792 21.157 24.456 ;
+     RECT  21.085 25.44 21.157 31.176 ;
+     RECT  21.013 3.36 21.161 10.68 ;
+     RECT  20.189 32.256 21.229 32.28 ;
+     RECT  20.801 33.36 21.233 40.152 ;
+     RECT  21.157 15.792 21.265 31.176 ;
+     RECT  21.229 32.208 21.265 32.28 ;
+     RECT  20.225 50.4 21.337 50.424 ;
+     RECT  21.125 51.888 21.337 55.848 ;
+     RECT  21.265 15.792 21.481 32.28 ;
+     RECT  21.445 57.024 21.539 57.048 ;
+     RECT  21.233 36.528 21.557 40.152 ;
+     RECT  21.481 15.792 21.625 32.376 ;
+     RECT  20.917 44.16 21.625 48.744 ;
+     RECT  21.625 44.16 21.701 48.792 ;
+     RECT  21.445 13.296 21.773 13.32 ;
+     RECT  21.625 14.496 21.773 32.376 ;
+     RECT  21.773 14.592 21.989 32.376 ;
+     RECT  21.989 14.784 22.025 32.376 ;
+     RECT  21.701 44.4 22.057 48.792 ;
+     RECT  21.004 41.184 22.117 42.792 ;
+     RECT  21.337 50.4 22.165 55.848 ;
+     RECT  21.557 36.864 22.309 40.152 ;
+     RECT  22.117 41.184 22.309 42.984 ;
+     RECT  22.057 44.4 22.345 48.888 ;
+     RECT  22.165 50.4 22.345 56.52 ;
+     RECT  22.025 15.168 22.385 32.376 ;
+     RECT  22.385 22.512 22.493 32.376 ;
+     RECT  21.161 3.36 22.501 10.344 ;
+     RECT  22.345 44.4 22.561 56.52 ;
+     RECT  22.501 3.12 22.669 10.344 ;
+     RECT  20.081 11.664 22.669 11.688 ;
+     RECT  21.233 33.36 22.705 35.544 ;
+     RECT  22.309 36.864 22.705 42.984 ;
+     RECT  22.385 15.168 22.709 21.528 ;
+     RECT  22.705 33.36 22.777 42.984 ;
+     RECT  22.709 15.168 22.853 15.864 ;
+     RECT  22.493 22.704 22.853 32.376 ;
+     RECT  22.853 26.064 22.885 32.376 ;
+     RECT  22.777 33.36 22.885 43.08 ;
+     RECT  22.669 3.12 22.925 12.12 ;
+     RECT  22.925 9.36 22.961 12.12 ;
+     RECT  22.885 26.064 23.027 43.08 ;
+     RECT  23.027 36.864 23.029 43.08 ;
+     RECT  22.961 9.84 23.033 12.12 ;
+     RECT  22.853 15.264 23.821 15.864 ;
+     RECT  22.853 22.704 23.821 24.504 ;
+     RECT  23.027 26.064 23.821 35.544 ;
+     RECT  22.925 3.12 24.008 8.232 ;
+     RECT  23.033 9.84 24.008 11.688 ;
+     RECT  23.101 13.392 24.008 13.416 ;
+     RECT  23.821 14.736 24.008 15.864 ;
+     RECT  22.709 16.944 24.008 21.528 ;
+     RECT  23.821 22.704 24.008 35.544 ;
+     RECT  23.029 36.864 24.008 43.128 ;
+     RECT  22.561 44.4 24.008 57.432 ;
+     RECT  24.008 2.148 24.112 58.332 ;
+     RECT  24.112 2.418 24.304 58.062 ;
+     RECT  24.304 19.056 24.437 26.088 ;
+     RECT  24.437 21.408 24.545 26.088 ;
+     RECT  24.304 3.12 24.581 8.232 ;
+     RECT  24.304 27.12 24.581 57.432 ;
+     RECT  24.581 49.776 24.803 57.432 ;
+     RECT  24.545 21.408 24.869 23.64 ;
+     RECT  24.581 27.12 24.905 48.744 ;
+     RECT  24.304 14.736 24.941 15.864 ;
+     RECT  24.905 30.864 25.013 48.744 ;
+     RECT  24.581 7.632 25.121 8.232 ;
+     RECT  24.437 19.056 25.121 20.328 ;
+     RECT  25.013 41.184 25.121 48.744 ;
+     RECT  25.121 7.728 25.297 8.232 ;
+     RECT  25.297 7.728 25.369 8.568 ;
+     RECT  24.304 9.84 25.369 11.688 ;
+     RECT  25.369 7.728 25.409 11.688 ;
+     RECT  25.409 11.232 25.475 11.688 ;
+     RECT  24.545 24.672 25.513 26.088 ;
+     RECT  24.905 27.12 25.513 29.88 ;
+     RECT  25.121 42.576 25.549 48.744 ;
+     RECT  24.803 49.776 25.549 51.384 ;
+     RECT  24.941 15.168 25.585 15.864 ;
+     RECT  24.304 16.944 25.585 17.976 ;
+     RECT  24.304 13.056 25.661 13.08 ;
+     RECT  25.409 7.728 25.697 9.864 ;
+     RECT  24.869 22.224 25.841 23.64 ;
+     RECT  25.121 41.184 25.841 41.544 ;
+     RECT  25.585 15.168 26.053 17.976 ;
+     RECT  24.581 3.12 26.125 6.456 ;
+     RECT  25.697 7.728 26.125 8.232 ;
+     RECT  25.841 23.088 26.125 23.64 ;
+     RECT  25.513 24.672 26.125 29.88 ;
+     RECT  25.475 11.376 26.161 11.688 ;
+     RECT  25.697 9.408 26.165 9.864 ;
+     RECT  26.125 23.088 26.197 29.88 ;
+     RECT  25.013 30.864 26.197 40.152 ;
+     RECT  26.125 3.12 26.237 8.232 ;
+     RECT  24.803 52.56 26.237 57.432 ;
+     RECT  26.053 14.352 26.273 17.976 ;
+     RECT  26.237 52.56 26.345 57.192 ;
+     RECT  26.197 23.088 26.449 40.152 ;
+     RECT  25.841 41.184 26.449 41.496 ;
+     RECT  26.161 11.376 26.669 13.032 ;
+     RECT  26.273 15.168 26.737 17.976 ;
+     RECT  25.121 19.056 26.737 20.04 ;
+     RECT  26.669 12.864 26.777 13.032 ;
+     RECT  26.449 23.088 26.917 41.496 ;
+     RECT  26.669 11.376 27.011 11.688 ;
+     RECT  26.773 14.016 27.011 14.04 ;
+     RECT  26.737 15.168 27.025 20.04 ;
+     RECT  26.125 21.12 27.025 21.144 ;
+     RECT  26.777 13.008 27.029 13.032 ;
+     RECT  25.549 42.576 27.029 51.384 ;
+     RECT  26.237 6.864 27.133 8.232 ;
+     RECT  27.025 15.168 27.353 21.144 ;
+     RECT  26.345 57.024 27.461 57.192 ;
+     RECT  27.133 6.864 27.569 8.616 ;
+     RECT  26.917 23.088 27.641 41.592 ;
+     RECT  26.345 52.56 27.673 55.8 ;
+     RECT  27.461 57.024 27.713 57.048 ;
+     RECT  26.237 3.12 27.745 5.592 ;
+     RECT  27.569 6.864 27.745 8.232 ;
+     RECT  27.745 3.12 27.893 8.232 ;
+     RECT  27.029 42.576 27.893 51.24 ;
+     RECT  27.673 52.56 27.925 56.04 ;
+     RECT  27.641 26.064 27.961 41.592 ;
+     RECT  27.893 42.576 27.961 51.096 ;
+     RECT  27.925 52.56 28.145 56.808 ;
+     RECT  27.353 15.168 28.249 20.328 ;
+     RECT  28.145 52.56 28.681 55.752 ;
+     RECT  27.893 7.728 28.717 8.232 ;
+     RECT  26.165 9.84 28.717 9.864 ;
+     RECT  28.717 7.728 28.789 9.864 ;
+     RECT  27.011 11.664 28.789 11.688 ;
+     RECT  28.249 13.92 28.825 13.944 ;
+     RECT  28.249 15.024 28.825 20.328 ;
+     RECT  27.889 21.36 28.861 21.384 ;
+     RECT  27.893 3.12 29.005 6.264 ;
+     RECT  28.825 13.92 29.041 20.328 ;
+     RECT  29.041 13.872 29.077 20.328 ;
+     RECT  28.861 21.36 29.077 21.768 ;
+     RECT  29.005 3.12 29.113 6.648 ;
+     RECT  28.789 7.728 29.149 11.688 ;
+     RECT  29.149 7.728 29.293 11.736 ;
+     RECT  27.641 23.088 29.401 24.696 ;
+     RECT  27.961 26.064 29.401 51.096 ;
+     RECT  29.113 3.072 29.408 6.648 ;
+     RECT  29.293 7.728 29.408 12.072 ;
+     RECT  29.077 13.872 29.408 21.768 ;
+     RECT  29.401 23.088 29.408 51.096 ;
+     RECT  28.681 52.368 29.408 55.752 ;
+     RECT  28.145 56.784 29.408 56.808 ;
+     RECT  29.408 2.148 29.512 58.332 ;
+     RECT  29.512 2.418 29.704 58.062 ;
+     RECT  29.704 13.92 29.801 20.328 ;
+     RECT  29.704 3.12 29.873 11.832 ;
+     RECT  29.801 14.496 29.945 20.328 ;
+     RECT  29.873 3.12 30.053 10.632 ;
+     RECT  29.945 19.056 30.089 20.328 ;
+     RECT  30.661 1.728 30.745 1.752 ;
+     RECT  30.733 13.392 30.769 13.416 ;
+     RECT  29.945 14.496 30.769 18.072 ;
+     RECT  29.704 21.648 30.769 47.208 ;
+     RECT  30.769 20.976 30.809 47.208 ;
+     RECT  29.704 52.368 30.841 54.984 ;
+     RECT  30.809 20.976 30.845 41.496 ;
+     RECT  30.845 28.464 30.899 41.496 ;
+     RECT  30.809 42.48 31.025 47.208 ;
+     RECT  30.841 51.984 31.057 54.984 ;
+     RECT  30.769 13.392 31.133 18.072 ;
+     RECT  30.899 28.464 31.133 40.152 ;
+     RECT  31.025 42.48 31.133 44.424 ;
+     RECT  29.873 11.664 31.201 11.832 ;
+     RECT  31.025 45.6 31.201 47.208 ;
+     RECT  29.704 48.192 31.201 50.664 ;
+     RECT  31.057 51.936 31.273 54.984 ;
+     RECT  31.201 10.848 31.345 11.832 ;
+     RECT  30.053 3.12 31.385 9.864 ;
+     RECT  30.845 20.976 31.421 27.192 ;
+     RECT  31.385 7.488 31.453 9.864 ;
+     RECT  31.345 10.848 31.453 11.976 ;
+     RECT  31.273 51.936 31.453 55.608 ;
+     RECT  29.704 56.784 31.453 57.576 ;
+     RECT  30.089 19.056 31.705 19.8 ;
+     RECT  31.421 20.976 31.705 25.848 ;
+     RECT  31.453 7.488 31.741 11.976 ;
+     RECT  31.741 7.488 31.777 12.072 ;
+     RECT  31.741 13.056 31.777 13.08 ;
+     RECT  31.385 3.12 31.889 5.736 ;
+     RECT  31.421 26.832 31.925 27.192 ;
+     RECT  31.925 26.928 31.957 27.192 ;
+     RECT  31.133 14.352 32.065 18.072 ;
+     RECT  31.705 19.056 32.065 25.848 ;
+     RECT  31.453 51.936 32.065 57.576 ;
+     RECT  31.889 5.136 32.069 5.736 ;
+     RECT  32.065 14.352 32.105 25.848 ;
+     RECT  31.777 7.488 32.177 13.08 ;
+     RECT  31.133 44.4 32.204 44.424 ;
+     RECT  31.201 45.6 32.204 50.664 ;
+     RECT  32.204 44.4 32.291 50.664 ;
+     RECT  31.133 28.512 32.317 40.152 ;
+     RECT  30.899 41.184 32.317 41.496 ;
+     RECT  32.177 7.488 32.465 12.888 ;
+     RECT  32.465 7.488 32.501 9.96 ;
+     RECT  32.317 28.512 32.533 41.496 ;
+     RECT  32.533 28.368 32.573 41.496 ;
+     RECT  31.957 26.928 32.609 27.24 ;
+     RECT  32.573 28.368 32.713 29.352 ;
+     RECT  32.291 45.408 32.713 50.664 ;
+     RECT  32.065 51.888 32.713 57.576 ;
+     RECT  32.105 14.832 32.825 25.848 ;
+     RECT  32.825 21.36 32.893 25.848 ;
+     RECT  32.609 26.928 32.893 27.192 ;
+     RECT  31.133 42.48 32.929 43.176 ;
+     RECT  32.291 44.4 32.929 44.424 ;
+     RECT  32.573 30.336 32.965 41.496 ;
+     RECT  32.929 42.48 32.965 44.424 ;
+     RECT  32.825 14.832 33.041 20.088 ;
+     RECT  32.465 11.232 33.077 12.888 ;
+     RECT  32.069 5.328 33.361 5.592 ;
+     RECT  33.361 5.328 33.469 5.784 ;
+     RECT  31.553 0.096 33.473 0.12 ;
+     RECT  33.469 5.328 33.613 6.024 ;
+     RECT  33.041 15.024 33.653 20.088 ;
+     RECT  32.713 45.408 33.653 57.576 ;
+     RECT  33.653 53.232 33.683 57.576 ;
+     RECT  32.893 21.36 33.731 27.192 ;
+     RECT  33.653 19.056 33.829 20.088 ;
+     RECT  33.731 21.36 33.829 26.136 ;
+     RECT  32.501 7.632 33.901 9.96 ;
+     RECT  33.077 11.232 33.901 11.688 ;
+     RECT  33.613 5.136 34.009 6.024 ;
+     RECT  31.889 3.12 34.069 4.008 ;
+     RECT  34.069 3.072 34.081 4.008 ;
+     RECT  34.009 5.04 34.081 6.024 ;
+     RECT  32.713 28.176 34.081 29.352 ;
+     RECT  32.965 30.336 34.081 44.424 ;
+     RECT  34.081 28.176 34.153 44.424 ;
+     RECT  33.653 45.408 34.153 52.2 ;
+     RECT  33.901 7.632 34.189 11.688 ;
+     RECT  34.189 7.2 34.261 11.688 ;
+     RECT  33.077 12.864 34.261 12.888 ;
+     RECT  34.261 7.2 34.585 12.888 ;
+     RECT  34.585 7.2 34.657 13.08 ;
+     RECT  34.081 3.072 34.693 6.024 ;
+     RECT  34.309 1.728 34.808 1.752 ;
+     RECT  34.693 3.072 34.808 6.072 ;
+     RECT  34.657 7.2 34.808 13.176 ;
+     RECT  33.653 15.024 34.808 17.976 ;
+     RECT  33.829 19.056 34.808 26.136 ;
+     RECT  33.731 27.168 34.808 27.192 ;
+     RECT  34.153 28.176 34.808 52.2 ;
+     RECT  33.683 53.328 34.808 57.576 ;
+     RECT  34.808 1.728 34.912 58.332 ;
+     RECT  34.912 1.728 35.104 58.062 ;
+     RECT  35.104 8.208 35.219 9.864 ;
+     RECT  35.104 19.056 35.219 26.136 ;
+     RECT  35.104 11.232 35.237 13.272 ;
+     RECT  35.104 27.168 35.273 35.736 ;
+     RECT  35.104 4.464 35.381 6.312 ;
+     RECT  35.104 36.864 35.381 57.576 ;
+     RECT  35.219 9.36 35.417 9.864 ;
+     RECT  35.219 8.208 35.597 8.232 ;
+     RECT  35.237 11.232 35.705 11.688 ;
+     RECT  35.237 12.864 35.813 13.272 ;
+     RECT  35.381 36.864 35.849 55.32 ;
+     RECT  35.813 13.056 35.885 13.272 ;
+     RECT  35.849 52.992 35.891 55.32 ;
+     RECT  35.849 36.864 35.957 51.96 ;
+     RECT  35.381 4.512 36.029 6.312 ;
+     RECT  35.104 15.024 36.085 17.976 ;
+     RECT  35.219 19.056 36.085 25.032 ;
+     RECT  35.273 28.176 36.097 35.736 ;
+     RECT  35.957 36.864 36.097 48.792 ;
+     RECT  36.085 15.024 36.137 25.032 ;
+     RECT  35.891 52.992 36.137 54.984 ;
+     RECT  36.137 16.944 36.179 25.032 ;
+     RECT  35.219 26.064 36.205 26.136 ;
+     RECT  35.273 27.168 36.205 27.192 ;
+     RECT  35.885 13.248 36.317 13.272 ;
+     RECT  36.097 28.176 36.323 48.792 ;
+     RECT  36.205 26.064 36.325 27.192 ;
+     RECT  36.323 28.176 36.325 35.736 ;
+     RECT  36.137 15.024 36.421 15.816 ;
+     RECT  35.104 1.728 36.425 1.752 ;
+     RECT  36.179 22.176 36.461 25.032 ;
+     RECT  36.461 22.32 36.493 25.032 ;
+     RECT  36.325 26.064 36.493 35.736 ;
+     RECT  36.029 4.512 36.605 5.592 ;
+     RECT  36.421 14.784 36.781 15.816 ;
+     RECT  35.417 9.84 36.997 9.864 ;
+     RECT  35.705 11.28 36.997 11.688 ;
+     RECT  36.323 36.816 37.069 48.792 ;
+     RECT  36.997 9.84 37.105 11.688 ;
+     RECT  36.997 12.864 37.105 12.888 ;
+     RECT  37.069 36.816 37.177 49.08 ;
+     RECT  35.957 50.112 37.177 51.96 ;
+     RECT  37.105 9.84 37.217 12.888 ;
+     RECT  37.093 0.096 37.253 0.12 ;
+     RECT  37.177 36.816 37.285 51.96 ;
+     RECT  36.137 53.328 37.285 54.984 ;
+     RECT  37.285 36.816 37.289 54.984 ;
+     RECT  37.289 42.48 37.361 54.984 ;
+     RECT  36.493 22.32 37.393 35.736 ;
+     RECT  37.289 36.816 37.393 41.496 ;
+     RECT  37.361 42.48 37.469 50.76 ;
+     RECT  37.361 51.936 37.505 54.984 ;
+     RECT  37.393 22.32 37.537 41.496 ;
+     RECT  36.605 4.896 37.573 5.592 ;
+     RECT  37.217 11.28 37.577 12.888 ;
+     RECT  37.537 22.224 37.865 41.496 ;
+     RECT  37.825 7.776 38.117 7.8 ;
+     RECT  38.005 1.728 38.153 1.752 ;
+     RECT  37.469 45.792 38.225 50.76 ;
+     RECT  37.573 4.896 38.437 6.264 ;
+     RECT  37.217 9.84 38.473 9.864 ;
+     RECT  37.577 11.376 38.693 12.888 ;
+     RECT  36.781 14.496 38.761 15.816 ;
+     RECT  36.179 16.944 38.761 21.144 ;
+     RECT  38.761 14.496 38.801 21.144 ;
+     RECT  38.225 48.192 38.801 50.76 ;
+     RECT  38.225 45.792 38.833 47.208 ;
+     RECT  35.104 3.36 38.869 3.384 ;
+     RECT  38.437 4.896 38.869 6.312 ;
+     RECT  37.469 42.48 38.869 44.424 ;
+     RECT  38.833 45.552 38.869 47.208 ;
+     RECT  37.865 22.32 39.013 41.496 ;
+     RECT  38.869 42.48 39.013 47.208 ;
+     RECT  38.801 50.016 39.109 50.76 ;
+     RECT  38.801 16.56 39.193 21.144 ;
+     RECT  39.013 22.32 39.193 47.208 ;
+     RECT  38.917 0.096 39.197 0.12 ;
+     RECT  39.109 50.016 39.229 51.096 ;
+     RECT  38.693 11.376 39.301 12.552 ;
+     RECT  38.473 9.84 39.409 10.104 ;
+     RECT  39.301 11.088 39.409 12.552 ;
+     RECT  39.193 16.56 39.553 47.208 ;
+     RECT  38.801 48.192 39.553 48.744 ;
+     RECT  39.653 59.856 39.737 59.88 ;
+     RECT  38.869 3.36 39.925 6.312 ;
+     RECT  39.925 3.36 39.98 7.128 ;
+     RECT  39.553 16.56 39.985 48.744 ;
+     RECT  39.229 50.016 39.985 51.288 ;
+     RECT  39.409 9.84 40.021 12.552 ;
+     RECT  38.801 14.496 40.057 15.576 ;
+     RECT  39.985 16.56 40.057 51.288 ;
+     RECT  39.797 1.728 40.208 1.752 ;
+     RECT  39.98 3.36 40.208 7.272 ;
+     RECT  39.589 8.4 40.208 8.424 ;
+     RECT  40.021 9.84 40.208 12.6 ;
+     RECT  40.057 14.496 40.208 51.288 ;
+     RECT  37.505 52.752 40.208 54.984 ;
+     RECT  35.381 56.784 40.208 57.576 ;
+     RECT  40.208 1.728 40.312 58.332 ;
+     RECT  40.312 1.728 40.504 58.062 ;
+     RECT  40.504 14.112 40.817 37.416 ;
+     RECT  40.504 8.832 40.835 8.856 ;
+     RECT  40.504 1.728 40.853 1.752 ;
+     RECT  40.504 4.512 40.889 7.272 ;
+     RECT  40.817 20.112 40.889 37.416 ;
+     RECT  40.889 20.112 40.961 20.136 ;
+     RECT  40.889 5.328 41.069 7.272 ;
+     RECT  40.504 11.376 41.213 13.08 ;
+     RECT  40.817 14.112 41.213 19.08 ;
+     RECT  41.213 14.688 41.321 19.08 ;
+     RECT  40.889 21.12 41.603 37.416 ;
+     RECT  40.504 3.36 41.677 3.384 ;
+     RECT  40.504 9.84 41.713 10.104 ;
+     RECT  41.603 30.816 41.713 37.416 ;
+     RECT  40.504 38.448 41.713 54.984 ;
+     RECT  41.713 9.792 41.753 10.104 ;
+     RECT  41.653 0.576 41.789 0.6 ;
+     RECT  41.213 11.376 41.789 12.6 ;
+     RECT  41.713 30.816 42.145 54.984 ;
+     RECT  41.321 17.136 42.541 19.08 ;
+     RECT  41.321 14.688 42.649 15.816 ;
+     RECT  42.145 30.816 42.653 55.224 ;
+     RECT  42.653 30.816 42.685 54.984 ;
+     RECT  41.603 21.12 42.709 29.448 ;
+     RECT  42.649 14.688 42.757 16.056 ;
+     RECT  42.541 17.136 42.757 19.8 ;
+     RECT  41.069 5.328 42.761 6.312 ;
+     RECT  42.145 13.584 42.764 13.608 ;
+     RECT  41.789 11.376 42.833 12.264 ;
+     RECT  42.757 14.688 42.833 19.8 ;
+     RECT  42.764 13.488 42.851 13.608 ;
+     RECT  42.851 13.584 42.869 13.608 ;
+     RECT  42.833 16.848 42.869 19.8 ;
+     RECT  42.709 21.024 42.977 29.448 ;
+     RECT  42.977 21.024 43.085 26.088 ;
+     RECT  42.869 17.424 43.193 19.8 ;
+     RECT  42.685 30.528 43.229 54.984 ;
+     RECT  41.753 9.792 43.265 9.864 ;
+     RECT  42.977 27.072 43.337 29.448 ;
+     RECT  43.337 27.12 43.409 29.448 ;
+     RECT  42.541 0.096 43.561 0.12 ;
+     RECT  43.085 21.648 43.625 26.088 ;
+     RECT  41.677 3.36 43.657 3.576 ;
+     RECT  40.504 56.784 43.657 57.576 ;
+     RECT  43.229 30.672 43.765 54.984 ;
+     RECT  42.833 11.664 43.873 12.264 ;
+     RECT  43.837 13.296 43.873 13.32 ;
+     RECT  43.193 19.776 43.901 19.8 ;
+     RECT  43.901 19.776 43.985 19.944 ;
+     RECT  43.765 30.672 43.985 55.272 ;
+     RECT  43.873 11.664 44.089 13.32 ;
+     RECT  43.657 56.736 44.089 57.576 ;
+     RECT  43.985 30.672 44.129 44.664 ;
+     RECT  44.089 11.424 44.233 13.32 ;
+     RECT  43.985 45.696 44.305 55.272 ;
+     RECT  43.193 17.424 44.377 18.792 ;
+     RECT  44.377 1.728 44.461 1.752 ;
+     RECT  44.305 45.696 44.629 55.704 ;
+     RECT  44.089 56.736 44.629 57.624 ;
+     RECT  43.625 21.648 44.665 25.08 ;
+     RECT  43.625 26.064 44.701 26.088 ;
+     RECT  43.409 27.168 44.701 29.448 ;
+     RECT  44.665 21.408 44.809 25.08 ;
+     RECT  44.377 17.424 44.917 19.128 ;
+     RECT  44.917 17.376 44.953 19.128 ;
+     RECT  44.129 44.064 44.953 44.664 ;
+     RECT  44.629 45.696 44.953 57.624 ;
+     RECT  44.233 11.376 44.989 13.32 ;
+     RECT  44.989 10.848 45.061 13.32 ;
+     RECT  42.833 14.688 45.061 15.816 ;
+     RECT  44.953 44.064 45.169 57.624 ;
+     RECT  44.953 17.376 45.205 19.272 ;
+     RECT  45.205 17.088 45.277 19.272 ;
+     RECT  45.061 10.848 45.313 15.816 ;
+     RECT  44.701 26.064 45.421 29.448 ;
+     RECT  45.313 10.848 45.457 16.056 ;
+     RECT  45.277 17.088 45.457 19.32 ;
+     RECT  44.129 30.672 45.457 42.984 ;
+     RECT  43.265 9.84 45.493 9.864 ;
+     RECT  43.657 3.36 45.608 3.96 ;
+     RECT  42.761 5.328 45.608 5.592 ;
+     RECT  45.493 9.264 45.608 9.864 ;
+     RECT  45.457 10.848 45.608 19.32 ;
+     RECT  44.809 20.688 45.608 25.08 ;
+     RECT  45.421 26.064 45.608 29.544 ;
+     RECT  45.457 30.576 45.608 42.984 ;
+     RECT  45.169 44.064 45.608 57.864 ;
+     RECT  45.608 2.148 45.712 58.332 ;
+     RECT  45.712 2.418 45.904 58.062 ;
+     RECT  45.904 8.16 46.001 19.32 ;
+     RECT  46.001 9.84 46.073 19.32 ;
+     RECT  46.073 14.016 46.289 19.32 ;
+     RECT  45.904 28.56 46.469 57.864 ;
+     RECT  46.289 14.016 46.649 18.984 ;
+     RECT  46.469 31.68 46.691 57.864 ;
+     RECT  45.269 0.096 46.757 0.12 ;
+     RECT  46.691 42.336 47.029 57.864 ;
+     RECT  46.073 9.84 47.149 12.888 ;
+     RECT  46.649 14.016 47.149 14.04 ;
+     RECT  45.904 3.36 47.219 3.624 ;
+     RECT  46.469 28.56 47.221 30.504 ;
+     RECT  46.001 8.16 47.293 8.52 ;
+     RECT  47.149 9.84 47.293 14.04 ;
+     RECT  46.691 31.68 47.297 41.256 ;
+     RECT  47.293 8.16 47.315 14.04 ;
+     RECT  47.297 31.68 47.315 37.416 ;
+     RECT  46.649 15.024 47.329 18.984 ;
+     RECT  45.904 20.688 47.329 27.192 ;
+     RECT  47.029 42.336 47.333 58.008 ;
+     RECT  47.329 15.024 47.413 27.192 ;
+     RECT  47.221 28.176 47.413 30.504 ;
+     RECT  47.413 15.024 47.617 30.504 ;
+     RECT  47.315 31.68 47.617 35.544 ;
+     RECT  47.617 15.024 47.657 35.544 ;
+     RECT  47.573 59.856 47.657 59.88 ;
+     RECT  47.297 38.448 47.693 41.256 ;
+     RECT  47.315 10.896 47.701 14.04 ;
+     RECT  47.657 15.024 47.701 27.384 ;
+     RECT  47.701 10.896 47.729 27.384 ;
+     RECT  47.693 38.448 47.729 40.056 ;
+     RECT  47.219 3.6 47.756 3.624 ;
+     RECT  45.904 5.328 47.756 5.592 ;
+     RECT  47.729 25.248 47.765 27.384 ;
+     RECT  47.315 8.16 47.795 9.864 ;
+     RECT  47.333 42.336 47.801 47.208 ;
+     RECT  47.333 48.192 47.801 58.008 ;
+     RECT  47.729 10.896 47.837 23.976 ;
+     RECT  47.756 3.6 47.843 5.592 ;
+     RECT  47.795 9.696 47.845 9.864 ;
+     RECT  47.843 3.6 47.909 3.96 ;
+     RECT  47.795 8.16 47.909 8.712 ;
+     RECT  47.801 48.192 47.945 50.952 ;
+     RECT  47.843 5.328 47.977 5.592 ;
+     RECT  47.837 10.896 47.981 20.424 ;
+     RECT  47.801 51.936 48.017 58.008 ;
+     RECT  47.693 41.184 48.049 41.256 ;
+     RECT  47.801 42.336 48.049 42.792 ;
+     RECT  47.657 28.56 48.269 35.544 ;
+     RECT  47.981 10.896 48.377 19.656 ;
+     RECT  48.269 28.56 48.413 30.552 ;
+     RECT  48.377 19.392 48.419 19.656 ;
+     RECT  47.801 44.064 48.449 47.208 ;
+     RECT  48.377 10.896 48.485 17.976 ;
+     RECT  48.449 45.6 48.509 47.208 ;
+     RECT  47.945 48.192 48.509 50.424 ;
+     RECT  48.485 11.184 48.521 17.976 ;
+     RECT  48.413 30.288 48.521 30.552 ;
+     RECT  48.509 45.6 48.563 50.424 ;
+     RECT  48.521 11.184 48.701 11.208 ;
+     RECT  48.521 12.24 48.773 17.976 ;
+     RECT  48.773 12.528 48.845 17.976 ;
+     RECT  47.977 5.328 48.913 5.64 ;
+     RECT  48.017 52.032 48.953 58.008 ;
+     RECT  48.953 52.032 48.985 57.72 ;
+     RECT  47.909 8.16 49.004 8.184 ;
+     RECT  48.563 46.8 49.021 50.424 ;
+     RECT  48.985 51.84 49.021 57.72 ;
+     RECT  49.021 46.8 49.025 57.72 ;
+     RECT  47.909 3.936 49.045 3.96 ;
+     RECT  49.004 8.16 49.045 8.424 ;
+     RECT  47.845 9.84 49.045 9.864 ;
+     RECT  48.845 12.624 49.061 17.976 ;
+     RECT  48.913 4.944 49.091 5.64 ;
+     RECT  48.449 44.064 49.165 44.52 ;
+     RECT  47.837 21.408 49.201 23.976 ;
+     RECT  49.045 3.312 49.205 3.96 ;
+     RECT  47.765 25.248 49.273 27.192 ;
+     RECT  49.025 49.728 49.277 57.72 ;
+     RECT  49.201 21.408 49.313 24.024 ;
+     RECT  47.315 36.576 49.453 37.416 ;
+     RECT  47.729 38.448 49.453 40.008 ;
+     RECT  49.165 43.824 49.453 44.52 ;
+     RECT  48.563 45.6 49.453 45.816 ;
+     RECT  49.273 25.008 49.525 27.192 ;
+     RECT  48.521 30.432 49.525 30.552 ;
+     RECT  48.269 31.68 49.525 35.544 ;
+     RECT  48.049 41.184 49.525 42.792 ;
+     RECT  49.453 43.824 49.525 45.816 ;
+     RECT  49.025 46.8 49.525 48.744 ;
+     RECT  48.413 28.56 49.553 29.304 ;
+     RECT  49.525 30.432 49.553 35.544 ;
+     RECT  49.313 21.408 49.561 23.88 ;
+     RECT  49.525 43.824 49.565 48.744 ;
+     RECT  48.419 19.392 49.597 19.416 ;
+     RECT  49.561 21.168 49.597 23.88 ;
+     RECT  49.553 28.56 49.597 35.544 ;
+     RECT  49.453 36.576 49.597 40.008 ;
+     RECT  49.525 41.136 49.669 42.792 ;
+     RECT  49.565 44.064 49.745 48.744 ;
+     RECT  49.597 19.392 49.817 23.88 ;
+     RECT  49.817 19.392 49.853 23.688 ;
+     RECT  49.045 8.16 49.921 9.864 ;
+     RECT  47.113 1.728 49.925 1.752 ;
+     RECT  49.921 8.16 49.993 10.68 ;
+     RECT  49.597 28.56 49.993 40.008 ;
+     RECT  49.669 41.088 49.993 42.792 ;
+     RECT  49.061 12.864 50.029 13.896 ;
+     RECT  49.853 19.392 50.101 23.304 ;
+     RECT  50.029 12.864 50.137 13.944 ;
+     RECT  49.061 15.024 50.137 17.976 ;
+     RECT  49.525 24.864 50.137 27.192 ;
+     RECT  49.993 28.56 50.137 42.792 ;
+     RECT  50.137 12.72 50.173 17.976 ;
+     RECT  50.137 24.864 50.173 42.792 ;
+     RECT  50.173 12.24 50.245 17.976 ;
+     RECT  49.993 8.16 50.461 11.016 ;
+     RECT  50.245 12 50.461 17.976 ;
+     RECT  50.461 8.16 50.641 17.976 ;
+     RECT  49.277 49.728 50.641 57.576 ;
+     RECT  50.641 8.16 50.677 18.216 ;
+     RECT  50.101 19.248 50.677 23.304 ;
+     RECT  49.745 44.4 50.713 48.744 ;
+     RECT  50.641 49.728 50.713 57.72 ;
+     RECT  50.173 24.864 50.869 43.08 ;
+     RECT  50.713 44.4 50.869 57.72 ;
+     RECT  50.773 0.096 50.897 0.12 ;
+     RECT  49.205 3.936 51.008 3.96 ;
+     RECT  49.091 4.944 51.008 5.112 ;
+     RECT  50.677 8.16 51.008 23.304 ;
+     RECT  50.869 24.864 51.008 57.72 ;
+     RECT  51.008 2.148 51.112 58.332 ;
+     RECT  51.112 2.148 51.304 58.062 ;
+     RECT  51.304 10.896 51.365 41.784 ;
+     RECT  51.304 42.768 51.365 57.576 ;
+     RECT  51.365 10.896 51.617 30.168 ;
+     RECT  51.365 31.68 51.617 41.784 ;
+     RECT  51.617 31.68 51.653 35.304 ;
+     RECT  51.685 1.728 51.869 1.752 ;
+     RECT  51.653 31.728 51.869 35.304 ;
+     RECT  51.617 10.992 51.977 30.168 ;
+     RECT  51.977 10.992 52.121 19.608 ;
+     RECT  51.365 48.192 52.121 57.576 ;
+     RECT  51.304 7.968 52.259 8.184 ;
+     RECT  51.977 20.832 52.265 30.168 ;
+     RECT  51.304 4.944 52.273 5.112 ;
+     RECT  51.617 36.48 52.333 41.784 ;
+     RECT  51.365 42.768 52.333 47.208 ;
+     RECT  52.325 58.656 52.409 58.68 ;
+     RECT  51.869 31.824 52.451 35.304 ;
+     RECT  51.304 9.6 52.585 9.864 ;
+     RECT  52.265 20.832 52.589 30.024 ;
+     RECT  52.333 36.48 52.693 47.208 ;
+     RECT  52.121 48.192 52.693 50.136 ;
+     RECT  52.597 0.576 52.733 0.6 ;
+     RECT  52.693 36.48 52.837 50.136 ;
+     RECT  52.121 11.424 52.877 19.608 ;
+     RECT  52.451 33.072 52.877 35.304 ;
+     RECT  52.837 36.384 52.949 50.136 ;
+     RECT  52.877 33.12 52.981 35.304 ;
+     RECT  52.949 36.384 52.981 49.08 ;
+     RECT  52.877 11.424 52.985 18.168 ;
+     RECT  52.981 33.12 52.985 49.08 ;
+     RECT  52.451 31.824 53.017 31.992 ;
+     RECT  52.589 25.488 53.057 30.024 ;
+     RECT  53.017 31.776 53.125 31.992 ;
+     RECT  52.985 11.424 53.129 17.64 ;
+     RECT  53.125 31.728 53.197 31.992 ;
+     RECT  53.057 25.968 53.228 30.024 ;
+     RECT  53.197 31.392 53.228 31.992 ;
+     RECT  53.129 11.424 53.237 17.592 ;
+     RECT  52.273 4.944 53.305 4.968 ;
+     RECT  53.305 4.512 53.345 4.968 ;
+     RECT  53.237 11.424 53.345 13.416 ;
+     RECT  52.949 50.112 53.377 50.136 ;
+     RECT  52.121 51.216 53.377 57.576 ;
+     RECT  53.345 4.512 53.413 4.536 ;
+     RECT  53.345 12.336 53.417 13.416 ;
+     RECT  53.417 12.336 53.453 13.08 ;
+     RECT  52.985 39.024 53.453 49.08 ;
+     RECT  53.377 50.112 53.453 57.576 ;
+     RECT  53.228 25.968 53.525 31.992 ;
+     RECT  53.453 50.112 53.525 50.76 ;
+     RECT  53.477 0.096 53.561 0.12 ;
+     RECT  53.453 51.888 53.633 57.576 ;
+     RECT  53.633 52.032 53.701 57.576 ;
+     RECT  53.525 30.288 53.705 31.992 ;
+     RECT  52.877 19.296 53.737 19.608 ;
+     RECT  52.589 20.832 53.737 24.456 ;
+     RECT  53.453 12.48 53.777 13.08 ;
+     RECT  53.701 52.032 53.785 57.624 ;
+     RECT  53.705 31.344 53.891 31.992 ;
+     RECT  53.737 19.296 53.921 24.456 ;
+     RECT  53.777 12.48 53.957 12.552 ;
+     RECT  52.985 33.12 53.957 37.992 ;
+     RECT  53.413 59.28 53.987 59.304 ;
+     RECT  53.525 25.968 53.993 29.304 ;
+     RECT  53.957 35.856 54.061 37.992 ;
+     RECT  53.453 39.024 54.061 48.984 ;
+     RECT  53.237 15.024 54.097 17.592 ;
+     RECT  53.921 19.296 54.133 24.36 ;
+     RECT  52.585 9.456 54.284 9.864 ;
+     RECT  53.917 10.848 54.284 10.872 ;
+     RECT  54.284 9.456 54.371 10.872 ;
+     RECT  53.957 12.528 54.425 12.552 ;
+     RECT  54.061 35.856 54.425 48.984 ;
+     RECT  54.425 48.576 54.461 48.984 ;
+     RECT  53.525 50.112 54.565 50.664 ;
+     RECT  54.421 1.728 54.569 1.752 ;
+     RECT  53.891 31.392 54.601 31.992 ;
+     RECT  53.957 33.12 54.601 34.536 ;
+     RECT  53.993 26.112 54.637 29.304 ;
+     RECT  53.705 30.288 54.637 30.36 ;
+     RECT  54.565 50.112 54.745 50.808 ;
+     RECT  53.785 52.032 54.745 57.576 ;
+     RECT  54.097 15.024 54.889 17.64 ;
+     RECT  54.637 26.112 54.889 30.36 ;
+     RECT  54.889 26.112 54.929 30.408 ;
+     RECT  54.781 13.68 54.949 13.704 ;
+     RECT  54.425 35.856 54.995 47.4 ;
+     RECT  53.413 3.984 54.997 4.536 ;
+     RECT  52.259 7.968 55.056 7.992 ;
+     RECT  54.133 19.2 55.105 24.36 ;
+     RECT  54.929 26.112 55.105 29.304 ;
+     RECT  54.461 48.72 55.105 48.984 ;
+     RECT  54.745 50.112 55.105 57.576 ;
+     RECT  54.997 3.408 55.145 4.536 ;
+     RECT  55.105 48.72 55.145 57.576 ;
+     RECT  54.995 35.856 55.148 35.88 ;
+     RECT  55.148 35.808 55.189 35.88 ;
+     RECT  54.371 9.456 55.249 9.48 ;
+     RECT  55.105 19.2 55.283 29.304 ;
+     RECT  54.601 31.392 55.285 34.536 ;
+     RECT  55.189 35.52 55.285 35.88 ;
+     RECT  54.995 36.864 55.289 47.4 ;
+     RECT  54.889 15.024 55.321 18.168 ;
+     RECT  55.283 19.2 55.321 24.36 ;
+     RECT  55.289 38.592 55.325 47.4 ;
+     RECT  55.249 9.36 55.357 9.48 ;
+     RECT  54.371 10.848 55.361 10.872 ;
+     RECT  54.949 12.72 55.361 13.704 ;
+     RECT  55.321 0.096 55.405 0.12 ;
+     RECT  55.321 58.656 55.571 58.68 ;
+     RECT  54.929 30.288 55.645 30.408 ;
+     RECT  55.285 31.392 55.645 35.88 ;
+     RECT  55.325 43.008 55.645 47.4 ;
+     RECT  55.357 9.264 55.681 9.48 ;
+     RECT  55.321 15.024 56.245 24.36 ;
+     RECT  55.645 43.008 56.245 47.688 ;
+     RECT  55.145 48.72 56.245 53.928 ;
+     RECT  56.245 15.024 56.293 24.984 ;
+     RECT  55.645 30.288 56.293 35.88 ;
+     RECT  55.289 36.864 56.293 37.608 ;
+     RECT  55.325 38.592 56.293 41.64 ;
+     RECT  56.245 43.008 56.293 53.928 ;
+     RECT  56.213 1.728 56.408 1.752 ;
+     RECT  55.145 3.408 56.408 3.432 ;
+     RECT  55.145 4.512 56.408 4.536 ;
+     RECT  56.293 7.968 56.408 7.992 ;
+     RECT  55.681 9.264 56.408 9.672 ;
+     RECT  55.361 12.72 56.408 13.08 ;
+     RECT  56.293 14.928 56.408 24.984 ;
+     RECT  55.283 26.112 56.408 29.304 ;
+     RECT  56.293 30.288 56.408 41.64 ;
+     RECT  56.293 42.864 56.408 53.928 ;
+     RECT  55.145 54.96 56.408 57.576 ;
+     RECT  56.408 1.728 56.512 58.332 ;
+     RECT  56.512 1.728 56.704 58.152 ;
+     RECT  56.704 13.104 56.765 15.816 ;
+     RECT  56.704 43.008 56.765 45.816 ;
+     RECT  56.704 3.408 56.801 3.432 ;
+     RECT  56.765 43.104 56.801 45.816 ;
+     RECT  56.704 4.848 56.819 4.872 ;
+     RECT  56.704 7.728 56.819 7.752 ;
+     RECT  56.704 36.864 56.819 41.304 ;
+     RECT  56.765 13.104 56.837 13.656 ;
+     RECT  56.704 20.688 56.837 22.344 ;
+     RECT  56.765 14.64 56.881 15.816 ;
+     RECT  56.704 19.536 56.909 19.56 ;
+     RECT  56.837 13.632 56.915 13.656 ;
+     RECT  56.837 21.072 56.915 22.344 ;
+     RECT  56.819 40.944 56.963 41.304 ;
+     RECT  56.881 14.928 57.053 15.816 ;
+     RECT  56.704 48.48 57.053 48.744 ;
+     RECT  56.704 26.112 57.089 26.136 ;
+     RECT  56.704 27.936 57.089 29.304 ;
+     RECT  56.704 50.112 57.089 51.48 ;
+     RECT  56.704 56.256 57.089 56.904 ;
+     RECT  57.053 14.928 57.125 15.288 ;
+     RECT  56.704 31.728 57.125 31.944 ;
+     RECT  56.963 40.944 57.125 41.208 ;
+     RECT  57.089 50.112 57.125 50.712 ;
+     RECT  56.704 58.128 57.155 58.152 ;
+     RECT  56.704 9.264 57.197 9.288 ;
+     RECT  56.801 43.632 57.197 45.816 ;
+     RECT  57.089 56.256 57.197 56.28 ;
+     RECT  56.819 36.864 57.203 39.768 ;
+     RECT  56.704 53.328 57.205 54.168 ;
+     RECT  57.125 14.928 57.233 15.048 ;
+     RECT  56.704 16.8 57.233 17.112 ;
+     RECT  56.915 21.12 57.233 22.344 ;
+     RECT  57.089 27.936 57.233 27.96 ;
+     RECT  57.125 31.92 57.233 31.944 ;
+     RECT  57.203 37.68 57.233 39.768 ;
+     RECT  57.197 45.168 57.233 45.816 ;
+     RECT  57.233 37.68 57.269 37.704 ;
+     RECT  57.233 39.024 57.269 39.096 ;
+     RECT  57.197 43.632 57.341 43.656 ;
+     RECT  56.704 1.728 57.377 1.752 ;
+     RECT  57.269 39.072 57.413 39.096 ;
+     RECT  57.233 16.8 57.485 16.824 ;
+     RECT  57.205 53.328 57.485 53.928 ;
+     RECT  57.233 21.12 57.521 21.144 ;
+     RECT  57.053 48.48 57.557 48.504 ;
+     RECT  57.089 29.28 57.665 29.304 ;
+     RECT  56.704 33.072 57.665 33.096 ;
+     RECT  57.125 41.136 57.665 41.208 ;
+     RECT  57.485 53.904 57.665 53.928 ;
+     RECT  58.028 2.256 58.115 2.28 ;
+     RECT  57.665 41.184 58.133 41.208 ;
+     RECT  56.704 47.088 58.169 47.112 ;
+     RECT  57.233 15.024 58.205 15.048 ;
+     RECT  57.233 22.32 58.205 22.344 ;
+     RECT  57.233 45.792 58.205 45.816 ;
+     RECT  57.125 50.112 58.205 50.136 ;
+     RECT  57.805 59.28 58.691 59.304 ;
+     RECT  58.949 0.096 59.033 0.12 ;
+    LAYER M5 ;
+     RECT  30.696 0.016 31.584 0.084 ;
+     RECT  31.608 0.016 32.496 0.084 ;
+     RECT  32.52 0.016 33.408 0.084 ;
+     RECT  33.432 0.016 34.32 0.084 ;
+     RECT  34.344 0.016 35.232 0.084 ;
+     RECT  35.256 0.016 36.144 0.084 ;
+     RECT  36.168 0.016 37.104 0.084 ;
+     RECT  37.128 0.016 38.016 0.084 ;
+     RECT  38.04 0.016 38.928 0.084 ;
+     RECT  38.952 0.016 39.84 0.084 ;
+     RECT  39.864 0.016 40.752 0.084 ;
+     RECT  40.776 0.016 41.664 0.084 ;
+     RECT  41.688 0.016 42.576 0.084 ;
+     RECT  42.6 0.016 43.488 0.084 ;
+     RECT  43.512 0.016 44.4 0.084 ;
+     RECT  44.424 0.016 45.312 0.084 ;
+     RECT  45.336 0.016 46.224 0.084 ;
+     RECT  46.248 0.016 47.136 0.084 ;
+     RECT  47.16 0.016 48.048 0.084 ;
+     RECT  48.072 0.016 48.96 0.084 ;
+     RECT  48.984 0.016 49.872 0.084 ;
+     RECT  49.896 0.016 50.784 0.084 ;
+     RECT  50.808 0.016 51.696 0.084 ;
+     RECT  51.72 0.016 52.608 0.084 ;
+     RECT  52.632 0.016 53.52 0.084 ;
+     RECT  53.544 0.016 54.432 0.084 ;
+     RECT  54.456 0.016 55.344 0.084 ;
+     RECT  55.368 0.016 56.256 0.084 ;
+     RECT  56.28 0.016 57.168 0.084 ;
+     RECT  57.192 0.016 58.08 0.084 ;
+     RECT  58.104 0.016 58.992 0.084 ;
+     RECT  30.672 0.084 59.016 0.131 ;
+     RECT  39.84 0.131 41.688 0.611 ;
+     RECT  51.696 0.131 52.632 0.611 ;
+     RECT  30.672 0.131 30.696 1.763 ;
+     RECT  34.32 0.131 36.168 1.763 ;
+     RECT  38.016 0.131 38.04 1.763 ;
+     RECT  39.84 0.611 40.776 1.763 ;
+     RECT  44.4 0.131 44.424 1.763 ;
+     RECT  47.136 0.131 49.896 1.763 ;
+     RECT  51.696 0.611 51.72 1.763 ;
+     RECT  54.432 0.131 54.456 1.763 ;
+     RECT  56.256 0.131 58.104 1.763 ;
+     RECT  2.4 2.137 2.52 2.151 ;
+     RECT  7.8 2.137 7.92 2.151 ;
+     RECT  13.2 2.137 13.32 2.151 ;
+     RECT  18.6 2.137 18.72 2.151 ;
+     RECT  24 2.137 24.12 2.151 ;
+     RECT  29.4 2.137 29.52 2.151 ;
+     RECT  45.6 2.137 45.72 2.151 ;
+     RECT  58.08 1.763 58.104 2.291 ;
+     RECT  34.8 1.763 35.112 3.061 ;
+     RECT  13.2 2.151 13.512 3.397 ;
+     RECT  47.184 3.349 47.208 3.589 ;
+     RECT  22.512 3.109 22.536 3.637 ;
+     RECT  22.512 3.637 23.016 3.685 ;
+     RECT  29.4 2.151 29.712 3.925 ;
+     RECT  29.088 3.925 29.712 3.973 ;
+     RECT  34.08 3.061 35.112 4.019 ;
+     RECT  17.232 3.301 17.256 4.453 ;
+     RECT  18.6 2.151 18.912 4.453 ;
+     RECT  40.2 1.763 40.512 4.501 ;
+     RECT  17.232 4.453 18.912 4.547 ;
+     RECT  21.888 3.685 23.016 4.595 ;
+     RECT  56.4 1.763 56.712 4.837 ;
+     RECT  29.088 3.973 29.976 5.075 ;
+     RECT  10.848 4.261 10.872 5.077 ;
+     RECT  51 2.137 51.312 5.077 ;
+     RECT  13.104 3.397 13.512 5.651 ;
+     RECT  5.52 3.925 5.544 5.987 ;
+     RECT  10.848 5.077 11.784 5.987 ;
+     RECT  34.8 4.019 35.112 6.037 ;
+     RECT  4.368 3.397 4.392 6.181 ;
+     RECT  39.936 4.501 40.512 7.093 ;
+     RECT  39.936 7.093 40.824 7.139 ;
+     RECT  56.4 4.837 56.808 7.763 ;
+     RECT  51 5.077 52.248 8.195 ;
+     RECT  34.704 6.037 35.112 8.245 ;
+     RECT  34.704 8.245 35.208 8.531 ;
+     RECT  34.8 8.531 35.208 8.675 ;
+     RECT  21.024 8.773 21.048 8.915 ;
+     RECT  31.968 8.245 31.992 8.917 ;
+     RECT  49.056 3.301 49.08 9.011 ;
+     RECT  31.968 8.917 32.04 9.251 ;
+     RECT  45.6 2.151 45.912 9.253 ;
+     RECT  4.368 6.181 4.536 9.349 ;
+     RECT  31.968 9.251 31.992 9.539 ;
+     RECT  51 8.195 51.312 9.637 ;
+     RECT  54.96 7.957 54.984 9.637 ;
+     RECT  56.4 7.763 56.712 9.637 ;
+     RECT  47.184 3.589 47.832 9.731 ;
+     RECT  40.032 7.139 40.824 10.115 ;
+     RECT  40.032 10.115 40.512 10.165 ;
+     RECT  54.96 9.637 56.712 10.213 ;
+     RECT  11.76 5.987 11.784 10.883 ;
+     RECT  29.136 5.075 29.976 10.883 ;
+     RECT  54.336 10.213 56.712 10.883 ;
+     RECT  22.512 4.595 23.016 11.221 ;
+     RECT  24 2.151 24.312 11.221 ;
+     RECT  25.44 4.837 25.464 11.267 ;
+     RECT  45.504 9.253 45.912 11.269 ;
+     RECT  4.176 9.349 4.536 11.459 ;
+     RECT  39.84 10.165 40.512 11.507 ;
+     RECT  16.176 4.501 16.2 11.893 ;
+     RECT  47.184 9.731 47.784 11.893 ;
+     RECT  15.744 11.893 16.2 11.939 ;
+     RECT  4.368 11.459 4.536 11.941 ;
+     RECT  13.2 5.651 13.512 11.941 ;
+     RECT  11.712 11.365 11.736 12.515 ;
+     RECT  40.032 11.507 40.512 12.517 ;
+     RECT  4.368 11.941 4.92 12.709 ;
+     RECT  45.072 11.269 45.912 12.755 ;
+     RECT  2.4 2.151 2.712 12.997 ;
+     RECT  40.032 12.517 41.064 13.091 ;
+     RECT  47.184 11.893 48.408 13.091 ;
+     RECT  45.12 12.755 45.912 13.331 ;
+     RECT  50.736 9.637 51.312 13.333 ;
+     RECT  54.96 10.883 56.712 13.621 ;
+     RECT  50.496 13.333 51.312 13.763 ;
+     RECT  9.312 11.701 9.336 13.907 ;
+     RECT  7.8 2.151 8.112 14.101 ;
+     RECT  15.744 11.939 15.768 14.291 ;
+     RECT  38.448 6.277 38.472 14.485 ;
+     RECT  40.032 13.091 40.512 14.485 ;
+     RECT  52.464 12.085 52.488 14.675 ;
+     RECT  42.816 13.477 42.84 14.723 ;
+     RECT  29.4 10.883 29.976 15.349 ;
+     RECT  26.976 11.365 27 15.491 ;
+     RECT  22.512 11.221 24.312 15.683 ;
+     RECT  9.696 15.493 9.72 15.781 ;
+     RECT  9.696 15.781 10.248 15.971 ;
+     RECT  7.68 14.101 8.112 16.019 ;
+     RECT  18.144 4.547 18.912 16.117 ;
+     RECT  2.4 12.997 2.808 16.405 ;
+     RECT  3.936 12.709 4.92 16.405 ;
+     RECT  17.568 16.117 18.912 16.405 ;
+     RECT  47.184 13.091 47.784 16.501 ;
+     RECT  48.912 15.493 48.936 16.501 ;
+     RECT  47.184 16.501 48.936 16.643 ;
+     RECT  12.72 11.941 13.512 16.741 ;
+     RECT  54.96 13.621 56.904 16.885 ;
+     RECT  12.72 16.741 13.608 16.933 ;
+     RECT  28.464 15.349 29.976 16.933 ;
+     RECT  45.6 13.331 45.912 17.029 ;
+     RECT  47.184 16.643 47.976 17.029 ;
+     RECT  2.4 16.405 4.92 17.077 ;
+     RECT  45.6 17.029 47.976 17.077 ;
+     RECT  31.776 15.877 31.8 17.123 ;
+     RECT  54.96 16.885 57 17.123 ;
+     RECT  12.72 16.933 13.992 17.125 ;
+     RECT  45.408 17.077 47.976 17.171 ;
+     RECT  49.008 16.981 49.032 17.171 ;
+     RECT  45.408 17.171 45.912 17.173 ;
+     RECT  12.72 17.125 14.664 17.365 ;
+     RECT  17.328 16.405 19.032 17.365 ;
+     RECT  12.144 17.365 14.664 17.555 ;
+     RECT  45.312 17.173 45.912 17.795 ;
+     RECT  27.744 16.933 29.976 18.083 ;
+     RECT  7.8 16.019 8.112 18.181 ;
+     RECT  50.736 13.763 51.312 18.229 ;
+     RECT  10.224 15.971 10.248 18.275 ;
+     RECT  17.328 17.365 19.416 18.275 ;
+     RECT  12.768 17.555 14.664 18.515 ;
+     RECT  38.448 14.485 40.512 18.659 ;
+     RECT  50.736 18.229 51.432 18.755 ;
+     RECT  45.6 17.795 45.912 18.757 ;
+     RECT  11.232 18.229 11.256 18.803 ;
+     RECT  7.44 18.181 8.112 18.851 ;
+     RECT  45.024 18.757 45.912 18.995 ;
+     RECT  28.032 18.083 29.976 19.091 ;
+     RECT  14.64 18.515 14.664 19.571 ;
+     RECT  47.184 17.171 47.976 19.621 ;
+     RECT  54.96 17.123 56.904 19.909 ;
+     RECT  54.624 19.909 56.904 19.955 ;
+     RECT  26.112 17.557 26.136 20.051 ;
+     RECT  7.8 18.851 8.112 20.581 ;
+     RECT  9.984 18.757 10.008 20.581 ;
+     RECT  55.728 19.955 56.904 21.107 ;
+     RECT  39.696 18.659 40.512 21.109 ;
+     RECT  54.624 19.955 54.744 21.155 ;
+     RECT  39.696 21.109 40.872 21.251 ;
+     RECT  45.6 18.995 45.912 21.637 ;
+     RECT  12.768 18.515 13.512 21.733 ;
+     RECT  36.096 18.181 36.12 21.923 ;
+     RECT  12 21.733 13.512 22.117 ;
+     RECT  43.92 19.909 43.944 22.117 ;
+     RECT  45.6 21.637 46.2 22.117 ;
+     RECT  28.464 19.091 29.976 22.165 ;
+     RECT  43.92 22.117 46.2 22.307 ;
+     RECT  17.328 18.275 18.912 22.645 ;
+     RECT  11.136 22.117 13.512 22.835 ;
+     RECT  7.8 20.581 10.008 22.883 ;
+     RECT  54.624 21.155 54.648 23.267 ;
+     RECT  50.736 18.755 51.312 23.317 ;
+     RECT  2.4 17.077 5.304 23.411 ;
+     RECT  33.408 7.861 33.432 23.605 ;
+     RECT  38.448 18.659 38.472 23.701 ;
+     RECT  39.696 21.251 40.512 23.701 ;
+     RECT  17.184 22.645 18.912 23.749 ;
+     RECT  45.6 22.307 46.2 23.795 ;
+     RECT  22.512 15.683 23.016 23.797 ;
+     RECT  16.992 23.749 18.912 23.891 ;
+     RECT  15.408 22.117 15.432 23.893 ;
+     RECT  22.464 23.797 23.016 23.893 ;
+     RECT  12 22.835 13.512 23.939 ;
+     RECT  34.8 8.675 35.112 23.941 ;
+     RECT  36.144 21.973 36.168 23.941 ;
+     RECT  47.184 19.621 48.408 23.987 ;
+     RECT  22.416 23.893 23.016 24.323 ;
+     RECT  54.576 23.893 54.6 24.325 ;
+     RECT  55.728 21.107 56.808 24.325 ;
+     RECT  9.984 22.883 10.008 24.469 ;
+     RECT  45.6 23.795 45.912 24.469 ;
+     RECT  22.464 24.323 23.016 24.659 ;
+     RECT  15.072 23.893 15.432 24.755 ;
+     RECT  15.408 24.755 15.432 24.899 ;
+     RECT  45.504 24.469 45.912 25.091 ;
+     RECT  42.72 21.013 42.744 25.139 ;
+     RECT  50.736 23.317 51.912 25.187 ;
+     RECT  54.576 24.325 56.808 25.187 ;
+     RECT  34.8 23.941 36.168 25.235 ;
+     RECT  38.448 23.701 40.512 25.573 ;
+     RECT  50.736 25.187 51.72 25.621 ;
+     RECT  9.12 24.469 10.008 25.667 ;
+     RECT  49.584 25.621 51.72 25.907 ;
+     RECT  17.328 23.891 18.912 26.005 ;
+     RECT  37.824 25.573 40.512 26.051 ;
+     RECT  33.312 23.605 33.432 26.101 ;
+     RECT  36.144 25.235 36.168 26.101 ;
+     RECT  17.328 26.005 19.896 26.147 ;
+     RECT  41.52 25.813 41.544 26.149 ;
+     RECT  27.312 19.621 27.336 26.197 ;
+     RECT  54.576 25.187 54.6 26.197 ;
+     RECT  49.584 25.907 51.312 26.243 ;
+     RECT  54.48 26.197 54.6 26.243 ;
+     RECT  54.48 26.243 54.504 26.581 ;
+     RECT  27.168 26.197 27.336 26.677 ;
+     RECT  27.168 26.677 27.384 26.771 ;
+     RECT  12.768 23.939 13.512 26.819 ;
+     RECT  27.264 26.771 27.384 26.867 ;
+     RECT  27.36 26.867 27.384 27.059 ;
+     RECT  33.312 26.101 33.72 27.059 ;
+     RECT  41.52 26.149 42.072 27.299 ;
+     RECT  9.984 25.667 10.008 27.347 ;
+     RECT  55.728 25.187 56.808 27.395 ;
+     RECT  41.712 27.299 42.072 27.443 ;
+     RECT  7.8 22.883 8.112 27.589 ;
+     RECT  36.144 26.101 36.36 27.589 ;
+     RECT  41.712 27.443 41.736 27.635 ;
+     RECT  17.328 26.147 18.912 27.637 ;
+     RECT  28.464 22.165 30.888 27.877 ;
+     RECT  36.144 27.589 37.08 27.923 ;
+     RECT  7.8 27.589 8.616 27.971 ;
+     RECT  17.328 27.637 19.752 28.117 ;
+     RECT  33.312 27.059 33.432 28.453 ;
+     RECT  34.8 25.235 35.112 28.453 ;
+     RECT  54.192 26.581 54.504 28.453 ;
+     RECT  17.328 28.117 20.04 28.499 ;
+     RECT  20.016 28.499 20.04 28.595 ;
+     RECT  38.448 26.051 40.512 28.693 ;
+     RECT  38.448 28.693 41.592 28.835 ;
+     RECT  24 15.683 24.312 28.933 ;
+     RECT  13.2 26.819 13.512 29.077 ;
+     RECT  50.688 26.243 51.312 29.077 ;
+     RECT  33.312 28.453 35.112 29.219 ;
+     RECT  7.8 27.971 8.112 29.221 ;
+     RECT  9.312 29.077 9.336 29.221 ;
+     RECT  43.92 22.307 43.944 29.269 ;
+     RECT  7.8 29.221 9.336 29.411 ;
+     RECT  43.68 29.269 43.944 29.411 ;
+     RECT  7.8 29.411 9.144 29.459 ;
+     RECT  7.8 29.459 8.616 29.555 ;
+     RECT  50.688 29.077 51.576 29.603 ;
+     RECT  2.4 23.411 2.712 29.605 ;
+     RECT  3.84 23.411 5.304 29.605 ;
+     RECT  45.6 25.091 45.912 29.605 ;
+     RECT  27.696 27.877 30.888 29.699 ;
+     RECT  21.072 29.749 21.096 29.939 ;
+     RECT  12.336 29.077 13.512 30.035 ;
+     RECT  41.568 28.835 41.592 30.035 ;
+     RECT  17.328 28.499 19.032 30.275 ;
+     RECT  49.584 26.243 49.608 30.275 ;
+     RECT  36.144 27.923 36.168 30.371 ;
+     RECT  9.12 30.517 9.144 30.755 ;
+     RECT  50.688 29.603 51.312 30.757 ;
+     RECT  38.448 28.835 40.512 30.805 ;
+     RECT  0.192 12.229 0.216 30.899 ;
+     RECT  14.736 30.757 14.856 30.899 ;
+     RECT  26.64 30.757 26.952 30.899 ;
+     RECT  54 28.453 54.504 30.901 ;
+     RECT  14.736 30.899 14.76 30.947 ;
+     RECT  38.448 30.805 40.632 30.947 ;
+     RECT  43.92 29.411 43.944 30.949 ;
+     RECT  9.216 30.757 9.24 30.995 ;
+     RECT  43.92 30.949 44.184 30.995 ;
+     RECT  22.512 24.659 23.016 31.045 ;
+     RECT  32.112 30.565 32.136 31.139 ;
+     RECT  21.84 31.045 23.016 31.187 ;
+     RECT  26.736 30.899 26.856 31.187 ;
+     RECT  38.448 30.947 40.512 31.333 ;
+     RECT  6.432 30.613 6.456 31.379 ;
+     RECT  45.6 29.605 46.2 31.669 ;
+     RECT  47.184 23.987 47.784 31.669 ;
+     RECT  53.28 30.901 54.504 32.003 ;
+     RECT  37.776 31.333 40.512 32.195 ;
+     RECT  53.856 32.003 54.504 32.341 ;
+     RECT  17.328 30.275 18.912 32.437 ;
+     RECT  33.312 29.219 33.432 32.437 ;
+     RECT  34.8 29.219 35.112 32.437 ;
+     RECT  22.512 31.187 23.016 32.725 ;
+     RECT  24 28.933 24.408 32.725 ;
+     RECT  33.312 32.437 35.112 32.725 ;
+     RECT  45.6 31.669 47.784 32.773 ;
+     RECT  38.448 32.195 40.512 32.869 ;
+     RECT  41.52 31.813 41.544 32.869 ;
+     RECT  38.448 32.869 41.544 33.011 ;
+     RECT  16.8 32.437 18.912 33.059 ;
+     RECT  26.208 31.861 26.232 33.107 ;
+     RECT  41.52 33.011 41.544 33.107 ;
+     RECT  52.416 32.437 52.44 33.107 ;
+     RECT  56.208 27.395 56.808 33.107 ;
+     RECT  42.912 32.341 42.936 33.395 ;
+     RECT  32.448 32.725 35.112 33.587 ;
+     RECT  45.504 32.773 47.784 33.731 ;
+     RECT  13.2 30.035 13.512 34.069 ;
+     RECT  44.16 30.995 44.184 34.117 ;
+     RECT  45.504 33.731 46.104 34.117 ;
+     RECT  28.464 29.699 30.888 34.213 ;
+     RECT  2.4 29.605 5.304 34.259 ;
+     RECT  16.848 33.059 18.912 34.355 ;
+     RECT  7.8 29.555 8.112 34.357 ;
+     RECT  53.856 32.341 54.984 34.357 ;
+     RECT  27.888 34.213 30.936 34.597 ;
+     RECT  48.768 31.861 48.792 34.693 ;
+     RECT  49.776 30.757 51.312 34.693 ;
+     RECT  27.168 34.597 30.936 34.787 ;
+     RECT  42.96 34.117 42.984 34.885 ;
+     RECT  44.16 34.117 46.104 34.885 ;
+     RECT  11.712 34.165 11.736 34.931 ;
+     RECT  42.96 34.885 46.104 34.931 ;
+     RECT  7.536 34.357 8.112 34.933 ;
+     RECT  45.504 34.931 46.104 35.027 ;
+     RECT  27.888 34.787 30.888 35.363 ;
+     RECT  22.512 32.725 24.408 35.411 ;
+     RECT  2.4 34.259 5.208 35.459 ;
+     RECT  7.44 34.933 8.112 35.509 ;
+     RECT  7.392 35.509 8.112 35.699 ;
+     RECT  7.44 35.699 8.112 35.795 ;
+     RECT  7.584 35.795 8.112 35.843 ;
+     RECT  53.856 34.357 55.224 35.843 ;
+     RECT  3.84 35.459 5.208 35.893 ;
+     RECT  22.992 35.411 24.408 35.939 ;
+     RECT  48.768 34.693 51.312 35.939 ;
+     RECT  11.328 35.557 11.352 36.131 ;
+     RECT  32.448 33.587 33.432 36.373 ;
+     RECT  53.856 35.843 54.984 36.373 ;
+     RECT  42.96 34.931 44.184 36.421 ;
+     RECT  42.144 36.421 44.184 36.467 ;
+     RECT  32.448 36.373 33.624 36.515 ;
+     RECT  36.288 32.437 36.312 36.515 ;
+     RECT  53.76 36.373 54.984 36.515 ;
+     RECT  48.768 35.939 48.792 36.611 ;
+     RECT  3.84 35.893 5.88 36.803 ;
+     RECT  45.6 35.027 46.104 36.803 ;
+     RECT  56.256 33.107 56.808 36.853 ;
+     RECT  53.76 36.515 54.744 37.091 ;
+     RECT  7.8 35.843 8.112 37.189 ;
+     RECT  34.8 33.587 35.112 37.237 ;
+     RECT  7.8 37.189 8.28 37.427 ;
+     RECT  34.8 37.237 35.352 37.429 ;
+     RECT  21.6 36.997 21.624 37.475 ;
+     RECT  33.408 36.515 33.624 37.477 ;
+     RECT  33.216 37.477 33.624 37.523 ;
+     RECT  23.424 35.939 24.408 37.669 ;
+     RECT  3.84 36.803 5.208 38.005 ;
+     RECT  6.336 36.901 6.36 38.005 ;
+     RECT  53.856 37.091 54.744 38.005 ;
+     RECT  3.84 38.005 6.36 38.051 ;
+     RECT  42.144 36.467 42.168 38.147 ;
+     RECT  33.216 37.523 33.432 38.387 ;
+     RECT  34.704 37.429 35.352 38.387 ;
+     RECT  52.368 37.957 52.392 38.435 ;
+     RECT  13.104 34.069 13.512 38.485 ;
+     RECT  23.424 37.669 24.504 38.531 ;
+     RECT  43.92 36.467 44.184 38.675 ;
+     RECT  36.768 37.621 36.792 38.677 ;
+     RECT  23.616 38.531 24.504 38.821 ;
+     RECT  26.928 37.573 26.952 38.869 ;
+     RECT  3.84 38.051 5.976 38.963 ;
+     RECT  36.528 38.677 36.792 39.155 ;
+     RECT  13.104 38.485 13.608 39.253 ;
+     RECT  49.824 35.939 51.312 39.253 ;
+     RECT  34.704 38.387 35.112 39.299 ;
+     RECT  3.936 38.963 5.976 39.443 ;
+     RECT  15.168 37.957 15.192 39.443 ;
+     RECT  36.528 39.155 36.552 39.443 ;
+     RECT  49.056 39.253 51.312 39.443 ;
+     RECT  3.936 39.443 5.832 39.539 ;
+     RECT  47.184 33.731 47.784 39.731 ;
+     RECT  26.928 38.869 27.24 39.827 ;
+     RECT  47.616 39.731 47.784 39.923 ;
+     RECT  50.4 39.443 51.312 39.971 ;
+     RECT  49.056 39.443 49.08 40.019 ;
+     RECT  53.856 38.005 55.272 40.021 ;
+     RECT  56.256 36.853 57.192 40.021 ;
+     RECT  12.864 39.253 13.608 40.067 ;
+     RECT  28.464 35.363 30.888 40.355 ;
+     RECT  26.928 39.827 26.952 40.835 ;
+     RECT  17.328 34.355 18.912 40.885 ;
+     RECT  50.496 39.971 51.312 41.077 ;
+     RECT  17.232 40.885 18.912 41.123 ;
+     RECT  4.224 39.539 5.832 41.125 ;
+     RECT  38.448 33.011 40.512 41.125 ;
+     RECT  50.496 41.077 52.248 41.125 ;
+     RECT  53.856 40.021 57.192 41.125 ;
+     RECT  38.448 41.125 41.064 41.267 ;
+     RECT  4.224 41.125 6.168 41.363 ;
+     RECT  44.16 38.675 44.184 41.363 ;
+     RECT  50.496 41.125 57.192 41.363 ;
+     RECT  33.312 38.387 33.432 41.365 ;
+     RECT  34.8 39.299 35.112 41.365 ;
+     RECT  33.312 41.365 35.112 41.411 ;
+     RECT  52.848 41.363 57.192 41.411 ;
+     RECT  52.848 41.411 55.272 41.555 ;
+     RECT  45.6 36.803 45.912 41.557 ;
+     RECT  47.616 39.923 47.64 41.557 ;
+     RECT  23.616 38.821 25.032 41.603 ;
+     RECT  10.848 41.461 10.872 41.651 ;
+     RECT  52.848 41.555 52.872 41.651 ;
+     RECT  53.856 41.555 55.272 41.651 ;
+     RECT  28.464 40.355 30.6 41.749 ;
+     RECT  7.8 37.427 8.112 41.941 ;
+     RECT  13.2 40.067 13.608 41.987 ;
+     RECT  17.328 41.123 18.912 42.083 ;
+     RECT  17.904 42.083 18.912 42.131 ;
+     RECT  50.496 41.363 51.312 42.133 ;
+     RECT  21.072 41.557 21.096 42.227 ;
+     RECT  18.144 42.131 18.912 42.709 ;
+     RECT  53.856 41.651 54.264 42.757 ;
+     RECT  55.248 41.651 55.272 42.757 ;
+     RECT  22.128 42.133 22.152 42.995 ;
+     RECT  7.68 41.941 8.112 43.043 ;
+     RECT  27.12 41.557 27.144 43.187 ;
+     RECT  9.552 40.405 9.576 43.285 ;
+     RECT  53.856 42.757 55.272 43.429 ;
+     RECT  56.256 41.411 57.192 43.429 ;
+     RECT  42.672 39.109 42.696 43.523 ;
+     RECT  33.408 41.411 35.112 43.811 ;
+     RECT  13.2 41.987 13.512 43.861 ;
+     RECT  9.36 43.285 9.576 44.003 ;
+     RECT  49.584 42.133 51.312 44.099 ;
+     RECT  38.448 41.267 40.512 44.101 ;
+     RECT  33.408 43.811 33.432 44.387 ;
+     RECT  15.936 44.293 15.96 44.435 ;
+     RECT  45.6 41.557 47.64 44.531 ;
+     RECT  24 41.603 25.032 44.629 ;
+     RECT  20.928 43.141 20.952 44.675 ;
+     RECT  24 44.629 25.08 44.771 ;
+     RECT  53.856 43.429 57.192 44.963 ;
+     RECT  6.528 44.341 6.552 45.011 ;
+     RECT  4.224 41.363 5.208 45.013 ;
+     RECT  4.224 45.013 5.448 45.059 ;
+     RECT  18.144 42.709 19.608 45.059 ;
+     RECT  11.28 41.941 11.304 45.203 ;
+     RECT  28.464 41.749 30.648 45.491 ;
+     RECT  13.2 43.861 13.608 45.635 ;
+     RECT  9.36 44.003 9.384 45.731 ;
+     RECT  49.92 44.099 51.312 45.731 ;
+     RECT  45.6 44.531 45.912 45.781 ;
+     RECT  27.12 45.685 27.144 45.827 ;
+     RECT  47.616 44.531 47.64 45.829 ;
+     RECT  44.736 45.781 45.912 45.923 ;
+     RECT  4.944 45.059 5.448 46.067 ;
+     RECT  53.856 44.963 55.272 46.069 ;
+     RECT  53.52 46.069 55.272 46.117 ;
+     RECT  56.256 44.963 57.192 46.117 ;
+     RECT  53.52 46.117 57.192 46.165 ;
+     RECT  53.424 46.165 57.192 46.355 ;
+     RECT  38.448 44.101 40.968 46.501 ;
+     RECT  5.088 46.067 5.448 46.787 ;
+     RECT  38.448 46.501 41.304 46.835 ;
+     RECT  50.496 45.731 51.312 46.835 ;
+     RECT  27.264 46.069 27.288 47.315 ;
+     RECT  53.424 46.355 54.312 47.315 ;
+     RECT  24 44.771 24.888 47.363 ;
+     RECT  47.616 45.829 48.552 47.363 ;
+     RECT  53.52 47.315 54.312 47.363 ;
+     RECT  28.464 45.491 29.712 47.509 ;
+     RECT  5.088 46.787 5.352 47.603 ;
+     RECT  45.6 45.923 45.912 47.845 ;
+     RECT  32.256 44.629 32.28 47.939 ;
+     RECT  34.464 43.811 35.112 48.133 ;
+     RECT  45.6 47.845 46.536 48.229 ;
+     RECT  11.664 47.461 11.688 48.371 ;
+     RECT  27.888 47.509 29.712 48.467 ;
+     RECT  28.464 48.467 29.712 48.899 ;
+     RECT  55.488 46.355 57.192 48.899 ;
+     RECT  15.072 46.645 15.096 48.901 ;
+     RECT  38.448 46.835 40.512 48.947 ;
+     RECT  14.88 48.901 15.096 48.949 ;
+     RECT  34.464 48.133 35.208 48.995 ;
+     RECT  45.024 48.229 46.536 48.995 ;
+     RECT  5.28 47.603 5.352 49.043 ;
+     RECT  26.208 48.949 26.232 49.045 ;
+     RECT  9.12 47.845 9.144 49.091 ;
+     RECT  14.784 48.949 15.096 49.139 ;
+     RECT  43.872 47.893 43.896 49.283 ;
+     RECT  28.992 48.899 29.712 49.379 ;
+     RECT  18.6 45.059 19.608 49.427 ;
+     RECT  2.4 35.459 2.712 49.477 ;
+     RECT  13.2 45.635 13.512 49.525 ;
+     RECT  24 47.363 24.792 49.717 ;
+     RECT  45.024 48.995 45.912 49.907 ;
+     RECT  12.72 49.525 13.512 50.003 ;
+     RECT  23.904 49.717 24.792 50.195 ;
+     RECT  26.208 49.045 26.568 50.195 ;
+     RECT  41.52 47.653 41.544 50.195 ;
+     RECT  26.544 50.195 26.568 50.243 ;
+     RECT  34.608 48.995 35.208 50.291 ;
+     RECT  13.2 50.003 13.512 50.389 ;
+     RECT  15.072 49.139 15.096 50.435 ;
+     RECT  50.736 46.835 51.312 50.579 ;
+     RECT  2.4 49.477 3.48 50.677 ;
+     RECT  5.328 49.043 5.352 50.723 ;
+     RECT  13.2 50.389 13.704 50.723 ;
+     RECT  45.312 49.907 45.912 50.867 ;
+     RECT  39.12 48.947 40.512 50.917 ;
+     RECT  39.12 50.917 41.064 51.107 ;
+     RECT  14.688 51.493 14.712 51.731 ;
+     RECT  18.6 49.427 18.912 51.829 ;
+     RECT  10.848 50.101 10.872 51.923 ;
+     RECT  18.6 51.829 19.656 51.925 ;
+     RECT  24 50.195 24.792 51.971 ;
+     RECT  34.608 50.291 35.112 51.973 ;
+     RECT  39.696 51.107 41.064 52.309 ;
+     RECT  39.696 52.309 41.592 52.355 ;
+     RECT  13.2 50.723 13.512 52.693 ;
+     RECT  18.6 51.925 20.568 52.979 ;
+     RECT  16.848 50.389 16.872 52.981 ;
+     RECT  18.6 52.979 19.656 52.981 ;
+     RECT  34.608 51.973 35.256 52.981 ;
+     RECT  45.6 50.867 45.912 52.981 ;
+     RECT  47.616 47.363 47.64 52.981 ;
+     RECT  16.848 52.981 19.656 53.027 ;
+     RECT  25.584 52.933 25.608 53.029 ;
+     RECT  29.4 49.379 29.712 53.029 ;
+     RECT  41.568 52.355 41.592 53.075 ;
+     RECT  45.6 52.981 47.64 53.171 ;
+     RECT  13.2 52.693 14.136 53.221 ;
+     RECT  33.024 51.493 33.048 53.221 ;
+     RECT  34.608 52.981 35.928 53.221 ;
+     RECT  33.024 53.221 35.928 53.267 ;
+     RECT  25.584 53.029 26.568 53.363 ;
+     RECT  28.704 53.029 29.712 53.363 ;
+     RECT  13.104 53.221 14.136 53.413 ;
+     RECT  17.664 53.027 19.656 53.507 ;
+     RECT  55.584 48.899 57.192 53.555 ;
+     RECT  2.4 50.677 3.624 53.557 ;
+     RECT  22.176 53.509 22.2 53.557 ;
+     RECT  2.4 53.557 3.96 53.603 ;
+     RECT  12.96 53.413 14.136 53.603 ;
+     RECT  17.664 53.507 18.912 53.603 ;
+     RECT  43.344 51.205 43.368 53.603 ;
+     RECT  33.648 53.267 35.928 53.795 ;
+     RECT  24 51.971 24.312 54.085 ;
+     RECT  25.584 53.363 25.608 54.085 ;
+     RECT  55.824 53.555 57.192 54.179 ;
+     RECT  33.648 53.795 35.88 54.611 ;
+     RECT  13.104 53.603 14.136 54.707 ;
+     RECT  18.6 53.603 18.912 54.997 ;
+     RECT  13.2 54.707 14.136 55.091 ;
+     RECT  34.608 54.611 35.88 55.091 ;
+     RECT  34.8 55.091 35.88 55.331 ;
+     RECT  45.6 53.171 45.912 55.333 ;
+     RECT  47.616 53.171 47.64 55.333 ;
+     RECT  21.936 53.557 22.2 55.525 ;
+     RECT  18 54.997 18.912 55.571 ;
+     RECT  53.856 47.363 54.312 55.669 ;
+     RECT  55.824 54.179 56.712 55.715 ;
+     RECT  24 54.085 25.608 55.811 ;
+     RECT  3.936 53.603 3.96 55.907 ;
+     RECT  24 55.811 25.128 55.907 ;
+     RECT  20.016 55.525 20.04 55.955 ;
+     RECT  50.832 50.579 51.312 56.483 ;
+     RECT  21.504 55.525 22.2 56.531 ;
+     RECT  21.504 56.531 21.528 57.059 ;
+     RECT  45.6 55.333 47.64 57.059 ;
+     RECT  53.712 55.669 54.312 57.059 ;
+     RECT  53.712 57.059 53.736 57.635 ;
+     RECT  47.04 57.059 47.64 58.019 ;
+     RECT  56.4 55.715 56.712 58.117 ;
+     RECT  2.4 53.603 2.712 58.329 ;
+     RECT  7.8 43.043 8.112 58.329 ;
+     RECT  13.2 55.091 13.512 58.329 ;
+     RECT  18.6 55.571 18.912 58.329 ;
+     RECT  24 55.907 24.312 58.329 ;
+     RECT  29.4 53.363 29.712 58.329 ;
+     RECT  34.8 55.331 35.112 58.329 ;
+     RECT  39.696 52.355 40.512 58.329 ;
+     RECT  45.6 57.059 45.912 58.329 ;
+     RECT  51 56.483 51.312 58.329 ;
+     RECT  2.4 58.329 2.52 58.343 ;
+     RECT  7.8 58.329 7.92 58.343 ;
+     RECT  13.2 58.329 13.32 58.343 ;
+     RECT  18.6 58.329 18.72 58.343 ;
+     RECT  24 58.329 24.12 58.343 ;
+     RECT  29.4 58.329 29.52 58.343 ;
+     RECT  34.8 58.329 34.92 58.343 ;
+     RECT  39.696 58.329 40.32 58.343 ;
+     RECT  45.6 58.329 45.72 58.343 ;
+     RECT  51 58.329 51.12 58.343 ;
+     RECT  56.4 58.117 57.144 58.343 ;
+     RECT  39.696 58.343 39.72 59.891 ;
+     RECT  47.616 58.019 47.64 59.891 ;
+     RECT  34.32 1.763 34.8 3.061 ;
+     RECT  56.712 1.763 58.08 2.291 ;
+     RECT  22.536 3.109 24 3.637 ;
+     RECT  17.256 3.301 18.6 4.453 ;
+     RECT  45.912 3.349 47.184 17.029 ;
+     RECT  47.832 3.589 49.056 9.011 ;
+     RECT  23.016 3.637 24 11.221 ;
+     RECT  4.392 3.925 5.52 5.987 ;
+     RECT  16.2 4.501 17.232 4.547 ;
+     RECT  24.312 4.837 25.44 11.267 ;
+     RECT  11.784 5.077 13.104 5.651 ;
+     RECT  11.784 5.651 13.2 10.883 ;
+     RECT  4.392 5.987 4.536 6.181 ;
+     RECT  38.472 6.277 39.936 7.139 ;
+     RECT  33.432 7.861 34.704 8.531 ;
+     RECT  54.984 7.957 56.4 9.637 ;
+     RECT  31.992 8.245 33.408 8.917 ;
+     RECT  33.432 8.531 34.8 26.101 ;
+     RECT  21.048 8.773 22.512 8.915 ;
+     RECT  32.04 8.917 33.408 9.251 ;
+     RECT  31.992 9.251 33.408 9.539 ;
+     RECT  2.712 9.349 4.176 11.459 ;
+     RECT  38.472 10.165 39.84 11.507 ;
+     RECT  11.76 10.883 13.2 11.365 ;
+     RECT  11.736 11.365 13.2 11.941 ;
+     RECT  2.712 11.459 4.368 12.709 ;
+     RECT  8.112 11.701 9.312 13.907 ;
+     RECT  11.736 11.941 12.72 12.515 ;
+     RECT  51.312 12.085 52.464 14.675 ;
+     RECT  2.712 12.709 3.936 12.997 ;
+     RECT  2.808 12.997 3.936 16.405 ;
+     RECT  27 15.349 28.464 15.491 ;
+     RECT  27.744 15.491 28.464 16.933 ;
+     RECT  47.784 15.493 48.912 16.501 ;
+     RECT  23.016 15.683 24 32.725 ;
+     RECT  47.976 16.643 48.936 16.981 ;
+     RECT  47.976 16.981 49.008 17.171 ;
+     RECT  45.912 17.171 47.184 21.637 ;
+     RECT  12.144 17.555 12.768 18.229 ;
+     RECT  45.312 17.795 45.6 18.757 ;
+     RECT  35.112 18.181 36.096 21.923 ;
+     RECT  10.248 18.229 11.232 18.275 ;
+     RECT  11.256 18.229 12.768 18.803 ;
+     RECT  10.224 18.275 11.232 18.757 ;
+     RECT  13.512 18.515 14.64 19.571 ;
+     RECT  38.472 18.659 39.696 23.701 ;
+     RECT  10.008 18.757 11.232 18.803 ;
+     RECT  28.032 19.091 28.464 19.621 ;
+     RECT  26.136 19.621 27.312 20.051 ;
+     RECT  27.336 19.621 28.464 26.677 ;
+     RECT  54.744 19.955 55.728 21.155 ;
+     RECT  42.744 21.013 43.92 25.139 ;
+     RECT  54.648 21.155 55.728 23.267 ;
+     RECT  46.2 21.637 47.184 23.795 ;
+     RECT  35.112 21.923 36.12 21.973 ;
+     RECT  35.112 21.973 36.144 23.941 ;
+     RECT  10.008 22.117 11.136 22.835 ;
+     RECT  54.624 23.267 55.728 23.893 ;
+     RECT  2.712 23.411 3.84 29.605 ;
+     RECT  45.912 23.795 47.184 29.605 ;
+     RECT  54.6 23.893 55.728 24.325 ;
+     RECT  8.112 24.469 9.12 25.667 ;
+     RECT  54.6 25.187 55.728 26.243 ;
+     RECT  35.112 25.235 36.144 30.371 ;
+     RECT  40.512 25.813 41.52 27.299 ;
+     RECT  33.72 26.101 34.8 27.059 ;
+     RECT  18.912 26.147 19.752 27.637 ;
+     RECT  49.608 26.243 50.688 30.275 ;
+     RECT  54.504 26.243 55.728 27.395 ;
+     RECT  27.384 26.677 28.464 27.059 ;
+     RECT  27.696 27.059 28.464 27.877 ;
+     RECT  33.432 27.059 34.8 28.453 ;
+     RECT  40.512 27.299 41.712 27.635 ;
+     RECT  37.08 27.589 38.448 27.923 ;
+     RECT  40.512 27.635 41.592 28.693 ;
+     RECT  8.112 27.971 8.616 29.077 ;
+     RECT  19.032 28.499 20.016 28.595 ;
+     RECT  40.512 28.835 41.568 30.035 ;
+     RECT  8.112 29.077 9.312 29.221 ;
+     RECT  33.432 29.219 34.8 32.437 ;
+     RECT  9.144 29.411 9.24 29.459 ;
+     RECT  8.616 29.459 9.24 29.555 ;
+     RECT  8.112 29.555 9.24 30.517 ;
+     RECT  46.2 29.605 47.184 31.669 ;
+     RECT  27.696 29.699 28.464 30.757 ;
+     RECT  21.096 29.749 22.512 29.939 ;
+     RECT  21.84 29.939 22.512 31.045 ;
+     RECT  40.512 30.035 40.632 30.805 ;
+     RECT  49.776 30.275 50.688 30.757 ;
+     RECT  8.112 30.517 9.12 30.755 ;
+     RECT  9.144 30.517 9.24 30.755 ;
+     RECT  30.888 30.565 32.112 31.139 ;
+     RECT  32.136 30.565 33.312 31.139 ;
+     RECT  5.304 30.613 6.432 31.379 ;
+     RECT  6.456 30.613 7.8 31.379 ;
+     RECT  8.112 30.755 9.24 30.757 ;
+     RECT  8.112 30.757 9.216 30.995 ;
+     RECT  13.512 30.757 14.736 30.947 ;
+     RECT  26.952 30.757 28.464 30.899 ;
+     RECT  40.512 30.947 40.632 31.813 ;
+     RECT  44.184 30.949 45.6 32.773 ;
+     RECT  43.92 30.995 44.16 32.341 ;
+     RECT  40.512 31.813 41.52 32.869 ;
+     RECT  47.784 31.861 48.768 36.611 ;
+     RECT  48.792 31.861 49.776 34.693 ;
+     RECT  53.28 32.003 53.856 32.437 ;
+     RECT  41.544 32.341 42.912 33.107 ;
+     RECT  42.936 32.341 44.16 33.395 ;
+     RECT  54.984 32.341 56.208 33.107 ;
+     RECT  35.112 32.437 36.288 36.515 ;
+     RECT  51.312 32.437 52.416 33.107 ;
+     RECT  52.44 32.437 53.856 33.107 ;
+     RECT  44.184 32.773 45.504 34.117 ;
+     RECT  40.512 33.011 41.52 33.107 ;
+     RECT  54.984 33.107 56.256 34.357 ;
+     RECT  42.96 33.395 44.16 34.117 ;
+     RECT  33.432 33.587 34.8 36.373 ;
+     RECT  46.104 33.731 47.184 36.803 ;
+     RECT  42.984 34.117 44.16 34.885 ;
+     RECT  11.736 34.165 13.104 34.931 ;
+     RECT  30.936 34.213 32.448 34.787 ;
+     RECT  55.224 34.357 56.256 35.843 ;
+     RECT  44.184 34.931 45.504 35.027 ;
+     RECT  44.184 35.027 45.6 41.363 ;
+     RECT  2.712 35.459 3.84 38.963 ;
+     RECT  7.392 35.699 7.44 35.795 ;
+     RECT  7.392 35.795 7.584 35.843 ;
+     RECT  7.392 35.843 7.8 35.893 ;
+     RECT  54.984 35.843 56.256 36.515 ;
+     RECT  5.88 35.893 7.8 36.803 ;
+     RECT  48.792 35.939 49.824 36.611 ;
+     RECT  33.624 36.373 34.8 37.429 ;
+     RECT  33.216 36.515 33.408 37.477 ;
+     RECT  35.112 36.515 36.312 37.237 ;
+     RECT  54.744 36.515 56.256 38.005 ;
+     RECT  5.208 36.803 7.8 36.901 ;
+     RECT  45.912 36.803 47.184 39.731 ;
+     RECT  5.208 36.901 6.336 38.005 ;
+     RECT  6.36 36.901 7.8 38.051 ;
+     RECT  53.76 37.091 53.856 37.957 ;
+     RECT  35.352 37.237 36.312 37.621 ;
+     RECT  33.624 37.429 34.704 37.523 ;
+     RECT  33.432 37.523 34.704 39.299 ;
+     RECT  26.952 37.573 28.464 38.869 ;
+     RECT  35.352 37.621 36.768 38.387 ;
+     RECT  51.312 37.957 52.368 38.435 ;
+     RECT  52.392 37.957 53.856 38.435 ;
+     RECT  55.272 38.005 56.256 40.021 ;
+     RECT  35.112 38.387 36.768 38.677 ;
+     RECT  43.92 38.675 44.16 39.109 ;
+     RECT  35.112 38.677 36.528 39.443 ;
+     RECT  27.24 38.869 28.464 39.827 ;
+     RECT  2.712 38.963 3.936 39.539 ;
+     RECT  42.696 39.109 44.16 41.363 ;
+     RECT  47.784 39.253 49.056 39.923 ;
+     RECT  33.432 39.299 34.8 41.365 ;
+     RECT  49.08 39.443 50.4 39.971 ;
+     RECT  2.712 39.539 4.224 45.059 ;
+     RECT  26.952 39.827 28.464 40.835 ;
+     RECT  47.64 39.923 49.056 40.019 ;
+     RECT  49.08 39.971 50.496 40.019 ;
+     RECT  30.6 40.355 30.648 41.749 ;
+     RECT  8.112 40.405 9.552 43.285 ;
+     RECT  27.12 40.835 28.464 41.557 ;
+     RECT  55.272 41.411 56.256 43.429 ;
+     RECT  9.576 41.461 10.848 41.651 ;
+     RECT  52.872 41.555 53.856 41.651 ;
+     RECT  27.144 41.557 28.464 43.187 ;
+     RECT  54.264 41.651 55.248 42.757 ;
+     RECT  21.096 42.133 22.128 42.227 ;
+     RECT  7.68 43.043 7.8 44.341 ;
+     RECT  19.608 43.141 20.928 44.675 ;
+     RECT  8.112 43.285 9.36 45.731 ;
+     RECT  33.432 43.811 34.464 44.387 ;
+     RECT  5.208 44.341 6.528 45.011 ;
+     RECT  6.552 44.341 7.8 45.011 ;
+     RECT  55.272 44.963 56.256 46.117 ;
+     RECT  5.208 45.011 5.448 45.013 ;
+     RECT  27.144 45.685 28.464 45.827 ;
+     RECT  27.264 45.827 28.464 46.069 ;
+     RECT  27.288 46.069 28.464 47.315 ;
+     RECT  54.312 46.355 55.488 48.899 ;
+     RECT  40.512 46.835 41.304 47.653 ;
+     RECT  27.888 47.315 28.464 47.509 ;
+     RECT  11.688 47.461 13.2 48.371 ;
+     RECT  40.512 47.653 41.52 50.195 ;
+     RECT  8.112 47.845 9.12 49.091 ;
+     RECT  46.536 47.845 47.616 48.995 ;
+     RECT  43.896 48.229 45.024 49.283 ;
+     RECT  12.72 48.371 13.2 49.525 ;
+     RECT  54.312 48.899 55.584 53.555 ;
+     RECT  13.512 48.901 14.88 48.949 ;
+     RECT  13.512 48.949 14.784 49.139 ;
+     RECT  24.792 48.949 26.208 50.195 ;
+     RECT  13.512 49.139 15.072 50.389 ;
+     RECT  40.512 50.195 41.064 50.917 ;
+     RECT  13.704 50.389 15.072 50.435 ;
+     RECT  13.704 50.435 14.712 50.723 ;
+     RECT  13.512 50.723 14.712 51.493 ;
+     RECT  13.512 51.493 14.688 51.731 ;
+     RECT  13.512 51.731 14.136 52.693 ;
+     RECT  24.312 51.971 24.792 52.933 ;
+     RECT  40.512 52.355 41.568 53.075 ;
+     RECT  24.312 52.933 25.584 54.085 ;
+     RECT  54.312 53.555 55.824 55.715 ;
+     RECT  2.712 53.603 3.936 55.907 ;
+     RECT  18 53.603 18.6 54.997 ;
+     RECT  18.912 55.525 20.016 55.955 ;
+     RECT  20.04 55.525 21.504 55.955 ;
+     RECT  45.912 57.059 47.04 58.019 ;
+  END
+END ot_hgi_coll_reduce_lane
+END LIBRARY

@@ -1,0 +1,43 @@
+{
+  "CK_old": 64,
+  "CK_new": 4,
+  "middle_copies_old": 8,
+  "middle_copies_new": 32,
+  "NA1": [
+    41,
+    878
+  ],
+  "NA2": [
+    21,
+    464
+  ],
+  "extra_active_strap_flops_estimate": "actual flop inventory pending gate",
+  "prior_std_area_um2": 8629,
+  "actual_std_area_um2": 13468.217,
+  "max_leaf_fanout_expected": 32,
+  "max_middle_copy_loads": 20,
+  "pin_strap_mid_fanout": 32,
+  "clock_root_sinks_estimate": 26118,
+  "clock_tree": "all physical node+wire+leaf stages counted, kit-local proof and assertion",
+  "startup_delta_edges": 0,
+  "data_delta_edges": 0,
+  "macros": 8,
+  "outline_um": [
+    432,
+    345.6
+  ],
+  "fill_waiver": "Coordinator accepted safe lattice+macro-channel outline; not shrinking",
+  "LCK_new": 2,
+  "actual_hard_area_um2": 31132.61568,
+  "synthesis_total_area_um2": 44600.83268,
+  "total_fill": 0.298734572455847,
+  "max_leaf_fanout_actual": 32,
+  "max_middle_copy_loads_actual": 28,
+  "pin_strap_mid_fanout_actual": 32,
+  "regional_reset_loads": 33,
+  "regional_reset_exception": "Coordinator accepts quantified one-load exception pending native/reset mapping audit",
+  "actual_std_delta_vs_rg1_um2": 4839.217000000001,
+  "fanout_inventory": "rg2_final_tt_fanout.json",
+  "synth_flops_actual": 26110,
+  "extra_flops_vs_rg1": 11255
+}

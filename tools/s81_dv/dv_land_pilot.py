@@ -16,6 +16,15 @@ ONE E per link (all lanes of a bundle share the compiler slot), the SAME E at TT
          the bundle gets the bundle E = max over its lanes, so the model times what the bound hardware does
   dv_land_pilot.py rebundle --plan-in DIR --out DIR [--bundle x_frame]
       the --bundle rule applied to an existing land_plan.json (no reports needed); rewrites land_plan.json + landing.sdc
+  dv_land_pilot.py agebundle --plan-in DIR --out DIR [--classes xring unit attn]
+      (S81-LBGAP/G8 10-18) lanes <stem>_l<i> of one link into one receiver form a BUNDLE that the receiver consumes in ONE
+      cycle (ot_s81sl_rstop 4 x 276 line beat, seqhost / svc entry words): every lane must land at the SAME age.  The
+      compiler / RTL age of a landed lane is ceil(N/2) + K + 1 (N half-cycle stations, K the landing strap, gate calendar
+      R0 = G + N mod 2), so per bundle K_l = E_l + (A - age_l), A = max lane age with K = E.  E stays the lane's STA E;
+      K is re-checked in the landing window per corner, F_c = ceil(-S1_c / T) in [K - D + 1, K - 1] (and
+      hold_K = H0 + (D - K) T >= 0 where H0 is known); a D 4 lane that does not fit moves to the long tile
+      dsfd_dvland_<W>l (D 8) when one exists; a bundle that fits no tile keeps K = E and is listed (age_unequal).
+      x_frame bundles (frame lk straps, bind table frame_lk) are only audited (frame_age_unequal).
   dv_land_pilot.py kit --plan DIR --case-remote CASE --libs-remote LIBS [--corners tt ff]
       -> DIR/sta_land_<corner>.tcl + run.sh: the dv_sta_pilot STA with landing.sdc sourced, plus per-link worst
          setup / hold at the landed block pins (link_<corner>.rpt) and the relay-hop hold path details (hop_<corner>.rpt)
@@ -65,6 +74,10 @@ def main():
     rb.add_argument('--bundle', nargs='+', default=['x_frame'])
     rb.add_argument('--landed', type=Path, default=None, help='landed STA of the source plan (link_<corner>.rpt): hold margins of '
                     'raised lanes whose H0 is unlisted = landed min slack - (E_bundle - E_lane) T')
+    ab = sp.add_parser('agebundle')
+    ab.add_argument('--plan-in', required=True, type=Path)
+    ab.add_argument('--out', required=True, type=Path)
+    ab.add_argument('--classes', nargs='+', default=['xring', 'unit', 'attn'])
     k = sp.add_parser('kit')
     k.add_argument('--plan', required=True, type=Path)
     k.add_argument('--case-remote', required=True)
@@ -91,6 +104,8 @@ def main():
         return variant(a)
     if a.cmd == 'rebundle':
         return rebundle(a)
+    if a.cmd == 'agebundle':
+        return agebundle(a)
     case = json.load(open(a.case))
     links = {}
     for c in case['chains']:
@@ -196,6 +211,93 @@ def write_plan(a, plan, hist, sdc, extra=None):
                    summary=summ, **(extra or {}), links=plan), open(a.out / 'land_plan.json', 'w'), indent=1)
     (a.out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     print(json.dumps(summ, indent=1))
+
+
+def lane_bundles(plan):
+    """(stem, dst) -> rows of the multi-lane bundles (<stem>_l<i> into one receiver)"""
+    grp = collections.defaultdict(list)
+    for p in plan:
+        m = re.fullmatch(r'(.+)_l(\d+)', p['link'])
+        if m:
+            grp[(m.group(1), p['dst'])].append(p)
+    return {k: v for k, v in grp.items() if len(v) > 1}
+
+
+def lane_age(r, K=None):
+    return math.ceil(r['stages'] / 2) + (r['K'] if K is None else K) + 1
+
+
+def window_ok_K(r, K, D, T):
+    """landing window of lane r read at strap K in a D-slot ring: per corner F = ceil(-S1/T) in [K-D+1, K-1]
+    (F <= 0 with K 1 = single-cycle met) and hold_K = H0 + (D - K) T >= 0 where H0 is known"""
+    why = []
+    for c, s1 in r['s1'].items():
+        if s1 is None:
+            continue
+        F = math.ceil(-float(s1) / T)
+        if not (K - D + 1 <= F <= K - 1) and not (F <= 0 and K == 1):
+            why.append(f'{c}: F {F} outside [{K - D + 1}, {K - 1}]')
+        h0 = (r.get('h0') or {}).get(c)
+        if h0 is not None and h0 + (D - K) * T < 0:
+            why.append(f'{c}: hold_K {h0 + (D - K) * T:.1f} ps')
+    return why
+
+
+def agebundle(a):
+    src = json.load(open(a.plan_in / 'land_plan.json'))
+    T, plan = src['T_ps'], src['links']
+    bund = lane_bundles(plan)
+    fixed, unequal, frame_bad, moved = [], [], [], []
+    for (stem, dst), rows in sorted(bund.items()):
+        ages = [lane_age(r) for r in rows]
+        if len(set(ages)) == 1:
+            continue
+        cls = rows[0]['cls']
+        if cls not in a.classes:
+            if cls == 'x_frame':
+                frame_bad.append(dict(bundle=stem, dst=dst, lanes=[(r['link'], r['stages'], r['K']) for r in rows], ages=ages))
+            continue
+        A = max(ages)
+        trial, why = [], []
+        for r, ag in zip(rows, ages):
+            K = r['K'] + (A - ag)
+            D, master = r['D'], r['master']
+            w = window_ok_K(r, K, D, T)
+            if w and D == 4 and r['bits'] in LONG_W:
+                w8 = window_ok_K(r, K, 8, T)
+                if not w8:
+                    D, master, w = 8, f'dsfd_dvland_{r["bits"]}l', []
+            if K > (63 if D == 8 else 7):
+                w.append(f'K {K} beyond the strap range')
+            trial.append((r, K, D, master))
+            why += [f'{r["link"]} K {K} D {D}: {x}' for x in w]
+        if why:
+            unequal.append(dict(bundle=stem, dst=dst, cls=cls, lanes=[(r['link'], r['stages'], r['E']) for r in rows], ages=ages,
+                                why=why))
+            continue
+        for r, K, D, master in trial:
+            raised = K - r['K']
+            if D != r['D']:
+                moved.append(r['link'])
+                r['ring_flops'] = (D + 1) * r['bits']
+            r.update(bundle=f'{stem}->{dst}', lane_age_E=lane_age(r), bundle_age=A, K=K, D=D, master=master,
+                     K_source='S81-LBGAP/G8 bundle age: K = E + (max bundle age - lane age)',
+                     added_edges=r.get('added_edges', 1 + r['E']) + raised)
+            r['window_ok'] = True
+        fixed.append(dict(bundle=stem, dst=dst, cls=cls, age=A, K=[r['K'] for r in rows], E=[r['E'] for r in rows],
+                          N=[r['stages'] for r in rows]))
+    a.D, a.corners = src['D'], src['corners']
+    summ_extra = dict(agebundle=dict(rule='per bundle <stem>_l<i> -> dst: K_l = E_l + (A - age_l), age = ceil(N/2) + K + 1',
+                                     classes=a.classes, multi_lane_bundles=len(bund), equalised=fixed, moved_to_D8=moved,
+                                     age_unequal=unequal, frame_age_unequal=frame_bad))
+    head = ['# S81-LAND landing model (tools/s81_dv/dv_land_pilot.py agebundle of %s): per forwarded-clock link, ring D, K = '
+            'bundle-age strap (S81-LBGAP/G8); setup multicycle = K, hold = D - 1; NOT_A_DIE_RESULT (stand-in blocks)'
+            % (a.plan_in / 'land_plan.json')]
+    for r in plan:     # the landing reads at K: the window multicycle is K (= E outside the equalised bundles)
+        r.setdefault('K', r['E'])
+    write_plan(a, plan, collections.Counter(p['E'] for p in plan),
+               head + sdc_lines([dict(p, E=p['K']) for p in plan], {p['link']: f"i_{p['link']}" for p in plan}),
+               extra=dict(source_plan=str(a.plan_in / 'land_plan.json'), **summ_extra))
 
 
 def rebundle(a):

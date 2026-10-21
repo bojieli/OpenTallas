@@ -1,0 +1,5 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2354444-1792460839 after 0 s
+SLCAP_GOLD DE 24 DL 16 rows 1280 written_ok 1280 bad_writes 0 missing 0 arrivals 7446/7446 arr_mismatch 0 fault 0 fcause 0000
+PASS cap_p1_gold DE=24 DL=16 slcap_vec_gbase
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2354444-1792460839): exit 0

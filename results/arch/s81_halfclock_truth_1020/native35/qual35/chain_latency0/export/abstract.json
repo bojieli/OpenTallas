@@ -1,0 +1,160 @@
+{
+  "name": "fc_coupon",
+  "orfs_dir": "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/qual35/chain_latency0/orfs",
+  "corners": {
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.417925080270948e-10 min 3.052055830288225e-11",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/qual35/chain_latency0/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/qual35/chain_latency0/export:/out",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "sdc_sequence": {
+    "tt": {
+      "mode": "legacy",
+      "tcl": [
+        "read_db /in/results/asap7/fc_coupon/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_spef /in/results/asap7/fc_coupon/base/6_final.spef",
+        "read_sdc /in/results/asap7/fc_coupon/base/6_final.sdc",
+        "set_propagated_clock [all_clocks]"
+      ]
+    }
+  },
+  "macro_views": [],
+  "forwarded_clock": {
+    "tt": {
+      "corner": "tt",
+      "input_pin": "ck",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx2_ASAP7_75t_R",
+      "driver_instance": "b1",
+      "direct_root_buffer": false,
+      "chain": [
+        {
+          "cell": "BUFx2_ASAP7_75t_R",
+          "instance": "b1"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "inv"
+        },
+        {
+          "cell": "BUFx4_ASAP7_75t_R",
+          "instance": "b0"
+        }
+      ],
+      "timing_sense": "negative_unate",
+      "root_waveform_ps": [
+        22.99999956631913,
+        376.9999882906165
+      ],
+      "output_rise_input_edge": "fall",
+      "output_fall_input_edge": "rise",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 136.12927200000001,
+        "arrival_min_rise": 134.75097699999998,
+        "arrival_max_fall": 119.79109199999999,
+        "arrival_min_fall": 118.43765300000001,
+        "slew_max_rise": 196.429871,
+        "slew_max_fall": 159.505478
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 118.65756199999998,
+        "arrival_min_rise": 117.27929699999999,
+        "arrival_max_fall": 102.593369,
+        "arrival_min_fall": 101.239952,
+        "slew_max_rise": 191.217041,
+        "slew_max_fall": 152.905701
+      },
+      "input_absolute_ps": {
+        "arrival_max_rise": 23.0,
+        "arrival_min_rise": 23.0,
+        "arrival_max_fall": 377.0,
+        "arrival_min_fall": 377.0,
+        "slew_max_rise": 20.0,
+        "slew_max_fall": 20.0
+      },
+      "output_absolute_ps": {
+        "arrival_max_rise": 513.129272,
+        "arrival_min_rise": 511.750977,
+        "arrival_max_fall": 142.791092,
+        "arrival_min_fall": 141.437653,
+        "slew_max_rise": 196.429871,
+        "slew_max_fall": 159.505478
+      },
+      "driver_absolute_ps": {
+        "arrival_max_rise": 495.657562,
+        "arrival_min_rise": 494.279297,
+        "arrival_max_fall": 125.593369,
+        "arrival_min_fall": 124.239952,
+        "slew_max_rise": 191.217041,
+        "slew_max_fall": 152.905701
+      },
+      "input_phase_normalized_ps": {
+        "arrival_max_rise": 4.336808707705586e-07,
+        "arrival_min_rise": 4.336808707705586e-07,
+        "arrival_max_fall": 1.1709383500146942e-05,
+        "arrival_min_fall": 1.1709383500146942e-05,
+        "slew_max_rise": 20.0,
+        "slew_max_fall": 20.0
+      },
+      "output_phase_normalized_ps": {
+        "arrival_max_rise": 136.12928370938351,
+        "arrival_min_rise": 134.75098870938348,
+        "arrival_max_fall": 119.79109243368086,
+        "arrival_min_fall": 118.43765343368088,
+        "slew_max_rise": 196.429871,
+        "slew_max_fall": 159.505478
+      },
+      "driver_phase_normalized_ps": {
+        "arrival_max_rise": 118.65757370938348,
+        "arrival_min_rise": 117.27930870938349,
+        "arrival_max_fall": 102.59336943368086,
+        "arrival_min_fall": 101.23995243368087,
+        "slew_max_rise": 191.217041,
+        "slew_max_fall": 152.905701
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 17.47171000000003,
+        "arrival_min_rise": 17.471679999999992,
+        "arrival_max_fall": 17.197722999999996,
+        "arrival_min_fall": 17.19770100000001,
+        "slew_max_rise": 5.212829999999997,
+        "slew_max_fall": 6.599777000000017
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "9f7fef278b715c9b19301880ceef56309e0cd5d375b0152c7497486738dcba0e",
+      "spef_sha256": "56d6e34115224297c376ec9fa3931fd40850141d54fd4516183b7750b3c6381b",
+      "native_signoff_sdc_sha256": "54214eee8ce0ddbf342cb7f7087d6e5caa1932b6ab1a6ff014d71a54efd62d51",
+      "native_combinational_lib_sha256": "1581a470cf4613f8f6f99355d01faa147a2b08f4b70db9a8802fe7a6841001ff",
+      "sequential_etm_before_merge_sha256": "8679b1adfa85f5c05f2123845d8757c34fdaf60e67287d87181fa4376bbc42e5",
+      "exported_etm_sha256": "8cec0adb5fd87ae79ef9c7a7105f089ab050b08006918d7b09987968bb045d33",
+      "extraction_tcl_sha256": "63aadfd244a7c7c7b9f93374c1b9d2572374da7a653f69e2f187ccf9fbbae4eb"
+    }
+  },
+  "abstract": {
+    "mode": "default",
+    "why": "no SS pass: abstract not written by this export"
+  },
+  "files": {
+    "fc_coupon_tt.lib": "8cec0adb5fd87ae79ef9c7a7105f089ab050b08006918d7b09987968bb045d33"
+  },
+  "ok": false,
+  "checked": false
+}

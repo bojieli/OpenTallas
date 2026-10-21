@@ -8,7 +8,13 @@
 // (presented RB_GAP edges after the partial: the xfin's exchange is benched by S81-DV).  Prints SLBEAT + latencies.
 // Negative controls: +define+OT_S81SL_MUT_TREE (vn tree association), +define+OT_S81SL_TB_MUT_COEF (bench swaps two
 // comb words in the leaf store: hc_post must then mismatch -- proves the h check sees the coefficient path).
-module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37, parameter integer VQ_XMEM = 0);
+// S81-SLICE 10-18 (vp NORMR + POST order): the 24 HC coefficients sit in the leaf store exactly as dsdv_gunit_l5 writes
+// them (six CTL rows R .. R + 5 = pre, post, comb rows 0..3; R = R_CA / R_CF).  NORMR = 1 (default) issues vp op 7
+// NORMR a0 = R (hc_pre from the row, imm 0); NORMR = 0 the legacy op 5 NORM with hc_pre in the imm.  POST a0 = R + 1.
+// RTL mutants: +define+OT_S81SL_VP_MUT_POSTLAST (vp's old POST row order: comb a0..a0+3, post a0+4) and
+// +define+OT_S81SL_VP_MUT_NORMIMM (NORMR ignores the row) must FAIL.
+module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37, parameter integer VQ_XMEM = 0,
+                       parameter integer NORMR = 1);
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     reg [15:0] h0 [0:255];
@@ -78,13 +84,15 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
                 img[(k ? R_GF : R_GA) + i / 4][32 * (i % 4) +: 32] = gw[64 * k + i];
                 img[(k ? R_YF : R_YA) + i / 4][32 * (i % 4) +: 32] = yp[64 * k + i];
             end
-            for (i = 0; i < 16; i = i + 1) img[(k ? R_CF : R_CA) + i / 4][32 * (i % 4) +: 32] = comb[16 * k + i];
+            // the G-unit's six rows: R = pre[0..3], R + 1 = post[0..3], R + 2 + j = comb[j][0..3]
+            for (i = 0; i < 4; i = i + 1) img[(k ? R_CF : R_CA)][32 * i +: 32] = pre[4 * k + i];
+            for (i = 0; i < 4; i = i + 1) img[(k ? R_CF : R_CA) + 1][32 * i +: 32] = post[4 * k + i];
+            for (i = 0; i < 16; i = i + 1) img[(k ? R_CF : R_CA) + 2 + i / 4][32 * (i % 4) +: 32] = comb[16 * k + i];
 `ifdef OT_S81SL_TB_MUT_COEF
-            img[(k ? R_CF : R_CA)][31:0] = comb[16 * k + 1]; img[(k ? R_CF : R_CA)][63:32] = comb[16 * k + 0];
+            img[(k ? R_CF : R_CA) + 2][31:0] = comb[16 * k + 1]; img[(k ? R_CF : R_CA) + 2][63:32] = comb[16 * k + 0];
 `endif
-            for (i = 0; i < 4; i = i + 1) img[(k ? R_CF : R_CA) + 4][32 * i +: 32] = post[4 * k + i];
             for (r = 0; r < 16; r = r + 1) begin wr_ok[(k ? R_GF : R_GA) + r] = 1; wr_ok[(k ? R_YF : R_YA) + r] = 1; end
-            for (r = 0; r < 5; r = r + 1) wr_ok[(k ? R_CF : R_CA) + r] = 1;
+            for (r = 0; r < 6; r = r + 1) wr_ok[(k ? R_CF : R_CA) + r] = 1;
         end
         // h0: half row hi = (j = hi >> 1, hf = hi & 1): copy c, lane 4 hf + t at bit (4c + t) * 16 of the 256-b half row
         for (i = 0; i < 16; i = i + 1)
@@ -115,7 +123,9 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         // per block: GAIN, NORM, rstd, POST, HSTORE, RDOUT
         if (cyc == 220 + 400 * blk && blk < 2) cmd(4'd1, blk ? R_GF : R_GA, 0, 0, 0);            // GAIN
         if (cyc == 240 + 400 * blk && blk < 2) begin
-            cmd(4'd5, 0, BEAT, 8'd3, {pre[4 * blk + 3], pre[4 * blk + 2], pre[4 * blk + 1], pre[4 * blk + 0]}); t_go = cyc;   // NORM
+            if (NORMR) cmd(4'd7, blk ? R_CF : R_CA, BEAT, 8'd3, 128'd0);                                   // NORMR (row R)
+            else cmd(4'd5, 0, BEAT, 8'd3, {pre[4 * blk + 3], pre[4 * blk + 2], pre[4 * blk + 1], pre[4 * blk + 0]});   // NORM (imm)
+            t_go = cyc;
         end
         if (p_v) begin
             np_ = np_ + 1; t_p = cyc; lat_p[blk] = cyc - t_go;
@@ -142,7 +152,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
             for (i = 0; i < 64; i = i + 1)
                 if (xb_d[16 * i +: 16] !== ey[64 * blk + i][31:16]) begin err = err + 1; if (err < 12) $display("B MISMATCH blk %0d lane %0d", blk, i); end
         end
-        if (t_q >= 0 && cyc == t_q + 12) begin cmd(4'd2, blk ? R_CF : R_CA, blk ? R_YF : R_YA, 0, 0); t_post = cyc; end   // POST
+        if (t_q >= 0 && cyc == t_q + 12) begin cmd(4'd2, (blk ? R_CF : R_CA) + 1, blk ? R_YF : R_YA, 0, 0); t_post = cyc; end   // POST (row R + 1)
         if (hw_v && t_post >= 0) begin t_hw_last = cyc; lat_post[blk] = cyc - t_post; end
         if (t_post >= 0 && cyc == t_post + 80) cmd(4'd4, R_HS, 0, 0, 0);                         // HSTORE
         if (t_post >= 0 && cyc == t_post + 110) cmd(4'd6, R_HS, 0, 16, 0);                       // RDOUT 16 row pairs
@@ -158,8 +168,8 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
             if (nlo == 16) begin nlo = 0; blk = blk + 1; t_p = -1; t_q = -1; t_post = -1; end
         end
         if (cyc == 1200) begin
-            $display("SLBEAT beat=%0d partials=%0d ybeats=%0d qbeats=%0d bbeats=%0d blocks_done=%0d err=%0d fault=vp%b/vn%b/vq%b go_to_partial=%0d/%0d rstd_to_y0=%0d/%0d rstd_to_xq=%0d/%0d rstd_to_xb=%0d/%0d post_cmd_to_last_hw=%0d/%0d",
-                     BEAT, np_, ny, nq, nb, blk, err, fp, fn, fq, lat_p[0], lat_p[1], lat_y[0], lat_y[1], lat_q[0], lat_q[1], lat_b[0], lat_b[1], lat_post[0], lat_post[1]);
+            $display("SLBEAT beat=%0d normr=%0d partials=%0d ybeats=%0d qbeats=%0d bbeats=%0d blocks_done=%0d err=%0d fault=vp%b/vn%b/vq%b go_to_partial=%0d/%0d rstd_to_y0=%0d/%0d rstd_to_xq=%0d/%0d rstd_to_xb=%0d/%0d post_cmd_to_last_hw=%0d/%0d",
+                     BEAT, NORMR, np_, ny, nq, nb, blk, err, fp, fn, fq, lat_p[0], lat_p[1], lat_y[0], lat_y[1], lat_q[0], lat_q[1], lat_b[0], lat_b[1], lat_post[0], lat_post[1]);
             if (err == 0 && np_ == 2 && ny == 16 && nq == 2 && nb == 2 && blk == 2 && !fp && !fn && !fq) $display("PASS"); else $display("FAIL");
             $finish;
         end

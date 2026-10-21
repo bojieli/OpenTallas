@@ -189,27 +189,58 @@ def class_last_beat(stream, sbase, nbeat, u0, u1):
 
 
 # ------------------------------------------------------------------------------------------------ legaliser
-def leaves_for(assign, emit_edge, rows_vals):
-    """assign: {pair: [(super row, seg, nseg)]} (one entry: one hw slot); emit_edge(pair, seg) -> edge"""
+def slot_order(items):
+    """the element's hw slot order of its segments (v41_die_images_w17w10.add_phase: classes by ascending unit range, a
+    class's segments by (fmt, row, tensor)); with one segment per class (S81-ROMOPT-C KSLOT) = ascending segment index"""
+    return sorted(items, key=lambda it: (it[1], it[0]))
+
+
+def leaves_for(assign, emit_edge, rows_vals, kslot=1):
+    """assign: {pair: [(super row, seg, nseg)]}; emit_edge(pair, seg[, j, n]) -> edge.  kslot 1: one hw slot per element
+    per phase (D2).  kslot k > 1 (S81-ROMOPT-C, OT_XS_KSLOT): up to k segment CLASSES per element (k segments of distinct
+    segment indices, each its own class / unit range); slot j of n (hw slot order) leaves at the MEASURED multi-class
+    cadence emit_edge(pair, seg, j, n).  Every leaf (element pv port, one word per macro per edge) must see distinct
+    edges.  (k segments of ONE class are not legalisable: they leave 1 edge apart on both macros, and the element's
+    leaf node -- r0 on a, r1 on b one edge later -- exits one word an edge: F1 in every element, ROMOPT-C 10-20.)"""
     lv = collections.defaultdict(list)
     for p, items in assign.items():
-        assert len(items) == 1, 'one hw slot per element per phase (cadence of several slots not modelled)'
-        R, s, n = items[0]
-        e = emit_edge(p, s)
-        for j in range(2):
-            r = 2 * R + j
-            if r not in rows_vals:
-                continue
-            lv[f'e{p}.r{j}'].append((e, C._mk((OPTAG << 14) | r, s, 0, n), rows_vals[r][s], 0))
+        n = len(items)
+        if kslot == 1:
+            assert n == 1, 'one hw slot per element per phase (cadence of several slots not modelled)'
+        else:
+            assert 1 <= n <= kslot, ('element over its k slots', p, n, kslot)
+            assert len({it[1] for it in items}) == n, ('KSLOT: k DISTINCT segment classes per element', p, items)
+        for j, (R, s, nn) in enumerate(slot_order(items)):
+            e = emit_edge(p, s) if kslot == 1 else emit_edge(p, s, j, n)
+            for jj in range(2):
+                r = 2 * R + jj
+                if r not in rows_vals:
+                    continue
+                lv[f'e{p}.r{jj}'].append((e, C._mk((OPTAG << 14) | r, s, 0, nn), rows_vals[r][s], 0))
+    for k_, ws in lv.items():
+        ed = sorted(w[0] for w in ws)
+        if len(set(ed)) != len(ed):
+            raise PortConflict(('element pv port: two words on one edge', k_, ed))
+        if kslot > 1 and any(b_ - a_ < 2 for a_, b_ in zip(ed, ed[1:])):
+            # E3: r0 / r1 of one element meet in its leaf node (r1 one edge later), which exits one word an edge; and
+            # the measured cadence (each class at its own single-slot edge) holds only for classes >= 2 edges apart
+            raise PortConflict(('element classes closer than 2 edges (leaf node exit / measured cadence)', k_, ed))
     return lv
 
 
-def score(topo, assign, emit_edge, rows_vals):
-    rep, ret = compose(topo, leaves_for(assign, emit_edge, rows_vals))
+class PortConflict(AssertionError):
+    """a static port conflict (element pv port / frame RET bus): a compile fault, never a runtime stall"""
+
+
+def score(topo, assign, emit_edge, rows_vals, kslot=1):
+    try:
+        rep, ret = compose(topo, leaves_for(assign, emit_edge, rows_vals, kslot))
+    except PortConflict:
+        return 10 ** 6, 10 ** 6, None, []
     return nfaults(rep), len(ret), rep, ret
 
 
-def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters):
+def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters, ret_score=None):
     """pairs: the frame's q pairs; nsr super rows x nseg segments = len(pairs) slots.  Local search over the slot
     permutation (super row, seg) -> pair; objective (faults, root words)."""
     slots = [(R, s, nseg) for R in range(nsr) for s in range(nseg)]
@@ -221,20 +252,127 @@ def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters):
     def mk(pm):
         return {pairs[i]: [slots[pm[i]]] for i in range(len(pairs))}
     best = perm[:]
-    bf, bw, _, _ = score(topo, mk(best), emit_edge, rows_vals)
+    bf, bw, _, ret = score(topo, mk(best), emit_edge, rows_vals)
+    if ret_score is not None:
+        bf += ret_score(ret)
     cur, cf_, cw = best[:], bf, bw
     T0 = 2.0
     for it in range(iters):
         cand = cur[:]
         i, j = rng.sample(range(len(cand)), 2)
         cand[i], cand[j] = cand[j], cand[i]
-        f, w, _, _ = score(topo, mk(cand), emit_edge, rows_vals)
+        f, w, _, ret = score(topo, mk(cand), emit_edge, rows_vals)
+        if ret_score is not None:
+            f += ret_score(ret)
         d = (f - cf_) * 100 + (w - cw)
         T = T0 * (1 - it / iters) + 1e-3
         if d <= 0 or rng.random() < pow(2.718, -d / T):
             cur, cf_, cw = cand, f, w
             if (f, w) < (bf, bw):
                 best, bf, bw = cand[:], f, w
+    return mk(best), bf, bw
+
+
+KSLOT_LAYOUTS = ROOT / 'tools/s81_dv/layer_prog/kslot_layouts.json'
+_LAY = None
+
+
+def kslot_key(master, fmt, K, nseg, nsr, k, stretch=None, rows=None):
+    """the calendar of a k-class phase is fixed by (master, shape, super rows, k, stretch) AND the row count (an odd
+    count leaves one idle half: fewer words, different merges)"""
+    return f'{master}|{fmt}|{K}|{nseg}|{nsr}|{k}|r{rows}' + (f'|st{float(stretch):g}' if stretch else '')
+
+
+def kslot_layouts():
+    """legalised k-class layouts {key: {pair: [[super row, seg], ...]}} (tools/s81_dv/layer_prog/kslot_layouts.json)"""
+    global _LAY
+    if _LAY is None:
+        import os
+        f = Path(os.environ.get('OT_XS_KSLOT_LAYOUTS', str(KSLOT_LAYOUTS)))
+        _LAY = json.loads(f.read_text())['layouts'] if f.exists() else {}
+    return _LAY
+
+
+def kslot_nsr(nseg, npairs, k):
+    """S81-ROMOPT-C: super rows a k-class phase holds on npairs q pairs (k slots each, nseg slots a super row)"""
+    return (k * npairs) // nseg
+
+
+def kslot_layout(nsr, nseg, npairs):
+    """initial k-class layout: slot t = (super row t // nseg, segment t % nseg) on pair t mod npairs (the frame's pair
+    order); a pair's segment indices are t, t + npairs, ... mod nseg -- distinct while npairs is not a multiple of nseg"""
+    lay = [[] for _ in range(npairs)]
+    for t in range(nsr * nseg):
+        lay[t % npairs].append((t // nseg, t % nseg))
+    for it in lay:
+        assert len({s for _, s in it}) == len(it), ('initial k-class layout repeats a class', it)
+    return lay
+
+
+def legalise_k(topo, pairs, nsr, nseg, k, emit_edge, rows_vals, seed, iters, ret_score=None, init=None):
+    """S81-ROMOPT-C (OT_XS_KSLOT=k): legalise a k-class phase.  Layout = per pair <= k slots (super row, segment) of
+    DISTINCT segment indices.  Local search: swap two slots between pairs (kept only if both pairs keep distinct
+    classes) or swap two pairs' whole contents (moves the slots to other leaves / x stations); objective (faults incl.
+    port conflicts, root words), as legalise."""
+    assert nsr * nseg <= k * len(pairs), ('k-class phase over its slots', nsr, nseg, k, len(pairs))
+    if init is None:
+        lay = kslot_layout(nsr, nseg, len(pairs))
+    else:    # a previous search's layout {pair: [(R, s, n)]} (kslot_search restarts)
+        lay = [[(R, s_) for R, s_, *_ in init.get(q, [])] for q in pairs]
+        assert sorted(x for L in lay for x in L) == sorted((R, s_) for R in range(nsr) for s_ in range(nseg))
+    assert max(len(x) for x in lay) <= k
+    rng = random.Random(seed)
+
+    def mk(L):
+        return {pairs[i]: [(R, s_, nseg) for R, s_ in x] for i, x in enumerate(L) if x}
+
+    def ev(L):
+        f, w, _, ret = score(topo, mk(L), emit_edge, rows_vals, k)
+        if ret_score is not None and ret:
+            f += ret_score(ret)
+        return f, w
+
+    def cp(L):
+        return [list(x) for x in L]
+    best = cp(lay)
+    bf, bw = ev(best)
+    cur, cf_, cw = cp(best), bf, bw
+    import os
+    T0 = float(os.environ.get('OT_XS_KSLOT_T0', '2.0'))      # annealing: fault weight W, start temperature T0
+    W = float(os.environ.get('OT_XS_KSLOT_W', '100'))
+    occ = [i for i, x in enumerate(lay)]
+    for it in range(iters):
+        cand = cp(cur)
+        if rng.random() < 0.3:
+            i, j = rng.sample(occ, 2)
+            cand[i], cand[j] = cand[j], cand[i]
+        else:
+            i, j = rng.sample(occ, 2)
+            if not cand[i] and not cand[j]:
+                continue
+            if cand[i] and (not cand[j] or rng.random() < 0.5 or len(cand[j]) >= k):
+                a = rng.randrange(len(cand[i]))
+                if cand[j] and len(cand[j]) >= k:
+                    b_ = rng.randrange(len(cand[j]))
+                    cand[i][a], cand[j][b_] = cand[j][b_], cand[i][a]
+                else:
+                    cand[j].append(cand[i].pop(a))
+            else:
+                b_ = rng.randrange(len(cand[j]))
+                if len(cand[i]) >= k:
+                    a = rng.randrange(len(cand[i]))
+                    cand[i][a], cand[j][b_] = cand[j][b_], cand[i][a]
+                else:
+                    cand[i].append(cand[j].pop(b_))
+            if any(len({s_ for _, s_ in x}) != len(x) for x in (cand[i], cand[j])):
+                continue
+        f, w = ev(cand)
+        d = (f - cf_) * W + (w - cw)
+        T = T0 * (1 - it / iters) + 1e-3
+        if d <= 0 or rng.random() < pow(2.718, -d / T):
+            cur, cf_, cw = cand, f, w
+            if (f, w) < (bf, bw):
+                best, bf, bw = cp(cand), f, w
     return mk(best), bf, bw
 
 
@@ -270,18 +408,47 @@ def golden_vals(mat, x, nseg):
     return {r: [int(G.bits(G.csum(blocks[r, e0 // 32:(e0 + el) // 32]))) for e0, el in segs] for r in range(mat.rows)}
 
 
-def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None):
+def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None, frame_schedule=None, ret_score=None,
+               kslot=1, nsr=None, slot_extra=None, stretch=None):
     """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
-    land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs"""
+    land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
+    seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
+    legalising (a per-segment term changes the calendar, so it cannot be added after planning)
+    kslot k > 1 (S81-ROMOPT-C, OT_XS_KSLOT): nsr super rows, each element up to k of them on ONE segment index; slot j
+    of an element holding n leaves slot_extra[n][j] (an int, or a list per segment index) edges after its single-slot
+    E(pair, seg) (MEASURED multi-slot cadence,
+    PV trace; None = unmeasured, 0)"""
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
     topo = load_topology(master)
     off, e0 = emission(master)
     e0 += x_shift(land_e)
-    nsr = len(pairs) // nseg
-    # the phase stream does not depend on which pair holds which segment: take it from a scratch placement
+    if frame_schedule:
+        import hashlib
+        schedule = json.loads(Path(frame_schedule).read_text())
+        for f, sha in schedule['source_sha256'].items():
+            assert hashlib.sha256((ROOT/f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
+        assert land_e is not None, 'landed frame schedule requires the actual cfifo landing E'
+        assert schedule['topology']['master'] == master
+        topo = schedule['topology']
+        off = dict(off)
+        for pair in pairs:
+            st = schedule['station_inputs'][f'e{pair}']
+            assert st['all_x_inputs_equal_added_edges'], ('unaligned x calendar', pair)
+            add, = st['added_edges']
+            assert all(c['added_edges'] == add for c in st['control'].values()), ('unaligned go/cfg', pair)
+            off[pair] += add
+    if kslot == 1:
+        nsr = len(pairs) // nseg
+        ident = [(i, i // nseg, i % nseg) for i in range(len(pairs))]
+    else:
+        assert nsr is not None and nsr * nseg <= kslot * len(pairs), (nsr, nseg, kslot, len(pairs))
+        ident = [(i_, R_, s_) for i_, it in enumerate(kslot_layout(nsr, nseg, len(pairs))) for R_, s_ in it]
+    # the phase stream does not depend on which pair holds which segment (only on the units and the most words any element
+    # reads a round, the same for every balanced k-slot layout): take it from a scratch placement
     scratch = I.Field(16, 1, 0, depth=8192, active=len(pairs), pp=True, fast=True)
-    ident = [(i, i // nseg, i % nseg) for i in range(len(pairs))]
+    if kslot > 1:
+        scratch.stretch = stretch
     orig = I._place
     I._place = place_fn(ident, nseg)
     try:
@@ -292,23 +459,77 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None):
     segs = S.segments(mat.K, nseg)
     beat = [class_last_beat(stream, 0, len(stream), *S.unit_range(mat.fmt, a0, el)) for a0, el in segs]
 
-    def emit_edge(p, s):
-        return e0 + beat[s] + off[p]
+    sx = list(seg_extra) if seg_extra is not None else [0] * len(segs)
+    assert len(sx) == len(segs), (sx, len(segs))
+
+    kx = slot_extra if slot_extra is not None else {n_: [0] * n_ for n_ in range(1, kslot + 1)}
+
+    def emit_edge(p, s, j=0, n=1):
+        if kslot == 1:
+            return e0 + beat[s] + off[p] + sx[s]
+        d = kx[n][j]
+        return e0 + beat[s] + off[p] + sx[s] + (d[s] if isinstance(d, (list, tuple)) else d)
     vals = golden_vals(mat, x, nseg)
-    assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters)
-    rep, ret = compose(topo, leaves_for(assign, emit_edge, vals))
+    layout_key = None
+    if assign is None and kslot > 1:
+        # S81-ROMOPT-C: a legalised k-class layout of this shape (compiler data, kslot_search.py) is reused when it covers
+        # these pairs and composes fault-free here (emission timing is value-independent, so every phase of one shape
+        # has the same calendar faults); otherwise the search below runs
+        layout_key = kslot_key(master, mat.fmt, mat.K, nseg, nsr, kslot, stretch, mat.rows)
+        lay_ = kslot_layouts().get(layout_key)
+        if lay_ is not None and {int(q_) for q_ in lay_} <= set(pairs):
+            cand_ = {int(q_): [(R_, s_, nseg) for R_, s_ in v_] for q_, v_ in lay_.items()}
+            if score(topo, cand_, emit_edge, vals, kslot)[0] == 0:
+                assign = cand_
+            else:
+                layout_key = None
+        else:
+            layout_key = None
+    if assign is None and kslot > 1:
+        # k-class search: OT_XS_KSLOT_ITERS (x iters, default 1) and OT_XS_KSLOT_SEEDS restarts (seeds seed..), best kept;
+        # the search stops at the first fault-free restart (deterministic for fixed settings)
+        import os
+        mul = int(os.environ.get('OT_XS_KSLOT_ITERS', '1'))
+        best_ = None
+        for sd_ in range(seed, seed + int(os.environ.get('OT_XS_KSLOT_SEEDS', '1'))):
+            r_ = legalise_k(topo, pairs, nsr, nseg, kslot, emit_edge, vals, sd_, iters * mul, ret_score=ret_score)
+            if best_ is None or r_[1:] < best_[1:]:
+                best_ = r_
+            if best_[1] == 0:
+                break
+        assign, f, w = best_
+    elif assign is None:
+        assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters, ret_score=ret_score)
+    else:
+        assert set(assign) <= set(pairs), ('fixed placement names a pair outside the frame', set(assign) - set(pairs))
+        items = [tuple(it) for its in assign.values() for it in its]
+        assert len({it[:2] for it in items}) == len(items) and all(it[2] == nseg for it in items), \
+            'fixed placement repeats a (super row, seg) slot or has the wrong nseg'
+    try:
+        rep, ret = compose(topo, leaves_for(assign, emit_edge, vals, kslot))
+        conflict = None
+    except PortConflict as e_:      # an unlegalised k-class layout (iters 0): reported as a compile fault, not raised
+        rep, ret, conflict = {}, [], str(e_)
     slot_of = {p: i for i, p in enumerate(pairs)}
+    flat = [(p, j, len(its), R, s, n) for p, its in sorted(assign.items()) for j, (R, s, n) in enumerate(slot_order(its))]
+    edges = ({f'e{p}': emit_edge(p, s) for p, [(R, s, n)] in assign.items()} if kslot == 1 else
+             {f'e{p}': [emit_edge(p, s, j, n_) for (q_, j, n_, R, s, n) in flat if q_ == p] for p in assign})
     return dict(schema=SCHEMA, master=master, win=WIN, rst=RST, cf=CF, K=mat.K, nseg=nseg, super_rows=nsr,
                 rows=mat.rows, topology=dict(nodes=topo['nodes'], root=topo['root'], root_link=topo['root_link'],
                                              r1_skew=topo['r1_skew']),
-                emission=dict(rule='E(pair, seg) = e0 + last_beat(seg class) + off(pair)', e0=e0, off=off,
+                frame_schedule=str(frame_schedule) if frame_schedule else None,
+                emission=dict(rule='E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)', e0=e0, off=off,
+                              seg_extra=sx,
                               cfifo='dsfd_cfifo_crs' if land_e is None else 'dsfd_cfifo_crs4', land_e=land_e,
                               x_shift=x_shift(land_e),
-                              last_beat=beat, edges={f'e{p}': emit_edge(p, s) for p, [(R, s, n)] in assign.items()}),
-                placement=[dict(pair=p, field_slot=slot_of[p], super_row=R, seg=s, nseg=n, rows=[2 * R, 2 * R + 1])
-                           for p, [(R, s, n)] in sorted(assign.items())],
-                assign_slots=[(slot_of[p], R, s) for p, [(R, s, n)] in sorted(assign.items())],
-                nodes=rep, faults=nfaults(rep), ret=[list(w_) for w_ in ret], ret_words=len(ret),
+                              last_beat=beat, edges=edges,
+                              **({} if kslot == 1 else dict(kslot=kslot, layout=layout_key,
+                                                            slot_extra={str(n_): v for n_, v in kx.items()}))),
+                placement=[dict(pair=p, field_slot=slot_of[p], super_row=R, seg=s, nseg=n, rows=[2 * R, 2 * R + 1],
+                                **({} if kslot == 1 else dict(slot=j, slots=n_))) for (p, j, n_, R, s, n) in flat],
+                assign_slots=[(slot_of[p], R, s) for (p, j, n_, R, s, n) in flat],
+                nodes=rep, faults=nfaults(rep) + (1000 if conflict else 0), ret=[list(w_) for w_ in ret], ret_words=len(ret),
+                **({'port_conflict': conflict} if conflict else {}),
                 merges=sum(r['merges'] for r in rep.values()),
                 rows_vals={str(r): v for r, v in vals.items()}, stream=stream)
 

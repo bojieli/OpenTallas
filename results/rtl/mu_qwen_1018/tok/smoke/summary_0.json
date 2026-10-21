@@ -1,0 +1,102 @@
+{
+ "mut": "0",
+ "C_issue_offset": 0,
+ "cases": {
+  "solo": {
+   "variant": "rtl_layer",
+   "production_calendar": true,
+   "starts": 135,
+   "events": 2436,
+   "argmax_emits": {
+    "0": 3
+   },
+   "kv_records": 108,
+   "measured_token_period": {
+    "0": 251615.0
+   },
+   "calendar_token_period": {
+    "0": 251615.0
+   },
+   "measured_tok_s": {
+    "0": 4769.19102597222
+   },
+   "measured_aggregate_tok_s": 4769.19102597222,
+   "end": [
+    0,
+    "000000",
+    0
+   ]
+  },
+  "pos2": {
+   "variant": "rtl_layer",
+   "production_calendar": true,
+   "starts": 256,
+   "events": 4742,
+   "argmax_emits": {
+    "0": 3,
+    "1": 2
+   },
+   "kv_records": 211,
+   "measured_token_period": {
+    "0": 251615.0,
+    "1": 265387.0
+   },
+   "calendar_token_period": {
+    "0": 251615.0,
+    "1": 265387.0
+   },
+   "measured_tok_s": {
+    "0": 4769.19102597222,
+    "1": 4521.698500680139
+   },
+   "measured_aggregate_tok_s": 9290.889526652358,
+   "end": [
+    0,
+    "000000",
+    0
+   ]
+  },
+  "pos4": {
+   "variant": "cmdplane4",
+   "production_calendar": false,
+   "starts": 507,
+   "events": 9552,
+   "argmax_emits": {
+    "0": 3,
+    "1": 2,
+    "2": 2,
+    "3": 2
+   },
+   "kv_records": 426,
+   "measured_token_period": {
+    "0": 251615.0,
+    "1": 254604.0,
+    "2": 255562.0,
+    "3": 256574.0
+   },
+   "calendar_token_period": {
+    "0": 251615.0,
+    "1": 254604.0,
+    "2": 255562.0,
+    "3": 256574.0
+   },
+   "measured_tok_s": {
+    "0": 4769.19102597222,
+    "1": 4713.201677899798,
+    "2": 4695.5337648007135,
+    "3": 4677.01325933259
+   },
+   "measured_aggregate_tok_s": 18854.93972800532,
+   "end": [
+    0,
+    "000000",
+    0
+   ]
+  }
+ },
+ "neg_shift": 36,
+ "neg_first_clash_edge": 4802,
+ "neg_fault_code": "000010",
+ "verdict": "PASS",
+ "fails": []
+}

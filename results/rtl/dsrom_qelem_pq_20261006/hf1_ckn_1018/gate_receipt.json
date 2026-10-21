@@ -1,0 +1,44 @@
+{
+ "what": "HF-1 pre-route gate: closed RSTP=1 recipe (calibrate cmd of dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-2bded98f0) + OT_Q_CK_NORTH=1 (clk at N-face centre x 249.42-261.42 M5), stopped after CTS",
+ "run_dir": "ot-epyc5:/srv/opentallas-scratch/claude/hf1-qxpq (gate_run, gate_post)",
+ "source": "epyc4 qxpq-rst-1017/src_gate (86727ef86, RTL sha256 517e501dd6a50587.. = closed RSTP view) + overlay of claude/hf1-qxpq-1018 6d2e178a4: tools/dsrom_qelem_cl/launch.sh, tools/closure_loop, tools/ref_tile, tools/textbook_lint.py",
+ "ck_north": {
+  "tt": {
+   "boundary_mean": 516.0,
+   "boundary_min": 505.9,
+   "boundary_max": 541.6,
+   "pin_flop_spread": 35.7,
+   "all_min": 496.9,
+   "all_max": 562.5,
+   "sinks": 53106
+  },
+  "ff": {
+   "boundary_mean": 410.2,
+   "boundary_min": 401.6,
+   "boundary_max": 429.2,
+   "pin_flop_spread": 27.6,
+   "all_min": 399.4,
+   "all_max": 446.3,
+   "sinks": 53106
+  }
+ },
+ "ck_south_closed_gate": {
+  "tt": {
+   "boundary_mean": 510.3,
+   "boundary_min": 488.3,
+   "boundary_max": 539.2,
+   "pin_flop_spread": 50.9
+  },
+  "ff": {
+   "boundary_mean": 407.2,
+   "boundary_min": 391.4,
+   "boundary_max": 435.8,
+   "pin_flop_spread": 44.4
+  },
+  "src": "results/rtl/dsrom_qelem_pq_20261006/qxpq_rst_1017/gate/ck.json"
+ },
+ "cts_hold": "CTS repair_timing hold: 226 endpoints -> 258 buffers, ws +10.00 ps, 0 violations",
+ "verdict": "PASS clock rule (pin-flop spread <=80 at TT and FF): N 35.7/27.6 vs S 50.9/44.4. Insertion unchanged (~516 TT / 410 FF): ck face does not fix the boundary; the frame compensation does.",
+ "not_changed": "pins other than clk, outline, macros, RTL. S input window (x 226-285) and N output cluster remain narrow (>6 pins/um, HARD-REVIEW): not addressed here",
+ "binding_note": "No routed view with ck on N exists: the closed RSTP view has ck on S. Binding the N variant needs one re-route (reroute_reason: contract clock face); NOT submitted (closure first, coordinator call)."
+}

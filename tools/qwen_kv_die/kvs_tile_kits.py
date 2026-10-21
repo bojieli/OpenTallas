@@ -174,8 +174,8 @@ def build(tiles_sel, tag, write_rtl=True):
                                  inst='*u_' + next(S.cluster_of(n)[2] for n in tl['members'] if S.ins()[n]['module'] == m)))
         w, h = outline(t, faces)
         name = master
-        bench = f'bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{t}_m{{M}} {t} {{M}}'
-        res = f'results/rtl/qwen_kv_die/kvs_kits_1018'
+        bench = f'KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{t}_m{{M}} {t} {{M}}'
+        res = os.environ.get('KVS_KIT_RES', 'results/rtl/qwen_kv_die/kvs_kits_1018')
         benches = [dict(name=f'{t}_lockstep', cmd=bench.replace('{M}', '0'), expect='pass', threads=4, peak_ram_gb=8,
                         needs=['verilator'], pass_regex=rf'^KVS_TILE PASS tile={t} .* errors=0 mut=0',
                         min_count_regex=r'checks=(\d+)', pass_witness=f'{res}/{t}_m0.log')]
@@ -183,6 +183,17 @@ def build(tiles_sel, tag, write_rtl=True):
             benches.append(dict(name=f'{t}_mut{mut}', cmd=bench.replace('{M}', str(mut)), expect='fail', threads=4,
                                 peak_ram_gb=8, needs=['verilator'], pass_regex=rf'^KVS_TILE PASS tile={t} ',
                                 fail_regex=rf'^KVS_TILE FAIL tile={t} .* mut={mut} ', fail_witness=f'{res}/{t}_m{mut}.log'))
+        if t == 'attn' and os.environ.get('OT_KV_ATTN_LAND', '0') == '1':
+            # KV-ATTNKIT 10-18: pair lockstep of the registered boundary vs the as-built chain (16 modes) + 4 mutants
+            pb = 'bash tools/qwen_kv_die/kvs_attn_land_pair_bench.sh {RUN}/bench/land_pair_%s %s %s "%s"'
+            benches.append(dict(name='attn_land_pair', cmd=pb % ('m0', 0, 0, ' '.join(map(str, range(16)))), expect='pass',
+                                threads=2, peak_ram_gb=4, needs=['verilator'], pass_regex=r'^KVS_LANDPAIR_ALL PASS bmut=0 fmut=0 ',
+                                min_count_regex=r'checks=(\d+)', pass_witness=f'{res}/land_pair_m0.log'))
+            for mt, bm, fm, md in (('b5', 5, 0, '0'), ('b6', 6, 0, '8'), ('b4', 4, 0, '13'), ('f5', 0, 5, '0')):
+                benches.append(dict(name=f'attn_land_pair_{mt}', cmd=pb % (mt, bm, fm, md), expect='fail', threads=2,
+                                    peak_ram_gb=4, needs=['verilator'], pass_regex=r'^KVS_LANDPAIR_ALL PASS ',
+                                    fail_regex=rf'^KVS_LANDPAIR_ALL FAIL bmut={bm} fmut={fm} ',
+                                    fail_witness=f'{res}/land_pair_{mt}.log'))
         spec = OrderedSpec(
             name=name, top=master, sources=srcs, params={}, reset_ports=['rst_n'] + [r for r in resets if r != 'rst_n'],
             pins={f: pins[f] for f in 'NSEW'},
@@ -193,7 +204,7 @@ def build(tiles_sel, tag, write_rtl=True):
             kind='cluster' if children else 'tile', clock_port='ck', layer_cap='M5', macros=[], children=children,
             inter=[], keep_pin_regs=True, inhold=True, outhold=True, io_flop_at_pins=dict(cols=4, allow_none=True),
             route=dict(pd=0.5, threads=8, peak_ram_gb=24, pin_min_tracks=3, m5_pg_pitch=2.7, hold_margin_ns=0.03,
-                       macro_halo_um=5.4),
+                       io_hold_margin_ns=0.03, macro_halo_um=5.4),     # KITS 10-18: boundary margin >= 0.025
             recipe=3, pin_reg_split=True, hold_pad=dict(cell='HB2xp67_ASAP7_75t_R'),
             outline=dict(w=w, h=h, exact=True),
             structural_change=(
@@ -202,7 +213,8 @@ def build(tiles_sel, tag, write_rtl=True):
                 f'{S.RTL_FILE} (sha256 {rtl_sha[:12]}) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck '
                 f'(OT_KV_TILE_KITS).  Faces {faces} pins on {w:.1f} x {h:.1f} um (die frame record '
                 f'{S.FRAME[t]} ASSUMED -> this outline for KV-PLAN3).'),
-            job=dict(owner='Claude:KV-INTEG2', branch='claude/kv-integ2-kits-1018', tag=tag,
+            job=dict(owner=os.environ.get('KVS_KIT_OWNER', 'Claude:KV-INTEG2'),
+                     branch=os.environ.get('KVS_KIT_BRANCH', 'claude/kv-integ2-kits-1018'), tag=tag,
                      purpose=(f'KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile '
                               f'{master}.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the '
                               f'same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die '

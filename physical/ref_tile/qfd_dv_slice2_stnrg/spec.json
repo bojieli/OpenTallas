@@ -1,0 +1,280 @@
+{
+ "name": "qfd_dv_slice2_stnrg",
+ "top": "qfd_dv_redstn2_region",
+ "kind": "tile",
+ "diagnostic": true,
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+  "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+  "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+  "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_physical.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v"
+ ],
+ "params": {
+  "PIN_IN": 1,
+  "BT_LAT": 1,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 151.2,
+  "h": 151.2
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "count": 5
+  }
+ ],
+ "pins": {
+  "W": [
+   "ck",
+   "rst_n",
+   "cfg_v_p",
+   "cfg_mode_p",
+   "cfg_wsrc_p",
+   "cfg_nwords_p",
+   "cfg_sbase_p",
+   "cfg_kcm1_p",
+   "rs_s_lo_p",
+   "rs_s_hi_p",
+   "rs_s_c_p",
+   "flt_bank_i",
+   "flt_vld_i"
+  ],
+  "N": [
+   "rs_n_lo_p",
+   "rs_n_hi_p",
+   "rs_n_c_p",
+   "nb_d_p",
+   "nb_c_p"
+  ],
+  "S": [
+   "bt_re",
+   "bt_word",
+   "bt_q_p",
+   "r_v",
+   "r_idx",
+   "r_last",
+   "r_d"
+  ],
+  "E": [
+   "nb_od",
+   "nb_oc",
+   "flt_bank_o",
+   "flt_vld_o",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   4.32,
+   4.904
+  ],
+  "rst_n": [
+   5.154,
+   5.737
+  ],
+  "cfg_v_p": [
+   5.987,
+   6.571
+  ],
+  "cfg_mode_p": [
+   6.821,
+   8.238
+  ],
+  "cfg_wsrc_p": [
+   8.488,
+   9.072
+  ],
+  "cfg_nwords_p": [
+   9.322,
+   15.742
+  ],
+  "cfg_sbase_p": [
+   15.992,
+   23.245
+  ],
+  "cfg_kcm1_p": [
+   23.495,
+   29.914
+  ],
+  "rs_s_lo_p": [
+   30.164,
+   83.27
+  ],
+  "rs_s_hi_p": [
+   83.52,
+   136.626
+  ],
+  "rs_s_c_p": [
+   136.876,
+   139.961
+  ],
+  "flt_bank_i": [
+   140.211,
+   143.295
+  ],
+  "flt_vld_i": [
+   143.545,
+   146.63
+  ],
+  "rs_n_lo_p": [
+   4.32,
+   50.15
+  ],
+  "rs_n_hi_p": [
+   50.4,
+   96.23
+  ],
+  "rs_n_c_p": [
+   96.48,
+   99.11
+  ],
+  "nb_d_p": [
+   99.36,
+   145.19
+  ],
+  "nb_c_p": [
+   145.44,
+   146.63
+  ],
+  "bt_re": [
+   4.32,
+   5.299
+  ],
+  "bt_word": [
+   5.549,
+   16.36
+  ],
+  "bt_q_p": [
+   16.61,
+   55.687
+  ],
+  "r_v": [
+   55.937,
+   56.916
+  ],
+  "r_idx": [
+   57.166,
+   66.747
+  ],
+  "r_last": [
+   66.997,
+   67.976
+  ],
+  "r_d": [
+   68.226,
+   146.63
+  ],
+  "nb_od": [
+   4.32,
+   125.721
+  ],
+  "nb_oc": [
+   125.971,
+   129.523
+  ],
+  "flt_bank_o": [
+   129.773,
+   137.126
+  ],
+  "flt_vld_o": [
+   137.376,
+   144.729
+  ],
+  "fault": [
+   144.979,
+   146.63
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: PIN_IN=1 one pin register on every data/control input; outputs are flop Q; rst_n lands in 2 registered stages (rst_l0/rst_l1) then kept 32-ary trees",
+  "2_reach": "PASS by construction: no region-to-region data; the only crossing (fault ring) is a landed hop (4-slot writer at source clock, K=2 reader at destination) between physical neighbours (folded 0,2,4,6,7,5,3,1)",
+  "3_fanout": "PASS by construction: control replicated per region from per-region input copies; cfg_v 1->24 kept copies, mode/valid copies <=16; reset kept copies <=32 (qfd_dv_reset_tree); gate textbook_lint high_fanout confirms",
+  "4_depth": "inherited R8 bounded math (ADD7/SCALE6 kernels); gate logic_depth WARN/--cts path classes confirm",
+  "5_storage": "PASS: skew/hb/h9/scale-wait in 32x64 SRAM macros (5 per region, 40 total); valid/bad bits in finite 4-slot rings",
+  "6_floorplan": "macros placed by gen on the asap7 lattice; outline from gate synthesis area; 2x4 region grid (stn8), square region (stnrg)",
+  "7_clock": "8 regional CTS roots (stn8: multiple_cts_roots related_same_frequency) / one root per hardened region (stnrg); crossings landed; io_hold_margin 0.03",
+  "8_schedule": "static: PIN_IN +1 edge on every input, BT_LAT +1 on the bt round trip, reset release +2, fault visibility <= 28 edges (sticky diagnostic) -> compiler schedule"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every data/control input at its pin (PIN_IN=1, in the region's own clock) and every output is flop Q; the flow wrapper would add a second +1 register (single clock)"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in 2 registered stages (rst_l0/rst_l1) in each region's own clock, then kept 32-ary trees (qfd_dv_reset_tree)"
+ },
+ "job": {
+  "owner": "Claude:QW-SLICE3",
+  "branch": "claude/qw-slice3-1019",
+  "tag": "g3",
+  "purpose": "QW-SLICE3: one SU-lane region of the slice2 station (8 per station, own clock root)",
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/hdc",
+   "rtl/common/landed_parent",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1"
+  ],
+  "benches": [
+   {
+    "name": "station_regional_eq",
+    "cmd": "PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/rg 0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "station_regional_rmut1",
+    "cmd": "PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/rg 0 1",
+    "expect": "fail",
+    "fail_regex": "REGIONAL_STATION_MISMATCH",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_slice2_stnrg/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_slice2_stnrg"
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

@@ -42,6 +42,10 @@ module ot_hbm_hc_qeng_static #(
     // die relay classes side by side, 1136 + 624 + 304 = 2,064 b (2,049 used: {lane fault, 64 chunk sums}; 15 spare
     // bits tied low), ot_hbm_rly = the hbfd_rly_{1136,624,304}_<flow> masters (reset: rs, released 3 edges later).
     parameter integer XRLY = 0,
+    // HH-9 10-19 (47247cc08 bank_distance): CPR 1 = chain pin registers at the bank tile faces: banks 1, 3, 4, 5, 7
+    // (ot_hbm_hc_bankq_static) CPI = CPO = 1, bank 0 CPO = 1, edge banks 2 / 6 unchanged -> the chain is CHX = 11
+    // edges longer (centre CHX, root QCHX = 11).  Default 0 = unchanged.
+    parameter integer CPR  = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -68,12 +72,13 @@ module ot_hbm_hc_qeng_static #(
     output reg            fault
 );
     localparam integer XB = 8192 / XW_BEATS;
+    localparam integer CP = (CPR != 0) ? 1 : 0, CHX = 11 * CP;
     initial if (XW_BEATS != 4) $fatal(1, "ring form: XW_BEATS must be 4 (2,048-b beats, 256-b bank slices)");
     initial if (XRLY < 0 || DRLY - XRLY < 1) $fatal(1, "XRLY: 0 <= XRLY <= DRLY - 1 (bank 0 registers the exit)");
     // ------------------------------------------------------------------ centre
     wire [7:0] rb, wf; wire [12:0] wc_w, wc_n, wc_e, wc_s; wire [2048:0] s_c;
     wire bd_v, bd_ss; wire [6:0] bd_nv; wire [9:0] bd_wa, bd_xa;
-    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .MUT((MUT == 3 || MUT == 4) ? MUT : 0)) u_cen (
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT((MUT == 3 || MUT == 4) ? MUT : 0)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(x_wave_v), .x_beat(x_wave_beat), .x_word(x_wave_word), .s_i(s_c), .wfault_i(wf), .rst_b(rb),
@@ -91,13 +96,32 @@ module ot_hbm_hc_qeng_static #(
     // corner feeds: bank 2 feeds 1 (a) and 3 (b); bank 6 feeds 5 (a) and 7 (b)
     wire [3:0] fx_v; wire [7:0] fx_b; wire [4*256-1:0] fx_d; wire [3:0] fwv, fxv, fj; wire [4*10-1:0] fwa;
     wire [3:0] frst, fwf_c;                        // corner reset (through the edge tile) / corner fault (into it)
-    `define OT_HCQ_CHAIN(k) .d_v(cv[k]), .d_ss(css[k]), .d_nv(cnv[(k)*7 +: 7]), .d_wa(cwa[(k)*10 +: 10]), .d_xa(cxa[(k)*10 +: 10]), \
+    // HCRING 10-19 (bench only): link k (bank k-1 outputs -> bank k inputs; link 8 = bank 7 exit -> bank 0 s_i) as ONE
+    // face vector in face-position order {f, sum[2047:0], xa, wa, nv, ss, v} (2,078 b).  Default: inputs = outputs.
+    // +define+OT_HC_JOINT_MAP + hc_joint_map.svh (tools/ref_tile/specs_hbm_b_rtl2_1017/hc_ring_joints.py) wires the
+    // inputs as the PHYSICAL abutment of the two tile faces does (pins paired by position along the joint), so the
+    // lockstep checks the bank pin plans + orientations, not only the names.
+    localparam integer FV = 2078;
+    wire [9*FV-1:0] fo, fi;
+    for (genvar k = 0; k < 9; k = k + 1) begin : g_fv
+        assign fo[k*FV +: FV] = {cf[k], csum[k*2048 +: 2048], cxa[k*10 +: 10], cwa[k*10 +: 10], cnv[k*7 +: 7], css[k], cv[k]};
+    end
+`ifdef OT_HC_JOINT_MAP
+    `include "hc_joint_map.svh"
+`else
+    assign fi = fo;
+`endif
+    wire [8:0] jv, jss, jf; wire [9*7-1:0] jnv; wire [9*10-1:0] jwa, jxa; wire [9*2048-1:0] jsum;
+    for (genvar k = 0; k < 9; k = k + 1) begin : g_fi
+        assign {jf[k], jsum[k*2048 +: 2048], jxa[k*10 +: 10], jwa[k*10 +: 10], jnv[k*7 +: 7], jss[k], jv[k]} = fi[k*FV +: FV];
+    end
+    `define OT_HCQ_CHAIN(k) .d_v(jv[k]), .d_ss(jss[k]), .d_nv(jnv[(k)*7 +: 7]), .d_wa(jwa[(k)*10 +: 10]), .d_xa(jxa[(k)*10 +: 10]), \
         .o_v(cv[(k)+1]), .o_ss(css[(k)+1]), .o_nv(cnv[((k)+1)*7 +: 7]), .o_wa(cwa[((k)+1)*10 +: 10]), .o_xa(cxa[((k)+1)*10 +: 10]), \
         .sum_out(csum[((k)+1)*2048 +: 2048]), .f_out(cf[(k)+1])
     assign cv[0] = bd_v; assign css[0] = bd_ss; assign cnv[0 +: 7] = bd_nv; assign cwa[0 +: 10] = bd_wa; assign cxa[0 +: 10] = bd_xa;
     // bank 7 chain exit -> [XRLY die relay stages] -> bank 0 exit relay
     wire [2048:0] s_x [0:XRLY];
-    assign s_x[0] = {cf[8], csum[8*2048 +: 2048]};
+    assign s_x[0] = {jf[8], jsum[8*2048 +: 2048]};
     for (genvar r = 0; r < XRLY; r = r + 1) begin : g_xr
         wire [2063:0] ri = {15'd0, s_x[r]}, ro;
         ot_hbm_rly #(.W(1136)) u_r0 (.ck(clk), .rs(rb[0]), .i(ri[0    +: 1136]), .o(ro[0    +: 1136]));
@@ -105,15 +129,107 @@ module ot_hbm_hc_qeng_static #(
         ot_hbm_rly #(.W(304))  u_r2 (.ck(clk), .rs(rb[0]), .i(ri[1760 +: 304]),  .o(ro[1760 +: 304]));
         assign s_x[r+1] = ro[2048:0];
     end
-    ot_hbm_hc_bankq0_static #(.MUT(0), .DRLY(DRLY - XRLY)) u_b0 (.clk(clk), .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
+    // HBM-HCBANK6 10-20: +define+HC_BANK_RC (bench only; unset = unchanged) builds the ring from the regional-clock bank
+    // successors ot_hbm_hc_bankq*_rc_static (+define+HC_BANK_RC3: the three-glue-root _rc3 tops) with every clock entry
+    // tied to clk; MUT 5 = bank 3 landing-copy mutant (bankrc MUT 2).
+    // HBM-HC7-BANK 10-20: +define+HC_BANK_RR / +define+HC_BANK_RH (with HC_BANK_RC): lane-row (_rr) / half-tile (_rh)
+    // regional-root tops, every root tied to clk; b0 adds its exit-relay roots clk_s0 / clk_s1.
+`ifdef HC_BANK_RC
+    `define OT_HCQ_B0CK
+ `ifdef HC_BANK_RR
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rr_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rr_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rr_static
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_r0(clk), .clk_r1(clk), .clk_r2(clk), .clk_r3(clk), .clk_q0(clk), \
+        .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RL
+    // HBM-HCBANK9 10-20: one root per compact register mass (_rl) / capture per SRAM row (+define+HC_BANK_RM: _rm)
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rl_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rl_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rl_static
+    `define OT_HCQ_RLW .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), .clk_x1(clk), .clk_x2(clk), \
+        .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_a(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RLW
+    `define OT_HCQ_BQCK `OT_HCQ_BCK .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), .clk_a(clk), `OT_HCQ_RLW
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RW2
+    // HBM-HCBANK9 10-21: _rl + per-SRAM write-data copies on clk_d<r> (+define+HC_BANK_RW3: hold / asm on clk)
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rw2_static
+  `ifdef HC_BANK_RW3
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw3_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rw3_static
+    `define OT_HCQ_RWA
+  `else
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw2_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rw2_static
+    `define OT_HCQ_RWA .clk_a(clk),
+  `endif
+    `define OT_HCQ_RLW .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), .clk_x1(clk), .clk_x2(clk), \
+        .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .clk_d0(clk), .clk_d1(clk), .clk_d2(clk), \
+        .clk_d3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RLW
+    `define OT_HCQ_BQCK `OT_HCQ_BCK `OT_HCQ_RWA .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), `OT_HCQ_RWA `OT_HCQ_RLW
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RM
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rm_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rm_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rm_static
+    `define OT_HCQ_RMW .clk_r0(clk), .clk_r1(clk), .clk_r2(clk), .clk_r3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), \
+        .clk_e3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RMW
+    `define OT_HCQ_BQCK `OT_HCQ_BCK .clk_a(clk), .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), .clk_a(clk), `OT_HCQ_RMW
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RH
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rh_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rh_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rh_static
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_r0(clk), .clk_r1(clk), .clk_q0(clk), .clk_q1(clk), \
+        .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RC3
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rc3_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rc3_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rc3_static
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+ `else
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rc_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rc_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rc_static
+    `define OT_HCQ_BCK .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+ `endif
+    `define OT_HCQ_M3(KC) ((MUT == 1 && (KC) == 3) ? 1 : (MUT == 5 && (KC) == 3) ? 2 : 0)
+`else
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_static
+    `define OT_HCQ_BCK
+    `define OT_HCQ_B0CK
+    `define OT_HCQ_M3(KC) ((MUT == 1 && (KC) == 3) ? 1 : 0)
+`endif
+`ifndef OT_HCQ_BQCK
+    `define OT_HCQ_BQCK `OT_HCQ_BCK
+`endif
+`ifndef OT_HCQ_BFCK
+    `define OT_HCQ_BFCK `OT_HCQ_BCK
+`endif
+    `OT_HCQ_B0 #(.MUT(0), .DRLY(DRLY - XRLY), .CPO(CP)) u_b0 (.clk(clk), `OT_HCQ_BCK `OT_HCQ_B0CK .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
         .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[0 +: 256]),
         .wv(wc_w[12]), .xv(wc_w[11]), .j(wc_w[10]), .wa(wc_w[9:0]), .wfault(wf[0]),
         .s_i(s_x[XRLY]), .s_o(s_c));
     for (genvar e = 0; e < 2; e = e + 1) begin : g_ft          // e 0: bank 2 (N, wc_n), e 1: bank 6 (S, wc_s)
         localparam integer K0 = 2 + 4 * e;
         wire [12:0] wc = (e == 0) ? wc_n : wc_s;
-        ot_hbm_hc_bankq_ft_static #(.MUT(0)) u_b (.clk(clk), .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
-            .sum_in(csum[K0*2048 +: 2048]), .f_in(cf[K0]),
+        `OT_HCQ_BF #(.MUT(0)) u_b (.clk(clk), `OT_HCQ_BFCK .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
+            .sum_in(jsum[K0*2048 +: 2048]), .f_in(jf[K0]),
             .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[K0*256 +: 256]),
             .wv(wc[12]), .xv(wc[11]), .j(wc[10]), .wa(wc[9:0]), .wfault(wf[K0]),
             .fa_xb_v(x_wave_v), .fa_xb_beat(x_wave_beat), .fa_xb_d(xs[(K0-1)*256 +: 256]),
@@ -130,15 +246,32 @@ module ot_hbm_hc_qeng_static #(
     // corners 1, 3, 5, 7 (feed index c = 0..3) and bank 4 (E edge, wc_e)
     for (genvar c = 0; c < 4; c = c + 1) begin : g_cn
         localparam integer KC = 2 * c + 1;
-        ot_hbm_hc_bankq_static #(.MUT((MUT == 1 && KC == 3) ? 1 : 0)) u_b (.clk(clk), .rst_n(frst[c]), `OT_HCQ_CHAIN(KC),
-            .sum_in(csum[KC*2048 +: 2048]), .f_in(cf[KC]),
+        `OT_HCQ_BQ #(.MUT(`OT_HCQ_M3(KC)), .CPI(CP), .CPO(CP)) u_b (.clk(clk), `OT_HCQ_BQCK .rst_n(frst[c]), `OT_HCQ_CHAIN(KC),
+            .sum_in(jsum[KC*2048 +: 2048]), .f_in(jf[KC]),
             .xb_v(fx_v[c]), .xb_beat(fx_b[2*c +: 2]), .xb_d(fx_d[c*256 +: 256]),
             .wv(fwv[c]), .xv(fxv[c]), .j(fj[c]), .wa(fwa[c*10 +: 10]), .wfault(fwf_c[c]));
     end
-    ot_hbm_hc_bankq_static #(.MUT(0)) u_b4 (.clk(clk), .rst_n(rb[4]), `OT_HCQ_CHAIN(4),
-        .sum_in(csum[4*2048 +: 2048]), .f_in(cf[4]),
+    `OT_HCQ_BQ #(.MUT(0), .CPI(CP), .CPO(CP)) u_b4 (.clk(clk), `OT_HCQ_BQCK .rst_n(rb[4]), `OT_HCQ_CHAIN(4),
+        .sum_in(jsum[4*2048 +: 2048]), .f_in(jf[4]),
         .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[4*256 +: 256]),
         .wv(wc_e[12]), .xv(wc_e[11]), .j(wc_e[10]), .wa(wc_e[9:0]), .wfault(wf[4]));
     `undef OT_HCQ_CHAIN
+    `undef OT_HCQ_B0
+    `undef OT_HCQ_BF
+    `undef OT_HCQ_BQ
+    `undef OT_HCQ_BCK
+    `undef OT_HCQ_BQCK
+    `undef OT_HCQ_BFCK
+`ifdef OT_HCQ_RLW
+    `undef OT_HCQ_RLW
+`endif
+`ifdef OT_HCQ_RMW
+    `undef OT_HCQ_RMW
+`endif
+`ifdef OT_HCQ_RWA
+    `undef OT_HCQ_RWA
+`endif
+    `undef OT_HCQ_B0CK
+    `undef OT_HCQ_M3
 endmodule
 `default_nettype wire

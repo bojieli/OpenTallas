@@ -86,7 +86,7 @@ module qfd_collective_static_io #(
  wire  sx0_peer_slot;
  wire  sx1_peer_slot;
  wire  sx2_peer_slot;
- qfd_io_collective_static u_collective(
+ qfd_io_collective_static #(.LU(LU),.LS(LS)) u_collective(
  .clk(clk),
  .clk_pfold0(clk_pfold0),
  .clk_pfold1(clk_pfold1),
@@ -221,7 +221,8 @@ module qfd_collective_static_io #(
  end endgenerate
  // The fixed die-name collective LU/LS defines and this parent must agree.
  initial if(SIX_FIVE && (PU!=20 || !SHARED_UCIE))$error("six_five (r10 200MHz block stage) requires the actual 20-core-edge registered-pin PHY calendar and the single 1043 boundary");
- initial if(LU!=`OT_QFDS_LU || LS!=`OT_QFDS_LS)$error("collective/link calendar latency profile mismatch");
+ // Q-COLLCAL3 10-18: the die-name collective takes LU / LS from this parent (one calendar profile by construction;
+ // was a compare against the OT_QFDS_* defines, which a GEN-compiled LS in die.v.params.json could not satisfy).
 endmodule
 
 // Source-visible paid relay stages. Every row advances unconditionally.

@@ -60,7 +60,15 @@ module ot_hbm_su_static_pgslice #(
  //   release on pg_clk edges, serial->stream crossing on a reviewed 1-bit synchroniser, as col_su r3). Serial and stream
  //   share one fixed-phase PLL lattice, so the release edge is deterministic: the first serial edge that samples
  //   rst_n=1, then the second following pg_clk edge. Datapath edges unchanged; only reset assert/release move.
- parameter integer PG_RSYNC=0
+ parameter integer PG_RSYNC=0,
+ // PRETREE (HBM-PRETREE2 2026-10-20, from HH-6 claude/hh11-qcore6-1019; default 0 = unchanged): the SU reducer ingress
+ //   widening. tree_cmd {v,max,cntB5,cntA5} at edge E takes ALL 32 lanes' ro_x/ro_v of the issue block (quarter words
+ //   16G..16G+15 = half A, 64+16G..+15 = half B; lanes >= the half's count are padding) into the CLOSED leaf
+ //   ot_hbm_su_red_pretree_s (hbm_su_pretree_s_1018-p3-1dad69123, clk_ctl): two golden csum8 16-word subtrees (or the
+ //   ordered canonical max, tree_cmd[10]) on tree_o, registered at E+58 (LAT 6, OPR 1). The quarter core joins the four
+ //   slices (qcore PRETREE). One block per edge; no stall. On the die the leaf is its own tile su_pt_<q><g> beside the
+ //   slice; tree_o / pt_ro_* are the same nets.
+ parameter integer PRETREE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -79,6 +87,8 @@ module ot_hbm_su_static_pgslice #(
  input wire [255:0] rf_dsec,
  input wire [11:0] red_sel,
  output reg [31:0] slice_x,
+ input wire [11:0] tree_cmd,           // PRETREE: {v, max, cntB5, cntA5} (this slice's counts, compiler-computed)
+ output wire [66:0] tree_o,            // PRETREE: {max, vB, xB, vA, xA}
  output wire [2*17-1:0] lg_rq, output wire [2*281-1:0] lg_wq,
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
  // COLLPORT ports (unused when COLLPORT=0)
@@ -93,9 +103,12 @@ module ot_hbm_su_static_pgslice #(
  // Serial fill destination delay and stream leaf tap return are different
  // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
  // macros commit n+15. Stream leaf retains its native10/7 edge contract.
- localparam integer RR=MULTIRATE ? 12 : READ_RETURN;
- initial if(MULTIRATE && (READ_RETURN!=10 || WRITE_RETURN!=7))
-  $fatal(1,"SU multirate candidate requires source-proven stream tap10/7");
+ // HBM-BANKLAT-SU 2026-10-19: READ_RETURN/WRITE_RETURN = the stream LG round trip the die binds (10/7 = zero-lane
+ // non-pin bank; the d4g faces bank + relay lanes need more). MULTIRATE: serial fill delay = the bridge's serial read
+ // edge SRD = ceil((3*READ_RETURN+18)/4) (12 at 10; su_multirate_compile.srd), fill commit n+SRD+3.
+ localparam integer RR=MULTIRATE ? (3*READ_RETURN+18+3)/4 : READ_RETURN;
+ initial if(MULTIRATE && (READ_RETURN<10 || WRITE_RETURN<7 || WRITE_RETURN>READ_RETURN))
+  $fatal(1,"SU multirate candidate requires stream tap round trip >= 10/7");
  function automatic integer lid(input integer n); lid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // ------------------------------------------------------------------ lanes
  wire [31:0] vi_re,vm_we,kv_we,ro_v,l_fault,l_coll;
@@ -185,7 +198,7 @@ module ot_hbm_su_static_pgslice #(
  end
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
   if(MULTIRATE)begin:g_multirate
-   ot_hbm_su_multirate_bridge u_bridge(
+   ot_hbm_su_multirate_bridge #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_bridge(
     .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
     .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
     .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),
@@ -359,10 +372,18 @@ module ot_hbm_su_static_pgslice #(
  wire ext=red_sel[10:8]==3'd0||red_sel[10:8]==3'd1||red_sel[10:8]==3'd3;
  wire red_bad=mine&&ext&&!ro_v[rn];
  always @(posedge clk_ctl)slice_x<=ro_x[rn*32+:32];
+ // ------------------------------------------------------------------ PRETREE: reducer ingress widening
+ wire pt_fault;
+ if(PRETREE!=0)begin:g_pretree
+  ot_hbm_su_red_pretree_s #(.LAT(6)) u_pt(.clk(clk_ctl),.rst_n(rst_n),.tree_cmd(tree_cmd),.ro_x(ro_x),.ro_v(ro_v),
+   .tree_o(tree_o),.fault(pt_fault));
+ end else begin:g_no_pretree
+  assign tree_o=67'd0; assign pt_fault=1'b0;
+ end
  // ------------------------------------------------------------------ sticky fault
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0;
   else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
-          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad)fault<=1'b1;
+          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad||pt_fault)fault<=1'b1;
 endmodule
 `default_nettype wire

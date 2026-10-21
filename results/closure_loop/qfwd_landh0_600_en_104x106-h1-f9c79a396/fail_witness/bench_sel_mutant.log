@@ -1,0 +1,17 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfwd_landh0_600_en_104x106-h1-f9c79a396 bench bench_sel_mutant host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-h1-f9c79a396 log cl/bench_sel_mutant.a1b1.log captured 2026-10-19T00:14:38-07:00
+# fail_regex 'FWD_BENCH FAIL'
+FWD_LANE NF=27 CD=4.50 XL=0.00 DOFF=2.00 G=12 R0=11 L=26 K=2
+FWD_LANE NF=8 CD=4.00 XL=0.00 DOFF=2.00 G=10 R0=14 L=8 K=3
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=9 R0=45 L=5 K=0
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=40 R0=9 L=7 K=5
+FWD_LANE NF=5 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=5 CD=3.60 XL=20.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=2 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE FAULT lane 1
+FWD_LANE FAULT lane 3
+FWD_LANE FAULT lane 5
+FWD_LANE FAULT lane 6
+FWD_LANE FAULT lane 7
+FWD_BENCH FAIL 4546 errors in 4585 checks (faults 5)

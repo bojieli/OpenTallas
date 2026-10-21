@@ -3,14 +3,15 @@
 //   golden host  dsfd_host_c (+DSFD_HOST_C_STATIC, ckv = ck) fed the same host stream (minus the 0x13 template words the
 //                unit intercepts): s_hw must equal its hw EVERY cycle and t_host[64:0] its t_collective completions,
 //                HSH edges later (S81U-SEQ7: the unit's ingest runs APIPE 6, whose registered request-FIFO write lands
-//                every host sector in u_ox one edge later than the golden's APIPE 3 = the documented +1 host-path shift).
+//                every host sector in u_ox one edge later than the golden's APIPE 3 = the documented +1 host-path shift;
+//                S81-SHLK 10-18: APIPE 7 adds the registered host-FIFO head, +1 more: HSH 2).
 //   golden seq   ot_s81_fixed_issue (NENG 5, ENG_PRESENT 10011) loaded with the golden host's t_sseq_pw / t_sseq_plen
 //                (its own paced path), reset with the unit's sequencer reset, launched D = 20 edges AHEAD of the unit
 //                (same clock phase), its completions modelled from its own commands.  Every golden command maps to an
 //                expected unit output: engine 0 / 1 -> CTL beat on vo_n / vo_s (template + context splice, independent
 //                model) at +D+LVO, engine 2 -> cw (gunit job) at +D+LCW, engine 2 -> cw (gunit job) at +D+LCW, engine 4 -> s_j {1, arg, slot, op} at +D+LJ; host 0x14 rows -> cw at +LCF; host 0x14 rows -> cw at +LCF; KIT -> t_kd at +D+LKD.
 //   rung         random traffic both ways (single beats, XQ / XB 4-fragment beats) only in slots the compiled program
-//                leaves free; expected vo = arrival 6 edges later or the injected beat.
+//                leaves free; expected vo = arrival LR = 6 + RL edges later or the injected beat (V south at +D+LVS, LVS = LVO + RL).
 //   svc chain    a fixed-latency model per half (RTL-BUILD-S81 10-18): s_jd_w done LS edges after each s_j (the W half is
 //                the far one), s_jd_e done LS - LSD edges after it; the unit's merged done must land at LS (calendar
 //                row unchanged).  s_hw_w / s_hw_e must each equal the golden's hw on the cycles the golden sector routes
@@ -21,9 +22,16 @@
 // contexts live), one KIT, one END; 6 jobs.  +collide=1: one rung arrival is placed on an injection slot of the last
 // job and the unit's status fault must rise (wf[0]).  PASS line "SEQHOST PASS".
 module tb_dsdv_seq_host;
-    localparam integer V = 276, D = 20, LVO = 7, LJ = 2, LKD = 3, LR = 6, LS = 9, LCW = 3, LCF = 6;
+    // S81-SHLK2 10-18: RL = the unit's L0 rung landing (default 1): rung vi -> vo 6 + RL each way, V south 7 + RL
+    localparam integer RL = 1;
+    localparam integer V = 276, D = 20, LVO = 7, LVS = LVO + RL, LJ = 2, LKD = 3, LR = 6 + RL, LS = 9, LCW = 3, LCF = 6;
     localparam integer DV_V = 5, DV_S = LS + 5, LSD = 3;
-    localparam integer HSH = 1;                     // unit host path (f_host -> s_hw / t_host completion) = golden + HSH     // calendar done row = issue + DV (V beat posted / svc chain done)
+`ifdef TB_HSH
+    localparam integer HSH = `TB_HSH;
+`else
+    localparam integer HSH = 2;                     // S81-SHLK 10-18: APIPE 7 registered host head (+1) on top of APIPE 6 (+1)
+`endif
+                        // unit host path (f_host -> s_hw / t_host completion) = golden + HSH     // calendar done row = issue + DV (V beat posted / svc chain done)
 `ifndef MUT
     localparam integer MUT = 0;
 `else
@@ -31,14 +39,14 @@ module tb_dsdv_seq_host;
 `endif
     reg ck = 0, rst_n = 0;
     always #0.5 ck = ~ck;
-    integer seed, seed0, collide, cyc, errs, i, k, e;
+    integer pair, seed, seed0, collide, cyc, errs, i, k, e;
     // ------------------------------------------------------------------ DUT
     reg [V-1:0] vi_s = 0, vi_n = 0; wire [V-1:0] vo_s, vo_n;
     reg [514:0] f_host = 0; wire [76:0] t_host; reg [52:0] f_ks = 0; wire [53:0] t_kd;
     wire cw_v; wire [9:0] cw_a; wire [255:0] cw_d;
     wire [32:0] s_j; reg [1:0] s_jd_w = 0, s_jd_e = 0; wire [291:0] s_hw_w, s_hw_e; reg [8:0] s_hc_w = 0, s_hc_e = 0;
     reg [1:0] st_rg_w = 2'b01, st_rg_e = 2'b01; integer stdrop, nhw_w = 0, nhw_e = 0, nmk = 0;
-    dsdv_seq_host #(.V(V), .MUT(MUT)) dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
+    dsdv_seq_host #(.V(V), .MUT(MUT), .RL(RL)) dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
         .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(4'b0101), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e),
         .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d));
@@ -82,6 +90,7 @@ module tb_dsdv_seq_host;
         if (!$value$plusargs("seed=%d", seed)) seed = 1; seed0 = seed;
         if (!$value$plusargs("collide=%d", collide)) collide = 0;
         if (!$value$plusargs("stdrop=%d", stdrop)) stdrop = 0;
+        if (!$value$plusargs("pair=%d", pair)) pair = 0;
         errs = 0; nhs = 0;
         for (i = 0; i < NT; i = i + 1) T[i] = rnd186(0);
         // calendar rows: engine e at ages = res(e) mod 8, unique; END after every done
@@ -90,6 +99,9 @@ module tb_dsdv_seq_host;
         for (i = 0; i < NR; i = i + 1) begin
             e = (i % 4 == 3) ? 4 : (i % 4);
             k = (i / 4) * 8 + ((e == 4) ? 2 : (e == 2) ? 3 : e);
+            // +pair=1 (S81-SAFE-FIX/SH walker): two calendar rows on one edge, as the compiled full layers have (VN + VS):
+            // V south on V north's edge in even groups (row pair word-aligned), on the svc edge in odd groups (straddling)
+            if (pair && e == 1) k = (i / 4) * 8 + (((i / 4) % 2 == 0) ? 0 : 2);
             r_eng[nrow] = e; r_iss[nrow] = k;
             r_done[nrow] = k + ((e == 4) ? DV_S : DV_V);
             if (e == 4) r_arg[nrow] = $random(seed) & 24'hffffff;
@@ -101,6 +113,24 @@ module tb_dsdv_seq_host;
         endage = endage + 4;
         r_eng[nrow] = 14; r_arg[nrow] = 0; r_iss[nrow] = endage - 20; r_done[nrow] = 0; nrow = nrow + 1;    // KIT
         r_eng[nrow] = 15; r_arg[nrow] = 0; r_iss[nrow] = endage;      r_done[nrow] = 0; nrow = nrow + 1;    // END
+        // S81-SAFE-FIX/SH 10-19 walker contract: rows in strictly increasing issue order (one row an edge): the KIT row
+        // moves to the first free edge at or after endage - 20, then every row is sorted by issue (row index = op tag)
+        begin : walk_order
+            integer a, b, ti; reg clash;
+            clash = 1;
+            while (clash) begin
+                clash = 0; for (a = 0; a < nrow - 2; a = a + 1) if (r_iss[a] == r_iss[nrow - 2]) clash = 1;
+                if (clash) r_iss[nrow - 2] = r_iss[nrow - 2] + 1;
+            end
+            // MUT 10 (walker negative control): rows left in generation order -> the unit's seal scan must fault (code 3)
+            if (MUT != 10) for (a = 1; a < nrow; a = a + 1)
+                for (b = a; b > 0 && r_iss[b - 1] > r_iss[b]; b = b - 1) begin
+                    ti = r_iss[b]; r_iss[b] = r_iss[b - 1]; r_iss[b - 1] = ti;
+                    ti = r_eng[b]; r_eng[b] = r_eng[b - 1]; r_eng[b - 1] = ti;
+                    ti = r_arg[b]; r_arg[b] = r_arg[b - 1]; r_arg[b - 1] = ti;
+                    ti = r_done[b]; r_done[b] = r_done[b - 1]; r_done[b - 1] = ti;
+                end
+        end
         if (2 * SPAC <= endage + 4) $fatal(1, "spacing too small for two live contexts");
         // host stream: length, BEGIN, rows (3 pages), SEAL, templates, RAW writes interleaved
         begin : hs
@@ -146,7 +176,9 @@ module tb_dsdv_seq_host;
     integer hsp, jobs, gjobs, launch0, ncmd_n, ncmd_s, ncmd_j, nkit, nhw, ncomp, narr, nfrag_s, nfrag_n, coll_at;
     integer ncmd_g, ncw, mism_cw, fr_n, fr_s, mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, seen_jobs;
     reg [V-1:0] a; reg [83:0] c;
-    reg [291:0] g_hw_p = 0; reg [64:0] g_tc_p = 0;  // the golden's hw / completion HSH (= 1) edge earlier
+    reg [291:0] g_hw_p = 0; reg [64:0] g_tc_p = 0;  // the golden's hw / completion HSH edges earlier
+    reg [291:0] g_hw_d [0:7]; reg [64:0] g_tc_d [0:7];  // golden delay line: g_hw_d[k] = g_hw k + 1 edges ago
+    initial for (int k = 0; k < 8; k++) begin g_hw_d[k] = 0; g_tc_d[k] = 0; end
     initial begin
         cyc = 0; hsp = 0; jobs = 0; gjobs = 0; launch0 = -1; ncmd_n = 0; ncmd_s = 0; ncmd_j = 0; nkit = 0; nhw = 0; ncomp = 0;
         narr = 0; ncmd_g = 0; ncw = 0; mism_cw = 0; fr_n = 0; fr_s = 0; mism_n = 0; mism_s = 0; mism_j = 0; mism_k = 0; mism_hw = 0; mism_tc = 0;
@@ -161,7 +193,7 @@ module tb_dsdv_seq_host;
             c = g_cd[84 * e +: 84];
             if (e == 0) begin EN[cyc + D + LVO] = beat(T[c[13:7]], c); RN[cyc + D + LVO] = 1; ncmd_n = ncmd_n + 1;
                 GDV[cyc + DV_V][0] = 1; GDT[cyc + DV_V][0 +: 8] = {c[83], c[6:0]}; end
-            if (e == 1) begin ES[cyc + D + LVO] = beat(T[c[13:7]], c); RS[cyc + D + LVO] = 1; ncmd_s = ncmd_s + 1;
+            if (e == 1) begin ES[cyc + D + LVS] = beat(T[c[13:7]], c); RS[cyc + D + LVS] = 1; ncmd_s = ncmd_s + 1;
                 GDV[cyc + DV_V][1] = 1; GDT[cyc + DV_V][8 +: 8] = {c[83], c[6:0]}; end
             if (e == 2) begin ECW[cyc + D + LCW] = {1'b1, 2'b10, 7'd0, c[14], 214'd0, T[c[13:7]][41:0]}; ncmd_g = ncmd_g + 1;
                 GDV[cyc + DV_V][2] = 1; GDT[cyc + DV_V][16 +: 8] = {c[83], c[6:0]}; end
@@ -194,7 +226,9 @@ module tb_dsdv_seq_host;
         if (s_hw_e[0]) begin SHE[cyc + 3] = (s_hw_e[288:257] == 32'hffffffff) ? 9'b000000001 : 9'b000000011;
             if (!s_hw_w[0]) nhw = nhw + 1; nhw_e = nhw_e + 1; end
         if (g_hw[0]) GHC[cyc + 3] = 9'b000000011;
-        g_hw_p = g_hw; g_tc_p = g_tc[64:0];
+        for (int k = 7; k > 0; k--) begin g_hw_d[k] = g_hw_d[k-1]; g_tc_d[k] = g_tc_d[k-1]; end
+        g_hw_d[0] = g_hw; g_tc_d[0] = g_tc[64:0];
+        g_hw_p = g_hw_d[(HSH > 0) ? HSH - 1 : 0]; g_tc_p = g_tc_d[(HSH > 0) ? HSH - 1 : 0];
         if (t_host[64]) ncomp = ncomp + 1;
         if (s_j[32]) begin SJD[cyc + LS] = 1; SJE[cyc + LS - LSD] = 1; end
     end

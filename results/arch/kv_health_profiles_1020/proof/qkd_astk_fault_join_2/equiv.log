@@ -1,0 +1,157 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `equiv.ys' --
+
+1. Executing Verilog-2005 frontend: cells.v
+Parsing SystemVerilog input from `cells.v' to AST representation.
+Generating RTLIL representation for module `\BUFx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFASRHQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIEHIx1_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: gate.v
+Parsing Verilog input from `gate.v' to AST representation.
+Generating RTLIL representation for module `\qkd_astk_fault_join'.
+Successfully finished Verilog frontend.
+Renaming module \qkd_astk_fault_join to \gate.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     \TIEHIx1_ASAP7_75t_R
+Used module:     \DFFASRHQNx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \OR2x6_ASAP7_75t_R
+Used module:     \INVx1_ASAP7_75t_R
+
+3.2. Analyzing design hierarchy..
+Top module:  \gate
+Used module:     \TIEHIx1_ASAP7_75t_R
+Used module:     \DFFASRHQNx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \OR2x6_ASAP7_75t_R
+Used module:     \INVx1_ASAP7_75t_R
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$cells.v:18$5 in module DFFASRHQNx1_ASAP7_75t_R.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \clr__w in `\DFFASRHQNx1_ASAP7_75t_R.$proc$cells.v:18$5'.
+Found async reset \pre__w in `\DFFASRHQNx1_ASAP7_75t_R.$proc$cells.v:18$5'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\DFFASRHQNx1_ASAP7_75t_R.$proc$cells.v:18$5'.
+     1/1: $0\IQN[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\DFFASRHQNx1_ASAP7_75t_R.\IQN' using process `\DFFASRHQNx1_ASAP7_75t_R.$proc$cells.v:18$5'.
+Warning: Complex async reset for dff `\IQN'.
+  created $dffsr cell `$procdff$21' with positive edge clock and multiple level-sensitive resets.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `DFFASRHQNx1_ASAP7_75t_R.$proc$cells.v:18$5'.
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module TIEHIx1_ASAP7_75t_R.
+Optimizing module OR2x6_ASAP7_75t_R.
+Optimizing module INVx1_ASAP7_75t_R.
+Optimizing module DFFASRHQNx1_ASAP7_75t_R.
+<suppressed ~7 debug messages>
+Optimizing module BUFx2_ASAP7_75t_R.
+
+5. Executing FLATTEN pass (flatten design).
+<suppressed ~8 debug messages>
+
+6. Executing RTLIL frontend.
+Input filename: gold1.il
+Added wire \S__q to module \gold.
+
+7. Executing ASYNC2SYNC pass.
+Replacing gold.$procdff$16 ($adff): ARST=\rst_n, D=$0\q[0:0], Q=\q
+Replacing gate.$flatten\q$_DFF_PN0_.$procdff$21 ($dffsr): SET=$flatten\q$_DFF_PN0_.$auto$rtlil.cc:3402:Mux$16, CLR=$flatten\q$_DFF_PN0_.$auto$rtlil.cc:3402:Mux$20, D=$flatten\q$_DFF_PN0_.$not$cells.v:18$6_Y, Q=$auto$rename.cc:496:execute$38
+Replacing DFFASRHQNx1_ASAP7_75t_R.$procdff$21 ($dffsr): SET=$auto$rtlil.cc:3402:Mux$16, CLR=$auto$rtlil.cc:3402:Mux$20, D=$not$cells.v:18$6_Y, Q=$auto$rename.cc:496:execute$65
+
+8. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: S__q_gold (\q_gold), S__q_gate ($flatten\q$_DFF_PN0_.$not$cells.v:14$1_Y_gate) -> S__q
+Presumably equivalent wires: a_gold (\a_gold), a_gate (\a_gate) -> a
+Presumably equivalent wires: b_gold (\b_gold), b_gate (\b_gate) -> b
+Presumably equivalent wires: ck_gold (\ck_gold), ck_gate (\ck_gate) -> ck
+Presumably equivalent wires: q_gold (\q_gold), q_gate ($flatten\_3_.$not$cells.v:24$7_Y_gate) -> q
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Setting undriven nets to undef: $auto$connect.cc:33:unset_drivers$30_gold
+
+9. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+9.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gold'.
+Removing unused module `\gate'.
+Removing unused module `\TIEHIx1_ASAP7_75t_R'.
+Removing unused module `\OR2x6_ASAP7_75t_R'.
+Removing unused module `\INVx1_ASAP7_75t_R'.
+Removing unused module `\DFFASRHQNx1_ASAP7_75t_R'.
+Removing unused module `\BUFx2_ASAP7_75t_R'.
+Removed 7 unused modules.
+
+10. Executing EQUIV_SIMPLE pass.
+Found 2 unproven $equiv cells (2 groups) in equiv:
+  Trying to prove $equiv for \q:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \S__q:ezsat
+ezsat
+ success!
+Proved 2 previously unproven $equiv cells.
+
+11. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+12. Executing EQUIV_STATUS pass.
+Found 2 $equiv cells in equiv:
+  Of those cells 2 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+13. Executing EQUIV_STATUS pass.
+Found 2 $equiv cells in equiv:
+  Of those cells 2 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: b967e64091, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 68.64 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 28% 4x read_verilog (0 sec), 26% 1x equiv_simple (0 sec), ...

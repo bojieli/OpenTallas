@@ -1,0 +1,3 @@
+CTLM_PROG MUT=0 BMUT=0 HRA=0 DECODE=3: PASS 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1229, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3420, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5071, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5755, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+rc=0

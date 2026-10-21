@@ -1,0 +1,10 @@
+XS_PLACE_GEN u_f_3L01 op attn.wo_b phase 1/5 mat wo_b rows 11 nseg 2 faults 0 ret_words 11 calendar measured_class T 985 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wo_b phase 2/5 mat wo_b rows 11 nseg 2 faults 0 ret_words 11 calendar measured_class T 985 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wo_b phase 3/5 mat wo_b rows 10 nseg 2 faults 0 ret_words 10 calendar measured_class T 983 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wo_b phase 4/5 mat wo_b rows 10 nseg 2 faults 0 ret_words 10 calendar measured_class T 983 mutant None
+FSEQA u_f_3L01 attn.wo_b golden P 127 nph 4 PASS as_expected ne rows=10 fixture_rows=0 errors=0 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+TOKSIM_FGU_SEQ PASS op attn.wo_b PER 127 phases 4 rows 42 fixture_rows 0 go0 63 last_ret 764 span 701 errors 0 []
+FSEQA u_f_3L01 attn.wo_b period_below_floor P 126 nph 4 FAIL as_expected _SEQ FAIL op attn.wo_b PER 126 phases 4 rows 42 fixture_rows 0 go0 63 last_ret 761 span 698 errors 4 ['FAULT edge 404 status 11 lx 0', 'FAULT edge 405 status 11 lx 0', 'FAULT edge 406 status 11 lx 0']
+FSEQA u_f_3L01 attn.wo_b shift P 127 nph 4 FAIL as_expected  4 rows 42 fixture_rows 0 go0 63 last_ret 764 span 701 errors 24 ['UNASSIGNED_RET edge 366 07a0afd5c10000045', 'UNASSIGNED_RET edge 371 1794d49e610008045', 'UNASSIGNED_RET edge 374 07ad403a010010045']
+FSEQA u_f_3L01 attn.wo_b swap P 127 nph 4 FAIL as_expected w 1 lo 0 k 1 got 3d3af46c/0 want 3aec3f80/0']", "PHASE_FAIL p3: ['MISMATCH edge 366 row 0 lo 0 k 1 got bcf66fe2/0 want 394cef00/0', 'MISMATCH edge 367 row 1 lo 0 k 1 got 3c1bf750/0 want b96a5f80/0']"]
+FSEQA_VERDICT u_f_3L01 attn.wo_b PASS span 701

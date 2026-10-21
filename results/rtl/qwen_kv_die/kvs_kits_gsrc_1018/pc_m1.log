@@ -1,0 +1,12 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=11 out o_grp
+MISMATCH t=12 out o_grp
+MISMATCH t=13 out o_grp
+MISMATCH t=14 out o_grp
+MISMATCH t=15 out o_grp
+KVS_TILE FAIL tile=pc edges=4000 checks=223832 errors=2974 mut=1 (dropped w_pc__er[260:260] in assign o_grp)
+- /srv/opentallas-scratch/claude/kv-kits-par/out-f985bf9d9/pc_m1/tb.sv:302: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.198 s; speed 40.444 us/s
+- Verilator: cpu 0.154 s on 1 threads; allocated 7 MB
+

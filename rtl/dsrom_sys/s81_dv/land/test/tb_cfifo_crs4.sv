@@ -69,7 +69,8 @@ module tb_cfifo_crs4;
     wire [14:0] cc_d; wire [69:0] rd_d; wire rs_d; wire [282:0] xa_d; wire [265:0] xb_d; wire [535:0] x2_d;
     wire [11:0] lk = {4{K[2:0]}};
     dsfd_cfifo_crs4 u_dut (.cc(cc_d), .cr(cks), .cr_s(cks), .rd(rd_d), .ri(ri), .rs(rs_d), .rst(rst), .st(st), .xa(xa_d),
-                           .xb(xb_d), .xd(xl[565:0]), .x2(x2_d), .xd2(xl[1103:566]), .xk(xk), .lk(lk));
+                           .xb(xb_d), .x2(x2_d), .xl0(xl[275:0]), .xl1(xl[551:276]), .xl2(xl[827:552]), .xl3(xl[1103:828]),
+                           .xk(xk), .lk(lk));
     // ---------------------------------------------------------------- recorder + checker
     reg [1099:0] hr [0:1023], hd [0:1023];
     reg [69:0] rr_ [0:1023], rdd [0:1023];

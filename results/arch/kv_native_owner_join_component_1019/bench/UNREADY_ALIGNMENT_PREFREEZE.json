@@ -1,0 +1,16 @@
+{
+  "kind": "pre_edit_actual_package_cause_landing",
+  "new_state_bits": 1,
+  "register": "pin_eng_unready",
+  "source": "private ifpins eng_start_unready input from real ctl_res[86]",
+  "clock_reset": "same posedge clk / negedge rst_n and reset0 as existing pin_eng_done",
+  "NBA": "parallel capture with pin_eng_done; no extra launch edge",
+  "output": "raw_done_unready=ENABLE_NATIVE_OWNER_JOIN && raw_done_v && pin_eng_unready",
+  "core_use": "raw_unready uses aligned actual cause, never !native_valid",
+  "missing_binding_check": "raw_done_v && !raw_done_native_valid && !raw_done_unready must cause protocol fault",
+  "declared_added_bits_H64": 1827,
+  "declared_added_bits_H512": 1830,
+  "event_indexed_bits": 2912,
+  "production_H": null,
+  "physical_cost": "not qualified"
+}

@@ -3,19 +3,7 @@
  "top": "dsdv_gunit_l1",
  "kind": "tile",
  "sources": [
-  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
-  "rtl/hdc/ot_hdc_delay.sv",
-  "rtl/hdc/ot_hdc_fastfp.sv",
-  "rtl/hdc/ot_hdc_fp32_f12.sv",
-  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-  "rtl/hdc/ot_hdc_prefix.sv",
-  "rtl/hdc/ot_hdc_sfu.sv",
-  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
-  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
-  "rtl/hdc/v41x/ot_dsrom_divc.sv",
-  "rtl/hdc/v41/ot_hdc_select_tree.sv",
-  "rtl/hdc/v41x/ot_dsrom_su_bias_select.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv"
  ],
@@ -58,37 +46,62 @@
    "f3"
   ],
   "E": [
+   "sa_r",
+   "sa_d",
+   "sb_r",
+   "sb_d",
+   "we",
+   "c_go",
+   "c_fw",
+   "c_l",
+   "c_bn",
+   "c_lvn",
+   "re",
+   "ra",
+   "bw_e",
+   "bw_a",
+   "bw_d",
+   "i_v",
+   "i_ids",
+   "gs_v",
+   "gs_d",
+   "fc"
+  ],
+  "W": [
    "clk",
    "rst_n"
   ]
  },
  "outline": {
   "w": 345.6,
-  "h": 518.4
+  "h": 216.0
  },
  "recipe": 4,
  "clock": "cts",
  "route": {
   "pd": 0.5,
   "threads": 8,
-  "peak_ram_gb": 48,
+  "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.0,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4
  },
- "structural_change": "S81U-GUNIT2 (10-17): new leaf L1 of the six-leaf dsdv_gunit (S81-DV column-3 G-unit): router score store, bias table, bias + top-6 select, ids CTL row, weight-row merge (5th of 6). Every input lands in a flop, every output leaves a flop; carried buses cross in 2 edges (dsdv_gunit_pass); no ready / credit (static schedule, contract checks are faults).",
+ "structural_change": "S81U-GUNIT-L1 (10-17): L1 (GUNIT2: 114,054 sinks on one root, clock-rule FAIL) is now the router STACK leaf only: rung feedthrough, SC checks / window + job sequencer, per-front control, bias-row writes to the fronts' SRAM macros, ids CTL row from the collector, routing-weight operands (renumbered ids row + one gathered score row) to L3, weight-row merge (~3.9k flops generic). Score store, bias table (now 8 x ot_sram_1r1w_128x256 in the fronts) and the select (two compare-exchanges per stage) moved to five E-side leaves dsdv_gunit_l1f x4 + dsdv_gunit_l1c. Every input lands in a flop, every output leaves a flop; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages ; collector ids into pin flops (+1 edge ids row)",
  "job": {
-  "owner": "Claude:S81U-GUNIT2",
-  "branch": "claude/s81u1-1017",
-  "tag": "g1",
-  "purpose": "S81-DV G-unit leaf L1 to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "owner": "Claude:S81U-GUNIT-L1",
+  "branch": "claude/s81u-gunit-l1-1017",
+  "tag": "gl1",
+  "purpose": "S81-DV G-unit router leaf L1 to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
    "rtl/hdc",
    "rtl/dsrom_sys/s81_suhc",
    "tools/hdc_golden_v41.py",
    "tools/hdc_golden.py",
-   "physical/ref_tile_specs/s81dv"
+   "physical/ref_tile_specs/s81dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
   ],
   "benches": [
    {
@@ -104,6 +117,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 1",
     "expect": "fail",
     "fail_regex": "^MUT=1: GUNIT FAIL ",
+    "fail_witness": "results/rtl/s81_dv_units_1017/gunit_l1b/mut1_witness.log",
     "threads": 6,
     "peak_ram_gb": 24
    }

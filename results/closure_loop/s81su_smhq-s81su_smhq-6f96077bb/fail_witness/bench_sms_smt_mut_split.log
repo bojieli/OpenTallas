@@ -1,0 +1,17 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81su_smhq-s81su_smhq-6f96077bb bench bench_sms_smt_mut_split host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/s81su_smhq-s81su_smhq-6f96077bb log cl/bench_sms_smt_mut_split.a1b1.log captured 2026-10-18T19:23:42-07:00
+# fail_regex '^SMS FAIL MUT=6 errors=[1-9]'
+SMS stats MUT=6 jobs=24 se_rows=225 so_rows=384 checks=609
+SMS latency (cycles at the share's pins): SE first e row = last score row + 105, e rows back to back; SO o row k = P.V row k + 54
+SMS latency: o_den = last e row + 46 at lt = clog2(nv) = 0
+SMS latency: o_den = last e row + 51 at lt = clog2(nv) = 1
+SMS latency: o_den = last e row + 61 at lt = clog2(nv) = 3
+SMS latency: o_den = last e row + 66 at lt = clog2(nv) = 4
+SMS latency: o_den = last e row + 71 at lt = clog2(nv) = 5
+SMS latency: o_den = last e row + 76 at lt = clog2(nv) = 6
+SMS MISMATCH SE latency != 106 at 105
+- /srv/opentallas-scratch/claude/closure-loop/s81su_smhq-s81su_smhq-6f96077bb/bench_src_a1/rtl/dsrom_sys/s81_dv/su_sm/test/tb_s81_su_sms.sv:211: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 96.335 s; speed 227.467 ns/s
+- Verilator: cpu 96.305 s on 1 threads; allocated 47 MB
+SMS FAIL MUT=6 errors=1 checks=609

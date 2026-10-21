@@ -1,0 +1,400 @@
+{
+  "module": "qfd_dv_stream",
+  "reset": "rst_n",
+  "leaf_count": 78,
+  "max_data_reset_loads": 32,
+  "reset_release_added_edges": 2,
+  "child_reset_loads": "requires synthesis census; not bounded by data assignment partition",
+  "leaves": [
+    {
+      "target": "dir",
+      "lsb": 0,
+      "bits": 2
+    },
+    {
+      "target": "tag",
+      "lsb": 0,
+      "bits": 28
+    },
+    {
+      "target": "emit",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "xm",
+      "lsb": 0,
+      "bits": 32
+    },
+    {
+      "target": "xm",
+      "lsb": 32,
+      "bits": 32
+    },
+    {
+      "target": "xopen",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "so_e",
+      "lsb": 0,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 32,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 64,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 96,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 128,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 160,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 192,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 224,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 256,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 288,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 320,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 352,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 384,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 416,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 448,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 480,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 512,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 544,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 576,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 608,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 640,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 672,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 704,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 736,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 768,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 800,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 832,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 864,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 896,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 928,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 960,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 992,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 1024,
+      "bits": 32
+    },
+    {
+      "target": "so_e",
+      "lsb": 1056,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 0,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 32,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 64,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 96,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 128,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 160,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 192,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 224,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 256,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 288,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 320,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 352,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 384,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 416,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 448,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 480,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 512,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 544,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 576,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 608,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 640,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 672,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 704,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 736,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 768,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 800,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 832,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 864,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 896,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 928,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 960,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 992,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 1024,
+      "bits": 32
+    },
+    {
+      "target": "so_w",
+      "lsb": 1056,
+      "bits": 32
+    },
+    {
+      "target": "tw_we",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "xt_bad",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "xt_v",
+      "lsb": 0,
+      "bits": 1
+    },
+    {
+      "target": "fault",
+      "lsb": 0,
+      "bits": 1
+    }
+  ]
+}

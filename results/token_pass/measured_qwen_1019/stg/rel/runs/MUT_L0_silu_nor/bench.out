@@ -1,0 +1,3 @@
+DV_LOWER_VEC silu FAIL 1/2 mutant=nor commands=24 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=816 isa_gold_words=1536/1536
+    act stream: 24/24 words wrong / off edge (first [(0, 0, 2343, 0), (0, 64, 2351, 64), (1, 128, 2344, 128)]), 24 x words at E5
+rc=1

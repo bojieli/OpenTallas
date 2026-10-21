@@ -1,5 +1,2 @@
-sel m3 base: RESULT PASS segments 32 out_beats 737 replays 4 errors 0 tail_minus_ref max 69062 mean 3780 ref_holds 12 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 17987, ingress words 66011, drain CTL 17989, egress words 780, errors 0
-sel m3 thru: RESULT PASS segments 32 out_beats 643 replays 4 errors 0 tail_minus_ref max 140518 mean 7508 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 230068, ingress words 65057, drain CTL 32905, egress words 686, errors 0
-sel m3 odd: RESULT PASS segments 32 out_beats 577 replays 4 errors 0 tail_minus_ref max 89461 mean 4669 ref_holds 9 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 21523, ingress words 62836, drain CTL 21524, egress words 620, errors 151
-sel m3 thruodd: RESULT PASS segments 32 out_beats 639 replays 4 errors 0 tail_minus_ref max 288467 mean 15435 ref_holds 7 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 454903, ingress words 64947, drain CTL 64955, egress words 682, errors 317
+sel m3 odd: RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 23159, ingress words 67752, drain CTL 23162, egress words 729, errors 133
 DSDV_BK_SEL FAIL mut=3

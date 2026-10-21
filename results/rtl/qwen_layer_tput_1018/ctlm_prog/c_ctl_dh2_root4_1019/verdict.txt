@@ -1,0 +1,14 @@
+ROOT4-QWPOST 10-19: c_ctl (cctl.sh) on the regenerated ctlm image -- NOT REPRODUCIBLE on the current die, FAIL (diagnostic).
+The dv2f14bn slice/scratch (ot-epyc4 qlb-prog-1018 / layerbench-qwen-1018) is gone with epyc4. Re-cut the c_ctl slice from the
+dv2f18dh2 die of record (die.v sha 7b1bdfc5.., port_bind PASS) with main 0408184bd RTL (cut.sh; slice_m0.json: 874 inst,
+unresolved 0) and ported the drive (cctl_dh2.sh: hr_wi __r26, head probes -> g_hard_hr.u_hr).  Results (Verilator 5.050, ot-epyc5):
+ c0 / c1 (MU die config: tt_ctlm NU 4 OPSEG 1 XPF 21, sys_face MU 1; COMP_AUTH 2): programme never loads (record port af=1,
+   witness not installed), tt_ctlm cf from @2048 (missing qfd_tt_ctlm_opseg.viamap.hex: the bench has no MU opseg image) -> CPROG FAIL 0/0.
+ c0_comp0 (COMP_AUTH 0): same.
+ su_comp2 / su_comp0 (DIAGNOSTIC single-user slice: NU 1 OPSEG 0 MU 0, mk_su.sh): COMP 2 = af fault (dh2 record bundle no longer
+   needs the G-C2 compensation); COMP 0 = PW 1024 / DW 8 reach tt_ctlm, cal_image_ready @6103, then face boot fault @7461,
+   witness 0, control_stores_ready 0 -> CPROG FAIL 0/0.
+Also: the image is compiled on dv2f14bn lane ages (xpf_transport_edges 15, R 14/14/13/13) while dh2 binds XPF_TRANSPORT_EDGES 21
+(fwd_lanes E cmd 18 / hr 19 / ss 16 / ag 16) and GEN3 dv2f19g3r adds lpf offsets (QW-GEN3): image of record needs the die's ages.
+NEEDED (handed to LEAD3-QW, lane QW-CCTL-MU): MU c_ctl bench = MU programme/record-auth replay + opseg image + dh_user drive on
+the GEN3 die slice, with the image compiled on that die's lane ages; then MUT 1 witness.

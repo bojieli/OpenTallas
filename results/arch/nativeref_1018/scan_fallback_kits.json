@@ -1,0 +1,411 @@
+{
+ "schema": "opentallas.nativeref.scan.v1",
+ "by": "NATIVE-REF 2026-10-18",
+ "what": "every closure-loop route on ot-epyc4/5, agidock, pve1 (latest per kit) whose 5_1_grt.log IO reference (io_ref_skew.sdc QDM) was NOT a pin-flop / REFGLOB median: lost_at_grt = CTS found pin flops, GRT did not (hold pads); no_pinflops = none at CTS either; hard_child_ref = reference is a hard child clock pin (raw, no insertion)",
+ "kits_scanned_with_fallback": 212,
+ "classes": {
+  "no_pinflops": 37,
+  "lost_at_grt": 167,
+  "no_pinflops+hard_child_ref": 7,
+  "lost_at_grt+hard_child_ref": 1
+ },
+ "likely_hit_rule": "GRT hold buffers >= 300 or a hard-child clock pin reference",
+ "likely_hit": [
+  {
+   "job": "qkd_kvs_emb-i2-5561116d2",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 822,
+   "cts_hold_bufs": 4928,
+   "ref": "u_join.act$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "qkd_d2d_static_r7t-r7t-28642e9aa",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 5188,
+   "cts_hold_bufs": 15442,
+   "ref": "abort_drained[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "s81dvbk_colv-pl1-d863824bf",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 1,
+   "cts_hold_bufs": 6562,
+   "ref": "g_l[0].u_l/ck[0]"
+  },
+  {
+   "job": "s81lk_kp4_dec-p1-867a65ed7",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 11,
+   "cts_hold_bufs": 10946,
+   "ref": "u_chn/clk"
+  },
+  {
+   "job": "s81su_smhq-s81su_smhq-65b8808ea",
+   "status": "CLOSED",
+   "host": "ot-epyc5",
+   "cls": "LOST_AT_GRT+MACRO",
+   "grt_hold_bufs": 3756,
+   "cts_hold_bufs": 1591,
+   "ref": "g_l[0].u_sml/ck"
+  },
+  {
+   "job": "s81sl_eg-v1-fbb651e33",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 547,
+   "cts_hold_bufs": 44461,
+   "ref": "ot_prs_00001_ff/CLK"
+  },
+  {
+   "job": "qkd_d2d_static_r7q-r7q-0b9807474-arg1",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 4979,
+   "cts_hold_bufs": 15209,
+   "ref": "abort_drained[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 2188,
+   "cts_hold_bufs": 13036,
+   "ref": "_74457_/CLK"
+  },
+  {
+   "job": "vm_native_q1core_n2-n2-e76d666ae",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 765,
+   "cts_hold_bufs": 11562,
+   "ref": "bid__ot_q[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "vm_native_q2_faces_g313f-mclkF-7dedb765c",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 1765,
+   "cts_hold_bufs": 25460,
+   "ref": "ot_prs_00126_ff/CLK"
+  },
+  {
+   "job": "hbfd_rly_624_ns_fc-fc2-6757ecde8",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 393,
+   "cts_hold_bufs": 1258,
+   "ref": "u.u_stage.g_rr.u_rst.rst_n[0]$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "hbfd_rly_624_we_fc-fc2-cd0c5f463",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 400,
+   "cts_hold_bufs": 1261,
+   "ref": "u.u_stage.g_rr.u_rst.rst_n[0]$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "hbfd_rly_624_sn_fc-fc1-ef0d0c1a2",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 345,
+   "cts_hold_bufs": 3920,
+   "ref": "u.u_stage.g_rr.u_rst.rst_n[0]$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "vm_native_q0_faces_g313-mclkB-77d881f64",
+   "status": "NEEDS_RTL",
+   "host": "ot-agidock128",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 446,
+   "cts_hold_bufs": 22442,
+   "ref": "bid__ot_q[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "dsfd_capt_x8x_s_w_split1016y-x43-f7ce9e573",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 964,
+   "cts_hold_bufs": 5614,
+   "ref": "ot_prs_00004_ff/CLK"
+  },
+  {
+   "job": "dsfd_capt_x8x_s_e_split1016y-x43-f7ce9e573",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 1198,
+   "cts_hold_bufs": 4501,
+   "ref": "ot_prs_00004_ff/CLK"
+  },
+  {
+   "job": "dsfd_capt_x8x_s_w_split1016x-x43-32b87a1a9",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 437,
+   "cts_hold_bufs": 5753,
+   "ref": "ot_prs_00004_ff/CLK"
+  },
+  {
+   "job": "dsfd_capt_x8x_s_e_split1016x-x43-32b87a1a9",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 476,
+   "cts_hold_bufs": 4922,
+   "ref": "ot_prs_00004_ff/CLK"
+  },
+  {
+   "job": "vm_native_q0_faces_g313c-mclkC-1ad8c4984",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 362,
+   "cts_hold_bufs": 22016,
+   "ref": "bid__ot_q[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "dsfd_capt_g2_dualho_split1016-split1-00e50305e",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 1158,
+   "cts_hold_bufs": 31754,
+   "ref": "a1[0]$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "vm_native_q0_ref-nat2-f084d0a8b",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 1201,
+   "cts_hold_bufs": 15642,
+   "ref": "bid__ot_q[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "vm_native_q1_ref-nat2-f084d0a8b",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 353,
+   "cts_hold_bufs": 13792,
+   "ref": "bid__ot_q[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "hbm_ckgen_cl-cl1-c3fc50d5c",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 0,
+   "cts_hold_bufs": 0,
+   "ref": "u_rel/ck_hbm"
+  },
+  {
+   "job": "qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 468,
+   "cts_hold_bufs": 24039,
+   "ref": "ot_prs_00000_ff/CLK"
+  },
+  {
+   "job": "s81_a2f_field4_pilot_2118_r3b-r3outhb2-cee81c89c",
+   "status": "CANCELLED",
+   "host": "ot-agidock128",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 361,
+   "cts_hold_bufs": 3450,
+   "ref": "ot_prs_00001_ff/CLK"
+  },
+  {
+   "job": "s81_a2f_control4_resetlocal_pilot_2118_r3-r3outhb2-COMMIT-8452b506f",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 618,
+   "cts_hold_bufs": 1341,
+   "ref": "ot_prs_00068_ff/CLK"
+  },
+  {
+   "job": "vm_strap_q3_ref-strap3-COMMIT-e6e8e1098",
+   "status": "CANCELLED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 429,
+   "cts_hold_bufs": 14548,
+   "ref": "bank.COMPILED_BID[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-caps-COMMIT-16fc576b0",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 2242,
+   "cts_hold_bufs": 19614,
+   "ref": "fdx[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "qvm_su_bank_native-su3-COMMIT-b025a43b6",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 1,
+   "cts_hold_bufs": 216,
+   "ref": "u_cap_hi/clk"
+  },
+  {
+   "job": "qvm_bank_entries_my_native-ne3-4ad880d2b",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 0,
+   "cts_hold_bufs": 526,
+   "ref": "u_cap_hi/clk"
+  },
+  {
+   "job": "ot_s81_vm_x43_t_w1026_1015_f4-f4-5b4b102fa",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 327,
+   "cts_hold_bufs": 24234,
+   "ref": "ot_prs_00029_ff/CLK"
+  },
+  {
+   "job": "ot_s81_vm_x34_s_w1026_1015_f4-f4-5b4b102fa",
+   "status": "CANCELLED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 562,
+   "cts_hold_bufs": 21534,
+   "ref": "ot_prs_03082_ff/CLK"
+  },
+  {
+   "job": "ot_s81_vm_x34_t_w560_1015_f4-f4-5b4b102fa",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 1004,
+   "cts_hold_bufs": 3522,
+   "ref": "ot_prs_00313_ff/CLK"
+  },
+  {
+   "job": "qfd_tt_ctlm_tree-tr4-b5100241d",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 556,
+   "cts_hold_bufs": 25404,
+   "ref": "ot_prs_00002_ff/CLK"
+  },
+  {
+   "job": "lkep_tx_shared_ref-txsplit1-7a34d98ba",
+   "status": "CLOSED",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 1098,
+   "cts_hold_bufs": 10660,
+   "ref": "a_h[0]$_DFFE_PP_/CLK"
+  },
+  {
+   "job": "smpub_vmmerge-r3-ef1510eba",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 337,
+   "cts_hold_bufs": 1175,
+   "ref": "ack[0]$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "dscoll_ces0_sp-sp1-d4bed2783",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 0,
+   "cts_hold_bufs": 0,
+   "ref": "u.g_0.u_c/ck"
+  },
+  {
+   "job": "dscoll_cesn_sp-sp1-d4bed2783",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "NO_PF+MACRO",
+   "grt_hold_bufs": 0,
+   "cts_hold_bufs": 0,
+   "ref": "u.g_ln[0].u_l/ck"
+  },
+  {
+   "job": "qfd_slab_pg_col_h6-c3-a89b702eb",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 439,
+   "cts_hold_bufs": 401,
+   "ref": "g_bank[0].cap4[0]$_DFF_P_/CLK"
+  },
+  {
+   "job": "hgi_topk_w8c_rt_e-w8e-7bd3a56c3",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "NO_PF",
+   "grt_hold_bufs": 1399,
+   "cts_hold_bufs": 13785,
+   "ref": "done$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "dsfd_svcio_od_m5-m5-5b76815db",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 738,
+   "cts_hold_bufs": 3033,
+   "ref": "bad$_DFF_PN0_/CLK"
+  },
+  {
+   "job": "qfd_tt_ctlm_i-fpasc-43229d70e-tc-hm0-cl",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "NO_PF",
+   "grt_hold_bufs": 4086,
+   "cts_hold_bufs": 2034,
+   "ref": "u_c.u_ctrl_me.g_me_cg.u_me_cg.u_icg_cgpd1/CLK"
+  },
+  {
+   "job": "qfd_seq_su_bi-fea-bcb927b50-tc-hm0-cl",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc4",
+   "cls": "LOST_AT_GRT",
+   "grt_hold_bufs": 347,
+   "cts_hold_bufs": 12624,
+   "ref": "b_su_tok[0]$_DFFE_PP_/CLK"
+  },
+  {
+   "job": "qfd_lst_v-3d5ad2a4ftt",
+   "status": "CLOSED",
+   "host": "ot-agidock128",
+   "cls": "NO_PF",
+   "grt_hold_bufs": 5185,
+   "cts_hold_bufs": 10430,
+   "ref": "g_straight.ab_q[0]$_SDFF_PN0_/CLK"
+  }
+ ]
+}

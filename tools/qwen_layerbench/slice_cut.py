@@ -302,16 +302,32 @@ def emit(args, nets, insts, pins, drv, loads, sel, idx, files, roots, bind, die_
         pv, _reason = rest.split(':', 1)
         k, v = pv.split('=', 1)
         ovr[inst][k] = v
+    # QLB-GEN 10-18: the die's master elaboration parameters (DIE_V.params.json, the GEN's compiler assignments, e.g.
+    # qfd_tt_ctlm_dv XPF_TRANSPORT_EDGES / qfd_d2d_static TXDP) are inlined on every selected instance of that master,
+    # as tools/die_port_bind.py elab_kit does; --override may only fill a parameter the die leaves unset
+    side = {}
+    pj = args.params or (args.die_v + '.params.json' if Path(args.die_v + '.params.json').exists() else None)
+    if pj:
+        side = {mst: {k: v for k, v in d.items() if not k.startswith('_')}
+                for mst, d in json.loads(Path(pj).read_text()).get('masters', {}).items()}
+    used_side = {}
     for st in text.split(';'):
         s = st.strip()
         m = re.match(r'(\\\S+|\w+)\s*(#\s*\(.*?\)\s*)?(\\\S+\s|\w+)\s*\(', s, re.S)
         if m and m.group(3).strip() in sel:
             name = m.group(3).strip()
             line = ' '.join(s.split())
-            if name in ovr:
+            pv = dict(side.get(m.group(1), {}))
+            if pv:
+                used_side[name] = dict(master=m.group(1), **pv)
+            for k in ovr.get(name, {}):
+                if k in pv:
+                    raise SystemExit(f'slice_cut: --override {name}.{k}: the die sets it ({pv[k]} in {pj})')
+            pv.update(ovr.get(name, {}))
+            if pv:
                 if m.group(2):
-                    raise SystemExit(f'slice_cut: --override on {name}, which already has die parameters')
-                ps = ', '.join(f'.{k}({v})' for k, v in ovr[name].items())
+                    raise SystemExit(f'slice_cut: parameters for {name}, which already has inline die parameters')
+                ps = ', '.join(f'.{k}({sv_lit(v)})' for k, v in pv.items())
                 line = f'{m.group(1)} #({ps}) {line[len(m.group(1)):].lstrip()}'
             inst_txt[name] = '  ' + line + ';'
     order = [inst for mst, inst, _, _ in insts if inst in sel]
@@ -370,6 +386,7 @@ def emit(args, nets, insts, pins, drv, loads, sel, idx, files, roots, bind, die_
         'bind_sha256': sha(args.bind), 'bind_verdict': bind.get('verdict'), 'src': args.src,
         'command': ' '.join(sys.argv),
         'selection': {'inst': args.inst, 'master': args.master, 'grow': args.grow, 'exclude': args.exclude},
+        'die_params_file': pj, 'die_params_applied': used_side,
         'die_gap_overrides': [dict(zip(('instance', 'param_value', 'reason'), (o.split(':', 1)[0],) +
                                        tuple(o.split(':', 1)[1].split(':', 1)))) for o in args.override],
         'instances': len(sel), 'masters': {m: sum(1 for i in sel if pins[i][0] == m) for m in masters},
@@ -384,6 +401,13 @@ def emit(args, nets, insts, pins, drv, loads, sel, idx, files, roots, bind, die_
     }
     (od / 'slice.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec
+
+
+def sv_lit(v):
+    """a sidecar value as an SV literal (ints >= 2**31 sized, so a [31:0] vector parameter keeps its bits)."""
+    if isinstance(v, int) and not 0 <= v < 2 ** 31:
+        return f"{max(32, v.bit_length())}'d{v}" if v >= 0 else str(v)
+    return str(v)
 
 
 def describe(insts, idx, regex):
@@ -414,6 +438,7 @@ def main(argv=None):
     ap.add_argument('--override', action='append', default=[],
                     help='INST:PARAM=VALUE:REASON -- a parameter the die netlist fails to set (a DIE GAP, recorded in '
                          'slice.json die_gap_overrides; never used to change a value the die sets)')
+    ap.add_argument('--params', default=None, help='die master parameter sidecar (default DIE_V.params.json when present)')
     ap.add_argument('--top', default='slice_top')
     ap.add_argument('--out')
     ap.add_argument('--describe', default=None)

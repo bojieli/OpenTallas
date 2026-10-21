@@ -1,0 +1,11 @@
+MISMATCH ci_b slot=3
+MISMATCH ci_b slot=6
+MISMATCH ci_b slot=7
+MISMATCH ci_b slot=8
+MISMATCH ci_b slot=22
+MISMATCH ci_b slot=31
+MISMATCH ci_b slot=32
+MISMATCH ci_b slot=34
+XRB hb=1 seed=1 sid=4 cycles=6016 ctl=1536 rd=1192 rowwr=240 lo=1996 sends=1014 vreinj=765 screl=123 parts=284 err=737
+XRILL missed=0 of 14 bsends=431
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED hops

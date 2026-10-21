@@ -1,0 +1,20 @@
+{
+  "mapped_json_sha256": "8e4fdb42a22d755e7efb9cfcdf1ac0efe1563ee500d177e2d8e810fd15b85d27",
+  "roots": 8586,
+  "counts": {
+    "comb": 4768,
+    "ff": 2782,
+    "input": 1036
+  },
+  "max_loads": 24,
+  "unsafe_roots": 0,
+  "unknown_bits": [],
+  "input_non_ff": [],
+  "output_non_ff": {},
+  "constant_endpoints": {
+    "0": 64,
+    "1": 202
+  },
+  "constant_note": "Literal constants require real per-sink tie repair in physical netlist; no physical tie or placement claim",
+  "clock_FF_contacts": 2782
+}

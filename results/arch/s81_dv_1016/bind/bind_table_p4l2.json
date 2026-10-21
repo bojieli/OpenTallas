@@ -2812,8 +2812,10 @@
    "view": null,
    "replaces": "dsfd_cfifo_crs (LANDING audit gaps 1+2)",
    "ports_used": [
-    "xd",
-    "xd2",
+    "xl0",
+    "xl1",
+    "xl2",
+    "xl3",
     "xk",
     "lk",
     "ri",
@@ -2827,7 +2829,7 @@
     "cc"
    ],
    "decision": "S81-LAND2 0dm+ (1); LANDFIX-SQ/F 10-18 binds it",
-   "view_note": "successor of r5f-507e1b0c3 (dsfd_cfifo_crs CLOSED); crs4 not hardened yet (owed)"
+   "view_note": "successor of r5f-507e1b0c3 (dsfd_cfifo_crs CLOSED); crs4 CLOSED s81coll_cfifo_crs4-c4a-f11bb1950 (TW-S81 10-19: ports xl0..xl3 = old {xd2,xd}[276k+:276], one port per lane; record merge claude/tw-s81-land-merge-1019)"
   },
   {
    "master": "dsfd_bf_front_roots",

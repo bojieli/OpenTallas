@@ -1,0 +1,22 @@
+# Native59 original safe3 / safe3b terminal failures
+
+Both original gates are terminal FAIL. Their CTS wrappers hit the existing 14,400-second cap and report GATE_CTS_RC=137. The exact executed scripts contain `timeout -k 60 14400`, followed by a named-container kill on elapsed cap. This records a timeout/stall mechanism; OOM is not established. No job was restarted, killed, or modified by this pickup.
+
+| Original kit | Genuine result timestamp (PT) | Last repair iteration / buffers | Last WNS / TNS (ps) | Last endpoint |
+| --- | --- | --- | --- | --- |
+| safe3 | 2026-10-19 16:02:52 | 13,210 / 12,952 | -66.169 / -27312.754 | u_ot_pr_core.u_core.p_ecq[131]$_DFF_PN0_/D |
+| safe3b | 2026-10-19 16:02:58 | 16,110 / 14,280 | -21.196 / -1848.104 | u_ot_pr_core.u_core.g_ctxmu.u_context.host_tag[50]$_DFF_PN0_/D |
+
+These are last intermediate repair values, not final STA. Both skip clock calibration, path classes, placed layout and GRT. The real results exist under `/home/ubuntu/wt/qw-n59s3/physical/ref_tile/qfd_native59_dv_service_{safe3,safe3b}/gate_result.json`. Only the remote run roots lack gate_result.json. Earlier broader absence statements are corrected. Original client JSON/logs and byte-preserved compressed genuine gate results are included; no gate record was fabricated.
+
+Original remote roots on ot-epyc7 are `/srv/opentallas-scratch/claude/ref_gate/qfd_native59_dv_service_safe3-20261019-113209` and its safe3b counterpart. Both preserve pre-CTS placement checkpoints only. `summary.json` and full inventory contain exact checkpoint paths, sizes, SHA256 and mtimes; large ODB/netlists stay remotely preserved. There is no completed CTS/final ODB. Native PG, uncapped all-driver fanout with transparent BUF/INV, native reach, corner timing and spread remain UNKNOWN. No fresh OpenROAD census was launched.
+
+Source is exact-content snapshot, start commit 005f4ae7a4bbf88853aac63bda94312cfc3c21bf, not an assertion that bare Git equals executed source. Original manifests retain daemon 85fcc1f and six overlays. Exact remote executed scripts independently match their shipping-manifest hashes. All 255 safe3 / 254 safe3b declared consumed source files were rehashed against the original manifest and match; their complete frozen source archives are included. The source inventory additionally hashes retained stage logs, configs, SDCs, checkpoints, reset-copy maps and tool inputs. Evidence tarballs contain compressed original stage/failure logs and configs; no huge B64 line is rendered in reports.
+
+Actual tool image is openroad/orfs digest sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29. Exact `make ... cts`, docker invocation, mounts, tool overlay and cap are in *.executed.sh. Config sets eight cores; original admission declared 48 GB memory, 22 GiB disk including 20 GiB work reserve. No actual peak-RSS measurement exists in the collected failure receipt, so none is inferred. The logs read five real ASAP7 RVT TT and matching FF libraries plus the frozen macro TT/FF files. The original WC alias reads TT; this is not SS signoff. Read-Liberty names and constraints are preserved, not replaced or relaxed.
+
+safe3 and safe3b use original land-reset approximately 45-load scope; safe3c uses the later 56-copy source and must be qualified separately. At actual 16:11:27 PT safe3c on ot-epyc6 remained active, cts.log updated one second earlier, iteration 14,130 / 18,738 buffers, WNS -124.651 ps and TNS -42247.242 ps at u_ot_pr_core.u_core.u_kvn.seat[1][453]$_DFFE_PP_/D. That progressing job remains untouched. This snapshot is not its terminal result.
+
+Next structural work must begin from an exact endpoint/cone/reset/clock/physical source model after the remaining original result lands. The retained 45-load reset violation is a known obligation, but neither a specific endpoint root cause nor a new source architecture is proven by the stalled repair rows. Do not retry these unchanged failures, tune routing knobs, infer a new constraint, transfer safe3c qualification, or silently relax the gate cap. ROOT/lead owns the subsequent structural proposal. Q-ready age-20 and actual installed producer/calendar binding remain open.
+
+See RESULT_CHECKLIST.md for the element obligations and the two original *.floorplan.png files for ROOT review. All files are additive results-only evidence; no production helper, RTL, macro, source selector, default, profile, or submission changes.

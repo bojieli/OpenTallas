@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root5-ktree-identity-final-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root5-ktree-identity-final-1020
+ot-run: ot-epyc7       admits   898 GB (avail 722, growth 93, headroom 0, waiters 0/0 GB) load 55/96 running 22 disk 5488 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root5-ktree-identity-final-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root5-ktree-identity-final-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root5-ktree-identity-final-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3270055-1792495686 after 0 s
+{"label": "nonbuf_function", "rc": 1, "raw_status": "FAIL", "max": 34, "nodes": 15, "admission": null, "role_errors": [], "netlist": {"path": "/audit/nonbuf_function.v", "sha256": "5b3106bc09c53f62ac4ddf997a7d076309b63eef9668c9a93f15df5e7f015cd7", "positive_buf_identity_sha256": "60021bc1281acdf1ada9869b8153a57bea9588eb431ca031ee7f1a72e57f4638"}}
+ACTUAL_NONBUF_FUNCTION_NEGATIVE_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3270055-1792495686): exit 0

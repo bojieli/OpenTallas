@@ -1,0 +1,6 @@
+TX edge=24 op=14 id=0000
+TX edge=38 op=81 id=0000
+FAIL CSR_ERROR_ID edge=41
+[410000] %Fatal: bridge_tb.sv:23: Assertion failed in bridge_tb.fail: CSR_ERROR_ID
+%Error: bridge_tb.sv:23: Verilog $stop
+Aborting...

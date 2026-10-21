@@ -1,0 +1,206 @@
+{
+  "area": {
+    "array_efficiency": 0.2883056812468577,
+    "array_height_um": 13.824,
+    "array_width_um": 19.3536,
+    "bank_control_height_um": 0.0,
+    "cell_area_um2": 0.03265919999999999,
+    "cell_col_pitch_um": 0.3024,
+    "cell_row_pitch_um": 0.108,
+    "column_height_um": 13.623163260579265,
+    "core_height_um": 27.447163260579266,
+    "core_width_um": 33.6536,
+    "data_array_area_um2": 267.54416639999994,
+    "decoder_width_um": 14.3,
+    "density_mb_per_mm2": 8.827701880231535,
+    "geometry_constants_um": {
+      "column_fixed": 9.082108840386176,
+      "column_per_mux_bit": 0.5,
+      "control_extra": 1.5,
+      "decoder_fixed": 4.0,
+      "decoder_per_row_bit": 0.45,
+      "fuse_compare_per_spare": 0.6,
+      "rom_column_fixed": 5.0,
+      "rom_decoder_fixed": 3.2
+    },
+    "macro_area_um2": 927.9878399999999,
+    "macro_height_um": 27.54,
+    "macro_width_um": 33.696,
+    "outline": {
+      "pin_limited": false,
+      "pin_stretch_um": 0.0,
+      "pins_per_edge": 105,
+      "signal_pins": 209,
+      "snap_overhead_um2": 4.292
+    },
+    "physical_array_area_um2": 267.5441664
+  },
+  "claim_boundary": "abstract views from a calibrated analytical model on measured ASAP7 bitcells and ASAP7 standard-cell FO4; no transistor layout, no SPICE of the macro, not silicon; ASAP7 is a predictive PDK and nothing here is a foundry N7 number",
+  "compiler_source_commit": "c2b6b4e72",
+  "faces": {
+    "E": {
+      "minimum_pin_pitch_um": 0.19199999999999662,
+      "pins": 104,
+      "pins_per_um": 3.776325344952796
+    },
+    "W": {
+      "minimum_pin_pitch_um": 0.19199999999999662,
+      "pins": 105,
+      "pins_per_um": 3.812636165577342
+    }
+  },
+  "host": "ot-epyc6",
+  "macro": "ot_sram_1r1w_128x64_m1_p192",
+  "pin_pitch_um": 0.192,
+  "provenance_note": "Source baseline metadata corrected after run; exact tested RTL/reference/bench/macro hashes verified below. Compiler inputs archived from c2b6b4e72.",
+  "runs": [
+    {
+      "exit_code": 0,
+      "expected": "PASS",
+      "mutant": 0,
+      "observed": "PASS",
+      "stdout": "PASS cycles=100140 accepted=67057 retired=64730 full=3794 empty=4081 simultaneous=44379 full_simultaneous=512 resets=121 overflow=3238 underflow=6035 zero_added_edges=1\n/srv/opentallas-scratch/claude/codex-kv-guard-fifo-sram-1019/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:80: $finish called at 1001406000 (1ps)\n"
+    },
+    {
+      "exit_code": 1,
+      "expected": "FAIL",
+      "mutant": 1,
+      "observed": "FAIL",
+      "stdout": "FATAL: /srv/opentallas-scratch/claude/codex-kv-guard-fifo-sram-1019/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:29: cycle 7 data got 0000000000000000 ref 1f87f86be49d628d\n       Time: 76000  Scope: tb_guard_fifo_sram.check\n"
+    },
+    {
+      "exit_code": 1,
+      "expected": "FAIL",
+      "mutant": 2,
+      "observed": "FAIL",
+      "stdout": "FATAL: /srv/opentallas-scratch/claude/codex-kv-guard-fifo-sram-1019/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:28: cycle 6 control got 1/  4/0/0 ref 0/  4/0/0\n       Time: 66000  Scope: tb_guard_fifo_sram.check\n"
+    },
+    {
+      "exit_code": 1,
+      "expected": "FAIL",
+      "mutant": 3,
+      "observed": "FAIL",
+      "stdout": "FATAL: /srv/opentallas-scratch/claude/codex-kv-guard-fifo-sram-1019/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:28: cycle 129 control got 1/127/1/0 ref 1/127/0/0\n       Time: 1296000  Scope: tb_guard_fifo_sram.check\n"
+    }
+  ],
+  "source_base_commit": "2752e68a3fe4b7b10c92cf4d7b41df3486445081",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v": "cf9d3ba1b30c0665fcec3957b162aeec38e5db00fa6a97a1f4b178dad54da139",
+    "results/rtl/kv_guard_fifo_sram_1019/qkd_host_guard_fifo_ref.sv": "21ac0f2d4949685447eac1f0c669c267b9a27c030fee7189aa6e68483cb49c2f",
+    "results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv": "707cb58909ad18776234f82aab9bbc677fd4857bdffc7d9811fd01ddb3200133",
+    "rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv": "50644336aebf1405d3d123e454d1dc9115c60e57304f87154e190e58073d5db9"
+  },
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "bitline_cap_ff": 7.97184,
+        "bitline_ps": 32.24810440495339,
+        "cell_current_ua": 24.720336736368004,
+        "column_mux_ps": 0.0,
+        "control_ps": 44.33172322666667,
+        "decode_ps": 79.05823975422224,
+        "fo4_ps": 14.777241075555557,
+        "output_ps": 36.94310268888889,
+        "precharge_ps": 31.299529892512385,
+        "read_cycle_ps": 230.6614200834,
+        "sense_ps": 29.554482151111113,
+        "wordline_cap_ff": 16.61088815786667,
+        "wordline_ps": 14.169340653934201,
+        "write_cycle_ps": 214.93560449540345,
+        "write_ps": 183.63607460289106
+      },
+      "clk_cap_ff": 10.3732,
+      "clk_to_q_ps": 236.53341183729844,
+      "corner": "ff",
+      "hold_ps": 19.67222053777778,
+      "leakage_nw": 4639.939199999999,
+      "min_period_ps": 230.6614200834,
+      "min_pulse_ps": 92.26456803336,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 0.683716,
+      "read_energy_fj": 103.24483370346582,
+      "setup_ps": 24.694771075555558,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 366.4558580874658
+    },
+    "ss": {
+      "breakdown": {
+        "bitline_cap_ff": 7.97184,
+        "bitline_ps": 51.48710104845652,
+        "cell_current_ua": 15.483178966509284,
+        "column_mux_ps": 0.0,
+        "control_ps": 70.7797235075,
+        "decode_ps": 126.22384025504168,
+        "fo4_ps": 23.593241169166667,
+        "output_ps": 58.98310292291667,
+        "precharge_ps": 51.082806087623005,
+        "read_cycle_ps": 373.9223501604562,
+        "sense_ps": 47.186482338333334,
+        "wordline_cap_ff": 16.61088815786667,
+        "wordline_ps": 27.16239692350166,
+        "write_cycle_ps": 349.924814030456,
+        "write_ps": 298.842007942833
+      },
+      "clk_cap_ff": 8.68376,
+      "clk_to_q_ps": 382.3326583770236,
+      "corner": "ss",
+      "hold_ps": 30.074020584583334,
+      "leakage_nw": 4639.939199999999,
+      "min_period_ps": 373.9223501604562,
+      "min_pulse_ps": 149.56894006418247,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 0.578766,
+      "read_energy_fj": 74.95839359785728,
+      "setup_ps": 39.800541169166664,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 245.3134256618573
+    },
+    "tt": {
+      "breakdown": {
+        "bitline_cap_ff": 7.97184,
+        "bitline_ps": 39.8592,
+        "cell_current_ua": 20.0,
+        "column_mux_ps": 0.0,
+        "control_ps": 54.79475631333334,
+        "decode_ps": 97.71731542544447,
+        "fo4_ps": 18.264918771111113,
+        "output_ps": 45.66229692777778,
+        "precharge_ps": 39.039514213600725,
+        "read_cycle_ps": 286.728091565056,
+        "sense_ps": 36.529837542222225,
+        "wordline_cap_ff": 16.61088815786667,
+        "wordline_ps": 18.787468070455215,
+        "write_cycle_ps": 267.6434870075456,
+        "write_ps": 228.6039727939449
+      },
+      "clk_cap_ff": 9.3458,
+      "clk_to_q_ps": 293.6793797495379,
+      "corner": "tt",
+      "hold_ps": 21.600259385555557,
+      "leakage_nw": 4639.939199999999,
+      "min_period_ps": 286.728091565056,
+      "min_pulse_ps": 114.6912366260224,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 0.619928,
+      "read_energy_fj": 88.57302186402133,
+      "setup_ps": 28.256178771111113,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 302.8560810640213
+    }
+  },
+  "verdict": "PASS",
+  "views": {
+    "ot_sram_1r1w_128x64_m1_p192.lef": "5d86bdfc3a88e4078b9b7cf4289981ce9a253621d2693bf34fb902a7ff6a6de0",
+    "ot_sram_1r1w_128x64_m1_p192.v": "cf9d3ba1b30c0665fcec3957b162aeec38e5db00fa6a97a1f4b178dad54da139",
+    "ot_sram_1r1w_128x64_m1_p192_bb.v": "3089a47a4049e594a4442228b841d15c3cc002777d69afdf9a6d1d7fd051fb10",
+    "ot_sram_1r1w_128x64_m1_p192_ff.lib": "c851d278b94ec87388b0728b65ec1b104e69be3bebdc2eccab1eaf088c3797a5",
+    "ot_sram_1r1w_128x64_m1_p192_ss.lib": "53ff5a84bb5152bdb27d01441d56254d18713520e1781e805f9d4bfd9a2b00e8",
+    "ot_sram_1r1w_128x64_m1_p192_tt.lib": "377809475797959b18e910d6c8a1e83dec27faf9de9eb7ee98bef9d96a9510e9"
+  }
+}

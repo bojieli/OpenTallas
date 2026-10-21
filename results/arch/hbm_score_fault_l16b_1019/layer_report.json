@@ -1,0 +1,13 @@
+{
+ "layer": "l16b_score_fault",
+ "instances": [
+  "hb_idx__s_SW",
+  "hb_idx__s_SE",
+  "hb_idx__s_NW",
+  "hb_idx__s_NE"
+ ],
+ "dependency": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_fault_static.sv",
+ "successful_data_added_cycles": 0,
+ "diagnostic_edges_after_registered_score": 1,
+ "physical_obligation": "quarter scorer source changes require fresh source-bound synthesis/qualification"
+}

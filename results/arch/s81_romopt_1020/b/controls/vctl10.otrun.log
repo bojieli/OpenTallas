@@ -1,0 +1,28 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-romopt-b/root
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-b/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-b/root
+ot-run: ot-epyc9       admits   858 GB (avail 742, growth 142, headroom 0, waiters 0/0 GB) load 115/128 running 44 disk 25 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-b/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-b/root
+ot-run: LOAD SPILL not possible (ot-epyc9 lacks /srv/opentallas-scratch/claude/s81-qf-producer-source-1019, /srv/opentallas-scratch/claude/tok2-capd (data not on the queue host)); running on ot-epyc9 at 1.33 x cores
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2654938-1792513403 after 0 s
+OT_XS_APROJ_TOPO=1
+OT_XS_CAL_SEGMENT=1
+OT_XS_CAP_VDEPTH=65536
+OT_XS_COMPACT_TAILS=0
+OT_XS_GU_MERGE=1
+OT_XS_PROP=1
+OT_XS_QPAIRS=10
+OT_XS_TOPO=1
+195da09e920e7a7152028aef432331958d54bfbed01d4e427925e869ed37deed  tools/s81_dv/layer_prog/xs_capacity.py
+d3704a169bad75ecb4c6bef32658cf156ffdda081b68141c73d3e920cc97ff9e  tools/s81_dv/layer_prog/xs_place.py
+3d11dd2988a637cca9cc270349749a5bc88cab132fe06604f09a14f81d00ce80  tools/s81_dv/layer_prog/xs_bf.py
+be24c9077b2fd91420e942bb08635a1cc163082ec84679998d202a27a93bdf5a  tools/s81_dv/layer_prog/xs_topo.py
+2ebcaa925dd09bd126d51215c4c56d36890c746e319714fce142d82dfff07863  tools/s81_dv/layer_prog/lower_xs.py
+d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780  tools/v41_die_images_w17w10.py
+XS_CAP {"id": "ctl10_L0_n140", "vdepth": "65536", "experts": 140, "dense_layer": 0, "frames": 122, "faults": 0, "first_fault": null, "q_max_fill": 10656, "q_max_fill_identity": 10656, "q_fill_pct": 130.08, "q_margin_words": -2464, "worst_frame": "u_f_0L10", "bf_max_fill": 1088, "bf_fill_pct": 13.28, "cfg7_phases": 884, "cfg7_margin": 140, "stream_dedup_words": 336, "calendar_rows": 1868, "calendar_margin": 2228, "expert_phases": 6, "layout_identical_all": true, "pass": false, "seconds": 210.4}
+XS_CAP {"id": "ctl10_exp_n140", "vdepth": "65536", "experts": 140, "dense_layer": null, "frames": 122, "faults": 0, "first_fault": null, "q_max_fill": 10080, "q_max_fill_identity": 10080, "q_fill_pct": 123.05, "q_margin_words": -1888, "worst_frame": "u_f_0L10", "bf_max_fill": 0, "bf_fill_pct": 0.0, "cfg7_phases": 840, "cfg7_margin": 184, "stream_dedup_words": 144, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 6, "layout_identical_all": true, "pass": false, "seconds": 160.7}
+XS_CAP_DONE FAIL
+ROMOPTB vctl10 rc=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2654938-1792513403): exit 0

@@ -5,11 +5,11 @@
     "pin_maps": {
       "exprcf": {
         "path": "results/rtl/dsrom_softmax_recovery_20261007/pin_maps/exprcf.json",
-        "sha256": "42f10a5f54b243a907b6d81df7138251fd4ee49c397f5eaa666dccfedb5256ca"
+        "sha256": "83d1ad577ee85d5b4b3855c82cac73c1ce1943b08a32e9278b45beae4cad0ce7"
       },
       "div2b": {
         "path": "results/rtl/dsrom_softmax_recovery_20261007/pin_maps/div2b.json",
-        "sha256": "09d3c1e94e37682a1876c9b9d737b3d9713798e7e3729e57e207e81ce0fac956"
+        "sha256": "c2b77d9499c989defe4b80e4a939dde94e4d9ca13acd469b9e2e6558797241be"
       }
     }
   },
@@ -19654,7 +19654,8 @@
   ],
   "pin_interfaces": {
     "exp_pin_map": {
-      "def_path": "/home/ubuntu/closure-loop-local/dsrom_softmax_safe_exprcf_bd30aca4a/routes/dsrom_softmax_safe_exprcf_bd30aca4a/work/orfs/results/asap7/opentallas_ot_dsrom_su_softmax_exp_tile_asap7_safe_dsrom_softmax_safe_exprcf_bd30aca4a/base/6_final.def",
+      "def_path": null,
+      "def_source": "closure-loop route dsrom_softmax_safe_exprcf_bd30aca4a base/6_final.def (localhost closure-loop-local, since swept; def_sha256 is that full DEF; the pins below are the retained extract)",
       "def_sha256": "731b91c09f88d109d858d82fabfde7d559191a49141956fd889dd8b7b2345dec",
       "units_per_um": 1000,
       "die_um": [
@@ -20288,7 +20289,9 @@
       ]
     },
     "div_pin_map": {
-      "def_path": "/srv/opentallas-scratch/claude/closure-loop/dsrom_softmax_safe_div2b_6133b4bbf/routes/dsrom_softmax_safe_div2b_6133b4bbf/work/orfs/results/asap7/opentallas_ot_dsrom_su_fdiv_tile_asap7_safe_dsrom_softmax_safe_div2b_6133b4bbf/base/6_final.def",
+      "def_path": "results/rtl/dsrom_softmax_recovery_20261007/pin_maps/div2b_pins.def",
+      "def_source": "closure-loop route dsrom_softmax_safe_div2b_6133b4bbf base/6_final.def (ot-pve1 scratch, 21.8 MB, not committed; def_sha256 is that full DEF)",
+      "pins_def_sha256": "4605850d42e8470d74bead0862a13b319279177dca4e2d8048d8ff461132e070",
       "def_sha256": "9dc1c7c7f832664aaf1511e42177fa14017c73aa9e8143cd8a5ea5ae58bea966",
       "units_per_um": 1000,
       "die_um": [

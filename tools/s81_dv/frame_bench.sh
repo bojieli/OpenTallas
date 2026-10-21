@@ -17,6 +17,7 @@
 # L4=1 (S81-LAND2): bench the successor <MASTER>_l4 (tools/s81_dv/frame_l4.py: column FIFO dsfd_cfifo_crs4, per-lane
 #   landings) through its bench wrapper <MASTER>_l4_b with lane strap K = LK (default 2); MUT=xlane re-derives the
 #   successor with lanes 1 / 2 swapped (frame_l4.py --mutant xlane).  The vectors and the check are the base master's.
+#   NX=1 (with L4=1, BIND/mu4): bench the chain-end variant <MASTER>_l4_nx (no x forward) via <MASTER>_l4_nx_b.
 #   L4 drives the lanes as the die does (tb TB_FWD_GATE: hop-0 gate opened at the frame reset release, lane ck_f + data
 #   LDLY whole periods late, default 0) and the plan set predicts the crs4 calendar (--land-e LK: x_shift = LK - 6).
 set -u
@@ -25,7 +26,14 @@ mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 FL=tools/s81_dv/frame_bench.f
 TOPF=""; DFR=$MASTER
-if [ "${L4:-0}" = 1 ]; then
+if [ "${FRAME_LP:-0}" = 1 ]; then
+  FR=rtl/dsrom_sys/s81_dv/frame_lp
+  case "$MUT" in 0) LM=0;; unland) LM=1;; landread) LM=2;; reset) LM=4;; *) echo "Unknown landed mutant $MUT"; exit 3;; esac
+  DFR=${MASTER}_l4_lp_b; SFX=_l4_lp
+  TOPF="$FR/${MASTER}_l4_lp_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv rtl/common/landed_parent/ot_pl_land.sv"
+  VFLAGS="${VFLAGS:-} -DLP_MUT=$LM -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"
+  LANDE="--land-e ${LK:-2} --frame-schedule results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json"
+elif [ "${L4:-0}" = 1 ]; then
   if [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame_l4; else
     [ -f $O/rtl/${MASTER}_l4.sv ] || python3 tools/s81_dv/frame_l4.py --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
     FR=$(realpath $O)/rtl; fi
@@ -33,6 +41,9 @@ if [ "${L4:-0}" = 1 ]; then
   # col_h9_MX_l4 = the col_h9_l4 RTL in a mirrored-placement wrapper: build both, vectors / check are col_h9's
   case $MASTER in *_MX) TOPF="$TOPF $FR/${MASTER%_MX}_l4.sv"; VMASTER=${MASTER%_MX};; esac
   DFR=${MASTER}_l4_b; SFX=_l4; VFLAGS="${VFLAGS:-} -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"; LANDE="--land-e ${LK:-2}"
+  # NX=1 (BIND/mu4): the chain-end successor <MASTER>_l4_nx (no xo / xok) through <MASTER>_l4_nx_b (relays re-attached bench-side)
+  if [ "${NX:-0}" = 1 ]; then case $MASTER in *_MX) echo "NX has no MX variant"; exit 3;; esac
+    TOPF="$FR/${MASTER}_l4_nx_b.sv ${TOPF#$FR/${MASTER}_l4_b.sv }"; DFR=${MASTER}_l4_nx_b; SFX=_l4_nx; fi
 elif [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame; else
   [ -f $O/rtl/$MASTER.sv ] || python3 tools/s81_dv/frame_wrap.py emit --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
   FR=$(realpath $O)/rtl; fi

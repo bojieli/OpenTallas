@@ -1,0 +1,22 @@
+{
+  "scope": "GENERATED SOURCE ONLY; no executed equivalence or native retention claim",
+  "anchor_sha256": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+  "model_sha256": "3cc8512986a3e5227661b2d62ed96cbcf8037f3918af1a1cbfbc5c8d49715bff",
+  "mapped_sha256": "46cd64f75ad939728f450fa77199dafb3665b5414126b25260184afd0237c95a",
+  "original_cells": 64383,
+  "new_cells": 65633,
+  "added": {
+    "ff": 841,
+    "comb": 344,
+    "tie": 65
+  },
+  "endpoint_assignments": 41023,
+  "files": {
+    "retained_graph.sv": "b0f0ef69a501db3d8be40d96c5318e2b745cd480ac34645b6904c8b5948a6161",
+    "anchor_private.sv": "907551756131e85a85e12e03011f7aa2a362e66149df64414a35922a311a6e3f",
+    "select.sv": "276b65d987fa29e3c8225e3f869897a5c15ad46bf086d90de0175437980dd8e5",
+    "anchor.sv": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+    "reset.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "anchor_wrapper.sv": "424d6e0777e544e7973c4f65c30b788d373a52adebb98b572e0cdb258e797c08"
+  }
+}

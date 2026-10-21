@@ -240,6 +240,11 @@ def main():
     ap.add_argument('--relay-ref', default='origin/main')
     ap.add_argument('--corners', nargs='+', default=['tt', 'ff'])
     a = ap.parse_args()
+    # ROOT14 10-20: TT setup + FF hold on every die build (tools/die_safety/corners.py completes, never trims)
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from die_safety import corners as _dsc
+    a.corners = _dsc.required(a.corners)
     (a.out / 'libs').mkdir(parents=True, exist_ok=True)
     import dv_land_pilot as LP
     for b in a.relay_widths:

@@ -30,3 +30,12 @@ kept rows 0.871 % AR / 0.903 % MTP. Running DV total = kept 0.871 + landing/half
 (MTP 0.903 + 1.57 = 2.47 %) vs the 15 % design limit; worst sensitivity (host serial each stage) 3.25 % / 2.83 %.
 Landing + half-cycle hops are owner-accepted (10-18 03:50, "about -2 %"); suggested ledger row S81.DV_LANDING_HALFCYCLE
 accepted AR 1.90 / MTP 1.57 (not written here: the ledger is edited on main).
+
+## Re-run 10-18 (S81-LBGAP/G3) -- `price_land_p4l2E.json`
+- dv_price fix: ledger rows `S81.DV_*` (S81.DV_LANDING_HALFCYCLE, added by ec38691d6) record THIS price's own landing term;
+  a re-run counted them again (DV AR 1365.7 -> 1338.6 and the hub "current" 1070.9 -> 1043.6). They are skipped now; the
+  re-run with landing/p4l reproduces price_land.json exactly (64/64 tok/s values).
+- G3 (52 end-slice / PHY lanes landed in the netlist) changes no price: dv_price already charged 1 + E on every staged link.
+- With the bind table's land plan (landing/p4l2, LANDFIX-SQ E incl. 276l long landings):
+  `python3 tools/s81_dv/dv_price.py --plan results/arch/s81_dv_1016/p4l/plan.json --land-plan results/arch/s81_dv_1016/landing/p4l2/land_plan.json --half-cycle --out results/arch/s81_dv_1016/p4l/price_land_p4l2E.json`
+  dv_base AR **1364.6** (-0.08 % vs 1365.7) / MTP **4042.7** (-0.07 %); host token 1364.4 / 4042.2. Ledger row unchanged in substance (1.90 / 1.57 %).

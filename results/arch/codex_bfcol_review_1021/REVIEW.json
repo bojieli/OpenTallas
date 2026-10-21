@@ -1,0 +1,67 @@
+{
+  "reviewer": "codex coordinator takeover 2026-10-21",
+  "time": "2026-10-21T00:33:32.657366-07:00",
+  "verdict": "APPROVED_ABSTRACT_GEOMETRY_ONLY",
+  "scope": "Lattice-width abstract of existing CLOSED prepabs may be used by frame qualification under rule freeze and prior coordinator release choice. No reroute, new timing result, native-audit PASS or frame/die closure granted.",
+  "source_view_commit": "19cd8ab4d9b91153385f5820132104ab1e6500d9",
+  "closed_source": "24cf7e2e3",
+  "view": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col",
+  "evidence": {
+    "ot_v41_bf_col_tt.lib": {
+      "base_sha256": "3deeca065fdac5b4c8eb8061634f9be2b0cbea084b686f7ba7877909ee9a90c1",
+      "lat_sha256": "3deeca065fdac5b4c8eb8061634f9be2b0cbea084b686f7ba7877909ee9a90c1",
+      "same": true
+    },
+    "ot_v41_bf_col_ff.lib": {
+      "base_sha256": "db08922f76986199918a0d3618d0963c772fcfabd6d66cd1e7b4de7a0c427ac5",
+      "lat_sha256": "db08922f76986199918a0d3618d0963c772fcfabd6d66cd1e7b4de7a0c427ac5",
+      "same": true
+    },
+    "ot_v41_bf_col_ss.lib": {
+      "base_sha256": "691190f7269699275092f5c206b28c9e8d7acef83c468f2be6fa92725b2c86a1",
+      "lat_sha256": "691190f7269699275092f5c206b28c9e8d7acef83c468f2be6fa92725b2c86a1",
+      "same": true
+    },
+    "insertion.json": {
+      "base_sha256": "d8e501801b7159331a829d3dd1cf523ad11a663459e62aeeac9f0c05f2d88d8f",
+      "lat_sha256": "d8e501801b7159331a829d3dd1cf523ad11a663459e62aeeac9f0c05f2d88d8f",
+      "same": true
+    },
+    "native_receipt.json": {
+      "base_sha256": "5d5843848b4a5d2bf2e6c84929f7b5d02b7c2385ab8de16b2170ebc9b1c1e53a",
+      "lat_sha256": "5d5843848b4a5d2bf2e6c84929f7b5d02b7c2385ab8de16b2170ebc9b1c1e53a",
+      "same": true
+    },
+    "abstract.json": {
+      "base_sha256": "41092f8f7eec1207d0945b43ed320de4920b37c6a65de0f6f12619a765e0bb26",
+      "lat_sha256": "41092f8f7eec1207d0945b43ed320de4920b37c6a65de0f6f12619a765e0bb26",
+      "same": true
+    },
+    "ot_v41_bf_col.lef": {
+      "base_sha256": "4a20bf914eb93177f4eef02ea3005b87082db361a754ca15f22e8982c6131e72",
+      "lat_sha256": "0f75401b29ed1d5d6d19112cd4931936f06ae1cd51d4de5a94a44d095719318b",
+      "same": false,
+      "pin_name_sets_same": true,
+      "size_old": [
+        "SIZE 450.144 BY 198.72 ;"
+      ],
+      "size_new": [
+        "SIZE 450.168 BY 198.72 ;"
+      ]
+    }
+  },
+  "images_actually_viewed": {
+    "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/gate2_ss594/png_4_1_cts/floorplan.png": "76fba9fdb647ad4d4802e9adc80936246c8cd1bea4c323779ee4c9b0805a7878",
+    "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/gate2_ss594/png_4_1_cts/density.png": "552fc8cc548b653be457da83667c5760ebecf1f0edb4b3d467253dcf42af1467"
+  },
+  "checklist": {
+    "lattice": "Inherited internal macro x42.3 not43.2 guidance; LEF width450.168 fixes MY65offtrack to0 at lattice parent origins, recorded track_check.",
+    "std_cell_band": "Actually viewed original CTS floorplan/density: two vertically stacked ROMs with open channel, continuous rows and connected logic region spanning centre/E; no isolated island.",
+    "pin_spread": "E777 pins concentrated span74.5um=10.4/um, fullface3.9/um; S64 outputs; clockN. Guidance exception retained, parent pinaccess/DRC decides. Same pin names. 777 E rectangles extend0.024um; accesspoint450.114 remains inside routedmetal<=450.144.",
+    "clock_entry": "Ncentre entry; inherited closed boundaryspread44.4TT/32.6FF from native receipt, no clock changes.",
+    "shape": "450.168x198.72 aspect2.27 inherited guidance; tinyEoutline growth only.",
+    "native": "Original receipt pass:false preserved launch281.1ps>220 on64outputs; capture180.9, comb0. Relative-C/parent timing must qualify. No conversion to PASS.",
+    "schedule": "No RTL/netlist/lib changes, no added edges."
+  },
+  "final_route_history": "Existing prepabs CLOSED TT+63.59/FF+6.24 DRC0; SS not headline qualification. Successor native85 deferred, not substituted."
+}

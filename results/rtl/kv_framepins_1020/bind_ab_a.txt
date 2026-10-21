@@ -1,0 +1,4 @@
+a qkd_d2d_cal_seq_pin_bc4 FAIL open ['adm_done', 'cal_ready', 'fault', 'layer', 'running'] unconn [] w [] notinrtl []
+a qkd_d2d_static FAIL open ['att_rx_slot', 'kvn_word_index', 'kvn_word_slot', 'recovery_cycles'] unconn [] w [] notinrtl []
+a qkd_host_root_admission_obs PASS open [] unconn [] w [] notinrtl []
+a OBSX-target opens 5 ['adm_done', 'cal_ready', 'layer', 'running', 'recovery_cycles'] | total OUTPUT_OPEN ports 26 | verdict FAIL | unread nets 200 undriven 0

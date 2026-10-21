@@ -1,0 +1,5 @@
+LEPH_STATS H->A ring 233/233 host 84/84 ks 83/83 | A->H frames 592/592 (ring 489 thost 51 tkd 52) | mismatches 0 f_lf 0101 bad 0 fault 0
+PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
+BENCH_PASS lep_host MUT=none seed 3
+rc=0
+# MU-S81-2/RX 10-19 ot-run ot-epyc4, source claude/mu-s81-2-rx-1019 ddc529908 (staged r2), Verilator 5.050; die P = ot_s81sl_lep_mu_ab (s81sl_lepmu), dies A / B = ot_s81sl_lep_mu_a (s81sl_lepmua)

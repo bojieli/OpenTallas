@@ -1,0 +1,1535 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_ff.lib
+read_db /work/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/4_cts.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/4_cts.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_grt_ot_grt183.tcl
+QDM PINFLOP reference: 909 input pin flops (0 hard-child clock pins at +insertion), median arrival 400.011322 (range 385.11615 .. 417.012939)
+QDM reference pin boundary_100146/Q$_DFF_P_/CLK clock arrival max 400.011322 min 308.981018 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 308.981018 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_PIN_KEEPOUT created 4: {M5 0 1128 42 171696} {M6 1032 172758 301392 172800} {M6 1128 0 301248 42} {M5 302358 1128 302400 171648}
+OT_GRT_TOP_SHADOW: 9 macros; GRT layers M2-M6 with M6 at zero capacity (detailed route stays <= M5)
+OT_SRAM_EDGE_GUARD hook invoked caller=pre_global_route_pre_grt.tcl
+OT_MACRO_EDGE_GUARD: created 18 on M5 (depth 1.2 um, pin stub 0.024 um free, outside 0.0 um)
+Took 6 seconds: source /work/hooks/pre_grt_ot_grt183.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     214
+Number of vias:       18
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_sys_face_control_safe
+Die area:                 ( 0 0 ) ( 302400 172800 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     54890
+Number of terminals:      2790
+Number of snets:          2
+Number of nets:           50089
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 103.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 861767.
+[INFO DRT-0033] V1 shape region query size = 4060041.
+[INFO DRT-0033] M2 shape region query size = 68441.
+[INFO DRT-0033] V2 shape region query size = 82752.
+[INFO DRT-0033] M3 shape region query size = 82761.
+[INFO DRT-0033] V3 shape region query size = 55168.
+[INFO DRT-0033] M4 shape region query size = 61805.
+[INFO DRT-0033] V4 shape region query size = 63922.
+[INFO DRT-0033] M5 shape region query size = 34185.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 2.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0078]   Complete 593 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 101 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0084]   Complete 33966 groups.
+#scanned instances     = 54890
+#unique  instances     = 103
+#stdCellGenAp          = 2872
+#stdCellValidPlanarAp  = 42
+#stdCellValidViaAp     = 2524
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 121957
+#instTermValidViaApCnt = 0
+#macroGenAp            = 149
+#macroValidPlanarAp    = 149
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:08:29, elapsed time = 00:01:03, memory = 938.26 (MB), peak = 1065.11 (MB)
+Took 65 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M6
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 9
+[INFO GRT-0004] Blockages: 28729
+[INFO GRT-0019] Found 2417 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 25
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    1747278       1241549          28.94%
+M3         Vertical      1998845       1485539          25.68%
+M4         Horizontal    1535729       1142874          25.58%
+M5         Vertical      1617255       1189023          26.48%
+M6         Horizontal    1427773             0          100.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0197] Via related to pin nodes: 252197
+[INFO GRT-0198] Via related Steiner nodes: 4842
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 342353
+[INFO GRT-0112] Final usage 3D: 1882756
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             1241549        294166           23.69%             0 /  0 /  0
+M3             1485539        283468           19.08%             0 /  0 /  0
+M4             1142874        131652           11.52%             0 /  0 /  0
+M5             1189023        146411           12.31%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          5058985        855697           16.91%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 549914 um
+[INFO GRT-0014] Routed nets: 50008
+[INFO GRT-0303] Global routing runtime = 00:01:24
+Took 85 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     50089
+     1000 |     +0.0% |       0 |       0 |             0 |     49089
+     2000 |     +0.0% |       0 |       0 |             0 |     48089
+     3000 |     +0.0% |       0 |       0 |             0 |     47089
+     4000 |     +0.0% |       0 |       1 |             1 |     46089
+     5000 |     +0.0% |       0 |       1 |             1 |     45089
+     6000 |     +0.0% |       0 |       1 |             1 |     44089
+     7000 |     +0.0% |       0 |       1 |             1 |     43089
+     8000 |     +0.0% |       0 |       1 |             1 |     42089
+     9000 |     +0.0% |       0 |       3 |             3 |     41089
+    10000 |     +0.0% |       0 |       6 |             6 |     40089
+    11000 |     +0.0% |       0 |       6 |             6 |     39089
+    12000 |     +0.0% |       0 |       7 |             7 |     38089
+    13000 |     +0.0% |       0 |      16 |            15 |     37089
+    14000 |     +0.0% |       0 |      16 |            15 |     36089
+    15000 |     +0.0% |       0 |      18 |            17 |     35089
+    16000 |     +0.1% |       0 |      32 |            29 |     34089
+    17000 |     +0.1% |       0 |      32 |            29 |     33089
+    18000 |     +0.1% |       0 |      32 |            29 |     32089
+    19000 |     +0.1% |       0 |      48 |            43 |     31089
+    20000 |     +0.1% |       0 |      58 |            52 |     30089
+    21000 |     +0.1% |       0 |      69 |            62 |     29089
+    22000 |     +0.1% |       0 |      70 |            63 |     28089
+    23000 |     +0.1% |       6 |      77 |            70 |     27089
+    24000 |     +0.2% |       6 |     137 |           127 |     26089
+    25000 |     +0.3% |       6 |     150 |           140 |     25089
+    26000 |     +0.3% |      10 |     170 |           156 |     24089
+    27000 |     +0.4% |      46 |     258 |           222 |     23089
+    28000 |     +0.5% |      47 |     272 |           232 |     22089
+    29000 |     +0.5% |      48 |     284 |           240 |     21089
+    30000 |     +0.5% |      48 |     308 |           264 |     20089
+    31000 |     +0.5% |      48 |     313 |           269 |     19089
+    32000 |     +0.5% |      49 |     327 |           279 |     18089
+    33000 |     +0.6% |      50 |     348 |           291 |     17089
+    34000 |     +0.6% |      50 |     363 |           303 |     16089
+    35000 |     +0.6% |      50 |     363 |           303 |     15089
+    36000 |     +0.6% |      50 |     364 |           304 |     14089
+    37000 |     +0.6% |      51 |     377 |           316 |     13089
+    38000 |     +0.6% |      51 |     378 |           317 |     12089
+[WARNING RSZ-0104] Net core/n14147 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14146 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14145 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14144 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14143 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14142 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14141 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14140 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14139 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14138 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14137 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14136 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14135 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14134 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14133 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14132 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14131 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14130 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14129 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14128 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14127 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14126 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14125 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14124 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14123 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14122 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14121 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14120 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14119 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14118 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14117 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14116 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14115 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14114 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14113 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14112 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14111 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14110 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14109 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14108 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14107 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14106 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14105 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14104 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14103 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14102 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14101 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14100 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14099 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14098 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14097 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14096 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14095 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14094 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14093 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14092 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14091 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14090 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14089 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14088 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14087 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14086 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14085 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14084 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14083 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14082 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14081 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14080 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14079 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14078 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14077 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14076 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14075 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14074 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14073 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14072 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14071 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14070 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14069 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net core/n14068 only has one pin. Check if it is intended to be dangling.
+    39000 |     +0.6% |      51 |     378 |           317 |     11089
+    40000 |     +0.6% |      51 |     383 |           321 |     10089
+    41000 |     +0.6% |      51 |     383 |           321 |      9089
+    42000 |     +0.6% |      51 |     385 |           323 |      8089
+    43000 |     +0.6% |      51 |     385 |           323 |      7089
+    44000 |     +0.6% |      51 |     385 |           323 |      6089
+    45000 |     +0.6% |      51 |     385 |           323 |      5089
+    46000 |     +0.6% |      51 |     385 |           323 |      4089
+    47000 |     +0.6% |      51 |     385 |           323 |      3089
+    48000 |     +0.6% |      51 |     385 |           323 |      2089
+    49000 |     +0.6% |      51 |     385 |           323 |      1089
+[WARNING RSZ-0104] Net seq_dc[54] only has one pin. Check if it is intended to be dangling.
+    50000 |     +0.6% |      51 |     385 |           323 |        89
+    final |     +0.6% |      51 |     385 |           323 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 327 slew violations.
+[INFO RSZ-0039] Resized 51 instances.
+[INFO RSZ-0038] Inserted 385 buffers in 323 nets.
+[INFO RSZ-0504] Runtime: 42.74s
+Took 42 seconds: repair_design -verbose -slew_margin 30
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 50220.52 um^2
+[INFO DPL-0007] Movable instances area: 6061.47 um^2
+[INFO DPL-0008] Fixed instances area within core: 10449.28 um^2
+[INFO DPL-0009] Utilization: 32.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 55266 cells
+[INFO DPL-0393]   height 77 row(s): 6 cells
+[INFO DPL-0393]   height 233 row(s): 3 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        115 |        16 |        99
+        1 |         19 |         8 |        11
+        2 |         12 |         2 |        10
+        3 |          6 |         2 |         4
+        4 |         12 |         2 |        10
+        5 |          9 |         3 |         6
+        6 |         21 |         3 |        18
+        7 |         39 |         3 |        36
+        8 |         22 |         3 |        19
+        9 |         19 |         5 |        14
+       10 |         23 |         5 |        18
+       15 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 15.
+[INFO DPL-0500] Runtime: 1.21s
+Placement Analysis
+---------------------------------
+total displacement        261.0 u
+average displacement        0.0 u
+max displacement            3.2 u
+original HPWL          457462.6 u
+legalized HPWL         457645.2 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/congestion_post_repair_design.rpt
+Took 15 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/qfd_sys_face_bc2l/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 909 input pin flops (0 hard-child clock pins at +insertion), median arrival 358.4019 (range 324.5316 .. 385.4929)
+QDM reference pin boundary_100346/Q$_DFF_P_/CLK clock arrival max 358.4019 min 347.3572 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 347.3572 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -171.98 / FF hold ws 1.72 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 552 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 552 out of 552 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -171.980 |   -58194.7 |   -25179.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+      10* |       0 |       0 |        0 |      0 |     9 |    +0.0% | -175.433 |   -58852.3 |   -25680.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+      16* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -171.970 |   -58191.1 |   -25178.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+      20* |       1 |       2 |        0 |      0 |     0 |    +0.0% | -173.633 |   -58960.0 |   -22977.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      24* |       1 |       3 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25003.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      27* |       1 |       3 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25003.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      30* |       1 |       5 |        1 |      0 |     0 |    +0.0% | -171.424 |   -57942.5 |   -24874.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+      31* |       1 |       4 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25008.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+      36* |       1 |       5 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25013.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+      39* |       1 |       5 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25013.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+      40* |       1 |       5 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25013.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+      44* |       1 |       6 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25017.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+      48* |       1 |       7 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25021.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+      50* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -171.424 |   -57942.5 |   -24887.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+      51* |       1 |       7 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25021.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+      56* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25024.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+      59* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25024.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+      60* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25024.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+      62* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.0 |   -25024.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+      70* |       1 |      12 |        3 |      2 |     0 |    +0.0% | -171.497 |   -57975.4 |   -25012.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+      72* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      75* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      79* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      80* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      83* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      90* |       1 |      11 |        3 |      2 |     0 |    +0.0% | -170.949 |   -57728.6 |   -25146.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+      92* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+      96* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     100* |       1 |       8 |        3 |      2 |     0 |    +0.0% | -170.949 |   -57728.6 |   -25124.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     105* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     109* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     110* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     113* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     117* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     120* |       1 |      10 |        1 |      0 |     0 |    +0.0% | -171.717 |   -58075.2 |   -24648.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     120* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     123* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     126* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     129* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     130* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     133* |       1 |       8 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25023.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     137* |       1 |       9 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25028.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     140* |       2 |      10 |        1 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -24881.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     150* |       3 |      15 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57696.1 |   -25071.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     152* |       3 |      12 |        3 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -24921.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     159* |       3 |      12 |        3 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -24921.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     160* |       3 |      12 |        3 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -24921.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     163* |       3 |      12 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25161.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     170* |       3 |      18 |        4 |      0 |     0 |    +0.0% | -171.717 |   -58075.2 |   -24699.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     170* |       3 |      16 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25075.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     174* |       3 |      17 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25076.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     178* |       3 |      18 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25081.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     180* |       3 |      18 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57696.1 |   -25084.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     182* |       3 |      18 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25081.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     186* |       3 |      18 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57696.1 |   -25081.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     190* |       3 |      21 |        4 |      0 |     0 |    +0.0% | -171.717 |   -58082.8 |   -25216.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     190* |       3 |      19 |        4 |      0 |     0 |    +0.0% | -170.876 |   -57703.7 |   -25592.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     198* |       3 |      22 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25652.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     200* |       3 |      23 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25657.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     202* |       3 |      23 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25657.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     206* |       3 |      24 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25662.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     209* |       3 |      24 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25662.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     210* |       3 |      24 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25662.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     212* |       3 |      24 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25662.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     216* |       3 |      25 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25666.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     220* |       3 |      28 |        4 |      0 |     1 |    +0.0% | -171.717 |   -58089.9 |   -25296.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     220* |       3 |      25 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25666.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     225* |       3 |      26 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25670.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     228* |       3 |      26 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25670.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     230* |       3 |      27 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25536.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     231* |       3 |      26 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25670.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     237* |       3 |      27 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25674.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     240* |       3 |      29 |        4 |      0 |     1 |    +0.0% | -171.717 |   -58082.8 |   -25299.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     240* |       3 |      27 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25674.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     244* |       3 |      27 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25674.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     250* |       3 |      29 |        6 |      2 |     1 |    +0.0% | -170.949 |   -57736.2 |   -25764.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     253* |       3 |      27 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25674.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     258* |       3 |      28 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25680.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     260* |       3 |      29 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25684.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     263* |       3 |      29 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25684.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     267* |       3 |      30 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25689.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     270* |       3 |      31 |        4 |      0 |     2 |    +0.0% | -171.424 |   -57950.2 |   -25556.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     271* |       3 |      30 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25689.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     274* |       3 |      30 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25689.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     279* |       3 |      30 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25689.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     280* |       3 |      30 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25689.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     283* |       3 |      31 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25694.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     287* |       3 |      31 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25694.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     290* |       3 |      31 |        4 |      2 |     1 |    +0.0% | -170.949 |   -57736.2 |   -25678.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     298* |       3 |      31 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25694.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     300* |       3 |      32 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25699.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     302* |       3 |      32 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25699.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     306* |       3 |      32 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25699.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     310* |       3 |      34 |        4 |      0 |     2 |    +0.0% | -171.717 |   -58082.8 |   -25326.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     310* |       3 |      32 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25699.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     314* |       3 |      33 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25703.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     318* |       3 |      34 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25708.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     320* |       3 |      35 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25574.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     321* |       3 |      34 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25708.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     324* |       3 |      34 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25708.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     327* |       3 |      34 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25708.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     330* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -171.717 |   -58082.8 |   -25333.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     330* |       3 |      34 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25708.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     335* |       3 |      35 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25711.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     339* |       3 |      35 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25711.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     340* |       3 |      35 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25711.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     344* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     348* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     350* |       3 |      36 |        4 |      1 |     1 |    +0.0% | -170.920 |   -57723.2 |   -25692.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     358* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     360* |       3 |      37 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25579.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     361* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     370* |       3 |      40 |        6 |      3 |     1 |    +0.0% | -170.991 |   -57755.2 |   -25805.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     372* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     380* |       3 |      40 |        6 |      2 |     1 |    +0.0% | -170.961 |   -57742.0 |   -25855.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     383* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     386* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     389* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     390* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     392* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     395* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     398* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     400* |       3 |      37 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25579.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     401* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     406* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     410* |       4 |      37 |        4 |      0 |     2 |    +0.0% | -171.424 |   -57950.2 |   -25389.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     411* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     414* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     417* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     420* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -171.717 |   -58082.8 |   -25338.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     420* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     423* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     426* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     429* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     430* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     432* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     435* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     438* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     440* |       3 |      37 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25579.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     441* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     445* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     448* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     450* |       3 |      37 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25579.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     451* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     455* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     460* |       3 |      37 |        6 |      2 |     1 |    +0.0% | -170.961 |   -57742.0 |   -25809.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     466* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     469* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     470* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     472* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     476* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     480* |       3 |      37 |        4 |      2 |     1 |    +0.0% | -170.961 |   -57742.0 |   -25723.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     487* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     490* |       3 |      37 |        4 |      0 |     2 |    +0.0% | -171.424 |   -57950.2 |   -25581.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     492* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     495* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     498* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     500* |       3 |      37 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25579.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     501* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     505* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     508* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     510* |       3 |      36 |        4 |      1 |     1 |    +0.0% | -170.920 |   -57723.2 |   -25692.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     519* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     520* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     522* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     526* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     530* |       4 |      37 |        4 |      0 |     2 |    +0.0% | -171.424 |   -57950.2 |   -25390.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     531* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     535* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     540* |       3 |      39 |        4 |      0 |     2 |    +0.0% | -171.717 |   -58082.8 |   -25339.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     540* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     548* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     550* |       3 |      36 |        4 |      0 |     2 |    +0.0% | -170.876 |   -57703.7 |   -25716.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     553* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     556* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     559* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     560* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     562* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     566* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     570* |       4 |      38 |        4 |      0 |     1 |    +0.0% | -171.717 |   -58082.8 |   -25146.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     570* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     573* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     576* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     580* |       4 |      38 |        4 |      0 |     1 |    +0.0% | -171.717 |   -58082.8 |   -25146.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     580* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     583* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     587* |       3 |      36 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25713.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     590* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25712.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     592* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25712.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     595* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25712.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     598* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25712.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     600* |       3 |      39 |        4 |      0 |     1 |    +0.0% | -171.424 |   -57950.2 |   -25578.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     601* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25712.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     605* |       3 |      38 |        4 |      0 |     1 |    +0.0% | -170.876 |   -57703.7 |   -25712.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     610* |       3 |      41 |        5 |      0 |     1 |    +0.0% | -171.680 |   -58066.3 |   -25981.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     611* |       3 |      39 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25885.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     615* |       3 |      39 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25885.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     620* |       4 |      42 |        5 |      0 |     1 |    +0.0% | -171.680 |   -58066.3 |   -25802.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     620* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     625* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     630* |       4 |      43 |        5 |      0 |     1 |    +0.0% | -171.680 |   -58066.3 |   -25803.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     630* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     635* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     640* |       4 |      43 |        5 |      0 |     1 |    +0.0% | -171.680 |   -58066.3 |   -25803.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     640* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     646* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     650* |       3 |      43 |        5 |      0 |     1 |    +0.0% | -171.680 |   -58066.3 |   -25982.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     651* |       3 |      40 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25887.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     656* |       3 |      41 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25889.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     660* |       4 |      43 |        5 |      0 |     1 |    +0.0% | -171.680 |   -58066.3 |   -25803.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     660* |       3 |      41 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25889.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     664* |       3 |      41 |        5 |      0 |     1 |    +0.0% | -170.736 |   -57641.0 |   -25889.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     670* |       3 |      43 |        8 |      0 |     1 |    +0.0% | -170.736 |   -57565.0 |   -25822.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     680* |       3 |      43 |       10 |      2 |     7 |    +0.0% | -170.736 |   -57725.0 |   -26704.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     689* |       3 |      43 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26638.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     690* |       3 |      43 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26638.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     691* |       3 |      44 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26641.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     693* |       3 |      45 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26643.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     696* |       3 |      46 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26646.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     697* |       3 |      46 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26646.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     698* |       3 |      46 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26646.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     699* |       3 |      46 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26646.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     700* |       3 |      46 |       10 |      2 |    15 |    +0.0% | -170.736 |   -57587.7 |   -26646.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     710* |       3 |      54 |       13 |      2 |    16 |    +0.0% | -170.736 |   -57443.9 |   -26134.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     720* |       3 |      59 |       19 |      4 |    16 |    +0.0% | -170.736 |   -57604.7 |   -26223.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     724* |       3 |      63 |       19 |      4 |    16 |    +0.0% | -170.736 |   -57585.6 |   -26202.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     725* |       3 |      63 |       19 |      4 |    16 |    +0.0% | -170.736 |   -57585.6 |   -26202.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     730* |       3 |      66 |       19 |      4 |    17 |    +0.0% | -170.736 |   -57568.6 |   -26188.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     731* |       3 |      67 |       19 |      4 |    17 |    +0.0% | -170.736 |   -57563.2 |   -26180.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     740* |       4 |      71 |       20 |      4 |    19 |    +0.0% | -170.736 |   -57520.7 |   -25360.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     750* |       5 |      76 |       21 |      4 |    22 |    +0.0% | -170.736 |   -57518.3 |   -25969.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     760* |       6 |      84 |       21 |      4 |    23 |    +0.0% | -170.736 |   -57494.8 |   -26740.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     770* |       6 |      88 |       24 |      4 |    27 |    +0.0% | -170.736 |   -57422.7 |   -25641.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     779* |       5 |      82 |       21 |      4 |    23 |    +0.0% | -170.736 |   -57465.4 |   -25251.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     780* |       5 |      82 |       21 |      4 |    23 |    +0.0% | -170.736 |   -57465.4 |   -25251.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     783* |       5 |      85 |       21 |      4 |    23 |    +0.0% | -170.736 |   -57494.6 |   -25245.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     784* |       5 |      85 |       21 |      4 |    23 |    +0.0% | -170.736 |   -57494.6 |   -25245.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     790* |       5 |      90 |       21 |      4 |    23 |    +0.0% | -170.736 |   -57283.9 |   -25088.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     800* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     800* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     801* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     802* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     803* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     804* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     805* |       5 |      97 |       24 |      4 |    23 |    +0.0% | -170.736 |   -57265.8 |   -25074.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     810* |       5 |      97 |       24 |      4 |    27 |    +0.0% | -170.736 |   -57267.9 |   -26188.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     820* |       5 |     103 |       24 |      4 |    31 |    +0.0% | -170.736 |   -57274.5 |   -25615.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     830* |       5 |     108 |       24 |      4 |    36 |    +0.0% | -170.736 |   -57279.6 |   -25480.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     840* |       5 |     114 |       24 |      4 |    40 |    +0.0% | -170.736 |   -57285.0 |   -25308.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     850* |       5 |     124 |       24 |      4 |    40 |    +0.0% | -170.736 |   -57295.3 |   -25126.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     857* |       5 |      97 |       24 |      4 |    24 |    +0.0% | -170.736 |   -57265.8 |   -24840.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     860* |       6 |      98 |       24 |      4 |    24 |    +0.0% | -170.736 |   -57298.7 |   -26438.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     870* |       6 |     103 |       27 |      4 |    27 |    +0.0% | -170.736 |   -57299.1 |   -25096.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     870* |       5 |      97 |       24 |      4 |    24 |    +0.0% | -170.736 |   -57265.8 |   -24840.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     871* |       5 |      97 |       24 |      4 |    24 |    +0.0% | -170.736 |   -57265.8 |   -24840.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     872* |       5 |      97 |       24 |      4 |    24 |    +0.0% | -170.736 |   -57265.8 |   -24840.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     880* |       6 |     102 |       27 |      4 |    24 |    +0.0% | -170.736 |   -57289.4 |   -26308.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     890* |       6 |     108 |       33 |      4 |    24 |    +0.0% | -170.736 |   -57263.3 |   -25567.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+     900* |       6 |     112 |       35 |      4 |    28 |    +0.0% | -170.736 |   -57293.3 |   -25172.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     902* |       6 |     108 |       32 |      4 |    24 |    +0.0% | -170.736 |   -57354.8 |   -24722.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     910* |       6 |     110 |       33 |      4 |    28 |    +0.0% | -170.736 |   -57316.0 |   -24712.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     920* |       6 |     110 |       33 |      4 |    38 |    +0.0% | -170.736 |   -57326.5 |   -24716.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+     923* |       6 |     110 |       33 |      4 |    27 |    +0.0% | -170.736 |   -57314.3 |   -24712.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+     926* |       6 |     111 |       34 |      4 |    27 |    +0.0% | -170.736 |   -57024.5 |   -24725.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+     930* |       6 |     112 |       34 |      6 |    27 |    +0.0% | -170.736 |   -57024.5 |   -24866.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     940* |       6 |     122 |       34 |      6 |    27 |    +0.0% | -170.736 |   -57034.1 |   -24448.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+     950* |       6 |     131 |       34 |      6 |    28 |    +0.0% | -170.736 |   -57043.7 |   -24397.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     951* |       6 |     132 |       34 |      6 |    28 |    +0.0% | -170.736 |   -57044.8 |   -24380.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+     954* |       6 |     133 |       34 |      7 |    28 |    +0.0% | -170.736 |   -57044.8 |   -24366.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+     960* |       6 |     138 |       34 |      7 |    28 |    +0.0% | -170.736 |   -57049.2 |   -24265.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+     970* |       6 |     147 |       35 |      7 |    28 |    +0.1% | -170.736 |   -57057.4 |   -24102.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+     980* |       6 |     156 |       35 |      7 |    29 |    +0.1% | -170.736 |   -57058.7 |   -24040.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+     990* |       6 |     166 |       35 |      7 |    29 |    +0.1% | -170.736 |   -57064.9 |   -23947.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1000* |       6 |     176 |       35 |      7 |    29 |    +0.1% | -170.736 |   -57070.7 |   -23824.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1010* |       6 |     183 |       36 |      7 |    31 |    +0.1% | -170.736 |   -57080.3 |   -24240.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1020* |       6 |     185 |       38 |      7 |    37 |    +0.1% | -170.736 |   -57076.4 |   -23959.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1023* |       6 |     185 |       38 |      7 |    40 |    +0.1% | -170.736 |   -57075.6 |   -23893.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1027* |       6 |     186 |       38 |      9 |    40 |    +0.1% | -170.736 |   -57075.6 |   -23963.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1028* |       6 |     186 |       38 |      9 |    40 |    +0.1% | -170.736 |   -57075.6 |   -23963.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1030* |       6 |     186 |       38 |      9 |    41 |    +0.1% | -170.736 |   -57075.1 |   -23958.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1040* |       6 |     192 |       39 |      9 |    44 |    +0.1% | -170.736 |   -57022.8 |   -23942.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1050* |       6 |     197 |       41 |      9 |    47 |    +0.1% | -170.736 |   -56997.0 |   -23934.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1050* |       6 |     197 |       41 |      9 |    47 |    +0.1% | -170.736 |   -56997.0 |   -23934.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1060* |       6 |     201 |       43 |      9 |    50 |    +0.1% | -170.736 |   -56714.2 |   -22645.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1068* |       6 |     202 |       43 |      9 |    50 |    +0.1% | -170.736 |   -56706.3 |   -22633.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1069* |       6 |     202 |       43 |      9 |    50 |    +0.1% | -170.736 |   -56706.3 |   -22633.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1070* |       6 |     202 |       43 |      9 |    50 |    +0.1% | -170.736 |   -56706.3 |   -22633.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1070* |       6 |     202 |       43 |      9 |    50 |    +0.1% | -170.736 |   -56706.3 |   -22633.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1074* |       6 |     202 |       44 |      9 |    50 |    +0.1% | -170.736 |   -56697.5 |   -22622.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1080* |       6 |     202 |       45 |      9 |    54 |    +0.1% | -170.736 |   -56798.9 |   -22624.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1090* |       6 |     203 |       47 |      9 |    61 |    +0.1% | -170.736 |   -56717.7 |   -22621.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1096* |       6 |     203 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22620.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1097* |       6 |     203 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22620.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1098* |       6 |     203 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22620.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1099* |       6 |     203 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22620.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1100* |       6 |     203 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22620.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1101* |       6 |     204 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22614.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1102* |       6 |     204 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22614.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1103* |       6 |     204 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22614.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1104* |       6 |     204 |       48 |      9 |    66 |    +0.1% | -170.736 |   -56701.9 |   -22614.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1106* |       6 |     204 |       49 |      9 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22615.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1107* |       6 |     204 |       49 |      9 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22615.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1108* |       6 |     204 |       49 |      9 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22615.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1109* |       6 |     204 |       49 |      9 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22615.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1110* |       6 |     204 |       49 |      9 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22615.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1110* |       6 |     204 |       49 |      9 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22615.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1114* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1115* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1116* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1117* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1118* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1119* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1120* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1120* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1121* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1122* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1123* |       6 |     205 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22598.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1125* |       6 |     206 |       49 |     11 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22596.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1128* |       6 |     207 |       49 |     12 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22644.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1129* |       6 |     207 |       49 |     12 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22644.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1130* |       6 |     207 |       49 |     12 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22644.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1134* |       6 |     208 |       54 |     14 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22385.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1137* |       6 |     209 |       54 |     15 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22481.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1140* |       6 |     210 |       54 |     16 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22512.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1140* |       6 |     210 |       54 |     16 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22512.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1150* |       6 |     212 |       56 |     16 |    71 |    +0.1% | -170.736 |   -56632.0 |   -22944.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1150* |       6 |     210 |       54 |     16 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22512.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1153* |       6 |     211 |       56 |     16 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22472.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1154* |       6 |     211 |       56 |     16 |    66 |    +0.1% | -170.736 |   -56693.5 |   -22472.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1160* |       6 |     214 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22166.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1161* |       6 |     215 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22188.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1162* |       6 |     215 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22188.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1164* |       6 |     216 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22192.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1165* |       6 |     216 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22192.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1166* |       6 |     216 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22192.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1167* |       6 |     216 |       56 |     18 |    66 |    +0.1% | -170.736 |   -56696.0 |   -22192.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1170* |       6 |     217 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56684.2 |   -22189.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1173* |       6 |     220 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22191.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1174* |       6 |     220 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22191.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1175* |       6 |     220 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22191.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1176* |       6 |     220 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22191.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1177* |       6 |     220 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22191.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1178* |       6 |     220 |       57 |     18 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22191.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1180* |       6 |     220 |       57 |     19 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22176.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1181* |       6 |     221 |       57 |     19 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22157.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1183* |       6 |     221 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22150.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1184* |       6 |     221 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22150.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1185* |       6 |     221 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22150.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1186* |       6 |     221 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22150.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1187* |       6 |     221 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22150.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1188* |       6 |     221 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56687.9 |   -22150.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1190* |       6 |     222 |       57 |     20 |    66 |    +0.1% | -170.736 |   -56683.2 |   -21960.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1200* |       7 |     229 |       58 |     21 |    66 |    +0.1% | -170.736 |   -56679.4 |   -21990.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1210* |       8 |     237 |       59 |     21 |    66 |    +0.1% | -170.736 |   -56661.7 |   -22070.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1220* |       8 |     243 |       60 |     21 |    69 |    +0.1% | -170.736 |   -56644.3 |   -22099.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1229* |       7 |     236 |       59 |     21 |    66 |    +0.1% | -170.736 |   -56654.5 |   -21853.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1230* |       7 |     236 |       59 |     21 |    66 |    +0.1% | -170.736 |   -56654.5 |   -21853.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1230* |       7 |     236 |       59 |     21 |    66 |    +0.1% | -170.736 |   -56654.5 |   -21853.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1231* |       7 |     236 |       59 |     21 |    66 |    +0.1% | -170.736 |   -56654.5 |   -21853.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1235* |       7 |     238 |       59 |     22 |    66 |    +0.1% | -170.736 |   -56654.5 |   -21879.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1238* |       7 |     239 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56654.5 |   -21846.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1240* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1241* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1242* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1243* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1244* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1245* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1246* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1247* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1248* |       7 |     240 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21821.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1250* |       7 |     241 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21823.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1251* |       7 |     241 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21823.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1252* |       7 |     241 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21823.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1253* |       7 |     241 |       59 |     23 |    66 |    +0.1% | -170.736 |   -56657.8 |   -21823.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1255* |       7 |     241 |       59 |     23 |    67 |    +0.1% | -170.736 |   -56658.4 |   -21820.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1256* |       7 |     241 |       59 |     23 |    67 |    +0.1% | -170.736 |   -56658.4 |   -21820.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1257* |       7 |     241 |       59 |     23 |    67 |    +0.1% | -170.736 |   -56658.4 |   -21820.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1258* |       7 |     241 |       59 |     23 |    67 |    +0.1% | -170.736 |   -56658.4 |   -21820.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1259* |       7 |     241 |       59 |     23 |    67 |    +0.1% | -170.736 |   -56658.4 |   -21820.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1260* |       7 |     241 |       59 |     23 |    67 |    +0.1% | -170.736 |   -56658.4 |   -21820.8 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1268* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1269* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1270* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1270* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1271* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1272* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1273* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1274* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1275* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1276* |       7 |     246 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22151.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1278* |       7 |     247 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22131.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1279* |       7 |     247 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22131.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1280* |       7 |     247 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22131.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1280* |       7 |     247 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22131.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1283* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1284* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1285* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1286* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1288* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1290* |       7 |     249 |       62 |     23 |    69 |    +0.1% | -170.736 |   -57356.0 |   -23295.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1290* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1291* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1292* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1293* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1294* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1296* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1297* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1298* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1299* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1300* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1300* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1301* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1302* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1303* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1304* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1305* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1306* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1307* |       7 |     249 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22149.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1309* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1310* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1311* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1312* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1313* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1314* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1315* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1316* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1317* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1318* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1319* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1320* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1320* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1321* |       7 |     250 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57364.8 |   -22163.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1330* |       8 |     257 |       61 |     23 |    69 |    +0.1% | -170.736 |   -57371.6 |   -22415.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1335* |       8 |     258 |       64 |     24 |    69 |    +0.1% | -170.736 |   -57370.7 |   -22169.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1339* |       8 |     260 |       64 |     25 |    69 |    +0.1% | -170.736 |   -57370.7 |   -22161.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1340* |       8 |     260 |       64 |     25 |    69 |    +0.1% | -170.736 |   -57370.7 |   -22161.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1350* |       8 |     265 |       67 |     27 |    69 |    +0.1% | -170.736 |   -57370.7 |   -22850.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1355* |       8 |     264 |       65 |     27 |    69 |    +0.1% | -170.736 |   -57557.1 |   -21813.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1356* |       8 |     264 |       65 |     27 |    69 |    +0.1% | -170.736 |   -57557.1 |   -21813.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1357* |       8 |     264 |       65 |     27 |    69 |    +0.1% | -170.736 |   -57557.1 |   -21813.7 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1359* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1360* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1360* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1361* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1362* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1363* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1364* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1365* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1366* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1368* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1369* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1370* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1370* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1371* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1372* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1373* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1374* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1380* |       8 |     267 |       67 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -22747.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1383* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1384* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1385* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1386* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1387* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1388* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1389* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1390* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1390* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1391* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1392* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1393* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1394* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1395* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1396* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1397* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1398* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1399* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1400* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1408* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1409* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1410* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1410* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1411* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1412* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1420* |       8 |     268 |       68 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -22886.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1421* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1430* |       8 |     268 |       68 |     27 |    71 |    +0.1% | -170.736 |   -57557.1 |   -22886.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1430* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1431* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1432* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1433* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1434* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1435* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1436* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1437* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1438* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1439* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1440* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1440* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1441* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1442* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1443* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1444* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1445* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1446* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1447* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1448* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1449* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1450* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1450* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1451* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1452* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1453* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1454* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1455* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1456* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1457* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1458* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1459* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1460* |       8 |     264 |       65 |     27 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21813.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1462* |       8 |     265 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21814.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1463* |       8 |     265 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21814.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1470* |       8 |     269 |       67 |     28 |    70 |    +0.1% | -170.736 |   -57557.1 |   -22749.5 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1472* |       8 |     265 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21814.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1473* |       8 |     265 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21814.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1474* |       8 |     265 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57557.1 |   -21814.3 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1480* |       8 |     266 |       65 |     28 |    74 |    +0.1% | -170.736 |   -57568.7 |   -21830.0 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1481* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1482* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1483* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1484* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1485* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1486* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1487* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1488* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1489* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1490* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1490* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1491* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1492* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1493* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1494* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1495* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1496* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1497* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1498* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1499* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1500* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1500* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1501* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1502* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1503* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1504* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1505* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1506* |       8 |     266 |       65 |     28 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21828.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1510* |       8 |     267 |       67 |     29 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21765.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1520* |       8 |     273 |       69 |     31 |    70 |    +0.1% | -170.736 |   -57568.7 |   -23226.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1521* |       8 |     271 |       67 |     31 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22134.6 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1530* |       8 |     274 |       71 |     33 |    70 |    +0.1% | -170.736 |   -57568.7 |   -23327.1 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1533* |       8 |     272 |       68 |     33 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22135.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1534* |       8 |     272 |       68 |     33 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22135.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1535* |       8 |     272 |       68 |     33 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22135.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1537* |       8 |     272 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22126.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1538* |       8 |     272 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22126.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1539* |       8 |     272 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22126.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1540* |       8 |     272 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22126.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1540* |       8 |     272 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22126.4 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1542* |       8 |     273 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22126.2 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1544* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1545* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1546* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1547* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1548* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1549* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1550* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1550* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1551* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1552* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1553* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1554* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1555* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1556* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1557* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1558* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1559* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1560* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1560* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1561* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1562* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1563* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1564* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1565* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1566* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1567* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1568* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1569* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1570* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1570* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1577* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1578* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1579* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1580* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1580* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1581* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1582* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1583* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1584* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1585* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1586* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1587* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1588* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1589* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1590* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1590* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1597* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1598* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1599* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1600* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1600* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1600* |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    552 | core/f2940/Q$_DFF_PN0_/D
+    1600+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1601+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1602+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1603+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1604+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1605+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1606+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1607+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1608+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1609+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1610+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1610+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1611+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1612+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1613+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1614+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1615+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1616+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1617+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1618+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1619+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1620+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1620+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1621+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1622+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1623+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1624+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1625+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1626+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1627+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1628+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1629+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1630+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1630+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1631+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1632+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1633+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1634+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1635+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1636+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1637+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1638+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1639+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1640+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1640+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1641+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1642+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1643+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1644+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1645+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1646+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1647+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1648+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1649+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1650+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1650+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1651+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1652+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1653+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1654+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1655+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1656+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1657+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1658+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1659+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1660+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1660+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1661+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1662+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1663+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1664+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1665+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1666+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1667+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1668+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1669+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1670+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1670+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1671+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1672+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1673+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1674+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1675+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1676+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1677+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1678+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1679+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1680+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1680+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1681+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1682+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1683+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1684+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1685+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1686+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1687+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1688+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1689+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1690+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1690+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1691+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1692+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1693+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1694+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1695+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1696+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1697+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1698+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1699+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1700+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1701+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1702+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1703+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1704+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1705+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1706+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1707+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1708+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1709+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1710+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1710+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1711+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1712+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1713+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1714+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1715+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1716+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1717+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1718+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1719+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1720+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1720+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1721+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1722+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1723+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1724+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1725+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1726+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1727+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1728+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1729+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1730+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1730+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1731+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1732+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1733+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1734+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1735+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1736+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1737+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1738+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1739+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1740+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1740+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1741+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1742+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1743+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1744+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1745+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1746+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1747+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1748+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1749+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1750+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1750+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1751+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1752+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1753+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1754+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1755+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1756+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1757+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1758+ |       8 |     274 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22121.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1760+ |       8 |     275 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22048.7 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1760+ |       8 |     275 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22048.7 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1761+ |       8 |     275 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22048.7 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1762+ |       8 |     275 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -22048.7 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1764+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1765+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1766+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1767+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1768+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1769+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1770+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1770+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1771+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1772+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1773+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1774+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1775+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1776+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1777+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1778+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1779+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1780+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1780+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1781+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1782+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1783+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1784+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1785+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1786+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1787+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1788+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1789+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1790+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1790+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1791+ |       8 |     276 |       68 |     34 |    70 |    +0.1% | -170.736 |   -57568.7 |   -21974.9 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1793+ |       8 |     276 |       68 |     34 |    71 |    +0.1% | -170.736 |   -57568.7 |   -21971.2 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1795+ |       8 |     276 |       68 |     34 |    72 |    +0.1% | -170.736 |   -57568.7 |   -21969.2 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1796+ |       8 |     276 |       68 |     34 |    72 |    +0.1% | -170.736 |   -57568.7 |   -21969.2 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1797+ |       8 |     276 |       68 |     34 |    72 |    +0.1% | -170.736 |   -57568.7 |   -21969.2 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1799+ |       8 |     276 |       68 |     34 |    73 |    +0.1% | -170.736 |   -57568.7 |   -21966.4 |    308 | core/f2940/Q$_DFF_PN0_/D
+    1800+ |       8 |     276 |       68 |     34 |    73 |    +0.1% | -170.736 |   -57568.7 |   -21966.4 |    308 | core/f2940/Q$_DFF_PN0_/D
+    final |       8 |     276 |       68 |     34 |    73 |    +0.1% | -170.736 |   -57568.7 |   -21966.4 |    308 | core/f2940/Q$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 8 buffers.
+[INFO RSZ-0040] Inserted 68 buffers.
+[INFO RSZ-0051] Resized 276 instances: 276 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 73 instances.
+[INFO RSZ-0049] Cloned 34 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 392.80s
+Took 392 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_RC_CAL hold: -global_routing layers M6 M7 R 0.014 C 0.105 (RCX-calibrated upper-layer RC; platform setRC restored after)
+OT_HOLD_MM after repair: SS setup ws -170.74 / FF hold ws 1.72 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/qfd_sys_face_bc2l/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 909 input pin flops (0 hard-child clock pins at +insertion), median arrival 358.4019 (range 324.5316 .. 385.4929)
+QDM reference pin boundary_100346/Q$_DFF_P_/CLK clock arrival max 358.4019 min 347.3572 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 347.3572 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -170.74 / FF hold ws 1.72 ps
+OT_HM_GUARD: margin 30 kept: 1541 endpoints in margin, ~1865 buffers, +0.3 util pts (within limits)
+OT_HOLD_GUARD start: hold ws 1.72 tns 0.0 viol 0 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 1541 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   1.715 |   0.000 | prog_tx_record[479]
+       10 |       0 |      27 |            0 |    +0.0% |   3.857 |   0.000 | prog_tx_record[494]
+       20 |       0 |      55 |            0 |    +0.0% |   4.747 |   0.000 | prog_tx_record[93]
+       30 |       0 |      85 |            0 |    +0.0% |   5.079 |   0.000 | prog_tx_record[147]
+       40 |       0 |     113 |            0 |    +0.0% |   5.412 |   0.000 | prog_tx_record[493]
+       50 |       0 |     141 |            0 |    +0.1% |   5.611 |   0.000 | prog_tx_record[6]
+       60 |       0 |     169 |            0 |    +0.1% |   5.753 |   0.000 | prog_tx_record[530]
+       70 |       0 |     197 |            0 |    +0.1% |   6.061 |   0.000 | prog_tx_record[536]
+       80 |       0 |     224 |            0 |    +0.1% |   6.203 |   0.000 | prog_tx_record[67]
+       90 |       0 |     253 |            0 |    +0.1% |   6.451 |   0.000 | prog_tx_record[18]
+      100 |       0 |     280 |            0 |    +0.1% |   6.764 |   0.000 | prog_tx_record[273]
+      110 |       0 |     308 |            0 |    +0.1% |   6.912 |   0.000 | prog_tx_record[520]
+      120 |       0 |     332 |            0 |    +0.1% |   7.097 |   0.000 | prog_tx_record[308]
+      130 |       0 |     361 |            0 |    +0.2% |   7.359 |   0.000 | prog_tx_record[347]
+      140 |       0 |     385 |            0 |    +0.2% |   7.586 |   0.000 | result_cycles[4]
+      150 |       0 |     409 |            0 |    +0.2% |   7.697 |   0.000 | prog_tx_record[371]
+      160 |       0 |     432 |            0 |    +0.2% |   7.775 |   0.000 | prog_tx_record[364]
+      170 |       0 |     457 |            0 |    +0.2% |   7.939 |   0.000 | cfg_data[15]
+      180 |       0 |     480 |            0 |    +0.2% |   8.065 |   0.000 | result_cycles[5]
+      190 |       0 |     505 |            0 |    +0.2% |   8.151 |   0.000 | prog_tx_record[524]
+      200 |       0 |     531 |            0 |    +0.2% |   8.279 |   0.000 | result_cycles[9]
+      210 |       0 |     553 |            0 |    +0.2% |   8.437 |   0.000 | prog_tx_record[459]
+      220 |       0 |     575 |            0 |    +0.3% |   8.554 |   0.000 | prog_tx_record[462]
+      230 |       0 |     599 |            0 |    +0.3% |   8.644 |   0.000 | result_cycles[11]
+      240 |       0 |     624 |            0 |    +0.3% |   8.727 |   0.000 | prog_tx_record[529]
+      250 |       0 |     648 |            0 |    +0.3% |   8.860 |   0.000 | prog_tx_record[518]
+      260 |       0 |     670 |            0 |    +0.3% |   8.965 |   0.000 | prog_tx_record[377]
+      270 |       0 |     695 |            0 |    +0.3% |   9.151 |   0.000 | prog_tx_record[403]
+      280 |       0 |     721 |            0 |    +0.3% |   9.206 |   0.000 | prog_tx_record[484]
+      290 |       0 |     746 |            0 |    +0.3% |   9.352 |   0.000 | prog_tx_record[390]
+      300 |       0 |     770 |            0 |    +0.3% |   9.511 |   0.000 | prog_tx_record[458]
+      310 |       0 |     794 |            0 |    +0.4% |   9.755 |   0.000 | tt_pw[67]
+      320 |       0 |     817 |            0 |    +0.4% |   9.946 |   0.000 | prog_tx_record[437]
+      330 |       0 |     840 |            0 |    +0.4% |  10.131 |   0.000 | prog_tx_record[324]
+      340 |       0 |     861 |            0 |    +0.4% |  10.248 |   0.000 | tt_pw[6]
+      350 |       0 |     883 |            0 |    +0.4% |  10.398 |   0.000 | prog_tx_record[181]
+      360 |       0 |     901 |            0 |    +0.4% |  10.563 |   0.000 | cfg_data[5]
+      370 |       0 |     922 |            0 |    +0.4% |  10.733 |   0.000 | prog_tx_record[348]
+      380 |       0 |     942 |            0 |    +0.4% |  11.070 |   0.000 | cfg_data[1]
+      390 |       0 |     962 |            0 |    +0.4% |  11.201 |   0.000 | prog_tx_record[376]
+      400 |       0 |     982 |            0 |    +0.4% |  11.375 |   0.000 | prog_tx_record[366]
+      410 |       0 |    1002 |            0 |    +0.4% |  11.471 |   0.000 | prog_tx_record[188]
+      420 |       0 |    1022 |            0 |    +0.5% |  11.547 |   0.000 | prog_tx_record[137]
+      430 |       0 |    1042 |            0 |    +0.5% |  11.652 |   0.000 | prog_tx_observed_v
+      440 |       0 |    1062 |            0 |    +0.5% |  11.737 |   0.000 | prog_tx_record[243]
+      450 |       0 |    1082 |            0 |    +0.5% |  11.836 |   0.000 | prog_tx_record[220]
+      460 |       0 |    1102 |            0 |    +0.5% |  11.956 |   0.000 | prog_tx_record[196]
+      470 |       0 |    1120 |            0 |    +0.5% |  12.054 |   0.000 | prog_tx_record[192]
+      480 |       0 |    1140 |            0 |    +0.5% |  12.162 |   0.000 | prog_tx_record[242]
+      490 |       0 |    1160 |            0 |    +0.5% |  12.253 |   0.000 | prog_tx_record[240]
+      500 |       0 |    1180 |            0 |    +0.5% |  12.300 |   0.000 | ctx_x[55]
+      510 |       0 |    1198 |            0 |    +0.5% |  12.393 |   0.000 | ctx_x[47]
+      520 |       0 |    1216 |            0 |    +0.5% |  12.464 |   0.000 | host_tag[5]
+      530 |       0 |    1236 |            0 |    +0.5% |  12.528 |   0.000 | ctx_x[11]
+      540 |       0 |    1256 |            0 |    +0.6% |  12.679 |   0.000 | prog_tx_record[234]
+      550 |       0 |    1276 |            0 |    +0.6% |  12.735 |   0.000 | emb_core_epoch[8]
+      560 |       0 |    1296 |            0 |    +0.6% |  12.778 |   0.000 | prog_tx_record[0]
+      570 |       0 |    1316 |            0 |    +0.6% |  12.841 |   0.000 | prog_tx_record[151]
+      580 |       0 |    1336 |            0 |    +0.6% |  12.933 |   0.000 | ctx_x[17]
+      590 |       0 |    1356 |            0 |    +0.6% |  13.010 |   0.000 | prog_tx_record[19]
+      600 |       0 |    1376 |            0 |    +0.6% |  13.068 |   0.000 | prog_tx_record[246]
+      610 |       0 |    1396 |            0 |    +0.6% |  13.163 |   0.000 | prog_tx_record[64]
+      620 |       0 |    1416 |            0 |    +0.6% |  13.231 |   0.000 | ctx_x[0]
+      630 |       0 |    1436 |            0 |    +0.6% |  13.314 |   0.000 | host_tag[38]
+      640 |       0 |    1456 |            0 |    +0.6% |  13.430 |   0.000 | prog_tx_record[85]
+      650 |       0 |    1476 |            0 |    +0.7% |  13.533 |   0.000 | prog_tx_record[263]
+      660 |       0 |    1496 |            0 |    +0.7% |  13.584 |   0.000 | prog_tx_record[149]
+      670 |       0 |    1516 |            0 |    +0.7% |  13.681 |   0.000 | cal_seg
+      680 |       0 |    1536 |            0 |    +0.7% |  13.744 |   0.000 | emb_word_data[204]
+      690 |       0 |    1554 |            0 |    +0.7% |  13.822 |   0.000 | emb_fill_epoch[15]
+      700 |       0 |    1574 |            0 |    +0.7% |  13.912 |   0.000 | prog_tx_record[126]
+      710 |       0 |    1594 |            0 |    +0.7% |  13.972 |   0.000 | emb_fill_epoch[10]
+      720 |       0 |    1614 |            0 |    +0.7% |  14.048 |   0.000 | emb_word_data[37]
+      730 |       0 |    1634 |            0 |    +0.7% |  14.168 |   0.000 | prog_tx_record[328]
+      740 |       0 |    1654 |            0 |    +0.7% |  14.264 |   0.000 | emb_word_data[77]
+      750 |       0 |    1674 |            0 |    +0.7% |  14.339 |   0.000 | prog_tx_record[8]
+      760 |       0 |    1694 |            0 |    +0.7% |  14.410 |   0.000 | ctx_x[51]
+      770 |       0 |    1714 |            0 |    +0.8% |  14.486 |   0.000 | emb_word_data[103]
+      780 |       0 |    1734 |            0 |    +0.8% |  14.548 |   0.000 | ctx_x[4]
+      790 |       0 |    1752 |            0 |    +0.8% |  14.628 |   0.000 | ctx_x[23]
+      800 |       0 |    1772 |            0 |    +0.8% |  14.723 |   0.000 | boundary_101193/Q$_DFF_P_/D
+      810 |       0 |    1792 |            0 |    +0.8% |  14.825 |   0.000 | prog_tx_record[112]
+      820 |       0 |    1810 |            0 |    +0.8% |  14.893 |   0.000 | cfg_addr[1]
+      830 |       0 |    1830 |            0 |    +0.8% |  14.978 |   0.000 | emb_word_data[3]
+      840 |       0 |    1850 |            0 |    +0.8% |  15.129 |   0.000 | emb_word_data[102]
+      850 |       0 |    1870 |            0 |    +0.8% |  15.212 |   0.000 | prog_tx_record[257]
+      860 |       0 |    1890 |            0 |    +0.8% |  15.305 |   0.000 | tt_pw[71]
+      870 |       0 |    1910 |            0 |    +0.8% |  15.425 |   0.000 | emb_fill_token[11]
+      880 |       0 |    1928 |            0 |    +0.9% |  15.502 |   0.000 | emb_word_data[66]
+      890 |       0 |    1948 |            0 |    +0.9% |  15.563 |   0.000 | tt_pw[45]
+      900 |       0 |    1968 |            0 |    +0.9% |  15.618 |   0.000 | host_epoch[9]
+      910 |       0 |    1988 |            0 |    +0.9% |  15.725 |   0.000 | emb_word_data[113]
+      920 |       0 |    2008 |            0 |    +0.9% |  15.846 |   0.000 | emb_fill_token[9]
+      930 |       0 |    2026 |            0 |    +0.9% |  15.970 |   0.000 | emb_word_data[23]
+      940 |       0 |    2044 |            0 |    +0.9% |  16.109 |   0.000 | emb_core_epoch[4]
+      950 |       0 |    2058 |            0 |    +0.9% |  16.235 |   0.000 | emb_word_data[21]
+      960 |       0 |    2076 |            0 |    +0.9% |  16.382 |   0.000 | ctx_x[14]
+      970 |       0 |    2096 |            0 |    +0.9% |  16.508 |   0.000 | ctx_x[81]
+      980 |       0 |    2116 |            0 |    +0.9% |  16.651 |   0.000 | emb_word_data[124]
+      990 |       0 |    2136 |            0 |    +0.9% |  16.855 |   0.000 | host_tag[54]
+     1000 |       0 |    2156 |            0 |    +1.0% |  17.119 |   0.000 | ctx_x[102]
+     1010 |       0 |    2174 |            0 |    +1.0% |  17.362 |   0.000 | emb_core_epoch[12]
+     1020 |       0 |    2192 |            0 |    +1.0% |  17.520 |   0.000 | emb_word_data[118]
+     1030 |       0 |    2209 |            0 |    +1.0% |  17.641 |   0.000 | emb_word_data[31]
+     1040 |       0 |    2226 |            0 |    +1.0% |  17.811 |   0.000 | emb_fill_epoch[2]
+     1050 |       0 |    2244 |            0 |    +1.0% |  17.996 |   0.000 | emb_fill_begin
+     1060 |       0 |    2262 |            0 |    +1.0% |  18.136 |   0.000 | emb_core_epoch[7]
+     1070 |       0 |    2277 |            0 |    +1.0% |  18.222 |   0.000 | emb_core_epoch[14]
+     1080 |       0 |    2289 |            0 |    +1.0% |  18.316 |   0.000 | emb_word_data[167]
+     1090 |       0 |    2302 |            0 |    +1.0% |  18.451 |   0.000 | ctx_x[48]
+     1100 |       0 |    2310 |            0 |    +1.0% |  18.601 |   0.000 | emb_word_data[193]
+     1110 |       0 |    2321 |            0 |    +1.0% |  18.846 |   0.000 | ctx_x[110]
+     1120 |       0 |    2336 |            0 |    +1.0% |  18.987 |   0.000 | emb_word_data[166]
+     1130 |       0 |    2350 |            0 |    +1.0% |  19.096 |   0.000 | emb_word_data[139]
+     1140 |       0 |    2365 |            0 |    +1.0% |  19.248 |   0.000 | emb_word_data[165]
+     1150 |       0 |    2375 |            0 |    +1.0% |  19.390 |   0.000 | emb_word_data[171]
+     1160 |       0 |    2387 |            0 |    +1.1% |  19.524 |   0.000 | emb_word_data[46]
+     1170 |       0 |    2399 |            0 |    +1.1% |  19.655 |   0.000 | emb_word_data[56]
+     1180 |       0 |    2414 |            0 |    +1.1% |  19.772 |   0.000 | emb_word_data[29]
+     1190 |       0 |    2422 |            0 |    +1.1% |  19.912 |   0.000 | core/f3334/Q$_DFFE_PN0P_/RESETN
+     1200 |       0 |    2432 |            0 |    +1.1% |  20.106 |   0.000 | emb_word_data[39]
+     1210 |       0 |    2446 |            0 |    +1.1% |  20.414 |   0.000 | ctx_x[79]
+     1220 |       0 |    2458 |            0 |    +1.1% |  20.572 |   0.000 | emb_expected_token[7]
+     1230 |       0 |    2470 |            0 |    +1.1% |  20.743 |   0.000 | emb_word_data[41]
+     1240 |       0 |    2480 |            0 |    +1.1% |  20.927 |   0.000 | host_tag[53]
+     1250 |       0 |    2489 |            0 |    +1.1% |  21.090 |   0.000 | emb_expected_token[4]
+     1260 |       0 |    2501 |            0 |    +1.1% |  21.321 |   0.000 | emb_word_data[47]
+     1270 |       0 |    2514 |            0 |    +1.1% |  21.694 |   0.000 | emb_word_data[181]
+     1280 |       0 |    2524 |            0 |    +1.1% |  21.996 |   0.000 | core/f2813/Q$_DFF_PN0_/RESETN
+     1290 |       0 |    2533 |            0 |    +1.1% |  22.251 |   0.000 | emb_word_data[55]
+     1300 |       0 |    2543 |            0 |    +1.1% |  22.545 |   0.000 | emb_word_data[182]
+     1310 |       0 |    2550 |            0 |    +1.1% |  22.813 |   0.000 | core/f995/Q$_DFFE_PN0N_/RESETN
+     1320 |       0 |    2561 |            0 |    +1.1% |  21.593 |   0.000 | core/f3161/Q$_DFFE_PN0P_/RESETN
+     1330 |       0 |    2569 |            0 |    +1.1% |  21.593 |   0.000 | core/f3161/Q$_DFFE_PN0P_/RESETN
+     1340 |       0 |    2577 |            0 |    +1.1% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1350 |       0 |    2583 |            0 |    +1.1% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1360 |       0 |    2591 |            0 |    +1.1% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1370 |       0 |    2597 |            0 |    +1.1% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1380 |       0 |    2604 |            0 |    +1.1% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1390 |       0 |    2611 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1400 |       0 |    2618 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1410 |       0 |    2623 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1420 |       0 |    2631 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1430 |       0 |    2641 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1440 |       0 |    2649 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1450 |       0 |    2658 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1460 |       0 |    2667 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1470 |       0 |    2673 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1480 |       0 |    2680 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1490 |       0 |    2688 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1500 |       0 |    2698 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1510 |       0 |    2705 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1520 |       0 |    2714 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1530 |       0 |    2722 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+     1540 |       0 |    2731 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+    final |       0 |    2733 |            0 |    +1.2% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 2733 hold buffers.
+[INFO RSZ-0506] Runtime: 762.41s
+Took 763 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws 23.39 (+21.67) tns 0.0 (+0.0%) viol 0, 763 s
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 10 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |  23.385 |   0.000 | boundary_101203/Q$_DFF_P_/D
+       10 |       0 |       9 |            0 |    +0.0% |  29.384 |   0.000 | boundary_101206/Q$_DFF_P_/D
+    final |       0 |      10 |            0 |    +0.0% |  30.004 |   0.000 | emb_word_data[117]
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 10 hold buffers.
+[INFO RSZ-0506] Runtime: 3.64s
+OT_HOLD_GUARD chunk 2: hold ws 30.00 (+6.62) tns 0.0 (+0.0%) viol 0, 766 s
+OT_RC_CAL restored platform setRC.tcl
+OT_HOLD_MM after repair: SS setup ws -170.74 / FF hold ws 30.00 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/qfd_sys_face_bc2l/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 909 input pin flops (0 hard-child clock pins at +insertion), median arrival 358.4019 (range 324.5316 .. 385.4929)
+QDM reference pin boundary_100346/Q$_DFF_P_/CLK clock arrival max 358.4019 min 347.3572 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 347.3572 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -170.74 / FF hold ws 30.00 ps
+OT_HOLD_MM after repair: SS setup ws -170.74 / FF hold ws 30.00 ps
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 50220.52 um^2
+[INFO DPL-0007] Movable instances area: 6281.43 um^2
+[INFO DPL-0008] Fixed instances area within core: 10449.28 um^2
+[INFO DPL-0009] Utilization: 33.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 58103 cells
+[INFO DPL-0393]   height 77 row(s): 6 cells
+[INFO DPL-0393]   height 233 row(s): 3 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       7650 |      1748 |      5899
+        1 |       5512 |       989 |      4436
+        2 |       3670 |       607 |      3030
+        3 |       2095 |       304 |      1765
+        4 |       1255 |       180 |      1075
+        5 |        717 |       110 |       601
+        6 |        410 |        55 |       355
+        7 |        198 |        29 |       169
+        8 |        101 |        18 |        83
+        9 |         86 |        15 |        71
+       10 |         22 |         3 |        19
+       13 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 13.
+[INFO DPL-0500] Runtime: 1.93s
+Placement Analysis
+---------------------------------
+total displacement       3345.1 u
+average displacement        0.1 u
+max displacement            6.6 u
+original HPWL          459330.4 u
+legalized HPWL         462343.4 u
+delta HPWL                    1 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/congestion_post_repair_timing.rpt
+Took 23 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0094] Found 311 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 311 (0.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -170.807 |   -56498.8 |   -21731.3 |    311 | core/f2940/Q$_DFF_PN0_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -170.807 |   -56498.8 |   -21731.3 |    311 | core/f2940/Q$_DFF_PN0_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -170.807 |   -56498.8 |   -21731.3 |    311 | core/f2940/Q$_DFF_PN0_/D
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% | -170.807 |   -56498.8 |   -21731.3 |    311 | core/f2940/Q$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 4.67s
+Took 5 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 16731 um^2 33% utilization.
+[INFO FLW-0007] clock core_clk period 770.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 11679
+source /src/physical/common_flow/grt_macro_top_layer_post.tcl
+OT_GRT_TOP_SHADOW: block max routing layer restored to M5 (level 5) for detailed routing
+write_db /work/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/5_1_grt.sdc
+Elapsed time: 24:50.71[h:]min:sec. CPU time: user 3121.60 sys 77.79 (214%). Peak memory: 1737064KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb         1490           1696 01695df06a14368bdc02
+5_1_grt                   .sdc                             5f8cdd1de32f12daf8f1

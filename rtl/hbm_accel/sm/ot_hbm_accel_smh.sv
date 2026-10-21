@@ -2490,6 +2490,12 @@ module ot_hbm_accel_smh_leaf #(
     output wire [TAGW-1:0]          o_itag,
     output wire [LBS*266+LSB*16-1:0] o_iw,
     output wire [LBS*266+LSB*16-1:0] o_ix
+`ifdef OT_SMH_XSE
+    ,
+    output wire                     o_ifirst_e,
+    output wire                     o_ilast_e,
+    output wire [TAGW-1:0]          o_itag_e
+`endif
 `else
     output wire                     gv,
     output wire                     gf,
@@ -2526,21 +2532,111 @@ module ot_hbm_accel_smh_leaf #(
     // ---- E3: line and control (sm_pq leaf) ----
     reg  [1:0]     c3v;
     reg  [CW-3:0]  c3d;
+`ifndef OT_SMH_XSRING
     reg  [WSW-1:0] w3;
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c3v <= 2'b00;
         else c3v <= r0v;
-    always @(posedge clk) begin c3d <= r0d; w3 <= r0w; end
+    always @(posedge clk) c3d <= r0d;
+`ifndef OT_SMH_XSRING
+    always @(posedge clk) w3 <= r0w;
+`endif
     // (margin m3) E3b: the row pipeline one register deeper, in step with the x-store read address registered once
     // more at the macro pins (r1x / r1a below): +1 cycle on every row read; the x write gets the same +1 at the macro
     // inputs (wce2 / wa2 / wd2 / wm2), so the write-before-read margin is unchanged
     reg  [1:0]     c3bv;
     reg  [CW-3:0]  c3bd;
-    reg  [WSW-1:0] w3b;
+`ifdef OT_SMH_XSRING
+    // Four-slot fixed-latency SRAM ring: r0w is the existing input stage;
+    // write at E3 and read the prior slot at E3b. No same-address collision,
+    // stalls, runtime wide mux, or added data edge. Half-cycle macro launches
+    // keep the SRAM hold window independent of its clock-pin skew.
+    // LH-SMATT/XS 10-19 (opt-in, default RTL unchanged):
+    //   OT_SMH_RING_RST2  : the ring slot counter and its address captures take their own KEPT reset relay from the
+    //                       leaf's landed rst_a (same SYNC 2 + TREE 1 release edge as u_rr), so the shared leaf relay
+    //                       keeps <= 32 loads after the local captures are added.
+    //   OT_SMH_RING_LOCAL_WADDR : each ring macro also gets a KEPT positive-edge local WRITE-address capture
+    //                       (wa_p <= slot + 1 == the old negedge wa_n at the macro write edge; reset 0 == old wa_n in reset).
+    //   OT_SMH_XSRING32   : the ring is built from ot_sram_1r1w_32x128_m1 (7 x 128 b, 51.4 x 20.8 um) instead of
+    //                       4 x ot_sram_1r1w_128x256_m1_r2c2 (half the hard area; same registered-read semantics).
+    // L2H-SMATT 10-19 (opt-in): OT_SMH_SRAM_P192 : same-port wide-pin-pitch macro variants (0.192 um face pitch, <= 5.1
+    //                       pins/um vs 9.5-10/um): ring ot_sram_1r1w_32x128_m1_p192_rc, x store ot_sram_1r1w_128x256_m1_r2c2_p192_mir.
+    //                       Identical ports and registered-read behaviour; only the hard-macro footprint changes.
+    wire rst_ring_n;
+`ifdef OT_SMH_RING_RST2
+    ot_rst_relay #(.REGIONS(1)) u_rr_ring (.clk(clk), .rst_n_in(rst_a), .rst_n(rst_ring_n));
+`else
+    assign rst_ring_n = rst_n;
+`endif
+    reg [1:0] wr_slot;
+    always @(posedge clk or negedge rst_ring_n)
+        if (!rst_ring_n) wr_slot <= 2'd0;
+        else wr_slot <= wr_slot + 2'd1;
+`ifdef OT_SMH_XSRING32
+    localparam integer RGB = 128;
+`else
+    localparam integer RGB = 256;
+`endif
+    localparam integer NRG = (WSW + RGB - 1) / RGB;
+    wire [NRG*RGB-1:0] ring_wd = {{(NRG*RGB-WSW){1'b0}}, r0w};
+    wire [NRG*RGB-1:0] ring_rd;
+    genvar rw;
+    generate for (rw=0; rw<NRG; rw=rw+1) begin : g_wr_ring
+`ifdef OT_SMH_RING_LOCAL_WADDR
+        wire[1:0]wa_n;
+        ot_hbm_accel_smh_ring_waddr u_wa(.clk(clk),.rst_n(rst_ring_n),.slot(wr_slot),.addr(wa_n));
+`else
+        reg[1:0]wa_n;
+`endif
+`ifdef OT_SMH_RING_LOCAL_ADDR
+        wire[1:0]ra_n;
+        // Previous posedge slot is exactly current negedge(slot-1). Native
+        // kept local captures add no data edge and prevent cross-macro merging.
+        ot_hbm_accel_smh_ring_raddr u_ra(.clk(clk),.rst_n(rst_ring_n),.slot(wr_slot),.addr(ra_n));
+`else
+        reg[1:0]ra_n;
+`endif
+        reg [RGB-1:0] wd_n;
+        always @(negedge clk) begin
+`ifndef OT_SMH_RING_LOCAL_WADDR
+            wa_n <= wr_slot;
+`endif
+`ifndef OT_SMH_RING_LOCAL_ADDR
+`ifdef OT_SMH_MUT_XSRING
+            ra_n <= wr_slot - 2'd2;
+`else
+            ra_n <= wr_slot - 2'd1;
+`endif
+`endif
+            wd_n <= ring_wd[RGB*rw +: RGB];
+        end
+`ifdef OT_SMH_XSRING32
+`ifdef OT_SMH_SRAM_P192
+        ot_sram_1r1w_32x128_m1_p192_rc u_w (
+`else
+        ot_sram_1r1w_32x128_m1 u_w (
+`endif
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(ring_rd[RGB*rw +: RGB]),
+            .w_ce_in(1'b1), .w_addr_in({3'd0,wa_n}), .wd_in(wd_n), .w_mask_in({RGB{1'b1}}));
+`else
+        ot_sram_1r1w_128x256_m1_r2c2 u_w (
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({5'd0,ra_n}), .rd_out(ring_rd[RGB*rw +: RGB]),
+            .w_ce_in(1'b1), .w_addr_in({5'd0,wa_n}), .wd_in(wd_n), .w_mask_in({RGB{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+`endif
+    end endgenerate
+    wire [WSW-1:0] w3b = ring_rd[WSW-1:0];
+`else
+    reg [WSW-1:0] w3b;
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c3bv <= 2'b00;
         else c3bv <= c3v;
-    always @(posedge clk) begin c3bd <= c3d; w3b <= w3; end
+    always @(posedge clk) c3bd <= c3d;
+`ifndef OT_SMH_XSRING
+    always @(posedge clk) w3b <= w3;
+`endif
     // ---- x write: the slice by strap rotation, masks by strap thermometer; two registered stages ----
     // W1: rotate by the offset's high bits (a[10:6]), latch the beat's one-hot at g / g + 1 per mask group;
     // W2 (= E3 level): rotate by the low bits, per-bit masks, per-macro write enables.  The rotation is a shifter
@@ -2553,21 +2649,26 @@ module ot_hbm_accel_smh_leaf #(
     // copies -> one kept copy per 64-bit output chunk of each rotation stage (stage 0, h, l, carry mask) => <= ~64 mux
     // loads a copy, <= 8 / <= 7 flop loads on the tree levels.  The data path latency is UNCHANGED (no beat stage
     // added); the straps settle 3 edges after power-up, long before reset releases the first beat.
-    localparam integer CK  = 64;
+`ifdef OT_SMH_FAN32
+    localparam integer CK = 4, LCK = 2, SMID = 32;
+`else
+    localparam integer CK = 64, LCK = 64, SMID = 8;
+`endif
+    //
     localparam integer N0K = (NBK + 255 + CK - 1) / CK, N0F = (NBF + 255 + CK - 1) / CK;
     localparam integer NHK = (NBK + 63 + CK - 1) / CK,  NHF = (NBF + 63 + CK - 1) / CK;
-    localparam integer NLK = (NBK + CK - 1) / CK,       NLF = (NBF + CK - 1) / CK;
+    localparam integer NLK = (NBK + LCK - 1) / LCK,     NLF = (NBF + LCK - 1) / LCK;
     localparam integer NA1 = N0K + NHK + 2 * NLK, NA2 = N0F + NHF + 2 * NLF;
     (* keep *) reg [10:0] a1p;
     (* keep *) reg [10:0] a2p;
     (* keep *) reg [4:0] g1p;
     (* keep *) reg [4:0] g2p;
     always @(posedge clk) begin a1p <= {xs_a1, {G1S{1'b0}}}; a2p <= {xs_a2, {G2S{1'b0}}}; g1p <= xs_g1; g2p <= xs_g2; end
-    wire [8*11-1:0] a1m, a2m;
+    wire [SMID*11-1:0] a1m, a2m;
     wire [NA1*11-1:0] a1c;
     wire [NA2*11-1:0] a2c;
     genvar sk;
-    generate for (sk = 0; sk < 8; sk = sk + 1) begin : g_sm
+    generate for (sk = 0; sk < SMID; sk = sk + 1) begin : g_sm
         (* keep *) reg [10:0] q1;
         (* keep *) reg [10:0] q2;
         always @(posedge clk) begin q1 <= a1p; q2 <= a2p; end
@@ -2577,15 +2678,15 @@ module ot_hbm_accel_smh_leaf #(
         (* keep *) reg [10:0] q;
 `ifdef OT_SMH_MUT_SFAN
         // negative control: stage-0 chunk 0's copy rotates by one 256-b step too far
-        always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11] + ((sk == 0) ? 11'd256 : 11'd0);
+        always @(posedge clk) q <= a1m[(sk % SMID)*11 +: 11] + ((sk == 0) ? 11'd256 : 11'd0);
 `else
-        always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11];
+        always @(posedge clk) q <= a1m[(sk % SMID)*11 +: 11];
 `endif
         assign a1c[sk*11 +: 11] = q;
     end endgenerate
     generate for (sk = 0; sk < NA2; sk = sk + 1) begin : g_s2
         (* keep *) reg [10:0] q;
-        always @(posedge clk) q <= a2m[(sk % 8)*11 +: 11];
+        always @(posedge clk) q <= a2m[(sk % SMID)*11 +: 11];
         assign a2c[sk*11 +: 11] = q;
     end endgenerate
     wire [4095:0] dd = {b_d, b_d};
@@ -2654,24 +2755,24 @@ module ot_hbm_accel_smh_leaf #(
         wa1  <= wa0;
     end
     // stage l (a[5:0]) and the carry mask (1 where the field bit is in beat g + 1), chunked as stage 0
-    wire [NLK*CK+63:0] blk1x = {{(NLK*CK+64-(NBK+63)){1'b0}}, blk1};
-    wire [NLF*CK+63:0] bf1x  = {{(NLF*CK+64-(NBF+63)){1'b0}}, bf1};
-    wire [NLK*CK-1:0] blk_l, blk_c;
-    wire [NLF*CK-1:0] bf_l, bf_c;
+    wire [NLK*LCK+63:0] blk1x = {{(NLK*LCK+64-(NBK+63)){1'b0}}, blk1};
+    wire [NLF*LCK+63:0] bf1x  = {{(NLF*LCK+64-(NBF+63)){1'b0}}, bf1};
+    wire [NLK*LCK-1:0] blk_l, blk_c;
+    wire [NLF*LCK-1:0] bf_l, bf_c;
     generate for (sk = 0; sk < NLK; sk = sk + 1) begin : g_rlk
         wire [10:0] a = a1c[(N0K + NHK + sk)*11 +: 11];
         wire [10:0] ac = a1c[(N0K + NHK + NLK + sk)*11 +: 11];
-        assign blk_l[sk*CK +: CK] = blk1x[sk*CK + a[RH-1:0] +: CK];
-        for (genvar ci = 0; ci < CK; ci = ci + 1) begin : g_c
-            assign blk_c[sk*CK + ci] = ({21'd0, ac} + 32'(sk*CK + ci)) >= 32'd2048;
+        assign blk_l[sk*LCK +: LCK] = blk1x[sk*LCK + a[RH-1:0] +: LCK];
+        for (genvar ci = 0; ci < LCK; ci = ci + 1) begin : g_c
+            assign blk_c[sk*LCK + ci] = ({21'd0, ac} + 32'(sk*LCK + ci)) >= 32'd2048;
         end
     end endgenerate
     generate for (sk = 0; sk < NLF; sk = sk + 1) begin : g_rlf
         wire [10:0] a = a2c[(N0F + NHF + sk)*11 +: 11];
         wire [10:0] ac = a2c[(N0F + NHF + NLF + sk)*11 +: 11];
-        assign bf_l[sk*CK +: CK] = bf1x[sk*CK + a[RH-1:0] +: CK];
-        for (genvar ci = 0; ci < CK; ci = ci + 1) begin : g_c
-            assign bf_c[sk*CK + ci] = ({21'd0, ac} + 32'(sk*CK + ci)) >= 32'd2048;
+        assign bf_l[sk*LCK +: LCK] = bf1x[sk*LCK + a[RH-1:0] +: LCK];
+        for (genvar ci = 0; ci < LCK; ci = ci + 1) begin : g_c
+            assign bf_c[sk*LCK + ci] = ({21'd0, ac} + 32'(sk*LCK + ci)) >= 32'd2048;
         end
     end endgenerate
     wire [SLW-1:0] wd_n = {bf_l[NBF-1:0], blk_l[NBK-1:0]};
@@ -2732,7 +2833,11 @@ module ot_hbm_accel_smh_leaf #(
 `else
         assign rce3 = rce2; assign wce3 = wce2; assign ra3 = ra2; assign wa3 = wa2; assign wd3 = wd2; assign wm3 = wm2;
 `endif
+`ifdef OT_SMH_SRAM_P192
+        ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_x (
+`else
         ot_sram_1r1w_128x256_m1_r2c2 u_x (
+`endif
             .clk(clk), .r_ce_in(rce3), .r_addr_in(ra3), .rd_out(xrd[256*m +: 256]),
             .w_ce_in(wce3), .w_addr_in(wa3), .wd_in(wd3), .w_mask_in(wm3),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
@@ -2759,6 +2864,19 @@ module ot_hbm_accel_smh_leaf #(
     // front's registered output (its j stage became the column input pin flops: 0 cycles)
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
+`ifdef OT_SMH_XSE
+    // HF-5b 2026-10-18 OT_SMH_XSE: the BF16 column's (E face) copy of the shared control is its OWN kept register
+    // (same D, same edge: 0 cycles, identical values).  Was one flop driving both the N pin (x 123) and the E pin
+    // (x 302, y 141): xs native audit launch o_itag_e 229 ps > 220 (closed view smh_xs_ref_p45m da183de3c).
+`ifdef OT_SMH_MUT_XSE
+    localparam [TAGW-1:0] XSE_MUT = 1;  // negative control: the E copy registers tag bit 0 inverted
+`else
+    localparam [TAGW-1:0] XSE_MUT = 0;
+`endif
+    // a kreg instance (keep_hierarchy): synthesis never merges it back into the N copy
+    ot_hbm_accel_smh_kreg #(.W(2+TAGW)) u_ctle (.clk(clk), .rst_n(1'b1), .en(1'b1),
+        .d({c3bd[CW-3], c3bd[CW-4], c3bd[TAGW-1:0] ^ XSE_MUT}), .q({o_ifirst_e, o_ilast_e, o_itag_e}));
+`endif
 `else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;
     reg [TAGW-1:0]   jtag;
@@ -2951,12 +3069,22 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
     output wire o_ifirst_e, output wire o_ilast_e, output wire [TAGW-1:0] o_itag_e
 );
     localparam integer XW = 7, CW = 6 + TAGW, WSW = 788, RBW = CW + WSW + 1 + XW, BBW = 1 + XW + NBEAT + 2048, NG = 25;
+`ifndef OT_SMH_XSE
     assign o_ifirst_e = o_ifirst; assign o_ilast_e = o_ilast; assign o_itag_e = o_itag;
+`endif
+`ifdef OT_SMH_XSRST
+    // Face reset landing: only the data pin of rst_l0 sees the raw port.
+    (* keep = "true" *) reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_a; rst_l1 <= rst_l0; end
+    wire rst_face = rst_l1;
+`else
+    wire rst_face = rst_a;
+`endif
     wire rl_n;
 `ifdef OT_SMH_RSTRELAY
-    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rl_n));
+    ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_face), .rst_n(rl_n));
 `else
-    assign rl_n = rst_a;
+    assign rl_n = rst_face;
 `endif
     // input lockups (el1011-hbm-smh, xs -cal route: -72 ps hold at the u_bkd2 landing, TNS -54 ns): the 2,900 landing bits
     // hop 21.6 um from pt_w's posedge launch flops on a DIFFERENT clock tree; a NEGEDGE stage at the pins gives every bit a
@@ -2984,11 +3112,15 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
         ot_hbm_accel_smh_kreg #(.W(NBEAT)) u (.clk(clk), .rst_n(rl_n), .en(1'b1), .d(ohl), .q(ohr[gi*NBEAT +: NBEAT]));
     end endgenerate
     ot_hbm_accel_smh_leaf #(.TAGW(TAGW), .NBEAT(NBEAT)) u_leaf (
-        .clk(clk), .rst_a(rst_a), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
+        .clk(clk), .rst_a(rst_face), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
         .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
         .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .ohr(ohr),
         .o_iv_b(o_iv_b), .o_iv_f(o_iv_f), .o_ifirst(o_ifirst), .o_ilast(o_ilast), .o_ifp4(o_ifp4), .o_itag(o_itag),
-        .o_iw(o_iw), .o_ix(o_ix));
+        .o_iw(o_iw), .o_ix(o_ix)
+`ifdef OT_SMH_XSE
+        , .o_ifirst_e(o_ifirst_e), .o_ilast_e(o_ilast_e), .o_itag_e(o_itag_e)
+`endif
+        );
 endmodule
 
 // the block-dot column: the leaf's j stage as input pin flops, then ot_hbm_accel_smh_bd_col (unchanged)
@@ -3532,4 +3664,36 @@ module ot_hbm_accel_smh_strap_region #(parameter integer W = 26, parameter integ
     end
     // Negative control corrupts one offset bit at the final regional station.
     assign q = s4 ^ {{(W-1){1'b0}}, (MUT != 0)};
+endmodule
+
+// Opt-in source-owned macro-address capture. Clock-region hardening remains a
+// separate requirement; this module alone does not qualify the failed tree.
+(* keep_hierarchy="yes" *)
+module ot_hbm_accel_smh_ring_raddr(input wire clk,rst_n,input wire[1:0]slot,output wire[1:0]addr);
+    (* keep="true",dont_touch="true" *)reg[1:0]a;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)a<=2'd3;
+`ifdef OT_SMH_MUT_XSRING
+        else a<=slot-2'd1;
+`else
+        else a<=slot;
+`endif
+    assign addr=a;
+endmodule
+
+// LH-SMATT/XS 10-19: opt-in macro-local WRITE-address capture (OT_SMH_RING_LOCAL_WADDR). The old negedge wa_n sampled
+// slot s_t half a cycle before the macro write edge; slot + 1 captured at the preceding posedge is the same s_t (mod 4),
+// and the reset value 0 equals the old wa_n while the slot counter is held at 0. Full-cycle posedge launch beside its
+// macro; no data edge added.
+(* keep_hierarchy="yes" *)
+module ot_hbm_accel_smh_ring_waddr(input wire clk,rst_n,input wire[1:0]slot,output wire[1:0]addr);
+    (* keep="true",dont_touch="true" *)reg[1:0]a;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)a<=2'd0;
+`ifdef OT_SMH_MUT_XSRING_W
+        else a<=slot;
+`else
+        else a<=slot+2'd1;
+`endif
+    assign addr=a;
 endmodule

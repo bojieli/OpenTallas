@@ -1,0 +1,319 @@
+[
+ {
+  "counts": {
+   "consumer": 0,
+   "ecap": 33,
+   "epay": 32,
+   "esrc": 3,
+   "estage": 3,
+   "esync1": 3,
+   "mem": 8736,
+   "rst": 20,
+   "rstage": 2184,
+   "src": 20,
+   "stage": 20,
+   "sync1": 20
+  },
+  "event_groups_diagnostic": {
+   "captures": [
+    "u_rank__fence_landed",
+    "u_rank__u_fence.g_on.fh"
+   ],
+   "counts": {
+    "ecap": 33,
+    "epay": 32,
+    "esrc": 3,
+    "estage": 3,
+    "esync1": 3
+   },
+   "verdict": "PASS"
+  },
+  "events": {
+   "fence_ack": {
+    "dst_domain": "core",
+    "payload_bits": 0,
+    "payload_max_delay_ps": 0.0,
+    "seen": 0,
+    "src_domain": "host",
+    "sync_max_delay_ps": 773.333,
+    "width": 1
+   },
+   "fence_fault": {
+    "dst_domain": "host",
+    "payload_bits": 0,
+    "payload_max_delay_ps": 0.0,
+    "seen": 0,
+    "src_domain": "core",
+    "sync_max_delay_ps": 773.333,
+    "width": 1
+   },
+   "fence_req": {
+    "dst_domain": "host",
+    "payload_bits": 32,
+    "payload_max_delay_ps": 940.0,
+    "seen": 1,
+    "src_domain": "core",
+    "sync_max_delay_ps": 773.333,
+    "width": 1
+   }
+  },
+  "fifos": {
+   "f0": {
+    "module": "ot_qwen_async_fifo_w",
+    "reader": "core",
+    "scope": "u_rank__u_bridge__u_done.g_afw.u_af",
+    "writer": "host"
+   },
+   "f1": {
+    "module": "ot_qwen_async_fifo_w",
+    "reader": "host",
+    "scope": "u_rank__u_bridge__u_ing.g_afw.u_af",
+    "writer": "core"
+   }
+  },
+  "inputs": {
+   "core": [
+    "host_rst_n",
+    "u_rank__done_cr",
+    "u_rank__u_bridge__qd",
+    "u_rank__u_bridge__qv",
+    "u_rank__global_prefix_v"
+   ],
+   "host": [
+    "u_rank__qm_crn",
+    "u_rank__qm_t_d",
+    "u_rank__qm_t_v"
+   ]
+  },
+  "macros": {},
+  "notes": [
+   "input host_rst_n sampled by families ['core', 'host'] ([('core', 'R'), ('host', 'R')])"
+  ],
+  "outputs": {
+   "core": [
+    "u_rank__done_d",
+    "u_rank__done_v",
+    "u_rank__u_bridge__qcr",
+    "service_faults_core"
+   ],
+   "host": [
+    "u_rank__qm_d",
+    "u_rank__qm_cls",
+    "u_rank__qm_v",
+    "u_rank__qm_t_cr",
+    "service_faults_host"
+   ]
+  },
+  "resets": 10,
+  "top": "qkd_hr_cdc_host",
+  "verdict": "PASS"
+ },
+ {
+  "counts": {
+   "consumer": 3889,
+   "ecap": 9,
+   "epay": 9,
+   "esrc": 4,
+   "estage": 5,
+   "esync1": 4,
+   "gated": 4644,
+   "lsrc": 0,
+   "macro": 32,
+   "mem": 13872,
+   "rst": 6,
+   "rstage": 0,
+   "src": 30,
+   "stage": 30,
+   "sync1": 30
+  },
+  "events": {
+   "qm_csr": {
+    "dst_domain": "core",
+    "payload_bits": 9,
+    "payload_max_delay_ps": 773.333,
+    "seen": 0,
+    "src_domain": "ingest",
+    "sync_max_delay_ps": 773.333,
+    "width": 1
+   },
+   "qm_fault": {
+    "dst_domain": "core",
+    "payload_bits": 0,
+    "payload_max_delay_ps": 0.0,
+    "seen": 0,
+    "src_domain": "ingest",
+    "sync_max_delay_ps": 773.333,
+    "width": 1
+   },
+   "qm_fault_h": {
+    "dst_domain": "host",
+    "payload_bits": 0,
+    "payload_max_delay_ps": 0.0,
+    "seen": 0,
+    "src_domain": "ingest",
+    "sync_max_delay_ps": 940.0,
+    "width": 1
+   },
+   "qm_hov": {
+    "dst_domain": "ingest",
+    "payload_bits": 0,
+    "payload_max_delay_ps": 0.0,
+    "seen": 0,
+    "src_domain": "host",
+    "sync_max_delay_ps": 940.0,
+    "width": 1
+   }
+  },
+  "fifos": {
+   "f0": {
+    "module": "ot_link_afifo",
+    "reader": "host",
+    "scope": "u_rank__u_qm.u_cx",
+    "writer": "ingest"
+   },
+   "f1": {
+    "module": "ot_link_afifo",
+    "reader": "ingest",
+    "scope": "u_rank__u_qm.u_hx",
+    "writer": "host"
+   },
+   "f2": {
+    "module": "ot_link_afifo",
+    "reader": "core",
+    "scope": "u_rank__u_qm.u_ox",
+    "writer": "ingest"
+   }
+  },
+  "inputs": {
+   "core": [
+    "host_rst_n",
+    "u_rank__ocr"
+   ],
+   "host": [
+    "u_rank__qm_d",
+    "u_rank__qm_cls",
+    "u_rank__qm_v",
+    "u_rank__qm_t_cr"
+   ]
+  },
+  "macros": {
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[0].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[0].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[10].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[10].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[11].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[11].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[12].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[12].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[13].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[13].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[14].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[14].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[15].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[15].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[1].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[1].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[2].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[2].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[3].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[3].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[4].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[4].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[5].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[5].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[6].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[6].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[7].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[7].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[8].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[8].u_mv": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[9].u_mk": "ingest",
+   "u_rank__u_qm.u_eng.g_qp.g_bm.g_mb[9].u_mv": "ingest"
+  },
+  "notes": [
+   "input host_rst_n sampled by families ['core', 'host', 'ingest'] ([('core', 'R'), ('host', 'R'), ('ingest', 'R')])"
+  ],
+  "outputs": {
+   "core": [
+    "service_faults",
+    "u_rank__ov",
+    "u_rank__owe",
+    "u_rank__oa",
+    "u_rank__od",
+    "host_upstream_quiet_core"
+   ],
+   "host": [
+    "u_rank__qm_crn",
+    "u_rank__qm_t_d",
+    "u_rank__qm_t_v",
+    "host_upstream_quiet_host"
+   ],
+   "ingest": [
+    "host_upstream_quiet_ingest"
+   ]
+  },
+  "resets": 3,
+  "top": "qkd_hr_ingest_qm",
+  "verdict": "PASS"
+ },
+ {
+  "counts": {
+   "consumer": 0,
+   "mem": 8736,
+   "rst": 16,
+   "rstage": 2184,
+   "src": 20,
+   "stage": 20,
+   "sync1": 20
+  },
+  "events": {},
+  "fifos": {
+   "f0": {
+    "module": "ot_qwen_async_fifo_w",
+    "reader": "core",
+    "scope": "u_rank__u_phy__u_rx.g_afw.u_af",
+    "writer": "phy"
+   },
+   "f1": {
+    "module": "ot_qwen_async_fifo_w",
+    "reader": "phy",
+    "scope": "u_rank__u_phy__u_tx.g_afw.u_af",
+    "writer": "core"
+   }
+  },
+  "inputs": {
+   "core": [
+    "host_rst_n",
+    "u_rank__raw_rx_cr",
+    "u_rank__physical_tx_d",
+    "u_rank__physical_tx_v"
+   ],
+   "phy": [
+    "u_rank__d_ccr",
+    "u_rank__u_phy__pad_d",
+    "u_rank__u_phy__pad_v"
+   ]
+  },
+  "macros": {},
+  "notes": [
+   "input host_rst_n sampled by families ['core', 'phy'] ([('core', 'R'), ('phy', 'R')])"
+  ],
+  "outputs": {
+   "core": [
+    "u_rank__raw_rx_d",
+    "u_rank__raw_rx_v",
+    "u_rank__physical_tx_cr",
+    "service_faults_core"
+   ],
+   "phy": [
+    "u_rank__d_cd",
+    "u_rank__d_cv",
+    "u_rank__u_phy__pad_cr",
+    "service_faults_phy"
+   ]
+  },
+  "resets": 8,
+  "top": "qkd_hr_cdc_pc",
+  "verdict": "PASS"
+ }
+]

@@ -1,0 +1,69 @@
+{
+  "status": "FANOUT_PASS_PHYSICAL_QUALIFICATION_PENDING_ASSERTION_EPOCH_STATE_REMOVE",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-1819482-1792432562",
+  "netlist_sha256": "f72710828a5c04b06bbbcbc75b8c60ecc5c607b5d32cbf68e1a68133854b5a7e",
+  "kept_soft_hierarchy_expanded": true,
+  "primitive_cells": 432074,
+  "cell_types": {
+    "$_DFFE_PN0P_": 151,
+    "$_DFFE_PN1P_": 34,
+    "$_DFF_PN0_": 630,
+    "$_DFF_P_": 44655,
+    "$_NOT_": 20142,
+    "$_OR_": 82237,
+    "$_AND_": 129102,
+    "$_XOR_": 38175,
+    "$_MUX_": 70024,
+    "$scopeinfo": 3295,
+    "$_SDFF_PN0_": 16880,
+    "$_SDFFE_PN0P_": 859,
+    "$_SDFF_PN1_": 1780,
+    "$_DFFE_PP_": 21300,
+    "$_SDFF_PP0_": 2672,
+    "$_SDFF_PP1_": 96,
+    "ot_sram_1r1w_32x64_m1": 42
+  },
+  "flops": 89057,
+  "reset_max_all_pins": 32,
+  "driven_nets_over32_count": 0,
+  "register_outputs_over32": [],
+  "issues": [],
+  "worst_generic_depth": [
+    {
+      "cell": "g_sc[0].u_mul.g_exact.u_d.u_289.$auto$ff.cc:337:slice$319047",
+      "pin": "D",
+      "bit": 245893,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[681]",
+        "g_sc[0].u_mul.g_exact.u_d.u_289.D"
+      ]
+    },
+    {
+      "cell": "g_sc[0].u_mul.g_exact.u_d.u_290.$auto$ff.cc:337:slice$319046",
+      "pin": "D",
+      "bit": 245894,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[682]",
+        "g_sc[0].u_mul.g_exact.u_d.u_290.D"
+      ]
+    },
+    {
+      "cell": "g_sc[0].u_mul.g_exact.u_d.u_293.$auto$ff.cc:337:slice$319043",
+      "pin": "D",
+      "bit": 245897,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[685]",
+        "g_sc[0].u_mul.g_exact.u_d.u_293.D"
+      ]
+    }
+  ],
+  "prefix_flops": 4482,
+  "prefix_unused_outputs": 0,
+  "prefix_constant_data_flops": 0,
+  "assertion_only_epoch_unread_flops": 9900,
+  "scope": "No native timing/physical credit; shared local writer assertion epoch outputs retain9900unread FF until explicit SYNTHESIS guard; count actual89057 includes them"
+}

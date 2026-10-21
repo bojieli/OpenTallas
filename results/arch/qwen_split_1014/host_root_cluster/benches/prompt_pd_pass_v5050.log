@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   239 GB (avail 443, growth 275, headroom 0, waiters 0/0 GB) load 162/128 running 34 disk 1548 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-133050-1792403143 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+HKV_PD_EQUIV cycles=120000 reads=58952 flips=15608 mismatches=0 fault_seen=1
+HKV_PD_EQUIV PASS
+- rtl/test/qwen_host/tb_hkv_prompt_pd_equiv.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 240us; walltime 0.258 s; speed 930.050 us/s
+- Verilator: cpu 0.257 s on 1 threads; allocated 7 MB
+HKV_CNT_LA cycles=200000 q1=86908 q2_wraps=169 mismatches=0
+HKV_CNT_LA PASS
+- rtl/test/qwen_host/tb_hkv_cnt_la.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 0.087 s; speed 4.585 ms/s
+- Verilator: cpu 0.071 s on 1 threads; allocated 7 MB
+HKV_PROMPT_PD PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-133050-1792403143): exit 0

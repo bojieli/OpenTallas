@@ -1,0 +1,2036 @@
+{
+  "collected_at": "2026-10-19T20:32:38.534414+00:00",
+  "source_commit": "715e572ace085894f342b4dfda2d302cb93f1165",
+  "top_legs": [
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_F0.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_F1.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_F2.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_FACES1.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_FACES4.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_G0.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_G1.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_G2.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_H1.out",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "witnesses": [],
+      "tail": []
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_H4.out",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "witnesses": [],
+      "tail": []
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_N0.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_N1.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_N2.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi.out",
+      "bytes": 630,
+      "sha256": "f851fa118a96f0edcbfa7763519c260b403693a78effcca7fa18f6cc40e67774",
+      "witnesses": [
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227",
+        "COLL_TP8SL PASS cases=2 latu=53 lats=378"
+      ],
+      "tail": [
+        "COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378",
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227",
+        "COLL_TP8SL PASS cases=2 latu=53 lats=378"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_dv2f14bi_diagnostic.out",
+      "bytes": 650,
+      "sha256": "bea412ba11973f7b949ac88f9da490c5052e4dd457e0e8519ced44b0a152955f",
+      "witnesses": [
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=61424 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=22512 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227",
+        "COLL_TP8SL FAIL failed=mu_window,mu_window_ref_user0"
+      ],
+      "tail": [
+        "COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378",
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=61424 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=22512 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227",
+        "COLL_TP8SL FAIL failed=mu_window,mu_window_ref_user0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_mut_rank.out",
+      "bytes": 427,
+      "sha256": "2b23cc8d48838e0de1eddd67453692655de911805712af81888b1e86eb5e0a09",
+      "witnesses": [
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=42288 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+      ],
+      "tail": [
+        "COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378",
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=42288 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_mut_rlat.out",
+      "bytes": 427,
+      "sha256": "21029ff9e49b3276efd744c4d165fdcf01ae7740a5661b2ab08e8437a363eee1",
+      "witnesses": [
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=30720 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+      ],
+      "tail": [
+        "COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378",
+        "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=30720 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_neg_overlap.out",
+      "bytes": 424,
+      "sha256": "68a0f60f03a126e109ed926aa5c035a199c07326d0d2b56d538730f48a541d68",
+      "witnesses": [
+        "case mu_window_neg_overlap kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=58376 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=59392 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+      ],
+      "tail": [
+        "COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378",
+        "case mu_window_neg_overlap kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=58376 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=59392 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138",
+        "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+      "bytes": 2139,
+      "sha256": "f4321abf8c407cc88f14c590c6d33146be678a0a4cdc34d34c4240845a5e4e77",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050",
+        "OK   mu_m0: MU_CTLM_PASS mut 0",
+        "OK   mu_m16: MU_CTLM_FAIL mut 16: mu4 C3 cmd words != compiled (missing 27 e.g. [(3039, 1, 77884452878022414430209536826542085), (4760, 2, 77884452878022414432461611518134277)]; extra 27 e.g. [(3039, 1, 77884452878022414427957737012856837), (4760, 2, 77884452878022414427958011890763781)])",
+        "OK   mu_m17: MU_CTLM_FAIL mut 17: C2 latency user sua differs mu4 vs solo1 (24/93; first diffs [(2836, 8), (2844, 9), (3902, 8), (6202, 9)])",
+        "OK   mu_m18: MU_CTLM_FAIL mut 18: mu4 C4 SEG base/tok/pos != compiled (missing 12 e.g. [(4302, 16, 4352, 512), (6024, 16, 4625, 528)]; extra 12 e.g. [(4302, 16, 4625, 528), (6024, 16, 4898, 544)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 0, 1, 2), (16353, 0, 2, 3), (23239, 0, 3, 37)]",
+        "OK   mu_m19: MU_CTLM_FAIL mut 19: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user mes differs mu4 vs solo1 (3/12; first diffs [(3023, 4625, 528), (4744, 4898, 544)]) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | mu4 C4 MES (ME programme start) != compiled (missing 0 e.g. []; extra 9 e.g. [(3023, 4625, 528), (4744, 4898, 544)])",
+        "OK   mu_m20: MU_CTLM_FAIL mut 20: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 3, 2, 1), (16353, 3, 3, 2), (23239, 3, 37, 3)]",
+        "MU_CTLM BENCHES: PASS",
+        "# exit 0"
+      ],
+      "tail": [
+        "OK   mu_m19: MU_CTLM_FAIL mut 19: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user mes differs mu4 vs solo1 (3/12; first diffs [(3023, 4625, 528), (4744, 4898, 544)]) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | mu4 C4 MES (ME programme start) != compiled (missing 0 e.g. []; extra 9 e.g. [(3023, 4625, 528), (4744, 4898, 544)])",
+        "OK   mu_m20: MU_CTLM_FAIL mut 20: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 3, 2, 1), (16353, 3, 3, 2), (23239, 3, 37, 3)]",
+        "MU_CTLM BENCHES: PASS",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12.out",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+      "bytes": 1067,
+      "sha256": "e675115c56414e9ce9acd18b276d5d60e78b3095d14b9307f95e7dac06af46c7",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050",
+        "OK   prog_m0: CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: PASS 84/84  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]",
+        "OK   prog_m0_landed: LANDED_LOCKSTEP PASS LMUT=0 compared=18071 mismatches=0 active=1198",
+        "OK   prog_m1: CTLM_PROG MUT=1 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: FAIL 40/84  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]",
+        "OK   lp_audit: AUDIT PASS",
+        "OK   lp_unland: AUDIT-UNLAND FAIL (expected)",
+        "OK   lp_m0: MUT 0: LP_LOCKSTEP PASS",
+        "OK   lp_m1: MUT 1: LP_LOCKSTEP FAIL",
+        "OK   lp_m2: MUT 2: LP_LOCKSTEP FAIL",
+        "INFO lp_m4 (waived, not observable): MUT 4: LP_LOCKSTEP PASS",
+        "OK   eq_m0_o0: LPF_EQ PASS DMUT=0 compared=3979",
+        "OK   eq_m5_o0: LPF_EQ FAIL DMUT=5 mismatches=1983 of 3979",
+        "OK   eq_m6_o0: LPF_EQ FAIL DMUT=6 mismatches=3979 of 3979",
+        "OK   eq_m0_o1: LPF_EQ PASS DMUT=0 compared=3979",
+        "OK   eq_m5_o1: LPF_EQ FAIL DMUT=5 mismatches=2017 of 3979",
+        "OK   eq_m29_o1: LPF_EQ FAIL DMUT=29 mismatches=1366 of 3979",
+        "OK   seq: MU_SEQ BENCHES: PASS",
+        "MU_CTLM BENCHES: PASS",
+        "# exit 0"
+      ],
+      "tail": [
+        "OK   eq_m29_o1: LPF_EQ FAIL DMUT=29 mismatches=1366 of 3979",
+        "OK   seq: MU_SEQ BENCHES: PASS",
+        "MU_CTLM BENCHES: PASS",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+      "bytes": 1094,
+      "sha256": "d3ea478c0ee7ce5d0fbc72a8ecd34668ee911866a193d1054aaab847a409ba5a",
+      "witnesses": [
+        "amax_mut1_ge want=FAIL OK :: TB_AMAX_MU FAIL MUT=1 NEG=0 seed=1 (eq 0, mismatches 338, mu_fault 0, emit_empty 0)",
+        "amax_mut2_xtalk want=FAIL OK :: TB_AMAX_MU FAIL MUT=2 NEG=0 seed=1 (eq 0, mismatches 416, mu_fault 0, emit_empty 0)",
+        "amax_mut3_clrall want=FAIL OK :: TB_AMAX_MU FAIL MUT=3 NEG=0 seed=1 (eq 0, mismatches 370, mu_fault 0, emit_empty 128)",
+        "amax_mut4_emitu want=FAIL OK :: TB_AMAX_MU FAIL MUT=4 NEG=0 seed=1 (eq 0, mismatches 388, mu_fault 1, emit_empty 16)",
+        "amax_neg_clear want=FAIL OK :: TB_AMAX_MU FAIL MUT=0 NEG=1 seed=1 (eq 0, mismatches 1, mu_fault 1, emit_empty 0)",
+        "amax_pass_s1 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=1",
+        "amax_pass_s2 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=2",
+        "amax_pass_s3 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=3",
+        "user_mut1_late want=FAIL OK :: TB_USER_EVENT FAIL MUT=1 seed=1",
+        "user_mut2_nochk want=FAIL OK :: TB_USER_EVENT FAIL MUT=2 seed=1",
+        "user_mut3_nu1 want=FAIL OK :: TB_USER_EVENT FAIL MUT=3 seed=1",
+        "user_pass_s1 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=1",
+        "user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2",
+        "overall rc=0"
+      ],
+      "tail": [
+        "user_mut3_nu1 want=FAIL OK :: TB_USER_EVENT FAIL MUT=3 seed=1",
+        "user_pass_s1 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=1",
+        "user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2",
+        "overall rc=0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+      "bytes": 7939,
+      "sha256": "8edfd91d57142170bf56f55c054b25b8c30b4d3ee215a06a8d5a5caad8d81d0e",
+      "witnesses": [
+        "HOST_MU cm1 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop",
+        "HOST_MU cm2 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop",
+        "HOST_MU cm3 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop",
+        "HOST_MU cm4 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop",
+        "HOST_MU cm5 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop",
+        "HOST_MU hm1 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop",
+        "HOST_MU hm2 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop",
+        "HOST_MU hm3 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop",
+        "HOST_MU hm4 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop",
+        "HOST_MU rm1 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_kv_mu_rowoff.sv:79: Verilog $stop",
+        "HOST_MU rm2 rc=1 src: %Error: rtl/test/mu_qwen_1018/tb_qkd_kv_mu_rowoff.sv:94: Verilog $stop",
+        "HOST_MU tb_qkd_ctrl8_composed rc=0 head: PASS CTRL8_COMPOSED checks=162 steps=40",
+        "HOST_MU tb_qkd_ctrl8_composed rc=0 src: PASS CTRL8_COMPOSED checks=162 steps=40",
+        "HOST_MU tb_qkd_host_control_capture rc=0 head: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent",
+        "HOST_MU tb_qkd_host_control_capture rc=0 src: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent",
+        "HOST_MU tb_qkd_host_control_composed rc=0 head: PASS actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent",
+        "HOST_MU tb_qkd_host_control_composed rc=0 src: PASS actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent",
+        "HOST_MU tb_qkd_host_control_prompt rc=0 head: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_control_prompt rc=0 src: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_control_role rc=0 head: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent",
+        "HOST_MU tb_qkd_host_control_role rc=0 src: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent",
+        "HOST_MU tb_qkd_host_control_service rc=0 head: PASS service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent",
+        "HOST_MU tb_qkd_host_control_service rc=0 src: PASS service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent",
+        "HOST_MU tb_qkd_host_control_token_service rc=0 head: PASS token service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent",
+        "HOST_MU tb_qkd_host_control_token_service rc=0 src: PASS token service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent",
+        "HOST_MU tb_qkd_host_ctl rc=0 head: PASS qkd_host_ctl exact checks=1375 starts=43 tokens=40 stale=320 drain=320",
+        "HOST_MU tb_qkd_host_ctl rc=0 src: PASS qkd_host_ctl exact checks=1375 starts=43 tokens=40 stale=320 drain=320",
+        "HOST_MU tb_qkd_host_ctl_mu rc=0 src: PASS qkd_host_ctl MU users4 steps400 in-order one-edge retire after all 8 dies, hc user=pos[17:16], max outstanding 4; faults die-skip/disagree/overflow/watchdog/unknown-gen fail closed and flush",
+        "HOST_MU tb_qkd_host_fullcontrol rc=0 head: PASS full host FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_fullcontrol rc=0 src: PASS full host FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_fullcontrol_packet rc=0 head: PASS full actual HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_fullcontrol_packet rc=0 src: PASS full actual HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_mu_out rc=0 src: PASS host MU_OUT users4 steps18 CQ entries12 per-user in order (slot/tag/pos/token/ngen/kind), hc user=pos[17:16], max outstanding 4, no fault",
+        "HOST_MU tb_qkd_host_program_loader rc=0 head: PASS program loader production1024pw8dw fixed1032cycles actual HC authorization staleauth rejection",
+        "HOST_MU tb_qkd_host_program_loader rc=0 src: PASS program loader production1024pw8dw fixed1032cycles actual HC authorization staleauth rejection",
+        "HOST_MU tb_qkd_host_prompt_packet rc=0 head: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_prompt_packet rc=0 src: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4",
+        "HOST_MU tb_qkd_host_prompt_ue rc=0 head: PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075",
+        "HOST_MU tb_qkd_host_prompt_ue rc=0 src: PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075",
+        "HOST_MU tb_qkd_kv_mu_rowoff rc=0 src: PASS users4 x stages36 x positions8192 identities1179648 sectors9437184 unique-addresses9437184 alias0 inverse{user,layer,pos,kind,dim}+raw256 exact; read rows 576/1728 commands, tag row[7:0]-64=layer, embedding/go/write unchanged; MU0 wires",
+        "# exit 0"
+      ],
+      "tail": [
+        "  tb_qkd_host_program_loader identical",
+        "  tb_qkd_host_prompt_packet identical",
+        "  tb_qkd_host_prompt_ue identical",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+      "bytes": 1720,
+      "sha256": "bb3ea494e86fcb9c3b2da2e3070a1cd4aa66079275da11dd961f7e48b6f88613",
+      "witnesses": [
+        "MU_HROOT al1 rc=0: FAIL MU_HROOT_E2E fails=165273 retires=0 requests=1 writer_stages=1",
+        "MU_HROOT al2 rc=0: FAIL MU_HROOT_E2E fails=169370 retires=0 requests=1 writer_stages=1",
+        "MU_HROOT ep1 rc=0: FAIL MU_HROOT_E2E fails=134994 retires=0 requests=1 writer_stages=145",
+        "MU_HROOT ep2 rc=0: FAIL MU_HROOT_E2E fails=18 retires=12 requests=12 writer_stages=432",
+        "MU_HROOT ex_endpoint rc=0: PASS HOST_NATIVE_CANCEL checks=146 requests=27 credits=18",
+        "MU_HROOT ex_endpoint_mu0 rc=0: PASS HOST_NATIVE_CANCEL checks=146 requests=27 credits=18",
+        "MU_HROOT ex_lifecycle rc=0: PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery",
+        "MU_HROOT ex_lifecycle_mu0 rc=0: PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery",
+        "MU_HROOT kp1 rc=0: FAIL MU_HROOT_E2E fails=141141 retires=0 requests=4 writer_stages=1",
+        "MU_HROOT kp2 rc=0: FAIL MU_HROOT_E2E fails=128435 retires=2 requests=4 writer_stages=146",
+        "MU_HROOT kp3 rc=0: FAIL MU_HROOT_COLLIDE: no collision fault (fault=0 code=00)",
+        "MU_HROOT lint_guard_mu: PASS LINT_GUARD_MU qkd_hr_core_guard (u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu, MU 1)",
+        "MU_HROOT tb_mu_hroot_collide rc=0: PASS MU_HROOT_COLLIDE: user 1 on user 0's frame slot -> KV programme collision fault code 10",
+        "MU_HROOT tb_mu_hroot_e2e rc=0: PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order",
+        "MU_HROOT tb_mu_lprg_lockstep rc=0: PASS MU_LPRG_LOCKSTEP seed=7 mu0_cmp=5597 mu1_cmp=5593 events=804 (MU0 == original; MU1 user 0 gap 0 == original)",
+        "MU_HROOT tb_mu_lprg_lockstep_s2 rc=0: PASS MU_LPRG_LOCKSTEP seed=1234 mu0_cmp=5102 mu1_cmp=5098 events=807 (MU0 == original; MU1 user 0 gap 0 == original)",
+        "# exit 0"
+      ],
+      "tail": [
+        "MU_HROOT tb_mu_hroot_e2e rc=0: PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order",
+        "MU_HROOT tb_mu_lprg_lockstep rc=0: PASS MU_LPRG_LOCKSTEP seed=7 mu0_cmp=5597 mu1_cmp=5593 events=804 (MU0 == original; MU1 user 0 gap 0 == original)",
+        "MU_HROOT tb_mu_lprg_lockstep_s2 rc=0: PASS MU_LPRG_LOCKSTEP seed=1234 mu0_cmp=5102 mu1_cmp=5098 events=807 (MU0 == original; MU1 user 0 gap 0 == original)",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+      "bytes": 1459,
+      "sha256": "96f45ad3f8bd078f6931588f060830adeaeb111e19c08b4c3b3ce50cf9828881",
+      "witnesses": [
+        "HOST_MU tb_qkd_kv_mu_rowoff rc=0 src: PASS users4 x stages36 x positions8192 identities1179648 sectors9437184 unique-addresses9437184 alias0 inverse{user,layer,pos,kind,dim}+raw256 exact; read rows 576/1728 commands, tag row[7:0]-64=layer, embedding/go/write unchanged; MU0 wires",
+        "MU0 kvplan_ci_nc_gate rc=0: PASS KVPLAN_CI_NC_LOCKSTEP_EXACT_OBSERVED_MUTANTS_PARENT_ELABORATES",
+        "MU_KV lint_mu_kv_tiles: PASS LINT_MU_KV_TILES qkd_kvs_ctl qkd_kvs_pc qkd_kvs_pc_h (tile file qkd_kvs_tiles_hroot_ff_k_mu.sv)",
+        "MU_KV mk1 rc=0: FAIL MU_KV_READ_ROWS act_bad=144 disjoint_bad=288 rest_mism=0 po_mism=0",
+        "MU_KV mk2 rc=0: FAIL MU_KV_READ_ROWS act_bad=96 disjoint_bad=0 rest_mism=0 po_mism=0",
+        "MU_KV mk3 rc=0: FAIL MU_KV_READ_ROWS act_bad=96 disjoint_bad=64 rest_mism=0 po_mism=0",
+        "MU_KV mw1 rc=1: %Error: rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv:88: Verilog $stop",
+        "MU_KV mw2 rc=1: %Error: rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv:88: Verilog $stop",
+        "MU_KV mw3 rc=1: %Error: rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv:88: Verilog $stop",
+        "MU_KV tb_mu_kv_pc_path_rows rc=0: PASS MU_KV_READ_ROWS users4 layers3 pc13 acts 48/48/48/48 row=64+l+256u exact, users disjoint, all other outputs lockstep with MU0",
+        "MU_KV tb_mu_kv_writer_rows rc=0: PASS MU_KV_WRITE_ROWS users4 x layers36 x positions8192 (stage-interleaved) words4718592 sectors9437184 unique alias0 inverse{user,layer,pos,kind,dim}+raw exact; MU1 == plain writer outside row[9:8]; MU0 wrapper == plain writer",
+        "# exit 0"
+      ],
+      "tail": [
+        "MU_KV mw3 rc=1: %Error: rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv:88: Verilog $stop",
+        "MU_KV tb_mu_kv_pc_path_rows rc=0: PASS MU_KV_READ_ROWS users4 layers3 pc13 acts 48/48/48/48 row=64+l+256u exact, users disjoint, all other outputs lockstep with MU0",
+        "MU_KV tb_mu_kv_writer_rows rc=0: PASS MU_KV_WRITE_ROWS users4 x layers36 x positions8192 (stage-interleaved) words4718592 sectors9437184 unique alias0 inverse{user,layer,pos,kind,dim}+raw exact; MU1 == plain writer outside row[9:8]; MU0 wrapper == plain writer",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+      "bytes": 4581,
+      "sha256": "544c97d0fab39c953c932c7c587106956758a5c3f22f150d0226e0a1b2a411cb",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050",
+        "OK   opseg_m21: MU_OPSEG_FAIL mut 21: red C1 mu faulted: cal [(4394, '000001')] opf [] end (1, '000001', 0, 0, '0000') | red C4 command fires != compiled (got 4607 want 3677; missing 1110 e.g. [(5292, 2, 77884452878022414427957444938305587), (6207, 1, 77884452878022415006670306309834757)]; extra 2040 e.g. [(4826, 2, 77884452878022414427957444938305587), (5023, 1, 77884452878022415006670306309834757)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 280 want 205; missing [(5394, 2, 16, 8738, 8174), (10325, 3, 16, 9011, 8168)]; extra [(4928, 2, 16, 8738, 8174), (6854, 3, 16, 9011, 8168)]) | red C2 latency user dc differs mu vs solo (98/99; first diffs [(4395, '78000000000000'), (18381, '7c000300000051'), (18381, '74000300000051'), (35872, '70000300000051')])",
+        "OK   opseg_m22: MU_OPSEG_FAIL mut 22: neg_coll: required fault not raised at ~6469 (opf log [])",
+        "OK   opseg_m23: MU_OPSEG_FAIL mut 23: red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 102 want 102; missing [(27893, 1, 4099), (43478, 2, 8195)]; extra [(27893, 1, 8465), (43478, 2, 4099)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(28783, 1, 16, 4099, 8181), (40269, 1, 16, 4099, 8181)]; extra [(28783, 1, 16, 8465, 8180), (40269, 1, 16, 8465, 8180)]) | red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27893, 1, 8465), (43478, 2, 4099)])",
+        "OK   opseg_m24: MU_OPSEG_FAIL mut 24: red C1 mu faulted: cal [(18332, '000010')] opf [] end (1, '000010', 0, 0, '0000') | red C3 u_cal starts != compiled playback (1481 vs 1481; missing [(2822, 1, 1, 1, 0, 9), (4393, 1, 1, 1, 12, 1), (4543, 2, 1, 1, 0, 2)]; extra [(2823, 1, 1, 1, 0, 9), (4394, 1, 1, 1, 12, 1), (4544, 2, 1, 1, 0, 2)]) | red C4 command fires != compiled (got 3650 want 3677; missing 1946 e.g. [(2831, 1, 77884452878022414427957444938303507), (2846, 1, 77884452878022418465434807245473797)]; extra 1919 e.g. [(2832, 1, 77884452878022414427957444938303507), (2847, 1, 77884452878022418465434807245473797)]) | red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 102 want 102; missing [(27893, 1, 4099), (43478, 2, 8195)]; extra [(27894, 1, 4099), (43479, 2, 8195)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3208, 1, 16, 8465, 8180), (5395, 2, 16, 8738, 8174)]) | red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27894, 1, 4099), (43479, 2, 8195)]) | red C2 latency user dc differs mu vs solo (98/99; first diffs [(18333, '78000000000000'), (18381, '7c000300000051'), (18381, '74000300000051'), (35872, '70000300000051')])",
+        "OK   opseg_m25: MU_OPSEG_FAIL mut 25: red C3 u_cal starts != compiled playback (547 vs 1481; missing [(19153, 1, 2, 1, 24, 13), (20070, 2, 2, 1, 24, 5), (21448, 3, 1, 1, 24, 5)]; extra []) | red C4 command fires != compiled (got 1781 want 3677; missing 1896 e.g. [(19243, 1, 77884452878022432300492892592408581), (19875, 1, 77884452878022417312513336998365189)]; extra 0 e.g. []) | red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 48 want 102; missing [(27893, 1, 4099), (43478, 2, 8195)]; extra []) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 102 want 205; missing [(28783, 1, 16, 4099, 8181), (31008, 3, 16, 9011, 8168)]; extra []) | red C7 filler EMB != its just-computed token (0 of 0 wrong, want 54; e.g. [])",
+        "OK   opseg_m26: MU_OPSEG_FAIL mut 26: neg_drift: required fault not raised at ~18651 (opf log [])",
+        "OK   opseg_m27: MU_OPSEG_FAIL mut 27: red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 0, 0), (5394, 2, 16, 0, 0)])",
+        "OK   opseg_m28: MU_OPSEG_FAIL mut 28: red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 8738, 8174), (5394, 2, 16, 9011, 8168)])",
+        "OK   opseg_m29: MU_OPSEG_FAIL mut 29: neg_ctx: required fault not raised at ~1035 (opf log [])",
+        "OK   opseg_m32: MU_OPSEG_FAIL mut 32: red C8 mu native_pos user carrier: (bad, starts u1, u2, u3) = (448431, 60, 30, 18)",
+        "OK   opseg_emb16: MU_OPSEG_FAIL mut 0_emb16: red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27805, 1, 8465), (43346, 2, 8738)])",
+        "OK   opseg_skew1: MU_OPSEG_FAIL mut 0_skew1: red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27893, 1, 8465), (43478, 2, 8738)])",
+        "MU_OPSEG BENCHES: PASS",
+        "# exit 0"
+      ],
+      "tail": [
+        "OK   opseg_emb16: MU_OPSEG_FAIL mut 0_emb16: red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27805, 1, 8465), (43346, 2, 8738)])",
+        "OK   opseg_skew1: MU_OPSEG_FAIL mut 0_skew1: red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27893, 1, 8465), (43478, 2, 8738)])",
+        "MU_OPSEG BENCHES: PASS",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_pass.out",
+      "bytes": 105,
+      "sha256": "fc24b79a047aa194bb5a004bc74d0a3a307ff8d1d9aced1f1495e40eb8e8b48a",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050",
+        "OK   opseg_m0: MU_OPSEG_PASS mut 0",
+        "MU_OPSEG BENCHES: PASS",
+        "# exit 0"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050",
+        "OK   opseg_m0: MU_OPSEG_PASS mut 0",
+        "MU_OPSEG BENCHES: PASS",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_DHUSER.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_F0_nu4_m_gap16.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_F0_nu4_m_gap20.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_F0_nu4_m_gap24.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_F0_nu4_m_gap30.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_FACES_mut11_nu4.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_FACES_mut12_nu4.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_i_mut11_nu4.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_j_mut12_nu4.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_am1.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_am2.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_am2_e.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_am3.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_am4.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_am6_rootnoclr.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_gap12_stnpend.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/sl_NEG_m_nu1_w.out",
+      "bytes": 9,
+      "sha256": "d90d755c87d7224cdff025d9bcc861a8fb45fead08f9eef628af99b0bda34137",
+      "witnesses": [
+        "# exit 0"
+      ],
+      "tail": [
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+      "bytes": 2629,
+      "sha256": "f402739d9cb10324f2fd548b3e8826847f2e7a66f76338f1ee9c1c149e49ea47",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050",
+        "MU_TOK_SMOKE_PASS mut 0",
+        "MU_TOK_SMOKE_FAIL mut cal11: K3 solo: events != compiled (missing 2301 e.g. [(1108, 'CMD', 0, 77884452878022414427957444938301459), (1108, 'SUI', 0, 1)]; extra 2301 e.g. [(1108, 'CMD', 1, 77884452878022414427957444938302483), (1108, 'SUI', 1, 65)]) | K4 solo: 0 wrong argmax e.g. []; emits {0: 0} want {0: 3} | K3 pos2: events != compiled (missing 4486 e.g. [(1108, 'CMD', 0, 77884452878022414427957444938301459), (1108, 'SUI', 0, 1)]; extra 4486 e.g. [(1108, 'CMD', 1, 77884452878022414427957444938302483), (1108, 'SUI', 1, 65)]) | K4 pos2: 0 wrong argmax e.g. []; emits {0: 0, 1: 3} want {0: 3, 1: 2} | K6 pos2: measured token period != calendar {1: (251615.0, 265387.0)} | K3 pos4: events != compiled (missing 9045 e.g. [(1108, 'CMD', 0, 77884452878022414427957444938301459), (1108, 'SUI', 0, 1)]; extra 9045 e.g. [(1108, 'CMD', 1, 77884452878022414427957444938302483), (1108, 'SUI', 1, 65)]) | K4 pos4: 0 wrong argmax e.g. []; emits {0: 2, 1: 3, 2: 2, 3: 2} want {0: 3, 1: 2, 2: 2, 3: 2} | K6 pos4: measured token period != calendar {0: (256574.0, 251615.0), 1: (251615.0, 254604.0), 2: (254604.0, 255562.0), 3: (255562.0, 256574.0)}",
+        "MU_TOK_SMOKE_FAIL mut amax1: K4 solo: 3 wrong argmax e.g. [(252452, 0, 0, 1954, 528482431, (146, 528482431)), (504067, 0, 1, 2020, 528482431, (0, 528482431))]; emits {0: 3} want {0: 3} | K4 pos2: 5 wrong argmax e.g. [(252452, 0, 0, 1954, 528482431, (146, 528482431)), (268409, 1, 0, 2006, 528482431, (323, 528482431))]; emits {0: 3, 1: 2} want {0: 3, 1: 2} | K4 pos4: 9 wrong argmax e.g. [(252452, 0, 0, 1954, 528482431, (146, 528482431)), (256060, 1, 0, 2006, 528482431, (323, 528482431))]; emits {0: 3, 1: 2, 2: 2, 3: 2} want {0: 3, 1: 2, 2: 2, 3: 2}",
+        "MU_TOK_SMOKE_FAIL mut glue1: K5 pos2: 2 wrong KV rows e.g. [(267269, 0, 2, 322, 322, 322), (532656, 0, 4, 324, 324, 324)]; records 211 want 211 | K5 pos4: 79 wrong KV rows e.g. [(252807, 2, 35, 355, 355, 355), (252808, 3, 35, 355, 355, 355)]; records 426 want 426 | K2 user 0 events in pos2 differ from solo",
+        "MU_TOK_SMOKE_FAIL mut glue2: K1 pos2: faults [] muf 0 rf 0 rcol 0 empty [(268409, 1), (533796, 1)] end (0, '000000', 0) | K4 pos2: 1 wrong argmax e.g. [(755682, 0, 2, 85, 528482431, (204, 528482431))]; emits {0: 3, 1: 0} want {0: 3, 1: 2} | K1 pos4: faults [] muf 0 rf 0 rcol 0 empty [(256060, 1), (263345, 2), (267787, 3)] end (0, '000000', 0) | K4 pos4: 1 wrong argmax e.g. [(755682, 0, 2, 85, 528482431, (204, 528482431))]; emits {0: 3, 1: 0, 2: 0, 3: 0} want {0: 3, 1: 2, 2: 2, 3: 2} | K2 user 0 events in pos2 differ from solo",
+        "MU_TOK_SMOKE BENCHES: PASS",
+        "# exit 0"
+      ],
+      "tail": [
+        "MU_TOK_SMOKE_FAIL mut glue1: K5 pos2: 2 wrong KV rows e.g. [(267269, 0, 2, 322, 322, 322), (532656, 0, 4, 324, 324, 324)]; records 211 want 211 | K5 pos4: 79 wrong KV rows e.g. [(252807, 2, 35, 355, 355, 355), (252808, 3, 35, 355, 355, 355)]; records 426 want 426 | K2 user 0 events in pos2 differ from solo",
+        "MU_TOK_SMOKE_FAIL mut glue2: K1 pos2: faults [] muf 0 rf 0 rcol 0 empty [(268409, 1), (533796, 1)] end (0, '000000', 0) | K4 pos2: 1 wrong argmax e.g. [(755682, 0, 2, 85, 528482431, (204, 528482431))]; emits {0: 3, 1: 0} want {0: 3, 1: 2} | K1 pos4: faults [] muf 0 rf 0 rcol 0 empty [(256060, 1), (263345, 2), (267787, 3)] end (0, '000000', 0) | K4 pos4: 1 wrong argmax e.g. [(755682, 0, 2, 85, 528482431, (204, 528482431))]; emits {0: 3, 1: 0, 2: 0, 3: 0} want {0: 3, 1: 2, 2: 2, 3: 2} | K2 user 0 events in pos2 differ from solo",
+        "MU_TOK_SMOKE BENCHES: PASS",
+        "# exit 0"
+      ]
+    }
+  ],
+  "nested": [
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu1_ag.out",
+      "bytes": 1131,
+      "sha256": "f3fd069995396557382eeeb5b892453e151becebeb7b51eb6401de6da7650562",
+      "witnesses": [
+        "bench2 (a) MUT=0: PASS 24/24",
+        "bench2 (b) MUT=0: PASS 8192/8192",
+        "bench2 (c) MUT=0: PASS 640/640",
+        "bench2 (d) MUT=0: PASS 256/256",
+        "bench2 (e) MUT=0: PASS 1024/1024",
+        "bench2 (f) MUT=0: PASS 3/3",
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ],
+      "tail": [
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu1_h.out",
+      "bytes": 211,
+      "sha256": "2414737ba9c757aa927f00f35f16221b6e38022a8f638084c09804796787c808",
+      "witnesses": [],
+      "tail": [
+        "# case F0_nu1_h env DV2_FACE=0 DV2_MU_NU=1 args h --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/H1/H1 host ot-epyc7 2026-10-19T12:29:43-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu4_ag.out",
+      "bytes": 1131,
+      "sha256": "220267bd35af05903aaa978919cfda4c91df5cf36e8dd64c848f12895e3323a1",
+      "witnesses": [
+        "bench2 (a) MUT=0: PASS 24/24",
+        "bench2 (b) MUT=0: PASS 8192/8192",
+        "bench2 (c) MUT=0: PASS 640/640",
+        "bench2 (d) MUT=0: PASS 256/256",
+        "bench2 (e) MUT=0: PASS 1024/1024",
+        "bench2 (f) MUT=0: PASS 3/3",
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ],
+      "tail": [
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu4_h.out",
+      "bytes": 211,
+      "sha256": "24be8c51feb7b0526d0f90e80f47395358ac841536bf4d6ab09b402ac4e7e46c",
+      "witnesses": [],
+      "tail": [
+        "# case F0_nu4_h env DV2_FACE=0 DV2_MU_NU=4 args h --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/H4/H4 host ot-epyc7 2026-10-19T12:29:44-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu4_m_s21.out",
+      "bytes": 360,
+      "sha256": "6a16503687aed221588a731903cfed049c90ab46644c99e63ff60bc8775eecf4",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_m_s21 env DV2_FACE=0 DV2_MU_NU=4 DV2_SEED=21 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G0/F0_nu4 host ot-epyc7 2026-10-19T12:59:48-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu4_m_s22.out",
+      "bytes": 360,
+      "sha256": "e8efa22d24cd920e6a15f53346368f37496a809d1f2b363a53b14303e274dc9f",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_m_s22 env DV2_FACE=0 DV2_MU_NU=4 DV2_SEED=22 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G0/F0_nu4 host ot-epyc7 2026-10-19T12:59:54-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 22 gap 18 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F0_nu4_n.out",
+      "bytes": 291,
+      "sha256": "6b0b0203239654fd40cf8a7fc1f9803bfb3b409f8fae74e4805d483b4f1ac6b9",
+      "witnesses": [
+        "bench2 (n) MUT=0: PASS 2/2",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_n env DV2_FACE=0 DV2_MU_NU=4 args n --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G0/F0_nu4 host ot-epyc7 2026-10-19T12:59:59-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (n): MU_NU 4 FACE 0 AM_MUT 0",
+        "bench2 (n) MUT=0: PASS 2/2",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F1_nu1_ag.out",
+      "bytes": 1131,
+      "sha256": "8ed79b7e810fae25551b5b1385eff7ada4689d90209b23ee84ab18c5bf9ff450",
+      "witnesses": [
+        "bench2 (a) MUT=0: PASS 24/24",
+        "bench2 (b) MUT=0: PASS 8192/8192",
+        "bench2 (c) MUT=0: PASS 640/640",
+        "bench2 (d) MUT=0: PASS 256/256",
+        "bench2 (e) MUT=0: PASS 1024/1024",
+        "bench2 (f) MUT=0: PASS 3/3",
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ],
+      "tail": [
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F1_nu4_ag.out",
+      "bytes": 1131,
+      "sha256": "00fe063867ba72523f0b56056c264dfcc0c562bab2314841aa94542f971dd34e",
+      "witnesses": [
+        "bench2 (a) MUT=0: PASS 24/24",
+        "bench2 (b) MUT=0: PASS 8192/8192",
+        "bench2 (c) MUT=0: PASS 640/640",
+        "bench2 (d) MUT=0: PASS 256/256",
+        "bench2 (e) MUT=0: PASS 1024/1024",
+        "bench2 (f) MUT=0: PASS 3/3",
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ],
+      "tail": [
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F1_nu4_m_s21.out",
+      "bytes": 360,
+      "sha256": "257f50c94f567a3d88432d02890666543a1bcfac10ab8cd9159439c02632b73d",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F1_nu4_m_s21 env DV2_FACE=1 DV2_MU_NU=4 DV2_SEED=21 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G1/F1_nu4 host ot-epyc7 2026-10-19T12:59:41-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F1_nu4_m_s22.out",
+      "bytes": 360,
+      "sha256": "a4e660a24f622861d8f72707a6463bf5646865b52dd0f40cba899044e6cf0760",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F1_nu4_m_s22 env DV2_FACE=1 DV2_MU_NU=4 DV2_SEED=22 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G1/F1_nu4 host ot-epyc7 2026-10-19T12:59:45-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 22 gap 18 MU_NU 4 FACE 1 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F1_nu4_n.out",
+      "bytes": 291,
+      "sha256": "2ea713ee310952e30533fbf4983ca6406c170fc47a2fef9635bf15d13f5084bf",
+      "witnesses": [
+        "bench2 (n) MUT=0: PASS 2/2",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F1_nu4_n env DV2_FACE=1 DV2_MU_NU=4 args n --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G1/F1_nu4 host ot-epyc7 2026-10-19T12:59:50-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (n): MU_NU 4 FACE 1 AM_MUT 0",
+        "bench2 (n) MUT=0: PASS 2/2",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F2_nu1_ag.out",
+      "bytes": 1131,
+      "sha256": "e917b317c820f348b29d27ecbb12b52581a5f04d5ee37385a972629a066ea6cf",
+      "witnesses": [
+        "bench2 (a) MUT=0: PASS 24/24",
+        "bench2 (b) MUT=0: PASS 8192/8192",
+        "bench2 (c) MUT=0: PASS 640/640",
+        "bench2 (d) MUT=0: PASS 256/256",
+        "bench2 (e) MUT=0: PASS 1024/1024",
+        "bench2 (f) MUT=0: PASS 3/3",
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ],
+      "tail": [
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F2_nu4_ag.out",
+      "bytes": 1131,
+      "sha256": "112a388d0d0d00897f7f3289f88e622cbe3f0e9d316717a303259416c2704219",
+      "witnesses": [
+        "bench2 (a) MUT=0: PASS 24/24",
+        "bench2 (b) MUT=0: PASS 8192/8192",
+        "bench2 (c) MUT=0: PASS 640/640",
+        "bench2 (d) MUT=0: PASS 256/256",
+        "bench2 (e) MUT=0: PASS 1024/1024",
+        "bench2 (f) MUT=0: PASS 3/3",
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ],
+      "tail": [
+        "bench2 (g) MUT=0: PASS 5/5",
+        "bench2 (i) MUT=0: PASS 3/3",
+        "bench2 (j) MUT=0: PASS 3/3",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F2_nu4_m_s21.out",
+      "bytes": 360,
+      "sha256": "b8b876eaa4cd2afa2e47700ad536463097f78fb568efcee14186f425acbe845f",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F2_nu4_m_s21 env DV2_FACE=2 DV2_MU_NU=4 DV2_SEED=21 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G2/F2_nu4 host ot-epyc7 2026-10-19T12:59:01-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 2 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F2_nu4_m_s22.out",
+      "bytes": 360,
+      "sha256": "639a1b75ee3dd1c7385c43a9811ebbddb65a20bc59e950087cecddc1b80a2284",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F2_nu4_m_s22 env DV2_FACE=2 DV2_MU_NU=4 DV2_SEED=22 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G2/F2_nu4 host ot-epyc7 2026-10-19T12:59:06-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 22 gap 18 MU_NU 4 FACE 2 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/F2_nu4_n.out",
+      "bytes": 291,
+      "sha256": "72912ac58fe24fe8790b8ca8e7afacbcee7eb34cccf191f69ab9f688d9e5861b",
+      "witnesses": [
+        "bench2 (n) MUT=0: PASS 2/2",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F2_nu4_n env DV2_FACE=2 DV2_MU_NU=4 args n --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G2/F2_nu4 host ot-epyc7 2026-10-19T12:59:12-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (n): MU_NU 4 FACE 2 AM_MUT 0",
+        "bench2 (n) MUT=0: PASS 2/2",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/FACES_mut0_nu1.out",
+      "bytes": 397,
+      "sha256": "46c66228dac7988677e607df9d29a7ed4dc22c4fde01699ebb7689aec8ebff3c",
+      "witnesses": [
+        "FACES MUT=0: PASS",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 162ns; walltime 0.584 s; speed 277.590 ns/s",
+        "- Verilator: cpu 0.583 s on 1 threads; allocated 83 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/FACES_mut0_nu4.out",
+      "bytes": 397,
+      "sha256": "14efede7c2dbd1c89fa2229d30c573e90fd1ec0893655f842a6d743a5abd87e1",
+      "witnesses": [
+        "FACES MUT=0: PASS",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 162ns; walltime 0.362 s; speed 447.912 ns/s",
+        "- Verilator: cpu 0.362 s on 1 threads; allocated 83 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/NEG_n_am7_f0.out",
+      "bytes": 398,
+      "sha256": "fdd94f84c5c9325488467fb53e9bc41d2cd0466e86b4846e7cccc61c87755595",
+      "witnesses": [
+        "bench2 (n) MUT=0: FAIL 1/2",
+        "# exit 1"
+      ],
+      "tail": [
+        "    bench2 (n): MU_NU 4 FACE 0 AM_MUT 7",
+        "bench2 (n) MUT=0: FAIL 1/2",
+        "    mixed: root sc fault 0 (want 1), root port fault 0 (want 0), slice-1 any fault 0 (want 0)",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/NEG_n_am7_f1.out",
+      "bytes": 398,
+      "sha256": "0ffc879548bf510f86a5f9d2518e39c415ab2e5dde047b61b760ef3bba3a0756",
+      "witnesses": [
+        "bench2 (n) MUT=0: FAIL 1/2",
+        "# exit 1"
+      ],
+      "tail": [
+        "    bench2 (n): MU_NU 4 FACE 1 AM_MUT 7",
+        "bench2 (n) MUT=0: FAIL 1/2",
+        "    mixed: root sc fault 0 (want 1), root port fault 0 (want 0), slice-1 any fault 0 (want 0)",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/NEG_n_am7_f2.out",
+      "bytes": 398,
+      "sha256": "69daafb7db883f681969d3c1ab03fcc18468bcfdfe10662216fd583a08d4bd9f",
+      "witnesses": [
+        "bench2 (n) MUT=0: FAIL 1/2",
+        "# exit 1"
+      ],
+      "tail": [
+        "    bench2 (n): MU_NU 4 FACE 2 AM_MUT 7",
+        "bench2 (n) MUT=0: FAIL 1/2",
+        "    mixed: root sc fault 0 (want 1), root port fault 0 (want 0), slice-1 any fault 0 (want 0)",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_F0.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_F1.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_F2.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_FACES1.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_FACES4.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_G0.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_G1.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_G2.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_H1.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_H4.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_N0.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_N1.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/amix/runs/verilator_version_N2.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/F0_nu4_m_gap16.out",
+      "bytes": 358,
+      "sha256": "d1ddffd2bf91eb56760e62734f5d78bef12325cc5e476ebc8fc94117aab29576",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_m_gap16 env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=16 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w/gap16 host ot-epyc7 2026-10-19T12:30:10-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 16 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1616",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/F0_nu4_m_gap20.out",
+      "bytes": 358,
+      "sha256": "e453d403aecfa55554e1319f2e60f58c3524fdfdcbf1fac935f6256f405c6bfa",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_m_gap20 env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=20 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w/gap20 host ot-epyc7 2026-10-19T12:30:12-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 20 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1744",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/F0_nu4_m_gap24.out",
+      "bytes": 358,
+      "sha256": "8dcd38750524a683be380a64e89c8cc2fe61fe9b9f812d8fae9c0c83b1461c09",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_m_gap24 env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=24 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w/gap24 host ot-epyc7 2026-10-19T12:30:14-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 24 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1872",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/F0_nu4_m_gap30.out",
+      "bytes": 358,
+      "sha256": "2541ec7064b8c160f894fb94f81eb80214d52e77eb3f438f40112f1af81ed97c",
+      "witnesses": [
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ],
+      "tail": [
+        "# case F0_nu4_m_gap30 env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=30 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w/gap30 host ot-epyc7 2026-10-19T12:30:17-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165",
+        "    bench2 (m): seed 21 gap 30 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 2064",
+        "bench2 (m) MUT=0: PASS 8/8",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/FACES_mut11_nu4.out",
+      "bytes": 434,
+      "sha256": "75c349bd5203293d54439fc9c2ed90e2f4404e52381294d91d6441634156d992",
+      "witnesses": [
+        "FACES MUT=11: FAIL 1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 162ns; walltime 0.479 s; speed 338.045 ns/s",
+        "- Verilator: cpu 0.479 s on 1 threads; allocated 83 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/FACES_mut12_nu4.out",
+      "bytes": 447,
+      "sha256": "6a0c876771f8c9b070dc937f36fe1f79f2fe1c85e12985fc683a6306d532dc2a",
+      "witnesses": [
+        "FACES MUT=12: FAIL 1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 162ns; walltime 0.629 s; speed 257.636 ns/s",
+        "- Verilator: cpu 0.629 s on 1 threads; allocated 83 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_i_mut11_nu4.out",
+      "bytes": 465,
+      "sha256": "b1958f3b4428dbbd669ecb3ac5c0921200f7ed096599ee558f53b28699c73b58",
+      "witnesses": [
+        "bench2 (i) MUT=11: FAIL 1/3",
+        "# exit 1"
+      ],
+      "tail": [
+        "bench2 (i) MUT=11: FAIL 1/3",
+        "    slice 0: cc ['0x21234deadbeef', '0x3ffff80000001'] want ['0x31234deadbeef', '0x2ffff80000001']",
+        "    slice 1: cc ['0x3000700000005', '0x2010000000007'] want ['0x2000700000005', '0x3010000000007']",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_j_mut12_nu4.out",
+      "bytes": 425,
+      "sha256": "bce73dae85af04d0b36633a4f022cd1f8b9e456b3e65de5a8fda62c10765fd63",
+      "witnesses": [
+        "bench2 (j) MUT=12: FAIL 1/3",
+        "# exit 1"
+      ],
+      "tail": [
+        "bench2 (j) MUT=12: FAIL 1/3",
+        "    slice 0: gather tokens [517, 5007] value 42480000, want last 2007 (rank 2)",
+        "    slice 1: gather tokens [517, 5007] value 42480000, want last 2007 (rank 2)",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_am1.out",
+      "bytes": 467,
+      "sha256": "6ed91a560ad7f407ec57933cbd53cc3f34666f10ddb3fcc4cdf5bb88f9c3773d",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 7/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 1: 8 emits, 6 tie heads, end cycle 1680",
+        "bench2 (m) MUT=0: FAIL 7/8",
+        "    round 1 user 0: root token / broadcast / slice-1 token [398, 398, 398] users [0, 0, 0], golden argmax 127",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_am2.out",
+      "bytes": 1017,
+      "sha256": "a5b758ac95cd2b6923f4ced60dd30f10ca1f03acc54057231d17bda41ca64b20",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 2/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 436",
+        "    round 1 user 0: root token / broadcast / slice-1 token [128, 128, 128] users [0, 0, 0], golden argmax 127",
+        "    round 1 user 2: root token / broadcast / slice-1 token [767, 767, 767] users [2, 2, 2], golden argmax 383",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_am2_e.out",
+      "bytes": 1020,
+      "sha256": "52191d74e061d6684752f3fa6e1da0dd61220dc8b46d8496128233e258e365ba",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 2/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 436",
+        "    round 1 user 0: root token / broadcast / slice-1 token [128, 128, 128] users [0, 0, 0], golden argmax 127",
+        "    round 1 user 2: root token / broadcast / slice-1 token [767, 767, 767] users [2, 2, 2], golden argmax 383",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_am3.out",
+      "bytes": 577,
+      "sha256": "ccacd29c8e11fffd76d9406b79771f7dca73837de6aa5fc951139e23e6a2a3aa",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 6/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "bench2 (m) MUT=0: FAIL 6/8",
+        "    round 1 user 1: root token / broadcast / slice-1 token [558, 558, 558] users [1, 1, 1], golden argmax 436",
+        "    round 1 user 0: root token / broadcast / slice-1 token [398, 398, 398] users [0, 0, 0], golden argmax 127",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_am4.out",
+      "bytes": 909,
+      "sha256": "37d167ad9cb4e9720a358f74e42add3442aedbeb9ab8ca32811b44a4e2cec8f5",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 2/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    round 0 user 0: root token / broadcast / slice-1 token [390, 390, 390] users [1, 1, 1], golden argmax 127",
+        "    round 0 user 3: root token / broadcast / slice-1 token [390, 390, 390] users [1, 1, 1], golden argmax 838",
+        "    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [2, 2, 2], golden argmax 436",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_am6_rootnoclr.out",
+      "bytes": 1027,
+      "sha256": "2885cec8bab665c608a8791e363c275bcda59d448e4ccc69c06b3e8823f63ffd",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 2/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 436",
+        "    round 1 user 0: root token / broadcast / slice-1 token [383, 383, 383] users [0, 0, 0], golden argmax 127",
+        "    round 1 user 3: root token / broadcast / slice-1 token [383, 383, 383] users [3, 3, 3], golden argmax 979",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_gap12_stnpend.out",
+      "bytes": 917,
+      "sha256": "8bfca4273ab7cda6f05e0a4de9318bbe61b3f0c685437009ca2d367779257ee5",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 1/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    round 0 user 0: root token / broadcast / slice-1 token [128, 128, 128] users [0, 0, 0], golden argmax 127",
+        "    round 0 user 3: root token / broadcast / slice-1 token [255, 255, 255] users [3, 3, 3], golden argmax 838",
+        "    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 436",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/NEG_m_nu1_w.out",
+      "bytes": 1006,
+      "sha256": "0d4ae6dff4a4dcaafb03f64ad2f717fb86404df8ade44155d076de6534cccbf4",
+      "witnesses": [
+        "bench2 (m) MUT=0: FAIL 2/8",
+        "# exit 1"
+      ],
+      "tail": [
+        "    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [0, 0, 0], golden argmax 436",
+        "    round 1 user 0: root token / broadcast / slice-1 token [383, 383, 383] users [0, 0, 0], golden argmax 127",
+        "    round 1 user 3: root token / broadcast / slice-1 token [383, 383, 383] users [0, 0, 0], golden argmax 979",
+        "# exit 1"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_fieldmap.out",
+      "bytes": 50,
+      "sha256": "c07ee491d8451dd505815775926d0b10a67b639ee827426823e93fd0225c1108",
+      "witnesses": [],
+      "tail": [
+        "seq_dh field map OK (h_start [42], stage [41:36])"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_mut1.out",
+      "bytes": 1114,
+      "sha256": "ef1bdb2b7496d12dc1e132916645d651fc733f2329716cba4a08212d4a2f1ba8",
+      "witnesses": [
+        "TB_DHUSER FAIL MUT=1 3494 mismatches",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 29us; walltime 0.030 s; speed 982.245 us/s",
+        "- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_mut2_slip.out",
+      "bytes": 807,
+      "sha256": "7ebec2b3d4cb875c5544ac991327557f4ab103c94e79abe22f159b129bce51a5",
+      "witnesses": [
+        "TB_DHUSER FAIL slip not detected (det -1)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 29us; walltime 0.027 s; speed 1.098 ms/s",
+        "- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_mut3.out",
+      "bytes": 1116,
+      "sha256": "ece92392b3fc068e828ca058dc499cd35886232b958f1d87757350186ac2210c",
+      "witnesses": [
+        "TB_DHUSER FAIL MUT=3 349 mismatches",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 29us; walltime 0.030 s; speed 972.446 us/s",
+        "- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_pass_s11.out",
+      "bytes": 779,
+      "sha256": "66601c8a2c238c157090e663728fed4966cb1022762ea9f4fe6973ef21b82843",
+      "witnesses": [
+        "TB_DHUSER PASS MUT=0",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 29us; walltime 0.020 s; speed 1.465 ms/s",
+        "- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_pass_s7.out",
+      "bytes": 781,
+      "sha256": "9e335c5094d98195431f7562f6e754a228bec654712b39b1b7ce27ac00284c12",
+      "witnesses": [
+        "TB_DHUSER PASS MUT=0",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 29us; walltime 0.030 s; speed 967.298 us/s",
+        "- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/dhuser_slip_pass.out",
+      "bytes": 834,
+      "sha256": "c770ae29106d685e6d12a9f29180b6db59ef5849e5ed96983fb0c7aaac6c07bd",
+      "witnesses": [
+        "TB_DHUSER PASS slip detected 2 h_starts after the slip (NU1 err 0)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 29us; walltime 0.030 s; speed 984.691 us/s",
+        "- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/verilator_version_DHUSER.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/verilator_version_FONE.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/adopt_slice/runs/verilator_version_ONE.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_mut1_ge.log",
+      "bytes": 1979,
+      "sha256": "97fc94be1411cb68f0e0d34a690a5e8738dac3f374f160ddd3c7dc80be3810d6",
+      "witnesses": [
+        "TB_AMAX_MU FAIL MUT=1 NEG=0 seed=1 (eq 0, mismatches 338, mu_fault 0, emit_empty 0)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 191us; walltime 0.306 s; speed 623.855 us/s",
+        "- Verilator: cpu 0.171 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_mut2_xtalk.log",
+      "bytes": 1982,
+      "sha256": "eff3dd62582d1d2aa6b670ac4950c17feb94270a7663d1e0c38e68ca985b6cff",
+      "witnesses": [
+        "TB_AMAX_MU FAIL MUT=2 NEG=0 seed=1 (eq 0, mismatches 416, mu_fault 0, emit_empty 0)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 191us; walltime 0.318 s; speed 599.520 us/s",
+        "- Verilator: cpu 0.160 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_mut3_clrall.log",
+      "bytes": 1987,
+      "sha256": "412b0e060ebece72b6b227724dc83f5854f7e2c2dece5913d1a4117ecb451781",
+      "witnesses": [
+        "TB_AMAX_MU FAIL MUT=3 NEG=0 seed=1 (eq 0, mismatches 370, mu_fault 0, emit_empty 128)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 191us; walltime 0.192 s; speed 993.853 us/s",
+        "- Verilator: cpu 0.160 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_mut4_emitu.log",
+      "bytes": 1984,
+      "sha256": "85bfc44d7bae716512f76bb280f7b068983ccefbab4b09fa1e79a52571ecdd8e",
+      "witnesses": [
+        "TB_AMAX_MU FAIL MUT=4 NEG=0 seed=1 (eq 0, mismatches 388, mu_fault 1, emit_empty 16)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 191us; walltime 0.326 s; speed 584.937 us/s",
+        "- Verilator: cpu 0.163 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_neg_clear.log",
+      "bytes": 1282,
+      "sha256": "33d85f0878a8281db8afde8d6199482efc798478bdfe22815a26f2f858e4e546",
+      "witnesses": [
+        "TB_AMAX_MU FAIL MUT=0 NEG=1 seed=1 (eq 0, mismatches 1, mu_fault 1, emit_empty 0)",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 191us; walltime 0.349 s; speed 546.544 us/s",
+        "- Verilator: cpu 0.139 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_pass_s1.log",
+      "bytes": 1139,
+      "sha256": "942565b214e689e07c3c4506609eda13a16c0c70d97fddc6a28c28433bcb6424",
+      "witnesses": [
+        "TB_AMAX_MU PASS MUT=0 NEG=0 seed=1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 208us; walltime 0.248 s; speed 841.283 us/s",
+        "- Verilator: cpu 0.170 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_pass_s2.log",
+      "bytes": 1137,
+      "sha256": "8b119e85ba69ca2cf5678bb9d056aaa5f9b1cc4cdaecb5cedacf8e85f5b280a4",
+      "witnesses": [
+        "TB_AMAX_MU PASS MUT=0 NEG=0 seed=2",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 208us; walltime 0.155 s; speed 1.343 ms/s",
+        "- Verilator: cpu 0.152 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/amax_pass_s3.log",
+      "bytes": 1139,
+      "sha256": "3e4f43ebe2d3a093ba7342949d52f47d673e0051b79df357bd5e0f5f3e264985",
+      "witnesses": [
+        "TB_AMAX_MU PASS MUT=0 NEG=0 seed=3",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 208us; walltime 0.314 s; speed 664.535 us/s",
+        "- Verilator: cpu 0.167 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/summary.txt",
+      "bytes": 1094,
+      "sha256": "d3ea478c0ee7ce5d0fbc72a8ecd34668ee911866a193d1054aaab847a409ba5a",
+      "witnesses": [
+        "amax_mut1_ge want=FAIL OK :: TB_AMAX_MU FAIL MUT=1 NEG=0 seed=1 (eq 0, mismatches 338, mu_fault 0, emit_empty 0)",
+        "amax_mut2_xtalk want=FAIL OK :: TB_AMAX_MU FAIL MUT=2 NEG=0 seed=1 (eq 0, mismatches 416, mu_fault 0, emit_empty 0)",
+        "amax_mut3_clrall want=FAIL OK :: TB_AMAX_MU FAIL MUT=3 NEG=0 seed=1 (eq 0, mismatches 370, mu_fault 0, emit_empty 128)",
+        "amax_mut4_emitu want=FAIL OK :: TB_AMAX_MU FAIL MUT=4 NEG=0 seed=1 (eq 0, mismatches 388, mu_fault 1, emit_empty 16)",
+        "amax_neg_clear want=FAIL OK :: TB_AMAX_MU FAIL MUT=0 NEG=1 seed=1 (eq 0, mismatches 1, mu_fault 1, emit_empty 0)",
+        "amax_pass_s1 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=1",
+        "amax_pass_s2 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=2",
+        "amax_pass_s3 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=3",
+        "user_mut1_late want=FAIL OK :: TB_USER_EVENT FAIL MUT=1 seed=1",
+        "user_mut2_nochk want=FAIL OK :: TB_USER_EVENT FAIL MUT=2 seed=1",
+        "user_mut3_nu1 want=FAIL OK :: TB_USER_EVENT FAIL MUT=3 seed=1",
+        "user_pass_s1 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=1",
+        "user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2",
+        "overall rc=0"
+      ],
+      "tail": [
+        "user_mut3_nu1 want=FAIL OK :: TB_USER_EVENT FAIL MUT=3 seed=1",
+        "user_pass_s1 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=1",
+        "user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2",
+        "overall rc=0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/user_mut1_late.log",
+      "bytes": 1226,
+      "sha256": "2984da4c2632b3486df7b2ef55c010321d192b76d8516f03cea9d3822745c4b7",
+      "witnesses": [
+        "TB_USER_EVENT FAIL MUT=1 seed=1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 400us; walltime 0.306 s; speed 1.309 ms/s",
+        "- Verilator: cpu 0.209 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/user_mut2_nochk.log",
+      "bytes": 1142,
+      "sha256": "638a336045ce3347704efdda87695d68ae4cdf2fe5f28df32e5770410a67ef3d",
+      "witnesses": [
+        "TB_USER_EVENT FAIL MUT=2 seed=1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 400us; walltime 0.298 s; speed 1.341 ms/s",
+        "- Verilator: cpu 0.217 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/user_mut3_nu1.log",
+      "bytes": 1295,
+      "sha256": "13b6aca7184fdabc500debe70b02713960abe61bf3aea087d07c406ab837d473",
+      "witnesses": [
+        "TB_USER_EVENT FAIL MUT=3 seed=1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 400us; walltime 0.223 s; speed 1.797 ms/s",
+        "- Verilator: cpu 0.223 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/user_pass_s1.log",
+      "bytes": 878,
+      "sha256": "0a4143421180bbb478c2f59595960f9d54685ea3a1418c7888ff6a8eaf577240",
+      "witnesses": [
+        "TB_USER_EVENT PASS MUT=0 seed=1",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 400us; walltime 0.438 s; speed 914.191 us/s",
+        "- Verilator: cpu 0.228 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/user_pass_s2.log",
+      "bytes": 876,
+      "sha256": "c0c23c0ee9d6b82983116b31a76892138df520dfea377ec912dd1237e660422e",
+      "witnesses": [
+        "TB_USER_EVENT PASS MUT=0 seed=2",
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "# exit 0"
+      ],
+      "tail": [
+        "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+        "- Verilator: $finish at 400us; walltime 0.363 s; speed 1.101 ms/s",
+        "- Verilator: cpu 0.217 s on 1 threads; allocated 7 MB",
+        "# exit 0"
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/src/results/rtl/mu_qwen_1018/head/runs/verilator_version.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+      "witnesses": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ],
+      "tail": [
+        "Verilator 5.050 2026-07-01 rev v5.050"
+      ]
+    }
+  ],
+  "source_hashes": {
+    "rtl/qwen_split/mu/qfd_mu_ctx_rx.sv": "1dabee3184a7ba1969b171d644d8992d870a50ea78ab413e0a7bcdc4beece922",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv": "be3edbb71a7783649859e523a6fa2f2d0d09753bfbca6a64232baf4c7893cf6a",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv": "d0d4870d3e71e6eaff0b53bade25440063e267f1d7159d4f49508fb76d935ea8",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_user.sv": "2687a8b3babae9d9ae7650ebef88887efd2885ef9486c5a03da334d0ba4e76be",
+    "rtl/qwen_split/ot_qfd_land_lag.sv": "33e3848694e24b872cb8db1922a7b5629bcd629b0a7990374ce3b2c67d332e55",
+    "rtl/qwen_split/ot_qfd_x3_mux.sv": "e62fecf2024cd5988ed1452ef7e895b8d61d0744b41b19549c2f36b5e1f90e1c",
+    "rtl/qwen_split/ot_qfd_x3_mux_native.sv": "5c00203517db8608da3f57b64e3e14e15b6af1578df88410a831fa69d90305b3",
+    "rtl/qwen_split/ot_qwen_me_array_xdie_w12.sv": "1b7065ac3d5d20156b15a3cbd2f691a18384d3cb312c0713a36303d6560be8cf",
+    "rtl/qwen_split/ot_qwen_xdie_net.sv": "f00244adfd22b7259323335adc5e383fd546c492499d6573c5b5173c65fce3d8",
+    "rtl/qwen_split/qfd_b2_train_source.sv": "bdc6548ab2ba729ecf2d4ee15e43f13e9fd9a9472ffd9ee26d76553c3b8e5804",
+    "rtl/qwen_split/qfd_b2_word_status.sv": "74f45cdfca82596ba71727661da508add6eb6f9034e28a710db4f81aaabf91d1",
+    "rtl/qwen_split/qfd_band_upper_b2.sv": "9075e7a0cc6b0cd4a8ba8860a14ae748897623cedbf5d34a6b7c5a1a106daa56",
+    "rtl/qwen_split/qfd_band_upper_b2_l2.sv": "6883a2bcb2d636a5bd04cbcf08b3d858ac29c46cecd6e3727e636dec2c350b8a",
+    "rtl/qwen_split/qfd_band_upper_b2_l2_s4.sv": "0f9e5908804d4bd6d6c2cb0b11dfdd2fd6d738f6f81800dcf73b986eea5bd8c9",
+    "rtl/qwen_split/qfd_band_upper_tp8.sv": "c353a480cdba6f98c15f3b823d51921aff91f5db87da778dbcbdb97739513ca1",
+    "rtl/qwen_split/qfd_embedding_stage_static.sv": "2de573d8a2631f8f716d3eed055e3665dc5da771a2a764b86c31c345dfe53f35",
+    "rtl/qwen_split/qfd_embedding_word_provider.sv": "f27ee51d3d0957f6fb9558efbd0688eace7d7f865aae081fda1a2eb737c931d1",
+    "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+    "rtl/qwen_split/qfd_link_slots.sv": "f191e94531edcf20e02b0fb44e14499cd6d82d82d9645c0616f2c9c86ef043bc",
+    "rtl/qwen_split/qfd_native59_command_context.sv": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20",
+    "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+    "rtl/qwen_split/qfd_native59_dv_service.sv": "47a39ba7d313d9e26ea62a1afb35b42118f608b8ecdbd43f3bc4ee98ad7aa724",
+    "rtl/qwen_split/qfd_native59_q_export_control.sv": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d",
+    "rtl/qwen_split/qfd_native59_record_endpoint.sv": "d5f51560f5a562bf4982ede0c6a44c62575e2689ff6908eb0276ea1e526c4991",
+    "rtl/qwen_split/qfd_native59_static_service.sv": "ce25ab965f10576e0c160c519ff005231cc1af6e24052a47c1051f0a7baa5002",
+    "rtl/qwen_split/qfd_native_compute_join.sv": "28a908d08b45c78bde56d031cfbd6398437a1a1075f87c605a32f40d81c6f99b",
+    "rtl/qwen_split/qfd_native_compute_join_956.sv": "c25beb2776d065c27dade380c8e330144c6acc216564faacb84c7c7a92fdc003",
+    "rtl/qwen_split/qfd_native_compute_join_957.sv": "e7632f5da92725d2079d77fa5ef28cdb8c1aa12bcd580f274ae51481ef2134c4",
+    "rtl/qwen_split/qfd_native_compute_join_958.sv": "0c42bb42b9fdbdd4ea8ba098d2b033f03811f11e20fe0a2eaea7278bbf59fbf1",
+    "rtl/qwen_split/qfd_native_compute_join_959.sv": "264912b8c14ce122c8e82bccfade4791b95967cd7e16b006308a94110610c047",
+    "rtl/qwen_split/qfd_native_compute_join_960.sv": "a5056f7ee001386d334798ca7ca9b17f83e638021f8f9d36bf82b9d15a8a5a40",
+    "rtl/qwen_split/qfd_native_compute_join_961.sv": "f10fbf191a23ab27e399bc9130cf4b9c27ccf47f026e68b132dab917c35b97c5",
+    "rtl/qwen_split/qfd_native_compute_join_961t.sv": "c377f088fb1985c74b2f4e4cfff1ffc9e6af209d7e65bef8b1dd392256862b53",
+    "rtl/qwen_split/qfd_native_compute_join_961w.sv": "0dfa2509f6c72112bb1e8048853c4f3f1145e79ca106a2d1da91caa735820b01",
+    "rtl/qwen_split/qfd_native_crom8_tp8.sv": "5d502a3f6be56871fe9b60d7a4c1a87d1e1161e0791b996aa4ecb3d57ab2e096",
+    "rtl/qwen_split/qfd_port_half_b2.sv": "f99637b915adec4ae716c22e3d7b3482b82d6d9162df2acf8e44dc7c806c3e2f",
+    "rtl/qwen_split/qfd_port_tiles.sv": "dd5dc40038a35fb5d087085c284f60830bc99cb892fb17fedc0a42e46f6c54bf",
+    "rtl/qwen_split/qfd_res_ser_half_b2.sv": "df83fa7ad7ca90f5cc8af1033701a20218f15271c9bebbdf19c79cdb16ec42d2",
+    "rtl/qwen_split/qfd_res_ser_static.sv": "69e27fd15d15e8177566910c9b30097aadcd0e74e0dfb8949fa5fa64a2dda19b",
+    "rtl/qwen_split/qfd_res_train_half_b2.sv": "57b1b8a101cda87fe1335f9812f3464abfd1c8ba04556719293b5a302d873655",
+    "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv": "c84d0c859594ff3a9d36885a073dbacdd3c2f3903ff4c535493a89942ad48c0c",
+    "rtl/qwen_split/qfd_res_train_issue.sv": "0299e41f193bdbc39e94a14624d438068efeed60ca7f669432231ab072360fe3",
+    "rtl/qwen_split/qfd_res_train_issue_b2.sv": "d658c2363cc0c51f3ae836adcdf217e587f0786c0a69001f2af63bcaea3f52e2",
+    "rtl/qwen_split/qfd_res_train_par.sv": "72f868b2cb3102e4b89d0ea6ad84cbd7bf67185bc8fa595721c12c7c13483c5d",
+    "rtl/qwen_split/qfd_res_train_static.sv": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+    "rtl/qwen_split/qfd_rly_26_NE_9x9.sv": "5f46d6962228d4bdd6767495bf5046f9f39c1e0209ab4c99a8fa71901a524cfd",
+    "rtl/qwen_split/qfd_seq_su.sv": "557bcaec265999ce47c1cf61f06bda174844254d9562c022e331715bdaec3775",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+    "rtl/qwen_split/qfd_seq_su_gateway.sv": "bcf425f5a227a208cad0bdef4f0a252e8523784f01342db64012a837a350b199",
+    "rtl/qwen_split/qfd_seq_su_static.sv": "47a85c1ad213437a73a3c0436d149975bfc292812910d08d76a86b967cecf672",
+    "rtl/qwen_split/qfd_seq_su_vm_static.sv": "0c3f7aa082430127fd13ff93873c5c4a9e55bd933aa58cf8f3fe05b851c2e9df",
+    "rtl/qwen_split/qfd_slab_pair_add.sv": "eca392b88762c7fc3ea66f178d39ceeab674b4a9489c33731658989b93b55da6",
+    "rtl/qwen_split/qfd_slab_port_leaf.sv": "6abf97c938a6a4a591a82f5e31c47a66b65465b1efe5874521562c9a0fde8a2f",
+    "rtl/qwen_split/qfd_slab_port_leaf_b2.sv": "6fec30bbb1bb2cae9880f24b2b69609191926ea610156251bb00692b90363663",
+    "rtl/qwen_split/qfd_slab_reg512.sv": "cc5546453d9bbc63b96740d7b15c1107948a19a8de41a94add5ed687f3215e63",
+    "rtl/qwen_split/qfd_slab_result_half.sv": "efc398be69ae3075ee84108c2f32be9a398c7e24e924078cdc22a9308d3faf14",
+    "rtl/qwen_split/qfd_slab_result_half_b2.sv": "b5045d1b8e0010fab9510d17eea6ca004a20f3e6509d0fb7d0c2b667b1a0393b",
+    "rtl/qwen_split/qfd_slab_word_half.sv": "ad09d0898e8d8ad7bc27e573c5a39a18cffae3bf03e3df27e40733fe216573d8",
+    "rtl/qwen_split/qfd_sp_res_train.sv": "7570cd8220cab47488dcde1017cac5f642682d77a0c918a436fba6e60e49ce83",
+    "rtl/qwen_split/qfd_sp_res_train_par.sv": "c54ae092681dba41a2dd69ed721c92b4015859e26639a174c588dc9a89068077",
+    "rtl/qwen_split/qfd_sp_su64_sfu.sv": "d1856ca609e409973ba1668213c823c9dc48f57aa092c2cd9679deeb078188dd",
+    "rtl/qwen_split/qfd_static_command_fork42.sv": "b2d006ceaf4b22f331316fe3a91684796c6a1aba1bef8f43643b33d7b551aa83",
+    "rtl/qwen_split/qfd_static_selector_fork26.sv": "8b602c061df380061a4352786f8ae6384a339103f96f594aca71b4fe7b75c89d",
+    "rtl/qwen_split/qfd_static_selector_fork4.sv": "91071905ac469a99bb0aa005472e8651e5c3cacc0cfa7e4397d458ca9b9aa4a9",
+    "rtl/qwen_split/qfd_su_static_copy.sv": "9e8d4b785e937a5e2302e6a704fc8d553f79dfbd7af103b356610a776bf08007",
+    "rtl/qwen_split/qfd_su_vm_pack.sv": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+    "rtl/qwen_split/qfd_sys_face.sv": "7e355ea683e92c351e26d786b5915c69622d13093c1d8e6c1b31353b73dc7421",
+    "rtl/qwen_split/qfd_sys_face_record_port.sv": "74c6f34f8a47e628068ace011dbeb72977fc4b4f9db517df90d1244df4bcca2f",
+    "rtl/test/qwen_dv/dv_bench.py": "6f1e4bc01176d52b158ec8d5eff0c23480f9e05bc57b749dfbbc3e65df09bd7a",
+    "rtl/test/qwen_dv/dv_bench2.py": "48ef71e2e53cec810ebe9d2ac2c2c455151da67458c4176ad2315456f362985f",
+    "rtl/test/qwen_dv/dv_lower_bench.py": "8173bec4c10e488fbe6e95d958c9a1c1c1482b8e386fb4905dd0b829d982b0bb",
+    "rtl/test/qwen_dv/run_all.sh": "c1ca74c9c391c7ac0a93edf37d2f89c3f48327a184a087527e5307ec855b4a40",
+    "rtl/test/qwen_dv/run_heads.sh": "8d7406252a84190d0dae18681a16d012e734d724bc39d0ca24c0951e361dfcaa",
+    "rtl/test/qwen_dv/run_mu_slice_gate.sh": "53902f66bdb180686640c95dad9d434fc41d9a629ffd5316ecd74f9761aa8465",
+    "rtl/test/qwen_dv/run_q3h_lat.sh": "d94943764b88dffcda78e0f5104b3bfb8f410f73248a1ba6b7d724ccbe59cf9b",
+    "rtl/test/qwen_dv/run_slice2_e_lpf.sh": "3c48ec7f0c18600160e3adf17abfb9ec05e74a9c39a214ad546301da042caa42",
+    "rtl/test/qwen_dv/run_tt_ctlm_dv.sh": "6bdea593b4e2a5b80229c99805e414673c4d8bb77c6808785f521ef276826683",
+    "rtl/test/qwen_dv/tb_q3h_su_lat.sv": "971a64a5ed2d16163eebf13a000fd0f84de323c7f7300594e94b570fd65c35e7",
+    "rtl/test/qwen_dv/tb_qfd_dv.sv": "cfa1ff79ea750b51116481b1b867fddf381374b00c92238682ea6641ea7b36de",
+    "rtl/test/qwen_dv/tb_qfd_dv2.sv": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+    "rtl/test/qwen_dv/tb_qfd_dv2_faces.sv": "9cc94460f972832de808e5f67d338da3440c5c1fc73cbaee1e620a17d914d05c",
+    "rtl/test/qwen_dv/tb_qfd_dv_heads.sv": "4691128fcbb87200965d6c530e0a2ab866b7b96c31c70c2a454690ced6430123",
+    "rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv": "7e8d214bad9249ed07b1d64dae93551fcaf42190bd05279d29189df2a9369e0f",
+    "rtl/test/qwen_dv/tb_qfd_tt_ctlm_cal.sv": "d97e473361ed22407a81ef0ae603fa420e5ed1459b6019a4d7e2dcac6a81426f",
+    "rtl/test/qwen_dv/tb_qfd_tt_ctlm_dv_abi.sv": "3851ffa88e6f72a7c50be3653f622570fae806caf627c87b2543288d4a9d9f98",
+    "rtl/test/qwen_dv/tb_qfd_tt_ctlm_prog.sv": "956571bd641b29c818fc210d20c5bc0a25e3d67aba4537ef6e855b642e1689c0",
+    "rtl/test/qwen_dv/tt_ctlm_cal_bench.py": "98715a7a4a918b3d7e97b79b2807004653b24da7b46af2a3b0a78fa4594722ad",
+    "rtl/test/qwen_dv/tt_ctlm_prog_bench.py": "20f780adebe15ec9e869818601036e4238fd0d24fd6a4fb050e568ebd03f0e63",
+    "rtl/test/qwen_dv/xhead/ibdec.py": "586a4438a18e02bd51b50f9393578675fa4f91017d74243d5246c6ce1fe2972f",
+    "rtl/test/qwen_dv/xhead/run_xt1.sh": "ea211cf9c7b3314ff0de379f893811e876ced7250d9b78b6033f7c78fe3700c9",
+    "rtl/test/qwen_dv/xhead/run_xt1n.sh": "ae489da222a3b0fa2ca5f66ee20fd10007a4c4c8d7966ab15d2def5fe38c0c4d",
+    "rtl/test/qwen_dv/xhead/tb_xt1.sv": "ed56b5bce5c7e72ba8d0dfc0e8204864bc56ac276b48b0cb3abf1945e2e20dcf",
+    "rtl/test/qwen_dv/xhead/tb_xt1_rb.sv": "66b25ef3f19f8a7b793f888d9bf3bdddbd63c5ce682dc2349e2fe675225a2b0d",
+    "rtl/test/qwen_dv/xhead/tb_xt1n.sv": "284c2d1edbbb2287584b2424e08ab95bb22893c9d76da1547f71df1a54a805e4",
+    "rtl/test/qwen_dv/xhead/xt1_bench.py": "1022d0f5f8c8d24a2423752d096b1605f7a640e7a0c8492cf58955f77021205d",
+    "rtl/test/qwen_dv/xhead/xt1_prep.py": "06367db5ba772582b6c6f2fad1588bbedd342acfab1866a19168b46ca79ba0db",
+    "rtl/test/qwen_dv/xhead/xt1_tile_acc.py": "4a87597185fd3ca5162fe8d13329953d8cb230db8d7265278584e008b64501eb",
+    "rtl/test/qwen_dv/xhead/xt1_trace.py": "bbfa23b3971a0bf5dd10d2a99c68fea397b603cc256d34ebe6b0d4fe492dfb8b",
+    "rtl/test/qwen_dv/xhead/xt1_xwin.py": "2c69b20177b6cfa43033d64e89821f4ac46e9af6f74d501136578f44bbe86b41",
+    "rtl/test/qwen_dv/xhead/xt1n_bench.py": "0a1bf708822445763e8c574e588a1806ea3f190e837b76e08feb382c676d2036",
+    "rtl/test/mu_qwen_1018/mu_kvctx_bench.py": "383ce2335e173ca9218386ec633146dd5366b63be1127c00900c5668bc07bdb1",
+    "rtl/test/mu_qwen_1018/run_all.sh": "0fa0203732bf2dced9b6d571eb6b56a19fe3abfcb272c7ad866928c2c5c7a46a",
+    "rtl/test/mu_qwen_1018/run_all_hroot.sh": "bb8d3c976076dd4a346b16bdd3f7282e4555716f2e28b6177f37dd27091ba807",
+    "rtl/test/mu_qwen_1018/run_all_kv.sh": "f5fb3d9ea223170323531759dc9c27f924322a894fe2afab976875541b1a9e2d",
+    "rtl/test/mu_qwen_1018/run_all_peer.sh": "602ea18d526f56ebea2636891acc6e738043c50ace1d01053c665021726bdcfd",
+    "rtl/test/mu_qwen_1018/run_host_mu.sh": "e15618fc996a68079241c4219fc8f72f1ac2e65173bdcb597a0cd330c10821e1",
+    "rtl/test/mu_qwen_1018/run_mu_hroot.sh": "d21bdf52e8a1206bc6387f4edd69642aa29c71215cb66f54d6563ce5763fcab2",
+    "rtl/test/mu_qwen_1018/run_mu_kv.sh": "6310b3e30ab8f663dc5aadf379c9a9ad0929aaf2bc2c73318a3480d308e5151e",
+    "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh": "59622572c62894193a6d388e996868819585aad9c98f2b6087a1df08c0186d0e",
+    "rtl/test/mu_qwen_1018/run_mu_kvctx.sh": "49fa39ac9c67e6e3a521702840ce59ee63d45095e5c0545649176299216bf7e8",
+    "rtl/test/mu_qwen_1018/run_mu_peer.sh": "114600fc035d25404c10350ceea8ceed32216cf9d76355bd9214df30f165a80f",
+    "rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv": "949188fdf2565c519e92ec30ea9b71de17b647b76905bde1cf8ed3b826b68515",
+    "rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv": "48cc26a75c1fd653872d8227946c94110aa5fbbde3c4b680f84f027fa4c0d377",
+    "rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv": "0f35610951b50c1e0d785e854adfeef821724dfea5f06f451eb21bd171fac6b2",
+    "rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv": "e033a72a4ad07d49808759db2dab9c04138d37c569fb1e846a3a8b5d09e4c545",
+    "rtl/test/mu_qwen_1018/tb_mu_kvctx.sv": "b8747fb467f49bf4618a88b81b59c7520fbd5b1cb51f00708accdaa9edf37956",
+    "rtl/test/mu_qwen_1018/tb_mu_lprg_lockstep.sv": "a34ed9499fc149f769ab83545ac99a6af6ee7086a23cbd864526d30c9e4b8d15",
+    "rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv": "fae4ba192ca4377103ae36e99c2c75b491eebbf1f1f0937373a22bf690cb37c3",
+    "rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv": "f42806f55d1200c407e1e8e42e1e370205fcc038b00037b4fc077a89a44eb20c",
+    "rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv": "73692725060d780ca038b6cca7d8ad86073875fedf6b623ee30cec0047792403",
+    "rtl/test/mu_qwen_1018/tb_qkd_kv_mu_rowoff.sv": "7678c2edca4767aa0b3203383b429737ac9b81b0395d7ea1b698330755ca9254",
+    "rtl/test/mu_qwen_seq/mu_ctlm_bench.py": "018397c3b61d2d025056313b23945e0ed8aa62a58d9f08738dd4127e50fcc1c1",
+    "rtl/test/mu_qwen_seq/mu_opseg_bench.py": "8b25ada8ea5c62cceb79f5a773dbee61ed649c3c1070fa8a9041a1bd06b7c16f",
+    "rtl/test/mu_qwen_seq/mu_seq_bench.py": "37724555a5356f6365fc6495b8c5822b3b754c880580e0e09c0afe4ba5200d8f",
+    "rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh": "c6892c23e4c926d52b8fe781a60846fbddfd28b5d4f87772c738bfc5a11db24f",
+    "rtl/test/mu_qwen_seq/run_mu_ctlm.sh": "58e06d4688d83eaaf43e56f73872cb26a799b84e2e249848b371bbc68ef574a6",
+    "rtl/test/mu_qwen_seq/run_mu_opseg.sh": "dbef6189cde936b7abf63099f7d68332b944bd5c202d8cf51710f3e655077c33",
+    "rtl/test/mu_qwen_seq/run_mu_seq.sh": "8ecd9789c4adfa70ae1cbca188eddfdd9320eac9d476dd4255beaaff9f0b6d5e",
+    "rtl/test/mu_qwen_seq/tb_dhuser_pinreg.sv": "a9b95815e6d07436b17d91529593431418ac5ebfbe26e8cdcf322a837fa83084",
+    "rtl/test/mu_qwen_seq/tb_mu_cmd_cal.sv": "0aef767f3cd58ac5674804b354c4fa3754023a249e5c57b6d075137d8fa8071e",
+    "rtl/test/mu_qwen_seq/tb_mu_ctlm_dv.sv": "a59c38ad1740fef3885779b278eca7f184cd530e3f7fb7a46dfac669ad16eb54",
+    "rtl/test/mu_qwen_seq/tb_mu_opseg_dv.sv": "d6ee6e28a07ceba1bbd51b3c625649909178eb5a5a6381f4310e32a2321c6362",
+    "rtl/test/mu_qwen_tok/launch_mu_tok.sh": "acbde6dc7e00e5ed4996c89b6e60d97df3b050ee3fe05c3359925d503be336bd",
+    "rtl/test/mu_qwen_tok/mu_tok_smoke.py": "c02eb37576b018e7b7653ea820ea6823a43158d1f33cfcae2c6f32f265698dd2",
+    "rtl/test/mu_qwen_tok/run_mu_tok_smoke.sh": "da200d1578e00c740886f08f1aacce974c2305ef156e3b9eaa590b52e3d54bf0",
+    "rtl/test/mu_qwen_tok/tb_mu_tok_compose.sv": "0367218b5a658fa9183a6ca4683c62633d5571eb66c2e3dee43634f00de334be",
+    "tools/xdie_qtp8/cases.py": "8ec172a478fe1e9666a630e3384fa661c7f789be486600df0dbfebed91cf6592",
+    "tools/xdie_qtp8/launch.sh": "46d23e0c0e26db2131cab087c27874564281f93f71a314ec997fdac4c427ecaf",
+    "tools/xdie_qtp8/record.py": "c42b234bc38608046425b2f491b8b592e78241e097eb51b415222e7c6799ba29"
+  },
+  "layer": {
+    "bench_outputs": [],
+    "run_script": {
+      "path": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/run.sh",
+      "bytes": 2346,
+      "sha256": "828b9ade17f888177a0609fd5611e2bb181985a64a6aff14a282ab5ec26c0b93",
+      "witnesses": [
+        "# on the die-of-record dv2f18dh2 source 0d4c9808f RTL (fresh Verilator 5.050 tb_qfd_dv2 N12 build) at MU_NU=$1.",
+        "[ -x $OBJ/Vtb ] || { echo BUILD FAILED; tail -30 $W/build.log; exit 1; }"
+      ],
+      "tail": [
+        "echo \"MUT_L0_silu_nor 1 --mode silu --mutant nor --fixture $FX/L0_silu_tp8.npz\"",
+        "echo \"MUT_L0_qk_ropesign 1 --mode qk --mutant ropesign --fixture $FX/L0_qk_tp8.npz\"",
+        "} | xargs -P 5 -L 1 bash -c 'job \"$@\"' _",
+        "date -Is; echo ALL DONE NU=$NU"
+      ]
+    },
+    "logs": [
+      {
+        "path": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/nu1.log",
+        "bytes": 64,
+        "sha256": "fae8a39e166c2f20c7c2c418820087f9b717147ca4cc9a1043e4873b2a2f828b",
+        "witnesses": [
+          "Verilator 5.050 2026-07-01 rev v5.050"
+        ],
+        "tail": [
+          "Verilator 5.050 2026-07-01 rev v5.050",
+          "2026-10-19T12:28:18-07:00"
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/nu4.log",
+        "bytes": 64,
+        "sha256": "fae8a39e166c2f20c7c2c418820087f9b717147ca4cc9a1043e4873b2a2f828b",
+        "witnesses": [
+          "Verilator 5.050 2026-07-01 rev v5.050"
+        ],
+        "tail": [
+          "Verilator 5.050 2026-07-01 rev v5.050",
+          "2026-10-19T12:28:18-07:00"
+        ]
+      }
+    ]
+  },
+  "builds": [
+    {
+      "make_pid": 30876,
+      "elapsed_s": 1499,
+      "command": "make -C /srv/opentallas-scratch/claude/refill-1225/QWLAYER/nu4/obj_n12 -f Vtb.mk -j 16",
+      "cc1plus": 10,
+      "cpu_sum": 742.1,
+      "rss_kib": 40216196
+    },
+    {
+      "make_pid": 30890,
+      "elapsed_s": 1499,
+      "command": "make -C /srv/opentallas-scratch/claude/refill-1225/QWLAYER/nu1/obj_n12 -f Vtb.mk -j 16",
+      "cc1plus": 11,
+      "cpu_sum": 825.6,
+      "rss_kib": 41871076
+    },
+    {
+      "make_pid": 31035,
+      "elapsed_s": 1491,
+      "command": "make -C /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/H1/H1/m0/obj2_n12_nu1_f0_am0/base -f Vtb.mk -j 16",
+      "cc1plus": 16,
+      "cpu_sum": 1252.9,
+      "rss_kib": 54604204
+    },
+    {
+      "make_pid": 32036,
+      "elapsed_s": 1412,
+      "command": "make -C /srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/qctlm/cal/obj_m0_n12 -f Vtb.mk -j 8",
+      "cc1plus": 8,
+      "cpu_sum": 595.8,
+      "rss_kib": 41876252
+    },
+    {
+      "make_pid": 32398,
+      "elapsed_s": 1359,
+      "command": "make -C /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/H4/H4/m0/obj2_n12_nu4_f0_am0/base -f Vtb.mk -j 16",
+      "cc1plus": 15,
+      "cpu_sum": 1176.1,
+      "rss_kib": 56173000
+    }
+  ]
+}

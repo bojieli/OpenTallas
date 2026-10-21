@@ -6,6 +6,8 @@ set -u
 O=$1; T=$2; M=${3:-0}; E=${4:-2000}
 mkdir -p "$O"
 source tools/qwen_kv_die/kvs_kits_env.sh
+# KV-KITS-ATTN 10-18: KVS_SIM=verilator runs on the closure daemon's pinned Verilator 5.050 (not Debian's 5.032)
+for _d in "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do [ -d "$_d" ] && export PATH="$_d:$PATH"; done
 python3 tools/qwen_kv_die/kvs_tile_bench.py --tile "$T" --mut "$M" --edges "$E" --out "$O" > "$O/run.log" 2>&1
 rc=$?
 grep -E '^MISMATCH' "$O/run.log" | head -5

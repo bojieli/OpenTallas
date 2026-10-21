@@ -1,0 +1,17 @@
+CPROG FAIL: 34/116 compiled events on their edges, 3 complete decode stages (+1 cut by the run end) (E0 [7655, 7735, 14318, 21161, 28004]), unexpected 70, sys_face faults 1 (first @7457), lane ages measured {'R_AG': 17, 'R_SS': 17, 'R_CMD': [19], 'R_HR': [19]}
+    tt_ctlm fault rise at 6098: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    die lane age R_AG: measured 17, image compiled with 13 (/srv/opentallas-scratch/claude/q-xpf-1018/src/results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json (measured lane ages; the die exports no land plan))
+    die lane age R_SS: measured 17, image compiled with 13 (/srv/opentallas-scratch/claude/q-xpf-1018/src/results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json (measured lane ages; the die exports no land plan))
+    die lane age R_CMD: measured [19], image compiled with 14 (/srv/opentallas-scratch/claude/q-xpf-1018/src/results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json (measured lane ages; the die exports no land plan))
+    die lane age R_HR: measured [19], image compiled with 14 (/srv/opentallas-scratch/claude/q-xpf-1018/src/results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bn.json (measured lane ages; the die exports no land plan))
+    CMD: 58 events off by [5] edges vs the compiled relay age
+    HRROM: 12 events off by [5] edges vs the compiled relay age
+    missing CMD at 6118 0xf000000000000000000000000000f
+    missing CMD at 7756 0xf0000000000000000000000000003
+    missing HRROM at 7787 None
+    missing CMD at 7823 0xf0000000000000000000000000023
+    missing CMD at 8030 0xf0000000000000000000000000033
+    missing CMD at 8056 0xf0000000000000000000000000043
+    missing CMD at 8087 0xf0000000000000000000000000053
+    missing CMD at 8112 0xf0000000000000000000000000063
+    missing CMD at 8143 0xf0000000000000000000000000073

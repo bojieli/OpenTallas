@@ -1,0 +1,14 @@
+{
+  "phase": "finite core exclusion guard-band review before final contract",
+  "initial_cell_size_nm": [108,168],
+  "actual_M2_landing_width_nm": 84,
+  "initial_cell_horizontal_margin_nm": 12,
+  "declared_required_lower_metal_margin_nm": 31,
+  "verdict": "REFUSED_UNDERPRICED_GUARD_BAND",
+  "final_cell_size_nm": [168,216],
+  "final_actual_all_lower_pad_minimum_margin_nm": 42,
+  "final_lower_cut_minimum_margin_nm_at_least": 34,
+  "SC2_final_north_apron_height_nm": 172,
+  "SC2_final_apron_area_um2": 29.919056,
+  "correction": "Reserve real guard space and recompute bitcore capacity; no supply metal, vias, RC or A3 geometry changes."
+}

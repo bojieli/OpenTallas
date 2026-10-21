@@ -1,0 +1,22 @@
+GATE WARN clock_span: 864.0 x 432.0 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE INFO pin_regs: pin registers opted out: the RTL registers every data/control input at its pin (PIN_IN=1, in the region's own clock) and every output is flop Q; the flow wrapper would add a second +1 register (single clock)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 256 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_dv_slice2_stn8_20261019-163557.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_dv_slice2_stn8_20261019-163557.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice2_stn8-20261019-163557
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 630 s (gate total 3766 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 4191, 'pin_rectangles': 4191, 'pin_track_checked': 4191, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 c144a578991aead8d42ce4d45846a038963cd896af358d99f3368b45d804cbc0
+GATE INFO util: synthesized std area 59164 um2 + macros 22096 in core 178991: util 45% (std-cell density 45.2% of placeable 130954 um2; total fill 45.4%)
+GATE INFO textbook: WARN qfd_dv_redstn2_rg8 cells 438,376 flops 86,408 depth 571.8 ps util 0.2185 reach 0.0 um (8.9 s)
+GATE WARN textbook.clock_domain: clock root port ck_r0: 10,801 flops > 8,000 spread over a 860 x 428 um outline (> 600 um) (+0 ICGs, 5 macro clock pins; e.g. u_rg.g_r[0].u_rg.bt_re$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_domain: clock root port ck_r1: 10,801 flops > 8,000 spread over a 860 x 428 um outline (> 600 um) (+0 ICGs, 5 macro clock pins; e.g. u_rg.g_r[1].u_rg.bt_re$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_domain: clock root port ck_r2: 10,801 flops > 8,000 spread over a 860 x 428 um outline (> 600 um) (+0 ICGs, 5 macro clock pins; e.g. u_rg.g_r[2].u_rg.bt_re$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_domain: clock root port ck_r3: 10,801 flops > 8,000 spread over a 860 x 428 um outline (> 600 um) (+0 ICGs, 5 macro clock pins; e.g. u_rg.g_r[3].u_rg.bt_re$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-slice3-1019/physical/ref_tile/qfd_dv_slice2_stn8/gate_layout/floorplan.png
+PRE_ROUTE_GATE: FAIL (2 fail, 7 warn)
+GATE: qfd_dv_slice2_stn8/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -1,0 +1,52 @@
+XSL_MISMATCH xs edge 464 ref edge 143 valid 1/0 cc 0040/0040
+XSL_BIT edge 464 bit 0 xs 1 ref 0
+XSL_BIT edge 464 bit 1 xs 1 ref 0
+XSL_BIT edge 464 bit 2 xs 1 ref 0
+XSL_BIT edge 464 bit 3 xs 1 ref 0
+XSL_BIT edge 464 bit 4 xs 1 ref 0
+XSL_BIT edge 464 bit 6 xs 1 ref 0
+XSL_BIT edge 464 bit 7 xs 1 ref 0
+XSL_BIT edge 464 bit 9 xs 1 ref 0
+XSL_BIT edge 464 bit 12 xs 1 ref 0
+XSL_BIT edge 464 bit 13 xs 1 ref 0
+XSL_BIT edge 464 bit 15 xs 1 ref 0
+XSL_BIT edge 464 bit 16 xs 1 ref 0
+XSL_MISMATCH xs edge 465 ref edge 144 valid 1/0 cc 0040/0040
+XSL_BIT edge 465 bit 0 xs 1 ref 0
+XSL_BIT edge 465 bit 1 xs 0 ref 1
+XSL_BIT edge 465 bit 4 xs 0 ref 1
+XSL_BIT edge 465 bit 5 xs 1 ref 0
+XSL_BIT edge 465 bit 9 xs 0 ref 1
+XSL_BIT edge 465 bit 10 xs 1 ref 0
+XSL_BIT edge 465 bit 11 xs 1 ref 0
+XSL_BIT edge 465 bit 16 xs 0 ref 1
+XSL_BIT edge 465 bit 18 xs 0 ref 1
+XSL_BIT edge 465 bit 20 xs 1 ref 0
+XSL_BIT edge 465 bit 24 xs 0 ref 1
+XSL_BIT edge 465 bit 27 xs 1 ref 0
+XSL_MISMATCH xs edge 466 ref edge 145 valid 1/0 cc 0040/0040
+XSL_MISMATCH xs edge 467 ref edge 146 valid 1/0 cc 0040/0040
+XSL_MISMATCH xs edge 468 ref edge 147 valid 1/0 cc 0040/0040
+XSL_MISMATCH xs edge 469 ref edge 148 valid 1/1 cc 0040/0040
+RET 705 07cafa18c1000008b
+RET 706 17a287c0c1000408b
+RET 709 07715eab01000804b
+RET 710 07b237c381000c04b
+RET 715 07b5b8bd01000844b
+RET 716 17a6991961000c44b
+RET 722 17a7c9fec1000888b
+RET 723 17accc83a1000c88b
+RET 725 07b82a1101000088b
+RET 726 078474f9c1000488b
+XSL_LOCKSTEP D=321 compared=1023 mismatch=92 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=-1
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame_xs.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 4.607 s; speed 293.052 ns/s
+- Verilator: cpu 4.598 s on 1 threads; allocated 48 MB
+CHECK PLAN_MISMATCH predicted 10 words, got 10; first diff ((724, 0, (0, 2, 5), 1045942470, 0), (705, 0, (0, 2, 5), 1045942470, 0))
+CHECK LOCKSTEP D=321 compared=1023 mismatch=92 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=-1
+CHECK XSL_MISMATCH xs edge 464 ref edge 143 valid 1/0 cc 0040/0040
+CHECK XSL_MISMATCH xs edge 465 ref edge 144 valid 1/0 cc 0040/0040
+CHECK XSL_MISMATCH xs edge 466 ref edge 145 valid 1/0 cc 0040/0040
+CHECK XSL_MISMATCH xs edge 467 ref edge 146 valid 1/0 cc 0040/0040
+XS_CAL_CHECK FAIL p16_nostall

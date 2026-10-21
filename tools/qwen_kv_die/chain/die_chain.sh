@@ -20,12 +20,30 @@ validate_case() {
 # Q-KV 2026-10-16: the prep's OT_KV_* flags (kvsys_prep.sh kv_flags.env) for the strict bind re-imports of kv_die
 [ "$DIE" = kv ] && [ -f "$R/kv_flags.env" ] && . "$R/kv_flags.env"
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
+# QW-DIECHAIN2 10-19 (dv2f18dh2 chain died: `ln` of the root-owned dieclk clock.odb -> grt floorplan_pdn.odb, Permission
+# denied under fs.protected_hardlinks, so GRT opened no ODB): place SRC... DST hard-links when the kernel allows it and
+# falls back to a copy for a root-owned / foreign-owned / cross-filesystem source.  Fails (non-zero) only if both fail.
+place() {
+  local n=$# s t; local d=${!n}
+  for s in "${@:1:n-1}"; do
+    t=$d; [ -d "$d" ] && t=$d/$(basename "$s")
+    ln -f "$s" "$t" 2>/dev/null || { rm -f "$t" && cp --reflink=auto "$s" "$t"; } || return 1
+  done
+}
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
 # ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset).  The KV die
 # runs it after the strict bind below (QXF-SEAMK 10-18: netlist-walk export + the compiler's schedule for THIS die)
 if [ "$DIE" != kv ]; then
-RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"; [ "$RCR" = 0 ] || exit 1
+RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"
+# QW-DIECHAIN2 10-19: same OT_BIND_DIAGNOSTIC=1 convention as the KV branch below -- a relay FAIL is stamped on STATUS and
+# in NOT_A_DIE_RESULT and the chain continues as PATHFINDING only (never a die result); default stays: stop.
+if [ "$RCR" != 0 ]; then
+  if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+    say "RELAY_CHECK FAIL ($R/relay_check.json): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT"
+    echo "RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+  else exit 1; fi
+fi
 fi
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
 # every launch, including preserved-case resumes. HARD_PHY still needs real ports.
@@ -75,8 +93,14 @@ fi
 # The PDN stays FAIL in STATUS; nothing about the PG verdict is relaxed (like OT_PDN=skip, timing-only evidence).
 pg_open_diag() {
   [ "${OT_PG_OPEN_DIAG:-0}" = 1 ] && grep -q '^OT_PDN PASS' $C/run_pdn.log && [ -s $C/floorplan_pdn_prepg.odb ] || return 1
+  # A killed or incomplete PG check is not a measured connectivity failure. Require both the process verdict
+  # and an explicit completed check failure before taking the diagnostic continuation (Qwen recovery 10-18).
+  local pg_process_rc
+  pg_process_rc=$(cat "$C/run_pdn.log.process_exit" 2>/dev/null) || return 1
+  case "$pg_process_rc" in 0|1) ;; *) return 1;; esac
+  grep -Eq '^OT_PGCHECK (VDD|VSS) FAIL ' "$C/run_pdn.log" || return 1
   grep -E '^(OT_.*FAIL|Error:|\[ERROR)' $C/run_pdn.log | grep -v -E 'OT_PGCHECK (VDD|VSS) FAIL|PSM-0069|run_pdn.tcl, [0-9]+ PSM-0069' | grep -q . && return 1
-  ln -f $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb
+  place $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb || return 1
   say "PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: $(grep PSM-0039 $C/run_pdn.log | sed -E 's/.*instance ([^ /]+)\/.*/\1/; s/(_[0-9]+)+$//' | sort | uniq -c | sort -rn | awk '{printf "%s=%s ",$2,$1}')"
 }
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
@@ -94,7 +118,7 @@ say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' 
 if [ "${OT_PDN:-run}" = skip ]; then
   # kvsys lead r5 2026-10-14: per-instance macro grids on the 13.4k expanded leaves insert ~15/min (~15 h): a
   # DIAGNOSTIC chain may skip the die PDN (GRT then sees no M8/M9 straps: overflow optimistic; STA unaffected)
-  ln -f $C/floorplan.odb $C/floorplan_pdn.odb
+  place $C/floorplan.odb $C/floorplan_pdn.odb || { say "PDN skip: cannot place floorplan.odb"; exit 1; }
   say "PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY"
 else
 $ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)); pdn_rc=$?
@@ -103,7 +127,36 @@ elif pg_open_diag; then :
 else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
-mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
+mkdir -p $G; cp $H/grt.tcl $G/; place $C/floorplan_pdn.odb $G/floorplan_pdn.odb || { say "GRT: cannot place floorplan_pdn.odb in $G"; exit 1; }
+# GEN16 item 6 (10-19, OT_DIE_CLOCK_PHYS=1, Qwen compute): the PHYSICAL die clock (regional entries + forwarded spine,
+# tools/qwen_split/chain_dieclk.sh) is built on the PDN floorplan BEFORE GRT; GRT routes its nets, STA takes the measured
+# arrivals as source latency (dieclk_lat_<c>.tcl).  Fail closed: no complete die clock, no GRT.
+if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
+  say "DIE CLOCK PHYS start (chain_dieclk.sh ${OT_DIE_CLOCK_VARIANT:-spine}: on case_${DIE}/floorplan_pdn.odb, before GRT)"
+  bash $SRC/tools/qwen_split/chain_dieclk.sh $R $SRC > $R/dieclk.log 2>&1 || { say "DIE CLOCK PHYS FAIL ($R/dieclk.log, $R/dieclk/STATUS.log): $(tail -1 $R/dieclk.log | cut -c1-300)"; exit 1; }
+  # QW-GEN2 10-19: dv2f18dh2 died here (ORD-0007: ln of the root-owned docker output -> Permission denied): copy, never link
+  rm -f $G/floorplan_pdn.odb; cp $R/dieclk/${OT_DIE_CLOCK_VARIANT:-spine}/tt/clock.odb $G/floorplan_pdn.odb || { say "DIE CLOCK PHYS: clock.odb copy FAIL"; exit 1; }
+  say "DIE CLOCK PHYS: $(grep -h -E 'CHECK TT\+FF|QCLK_SPINE_NEIGHBOUR|QCLK_SPINE_MANIFEST|QCLK_REGIONAL|DIECLK_STA_LAT' $R/dieclk/STATUS.log | tr '\n' ' ' | cut -c1-900)"
+fi
+# ROOT14 10-20 (owner: reduce die closure risk): GEN hard checks before any GRT (tools/die_safety/gen_check.py):
+# every region crossing landed (ring) with a clock root on both sides, every die wire hop <= 405 um (relay site within
+# reach).  Facts: case_<die>/gen_safety_facts.json (GEN export), the die clock landed_pairs.json, the relay-stage spans.
+# Counts go into RUN/gen_packet.json.  FAIL stops the chain; OT_GEN_SAFETY=diag / OT_BIND_DIAGNOSTIC=1 run it as a
+# labelled diagnostic (NOT_A_DIE_RESULT).
+GSA=(--design "$DIE" --packet "$R/gen_packet.json" --out "$R/gen_safety.json")
+[ -s "$C/gen_safety_facts.json" ] && GSA+=(--facts "$C/gen_safety_facts.json")
+for f in "${OT_GEN_LANDED_PAIRS:-}" "$R/dieclk/landed_pairs.json" "$R"/dieclk/*/landed_pairs.json; do
+  [ -n "$f" ] && [ -s "$f" ] && { GSA+=(--landed-pairs "$f"); break; }; done
+for f in "$C/relay_stages.json" "$R/relay_stages_netlist.json"; do [ -s "$f" ] && { GSA+=(--relay-stages "$f"); break; }; done
+GSL=$(python3 "$SRC/tools/die_safety/gen_check.py" "${GSA[@]}" 2>&1) && GSR=0 || GSR=$?
+say "$(echo "$GSL" | tail -1 | cut -c1-900)"
+if [ "$GSR" != 0 ]; then
+  if [ "${OT_GEN_SAFETY:-fail}" = diag ] || [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+    say "GEN SAFETY FAIL ($R/gen_safety.json): DIAGNOSTIC ONLY -- NOT A DIE RESULT"; echo "GEN_SAFETY_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+  else
+    say "GEN SAFETY FAIL ($R/gen_safety.json): no die GRT launched (OT_GEN_SAFETY=diag = labelled diagnostic)"; exit 1
+  fi
+fi
 # DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
 # element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
@@ -118,16 +171,33 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
   python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
   python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
-    --std-corner TT --legalize snap "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+    --std-corner TT --legalize snap --signal-top-layer ${OT_DIE_SIGNAL_TOP_LAYER:-M8} "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+  # Q-RLYFCLK 10-19: forwarded-lane capture payload contract (a[] + ea; landing K straps from own ties are not payload)
+  if [ "${RD%_fwd}" != "$RD" ] && [ -f $SRC/tools/qwen_split/fclk_data_ports.py ]; then
+    { python3 $SRC/tools/qwen_split/fclk_data_ports.py $C/die.v && cat $G/die_rep_call.tcl; } > $G/die_rep_call.tcl.new && \
+      mv $G/die_rep_call.tcl.new $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: fclk data-port contract"; exit 1; }
+  fi
 fi
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0}
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0} OT_DIE_SIGNAL_TOP_LAYER=${OT_DIE_SIGNAL_TOP_LAYER:-M8}
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   say "$(python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json)" || true
   python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json > /dev/null || { say "DIE_REPAIR FAIL: no GRT result is a die result"; exit 1; }
 fi
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
-[ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }
+# ROOT14 10-20 (COORD 21:29 risk reduction (a)): die STA TT setup + FF hold runs on EVERY die build, diagnostic ones
+# included -- OT_STOP=grt no longer skips it (the GRT map is still written first).
+[ "${OT_STOP:-}" = grt ] && say "OT_STOP=grt: die STA TT+FF still runs (every die build is timed)"
+# ROOT14 10-20: die IR-drop check with the M8 signal routes present (tools/die_safety/ir_step.sh on the GRT odb + GRT M8
+# usage).  FAIL / NOT_RUN = chain FAIL at the end (STA still runs) and an OWNER_REPORT line (coordinator tells the owner).
+ir_failed=0
+if [ "${OT_DIE_IR:-run}" != skip ]; then
+  OT_IR_DESIGN=$DIE bash "$SRC/tools/die_safety/ir_step.sh" "$G/ckpt_grt.odb" "$R/ir_drop" "$G/grt.log" > "$R/ir_drop.log" 2>&1 || ir_failed=1
+  say "$(grep -E '^DIE_IR_DROP ' $R/ir_drop.log | tail -1 | cut -c1-600)"
+  [ "$ir_failed" = 0 ] || say "$(grep -E '^OWNER_REPORT ' $R/ir_drop.log | tail -1 | cut -c1-600)"
+else
+  say "DIE IR DROP SKIPPED (OT_DIE_IR=skip): NOT A DIE RESULT"; echo "IR_DROP_SKIPPED" >> "$R/NOT_A_DIE_RESULT"
+fi
 # qwen-1010/a: a die top without ports gets an empty *PORTS section from write_spef; OpenSTA rejects it (STA-1670)
 if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;next} p&&NF{print;exit}' | grep -q '^\*D_NET\|^\*NAME_MAP'; then
   awk 'NR<=30 && /^\*PORTS$/ {next} {print}' $G/die_grt.spef > $G/die_grt.spef.np && mv $G/die_grt.spef.np $G/die_grt.spef
@@ -135,18 +205,27 @@ if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;n
 fi
 sta_failed=0
 corners=${OT_CORNERS-tt ff}
+# ROOT14 10-20: TT setup + FF hold always (tools/die_safety/corners.py completes the list, never trims it)
+corners=$(python3 "$SRC/tools/die_safety/corners.py" $corners 2>>$R/STATUS.log) || { say "STA FAIL: bad corner list ${OT_CORNERS:-}"; exit 1; }
 [ -n "${corners//[[:space:]]/}" ] || { say "STA FAIL: empty corner list"; exit 1; }
 for c in $corners; do
   case "$c" in tt|ff|ss) ;; *) say "STA FAIL: unsupported corner $c"; exit 1;; esac
 done
 for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; sta_failed=1; continue; }
-  ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
+  place $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/ || { say "STA $c: cannot place GRT outputs in $D"; sta_failed=1; continue; }
   cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; for f in $R/libs/qfd_etm_*_$c.lib; do [ -f "$f" ] && cp "$f" $D/libs/; done; [ -f $R/libs/views.json ] && cp $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
   # qwendie-1011: the die's CTS-measured clock arrivals (clock_plan.py record) when the run has one, else ideal
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP || { say "STA $c Tcl generation FAIL"; sta_failed=1; continue; }
   say "STA $c clock: ${OT_STA_CLOCKS:-${CP:-ideal (no clock plan)}}"
+  if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
+    # GEN16 item 6: measured die-clock arrivals as source latency after the compensated clocks (SS: no measured corner)
+    if [ -s $R/dieclk/dieclk_lat_$c.tcl ] && grep -q OT_COMPENSATED_CLOCK $D/grt_$c.tcl; then
+      sed -i "/OT_COMPENSATED_CLOCK/r $R/dieclk/dieclk_lat_$c.tcl" $D/grt_$c.tcl; say "STA $c: physical die clock arrivals ($(head -2 $R/dieclk/dieclk_lat_$c.tcl | tail -1 | cut -c1-160))"
+    elif [ "$c" = ss ]; then say "STA ss: die clock NOT measured at SS (sensitivity corner; ideal die clock)"
+    else say "STA $c: DIE CLOCK PHYS latency file missing or no compensated clock block"; sta_failed=1; continue; fi
+  fi
   # ROOT 2026-10-16 (coordinator, owner-approved): shared die clock check on every die trial (tools/die_clock_check.*);
   # dumped inside the STA session after the reports, corners in OT_DCC_CORNERS (default tt)
   DCC=0; case " ${OT_DCC_CORNERS:-tt} " in *" $c "*) DCC=1;; esac
@@ -191,6 +270,7 @@ if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
     --out $R/rst_window.json 2>&1 | tail -1)"
 fi
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+[ "$ir_failed" = 0 ] || { say "chain FAIL: die IR-drop check FAIL/NOT_RUN ($R/ir_drop/ir_drop.json) -- OWNER REPORT"; exit 1; }
 if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
   LG=(); for c in tt ff; do [ -s $R/sta_${DIE}_$c/grt_$c.log ] && LG+=($R/sta_${DIE}_$c/grt_$c.log); done
   [ ${#LG[@]} -gt 0 ] && say "LAND PLAN: $(python3 $SRC/tools/qwen_split/fwd_land_plan.py plan --lanes $C/fwd_lanes.json --logs "${LG[@]}" --out $R/land_plan.json 2>&1 | tail -1)"

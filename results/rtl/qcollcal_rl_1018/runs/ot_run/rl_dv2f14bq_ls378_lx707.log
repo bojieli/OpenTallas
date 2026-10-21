@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   660 GB (avail 714, growth 252, headroom 0, waiters 0/0 GB) load 148/128 running 40 disk 2056 GB 
+ot-run: ot-epyc4       admits   246 GB (avail 378, growth 205, headroom 0, waiters 0/0 GB) load 113/128 running 24 disk 48 GB 
+ot-run: ot-pve1        admits   233 GB (avail 212, growth 49, headroom 0, waiters 0/0 GB) load 43/28 running 18 disk 1222 GB 
+ot-run: ot-agidock128  admits    48 GB (avail 73, growth 40, headroom 0, waiters 0/0 GB) load 71/64 running 14 disk 173 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2662714-1792373824 after 0 s
+case qwen_ar_256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=2048 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=2048 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=797
+case qwen_layer_2x256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=4096 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4096 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1537
+case qwen_argmax_1w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=16 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=64 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=446
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=4128 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4160 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1545
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=4 latu=53 lats=378
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2662714-1792373824): exit 0

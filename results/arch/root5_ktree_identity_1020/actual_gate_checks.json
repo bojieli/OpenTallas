@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "actual_gate_warn_raw_fail_preserved",
+    "missing_node_refused",
+    "extra_node_refused",
+    "wrong_driver_refused",
+    "wrong_net_refused",
+    "loads_refused",
+    "max_refused",
+    "missing_lib_refused",
+    "other_top_refused",
+    "role_error_refused"
+  ],
+  "gate_items": [
+    {
+      "severity": "WARN",
+      "check": "native_census",
+      "message": "raw native census FAIL max34; exact coordinator waiver for 15 library-adder nodes",
+      "fix": "coord-20261020-0330-ktree-15-library-adder-nodes; all other drivers retain limit32; timing and physical checks required"
+    }
+  ],
+  "raw_reports": {
+    "candidate_new.json": {
+      "sha256": "1e4c013e4e4431edb483990ae0dd22505de77eb0c6d56591136084373092017f",
+      "bytes": 9444565
+    }
+  }
+}

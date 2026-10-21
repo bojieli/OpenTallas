@@ -3,13 +3,15 @@
 // dchn / dout, ot_s81_kp4_dec) against the frozen two-tile decoder of 33a35eb7d (ref/ot_s81_kp4_dec_r33.sv), on the
 // tb_s81_kp4 stimulus (encoder + random symbol errors, frames <= t and > t).
 //   * RTL: every output of u_d (DMUT) equals the reference u_r (MUT 0) on every cycle after reset (same latency, 60);
-//   * HW: kp4_dec_hw = the four tiles with every tile pin registered (cluster in / out + both pins of every seam);
-//     its q_* equal the reference delayed by DLY_Q = 6 cycles and lock by DLY_L = 2 (pin registers of the
-//     33a35eb7d cluster: 4 on q_*) -> the re-split adds 2 cycles in hardware;
+//   * HW: kp4_dec_hw = the four tiles with every tile pin registered (cluster in / out + both pins of every seam)
+//     PLUS the hardened 2x2 parent's own pin registers (s81lk_kp4_dec pin_regs, SMHKP4 2026-10-18: +1 in, +1 out);
+//     its q_* equal the reference delayed by DLY_Q = 8 cycles and lock by DLY_L = 4 (n_* counters are not cycle-aligned in this model, as before) (pin registers of the
+//     33a35eb7d cluster: 4 on q_*) -> the re-split adds 2 cycles and the parent landing 2 more in hardware;
 //   * the original tb_s81_kp4 exactness checks against tools/s81_link/rs544.py still run on u_d.
-// PASS line: TB_S81_KP4_EQ ... PASS.  A mutant (DMUT 2 / 3, or SEAMMUT 1: the word seam one register short) must FAIL.
+// PASS line: TB_S81_KP4_EQ ... PASS.  A mutant (DMUT 2 / 3, SEAMMUT 1: the word seam one register short, or PREGMUT 1:
+// the parent's input landing register missing) must FAIL.
 module tb_s81_kp4_eq;
-    parameter integer NF = 120, NV = 16, EMUT = 0, DMUT = 0, SEAMMUT = 0;
+    parameter integer NF = 120, NV = 16, EMUT = 0, DMUT = 0, SEAMMUT = 0, PREGMUT = 0;
     reg clk = 0, rst_n = 0;
     always #0.41667 clk = ~clk;
     reg tx_v = 0; reg [511:0] tx_d = 0;
@@ -24,15 +26,15 @@ module tb_s81_kp4_eq;
     ot_s81_kp4_dec_r33 u_r (.clk(clk), .rst_n(rst_n), .p_v(ch_v), .p_d(ch_d), .q_v(r_v), .q_d(r_d), .q_first(r_first),
         .q_unc(r_unc), .q_nerr(r_nerr), .q_seq(r_seq), .lock(r_lock), .n_corr(r_corr), .n_unc(r_unc_n), .n_relock(r_relock));
     wire h_v, h_first, h_unc, h_lock; wire [511:0] h_d; wire [4:0] h_nerr; wire [7:0] h_seq; wire [31:0] h_corr, h_unc_n, h_relock;
-    kp4_dec_hw #(.MUT(DMUT), .SEAMMUT(SEAMMUT)) u_h (.clk(clk), .rst_n(rst_n), .p_v(ch_v), .p_d(ch_d), .q_v(h_v), .q_d(h_d), .q_first(h_first),
+    kp4_dec_hw #(.MUT(DMUT), .SEAMMUT(SEAMMUT), .PREGMUT(PREGMUT)) u_h (.clk(clk), .rst_n(rst_n), .p_v(ch_v), .p_d(ch_d), .q_v(h_v), .q_d(h_d), .q_first(h_first),
         .q_unc(h_unc), .q_nerr(h_nerr), .q_seq(h_seq), .lock(h_lock), .n_corr(h_corr), .n_unc(h_unc_n), .n_relock(h_relock));
-    localparam integer DLY_Q = 6, DLY_L = 2;
-    reg [530:0] rq_dl [0:DLY_Q]; reg rl_dl [0:DLY_L];
+    localparam integer DLY_Q = 8, DLY_L = 4;
+    reg [530:0] rq_dl [0:DLY_Q]; reg rl_dl [0:DLY_L]; reg [95:0] rn_dl [0:DLY_L];
     integer k_, eq_rtl_bad = 0, eq_hw_bad = 0, eq_cyc = 0, eq_qv = 0;
     always @(posedge clk) begin
-        rq_dl[0] <= {r_v, r_first, r_unc, r_nerr, r_seq, r_d}; rl_dl[0] <= r_lock;
+        rq_dl[0] <= {r_v, r_first, r_unc, r_nerr, r_seq, r_d}; rl_dl[0] <= r_lock; rn_dl[0] <= {r_corr, r_unc_n, r_relock};
         for (k_ = 1; k_ <= DLY_Q; k_ = k_ + 1) rq_dl[k_] <= rq_dl[k_ - 1];
-        for (k_ = 1; k_ <= DLY_L; k_ = k_ + 1) rl_dl[k_] <= rl_dl[k_ - 1];
+        for (k_ = 1; k_ <= DLY_L; k_ = k_ + 1) begin rl_dl[k_] <= rl_dl[k_ - 1]; rn_dl[k_] <= rn_dl[k_ - 1]; end
     end
     always @(posedge clk) if (rst_n) begin
         eq_cyc = eq_cyc + 1; if (r_v) eq_qv = eq_qv + 1;
@@ -146,13 +148,14 @@ module tb_s81_kp4_eq;
     end
 endmodule
 
-// four tiles with every tile pin registered (the pin_regs of the kits): cluster in (1) / out (1), each seam 2
-module kp4_dec_hw #(parameter integer MUT = 0, parameter integer SEAMMUT = 0) (
+// four tiles with every tile pin registered (the pin_regs of the kits): cluster in (1) / out (1), each seam 2; plus the
+// hardened parent's own pin registers (s81lk_kp4_dec pin_regs): p_* in (1), every output out (1)
+module kp4_dec_hw #(parameter integer MUT = 0, parameter integer SEAMMUT = 0, parameter integer PREGMUT = 0) (
     input wire clk, input wire rst_n, input wire p_v, input wire [543:0] p_d,
     output wire q_v, output wire [511:0] q_d, output wire q_first, output wire q_unc, output wire [4:0] q_nerr, output wire [7:0] q_seq,
     output wire lock, output wire [31:0] n_corr, n_unc, n_relock);
-    reg pv1; reg [543:0] pd1;
-    always @(posedge clk) begin pv1 <= p_v; pd1 <= p_d; end
+    reg pv0, pv1; reg [543:0] pd0, pd1;
+    always @(posedge clk) begin pv0 <= p_v; pd0 <= p_d; pv1 <= PREGMUT ? p_v : pv0; pd1 <= PREGMUT ? p_d : pd0; end
     wire [543:0] x_q, d_q, cw; wire [3:0] k_v; wire [309:0] k_lo; wire [4:0] k_L, o_ne; wire k_any, o_unc, fs, lk; wire [7:0] apply;
     wire [31:0] nrl, nco, nun;
     ot_s81_kp4_dsyn #(.MUT(MUT)) u_syn (.clk(clk), .rst_n(rst_n), .p_v(pv1), .p_d(pd1), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
@@ -170,6 +173,8 @@ module kp4_dec_hw #(parameter integer MUT = 0, parameter integer SEAMMUT = 0) (
         .q_v(v_), .q_d(d_), .q_first(f_), .q_unc(u_), .q_nerr(ne_), .q_seq(sq_));
     reg [529:0] o1; reg l1; reg [95:0] n1;
     always @(posedge clk) begin o1 <= {v_, f_, u_, ne_, sq_, d_}; l1 <= lk; n1 <= {nco, nun, nrl}; end
-    assign {q_v, q_first, q_unc, q_nerr, q_seq, q_d} = o1;
-    assign lock = l1; assign {n_corr, n_unc, n_relock} = n1;
+    reg [529:0] o2; reg l2; reg [95:0] n2;
+    always @(posedge clk) begin o2 <= o1; l2 <= l1; n2 <= n1; end
+    assign {q_v, q_first, q_unc, q_nerr, q_seq, q_d} = o2;
+    assign lock = l2; assign {n_corr, n_unc, n_relock} = n2;
 endmodule

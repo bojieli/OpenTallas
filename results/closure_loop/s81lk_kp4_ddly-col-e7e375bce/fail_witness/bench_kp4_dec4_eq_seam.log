@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81lk_kp4_ddly-col-e7e375bce bench bench_kp4_dec4_eq_seam host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81lk_kp4_ddly-col-e7e375bce log cl/bench_kp4_dec4_eq_seam.a1b1.log captured 2026-10-19T01:44:59-07:00
+# fail_regex '^TB_S81_KP4_EQ FAIL$'
+ERR hw mismatch cycle 90
+ERR hw mismatch cycle 91
+ERR hw mismatch cycle 92
+TB_S81_KP4_EQ cycles=1476 ref_beats=1395 rtl_mismatch=0 hw_mismatch=1387 SEAMMUT=1
+TB_S81_KP4 frames_out=140 exact=122 beyond_t_flagged=17 bad=0 miscorrected=0 nerr_bad=0 parity_checked=16 parity_bad=0 lock=1 relocks=1 n_corr=855 n_unc=17 EMUT=0 DMUT=0 FAIL
+TB_S81_KP4_EQ FAIL

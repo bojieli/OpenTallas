@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbfd_pad_r17x115-p1-1e2fd202a bench bench_pad_mut3_edge host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hbfd_pad_r17x115-p1-1e2fd202a log cl/bench_pad_mut3_edge.a1b1.log captured 2026-10-19T17:34:04-07:00
+# fail_regex 'PAD_MUTANT_WITNESS mutant=3 W=17 N=115'
+Verilator 5.050 2026-07-01 rev v5.050
+[98000] %Fatal: tb.sv:23: Assertion failed in tb_hbfd_pad_storage.c57: PAD_MUTANT_WITNESS mutant=3 W=17 N=115 seq=117
+%Error: tb.sv:23: Verilog $stop
+Aborting...

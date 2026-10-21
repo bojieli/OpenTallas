@@ -90,11 +90,18 @@ module tb_s81sl_cap;
             cfg_v <= 1'b0;
         end
     end
+    // split form (S81U-CAP2): the lane pin flops live in the tree leaves, fcause in the root leaf
+    wire [7:0] rvq; wire [15:0] fcause;
+    generate if (MUT == 0) begin : g_h
+        assign rvq = {dut.g_hard.u_te.rv_q, dut.g_hard.u_tw.rv_q}; assign fcause = dut.g_hard.u_rt.fcause;
+    end else begin : g_m
+        assign rvq = {dut.g_mut.u_te.rv_q, dut.g_mut.u_tw.rv_q}; assign fcause = dut.g_mut.u_rt.fcause;
+    end endgenerate
     // checks: the value registered at posedge cyc is visible at the following negedge
     integer j, found;
     always @(negedge clk) if (rst_n && cyc > 0) begin
         for (k = 0; k < 8; k = k + 1)
-            if (dut.rv_q[k]) begin
+            if (rvq[k]) begin
                 if (aidx >= nA || ea_e[aidx] != cyc || ea_l[aidx] != k) begin
                     if (abad < 8) $display("ARR_MISMATCH edge %0d lane %0d (expect %0d lane %0d)", cyc, k,
                                            aidx < nA ? ea_e[aidx] : -1, aidx < nA ? ea_l[aidx] : -1);
@@ -126,7 +133,7 @@ module tb_s81sl_cap;
                 extra = extra + 1;
             end
             $display("SLCAP rows %0d written_ok %0d bad_writes %0d missing %0d arrivals %0d/%0d arr_mismatch %0d fault %0d fcause %04h",
-                     nE, hits, bad, extra, aidx, nA, abad, fault, dut.fcause);
+                     nE, hits, bad, extra, aidx, nA, abad, fault, fcause);
             if (hits > 0) $display("SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min %0d max %0d mean %0.2f",
                                    lat_min, lat_max, lat_sum / hits);
             if (bad == 0 && extra == 0 && abad == 0 && aidx == nA && hits == nE && fault == 0) $display("PASS");

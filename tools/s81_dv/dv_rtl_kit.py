@@ -44,6 +44,10 @@ sys.path.insert(0, str(ROOT / 'tools'))
 CELL_MODELS = {  # ASAP7 7.5T RVT library function (asap7sc7p5t_INVBUF_RVT): Y = A / Y = ~A
     'BUFx8_ASAP7_75t_R': 'module BUFx8_ASAP7_75t_R (input A, output Y); assign Y = A; endmodule',
     'INVx2_ASAP7_75t_R': 'module INVx2_ASAP7_75t_R (input A, output Y); assign Y = ~A; endmodule',
+    # S81-LBGAP/G1 hop-0 lane clock gate (asap7sc7p5t_SEQ ICGx4): latch transparent while CLK is low, ANDed with CLK
+    'ICGx4_ASAP7_75t_R': ('module ICGx4_ASAP7_75t_R (input CLK, input ENA, input SE, output GCLK); reg en_l; '
+                          '/* verilator lint_off COMBDLY */ always_latch if (!CLK) en_l = ENA | SE; /* verilator lint_on COMBDLY */ '
+                          'assign GCLK = CLK & en_l; endmodule'),
 }
 DEFAULT_PREFER = ['tools/s81_dv/frame_bench.f', 'tools/s81_dv/svc_rs/rs_files.sh']
 MACRO_DIRS = ['physical/asap7_memory_macros_v2', 'physical/asap7_memory_macros']
@@ -153,7 +157,7 @@ def main(argv=None):
 
     defs = defaultdict(list)         # module -> [(path, Module)]   (parse cache: per ref sha + defines, ~3 min cold)
     import pickle
-    ck = Path.home() / '.cache' / 'dv_rtl_kit' / (sha + '_' + hashlib.sha256(repr((sorted(defines), sorted(texts))).encode()).hexdigest()[:16] + '.pkl')
+    ck = Path.home() / '.cache' / 'dv_rtl_kit' / (sha + '_' + hashlib.sha256(repr((sorted(defines), sorted(texts), texts['cells_used.v'])).encode()).hexdigest()[:16] + '.pkl')
     parsed = None
     if ck.exists():
         try:
@@ -235,7 +239,8 @@ def main(argv=None):
         (`begin : g_x  ot_v41_segtree6 #(...) u (...)`; the bind's child closure missed ot_v41_segtree6 / ot_s81sl_xr3 /
         ...), so also take every known module name followed by a parameter list or an instance name"""
         out = set()
-        for m in re.finditer(r'\b([A-Za-z_]\w*)\s*(?=#\s*\(|[A-Za-z_\\][\w\\]*\s*(?:\[[^\]]*\]\s*)?\()', body):
+        # (also `MASTER `MACRO inst (...)`: a parameter macro between master and instance, e.g. dsdv_gunit `DSDV_GU_MUT)
+        for m in re.finditer(r'\b([A-Za-z_]\w*)\s*(?=(?:`\w+\s*)?(?:#\s*\(|[A-Za-z_\\][\w\\]*\s*(?:\[[^\]]*\]\s*)?\())', body):
             if m.group(1) in defs:
                 out.add(m.group(1))
         return out
@@ -311,6 +316,9 @@ def main(argv=None):
     top_text = Path(a.top_v).read_text(errors='replace') if not a.top_v.endswith('.gz') else \
         __import__('gzip').open(a.top_v, 'rt').read()
     nets, tin, tout, insts = D.parse_die(a.top_v if not a.top_v.endswith('.gz') else _ungz(a.top_v, out), a.top)
+    # bench-side modules defined in the top file itself (dv_slice_cut dv_flight_sim, S81-LBGAP/G1) need no RTL source
+    local_mods = set(re.findall(r'^\s*module\s+(\w+)', top_text, re.M))
+    insts = [i for i in insts if i[0] not in local_mods]
     masters = sorted({i[0] for i in insts if i[0] != '__assign__'})
     pref_of = {}
     for k, (p, lab) in enumerate(pref_order):
@@ -371,10 +379,38 @@ def main(argv=None):
         dst.write_bytes(texts[f])
         rec_files.append(dict(path=f, sha256=hashlib.sha256(texts[f]).hexdigest(),
                               origin=(extra[f] if f in extra else ('library-function' if f == 'cells_used.v' else sha))))
+    # `include files (LB2-S81 L0 10-18: dsdv_svc_rs.sv / dsdv_svc_sx_hrow.sv include *_roles.svh from their own
+    # directory; the kit copied only module files -> "Cannot find include file").  Written next to the includer (its
+    # directory is already an +incdir), never listed as a compile unit; a missing include is a kit problem.
+    includes = []
+    tree_names = None
+    for f in list(files):
+        if f not in texts:
+            continue
+        for inc in re.findall(r'`include\s+"([^"]+)"', texts[f].decode(errors='ignore')):
+            cand = str(Path(f).parent / inc)
+            if cand not in texts:
+                r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                if r_.returncode:      # not beside the includer: the one file of that name in the tree (an +incdir)
+                    if tree_names is None:
+                        tree_names = git(repo, 'ls-tree', '-r', '--name-only', sha).split('\n')
+                    hits = [t for t in tree_names if t.endswith('/' + inc) and '/test/' not in t]
+                    if len(hits) != 1:
+                        problems.append(f'INCLUDE_MISSING {inc} (included by {f}; tree matches {hits[:4]})')
+                        continue
+                    cand = hits[0]
+                    r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                texts[cand] = r_.stdout
+            if cand not in includes and cand not in files:
+                includes.append(cand)
+                d_ = src / cand
+                d_.parent.mkdir(parents=True, exist_ok=True)
+                d_.write_bytes(texts[cand])
+                rec_files.append(dict(path=cand, sha256=hashlib.sha256(texts[cand]).hexdigest(), origin=sha, include=True))
     tdst = src / 'top' / Path(a.top_v).name.replace('.gz', '')
     tdst.parent.mkdir(parents=True, exist_ok=True)
     tdst.write_text(top_text)
-    incs = sorted({str((Path('src') / f).parent) for f in files})
+    incs = sorted({str((Path('src') / f).parent) for f in list(files) + includes})
     fl = [f'+incdir+{d}' for d in incs] + [f'+define+{d}' for d in defines] + [f'src/{f}' for f in files] + \
          [str(tdst.relative_to(out))]
     (out / 'kit.f').write_text('\n'.join(fl) + '\n')

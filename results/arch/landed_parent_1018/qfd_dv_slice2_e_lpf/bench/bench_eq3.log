@@ -1,0 +1,52 @@
+ot-run: ot-epyc4       admits  1121 GB (avail 849, growth 64, headroom 0, waiters 0/0 GB) load 45/128 running 15 disk 515 GB 
+ot-run: ot-epyc5       admits  1182 GB (avail 896, growth 69, headroom 0, waiters 0/0 GB) load 96/128 running 15 disk 1758 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ownq-slicee/src_6e88bca26
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ownq-slicee/src_6e88bca26
+ot-run: -> ot-epyc4
+ot-heavy: request 64G is charged 23G (class 'run_slice#_e_lpf.sh:eq' measured peak 14.8G, n=8+0 proved); the cap stays 64G
+ot-heavy: admitted on regular-crane as oth-ubuntu-172164-1792387937 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+/srv/opentallas-scratch/claude/ownq-slicee/bench_6e88bca26/eq3.log:LPF_MISMATCH port=ag_eo cycle=20 ref=091 lpf=092
+/srv/opentallas-scratch/claude/ownq-slicee/bench_6e88bca26/eq3.log:LPF_MISMATCH port=ag_eo cycle=23 ref=3f9 lpf=3fa
+/srv/opentallas-scratch/claude/ownq-slicee/bench_6e88bca26/eq3.log:LPF_MISMATCH port=ag_eo cycle=25 ref=12a lpf=129
+LPF_NZ ag_eo 2980
+LPF_NZ ss_eo 2981
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2969
+LPF_NZ cw_s1 2969
+LPF_NZ cw_s2 2969
+LPF_NZ cw_s3 2969
+LPF_FAULT_CYCLES heads=2974 any=2979
+LPF_EQ FAIL quiet=0 hronly=0 mismatches=1447 of 98373
+LPF_NZ ag_eo 2978
+LPF_NZ ss_eo 2981
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2969
+LPF_NZ cw_s1 2969
+LPF_NZ cw_s2 2969
+LPF_NZ cw_s3 2969
+LPF_FAULT_CYCLES heads=2968 any=2978
+LPF_EQ PASS quiet=1 hronly=0 compared=98373 nonzero=37505 cycles=3000
+LPF_NZ ag_eo 2968
+LPF_NZ ss_eo 2981
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2969
+LPF_NZ cw_s1 2969
+LPF_NZ cw_s2 2969
+LPF_NZ cw_s3 2969
+LPF_FAULT_CYCLES heads=2968 any=2968
+LPF_EQ PASS quiet=0 hronly=1 compared=98373 nonzero=32682 cycles=3000
+EQ MUT=3: LPF_EQ FAIL
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 5.776 MB sources in 96 modules, into 572.633 MB in 519 C++ files needing 0.151 MB
+- Verilator: Walltime 283.862 s (elab=0.906, cvt=133.362, bld=144.167); cpu 149.423 s on 16 threads; allocated 11128.398 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-172164-1792387937): exit 0

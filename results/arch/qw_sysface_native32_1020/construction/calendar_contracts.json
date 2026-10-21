@@ -1,0 +1,692 @@
+{
+  "qfd_syscal16_n32": {
+    "kind": "soft_child",
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 5,
+        "clock": false
+      },
+      "cfg_we": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "width": 5,
+        "clock": false
+      },
+      "cfg_data_k": {
+        "direction": "input",
+        "width": 32,
+        "clock": false
+      },
+      "cfg_seg_k": {
+        "direction": "input",
+        "width": 16,
+        "clock": false
+      },
+      "start_k": {
+        "direction": "input",
+        "width": 8,
+        "clock": false
+      },
+      "halt_k": {
+        "direction": "input",
+        "width": 8,
+        "clock": false
+      },
+      "seg_k": {
+        "direction": "input",
+        "width": 5,
+        "clock": false
+      },
+      "ev_v": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "ev_port": {
+        "direction": "output",
+        "width": 3,
+        "clock": false
+      },
+      "ev_kind": {
+        "direction": "output",
+        "width": 4,
+        "clock": false
+      },
+      "ev_beat": {
+        "direction": "output",
+        "width": 5,
+        "clock": false
+      },
+      "running": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "fault": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      }
+    },
+    "input_loads": {
+      "rst_n": [
+        30,
+        8,
+        14,
+        16,
+        16
+      ],
+      "cfg_we": [
+        4
+      ],
+      "cfg_addr": [
+        8,
+        8,
+        8,
+        8,
+        5
+      ],
+      "cfg_data_k": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "cfg_seg_k": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        5,
+        2,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "start_k": [
+        0,
+        2,
+        0,
+        4,
+        2,
+        17,
+        6,
+        4
+      ],
+      "halt_k": [
+        0,
+        4,
+        0,
+        10,
+        6,
+        8,
+        6,
+        4
+      ],
+      "seg_k": [
+        32,
+        16,
+        20,
+        5,
+        31
+      ]
+    },
+    "load_source_sha256": "16aeb2a6ef734586b41dd50bfd3163e2158807a9273def662d16fbbbcdcd9397",
+    "implementation_source_sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8",
+    "native_odb_sha256": "cd389d0c25bb09ce4ed910f968f1b999d46cea381a41d28fc66c0ab9ff4d432b",
+    "wrapper_sha256": "261aa885a092d01c41023daf307ad573f4a09e8536d7291b942dcc6864c003e4"
+  },
+  "qfd_syscal32_n32": {
+    "kind": "soft_child",
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 7,
+        "clock": false
+      },
+      "cfg_we": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "width": 6,
+        "clock": false
+      },
+      "cfg_data_k": {
+        "direction": "input",
+        "width": 32,
+        "clock": false
+      },
+      "cfg_seg_k": {
+        "direction": "input",
+        "width": 35,
+        "clock": false
+      },
+      "start_k": {
+        "direction": "input",
+        "width": 10,
+        "clock": false
+      },
+      "halt_k": {
+        "direction": "input",
+        "width": 10,
+        "clock": false
+      },
+      "seg_k": {
+        "direction": "input",
+        "width": 6,
+        "clock": false
+      },
+      "ev_v": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "ev_port": {
+        "direction": "output",
+        "width": 3,
+        "clock": false
+      },
+      "ev_kind": {
+        "direction": "output",
+        "width": 4,
+        "clock": false
+      },
+      "ev_beat": {
+        "direction": "output",
+        "width": 5,
+        "clock": false
+      },
+      "running": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "fault": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      }
+    },
+    "input_loads": {
+      "rst_n": [
+        31,
+        8,
+        14,
+        16,
+        16,
+        16,
+        16
+      ],
+      "cfg_we": [
+        4
+      ],
+      "cfg_addr": [
+        8,
+        8,
+        8,
+        4,
+        4,
+        8
+      ],
+      "cfg_data_k": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "cfg_seg_k": [
+        4,
+        4,
+        4,
+        4,
+        1,
+        4,
+        4,
+        4,
+        4,
+        1,
+        7,
+        4,
+        6,
+        4,
+        6,
+        4,
+        4,
+        4,
+        3,
+        2,
+        4,
+        4,
+        4,
+        3,
+        2,
+        7,
+        3,
+        6,
+        3,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "start_k": [
+        0,
+        3,
+        0,
+        7,
+        5,
+        18,
+        6,
+        4,
+        2,
+        4
+      ],
+      "halt_k": [
+        0,
+        3,
+        0,
+        9,
+        11,
+        6,
+        6,
+        4,
+        19,
+        4
+      ],
+      "seg_k": [
+        31,
+        16,
+        20,
+        7,
+        31,
+        32
+      ]
+    },
+    "load_source_sha256": "52e27953fc8875e840c1417ad25e96759fd3c6018e5d56b551a2da5a8b87af52",
+    "implementation_source_sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8",
+    "native_odb_sha256": "6c9c2700b84ab141f75ec31f2526a9904bbd1fd511c20e1e722b8c0c0af1072c",
+    "wrapper_sha256": "4060ae25ad01e4e7dfbc591cef78dca9af55e9a5b28fd8caab464c3a92228b57"
+  },
+  "qfd_syscal64_n32": {
+    "kind": "soft_child",
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 11,
+        "clock": false
+      },
+      "cfg_we": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "width": 7,
+        "clock": false
+      },
+      "cfg_data_k": {
+        "direction": "input",
+        "width": 64,
+        "clock": false
+      },
+      "cfg_seg_k": {
+        "direction": "input",
+        "width": 78,
+        "clock": false
+      },
+      "start_k": {
+        "direction": "input",
+        "width": 14,
+        "clock": false
+      },
+      "halt_k": {
+        "direction": "input",
+        "width": 14,
+        "clock": false
+      },
+      "seg_k": {
+        "direction": "input",
+        "width": 8,
+        "clock": false
+      },
+      "ev_v": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "ev_port": {
+        "direction": "output",
+        "width": 3,
+        "clock": false
+      },
+      "ev_kind": {
+        "direction": "output",
+        "width": 4,
+        "clock": false
+      },
+      "ev_beat": {
+        "direction": "output",
+        "width": 5,
+        "clock": false
+      },
+      "running": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "fault": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      }
+    },
+    "input_loads": {
+      "rst_n": [
+        32,
+        8,
+        14,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "cfg_we": [
+        4
+      ],
+      "cfg_addr": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        14
+      ],
+      "cfg_data_k": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "cfg_seg_k": [
+        4,
+        4,
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        3,
+        6,
+        2,
+        4,
+        4,
+        2,
+        1,
+        4,
+        4,
+        4,
+        4,
+        1,
+        1,
+        4,
+        4,
+        4,
+        4,
+        1,
+        4,
+        6,
+        2,
+        5,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        1,
+        1,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        6,
+        2,
+        5,
+        4,
+        5,
+        5,
+        4,
+        4,
+        4,
+        3,
+        1,
+        1,
+        4,
+        4,
+        3,
+        4,
+        1,
+        1,
+        7,
+        3,
+        5,
+        4,
+        5,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "start_k": [
+        0,
+        17,
+        0,
+        4,
+        3,
+        31,
+        4,
+        4,
+        6,
+        4,
+        6,
+        4,
+        6,
+        4
+      ],
+      "halt_k": [
+        0,
+        9,
+        0,
+        5,
+        7,
+        14,
+        4,
+        4,
+        6,
+        4,
+        6,
+        4,
+        6,
+        4
+      ],
+      "seg_k": [
+        30,
+        16,
+        20,
+        8,
+        32,
+        32,
+        31,
+        32
+      ]
+    },
+    "load_source_sha256": "73fa7bd2df34b54cbce94ad746652fcfb785c48323d33aa01f3efb64b1ab4e9b",
+    "implementation_source_sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8",
+    "native_odb_sha256": "c517aa7111430fb1322f70d14b9a184807316c68921f86071ac607a43868efdd",
+    "wrapper_sha256": "b828543c7aadeeb4649ad10438e75cc05d54da114a0373c20650e8e018cc8cbc"
+  }
+}

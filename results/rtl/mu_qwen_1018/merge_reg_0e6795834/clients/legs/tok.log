@@ -1,0 +1,13 @@
+# leg tok mem 8 threads 8 2026-10-19T06:06:16-07:00
+# cmd: bash rtl/test/mu_qwen_tok/run_mu_tok_smoke.sh /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/tok/w
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-pve1        admits    40 GB (avail 82, growth 55, headroom 0, waiters 0/0 GB) load 15/28 running 8 disk 1226 GB 
+ot-run: ot-agidock128  admits    17 GB (avail 82, growth 70, headroom 0, waiters 0/0 GB) load 17/64 running 11 disk 310 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-624742-1792415176 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-624742-1792415176): exit 0
+# ot-run rc=0 2026-10-19T06:07:11-07:00

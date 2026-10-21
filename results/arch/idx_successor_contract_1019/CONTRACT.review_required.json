@@ -1,0 +1,302 @@
+{
+  "actions": [
+    "hash_all_inputs",
+    "native_pg_recensus_exact_clone",
+    "copy_complete_predecessor_views_unchanged",
+    "hash_all_inputs_again",
+    "write_new_successor_record_exclusive"
+  ],
+  "approved_pg_callback": {
+    "path": null,
+    "sha256": null
+  },
+  "claim": "native_pg_metadata_corrected",
+  "clone_odb": {
+    "path": "/srv/opentallas-scratch/claude/hbm-idx-pg-clone-1019/clone.odb",
+    "sha256": "22e4a3d00d57b5d0b9c69e92bd26b4ca351b95b179f3fce416c065a34e79821a"
+  },
+  "clone_packet_commit": "39021a45e",
+  "complete_predecessor_view_inventory_sha256": "8da6451497a9e0fb09b12e0ce8c5d41271e86bf04682b59af4a4f0f17bb1616e",
+  "expected_domain_rules_sha256": null,
+  "exporter_source": {
+    "path": "/home/ubuntu/wt/idx-successor-contract-1019/tools/closure_loop/idx_metadata_successor.py",
+    "sha256": "69197b3e84f00391f7fff8f660387f9ed4a94fe648158d4824d774ca9df48d4e"
+  },
+  "full_token_qualified": false,
+  "gate_review_snapshot_fingerprints": {
+    "archive": "1861a67a289a1b7b4d802212b6292f86d466b78d5fbc826eb7fe05907e370cf0",
+    "manifest": "5f8f01668eca42bd0d46ad03d609f593bf6f6c39fd9bf9aed6492611dbd6b628"
+  },
+  "gate_snapshot_scope": "pre-route gate only; not routed source fingerprint",
+  "geometry_fingerprint": "b44057faf45222632b3bb2eb75a32eb13868819d5b17a28754ceae394f891c4d",
+  "global_index_eligible": false,
+  "invariants": {
+    "all_geometry_signal_protection_unchanged": true,
+    "full_def_equals_reviewed_clone": true,
+    "instances": 322,
+    "native_pg_terms": 196864,
+    "pg_binds": 644
+  },
+  "lineage": {
+    "closure_record": [
+      {
+        "path": "/home/ubuntu/artifacts/hbm-idx-original-lineage-1019/job.json",
+        "sha256": "2bf7b05858818dca0aafc061ec77c2a7e7677ad2b244719e0f4a83f3003d3184"
+      },
+      {
+        "path": "/home/ubuntu/artifacts/hbm-idx-original-lineage-1019/verdict.json",
+        "sha256": "29de08442272b264048c965774478eedcb38d602ef0da8e0e563dd243f31cc9d"
+      }
+    ],
+    "geometry_review": [
+      {
+        "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/original_ROOT_FINAL_REVIEW.md",
+        "sha256": "eb7b7f814312f8da2451f637b923191f24959a108c7631c68626782bd2a85fe9"
+      }
+    ],
+    "helper_manifest": [
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/cl/helper_overlay_plan.json",
+        "sha256": "f2556fec10c6bbc8ebd2abb8e5724559cd9ad26dc0a3f3a6b2d24f314c65a13e"
+      }
+    ],
+    "lef": null,
+    "liberty": null,
+    "pg_hold_review": null,
+    "rtl": null,
+    "sdc": [
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/cl/io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/cl/link_budget_consistent.sdc",
+        "sha256": "3d298ce13f96c011e8dc089c7b6617f36ba781fd64e92d8778e525d36028343f"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/cl/nbr_clk_measured_ttb.sdc",
+        "sha256": "ce6df0a5101ca85c53598bd65a234b7fdcd6ff6f414d4b914904b54f1df62f52"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/route/signoff.sdc",
+        "sha256": "45bd6e209718d1a5cd95cbfadd529373b6e3e8eaa94a63a62217ec197148009b"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/physical_artifacts/constraint.sdc",
+        "sha256": "9857550b5cc90a0363da6baf09fdd4d9e8ee7c3ef0a643208350f14bba269f6e"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/signoff.sdc",
+        "sha256": "45bd6e209718d1a5cd95cbfadd529373b6e3e8eaa94a63a62217ec197148009b"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/constraint.sdc",
+        "sha256": "9857550b5cc90a0363da6baf09fdd4d9e8ee7c3ef0a643208350f14bba269f6e"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/hooks/link_budget_consistent.sdc",
+        "sha256": "3d298ce13f96c011e8dc089c7b6617f36ba781fd64e92d8778e525d36028343f"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/1_2_yosys.sdc",
+        "sha256": "6f7139871a30a65c7aacf185e63afcdfa8b3bb7e954006e22b6cc705d61f0251"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/1_synth.sdc",
+        "sha256": "57fd71118384ab7fde5cca4dc0600242e780c25cc130e0a88b384f495b545764"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/2_1_floorplan.sdc",
+        "sha256": "57fd71118384ab7fde5cca4dc0600242e780c25cc130e0a88b384f495b545764"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/2_floorplan.sdc",
+        "sha256": "57fd71118384ab7fde5cca4dc0600242e780c25cc130e0a88b384f495b545764"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/3_place.sdc",
+        "sha256": "57fd71118384ab7fde5cca4dc0600242e780c25cc130e0a88b384f495b545764"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/4_cts.sdc",
+        "sha256": "1ca12f5298c8db36af82953181fe2b93c47fca854181eb493b786e5884669ce8"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/5_1_grt.sdc",
+        "sha256": "1ca12f5298c8db36af82953181fe2b93c47fca854181eb493b786e5884669ce8"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/5_route.sdc",
+        "sha256": "1ca12f5298c8db36af82953181fe2b93c47fca854181eb493b786e5884669ce8"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/6_1_fill.sdc",
+        "sha256": "1ca12f5298c8db36af82953181fe2b93c47fca854181eb493b786e5884669ce8"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/6_final.sdc",
+        "sha256": "1ca12f5298c8db36af82953181fe2b93c47fca854181eb493b786e5884669ce8"
+      },
+      {
+        "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/w18_extra.sdc",
+        "sha256": "45bd6e209718d1a5cd95cbfadd529373b6e3e8eaa94a63a62217ec197148009b"
+      }
+    ],
+    "snapshot_archive": null,
+    "snapshot_manifest": null,
+    "view_index": [
+      {
+        "path": "/home/ubuntu/artifacts/hbm-idx-original-lineage-1019/view_abstract.json",
+        "sha256": "71f91b69d1b2a402ebda96f82973884407ab90f806afc0c0686903ae67c849bc"
+      },
+      {
+        "path": "/home/ubuntu/artifacts/hbm-idx-original-lineage-1019/view_insertion.json",
+        "sha256": "d135aacbc3e67a5ace97bb423c37e64156e31735325e0e13c69bc0ea707d81ec"
+      },
+      {
+        "path": "/home/ubuntu/artifacts/hbm-idx-original-lineage-1019/view_export.abstract.json",
+        "sha256": "3728cfc1d89c7f95186ef0eb360ce5bfd58202a23551dec71986eb57886e4c3c"
+      }
+    ]
+  },
+  "native_mterm_proof_commit": "a92a4017131b6e7a7582c6011a72b057c6d1227f",
+  "native_pg_audit": {
+    "path": null,
+    "sha256": null
+  },
+  "native_pg_collector": {
+    "path": null,
+    "sha256": null
+  },
+  "openroad_binary": {
+    "path": null,
+    "sha256": null
+  },
+  "original_job": "hdie_col_idx256_1019-fan32g1-2727e1f68",
+  "original_odb": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/6_final.odb",
+    "sha256": "851903b3ea016e159ac50862a1c80c5b3f4c6276e13df27789182736ce4e72c6"
+  },
+  "original_pg_qualification": "PG_HOLD",
+  "original_spef": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/routes/hdie_col_idx256_1019_fan32g1_2727e1f68/work/orfs/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_hdie_col_idx256_1019_fan32g1_2727e1f68/base/6_final.spef",
+    "sha256": "a86653e98ff953e441f905ec66347cec4a7dd5cfb453b33f3903b59a8e2c29a2"
+  },
+  "original_status": "CLOSED",
+  "parent_adoption": false,
+  "pg_receipt_runner": {
+    "path": null,
+    "sha256": null
+  },
+  "predecessor_publish_status": "AUTO-MERGE CONFLICT (4 source files); unpublished",
+  "predecessor_view_root": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256",
+  "predecessor_views": {
+    "abstract.json": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/abstract.json",
+      "sha256": "71f91b69d1b2a402ebda96f82973884407ab90f806afc0c0686903ae67c849bc"
+    },
+    "child_lint.json": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/child_lint.json",
+      "sha256": "4b1f066adc234fc92ac22059f9570ffde6b8e926d03d9a0dbe5f3280913f4e6c"
+    },
+    "export_ff.log": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/export_ff.log",
+      "sha256": "1c170adc35c498c05d3d76616618a834291a2d2a7db2f4755afa337f8a1a16c7"
+    },
+    "export_ff.tcl": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/export_ff.tcl",
+      "sha256": "0d57fea0ae3be8af828eda28ef3bb042504a113ce7420579231c491d8b1ce64c"
+    },
+    "export_ss.log": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/export_ss.log",
+      "sha256": "3afb2ecdabcf715ef566f41b0e8da3263ef5a3083829762242b392b59f8a0494"
+    },
+    "export_ss.tcl": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/export_ss.tcl",
+      "sha256": "b4725abbc07dc81f509c3fe0d9cfd8e0e4fc0fdb01911b0a5ec6447b4ecee406"
+    },
+    "export_tt.log": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/export_tt.log",
+      "sha256": "0bddbba4858c7162089543f821c00e6c6da204430e51e6fa5bd47f8eb18f9f14"
+    },
+    "export_tt.tcl": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/export_tt.tcl",
+      "sha256": "7598b4eada21f328008ec20ef4bd6fb72901e11dffb1fdca448d3d869983744b"
+    },
+    "insertion.json": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/insertion.json",
+      "sha256": "d135aacbc3e67a5ace97bb423c37e64156e31735325e0e13c69bc0ea707d81ec"
+    },
+    "ot_hbm_static_cfg_collar_idx256.lef": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/ot_hbm_static_cfg_collar_idx256.lef",
+      "sha256": "c8452be1ef74e19f127692d2040c3e2f18242c8211d5af055d77d616b0667754"
+    },
+    "ot_hbm_static_cfg_collar_idx256_ff.lib": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/ot_hbm_static_cfg_collar_idx256_ff.lib.zst",
+      "sha256": "a28f4768f04ad5cc41f0e650e5d9d9db009de0ec06a07d99a4c5a2f276c1c7a6"
+    },
+    "ot_hbm_static_cfg_collar_idx256_ss.lib": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/ot_hbm_static_cfg_collar_idx256_ss.lib.zst",
+      "sha256": "d929a1ccf7a33ebc0e50145cc4836f566bc0c3a4be2837ea59336c3f9c517c60"
+    },
+    "ot_hbm_static_cfg_collar_idx256_tt.lib": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/ot_hbm_static_cfg_collar_idx256_tt.lib.zst",
+      "sha256": "21428b027e5e36ed3fa6def1d5d290679b05a62a466142b119652d7af40848dd"
+    },
+    "provenance/abstract_pin_stub.json": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/provenance/abstract_pin_stub.json",
+      "sha256": "31c65f03bd9eefcc027706a9d409617cca7aafc5da18fd1f79080317586aeec5"
+    },
+    "provenance/raw/ot_hbm_static_cfg_collar_idx256.lef": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/provenance/raw/ot_hbm_static_cfg_collar_idx256.lef",
+      "sha256": "c92d5ba32836d0d13858071ac6c9cf88c56ab1ac1184879adb95b89f855ca324"
+    },
+    "provenance/view_export.abstract.json": {
+      "path": "/home/ubuntu/closed_archive/ot_hbm_static_cfg_collar_idx256/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/provenance/view_export.abstract.json",
+      "sha256": "3728cfc1d89c7f95186ef0eb360ce5bfd58202a23551dec71986eb57886e4c3c"
+    }
+  },
+  "result_directory": "results/physical/hdie_col_idx256_1019_pg_metadata_successor_1019/idx256_pgmeta_review_20261019_001",
+  "reviewed_native_audit_sha256": "33c83927a7b4102a684e98fa1a829278031dbcd0432bafe57ca022edb27d290a",
+  "reviewed_native_collector_sha256": "86ecd58dcc68419006b65d773c832ac6feeaf7ecdcf39dbf9f8f442f868bb5c4",
+  "reviewed_proofs": {
+    "after.def.gz": {
+      "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/after.def.gz",
+      "sha256": "1731b710c24f86b9ab1182277dac10d223e5395f2faad7df4f435a3ee698e1d5"
+    },
+    "after_raw.json.gz": {
+      "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/after_raw.json.gz",
+      "sha256": "19180419b99135d2ae9239fe545fa283295d344022546120a5d1a1c61abce676"
+    },
+    "clone_strict_summary.json": {
+      "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/clone_strict_summary.json",
+      "sha256": "899d342e7174d3ebfddfa787c12f0c625e9a11e520119c7f9c4bbd10caf6258f"
+    },
+    "clone_summary.json": {
+      "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/clone_summary.json",
+      "sha256": "515b3c0fea680378af85f7a599810cfdbe01fd4da250932d8976d1266653368e"
+    },
+    "def_invariants.log": {
+      "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/def_invariants.log",
+      "sha256": "5eaf19d507c58b3669fc07a36fdf1f4c8b1a4e9f3db2e76eea254cd9a917925f"
+    },
+    "metal_proof.json": {
+      "path": "/home/ubuntu/artifacts/hbm-idx-pg-clone-1019/metal_proof.json",
+      "sha256": "5a080c7f2ebe652469a1f1c87aa1ac073b165570304af5858445adb6187b8174"
+    }
+  },
+  "routed_source_commit": "2727e1f68fe35352898f603aa751441ae447096f",
+  "schema": "opentallas.idx_pg_metadata_successor.v1",
+  "snapshot_reconstruction_status": "exact routed per-file source/helper/native-LEF/Lib binding required; original archive unavailable",
+  "successor_view_name": "idx256_pgmeta_review_20261019_001",
+  "timing_provenance": "inherited unchanged signal geometry/SPEF; not re-extracted",
+  "unresolved_qualifications": [
+    "full_su_mu_token",
+    "neighbor_matching",
+    "nf5_die_binding",
+    "parent_any_prm",
+    "production_throughput",
+    "source_to_netlist_equivalence"
+  ],
+  "view_provenance": "byte-identical predecessor geometry/timing; not regenerated from clone"
+}

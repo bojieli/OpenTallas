@@ -7,6 +7,11 @@
 2. vop_golden reproduces su_arith_compile's independent golden for every baseline op (same seed, same immediates);
 3. DS L0 end to end: emitted SU programmes drive only slice input ports, no placement conflict, RAW order kept,
    lower_columns' expected.mem == the merged quarter lines (column image round trip by the image compiler).
+4. DS L2 from the committed ds_native fixture (--fixtures fixtures/L02, its own layer image): every emitted SU record's
+   expected O words equal the fixture's post-record VM, no placeholder operand; split_replay parts fit NEV 6309 and
+   keep every drive / check at its cycle.
+5. host-CP transport: cp_frames drives only slice inputs within their widths (gen_slice_tb accepts it); SW_TARGETS ==
+   the die.v tgt straps of the instances hleaf_SW configures (when die.v is present).
 """
 import argparse
 import json
@@ -97,6 +102,59 @@ def t_layer(programme, boundary):
               f"counts {m['counts']}")
 
 
+def t_fixture(boundary):
+    from hbm_layer_vehicle import split_replay as SP
+    rec = HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018"
+    with tempfile.TemporaryDirectory() as d:
+        subprocess.run([sys.executable, "-m", "hbm_layer_vehicle.layer_images", "--design", "ds", "--layer", "2",
+                        "--fixtures", str(rec / "fixtures/L02"), "--boundary", str(boundary), "--out", d], check=True,
+                       env={"PYTHONPATH": str(HERE.parent), "PATH": "/usr/bin:/bin"}, capture_output=True)
+        m = json.loads(Path(d, "manifest.json").read_text())
+        rep = json.loads(Path(d, "replay.json").read_text())
+    em = [r for r in m["records"] if r["status"] == "emitted"]
+    assert len(em) >= 9 and not [r for r in m["records"] if r["status"] == "golden_mismatch"], m["counts"]
+    for r in em:
+        f = r["fixture"]
+        assert f["matched"] and f["checked_words"] > 0 and f["mismatched_words"] == 0 and not r["inputs_placeholder"], r
+    parts = SP.split(rep, m, 6309)
+    nonm = lambda ev: sorted(json.dumps(e, sort_keys=True) for e in ev if e["k"] != "M")
+    assert len(parts) >= 2 and all(len(nonm(p["events"])) <= 6308 for p in parts)
+    assert sorted(sum((nonm(p["events"]) for p in parts), [])) == nonm(rep["events"])
+    print(f"fixture OK: L2 {len(em)} SU records emitted, {sum(r['fixture']['checked_words'] for r in em)} O words "
+          f"== ds_native; split into {len(parts)} parts")
+
+
+def t_cp(die, boundary):
+    import re
+    bnd = json.loads(Path(boundary).read_text())
+    w = {e["name"]: e["width"] for e in bnd["inputs"]}
+    ev, lt, end = LI.cp_frames(108, [(1 << 255) | 5, 7], 10)
+    assert all(e["port"] in w and int(e["val"], 16) >> w[e["port"]] == 0 for e in ev)
+    A = LI.AXI_WRITE_EDGES                        # F20, 2 rows x 8 F24, F28 + F2c, idle slot, F30
+    assert lt == 10 + A + 2 * LI.CP_FRAME_EDGES + 2 * A + LI.CP_DESC_TO_LAUNCH and end == lt + LI.CP_LAUNCH_GUARD
+    cv = sorted(e["cyc"] for e in ev if e["port"].endswith("cfg_v") and e["val"] == "1")
+    assert cv[1] - cv[0] == 8 * A, cv            # ingress rate: one 256-b row per 8 AXI writes
+    with tempfile.TemporaryDirectory() as d:
+        Path(d, "cp.json").write_text(json.dumps(dict(events=ev)))
+        subprocess.run([sys.executable, str(HERE / "gen_slice_tb.py"), "--boundary", str(boundary), "--out", d,
+                        "--replay", str(Path(d, "cp.json"))], check=True, capture_output=True)
+    if not Path(die).exists():
+        print("cp OK (die.v target scan SKIPPED)")
+        return
+    s = Path(die).read_text()
+    got = {}
+    for m in re.finditer(r"\n  (\w+) (?:#\([^;]*?\) )?(\w+) \(\n(.*?)\n  \);", s, re.S):
+        cv = re.search(r"\.cfg_v\((hleaf_SW__[ab]_cfg_v)", m.group(3))
+        t = re.search(r"\.tgt\(8'd(\d+)\)", m.group(3))
+        if cv:
+            got[m.group(2)] = int(t.group(1)) if t else None
+    want = {i: t for v in LI.SW_TARGETS.values() for i, t in v if not i.startswith("col_idx")}
+    assert all(got.get(i, "missing") == t for i, t in want.items()), {i: (t, got.get(i)) for i, t in want.items()}
+    extra = {i: t for i, t in got.items() if i not in want}
+    assert not extra, f"hleaf_SW targets missing from SW_TARGETS: {extra}"
+    print(f"cp OK: {len(got)} hleaf_SW targets in die.v, SW_TARGETS ({len(want)}) match")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--programme", default=str(LI.DS_PROGRAMME))
@@ -109,6 +167,9 @@ def main():
         t_layer(a.programme, a.boundary)
     else:
         print("layer test SKIPPED (programme / boundary not present)")
+    t_fixture(HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json")
+    t_cp(a.die if Path(a.die).exists() else "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/pb0/die.v",
+         HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json")
     print("TEST_LAYER_IMAGES PASS")
 
 

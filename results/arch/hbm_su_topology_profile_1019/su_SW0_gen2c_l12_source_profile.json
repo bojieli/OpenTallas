@@ -1,0 +1,3626 @@
+{
+  "schema": "opentallas.hbm.su.record23.topology_profile.v1",
+  "qualification": "SOURCE-EXPANDED GEN2c+l12 BASIS ONLY; GEN2e pre-relay, S4/S5 not emitted; current source53cb component planned, not parent-qualified",
+  "basis": {
+    "path": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e/banklat/contract_gen2c_l12.json",
+    "sha256": "305c8c1e14f7546c22f5f21bd94ba1171145a3adbe91d79e75f00b21282c781f",
+    "client": {
+      "master": "ot_hbm_su_static_pgslice_lg",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+      "params": {
+        "QID": 0,
+        "G": 0,
+        "READ_RETURN": 18,
+        "WRITE_RETURN": 15,
+        "FETCH_EXTRA_EDGES": 2,
+        "MLAT": 4,
+        "ALAT": 3,
+        "LEAF": 1,
+        "MUT": 0,
+        "MULTIRATE": 1,
+        "COLLPORT": 1,
+        "RF_LOCAL": 1
+      },
+      "slot": "su_SW0",
+      "owner": "H-SU",
+      "region": "su_sfu",
+      "note": "port-group slice G=0 of quarter SW (VM bank pair 0,1); carries the global-lane-0 SIDE pipe | r8b_d4f: remastered ot_hbm_su_static_pgslice -> ot_hbm_su_static_pgslice_lg | su_rflocal_d4f: params {'RF_LOCAL': 1} | d4g_l12_banklat: latency budget {'READ_RETURN': 18, 'WRITE_RETURN': 15} (was {'READ_RETURN': 10, 'WRITE_RETURN': 7})",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+      ],
+      "ports": {
+        "pg_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_lane": {
+          "direction": "input",
+          "bits": 256
+        },
+        "clk_insert": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rst_lane_n": {
+          "direction": "input",
+          "bits": 32
+        },
+        "clk_bcast": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rst_bcast_n": {
+          "direction": "input",
+          "bits": 4
+        },
+        "clk_bank": {
+          "direction": "input",
+          "bits": 32
+        },
+        "clk_bank_macro": {
+          "direction": "input",
+          "bits": 192
+        },
+        "clk_ctl": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_side": {
+          "direction": "input",
+          "bits": 6
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "bridge_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "control": {
+          "direction": "input",
+          "bits": 1742
+        },
+        "vmr_cmd": {
+          "direction": "input",
+          "bits": 60
+        },
+        "vmw_cmd": {
+          "direction": "input",
+          "bits": 78
+        },
+        "rf_bword": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rf_bcmd": {
+          "direction": "input",
+          "bits": 36
+        },
+        "rf_dsec": {
+          "direction": "input",
+          "bits": 256
+        },
+        "red_sel": {
+          "direction": "input",
+          "bits": 12
+        },
+        "slice_x": {
+          "direction": "output",
+          "bits": 32
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_q": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "dw_v": {
+          "direction": "input",
+          "bits": 2
+        },
+        "dw_row": {
+          "direction": "input",
+          "bits": 18
+        },
+        "dw_d": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "lg_rq": {
+          "direction": "output",
+          "bits": 34
+        },
+        "lg_wq": {
+          "direction": "output",
+          "bits": 562
+        },
+        "lg_rr": {
+          "direction": "input",
+          "bits": 514
+        },
+        "lg_w_done": {
+          "direction": "input",
+          "bits": 2
+        },
+        "lg_read": {
+          "direction": "input",
+          "bits": 2
+        },
+        "lg_write": {
+          "direction": "input",
+          "bits": 2
+        },
+        "far_rq": {
+          "direction": "input",
+          "bits": 34
+        },
+        "far_wq": {
+          "direction": "input",
+          "bits": 562
+        },
+        "far_rr": {
+          "direction": "output",
+          "bits": 514
+        },
+        "far_w_done": {
+          "direction": "output",
+          "bits": 2
+        },
+        "lg_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    }
+  },
+  "paths": [
+    {
+      "kind": "read",
+      "lane": 0,
+      "request_port": "lg_rq",
+      "return_port": "lg_rr",
+      "request_bits": 17,
+      "return_bits": 257,
+      "bank": "vmb_SW0",
+      "bank_request_port": "rq0",
+      "bank_return_port": "rr0",
+      "request_hops": [
+        "l12p_su_SW0_lg_rq_vmb_SW0_rq0_0",
+        "rf0444_s000_l0",
+        "rf0444_s001_l0",
+        "rf0444_s002_l0"
+      ],
+      "return_hops": [
+        "rf0771_s000_l0",
+        "rf0771_s001_l0",
+        "rf0771_s002_l0"
+      ],
+      "request_edges": 4,
+      "return_edges": 3,
+      "bank_internal_edges": 6,
+      "bank_face_edges": 1,
+      "source_port_roundtrip": 14,
+      "local_su_edges": 4,
+      "required_parameter": 18,
+      "unresolved": []
+    },
+    {
+      "kind": "read",
+      "lane": 1,
+      "request_port": "lg_rq",
+      "return_port": "lg_rr",
+      "request_bits": 17,
+      "return_bits": 257,
+      "bank": "vmb_SW1",
+      "bank_request_port": "rq0",
+      "bank_return_port": "rr0",
+      "request_hops": [
+        "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0",
+        "rf0443_s000_l0",
+        "rf0443_s001_l0",
+        "rf0443_s002_l0"
+      ],
+      "return_hops": [
+        "rf0770_s000_l0",
+        "rf0770_s001_l0"
+      ],
+      "request_edges": 5,
+      "return_edges": 2,
+      "bank_internal_edges": 6,
+      "bank_face_edges": 1,
+      "source_port_roundtrip": 14,
+      "local_su_edges": 4,
+      "required_parameter": 18,
+      "unresolved": []
+    },
+    {
+      "kind": "write",
+      "lane": 0,
+      "request_port": "lg_wq",
+      "return_port": "lg_w_done",
+      "request_bits": 281,
+      "return_bits": 1,
+      "bank": "vmb_SW0",
+      "bank_request_port": "wq0",
+      "bank_return_port": "wq_done0",
+      "request_hops": [
+        "rf0444_s000_l0",
+        "rf0444_s001_l0",
+        "rf0444_s002_l0"
+      ],
+      "return_hops": [
+        "rf0771_s000_l0",
+        "rf0771_s001_l0",
+        "rf0771_s002_l0",
+        "l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0"
+      ],
+      "request_edges": 3,
+      "return_edges": 4,
+      "bank_internal_edges": 3,
+      "bank_face_edges": 1,
+      "source_port_roundtrip": 11,
+      "local_su_edges": 4,
+      "required_parameter": 15,
+      "unresolved": []
+    },
+    {
+      "kind": "write",
+      "lane": 1,
+      "request_port": "lg_wq",
+      "return_port": "lg_w_done",
+      "request_bits": 281,
+      "return_bits": 1,
+      "bank": "vmb_SW1",
+      "bank_request_port": "wq0",
+      "bank_return_port": "wq_done0",
+      "request_hops": [
+        "rf0443_s000_l0",
+        "rf0443_s001_l0",
+        "rf0443_s002_l0"
+      ],
+      "return_hops": [
+        "rf0770_s000_l0",
+        "rf0770_s001_l0",
+        "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0"
+      ],
+      "request_edges": 3,
+      "return_edges": 4,
+      "bank_internal_edges": 3,
+      "bank_face_edges": 1,
+      "source_port_roundtrip": 11,
+      "local_su_edges": 4,
+      "required_parameter": 15,
+      "unresolved": []
+    }
+  ],
+  "reset_paths": [
+    {
+      "target": [
+        "su_SW0",
+        "bridge_rst_n",
+        0
+      ],
+      "source": [
+        "subr_SW",
+        "bridge_rst_n",
+        0
+      ],
+      "edges": [
+        {
+          "name": "rf1912__ld_su_SW0_bridge_rst_n_0",
+          "bits": 1,
+          "source": [
+            "rf1912_k06_10_l0",
+            "o",
+            0,
+            1
+          ],
+          "sink": [
+            "su_SW0",
+            "bridge_rst_n",
+            0,
+            1
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_10_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_09_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_10_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_09_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_08_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_09_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_08_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_07_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_08_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_07_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_06_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_07_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_06_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_05_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_06_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_05_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_04_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_05_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_04_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_03_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_04_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_03_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_02_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_03_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_02_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_01_l0",
+            "o",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_02_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_01_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_k06_00_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_k06_01_l0",
+            "i",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_k06_00_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s013_l0",
+            "b",
+            136,
+            272
+          ],
+          "sink": [
+            "rf1912_k06_00_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_s013_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s012_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_s013_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_s012_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s011_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_s012_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_s011_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s010_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_s011_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_s010_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s002_l0",
+            "b",
+            136,
+            272
+          ],
+          "sink": [
+            "rf1912_s010_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_s002_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s001_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_s002_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__t_rf1912_s001_l0",
+          "bits": 136,
+          "source": [
+            "rf1912_s000_l0",
+            "b",
+            0,
+            136
+          ],
+          "sink": [
+            "rf1912_s001_l0",
+            "a",
+            0,
+            136
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        },
+        {
+          "name": "rf1912__drv_rf1912_s000_l0_0",
+          "bits": 1,
+          "source": [
+            "subr_SW",
+            "bridge_rst_n",
+            0,
+            1
+          ],
+          "sink": [
+            "rf1912_s000_l0",
+            "a",
+            0,
+            1
+          ],
+          "clock": "serial",
+          "ready_or_credit": false,
+          "allowed_exception": null,
+          "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+          "region": "relays_d4f"
+        }
+      ],
+      "qualification": "exact source edges; reset age must follow each modeled master, no age inferred from count"
+    }
+  ],
+  "instances": {
+    "hb_ckgen": {
+      "master": "hfd_ckgen",
+      "source": "rtl/hbm_accel/control/hfd_ckgen.sv",
+      "params": {},
+      "slot": null,
+      "owner": null,
+      "region": "v15",
+      "note": "kept from v15.1 source contract",
+      "ports": {
+        "refclk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "por_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pll_stream": {
+          "direction": "output",
+          "bits": 1
+        },
+        "pll_serial": {
+          "direction": "output",
+          "bits": 1
+        },
+        "pll_hbm": {
+          "direction": "output",
+          "bits": 1
+        },
+        "pll_link": {
+          "direction": "output",
+          "bits": 1
+        },
+        "por_stream": {
+          "direction": "output",
+          "bits": 1
+        },
+        "por_serial": {
+          "direction": "output",
+          "bits": 1
+        },
+        "por_hbm": {
+          "direction": "output",
+          "bits": 1
+        },
+        "por_link": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "l12p_su_SW0_lg_rq_vmb_SW0_rq0_0": {
+      "master": "hbfd_pad",
+      "source": "rtl/hbm_accel/die_glue/hbfd_pad.sv",
+      "params": {
+        "W": 17,
+        "N": 1
+      },
+      "slot": null,
+      "owner": "TW5-BANKLATDIE l12 bank-client latency pad",
+      "region": "d4g_l12_banklat",
+      "note": "TW5-BANKLATDIE l12 bank-client latency pad: 1 stages on the request lane su_SW0.lg_rq -> vmb_SW0.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 13)",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hdc/ot_hdc_delay.sv"
+      ],
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 17
+        },
+        "o": {
+          "direction": "output",
+          "bits": 17
+        }
+      }
+    },
+    "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0": {
+      "master": "hbfd_pad",
+      "source": "rtl/hbm_accel/die_glue/hbfd_pad.sv",
+      "params": {
+        "W": 17,
+        "N": 2
+      },
+      "slot": null,
+      "owner": "TW5-BANKLATDIE l12 bank-client latency pad",
+      "region": "d4g_l12_banklat",
+      "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane su_SW0.lg_rq -> vmb_SW1.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 12)",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hdc/ot_hdc_delay.sv"
+      ],
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 17
+        },
+        "o": {
+          "direction": "output",
+          "bits": 17
+        }
+      }
+    },
+    "l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0": {
+      "master": "hbfd_pad",
+      "source": "rtl/hbm_accel/die_glue/hbfd_pad.sv",
+      "params": {
+        "W": 1,
+        "N": 1
+      },
+      "slot": null,
+      "owner": "TW5-BANKLATDIE l12 bank-client latency pad",
+      "region": "d4g_l12_banklat",
+      "note": "TW5-BANKLATDIE l12 bank-client latency pad: 1 stages on the return lane vmb_SW0.wq_done0[0:1] -> su_SW0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 10)",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hdc/ot_hdc_delay.sv"
+      ],
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 1
+        },
+        "o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0": {
+      "master": "hbfd_pad",
+      "source": "rtl/hbm_accel/die_glue/hbfd_pad.sv",
+      "params": {
+        "W": 1,
+        "N": 2
+      },
+      "slot": null,
+      "owner": "TW5-BANKLATDIE l12 bank-client latency pad",
+      "region": "d4g_l12_banklat",
+      "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane vmb_SW1.wq_done0[0:1] -> su_SW0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 9)",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hdc/ot_hdc_delay.sv"
+      ],
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 1
+        },
+        "o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf0443_s000_l0": {
+      "master": "hbfd_rly_624_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:su_SW0.lg_rq+lg_wq",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 1 lane/tile 0/1 toward vmb_SW1; lane row rf0443_s000 0/1 EW; site (865.0, 9755.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0443_s001_l0": {
+      "master": "hbfd_rly_624_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:su_SW0.lg_rq+lg_wq",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 2 lane/tile 0/1 toward vmb_SW1; lane row rf0443_s001 0/1 EW; site (555.0, 9685.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0443_s002_l0": {
+      "master": "hbfd_rly_624_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:su_SW0.lg_rq+lg_wq",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 3 lane/tile 0/1 toward vmb_SW1; lane row rf0443_s002 0/1 EW; site (305.0, 9815.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0444_s000_l0": {
+      "master": "hbfd_rly_624_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:su_SW0.lg_rq+lg_wq",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 1 lane/tile 0/1 toward vmb_SW0; lane row rf0444_s000 0/1 EW; site (865.0, 9755.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0444_s001_l0": {
+      "master": "hbfd_rly_624_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:su_SW0.lg_rq+lg_wq",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 2 lane/tile 0/1 toward vmb_SW0; lane row rf0444_s001 0/1 EW; site (555.0, 9685.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0444_s002_l0": {
+      "master": "hbfd_rly_624_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:su_SW0.lg_rq+lg_wq",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 3 lane/tile 0/1 toward vmb_SW0; lane row rf0444_s002 0/1 EW; site (305.0, 9555.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0770_s000_l0": {
+      "master": "hbfd_rly_624_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:vmb_SW1.rr0+wq_done0",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 1 lane/tile 0/1 toward su_SW0; lane row rf0770_s000 0/1 WE; site (615.0, 9685.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0770_s001_l0": {
+      "master": "hbfd_rly_624_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:vmb_SW1.rr0+wq_done0",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 2 lane/tile 0/1 toward su_SW0; lane row rf0770_s001 0/1 WE; site (995.0, 9685.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0771_s000_l0": {
+      "master": "hbfd_rly_624_SN",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:vmb_SW0.rr0+wq_done0",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 1 lane/tile 0/1 toward su_SW0; lane row rf0771_s000 0/1 SN; site (405.0, 9555.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0771_s001_l0": {
+      "master": "hbfd_rly_624_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:vmb_SW0.rr0+wq_done0",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 2 lane/tile 0/1 toward su_SW0; lane row rf0771_s001 0/1 WE; site (785.0, 9555.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf0771_s002_l0": {
+      "master": "hbfd_rly_624_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:vmb_SW0.rr0+wq_done0",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "old station depth 3 lane/tile 0/1 toward su_SW0; lane row rf0771_s002 0/1 WE; site (1155.0, 9565.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 624
+        },
+        "o": {
+          "direction": "output",
+          "bits": 624
+        }
+      }
+    },
+    "rf1912_k06_00_l0": {
+      "master": "hbfd_land_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "LANDING (K 5 NO_E placeholder) N 7 at su_SW0 lane/tile 0/1; lane row rf1912_k06_00 0/1 NS; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "k0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "k1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "k2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "b": {
+          "direction": "output",
+          "bits": 136
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf1912_k06_01_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 1/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_01 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_02_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 2/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_02 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_03_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 3/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_03 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_04_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 4/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_04 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_05_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 5/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_05 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_06_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 6/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_06 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_07_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 7/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_07 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_08_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 8/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_08 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_09_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 9/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_09 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_k06_10_l0": {
+      "master": "hbfd_rly_136_WE",
+      "source": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "params": {},
+      "slot": "d4f_relay_sink:subr_SW.bridge_rst_n->su_SW0",
+      "owner": "HBM-LANDING / H-NETLIST",
+      "note": "equal-age pad (sink root) 10/10 at su_SW0 lane/tile 0/1; lane row rf1912_k06_10 0/1 WE; site (3039.5, 11552.7) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i": {
+          "direction": "input",
+          "bits": 136
+        },
+        "o": {
+          "direction": "output",
+          "bits": 136
+        }
+      }
+    },
+    "rf1912_s000_l0": {
+      "master": "hbfd_lh0_136_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 1 lane/tile 0/1 toward su_SW2; lane row rf1912_s000 0/1 EW; site (3905.0, 12825.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "en": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 136
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf1912_s001_l0": {
+      "master": "hbfd_lh_136_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 2 lane/tile 0/1 toward su_SW2; lane row rf1912_s001 0/1 EW; site (3635.0, 12715.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 136
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf1912_s002_l0": {
+      "master": "hbfd_lh_136_EW_f3",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 3 lane/tile 0/1 toward su_SW2; lane row rf1912_s002 0/1 EW; site (3255.0, 12715.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 408
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 3
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 3
+        }
+      }
+    },
+    "rf1912_s010_l0": {
+      "master": "hbfd_lh_136_EW",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 4 lane/tile 0/1 toward su_SW0; lane row rf1912_s010 0/1 EW; site (3045.0, 12805.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 136
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf1912_s011_l0": {
+      "master": "hbfd_lh_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 5 lane/tile 0/1 toward su_SW0; lane row rf1912_s011 0/1 NS; site (3045.0, 12425.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 136
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf1912_s012_l0": {
+      "master": "hbfd_lh_136_NS",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 6 lane/tile 0/1 toward su_SW0; lane row rf1912_s012 0/1 NS; site (3045.0, 12045.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 136
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "rf1912_s013_l0": {
+      "master": "hbfd_lh_136_NS_f2",
+      "source": "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+      "params": {},
+      "slot": "d4f_relay:subr_SW.bridge_rst_n",
+      "owner": "H-DIE relay route / H-NETLIST",
+      "note": "fc136lane station depth 7 lane/tile 0/1 toward su_SW0; lane row rf1912_s013 0/1 NS; site (3045.0, 11665.0) um",
+      "rtl_deps": [
+        "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+        "rtl/qwen_split/qfd_fwd_lane.sv",
+        "rtl/hdc/ot_hdc_cg.sv"
+      ],
+      "region": "relays_d4f",
+      "ports": {
+        "ckf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ea": {
+          "direction": "input",
+          "bits": 1
+        },
+        "a": {
+          "direction": "input",
+          "bits": 136
+        },
+        "b": {
+          "direction": "output",
+          "bits": 272
+        },
+        "eb": {
+          "direction": "output",
+          "bits": 2
+        },
+        "ck_o": {
+          "direction": "output",
+          "bits": 2
+        }
+      }
+    },
+    "su_SW0": {
+      "master": "ot_hbm_su_static_pgslice_lg",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv",
+      "params": {
+        "QID": 0,
+        "G": 0,
+        "READ_RETURN": 18,
+        "WRITE_RETURN": 15,
+        "FETCH_EXTRA_EDGES": 2,
+        "MLAT": 4,
+        "ALAT": 3,
+        "LEAF": 1,
+        "MUT": 0,
+        "MULTIRATE": 1,
+        "COLLPORT": 1,
+        "RF_LOCAL": 1
+      },
+      "slot": "su_SW0",
+      "owner": "H-SU",
+      "region": "su_sfu",
+      "note": "port-group slice G=0 of quarter SW (VM bank pair 0,1); carries the global-lane-0 SIDE pipe | r8b_d4f: remastered ot_hbm_su_static_pgslice -> ot_hbm_su_static_pgslice_lg | su_rflocal_d4f: params {'RF_LOCAL': 1} | d4g_l12_banklat: latency budget {'READ_RETURN': 18, 'WRITE_RETURN': 15} (was {'READ_RETURN': 10, 'WRITE_RETURN': 7})",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv"
+      ],
+      "ports": {
+        "pg_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_lane": {
+          "direction": "input",
+          "bits": 256
+        },
+        "clk_insert": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rst_lane_n": {
+          "direction": "input",
+          "bits": 32
+        },
+        "clk_bcast": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rst_bcast_n": {
+          "direction": "input",
+          "bits": 4
+        },
+        "clk_bank": {
+          "direction": "input",
+          "bits": 32
+        },
+        "clk_bank_macro": {
+          "direction": "input",
+          "bits": 192
+        },
+        "clk_ctl": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_side": {
+          "direction": "input",
+          "bits": 6
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "bridge_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "control": {
+          "direction": "input",
+          "bits": 1742
+        },
+        "vmr_cmd": {
+          "direction": "input",
+          "bits": 60
+        },
+        "vmw_cmd": {
+          "direction": "input",
+          "bits": 78
+        },
+        "rf_bword": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rf_bcmd": {
+          "direction": "input",
+          "bits": 36
+        },
+        "rf_dsec": {
+          "direction": "input",
+          "bits": 256
+        },
+        "red_sel": {
+          "direction": "input",
+          "bits": 12
+        },
+        "slice_x": {
+          "direction": "output",
+          "bits": 32
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_q": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "dw_v": {
+          "direction": "input",
+          "bits": 2
+        },
+        "dw_row": {
+          "direction": "input",
+          "bits": 18
+        },
+        "dw_d": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "lg_rq": {
+          "direction": "output",
+          "bits": 34
+        },
+        "lg_wq": {
+          "direction": "output",
+          "bits": 562
+        },
+        "lg_rr": {
+          "direction": "input",
+          "bits": 514
+        },
+        "lg_w_done": {
+          "direction": "input",
+          "bits": 2
+        },
+        "lg_read": {
+          "direction": "input",
+          "bits": 2
+        },
+        "lg_write": {
+          "direction": "input",
+          "bits": 2
+        },
+        "far_rq": {
+          "direction": "input",
+          "bits": 34
+        },
+        "far_wq": {
+          "direction": "input",
+          "bits": 562
+        },
+        "far_rr": {
+          "direction": "output",
+          "bits": 514
+        },
+        "far_w_done": {
+          "direction": "output",
+          "bits": 2
+        },
+        "lg_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "subr_SW": {
+      "master": "ot_hbm_su_bridge_release_s",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv",
+      "params": {
+        "MUT": 0
+      },
+      "slot": null,
+      "owner": "H-SU",
+      "region": "d4g_gen1_l2",
+      "note": "d4g_gen1_l2: r2 single-serial-clock bridge release (hbm_su_bridge_release_1018 r2 CLOSED; serial->stream hold fix); bridge_rst_n is an async reset to su_SW0..3 + the cxport leaves: buffered (repeaters), never a registered relay | was: SU quarter SW multirate bridge epoch release (closes G-SU-BRIDGE-EPOCH-SW): serial pin register of su_prog.busy at the common edge E0-12q, three stream stages, ",
+      "replaces_v15": null,
+      "rtl_deps": [],
+      "ports": {
+        "clk_serial": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "prog_busy": {
+          "direction": "input",
+          "bits": 1
+        },
+        "bridge_rst_n": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "vmb_SW0": {
+      "master": "hfd_vms_bank_native_q0_faces",
+      "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+      "params": {},
+      "slot": "vmb_SW0",
+      "owner": "H-SM/H-DIE",
+      "region": "vm_hoist_d4f",
+      "note": "hb_vms_SW bank 0 hoisted (q0C faces master, literal input pin flops)",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+        "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+      ],
+      "ports": {
+        "rq0": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr0": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq1": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr1": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq2": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr2": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq3": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr3": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq4": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr4": {
+          "direction": "output",
+          "bits": 257
+        },
+        "wq0": {
+          "direction": "input",
+          "bits": 281
+        },
+        "wq_done0": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wq1": {
+          "direction": "input",
+          "bits": 281
+        },
+        "wq_done1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "bid": {
+          "direction": "input",
+          "bits": 3
+        },
+        "sid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_e": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_w": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_macro0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_macro1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_macro2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rslot_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rslot": {
+          "direction": "input",
+          "bits": 3
+        },
+        "wslot_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "wslot": {
+          "direction": "input",
+          "bits": 3
+        },
+        "dq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "dq_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "kq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "kq_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "xq": {
+          "direction": "input",
+          "bits": 276
+        },
+        "xq_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "xq2": {
+          "direction": "input",
+          "bits": 276
+        },
+        "xq2_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "eg": {
+          "direction": "output",
+          "bits": 276
+        },
+        "pq": {
+          "direction": "input",
+          "bits": 285
+        },
+        "pr": {
+          "direction": "output",
+          "bits": 266
+        },
+        "status": {
+          "direction": "output",
+          "bits": 18
+        }
+      }
+    },
+    "vmb_SW1": {
+      "master": "hfd_vms_bank_native_q0_faces",
+      "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+      "params": {},
+      "slot": "vmb_SW1",
+      "owner": "H-SM/H-DIE",
+      "region": "vm_hoist_d4f",
+      "note": "hb_vms_SW bank 1 hoisted (q0C faces master, literal input pin flops)",
+      "replaces_v15": null,
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+        "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+      ],
+      "ports": {
+        "rq0": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr0": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq1": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr1": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq2": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr2": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq3": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr3": {
+          "direction": "output",
+          "bits": 257
+        },
+        "rq4": {
+          "direction": "input",
+          "bits": 17
+        },
+        "rr4": {
+          "direction": "output",
+          "bits": 257
+        },
+        "wq0": {
+          "direction": "input",
+          "bits": 281
+        },
+        "wq_done0": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wq1": {
+          "direction": "input",
+          "bits": 281
+        },
+        "wq_done1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "bid": {
+          "direction": "input",
+          "bits": 3
+        },
+        "sid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_e": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_w": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_macro0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_macro1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_macro2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rslot_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rslot": {
+          "direction": "input",
+          "bits": 3
+        },
+        "wslot_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "wslot": {
+          "direction": "input",
+          "bits": 3
+        },
+        "dq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "dq_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "kq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "kq_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "xq": {
+          "direction": "input",
+          "bits": 276
+        },
+        "xq_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "xq2": {
+          "direction": "input",
+          "bits": 276
+        },
+        "xq2_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "eg": {
+          "direction": "output",
+          "bits": 276
+        },
+        "pq": {
+          "direction": "input",
+          "bits": 285
+        },
+        "pr": {
+          "direction": "output",
+          "bits": 266
+        },
+        "status": {
+          "direction": "output",
+          "bits": 18
+        }
+      }
+    }
+  },
+  "clock_resets": [
+    {
+      "instance": "su_SW0",
+      "port": "clk_bank",
+      "bits": 32,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "clk_bank_macro",
+      "bits": 192,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "clk_bcast",
+      "bits": 4,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "clk_ctl",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "clk_insert",
+      "bits": 128,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "clk_lane",
+      "bits": 256,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "clk_side",
+      "bits": 6,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "pg_clk",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "rst_bcast_n",
+      "bits": 4,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "rst_lane_n",
+      "bits": 32,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ]
+    },
+    {
+      "instance": "su_SW0",
+      "port": "rst_n",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ]
+    },
+    {
+      "instance": "subr_SW",
+      "port": "clk_serial",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "subr_SW",
+      "port": "rst_n",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_e",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_macro0",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_macro1",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_macro2",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_n",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_s",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "clk_w",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW0",
+      "port": "rst_n",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_e",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_macro0",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_macro1",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_macro2",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_n",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_s",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "clk_w",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "port": "rst_n",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ]
+    },
+    {
+      "instance": "rf0443_s000_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0443_s000_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0443_s001_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0443_s001_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0443_s002_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0443_s002_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0444_s000_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0444_s000_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0444_s001_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0444_s001_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0444_s002_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0444_s002_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0770_s000_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0770_s000_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0770_s001_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0770_s001_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0771_s000_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0771_s000_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0771_s001_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0771_s001_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0771_s002_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf0771_s002_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_s000_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_s000_l0",
+      "port": "en",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_00_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_00_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_01_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_01_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_02_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_02_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_03_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_03_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_04_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_04_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_05_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_05_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_06_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_06_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_07_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_07_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_08_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_08_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_09_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_09_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_10_l0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "rf1912_k06_10_l0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ],
+      "note": "relay layer relays_d4f"
+    },
+    {
+      "instance": "l12p_su_SW0_lg_rq_vmb_SW0_rq0_0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_rq_vmb_SW0_rq0_0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_serial"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "serial",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_serial"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0",
+      "port": "ck",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0",
+      "port": "rs",
+      "bits": 1,
+      "domain": "stream",
+      "kind": "reset",
+      "source": [
+        "hb_ckgen",
+        "por_stream"
+      ]
+    }
+  ],
+  "clock_reset_edges": [
+    {
+      "name": "rf1912__ld_su_SW0_bridge_rst_n_0",
+      "bits": 1,
+      "source": [
+        "rf1912_k06_10_l0",
+        "o",
+        0,
+        1
+      ],
+      "sink": [
+        "su_SW0",
+        "bridge_rst_n",
+        0,
+        1
+      ],
+      "clock": "serial",
+      "ready_or_credit": false,
+      "allowed_exception": null,
+      "basis": "d4f F1 relay tree rf1912 (equal_age_pad, subr_SW) -- relay_layer_d4f.py",
+      "region": "relays_d4f"
+    }
+  ],
+  "straps": [
+    {
+      "inst": "vmb_SW0",
+      "port": "bid",
+      "value": 0,
+      "reason": "identity: bank id 0 of hb_vms_SW (slice .bid(3'(b)))",
+      "lo": 0,
+      "hi": 3,
+      "master": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+      "inst": "vmb_SW0",
+      "port": "sid",
+      "value": 0,
+      "reason": "identity: slice id of hb_vms_SW",
+      "lo": 0,
+      "hi": 2,
+      "master": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+      "inst": "vmb_SW1",
+      "port": "bid",
+      "value": 1,
+      "reason": "identity: bank id 1 of hb_vms_SW (slice .bid(3'(b)))",
+      "lo": 0,
+      "hi": 3,
+      "master": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+      "inst": "vmb_SW1",
+      "port": "sid",
+      "value": 0,
+      "reason": "identity: slice id of hb_vms_SW",
+      "lo": 0,
+      "hi": 2,
+      "master": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+      "inst": "rf1912_k06_00_l0",
+      "port": "k0",
+      "value": 1,
+      "lo": 0,
+      "hi": 1,
+      "master": "hbfd_land_136_NS",
+      "reason": "identity: landing K strap bit 0 of link subr_SW.bridge_rst_n->su_SW0 (K 5, E None; NO_E placeholder)"
+    },
+    {
+      "inst": "rf1912_k06_00_l0",
+      "port": "k1",
+      "value": 0,
+      "lo": 0,
+      "hi": 1,
+      "master": "hbfd_land_136_NS",
+      "reason": "identity: landing K strap bit 1 of link subr_SW.bridge_rst_n->su_SW0 (K 5, E None; NO_E placeholder)"
+    },
+    {
+      "inst": "rf1912_k06_00_l0",
+      "port": "k2",
+      "value": 1,
+      "lo": 0,
+      "hi": 1,
+      "master": "hbfd_land_136_NS",
+      "reason": "identity: landing K strap bit 2 of link subr_SW.bridge_rst_n->su_SW0 (K 5, E None; NO_E placeholder)"
+    }
+  ],
+  "basis_rtl_sha256": {
+    "rtl/hbm_accel/control/hfd_ckgen.sv": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f",
+    "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv": "62fd80b3972a73ee5f6f985b8eade275b93304826c684635ba45c19a24fb6ee3",
+    "rtl/hbm_accel/die_glue/ot_hbm_lane.sv": "8e605d58ab469eafc537e48457476cdb7cfafa6bad8e5a9faf1a8b367591f274",
+    "rtl/hbm_accel/die_glue/hbfd_pad.sv": "7ce5f156514b741380f6e3df96fef21b3029de1b0225a014c27e7bda3f19a3e9"
+  },
+  "planned_component": {
+    "revision": "53cbcc9a8",
+    "spec": "/home/ubuntu/wt/codex-pgstream-cdc-1019/physical/ref_tile/hbm_su_pg_stream_b_1019/spec.json",
+    "spec_sha256": "32d3f1e40304137d6cf65c2b5408f06fbb42dae70d8fbd27867942bf762ba65c",
+    "top": "ot_hbm_su_static_pg_stream_split",
+    "params": {
+      "QID": 1,
+      "G": 2,
+      "READ_RETURN": 18,
+      "WRITE_RETURN": 15,
+      "STRAP": 1,
+      "FAULT_REG": 1
+    },
+    "reset_landing": {
+      "enable": true,
+      "stages": 3,
+      "clock": "clk_ctl",
+      "why": "3 serial stages = one 3:4 epoch (12q): bridge / inject slot counters of both roots release on the same epoch-aligned edge (as hbm_su_pg_stream_1019)"
+    },
+    "source_sha256": {
+      "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_split.sv": "7e00c37c17fc4cec4329b5cb7fd6a58fddf9bc26454cd19bd43f35118d0a4506",
+      "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge_split.sv": "b14cc91fa9163092fe700affc00548b1a78c59607fabfb27369472e21ed72e4f",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv": "3b0b126340d39eef7efc913995ab1ff4779dd64d3b8d669ff92530b08ea11198",
+      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "representative_kit_identity": {
+      "QID": 1,
+      "G": 2
+    }
+  },
+  "planned_gen2e_rule": "Use real extracted per-direction lane counts as minimum component basis; emitted GEN2e S4/S5 must regenerate/verify paths against new geometry and current reset/clock epochs; pad to budget18/15 or reprice/re-harden if longer. No budget fixture constitutes emitted GEN2e topology.",
+  "physical_qualified": false,
+  "historical_source_pin": {
+    "revision": "e9e8c9273",
+    "basis": "branch declared by original BANKLATDIE README; per-file objects retrieved from own repository, no live frozen tree Git",
+    "sha256": {
+      "rtl/hbm_accel/control/hfd_ckgen.sv": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f",
+      "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv": "62fd80b3972a73ee5f6f985b8eade275b93304826c684635ba45c19a24fb6ee3",
+      "rtl/hbm_accel/die_glue/hbfd_pad.sv": "7ce5f156514b741380f6e3df96fef21b3029de1b0225a014c27e7bda3f19a3e9",
+      "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d",
+      "rtl/hbm_accel/die_glue/ot_hbm_lane.sv": "8e605d58ab469eafc537e48457476cdb7cfafa6bad8e5a9faf1a8b367591f274",
+      "rtl/hbm_accel/die_glue/ot_hbm_rly.sv": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa",
+      "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv": "f49291fd08950a1191d1d7937783ac5559fbcea9b0cb4d06065fefee4acbb485",
+      "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "856f03008f5278674383e43b68ebf64ae3f82fc3bfbdfc81b6d5728ed259f02d",
+      "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg.sv": "99205457bcdfd96f47b4d5ebe8b4e5ee472b951a7c3cf6ec1890ae7bd5121c10",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": "b069136bfe9572147c212d2c9ba2a11ad162663f777b8a52829e9327b7483a17",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+      "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622"
+    },
+    "missing": []
+  },
+  "planned_record23_parameters": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "STRAP": 1,
+    "FAULT_REG": 1
+  },
+  "planned_record23_parameters_note": "Use actual SW0 identity with current source53cb; representative physical kit QID1/G2 remains unchanged and is not the record23 bank identity."
+}

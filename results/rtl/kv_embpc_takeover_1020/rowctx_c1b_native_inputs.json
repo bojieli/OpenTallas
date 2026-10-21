@@ -1,0 +1,14 @@
+{
+ "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "libs": [
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+  "/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib"
+ ],
+ "job": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_c1b-c1b-7ea686674",
+ "netlist": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_c1b-c1b-7ea686674/routes/qkd_embedding_row_tx_ctx_c1b_c1b_7ea686674/work/orfs/results/asap7/opentallas_qkd_embedding_row_tx_ctx_asap7_ref_qkd_embedding_row_tx_ctx_c1b_c1b_7ea686674/base/1_2_yosys.v",
+ "exit_code": 1
+}

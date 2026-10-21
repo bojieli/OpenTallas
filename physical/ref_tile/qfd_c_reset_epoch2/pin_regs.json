@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_reset_epoch",
+ "enable": false,
+ "reason": "rst_n is captured in face rst_l0 then rst_l1; rst_o is a register Q"
+}

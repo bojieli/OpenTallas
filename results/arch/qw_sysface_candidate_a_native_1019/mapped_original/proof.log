@@ -1,0 +1,157 @@
+
+-- Executing script file `mapped_original/native_proof.ys' --
+
+1. Executing Verilog-2005 frontend: mapped_original/native_proof.sv
+Parsing formal Verilog input from `mapped_original/native_proof.sv' to AST representation.
+Generating RTLIL representation for module `\old_next'.
+Generating RTLIL representation for module `\new_next'.
+Generating RTLIL representation for module `\original_native_next'.
+Generating RTLIL representation for module `\native_proof'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \native_proof
+Used module:     \original_native_next
+Used module:     \old_next
+
+2.2. Analyzing design hierarchy..
+Top module:  \native_proof
+Used module:     \original_native_next
+Used module:     \old_next
+Removing unused module `\new_next'.
+Removed 1 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 10 switch rules as full_case in process $proc$mapped_original/native_proof.sv:17$24 in module old_next.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 8 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+     1/34: $10\fault_next[0:0]
+     2/34: $9\fault_next[0:0]
+     3/34: $8\fault_next[0:0]
+     4/34: $7\fault_next[0:0]
+     5/34: $6\host_epoch_valid_next[0:0]
+     6/34: $5\host_epoch_valid_next[0:0]
+     7/34: $6\fault_next[0:0]
+     8/34: $3\host_image_digest_next[63:0]
+     9/34: $3\host_image_epoch_next[15:0]
+    10/34: $3\host_fusedcap_next[0:0]
+    11/34: $3\host_gen_next[1:0]
+    12/34: $3\host_tag_next[58:0]
+    13/34: $3\accepted_v_next[0:0]
+    14/34: $5\fault_next[0:0]
+    15/34: $2\host_image_digest_next[63:0]
+    16/34: $2\host_image_epoch_next[15:0]
+    17/34: $2\host_fusedcap_next[0:0]
+    18/34: $2\host_gen_next[1:0]
+    19/34: $2\host_tag_next[58:0]
+    20/34: $4\host_epoch_valid_next[0:0]
+    21/34: $2\accepted_v_next[0:0]
+    22/34: $3\host_epoch_valid_next[0:0]
+    23/34: $4\fault_next[0:0]
+    24/34: $3\fault_next[0:0]
+    25/34: $2\fault_next[0:0]
+    26/34: $2\host_epoch_valid_next[0:0]
+    27/34: $1\fault_next[0:0]
+    28/34: $1\host_image_digest_next[63:0]
+    29/34: $1\host_image_epoch_next[15:0]
+    30/34: $1\host_fusedcap_next[0:0]
+    31/34: $1\host_gen_next[1:0]
+    32/34: $1\host_tag_next[58:0]
+    33/34: $1\host_epoch_valid_next[0:0]
+    34/34: $1\accepted_v_next[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\old_next.\accepted_v_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\host_epoch_valid_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\host_tag_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\host_gen_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\host_fusedcap_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\host_image_epoch_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\host_image_digest_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+No latch inferred for signal `\old_next.\fault_next' from process `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 10 empty switches in `\old_next.$proc$mapped_original/native_proof.sv:17$24'.
+Removing empty process `old_next.$proc$mapped_original/native_proof.sv:17$24'.
+Cleaned up 10 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module original_native_next.
+<suppressed ~586 debug messages>
+Optimizing module native_proof.
+Optimizing module old_next.
+<suppressed ~39 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module original_native_next.
+Deleting now unused module old_next.
+<suppressed ~2 debug messages>
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \native_proof..
+Removed 131 unused cells and 2058 unused wires.
+<suppressed ~262 debug messages>
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 5647 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \state
+Import show expression: \rst_n
+Import show expression: \native_active
+Import show expression: \head_position
+Import show expression: \head_token
+Import show expression: \head_stage
+Import show expression: \head_context_v
+Import show expression: \program_digest
+Import show expression: \program_epoch
+Import show expression: \installed_fusedcap
+Import show expression: \program_ready
+Import show expression: \program_begin_v
+Import show expression: \rx_record
+Import show expression: \rx_v
+Import show expression: \receive_slot
+Import show expression: \ok
+
+Solving problem with 32964 variables and 84211 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

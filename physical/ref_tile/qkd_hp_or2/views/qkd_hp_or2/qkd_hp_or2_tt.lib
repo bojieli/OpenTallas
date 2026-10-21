@@ -1,0 +1,143 @@
+library (qkd_hp_or2_tt) {
+  comment                        : "";
+  delay_model                    : table_lookup;
+  simulation                     : false;
+  capacitive_load_unit (1,fF);
+  leakage_power_unit             : 1pW;
+  current_unit                   : "1mA";
+  pulling_resistance_unit        : "1kohm";
+  time_unit                      : "1ps";
+  voltage_unit                   : "1v";
+  library_features(report_delay_calculation);
+
+  input_threshold_pct_rise : 50;
+  input_threshold_pct_fall : 50;
+  output_threshold_pct_rise : 50;
+  output_threshold_pct_fall : 50;
+  slew_lower_threshold_pct_rise : 10;
+  slew_lower_threshold_pct_fall : 10;
+  slew_upper_threshold_pct_rise : 90;
+  slew_upper_threshold_pct_fall : 90;
+  slew_derate_from_library : 1.0;
+
+
+  nom_process                    : 1.0;
+  nom_temperature                : 25.0;
+  nom_voltage                    : 0.70;
+
+  lu_table_template(template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+  }
+
+  cell ("qkd_hp_or2") {
+    area : 0.802 
+    is_macro_cell : true;
+    pin("a") {
+      direction : input;
+      capacitance : 0.7667;
+      timing() {
+        related_pin : "ck";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("-65.30080");
+        }
+        fall_constraint(scalar) {
+          values("-65.25362");
+        }
+      }
+      timing() {
+        related_pin : "ck";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("81.07415");
+        }
+        fall_constraint(scalar) {
+          values("81.62708");
+        }
+      }
+    }
+    pin("b") {
+      direction : input;
+      capacitance : 0.7232;
+      timing() {
+        related_pin : "ck";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("-66.82999");
+        }
+        fall_constraint(scalar) {
+          values("-66.23876");
+        }
+      }
+      timing() {
+        related_pin : "ck";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("81.74685");
+        }
+        fall_constraint(scalar) {
+          values("81.89298");
+        }
+      }
+    }
+    pin("ck") {
+      direction : input;
+      clock : true;
+      capacitance : 2.0672;
+      timing() {
+        timing_sense : positive_unate;
+        timing_type : min_clock_tree_path;
+        cell_rise(scalar) {
+          values("0.34115");
+        }
+        cell_fall(scalar) {
+          values("0.33995");
+        }
+      }
+      timing() {
+        timing_sense : positive_unate;
+        timing_type : max_clock_tree_path;
+        cell_rise(scalar) {
+          values("0.38193");
+        }
+        cell_fall(scalar) {
+          values("0.38203");
+        }
+      }
+    }
+    pin("q") {
+      direction : output;
+      capacitance : 0.1751;
+      timing() {
+        related_pin : "ck";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("139.50189,141.91263,146.16080,154.10321,169.58110,200.41345,262.02844");
+        }
+        rise_transition(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("8.76546,12.84363,21.17171,38.18781,72.71120,142.24277,281.61118");
+        }
+        cell_fall(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("130.36983,132.61102,136.37854,143.09543,155.91440,181.21931,231.73396");
+        }
+        fall_transition(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("8.00173,11.27701,17.75978,30.83888,57.44368,111.33755,219.74298");
+        }
+      }
+    }
+    pin("VDD") {
+      direction : input;
+      capacitance : 0.0000;
+    }
+    pin("VSS") {
+      direction : input;
+      capacitance : 0.0000;
+    }
+  }
+
+}

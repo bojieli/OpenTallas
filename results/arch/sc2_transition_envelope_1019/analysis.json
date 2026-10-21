@@ -1,0 +1,406 @@
+{
+  "status": "ANALYTICAL_AND_NATIVE_API_RESEARCH_ONLY",
+  "native_lookup_comparisons": 168,
+  "witnesses": {
+    "nonmonotone_interior_min": true,
+    "zero_is_extrapolated_not_clamped": true,
+    "transition_only_zero_clip": true,
+    "constraint_uses_upper": true,
+    "unsupported_refusals": 4
+  },
+  "models": {
+    "tt": {
+      "generator_transition_at_max_load_ps": 73.65094837558854,
+      "generator_transition_min_load_ps": 28.120090191337322,
+      "old_planner_writer_formula_upper_ps": 220.82036535675084,
+      "conditional_waveform_interval_ps": [
+        0,
+        735.1772664805355
+      ],
+      "proposed_setup_upper_over_0_1000_ps": 299.07832078200465,
+      "proposed_hold_upper_over_0_1000_ps": 130.90948643488383,
+      "native_320ps_domain_exceeded": true,
+      "physical_characterization_claim": false,
+      "production_admission": false
+    },
+    "ss": {
+      "generator_transition_at_max_load_ps": 107.19946423709823,
+      "generator_transition_min_load_ps": 36.51188679255231,
+      "old_planner_writer_formula_upper_ps": 260.4275937677603,
+      "conditional_waveform_interval_ps": [
+        0,
+        918.1567048893282
+      ],
+      "proposed_setup_upper_over_0_1000_ps": 315.92368684834685,
+      "proposed_hold_upper_over_0_1000_ps": 141.0521232477537,
+      "native_320ps_domain_exceeded": true,
+      "physical_characterization_claim": false,
+      "production_admission": false
+    },
+    "ff": {
+      "generator_transition_at_max_load_ps": 54.32725083242356,
+      "generator_transition_min_load_ps": 22.66838331988162,
+      "old_planner_writer_formula_upper_ps": 198.15575506977345,
+      "conditional_waveform_interval_ps": [
+        0,
+        630.5267652251665
+      ],
+      "proposed_setup_upper_over_0_1000_ps": 292.8824975932915,
+      "proposed_hold_upper_over_0_1000_ps": 128.31664942013018,
+      "native_320ps_domain_exceeded": true,
+      "physical_characterization_claim": false,
+      "production_admission": false
+    }
+  },
+  "envelopes": [
+    {
+      "instance": "dependent",
+      "role": "combinational",
+      "rf": 1,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          4.608e-14
+        ]
+      ],
+      "delay_or_check": {
+        "lower": 1.8898133131674333e-12,
+        "upper": 5.176307711386707e-10,
+        "raw_lower": 1.961840412372974e-12,
+        "raw_upper": 5.175587440394651e-10,
+        "lower_witness": [
+          0,
+          0
+        ],
+        "upper_witness": [
+          1e-09,
+          4.608e-14
+        ],
+        "knot_vertices": 72,
+        "float32_research_cushion": 7.20270992055402e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      },
+      "output_transition": {
+        "lower": 8.768814429030721e-13,
+        "upper": 4.782037026601279e-10,
+        "raw_lower": 9.763396688870534e-13,
+        "raw_upper": 4.781042444341438e-10,
+        "lower_witness": [
+          0,
+          0
+        ],
+        "upper_witness": [
+          1e-09,
+          4.608e-14
+        ],
+        "knot_vertices": 72,
+        "float32_research_cushion": 9.945822598398119e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "dependent",
+      "role": "combinational",
+      "rf": 0,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          4.608e-14
+        ]
+      ],
+      "delay_or_check": {
+        "lower": 2.08032667620015e-12,
+        "upper": 5.699357275338899e-10,
+        "raw_lower": 2.163279104496397e-12,
+        "raw_upper": 5.698527751055935e-10,
+        "lower_witness": [
+          0,
+          0
+        ],
+        "upper_witness": [
+          1e-09,
+          4.608e-14
+        ],
+        "knot_vertices": 72,
+        "float32_research_cushion": 8.295242829624662e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      },
+      "output_transition": {
+        "lower": 1.0947169359318237e-12,
+        "upper": 5.645227964943906e-10,
+        "raw_lower": 1.2211603256363832e-12,
+        "raw_upper": 5.64396353104686e-10,
+        "lower_witness": [
+          0,
+          0
+        ],
+        "upper_witness": [
+          1e-09,
+          4.608e-14
+        ],
+        "knot_vertices": 72,
+        "float32_research_cushion": 1.2644338970455922e-13,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "launch",
+      "role": "Reg Clk to Q",
+      "rf": 0,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          4.608e-14
+        ]
+      ],
+      "delay_or_check": {
+        "lower": 3.2355240016080094e-10,
+        "upper": 5.449443288287577e-10,
+        "raw_lower": 3.2373620759455664e-10,
+        "raw_upper": 5.44760521395002e-10,
+        "lower_witness": [
+          0,
+          0
+        ],
+        "upper_witness": [
+          1e-09,
+          4.608e-14
+        ],
+        "knot_vertices": 42,
+        "float32_research_cushion": 1.8380743375565108e-13,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      },
+      "output_transition": {
+        "lower": 2.7375485760401308e-11,
+        "upper": 7.36728175793487e-11,
+        "raw_lower": 2.7397400320599323e-11,
+        "raw_upper": 7.365090301915068e-11,
+        "lower_witness": [
+          1e-09,
+          0
+        ],
+        "upper_witness": [
+          4.99999998002e-12,
+          4.608e-14
+        ],
+        "knot_vertices": 42,
+        "float32_research_cushion": 2.191456019801044e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "launch",
+      "role": "Reg Clk to Q",
+      "rf": 1,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          4.608e-14
+        ]
+      ],
+      "delay_or_check": {
+        "lower": 3.2355240016080094e-10,
+        "upper": 5.449443288287577e-10,
+        "raw_lower": 3.2373620759455664e-10,
+        "raw_upper": 5.44760521395002e-10,
+        "lower_witness": [
+          0,
+          0
+        ],
+        "upper_witness": [
+          1e-09,
+          4.608e-14
+        ],
+        "knot_vertices": 42,
+        "float32_research_cushion": 1.8380743375565108e-13,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      },
+      "output_transition": {
+        "lower": 2.7375485760401308e-11,
+        "upper": 7.36728175793487e-11,
+        "raw_lower": 2.7397400320599323e-11,
+        "raw_upper": 7.365090301915068e-11,
+        "lower_witness": [
+          1e-09,
+          0
+        ],
+        "upper_witness": [
+          4.99999998002e-12,
+          4.608e-14
+        ],
+        "knot_vertices": 42,
+        "float32_research_cushion": 2.191456019801044e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "capture",
+      "role": "setup",
+      "rf": 0,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          1e-09
+        ]
+      ],
+      "delay_or_check": {
+        "lower": -7.2673002395255e-11,
+        "upper": 2.776854328167659e-10,
+        "raw_lower": -7.249379748871374e-11,
+        "raw_upper": 2.7750622791022456e-10,
+        "lower_witness": [
+          0,
+          1e-09
+        ],
+        "upper_witness": [
+          1e-09,
+          0
+        ],
+        "knot_vertices": 49,
+        "float32_research_cushion": 1.7920490654125097e-13,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "capture",
+      "role": "setup",
+      "rf": 1,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          1e-09
+        ]
+      ],
+      "delay_or_check": {
+        "lower": -7.2673002395255e-11,
+        "upper": 2.776854328167659e-10,
+        "raw_lower": -7.249379748871374e-11,
+        "raw_upper": 2.7750622791022456e-10,
+        "lower_witness": [
+          0,
+          1e-09
+        ],
+        "upper_witness": [
+          1e-09,
+          0
+        ],
+        "knot_vertices": 49,
+        "float32_research_cushion": 1.7920490654125097e-13,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "capture",
+      "role": "hold",
+      "rf": 0,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          1e-09
+        ]
+      ],
+      "delay_or_check": {
+        "lower": -2.2771076438605753e-10,
+        "upper": 1.2241135078863985e-10,
+        "raw_lower": -2.276497122923744e-10,
+        "raw_upper": 1.2235029869495672e-10,
+        "lower_witness": [
+          1e-09,
+          0
+        ],
+        "upper_witness": [
+          0,
+          1e-09
+        ],
+        "knot_vertices": 49,
+        "float32_research_cushion": 6.10520936831048e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    },
+    {
+      "instance": "capture",
+      "role": "hold",
+      "rf": 1,
+      "domain_si": [
+        [
+          0,
+          1e-09
+        ],
+        [
+          0,
+          1e-09
+        ]
+      ],
+      "delay_or_check": {
+        "lower": -2.2771076438605753e-10,
+        "upper": 1.2241135078863985e-10,
+        "raw_lower": -2.276497122923744e-10,
+        "raw_upper": 1.2235029869495672e-10,
+        "lower_witness": [
+          1e-09,
+          0
+        ],
+        "upper_witness": [
+          0,
+          1e-09
+        ],
+        "knot_vertices": 49,
+        "float32_research_cushion": 6.10520936831048e-14,
+        "extrapolated": true,
+        "physical_domain_qualified": false
+      }
+    }
+  ],
+  "scope": "Native piecewise bilinear LUT mathematical extrema; explicit extrapolation, no characterization-domain expansion or production integration.",
+  "native_zero_vs_5ps": [
+    {
+      "rf": 1,
+      "zero_delay_ps": 4.29734026142,
+      "five_delay_ps": 6.00517986032
+    },
+    {
+      "rf": 0,
+      "zero_delay_ps": 5.11493928809,
+      "five_delay_ps": 6.90714976534
+    }
+  ]
+}

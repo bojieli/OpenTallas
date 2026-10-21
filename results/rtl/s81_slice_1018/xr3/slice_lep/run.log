@@ -1,0 +1,5 @@
+ot-run: -> ot-epyc4
+SLEP_STATS A->B 200/200 B->A 200/200 mismatches 0 fault A 0 B 0
+PASS slice_lep: 200 + 200 line beats crossed W-end -> E-end and back through the slice ring stops + UCIe lanes bit-exact
+BENCH_PASS slice_lep
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3702528-1792320686): exit 0

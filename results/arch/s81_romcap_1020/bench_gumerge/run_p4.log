@@ -1,0 +1,35 @@
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e4e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e14b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e14b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e14_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e14_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e12b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e12b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e12_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/s81-romcap/out/vec/p4/f_e12_0.viamap.hex:0: $readmem file not found
+RET 388 17d8b890c1000008b
+RET 389 17d1e6ee41000408b
+RET 392 17d09f6201000804b
+RET 393 17ce9da001000c04b
+RET 398 07b43afb01000844b
+RET 399 07c286dd81000c44b
+RET 405 07b8834001000888b
+RET 406 17c15bbc01000c88b
+RET 408 17d28bd701000088b
+RET 409 17bc817801000488b
+END edges=1072 ret_words=10 xo_checked=1070 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 12.829 s; speed 83.989 ns/s
+- Verilator: cpu 12.828 s on 1 threads; allocated 46 MB

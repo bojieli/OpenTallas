@@ -14,7 +14,11 @@ NET_K='9,11,9,8,9,6,11'        # kvs14c as netlisted: srx 9, rx_payload 11, att_
 # every bundle at its netlisted member maximum (what the die plan must build; F5 / F6): compute tx_record (tx_v + payload)
 # is direct in dv2f14bn -> SC_TX 0 (QXF-LINK 10-18; run_r3 used 2 -> TXDP C [8,3,1,9]; the compiler's die-run table and
 # LAYERBENCH-QWEN compiled_L1 give 0 -> C [6,3,1,9])
-PLAN='2,2,2,2,0,2/11,11,9,9,9,11,11'
+PLAN=${XQ_PLAN:-'2,2,2,2,0,2/11,11,9,9,9,11,11'}
+# Q-XDIE-GEN 10-18: XQ_PLAN = the NETLISTED seam of the current die GENs (lane cycles per record bundle, E + 1 for a landed
+# forwarded lane: record_bundle_audit.json / BUNDLE_EQ); XQ_G = extra bench -G flags for every config (e.g. -GK_NTX=3);
+# XQ_TXDP_OFF1 = the off-by-one compute TXDP mutant for that plan; XQ_GEN_TXDP = the TXDP the die GENs BIND (pair_gen_txdp)
+GEN_TXDP=${XQ_GEN_TXDP:-'6,3,1,9/23,4,3,3'}
 PLAN_R3='2,2,2,2,2,2/11,11,9,9,9,11,11'
 ZERO='0,0,0,0,0,0/0,0,0,0,0,0,0'
 # QXF-SEAMK 10-18 (F6): kvs14c after the generator's bundle pads (tools/qwen_kv_die/kv_bundle_eq.py: srx +2, kind +1, tx_v +5)
@@ -22,7 +26,11 @@ ZERO='0,0,0,0,0,0/0,0,0,0,0,0,0'
 BEQ_K='11,11,9,9,9,11,11'
 AT_D2D_K='1,1,0,0,0,0,0'   # kvs_attn W of the HOST root, N face at the D2D end's bottom (OT_KV_ATTN_D2D_TOP 0)
 OLDTXDP='3,3,1,4/3,4,3,3'      # the r4..r9 masters' hard-wired PR TXDP (component-bench codecs)
-PAIR_TXDP_OFF1='7,3,1,9/23,4,3,3'   # QXF-PAIR mutant: compute CMD/Q port TXDP one edge over the compiled C [6,3,1,9]
+PAIR_TXDP_OFF1=${XQ_TXDP_OFF1:-'7,3,1,9/23,4,3,3'}   # QXF-PAIR mutant: compute CMD/Q port TXDP one edge over the compiled C [6,3,1,9]
+CUR=${XQ_CUR:-'2,2,2,3,2,2/11,11,9,9,9,9,9'}          # QW-XDIE: g5r2b compute (netlisted) / K22 pair-image KV seam
+D22BU='2,2,2,3,2,2/13,13,9,9,9,11,11'                 # KV d22bu as-built (relay_check: rx_record 13, tx_slot 9, tx_record 11)
+CUR_LAW='--c-real 1 --k-real 3 --kv-codec 2 --attn-tx-shift 1 --status-delay 213'
+CUR_G='-GC_REAL=1 -GK_REAL=4 -GK_NTX=3 -GPOS_P=255 -DXQ_K_SFM'
 # name | expect (PASS | FAIL | BUILD_FAIL) | calendar flags | bench -G flags [| source mod: face4 = vendored kvs_attn face MUT 4]
 CONFIGS=(
  "vc|PASS|--c-real 1 --k-real 0 --stages $PLAN|-GC_REAL=1 -GK_REAL=0"
@@ -65,12 +73,39 @@ CONFIGS=(
  "pair_phy9|PASS|--c-real 1 --k-real 3 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
  "pair_l0|PASS|--c-real 1 --k-real 3 --layer L0 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
  "pair_l0_phy9|PASS|--c-real 1 --k-real 3 --layer L0 --phy 9 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
+ "pair_gen_txdp|${XQ_GEN_TXDP_EXPECT:-PASS}|--c-real 1 --k-real 3 --stages $PLAN --masters-txdp $GEN_TXDP|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
  "pair_mut_txdp_c_off1|FAIL|--c-real 1 --k-real 3 --stages $PLAN --masters-txdp $PAIR_TXDP_OFF1|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255"
  "pair_mut_kseam_rx_torn|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GK_TEAR=1"
  "pair_mut_kseam_tx_torn|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GK_TEAR=2"
  "pair_mut_status_done|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GMUT=8"
  "pair_mut_result_bit|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GMUT=9"
  "pair_mut_phy_bit|FAIL|--c-real 1 --k-real 3 --stages $PLAN|-GC_REAL=1 -GK_REAL=3 -GPOS_P=255 -GMUT=2"
+ # QW-XDIE 10-20: CURRENT dies -- compute dv2f20g5r2b (qfd_d2d_static TXDP 0x0a010308 + native59, netlisted seam C 2,2,2,3,2,2
+ # = relay_check PASS) x KV kvs14r gen9 d22bu (qkd_d2d_static_sfm NTX 3 TXDP 0x03030416 + qkd_kvs_attn_fl r17 RETIRE_STATIC 1
+ # STATUS_DELAY 213); K seam = the K22 pair image 11,11,9,9,9,9,9 (d23p SEAM_PIN target) or d22bu as-built 13/9/11.
+ # Link law for the r17 tile: --kv-codec 2 --attn-tx-shift 1 --status-delay 213 (kv_static_programme.link_calendar).
+ "cur_pair|PASS|$CUR_LAW --stages $CUR|$CUR_G"
+ "cur_mut_no_base|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GXQ_SKIP_BASE=1"
+ "cur_pair_t8192|PASS|$CUR_LAW --stages $CUR|$CUR_G -GPOS_P=8191"
+ "cur_pair_phy9|PASS|$CUR_LAW --phy 9 --stages $CUR|$CUR_G"
+ "cur_pair_l0|PASS|$CUR_LAW --layer L0 --stages $CUR|$CUR_G"
+ "cur_shift_only_sd0|PASS|--c-real 1 --k-real 3 --kv-codec 2 --attn-tx-shift 1 --stages $CUR|$CUR_G -GK_SD=0"
+ # the images the dies BIND today (main d2d_cal_image(_mu).svh K22, d22bu layer_compile): TX shift 0, STATUS tail 0
+ "cur_bound_image|${XQ_BOUND_EXPECT:-FAIL}|--c-real 1 --k-real 3 --kv-codec 2 --stages $CUR|$CUR_G"
+ "cur_bound_image_tile_sd0|${XQ_BOUND_EXPECT:-FAIL}|--c-real 1 --k-real 3 --kv-codec 2 --stages $CUR|$CUR_G -GK_SD=0"
+ "cur_no_status_tail|FAIL|--c-real 1 --k-real 3 --kv-codec 2 --attn-tx-shift 1 --stages $CUR|$CUR_G"
+ # compute die dv2f20g5r2b binds the codec-1 image (TXDP_K 0x15): its C RX calendar compiled for a KV codec 1
+ "cur_c_rx_codec1|FAIL|$CUR_LAW --stages $CUR|$CUR_G|crx1"
+ # KV d22bu as-built seam (route A D2D_PINS: K.rx_record 13 / K.tx_record 11) with the bound TXDP_K 22, and route R (compiled 24)
+ "cur_kseam_d22bu_bound|FAIL|$CUR_LAW --stages $D22BU --masters-txdp 8,3,1,10/22,4,3,3|$CUR_G"
+ "cur_kseam_d22bu_route_r|PASS|$CUR_LAW --stages $D22BU|$CUR_G"
+ # positive-vehicle negatives on cur_pair
+ "cur_mut_txdp_c_off1|FAIL|$CUR_LAW --stages $CUR --masters-txdp 9,3,1,10/22,4,3,3|$CUR_G"
+ "cur_mut_status_done|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GMUT=8"
+ "cur_mut_result_bit|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GMUT=9"
+ "cur_mut_phy_bit|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GMUT=2"
+ "cur_mut_kseam_rx_torn|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GK_TEAR=1"
+ "cur_mut_kv_run_late|FAIL|$CUR_LAW --stages $CUR|$CUR_G -GMUT=1"
 )
 SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_static_slot_link.sv" "$S/ot_qkvd_d2d_llr.sv"
  "$S/qkd_native_attention_record.sv" "$D/ot_qwen_d2d_static.sv" "$D/ot_qwen_d2d_services.sv" "$Q/qfd_kvn_static_transport.sv"
@@ -81,13 +116,16 @@ SRC_COMMON=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_st
  "$S/qkd_native_attention_programme.sv" "$S/qkd_native59_descriptor_producer.sv" "$S/qkd_native_attention_static_ctl.sv"
  "$S/qkd_native59_command_guard.sv" "$S/qkd_attn_cal_gen.sv" "$S/qkd_attn_service_root.sv" "$S/qkd_attn_result_face_s.sv"
  "$S/qkd_pv_fin_s.sv" "rtl/hdc/ot_hdc_fp32_add_lat.sv" "rtl/hdc/ot_hdc_fp32_mul_lat.sv" "rtl/hdc/ot_hdc_prefix.sv" "rtl/hdc/ot_hdc_fastfp.sv"
+ "rtl/lib/ot_pin_land.sv" "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv" "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv"
+ "$D/ot_qwen_d2d_safe_fo.sv" "$D/ot_qwen_d2d_sfm.sv"
+ "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.v"
  "rtl/test/qwen_split/tb_xdie_qwen_exchange.sv")
 KATTN=rtl/test/qwen_split/xdie_kvs14c/qkd_kvs_attn_kvs14c.sv
 mkdir -p "$OUT"
 sha256sum "${SRC_COMMON[@]}" "$KATTN" "$D/ot_qwen_d2d_dies.sv" tools/qwen_split/xdie_exchange_cal.py tools/qwen_split/d2d_link_calendar.py "$0" > "$OUT/source.sha256"
 want=("$@")
 one() {
-  local name=$1 exp=$2 calf=$3 gf=$4 mod=${5:-} o=$OUT/$1 kattn=$KATTN
+  local name=$1 exp=$2 calf=$3 gf="$4 ${XQ_G:-}" mod=${5:-} o=$OUT/$1 kattn=$KATTN
   mkdir -p "$o"
   if [ "$mod" = face4 ]; then   # QXF-FACE mutant: the vendored kvs_attn with its stream face at MUT 4 (R left out)
     grep -c 'qkd_attn_result_face_s #(.NF(10), .RESULT_RELAY(0), .F_DLY(1), .MUT(0))' "$KATTN" | grep -qx 1 || { echo "$name expect=$exp got=MOD_FAIL -> UNEXPECTED"; return; }
@@ -95,6 +133,10 @@ one() {
     kattn="$o/qkd_kvs_attn_face4.sv"
   fi
   python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal" $calf > "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> UNEXPECTED"; tail -3 "$o/cal.log"; return; }   # QXF-FACE: a run that never simulated is no FAIL witness
+  if [ "$mod" = crx1 ]; then   # QW-XDIE: compute RX calendar from the codec-1 compile (what dv2f20g5r2b binds: TXDP_K 0x15)
+    python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal_c1" ${calf/--kv-codec 2/--kv-codec 1} >> "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> UNEXPECTED"; return; }
+    cp "$o/cal_c1/cal_C_rx.memh" "$o/cal/cal_C_rx.memh"; echo "crx1: cal_C_rx.memh <- kv-codec 1 compile" >> "$o/cal.log"
+  fi
   # the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K; QXF-LINK F4): no source patching
   $V --binary --timing -j "${JOBS:-4}" -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH \
      -DOT_MEM_NO_INIT -I"$o/cal" --top-module tb_xdie_qwen_exchange $gf -GCALDIR="\"$o/cal\"" --Mdir "$o/obj" \

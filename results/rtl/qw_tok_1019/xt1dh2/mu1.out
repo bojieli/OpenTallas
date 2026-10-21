@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+GEN nominal lead 8 gap 4 events 171 ncyc 6460
+RESULT XT1 PASS mode=nominal lead=8 gap=4 exact 64/64 {"qkv": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 237, "last_final": 244, "round_period": null, "exact": "8/8"}, "o": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 189, "last_final": 228, "round_period": [16, 16], "exact": "24/24"}, "gu": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 429, "last_final": 436, "round_period": null, "exact": "8/8"}, "down": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 221, "last_final": 324, "round_period": [48, 48], "exact": "24/24"}}
+GEN nominal lead 4 gap 2 events 171 ncyc 6460
+RESULT XT1 PASS mode=nominal lead=4 gap=2 exact 64/64 {"qkv": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 237, "last_final": 244, "round_period": null, "exact": "8/8"}, "o": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 189, "last_final": 228, "round_period": [16, 16], "exact": "24/24"}, "gu": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 429, "last_final": 436, "round_period": null, "exact": "8/8"}, "down": {"d_head": 16, "d_clu": 165, "first_rs": 181, "first_final": 221, "last_final": 324, "round_period": [48, 48], "exact": "24/24"}}
+CAMPAIGN_DONE

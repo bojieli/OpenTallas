@@ -14,7 +14,7 @@
     "ot_pin_regs.tsv": "34d2697aad8268eaea5dbebd9bf8a672a5ed8bfae02cdc6da7dbb01bfdfce34e",
     "ot_pin_regs_wrapper.v": "dc7bd9e9aeaebb69c6e775de1c3d987c451a880adeaa78c6cb0c0347ed2e6cca"
   },
-  "job": "s81lk_kp4_dchn-t2-5f0b4a343",
+  "job": "s81lk_kp4_dchn-col-07c70c35d",
   "ports": {
     "apply": {
       "dir": "output",
@@ -97,6 +97,6 @@
   },
   "schema": "opentallas.ref_tile.port_latency.v1",
   "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
-  "source_commit": "5f0b4a343c623fa04d86ecb9d4e9a690acb166fc",
+  "source_commit": "07c70c35dd9168b97ae70d2de40a3c81de90aa26",
   "top": "ot_s81_kp4_dchn"
 }

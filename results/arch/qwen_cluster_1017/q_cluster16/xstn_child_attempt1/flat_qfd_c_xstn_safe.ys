@@ -1,0 +1,14 @@
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_verilog /in/1_2_yosys.v
+hierarchy -top qfd_c_xstn_safe
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten
+write_json /out/flat_qfd_c_xstn_safe.json

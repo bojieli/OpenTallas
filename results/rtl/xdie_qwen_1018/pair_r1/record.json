@@ -1029,58 +1029,62 @@
   "paired_attn_segment_vs_priced_L1_L35": 1050,
   "paired_attn_segment_vs_priced_L1_L35_phy9": 1330
  },
- "token_compose": {
-  "terms": [
-   {
-    "design": "qwen_rom",
-    "workload": "ar",
-    "slot": "Lc.xdie.d2d_attention",
-    "E": [
-     {
-      "grade": "measured-current-RTL",
-      "E": 28.0,
-      "note": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
-     },
-     {
-      "grade": "measured-current-RTL",
-      "E": 24.0,
-      "note": "die seam relays at the fixed-GEN bundle depth (compute C.tx_record 0 / C.rx_record 2, KV K.rx_record 11 / K.tx_record 11; QXF-SEAMC / QXF-SEAMK), register chains in the vehicle"
-     },
-     {
-      "grade": "modelled-PHY",
-      "E": 10.0,
-      "note": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
-     }
-    ],
-    "O": 0.0,
-    "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
-    "pointer": "exchanges.pair (C2K + K2C, PHY 5)"
-   },
-   {
-    "design": "qwen_rom",
-    "workload": "ar",
-    "slot": "L0.xdie.d2d_attention",
-    "E": [
-     {
-      "grade": "measured-current-RTL",
-      "E": 28.0,
-      "note": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
-     },
-     {
-      "grade": "measured-current-RTL",
-      "E": 24.0,
-      "note": "die seam relays at the fixed-GEN bundle depth (compute C.tx_record 0 / C.rx_record 2, KV K.rx_record 11 / K.tx_record 11; QXF-SEAMC / QXF-SEAMK), register chains in the vehicle"
-     },
-     {
-      "grade": "modelled-PHY",
-      "E": 10.0,
-      "note": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
-     }
-    ],
-    "O": 0.0,
-    "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
-    "pointer": "exchanges.pair_l0 (C2K + K2C, PHY 5)"
-   }
-  ]
+ "token_compose_superseded": {
+  "by": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+  "why": "Q-XDIE-GEN 10-18: pair_r2 re-runs this vehicle on the NETLISTED seam of the next die GENs (compute dv2f14bi, KV kvs14q/kvs14p source); one record per slot (tests/test_token_compose_xdie.py)",
+  "block": {
+   "terms": [
+    {
+     "design": "qwen_rom",
+     "workload": "ar",
+     "slot": "Lc.xdie.d2d_attention",
+     "E": [
+      {
+       "grade": "measured-current-RTL",
+       "E": 28.0,
+       "note": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
+      },
+      {
+       "grade": "measured-current-RTL",
+       "E": 24.0,
+       "note": "die seam relays at the fixed-GEN bundle depth (compute C.tx_record 0 / C.rx_record 2, KV K.rx_record 11 / K.tx_record 11; QXF-SEAMC / QXF-SEAMK), register chains in the vehicle"
+      },
+      {
+       "grade": "modelled-PHY",
+       "E": 10.0,
+       "note": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
+      }
+     ],
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "pointer": "exchanges.pair (C2K + K2C, PHY 5)"
+    },
+    {
+     "design": "qwen_rom",
+     "workload": "ar",
+     "slot": "L0.xdie.d2d_attention",
+     "E": [
+      {
+       "grade": "measured-current-RTL",
+       "E": 28.0,
+       "note": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
+      },
+      {
+       "grade": "measured-current-RTL",
+       "E": 24.0,
+       "note": "die seam relays at the fixed-GEN bundle depth (compute C.tx_record 0 / C.rx_record 2, KV K.rx_record 11 / K.tx_record 11; QXF-SEAMC / QXF-SEAMK), register chains in the vehicle"
+      },
+      {
+       "grade": "modelled-PHY",
+       "E": 10.0,
+       "note": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
+      }
+     ],
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "pointer": "exchanges.pair_l0 (C2K + K2C, PHY 5)"
+    }
+   ]
+  }
  }
 }

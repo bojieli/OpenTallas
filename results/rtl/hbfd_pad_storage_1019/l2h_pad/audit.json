@@ -1,0 +1,3098 @@
+{
+ "scope": "Yosys 0.68 generic synth -flatten (keep_hierarchy leaves kept), not technology mapped",
+ "sources": {
+  "delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "hbfd_pad.sv": "b9718eed893de6f19177771134900e4373a08bd03b4e3527139902037b25a5f7",
+  "macro.sv": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+  "macro_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+  "tb.sv": "bc4c13ec06ddbc1738cbceb380f2ad34bd416b44fd735ac3dd6205c7b1fe629e",
+  "wrap_136_28.sv": "5eb393e887a63fc990207fa619a320a711b268ad57f9891273020f021877cbb2",
+  "wrap_17_4.sv": "751c652edc1db5a77acd084545fe39993f1bf9939f26655d45563b333a2da69a",
+  "wrap_1_115.sv": "256d140d5b1e16b26323039dbd02b8faf65fb0151af39d15698244110d2438a8",
+  "wrap_1_3.sv": "96dd4df7993146f053b71bea86ec03a88ebe588f0f2314c5aaff8737bf4ebd98",
+  "wrap_274_14.sv": "79ea0e37d4107b90cdeec041790506852c4a8d61c4ba443d67f7f1dbb8e89dff",
+  "wrap_274_3.sv": "77188aec074cb5fe9c98c3e6471d040d9ba3ddecfc133cdf3834ded50fd458ff",
+  "wrap_34_73.sv": "b713a7efa744d60cb5d74f3fdaa703e5c1378556f7bf92ac8b2042105bce5cbc"
+ },
+ "shapes": {
+  "synth_136_28": {
+   "top": "pad_top_136_28",
+   "sha256": "36e181ec1d172d7bc8c6c1fe77928f4bdd7e3038077e727b75eb4abcaf04759c",
+   "cells": 824,
+   "ff_outputs": 590,
+   "kept_cells": {
+    "hbfd_pad_rst_land": 15
+   },
+   "macro_counts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 1
+   },
+   "max_q_loads": 16,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 680,
+     "names": [
+      "u_pad.g_ring.rl_cap[0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 821,
+     "names": [
+      "u_pad.g_ring.rl_cap[1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 679,
+     "names": [
+      "u_pad.g_ring.rl_cap[2]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[3].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 817,
+     "names": [
+      "u_pad.g_ring.rl_cap[3]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[4].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 820,
+     "names": [
+      "u_pad.g_ring.rl_cap[4]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[5].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1094,
+     "names": [
+      "u_pad.g_ring.rl_cap[5]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[6].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1095,
+     "names": [
+      "u_pad.g_ring.rl_cap[6]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[7].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1096,
+     "names": [
+      "u_pad.g_ring.rl_cap[7]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1700",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 819,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 15
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[8].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1097,
+     "names": [
+      "u_pad.g_ring.rl_cap[8]"
+     ],
+     "loads": 8
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1694",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 292,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[3]",
+      "u_pad.g_ring.g_core.ptr[3]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "u_pad.g_ring.u_rl_ctl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 818,
+     "names": [
+      "u_pad.g_ring.rl_ctl[0]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1691",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 276,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[0]",
+      "u_pad.g_ring.g_core.ptr[0]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1693",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 290,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[2]",
+      "u_pad.g_ring.g_core.ptr[2]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1692",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 288,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[1]",
+      "u_pad.g_ring.g_core.ptr[1]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1695",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 295,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[4]",
+      "u_pad.g_ring.g_core.ptr[4]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 677,
+     "names": [
+      "u_pad.g_ring.rl_age[0]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 676,
+     "names": [
+      "u_pad.g_ring.rl_age[1]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 675,
+     "names": [
+      "u_pad.g_ring.rl_age[2]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[3].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 674,
+     "names": [
+      "u_pad.g_ring.rl_age[3]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[4].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 678,
+     "names": [
+      "u_pad.g_ring.rl_age[4]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1506",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 286,
+     "names": [
+      "u_pad.g_ring.g_core.age[3][0]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1511",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 278,
+     "names": [
+      "u_pad.g_ring.g_core.age[2][0]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1516",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 282,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][0]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1521",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 284,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][0]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1526",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 280,
+     "names": [
+      "u_pad.g_ring.g_core.age[4][0]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1507",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 364,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$1267.CO[0]",
+      "u_pad.g_ring.g_core.age[3][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1508",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 363,
+     "names": [
+      "u_pad.g_ring.g_core.age[3][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1509",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 361,
+     "names": [
+      "u_pad.g_ring.g_core.age[3][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1512",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 333,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$1249.CO[0]",
+      "u_pad.g_ring.g_core.age[2][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1513",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 335,
+     "names": [
+      "u_pad.g_ring.g_core.age[2][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1514",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 349,
+     "names": [
+      "u_pad.g_ring.g_core.age[2][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1517",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 340,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$1231.CO[0]",
+      "u_pad.g_ring.g_core.age[1][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1518",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 342,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1519",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 344,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1522",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 325,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$1213.CO[0]",
+      "u_pad.g_ring.g_core.age[0][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1523",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 327,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1524",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 329,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1527",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 318,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$1285.CO[0]",
+      "u_pad.g_ring.g_core.age[4][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1528",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 319,
+     "names": [
+      "u_pad.g_ring.g_core.age[4][2]"
+     ],
+     "loads": 3
+    }
+   ]
+  },
+  "synth_17_115": {
+   "top": "hbfd_pad_r17x115",
+   "sha256": "27902de7a868cbcd4105bf9f646503ea79ffcdddcb948a74813e73712014dd0e",
+   "cells": 6081,
+   "ff_outputs": 2127,
+   "kept_cells": {
+    "W=s32'00000000000000000000000000010001": 8,
+    "hbfd_pad_rst_land": 4
+   },
+   "macro_counts": {},
+   "max_q_loads": 16,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6088,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6089,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6090,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][2]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6091,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][3]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6092,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][4]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6093,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][5]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6094,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][6]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6095,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][7]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6096,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][8]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6097,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][9]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6098,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][10]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6099,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][11]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6100,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][12]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6101,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][13]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6102,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][14]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6103,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][15]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6104,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][16]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6071,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6072,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6073,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][2]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6074,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][3]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6075,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][4]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6076,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][5]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6077,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][6]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6078,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][7]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6079,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][8]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6080,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][9]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6081,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][10]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6082,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][11]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6083,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][12]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6084,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][13]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6085,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][14]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6086,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][15]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6087,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][16]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6054,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6055,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6056,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][2]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6057,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][3]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6058,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][4]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000010001",
+     "port": "q",
+     "bit": 6059,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][5]"
+     ],
+     "loads": 16
+    }
+   ]
+  },
+  "synth_17_4": {
+   "top": "pad_top_17_4",
+   "sha256": "65a42d0d896cab8be8526e1e9d604cc1e77c52a3768754e23173bf5b8dc995a1",
+   "cells": 73,
+   "ff_outputs": 72,
+   "kept_cells": {
+    "hbfd_pad_rst_land": 3
+   },
+   "macro_counts": {},
+   "max_q_loads": 16,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 40,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[0]",
+      "u_pad.g_ring.rl_cap[0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 43,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[1]",
+      "u_pad.g_ring.rl_cap[1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$392",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 83,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 91,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[2]",
+      "u_pad.g_ring.rl_cap[2]"
+     ],
+     "loads": 2
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$342",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 39,
+     "names": [
+      "u_pad.g_ring.g_tiny.dl[5]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$343",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 42,
+     "names": [
+      "u_pad.g_ring.g_tiny.dl[1]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$344",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 26,
+     "names": [
+      "o[5]",
+      "u_pad.g_ring.core_o[5]",
+      "u_pad.g_ring.g_tiny.dl[22]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$345",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 45,
+     "names": [
+      "u_pad.g_ring.face1[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$346",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 41,
+     "names": [
+      "u_pad.g_ring.face1[1]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$347",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 48,
+     "names": [
+      "u_pad.g_ring.face1[2]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$348",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 50,
+     "names": [
+      "u_pad.g_ring.face1[3]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$349",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 52,
+     "names": [
+      "u_pad.g_ring.face1[4]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$350",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 38,
+     "names": [
+      "u_pad.g_ring.face1[5]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$351",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 55,
+     "names": [
+      "u_pad.g_ring.face1[6]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$352",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 57,
+     "names": [
+      "u_pad.g_ring.face1[7]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$353",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 59,
+     "names": [
+      "u_pad.g_ring.face1[8]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$354",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 61,
+     "names": [
+      "u_pad.g_ring.face1[9]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$355",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 63,
+     "names": [
+      "u_pad.g_ring.face1[10]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$356",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 65,
+     "names": [
+      "u_pad.g_ring.face1[11]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$357",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 67,
+     "names": [
+      "u_pad.g_ring.face1[12]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$358",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 69,
+     "names": [
+      "u_pad.g_ring.face1[13]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$359",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 71,
+     "names": [
+      "u_pad.g_ring.face1[14]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$360",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 73,
+     "names": [
+      "u_pad.g_ring.face1[15]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$361",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 75,
+     "names": [
+      "u_pad.g_ring.face1[16]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$362",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 76,
+     "names": [
+      "u_pad.g_ring.g_tiny.dl[6]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$363",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 27,
+     "names": [
+      "o[6]",
+      "u_pad.g_ring.core_o[6]",
+      "u_pad.g_ring.g_tiny.dl[23]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$364",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 22,
+     "names": [
+      "o[1]",
+      "u_pad.g_ring.core_o[1]",
+      "u_pad.g_ring.g_tiny.dl[18]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$365",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 77,
+     "names": [
+      "u_pad.g_ring.g_tiny.dl[7]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$366",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 44,
+     "names": [
+      "u_pad.g_ring.face0[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$367",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 46,
+     "names": [
+      "u_pad.g_ring.face0[1]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$368",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 47,
+     "names": [
+      "u_pad.g_ring.face0[2]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$369",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 49,
+     "names": [
+      "u_pad.g_ring.face0[3]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$370",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 51,
+     "names": [
+      "u_pad.g_ring.face0[4]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$371",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 53,
+     "names": [
+      "u_pad.g_ring.face0[5]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$372",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 54,
+     "names": [
+      "u_pad.g_ring.face0[6]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$373",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 56,
+     "names": [
+      "u_pad.g_ring.face0[7]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$374",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 58,
+     "names": [
+      "u_pad.g_ring.face0[8]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$375",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 60,
+     "names": [
+      "u_pad.g_ring.face0[9]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$376",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 62,
+     "names": [
+      "u_pad.g_ring.face0[10]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$377",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 64,
+     "names": [
+      "u_pad.g_ring.face0[11]"
+     ],
+     "loads": 1
+    }
+   ]
+  },
+  "synth_1_115": {
+   "top": "pad_top_1_115",
+   "sha256": "6f20b9400ae83ada9cbd74016dbf8dcae1503da1065a6d0abff74c0b9f26dadf",
+   "cells": 600,
+   "ff_outputs": 142,
+   "kept_cells": {
+    "W=s32'00000000000000000000000000000001": 8,
+    "hbfd_pad_rst_land": 3
+   },
+   "macro_counts": {},
+   "max_q_loads": 16,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[0].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 598,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[0][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[1].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 597,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[1][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[2].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 596,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[2][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[3].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 595,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[3][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[4].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 594,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[4][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[5].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 593,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[5][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_core.g_small.g_ingress[6].u_ic",
+     "type": "$paramod\\hbfd_pad_icopy\\W=s32'00000000000000000000000000000001",
+     "port": "q",
+     "bit": 592,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.ingress_local[6][0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1436",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 8,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[1]"
+     ],
+     "loads": 10
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1437",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 9,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[2]"
+     ],
+     "loads": 8
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1442",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 602,
+     "names": [
+      "u_pad.g_ring.face1[0]"
+     ],
+     "loads": 8
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1435",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 16,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[0]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1439",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 14,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[4]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 590,
+     "names": [
+      "u_pad.g_ring.rl_age[0]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "u_pad.g_ring.u_rl_ctl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 600,
+     "names": [
+      "u_pad.g_ring.rl_ctl[0]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1438",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 11,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[3]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1440",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 20,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[5]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1441",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 21,
+     "names": [
+      "u_pad.g_ring.g_core.ptr[6]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1314",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 6,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$1149.CO[0]",
+      "u_pad.g_ring.g_core.age[0][0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1316",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 47,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1317",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 48,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1318",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 41,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][4]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1434",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 599,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1315",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 45,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][1]"
+     ],
+     "loads": 2
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1319",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 40,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][5]"
+     ],
+     "loads": 2
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1320",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 43,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][6]"
+     ],
+     "loads": 2
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1321",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 338,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[112][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1322",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 333,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[111][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1323",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 336,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[110][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1324",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 325,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[109][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1325",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 315,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[108][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1326",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 331,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[107][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1327",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 317,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[106][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1328",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 319,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[105][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1329",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 430,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[104][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1330",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 357,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[103][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1331",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 476,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[102][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1332",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 470,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[101][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1333",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 421,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[100][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1334",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 216,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[99][0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$1335",
+     "type": "$_DFFE_PP_",
+     "port": "Q",
+     "bit": 363,
+     "names": [
+      "u_pad.g_ring.g_core.g_small.mem[98][0]"
+     ],
+     "loads": 1
+    }
+   ]
+  },
+  "synth_1_3": {
+   "top": "pad_top_1_3",
+   "sha256": "bf104577225860b20632e37d266ecf1e48dcef7bbb3ac882b8ef00836e2cb661",
+   "cells": 6,
+   "ff_outputs": 5,
+   "kept_cells": {
+    "hbfd_pad_rst_land": 1
+   },
+   "macro_counts": {},
+   "max_q_loads": 1,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "$auto$ff.cc:337:slice$111",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 7,
+     "names": [
+      "u_pad.g_ring.face1[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$112",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 6,
+     "names": [
+      "u_pad.g_ring.face0[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$113",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 5,
+     "names": [
+      "o[0]",
+      "u_pad.g_ring.core_o[0]",
+      "u_pad.g_ring.g_tiny.dl[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$114",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 9,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 8,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[0]",
+      "u_pad.g_ring.rl_cap[0]"
+     ],
+     "loads": 1
+    }
+   ]
+  },
+  "synth_274_14": {
+   "top": "pad_top_274_14",
+   "sha256": "a65d8817bc470bae68784aaa5ad4e9296db8e49254043a8c6b8345e2bc308961",
+   "cells": 1539,
+   "ff_outputs": 1165,
+   "kept_cells": {
+    "hbfd_pad_rst_land": 28
+   },
+   "macro_counts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+   },
+   "max_q_loads": 28,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "$auto$ff.cc:337:slice$3831",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 2081,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 28
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1798,
+     "names": [
+      "u_pad.g_ring.rl_cap[0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[10].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2077,
+     "names": [
+      "u_pad.g_ring.rl_cap[10]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[11].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2079,
+     "names": [
+      "u_pad.g_ring.rl_cap[11]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[12].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2080,
+     "names": [
+      "u_pad.g_ring.rl_cap[12]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[13].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2082,
+     "names": [
+      "u_pad.g_ring.rl_cap[13]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[14].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2084,
+     "names": [
+      "u_pad.g_ring.rl_cap[14]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[15].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2085,
+     "names": [
+      "u_pad.g_ring.rl_cap[15]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[16].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2086,
+     "names": [
+      "u_pad.g_ring.rl_cap[16]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1247,
+     "names": [
+      "u_pad.g_ring.rl_cap[1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2074,
+     "names": [
+      "u_pad.g_ring.rl_cap[2]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[3].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2078,
+     "names": [
+      "u_pad.g_ring.rl_cap[3]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[4].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2083,
+     "names": [
+      "u_pad.g_ring.rl_cap[4]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[5].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1246,
+     "names": [
+      "u_pad.g_ring.rl_cap[5]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[6].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1249,
+     "names": [
+      "u_pad.g_ring.rl_cap[6]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[7].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1799,
+     "names": [
+      "u_pad.g_ring.rl_cap[7]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[8].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2075,
+     "names": [
+      "u_pad.g_ring.rl_cap[8]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[9].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 2076,
+     "names": [
+      "u_pad.g_ring.rl_cap[9]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.u_rl_ctl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1248,
+     "names": [
+      "u_pad.g_ring.rl_ctl[0]"
+     ],
+     "loads": 8
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2854",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 554,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[0]",
+      "u_pad.g_ring.g_core.ptr[0]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2856",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 663,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[2]",
+      "u_pad.g_ring.g_core.ptr[2]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2857",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 661,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[3]",
+      "u_pad.g_ring.g_core.ptr[3]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2855",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 658,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[1]",
+      "u_pad.g_ring.g_core.ptr[1]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1242,
+     "names": [
+      "u_pad.g_ring.rl_age[0]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1238,
+     "names": [
+      "u_pad.g_ring.rl_age[1]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1245,
+     "names": [
+      "u_pad.g_ring.rl_age[2]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[3].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1244,
+     "names": [
+      "u_pad.g_ring.rl_age[3]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[4].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1243,
+     "names": [
+      "u_pad.g_ring.rl_age[4]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[5].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1241,
+     "names": [
+      "u_pad.g_ring.rl_age[5]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[6].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1240,
+     "names": [
+      "u_pad.g_ring.rl_age[6]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[7].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1239,
+     "names": [
+      "u_pad.g_ring.rl_age[7]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[8].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1237,
+     "names": [
+      "u_pad.g_ring.rl_age[8]"
+     ],
+     "loads": 4
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2809",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 562,
+     "names": [
+      "u_pad.g_ring.g_core.age[8][0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2811",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 589,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$2521.CO[0]",
+      "u_pad.g_ring.g_core.age[8][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2812",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 591,
+     "names": [
+      "u_pad.g_ring.g_core.age[8][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2813",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 552,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2815",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 601,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$2395.CO[0]",
+      "u_pad.g_ring.g_core.age[1][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2816",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 600,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2817",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 560,
+     "names": [
+      "u_pad.g_ring.g_core.age[7][0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2819",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 596,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$2503.CO[0]",
+      "u_pad.g_ring.g_core.age[7][2]"
+     ],
+     "loads": 3
+    }
+   ]
+  },
+  "synth_274_3": {
+   "top": "pad_top_274_3",
+   "sha256": "3266accad75acf42602a425b95f83e92cf15ba922cce1ebc273532a8c5e43cf9",
+   "cells": 842,
+   "ff_outputs": 841,
+   "kept_cells": {
+    "hbfd_pad_rst_land": 18
+   },
+   "macro_counts": {},
+   "max_q_loads": 18,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "$auto$ff.cc:337:slice$2735",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 1113,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 18
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 568,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[0]",
+      "u_pad.g_ring.rl_cap[0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[10].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1109,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[10]",
+      "u_pad.g_ring.rl_cap[10]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[11].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1110,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[11]",
+      "u_pad.g_ring.rl_cap[11]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[12].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1111,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[12]",
+      "u_pad.g_ring.rl_cap[12]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[13].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1114,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[13]",
+      "u_pad.g_ring.rl_cap[13]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[14].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1115,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[14]",
+      "u_pad.g_ring.rl_cap[14]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[15].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1116,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[15]",
+      "u_pad.g_ring.rl_cap[15]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[16].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1117,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[16]",
+      "u_pad.g_ring.rl_cap[16]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 556,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[1]",
+      "u_pad.g_ring.rl_cap[1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 572,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[2]",
+      "u_pad.g_ring.rl_cap[2]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[3].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1108,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[3]",
+      "u_pad.g_ring.rl_cap[3]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[4].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1112,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[4]",
+      "u_pad.g_ring.rl_cap[4]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[5].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 553,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[5]",
+      "u_pad.g_ring.rl_cap[5]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[6].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 563,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[6]",
+      "u_pad.g_ring.rl_cap[6]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[7].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 590,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[7]",
+      "u_pad.g_ring.rl_cap[7]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[8].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1106,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[8]",
+      "u_pad.g_ring.rl_cap[8]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[9].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1107,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[9]",
+      "u_pad.g_ring.rl_cap[9]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[17].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 1118,
+     "names": [
+      "u_pad.g_ring.g_tiny.rl_dl[17]",
+      "u_pad.g_ring.rl_cap[17]"
+     ],
+     "loads": 2
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2022",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 368,
+     "names": [
+      "o[90]",
+      "u_pad.g_ring.core_o[90]",
+      "u_pad.g_ring.g_tiny.dl[90]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2023",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 369,
+     "names": [
+      "o[91]",
+      "u_pad.g_ring.core_o[91]",
+      "u_pad.g_ring.g_tiny.dl[91]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2024",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 307,
+     "names": [
+      "o[29]",
+      "u_pad.g_ring.core_o[29]",
+      "u_pad.g_ring.g_tiny.dl[29]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2025",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 370,
+     "names": [
+      "o[92]",
+      "u_pad.g_ring.core_o[92]",
+      "u_pad.g_ring.g_tiny.dl[92]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2026",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 371,
+     "names": [
+      "o[93]",
+      "u_pad.g_ring.core_o[93]",
+      "u_pad.g_ring.g_tiny.dl[93]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2027",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 372,
+     "names": [
+      "o[94]",
+      "u_pad.g_ring.core_o[94]",
+      "u_pad.g_ring.g_tiny.dl[94]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2028",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 308,
+     "names": [
+      "o[30]",
+      "u_pad.g_ring.core_o[30]",
+      "u_pad.g_ring.g_tiny.dl[30]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2029",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 373,
+     "names": [
+      "o[95]",
+      "u_pad.g_ring.core_o[95]",
+      "u_pad.g_ring.g_tiny.dl[95]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2030",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 374,
+     "names": [
+      "o[96]",
+      "u_pad.g_ring.core_o[96]",
+      "u_pad.g_ring.g_tiny.dl[96]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2031",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 375,
+     "names": [
+      "o[97]",
+      "u_pad.g_ring.core_o[97]",
+      "u_pad.g_ring.g_tiny.dl[97]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2032",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 309,
+     "names": [
+      "o[31]",
+      "u_pad.g_ring.core_o[31]",
+      "u_pad.g_ring.g_tiny.dl[31]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2033",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 376,
+     "names": [
+      "o[98]",
+      "u_pad.g_ring.core_o[98]",
+      "u_pad.g_ring.g_tiny.dl[98]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2034",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 287,
+     "names": [
+      "o[9]",
+      "u_pad.g_ring.core_o[9]",
+      "u_pad.g_ring.g_tiny.dl[9]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2035",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 377,
+     "names": [
+      "o[99]",
+      "u_pad.g_ring.core_o[99]",
+      "u_pad.g_ring.g_tiny.dl[99]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2036",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 378,
+     "names": [
+      "o[100]",
+      "u_pad.g_ring.core_o[100]",
+      "u_pad.g_ring.g_tiny.dl[100]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2037",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 310,
+     "names": [
+      "o[32]",
+      "u_pad.g_ring.core_o[32]",
+      "u_pad.g_ring.g_tiny.dl[32]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2038",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 379,
+     "names": [
+      "o[101]",
+      "u_pad.g_ring.core_o[101]",
+      "u_pad.g_ring.g_tiny.dl[101]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2039",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 380,
+     "names": [
+      "o[102]",
+      "u_pad.g_ring.core_o[102]",
+      "u_pad.g_ring.g_tiny.dl[102]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2040",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 381,
+     "names": [
+      "o[103]",
+      "u_pad.g_ring.core_o[103]",
+      "u_pad.g_ring.g_tiny.dl[103]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2041",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 311,
+     "names": [
+      "o[33]",
+      "u_pad.g_ring.core_o[33]",
+      "u_pad.g_ring.g_tiny.dl[33]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$2042",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 382,
+     "names": [
+      "o[104]",
+      "u_pad.g_ring.core_o[104]",
+      "u_pad.g_ring.g_tiny.dl[104]"
+     ],
+     "loads": 1
+    }
+   ]
+  },
+  "synth_34_73": {
+   "top": "pad_top_34_73",
+   "sha256": "c99e174ee3973697e1b59e5a8ef15a01bcf3aa0e3b30b1ad43e685840736dd45",
+   "cells": 290,
+   "ff_outputs": 164,
+   "kept_cells": {
+    "hbfd_pad_rst_land": 6
+   },
+   "macro_counts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 1
+   },
+   "max_q_loads": 16,
+   "over32_count": 0,
+   "max_input_port_loads": 1,
+   "top_q": [
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 253,
+     "names": [
+      "u_pad.g_ring.rl_cap[0]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 356,
+     "names": [
+      "u_pad.g_ring.rl_cap[1]"
+     ],
+     "loads": 16
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$708",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 104,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[5]",
+      "u_pad.g_ring.g_core.ptr[5]"
+     ],
+     "loads": 9
+    },
+    {
+     "cell": "u_pad.g_ring.u_rl_ctl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 359,
+     "names": [
+      "u_pad.g_ring.rl_ctl[0]"
+     ],
+     "loads": 9
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$705",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 98,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[2]",
+      "u_pad.g_ring.g_core.ptr[2]"
+     ],
+     "loads": 8
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$706",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 100,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[3]",
+      "u_pad.g_ring.g_core.ptr[3]"
+     ],
+     "loads": 8
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$707",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 102,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[4]",
+      "u_pad.g_ring.g_core.ptr[4]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$709",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 113,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[6]",
+      "u_pad.g_ring.g_core.ptr[6]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[0].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 252,
+     "names": [
+      "u_pad.g_ring.rl_age[0]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_age[1].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 251,
+     "names": [
+      "u_pad.g_ring.rl_age[1]"
+     ],
+     "loads": 7
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$682",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 357,
+     "names": [
+      "u_pad.g_ring.rs_s1[0]"
+     ],
+     "loads": 6
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$703",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 74,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[0]",
+      "u_pad.g_ring.g_core.ptr[0]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$704",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 96,
+     "names": [
+      "u_pad.g_ring.g_core.g_macro.wa[1]",
+      "u_pad.g_ring.g_core.ptr[1]"
+     ],
+     "loads": 5
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$552",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 76,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$369.CO[0]",
+      "u_pad.g_ring.g_core.age[1][0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$553",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 150,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$554",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 152,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$555",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 155,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$556",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 159,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][4]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$557",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 165,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][5]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$558",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 169,
+     "names": [
+      "u_pad.g_ring.g_core.age[1][6]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$559",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 72,
+     "names": [
+      "$auto$alumacc.cc:548:replace_alu$351.CO[0]",
+      "u_pad.g_ring.g_core.age[0][0]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$560",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 78,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][1]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$561",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 80,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][2]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$562",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 86,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][3]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$563",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 85,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][4]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$564",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 88,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][5]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$565",
+     "type": "$_DFFE_PN0N_",
+     "port": "Q",
+     "bit": 91,
+     "names": [
+      "u_pad.g_ring.g_core.age[0][6]"
+     ],
+     "loads": 3
+    },
+    {
+     "cell": "u_pad.g_ring.g_rl_cap[2].u_rl",
+     "type": "hbfd_pad_rst_land",
+     "port": "q",
+     "bit": 358,
+     "names": [
+      "u_pad.g_ring.rl_cap[2]"
+     ],
+     "loads": 2
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$566",
+     "type": "$_DFF_PN0_",
+     "port": "Q",
+     "bit": 46,
+     "names": [
+      "o[8]",
+      "u_pad.g_ring.core_o[8]",
+      "u_pad.g_ring.g_core.capture[8]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$567",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 255,
+     "names": [
+      "u_pad.g_ring.face1[0]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$568",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 257,
+     "names": [
+      "u_pad.g_ring.face1[1]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$569",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 259,
+     "names": [
+      "u_pad.g_ring.face1[2]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$570",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 261,
+     "names": [
+      "u_pad.g_ring.face1[3]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$571",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 263,
+     "names": [
+      "u_pad.g_ring.face1[4]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$572",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 265,
+     "names": [
+      "u_pad.g_ring.face1[5]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$573",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 267,
+     "names": [
+      "u_pad.g_ring.face1[6]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$574",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 269,
+     "names": [
+      "u_pad.g_ring.face1[7]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$575",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 271,
+     "names": [
+      "u_pad.g_ring.face1[8]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$576",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 273,
+     "names": [
+      "u_pad.g_ring.face1[9]"
+     ],
+     "loads": 1
+    },
+    {
+     "cell": "$auto$ff.cc:337:slice$577",
+     "type": "$_DFF_P_",
+     "port": "Q",
+     "bit": 275,
+     "names": [
+      "u_pad.g_ring.face1[10]"
+     ],
+     "loads": 1
+    }
+   ]
+  }
+ }
+}

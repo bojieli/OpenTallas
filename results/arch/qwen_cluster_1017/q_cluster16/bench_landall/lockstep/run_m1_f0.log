@@ -1,0 +1,10 @@
+MISMATCH cycle 89
+MISMATCH cycle 90
+MISMATCH cycle 91
+MISMATCH cycle 92
+MISMATCH cycle 93
+LOCKSTEP_FAIL MUT 1 FAR 0 mismatching cycles 5817
+- rtl/test/tb_qcluster_lockstep.sv:607: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 6us; walltime 0.109 s; speed 54.717 us/s
+- Verilator: cpu 0.110 s on 1 threads; alloced 1018 MB

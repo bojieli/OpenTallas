@@ -1,0 +1,232 @@
+{
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "name": "qkd_embedding_row_tx_ctx_c1a",
+ "top": "qkd_embedding_row_tx_ctx",
+ "sources": [
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx.sv"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_row"
+  }
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 151.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "emb_tx_v",
+   "emb_tx_payload",
+   "emb_tx_slot"
+  ],
+  "E": [
+   "word_v",
+   "word_data",
+   "word_token",
+   "word_index",
+   "word_scale",
+   "word_epoch"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "fill_begin",
+   "fill_token",
+   "fill_epoch",
+   "fault",
+   "row_ready",
+   "row_open"
+  ],
+  "N": []
+ },
+ "pin_ranges": {
+  "emb_tx_payload": [
+   4,
+   140
+  ],
+  "emb_tx_v": [
+   141,
+   141.4
+  ],
+  "emb_tx_slot": [
+   143,
+   143.4
+  ],
+  "word_data": [
+   4,
+   120
+  ],
+  "word_token": [
+   121,
+   126
+  ],
+  "word_index": [
+   127,
+   129
+  ],
+  "word_epoch": [
+   130,
+   136
+  ],
+  "word_v": [
+   138,
+   138.4
+  ],
+  "word_scale": [
+   140,
+   140.4
+  ],
+  "ck": [
+   100,
+   100.4
+  ],
+  "rst_n": [
+   104,
+   104.4
+  ],
+  "fill_begin": [
+   60,
+   60.4
+  ],
+  "fill_token": [
+   62,
+   72
+  ],
+  "fill_epoch": [
+   74,
+   84
+  ],
+  "fault": [
+   160,
+   160.4
+  ],
+  "row_ready": [
+   164,
+   164.4
+  ],
+  "row_open": [
+   168,
+   168.4
+  ]
+ },
+ "job": {
+  "owner": "Claude:KV-EMB4 (LEAD3-KV, tree K.STA.EMB)",
+  "branch": "claude/kv-emb4-1019",
+  "tag": "c1a",
+  "purpose": "qkd_embedding_row_tx_ctx: closed row_tx body + row_open (= armed) diagnostic output for the OT_KV_EMB_CTX kvs_emb (ctx_start overlap veto); static, fault never stall",
+  "extra_paths": [
+   "rtl/test",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "tools/qwen_kv_die"
+  ],
+  "benches": [
+   {
+    "name": "row_tx_ctx_exact",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^PASS kvjc row_tx_ctx row_open=armed ",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/qwen_kv_emb4_1019/row_tx_ctx/m0.log"
+   },
+   {
+    "name": "row_tx_ctx_mutant1",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL",
+    "fail_witness": "results/rtl/qwen_kv_emb4_1019/row_tx_ctx/m1.log"
+   },
+   {
+    "name": "row_tx_ctx_mutant2",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL",
+    "fail_witness": "results/rtl/qwen_kv_emb4_1019/row_tx_ctx/m2.log"
+   },
+   {
+    "name": "row_tx_ctx_mutant3",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL",
+    "fail_witness": "results/rtl/qwen_kv_emb4_1019/row_tx_ctx/m3.log"
+   },
+   {
+    "name": "row_tx_ctx_mutant4",
+    "cmd": "bash tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL",
+    "fail_witness": "results/rtl/qwen_kv_emb4_1019/row_tx_ctx/m4.log"
+   }
+  ]
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "keep_pin_regs": true,
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "6.0"
+ },
+ "structural_change": "KV-EMB4 c1a 10-19: successor master of the CLOSED qkd_embedding_row_tx r2 (b97c79344) for the OT_KV_EMB_CTX kvs_emb: same row body, SRAM, outline 216 x 151.2, pin faces; ONE new S-face output row_open (= armed) at x 168 (pin-registered like every pin: +1 edge, priced in the GEN9 calendar); io_hold_margin 0.03 (KITS rule >= 0.025, r2 had 0.0). Bench kvjc_row_tx_ctx_gate.sh exact PASS + mutants 1-4 FAIL on Verilator 5.050 (witnesses committed).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

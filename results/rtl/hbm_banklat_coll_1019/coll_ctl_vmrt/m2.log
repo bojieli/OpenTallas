@@ -1,0 +1,14 @@
+COLL_VMRT mismatch out0 pair0 cyc94 exp_cyc94
+COLL_VMRT mismatch out1 pair1 cyc94 exp_cyc94
+COLL_VMRT mismatch out2 pair2 cyc94 exp_cyc94
+COLL_VMRT mismatch out3 pair3 cyc94 exp_cyc94
+COLL_VMRT mismatch out4 pair0 cyc95 exp_cyc95
+COLL_VMRT mismatch out5 pair1 cyc95 exp_cyc95
+COLL_VMRT mismatch out6 pair2 cyc95 exp_cyc95
+COLL_VMRT mismatch out7 pair3 cyc95 exp_cyc95
+COLL_VMRT mismatch out8 pair0 cyc99 exp_cyc96
+COLL_VMRT mismatch out9 pair1 cyc99 exp_cyc96
+COLL_VMRT FAIL MUT2 LAT74 VM_RT0 errors1180 protocol_fault_edges702 got1180 exp1792
+[722000] %Fatal: tb_hgi_coll_ctl_vmrt.sv:109: Assertion failed in tb_hgi_coll_ctl_vmrt: COLL VM_RT
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_vmrt.sv:109: Verilog $stop
+Aborting...

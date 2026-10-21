@@ -74,7 +74,15 @@ module ot_pl_land_r #(
             rc <= rc + 1'b1;
             if (rc == kk - 1'b1) warm <= 1'b1;
         end
-    always @(posedge ck) o <= (warm && vld[sel]) ? bank[sel*W +: W] : {W{1'b0}};
+    // decoded slot select (one-hot compare + AND-OR, constant-index slices): a runtime bank[sel*W +: W] is a W-bit
+    // $shiftx that yosys SHARE can stall on for wide landings (pre_route_gate rtl runtime_partselect; PL-SMT W = 2,069)
+    reg [W-1:0] pick;
+    integer j;
+    always @* begin
+        pick = {W{1'b0}};
+        for (j = 0; j < D; j = j + 1) pick = pick | ({W{sel == j[AW-1:0]}} & bank[j*W +: W]);
+    end
+    always @(posedge ck) o <= (warm && vld[sel]) ? pick : {W{1'b0}};
 `ifndef SYNTHESIS
     reg fault = 1'b0;
     always @(posedge ck)
@@ -87,6 +95,152 @@ module ot_pl_land_r #(
 `endif
 endmodule
 `default_nettype wire
+
+// Opt-in bounded local rings. Slot-major external bank layout and K/reset ages
+// match ot_pl_land_w/r exactly; each small hierarchy owns its selector/counter.
+// Keeping hierarchy prevents synthesis from merging the identical selectors back
+// into a bus-wide high-fanout select. At CHUNK_BITS24 each ring stores96 data bits.
+module ot_pl_land_chunk_w #(
+    parameter integer W = 514, D = 4, CHUNK_BITS = 24,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [W-1:0] i,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D*((W+CHUNK_BITS-1)/CHUNK_BITS)-1:0] vld
+);
+    genvar c, s;
+    generate for (c = 0; c < (W + CHUNK_BITS - 1) / CHUNK_BITS; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        wire [D*(AW+1)-1:0] ce;
+        wire [D-1:0] cv;
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_w #(.W(CW), .D(D)) u_local (
+            .ck(ck), .rsi(rsi), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(cv));
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
+        end
+        assign vld[c*D +: D] = cv;
+        if (c == 0) begin : g_tags
+            assign epo = ce;
+
+        end
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24)
+        $fatal(1, "ot_pl_land_chunk_w: CHUNK_BITS must be1..24");
+`endif
+endmodule
+
+module ot_pl_land_chunk_r #(
+    parameter integer W = 514, D = 4, K = 2, CHUNK_BITS = 24,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [D*W-1:0] bank,
+    input wire [D*(AW+1)-1:0] epo,
+    input wire [D*((W+CHUNK_BITS-1)/CHUNK_BITS)-1:0] vld,
+    output wire [W-1:0] o
+);
+    genvar c, s;
+    generate for (c = 0; c < (W + CHUNK_BITS - 1) / CHUNK_BITS; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign cb[s*CW +: CW] = bank[s*W + c*CHUNK_BITS +: CW];
+        end
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_r #(.W(CW), .D(D), .K(K)) u_local (
+            .ck(ck), .rsi(rsi), .bank(cb), .epo(epo), .vld(vld[c*D +: D]), .o(o[c*CHUNK_BITS +: CW]));
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24)
+        $fatal(1, "ot_pl_land_chunk_r: CHUNK_BITS must be1..24");
+`endif
+endmodule
+
+// Small independently kept selectors. Data never passes through a binary indexed
+// wide mux; the one-hot register advances ahead of the capture edge so K and the
+// reset age remain exactly the original contract.
+module ot_pl_land_local_w #(
+    parameter integer W = 24, D = 4,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [W-1:0] i,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D-1:0] vld
+);
+    reg rq;
+    reg [AW:0] wc;
+    (* keep *) reg [D-1:0] write_oh;
+    reg [D-1:0] valid;
+    reg [W-1:0] data [0:D-1];
+    reg [AW:0] epoch [0:D-1];
+    always @(posedge ck) rq <= rsi;
+    always @(posedge ck)
+        if (!rq) begin wc <= 0; write_oh <= {{(D-1){1'b0}},1'b1}; valid <= 0; end
+        else begin
+            wc <= wc + 1'b1;
+            write_oh <= {write_oh[D-2:0], write_oh[D-1]};
+            valid <= valid | write_oh;
+        end
+    genvar s;
+    generate for (s=0;s<D;s=s+1) begin:g_slot
+        always @(posedge ck) if (rq && write_oh[s]) begin data[s] <= i; epoch[s] <= wc; end
+        assign bank[s*W+:W] = data[s];
+        assign epo[s*(AW+1)+:AW+1] = epoch[s];
+    end endgenerate
+    assign vld = valid;
+endmodule
+
+module ot_pl_land_local_r #(
+    parameter integer W = 24, D = 4, K = 2,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [D*W-1:0] bank,
+    input wire [D*(AW+1)-1:0] epo,
+    input wire [D-1:0] vld,
+    output reg [W-1:0] o
+);
+    reg rq, warm;
+    reg [AW:0] rc;
+    (* keep *) reg [D-1:0] read_oh;
+    wire [AW:0] expected_epoch = rc - (AW+1)'(K);
+    reg [W-1:0] selected;
+    reg selected_valid;
+    integer s;
+    always @* begin
+        selected = 0;
+        selected_valid = 0;
+        for (integer j=0;j<D;j=j+1) begin
+            selected = selected | (bank[j*W+:W] & {W{read_oh[j]}});
+            selected_valid = selected_valid | (vld[j] & read_oh[j]);
+        end
+    end
+    always @(posedge ck) rq <= rsi;
+    always @(posedge ck)
+        if (!rq) begin
+            rc <= 0; warm <= 0;
+            for (s=0;s<D;s=s+1) read_oh[s] <= (s == ((D-K) % D));
+        end else begin
+            rc <= rc + 1'b1;
+            if (rc == K-1) warm <= 1;
+            read_oh <= {read_oh[D-2:0], read_oh[D-1]};
+        end
+    always @(posedge ck) o <= (warm && selected_valid) ? selected : {W{1'b0}};
+`ifndef SYNTHESIS
+    reg fault = 0;
+    always @(posedge ck) if (warm && selected_valid && !fault) begin
+        for (integer j=0;j<D;j=j+1) if (read_oh[j] && epo[j*(AW+1)+:AW+1] != expected_epoch) begin
+            fault <= 1;
+            $error("LAND_FAULT %m: slot%0d epoch%0d expected%0d",j,epo[j*(AW+1)+:AW+1],expected_epoch);
+        end
+    end
+`endif
+endmodule
 
 `default_nettype none
 // ot_pl_pad: N-stage register chain (N = 0: a wire).  tools/landed_parent/lp.py uses it for the alignment pads (a net whose

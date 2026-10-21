@@ -1,0 +1,500 @@
+{
+ "name": "hcoll_ring_ag_ctln_1018",
+ "top": "ot_hgi_coll_ring_ag_ctln",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_n.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "cw_i",
+   "rx_slot0",
+   "ccw_o"
+  ],
+  "E": [
+   "cw_o",
+   "ccw_i"
+  ],
+  "N": [
+   "carry_write0",
+   "pin0_q",
+   "state_tx",
+   "acc_we",
+   "acc_tag",
+   "cmd_lp_we_o",
+   "cmd_lp_tag_o",
+   "cmd_read_add_o",
+   "cmd_read_tx_o",
+   "cmd_read_rr_o",
+   "cmd_add_tag_o",
+   "cmd_tx_tag_o",
+   "cmd_rr_tag_o",
+   "cmd_add_src_o",
+   "cmd_rhs_acc_o",
+   "cmd_tx_acc_o",
+   "cmd_add_v_o",
+   "rn_o",
+   "clk",
+   "av",
+   "acc_rr",
+   "pin1_q",
+   "rx_slot1",
+   "carry_write1"
+  ],
+  "S": [
+   "ag_d",
+   "rst_n",
+   "qid",
+   "lp_we",
+   "lp_tag",
+   "state_read_add",
+   "state_read_tx",
+   "state_read_rr",
+   "state_add_tag",
+   "state_tx_tag",
+   "state_rr_tag",
+   "state_add_src",
+   "state_add_rhs_acc",
+   "state_tx_acc",
+   "add_v",
+   "add_tag",
+   "add_src",
+   "add_rhs_acc",
+   "tx_inject",
+   "tx_forward",
+   "tx_tag",
+   "tx_dst",
+   "tx_result",
+   "tx_acc",
+   "tx_gather",
+   "tx_ttl",
+   "rx_kind",
+   "rx_src",
+   "rx_tag",
+   "rr_local",
+   "rr_local_tag",
+   "rr_v",
+   "rr_tag",
+   "ag_v",
+   "ag_src",
+   "ag_tag",
+   "fault",
+   "rr_d"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333333,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "io_hold_margin_ns": 0.025,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:ELEM-GAPS/HBMN1",
+  "branch": "claude/eg-hbmn1-1018",
+  "tag": "r5c",
+  "purpose": "NATIVE successor of hcoll_ring_ag_ctl_1017 (rc1-2d4d79dd8 CLOSED but native FAIL launch 360/capture 483/2 comb pins): ot_hgi_coll_ring_ag_ctln = the unchanged closed control body behind pure pin flops (commands lead 1, tx-read group lead 2, state_tx/av pin flops, dedicated pin0_q/pin1_q/acc/lane-command output flops, carry_write registered one edge ahead, rst relay); compiler record results/rtl/eg_hbmn1_1018/ring_ag_n_latency_record.json | r2: pin0_q/pin1_q copies = keep_hierarchy leaves (n1 merged them into the core pin_p register: launch 286) fixed at the cw_i/ccw_i -> pin0_q/pin1_q midpoint (cp_mid.tcl); carry_write/rx_slot split per direction at the N corners (n1 capture rx_slot 254) | r3: cp_mid.tcl also places u_core.rr_d (acc_rr N -> rr_d S) and carry_write0/1 at their pin midpoints (r2 probe: launch 217.6 all ok, capture acc_rr 212 pins / cw_i[274] 228) | r4: rr_d / carry_write at 0.35 from the input pin (r3: launch 209 ok, capture acc_rr ~200 x149, cw_i[274] 206) | r5: acc_rr pin flops (acc_rr_q) + rr-read group LEAD 2 (lanes read one edge early, hz_rr legality check; r4 capture acc_rr 201 = 4 core mux levels); rx_slot0 to the W face beside cw_i[278:273] and carry_write0 at 0.1 from cw_i[274] (r4 capture cw_i[273] 211); rr_d back to a plain S-face output flop; io_hold_margin 0.025 | r5b: r5 probe capture acc_rr fixed (<=150), cw_i[273] 213 = 177 ps of compare logic into one flop -> carry_write = AND2 of two flops (slot&kind, dst==qid) | r5c: r5b probe capture 181 ok (cw_i[273]); acc_we launch 233 (shared flop feeds hz/hz_rr/aw_d) -> dedicated acc_we copy flop",
+  "benches": [
+   {
+    "name": "ring_ag_n_exact",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/ring_ag_n",
+    "expect": "pass",
+    "min_count_regex": "RING_AG_N BENCH PASS mutants_rejected=(8)",
+    "threads": 6,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ring_ag_n_mut_txlead",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/mut_txlead txlead",
+    "expect": "fail",
+    "fail_regex": "RING_AG_N MUTANT txlead FAILED",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctln_1018/bench_witness/ring_ag_n_mut_txlead.log"
+   },
+   {
+    "name": "ring_ag_n_mut_cw",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/mut_cw cw",
+    "expect": "fail",
+    "fail_regex": "RING_AG_N MUTANT cw FAILED",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctln_1018/bench_witness/ring_ag_n_mut_cw.log"
+   },
+   {
+    "name": "ring_ag_n_mut_hz",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/mut_hz hz",
+    "expect": "fail",
+    "fail_regex": "RING_AG_N MUTANT hz FAILED",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctln_1018/bench_witness/ring_ag_n_mut_hz.log"
+   },
+   {
+    "name": "ring_ag_n_mut_ttl",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/mut_ttl ttl",
+    "expect": "fail",
+    "fail_regex": "RING_AG_N MUTANT ttl FAILED",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctln_1018/bench_witness/ring_ag_n_mut_ttl.log"
+   },
+   {
+    "name": "ring_ag_n_mut_rrlead",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/mut_rrlead rrlead",
+    "expect": "fail",
+    "fail_regex": "RING_AG_N MUTANT rrlead FAILED",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctln_1018/bench_witness/ring_ag_n_mut_rrlead.log"
+   },
+   {
+    "name": "ring_ag_n_mut_hzrr",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh {RUN}/bench/mut_hzrr hzrr",
+    "expect": "fail",
+    "fail_regex": "RING_AG_N MUTANT hzrr FAILED",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "physical/ref_tile/hcoll_ring_ag_ctln_1018/bench_witness/ring_ag_n_mut_hzrr.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_ring_ag_ctln_1018/views",
+  "record_to": "results/arch/hbm_d4g_coll_ag_1017/route_n"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every boundary is already registered in RTL (ot_hgi_coll_ring_ag_ctln): pure pin flops on all command inputs, ring words, state_tx and av; every output a dedicated flop Q (pin0_q/pin1_q copies, carry_write, acc_we/acc_tag, lane-command copies, fault); automatic pin registers would add a second edge"
+ },
+ "pin_ranges": {
+  "cw_i": [
+   3.0,
+   64.2
+  ],
+  "ccw_o": [
+   64.8,
+   126.6
+  ],
+  "cw_o": [
+   3.0,
+   64.8
+  ],
+  "ccw_i": [
+   64.8,
+   126.6
+  ],
+  "pin0_q": [
+   4.2,
+   54.73
+  ],
+  "state_tx": [
+   54.73,
+   102.026
+  ],
+  "acc_we": [
+   102.642,
+   103.258
+  ],
+  "acc_tag": [
+   103.258,
+   103.874
+  ],
+  "clk": [
+   111.88,
+   112.496
+  ],
+  "av": [
+   112.496,
+   113.974
+  ],
+  "acc_rr": [
+   113.974,
+   161.27
+  ],
+  "pin1_q": [
+   161.27,
+   211.8
+  ],
+  "ag_d": [
+   3.0,
+   125.751
+  ],
+  "rst_n": [
+   125.751,
+   126.333
+  ],
+  "qid": [
+   126.333,
+   126.916
+  ],
+  "lp_we": [
+   126.916,
+   127.499
+  ],
+  "lp_tag": [
+   127.499,
+   128.219
+  ],
+  "state_read_add": [
+   128.219,
+   128.801
+  ],
+  "state_read_tx": [
+   128.801,
+   129.384
+  ],
+  "state_read_rr": [
+   129.384,
+   129.967
+  ],
+  "state_add_tag": [
+   129.967,
+   130.687
+  ],
+  "state_tx_tag": [
+   130.687,
+   131.406
+  ],
+  "state_rr_tag": [
+   131.406,
+   132.125
+  ],
+  "state_add_src": [
+   132.125,
+   132.708
+  ],
+  "state_add_rhs_acc": [
+   132.708,
+   133.291
+  ],
+  "state_tx_acc": [
+   133.291,
+   133.874
+  ],
+  "add_v": [
+   133.874,
+   134.457
+  ],
+  "add_tag": [
+   134.457,
+   135.176
+  ],
+  "add_src": [
+   135.176,
+   135.759
+  ],
+  "add_rhs_acc": [
+   135.759,
+   136.342
+  ],
+  "tx_inject": [
+   136.342,
+   136.925
+  ],
+  "tx_forward": [
+   136.925,
+   137.508
+  ],
+  "tx_tag": [
+   137.508,
+   138.227
+  ],
+  "tx_dst": [
+   138.227,
+   138.81
+  ],
+  "tx_result": [
+   138.81,
+   139.393
+  ],
+  "tx_acc": [
+   139.393,
+   139.976
+  ],
+  "tx_gather": [
+   139.976,
+   140.559
+  ],
+  "tx_ttl": [
+   140.559,
+   141.518
+  ],
+  "rx_kind": [
+   142.101,
+   143.06
+  ],
+  "rx_src": [
+   143.06,
+   144.019
+  ],
+  "rx_tag": [
+   144.019,
+   145.457
+  ],
+  "rr_local": [
+   145.457,
+   146.04
+  ],
+  "rr_local_tag": [
+   146.04,
+   146.759
+  ],
+  "rr_v": [
+   146.759,
+   147.342
+  ],
+  "rr_tag": [
+   147.342,
+   148.061
+  ],
+  "ag_v": [
+   148.061,
+   148.644
+  ],
+  "ag_src": [
+   148.644,
+   149.603
+  ],
+  "ag_tag": [
+   149.603,
+   151.042
+  ],
+  "fault": [
+   151.042,
+   151.625
+  ],
+  "rr_d": [
+   151.625,
+   213.0
+  ],
+  "cmd_lp_we_o": [
+   103.874,
+   104.49
+  ],
+  "cmd_lp_tag_o": [
+   104.49,
+   105.106
+  ],
+  "cmd_read_add_o": [
+   105.106,
+   105.721
+  ],
+  "cmd_read_tx_o": [
+   105.721,
+   106.337
+  ],
+  "cmd_read_rr_o": [
+   106.337,
+   106.953
+  ],
+  "cmd_add_tag_o": [
+   106.953,
+   107.569
+  ],
+  "cmd_tx_tag_o": [
+   107.569,
+   108.185
+  ],
+  "cmd_rr_tag_o": [
+   108.185,
+   108.801
+  ],
+  "cmd_add_src_o": [
+   108.801,
+   109.416
+  ],
+  "cmd_rhs_acc_o": [
+   109.416,
+   110.032
+  ],
+  "cmd_tx_acc_o": [
+   110.032,
+   110.648
+  ],
+  "cmd_add_v_o": [
+   110.648,
+   111.264
+  ],
+  "rn_o": [
+   111.264,
+   111.88
+  ],
+  "carry_write0": [
+   3.0,
+   3.6
+  ],
+  "rx_slot0": [
+   64.2,
+   64.8
+  ],
+  "rx_slot1": [
+   211.8,
+   212.4
+  ],
+  "carry_write1": [
+   212.4,
+   213.0
+  ]
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_hook_before_flops": [
+  "physical/ref_tile/hcoll_ring_ag_ctln_1018/cp_mid.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/hcoll_ring_ag_ctln_1018/cp_mid_release.tcl"
+ ]
+}

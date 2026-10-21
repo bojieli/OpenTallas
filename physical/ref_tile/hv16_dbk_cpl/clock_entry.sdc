@@ -1,7 +1,7 @@
 set ::ot_ce_require_wire 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
-set ::ot_ce_refs [dict create {ot_hgi_dma_back_landing_bank/clk} {tt {118.5 125.9 135.9} ff {93.8 101.5 111.7} ss {161.2 168.3 178.1}} {ot_hgi_dma_back_static_vp4_controller/clk} {tt {124.1 132.2 138.9} ff {99.6 106.3 112.3} ss {167.3 177.7 186.0}} {ot_hgi_dma_back_cp_collar/clk} {tt {187.8 217.1 235.2} ff {153.9 182.2 199.3} ss {243.5 274.0 292.7}}]
+set ::ot_ce_refs [dict create {ot_hgi_dma_back_landing_bank/clk} {tt {118.5 125.9 135.9} ff {93.8 101.5 111.7} ss {161.2 168.3 178.1}} {ot_hgi_dma_back_static_vp4_controller/clk} {tt {130.8 138.0 145.3} ff {104.9 111.1 118.5} ss {174.8 184.8 192.2}} {ot_hgi_dma_back_cp_collar/clk} {tt {187.8 217.1 235.2} ff {153.9 182.2 199.3} ss {243.5 274.0 292.7}}]
 set ::ot_ce_counts [dict create {ot_hgi_dma_back_landing_bank} 8 {ot_hgi_dma_back_static_vp4_controller} 1 {ot_hgi_dma_back_cp_collar} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{*}} outputs {{*}}}]
 set ::ot_ce_source_domains [dict create {clk} {core} {clk_cp} {core} {clk_rst} {core} {clk_bank[0]} {core} {clk_bank[1]} {core} {clk_bank[2]} {core} {clk_bank[3]} {core} {clk_bank[4]} {core} {clk_bank[5]} {core} {clk_bank[6]} {core} {clk_bank[7]} {core}]
@@ -112,6 +112,27 @@ proc ot_ce_boundary_cells {} {
   }
   return $boundary
 }
+# Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
+# (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
+# TT or FF; SS is sensitivity only.  > 15k sinks and > 300 ps insertion only WARN.
+proc ot_ce_clock_rule {corner name sinks all_mean pin_mean pin_lo pin_hi scope} {
+  set spread [expr {$pin_hi - $pin_lo}]
+  set warn {}
+  if {$sinks > 15000} { lappend warn "sinks $sinks > 15000 (guidance)" }
+  if {$all_mean > 300 || $pin_mean > 300} {
+    lappend warn "insertion all_mean [format %.1f $all_mean] / pin_mean [format %.1f $pin_mean] ps > 300 (guidance)"
+  }
+  if {[string tolower $corner] in {tt ff} && $spread > 80} {
+    set level FAIL
+  } elseif {[llength $warn]} {
+    set level WARN
+  } else {
+    set level PASS
+  }
+  puts "OT_HYBRID CLOCK_RULE $corner $name $level pin_spread=[format %.1f $spread] scope=$scope sinks=$sinks[expr {[llength $warn] ? " WARN: [join $warn {; }]" : ""}]"
+  return $level
+}
+
 proc ot_ce_boundary_pins {pins boundary_cells} {
   set regs {}; set boundary {}
   foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
@@ -219,9 +240,6 @@ proc ot_ce_apply {} {
     if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
       error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
     }
-    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
-      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
-    }
     if {!$boundary_cells_ready} {
       set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
     }
@@ -236,8 +254,12 @@ proc ot_ce_apply {} {
     set arrivals [lsort -real $arrivals]
     set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
     set mean [expr {$total / [llength $arrivals]}]
-    if {[llength $pins] > 15000 && $mean > 300} {
-      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    # Clock rule (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval): FAIL only on the pin-flop (boundary
+    # register; child-flop on a region-rooted parent) spread > 80 ps at TT or FF.  > 15k sinks on one root and
+    # insertion > 300 ps are guidance (WARN): the neighbour boundary is matched by the source-latency
+    # compensation below / a ring crossing and judged by native_pin_audit --relative-to.
+    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {
+      error "OT_HYBRID: glue root $name pin-flop spread [format %.1f [expr {$hi-$lo}]] ps > 80 at $corner ($scope, [llength $boundary] of [llength $pins] sinks)"
     }
     set domain [dict get $::ot_ce_source_domains $name]
     lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]

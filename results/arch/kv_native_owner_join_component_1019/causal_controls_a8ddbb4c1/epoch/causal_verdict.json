@@ -1,0 +1,17 @@
+{
+  "name": "epoch",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "private/qkd_host_native_owner_join_rc.sv"
+  ],
+  "baseline_log_sha256": "42b7932b6c22e52dbf7959fb341ccb6bfa94a618c1e00853f8a9d27ad60ea39c",
+  "mutant_log_sha256": "445c460a478e251a59aebc9edc730c735f98e55df7b993ba94c0aff5fe035bcd",
+  "required_regex": "MALFORMED_CERTIFICATE_ADVANCED_COMMITTED_OR_EVENT|MISSING_ATOMIC_CERTIFICATE_VETO",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}

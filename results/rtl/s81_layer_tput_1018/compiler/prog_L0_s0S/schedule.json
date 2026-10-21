@@ -979,100 +979,7 @@
    "dst": "L0.ffn.shared_quant"
   }
  ],
- "smoke": {
-  "slice": "u_s_0S",
-  "sid": 0,
-  "ctl_latency": {
-   "slice": "u_s_0S",
-   "sid": 0,
-   "entry_port": "ri_e",
-   "edges": 56.5,
-   "path": [
-    {
-     "at": "u_seqhost.vo",
-     "edge": 7
-    },
-    {
-     "at": "tvS_seqhost landed",
-     "link": "tvS_seqhost",
-     "edge": 11,
-     "stations": 1,
-     "E": 2
-    },
-    {
-     "at": "tvS_bk_sel (abutted, no station / landing)",
-     "link": "tvS_bk_sel",
-     "edge": 13,
-     "stations": 0,
-     "E": null
-    },
-    {
-     "at": "u_s_4S line inject",
-     "edge": 15
-    },
-    {
-     "at": "u_s_3S line",
-     "link": "xrW_3S_l3",
-     "lanes": [
-      "xrW_3S_l0",
-      "xrW_3S_l1",
-      "xrW_3S_l2",
-      "xrW_3S_l3"
-     ],
-     "edge": 27
-    },
-    {
-     "at": "u_s_2S line",
-     "link": "xrW_2S_l3",
-     "lanes": [
-      "xrW_2S_l0",
-      "xrW_2S_l1",
-      "xrW_2S_l2",
-      "xrW_2S_l3"
-     ],
-     "edge": 39
-    },
-    {
-     "at": "u_s_1S line",
-     "link": "xrW_1S_l3",
-     "lanes": [
-      "xrW_1S_l0",
-      "xrW_1S_l1",
-      "xrW_1S_l2",
-      "xrW_1S_l3"
-     ],
-     "edge": 51
-    },
-    {
-     "at": "u_s_0S line",
-     "link": "xrW_0S_l2",
-     "lanes": [
-      "xrW_0S_l0",
-      "xrW_0S_l1",
-      "xrW_0S_l2",
-      "xrW_0S_l3"
-     ],
-     "edge": 56.5
-    }
-   ],
-   "model": "contract (dsdv_seq_host header + ot_s81_land E + 1 + half-cycle stations + rstop 2/stop); the bench asserts the arrival edge"
-  },
-  "t_issue0": 3,
-  "last_partial": 243.5,
-  "rstd": 477.5,
-  "xq_at_ring": 556.5,
-  "end": 556.5,
-  "templates": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   6,
-   7
-  ]
- },
+ "smoke": "",
  "events": [
   {
    "cycle": 59.5,
@@ -1081,7 +988,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.HLOAD",
-   "payload": "template 0"
+   "payload": "template 103"
   },
   {
    "cycle": 99.5,
@@ -1090,7 +997,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.GAIN",
-   "payload": "template 1"
+   "payload": "template 104"
   },
   {
    "cycle": 119.5,
@@ -1099,7 +1006,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.NORM.k0",
-   "payload": "template 2; imm hc_pre RUNTIME"
+   "payload": "template 105; imm hc_pre RUNTIME"
   },
   {
    "cycle": 120.5,
@@ -1108,7 +1015,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.NORM.k1",
-   "payload": "template 3; imm hc_pre RUNTIME"
+   "payload": "template 106; imm hc_pre RUNTIME"
   },
   {
    "cycle": 121.5,
@@ -1117,7 +1024,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.NORM.k2",
-   "payload": "template 4; imm hc_pre RUNTIME"
+   "payload": "template 107; imm hc_pre RUNTIME"
   },
   {
    "cycle": 122.5,
@@ -1126,7 +1033,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.NORM.k3",
-   "payload": "template 5; imm hc_pre RUNTIME"
+   "payload": "template 108; imm hc_pre RUNTIME"
   },
   {
    "cycle": 123.5,
@@ -1135,7 +1042,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.NORM.k4",
-   "payload": "template 6; imm hc_pre RUNTIME"
+   "payload": "template 109; imm hc_pre RUNTIME"
   },
   {
    "cycle": 124.5,
@@ -1144,7 +1051,7 @@
    "dir": "in",
    "kind": "CTL",
    "tag": "attn.XFIN_GO",
-   "payload": "template 7"
+   "payload": "template 110"
   },
   {
    "cycle": 243.5,
@@ -1165,100 +1072,1521 @@
    "tag": "attn.x_allgather",
    "payload": "act-quant x beats of the slice (fixture: golden FP8 codes)",
    "plan_only": true
+  },
+  {
+   "cycle": 1164.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout0",
+   "payload": "template 56"
+  },
+  {
+   "cycle": 1169.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout1",
+   "payload": "template 57"
+  },
+  {
+   "cycle": 1173.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout0",
+   "payload": "template 28"
+  },
+  {
+   "cycle": 1174.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout2",
+   "payload": "template 58"
+  },
+  {
+   "cycle": 1178.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout1",
+   "payload": "template 29"
+  },
+  {
+   "cycle": 1178.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg0",
+   "payload": "template 59"
+  },
+  {
+   "cycle": 1179.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout3",
+   "payload": "template 60"
+  },
+  {
+   "cycle": 1183.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout2",
+   "payload": "template 30"
+  },
+  {
+   "cycle": 1183.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg1",
+   "payload": "template 61"
+  },
+  {
+   "cycle": 1184.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout0",
+   "payload": "template 0"
+  },
+  {
+   "cycle": 1184.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout4",
+   "payload": "template 62"
+  },
+  {
+   "cycle": 1187.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg0",
+   "payload": "template 31"
+  },
+  {
+   "cycle": 1188.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout3",
+   "payload": "template 32"
+  },
+  {
+   "cycle": 1188.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg2",
+   "payload": "template 63"
+  },
+  {
+   "cycle": 1189.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout1",
+   "payload": "template 1"
+  },
+  {
+   "cycle": 1189.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout5",
+   "payload": "template 64"
+  },
+  {
+   "cycle": 1189.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 0..7 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1192.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg1",
+   "payload": "template 33"
+  },
+  {
+   "cycle": 1193.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout4",
+   "payload": "template 34"
+  },
+  {
+   "cycle": 1193.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg3",
+   "payload": "template 65"
+  },
+  {
+   "cycle": 1194.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout2",
+   "payload": "template 2"
+  },
+  {
+   "cycle": 1194.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout6",
+   "payload": "template 66"
+  },
+  {
+   "cycle": 1194.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 8..15 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1197.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg2",
+   "payload": "template 35"
+  },
+  {
+   "cycle": 1198.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg0",
+   "payload": "template 3"
+  },
+  {
+   "cycle": 1198.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout5",
+   "payload": "template 36"
+  },
+  {
+   "cycle": 1198.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 0..7 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1198.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg4",
+   "payload": "template 67"
+  },
+  {
+   "cycle": 1199.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout3",
+   "payload": "template 4"
+  },
+  {
+   "cycle": 1199.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout7",
+   "payload": "template 68"
+  },
+  {
+   "cycle": 1199.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 16..23 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1202.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg3",
+   "payload": "template 37"
+  },
+  {
+   "cycle": 1203.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg1",
+   "payload": "template 5"
+  },
+  {
+   "cycle": 1203.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout6",
+   "payload": "template 38"
+  },
+  {
+   "cycle": 1203.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 8..15 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1203.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg5",
+   "payload": "template 69"
+  },
+  {
+   "cycle": 1204.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout4",
+   "payload": "template 6"
+  },
+  {
+   "cycle": 1204.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout8",
+   "payload": "template 70"
+  },
+  {
+   "cycle": 1204.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 24..31 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1207.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg4",
+   "payload": "template 39"
+  },
+  {
+   "cycle": 1208.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg2",
+   "payload": "template 7"
+  },
+  {
+   "cycle": 1208.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout7",
+   "payload": "template 40"
+  },
+  {
+   "cycle": 1208.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 16..23 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1208.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg6",
+   "payload": "template 71"
+  },
+  {
+   "cycle": 1209.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout5",
+   "payload": "template 8"
+  },
+  {
+   "cycle": 1209.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 0..7 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1209.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout9",
+   "payload": "template 72"
+  },
+  {
+   "cycle": 1209.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 32..39 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1212.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg5",
+   "payload": "template 41"
+  },
+  {
+   "cycle": 1213.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg3",
+   "payload": "template 9"
+  },
+  {
+   "cycle": 1213.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout8",
+   "payload": "template 42"
+  },
+  {
+   "cycle": 1213.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 24..31 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1213.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg7",
+   "payload": "template 73"
+  },
+  {
+   "cycle": 1214.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout6",
+   "payload": "template 10"
+  },
+  {
+   "cycle": 1214.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 8..15 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1214.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout10",
+   "payload": "template 74"
+  },
+  {
+   "cycle": 1214.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 40..47 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1217.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg6",
+   "payload": "template 43"
+  },
+  {
+   "cycle": 1218.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg4",
+   "payload": "template 11"
+  },
+  {
+   "cycle": 1218.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout9",
+   "payload": "template 44"
+  },
+  {
+   "cycle": 1218.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 32..39 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1218.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg8",
+   "payload": "template 75"
+  },
+  {
+   "cycle": 1219.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout7",
+   "payload": "template 12"
+  },
+  {
+   "cycle": 1219.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 16..23 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1219.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout11",
+   "payload": "template 76"
+  },
+  {
+   "cycle": 1219.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 48..55 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1222.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg7",
+   "payload": "template 45"
+  },
+  {
+   "cycle": 1223.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg5",
+   "payload": "template 13"
+  },
+  {
+   "cycle": 1223.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout10",
+   "payload": "template 46"
+  },
+  {
+   "cycle": 1223.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 40..47 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1223.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg9",
+   "payload": "template 77"
+  },
+  {
+   "cycle": 1224.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout8",
+   "payload": "template 14"
+  },
+  {
+   "cycle": 1224.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 24..31 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1224.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout12",
+   "payload": "template 78"
+  },
+  {
+   "cycle": 1224.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 56..63 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1227.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg8",
+   "payload": "template 47"
+  },
+  {
+   "cycle": 1228.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg6",
+   "payload": "template 15"
+  },
+  {
+   "cycle": 1228.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout11",
+   "payload": "template 48"
+  },
+  {
+   "cycle": 1228.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 48..55 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1228.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg10",
+   "payload": "template 79"
+  },
+  {
+   "cycle": 1229.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout9",
+   "payload": "template 16"
+  },
+  {
+   "cycle": 1229.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 32..39 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1229.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout13",
+   "payload": "template 80"
+  },
+  {
+   "cycle": 1229.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 64..71 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1232.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg9",
+   "payload": "template 49"
+  },
+  {
+   "cycle": 1233.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg7",
+   "payload": "template 17"
+  },
+  {
+   "cycle": 1233.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout12",
+   "payload": "template 50"
+  },
+  {
+   "cycle": 1233.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 56..63 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1233.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg11",
+   "payload": "template 81"
+  },
+  {
+   "cycle": 1234.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout10",
+   "payload": "template 18"
+  },
+  {
+   "cycle": 1234.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 40..47 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1234.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 72..79 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1237.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg10",
+   "payload": "template 51"
+  },
+  {
+   "cycle": 1238.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg8",
+   "payload": "template 19"
+  },
+  {
+   "cycle": 1238.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout13",
+   "payload": "template 52"
+  },
+  {
+   "cycle": 1238.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 64..71 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1238.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg12",
+   "payload": "template 82"
+  },
+  {
+   "cycle": 1239.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout11",
+   "payload": "template 20"
+  },
+  {
+   "cycle": 1239.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 48..55 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1239.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 320..327 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1242.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg11",
+   "payload": "template 53"
+  },
+  {
+   "cycle": 1243.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg9",
+   "payload": "template 21"
+  },
+  {
+   "cycle": 1243.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 72..79 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1243.5,
+   "inst": "u_s_7N",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg13",
+   "payload": "template 83"
+  },
+  {
+   "cycle": 1244.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout12",
+   "payload": "template 22"
+  },
+  {
+   "cycle": 1244.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 56..63 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1244.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 328..335 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1247.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg12",
+   "payload": "template 54"
+  },
+  {
+   "cycle": 1248.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg10",
+   "payload": "template 23"
+  },
+  {
+   "cycle": 1248.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 320..327 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1249.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "rdout13",
+   "payload": "template 24"
+  },
+  {
+   "cycle": 1249.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 64..71 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1249.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 336..343 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1252.5,
+   "inst": "u_s_7S",
+   "port": "ri_w",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg13",
+   "payload": "template 55"
+  },
+  {
+   "cycle": 1253.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg11",
+   "payload": "template 25"
+  },
+  {
+   "cycle": 1253.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 328..335 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1254.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 72..79 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1254.5,
+   "inst": "u_s_7N",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 344..351 -> sid 1",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1258.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg12",
+   "payload": "template 26"
+  },
+  {
+   "cycle": 1258.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 336..343 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1259.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 320..327 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1263.5,
+   "inst": "u_s_0S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "cfg13",
+   "payload": "template 27"
+  },
+  {
+   "cycle": 1263.5,
+   "inst": "u_s_7S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 344..351 -> sid 0",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1264.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 328..335 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1269.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 336..343 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1274.5,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 344..351 -> sid 14",
+   "payload": "fixture a_allgather words"
+  },
+  {
+   "cycle": 1791,
+   "inst": "u_rsv_11",
+   "port": "j",
+   "dir": "in",
+   "kind": "SVCJ",
+   "tag": "attn.job",
+   "payload": "100040100"
+  },
+  {
+   "cycle": 1801,
+   "inst": "u_rsv_05",
+   "port": "j",
+   "dir": "in",
+   "kind": "SVCJ",
+   "tag": "attn.job",
+   "payload": "100040100"
+  },
+  {
+   "cycle": 1805,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.CFG",
+   "payload": "frame CFG (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 1805,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.CFG",
+   "payload": "frame CFG (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 1806,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.OWN_ROW",
+   "payload": "frame OWN_ROW (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 1806,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.OWN_ROW",
+   "payload": "frame OWN_ROW (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 1823,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.WIN_LOAD",
+   "payload": "frame WIN_LOAD (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 1823,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.WIN_LOAD",
+   "payload": "frame WIN_LOAD (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 2896,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 2953",
+   "plan_only": true
+  },
+  {
+   "cycle": 2896,
+   "inst": "u_s_0S.leaf1.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 2953",
+   "plan_only": true
+  },
+  {
+   "cycle": 2896,
+   "inst": "u_s_0S.leaf2.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 2953",
+   "plan_only": true
+  },
+  {
+   "cycle": 2896,
+   "inst": "u_s_0S.leaf3.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 2953",
+   "plan_only": true
+  },
+  {
+   "cycle": 2896,
+   "inst": "u_s_0S.leaf4.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 2953",
+   "plan_only": true
+  },
+  {
+   "cycle": 3001,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.ATTN_Q0",
+   "payload": "frame ATTN_Q0 (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3001,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.ATTN_Q0",
+   "payload": "frame ATTN_Q0 (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3130,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.ATTN_Q1",
+   "payload": "frame ATTN_Q1 (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3130,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.ATTN_Q1",
+   "payload": "frame ATTN_Q1 (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3259,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.SMJ",
+   "payload": "frame SMJ (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3259,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.SMJ",
+   "payload": "frame SMJ (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3262,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.GO",
+   "payload": "frame GO (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3262,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.GO",
+   "payload": "frame GO (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3763,
+   "inst": "u_rsv_05",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.PV",
+   "payload": "frame PV (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3763,
+   "inst": "u_rsv_11",
+   "port": "q",
+   "dir": "in",
+   "kind": "QF",
+   "tag": "attn.PV",
+   "payload": "frame PV (producer u_s_3S / u_s_4S xr band bo)"
+  },
+  {
+   "cycle": 3943,
+   "inst": "u_rsv_11",
+   "port": "pv_v / pv_d",
+   "dir": "out",
+   "kind": "PV",
+   "tag": "attn.pv",
+   "payload": "160 words (quarter 0: 4 x 40-cycle windows) to u_s_4S bi"
+  },
+  {
+   "cycle": 4103,
+   "inst": "u_rsv_05",
+   "port": "jd",
+   "dir": "out",
+   "kind": "SVCDONE",
+   "tag": "attn.job",
+   "payload": "done"
+  },
+  {
+   "cycle": 4103,
+   "inst": "u_rsv_11",
+   "port": "jd",
+   "dir": "out",
+   "kind": "SVCDONE",
+   "tag": "attn.job",
+   "payload": "done"
+  },
+  {
+   "cycle": 6501,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 6520",
+   "plan_only": true
+  },
+  {
+   "cycle": 6502,
+   "inst": "u_s_0S.leaf1.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 6521",
+   "plan_only": true
+  },
+  {
+   "cycle": 6503,
+   "inst": "u_s_0S.leaf2.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 6522",
+   "plan_only": true
+  },
+  {
+   "cycle": 6504,
+   "inst": "u_s_0S.leaf3.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 6523",
+   "plan_only": true
+  },
+  {
+   "cycle": 6505,
+   "inst": "u_s_0S.leaf4.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 6524",
+   "plan_only": true
+  },
+  {
+   "cycle": 10585,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.softplus_sqrt.RA",
+   "payload": "n=6 busy until 10732",
+   "plan_only": true
+  },
+  {
+   "cycle": 11193,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.bias.RB",
+   "payload": "n=6 busy until 11218",
+   "plan_only": true
+  },
+  {
+   "cycle": 12738,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 12929",
+   "plan_only": true
+  },
+  {
+   "cycle": 12739,
+   "inst": "u_s_0S.leaf1.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 12930",
+   "plan_only": true
+  },
+  {
+   "cycle": 12740,
+   "inst": "u_s_0S.leaf2.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 12931",
+   "plan_only": true
+  },
+  {
+   "cycle": 12741,
+   "inst": "u_s_0S.leaf3.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 12932",
+   "plan_only": true
+  },
+  {
+   "cycle": 12742,
+   "inst": "u_s_0S.leaf4.vs",
+   "port": "s_d",
+   "dir": "in",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 12933",
+   "plan_only": true
   }
  ],
  "links": {
-  "ht_7N": {
-   "stations": 60,
-   "landing": "ld_ht_7N",
+  "hf_7N_l2": {
+   "stations": 59,
+   "landing": "ld_hf_7N_l2",
    "K": 28,
    "E": 28,
    "src": [
     [
-     "u_seqhost",
-     "t_host"
-    ],
-    [
-     "u_seqhost",
-     "t_kd"
+     "u_s_7N",
+     "f_ks"
     ]
    ],
    "dst": [
     [
-     "u_s_7N",
-     "t_host"
-    ],
-    [
-     "u_s_7N",
-     "t_kd"
+     "u_seqhost",
+     "f_ks"
     ]
    ],
    "age_edges": 59,
    "land_master": "dsfd_dvland_276l"
-  },
-  "xrW_0S_l2": {
-   "stations": 7,
-   "landing": null,
-   "K": null,
-   "E": 4,
-   "src": [
-    [
-     "u_s_1S",
-     "ro_w"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "ri_e"
-    ]
-   ],
-   "age_edges": 3.5,
-   "land_master": null
-  },
-  "lr_lk_WS1": {
-   "stations": 3,
-   "landing": "ld_lr_lk_WS1",
-   "K": 3,
-   "E": 3,
-   "src": [
-    [
-     "u_lk_WS1",
-     "rx"
-    ],
-    [
-     "u_lk_WS1",
-     "st"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "rx1"
-    ]
-   ],
-   "age_edges": 6,
-   "land_master": "dsfd_dvland_562"
-  },
-  "r_f_0R03": {
-   "stations": 2,
-   "landing": null,
-   "K": null,
-   "E": 2,
-   "src": [
-    [
-     "u_f_0R03",
-     "ret"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "rt"
-    ]
-   ],
-   "age_edges": 1.0,
-   "land_master": null
   },
   "x_f_0L01_l0": {
    "stations": 1,
@@ -1280,25 +2608,105 @@
    "age_edges": 0.5,
    "land_master": null
   },
-  "x_f_0R01_l2": {
-   "stations": 1,
+  "r_f_0R03": {
+   "stations": 2,
    "landing": null,
    "K": null,
    "E": 2,
    "src": [
     [
-     "u_s_0S",
-     "xc"
+     "u_f_0R03",
+     "ret"
     ]
    ],
    "dst": [
     [
-     "u_f_0R01",
-     "x"
+     "u_s_0S",
+     "rt"
     ]
    ],
-   "age_edges": 0.5,
+   "age_edges": 1.0,
    "land_master": null
+  },
+  "lt_lk_WS1": {
+   "stations": 3,
+   "landing": null,
+   "K": null,
+   "E": 3,
+   "src": [
+    [
+     "u_s_0S",
+     "tx1"
+    ]
+   ],
+   "dst": [
+    [
+     "u_lk_WS1",
+     "tx"
+    ]
+   ],
+   "age_edges": 1.5,
+   "land_master": null
+  },
+  "tvS_s_0N": {
+   "stations": 16,
+   "landing": null,
+   "K": null,
+   "E": 9,
+   "src": [
+    [
+     "u_s_0N",
+     "vo"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "vi"
+    ]
+   ],
+   "age_edges": 8.0,
+   "land_master": null
+  },
+  "xrE_0S_l2": {
+   "stations": 7,
+   "landing": "ld_xrE_0S_l2",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_0S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_1S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "tvS_seqhost": {
+   "stations": 1,
+   "landing": "ld_tvS_seqhost",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_seqhost",
+     "vo_s"
+    ]
+   ],
+   "dst": [
+    [
+     "u_bk_sel",
+     "vi_n"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_276"
   },
   "jw_E_l0": {
    "stations": 24,
@@ -1328,24 +2736,344 @@
    "age_edges": 24,
    "land_master": "dsfd_dvland_276l"
   },
-  "lt_lk_WS1": {
-   "stations": 3,
+  "x_f_0R01_l3": {
+   "stations": 1,
    "landing": null,
    "K": null,
-   "E": 3,
+   "E": 2,
    "src": [
     [
      "u_s_0S",
-     "tx1"
+     "xc"
     ]
    ],
    "dst": [
     [
-     "u_lk_WS1",
-     "tx"
+     "u_f_0R01",
+     "x"
     ]
    ],
-   "age_edges": 1.5,
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "jd_E": {
+   "stations": 24,
+   "landing": "ld_jd_E",
+   "K": 12,
+   "E": 12,
+   "src": [
+    [
+     "u_rsv_11",
+     "jd"
+    ],
+    [
+     "u_rsv_11",
+     "hc"
+    ],
+    [
+     "u_rsv_11",
+     "st_rg"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "s_jd_e"
+    ],
+    [
+     "u_seqhost",
+     "s_hc_e"
+    ],
+    [
+     "u_seqhost",
+     "st_rg_e"
+    ]
+   ],
+   "age_edges": 25,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "xrE_0S_l0": {
+   "stations": 7,
+   "landing": "ld_xrE_0S_l0",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_0S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_1S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "jw_W_l1": {
+   "stations": 33,
+   "landing": "ld_jw_W_l1",
+   "K": 16,
+   "E": 16,
+   "src": [
+    [
+     "u_seqhost",
+     "s_hw_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_05",
+     "hw"
+    ]
+   ],
+   "age_edges": 34,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "x_f_0R01_l2": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_0S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_0R01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "hf_7N_l0": {
+   "stations": 58,
+   "landing": "ld_hf_7N_l0",
+   "K": 28,
+   "E": 28,
+   "src": [
+    [
+     "u_s_7N",
+     "f_host"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "f_host"
+    ]
+   ],
+   "age_edges": 58,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "ht_7N": {
+   "stations": 60,
+   "landing": "ld_ht_7N",
+   "K": 28,
+   "E": 28,
+   "src": [
+    [
+     "u_seqhost",
+     "t_host"
+    ],
+    [
+     "u_seqhost",
+     "t_kd"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_7N",
+     "t_host"
+    ],
+    [
+     "u_s_7N",
+     "t_kd"
+    ]
+   ],
+   "age_edges": 59,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "r_f_0R00": {
+   "stations": 7,
+   "landing": null,
+   "K": null,
+   "E": 4,
+   "src": [
+    [
+     "u_f_0R00",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "rt"
+    ]
+   ],
+   "age_edges": 3.5,
+   "land_master": null
+  },
+  "jw_E_l1": {
+   "stations": 24,
+   "landing": "ld_jw_E_l1",
+   "K": 12,
+   "E": 12,
+   "src": [
+    [
+     "u_seqhost",
+     "s_hw_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_11",
+     "hw"
+    ]
+   ],
+   "age_edges": 25,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "x_f_0R01_l0": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_0S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_0R01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "xrW_0S_l3": {
+   "stations": 7,
+   "landing": null,
+   "K": null,
+   "E": 5,
+   "src": [
+    [
+     "u_s_1S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 3.5,
+   "land_master": null
+  },
+  "cw_seqhost": {
+   "stations": 23,
+   "landing": "ld_cw_seqhost",
+   "K": 12,
+   "E": 12,
+   "src": [
+    [
+     "u_seqhost",
+     "cw_v"
+    ],
+    [
+     "u_seqhost",
+     "cw_a"
+    ],
+    [
+     "u_seqhost",
+     "cw_d"
+    ]
+   ],
+   "dst": [
+    [
+     "u_gunit",
+     "cw_v"
+    ],
+    [
+     "u_gunit",
+     "cw_a"
+    ],
+    [
+     "u_gunit",
+     "cw_d"
+    ]
+   ],
+   "age_edges": 25,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "r_f_0L01": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_f_0L01",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "rt"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "x_f_0L01_l3": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_0S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_0L01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "xrW_0S_l1": {
+   "stations": 7,
+   "landing": null,
+   "K": null,
+   "E": 4,
+   "src": [
+    [
+     "u_s_1S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 3.5,
    "land_master": null
   },
   "hf_7N_l1": {
@@ -1384,6 +3112,46 @@
    "age_edges": 59,
    "land_master": "dsfd_dvland_276l"
   },
+  "tvN_s_0S": {
+   "stations": 16,
+   "landing": null,
+   "K": null,
+   "E": 9,
+   "src": [
+    [
+     "u_s_0S",
+     "vo"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0N",
+     "vi"
+    ]
+   ],
+   "age_edges": 8.0,
+   "land_master": null
+  },
+  "xrW_0S_l0": {
+   "stations": 7,
+   "landing": null,
+   "K": null,
+   "E": 4,
+   "src": [
+    [
+     "u_s_1S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 3.5,
+   "land_master": null
+  },
   "x_f_0L01_l1": {
    "stations": 1,
    "landing": null,
@@ -1403,6 +3171,110 @@
    ],
    "age_edges": 0.5,
    "land_master": null
+  },
+  "lt_lk_WS0": {
+   "stations": 3,
+   "landing": null,
+   "K": null,
+   "E": 3,
+   "src": [
+    [
+     "u_s_0S",
+     "tx0"
+    ]
+   ],
+   "dst": [
+    [
+     "u_lk_WS0",
+     "tx"
+    ]
+   ],
+   "age_edges": 1.5,
+   "land_master": null
+  },
+  "xrE_0S_l1": {
+   "stations": 7,
+   "landing": "ld_xrE_0S_l1",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_0S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_1S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "lr_lk_WS1": {
+   "stations": 3,
+   "landing": "ld_lr_lk_WS1",
+   "K": 3,
+   "E": 3,
+   "src": [
+    [
+     "u_lk_WS1",
+     "rx"
+    ],
+    [
+     "u_lk_WS1",
+     "st"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "rx1"
+    ]
+   ],
+   "age_edges": 6,
+   "land_master": "dsfd_dvland_562"
+  },
+  "r_f_0R01": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_f_0R01",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "rt"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "xrE_0S_l3": {
+   "stations": 7,
+   "landing": "ld_xrE_0S_l3",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_0S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_1S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
   },
   "jw_W_l0": {
    "stations": 33,
@@ -1428,101 +3300,41 @@
    "age_edges": 34,
    "land_master": "dsfd_dvland_276l"
   },
-  "r_f_0R01": {
+  "tvN_bk_sel": {
    "stations": 1,
-   "landing": null,
-   "K": null,
+   "landing": "ld_tvN_bk_sel",
+   "K": 2,
    "E": 2,
    "src": [
     [
-     "u_f_0R01",
-     "ret"
+     "u_bk_sel",
+     "vo_n"
     ]
    ],
    "dst": [
     [
-     "u_s_0S",
-     "rt"
+     "u_seqhost",
+     "vi_s"
     ]
    ],
-   "age_edges": 0.5,
-   "land_master": null
-  },
-  "r_f_0L03": {
-   "stations": 2,
-   "landing": null,
-   "K": null,
-   "E": 2,
-   "src": [
-    [
-     "u_f_0L03",
-     "ret"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "rt"
-    ]
-   ],
-   "age_edges": 1.0,
-   "land_master": null
-  },
-  "r_f_0R00": {
-   "stations": 7,
-   "landing": null,
-   "K": null,
-   "E": 4,
-   "src": [
-    [
-     "u_f_0R00",
-     "ret"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "rt"
-    ]
-   ],
-   "age_edges": 3.5,
-   "land_master": null
-  },
-  "xrE_0S_l3": {
-   "stations": 7,
-   "landing": "ld_xrE_0S_l3",
-   "K": 4,
-   "E": 4,
-   "src": [
-    [
-     "u_s_0S",
-     "ro_e"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_1S",
-     "ri_w"
-    ]
-   ],
-   "age_edges": 9,
+   "age_edges": 4,
    "land_master": "dsfd_dvland_276"
   },
-  "r_f_0L01": {
+  "x_f_0L01_l2": {
    "stations": 1,
    "landing": null,
    "K": null,
    "E": 2,
    "src": [
     [
-     "u_f_0L01",
-     "ret"
+     "u_s_0S",
+     "xc"
     ]
    ],
    "dst": [
     [
-     "u_s_0S",
-     "rt"
+     "u_f_0L01",
+     "x"
     ]
    ],
    "age_edges": 0.5,
@@ -1548,143 +3360,7 @@
    "age_edges": 3.5,
    "land_master": null
   },
-  "x_f_0L01_l2": {
-   "stations": 1,
-   "landing": null,
-   "K": null,
-   "E": 2,
-   "src": [
-    [
-     "u_s_0S",
-     "xc"
-    ]
-   ],
-   "dst": [
-    [
-     "u_f_0L01",
-     "x"
-    ]
-   ],
-   "age_edges": 0.5,
-   "land_master": null
-  },
-  "xrE_0S_l0": {
-   "stations": 7,
-   "landing": "ld_xrE_0S_l0",
-   "K": 4,
-   "E": 4,
-   "src": [
-    [
-     "u_s_0S",
-     "ro_e"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_1S",
-     "ri_w"
-    ]
-   ],
-   "age_edges": 9,
-   "land_master": "dsfd_dvland_276"
-  },
-  "tvS_seqhost": {
-   "stations": 1,
-   "landing": "ld_tvS_seqhost",
-   "K": 2,
-   "E": 2,
-   "src": [
-    [
-     "u_seqhost",
-     "vo_s"
-    ]
-   ],
-   "dst": [
-    [
-     "u_bk_sel",
-     "vi_n"
-    ]
-   ],
-   "age_edges": 4,
-   "land_master": "dsfd_dvland_276"
-  },
-  "xrE_0S_l1": {
-   "stations": 7,
-   "landing": "ld_xrE_0S_l1",
-   "K": 4,
-   "E": 4,
-   "src": [
-    [
-     "u_s_0S",
-     "ro_e"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_1S",
-     "ri_w"
-    ]
-   ],
-   "age_edges": 9,
-   "land_master": "dsfd_dvland_276"
-  },
-  "jw_W_l1": {
-   "stations": 33,
-   "landing": "ld_jw_W_l1",
-   "K": 16,
-   "E": 16,
-   "src": [
-    [
-     "u_seqhost",
-     "s_hw_w"
-    ]
-   ],
-   "dst": [
-    [
-     "u_rsv_05",
-     "hw"
-    ]
-   ],
-   "age_edges": 34,
-   "land_master": "dsfd_dvland_276l"
-  },
-  "jd_E": {
-   "stations": 24,
-   "landing": "ld_jd_E",
-   "K": 12,
-   "E": 12,
-   "src": [
-    [
-     "u_rsv_11",
-     "jd"
-    ],
-    [
-     "u_rsv_11",
-     "hc"
-    ],
-    [
-     "u_rsv_11",
-     "st_rg"
-    ]
-   ],
-   "dst": [
-    [
-     "u_seqhost",
-     "s_jd_e"
-    ],
-    [
-     "u_seqhost",
-     "s_hc_e"
-    ],
-    [
-     "u_seqhost",
-     "st_rg_e"
-    ]
-   ],
-   "age_edges": 25,
-   "land_master": "dsfd_dvland_276l"
-  },
-  "x_f_0R01_l3": {
+  "x_f_0R01_l1": {
    "stations": 1,
    "landing": null,
    "K": null,
@@ -1702,6 +3378,26 @@
     ]
    ],
    "age_edges": 0.5,
+   "land_master": null
+  },
+  "xrW_0S_l2": {
+   "stations": 7,
+   "landing": null,
+   "K": null,
+   "E": 4,
+   "src": [
+    [
+     "u_s_1S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_0S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 3.5,
    "land_master": null
   },
   "jd_W": {
@@ -1740,221 +3436,25 @@
    "age_edges": 32,
    "land_master": "dsfd_dvland_276l"
   },
-  "xrW_0S_l3": {
-   "stations": 7,
-   "landing": null,
-   "K": null,
-   "E": 5,
-   "src": [
-    [
-     "u_s_1S",
-     "ro_w"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "ri_e"
-    ]
-   ],
-   "age_edges": 3.5,
-   "land_master": null
-  },
-  "hf_7N_l0": {
-   "stations": 58,
-   "landing": "ld_hf_7N_l0",
-   "K": 28,
-   "E": 28,
-   "src": [
-    [
-     "u_s_7N",
-     "f_host"
-    ]
-   ],
-   "dst": [
-    [
-     "u_seqhost",
-     "f_host"
-    ]
-   ],
-   "age_edges": 58,
-   "land_master": "dsfd_dvland_276l"
-  },
-  "tvN_bk_sel": {
-   "stations": 1,
-   "landing": "ld_tvN_bk_sel",
-   "K": 2,
-   "E": 2,
-   "src": [
-    [
-     "u_bk_sel",
-     "vo_n"
-    ]
-   ],
-   "dst": [
-    [
-     "u_seqhost",
-     "vi_s"
-    ]
-   ],
-   "age_edges": 4,
-   "land_master": "dsfd_dvland_276"
-  },
-  "cw_seqhost": {
-   "stations": 23,
-   "landing": "ld_cw_seqhost",
-   "K": 12,
-   "E": 12,
-   "src": [
-    [
-     "u_seqhost",
-     "cw_v"
-    ],
-    [
-     "u_seqhost",
-     "cw_a"
-    ],
-    [
-     "u_seqhost",
-     "cw_d"
-    ]
-   ],
-   "dst": [
-    [
-     "u_gunit",
-     "cw_v"
-    ],
-    [
-     "u_gunit",
-     "cw_a"
-    ],
-    [
-     "u_gunit",
-     "cw_d"
-    ]
-   ],
-   "age_edges": 25,
-   "land_master": "dsfd_dvland_276l"
-  },
-  "xrW_0S_l1": {
-   "stations": 7,
-   "landing": null,
-   "K": null,
-   "E": 4,
-   "src": [
-    [
-     "u_s_1S",
-     "ro_w"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "ri_e"
-    ]
-   ],
-   "age_edges": 3.5,
-   "land_master": null
-  },
-  "x_f_0L01_l3": {
-   "stations": 1,
+  "r_f_0L03": {
+   "stations": 2,
    "landing": null,
    "K": null,
    "E": 2,
    "src": [
     [
-     "u_s_0S",
-     "xc"
+     "u_f_0L03",
+     "ret"
     ]
    ],
    "dst": [
     [
-     "u_f_0L01",
-     "x"
+     "u_s_0S",
+     "rt"
     ]
    ],
-   "age_edges": 0.5,
+   "age_edges": 1.0,
    "land_master": null
-  },
-  "hf_7N_l2": {
-   "stations": 59,
-   "landing": "ld_hf_7N_l2",
-   "K": 28,
-   "E": 28,
-   "src": [
-    [
-     "u_s_7N",
-     "f_ks"
-    ]
-   ],
-   "dst": [
-    [
-     "u_seqhost",
-     "f_ks"
-    ]
-   ],
-   "age_edges": 59,
-   "land_master": "dsfd_dvland_276l"
-  },
-  "x_f_0R01_l1": {
-   "stations": 1,
-   "landing": null,
-   "K": null,
-   "E": 2,
-   "src": [
-    [
-     "u_s_0S",
-     "xc"
-    ]
-   ],
-   "dst": [
-    [
-     "u_f_0R01",
-     "x"
-    ]
-   ],
-   "age_edges": 0.5,
-   "land_master": null
-  },
-  "jw_E_l1": {
-   "stations": 24,
-   "landing": "ld_jw_E_l1",
-   "K": 12,
-   "E": 12,
-   "src": [
-    [
-     "u_seqhost",
-     "s_hw_e"
-    ]
-   ],
-   "dst": [
-    [
-     "u_rsv_11",
-     "hw"
-    ]
-   ],
-   "age_edges": 25,
-   "land_master": "dsfd_dvland_276l"
-  },
-  "xrE_0S_l2": {
-   "stations": 7,
-   "landing": "ld_xrE_0S_l2",
-   "K": 4,
-   "E": 4,
-   "src": [
-    [
-     "u_s_0S",
-     "ro_e"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_1S",
-     "ri_w"
-    ]
-   ],
-   "age_edges": 9,
-   "land_master": "dsfd_dvland_276"
   },
   "lr_lk_WS0": {
    "stations": 3,
@@ -1979,106 +3479,6 @@
    ],
    "age_edges": 6,
    "land_master": "dsfd_dvland_562"
-  },
-  "tvS_s_0N": {
-   "stations": 16,
-   "landing": null,
-   "K": null,
-   "E": 9,
-   "src": [
-    [
-     "u_s_0N",
-     "vo"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "vi"
-    ]
-   ],
-   "age_edges": 8.0,
-   "land_master": null
-  },
-  "lt_lk_WS0": {
-   "stations": 3,
-   "landing": null,
-   "K": null,
-   "E": 3,
-   "src": [
-    [
-     "u_s_0S",
-     "tx0"
-    ]
-   ],
-   "dst": [
-    [
-     "u_lk_WS0",
-     "tx"
-    ]
-   ],
-   "age_edges": 1.5,
-   "land_master": null
-  },
-  "tvN_s_0S": {
-   "stations": 16,
-   "landing": null,
-   "K": null,
-   "E": 9,
-   "src": [
-    [
-     "u_s_0S",
-     "vo"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0N",
-     "vi"
-    ]
-   ],
-   "age_edges": 8.0,
-   "land_master": null
-  },
-  "x_f_0R01_l0": {
-   "stations": 1,
-   "landing": null,
-   "K": null,
-   "E": 2,
-   "src": [
-    [
-     "u_s_0S",
-     "xc"
-    ]
-   ],
-   "dst": [
-    [
-     "u_f_0R01",
-     "x"
-    ]
-   ],
-   "age_edges": 0.5,
-   "land_master": null
-  },
-  "xrW_0S_l0": {
-   "stations": 7,
-   "landing": null,
-   "K": null,
-   "E": 4,
-   "src": [
-    [
-     "u_s_1S",
-     "ro_w"
-    ]
-   ],
-   "dst": [
-    [
-     "u_s_0S",
-     "ri_e"
-    ]
-   ],
-   "age_edges": 3.5,
-   "land_master": null
   }
  }
 }

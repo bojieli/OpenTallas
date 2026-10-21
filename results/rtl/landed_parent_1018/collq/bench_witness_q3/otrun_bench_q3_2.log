@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/pl-collq/src
+ot-run: ot-epyc5       admits    74 GB (avail 580, growth 528, headroom 0, waiters 1/128 GB) load 57/128 running 32 disk 2499 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pl-collq/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pl-collq/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1083116-1792333310 after 0 s
+EQ PASS
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+Q3_LP_ALL_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1083116-1792333310): exit 0

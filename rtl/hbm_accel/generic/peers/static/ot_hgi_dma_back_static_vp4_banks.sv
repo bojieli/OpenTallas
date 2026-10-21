@@ -7,7 +7,8 @@
 // and physical qualification is separate; no producer or compiler adoption.
 module ot_hgi_dma_back_static_vp4_banks #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
-    parameter integer MUT=0 // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
+    parameter integer MUT=0, // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
+    parameter integer RR_RT=7 // VM read round trip at the controller pins (see the controller header)
 )(
     input wire clk,rst_n,
     // stack identity strap (H-HARDEN 2026-10-15, DEDUPE: ONE controller/cluster master for all four stacks; replaces
@@ -36,14 +37,14 @@ module ot_hgi_dma_back_static_vp4_banks #(
     // Wires-only physical parent: nine compensated related clock entries.
     // Banks use identical source and parameters; address constants are resolved in controller registers.
     wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
-    wire [6:0] bank_read_slot,bank_write_slot;
+    wire [6:0] rslot_s,rslot_w,rslot_n,wslot_s,wslot_w,wslot_n;   // per bank-group copies (S 0-2, W 3-4, N 5-7)
     wire [255:0] bank_read_addr;
     // OT_DBK_HARD (hb_dbk wires-only cluster route): the controller is a hard view, instantiated without overrides
     // (its defaults ARE the hardened configuration); simulation keeps the bench MUT/STACK_BYTES pass-through.
 `ifdef OT_DBK_HARD
     ot_hgi_dma_back_static_vp4_controller u_control(
 `else
-    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_control(
+    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT)) u_control(
 `endif
         .clk(clk),
         .rst_n(rst_n),
@@ -73,22 +74,30 @@ module ot_hgi_dma_back_static_vp4_banks #(
         .wa(wa),
         .rr_valid_i(rr_valid_i),
         .bank_read_en(bank_read_en),
-        .bank_read_slot(bank_read_slot),
-        .bank_write_slot(bank_write_slot),
+        .bank_read_slot_s(rslot_s),.bank_read_slot_w(rslot_w),.bank_read_slot_n(rslot_n),
+        .bank_write_slot_s(wslot_s),.bank_write_slot_w(wslot_w),.bank_write_slot_n(wslot_n),
         .bank_output_en(bank_output_en),
-        .bank_read_addr(bank_read_addr));
+        .bank_read_addr_s(bank_read_addr[95:0]),.bank_read_addr_w(bank_read_addr[159:96]),.bank_read_addr_n(bank_read_addr[255:160]));
     for(genvar b=0;b<8;b=b+1)begin:L
         assign rr_valid_i[b]=rr[b*257+256];
         ot_hgi_dma_back_landing_bank u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),
-            .read_en(bank_read_en[b]),.read_slot(bank_read_slot),
-            .write_en(rr_valid_i[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
+            .read_en(bank_read_en[b]),.read_slot(b<3?rslot_s:b<5?rslot_w:rslot_n),
+            .write_en(rr_valid_i[b]),.write_slot(b<3?wslot_s:b<5?wslot_w:wslot_n),.rr_data(rr[b*257+:256]),
             .read_addr(bank_read_addr[b*32+:32]),.output_en(bank_output_en[b]),.wd(wd[b*289+:289]));
     end
 endmodule
 module ot_hgi_dma_back_static_vp4_controller #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
-    parameter integer MUT=0 // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
+    parameter integer MUT=0, // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
+    // HBM-BANKLAT-DMA 10-19: VM read round trip, rq launch edge -> rr launch edge at THIS controller's pins, the same
+    // for all eight banks (scalar: the die pads the short 17-bit rq lanes, never the 257-bit rr lanes). Sets when the
+    // landing write slot and the expected response mask are presented (G_LONG_RT, 2 bits/edge) and the minimum drain lag
+    // drain_at-issue_at >= RR_RT+3 that the controller accepts (the compiler must schedule drain_rel at least that
+    // far after issue_rel: tools/hbm_die_v16/d4g_bank_latency.py dma_min_drain_lag). Default 7 = today's closed
+    // behaviour (ot_vms_bank_static wired directly: samples rq one edge after launch, registered answer n+6).
+    // d4g budget: 80 (GEN2c lanes 33..58, worst-case landing E 72; GEN2d headroom), see lanes/HBM-BANKLAT-DMA.md.
+    parameter integer RR_RT=7
 )(
     input wire clk,rst_n,
     input wire [1:0] stk,   // stack identity strap: die constant per instance (stack = HBM queue id)
@@ -109,11 +118,25 @@ module ot_hgi_dma_back_static_vp4_controller #(
     output reg wb_fill_start,
     input wire wb_ready,
     output reg [7:0] bank_read_en,
-    output wire [6:0] bank_read_slot,bank_write_slot,
+    // HH-7 10-19 (hv16_dbk_cpl 65c2387ab TT -12.3: bank_read_addr[166] -> L[5] -12.30, bank_write_slot[6] -> L[2] -11.73,
+    // ~430-460 um parent wires): the bank read address and the two 7-bit slot broadcasts leave on the face of the bank
+    // group they serve (S = banks 0-2 / row 0, W = banks 3-4 / column 0, N = banks 5-7 / row 3), each a point-to-point
+    // copy of the same register (no star net across the cluster). Same registers, same values, same edges: 0 cycles.
+    output wire [6:0] bank_read_slot_s,bank_read_slot_w,bank_read_slot_n,
+    output wire [6:0] bank_write_slot_s,bank_write_slot_w,bank_write_slot_n,
     output wire [7:0] bank_output_en,
-    output reg [255:0] bank_read_addr,
+    output wire [95:0] bank_read_addr_s,
+    output wire [63:0] bank_read_addr_w,
+    output wire [95:0] bank_read_addr_n,
     input wire [11:0] wa
 );
+    wire [6:0] bank_read_slot,bank_write_slot;
+    reg [255:0] bank_read_addr;
+    assign bank_read_addr_s=bank_read_addr[95:0];
+    assign bank_read_addr_w=bank_read_addr[159:96];
+    assign bank_read_addr_n=bank_read_addr[255:160];
+    assign bank_read_slot_s=bank_read_slot;assign bank_read_slot_w=bank_read_slot;assign bank_read_slot_n=bank_read_slot;
+    assign bank_write_slot_s=bank_write_slot;assign bank_write_slot_w=bank_write_slot;assign bank_write_slot_n=bank_write_slot;
     // Reset is exceptional initialization: async assertion, two fixed release
     // edges, then normal compiler-scheduled commands. Only this two-flop leaf
     // touches the external reset pin; no normal command or data cycle is added.
@@ -131,9 +154,10 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // malformed response fault reporting gains one edge, never execution stalls.
     reg [7:0] expect_response_q;
     reg response_check_q;
+    wire [7:0] expect_mask_rt; wire [6:0] land_tag_rt;   // RR_RT>7 path (G_LONG_RT below)
     always @(posedge clk or negedge local_rst_n)
         if(!local_rst_n)begin expect_response_q<=0;response_check_q<=0;end
-        else begin expect_response_q<=expect_mask[7];response_check_q<=1;end
+        else begin expect_response_q<=(RR_RT==7)?expect_mask[7]:expect_mask_rt;response_check_q<=1;end
     // Pin captures. Normal execution advances the absolute input cycle once per
     // related clock edge; this is checked, never used to reschedule execution.
     function automatic [31:0] inc32(input [31:0] x);
@@ -286,7 +310,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
     assign bank_read_slot=drain_index[6:0];
     // Each landing bank pin-captures the raw response valid itself; its slot is this
     // register one edge ahead, so the bank's write is on the same edge as before.
-    assign bank_write_slot=expect_tag[7];
+    assign bank_write_slot=(RR_RT==7)?expect_tag[7]:land_tag_rt;
     assign bank_output_en=output_mask_q;
     for(genvar b=0;b<8;b=b+1)begin:RQ
         assign rq[b*17+:17]={rq_v[b],rq_payload[b]};
@@ -303,7 +327,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
         c_hok<=c_hend_d[40:37]==0&&c_hend_d[36:35]==stk_q&&{1'b0,c_hend_d[34:0]}<=STACK_BYTES;
         c_nchunk_ok<=b_nchunk>0&&b_nchunk<=128;
         c_ilead_ok<=$signed(b_ci_m2-cycle_q)>=1;            // ci-cycle(k)>=1, cycle(k)=cycle_q(k-1)+2
-        c_lag_ok<=$signed(b_cd-b_ci)>=10;
+        c_lag_ok<=$signed(b_cd-b_ci)>=RR_RT+3;            // landing written before its drain read
         c_ihit<=cycle_q==b_ci_m3;                            // cycle(k)+1==ci
         c_dhit<=cycle_q==b_cd_m3;                            // cycle(k)+1==cd
         c_phit<=cycle_q==b_cd_m4;                            // cycle(k)+2==cd
@@ -401,5 +425,25 @@ module ot_hgi_dma_back_static_vp4_controller #(
             end
         end
     end
+    // HBM-BANKLAT-DMA 10-19: RR_RT>7 (d4g lanes).  The 8-deep expect_tag/expect_mask above stay the closed RR_RT 7 path
+    // (unused, swept, otherwise).  A long round trip delays only 2 bits per edge: 'issued' and 'last partial column';
+    // the mask is rebuilt from row_sectors and the landing slot is a landing counter.  Exact under the static contract:
+    // a move reloads only after the previous one ended (end_at = cd+nchunk+1 > last landing, as the controller enforces
+    // cd-ci >= RR_RT+3), so row_sectors is the landing move's and the counter restarts at 0 for its chunk 0 landing.
+    generate if(RR_RT==7)begin:G_RT7
+        assign expect_mask_rt=8'd0; assign land_tag_rt=7'd0;
+    end else begin:G_LONG_RT
+        if(RR_RT<7)begin:G_BAD $error("RR_RT %0d below the bank's own n+6 (+1 launch)",RR_RT); end
+        reg [RR_RT:0] iss_d,last_d; reg [6:0] land_tag;
+        always @(posedge clk or negedge local_rst_n)
+            if(!local_rst_n)begin iss_d<=0;last_d<=0;land_tag<=0;end
+            else begin
+                iss_d<={iss_d[RR_RT-1:0],issue_slot};
+                last_d<={last_d[RR_RT-1:0],issue_slot&&column==row_chunks-1&&row_sectors[2:0]!=0};
+                land_tag<=reload?7'd0:land_tag+7'(iss_d[RR_RT]);
+            end
+        assign expect_mask_rt=!iss_d[RR_RT]?8'd0:last_d[RR_RT]?((8'd1<<row_sectors[2:0])-1'b1):8'hff;
+        assign land_tag_rt=land_tag;
+    end endgenerate
 endmodule
 `default_nettype wire

@@ -41,6 +41,13 @@
 // K_TEAR (QXF-PAIR mutant, K_REAL != 0): one member of a KV seam bundle one stage short of its bundle's landed age
 //      (1: att_rx_v of K.rx_record = KS_RXV - 1 vs rx_payload KS_RXP; 2: tx_v of K.tx_record = SK_TXV - 1 vs tx_payload).
 // QXF-PAIR 10-18: C_REAL=1 + K_REAL=3 = the PAIRED co-sim (both die masters + native59 + as-built kvs_attn + real pvfin).
+// QW-XDIE 2026-10-20 (current dies, compute dv2f20g5r2b + KV kvs14r gen9 d22bu): K_REAL=4 = the KV die's CURRENT attention
+//      tile qkd_kvs_attn_fl (rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv: fin / i_ctl landed +1, issue / run landing copies,
+//      registered RX validation, cal_gen TX_SHIFT 1, RETIRE_STATIC K_RS / STATUS_DELAY K_SD = the die's 1 / 213) + real
+//      qkd_pv_fin_s; boot-age cfg bytes in i_ctl[31:0] (PV_LEAD K_PL, F_DLY K_FD, D_QK K_DQ, D_RL K_DR; the vehicle has
+//      no KV-internal relays, so PV_LEAD 0 / F_DLY 2 = pvfin -> fin land 1 -> face); i_ctl is driven one edge early
+//      (the wrapper lands it).  `define XQ_K_SFM: the KV D2D master is the die's bound qkd_d2d_static_sfm (r7w_sfm2:
+//      NL 2, NTX K_NTX, SAFE_RC 1, SRAMV 2, FEG 1) instead of qkd_d2d_static.
 // QXF-LINK 2026-10-18: the die masters take TXDP from the compiler (xdie_params.svh P_TXDP_C / P_TXDP_K = the calendar's
 //      TXD; F4), STATUS words come from qkd_native_status_word (F2), QGAP default 0 = the compiler's CMD->Q law (F1).
 // =====================================================================================================================
@@ -58,6 +65,9 @@ endmodule
 module tb_xdie_qwen_exchange;
     `include "xdie_params.svh"
     parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0, POS_P = 255, FIN_MUT = 0, K_TEAR = 0;
+    parameter integer K_NTX = 4;           // Q-XDIE-GEN 10-18: KV die binds qkd_d2d_static .NTX(3) (S-QTIES QC-12, kvs14p)
+    parameter integer K_RS = 1, K_SD = 213, K_PL = 0, K_FD = 2, K_DQ = 57, K_DR = 91;   // K_REAL=4 (d22bu: RS 1, SD 213, DQ 57, DR 91)
+    parameter integer XQ_SKIP_BASE = 0;
     parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
@@ -84,7 +94,7 @@ module tb_xdie_qwen_exchange;
         integer j; begin for (j = 0; j < 16; j = j + 1) qbeat[32*j +: 32] = qval(16 * b + j, l); end endfunction
     function automatic [511:0] obeat(input integer b, input integer l);
         integer j; begin for (j = 0; j < 16; j = j + 1) obeat[32*j +: 32] = 32'(b * 16 + j) * 32'h85EBCA6B + 32'h1234567 + 32'(l) * 32'h27D4EB2F;
-            if (K_REAL == 3) for (j = 0; j < 16; j = j + 1) obeat[32*j+29 +: 2] = 2'b01; end endfunction   // normal exponent 64..127
+            if (K_REAL >= 3) for (j = 0; j < 16; j = j + 1) obeat[32*j+29 +: 2] = 2'b01; end endfunction   // normal exponent 64..127
     // K_REAL=3 pair partial: obeat with exponent + h (h = b / 8, the head of beat b); (p0 + p1) * 2^-(h+1) == obeat
     function automatic [511:0] pbeat(input integer b, input integer l);
         integer j; reg [511:0] o; begin o = obeat(b, l); pbeat = o;
@@ -107,7 +117,7 @@ module tb_xdie_qwen_exchange;
 
     // ------------------------------------------------------------------ calendars (compiler images)
     reg [31:0] img_ct [0:31], img_cr [0:31], img_kt [0:31], img_kr [0:31];
-    reg cfg_c_tx = 0, cfg_c_rx = 0, cfg_k_tx = 0, cfg_k_rx = 0; reg [4:0] cfg_a = 0; reg [31:0] cfg_dc = 0, cfg_dk = 0;
+    reg cfg_c_tx = 0, cfg_c_rx = 0, cfg_k_tx = 0, cfg_k_rx = 0; reg [5:0] cfg_a = 0; reg [31:0] cfg_dc = 0, cfg_dk = 0;
     reg cstart = 0;
 
     // ------------------------------------------------------------------ PHY pair (behavioural, the only modelled block)
@@ -141,7 +151,7 @@ module tb_xdie_qwen_exchange;
     wire c_prog_rxv, c_prog_auth, c_prog_ctx, c_prog_wslot, c_emb_v, c_emb_s, k_emb_slot;
     wire st_res = act && rel == 20;
     qfd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_C)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
-        .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
+        .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr(cfg_a), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(1'b0),
         .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
         .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
         .native_tx_payload(c_tp0), .rx_payload(c_rxp), .native_rx_v(c_rxe0), .native_rx_slot(c_rxs0),
@@ -155,8 +165,12 @@ module tb_xdie_qwen_exchange;
         .result_gen(GEN), .result_token(TOK), .result_value(32'(lay * 77)), .result_cycles(32'(lay)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
-        .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(1'b0),
+`ifdef XQ_K_SFM
+    qkd_d2d_static_sfm #(.MUT(0), .NL(2), .NTX(K_NTX), .SAFE_RC(1), .SRAMV(2), .FEG(1), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n), .rx_zero17(),
+`else
+    qkd_d2d_static #(.MUT(0), .NTX(K_NTX), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+`endif
+        .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr(cfg_a), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(1'b0),
         .host_link_reset_req(1'b0), .host_recovery_clear(1'b0), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
         .att_tx_slot(k_txs0), .att_tx_kind(k_tk), .att_tx_beat(k_tb), .att_tx_v(k_tv0), .att_tx_payload(k_tp0),
@@ -335,7 +349,7 @@ module tb_xdie_qwen_exchange;
         reg sf = 0;
         always @(posedge ck) if (rst_n && (k_pf || lf || iof) && !sf) begin sf <= 1;
             $display("XQ_CAUSE KV programme cyc %0d rel %0d age %0d: ctl local %0d guard %0d record %0d (codec cause {rx_rec,tx_rec,rx_time,tx_time}=%b) slot %0d producer %0d | root lf %0d iof %0d",
-                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.codec.fault_cause,
+                cyc, rel, age, u_attn.ctl.local_fault, u_attn.ctl.guard_fault, u_attn.ctl.record_fault, u_attn.ctl.g_cd.codec.fault_cause,
                 u_attn.ctl.slot_fault, u_attn.producer_fault, lf, iof); end
         always @(posedge ck) if (rst_n && (lf || iof || cal_f)) err("KV attention root / calendar fault");
         always @(posedge ck) if (rst_n && kq_v && !q_rdy) err("q_valid without q_ready (no wait exists)");
@@ -365,7 +379,7 @@ module tb_xdie_qwen_exchange;
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn cyc %0d rel %0d: programme ctl local %0d guard %0d record %0d (codec cause %b) slot %0d | face result_fault %0d RESULT_AGE %0d (P0 %0d P1 %0d PV %0d R %0d) root age %0d | ctl tx_first %0d",
                 cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.guard_fault, u_kattn.u_attn.ctl.record_fault,
-                u_kattn.u_attn.ctl.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
+                u_kattn.u_attn.ctl.g_cd.codec.fault_cause, u_kattn.u_attn.ctl.slot_fault, u_kattn.w_attn_face__result_fault, fres, fp0, fp1, fpv,
                 fcal[175:160], fage, u_kattn.w_attn_cal__tx_first); end
     end else if (K_REAL == 3) begin : g_kfin
         // QXF-FACE: as-built qkd_kvs_attn + real qkd_pv_fin_s (0 die relays on pvfst / fin: PV_LEAD 0, F_DLY 1 as built)
@@ -407,9 +421,65 @@ module tb_xdie_qwen_exchange;
                 fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17, u_kattn.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && (k_pf || u_kattn.w_attn_face__result_fault || uff) && !sf) begin sf <= 1;
             $display("XQ_CAUSE kvs_attn+pvfin cyc %0d rel %0d: programme ctl local %0d record %0d (codec cause %b) | face result_fault %0d | pvfin fault %0d | cal P0 %0d P1 %0d PV %0d R %0d root age %0d | ctl tx_first %0d",
-                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.codec.fault_cause,
+                cyc, rel, u_kattn.u_attn.ctl.local_fault, u_kattn.u_attn.ctl.record_fault, u_kattn.u_attn.ctl.g_cd.codec.fault_cause,
                 u_kattn.w_attn_face__result_fault, uff, fp0, fp1, fpv, fr, u_kattn.w_attn_root__age, u_kattn.w_attn_cal__tx_first); end
         always @(posedge ck) if (rst_n && act && (uff || u_kattn.w_attn_face__result_fault || u_kattn.w_attn_cal__fault)) err("pvfin / result face / calendar fault");
+    end else if (K_REAL == 4) begin : g_k17
+        // QW-XDIE 10-20: the KV die's current tile qkd_kvs_attn_fl r17 (d22bu bind: RETIRE_STATIC 1, STATUS_DELAY 213) + pvfin
+        wire [30:0] pvst; wire [64:0] pvfst; wire [164:0] ahs; wire [536:0] prg; wire [47:0] ac0, ac1, ac2, ac3; wire [7:0] arh;
+        // i_ctl lands +1 in the wrapper (ot_pin_land; issue / run copies +1): drive it one edge before the compiled edge
+        wire kv_go_e = act && rel == P_KV_RUN - 31 + (MUT == 1 ? 1 : 0);
+        wire kv_issue_e = act && rel == P_KV_RUN - 9 + (MUT == 1 ? 1 : 0);
+        wire kv_run_e = act && rel == P_KV_RUN - 1 + (MUT == 1 ? 1 : 0);
+        wire [108:0] i_ctl = {TOK, kv_go_e, stage, 18'(POS), EP, 14'(POS + 1), kv_run_e, kv_issue_e, 1'b1, 1'b1,
+                              8'(K_DR), 8'(K_DQ), 8'(K_FD), 8'(K_PL)};
+        wire [521:0] srx = {512'd0, 5'd0, 4'd0, a_rxe};
+        wire [533:0] fin; wire uff;
+        qkd_kvs_attn_fl #(.MUT(0), .RETIRE_STATIC(K_RS), .STATUS_DELAY(K_SD)) u_kattn (.ck(ck), .rst_n(rst_n),
+            .ufs_WS(1'b0), .ufs_WN(1'b0), .ufs_ES(1'b0), .ufs_EN(1'b0), .ufh(1'b0),
+            .ufp0(1'b0), .ufp1(1'b0), .uff(uff), .ufk_WS(1'b0), .ufk_WN(1'b0), .ufk_ES(1'b0), .ufk_EN(1'b0),
+            .d2d__srx(srx), .d2d__rx_payload(a_rxp), .d2d__att_tx_slot(a_txs), .d2d__att_tx_kind(a_tk), .d2d__att_tx_beat(a_tb),
+            .fin(fin), .attn__tx_valid(a_tv), .attn__tx_payload(a_tp), .pvst(pvst), .pvfst(pvfst), .ahs(ahs), .prg(prg),
+            .acal_WS(ac0), .acal_WN(ac1), .acal_ES(ac2), .acal_EN(ac3), .arh(arh), .i_ctl(i_ctl));
+        integer fk = -1; reg [15:0] s_p0 = 0, s_p1 = 0, s_r = 0, s_ep = 0;
+        always @(posedge ck) if (rst_n) begin
+            if (pvfst[0]) begin fk <= 1; s_p0 <= pvfst[32:17]; s_p1 <= pvfst[48:33]; s_r <= pvfst[64:49]; s_ep <= pvfst[16:1]; end
+            else if (fk >= 1 && fk < 20000) fk <= fk + 1;
+        end
+        wire f0v = fk >= 1 && fk >= s_p0 && fk < s_p0 + 32, f1v = fk >= 1 && fk >= s_p1 && fk < s_p1 + 32, frv = fk >= 1 && fk == s_r;
+        wire [4:0] f0b = 5'(fk - s_p0), f1b = 5'(fk - s_p1);
+        wire [127:0] rzw = {1'b0, 8'd123, 23'd0, 1'b0, 8'd124, 23'd0, 1'b0, 8'd125, 23'd0, 1'b0, 8'd126, 23'd0};
+        wire fo_v; wire [4:0] fo_b; wire [15:0] fo_e; wire [511:0] fo_d;
+        qkd_pv_fin_s #(.ADD_LAT(7), .MUL_LAT(6), .SKEW(1), .MUT(FIN_MUT)) u_fin (.ck(ck), .rst_n(rst_n),
+            .start(pvfst[0]), .epoch(pvfst[16:1]), .cal(pvfst[64:17]),
+            .p0_valid(f0v), .p0_beat(f0b), .p0_epoch(s_ep), .p0_data(f0v ? pbeat(f0b, lay) : 512'd0),
+            .p1_valid(f1v), .p1_beat(f1b), .p1_epoch(s_ep), .p1_data(f1v ? pbeat(f1b, lay) : 512'd0),
+            .rz_valid(frv), .rz_epoch(s_ep), .rz(rzw),
+            .out_valid(fo_v), .out_beat(fo_b), .out_epoch(fo_e), .out_data(fo_d), .fault(uff));
+        assign fin = {fo_d, fo_e, fo_b, fo_v};
+        wire [175:0] fcal = u_kattn.u_core.w_root__cal;
+        wire [15:0] fpv = fcal[127:112], fp0 = fcal[143:128], fp1 = fcal[159:144], fr = fcal[175:160];
+        assign kq_v = prg[19]; assign kq_b = prg[24:20]; assign kq_d = prg[536:25];
+        assign kreq_v = prg[0];
+        wire k_face_rf = u_kattn.u_core.u_attn_face.result_fault, k_root_lf = u_kattn.u_core.w_root__local_fault,
+             k_root_iof = u_kattn.u_core.w_root__io_fault, k_cal_f = u_kattn.u_core.u_attn_cal.fault;
+        assign k_pf = u_kattn.u_core.u_attn.fault;
+        reg sf = 0, fl = 0, sl = 0;
+        always @(posedge ck) if (rst_n && act && fo_v && fo_b == 0 && !fl) begin fl <= 1;
+            $display("XQ_FIN layer %0d T %0d: pvfin beat0 at root age %0d = PV %0d + max(P0 %0d, P1 %0d, R %0d) + 17 -> %0d | programme tx_first %0d end %0d (RETIRE_STATIC %0d STATUS_DELAY %0d)",
+                lay, POS + 1, u_kattn.u_core.w_root__age, fpv, fp0, fp1, fr,
+                fpv + ((fp0 > fp1) ? ((fp0 > fr) ? fp0 : fr) : ((fp1 > fr) ? fp1 : fr)) + 17, u_kattn.u_core.w_attn_cal__tx_first,
+                u_kattn.u_core.w_attn_cal__end_age, K_RS, K_SD); end
+        always @(posedge ck) if (rst_n && (k_pf || k_face_rf || uff || k_root_lf || k_root_iof || k_cal_f) && !sf) begin sf <= 1;
+            $display("XQ_CAUSE kvs_attn_r17+pvfin cyc %0d rel %0d age %0d: ctl local %0d guard %0d record %0d slot %0d | face result_fault %0d | root lf %0d iof %0d | cal fault %0d | pvfin fault %0d | cal P0 %0d P1 %0d PV %0d R %0d | tx_first %0d end %0d",
+                cyc, rel, u_kattn.u_core.u_attn.ctl.age, u_kattn.u_core.u_attn.ctl.local_fault, u_kattn.u_core.u_attn.ctl.guard_fault,
+                u_kattn.u_core.u_attn.ctl.record_fault, u_kattn.u_core.u_attn.ctl.slot_fault_o, k_face_rf, k_root_lf, k_root_iof, k_cal_f, uff,
+                fp0, fp1, fpv, fr, u_kattn.u_core.w_attn_cal__tx_first, u_kattn.u_core.w_attn_cal__end_age); end
+        // first TX slot pin / first tx_valid of each layer at the tile (programme ages): the slot law witness
+        always @(posedge ck) if (rst_n && act && a_txs && !sl && lay == 1) begin sl <= 1;
+            $display("XQ_K17 layer 1: first att_tx_slot at the tile pins rel %0d programme age %0d (tile tx_first %0d)", rel,
+                u_kattn.u_core.u_attn.ctl.age, u_kattn.u_core.w_attn_cal__tx_first); end
+        always @(posedge ck) if (rst_n && act && (uff || k_face_rf || k_cal_f || k_root_lf || k_root_iof)) err("pvfin / result face / calendar / root fault");
     end else begin : g_kstub
         wire r_ev = act && (rel >= P_RS && rel < P_RS + 32 || rel == P_RE);
         wire [3:0] r_kind = rel == P_RE ? 4'd4 : 4'd3;
@@ -495,7 +565,13 @@ module tb_xdie_qwen_exchange;
         // sticky faults: reported once each, with the first-fault cause (witness)
         if ((c_f || k_f || c_abort || k_abort) && !seen_end) begin seen_end = 1; err("D2D end fault / epoch abort in a normal layer");
             $display("XQ_CAUSE d2d: compute fault %0d abort %0d end_fault %0d cause %b | KV fault %0d abort %0d end_fault %0d cause %b",
-                c_f, c_abort, u_c.u_core.u_end.end_fault, u_c.u_core.u_end.fault_cause, k_f, k_abort, u_k.u_core.u_end.end_fault, u_k.u_core.u_end.fault_cause); end
+                c_f, c_abort, u_c.u_core.u_end.end_fault, u_c.u_core.u_end.fault_cause, k_f, k_abort, u_k.u_core.u_end.end_fault, u_k.u_core.u_end.fault_cause);
+`ifdef XQ_K_SFM
+            $display("XQ_BOOT tx_seen=%h tx_base=%b tx_ok=%h tx_poison=%b tx_fault=%b rx_seen=%h rx_base=%b rx_ok=%h rx_poison=%b rx_fault=%b",
+                u_k.u_core.u_end.u_txcal.seen,u_k.u_core.u_end.u_txcal.base_seen,u_k.u_core.u_end.u_txcal.ok_c,u_k.u_core.u_end.u_txcal.poison,u_k.u_core.u_end.u_txcal.fault,
+                u_k.u_core.u_end.u_rxcal.seen,u_k.u_core.u_end.u_rxcal.base_seen,u_k.u_core.u_end.u_rxcal.ok_c,u_k.u_core.u_end.u_rxcal.poison,u_k.u_core.u_end.u_rxcal.fault);
+`endif
+        end
         if (n_fault && !seen_n) begin seen_n = 1; err("compute producer/consumer fault"); end
         if (k_pf && !seen_k) begin seen_k = 1; err("KV producer/consumer fault"); end
     end
@@ -532,9 +608,15 @@ module tb_xdie_qwen_exchange;
         $readmemh({CALDIR, "/cal_K_tx.memh"}, img_kt); $readmemh({CALDIR, "/cal_K_rx.memh"}, img_kr);
         tick(3); por_n = 1; tick(3); rst_n = 1; tick(2);
         for (i = 0; i < 32; i = i + 1) begin
-            cfg_a = 5'(i); cfg_dc = img_ct[i]; cfg_dk = img_kt[i]; cfg_c_tx = 1; cfg_k_tx = 1; tick(1);
+            cfg_a = 6'(i); cfg_dc = img_ct[i]; cfg_dk = img_kt[i]; cfg_c_tx = 1; cfg_k_tx = 1; tick(1);
             cfg_c_tx = 0; cfg_k_tx = 0; cfg_dc = img_cr[i]; cfg_dk = img_kr[i]; cfg_c_rx = 1; cfg_k_rx = 1; tick(1);
             cfg_c_rx = 0; cfg_k_rx = 0;
+        end
+        // Complete FEG receipt includes explicit segment base, even for segment 0.
+        if (!XQ_SKIP_BASE) begin
+            cfg_a = 6'd32; cfg_dc = 0; cfg_dk = 0;
+            cfg_c_tx = 1; cfg_c_rx = 1; cfg_k_tx = 1; cfg_k_rx = 1; tick(1);
+            cfg_c_tx = 0; cfg_c_rx = 0; cfg_k_tx = 0; cfg_k_rx = 0;
         end
         wait (k_up && c_up); tick(2);
         host_boot = 1; tick(1); host_boot = 0; wait (k_eb); tick(100);

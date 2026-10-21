@@ -1,1 +1,1 @@
-source /src/physical/ref_tile/dsdv_sh_lk/clock_entry.sdc
+source /src/physical/qwen_die_masters/post_plain.tcl

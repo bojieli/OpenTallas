@@ -27,6 +27,7 @@ clock_from}}, DIR/slice_insts.json (instances by master, how each was included).
 import argparse
 import gzip
 import json
+import math
 import re
 import sys
 from collections import defaultdict, Counter
@@ -36,9 +37,39 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import dv_rtl_kit as K  # noqa: E402
 
-RELAY_RE = re.compile(r'^(dsfd_dvrlyh_|dsfd_rly_|dsfd_dvland_|BUFx|INVx)')
+RELAY_RE = re.compile(r'^(dsfd_dvrlyh_|dsfd_rly_|dsfd_dvland_|BUFx|INVx|ICGx)')   # ICGx: hop-0 lane clock gate (S81-LBGAP/G1)
 RESET_RE = re.compile(r'^dsfd_rly_1_')
-CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|cr|cr_s)$')
+CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|cr|cr_s|CLK)$')
+
+
+FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of lane flight between the last relay station and its
+// landing.  The word is delayed F edges of the lane clock and the lane clock reaches the landing F edges late: its first
+// edge carries the word of hop-0 gate edge G, as the silicon ck_f edge 0 does (LANDING-CONTRACT L3).
+module dv_flight_sim #(parameter integer W = 1, parameter integer F = 0) (
+    input  wire ck_in, input wire rs, input wire [W-1:0] i_in, output wire ck_out, output wire [W-1:0] i_out);
+    generate if (F == 0) begin : g0
+        assign ck_out = ck_in; assign i_out = i_in;
+    end else begin : gf
+        reg [W-1:0] d [0:F-1];
+        reg [31:0] n = 0;
+        reg en_l = 1'b0;
+        integer k;
+        always @(posedge ck_in) begin
+            d[0] <= i_in;
+            for (k = 1; k < F; k = k + 1) d[k] <= d[k - 1];
+        end
+        // the flight count starts with the lane clock's first real edge: the time-0 settle of an idle-high (inverted,
+        // half-cycle) lane clock is not an edge (rs kept on the port for the record; the wire delay ignores it)
+        always @(posedge ck_in)
+            if ($time > 0 && n < F) n <= n + 1;
+        /* verilator lint_off COMBDLY */
+        always_latch if (!ck_in) en_l = (n >= F);
+        /* verilator lint_on COMBDLY */
+        assign ck_out = ck_in & en_l;
+        assign i_out = d[F - 1];
+    end endgenerate
+endmodule
+"""
 
 
 def load_masters(kit, D, names):
@@ -85,9 +116,15 @@ def main(argv=None):
     ap.add_argument('--top', default='dv_die')
     ap.add_argument('--no-grow', action='store_true')
     ap.add_argument('--land-plan', help='p4l land_plan.json: back-annotate every landing input (ck_f and i together) with '
-                    'the lane flight time dL = -S1 at --corner (the landing contract window is defined against it; RTL '
-                    'relays are zero-delay, so without it every lane with E > 1 violates its window)')
+                    'the lane flight time at --corner as a CYCLE model (S81-LBGAP/G1): F = ceil(-S1/T) whole periods '
+                    '(E - 1 at the corner that sets E), clipped into the landing window [K-D+1, K-1] (K = the plan strap, G8). '
+                    'RTL relays are zero-delay, so without it every lane with E >= D aliases its ring.  The model delays the '
+                    'lane word by F ck_f edges and opens ck_f F edges late -- the hop-0 gate (die.v ICG, LANDING-CONTRACT '
+                    'L3) is what makes the late first edge carry the calendar epoch.  Bench side only (wire flight), never '
+                    'in the die netlist.  Within the window the landing output is independent of F (run both corners).')
     ap.add_argument('--corner', default='tt', choices=['tt', 'ff'])
+    ap.add_argument('--flight-shift', type=int, default=0,
+                    help='MUTANT ONLY: add this many cycles to every F (outside the window -> the landings must fault)')
     ap.add_argument('--rom-instance', action='store_true',
                     help='give every instance of a master with a string INSTANCE parameter (the frames: their ROM macros '
                          'load <OT_ROM_DIR>/<INSTANCE>_cX_Y.viamap.hex) .INSTANCE("<instance name>") -- die.v passes none, so '
@@ -215,9 +252,12 @@ def main(argv=None):
         return sorted(srcs)
 
     ports, decl, body = {}, [], []
+    # a 1-bit net the die declares as [0:0] and the instance lines bit-select (dv_bind nc fillers `u_x_p_nc3[0:0]`) keeps
+    # its range (LB2-S81 L0 10-18: cut_svc failed Verilator "Illegal bit or array select" x8 on scalar re-declarations)
+    selected = set(re.findall(r'([A-Za-z_]\w*)\s*\[', text))
     for n in sorted(snets):
         w, lo = nets[n]
-        rng = f'[{lo + w - 1}:{lo}] ' if (w > 1 or lo) else ''
+        rng = f'[{lo + w - 1}:{lo}] ' if (w > 1 or lo or n in selected) else ''
         if n in in_bits:
             pn = f'i__{n}'
             kind = 'clock' if clk_bits.get(n) else ('die_input' if peers_in[n] == {'<die_in>'} else 'boundary')
@@ -238,6 +278,9 @@ def main(argv=None):
     # instance lines verbatim from die.v (statement text, comments dropped)
     lines = {}
     for ln in text.split('\n'):
+        # die.v declares a few nets on the instance's line ('wire u_rsv_00_rst; INVx2_ASAP7_75t_R rinv_rsv_00 (...)');
+        # the cut declares every net itself, so the leading declaration is dropped
+        ln = re.sub(r'^(\s*)wire\b[^;(]*;\s*', r'\1', ln)
         m = re.match(r'\s*([\w\\]\S*)\s+(?:#\s*\(.*?\)\s*)?([\w\\]\S*)\s*\(', ln)
         if m and m.group(2) in S:
             lines[m.group(2)] = ln.split(');')[0].rstrip() + ');'
@@ -255,27 +298,39 @@ def main(argv=None):
                 rom_inst.append(i)
     lane_dl = {}
     if a.land_plan:
-        LP = {r['link']: r for r in json.loads(Path(a.land_plan).read_text())['links']}
+        LPJ = json.loads(Path(a.land_plan).read_text())
+        LP = {r['link']: r for r in LPJ['links']}
+        T_ps = float(LPJ['T_ps'])
         for i in sorted(lines):
             if not byname[i][0].startswith('dsfd_dvland'):
                 continue
             r = LP.get(i[3:] if i.startswith('ld_') else i)
             if r is None:
                 raise SystemExit(f'dv_slice_cut: landing {i} has no land-plan row')
-            dl = max(0.0, -float(r['s1'][a.corner]))
+            s1 = r['s1'].get(a.corner)
+            if s1 is None:
+                raise SystemExit(f'dv_slice_cut: landing {i} has no S1 at {a.corner}')
+            E_, D_ = int(r['E']), int(r.get('D', LPJ.get('D', 4)))
+            K_ = int(r.get('K') or E_)      # S81-LBGAP/G8: the landing reads at K (bundle age), the window is K's
+            # whole periods the lane clock lags beyond the single-cycle hop, kept inside the window: with the hop-0
+            # gate and the calendar R0 = G + (N mod 2) the ring occupancy is K - 1 - F + (N mod 2), legal for
+            # K - D + 1 <= F <= K - 1
+            f_raw = math.ceil(-float(s1) / T_ps)
+            F = min(max(f_raw, K_ - D_ + 1), K_ - 1) + a.flight_shift
+            F = max(F, 0)
             cm = byname[i][3]
             ln = lines[i]
             ln = ln.replace(f'.ck_f({cm["ck_f"]})', f'.ck_f({i}__ckf_d)', 1).replace(f'.i({cm["i"]})', f'.i({i}__i_d)', 1)
             w = nets[re.match(r'[\w\\]+', cm['i']).group(0)][0] if re.fullmatch(r'[\w\\]+', cm['i'].strip()) else None
             if w is None:
                 raise SystemExit(f'dv_slice_cut: landing {i} data is not a whole net: {cm["i"][:60]}')
-            # TRANSPORT delay (non-blocking intra-assignment): a continuous-assign delay is inertial and would swallow
-            # every clock pulse / one-cycle beat shorter than the 2-3 ns flight time
-            body.append(f'  reg {i}__ckf_d = 1\'b0; reg [{w - 1}:0] {i}__i_d = 0;   // lane flight time {dl:.1f} ps ({a.corner}, land plan S1)')
-            body.append(f'  always @({cm["ck_f"]}) {i}__ckf_d <= #({dl / 1000.0:.4f}) {cm["ck_f"]};')
-            body.append(f'  always @({cm["i"]}) {i}__i_d <= #({dl / 1000.0:.4f}) {cm["i"]};')
+            # CYCLE flight model (zero-delay RTL): Verilator 5.050 drops transport-delayed clock pulses, so the flight is
+            # whole periods on the lane's own (gated) clock
+            body.append(f'  wire {i}__ckf_d; wire [{w - 1}:0] {i}__i_d;   // lane flight {F} cycles ({a.corner}: S1 {float(s1):.1f} ps, E {E_}, K {K_}, D {D_})')
+            body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {i}__flight (.ck_in({cm["ck_f"]}), .rs({cm["rs"]}), .i_in({cm["i"]}), .ck_out({i}__ckf_d), .i_out({i}__i_d));')
             lines[i] = ln
-            lane_dl[i] = dict(dl_ps=round(dl, 1), E=r['E'], K=r['K'], corner=a.corner)
+            lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
+                              corner=a.corner, flight_shift=a.flight_shift)
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')
@@ -283,6 +338,8 @@ def main(argv=None):
           f'{len(ports)} ports -- instance lines verbatim from the die netlist\nmodule {a.name} (\n' + \
           ',\n'.join(f'  {p}' for p in ports) + '\n);'
     sv = [hdr] + decl + body + [lines[i] for i in sorted(S, key=lambda x: list(byname).index(x))] + ['endmodule', '']
+    if lane_dl:
+        sv += [FLIGHT_SIM]
     (out / f'{a.name}.sv').write_text('\n'.join(sv))
     (out / 'slice_ports.json').write_text(json.dumps(dict(schema='opentallas.s81_dv.slice_ports.v1', top=a.name,
                                                           die_v=a.die_v, ports=ports), indent=1) + '\n')

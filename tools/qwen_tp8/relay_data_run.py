@@ -113,6 +113,19 @@ if '--case' in sys.argv:
             # them); dv2f14bn wrote the lane's total E (12-14 on the 26-frame lanes) -> hold edge E - D, FF hold -7.7 ns
             sdc += [f"set_multicycle_path -setup {r_.get('E_sta', r_['E'])} -to [get_pins {{{pins}}}]",
                     f"set_multicycle_path -hold {fl['D'] - 1} -to [get_pins {{{pins}}}]"]
+        # NS-CASE 10-18 (ROOT-2115): the landing's K straps k0..k2 are die constants (each on the instance's own
+        # tie_hi / tie_lo; lane_latency_audit (b) in the strict bind checks the netlist K == this K): the die STA
+        # case-analyses them, as the tile native audit --case k0,k1,k2 excludes them
+        sdc += ['set ::ot_case_n 0; set ::ot_case_miss 0',
+                'proc ot_case {v p} { set q [get_pins -quiet $p]; if {[llength $q]} { set_case_analysis $v $q; '
+                'incr ::ot_case_n } else { incr ::ot_case_miss } }']
+        n_case = 0
+        for r_ in fl['lanes']:
+            if r_.get('lane') == 'reset' or r_.get('K') is None:
+                continue
+            for i in range(3):
+                sdc.append(f"ot_case {(int(r_['K']) >> i) & 1} {{{r_['landing']}/k{i}}}"); n_case += 1
+        sdc.append('puts "OT_CASE_STRAPS set $::ot_case_n missing $::ot_case_miss of %d"' % n_case)
         (out / 'case' / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
         if m.get('coll_lane_latency'):
             # Q-COLLCAL 10-18: the SerDes lane cycles of THIS build and the collective calendar that absorbs them
@@ -130,6 +143,34 @@ if '--case' in sys.argv:
         (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
         rec['fwd_lanes'] = {k_: fl[k_] for k_ in ('lanes', 'stations', 'landings', 'masters', 'plain_relays_left',
                                                   'reclassed_reset_hops')} | dict(lanes=len(fl['lanes']), skipped=len(fl['skipped']))
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
+    # QW-DIEFIX 10-19 (QW-XHEAD XT1: the GEN bound NO tile ROM content -> die-netlist sims read empty code ROMs): every
+    # qfd_c_b16_dv tile gets its sim-only ROM_TILE (= tile_id strap) in case/rom_bind.vh + case/rom_bind.json; the
+    # structural audit always runs and fails the GEN closed; OT_QWEN_ROM_MASKS=<code-mask manifest> (tools/qwen_code_rom/
+    # build.py) adds the per-macro content check (every macro has an existing, non-empty, sha256-matching mask file)
+    _dv = out / 'case' / 'die.v'
+    if _dv.exists() and 'qfd_c_b16_dv ' in _dv.read_text():
+        from qwen_split import die_rom_bind as _RB2
+        _mk = os.environ.get('OT_QWEN_ROM_MASKS', '').strip()
+        _rbv, _rbd, _rbh = _RB2.run(_dv, Path.cwd(), Path(_mk) if _mk else None,
+                                    int(os.environ['OT_QWEN_ROM_RANK']) if os.environ.get('OT_QWEN_ROM_RANK') else None,
+                                    '`OT_ROM_BIND_TOP.', [], 0)
+        (out / 'case' / 'rom_bind.vh').write_text(_rbh)
+        (out / 'case' / 'rom_bind.json').write_text(json.dumps(_rbd, indent=1) + '\n')
+        rec['rom_bind'] = {k_: _rbd['audit'][k_] for k_ in ('verdict', 'fails', 'clusters', 'tiles', 'macros')}
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
+        print(f"ROM_BIND_AUDIT {_rbv} tiles={_rbd['audit']['tiles']} masks="
+              f"{'none' if not _mk else _rbd['audit']['masks'].get('files_ok')}", flush=True)
+        if _rbv != 'PASS':
+            raise SystemExit(f"ROM_BIND_AUDIT FAIL: {_rbd['audit']['fails'][:5]} (case/rom_bind.json)")
+    if (m.get('reset_sync') or {}).get('endpoints'):
+        # Q-RSTGEN7 10-19: declared reset synchroniser inputs of this build (tools/qwen_split/reset_sync_contract.py) ->
+        # die STA false paths with their structural reason (read by tools/qwen_tp8/die_sta_libs.py after landing.sdc)
+        from qwen_split import reset_sync_contract as _RS
+        (out / 'case' / 'reset_sync.json').write_text(json.dumps(dict(schema='opentallas.qwen.reset-sync.v1',
+            **m['reset_sync']), indent=1) + '\n')
+        (out / 'case' / 'reset_sync.sdc').write_text(_RS.sdc(m['reset_sync']['endpoints']))
+        rec['reset_sync'] = dict(endpoints=len(m['reset_sync']['endpoints']), reclock=m['reset_sync']['reclock'])
         (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
     # r10: pin directions of every die master as the bus list has them (driver first), for the placeholder Liberty
     # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word

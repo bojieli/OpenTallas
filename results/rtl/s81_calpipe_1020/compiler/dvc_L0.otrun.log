@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-epyc9       admits   687 GB (avail 746, growth 265, headroom 0, waiters 0/0 GB) load 122/128 running 72 disk 147 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2477333-1792491657 after 1 s
+DVC dvc_L0 rc=0 7 calendar records
+{"layer": "L0", "ops": 65, "status": {"PARTIAL": 56, "GAP": 9}, "rows": 131, "templates": 130}
+SMOKE u_s_0S sid 0: CTL latency 63.5 edges, last partial 254.5, rstd 488.5, XQ at ring 567.5
+DVC_CAL L0 attn.wo_a pipeline 231 phases 12 static True span 2893
+DVC_CAL L0 attn.wo_b pipeline 127 phases 4 static True span 701
+DVC_CAL L0 ['attn.wq_b'] pipeline 126 phases 11 static True span 1483
+DVC_CAL L0 ffn.down pipeline 130 phases 21 static True span 2889
+DVC_CAL L0 ffn.experts_gu pipeline 145 phases 24 static True span 3680
+DVC_CAL L0 ffn.router pipeline 231 phases 5 static True span 1269
+DVC_CAL L0 ffn.shared_gu pipeline 146 phases 4 static True span 798
+FCAL_DONE dvc_L0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2477333-1792491657): exit 0

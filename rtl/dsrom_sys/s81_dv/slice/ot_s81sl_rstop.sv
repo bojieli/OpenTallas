@@ -2,7 +2,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // S81-SLICE (stream 0cm, 2026-10-17): the slice ring stop, data plane (centre leaf, gather sub-leaf, with the x streamer).
 // Topology p4c (S81-DV SPEC 0b): each tier is an 8-slice bidirectional LINE on the 1,104-b E/W ports; the per-column V
-// rung (276 b) is the only tier crossing.  Straps (captured pins, never parameters): sid = {tier, col}.
+// rung (276 b) is the only tier crossing.  Straps (captured pins, never parameters): sid = 2 * col + tier (tier 0 = S,
+// 1 = N), the die-wide slice id (die.v straps u_s_<c><S|N> = 2c + r; svc_rs_embed.py sid(rc); ot_s81sl_xr's slice mask
+// bit; dv_layer_compile.py).  S81-LBGAP G2 (10-18): this stop decoded {tier, col} (col = sid[2:0]) until 10-18, so in the
+// die u_s_4S (sid 8) took column 0 / tier N (W line default 0 hops) and the NX snake ends (map_e / map_w) were wrong.
 //
 //   line deliver  every valid line beat is delivered by kind: XQ / XB -> x streamer gather (1 = from W, 2 = from E);
 //                 NX -> xfin's W / E inputs (xfin forwards NX itself); CTL / RD / SC / CL -> control plane (dl_e / dl_w).
@@ -21,6 +24,11 @@
 //   inject        per line side ONE of: forward, xfin NX (unless V-mapped), own beat, V-assembled beat, control plane.
 //                 V out: ONE of own fragments, V-mapped NX, control-plane V beat.  Two sources in a cycle = sticky fault.
 //                 A control-plane line beat with hops 0 takes the line default of each side (E 7 - col, W col).
+// S81-SMWIRE (10-19): a control-plane injection of kind XB (the C3 xr's SO gather beat) is an OWN beat of this stop:
+//   ci E / W (line default hops when 0) also delivers it to the own x streamer (gather source 0, as the own beat);
+//   ci V sends it as the 4-fragment V train (fragment 0 = ci_b[275:0] on the ci edge, fragments 1..3 on the next three
+//   edges), which the column partner re-assembles, delivers and injects on its line exactly as a leaf beat.  A ci XB
+//   beat together with an own / V-assembled beat, or a V train overlapping any other V source, is a sticky fault.
 // Latency: line in pin -> line out pin 2 edges a stop; V fragment in -> assembled beat on the line 2 edges after the
 // 4th fragment's input flop.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -30,7 +38,7 @@ module ot_s81sl_rstop #(
 ) (
     input  wire            clk,
     input  wire            rst_n,
-    input  wire [3:0]      sid,          // {tier, col}
+    input  wire [3:0]      sid,          // 2 * col + tier
     input  wire [W-1:0]    ri_w,         // E-bound beats from the W neighbour
     input  wire [W-1:0]    ri_e,         // W-bound beats from the E neighbour
     output reg  [W-1:0]    ro_e,
@@ -61,7 +69,12 @@ module ot_s81sl_rstop #(
     always @(posedge clk) begin
         iw <= ri_w; ie <= ri_e; iv <= vi; xfs_q <= xf_s; xf_q <= xf; neo_q <= nx_eo; nwo_q <= nx_wo; ci_q <= ci_b; cid_q <= ci_dir; sid_c <= sid;
     end
-    wire [2:0] col = sid_c[2:0]; wire tier = sid_c[3];          // tier 0 = S, 1 = N
+`ifdef OT_S81SL_RSTOP_MUT_TIERCOL
+    // NEGATIVE CONTROL (S81-LBGAP G2): the pre-10-18 {tier, col} decode
+    wire [2:0] col = sid_c[2:0]; wire tier = sid_c[3];
+`else
+    wire [2:0] col = sid_c[3:1]; wire tier = sid_c[0];          // sid = 2 * col + tier; tier 0 = S, 1 = N
+`endif
     wire map_e = tier ? col == 3'd0 : col == 3'd7;              // xfin side carried by V (snake end columns)
     wire map_w = tier ? col == 3'd7 : col == 3'd0;
     wire [4:0] h_e = 5'd7 - {2'd0, col}, h_w = {2'd0, col};
@@ -116,11 +129,25 @@ module ot_s81sl_rstop #(
               nxb[20:13] = f[167:160]; nxb[21 +: 160] = f[159:0]; end
     endfunction
     wire [W-1:0] nxv_b = nxb(nxv_f, sid_c);
-    wire [2:0] sv = ofv + nxv_out + (ci_q[0] && cid_q[2]);
+    // S81-SMWIRE: ci XB beats (own delivery on E / W; V train on V)
+    wire ci_xb = ci_q[0] && ci_q[3:1] == K_XB;
+`ifdef OT_S81SL_RSTOP_MUT_CIXB
+    wire cxo = 1'b0;                                              // mutant: no own delivery of a ci XB line beat
+`else
+    wire cxo = ci_xb && (cid_q[0] || cid_q[1]);
+`endif
+    reg [1:0] vt_n; reg [3 * V - 1:0] vt_b;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) vt_n <= 2'd0;
+        else vt_n <= (ci_xb && cid_q[2]) ? 2'd3 : (vt_n != 2'd0) ? vt_n - 2'd1 : 2'd0;
+    always @(posedge clk) vt_b <= (ci_xb && cid_q[2]) ? ci_q[W-1:V] : (vt_b >> V);
+    wire vt_on = vt_n != 2'd0;
+    wire [2:0] sv = ofv + nxv_out + (ci_q[0] && cid_q[2]) + vt_on;
     // the leaves' fragment 0 already carries hops 1 and src (vq): the V partner delivers it and re-injects as its own
     always @(posedge clk or negedge rst_n)
         if (!rst_n) vo <= {V{1'b0}};
-        else vo <= ofv ? of : nxv_out ? nxv_b[V-1:0] : (ci_q[0] && cid_q[2]) ? ci_q[V-1:0] : {V{1'b0}};
+        else vo <= ofv ? of : nxv_out ? nxv_b[V-1:0] : (ci_q[0] && cid_q[2]) ? ci_q[V-1:0] : vt_on ? vt_b[V-1:0] :
+                   {V{1'b0}};
     // ---------------------------------------------------------------- line output selection
     wire fe = iw_v && iw_k != K_NX && iw_h > 5'd1;
     wire fw = ie_v && ie_k != K_NX && ie_h > 5'd1;
@@ -139,7 +166,8 @@ module ot_s81sl_rstop #(
                     ae ? hdr(asm_b, h_e, sid_c) : ce ? ((ci_q[8:4] == 5'd0) ? hdr(ci_q, h_e, sid_c) : ci_q) : {W{1'b0}};
             ro_w <= fw ? hdr(ie, ie_h - 5'd1, ie[12:9]) : nw ? nxb(nx_pw, sid_c) : ow ? hdr(own, h_w, sid_c) :
                     aw ? hdr(asm_b, h_w, sid_c) : cw ? ((ci_q[8:4] == 5'd0) ? hdr(ci_q, h_w, sid_c) : ci_q) : {W{1'b0}};
-            if (se > 3'd1 || sw_ > 3'd1 || nown > 3'd1 || sv > 3'd1 || (own_v && asm_v)) fault <= 1'b1;
+            if (se > 3'd1 || sw_ > 3'd1 || nown > 3'd1 || sv > 3'd1 || (own_v && asm_v) || (cxo && (own_v || asm_v)))
+                fault <= 1'b1;
         end
     // ---------------------------------------------------------------- deliveries (registered)
     reg nxw_v, nxe_v; reg [171:0] nxw_d, nxe_d;
@@ -152,14 +180,14 @@ module ot_s81sl_rstop #(
         if (!rst_n) begin g_v <= 3'b000; dl_ev <= 1'b0; dl_wv <= 1'b0; dl_vv <= 1'b0; nxw_v <= 1'b0; nxe_v <= 1'b0; end
         else begin
             g_v <= {ie_v && (ie_k == K_XQ || ie_k == K_XB), iw_v && (iw_k == K_XQ || iw_k == K_XB),
-                    (own_v && (own[3:1] == K_XQ || own[3:1] == K_XB)) || asm_v};
+                    (own_v && (own[3:1] == K_XQ || own[3:1] == K_XB)) || asm_v || cxo};
             dl_ev <= iw_v && iw_k != K_XQ && iw_k != K_XB && iw_k != K_NX;
             dl_wv <= ie_v && ie_k != K_XQ && ie_k != K_XB && ie_k != K_NX;
             dl_vv <= v_cs;
             nxw_v <= map_w ? v_nx : xw_nx;
             nxe_v <= map_e ? v_nx : xe_nx;
         end
-    wire [W-1:0] g0 = asm_v ? asm_b : own;
+    wire [W-1:0] g0 = asm_v ? asm_b : cxo ? ci_q : own;
     always @(posedge clk) begin
         g_fam <= {ie_k == K_XB, iw_k == K_XB, g0[3:1] == K_XB};
         g_idx <= {ie[19:13], iw[19:13], g0[19:13]};

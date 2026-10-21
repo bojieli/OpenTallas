@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-epyc7       admits   613 GB (avail 530, growth 101, headroom 0, waiters 0/0 GB) load 60/96 running 21 disk 5999 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: -> ot-epyc7
+ot-heavy: request 48G is charged 26G (class 'run_e#e.sh:OT_SMWIRE_MUT_ORDER' measured peak 16.8G, n=1+0 proved); the cap stays 48G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1958991-1792461053 after 0 s
+E2E rtlmut_OT_SMWIRE_MUT_ORDER expect=fail smwire=FAIL caught=NO -> OK | SMWIRE stats mut=0 route=1 gather s3=192 s4=192 s2=192 n3=0 lat(head0 beat -> port) s3=16 s4=18 s2=18 n3=-1 head1 +tree hop: s3=21 checks=589824 faults sot 00 gw 00 land 0 xr 0 rstop 0000
+E2E_DONE bad=0 define=OT_SMWIRE_MUT_ORDER
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1958991-1792461053): exit 0

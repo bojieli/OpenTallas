@@ -1,0 +1,33 @@
+{
+ "cell": "ot_hgi_qdq_transport_ctl_r4",
+ "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r4s/views/ot_hgi_qdq_transport_ctl_r4",
+ "lib_cell": "ot_hgi_qdq_transport_ctl_r4",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 232.2,
+ "spread_ps": 28.6,
+ "outputs": 346,
+ "inputs": 73,
+ "launch_ps": 238.5,
+ "launch_pin": "wq_v[5]",
+ "capture_ps": 126.6,
+ "capture_pin": "rst_n",
+ "launch_over": 265,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pin_rule": "owner 10-20: registered at region crossings (none declared); same-region pins may connect directly (die / parent STA judges)",
+ "direct_pins": 265,
+ "direct_first": [
+  "beat_done",
+  "rq[100]",
+  "rq[101]"
+ ],
+ "ff_spread_ps": 22.8,
+ "ff_launch_min_ps": 144.8,
+ "ff_hold_need_ps": -56.5,
+ "pass": true,
+ "fail_why": ""
+}

@@ -1,0 +1,19 @@
+{
+  "source": "e0d4d194a",
+  "tool": "Yosys0.68",
+  "passes": "proc;opt;flatten;opt",
+  "MU_NU": 4,
+  "root_reset_input_pin_loads": 1,
+  "root_CFG_input_pin_loads": 6,
+  "max_CFG_distribution_pin_loads": 25,
+  "max_async_reset_pin_loads": 32,
+  "max_reset_distribution_pin_loads": 32,
+  "kept_copy_instances": 796,
+  "kept_CFG_copy_instances": 97,
+  "optimized_generic_flop_bits_recursive": 19925,
+  "same_shape_safe_storage_scalar_baseline_flop_bits": 16640,
+  "scalar_delta_flop_bits_vs_safe_storage_baseline": 3285,
+  "cfg_setup_added_edges": 2,
+  "arithmetic_data_added_edges": 0,
+  "scope": "Soft scalar/reset/CFG only. Actual root reach, mapped standard-cell area, native clock arrivals and routed TT/FF timing remain pending."
+}

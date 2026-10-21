@@ -1,0 +1,545 @@
+{
+  "scope": "Exact spec+immutable LEF planning geometry; NOT placed/CTS/route evidence",
+  "outline": {
+    "w": 475.2,
+    "h": 432.0
+  },
+  "macros": [
+    {
+      "inst": "*g_xm?0?.u_x*",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin": [
+        216.0,
+        86.4
+      ],
+      "orient": "R0",
+      "bbox": [
+        216.0,
+        86.4,
+        310.824,
+        166.872
+      ],
+      "lef_sha256": "7e3734cd8e6619daf31061405df22e3be70b42181faacec4a36af2e03a7da9a4",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 410,
+        "E": 409
+      },
+      "signal_pins_per_um": {
+        "W": 5.094939854856348,
+        "E": 5.0825131722835275
+      },
+      "pg_pin_face_access": {
+        "E": [
+          "VDD",
+          "VSS"
+        ],
+        "N": [
+          "VDD"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          216000,
+          86400
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_xm?1?.u_x*",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin": [
+        216.0,
+        216.0
+      ],
+      "orient": "R0",
+      "bbox": [
+        216.0,
+        216.0,
+        310.824,
+        296.472
+      ],
+      "lef_sha256": "7e3734cd8e6619daf31061405df22e3be70b42181faacec4a36af2e03a7da9a4",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 410,
+        "E": 409
+      },
+      "signal_pins_per_um": {
+        "W": 5.094939854856348,
+        "E": 5.0825131722835275
+      },
+      "pg_pin_face_access": {
+        "E": [
+          "VDD",
+          "VSS"
+        ],
+        "N": [
+          "VDD"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          216000,
+          216000
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_xm?2?.u_x*",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin": [
+        345.6,
+        86.4
+      ],
+      "orient": "R0",
+      "bbox": [
+        345.6,
+        86.4,
+        440.42400000000004,
+        166.872
+      ],
+      "lef_sha256": "7e3734cd8e6619daf31061405df22e3be70b42181faacec4a36af2e03a7da9a4",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 410,
+        "E": 409
+      },
+      "signal_pins_per_um": {
+        "W": 5.094939854856348,
+        "E": 5.0825131722835275
+      },
+      "pg_pin_face_access": {
+        "E": [
+          "VDD",
+          "VSS"
+        ],
+        "N": [
+          "VDD"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          345600,
+          86400
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_xm?3?.u_x*",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin": [
+        345.6,
+        216.0
+      ],
+      "orient": "R0",
+      "bbox": [
+        345.6,
+        216.0,
+        440.42400000000004,
+        296.472
+      ],
+      "lef_sha256": "7e3734cd8e6619daf31061405df22e3be70b42181faacec4a36af2e03a7da9a4",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 410,
+        "E": 409
+      },
+      "signal_pins_per_um": {
+        "W": 5.094939854856348,
+        "E": 5.0825131722835275
+      },
+      "pg_pin_face_access": {
+        "E": [
+          "VDD",
+          "VSS"
+        ],
+        "N": [
+          "VDD"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          345600,
+          216000
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?0?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        43.2,
+        86.4
+      ],
+      "orient": "R0",
+      "bbox": [
+        43.2,
+        86.4,
+        94.608,
+        126.36000000000001
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          86400
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?1?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        43.2,
+        172.8
+      ],
+      "orient": "R0",
+      "bbox": [
+        43.2,
+        172.8,
+        94.608,
+        212.76000000000002
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          172800
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?2?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        43.2,
+        259.20000000000005
+      ],
+      "orient": "R0",
+      "bbox": [
+        43.2,
+        259.20000000000005,
+        94.608,
+        299.16
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          259200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?3?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        43.2,
+        345.6
+      ],
+      "orient": "R0",
+      "bbox": [
+        43.2,
+        345.6,
+        94.608,
+        385.56
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          345600
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?4?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        129.6,
+        86.4
+      ],
+      "orient": "R0",
+      "bbox": [
+        129.6,
+        86.4,
+        181.00799999999998,
+        126.36000000000001
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          129600,
+          86400
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?5?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        129.6,
+        172.8
+      ],
+      "orient": "R0",
+      "bbox": [
+        129.6,
+        172.8,
+        181.00799999999998,
+        212.76000000000002
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          129600,
+          172800
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "inst": "*g_wr_ring?6?.u_w*",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "origin": [
+        129.6,
+        259.20000000000005
+      ],
+      "orient": "R0",
+      "bbox": [
+        129.6,
+        259.20000000000005,
+        181.00799999999998,
+        299.16
+      ],
+      "lef_sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "literal_lattice": true,
+      "signal_pin_faces": {
+        "W": 199,
+        "E": 198
+      },
+      "signal_pins_per_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "pg_pin_face_access": {
+        "W": [
+          "VDD",
+          "VSS"
+        ]
+      },
+      "pin_track": {
+        "orient": "R0",
+        "origin_nm": [
+          129600,
+          259200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    }
+  ],
+  "overlaps": [],
+  "min_horizontal_channel_um": 34.77600000000001,
+  "min_vertical_channel_um": 46.44,
+  "source_mapped_std_area_um2": 11255.0,
+  "source_gate_macro_area_um2": 44902.6,
+  "source_unchanged": true,
+  "direct_macro_read_capture_reach": {
+    "metric": "Manhattan, exact macro pins to fixed IO capture targets;10um allowed for local FF placement",
+    "worst": {
+      "port": "o_ix[255]",
+      "macro": "*g_xm?0?.u_x*",
+      "macro_pin": "rd_out[255]",
+      "capture_pin_target": [
+        308.3182538071066,
+        432.0
+      ],
+      "manhattan_um": 386.4382538071066
+    },
+    "with10umplacement_allowance": 396.4382538071066
+  },
+  "clock": {
+    "source": "clk",
+    "edge": "posedge",
+    "period_ns": 0.833333,
+    "io_hold_ns": 0.03,
+    "regional_k": "64",
+    "phase_change": false,
+    "new_insertion_spread": "unmeasured until CTS"
+  }
+}

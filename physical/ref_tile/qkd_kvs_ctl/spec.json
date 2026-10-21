@@ -1,0 +1,187 @@
+{
+ "name": "qkd_kvs_ctl",
+ "top": "qkd_kvs_ctl",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+  "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n",
+  "por_n"
+ ],
+ "pins": {
+  "N": [
+   "boot__boot_pr",
+   "boot__boot_image_target",
+   "boot__boot_image_ready",
+   "boot__boot_image_fault",
+   "boot__boot_image_epoch",
+   "boot__boot_image_digest",
+   "d2d__svc",
+   "por_n",
+   "embgw__bw",
+   "st",
+   "auth",
+   "cht",
+   "chg",
+   "d2d__skw",
+   "oobs__host_launch_quiet",
+   "oobs__host_upstream_quiet",
+   "d2d__srx",
+   "d2d__kvn_word_identity",
+   "d2d__kvn_word_generation",
+   "boot__link_cfg_tx_we",
+   "boot__link_cfg_rx_we",
+   "boot__link_cfg_addr",
+   "boot__link_cfg_data",
+   "kvi",
+   "oobs__kv_drained_local",
+   "oobs__kv_flush_local",
+   "oobs__kv_active_local",
+   "kg",
+   "boot__setup_ready",
+   "own__native_reserved",
+   "own__ownership_valid",
+   "cf_root__fault",
+   "o_emb"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "lp",
+   "o_attn"
+  ],
+  "E": [
+   "o_hroot_ES",
+   "i_hroot_ES",
+   "o_hroot_EN",
+   "i_hroot_EN"
+  ],
+  "W": [
+   "o_hroot_WS",
+   "i_hroot_WS",
+   "o_hroot_WN",
+   "i_hroot_WN"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their own flops."
+ },
+ "kind": "tile",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 475.20000000000005,
+  "h": 475.20000000000005,
+  "exact": true
+ },
+ "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_ctl of the KV die (20 children: qkd_kv_cfault_node, qkd_kv_die_cfg, qkd_kv_es_fan_root2_b, qkd_kv_native_programme, qkd_kv_ownership_obs, qkd_kv_static_writer_native, qkd_static_kv_boot_dispatch, qkd_static_kv_boot_observe, qkd_static_kv_layer_programme, qkd_static_kv_ownership_calendar; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 4db849c89d25) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 100, 'N': 1647, 'W': 2524, 'E': 2524} pins on 475.2 x 475.2 um (die frame record (1123.2, 172.8) ASSUMED -> this outline for KV-PLAN3).",
+ "job": {
+  "owner": "Claude:KV-KITS/PARENTS",
+  "branch": "claude/kv-kits-par-1018",
+  "tag": "p1",
+  "purpose": "KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_ctl.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
+  "benches": [
+   {
+    "name": "ctl_lockstep",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/ctl_m0 ctl 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=ctl .* errors=0 mut=0",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/ctl_m0.log"
+   },
+   {
+    "name": "ctl_mut1",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/ctl_m1 ctl 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=ctl ",
+    "fail_regex": "^KVS_TILE FAIL tile=ctl .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/ctl_m1.log"
+   },
+   {
+    "name": "ctl_mut2",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/ctl_m2 ctl 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=ctl ",
+    "fail_regex": "^KVS_TILE FAIL tile=ctl .* mut=2 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/ctl_m2.log"
+   },
+   {
+    "name": "ctl_mut3",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/ctl_m3 ctl 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=ctl ",
+    "fail_regex": "^KVS_TILE FAIL tile=ctl .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018/ctl_m3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_ctl/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_ctl"
+ }
+}

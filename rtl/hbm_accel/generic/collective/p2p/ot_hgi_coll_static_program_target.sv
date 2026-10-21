@@ -20,7 +20,17 @@ module ot_hgi_coll_static_program_target #(
     // 15 levels): the scanned row's flow word and loaded bit are registered one edge ahead (row 0 at descriptor
     // accept, row+1 while scanning). Exact: flow/loaded never change while checking (frames fault while checking,
     // drains cannot start), so every check reads the same values on the same edges. Default 0 = the closed form.
-    parameter integer LOOKAHEAD=0
+    parameter integer LOOKAHEAD=0,
+    // XDIE-HBM4 (10-19): ROWS 128 (default 64 = unchanged): address[11:10]=0, [9:3]=row; metadata[53:51] carry the
+    // next/target/lid pc MSBs (metadata[63:54]=0); descriptor base<128, limit<=128; the scan covers 128 rows (reserve
+    // 130 edges from descriptor capture to launch); mode-0 issuer cfg carries row[6] in cfg[8].
+    // HBM-COLL256-KITS (10-19, SAFE-DESIGN item 5): ROWS 256 keeps the 256 x 18-b flow words in ONE ot_sram_1rw_256x64
+    // (g_fsram.u_flow) instead of 4.6 kb of flops: the macro read IS the lookahead register (row 0 read at descriptor
+    // accept, row+1 while scanning; frames and descriptor scans never overlap, so one 1RW port suffices), and
+    // issuer_start_pc is set at descriptor accept (= base, >= ROWS+2 edges before launch; the 256-row issuer v7 primes
+    // its lookahead from a stable start_pc). ROWS 64/128 elaborate exactly as before (flow flops, start_pc at launch).
+    parameter integer ROWS=64,
+    parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6      // derived; never override
 )(
     input wire clk,rst_n,
     input wire cfg_v,
@@ -33,10 +43,10 @@ module ot_hgi_coll_static_program_target #(
     input wire [15:0] desc_loops,
     input wire launch_v,program_active,
     input wire issuer_busy,issuer_fault,issuer_uop_v,
-    input wire [5:0] issuer_uop_pc,
+    input wire [PW-1:0] issuer_uop_pc,
     output reg [36:0] issuer_cfg,
     output reg issuer_start,
-    output reg [5:0] issuer_start_pc,
+    output reg [PW-1:0] issuer_start_pc,
     output reg configured,init_busy,fault
 );
     // Input capture is the first transport rung. Processing and registered
@@ -54,24 +64,51 @@ module ot_hgi_coll_static_program_target #(
     reg [1535:0] assembly;
     reg [63:0] metadata;
     reg [6:0] seen;
-    reg [5:0] row;
-    reg [63:0] loaded;
-    reg [13:0] flow[0:63]; // {halt,has_repeat,targetPC6,nextPC6}
+    reg [PW-1:0] row;
+    reg [ROWS-1:0] loaded;
+    reg [2*PW+1:0] flow[0:ROWS-1]; // {halt,has_repeat,targetPC,nextPC}
+    localparam integer FW=2*PW+2;
     reg checking,check_bad;
-    reg [5:0] check_row;
+    reg [PW-1:0] check_row;
     reg draining;
     reg [5:0] step;
-    reg [5:0] base;
-    reg [6:0] limit;
+    reg [PW-1:0] base;
+    reg [PW:0] limit;
     wire in_range={1'b0,check_row}>=base && {1'b0,check_row}<limit;
-    reg [13:0] f_la;reg ld_la;
-    wire [13:0] f=(LOOKAHEAD!=0)?f_la:flow[check_row];
+    reg [FW-1:0] f_la;reg ld_la;
+    wire [FW-1:0] f_sram;
+    wire [FW-1:0] f=(ROWS>128)?f_sram:(LOOKAHEAD!=0)?f_la:flow[check_row];
     wire ld=(LOOKAHEAD!=0)?ld_la:loaded[check_row];
+    wire [PW-1:0] f_nx=f[PW-1:0],f_tg=f[2*PW-1:PW];wire f_halt=f[FW-1],f_rep=f[FW-2];
     wire row_bad=in_range && (!ld ||
-        (!f[13] && (f[5:0]<base || {1'b0,f[5:0]}>=limit ||
-          (f[12] && (f[11:6]<base || {1'b0,f[11:6]}>=limit)))) ||
-        ({1'b0,check_row}==limit-1'b1 && !f[13]));
+        (!f_halt && (f_nx<base || {1'b0,f_nx}>=limit ||
+          (f_rep && (f_tg<base || {1'b0,f_tg}>=limit)))) ||
+        ({1'b0,check_row}==limit-1'b1 && !f_halt));
+    wire [PW-1:0] a_row=addr_q[PW+2:3];
+    wire a_hi_bad=(PW==8)?(addr_q[11]!=0):(PW==7)?(addr_q[11:10]!=0):(addr_q[11:9]!=0);
+    localparam [12:0] MSPARE=(PW==8)?13'h1fc0:(PW==7)?13'h1ff8:13'h1fff;   // data[63:51] bits that must be zero
     wire occupied=program_active || issuer_busy || issuer_start;
+    generate if(ROWS>128)begin:g_fsram
+        // the same accept conditions as the frame / descriptor branches below (no fault this edge)
+        wire fw=cv && target_q==TARGET && addr_q[2:0]==6 && !(occupied || lv || draining || checking || fault || dv ||
+            a_hi_bad || loaded[a_row] || (seen!=0 && row!=a_row) || seen[6] || data_q[255:64]!=0 || (data_q[63:51]&MSPARE)!=0);
+        wire dacc=dv && target_q==TARGET && !(occupied || lv || draining || checking || seen!=0 || fault || cv ||
+            base_q>=ROWS || limit_q>ROWS || limit_q<={1'b0,base_q} || loops_q!=1);
+`ifdef OT_PT_MUT_LA_STALE
+        wire fr=dacc;                                              // mutant: lookahead never advances
+`else
+        wire fr=dacc || (checking && check_row!=PW'(ROWS-1));
+`endif
+        wire [PW-1:0] fa=dacc ? {PW{1'b0}} : PW'(check_row+1'b1);
+        wire [FW-1:0] fwd={data_q[44],|data_q[43:12],data_q[55],data_q[52],data_q[11:6],data_q[54],data_q[51],data_q[5:0]};
+        wire [63:0] rd;
+        ot_sram_1rw_256x64_m4_r2c2 u_flow(.clk(clk),.ce_in(fw || fr),.we_in(fw),.addr_in(fw ? a_row : fa),
+            .wd_in(64'(fwd)),.w_mask_in({64{1'b1}}),.rd_out(rd),
+            .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(12'b0));
+        assign f_sram=rd[FW-1:0];
+    end else begin:g_fflop
+        assign f_sram={FW{1'b0}};
+    end endgenerate
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
@@ -84,21 +121,21 @@ module ot_hgi_coll_static_program_target #(
             if(issuer_fault)fault<=1;
             if(checking)begin
                 if(row_bad)check_bad<=1;
-                if(check_row==63)begin
+                if(check_row==PW'(ROWS-1))begin
                     checking<=0;init_busy<=0;
                     if(check_bad || row_bad)fault<=1;
                     else if(!fault)configured<=1;
                 end else begin
                     check_row<=check_row+1'b1;
 `ifndef OT_PT_MUT_LA_STALE
-                    f_la<=flow[6'(check_row+1'b1)];ld_la<=loaded[6'(check_row+1'b1)];   // mutant: lookahead never advances
+                    f_la<=flow[PW'(check_row+1'b1)];ld_la<=loaded[PW'(check_row+1'b1)];   // mutant: lookahead never advances
 `endif
                 end
             end
             if(issuer_uop_v && (!configured || issuer_uop_pc<base || {1'b0,issuer_uop_pc}>=limit))fault<=1;
             if(draining)begin
                 if(step<51)begin
-                    if(step%17==0)issuer_cfg<={1'b1,4'd0,24'b0,2'(step/17),row};
+                    if(step%17==0)issuer_cfg<=(PW==8)?{1'b1,4'd0,22'b0,row[PW-1:PW-2],2'(step/17),row[5:0]}:(PW==7)?{1'b1,4'd0,23'b0,row[PW-1],2'(step/17),row[5:0]}:{1'b1,4'd0,24'b0,2'(step/17),row[5:0]};
                     else issuer_cfg<={1'b1,4'd1,assembly[(step/17)*512+(step%17-1)*32+:32] ^ ((MUT_DATA!=0 && step==1)?32'b1:32'b0)};
                 end else if(step==51)issuer_cfg<={1'b1,4'd2,metadata[31:0]};
                 else if(step==52)issuer_cfg<={1'b1,4'd3,metadata[63:32]};
@@ -108,15 +145,17 @@ module ot_hgi_coll_static_program_target #(
                 end else step<=step+1'b1;
             end
             if(cv && target_q==TARGET)begin
-                if(occupied || lv || draining || checking || fault || dv || addr_q[11:9]!=0 ||
-                   addr_q[2:0]==7 || loaded[addr_q[8:3]] ||
-                   (seen!=0 && row!=addr_q[8:3]) || seen[addr_q[2:0]] ||
-                   (addr_q[2:0]==6 && (data_q[255:64]!=0 || data_q[63:51]!=0)))fault<=1;
+                if(occupied || lv || draining || checking || fault || dv || a_hi_bad ||
+                   addr_q[2:0]==7 || loaded[a_row] ||
+                   (seen!=0 && row!=a_row) || seen[addr_q[2:0]] ||
+                   (addr_q[2:0]==6 && (data_q[255:64]!=0 || (data_q[63:51]&MSPARE)!=0)))fault<=1;
                 else begin
-                    row<=addr_q[8:3];seen[addr_q[2:0]]<=1;init_busy<=1;
+                    row<=a_row;seen[addr_q[2:0]]<=1;init_busy<=1;
                     if(addr_q[2:0]==6)begin
                         metadata<=data_q[63:0];
-                        flow[addr_q[8:3]]<={data_q[44],|data_q[43:12],data_q[11:0]};
+                        if(ROWS<=128)flow[a_row]<=(PW==8)?FW'({data_q[44],|data_q[43:12],data_q[55],data_q[52],data_q[11:6],data_q[54],data_q[51],data_q[5:0]})
+                                            :(PW==7)?FW'({data_q[44],|data_q[43:12],data_q[52],data_q[11:6],data_q[51],data_q[5:0]})
+                                            :FW'({data_q[44],|data_q[43:12],data_q[11:0]});
                     end
                     else assembly[addr_q[2:0]*256+:256]<=data_q;
                     if((seen | (7'b1<<addr_q[2:0]))==7'h7f)begin draining<=1;step<=0;end
@@ -124,9 +163,12 @@ module ot_hgi_coll_static_program_target #(
             end
             if(dv && target_q==TARGET)begin
                 if(occupied || lv || draining || checking || seen!=0 || fault || cv ||
-                   base_q>=64 || limit_q>64 || limit_q<={1'b0,base_q} || loops_q!=1)fault<=1;
+                   base_q>=ROWS || limit_q>ROWS || limit_q<={1'b0,base_q} || loops_q!=1)fault<=1;
                 else begin
-                    base<=base_q[5:0];limit<=limit_q[6:0];configured<=0;
+                    base<=base_q[PW-1:0];limit<=limit_q[PW:0];configured<=0;
+`ifndef OT_PT_MUT_LATE_SPC
+                    if(ROWS>128)issuer_start_pc<=base_q[PW-1:0];   // mutant: start_pc only at launch (v7 start faults)
+`endif
                     checking<=1;check_row<=0;check_bad<=0;init_busy<=1;
                     f_la<=flow[0];ld_la<=loaded[0];
                 end

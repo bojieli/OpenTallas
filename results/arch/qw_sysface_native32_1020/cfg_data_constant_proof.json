@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.sysface32.cfg_data_constant_proof.v1",
+ "svh": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh",
+ "words": 136,
+ "or_mask_hex": "3ffefc3f",
+ "source_zero_bits": [
+  6,
+  7,
+  8,
+  9,
+  16,
+  30,
+  31
+ ],
+ "native_constant_bits": [
+  6,
+  7,
+  8,
+  9,
+  16,
+  30,
+  31
+ ],
+ "PASS": true,
+ "scope": "every cfg_data source word (reset 0, C/K TX/RX IMG x32, SEG1, SEG2) has these bits 0; the native TIELO outputs are source-literal constants, no functional tie"
+}

@@ -57,8 +57,9 @@ class Leaf:
             self.img[a + i] = [int(w) for w in r]
         return a
 
-    def cmd(self, op, a0, n, ob=0, wb=0, uq=0, umq=0, umb=0, umi=0, j0=0, lim=0, w0=0, w1=0, a1=0):
-        imm = ob | wb << 10 | uq << 11 | umq << 12 | umb << 13 | umi << 14 | j0 << 22 | lim << 32 | w0 << 64 | w1 << 96
+    def cmd(self, op, a0, n, ob=0, wb=0, uq=0, umq=0, umb=0, umi=0, j0=0, lim=0, w0=0, w1=0, a1=0, wr=0, wsel=0):
+        imm = (ob | wb << 10 | uq << 11 | umq << 12 | umb << 13 | umi << 14 | j0 << 22 | wr << 25 | wsel << 26 | lim << 32 |
+               w0 << 64 | w1 << 96)
         c = OP[op] | a0 << 4 | a1 << 14 | n << 24 | imm << 32
         self.prog.append((1, OP[op], 0, c))
 
@@ -131,6 +132,7 @@ def main():
         assert np.array_equal(u32(a), np.asarray(c["checks"][0][2], np.uint32)), f"{L} swiglu s{s} golden vs case check"
         sw_all.append((g, uu, w, a))
         a0 = lf.put(il(rows4(u32(g)), rows4(u32(uu))))
+        sw_all[-1] = sw_all[-1] + (a0,)
         ob = lf.alloc(6)
         wb_ = int(u32([w])[0]) if w is not None else 0x3F800000          # the shared expert: w = 1.0 (exact)
         lf.cmd("SW", a0, 6, ob=ob, wb=1, lim=lim_bits, w0=wb_, w1=wb_)
@@ -142,12 +144,30 @@ def main():
     u64 = np.concatenate([sw_all[0][1], sw_all[1][1], sw_all[2][1][:16]]).astype(F)
     wv = np.concatenate([np.repeat(sw_all[0][2], 32), np.repeat(sw_all[1][2], 32)]).astype(F)
     a64 = SG.golden_swiglu(g64, u64, wv, f32([lim_bits])[0])
-    a0 = lf.put(il(rows4(u32(g64)), rows4(u32(u64))))
+    a0 = a0_64 = lf.put(il(rows4(u32(g64)), rows4(u32(u64))))
     ob = lf.alloc(16)
     lf.cmd("SW", a0, 16, ob=ob, wb=1, uq=1, umq=1, umi=0x21, lim=lim_bits, w0=int(u32([sw_all[0][2]])[0]),
            w1=int(u32([sw_all[1][2]])[0]))
     lf.check("SW", ob, rows4(u32(a64)), [0xF] * 16)
     lf.expect_xq(a64, 0x21)
+    # ------------------------------------------------ SW wr (TOK-S81-GAPS 10-18): the routing weights from the leaf store,
+    # laid out as the gunit router writes them (dsdv_gunit_l1 CTL target 5: row R+1 = w0..w3, R+2 = w4, w5); the command
+    # immediate carries a poison weight (an RTL that ignores wr fails), wsel = slot, a1 = R+1
+    wts = [int(u32([sw_all[s][2]])[0]) for s in range(6)]
+    rw = lf.put([wts[0:4], wts[4:6] + [0, 0]])
+    POISON = 0x40490FDB
+    for s in range(6):
+        g, uu, w, a, a0s = sw_all[s]
+        ob = lf.alloc(6)
+        lf.cmd("SW", a0s, 6, ob=ob, wb=1, lim=lim_bits, w0=POISON, w1=POISON, a1=rw, wr=1, wsel=s)
+        lf.check("SW", ob, rows4(u32(a)), [0xF] * 6)
+    # 16 groups on one weight (groups 8..15 use the w1 path: MUT 9 = w1 from the wrong word is observable), + vq stream
+    w5 = sw_all[5][2]
+    a16 = SG.golden_swiglu(g64, u64, np.repeat(w5, 64).astype(F), f32([lim_bits])[0])
+    ob = lf.alloc(16)
+    lf.cmd("SW", a0_64, 16, ob=ob, wb=1, uq=1, umq=1, umi=0x22, lim=lim_bits, w0=POISON, w1=POISON, a1=rw, wr=1, wsel=5)
+    lf.check("SW", ob, rows4(u32(a16)), [0xF] * 16)
+    lf.expect_xq(a16, 0x22)
     # ------------------------------------------------ QB (z_quant): 64 values of this layer's attention output (o_own)
     z = f32(by[f"{L}.attend_tail"]["checks"][0][2])[:64]
     a0 = lf.put(rows4(u32(z)))

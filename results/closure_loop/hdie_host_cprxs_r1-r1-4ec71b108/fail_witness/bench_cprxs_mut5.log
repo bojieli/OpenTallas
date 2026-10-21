@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_host_cprxs_r1-r1-4ec71b108 bench bench_cprxs_mut5 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hdie_host_cprxs_r1-r1-4ec71b108 log cl/bench_cprxs_mut5.a1b1.log captured 2026-10-18T06:35:44-07:00
+# fail_regex '^HOST_CP_RXS_FAIL MUT=5 fault_edge=[0-9]'
+FAULT at die edge 1062392: land 0 prot 0 link 1 seq 0 ep 0/000 host_ep 0/000 host_link 0/000 host_seq 0 st 10/10
+HOST_CP_RXS_FAIL MUT=5 fault_edge=1062392 mism=0 first_bad=-1 rsp 65359/70000 ev 10598/11350 (eq 0) st 177/177 (eq 1) rsp_eq 0 cfg=5299 rd=7066 ingf 0/0

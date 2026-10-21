@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsdv_mu_hslot.lef",
+    "sha256": "aa88a4bdbfbd0edb7fa968df5cac9708248c6a39b38944afaf7ce77d88b3cc2d"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/record/views/dsdv_mu_hslot/provenance/raw/dsdv_mu_hslot.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/record/views/dsdv_mu_hslot/provenance/dsdv_mu_hslot.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 462 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/record/views/dsdv_mu_hslot/provenance/dsdv_mu_hslot.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsdv_mu_hslot 259.2 x 129.6: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 171 blocked-above 0 blocked-same 0; clock ck insertion 286 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsdv_mu_hslot",
+      "W": 259.2,
+      "H": 129.6,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.979,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.979,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 171,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 285.75,
+          "min_ps": 202.96
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 462
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "dsdv_mu_hslot.lef",
+    "sha256": "417c1689f404702552bebe0877a956763e8d2eed3a9c4e29fe17fc4f3738f47c"
+  }
+}

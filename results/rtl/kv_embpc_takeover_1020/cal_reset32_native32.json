@@ -1,0 +1,1422 @@
+{
+ "max": 32,
+ "cells": 9358,
+ "over": [
+  {
+   "net": "_08364_",
+   "driver": "_14765_ (TIEHIx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 364,
+   "total": 368
+  },
+  {
+   "net": "_08128_",
+   "driver": "_11635_ (OA31x2_ASAP7_75t_R)",
+   "data": 33,
+   "reset": 0,
+   "total": 33
+  }
+ ],
+ "top": [
+  {
+   "net": "_08364_",
+   "driver": "_14765_ (TIEHIx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 364,
+   "total": 368
+  },
+  {
+   "net": "_08128_",
+   "driver": "_11635_ (OA31x2_ASAP7_75t_R)",
+   "data": 33,
+   "reset": 0,
+   "total": 33
+  },
+  {
+   "net": "_02761_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02771_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[10]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02772_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[11]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02773_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[12]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02774_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[13]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02775_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[14]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02776_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02777_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[16]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02780_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[19]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02762_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[1]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02763_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[2]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02764_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[3]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02765_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[4]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02766_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[5]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02767_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[6]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02768_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[7]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02769_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[8]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02770_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[9]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02781_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_02695_",
+   "driver": "\\g_reset.u_bank.rst_n[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02696_",
+   "driver": "\\g_reset.u_bank.rst_n[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02697_",
+   "driver": "\\g_reset.u_bank.rst_n[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02698_",
+   "driver": "\\g_reset.u_bank.rst_n[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02699_",
+   "driver": "\\g_reset.u_bank.rst_n[4]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02700_",
+   "driver": "\\g_reset.u_bank.rst_n[5]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02701_",
+   "driver": "\\g_reset.u_bank.rst_n[6]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02702_",
+   "driver": "\\g_reset.u_bank.rst_n[7]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 30,
+   "total": 30
+  },
+  {
+   "net": "_02747_",
+   "driver": "\\u_join4.g_native32.g_slice[0].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02748_",
+   "driver": "\\u_join4.g_native32.g_slice[0].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02749_",
+   "driver": "\\u_join4.g_native32.g_slice[0].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02750_",
+   "driver": "\\u_join4.g_native32.g_slice[0].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02743_",
+   "driver": "\\u_join4.g_native32.g_slice[1].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02744_",
+   "driver": "\\u_join4.g_native32.g_slice[1].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02745_",
+   "driver": "\\u_join4.g_native32.g_slice[1].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02746_",
+   "driver": "\\u_join4.g_native32.g_slice[1].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02739_",
+   "driver": "\\u_join4.g_native32.g_slice[2].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02740_",
+   "driver": "\\u_join4.g_native32.g_slice[2].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02741_",
+   "driver": "\\u_join4.g_native32.g_slice[2].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02742_",
+   "driver": "\\u_join4.g_native32.g_slice[2].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02735_",
+   "driver": "\\u_join4.g_native32.g_slice[3].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02736_",
+   "driver": "\\u_join4.g_native32.g_slice[3].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02737_",
+   "driver": "\\u_join4.g_native32.g_slice[3].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02738_",
+   "driver": "\\u_join4.g_native32.g_slice[3].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02731_",
+   "driver": "\\u_join4.g_native32.g_slice[4].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02732_",
+   "driver": "\\u_join4.g_native32.g_slice[4].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02733_",
+   "driver": "\\u_join4.g_native32.g_slice[4].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02734_",
+   "driver": "\\u_join4.g_native32.g_slice[4].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02727_",
+   "driver": "\\u_join4.g_native32.g_slice[5].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02728_",
+   "driver": "\\u_join4.g_native32.g_slice[5].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02729_",
+   "driver": "\\u_join4.g_native32.g_slice[5].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02730_",
+   "driver": "\\u_join4.g_native32.g_slice[5].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02723_",
+   "driver": "\\u_join4.g_native32.g_slice[6].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02724_",
+   "driver": "\\u_join4.g_native32.g_slice[6].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02725_",
+   "driver": "\\u_join4.g_native32.g_slice[6].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02726_",
+   "driver": "\\u_join4.g_native32.g_slice[6].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02719_",
+   "driver": "\\u_join4.g_native32.g_slice[7].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02720_",
+   "driver": "\\u_join4.g_native32.g_slice[7].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02721_",
+   "driver": "\\u_join4.g_native32.g_slice[7].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02722_",
+   "driver": "\\u_join4.g_native32.g_slice[7].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02715_",
+   "driver": "\\u_join4.g_native32.g_slice[8].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02716_",
+   "driver": "\\u_join4.g_native32.g_slice[8].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02717_",
+   "driver": "\\u_join4.g_native32.g_slice[8].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02718_",
+   "driver": "\\u_join4.g_native32.g_slice[8].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02791_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[10]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02792_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[11]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02793_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[12]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02794_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[13]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02795_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[14]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02796_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02797_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[16]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02782_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[1]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02783_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[2]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02784_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[3]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02785_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[4]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02786_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[5]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02787_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[6]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02788_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[7]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02789_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[8]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02790_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[9]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 30,
+   "reset": 0,
+   "total": 30
+  },
+  {
+   "net": "_02711_",
+   "driver": "\\u_join4.g_native32.g_slice[9].valid_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 28,
+   "reset": 0,
+   "total": 28
+  },
+  {
+   "net": "_02712_",
+   "driver": "\\u_join4.g_native32.g_slice[9].valid_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 28,
+   "reset": 0,
+   "total": 28
+  },
+  {
+   "net": "_02713_",
+   "driver": "\\u_join4.g_native32.g_slice[9].valid_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 28,
+   "reset": 0,
+   "total": 28
+  },
+  {
+   "net": "_02714_",
+   "driver": "\\u_join4.g_native32.g_slice[9].valid_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 28,
+   "reset": 0,
+   "total": 28
+  },
+  {
+   "net": "start",
+   "driver": "start (PORT)",
+   "data": 25,
+   "reset": 0,
+   "total": 25
+  },
+  {
+   "net": "_02704_",
+   "driver": "\\g_reset.u_main.rst_n[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 22,
+   "total": 22
+  },
+  {
+   "net": "_08008_",
+   "driver": "_11451_ (NOR3x1_ASAP7_75t_R)",
+   "data": 20,
+   "reset": 0,
+   "total": 20
+  },
+  {
+   "net": "_08028_",
+   "driver": "_11486_ (NOR3x1_ASAP7_75t_R)",
+   "data": 20,
+   "reset": 0,
+   "total": 20
+  },
+  {
+   "net": "_04986_",
+   "driver": "_13927_ (AND5x1_ASAP7_75t_R)",
+   "data": 20,
+   "reset": 0,
+   "total": 20
+  },
+  {
+   "net": "\\u_join4.g_pipelined_join.u_join.beat_scale",
+   "driver": "_10836_ (NAND2x1_ASAP7_75t_R)",
+   "data": 19,
+   "reset": 0,
+   "total": 19
+  },
+  {
+   "net": "_02845_",
+   "driver": "\\ss$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 19,
+   "reset": 0,
+   "total": 19
+  },
+  {
+   "net": "cfg_we",
+   "driver": "cfg_we (PORT)",
+   "data": 17,
+   "reset": 0,
+   "total": 17
+  },
+  {
+   "net": "_07918_",
+   "driver": "_11301_ (OR2x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_07928_",
+   "driver": "_11318_ (OR2x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_07961_",
+   "driver": "_11373_ (OR2x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_07993_",
+   "driver": "_11427_ (OR2x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_08044_",
+   "driver": "_11515_ (OR3x1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_08054_",
+   "driver": "_11532_ (OR3x1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_08086_",
+   "driver": "_11586_ (OR2x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_08206_",
+   "driver": "_11743_ (OR2x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02705_",
+   "driver": "\\g_reset.u_main.rst_n[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 16,
+   "total": 16
+  },
+  {
+   "net": "_02798_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.out_scale_q[17]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02799_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02809_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[10]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02810_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[11]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02811_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[12]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02812_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[13]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02813_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[14]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02814_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02800_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[1]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02801_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[2]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02802_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[3]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02803_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[4]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02804_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[5]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02805_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[6]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02806_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[7]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02807_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[8]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02808_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.scale_onehot_q[9]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_02646_",
+   "driver": "\\cd[8]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 14,
+   "reset": 0,
+   "total": 14
+  },
+  {
+   "net": "_02645_",
+   "driver": "\\cd[9]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 14,
+   "reset": 0,
+   "total": 14
+  },
+  {
+   "net": "_02839_",
+   "driver": "\\u_join4.g_reset.u_reset.rst_n[10]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 14,
+   "total": 14
+  },
+  {
+   "net": "_02644_",
+   "driver": "\\cd[10]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 13,
+   "reset": 0,
+   "total": 13
+  },
+  {
+   "net": "_02709_",
+   "driver": "\\g_reset.u_root.rst_n[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 13,
+   "total": 13
+  },
+  {
+   "net": "_07893_",
+   "driver": "_11260_ (OR2x2_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_07899_",
+   "driver": "_11268_ (NOR2x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_07941_",
+   "driver": "_11338_ (OR2x2_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_07946_",
+   "driver": "_11345_ (NOR2x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_07973_",
+   "driver": "_11392_ (OR2x2_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_07978_",
+   "driver": "_11399_ (NOR2x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08004_",
+   "driver": "_11445_ (OR3x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08024_",
+   "driver": "_11480_ (OR3x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08066_",
+   "driver": "_11551_ (OR2x2_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08071_",
+   "driver": "_11558_ (NOR2x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08186_",
+   "driver": "_11708_ (OR2x2_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08191_",
+   "driver": "_11715_ (NOR2x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08257_",
+   "driver": "_11816_ (OR2x2_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_08262_",
+   "driver": "_11823_ (NOR2x1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_02643_",
+   "driver": "\\cd[11]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_02641_",
+   "driver": "\\cd[13]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_02779_",
+   "driver": "\\u_join4.g_pipelined_join.u_join.low_capture_q[18]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 12,
+   "reset": 0,
+   "total": 12
+  },
+  {
+   "net": "_07891_",
+   "driver": "_11258_ (OR3x1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_07917_",
+   "driver": "_11300_ (OR3x1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_07939_",
+   "driver": "_11336_ (OR3x1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_07971_",
+   "driver": "_11390_ (OR3x1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_08064_",
+   "driver": "_11549_ (OR3x1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_08184_",
+   "driver": "_11706_ (OR3x1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_02842_",
+   "driver": "\\act$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_02640_",
+   "driver": "\\cd[14]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_02637_",
+   "driver": "\\cd[17]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_02840_",
+   "driver": "\\u_join4.g_reset.u_reset.sync_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "up0[0]",
+   "driver": "up0[0] (PORT)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "up1[0]",
+   "driver": "up1[0] (PORT)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "up2[0]",
+   "driver": "up2[0] (PORT)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "up3[0]",
+   "driver": "up3[0] (PORT)",
+   "data": 11,
+   "reset": 0,
+   "total": 11
+  },
+  {
+   "net": "_02642_",
+   "driver": "\\cd[12]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02639_",
+   "driver": "\\cd[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02638_",
+   "driver": "\\cd[16]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02636_",
+   "driver": "\\cd[18]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02635_",
+   "driver": "\\cd[19]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02653_",
+   "driver": "\\cd[1]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02634_",
+   "driver": "\\cd[20]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02633_",
+   "driver": "\\cd[21]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02632_",
+   "driver": "\\cd[22]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02631_",
+   "driver": "\\cd[23]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02688_",
+   "driver": "\\g_native32_calendar.g_segment[1].cw_off_q$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02683_",
+   "driver": "\\g_native32_calendar.g_segment[2].cw_off_q$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02678_",
+   "driver": "\\g_native32_calendar.g_segment[3].cw_off_q$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02668_",
+   "driver": "\\g_native32_calendar.g_segment[5].cw_off_q$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02663_",
+   "driver": "\\g_native32_calendar.g_segment[6].cw_off_q$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02658_",
+   "driver": "\\g_native32_calendar.g_segment[7].cw_off_q$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 10,
+   "reset": 0,
+   "total": 10
+  },
+  {
+   "net": "_02707_",
+   "driver": "\\g_reset.u_root.rst_n[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 10,
+   "total": 10
+  },
+  {
+   "net": "_07503_",
+   "driver": "_10672_ (OA211x2_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_07507_",
+   "driver": "_10677_ (OA211x2_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_07511_",
+   "driver": "_10682_ (OA211x2_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_07515_",
+   "driver": "_10687_ (OA211x2_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_08220_",
+   "driver": "_11764_ (OR2x2_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_05621_",
+   "driver": "_13364_ (OR4x1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_05648_",
+   "driver": "_13394_ (OR3x1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_05656_",
+   "driver": "_13407_ (OR3x1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_05694_",
+   "driver": "_13460_ (OR4x1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_05828_",
+   "driver": "_13669_ (OR3x1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_01061_",
+   "driver": "\\cd[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_02652_",
+   "driver": "\\cd[2]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_02651_",
+   "driver": "\\cd[3]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_02650_",
+   "driver": "\\cd[4]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_02649_",
+   "driver": "\\cd[5]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_02648_",
+   "driver": "\\cd[6]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_02647_",
+   "driver": "\\cd[7]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00165_",
+   "driver": "\\g_native32_calendar.g_segment[0].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00186_",
+   "driver": "\\g_native32_calendar.g_segment[1].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00129_",
+   "driver": "\\g_native32_calendar.g_segment[2].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00160_",
+   "driver": "\\g_native32_calendar.g_segment[3].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00213_",
+   "driver": "\\g_native32_calendar.g_segment[4].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00200_",
+   "driver": "\\g_native32_calendar.g_segment[5].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_00091_",
+   "driver": "\\g_native32_calendar.g_segment[7].count_q[3]$_SDFFE_PP0P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 9,
+   "reset": 0,
+   "total": 9
+  },
+  {
+   "net": "_08228_",
+   "driver": "_11773_ (OR3x1_ASAP7_75t_R)",
+   "data": 8,
+   "reset": 0,
+   "total": 8
+  },
+  {
+   "net": "_05644_",
+   "driver": "_13388_ (AND3x1_ASAP7_75t_R)",
+   "data": 8,
+   "reset": 0,
+   "total": 8
+  },
+  {
+   "net": "_05660_",
+   "driver": "_13412_ (OR3x1_ASAP7_75t_R)",
+   "data": 8,
+   "reset": 0,
+   "total": 8
+  },
+  {
+   "net": "_05723_",
+   "driver": "_13505_ (OR3x1_ASAP7_75t_R)",
+   "data": 8,
+   "reset": 0,
+   "total": 8
+  }
+ ]
+}

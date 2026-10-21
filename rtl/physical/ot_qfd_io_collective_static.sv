@@ -10,7 +10,16 @@
 // adjacent), LS = 362 + 2 R_max (board PHY 339; default R_max 7 = the compute lead's SerDes bound -> 376); faces nearer
 // than R_max pad their RX read slot in the IO calendar so every port lands at the one compiled LS.
 // Successor of qfd_io_collective (credit design, historical/diagnostic under 0ah).
-module qfd_io_collective_static (
+// Q-COLLCAL3 10-18: LU / LS are parameters (defaults = the OT_QFDS_LU / OT_QFDS_LS defines, unchanged 53 / 376) so the
+// die GEN can elaborate the compiled collective calendar (die.v.params.json LS = tools/qwen_split/lane_groups.collective_calendar:
+// LS >= KC + KW + 17 + PS + LX_j + R_j + R_peer(j) for every SerDes port j) through the production parent.
+`ifndef OT_QFDS_LU
+`define OT_QFDS_LU 53
+`endif
+`ifndef OT_QFDS_LS
+`define OT_QFDS_LS 376
+`endif
+module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter integer LS = `OT_QFDS_LS) (
     input  wire          clk,                   // parent root
     input  wire          clk_pfold0, clk_pfold1, clk_pfold2, clk_pfold3,
     input  wire          clk_xfold0, clk_xfold1, clk_xfold2, clk_xfold3,
@@ -52,13 +61,7 @@ module qfd_io_collective_static (
     output wire          sx0_peer_slot, sx1_peer_slot, sx2_peer_slot,
     output wire          cmd_free               // -> collective command issuer (fault check only)
 );
-`ifndef OT_QFDS_LU
-`define OT_QFDS_LU 53
-`endif
-`ifndef OT_QFDS_LS
-`define OT_QFDS_LS 376
-`endif
-    initial if (`OT_QFDS_LU + 2 > 64) $error("collective direct SRAM entries require a four-bank physical profile for LU>62");
+    initial if (LU + 2 > 64) $error("collective direct SRAM entries require a four-bank physical profile for LU>62");
     // Command pin boundary: the compiler issues one core cycle earlier than
     // the internal collective command calendar. Payload/link calendars retain
     // their original cycles. This extra command lead is paid explicitly.
@@ -67,7 +70,7 @@ module qfd_io_collective_static (
     (* keep *) reg [31:0] ct_pin;
     always @(posedge clk)begin cm_pin<=cmd_mode;cw_pin<=cmd_words;ct_pin<=cmd_tag;end
     always @(posedge clk or negedge rst_n)if(!rst_n)cv_pin<=0;else cv_pin<=cmd_v;
-    ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(`OT_QFDS_LU), .LS(`OT_QFDS_LS), .GC(8), .CCLK(1)) u_coll (
+    ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(LU), .LS(LS), .GC(8), .CCLK(1)) u_coll (
         .clk_mem({clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0}),
         .clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),
         .clk_xfold({clk_xfold3, clk_xfold2, clk_xfold1, clk_xfold0}),

@@ -1,0 +1,39 @@
+HOST_MU tb_qkd_ctrl8_composed rc=0 head: PASS CTRL8_COMPOSED checks=162 steps=40
+HOST_MU tb_qkd_host_ctl rc=0 new: PASS qkd_host_ctl exact checks=1375 starts=43 tokens=40 stale=320 drain=320
+HOST_MU tb_qkd_host_ctl rc=0 head: PASS qkd_host_ctl exact checks=1375 starts=43 tokens=40 stale=320 drain=320
+HOST_MU tb_qkd_ctrl8_composed rc=0 new: PASS CTRL8_COMPOSED checks=162 steps=40
+HOST_MU tb_qkd_host_control_prompt rc=0 head: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_control_capture rc=0 head: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent
+HOST_MU tb_qkd_host_control_prompt rc=0 new: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_control_role rc=0 head: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent
+HOST_MU tb_qkd_host_control_composed rc=0 new: PASS actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent
+HOST_MU tb_qkd_host_control_composed rc=0 head: PASS actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent
+HOST_MU tb_qkd_host_control_capture rc=0 new: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent
+HOST_MU tb_qkd_host_control_role rc=0 new: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent
+HOST_MU tb_qkd_host_fullcontrol rc=0 head: PASS full host FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_fullcontrol rc=0 new: PASS full host FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_prompt_packet rc=0 new: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_control_service rc=0 new: PASS service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent
+HOST_MU tb_qkd_host_fullcontrol_packet rc=0 head: PASS full actual HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_fullcontrol_packet rc=0 new: PASS full actual HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_program_loader rc=0 new: PASS program loader production1024pw8dw fixed1032cycles actual HC authorization staleauth rejection
+HOST_MU tb_qkd_host_prompt_packet rc=0 head: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4
+HOST_MU tb_qkd_host_program_loader rc=0 head: PASS program loader production1024pw8dw fixed1032cycles actual HC authorization staleauth rejection
+HOST_MU tb_qkd_host_control_service rc=0 head: PASS service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent
+HOST_MU tb_qkd_host_control_token_service rc=0 new: PASS token service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent
+HOST_MU tb_qkd_host_control_token_service rc=0 head: PASS token service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent
+HOST_MU tb_qkd_host_prompt_ue rc=0 new: PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075
+HOST_MU cm1 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop
+HOST_MU tb_qkd_host_ctl_mu rc=0 new: PASS qkd_host_ctl MU users4 steps400 in-order one-edge retire after all 8 dies, hc user=pos[17:16], max outstanding 4; faults die-skip/disagree/overflow/watchdog/unknown-gen fail closed and flush
+HOST_MU tb_qkd_host_mu_out rc=0 new: PASS host MU_OUT users4 steps18 CQ entries12 per-user in order (slot/tag/pos/token/ngen/kind), hc user=pos[17:16], max outstanding 4, no fault
+HOST_MU tb_qkd_host_prompt_ue rc=0 head: PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075
+HOST_MU cm2 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop
+HOST_MU cm4 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop
+HOST_MU cm3 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv:147: Verilog $stop
+HOST_MU hm1 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop
+HOST_MU hm2 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop
+HOST_MU hm4 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop
+HOST_MU hm3 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop
+HOST_MU rm1 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_kv_mu_rowoff.sv:79: Verilog $stop
+HOST_MU tb_qkd_kv_mu_rowoff rc=0 new: PASS users4 x stages36 x positions8192 identities1179648 sectors9437184 unique-addresses9437184 alias0 inverse{user,layer,pos,kind,dim}+raw256 exact; read rows 576/1728 commands, tag row[7:0]-64=layer, embedding/go/write unchanged; MU0 wires
+HOST_MU rm2 rc=1 new: %Error: rtl/test/mu_qwen_1018/tb_qkd_kv_mu_rowoff.sv:94: Verilog $stop

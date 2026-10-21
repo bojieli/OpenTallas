@@ -42,9 +42,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
+import placement_coverage
+from grant_slot_bind import resolve_slot
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
+from die_safety import m8 as die_m8  # noqa: E402  (ROOT14 10-20: M8 die-signal RC model)
 from die_repeaters import step as die_repeaters_step  # noqa: E402
 import die_hold_budget  # noqa: E402
 
@@ -352,6 +355,8 @@ def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
+    ap.add_argument('--require-explicit-placement', action='store_true',
+                    help='refuse absent homes and generic centroid fallback; source-complete release admission')
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     ap.add_argument('--die-repeaters', action='store_true',
@@ -378,6 +383,9 @@ def main():
     ap.add_argument('--clock-region-max-um', type=float, default=4000.0,
                     help="regional: two regions joined by a communicating entry pair within --clock-near-um are merged "
                          "when the merged sink box stays within this side (adjacent communicating tiles share a root)")
+    ap.add_argument('--signal-top-layer', default='M9', choices=('M7', 'M8', 'M9'),
+                    help='die signal routing top layer (routing M4-<top>); M8/M9 -> STA wire RC + repeater RC on M8 '
+                         '(tools/die_safety/m8.py, ROOT14 10-20)')
     ap.add_argument('--clock-near-um', type=float, default=405.0, help='regional: near-pair distance (measured reach)')
     ap.add_argument('--diagnostic-param-alias', action='store_true',
                     help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
@@ -508,12 +516,7 @@ def main():
 
     # ---------------- outlines of SYNTH cells ----------------
     def eslot(n):
-        s = I[n].get('slot')
-        if s:
-            return s
-        if n in slots or (n in P and isinstance(P[n], dict) and 'x' in P[n]):
-            return n
-        return None
+        return resolve_slot(n, I[n], slots, P, slot_map.get(n))
     slot_users = defaultdict(list)
     for n in inst:
         s = eslot(n)
@@ -1078,9 +1081,12 @@ def main():
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
     exposed = C.get('exposed_inputs', {})
+    # Legacy contract layers sometimes preserved the exposed-input keys as a list.  That is not a numerical
+    # summary; retain unknown counts in the diagnostic label instead of crashing after all placement work.
+    exposed_summary = exposed if isinstance(exposed, dict) else {}
     manifest = dict(schema='opentallas.hbm_v16.die_case.v1',
-                    label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
-                          f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
+                    label=f"NOT_A_DIE_RESULT (source contract has {exposed_summary.get('ports', 'unknown')} exposed "
+                          f"input ports / {exposed_summary.get('bits', 'unknown')} b; SYNTH views are estimates; "
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags, reticle=RETICLE,
                     excluded_cells=excluded, excluded_instances=out_inst,
@@ -1092,6 +1098,13 @@ def main():
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
                     routed_view_qualification='All routed candidates are source/native UNBOUND; matching ports alone cannot qualify them.',
                     placement=pl, sm_mx_s_quadrant=sm_mx, carved_feedthrough=carved, in_carved_channel=in_channel, corners='setup TT, hold FF (owner option B); SS not run')
+    placement_gate = placement_coverage.audit(manifest, C)
+    manifest['placement_coverage'] = placement_gate
+    (out / 'placement_coverage.json').write_text(json.dumps(placement_gate, indent=1) + '\n')
+    print('placement_coverage', json.dumps({k: v for k, v in placement_gate.items() if k != 'rows'}), flush=True)
+    if a.require_explicit_placement and placement_gate['verdict'] != 'PASS':
+        (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
+        raise SystemExit('PLACEMENT_COVERAGE_FAIL: give every actual source instance an explicit legal home')
     # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
     # A source path alone cannot establish lineage after another branch changes a view.
     digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -1307,10 +1320,10 @@ source {plat}/setRC.tcl
 set blk [ord::get_db_block]
 foreach n [$blk getNets] {{ if {{[string match dk?_* [$n getName]] || [string match n_dk?_* [$n getName]] || [string match ckg_pll_* [$n getName]]}} {{ $n setSigType CLOCK }} }}
 set_wire_rc -clock -layer M8
-set_wire_rc -signal -layer M6
-set_routing_layers -signal M4-M9 -clock M7-M9
+set_wire_rc -signal -layer {die_m8.model(a.signal_top_layer)['sta_wire_rc_layer']}
+set_routing_layers -signal M4-{a.signal_top_layer} -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M9 0.146
+set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.146
 {{REPEAT}}
 set t0 [clock seconds]
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
@@ -1383,7 +1396,8 @@ puts OT_DONE
         die_repeaters_step.copy(out)
     rep_call = (die_reach.repair_tcl(mw, '-buffer_gain 4.0') if a.legacy_die_repeaters else
                 die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
-                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um).rstrip())
+                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um,
+                                            signal_top_layer=a.signal_top_layer).rstrip())
     rep_ = '' if not a.die_repeaters else f'''{clocks}
 {groups}
 estimate_parasitics -placement

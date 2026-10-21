@@ -1,0 +1,404 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/home/ubuntu/scratch/codex-smb-l15-1019/l15_interface_unit.v",
+ "top": "l15_interface_unit",
+ "verdict": "FAIL",
+ "failing": [
+  "width_mismatch",
+  "unparsed_connections",
+  "unresolved_children"
+ ],
+ "summary": {
+  "masters": 3,
+  "instances": 3,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 25,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 93,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0,
+  "pad_bits": 0,
+  "spare_out_bits": 0,
+  "unresolved_children": 3,
+  "ambiguous_children": 0,
+  "variant_children": 0
+ },
+ "masters": {
+  "ot_hbm_svc_sm_group_rel_id": {
+   "verdict": "FAIL",
+   "fails": [
+    "WIDTH_MISMATCH",
+    "UNPARSED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "svg_SW0"
+   ],
+   "param_sets": {
+    "{\"DD\": \"256\", \"IDW\": \"9\", \"LBANKS\": \"4\", \"NID\": \"6\", \"PAW\": \"11\", \"PREL\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {
+    "expected_request": [
+     [
+      1,
+      43
+     ]
+    ],
+    "fm": [
+     [
+      1,
+      12
+     ]
+    ],
+    "k_addr": [
+     [
+      1,
+      120
+     ]
+    ],
+    "k_len": [
+     [
+      1,
+      16
+     ]
+    ],
+    "k_tag": [
+     [
+      1,
+      68
+     ]
+    ],
+    "k_v": [
+     [
+      1,
+      4
+     ]
+    ],
+    "k_wdata": [
+     [
+      1,
+      1024
+     ]
+    ],
+    "k_we": [
+     [
+      1,
+      4
+     ]
+    ],
+    "k_wstrb": [
+     [
+      1,
+      128
+     ]
+    ],
+    "kr_rdy": [
+     [
+      1,
+      4
+     ]
+    ],
+    "lb0": [
+     [
+      1,
+      570
+     ]
+    ],
+    "lb1": [
+     [
+      1,
+      570
+     ]
+    ],
+    "lt0": [
+     [
+      1,
+      1082
+     ]
+    ],
+    "lt1": [
+     [
+      1,
+      1082
+     ]
+    ],
+    "sm_command": [
+     [
+      1,
+      83
+     ]
+    ],
+    "sm_packet": [
+     [
+      1,
+      1099
+     ]
+    ]
+   },
+   "unparsed_conn": [
+    "desc_addr",
+    "desc_data",
+    "desc_we",
+    "expected_request",
+    "fault",
+    "fm",
+    "hbm_clk",
+    "hbm_fifo_clk",
+    "hbm_pc_clk",
+    "hbm_rst_n",
+    "id_sm",
+    "id_stack",
+    "ids",
+    "ids_layer",
+    "ids_v",
+    "k_addr",
+    "k_len",
+    "k_rdy",
+    "k_tag",
+    "k_v",
+    "k_wdata",
+    "k_we",
+    "k_wr_done",
+    "k_wstrb",
+    "kr_beat",
+    "kr_data",
+    "kr_rdy",
+    "kr_tag",
+    "kr_v",
+    "lb0",
+    "lb1",
+    "lt0",
+    "lt1",
+    "program_active",
+    "program_cfg_addr",
+    "program_cfg_data",
+    "program_cfg_we",
+    "run_base",
+    "run_count",
+    "run_done"
+   ],
+   "duplicate_port": []
+  },
+  "ot_hbm_svc_sm_xcal_rel_t": {
+   "verdict": "FAIL",
+   "fails": [
+    "WIDTH_MISMATCH",
+    "UNPARSED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "xc_SW0"
+   ],
+   "param_sets": {
+    "{\"DD\": \"256\", \"PAW\": \"11\", \"PREL\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {
+    "cmd_ext": [
+     [
+      1,
+      109
+     ]
+    ],
+    "kv_desc": [
+     [
+      1,
+      64
+     ]
+    ]
+   },
+   "unparsed_conn": [
+    "active",
+    "cfg_addr",
+    "cfg_data",
+    "cfg_target",
+    "cfg_v",
+    "clk",
+    "cmd_ext",
+    "configured",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "desc_v",
+    "done",
+    "fault",
+    "kv_desc",
+    "launch_v",
+    "rst_n",
+    "tgt"
+   ],
+   "duplicate_port": []
+  },
+  "ot_static_run_target": {
+   "verdict": "FAIL",
+   "fails": [
+    "WIDTH_MISMATCH",
+    "UNPARSED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "cp_svg_SW0"
+   ],
+   "param_sets": {
+    "{\"AWA\": \"11\", \"AWB\": \"8\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"8\", \"RCW\": \"9\", \"RSYNC\": \"1\", \"TGT_PIN\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {
+    "a_addr": [
+     [
+      1,
+      11
+     ]
+    ],
+    "a_data": [
+     [
+      1,
+      256
+     ]
+    ],
+    "b_addr": [
+     [
+      1,
+      8
+     ]
+    ],
+    "b_data": [
+     [
+      1,
+      256
+     ]
+    ],
+    "run_arg": [
+     [
+      1,
+      8
+     ]
+    ],
+    "run_base": [
+     [
+      1,
+      8
+     ]
+    ],
+    "run_count": [
+     [
+      1,
+      9
+     ]
+    ]
+   },
+   "unparsed_conn": [
+    "a_addr",
+    "a_data",
+    "a_we",
+    "active",
+    "b_addr",
+    "b_data",
+    "b_we",
+    "cfg_addr",
+    "cfg_data",
+    "cfg_target",
+    "cfg_v",
+    "clk",
+    "configured",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "desc_v",
+    "fault",
+    "launch_v",
+    "rst_n",
+    "run_arg",
+    "run_base",
+    "run_count",
+    "run_v",
+    "tgt",
+    "tgt_active",
+    "tgt_fault"
+   ],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_bit_ranges": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 9,
+  "unresolved_children": {
+   "ot_hbm_svc_sm4pc_cdc_rel_id": [
+    "ot_hbm_svc_sm_feed_programmed_rel_id"
+   ],
+   "ot_hbm_svc_static_sm_packed136": [
+    "ot_hbm_svc_sm_feed_programmed_rel_id"
+   ],
+   "ot_smh_static_feed": [
+    "ot_hbm_svc_sm_feed_programmed_rel_id"
+   ]
+  },
+  "model_children": {},
+  "variant_children": {},
+  "ambiguous_children": {},
+  "elab_traps": {},
+  "prefer_lists": [],
+  "ref_tile_specs_used": []
+ },
+ "pads_declared": [],
+ "die_sha256": "0a6d9656195abc4374ef387bc3b5997aa6deb1ca07ca75fd559321161f7599dd",
+ "straps_declared": [],
+ "params_file": null,
+ "rtl_roots": [
+  "/nonexistent",
+  "physical/asap7_memory_macros"
+ ],
+ "rtl_files": [
+  "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv"
+ ],
+ "defines": []
+}

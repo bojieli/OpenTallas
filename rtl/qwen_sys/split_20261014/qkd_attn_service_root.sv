@@ -17,9 +17,16 @@
 //    after PV_START_AGE (the service would never fire start_pv; an early start would land after the token), cannot be
 //    met and raises local_fault (never stretches the timeline).  ctx / ep are held from the accept edge to the next accept, so they ride the same relay.
 // No credit, ready or completion signal moves any slot (static cycle schedule).
-// MUT (diagnostic, bench only): 1 = start_pv one edge late, 2 = ctx = position (not position+1).
+// KV-ATTNKIT 10-18: CAL_PIPE=1 (die knob OT_KV_ATTN_LAND; kit qkd_kvs_attn-g1 failed request_calendar -> end_t, ~25
+// levels: a 3-way 16-bit max and two adds in one edge).  The calendar fields are piped one edge ahead of the accept:
+// PV_START and max(P0, P1, R) are registered every edge from request_calendar, and the accept edge adds them.  Exact
+// whenever request_calendar[175:112] is the same on the accept edge and the one before -- the programme's calendar is
+// its static_ctl 'cal' register, loaded on 'load' >= 3 edges before any request; a moved calendar raises local_fault.
+// MUT (diagnostic, bench only): 1 = start_pv one edge late, 2 = ctx = position (not position+1), 3 = CAL_PIPE without
+// the moved-calendar check.
 module qkd_attn_service_root #(
  parameter integer PV_LEAD=0,
+ parameter integer CAL_PIPE=0,
  parameter integer MUT=0
 )(
  input wire ck,rst_n,
@@ -43,9 +50,13 @@ module qkd_attn_service_root #(
  wire [15:0] rq_pv=request_calendar[127:112],rq_p0=request_calendar[143:128];
  wire [15:0] rq_p1=request_calendar[159:144],rq_r=request_calendar[175:160];
  wire [15:0] rq_last=(rq_p0>rq_p1)?((rq_p0>rq_r)?rq_p0:rq_r):((rq_p1>rq_r)?rq_p1:rq_r);
- wire [15:0] rq_end_m1=rq_pv+rq_last+16'd48;            // END_AGE-1 = PV_START + LAST_CAPTURE + 16 + 33 - 1 (16-bit wrap)
+ reg [15:0] cp_pv,cp_last;reg [63:0] cp_cal;            // CAL_PIPE: the fields one edge ahead of the accept
+ always @(posedge ck)begin cp_pv<=rq_pv;cp_last<=rq_last;cp_cal<=request_calendar[175:112];end
+ wire [15:0] u_pv=(CAL_PIPE!=0)?cp_pv:rq_pv,u_last=(CAL_PIPE!=0)?cp_last:rq_last;
+ wire cal_moved=CAL_PIPE!=0&&MUT!=3&&cp_cal!=request_calendar[175:112];
+ wire [15:0] rq_end_m1=u_pv+u_last+16'd48;              // END_AGE-1 = PV_START + LAST_CAPTURE + 16 + 33 - 1 (16-bit wrap)
  localparam integer PV_SUB=1+PV_LEAD-((MUT==1)?1:0);
- wire [16:0] rq_pv_t={1'b0,rq_pv}-17'(PV_SUB);          // < 0 wraps above 16'hffff: never reached
+ wire [16:0] rq_pv_t={1'b0,u_pv}-17'(PV_SUB);           // < 0 wraps above 16'hffff: never reached
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin boot_count<=0;running<=0;start_qk<=0;start_pv<=0;age<=0;ep<=0;layer<=0;ctx<=0;cal<=0;
    local_fault<=0;io_fault<=0;cycles<=0;pv_t<=17'h1ffff;end_t<=17'h1ffff;end
@@ -60,7 +71,8 @@ module qkd_attn_service_root #(
    if(q_window&&q_valid&&q_beat!=5'(age-1))io_fault<=1;
    if(request_valid&&request_ready)begin
     if(!fused_program_capability||request_position>8191)local_fault<=1;
-    if(PV_LEAD>0&&(rq_pv<=16'(PV_LEAD)||(rq_end_m1!=16'hffff&&rq_pv>rq_end_m1)))local_fault<=1;
+    if(PV_LEAD>0&&(u_pv<=16'(PV_LEAD)||(rq_end_m1!=16'hffff&&u_pv>rq_end_m1)))local_fault<=1;
+    if(cal_moved)local_fault<=1;
     ep<=request_epoch;layer<=request_layer;ctx<=(MUT==2)?14'(request_position):14'(request_position+1);
     cal<=request_calendar;pv_t<=rq_pv_t;end_t<={rq_end_m1==16'hffff,rq_end_m1};
     running<=1;start_qk<=1;age<=0;cycles<=0;

@@ -14,6 +14,10 @@ foreach p [lsort -dictionary -index 0 $ot_ref_l] {
   set i [lindex $p 1]; dict lappend ot_ref_by [[$i getMaster] getName] $i
 }
 set ot_ref_used {}
+proc ot_ref_wrapped_match {sp n} {
+  if {![regsub {^u_ot_pr_core[./]} $n {} c]} { return 0 }
+  return [expr {$sp eq $c || [string match $sp $c]}]
+}
 proc ot_ref_pick {by master pat} {
   upvar ot_ref_used used
   if {![dict exists $by $master]} { error "ref_tile place: no instance of $master in the netlist" }
@@ -22,7 +26,7 @@ proc ot_ref_pick {by master pat} {
     if {[lsearch -exact $used $n] >= 0} continue
     set sp [ot_ref_strip $pat]
     # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
-    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n] && ![ot_ref_wrapped_match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"

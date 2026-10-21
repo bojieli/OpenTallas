@@ -1,0 +1,523 @@
+{
+ "schema": "opentallas.cb16.safe_parent_plan.v1",
+ "source": "ac8e4c483",
+ "diagnostic_only": true,
+ "candidates": [
+  {
+   "outline_um": {
+    "w": 2808.0,
+    "h": 5227.2
+   },
+   "area_mm2": 14.677978,
+   "area_ratio": 1.14841,
+   "aspect": 1.86154,
+   "tile_origins_x_um": [
+    129.6,
+    820.8000000000001,
+    1512.0,
+    2203.2000000000003
+   ],
+   "inner_corridor_um": 233.28,
+   "clock_region_seams_x_um": [
+    723.6,
+    1414.8000000000002,
+    2106.0000000000005
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 129.6,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 253,
+   "unplaced": 160,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 49,
+   "crossing_more_than_2x405_um": 16,
+   "provisional_capture_relay_debt": 14,
+   "provisional_output_relay_debt": 6
+  },
+  {
+   "outline_um": {
+    "w": 3067.2,
+    "h": 5227.2
+   },
+   "area_mm2": 16.032868,
+   "area_ratio": 1.254417,
+   "aspect": 1.70423,
+   "tile_origins_x_um": [
+    129.6,
+    907.2,
+    1684.8,
+    2462.4
+   ],
+   "inner_corridor_um": 319.68,
+   "clock_region_seams_x_um": [
+    723.6,
+    1501.2,
+    2278.8
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 129.6,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 339,
+   "unplaced": 74,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 37,
+   "crossing_more_than_2x405_um": 12,
+   "provisional_capture_relay_debt": 31,
+   "provisional_output_relay_debt": 14
+  },
+  {
+   "outline_um": {
+    "w": 3326.4,
+    "h": 5227.2
+   },
+   "area_mm2": 17.387758,
+   "area_ratio": 1.360424,
+   "aspect": 1.57143,
+   "tile_origins_x_um": [
+    129.6,
+    993.6,
+    1857.6,
+    2721.6
+   ],
+   "inner_corridor_um": 406.08,
+   "clock_region_seams_x_um": [
+    723.6,
+    1587.6,
+    2451.6000000000004
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 129.6,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 377,
+   "unplaced": 36,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 32,
+   "crossing_more_than_2x405_um": 15,
+   "provisional_capture_relay_debt": 27,
+   "provisional_output_relay_debt": 17
+  },
+  {
+   "outline_um": {
+    "w": 3585.6,
+    "h": 5227.2
+   },
+   "area_mm2": 18.742648,
+   "area_ratio": 1.466431,
+   "aspect": 1.45783,
+   "tile_origins_x_um": [
+    129.6,
+    1080.0,
+    2030.3999999999999,
+    2980.7999999999997
+   ],
+   "inner_corridor_um": 492.48,
+   "clock_region_seams_x_um": [
+    723.6,
+    1674.0,
+    2624.4000000000005
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 129.6,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 413,
+   "unplaced": 0,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 17,
+   "provisional_capture_relay_debt": 30,
+   "provisional_output_relay_debt": 18
+  },
+  {
+   "outline_um": {
+    "w": 3844.8,
+    "h": 5227.2
+   },
+   "area_mm2": 20.097539,
+   "area_ratio": 1.572438,
+   "aspect": 1.35955,
+   "tile_origins_x_um": [
+    129.6,
+    1166.3999999999999,
+    2203.2,
+    3239.9999999999995
+   ],
+   "inner_corridor_um": 578.88,
+   "clock_region_seams_x_um": [
+    723.6,
+    1760.3999999999999,
+    2797.2000000000003
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 129.6,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 413,
+   "unplaced": 0,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 17,
+   "provisional_capture_relay_debt": 27,
+   "provisional_output_relay_debt": 12
+  },
+  {
+   "outline_um": {
+    "w": 4104.0,
+    "h": 5227.2
+   },
+   "area_mm2": 21.452429,
+   "area_ratio": 1.678445,
+   "aspect": 1.27368,
+   "tile_origins_x_um": [
+    129.6,
+    1252.8,
+    2376.0,
+    3499.2000000000003
+   ],
+   "inner_corridor_um": 665.28,
+   "clock_region_seams_x_um": [
+    723.6,
+    1846.8,
+    2970.0000000000005
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 129.6,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 413,
+   "unplaced": 0,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 16,
+   "provisional_capture_relay_debt": 24,
+   "provisional_output_relay_debt": 11
+  },
+  {
+   "outline_um": {
+    "w": 2808.0,
+    "h": 5227.2
+   },
+   "area_mm2": 14.677978,
+   "area_ratio": 1.14841,
+   "aspect": 1.86154,
+   "tile_origins_x_um": [
+    129.6,
+    820.8000000000001,
+    1512.0,
+    2203.2000000000003
+   ],
+   "inner_corridor_um": 233.28,
+   "clock_region_seams_x_um": [
+    723.6,
+    1414.8000000000002,
+    2106.0000000000005
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 103.68,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 306,
+   "unplaced": 107,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 44,
+   "crossing_more_than_2x405_um": 16,
+   "provisional_capture_relay_debt": 17,
+   "provisional_output_relay_debt": 24
+  },
+  {
+   "outline_um": {
+    "w": 3067.2,
+    "h": 5227.2
+   },
+   "area_mm2": 16.032868,
+   "area_ratio": 1.254417,
+   "aspect": 1.70423,
+   "tile_origins_x_um": [
+    129.6,
+    907.2,
+    1684.8,
+    2462.4
+   ],
+   "inner_corridor_um": 319.68,
+   "clock_region_seams_x_um": [
+    723.6,
+    1501.2,
+    2278.8
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 103.68,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 391,
+   "unplaced": 22,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 26,
+   "crossing_more_than_2x405_um": 10,
+   "provisional_capture_relay_debt": 29,
+   "provisional_output_relay_debt": 23
+  },
+  {
+   "outline_um": {
+    "w": 3326.4,
+    "h": 5227.2
+   },
+   "area_mm2": 17.387758,
+   "area_ratio": 1.360424,
+   "aspect": 1.57143,
+   "tile_origins_x_um": [
+    129.6,
+    993.6,
+    1857.6,
+    2721.6
+   ],
+   "inner_corridor_um": 406.08,
+   "clock_region_seams_x_um": [
+    723.6,
+    1587.6,
+    2451.6000000000004
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 103.68,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 406,
+   "unplaced": 7,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 7,
+   "provisional_capture_relay_debt": 20,
+   "provisional_output_relay_debt": 16
+  },
+  {
+   "outline_um": {
+    "w": 3585.6,
+    "h": 5227.2
+   },
+   "area_mm2": 18.742648,
+   "area_ratio": 1.466431,
+   "aspect": 1.45783,
+   "tile_origins_x_um": [
+    129.6,
+    1080.0,
+    2030.3999999999999,
+    2980.7999999999997
+   ],
+   "inner_corridor_um": 492.48,
+   "clock_region_seams_x_um": [
+    723.6,
+    1674.0,
+    2624.4000000000005
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 103.68,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 413,
+   "unplaced": 0,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 8,
+   "provisional_capture_relay_debt": 13,
+   "provisional_output_relay_debt": 9
+  },
+  {
+   "outline_um": {
+    "w": 3844.8,
+    "h": 5227.2
+   },
+   "area_mm2": 20.097539,
+   "area_ratio": 1.572438,
+   "aspect": 1.35955,
+   "tile_origins_x_um": [
+    129.6,
+    1166.3999999999999,
+    2203.2,
+    3239.9999999999995
+   ],
+   "inner_corridor_um": 578.88,
+   "clock_region_seams_x_um": [
+    723.6,
+    1760.3999999999999,
+    2797.2000000000003
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 103.68,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 413,
+   "unplaced": 0,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 11,
+   "provisional_capture_relay_debt": 14,
+   "provisional_output_relay_debt": 8
+  },
+  {
+   "outline_um": {
+    "w": 4104.0,
+    "h": 5227.2
+   },
+   "area_mm2": 21.452429,
+   "area_ratio": 1.678445,
+   "aspect": 1.27368,
+   "tile_origins_x_um": [
+    129.6,
+    1252.8,
+    2376.0,
+    3499.2000000000003
+   ],
+   "inner_corridor_um": 665.28,
+   "clock_region_seams_x_um": [
+    723.6,
+    1846.8,
+    2970.0000000000005
+   ],
+   "landing_child": {
+    "w": 64.8,
+    "h": 103.68,
+    "bank_faces": "W/E each516b, a/q N/S258b",
+    "peak_pins_per_um": 4.049
+   },
+   "hard_candidates": 413,
+   "placed": 413,
+   "unplaced": 0,
+   "reset_hardening_blocker": {
+    "count": 547,
+    "existing_depth_edges": 19,
+    "target_hop_um": 315,
+    "required": "pack regional reset relay children, two face stages; no soft root sinks at parent gate"
+   },
+   "macro_channels_um": 20.0,
+   "lattice_um": 43.2,
+   "release_ready": false,
+   "unresolved_hop_endpoints": 25,
+   "crossing_more_than_2x405_um": 15,
+   "provisional_capture_relay_debt": 12,
+   "provisional_output_relay_debt": 8
+  }
+ ]
+}

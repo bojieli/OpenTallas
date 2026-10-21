@@ -94,7 +94,23 @@ fi
 IR=SKIPPED_NO_PDN
 grep -qiE 'pdngen|analyze_power_grid' $W/run.tcl $G/run.tcl 2>/dev/null && IR=PDN_IN_CASE_IR_NOT_WIRED
 [ -d $D/pdn_$V ] && IR="PDN_CASE_PRESENT_NOT_RUN:$D/pdn_$V"
+# ROOT14 10-20: the shared die IR-drop step (tools/die_safety/ir_step.sh: die-grid windows, M8+M9 straps, GRT M8 usage)
+# on the GRT-of-record odb; FAIL / NOT_RUN -> OWNER_REPORT line (coordinator tells the owner) and post_grt exit 1
+IR_RC=1
+IR_ODB_FOUND=0
+for O in $G/out/grt.odb $G/grt.odb $G/ckpt_grt.odb; do
+  [ -s $O ] || continue
+  IR_ODB_FOUND=1
+  IR_RC=0
+  OT_IR_DESIGN=hbm bash $SRC/tools/die_safety/ir_step.sh $O $D/ir_drop_$V $G/grt.log > $D/ir_drop_$V.log 2>&1 || IR_RC=1
+  IR="$(grep -E '^DIE_IR_DROP ' $D/ir_drop_$V.log | tail -1 | cut -c1-300)"; break
+done
+if [ "$IR_ODB_FOUND" = 0 ]; then
+  IR="DIE_IR_DROP NOT_RUN: no GRT-of-record odb in $G"
+  printf '%s\n' "$IR" "OWNER_REPORT die IR-drop NOT_RUN: no GRT-of-record odb in $G" > "$D/ir_drop_$V.log"
+fi
 say "ir: $IR"
+[ $IR_RC = 0 ] || say "$(grep -E '^OWNER_REPORT ' $D/ir_drop_$V.log | tail -1)"
 
 # ---- 6 summary + README row ----
 python3 - "$W" "$B/detour.json" "$S" "$IR" "$G" "$CLKPIN" "$V" "$R" "$(cat $SRC/SOURCE_COMMIT 2>/dev/null)" <<'EOF'
@@ -150,3 +166,4 @@ open(f'{rdir}/README_row.md', 'w').write(hdr + row + '\n')
 print(row)
 EOF
 say "summary $S ; README row $R/README_row.md (collect into results/physical/die_iter_1012/r25gq/)"
+[ "${IR_RC:-0}" = 0 ] || { say "FAIL: die IR-drop check (OWNER REPORT)"; exit 1; }

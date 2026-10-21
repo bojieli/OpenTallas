@@ -1,0 +1,60 @@
+{
+  "tt": {
+    "wns_ps": {
+      "setup": 140.9571348531813,
+      "hold": 34.54639352362676
+    },
+    "max_launch_ps": [
+      114.66305999999997,
+      "fdi_tx_flit[470]"
+    ],
+    "max_capture_ps": [
+      82.29086000000001,
+      "cal_start_rx"
+    ],
+    "comb_pins": [],
+    "clock_refs": {
+      "ck": {
+        "rise": 327.0,
+        "fall": 355.37425,
+        "min": 284.33109,
+        "max": 373.83841,
+        "src": "insertion.json child_flop boundary mean",
+        "bmin": 311.5,
+        "bmax": 350.7,
+        "n": 3686
+      }
+    },
+    "library_sha256": "5fca9596843aaddf9623d3bfbec26f8e0d35c40d575f7d7e1aac1bc9afc5462c",
+    "scope": "Placement-RC diagnostic at own CTS reference, no routed or parent-native qualification."
+  },
+  "ff": {
+    "wns_ps": {
+      "setup": 296.92032166295235,
+      "hold": 28.836294463374657
+    },
+    "max_launch_ps": [
+      80.20965999999999,
+      "fdi_tx_flit[450]"
+    ],
+    "max_capture_ps": [
+      63.84321000000003,
+      "cal_start_rx"
+    ],
+    "comb_pins": [],
+    "clock_refs": {
+      "ck": {
+        "rise": 265.1,
+        "fall": 278.80813500000005,
+        "min": 224.5208,
+        "max": 308.06424,
+        "src": "insertion.json child_flop boundary mean",
+        "bmin": 250.4,
+        "bmax": 286.2,
+        "n": 3686
+      }
+    },
+    "library_sha256": "a8a7f3ff68e7bdaab3927eef575284e95dce5f362620959bd1500788729c77c6",
+    "scope": "Placement-RC diagnostic at own CTS reference, no routed or parent-native qualification."
+  }
+}

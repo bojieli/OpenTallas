@@ -31,7 +31,8 @@
 // names u_control / L[b].u_bank, same wiring); only the reset nets differ.
 module ot_hgi_dma_back_static_vp4_banks_rs #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
-    parameter integer MUT=0
+    parameter integer MUT=0,
+    parameter integer RR_RT=7
 )(
     input wire clk,
     input wire rst_ctl_n,
@@ -58,26 +59,28 @@ module ot_hgi_dma_back_static_vp4_banks_rs #(
     input wire [11:0] wa
 );
     wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
-    wire [6:0] bank_read_slot,bank_write_slot;
+    wire [6:0] rslot_s,rslot_w,rslot_n,wslot_s,wslot_w,wslot_n;   // per bank-group copies (S 0-2, W 3-4, N 5-7)
     wire [255:0] bank_read_addr;
 `ifdef OT_DBK_HARD
     ot_hgi_dma_back_static_vp4_controller u_control(
 `else
-    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_control(
+    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT)) u_control(
 `endif
         .clk(clk),.rst_n(rst_ctl_n),.stk(stk),.cycle_in(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
         .mv_wb_bank(mv_wb_bank),.mv_wb_epoch(mv_wb_epoch),.mv_src(mv_src),.mv_done(mv_done),.mv_fault(mv_fault),
         .quiet(quiet),.busy(busy),.rq(rq),.wb_reserve_v(wb_reserve_v),.wb_reserve_bank(wb_reserve_bank),
         .wb_fill_bank(wb_fill_bank),.wb_reserve_epoch(wb_reserve_epoch),.wb_fill_epoch(wb_fill_epoch),
         .wb_reserve_sectors(wb_reserve_sectors),.wb_reserve_base(wb_reserve_base),.wb_fill_start(wb_fill_start),
-        .wb_ready(wb_ready),.wa(wa),.rr_valid_i(rr_valid_i),.bank_read_en(bank_read_en),.bank_read_slot(bank_read_slot),
-        .bank_write_slot(bank_write_slot),.bank_output_en(bank_output_en),.bank_read_addr(bank_read_addr));
+        .wb_ready(wb_ready),.wa(wa),.rr_valid_i(rr_valid_i),.bank_read_en(bank_read_en),
+        .bank_read_slot_s(rslot_s),.bank_read_slot_w(rslot_w),.bank_read_slot_n(rslot_n),
+        .bank_write_slot_s(wslot_s),.bank_write_slot_w(wslot_w),.bank_write_slot_n(wslot_n),.bank_output_en(bank_output_en),
+        .bank_read_addr_s(bank_read_addr[95:0]),.bank_read_addr_w(bank_read_addr[159:96]),.bank_read_addr_n(bank_read_addr[255:160]));
     for(genvar b=0;b<8;b=b+1)begin:L
         assign rr_valid_i[b]=rr[b*257+256];
         ot_hgi_dma_back_landing_bank u_bank(
             .clk(clk_bank[b]),.rst_n(rst_bank_n[b]),
-            .read_en(bank_read_en[b]),.read_slot(bank_read_slot),
-            .write_en(rr_valid_i[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
+            .read_en(bank_read_en[b]),.read_slot(b<3?rslot_s:b<5?rslot_w:rslot_n),
+            .write_en(rr_valid_i[b]),.write_slot(b<3?wslot_s:b<5?wslot_w:wslot_n),.rr_data(rr[b*257+:256]),
             .read_addr(bank_read_addr[b*32+:32]),.output_en(bank_output_en[b]),.wd(wd[b*289+:289]));
     end
 endmodule
@@ -86,7 +89,11 @@ module ot_hgi_dma_back_static_vp4_banks_cp #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
     parameter integer MUT=0,     // DMA bench mutants pass through (simulation only)
     parameter integer CP_MUT=0,  // 1: wrong command slice (bench negative control)
-    parameter integer RST_MUT=0  // 1: controller reset straight from the port (bench negative control)
+    parameter integer RST_MUT=0, // 1: controller reset straight from the port (bench negative control)
+    // HBM-BANKLAT-DMA 10-19: VM read round trip at the controller pins (rq launch -> rr launch, edges, all 8 banks;
+    // the die pads the short rq lanes). Default 7 = closed behaviour; d4g budget 80. Under OT_DBK_HARD the controller
+    // is the hard view kitted with this value (its PARAMS), so the parent takes no override there.
+    parameter integer RR_RT=7
 )(
     input wire clk,rst_n,
     input wire clk_cp,              // collar leaf clock pin (related, same die clock as clk)
@@ -134,7 +141,7 @@ module ot_hgi_dma_back_static_vp4_banks_cp #(
 `ifdef OT_DBK_HARD
     ot_hgi_dma_back_static_vp4_banks_rs u_dbk(
 `else
-    ot_hgi_dma_back_static_vp4_banks_rs #(.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_dbk(
+    ot_hgi_dma_back_static_vp4_banks_rs #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT)) u_dbk(
 `endif
         .clk(clk),.rst_ctl_n(rst_ctl_n),.rst_bank_n(rst_bk_n[7:0]),.stk(stk),.clk_bank(clk_bank),.cycle(cycle),
         .mv_v(cmd_v),.mv((CP_MUT==1)?cmd[291:65]:cmd[290:64]),.issue_at(cmd[31:0]),.drain_at(cmd[63:32]),

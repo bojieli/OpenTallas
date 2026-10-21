@@ -1,0 +1,27 @@
+[
+ {
+  "violation_pin": "_1653_/A",
+  "upstream_through_BUF_INV_HB4": [
+   {
+    "pin": "place2390/Y",
+    "master": "BUFx3_ASAP7_75t_R",
+    "net": "net2389"
+   },
+   {
+    "pin": "g_pin.wq\\[27\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": "_0477_"
+   }
+  ]
+ },
+ {
+  "violation_pin": "place2292/A",
+  "upstream_through_BUF_INV_HB4": [
+   {
+    "pin": "u_core.g_hard.u_rt/cw_n_d[0]",
+    "master": "ot_s81sl_cap_rt",
+    "net": "nd\\[0\\]"
+   }
+  ]
+ }
+]

@@ -1,0 +1,469 @@
+{
+ "scope": "SOURCE_PINNED_NECESSARY_CAPACITY_BOUND; NEVER_FULL_STAGE_PASS",
+ "existing_ownership": "72 mergedGU and80 down rank rows per expert per slice",
+ "segment_shapes": {
+  "('fp4', 5120)": {
+   "segments": [
+    [
+     0,
+     1024
+    ],
+    [
+     1024,
+     1024
+    ],
+    [
+     2048,
+     1024
+    ],
+    [
+     3072,
+     1024
+    ],
+    [
+     4096,
+     1024
+    ]
+   ],
+   "paired_address_increments": [
+    16,
+    16,
+    16,
+    16,
+    16
+   ],
+   "total_per_superrow": 80
+  },
+  "('fp4', 2304)": {
+   "segments": [
+    [
+     0,
+     512
+    ],
+    [
+     512,
+     512
+    ],
+    [
+     1024,
+     512
+    ],
+    [
+     1536,
+     512
+    ],
+    [
+     2048,
+     256
+    ]
+   ],
+   "paired_address_increments": [
+    8,
+    8,
+    8,
+    8,
+    8
+   ],
+   "total_per_superrow": 40
+  }
+ },
+ "minimum_per_slice": 4480,
+ "physical_slice_bounds": [
+  {
+   "physical_frames": 6,
+   "q_pairs": 72,
+   "paired_depth": 8192,
+   "minimum_paired_addresses_per_expert": 4480,
+   "max_experts_necessary_bound_ignoring_dense": 131,
+   "minimum_mean_depth_at_140_experts": 8711.111111111111,
+   "qualification": "NECESSARY_BOUND_ONLY; no per-pair admission"
+  },
+  {
+   "physical_frames": 7,
+   "q_pairs": 84,
+   "paired_depth": 8192,
+   "minimum_paired_addresses_per_expert": 4480,
+   "max_experts_necessary_bound_ignoring_dense": 153,
+   "minimum_mean_depth_at_140_experts": 7466.666666666667,
+   "qualification": "NECESSARY_BOUND_ONLY; no per-pair admission"
+  },
+  {
+   "physical_frames": 8,
+   "q_pairs": 96,
+   "paired_depth": 8192,
+   "minimum_paired_addresses_per_expert": 4480,
+   "max_experts_necessary_bound_ignoring_dense": 175,
+   "minimum_mean_depth_at_140_experts": 6533.333333333333,
+   "qualification": "NECESSARY_BOUND_ONLY; no per-pair admission"
+  }
+ ],
+ "stage_count_cases": [
+  {
+   "stages": 97,
+   "max_expert_identities_necessary_bound": 12707,
+   "required": 15360,
+   "status": "FAIL_NECESSARY_BOUND",
+   "excludes": [
+    "all dense weights",
+    "per-pair imbalance",
+    "odd-row/idle-phase padding",
+    "cfg phase admission",
+    "stage ownership selection",
+    "consumer contract"
+   ]
+  },
+  {
+   "stages": 110,
+   "max_expert_identities_necessary_bound": 14410,
+   "required": 15360,
+   "status": "FAIL_NECESSARY_BOUND",
+   "excludes": [
+    "all dense weights",
+    "per-pair imbalance",
+    "odd-row/idle-phase padding",
+    "cfg phase admission",
+    "stage ownership selection",
+    "consumer contract"
+   ]
+  },
+  {
+   "stages": 130,
+   "max_expert_identities_necessary_bound": 17030,
+   "required": 15360,
+   "status": "NOT_ADMITTED_NO_SELECTED_MAP",
+   "excludes": [
+    "all dense weights",
+    "per-pair imbalance",
+    "odd-row/idle-phase padding",
+    "cfg phase admission",
+    "stage ownership selection",
+    "consumer contract"
+   ]
+  }
+ ],
+ "minimum_stage_count_ignoring_dense": 118,
+ "actual_compact_fixture": {
+  "ffn.experts_gu": {
+   "input_sha256": "487094b039fac56ca30a2e7caf7ca39a089aa2f4ba2c6822025e5a57a2481bf9",
+   "per_pair_increments": [
+    176,
+    176,
+    160,
+    192,
+    240,
+    224,
+    208,
+    208,
+    176,
+    192,
+    240,
+    208
+   ],
+   "total": 2400,
+   "phases": [
+    {
+     "phase": 1,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 12
+    },
+    {
+     "phase": 2,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 8
+    },
+    {
+     "phase": 3,
+     "rows": 1,
+     "slots": 5,
+     "paired_addresses": 80,
+     "ret_words": 3
+    },
+    {
+     "phase": 4,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 12
+    },
+    {
+     "phase": 5,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 8
+    },
+    {
+     "phase": 6,
+     "rows": 1,
+     "slots": 5,
+     "paired_addresses": 80,
+     "ret_words": 3
+    },
+    {
+     "phase": 7,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 12
+    },
+    {
+     "phase": 8,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 8
+    },
+    {
+     "phase": 9,
+     "rows": 1,
+     "slots": 5,
+     "paired_addresses": 80,
+     "ret_words": 4
+    },
+    {
+     "phase": 10,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 12
+    },
+    {
+     "phase": 11,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 8
+    },
+    {
+     "phase": 12,
+     "rows": 1,
+     "slots": 5,
+     "paired_addresses": 80,
+     "ret_words": 2
+    },
+    {
+     "phase": 13,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 12
+    },
+    {
+     "phase": 14,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 8
+    },
+    {
+     "phase": 15,
+     "rows": 1,
+     "slots": 5,
+     "paired_addresses": 80,
+     "ret_words": 3
+    },
+    {
+     "phase": 16,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 12
+    },
+    {
+     "phase": 17,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 160,
+     "ret_words": 8
+    },
+    {
+     "phase": 18,
+     "rows": 1,
+     "slots": 5,
+     "paired_addresses": 80,
+     "ret_words": 3
+    }
+   ],
+   "scope": "real six-activated-expert fixture, first eight-frame slice; NOT full-stage"
+  },
+  "ffn.down": {
+   "input_sha256": "d7bd98f125a0182c1adb282da82f0e4f12d4f56c6093bad0512a00fe3f426c4c",
+   "per_pair_increments": [
+    128,
+    128,
+    112,
+    128,
+    152,
+    144,
+    128,
+    128,
+    104,
+    120,
+    152,
+    136
+   ],
+   "total": 1560,
+   "phases": [
+    {
+     "phase": 1,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 144,
+     "ret_words": 12
+    },
+    {
+     "phase": 2,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 144,
+     "ret_words": 10
+    },
+    {
+     "phase": 3,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 72,
+     "ret_words": 6
+    },
+    {
+     "phase": 4,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 5,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 10
+    },
+    {
+     "phase": 6,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 40,
+     "ret_words": 6
+    },
+    {
+     "phase": 7,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 8,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 9,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 40,
+     "ret_words": 8
+    },
+    {
+     "phase": 10,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 11,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 10
+    },
+    {
+     "phase": 12,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 40,
+     "ret_words": 4
+    },
+    {
+     "phase": 13,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 14,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 15,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 40,
+     "ret_words": 8
+    },
+    {
+     "phase": 16,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 17,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 10
+    },
+    {
+     "phase": 18,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 40,
+     "ret_words": 6
+    },
+    {
+     "phase": 19,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 20,
+     "rows": 4,
+     "slots": 10,
+     "paired_addresses": 80,
+     "ret_words": 12
+    },
+    {
+     "phase": 21,
+     "rows": 2,
+     "slots": 5,
+     "paired_addresses": 40,
+     "ret_words": 8
+    }
+   ],
+   "scope": "real six-activated-expert fixture, first eight-frame slice; NOT full-stage"
+  }
+ },
+ "inputs": {
+  "/srv/opentallas-scratch/codex/s81-stage-admission-1020/root/out/census_r2/all_expert_metadata.json": "176dc5cbd77eec2f3fce4d5f6e68b8cb5b3e2e097832de01f62643fe630ebb5c",
+  "/srv/opentallas-scratch/codex/s81-stage-admission-1020/root/out/census_r2/summary.json": "dde5bdf644baaf44761b2d574e43b1fe22290635587049492d95879eef8f0cef",
+  "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+  "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_place.py": "1f2595d3b8dbe85bc534da74a87d381ee88f40466cabc58f8e66bb5ec4f0e673",
+  "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/v41_die_images_w17w10.py": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780"
+ }
+}

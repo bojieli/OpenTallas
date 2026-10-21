@@ -23,6 +23,21 @@
 //   The compiler keeps those slots free (no forwarded beat), so the vstop never sees a collision.
 // ---------------------------------------------------------------------------------------------------------------------
 
+// Per-lane live flag (S81-BKG 10-18): reset 0, then 1 from the 2nd edge after reset release (the old shared live -> lane
+// register pair, 2 flops).  One instance per lane word: the 4 lanes' live bits were structurally identical, so synthesis
+// merged them into ONE flop driving the W and E face pins (dsdv_bk_g native launch 247.0 ps on ln3[513] / ln1[513]).
+// Unparameterised and kept as hierarchy (kit route.synth_keep_modules) so each lane pin keeps its own launch flop.
+module dsdv_bk_live (
+    input  wire clk,
+    input  wire rst_n,
+    output reg  q
+);
+    reg l0;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin l0 <= 1'b0; q <= 1'b0; end
+        else begin l0 <= 1'b1; q <= l0; end
+endmodule
+
 // V ingress: tapped beats -> 4 lane words (registered, fixed latency: V pin -> lane word 3 edges) + drain commands
 module dsdv_bk_vin #(
     parameter integer V   = 276,
@@ -36,7 +51,7 @@ module dsdv_bk_vin #(
     input  wire [V-1:0]      dl_n,
     input  wire              dl_sv,
     input  wire [V-1:0]      dl_s,
-    output reg  [4*515-1:0]  lanes,       // per lane {fault, live, data 512, valid}; lane 0 SW, 1 SE, 2 NW, 3 NE
+    output wire [4*515-1:0]  lanes,       // per lane {fault, live, data 512, valid}; lane 0 SW, 1 SE, 2 NW, 3 NE
     output reg               dr_v,        // drain command
     output reg  [7:0]        dr_n,
     output reg  [7:0]        dr_d,
@@ -73,7 +88,13 @@ module dsdv_bk_vin #(
             end
         end
     end
-    reg live;
+    reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from u_live[l] instead
+    genvar gl;
+    generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_live
+        wire lv;
+        dsdv_bk_live u_live (.clk(clk), .rst_n(rst_n), .q(lv));
+        assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv, lq[515 * gl + 1 +: 512], lq[515 * gl]};
+    end endgenerate
 `ifdef OT_DSDV_BK_TRACE
     integer tc = 0;
     always @(posedge clk) begin tc <= tc + 1; if (tc < 120 && (dl_nv || dl_sv)) $display("DSDV_BK_VIN t %0d n %0d/%h s %0d/%h", tc, dl_nv, dl_n[19:0], dl_sv, dl_s[19:0]); end
@@ -82,26 +103,24 @@ module dsdv_bk_vin #(
 `endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            hv <= 4'd0; fault <= 1'b0; live <= 1'b0; dr_v <= 1'b0;
-            for (l = 0; l < 4; l = l + 1) begin lanes[515 * l] <= 1'b0; lanes[515 * l + 513] <= 1'b0; lanes[515 * l + 514] <= 1'b0; end
+            hv <= 4'd0; fault <= 1'b0; dr_v <= 1'b0;
+            for (l = 0; l < 4; l = l + 1) begin lq[515 * l] <= 1'b0; lq[515 * l + 514] <= 1'b0; end
         end else begin
-            live <= 1'b1;
             dr_v <= cn | cs;
             if ((cn && cs) || err != 4'd0) fault <= 1'b1;
             for (l = 0; l < 4; l = l + 1) begin
                 if ((dn && dl_n[5:4] == l && !dl_n[6] && !dl_n[7]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6] && !dl_s[7]))
                     hv[l] <= 1'b1;
                 else if (wv[l]) hv[l] <= 1'b0;
-                lanes[515 * l]       <= wv[l];
-                lanes[515 * l + 513] <= live;
-                lanes[515 * l + 514] <= (wv[l] && wf[l]) || fault;
+                lq[515 * l]       <= wv[l];
+                lq[515 * l + 514] <= (wv[l] && wf[l]) || fault;
             end
         end
     always @(posedge clk) begin
         dr_n <= cn ? dl_n[39:32] : dl_s[39:32];
         dr_d <= cn ? dl_n[47:40] : dl_s[47:40];
         for (l = 0; l < 4; l = l + 1) begin
-            if (wv[l]) lanes[515 * l + 1 +: 512] <= wd[l];
+            if (wv[l]) lq[515 * l + 1 +: 512] <= wd[l];
             if ((dn && dl_n[5:4] == l && !dl_n[6]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6]))
                 hd[l] <= (dn && dl_n[5:4] == l) ? dl_n[275:20] : dl_s[275:20];
         end

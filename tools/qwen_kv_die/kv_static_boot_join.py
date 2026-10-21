@@ -35,6 +35,11 @@ from pathlib import Path
 import kv_static as K
 
 BOOT = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv', 'qkd_static_kv_boot_dispatch')
+# MU-KV-BOOT 10-19 (OT_KV_MU=1): target 1 in the MU form (471 words: rows, digest, epoch, GAP[4][36] at 326..469, seal at
+# 470) for qkd_static_kv_layer_programme_mu; the wrapper keeps the original dispatcher (MU 0 = the original)
+BOOT_MU = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv', 'qkd_static_kv_boot_dispatch_mu')
+if K.MU:
+    BOOT = BOOT_MU
 CDC = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_kv_boot_cdc')
 OBS = ('rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv', 'qkd_static_kv_boot_observe')
 # KVJ-A 10-17 item 3: the die's HOST root is qkd_host_root_admission (kv_die.HOST_RT_FILE); it is a kv_die master, not a
@@ -69,7 +74,7 @@ def boot_join(graph, root=K.ROOT, name='boot'):
     # KVJ-SMALL b2 10-17 (KVJ-C3 open): ESCFG=1 adds targets 12 / 13 (order 1..9, 11, 12, 13, 0) -> the shared boot bus of
     # the PC chain root (fanr) and join4_cal (emb_join) (kv_static_programme.es_cfg_words; bench run_es_cfg_boot.sh)
     # RTL-BUILD-KV/FAULT 10-18 (P8): DIECAP=1 -> target 10 carries the die cfg capability word (qkd_kv_die_cfg CAP=1)
-    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1, ESCFG=1, DIECAP=1)
+    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1, ESCFG=1, DIECAP=1, **({'MU': 1, 'WMUT': 0} if K.MU else {}))
     pp = K.ports(spec, params)
     ins = {i['name']: i for i in graph['instances']}
     if name in ins:

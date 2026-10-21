@@ -18,12 +18,18 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
  reg[6:0]s1[0:31],s2[0:3],s3;reg[4:0]sel1;reg[1:0]sel2;
  reg v1,v2,v3;reg[6:0]front[0:7];reg[2:0]fw,fr;reg[3:0]fc,read_credit;
  wire fetch=unread!=0&&read_credit!=0&&!fault;
- wire[6:0]head=front[fr];
+ // HRORDER 10-18 (route qkd_hr_core_order-r2-c420f015e TT -30 ps: fr -> front[fr] -> 128 compares -> pop -> pending):
+ // head_oh = one-hot of front[fr], a register kept exact by write-bypass whenever fc!=0 (pop and consume only use it
+ // then). Cycle-exact with the previous form (bench tools/qwen_kv_die/host_cluster/bench/hrorder_equiv).
+ reg[127:0]head_oh;
  wire[127:0]head_ready;
  for(genvar k=0;k<128;k++)begin:g_ready
-  assign head_ready[k]=head==7'(k)&&pending[k]!=0;
+  assign head_ready[k]=head_oh[k]&&pending[k]!=0;
  end
  wire pop=fc!=0&&!fault&&((|head_ready)||MUT==1);
+ wire[2:0]fr1=fr+3'd1;
+ wire[6:0]head_adv=(v3&&fw==fr1)?s3:front[fr1],head_hold=(v3&&fw==fr)?s3:front[fr];
+ always @(posedge ck)head_oh<=pop?(128'd1<<head_adv):(128'd1<<head_hold);
  wire take=iqv&&!fault&&total<256;
  always @(posedge ck)begin
   iqpc<=issue_pc;
@@ -39,7 +45,7 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
   end
  end
  for(genvar k=0;k<128;k++)begin:g_pc
-  wire add=take&&iqpc==7'(k),physical=aq[k],consume=pop&&head==7'(k);
+  wire add=take&&iqpc==7'(k),physical=aq[k],consume=pop&&head_oh[k];
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)begin outstanding[k]<=0;pending[k]<=0;end
    else begin
@@ -66,7 +72,7 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
    case({take,pop})2'b10:total<=total+1'b1;2'b01:total<=total-1'b1;default:;endcase
    case({pop,fetch})2'b10:read_credit<=read_credit+1'b1;2'b01:read_credit<=read_credit-1'b1;default:;endcase
    if(v3)begin if(fc==8&&!pop)fault<=1;fw<=fw+1'b1;end
-   if(pop)begin fr<=fr+1'b1;prefix_count<=prefix_count+1'b1;if(prefix_count==32'hffffffff)fault<=1;end
+   if(pop)begin fr<=fr1;prefix_count<=prefix_count+1'b1;if(prefix_count==32'hffffffff)fault<=1;end
    case({v3,pop})2'b10:fc<=fc+1'b1;2'b01:fc<=fc-1'b1;default:;endcase
   end
  end
