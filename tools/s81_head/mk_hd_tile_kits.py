@@ -196,6 +196,7 @@ for v, (W, H) in {'m': (216.0, 648.0), 'f': (259.2, 691.2)}.items():
               if top == 'ot_s81hd_spo' else
               bench('hd_mut_spr_early', 'A', 'SPR_EARLY', r'^A: TB_FAIL row 0 != 21946$')]
         s = common(name, top, NODE_SRC, {'w': W, 'h': H}, pins, rng, why, nb)
+        s['route']['pin_balance'] = {'group_max': 1, 'h': 'M4', 'v': 'M3 M5'}
         s['fill_reason'] = {'pin_bound': (
             f'Pin-bound: 2,260 bus pins on four faces of the SPEC 216 x 648 spine slot; std-cell fill well under 40% '
             f'is the price of the slot and faces (RULE FREEZE 10-20: tile fill is guidance).')}

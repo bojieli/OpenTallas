@@ -33,6 +33,11 @@
    "size": 24,
    "diameter_um": 30,
    "extra": "-distance_between_buffers 15 -balance_levels"
+  },
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
   }
  },
  "pins": {
