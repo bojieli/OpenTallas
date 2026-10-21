@@ -2162,6 +2162,22 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         # v1.4.3b: the grown groups leave the HOST tree / slice chains their N-apron and the S|N channel only with a taller
         # stack pitch (die height + 2 x this, measured by the relay allocator)
         sp += up(float(__import__('os').environ.get('OT_KV_V143_EXTRA', '0')), LAT)
+    # KV-SAFE32C 10-20 (COORD 19:25): OT_KV_SAFE32_RECENTRE centres each engine group and its landing strip on each other
+    # (see the group placement below): 1 = the groups move onto the strip centre; 2 = the strip band (PHY / controller /
+    # PC / slg landing groups, kc head) moves onto the group centre -- the groups (and their S|N seam, SerDes corridor and
+    # N apron, which the d20s relay plan was tuned on) stay put, the die outline is unchanged, only the band seam narrows
+    SAFE32_RECENTRE = os.environ.get('OT_KV_SAFE32_RECENTRE', '0')
+    if SAFE32_RECENTRE not in ('0', '1', '2'):
+        raise ValueError('OT_KV_SAFE32_RECENTRE must be 0, 1 or 2')
+    SAFE32_RECENTRE = int(SAFE32_RECENTRE)
+    if SAFE32_RECENTRE and not (split and V143['on'] and not V143_CENTER and QKH_SAFE32 and not V143B):
+        raise ValueError('OT_KV_SAFE32_RECENTRE is defined on the split v1.4.3 (non-centre, non-B) geometry with OT_KV_QKH_SAFE32=1')
+    # mode 2: the band offset that centres the strip on the v1.4.3b group (S groups grew up, N groups down by gh - gh_old),
+    # on the 43.2 lattice (hard-macro origin residues kept)
+    strip_dy = {'S': 0.0, 'N': 0.0}
+    if SAFE32_RECENTRE == 2:
+        _d = round((4 * RENG[1] - 4 * V143['eng_h_v142']) / 2 / LAT) * LAT
+        strip_dy = {'S': _d, 'N': -_d}
     band_shift = {'S': up((sp - stack_h) / 2, LAT), 'N': up((sp - stack_h) / 2, LAT) + (sp - stack_h)}
     # split: the S engine groups reach down to the die edge, where the host SerDes PHY (2,400 wide, wider than the centre
     # column) sits: lift everything above it by d0
@@ -2204,12 +2220,12 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         band_dy[side] = {half:offset+edge_chan for half,offset in dy.items()}
         for n, mst, x, y, w, h, o, k, dom in rows:
             half = 'N' if y + h / 2 > MARGIN + stack_h + GY / 2 else 'S'
-            add(n, mst, x, y+edge_chan+band_shift[half], w, h, o, k, 'phy' if k == 'phy' else ('ctrl' if k == 'ctrl' else 'strip'), dom)
+            add(n, mst, x, y+edge_chan+band_shift[half]+strip_dy[half], w, h, o, k, 'phy' if k == 'phy' else ('ctrl' if k == 'ctrl' else 'strip'), dom)
     if split:
         for it_ in ins:
             if it_.master == 'ot_hbm3e_phy':
                 it_.master = SPLIT_PHY     # v1.2: the PHY-only abstract with per-PC DFI words (no controller inside)
-    ystack = {'S': MARGIN+edge_chan+band_shift['S'], 'N': MARGIN+edge_chan + stack_h + GY+band_shift['N']}
+    ystack = {'S': MARGIN+edge_chan+band_shift['S']+strip_dy['S'], 'N': MARGIN+edge_chan + stack_h + GY+band_shift['N']+strip_dy['N']}
     xc = Wk / 2
     for st in STACKS:
         side, half = st[0], st[1]
@@ -2228,9 +2244,17 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             # v1.4.3b: S groups keep their v1.4.2 bottom (the SerDes corridor) and grow up into the middle; N groups rise
             # into the empty top by <= V143_N_UP and grow the rest down
             gh_old = 4 * V143['eng_h_v142'] + 3 * GY
-            gy = up(y0 + (stack_h - gh_old) / 2, GY)
+            gy = up(y0 - strip_dy[half] + (stack_h - gh_old) / 2, GY)     # (strip_dy: OT_KV_SAFE32_RECENTRE=2 only)
             if st[1] == 'N':
                 gy = (up(gy + gh_old + min(V143_N_UP, gh - gh_old) - gh, GY) if V143B else gy + gh_old - gh)
+            if SAFE32_RECENTRE == 1:
+                # KV-SAFE32C 10-20 (COORD 19:25, OT_KV_SAFE32_RECENTRE=1): the safe32 heads make the group gh - gh_old taller
+                # and v1.4.3b grows S groups up / N groups down, so every ECTL frame sits (gh - gh_old) / 2 off the static
+                # landing groups slg_<st>_<g> (fixed on the HBM PC pitch of the strip): d20s natural K round trip 82-96 > 80.
+                # Centre the group on its landing strip instead (S down, N up by the same amount; die outline, stack pitch
+                # and the S|N seam unchanged -- the seam only widens).  With OT_KV_ECTL_PAIR=1 each frame row then sits
+                # level with its slot pair (row pitch RENG + GY ~ 2 x 4 x PC_PITCH).
+                gy = up(y0 + (stack_h - gh) / 2, GY)
         grp_y = locals().setdefault('grp_y', {})
         grp_y[st] = (gy, gy + gh)
         # qwen-1010/b 2026-10-10 (KV11 die STA: land -> ectl rs hops of ~3 mm between pins): every stack group is the
@@ -2451,6 +2475,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         m['geo']['pv144'] = pv_geo
     if SN_LIFT:
         m['geo']['sn_lift'] = dict(lift_um=SN_LIFT, die_h_um=Hk, die_w_um=Wk)
+    if SAFE32_RECENTRE:
+        # KV-SAFE32C: engine groups and landing strips centred on each other (1: groups moved; 2: strip band moved by strip_dy)
+        m['geo']['safe32_recentre'] = dict(mode=SAFE32_RECENTRE, strip_dy_um=strip_dy)
     if d2d_apron:
         m['geo']['d2d_relay_apron_um'] = d2d_apron
     m['keepouts'] = m_keep
