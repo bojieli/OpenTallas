@@ -65,6 +65,13 @@ python3 tools/hbm_die_v16/relay_lanes_d4f.py --stations $A/stations_case_a_405.j
   --manifest $B/a/case_a/manifest.json --root-keepouts $A/root_sites.json --jobs 16 --capacity --split-port-faces --macro-transit-cost 1000 ${OT_CAP_ARGS:-} \
   --out $A/stations_lanes.json --report $A/lanes_report.json > $A/lanes.log 2>&1 || { echo S4_LANES_FAIL; tail $A/lanes.log; exit 14; }
 tail -c 1500 $A/lanes.log; echo
+python3 - "$A/lanes_report.json" <<'PY_CAPACITY' || { echo S4_BLOCKING_GEOMETRY_NO_ROUTE; exit 24; }
+import json,sys
+r=json.load(open(sys.argv[1]));c=r.get('capacity') or {};w=c.get('windows') or {}
+bad=dict(hop_violations=r.get('hop_violations'),forced=c.get('forced'),windows_over_1=w.get('over_1'))
+print('S4_CAPACITY_GATE',bad)
+sys.exit(any(v is None or v!=0 for v in bad.values()))
+PY_CAPACITY
 touch $B/S4_DONE
 echo "STEP S5 layer $(date -Is)"
 cp $B/a/views/contract.json $A/net/pre_relay.json
