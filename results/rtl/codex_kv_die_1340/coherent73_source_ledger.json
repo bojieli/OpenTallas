@@ -75,7 +75,11 @@
     "status225_transport": null,
     "host_stages": null,
     "die_stages": null,
-    "note": "local expected-bank cut4 and health retirement STATUS1913 are not full rawHEAD->HBM/header age; no old595/zero substitution"
+    "note": "local expected-bank cut4 and health retirement STATUS1913 are not full rawHEAD->HBM/header age; no old595/zero substitution",
+    "kv_descriptor_to_kvn_expected_path": null,
+    "status225_transport_path": null,
+    "host_stages_semantics": "existing D2D calendar --host-stages boot/HOST O61 ingress transport; unrelated to STATUS observation",
+    "status225_transport_semantics": "distinct actual v/epoch16/payload208 D2D-to-HOST transport; local atomic293bit snapshot is format only, no transport age"
   },
   "pending_bindings": [
     "final coherent GEN actual source/readset/clock/interface transports",
