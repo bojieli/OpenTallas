@@ -1,0 +1,1519 @@
+{
+ "reserves": [
+  {
+   "name": "link_1_4",
+   "w": 518.4,
+   "h": 3844.8,
+   "x": 24160.64,
+   "y": 7962.4,
+   "kind": "reserve",
+   "scope": "G4 copy-A/B pair reserve (518.4 x 3844.8 SerDes slot, E column B): placement + routing blockage only, no master/pins (G7: rows 2/3, frees the E pocket)"
+  },
+  {
+   "name": "link_1_5",
+   "w": 518.4,
+   "h": 3844.8,
+   "x": 24160.64,
+   "y": 11893.6,
+   "kind": "reserve",
+   "scope": "G4 copy-A/B pair reserve (518.4 x 3844.8 SerDes slot, E column B): placement + routing blockage only, no master/pins (G7: rows 2/3, frees the E pocket)"
+  }
+ ],
+ "scope": "OWNER72 SELECTED IMPLEMENTATION G8 CONSTRUCTION (G7 + full reticle 33 x 26 mm, 0.1 mm seal ring; extra room = wider streets / end slots, not density), not routed closure",
+ "die": [
+  33000.0,
+  26000.0
+ ],
+ "clearance": 86.4,
+ "best": {
+  "blocks": [
+   {
+    "name": "h9_00",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 100.0
+   },
+   {
+    "name": "h9_01",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_02",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_00",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_03",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_04",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_05",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 100.0,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_06",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 100.0
+   },
+   {
+    "name": "h9_07",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_08",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_01",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_09",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_10",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_11",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 1623.232,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_12",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 100.0
+   },
+   {
+    "name": "h9_13",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_14",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_02",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_15",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_16",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_17",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 3146.464,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_18",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 100.0
+   },
+   {
+    "name": "h9_19",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_20",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_03",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_21",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_22",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_23",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 4669.696,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_24",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 100.0
+   },
+   {
+    "name": "h9_25",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_26",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_04",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_27",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_28",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_29",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 6192.928,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_30",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 100.0
+   },
+   {
+    "name": "h9_31",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_32",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_05",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_33",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_34",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_35",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 31463.168,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_36",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 100.0
+   },
+   {
+    "name": "h9_37",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_38",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_06",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_39",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_40",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_41",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 29939.936,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_42",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 100.0
+   },
+   {
+    "name": "h9_43",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_44",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_07",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_45",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_46",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_47",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 28416.704,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_48",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 100.0
+   },
+   {
+    "name": "h9_49",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_50",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_08",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_51",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_52",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_53",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 26893.472,
+    "y": 21138.4
+   },
+   {
+    "name": "h9_54",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 100.0
+   },
+   {
+    "name": "h9_55",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 3556.0
+   },
+   {
+    "name": "h9_56",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 7012.0
+   },
+   {
+    "name": "h10_09",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 10468.0
+   },
+   {
+    "name": "h9_57",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 14226.4
+   },
+   {
+    "name": "h9_58",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 17682.4
+   },
+   {
+    "name": "h9_59",
+    "w": 1436.832,
+    "h": 3369.6,
+    "scope": "selected production rf3rl outline",
+    "x": 25370.24,
+    "y": 21138.4
+   },
+   {
+    "name": "h10_10",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 7716.16,
+    "y": 16831.2
+   },
+   {
+    "name": "link_0_0",
+    "x": 7716.16,
+    "y": 100.0,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_0_1",
+    "x": 7716.16,
+    "y": 4031.2,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_0_2",
+    "x": 7716.16,
+    "y": 7962.4,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_0_3",
+    "x": 7716.16,
+    "y": 11893.6,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "h10_11",
+    "w": 1436.832,
+    "h": 3672,
+    "scope": "selected production rf3rl outline",
+    "x": 23847.008,
+    "y": 16831.2
+   },
+   {
+    "name": "link_1_0",
+    "x": 24765.44,
+    "y": 100.0,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_1_1",
+    "x": 24765.44,
+    "y": 4031.2,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_1_2",
+    "x": 24765.44,
+    "y": 7962.4,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_1_3",
+    "x": 24765.44,
+    "y": 11893.6,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_0_4",
+    "x": 8320.96,
+    "y": 7962.4,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G4 real SerDes column-B slot (5th lane pair, s_0N pair B; ot_pdie_serdes 518.4 x 3844.8)"
+   },
+   {
+    "name": "link_0_5",
+    "x": 8320.96,
+    "y": 11893.6,
+    "w": 518.4,
+    "h": 3844.8,
+    "scope": "G4 real SerDes column-B slot (5th lane pair, s_0N pair B; ot_pdie_serdes 518.4 x 3844.8)"
+   },
+   {
+    "name": "phy_hbm",
+    "x": 12250.0,
+    "y": 100.0,
+    "w": 8500,
+    "h": 1177
+   },
+   {
+    "name": "ctrl_00",
+    "x": 12321.225,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_01",
+    "x": 12852.475,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_02",
+    "x": 13383.725,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_03",
+    "x": 13914.975,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_04",
+    "x": 14446.225,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_05",
+    "x": 14977.475,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_06",
+    "x": 15508.725,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_07",
+    "x": 16039.975,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_08",
+    "x": 16571.225,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_09",
+    "x": 17102.475,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_10",
+    "x": 17633.725,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_11",
+    "x": 18164.975,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_12",
+    "x": 18696.225,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_13",
+    "x": 19227.475,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_14",
+    "x": 19758.725,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "ctrl_15",
+    "x": 20289.975,
+    "y": 1406.6,
+    "w": 388.8,
+    "h": 324
+   },
+   {
+    "name": "svc_full_0",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 9134.4,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_1",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 9134.4,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_2",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 10992.0,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_3",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 10992.0,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_4",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 12849.6,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_5",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 12849.6,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_6",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 14707.2,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_7",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 14707.2,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_8",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 16564.8,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_9",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 16564.8,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_10",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 18422.4,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_11",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 18422.4,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_12",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 20280.0,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_13",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 20280.0,
+    "y": 6612.2
+   },
+   {
+    "name": "svc_full_14",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 22137.6,
+    "y": 2724.2
+   },
+   {
+    "name": "svc_full_15",
+    "w": 1728.0,
+    "h": 3801.6,
+    "scope": "existing co-located service model target; actual source/view owed",
+    "x": 22137.6,
+    "y": 6612.2
+   },
+   {
+    "name": "slice_00",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 9325.792,
+    "y": 10520.6
+   },
+   {
+    "name": "slice_01",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 9325.792,
+    "y": 17432.6
+   },
+   {
+    "name": "slice_02",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 10751.392,
+    "y": 10520.6
+   },
+   {
+    "name": "slice_03",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 10751.392,
+    "y": 17432.6
+   },
+   {
+    "name": "slice_04",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 12176.992,
+    "y": 10520.6
+   },
+   {
+    "name": "slice_05",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 12176.992,
+    "y": 17432.6
+   },
+   {
+    "name": "slice_06",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 13602.592,
+    "y": 10520.6
+   },
+   {
+    "name": "slice_07",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 13602.592,
+    "y": 17432.6
+   },
+   {
+    "name": "slice_08",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 15028.192,
+    "y": 10520.6
+   },
+   {
+    "name": "slice_09",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 15028.192,
+    "y": 17432.6
+   },
+   {
+    "name": "slice_10",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 16453.792,
+    "y": 10520.6
+   },
+   {
+    "name": "slice_11",
+    "w": 1252.8,
+    "h": 6739.2,
+    "scope": "selected k8a outline; MU parents decomposed, source reassembly owed",
+    "x": 16453.792,
+    "y": 17432.6
+   },
+   {
+    "name": "end_parent_0",
+    "w": 2851.2,
+    "h": 6825.6,
+    "scope": "NEW unhardened MU72 assembly lepw (lep R0) | G8: 2851.2 end slot, per-region clock trees (12 die-top roots)",
+    "x": 17879.392,
+    "y": 10520.6
+   },
+   {
+    "name": "end_parent_1",
+    "w": 2851.2,
+    "h": 6825.6,
+    "scope": "NEW unhardened MU72 assembly G4 lepw_mab_mu_72 copy-A/B parent (5th lane pair B: +2 safe8 lanes, 2851.2 wide) | G8: 2851.2 end slot, per-region clock trees (12 die-top roots)",
+    "x": 17879.392,
+    "y": 17432.6
+   },
+   {
+    "name": "end_parent_2",
+    "w": 2851.2,
+    "h": 6825.6,
+    "scope": "NEW unhardened MU72 assembly lepe G3: lep MY at slice ri_e/ro_e height, lanes beside lep (2851.2 wide) | G8: 2851.2 end slot, per-region clock trees (12 die-top roots)",
+    "x": 20903.392,
+    "y": 10520.6
+   },
+   {
+    "name": "end_parent_3",
+    "w": 2851.2,
+    "h": 6825.6,
+    "scope": "NEW unhardened MU72 assembly lepe G3: lep MY at slice ri_e/ro_e height, lanes beside lep (2851.2 wide) | G8: 2851.2 end slot, per-region clock trees (12 die-top roots)",
+    "x": 20903.392,
+    "y": 17432.6
+   },
+   {
+    "name": "bk_sel_00",
+    "w": 907.2,
+    "h": 4190.4,
+    "scope": "G7 bk_sel_vmtx (L20 split: +10 x ot_sram_1r1w_1024x256 TX/IDX store) 907.2 x 4190.4",
+    "x": 7716.16,
+    "y": 20676.0
+   },
+   {
+    "name": "idx_00",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 9444.16,
+    "y": 1396.0
+   },
+   {
+    "name": "idx_01",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 9444.16,
+    "y": 100.0
+   },
+   {
+    "name": "idx_02",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 10567.36,
+    "y": 100.0
+   },
+   {
+    "name": "idx_03",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 10567.36,
+    "y": 1396.0
+   },
+   {
+    "name": "idx_04",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 20836.4,
+    "y": 1396.0
+   },
+   {
+    "name": "idx_05",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 20836.4,
+    "y": 100.0
+   },
+   {
+    "name": "idx_06",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 21959.6,
+    "y": 100.0
+   },
+   {
+    "name": "idx_07",
+    "w": 1036.8,
+    "h": 1209.6,
+    "scope": "G7 L2 index reader beside its HBM controllers (south pocket; COORD decision 4.4)",
+    "x": 21959.6,
+    "y": 1396.0
+   },
+   {
+    "name": "gunit_00",
+    "w": 950,
+    "h": 1469,
+    "scope": "owner granted reservation",
+    "x": 18829.792,
+    "y": 24431.0
+   },
+   {
+    "name": "seqhost_00",
+    "w": 475.2,
+    "h": 993.6,
+    "scope": "owner granted reservation",
+    "x": 19866.192,
+    "y": 24431.0
+   },
+   {
+    "name": "bk_col_00",
+    "w": 674,
+    "h": 648,
+    "scope": "existing closed body",
+    "x": 20427.792,
+    "y": 24431.0
+   },
+   {
+    "name": "iqf_00",
+    "w": 259.2,
+    "h": 432,
+    "scope": "G7 iqf in the W pocket beside the reader chain head irg_00",
+    "x": 8320.96,
+    "y": 100.0
+   },
+   {
+    "name": "etap_00",
+    "x": 11690.56,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap_w sid 0) inline on irg_00 <-> ctrl_00"
+   },
+   {
+    "name": "etap_01",
+    "x": 11992.96,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 1) inline on irg_00 <-> ctrl_01"
+   },
+   {
+    "name": "etap_02",
+    "x": 12295.36,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 2) inline on irg_01 <-> ctrl_02"
+   },
+   {
+    "name": "etap_03",
+    "x": 12597.76,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 3) inline on irg_01 <-> ctrl_03"
+   },
+   {
+    "name": "etap_04",
+    "x": 12900.16,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 4) inline on irg_02 <-> ctrl_04"
+   },
+   {
+    "name": "etap_05",
+    "x": 13202.56,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 5) inline on irg_02 <-> ctrl_05"
+   },
+   {
+    "name": "etap_06",
+    "x": 13504.96,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 6) inline on irg_03 <-> ctrl_06"
+   },
+   {
+    "name": "etap_07",
+    "x": 13807.36,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 7) inline on irg_03 <-> ctrl_07"
+   },
+   {
+    "name": "etap_08",
+    "x": 18417.2,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 8) inline on irg_04 <-> ctrl_08"
+   },
+   {
+    "name": "etap_09",
+    "x": 18719.6,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 9) inline on irg_04 <-> ctrl_09"
+   },
+   {
+    "name": "etap_10",
+    "x": 19022.0,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 10) inline on irg_05 <-> ctrl_10"
+   },
+   {
+    "name": "etap_11",
+    "x": 19324.4,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 11) inline on irg_05 <-> ctrl_11"
+   },
+   {
+    "name": "etap_12",
+    "x": 19626.8,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 12) inline on irg_06 <-> ctrl_12"
+   },
+   {
+    "name": "etap_13",
+    "x": 19929.2,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 13) inline on irg_06 <-> ctrl_13"
+   },
+   {
+    "name": "etap_14",
+    "x": 20231.6,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 14) inline on irg_07 <-> ctrl_14"
+   },
+   {
+    "name": "etap_15",
+    "x": 20534.0,
+    "y": 1989.8,
+    "w": 216.0,
+    "h": 648.0,
+    "kind": "unit",
+    "scope": "G7 Engram reader tap (dsdv_eng_tap sid 15) inline on irg_07 <-> ctrl_15"
+   },
+   {
+    "name": "eng_00",
+    "x": 16453.792,
+    "y": 24431.0,
+    "w": 1296.0,
+    "h": 1209.6,
+    "kind": "unit",
+    "scope": "G7 Engram row-read cluster dsdv_eng_rr (S81-RTLGAP/eng, ra512 lookup) above s_6S (column-6 rung)"
+   }
+  ],
+  "unplaced": [],
+  "trial": {
+   "strategy": "G3 selected construction",
+   "placed": 144,
+   "unplaced": 0
+  }
+ },
+ "service_group": {
+  "at": [
+   9272.000000000002,
+   1803.4
+  ],
+  "outline": [
+   14428.8,
+   7689.599999999999
+  ],
+  "slot": [
+   1728.0,
+   3801.6
+  ],
+  "order": "even lower/odd upper; original sgN/S/E/W faces"
+ },
+ "serdes": {
+  "slot": [
+   518.4,
+   3844.8
+  ],
+  "column_A_x": {
+   "0": 7702.56,
+   "1": 24751.84
+  },
+  "column_B_x": {
+   "0": 8307.36,
+   "1": 24147.039999999997
+  },
+  "real_per_side": {
+   "0": 6,
+   "1": 4
+  },
+  "reserved_per_side": {
+   "0": 0,
+   "1": 2
+  }
+ },
+ "g4_changes": {
+  "real_w_column_b": [
+   "link_0_4",
+   "link_0_5"
+  ],
+  "end_parent_w": {
+   "0": 2505.6,
+   "1": 2851.2,
+   "2": 2851.2,
+   "3": 2851.2
+  },
+  "end_parent_1": "s_0N -> ot_s81sl_slice_lepw_mab_mu_72",
+  "die": [
+   32972.8,
+   25200.0
+  ],
+  "die_growth_vs_g3_um": 670.4
+ },
+ "g3_slot_changes": {
+  "serdes": [
+   518.4,
+   3844.8
+  ],
+  "svc": [
+   1728.0,
+   3801.6
+  ],
+  "ctrl_row_up_um": 43.2,
+  "end_parent_w": {
+   "0": 2505.6,
+   "1": 2851.2
+  },
+  "idx": [
+   1036.8,
+   1209.6
+  ],
+  "seqhost": [
+   475.2,
+   993.6
+  ],
+  "die": [
+   32972.8,
+   25200.0
+  ],
+  "die_growth_um": [
+   972.8,
+   200.0
+  ]
+ },
+ "obligations": [
+  "MU parents actual child/source reassembly (G3 lepe geometry in physical/ref_tile/s81_mu72_assembly)",
+  "service parent source and clocks/reset integration",
+  "actual pin projection and relay legalization/cycle pricing",
+  "E column B copy-A/B pair reserves are blockages only"
+ ],
+ "g7_changes": {
+  "shift_up_um": 907.2,
+  "die": [
+   32972.8,
+   25952.4
+  ],
+  "readers": {
+   "idx_00": [
+    9430.56,
+    1382.4
+   ],
+   "idx_01": [
+    9430.56,
+    86.4
+   ],
+   "idx_02": [
+    10553.76,
+    86.4
+   ],
+   "idx_03": [
+    10553.76,
+    1382.4
+   ],
+   "idx_04": [
+    20822.8,
+    1382.4
+   ],
+   "idx_05": [
+    20822.8,
+    86.4
+   ],
+   "idx_06": [
+    21946.0,
+    86.4
+   ],
+   "idx_07": [
+    21946.0,
+    1382.4
+   ]
+  },
+  "e_reserves_rows": [
+   2,
+   3
+  ],
+  "taps": {
+   "slot": [
+    216.0,
+    648.0
+   ],
+   "y": 1976.2,
+   "w_first_x": 11676.96,
+   "e_last_right": 20736.4
+  },
+  "eng": {
+   "slot": [
+    1296.0,
+    1209.6
+   ],
+   "above": "slice_11 (s_6S)"
+  },
+  "bk_sel_h": 4190.4,
+  "iqf": "W pocket column B (x 8307.36, y 86.4)"
+ },
+ "g8_changes": {
+  "die": [
+   33000.0,
+   26000.0
+  ],
+  "seal_ring_um": 100.0,
+  "g7_translate_um": 13.599999999999994,
+  "g7_constructed_at": [
+   32972.8,
+   25952.4
+  ],
+  "slice_row_streets_um": [
+   172.8,
+   172.8,
+   172.8,
+   172.8,
+   172.8,
+   172.8,
+   172.8,
+   172.8
+  ],
+  "slice_row_east_street_um": 92.416,
+  "svc_column_streets_um": [
+   129.6
+  ],
+  "svc_side_streets_um": [
+   295.04,
+   295.04
+  ],
+  "svc_to_slice_street_um": 106.8,
+  "end_parent_w": 2851.2,
+  "unchanged": [
+   "72 frames (60 h9 + 12 h10) at G7 slots (+translate)",
+   "SerDes 10 real + 2 copy-A/B reserves",
+   "ctrl row / PHY / taps / readers / iqf / bk_sel (+translate)",
+   "qualified 241-stage map 483869b91"
+  ]
+ }
+}

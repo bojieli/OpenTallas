@@ -107,6 +107,22 @@ def _closing_paren(text, start):
     raise ValueError('unterminated SystemVerilog module header')
 
 
+def _closing_paren_masked(masked, start):
+    """_closing_paren on text that is ALREADY lexically masked (instantiated(): the body was masked once).  Same result;
+    _closing_paren re-masks the whole text on every call, which made the child closure quadratic in a module body
+    (S81-G8 10-21: a frame view netlist with thousands of #( instances spent 3-4 h of the die strict bind in here)."""
+    depth = 0
+    for i in range(start, len(masked)):
+        c = masked[i]
+        if c == '(':
+            depth += 1
+        elif c == ')':
+            depth -= 1
+            if depth == 0:
+                return i
+    raise ValueError('unterminated SystemVerilog module header')
+
+
 def preprocess(t: str, defines: dict) -> str:
     """`define / `ifdef / `ifndef / `elsif / `else / `endif (nested); `include and other directives dropped."""
     out, stack = [], []          # stack of (taking, any_taken)
@@ -966,7 +982,7 @@ def instantiated(body: str):
             if j < 0 or masked[i + 1:j].strip():
                 continue
             try:
-                i = _closing_paren(masked, j) + 1
+                i = _closing_paren_masked(masked, j) + 1
             except ValueError:
                 continue
         im = re.match(r'\s*([A-Za-z_]\w*|\\\S+)\s*(\[[^\]]*\]\s*)*\(', masked[i:])
