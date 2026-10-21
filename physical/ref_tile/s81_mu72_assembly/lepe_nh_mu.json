@@ -311,13 +311,16 @@
       "binding_state": "UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias"
     },
     {
-      "view": "physical/ref_tile/s81sl_capc5k/views/ot_s81sl_capc5c",
       "count": 1,
       "inst": "u_sl.u_cap",
       "at": [
         777.6,
         3456.0
-      ]
+      ],
+      "master": "ot_s81sl_capc5r",
+      "view": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r",
+      "params": {},
+      "binding_state": "CLOSED s81sl_capc5r-s81sl_capc5r-163d31541 (closure-loop record 4a4d275ee on main; kit physical/ref_tile/s81sl_capc5r, top ot_s81sl_capc5r, no params; GRT overflow 0, per-root spread TT<=77.6/FF<=68.9); exact: u_sl.u_cap in ot_s81sl_slice_c1x_k8_cap5r_lp is ot_s81sl_capc5r, all 8 kit source blobs (ot_s81sl_capc5r.sv 6461f44e3, ot_pl_land*, ot_rst_relay, ot_hdc_delay_rf, cap_ed, cap_ld) identical to 163d31541; replaces the old capc5c view (s81sl_capc5k) carried from the normal spec (S81-LINK5B G6 10-21)"
     },
     {
       "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",

@@ -67,6 +67,16 @@ def assemble(normal, flavor, bindings):
             c.pop("view", None)
             c.update(master="ot_s81sl_xg_xo",
                      binding_state="UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias")
+        if c["inst"] == "u_sl.u_cap":
+            # S81-LINK5B G6: the cap5r_lp end slice instantiates u_cap as ot_s81sl_capc5r (region-landed reset ports).
+            # The normal spec's capc5c view is NOT this master: bind the CLOSED capc5r view only via --bindings
+            # (exact source), else UNBOUND (never alias the old capc5c view onto the successor).
+            c.pop("view", None)
+            c["master"] = "ot_s81sl_capc5r"
+            if "ot_s81sl_capc5r" in bindings:
+                c.update(copy.deepcopy(bindings["ot_s81sl_capc5r"]))
+            else:
+                c["binding_state"] = "UNBOUND: ot_s81sl_capc5r view; never old ot_s81sl_capc5c alias"
         children.append(c)
     modules = {"u_ln0":f"dsfd_coll_lane_{side}_safe8_ntf",
                "u_ln1":f"dsfd_coll_lane_{side}_safe8_ntf",
