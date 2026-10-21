@@ -1,0 +1,62 @@
+{
+ "clock_port": "clk",
+ "outline": {
+  "w": 648.0,
+  "h": 561.6
+ },
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w",
+   "nx_wi",
+   "nx_wo"
+  ],
+  "E": [
+   "ri_e",
+   "ro_e",
+   "nx_ei",
+   "nx_eo"
+  ],
+  "N": [
+   "sid",
+   "dl_ev",
+   "dl_e",
+   "dl_wv",
+   "dl_w",
+   "dl_vv",
+   "dl_vb",
+   "ci_dir",
+   "ci_b",
+   "is_v",
+   "is_d"
+  ],
+  "S": [
+   "xf_v",
+   "xf_s",
+   "xf",
+   "vi",
+   "vo",
+   "clk",
+   "rst_n",
+   "xw_v",
+   "xw_d",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   318.6,
+   320.76
+  ],
+  "rst_n": [
+   327.24,
+   329.4
+  ]
+ },
+ "top": "ot_s81sl_xg",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv"
+ ],
+ "name": "standin_ot_s81sl_xg",
+ "_note": "DRIVE-S81-SLICEP 10-20 stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) at the real kit outline/pins of ot_s81sl_xg"
+}
