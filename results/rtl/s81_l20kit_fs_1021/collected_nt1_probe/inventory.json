@@ -1,0 +1,238 @@
+{
+  "scope": "READ_ONLY GEOMETRY/CONFIG INVENTORY; NO IMPLEMENTATION FIT OR CLOSURE CLAIM",
+  "source_parent_commit": "edd3f4a9eba27542db0c85acd98f039af9666355",
+  "hashes": {
+    "/home/ubuntu/wt/s81-die72-g8/results/arch/s81_die72_1021/g8/plan_unrouted_g8.json": "b0173ffeb2240af1aec8adda2d61940f378831858f2ef4e79b456d3932c2f5cc",
+    "/home/ubuntu/wt/s81-attn1-nt1-1020/tools/ref_tile/specs_s81dv_svc_lp/dsdv_svc_attw_n1_main_lp.json": "a73cee85ee6606fcf8350dc2daf5f5af485a5c028970df839392d5740f729056",
+    "/home/ubuntu/wt/s81-attn1-nt1-1020/tools/ref_tile/specs_s81dv_svc_lp/dsdv_svc_attw_n1_fb_lp.json": "1c475a74f1e85eed1afbec66666de8c6d06766afbe359414df8b97992cb2aa9d",
+    "/home/ubuntu/wt/s81-attn1-nt1-1020/rtl/dsrom_sys/s81_dv/svc_rs/attw/dsdv_svc_attw_n1_f.sv": "7f99f631e4ef1faf16e9d58bd7e4568ef3b4c66281770936940963bbfcaba545",
+    "/home/ubuntu/wt/s81-attn1-nt1-1020/tools/ref_tile/specs_s81dv_svc_lp/dsdv_svc_rs_lp.json": "1a123f779ce5b523db4ea5e9b247e65eb55cd5c290e7977145e6985434f22d36",
+    "/home/ubuntu/wt/s81-attn1-nt1-1020/tools/ref_tile/specs_s81dv_svc_lp/dsdv_svc_rs_entry_lp.json": "88a123c1448cdc09e33c66e79d049ba41b96889d70a309986376adf1803a26fa"
+  },
+  "die_um": [
+    33000.0,
+    26000.0
+  ],
+  "service_slots": [
+    {
+      "name": "rsv_00",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 9134.4,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_01",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 9134.4,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_02",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 10992.0,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_03",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 10992.0,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_04",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 12849.6,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_05",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 12849.6,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_06",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 14707.2,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_07",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 14707.2,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_08",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 16564.8,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_09",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 16564.8,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_10",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 18422.4,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_11",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 18422.4,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_12",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 20280.0,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_13",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 20280.0,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_14",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 22137.6,
+      "y": 2724.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    },
+    {
+      "name": "rsv_15",
+      "master": "dsdv_svc_rs",
+      "kind": "svc",
+      "group": "south",
+      "x": 22137.6,
+      "y": 6612.2,
+      "w": 1728.0,
+      "h": 3801.6,
+      "reg": false
+    }
+  ],
+  "attention_G4": {
+    "physical_tiles": 1,
+    "physical_hgrp8": 4,
+    "NTP": 1,
+    "virtual_logical_tiles": 4,
+    "main_um": [
+      1036.8,
+      2160
+    ],
+    "fb_um": [
+      1123.2,
+      2160
+    ],
+    "source": "dsdv_svc_attw_n1_f -> dsdv_svc_rs_attw TEXT=1,NTP=1,TLX=6,SRAM_MACRO=1; tile H=16 TD=32 NBANK=5 BW=3 PWORDS=2 FPL=4 FML=6 F12=1; OT_ATTN_HGRP_HARD+OT_ATTN_HGRP8"
+  },
+  "stack_cases": [
+    {
+      "core_h_um": 1555.2,
+      "scope": "nonentry pin lower bound ONLY",
+      "required_stack_h_um": 3801.6000000000004,
+      "excess_current_slot_um": 4.547473508864641e-13,
+      "uniform16_excess_reserved_mm2": 1.257285475730896e-14
+    },
+    {
+      "core_h_um": 1641.6,
+      "scope": "uniform literal-grid/entry pin lower bound ONLY",
+      "required_stack_h_um": 3888.0,
+      "excess_current_slot_um": 86.40000000000009,
+      "uniform16_excess_reserved_mm2": 2.3887872000000026
+    },
+    {
+      "core_h_um": 2073.6,
+      "scope": "actual historical different-ABI landed-kit outline",
+      "required_stack_h_um": 4320.0,
+      "excess_current_slot_um": 518.4000000000001,
+      "uniform16_excess_reserved_mm2": 14.332723200000004
+    }
+  ],
+  "area": {
+    "current16_reserved_mm2": 105.1066368,
+    "G4_main_attw16_mm2": 35.831808,
+    "G4_fb_attw16_mm2": 38.817792,
+    "obsolete_G16_attw16_mm2": 98.537472
+  }
+}
