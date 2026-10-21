@@ -54,6 +54,40 @@
     end
 endmodule
 
+// HBM-COLLECT10/HCE2 10-21: ring writer with the ot_pl_land_local_w calendar (slot-major bank, write one-hot from reset,
+// valid, sim-only epochs) but each slot's write enable is a KEPT register computed one edge ahead from rsi, so the
+// reset leaf / rq never fan into every slot bit (native census <= 32).  we[s] at edge n == rq(n) && write_oh(n).
+module ot_hcb_land_w #(parameter integer W = 8, D = 4)(
+    input wire ck, rsi, input wire [W-1:0] i,
+    output wire [D*W-1:0] bank, output wire [D*3-1:0] epo, output wire [D-1:0] vld);
+    (* keep = "true" *) reg rq;
+    (* keep = "true" *) reg [D-1:0] oh;
+    (* keep = "true" *) reg [D-1:0] we;
+    reg [D-1:0] valid;
+    reg [W-1:0] data [0:D-1];
+    wire [D-1:0] oh_n = rq ? {oh[D-2:0], oh[D-1]} : {{(D-1){1'b0}}, 1'b1};
+    always @(posedge ck) begin
+        rq <= rsi; oh <= oh_n; we <= {D{rsi}} & oh_n;
+        if (!rq) valid <= {D{1'b0}}; else valid <= valid | oh;
+    end
+    for (genvar s = 0; s < D; s = s + 1) begin : g_slot
+        always @(posedge ck) if (we[s]) data[s] <= i;
+        assign bank[s*W +: W] = data[s];
+    end
+    assign vld = valid;
+`ifndef SYNTHESIS
+    reg [2:0] wc; reg [2:0] ep [0:D-1];
+    always @(posedge ck) if (!rq) wc <= 3'd0; else wc <= wc + 3'd1;
+    for (genvar s = 0; s < D; s = s + 1) begin : g_ep
+        always @(posedge ck) if (we[s]) ep[s] <= wc;
+        assign epo[s*3 +: 3] = ep[s];
+    end
+    initial if (D != 4) $fatal(1, "ot_hcb_land_w: D 4 only (3-bit epochs)");
+`else
+    assign epo = {(D*3){1'b0}};
+`endif
+endmodule
+
 module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0,
     parameter integer WROW = 0,
     // HBM-HCBANK10 10-21 STG 1: the stage control's long-reach registers (SRAM read enables / addresses, lane-enable
@@ -202,21 +236,34 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     end else begin : g_spl
         localparam integer LS = 5, LK = (MUT == 3) ? 3 : 2;  // slot = edge LS+1, read = LS+1+LK = OT (8)
         // chain landing: W region clk_c ring (beside stage LS) -> E region clk_o read (the o_* out registers)
-        // chunked rings (8-bit kept local selectors / reset leaves): the gate's native census refused one 29-bit ring
-        // (counter / rq drivers 64..124 loads) -> ot_pl_land_chunk_w/_r, same D / K / reset ages, each chunk <= ~10 loads
+        // Native census (gate, 10-21): one 29-bit ot_pl_land ring = counter / rq drivers 64..124 loads; ot_pl_land_chunk_w
+        // still 44..56 (rq folded into every slot-bit enable).  So: 8-bit chunks, chunk writers ot_hcb_land_w (kept
+        // registered slot enables, same write calendar / reset age as ot_pl_land_local_w), readers ot_pl_land_chunk_r,
+        // and a dedicated 2-leaf reset relay for the rings (same release age as rn_st: same relay, same clock).
+        wire [1:0] rl;
+        ot_rst_relay #(.REGIONS(2)) u_rst_l (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
         localparam integer LCB = 8, LNC = (DW + LCB - 1) / LCB;
         wire [4*DW-1:0] lc_bank; wire [4*3-1:0] lc_epo; wire [4*LNC-1:0] lc_vld; wire [DW-1:0] lc_o;
-        ot_pl_land_chunk_w #(.W(DW), .D(4), .CHUNK_BITS(LCB)) u_lcw (.ck(clk_c), .rsi(rn_st), .i({cv[LS], cd[LS]}),
-            .bank(lc_bank), .epo(lc_epo), .vld(lc_vld));
-        ot_pl_land_chunk_r #(.W(DW), .D(4), .K(LK), .CHUNK_BITS(LCB)) u_lcr (.ck(clk_o), .rsi(rn_st), .bank(lc_bank),
+        wire [DW-1:0] lc_i = {cv[LS], cd[LS]};
+        for (genvar lc = 0; lc < LNC; lc = lc + 1) begin : u_lcw
+            localparam integer CW = (DW - lc*LCB < LCB) ? DW - lc*LCB : LCB;
+            wire [4*CW-1:0] cb; wire [4*3-1:0] ce;
+            ot_hcb_land_w #(.W(CW), .D(4)) u_w (.ck(clk_c), .rsi(rl[0]), .i(lc_i[lc*LCB +: CW]), .bank(cb), .epo(ce),
+                .vld(lc_vld[lc*4 +: 4]));
+            for (genvar sl = 0; sl < 4; sl = sl + 1) begin : g_s
+                assign lc_bank[sl*DW + lc*LCB +: CW] = cb[sl*CW +: CW];
+            end
+            if (lc == 0) begin : g_e assign lc_epo = ce; end
+        end
+        ot_pl_land_chunk_r #(.W(DW), .D(4), .K(LK), .CHUNK_BITS(LCB)) u_lcr (.ck(clk_o), .rsi(rl[0]), .bank(lc_bank),
             .epo(lc_epo), .vld(lc_vld), .o(lc_o));
         assign q_v = lc_o[DW-1]; assign {q_ss, q_nv, q_wa, q_xa} = lc_o[DW-2:0];
         // fault flag landing: slots written by the f_in pin on clk_rw[3] (W row 3), read K 1 on clk_rx[3] (E row 3)
         wire [3:0] lf_bank; wire [4*3-1:0] lf_epo; wire [3:0] lf_vld;
-        ot_pl_land_w #(.W(1), .D(4)) u_lfw (.ck(clk_rw[3]), .rsi(rn_st), .i(c_f), .bank(lf_bank), .epo(lf_epo), .vld(lf_vld));
+        ot_hcb_land_w #(.W(1), .D(4)) u_lfw (.ck(clk_rw[3]), .rsi(rl[1]), .i(c_f), .bank(lf_bank), .epo(lf_epo), .vld(lf_vld));
         reg f_rq, f_warm, f_e; reg [2:0] f_rc;
         wire [2:0] f_x = f_rc - 3'd1; wire [1:0] f_sel = f_x[1:0];
-        always @(posedge clk_rx[3]) f_rq <= rn_st;
+        always @(posedge clk_rx[3]) f_rq <= rl[1];
         always @(posedge clk_rx[3])
             if (!f_rq) begin f_rc <= 3'd0; f_warm <= 1'b0; end
             else begin f_rc <= f_rc + 3'd1; if (f_rc == 3'd0) f_warm <= 1'b1; end
