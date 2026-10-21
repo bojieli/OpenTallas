@@ -343,23 +343,36 @@ module ot_hgi_coll_issuer_m128v8 (
  // ---------------- helpers ----------------
  function automatic [6:0] f_next(input [63:0] x); f_next={x[51],x[5:0]}; endfunction
  function automatic [6:0] f_tgt(input [63:0] x); f_tgt={x[52],x[11:6]}; endfunction
- // record {next 7 [52:46], tgt 7 [45:39], lid 5 [38:34], halt [33], has [32], cm1 32 [31:0]}; cm1 = count - 1
+ // record {next 7 [52:46], tgt 7 [45:39], lid 5 [38:34], halt [33], has [32], cnt 32 [31:0]}; cnt = RAW count field.
+ // HBM-COLLECT10/ISS (10-21): the v8 record held count-1, so every metadata macro read (326 ps clk->q) fed a 32-bit
+ // decrement borrow chain (~10 OR levels) into rt / rn / pr_* in the same edge (route r128v9b: TT -135 ps, 64 D pins,
+ // class g_meta rd_out -> rt/rn/pr_*). The record now stores the raw count and the decrement is folded into the loop
+ // decision (registered side): take = has && q < cnt-1 == has && q + ~cnt + 2 < 2^32 (carry-save, one adder).
  localparam integer RW=53;
  function automatic [RW-1:0] f_rec(input [63:0] x);
-  f_rec={f_next(x),f_tgt(x),x[49:45],x[44],|x[43:12],x[43:12]-32'd1};
+  f_rec={f_next(x),f_tgt(x),x[49:45],x[44],|x[43:12],x[43:12]};
  endfunction
  function automatic [6:0] r_next(input [RW-1:0] r); r_next=r[52:46]; endfunction
  function automatic [6:0] r_tgt(input [RW-1:0] r); r_tgt=r[45:39]; endfunction
  function automatic [4:0] r_lid(input [RW-1:0] r); r_lid=r[38:34]; endfunction
  function automatic r_has(input [RW-1:0] r); r_has=r[32]; endfunction
- function automatic [31:0] r_cm1(input [RW-1:0] r); r_cm1=r[31:0]; endfunction
+ function automatic [31:0] r_cnt(input [RW-1:0] r); r_cnt=r[31:0]; endfunction
  // loop decision, visits domain: take = has && (q < count-1)   (reload mutant: q <= count-1 = v7 lp1 <= count)
- function automatic f_take(input has,input [31:0] qv,input [31:0] cm1);
+ // q < cnt-1 (cnt >= 1)  <=>  q + ~cnt + 2 < 2^32: carry-save q / ~cnt / 2, then one 32-bit carry-out (no decrement).
+ // reload mutant q <= cnt-1 <=> q < cnt <=> q + ~cnt + 1 < 2^32.
+ function automatic f_take(input has,input [31:0] qv,input [31:0] cnt);
+  reg [31:0] b,c,sv,kv;reg [32:0] t;
+  begin
+   b=~cnt;
 `ifdef OT_COLL_ISS8_MUT_RELOAD
-  f_take=has && (qv<=cm1);
+   c=32'd1;
 `else
-  f_take=has && (qv<cm1);
+   c=32'd2;
 `endif
+   sv=qv ^ b ^ c;kv=(qv & b) | (qv & c) | (b & c);
+   t={1'b0,sv}+{1'b0,kv[30:0],1'b0};
+   f_take=has && !(kv[31] || t[32]);
+  end
  endfunction
  // explicit 2+3 predecoded 5->32 one-hot (with enable)
  function automatic [31:0] f_dec(input en,input [4:0] a);
@@ -475,7 +488,7 @@ module ot_hgi_coll_issuer_m128v8 (
  wire [31:0] l_t={fwt_c[1] ? nft[31:16] : aot[31:16],fwt_c[0] ? nft[15:0] : aot[15:0]};
  wire [31:0] l_n={fwn_c[1] ? nfn[31:16] : aon[31:16],fwn_c[0] ? nfn[15:0] : aon[15:0]};
 `endif
- wire tt=f_take(r_has(rt),l_t,r_cm1(rt)),tn=f_take(r_has(rn),l_n,r_cm1(rn));
+ wire tt=f_take(r_has(rt),l_t,r_cnt(rt)),tn=f_take(r_has(rn),l_n,r_cnt(rn));
  // ---------------- data next state (per-bit select copies) ----------------
  wire [RW-1:0] rec_nt=f_rec(nt_w),rec_nn=f_rec(nn_w),rec_m0=f_rec(mo0),rec_m1=f_rec(mo1);
  wire [20:0] rc_n;wire [RW-1:0] rt_n,rn_n;wire [31:0] q_n;
@@ -536,7 +549,7 @@ module ot_hgi_coll_issuer_m128v8 (
            (cfg[35:32]==4'd2 || (cfg[35:32]==4'd3 && cfg[31:22]==10'd0 && !cfg[21] && !cfg[18]));
  wire m1ok_x=cfg[36] && cfg[35:32]==4'd1 && nbs_x && sel_n && bank_n!=2'd3;
  wire upd_x=adv_x && rc_n[0];
- wire take_x=sacc ? (r_has(pr_c) && f_take(1'b1,32'd0,r_cm1(pr_c))) : adv ? (take ? tt : tn) : take;
+ wire take_x=sacc ? (r_has(pr_c) && f_take(1'b1,32'd0,r_cnt(pr_c))) : adv ? (take ? tt : tn) : take;
  wire [31:0] oht_x=f_dec(1'b1,r_lid(rt_n)),ohn_x=f_dec(1'b1,r_lid(rn_n)),wr_x=f_dec(upd_x,rc_n[6:2]);
  wire [15:0] aen_x;
  for(genvar f=0;f<16;f=f+1)begin:g_aenx assign aen_x[f]=m1ok_x && frag_n==f; end
