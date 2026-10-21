@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-mkdir -p soft_copy_probe
-cd soft_copy_probe
-cp ../partition_probe_r2/partitioned.v .
+mkdir -p soft_copy_probe_r3
+cd soft_copy_probe_r3
+cp ../partition_probe_r3/partitioned.v .
 for f in engine_native32.py engine_copy_certificate.py bind_copy_inputs.py textbook_lint.py extract_soft.py native_census.py macro_bb.v;do cp ../"$f" .;done
 ln -sfn ../libs libs
 python3 extract_soft.py partitioned.v original.v > extraction.json
