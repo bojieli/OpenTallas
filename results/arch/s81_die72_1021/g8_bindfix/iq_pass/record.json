@@ -1,0 +1,30 @@
+{
+  "state": "STRICT_BIND_PASS_GEN_LIVE_NOT_PHYSICAL_CLOSURE",
+  "source_ref": "553741303923ab6bab36d67d17f914b1f11896c5",
+  "unit": "oth-ubuntu-2769577-1792605815",
+  "host": "ot-gold2",
+  "run": "/srv/opentallas-scratch/claude/codex-s81-g8-iqready-1021/die72-g8iq",
+  "strict_pass_edge": "2026-10-21 11:15:16 PDT",
+  "masters": 47,
+  "instances": 30170,
+  "all_strict_errors": 0,
+  "spare_out_bits": 283580,
+  "exact_XC_spare_ranges": [
+    [
+      1104,
+      2207
+    ],
+    [
+      3312,
+      4415
+    ]
+  ],
+  "live_copies_strict": [
+    0,
+    2
+  ],
+  "actual_die_v_sha256": "8ef3b748e5b14da4446d29576702d2828a056943481c650a65b5f5b18bf84838",
+  "die_v_byte_identical_to_preserved_R4_and_FAST": true,
+  "clock_geometry_runtime_cycle_changes": 0,
+  "remaining": "automatic GEN then GRT/TTFFSS/clock on available views; no all-closed barrier"
+}
