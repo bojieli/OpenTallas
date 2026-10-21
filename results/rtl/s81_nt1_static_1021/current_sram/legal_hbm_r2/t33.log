@@ -1,0 +1,6 @@
+CURRENT_ATT T=33 SRAM=1 NTP=0/1 scores=9/9 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+- tools/s81_dv/svc_rs/tb_attn1_current_sram.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 79.659 s; speed 54.759 ns/s
+- Verilator: cpu 79.650 s on 1 threads; allocated 118 MB

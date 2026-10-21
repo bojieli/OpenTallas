@@ -1,0 +1,100 @@
+{
+ "baseline": {
+  "status": "PASS",
+  "cases": [
+   {
+    "T": 1,
+    "score_beats_per_engine": 1,
+    "pv_words_per_engine": 40,
+    "metadata_reads_per_engine": 4,
+    "go_per_engine": 1,
+    "done_mask": 3,
+    "fault": 0,
+    "mismatch": 0,
+    "PIO": 123,
+    "dynamic_ST": 0,
+    "status": "PASS"
+   },
+   {
+    "T": 33,
+    "score_beats_per_engine": 9,
+    "pv_words_per_engine": 40,
+    "metadata_reads_per_engine": 4,
+    "go_per_engine": 1,
+    "done_mask": 3,
+    "fault": 0,
+    "mismatch": 0,
+    "PIO": 123,
+    "dynamic_ST": 0,
+    "status": "PASS"
+   },
+   {
+    "T": 46,
+    "score_beats_per_engine": 12,
+    "pv_words_per_engine": 40,
+    "metadata_reads_per_engine": 4,
+    "go_per_engine": 1,
+    "done_mask": 3,
+    "fault": 0,
+    "mismatch": 0,
+    "PIO": 123,
+    "dynamic_ST": 0,
+    "status": "PASS"
+   }
+  ],
+  "source_design": "4b027d3be currentAPI NTP0 vs NTP1",
+  "bench_source": "1172141bb",
+  "unit": "2488270-1792604136",
+  "scope": "ActualATTproductionNoFG3,one complete tile,remoteROWselected inputs,legalWINmetadataHBM WB64/65 replies tagged+onecredit/request, fixedPO300/800 andPVO1600/2600,realSRAMmodels/PINREGoff. Does not qualify all16shares/callers,local HBMweight windowfetch,SMWIRE/PVSO producer assembly,nativefloorplan/STA or fulltoken.",
+  "adopted": false
+ },
+ "sram": {
+  "status": "PASS",
+  "cases": [
+   {
+    "T": 1,
+    "score_beats_per_engine": 1,
+    "pv_words_per_engine": 40,
+    "metadata_reads_per_engine": 4,
+    "go_per_engine": 1,
+    "done_mask": 3,
+    "fault": 0,
+    "mismatch": 0,
+    "PIO": 123,
+    "dynamic_ST": 0,
+    "status": "PASS"
+   },
+   {
+    "T": 33,
+    "score_beats_per_engine": 9,
+    "pv_words_per_engine": 40,
+    "metadata_reads_per_engine": 4,
+    "go_per_engine": 1,
+    "done_mask": 3,
+    "fault": 0,
+    "mismatch": 0,
+    "PIO": 123,
+    "dynamic_ST": 0,
+    "status": "PASS"
+   },
+   {
+    "T": 46,
+    "score_beats_per_engine": 12,
+    "pv_words_per_engine": 40,
+    "metadata_reads_per_engine": 4,
+    "go_per_engine": 1,
+    "done_mask": 3,
+    "fault": 0,
+    "mismatch": 0,
+    "PIO": 123,
+    "dynamic_ST": 0,
+    "status": "PASS"
+   }
+  ],
+  "source_design": "4b027d3be canonicalREF vs0b50e2106 SRAMrestorationDUT",
+  "bench_source": "1172141bb",
+  "unit": "2488685-1792604137",
+  "scope": "ActualATTproductionNoFG3,one complete tile,remoteROWselected inputs,legalWINmetadataHBM WB64/65 replies tagged+onecredit/request, fixedPO300/800 andPVO1600/2600,realSRAMmodels/PINREGoff. Does not qualify all16shares/callers,local HBMweight windowfetch,SMWIRE/PVSO producer assembly,nativefloorplan/STA or fulltoken.",
+  "adopted": false
+ }
+}
