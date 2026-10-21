@@ -301,6 +301,13 @@ mv $A/net/contract_pre.json $A/net/contract_pre_nol24.json && mv $A/net/contract
 python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/contract_pre.json --rev HEAD --json $A/pb5b/contract_modules_l24.json > $A/pb5b/cmc_l24.log 2>&1; tail -1 $A/pb5b/cmc_l24.log
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/contract_pre.json --report $A/pb5b/functional_bind_l24.json --lat warn > $A/pb5b/functional_bind_l24.log 2>&1
 tail -1 $A/pb5b/functional_bind_l24.log; grep -q "^FUNCTIONAL_BIND PASS" $A/pb5b/functional_bind_l24.log || { echo S5X_FUNCTIONAL_FAIL; exit 16; }
+python3 - "$A/lanes_report.json" <<'PY_CAPACITY' || { echo S4_BLOCKING_GEOMETRY_NO_ROUTE; exit 24; }
+import json,sys
+r=json.load(open(sys.argv[1]));c=r.get('capacity') or {};w=c.get('windows') or {}
+bad=dict(hop_violations=r.get('hop_violations'),forced=c.get('forced'),windows_over_1=w.get('over_1'))
+print('S4_CAPACITY_GATE',bad)
+sys.exit(any(v is None or v!=0 for v in bad.values()))
+PY_CAPACITY
 step S6 synth_b
 synth_round $A/net/contract_pre.json $A/vplan_b b $A7/vplan_b || exit $?
 step S7 gen2e_case_b_postlanding
