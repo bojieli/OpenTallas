@@ -1,0 +1,9 @@
+O2 is prepared; it is not admitted. ROOT must explicitly approve admission after the immutable O run terminates. This packet corrects six missed placement slot bindings in O83d057be0, whose actual GEN realized 67 of the 73 intended homes.
+
+The selected model is plano2M/corridor_model.json. O2_SIX_SLOT_IDENTITY.json verifies the six actual masters, parameters, RTL source hashes, ports, clock/reset parents, and unchanged coordinate/region maps. Model0ebafacb8 precedes runner449de79d5; bdc375d09 adds owned stop receipts; 955d021fa adds the source/clock identity packet. RTL, source contract, cycle prices, exact74S2 reuse, and selected colh remain unchanged.
+
+The runner checks actual master, orientation, dimensions, coordinates, and placement problems after A and after both P/Q GEN jobs. A mismatch exits25 before later admission. Isolated verification rejected the original O actual67 plan and accepted the existing N actual50 reference.
+
+Owned stop control applies only to this future runner: create /home/ubuntu/artifacts/hdie-d4/codex_hbm_r16o2_binding_1021/plano2M/STOP_FUTURE_STAGES. Checks occur at stage boundaries and directly before GEN/S4 admissions. A present marker records STOP_RECEIPT_<pid>.json and exits26 without signalling admitted children or claiming completion. Admitted P/Q workers finish normally. No automatic restart over an existing remote root is supported; the returning DIE/Claude coordinator must review exact inputs and receipts before a manual continuation. The marker is absent by default.
+
+After explicit ROOT admission, the intended owned command is bash results/arch/hbm_release_r16_1021/gen_s4_r16o2_binding.sh o2M from this branch worktree, with output captured in the matching artifact chain.log. This statement documents the recipe; it does not authorize or execute it. The runner admits only GEN/PQ/S4, never S5 or physical route. Any failed capacity guard remains blocking.

@@ -1,0 +1,15 @@
+{
+  "status": "STOPPED_BEFORE_FUTURE_ADMISSION",
+  "time": "2026-10-21T16:35:28.959072-07:00",
+  "stage": "TEST_BEFORE_ADMISSION",
+  "source": "bdc375d09",
+  "controller_pid": "67342",
+  "remote_root": "TEST_ONLY_NO_REMOTE",
+  "marker": "/tmp/hbm_o2_stop_guard_xnt8u9r4/STOP_FUTURE_STAGES",
+  "restart_owner": "DIE coordinator /root/hbm_lead/die_chain or returning Claude coordinator",
+  "admitted_jobs_signalled": false,
+  "completion_claim": false,
+  "resume": "Manual source/receipt review of identical inputs required; this runner is not automatically restartable over an existing remote root.",
+  "test_only": true,
+  "validation": "isolated function invocation exited26; later echo unreachable; no remote command executed"
+}
