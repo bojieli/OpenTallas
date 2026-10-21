@@ -10,7 +10,7 @@ Persistence: `gen_slice8_rp_source.py` owns FDN generation; its extracted `fdn()
 
 Executed light model: `python3 results/arch/q_s8_local_guards_1021/model.py` checks 64 four-state guard triples, 3072 ternary comparisons, 64 header associations, 16 procedural-priority pairs, all 547 field provenance positions, partition coverage, unchanged register declarations, and source hashes. Generator byte identity and `git diff --check` pass. This is a mechanism/field model, not executed full registered RTL equivalence. Actual fixture equivalence and combined native qualification belong to cb16. ABC preservation and actual fanout must be measured before adoption.
 
-Remaining coverage is explicit: three math OAI roots (35/36/35 loads), TAP roots (separate cb16 repair), and fallback physical rs_s/rs_n/l9_i valid inputs (57/64 loads) are not repaired by this patch. Hold combined native until those source remedies are ready. No physical, timing, clock or release qualification is claimed.
+The fallback physical rs_s/rs_n/l9_i valid inputs (57/64 loads) are addressed by the additional source transform below. TAP roots have a separate cb16 repair. Three math OAI roots (35/36/35 loads) remain explicitly open pending the exact station binding; the submitted standalone station source is unchanged. Hold combined native until all required source coverage and actual RTL equivalence are ready. No physical, timing, clock or release qualification is claimed.
 
 ## Additional fallback input-flag candidate
 
