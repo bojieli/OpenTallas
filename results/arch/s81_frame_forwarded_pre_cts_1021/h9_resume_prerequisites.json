@@ -1,0 +1,18 @@
+{
+  "scope": "Preparation only, no resume launched",
+  "original_host": "ot-epyc9",
+  "original_root": "/srv/opentallas-scratch/claude/ref_gate/s81frame_col_h9_rf3rlfs1-20261021-020340",
+  "placed_odb": "routes/gate/work/orfs/results/asap7/opentallas_col_h9_l4_lp_asap7_ref_gate/base/3_place.odb",
+  "placed_odb_bytes": 655685241,
+  "placed_odb_sha256": "7d677c7eb92511fcd3d2b6257b3c2591219730fd1a79189d31336c6352f1bc40",
+  "source_archive_sha256": "565315c33c58d8232fe7cb4ba7aea8b93af038718c2139557c6cd06b3a790006",
+  "source_manifest_sha256": "d79b5601fb5fd5f9ba45edfa82e0f38c81aa6c7e35dbf88d22435129d5f86638",
+  "required_before_resume": [
+    "actual focused positive/freshCTS PASS and exact old mixedphase causal FAIL",
+    "root_integration paired/publication/runtime sync",
+    "fresh copied immutable original source/work, no original mutation",
+    "identity guard source/netlist/3_place ODB; regenerate only repaired hooks",
+    "retain original preCTS evidence and original source geometry; normal CTS/ck/path/GRT tail without placement rebuild"
+  ],
+  "required_normal_admission": true
+}
