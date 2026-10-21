@@ -1,0 +1,248 @@
+{
+ "schema": "opentallas.release_rack.hop_latency.v1",
+ "clock_hz": 1200000000.0,
+ "note": "per-hop off-die latency per circuit class for the token-pass static schedule: D = direct (board trace / cable, full RS(544,514) KP4 hop 209 ns + flight beyond 0.3 m + AEC retimer); S = static circuit through one Tomahawk-Ultra-class switch (PHY/FEC 100 + switch 250 + flight); S_budget = the 377.6 ns contract the xdie co-sims model today. Cycles at 1.2 GHz, rounded up.",
+ "systems": {
+  "S81": {
+   "tp_mesh": {
+    "circuits": 1752,
+    "D_media": [
+     "board trace"
+    ],
+    "D_ns_max": 209.0,
+    "D_cycles_max": 251,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 203
+   },
+   "head_hop": {
+    "circuits": 12,
+    "D_media": [
+     "board trace",
+     "passive DAC"
+    ],
+    "D_ns_max": 213.6,
+    "D_cycles_max": 257,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 197
+   },
+   "token_return": {
+    "circuits": 4,
+    "D_media": [
+     "board trace"
+    ],
+    "D_ns_max": 209.0,
+    "D_cycles_max": 251,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 203
+   },
+   "stage_hop": {
+    "circuits": 960,
+    "D_media": [
+     "AEC",
+     "board trace",
+     "passive DAC"
+    ],
+    "D_ns_max": 220.7,
+    "D_cycles_max": 265,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 189
+   },
+   "copyb_in": {
+    "circuits": 32,
+    "D_media": [
+     "passive DAC"
+    ],
+    "D_ns_max": 214.3,
+    "D_cycles_max": 258,
+    "D_ns_min": 214.0,
+    "D_cycles_min": 257,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 196
+   },
+   "copyb_hop": {
+    "circuits": 160,
+    "D_media": [
+     "AEC",
+     "board trace",
+     "passive DAC"
+    ],
+    "D_ns_max": 220.5,
+    "D_cycles_max": 265,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 189
+   },
+   "copyb_out": {
+    "circuits": 32,
+    "D_media": [
+     "board trace",
+     "passive DAC"
+    ],
+    "D_ns_max": 213.6,
+    "D_cycles_max": 257,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 197
+   }
+  },
+  "Qwen-ROM": {
+   "ucie_rom_pair": {
+    "circuits": 4,
+    "D_media": [
+     "UCIe (in package)"
+    ],
+    "D_ns_max": 3.5,
+    "D_cycles_max": 5,
+    "D_ns_min": 3.5,
+    "D_cycles_min": 5,
+    "S_ns": 3.5,
+    "S_cycles": 5,
+    "S_budget_ns": null,
+    "S_budget_cycles": null,
+    "saved_cycles_D_vs_S_budget": 0
+   },
+   "ucie_rom_kv": {
+    "circuits": 8,
+    "D_media": [
+     "UCIe (in package)"
+    ],
+    "D_ns_max": 4.2,
+    "D_cycles_max": 6,
+    "D_ns_min": 4.2,
+    "D_cycles_min": 6,
+    "S_ns": 4.2,
+    "S_cycles": 6,
+    "S_budget_ns": null,
+    "S_budget_cycles": null,
+    "saved_cycles_D_vs_S_budget": 0
+   },
+   "tp8_allreduce": {
+    "circuits": 12,
+    "D_media": [
+     "board trace"
+    ],
+    "D_ns_max": 210.5,
+    "D_cycles_max": 253,
+    "D_ns_min": 209.1,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 201
+   },
+   "host": {
+    "circuits": 1,
+    "D_media": [
+     "passive DAC"
+    ],
+    "D_ns_max": 214.5,
+    "D_cycles_max": 258,
+    "D_ns_min": 214.5,
+    "D_cycles_min": 258,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 196
+   }
+  },
+  "HBM-DS": {
+   "quad_mesh": {
+    "circuits": 288,
+    "D_media": [
+     "board trace"
+    ],
+    "D_ns_max": 209.0,
+    "D_cycles_max": 251,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 203
+   },
+   "quad_ring": {
+    "circuits": 192,
+    "D_media": [
+     "AEC",
+     "board trace",
+     "passive DAC"
+    ],
+    "D_ns_max": 220.5,
+    "D_cycles_max": 265,
+    "D_ns_min": 209.0,
+    "D_cycles_min": 251,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 189
+   }
+  },
+  "HBM-Qwen": {
+   "hypercube": {
+    "circuits": 12,
+    "D_media": [
+     "in-package trace"
+    ],
+    "D_ns_max": 3.3,
+    "D_cycles_max": 4,
+    "D_ns_min": 3.3,
+    "D_cycles_min": 4,
+    "S_ns": 3.3,
+    "S_cycles": 4,
+    "S_budget_ns": null,
+    "S_budget_cycles": null,
+    "saved_cycles_D_vs_S_budget": 0
+   },
+   "host": {
+    "circuits": 1,
+    "D_media": [
+     "passive DAC"
+    ],
+    "D_ns_max": 214.5,
+    "D_cycles_max": 258,
+    "D_ns_min": 214.5,
+    "D_cycles_min": 258,
+    "S_ns": 379.6,
+    "S_cycles": 456,
+    "S_budget_ns": 377.6,
+    "S_budget_cycles": 454,
+    "saved_cycles_D_vs_S_budget": 196
+   }
+  }
+ }
+}
