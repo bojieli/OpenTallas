@@ -122,7 +122,7 @@ def gen(hb: int) -> str:
     w("    wire [31:0] x_eps, x_s, x_rbd, x_scale; wire x_mode;")
     w("    wire xe_v, eg_v, f_eg; wire [1:0] xe_c, eg_c; wire [31:0] xe_hh, xe_kk, xe_dd, eg_d; wire [7:0] x_si;")
     w("    wire [172:0] nx_wi, nx_ei, nx_eo, nx_wo; wire [1100:0] xw_d;")
-    w("    ot_s81sl_xg u_xg (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w),")
+    w("    ot_s81sl_xg5 u_xg (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w),")
     w("        .vi(vi), .vo(vo), .xf_v(xfv_x), .xf_s(xfs_x), .xf(xf_x), .nx_wi(nx_wi), .nx_ei(nx_ei), .nx_eo(nx_eo), .nx_wo(nx_wo),")
     w("        .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),")
     w("        .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));")

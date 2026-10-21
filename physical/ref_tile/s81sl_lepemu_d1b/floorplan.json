@@ -1,0 +1,223 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81sl_lepemu_d1b",
+ "top": "ot_s81sl_slice_lepe_mu_x_lp",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  2462.4,
+  5788.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  2460.2400000000002,
+  5786.64
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "ot_s81sl_slice": "M5",
+   "ot_s81sl_lep_mu_h": "M5",
+   "dsdv_mu_land": "M5",
+   "dsfd_coll_lane_e_ntf": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w"
+  ],
+  "N": [
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "E": [
+   "f_host",
+   "f_lf",
+   "f_ks",
+   "t_host",
+   "t_kd",
+   "rst_n",
+   "ck_S",
+   "fault",
+   "rx0",
+   "tx0",
+   "rx1",
+   "tx1",
+   "ch_b",
+   "ck_K",
+   "mu_c",
+   "mu_rt",
+   "mu_rc"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "clock_port": "ck_S",
+ "clock_ports": [
+  "ck_S",
+  "ck_K"
+ ],
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice",
+   "master": "ot_s81sl_slice",
+   "inst": "u_sl",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 1252.8,
+   "h": 5702.4,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h",
+   "master": "ot_s81sl_lep_mu_h",
+   "inst": "u_lep",
+   "idx": 0,
+   "x": 1468.8,
+   "y": 2592.0,
+   "w": 475.2,
+   "h": 561.6,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+   "master": "dsdv_mu_land",
+   "inst": "u_land",
+   "idx": 0,
+   "x": 1468.8,
+   "y": 3196.8,
+   "w": 475.2,
+   "h": 216.0,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf",
+   "master": "dsfd_coll_lane_e_ntf",
+   "inst": "u_ln0",
+   "idx": 0,
+   "x": 1987.2,
+   "y": 2548.8,
+   "w": 432.0,
+   "h": 336.96,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf",
+   "master": "dsfd_coll_lane_e_ntf",
+   "inst": "u_ln1",
+   "idx": 0,
+   "x": 1987.2,
+   "y": 2937.6,
+   "w": 432.0,
+   "h": 336.96,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/lepe_mu/ot_s81sl_slice_lepe_mu_x_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice/ot_s81sl_slice_bb.v",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h/ot_s81sl_lep_mu_h_bb.v",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_bb.v",
+  "physical/ref_tile/s81sl_lepemu_d1b/kit.env",
+  "physical/ref_tile/s81sl_lepemu_d1b/clock.sdc",
+  "physical/ref_tile/s81sl_lepemu_d1b/signoff.sdc",
+  "physical/ref_tile/s81sl_lepemu_d1b/pdn.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/pre_cts.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/post_cts.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/post_grt.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/pre_drt.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/pre_fill.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/post_fill.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/pre_grt.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/pre_gpl.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/s81sl_lepemu_d1b/clock_entry.sdc",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice/insertion.json",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h/insertion.json",
+  "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/insertion.json",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/insertion.json",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/insertion.json",
+  "results/rtl/drive_s81_slicep_1020/lp/ot_s81sl_slice_lepe_mu_x_lp_record.json",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice/ot_s81sl_slice.lef",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice/ot_s81sl_slice_ss.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice/ot_s81sl_slice_ff.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_slice/ot_s81sl_slice_tt.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h/ot_s81sl_lep_mu_h.lef",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h/ot_s81sl_lep_mu_h_ss.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h/ot_s81sl_lep_mu_h_ff.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/ot_s81sl_lep_mu_h/ot_s81sl_lep_mu_h_tt.lib",
+  "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/dsdv_mu_land.lef",
+  "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/dsdv_mu_land_ss.lib",
+  "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/dsdv_mu_land_ff.lib",
+  "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/dsdv_mu_land_tt.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf.lef",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_ss.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_ff.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_tt.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf.lef",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_ss.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_ff.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/standin_views/dsfd_coll_lane_e_ntf/dsfd_coll_lane_e_ntf_tt.lib",
+  "physical/ref_tile/s81sl_lepemu_d1b/place.tcl"
+ ]
+}

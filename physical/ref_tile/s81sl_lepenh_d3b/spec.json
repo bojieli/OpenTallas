@@ -1,0 +1,312 @@
+{
+ "name": "s81sl_lepenh_d3b",
+ "top": "ot_s81sl_slice_lepe_nh_x_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "physical/ref_tile/s81sl_lepenh_d3b/standin_views/ot_s81sl_slice/ot_s81sl_slice_bb.v",
+  "physical/ref_tile/s81sl_lepenh_d3b/standin_views/ot_s81sl_lep_nh/ot_s81sl_lep_nh_bb.v",
+  "physical/ref_tile/s81sl_lepenh_d3b/standin_views/dsfd_coll_lane_e/dsfd_coll_lane_e_bb.v"
+ ],
+ "params": {},
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81PH_LANE_CR"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_S",
+ "clock_ports": [
+  "ck_S",
+  "ck_K"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_S"
+   ],
+   "inputs": [
+    "rst_n",
+    "sid",
+    "ri_w",
+    "vi",
+    "bi",
+    "rt"
+   ],
+   "outputs": [
+    "ro_w",
+    "vo",
+    "bo",
+    "xc",
+    "ck_line",
+    "ck_v",
+    "ck_xc",
+    "ck_rt"
+   ]
+  },
+  "lk": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_K"
+   ],
+   "inputs": [
+    "ch_b",
+    "rx0",
+    "rx1"
+   ],
+   "outputs": [
+    "tx0",
+    "tx1",
+    "tf",
+    "fault"
+   ]
+  }
+ },
+ "landed_record": "results/rtl/s81_slice3_lepenh_1019/lp/ot_s81sl_slice_lepe_nh_x_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_S) -> u_lpr_<r> regional runs (depth 3) -> per-child u_lprc_* pads; the port net has ONE sink"
+ },
+ "outline": {
+  "w": 2462.4,
+  "h": 5788.8,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_d3b/standin_views/ot_s81sl_slice",
+   "count": 1,
+   "inst": "u_sl",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_d3b/standin_views/ot_s81sl_lep_nh",
+   "count": 1,
+   "inst": "u_lep",
+   "at": [
+    1468.8,
+    2592.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_d3b/standin_views/dsfd_coll_lane_e",
+   "count": 1,
+   "inst": "u_ln0",
+   "at": [
+    1987.2,
+    2548.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_lepenh_d3b/standin_views/dsfd_coll_lane_e",
+   "count": 1,
+   "inst": "u_ln1",
+   "at": [
+    1987.2,
+    2937.6
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w"
+  ],
+  "N": [
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "E": [
+   "rst_n",
+   "ck_S",
+   "rx0",
+   "tx0",
+   "tf",
+   "rx1",
+   "tx1",
+   "ch_b",
+   "ck_K",
+   "fault"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "pin_ranges": {
+  "bi": [
+   53.2,
+   257.121
+  ],
+  "bo": [
+   258.121,
+   352.878
+  ],
+  "xc": [
+   353.878,
+   1169.562
+  ],
+  "rt": [
+   1170.562,
+   1274.0
+  ],
+  "ck_line": [
+   1275.0,
+   1279.0
+  ],
+  "ck_v": [
+   1280.0,
+   1281.0
+  ],
+  "ck_xc": [
+   1282.0,
+   1286.0
+  ],
+  "ck_rt": [
+   1287.0,
+   1289.0
+  ],
+  "ri_w": [
+   2203.2,
+   2894.4
+  ],
+  "ro_w": [
+   2894.4,
+   3585.6
+  ],
+  "sid": [
+   143.2,
+   163.2
+  ],
+  "vi": [
+   173.2,
+   633.2
+  ],
+  "vo": [
+   683.2,
+   1143.2
+  ],
+  "rst_n": [
+   2436.0,
+   2440.0
+  ],
+  "ck_S": [
+   2444.0,
+   2456.0
+  ],
+  "rx0": [
+   2558.8,
+   2718.8
+  ],
+  "tx0": [
+   2718.8,
+   2879.76
+  ],
+  "tf": [
+   2888.0,
+   2935.0
+  ],
+  "rx1": [
+   2947.6,
+   3107.6
+  ],
+  "tx1": [
+   3107.6,
+   3268.56
+  ],
+  "ch_b": [
+   3290.0,
+   3294.0
+  ],
+  "ck_K": [
+   3300.0,
+   3312.0
+  ],
+  "fault": [
+   2500.0,
+   2504.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 128,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15 -balance_levels"
+  }
+ },
+ "structural_change": "DRIVE-S81-LEPENH 10-20 s81sl_lepenh_d3b DIAGNOSTIC stand-in parent (never bindable), successor of s81sl_lepenh_d2 (d2b CTS: all parent flops in the 129.6-um channel but 3 E-face port flops stretched both CTS boxes to 1150x700 um, depth 20-23, TT spread 800 ps; channel over-dense, 111k hold buffers, GRT congested). See mk_d3.py: real-size lep_nh (475.2x561.6), channel 172.8, re-ranged line ports, fault/rst_n pins moved toward the channel; d3b: anchors kept, CTS 24 sinks/30 um/15-um buffers/-balance_levels.",
+ "job": {
+  "owner": "Claude:DRIVE-S81-LEPENH",
+  "branch": "claude/s81-lepenh3-1020",
+  "tag": "d3b",
+  "purpose": "early parent integration with stand-ins (owner EFFICIENCY 10-18): gate / GRT / clock pairs; no submit until real child views exist",
+  "submit": false,
+  "hold_merge": "stand-in children: diagnostic only, never route or bind",
+  "benches": [],
+  "no_bench_reason": "diagnostic stand-in gate; behavioural benches run separately (lockstep + slice_lep 2-die on the landed parent)",
+  "views_to": "physical/ref_tile/s81sl_lepenh_d3b/views",
+  "record_to": "results/rtl/ref_tile/s81sl_lepenh_d3b",
+  "extra_paths": [
+   "results/rtl/s81_slice3_lepenh_1019/lp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_OFLOP_GAP": "4.5"
+ },
+ "io_flop_at_pins": {
+  "cols": 21
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

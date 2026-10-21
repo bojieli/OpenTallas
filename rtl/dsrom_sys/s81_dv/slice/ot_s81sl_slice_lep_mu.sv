@@ -3,10 +3,13 @@
 // MU-S81-2/DIE (2026-10-19): multi-user end-slice clusters and their parameter-free p4l die masters, on the hardened MU
 // endpoint tops of record (MU-S81/KIT + MU-S81b, all in ot_s81sl_slice_lep.sv, which this file does NOT change, so the
 // lep / lep_nh / lep_mu_a / lep_mu_ab kit sources stay byte-identical):
-//   copy-A-only endpoint  ot_s81sl_lep_mu_a  (MU_EN 1, AB_EN 0, HOST_EN 0; kit s81sl_lepmua)  -> s_0N, s_0S, s_7S
+//   copy-A-only endpoint  ot_s81sl_lep_mu_a_n32 (= ot_s81sl_lep_mu_a RX_SRAM/IN_PIPE/NATIVE32 1; kit s81sl_lepmua_n32)
+//                         -> s_0N, s_0S, s_7S
 //   copy-A/B endpoint     ot_s81sl_lep_mu_ab (MU_EN 1, AB_EN 1, HOST_EN 0; kit s81sl_lepmu)   -> s_0S of the AB die only
-//   host-plane endpoint   ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0))  -> s_7N  (OWED: no parameter-free top / kit yet;
-//                         its pair-B inputs are constant 0 here and unread inside at AB_EN 0, generate)
+//   host-plane endpoint   ot_s81sl_lep_mu_h_n32 (= ot_s81sl_lep_mu_h RX_SRAM/IN_PIPE/NATIVE32 1; kit s81sl_lepmuh_n32) -> s_7N
+// S81-SLICERTL (10-20): the A / H endpoints are the PARAMETER-FREE native32 tops (ot_s81sl_lep_mu_n32.sv), so the die
+// binds exactly the elaboration the n32 kits close (was: default params RX_SRAM 0 / IN_PIPE 0 / NATIVE32 0, and the
+// generic ot_s81sl_lep_mu #(.HOST_EN(1)) on s_7N).  IN_PIPE: +1 edge on ro / t_host / t_kd / mu_c (MU.S81.CAL).
 // beside the CLOSED landing leaf dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) (view dsdv_mu_land-263e13fc3).
 // Cluster = slice + 2 (AB: 4) link lane tiles + endpoint + landing, exactly the MU_EN branch of ot_s81sl_slice_lep with
 // the leaf chosen per die position (MU-S81/DIE 908a67c18 used the generic ot_s81sl_lep_mu for every end slice).
@@ -93,16 +96,13 @@ module ot_s81sl_slice_lep_mux #(
         assign f2 = 3'd0; assign f3 = 3'd0;
     end endgenerate
     wire mwv, mrv, mf; wire [1103:0] mwd, mrd;
-    generate if (HOST_EN != 0) begin : g_h        // s_7N: host-plane endpoint (OWED parameter-free top / kit)
-    ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0)) u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+    generate if (HOST_EN != 0) begin : g_h        // s_7N: host-plane endpoint, parameter-free native32 top (kit s81sl_lepmuh_n32)
+    ot_s81sl_lep_mu_h_n32 u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
         .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv),
         .sl_f(sf), .l0_f(f0), .l1_f(f1), .l0_st(rx0[513:512]), .l1_st(rx1[513:512]),
         .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks),
-        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
-        .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
-        .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
-        .l2_f(3'd0), .l3_f(3'd0), .fault(fault));
+        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault));
     end else if (AB_EN != 0) begin : g_ab     // copy-A/B endpoint (kit s81sl_lepmu)
     ot_s81sl_lep_mu_ab u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
@@ -113,8 +113,8 @@ module ot_s81sl_slice_lep_mux #(
         .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb),
         .l2_f(f2), .l3_f(f3), .fault(fault));
     assign f_host = 515'd0; assign f_lf = 4'd0; assign f_ks = 53'd0;
-    end else begin : g_a                         // copy-A-only endpoint (kit s81sl_lepmua)
-    ot_s81sl_lep_mu_a u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+    end else begin : g_a                         // copy-A-only endpoint, parameter-free native32 top (kit s81sl_lepmua_n32)
+    ot_s81sl_lep_mu_a_n32 u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
         .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv),
         .sl_f(sf), .l0_f(f0), .l1_f(f1),

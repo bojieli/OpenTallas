@@ -271,6 +271,9 @@ class Module:
         # a macro between master and instance name (`child `MUTP u_x (...)`, e.g. dsdv_gunit's `DSDV_GU_MUT) hid real
         # instances from the regex below (S81-BIND3 10-17: dsdv_gunit reported STUB) -> drop `macro tokens first
         b = re.sub(r'`\w+', ' ', self.body)
+        # S81-LEPENH2 10-20: a '(* keep_hierarchy="yes" *)' attribute in front of a child instance hid it from the
+        # instance regex (ot_pl_land_reset_forest reported STUB: its only behaviour is kept-hierarchy copy flops)
+        b = re.sub(r'\(\*.*?\*\)', ' ', b, flags=re.S)
         if re.search(r'\balways(_ff|_comb|_latch)?\b', b) or re.search(r'\binitial\b[^;]*\$readmem', b):
             self._kind = 'real'; return 'real'
         for m in re.finditer(r'\bassign\b([^;]*)=([^;]*);', b):

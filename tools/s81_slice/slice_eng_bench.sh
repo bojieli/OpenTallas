@@ -14,7 +14,7 @@ EG=$(ls rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg*.sv 2>/dev/null | grep -v test | tr
 SL=${SLICE_SRCS:-rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv}
 srcs="$(cat physical/hbm_norm_split_20261008/sources.f rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f | sort -u | tr '\n' ' ') $MAC
  rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv $EG
- rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv
+ rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg5.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv $XS $CAP $SL ${SLICE_ENG_TB:-rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_eng.sv}"
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD +define+DSFD_PQ_STATIC_X2 -GVS_MUT=$M --top-module tb_s81sl_slice_eng -Mdir $O/obj $srcs \
   --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; grep -m8 "%Error" $O/build.log; tail -n 4 $O/build.log; exit 3; }

@@ -45,7 +45,10 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
-rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rs.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg5.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv

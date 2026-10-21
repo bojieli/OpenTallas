@@ -264,6 +264,12 @@
   }
  ],
  "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
  "reset": {
   "port": "rst_n",
   "root_region": "C",
@@ -353,6 +359,7 @@
    "fault": 0
   },
   "reset_release_added_edges": 13,
+  "status_flag_lag_edges": {},
   "schedule": "reference: cross-region loops re-scheduled; the landed parent == the flat parent with ref_params (+E+1 per landed crossing on that path), reset delayed reset_release_added_edges, ports at offset 0",
   "ref_params": {
    "DLK0": 4,

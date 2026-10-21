@@ -22,7 +22,7 @@ if [ $MODE = master ]; then
   D="$D +define+XDIE_MASTER +define+DSFD_PQ_STATIC_X2"
   MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
   CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
-   rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
+   rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg5.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
    rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
    rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv
    rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv

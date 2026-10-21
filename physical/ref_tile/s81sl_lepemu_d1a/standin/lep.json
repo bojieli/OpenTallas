@@ -1,0 +1,132 @@
+{
+ "name": "standin_ot_s81sl_lep_mu_h",
+ "top": "ot_s81sl_lep_mu_h",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 475.2,
+  "h": 561.6
+ },
+ "pins": {
+  "W": [
+   "ro",
+   "ri"
+  ],
+  "E": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f",
+   "l0_st",
+   "l1_st",
+   "clk",
+   "rst_n",
+   "mu_c",
+   "mu_rt"
+  ],
+  "N": [
+   "ml_wd",
+   "ml_rd",
+   "ml_wv",
+   "ml_rv",
+   "ml_f"
+  ],
+  "S": [
+   "sl_f",
+   "fault",
+   "f_host",
+   "f_lf",
+   "f_ks",
+   "t_host",
+   "t_kd"
+  ]
+ },
+ "pin_ranges": {
+  "ro": [
+   4.0,
+   280.0
+  ],
+  "ri": [
+   282.0,
+   557.6
+  ],
+  "clk": [
+   272.8,
+   280.8
+  ],
+  "rst_n": [
+   280.8,
+   288.8
+  ],
+  "mu_c": [
+   520.0,
+   538.0
+  ],
+  "mu_rt": [
+   539.0,
+   556.0
+  ],
+  "ml_f": [
+   1.4,
+   2.0
+  ],
+  "ml_rv": [
+   2.4,
+   3.0
+  ],
+  "ml_wv": [
+   3.4,
+   3.9
+  ],
+  "ml_rd": [
+   4.4,
+   238.4
+  ],
+  "ml_wd": [
+   239.4,
+   473.6
+  ],
+  "sl_f": [
+   3.0,
+   10.0
+  ],
+  "fault": [
+   455.0,
+   472.0
+  ],
+  "f_host": [
+   160.0,
+   330.0
+  ],
+  "f_lf": [
+   331.0,
+   333.0
+  ],
+  "f_ks": [
+   334.0,
+   352.0
+  ],
+  "t_host": [
+   354.0,
+   390.0
+  ],
+  "t_kd": [
+   391.0,
+   450.0
+  ]
+ },
+ "_note": "DRIVE-S81-SLICEP stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) at the lepmuh_n32 outline 475.2 x 561.6, drawn in the E-end (MY) orientation. Pin REQUEST for the real view: ro/ri on the slice face bit-aligned across the 172.8-um channel, ml_* on N under the dsdv_mu_land S-face pins, mu_c/mu_rt at the top of the lane face, sl_f at the S channel corner."
+}
