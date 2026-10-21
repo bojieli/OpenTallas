@@ -1,0 +1,155 @@
+{
+  "observed_at": "2026-10-21T15:23:37.235438-07:00",
+  "source_ref": "363295685",
+  "actual_finish": "2026-10-21T15:14:37.529433-07:00",
+  "status": "FAIL",
+  "max_dynamic_loads": 1053,
+  "role_errors": [],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_dv_s8b_lp_asap7_ref_census/base/1_2_yosys.v",
+    "sha256": "338125e7668963743546ee9a544238b7bf5a29a77bd83a201f9c03ee191cdecd"
+  },
+  "violations": [
+    {
+      "driver": "rs_s[1027]",
+      "driver_role": "input_port",
+      "net": "rs_s[1027]",
+      "loads": 57
+    },
+    {
+      "driver": "rs_s[1026]",
+      "driver_role": "input_port",
+      "net": "rs_s[1026]",
+      "loads": 57
+    },
+    {
+      "driver": "rs_s[513]",
+      "driver_role": "input_port",
+      "net": "rs_s[513]",
+      "loads": 57
+    },
+    {
+      "driver": "rs_s[512]",
+      "driver_role": "input_port",
+      "net": "rs_s[512]",
+      "loads": 57
+    },
+    {
+      "driver": "rs_n[1027]",
+      "driver_role": "input_port",
+      "net": "rs_n[1027]",
+      "loads": 64
+    },
+    {
+      "driver": "rs_n[1026]",
+      "driver_role": "input_port",
+      "net": "rs_n[1026]",
+      "loads": 64
+    },
+    {
+      "driver": "rs_n[513]",
+      "driver_role": "input_port",
+      "net": "rs_n[513]",
+      "loads": 64
+    },
+    {
+      "driver": "rs_n[512]",
+      "driver_role": "input_port",
+      "net": "rs_n[512]",
+      "loads": 64
+    },
+    {
+      "driver": "l9_i[513]",
+      "driver_role": "input_port",
+      "net": "l9_i[513]",
+      "loads": 64
+    },
+    {
+      "driver": "l9_i[512]",
+      "driver_role": "input_port",
+      "net": "l9_i[512]",
+      "loads": 64
+    },
+    {
+      "driver": "_355333_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_021192_",
+      "loads": 526
+    },
+    {
+      "driver": "_355338_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_021196_",
+      "loads": 1053
+    },
+    {
+      "driver": "_359470_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_021917_",
+      "loads": 69
+    },
+    {
+      "driver": "_365685_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_023297_",
+      "loads": 81
+    },
+    {
+      "driver": "_365733_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_023330_",
+      "loads": 33
+    },
+    {
+      "driver": "_381105_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_035723_",
+      "loads": 33
+    },
+    {
+      "driver": "_389040_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_042422_",
+      "loads": 35
+    },
+    {
+      "driver": "_433073_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_079401_",
+      "loads": 38
+    },
+    {
+      "driver": "u_tap.u_114.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_114._0_",
+      "loads": 96
+    },
+    {
+      "driver": "u_tap.u_115.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_115._0_",
+      "loads": 96
+    },
+    {
+      "driver": "u_tap.u_116.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_116._0_",
+      "loads": 96
+    },
+    {
+      "driver": "u_tap.u_117.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_117._0_",
+      "loads": 96
+    },
+    {
+      "driver": "u_tap.u_118.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_118._0_",
+      "loads": 96
+    }
+  ],
+  "raw_gzip_sha256": "43ae62cd6ba254b32a6a4fb812ed6916d7fa5c9678233ea473ad20a396b24952",
+  "scope": "Actual wholeparent FB mappednative FAIL; no layout; standaloneprefixchild32PASS separate",
+  "analysis_owner": "Q_CLASS sole mapping; no duplicate build"
+}
