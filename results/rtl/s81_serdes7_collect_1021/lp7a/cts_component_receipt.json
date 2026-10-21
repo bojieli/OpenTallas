@@ -4,44 +4,60 @@
   "roots": [
     {
       "root": "ck_tx",
+      "tt_n": 2,
       "tt_spread_ps": 313.1,
+      "ff_n": 2,
       "ff_spread_ps": 308.2
     },
     {
       "root": "ck_r0",
+      "tt_n": 1,
       "tt_spread_ps": 0.0,
+      "ff_n": 1,
       "ff_spread_ps": 0.0
     },
     {
       "root": "ck_r1",
+      "tt_n": 1,
       "tt_spread_ps": 0.0,
+      "ff_n": 1,
       "ff_spread_ps": 0.0
     },
     {
       "root": "ck_ptx",
+      "tt_n": 2,
       "tt_spread_ps": 49.3,
+      "ff_n": 2,
       "ff_spread_ps": 70.8
     },
     {
       "root": "ck_rxo",
+      "tt_n": 515,
       "tt_spread_ps": 81.0,
+      "ff_n": 515,
       "ff_spread_ps": 70.5
     },
     {
       "root": "ck_dly",
+      "tt_n": 1,
       "tt_spread_ps": 0.0,
+      "ff_n": 1,
       "ff_spread_ps": 0.0
     },
     {
       "root": "ck_dec",
+      "tt_n": 1,
       "tt_spread_ps": 0.0,
+      "ff_n": 1,
       "ff_spread_ps": 0.0
     },
     {
       "root": "ck_prx",
+      "tt_n": 2,
       "tt_spread_ps": 21.1,
+      "ff_n": 2,
       "ff_spread_ps": 99.1
     }
   ],
-  "conclusion": "TX child-compensated clock spread already exceeds80ps before interruption; physicalsource redesign required; no blind unchanged GRTrestart. Old300pspairwaiver notadopted."
+  "conclusion": "Actual child-compensated TX313.1/308.2ps, RXO TT81.0ps and PRX FF99.1ps exceed80 before interruption. No globalPASS/empty-root claim; source redesign required, no blind GRTrestart or300pswaiver."
 }
