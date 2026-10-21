@@ -111,6 +111,7 @@ CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_
 # KV-BIND12 10-20 (OT_KV_RLY_FINE=1, default off): a relay chain that finds no spot on the G-lattice offsets retries the same
 # path points with sub-cell y / x offsets (RLY_FINE_STEPS) before refusing (kv_die._relays chain_)
 RLY_FINE = __import__('os').environ.get('OT_KV_RLY_FINE', '0') == '1'
+RLY_FINE_XY = __import__('os').environ.get('OT_KV_RLY_FINE_XY', '0') == '1'
 RLY_FINE_STEPS = (10.8, -10.8, 21.6, -21.6, 32.4, -32.4)
 RLY_D2D_FIRST = __import__('os').environ.get('OT_KV_RLY_D2D_FIRST', '0') == '1'   # KV-BIND12: wide D2D words placed first
 REACH_W = sorted((int(k), float(v)) for k, v in (t.split(':') for t in
@@ -2024,10 +2025,12 @@ def build(*args, **kwargs):
             _ho = KSD.ahub_ofs_bound()
             if not _ho:
                 raise ValueError('kv_die: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view hardened offsets)')
-            for _f in (kv_bundle_eq.ahub_ap_bundle, kv_bundle_eq.ahub_fr_bundle):
-                _ab = _f(m, {i.name: i for i in m['insts']}, _ho)
-                if _ab:
-                    m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
+            # KV-AHUB10 10-20: only the ap bundle here; the fr bundle runs AFTER PVFIN_ALIGN (it pads ks_pvfst: i13b
+            # solved fr on pvfst 41, PVFIN_ALIGN then made it 42 -> FR_OFS -6 vs the hub's -7).  kv_fwd_lanes re-solves
+            # both on the post-station lane ages (AHUB_PAD_POST) and fails closed on any residue.
+            _ab = kv_bundle_eq.ahub_ap_bundle(m, {i.name: i for i in m['insts']}, _ho)
+            if _ab:
+                m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
         print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
                                                for n_, r_ in m['bundle_eq']['bundles'].items())
               + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
@@ -2050,6 +2053,16 @@ def build(*args, **kwargs):
         r_ = m.get('pvfin_align') or {}
         print(f"kv die PVFIN_ALIGN: align {r_.get('before')} -> {r_.get('after')}, pads {r_.get('pads')}",
               file=sys.stderr)
+    if KSD.ON and kv_bundle_eq.on() and kv_bundle_eq.ahub_pad_on() and kwargs.get('split', len(args) > 7 and args[7]):
+        # KV-AHUB10 10-20: the hub fr bundle on the FINAL generator ks_pvfst (after PVFIN_ALIGN; see the AHUB pass above)
+        _ab = kv_bundle_eq.ahub_fr_bundle(m, {i.name: i for i in m['insts']}, KSD.ahub_ofs_bound())
+        if _ab:
+            m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
+            _fr = m['bundle_eq']['bundles'].get('A.hub_fr') or {}
+            print(f"kv die AHUB_FR: {_fr}", file=sys.stderr)
+            if ((_fr.get('members') or {}).get('kvs_attn.pvfst->pvfin') or {}).get('pads'):
+                raise ValueError(f'kv die AHUB_FR FAIL: the hub FR_OFS needs a ks_pvfst pad ({_fr}), which tears '
+                                 'PVFIN_ALIGN: re-plan ks_ahs / ks_ahfr shorter or re-harden the hub FR_OFS')
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -3178,6 +3191,15 @@ def _relays(m):
                 fx_ = it.w - cx if it.orient in ('MY', 'R180') else cx
                 fy_ = it.h - cy if it.orient in ('MX', 'R180') else cy
                 return (it.x + fx_, it.y + fy_)
+            if os.environ.get('OT_KV_PV_CONTROL_PIN', '0') == '1':
+                # Same canonical N-face control positions used by masters().
+                # pvw_1 is MX: its start input is at the SOUTH strip end.
+                # Starting at its nearest frame edge left codexcpB's branch
+                # at the opposite end, with a 12.945-mm unrepairable last hop.
+                # Preserve a later pin-drawn hint if one already exists.
+                ctx_ = P_['face_pins']['strip']['x']
+                for cp_, delta_ in dict(st=-120.0, ie=60.0, iee=90.0).items():
+                    _PIN_HINT.setdefault((it_.name, cp_), die_xy_(ctx_ + delta_, it_.h))
             for k_ in range(8):
                 for g_ in range(8):
                     f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
@@ -3228,6 +3250,17 @@ def _relays(m):
                 _PIN_HINT.setdefault((it_.name, p_), dict(
                     N=(it_.x + it_.w / 2, it_.y + it_.h), S=(it_.x + it_.w / 2, it_.y),
                     W=(it_.x, it_.y + it_.h / 2), E=(it_.x + it_.w, it_.y + it_.h / 2))[f_])
+    if os.environ.get('OT_KV_PVRS_ACTUAL_FIRST', '0') == '1':
+        # The group response can leave a far row of its long frame. Planning
+        # from the nearest frame edge left pvrs_WN_0_1 as a 1413.7-um wire
+        # when later pin-hinted replans failed. Use the same pin assignment
+        # that pin_reach/physical emission checks, on the first allocation.
+        pm_ = masters(m, 1)
+        for rb_, rc_, rw_, re_ in m['buses']:
+            if rb_.startswith('pvrs_'):
+                for ri_, rp_ in re_:
+                    _PIN_HINT.setdefault((ri_, rp_.lstrip('*')),
+                                         pin_xy(by[ri_], pm_[by[ri_].master], rp_.lstrip('*')))
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -3369,6 +3402,12 @@ def _relays(m):
                     and len(b[3]) == 2 and any(e[0] == 'd2d_kv' for e in b[3])]
         ids = {b[0] for b in endpoint}
         order_ = endpoint + [b for b in order_ if b[0] not in ids]
+    if os.environ.get('OT_KV_PVRS_ACTUAL_FIRST', '0') == '1':
+        # Reserve the wide return's real relay cells before unconstrained
+        # strip-control traffic. Keep the five constrained D2D payloads first.
+        order_.sort(key=lambda b_: (0 if b_[2] >= 548 and b_[1] not in ABUT
+                                   and any(e_[0] == 'd2d_kv' for e_ in b_[3]) else
+                                   1 if b_[0].startswith('pvrs_') else 2))
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -3627,6 +3666,8 @@ def _relays(m):
             return min(PHY_REACH, reach_()) if phy_b else reach_()
 
         def reach_():
+            if os.environ.get('OT_KV_PVRS_ACTUAL_FIRST', '0') == '1' and bid.startswith('pvrs_'):
+                return min(reach0_(), width_reach(bits))
             # the PV pair words keep the plain reach (their in-array distribution is the PV pair successor's; the width
             # class moved pvin's planned end off the r6 W-equalised face pins: kvt13k-a 3 unrepaired 1.2-4.2 mm hops)
             tgt_ = st_['exact_k'] if st_.get('exact_k') is not None else st_.get('soft_k')
@@ -3726,6 +3767,16 @@ def _relays(m):
                     # a 0-overlap spot 259-321 um from every D2D pin exists).  Only chains that would raise reach here, so
                     # every plan that built is unchanged.
                     fine_ = [(dx_, dy_ + f_) for dx_, dy_ in offl_ for f_ in RLY_FINE_STEPS]
+                    if RLY_FINE_XY:
+                        # codexcpA actual endpoint failure: legal slots at
+                        # x6627..6633 between two HOST record relay frames,
+                        # but the path-relative X grid offered6619/6641.
+                        # Y-only refinement cannot enter that real cell row.
+                        # Cover both axes; _spot still snaps GX/GY and checks
+                        # actual keepouts, previous reach and farthest bit.
+                        phases = (0.0, 10.8, -10.8, 21.6)
+                        fine_ += [(dx_ + fx_, dy_ + fy_) for dx_, dy_ in offl_
+                                  for fx_ in phases[1:] for fy_ in phases]
                     got = _spot(idxs, fine_, prev_pt_, rch, pad_, at_end or term_)
                     if got is not None:
                         m.setdefault('rly_fine', []).append((bid, st_['k'], round(got[0], 3), round(got[1], 3)))
@@ -4005,6 +4056,14 @@ def _krs_top_lane(m, bid):
     ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_{e}')
     if ak is None or ec is None:
         return None
+    # LEAD-KV 10-21: an ECTL re-homed beside its own group (OT_KV_KRT_ES6_HOME: same side of the ASTK column as slg)
+    # no longer crosses the column; the far-channel lane would route out and back (prep es6p3: wp1 -> wp2 unroutable,
+    # 579 um unrepaired hop).  Its K response word takes the short direct path.
+    sg = by.get(f'slg_{st}_{e}')
+    acx = ak.x + ak.w / 2
+    home = (m.get('geo') or {}).get('krt_es6_home') or {}
+    if home.get('instance') == ec.name and sg is not None and ((sg.x + sg.w / 2) - acx) * ((ec.x + ec.w / 2) - acx) > 0:
+        return None
     if st[1] == 'S':
         if e < 6:
             return None
@@ -4015,6 +4074,12 @@ def _krs_top_lane(m, bid):
         ly = max(g[st][1], ak.y + ak.h) + (dy if e == 7 else dy - 216.0)
     rs_x = ec.x + (ec.w if ec.orient in ('MY', 'R180') else 0.0)
     off = dch if e in (4, 7) else dch + 216.0
+    # LEAD-KV 10-21: the ES6 K round trip is natural 81 > hardened 80 (a556); its lane overshoots the rs face by 864 um
+    # and comes back.  The ECTL must stay beside its stack (re-homing it broke the 1559-b stack-local tp words, 7 mm);
+    # OT_KV_KRS_TOP_CH_<st><g> sets that one word's lane offset, OT_KV_KRS_TOP_LANE_<st><g>=0 drops its lane.
+    if _os.environ.get(f'OT_KV_KRS_TOP_LANE_{st}{e}', '1') != '1':
+        return None
+    off = float(_os.environ.get(f'OT_KV_KRS_TOP_CH_{st}{e}', off))
     cx = rs_x + (off if rs_x > ak.x + ak.w / 2 else -off)
     ry = ec.y + ec.h / 2
     return [(ak.x + ak.w / 2, ly), (cx, ly), (cx, ry)]

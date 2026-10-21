@@ -95,6 +95,19 @@ if [ "${OT_KV_HROOT_VIEW:-auto}" != 0 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [
     BV="$BV --view qkd_kvs_hroot=$HRV"; echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot -> $HRV ($HRWHY)"
   else echo "OT_KV_HROOT_VIEW: no closed view at $HRV (frame ASSUMED)"; fi
 fi
+# KV-AHUB11 10-21 (OT_KV_AHUB_VIEW = auto (default on the static die) | 1 | 0): the static hub slot qkd_ahub binds the CLOSED
+# a7 view (kit qkd_ahub_sdw, qkd_ahub_sdw-a7-c6c412b4c TT +8.48 / FF +8.83, record c9b10ee5e) instead of the ASSUMED
+# 1175 x 760 frame.  Source identity: qkd_ahub_static_dw.sv / cal_gen / ot_qkd_drly identical to c6c412b4c, ot_rst_pipe only
+# gained the opt-in COPIES (default 1 = as built).  The view was hardened at Z_IN_STRIDE 4, AP_OFS -36,-36,-34,-35, FR_OFS -7
+# = OT_KV_AHUB_OFS (kv_static_params AHUB_OFS_BOUND checks kit == die binding == post-station table).  629/629 bits map
+# (bind test on a10b's case), 734.4 x 540 fits the slot.  1 = fail the prep if it does not bind.
+AHV=
+if [ "${OT_KV_AHUB_VIEW:-auto}" != 0 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  AHV=physical/ref_tile/${OT_KV_AHUB_KIT:-qkd_ahub_sdw}/views/qkd_ahub_static_dw
+  if [ -f $AHV/qkd_ahub_static_dw.lef ] && [ -f $AHV/qkd_ahub_static_dw_tt.lib ] && [ -f $AHV/qkd_ahub_static_dw_ff.lib ]; then
+    BV="$BV --view qkd_ahub=$AHV"; echo "OT_KV_AHUB_VIEW: qkd_ahub -> $AHV (CLOSED a7)"
+  else echo "OT_KV_AHUB_VIEW: no closed view at $AHV (frame ASSUMED)"; [ "${OT_KV_AHUB_VIEW:-auto}" = 1 ] && exit 7; AHV=; fi
+fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
 # OT_KV_DCAL=1 (Q-KVSYS-DIE 10-16): the link calendar sequencer qkd_d2d_cal_seq_pin on its CLOSED view (kv_die.py DCAL)
@@ -203,6 +216,11 @@ python3 tools/qwen_kv_die/bind_views.py --split --case $O/case_kv --libs $O/libs
   --out $O/libs/views.json > $O/bind.log
 if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_d2ds' in d['bound'] else 1)" $O/libs/views.json \
   || { echo "OT_KV_D2DS_VIEW: qkd_d2ds view did not bind (bind.log)"; exit 7; }; echo "OT_KV_D2DS_VIEW: qkd_d2ds bound to $D2DSV"; fi
+if [ -n "$AHV" ]; then
+  if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_ahub' in d['bound'] else 1)" $O/libs/views.json; then
+    echo "OT_KV_AHUB_VIEW: qkd_ahub bound to $AHV"
+  else echo "OT_KV_AHUB_VIEW: qkd_ahub view did NOT bind (bind.log) -- frame kept"; [ "${OT_KV_AHUB_VIEW:-auto}" = 1 ] && exit 7; fi
+fi
 if [ -n "${HRV:-}" ] && [ -f $HRV/${HRN:-qkd_kvs_hroot}.lef ]; then
   if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_kvs_hroot' in d['bound'] else 1)" $O/libs/views.json; then
     echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot bound to $HRV (stand-in)"
@@ -297,6 +315,10 @@ fi
 # Q-KV 10-16: over-block capacity from each block's real top layer (post-expand elements.lef) -- the old die-layer-only
 # capacity over-counted crossings over M5 tiles (kvs13i fine max 2.26 -> 1.48)
 python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements.lef $( [ -f $O/expand.json ] && echo --expand $O/expand.json ) --out $O/window.json > $O/window.log
-python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" > "$O/gen_safety_export.log" 2>&1 \
+python3 tools/qwen_kv_die/kv_gen_source_ports.py --case "$O/case_kv" --records "$O/port_bind_v2" --root "$PWD" \
+  > "$O/gen_source_ports.log" 2>&1 \
+  || { tail -6 "$O/gen_source_ports.log"; echo 'KV GEN source direction export REFUSED'; exit 12; }
+python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" \
+  --source-ports "$O/case_kv/gen_source_ports.json" > "$O/gen_safety_export.log" 2>&1 \
   || { tail -6 "$O/gen_safety_export.log"; echo 'KV GEN safety facts export REFUSED'; exit 12; }
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"

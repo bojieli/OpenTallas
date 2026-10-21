@@ -242,8 +242,10 @@ def rtl_txdp(compute_commit, kv_commit=None, compute_params=None):
     out, src = {}, {}
     for end, commit in (('C', compute_commit), ('K', kv_commit or compute_commit)):
         rtl = git_show(commit, D2D_RTL)
+        # KV-INTEG18 10-21: the literal form is `.TXDP(PR ? {8'd..})`; the required-parameter RTL reads
+        # `.TXDP(PR ? TXDP : {..})`, which the old `PR ?` test also matched, so the compute GEN's params were never used.
         if end == 'C' and compute_params and not re.search(
-                r"qfd_d2d_static_core\s*#\([^;]*?\.TXDP\(PR \?", rtl, re.S):
+                r"qfd_d2d_static_core\s*#\([^;]*?\.TXDP\(PR \? \{8'd", rtl, re.S):
             v = json.loads(Path(compute_params).read_text()).get('masters', {}).get('qfd_d2d_static', {}).get('TXDP')
             if v is None:
                 raise SystemExit(f'layer_compile: {compute_params} assigns no qfd_d2d_static TXDP')
@@ -355,6 +357,10 @@ def main(argv=None):
     ap.add_argument('--kv-static-model', help='HKV-DIE2: CASE/static_model.json (kv_die.py case): recompute the KV static '
                     'parameters (hub AP_OFS/FR_OFS, ASTK e_after_header, attention fault latencies, seq KVN bundle) on '
                     '--kv-stages and FAIL a finding where they disagree (tools/qwen_kv_die/kv_static_params.py)')
+    ap.add_argument('--emb-window', type=int, default=None,
+                    help='KV-INTEG18: token-run embedding window the die pair binds (OT_KV_EMB_WIN, d2d_cal_image_ew<N>.svh); '
+                         'passed to the program compile so the compiled programme / KV boot image match the bound image '
+                         '(default = the priced window, byte-identical)')
     ap.add_argument('--kv-fwd-lanes', help='RUN/fwd_lanes.json: landed lane ages for buses whose netlist age is not a stage count')
     a = ap.parse_args(argv)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
@@ -444,7 +450,8 @@ def main(argv=None):
         raise SystemExit('layer_compile: KV host.record_tx -> d2d_kv bus missing (HOST stages)')
     run([sys.executable, 'tools/qwen_split/d2d_link_calendar.py', '--out', str(prog.resolve()), '--txl', str(a.txl), '--phy', str(a.phy),
          '--profile', 'program', '--txd-c', ','.join(map(str, raw['C'])), '--txd-k', ','.join(map(str, raw['K'])),
-         '--host-stages', str(host_stages), '--link-handoff', a.link_handoff, '--pinreg', '--token-path', str(tpx.resolve())],
+         '--host-stages', str(host_stages), '--link-handoff', a.link_handoff, '--pinreg', '--token-path', str(tpx.resolve())]
+        + (['--emb-window', str(a.emb_window)] if a.emb_window is not None else []),
         d2d / 'program.log')
     run([sys.executable, 'tools/qwen_split/d2d_cal_seq_image.py', str(prog.resolve()), str((d2d / 'd2d_cal_image.svh').resolve())],
         d2d / 'image.log')
@@ -524,7 +531,7 @@ def main(argv=None):
                compute_seam=dict(stages=seam_st, source='record_bundles.seam_stages', rule=seam_rec['rule']),
                die_table_digests={k: d['digest'] for k, d in docs.items()},
                layers=dict(L1=dict(X=X['L1'], period_compiled=next(l['cycles'] for l in pc['program']['layers'] if l['id'] == 'L1')),
-                           L0=dict(X=X['L0'], start=pc['program']['layers'][0]['start']),
+                           L0=dict(X=X['L0'], start=pc['program']['layers'][0]['start'], emb_window=a.emb_window),
                            head='no D2D traffic (compute-only; terminal RESULT is in the token run segment 1); ME programme = gap'),
                stages=S, txd=txd, kv_programme=kvp, relay_check={k: v['verdict'] for k, v in checks.items()},
                **({'kv_static_params': dict(status=ksp['status'], table_digest=ksp['table_digest'],

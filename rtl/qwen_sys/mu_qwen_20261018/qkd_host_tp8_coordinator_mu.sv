@@ -24,18 +24,43 @@ module qkd_host_tp8_coordinator_mu #(parameter integer MU=1,parameter integer PO
 generate if(MU==0)begin:g_plain
  qkd_host_tp8_coordinator  u_plain(.ck_codec(ck_codec),.ck_lifecycle(ck_lifecycle),.ck_post(ck_post),.por_n(por_n),.peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),.token_request_valid(token_request_valid),.token_request_token(token_request_token),.token_request_position(token_request_position),.token_request_gen(token_request_gen),.token_request_ready(token_request_ready),.token_grant_valid(token_grant_valid),.token_grant_ready(token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_gen(token_grant_gen),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.engine_admit_ready(engine_admit_ready),.dispatch_valid(dispatch_valid),.dispatched(dispatched),.cohort_tag(cohort_tag),.cohort_gen(cohort_gen),.accepted_ranks(accepted_ranks),.participant_trace(participant_trace),.participant_token(participant_token),.participant_pos(participant_pos),.engine_result_v(engine_result_v),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.engine_result_cr(engine_result_cr),.program_consensus(program_consensus),.program_epoch(program_epoch),.program_digest(program_digest),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.wrap_locked(wrap_locked),.identity_fault(identity_fault),.recovery_complete(recovery_complete),.post_pending(post_pending),.fault(fault));
 end else begin:g_mu
-
- wire[7:0]participant_valid,participant_accepted,cancel_valid,cancel_done,cancel_fault,cancel_accepted;
- wire[471:0]participant_tag,cancel_tag;wire[15:0]participant_gen,cancel_gen;
- wire[7:0]service_ready,native_ready,kv_drained,vm_drained,collective_drained,host_drained,context_owned,links_drained,link_reset_seen,retrained,program_ready;
- wire[127:0]service_epochs,certificate_epochs;wire[127:0]epochs;wire[511:0]digests;wire[7:0]terminal_released;
+ // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
+ wire[7:0] participant_valid,participant_accepted,cancel_valid,cancel_done,cancel_fault,cancel_accepted;
+ wire[471:0] participant_tag,cancel_tag;
+ wire[15:0] participant_gen,cancel_gen;
+ wire[7:0] service_ready,native_ready,kv_drained,vm_drained,collective_drained,host_drained,context_owned,links_drained,link_reset_seen,retrained,program_ready;
+ wire[127:0] service_epochs,certificate_epochs;
+ wire[127:0] epochs;
+ wire[511:0] digests;
+ wire[7:0] terminal_released;
  wire codec_fault,post_fault,lifecycle_fault,result_transport_idle;
  wire step_issue_v,step_retire_v,step_retire_cq,cq_commit_v;
- wire[15:0]step_client_tag,step_retire_client_tag,cq_client_tag;wire[7:0]step_slot,step_retire_slot,cq_slot;
- wire[17:0]step_pos,step_retire_pos,step_retire_token,cq_pos,cq_token;
- wire terminal_accepted,post_retired,link_reset_request,retraining_request;wire[58:0]post_tag,acknowledged_tag;wire[1:0]post_gen,acknowledged_gen;
- wire[58:0]terminal_tag={token_grant_tag[58:43],6'd37,token_grant_tag[36:0]};
- wire[7:0]same_program,current_certificate;
+ wire[15:0] step_client_tag,step_retire_client_tag,cq_client_tag;
+ wire[7:0] step_slot,step_retire_slot,cq_slot;
+ wire[17:0] step_pos,step_retire_pos,step_retire_token,cq_pos,cq_token;
+ wire terminal_accepted,post_retired,link_reset_request,retraining_request;
+ wire[58:0] post_tag,acknowledged_tag;
+ wire[1:0] post_gen,acknowledged_gen;
+ wire[58:0] terminal_tag;
+ wire[7:0] same_program,current_certificate;
+ wire local_request_ready;
+ wire request_admission;
+ wire warm_ready;
+ reg recovery_active,recovery_required;
+ reg recovery_start;
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ assign terminal_tag={token_grant_tag[58:43],6'd37,token_grant_tag[36:0]};
+ 
  assign program_epoch=epochs[15:0];assign program_digest=digests[63:0];
  for(genvar i=0;i<8;i=i+1)begin:g_program
   assign current_certificate[i]=certificate_valid[i]&&certificate_epochs[i*16+:16]==service_epochs[i*16+:16];
@@ -43,11 +68,11 @@ end else begin:g_mu
  end
  assign program_consensus=(&program_ready)&&(&same_program);
  assign fault=codec_fault||post_fault||identity_fault||lifecycle_fault;
- wire local_request_ready;
- wire request_admission=!wrap_locked&&!recovery_active&&!recovery_required&&!identity_fault;
+ 
+ assign request_admission=!wrap_locked&&!recovery_active&&!recovery_required&&!identity_fault;
  assign token_request_ready=local_request_ready&&request_admission;
- wire warm_ready=(&service_ready)&&(&current_certificate)&&program_consensus&&!codec_fault;
- reg recovery_active,recovery_required;reg recovery_start;
+ assign warm_ready=(&service_ready)&&(&current_certificate)&&program_consensus&&!codec_fault;
+ 
  always @(posedge ck_lifecycle or negedge por_n)begin
   if(!por_n)begin recovery_active<=0;recovery_required<=0;recovery_start<=0;end
   else begin

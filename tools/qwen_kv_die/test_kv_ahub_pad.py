@@ -75,3 +75,78 @@ def test_a7_kit_spec_offsets_read(monkeypatch):
     (how, got), = P.hub_bound({}, None)
     assert got == A7 and 'physical/ref_tile/qkd_ahub_sdw/spec.json' in how
     assert P._int_lit("32'hfffffff9") == -7 and P._int_lit('-6') == -6 and P._int_lit(3) == 3
+
+
+# ---- KV-AHUB10 10-20: post-station solve (AHUB_PAD_POST in kv_fwd_lanes) on the ACTUAL lane ages
+I13B = dict(ks_ahs=47, ks_ahfr=0, ks_pvfst=42, ap_WS=6, ap_WN=6, ap_ES=8, ap_EN=7)   # kvs14r-f7a24f73d-i13b netlist table
+
+
+def test_post_solve_i13b_closes_a7():
+    assert B.ahub_check(I13B, A7) == ['AP_OFS WS -39 != -36', 'AP_OFS WN -39 != -36', 'AP_OFS ES -37 != -34',
+                                      'AP_OFS EN -38 != -35', 'FR_OFS -6 != -7']
+    pads = B.ahub_post_solve(I13B, A7)
+    assert pads == dict(ks_ahs=0, ap_WS=3, ap_WN=3, ap_ES=3, ap_EN=3, ks_ahfr=1)
+    assert B.ahub_check({k: v + pads.get(k, 0) for k, v in I13B.items()}, A7) == []
+
+
+def test_post_solve_ap_long_pads_hs_then_fr():
+    ages = dict(I13B, ap_WS=12, ks_pvfst=48)          # WS offset 2 + 12 - 47 = -33 > -36: hs waits 3, fr absorbs it
+    pads = B.ahub_post_solve(ages, A7)
+    assert pads['ks_ahs'] == 3 and pads['ap_WS'] == 0 and pads['ap_ES'] == 6
+    assert B.ahub_check({k: v + pads.get(k, 0) for k, v in ages.items()}, A7) == []
+
+
+def test_post_solve_fails_closed_when_only_pvfst_pad_closes_fr():
+    import pytest
+    with pytest.raises(ValueError, match='PVFIN_ALIGN'):
+        B.ahub_post_solve(dict(I13B, ap_WS=12), A7)     # hs +3 -> FR -10 < -7: only a pvfst pad would close it
+    with pytest.raises(ValueError, match='PVFIN_ALIGN'):
+        B.ahub_post_solve(dict(I13B, ks_pvfst=30), A7)
+
+
+def _walk_net():
+    lines = """module die;
+  wire [1:0] n_ap_WS;
+  wire [1:0] n_ap_WS__r0;
+  wire [1:0] n_ap_WS__r1;
+  wire [1:0] n_ap_WS__r2;
+  wire [1:0] n_ap_WS__r3;
+  qkd_astk astk_WS (.ap(n_ap_WS));
+  qkd_rlys_36 rly_ap_WS_0__s0 (.ck(n_clk_core_WS), .a(n_ap_WS), .b(n_ap_WS__r0));
+  qkd_rlys_36 rly_ap_WS_1__s0 (.ck(n_clk_core_WS), .a(n_ap_WS__r0), .b(n_ap_WS__r1));
+  qkd_rlys_36 rly_ap_WS_2__s0 (.ck(n_clk_core_WS), .a(n_ap_WS__r1), .b(n_ap_WS__r2));
+  qkd_rlys_36 rly_ap_WS_2__s0_y7 (.ck(n_clk_core_c), .a(n_ap_WS__r2), .b(n_ap_WS__r3));
+  qkd_ahub ahub (.ap_WS(n_ap_WS__r3));
+endmodule""".split('\n')
+    dirs = {'qkd_astk': {'ap': 'OUTPUT'}, 'qkd_ahub': {'ap_WS': 'INPUT'}}
+    F = dict(rep=dict(lanes=[dict(stations=['rly_ap_WS_0__s0', 'rly_ap_WS_1__s0', 'rly_ap_WS_2__s0'], n=3, E=2)]))
+    return lines, dirs, F
+
+
+def test_post_ages_walk_lane_plus_after_stage():
+    import kv_fwd_lanes as FL
+    lines, dirs, F = _walk_net()
+    ages, ends, probs = FL.ahub_post_ages(lines, F, dirs, sinks={'ap_WS': ('ahub', 'ap_WS')})
+    assert probs == [] and ages == {'ap_WS': 2 + 1 + 1}          # lane E + LAND_O, + 1 plain receiving-side pad
+    assert ends == {'ap_WS': ['rly_ap_WS_2__s0_y7']}
+
+
+def test_post_ages_walk_torn_and_missing_fail():
+    import kv_fwd_lanes as FL
+    lines, dirs, F = _walk_net()
+    lines = [ln.replace('ahub (.ap_WS(n_ap_WS__r3))', 'ahub (.ap_WS({n_ap_WS__r2[1], n_ap_WS__r3[0]}))') for ln in lines]  # bit 1 skips the pad
+    ages, _e, probs = FL.ahub_post_ages(lines, F, dirs, sinks={'ap_WS': ('ahub', 'ap_WS'), 'ks_ahs': ('ahub', 'hs')})
+    assert any('torn' in p for p in probs) and any('no sink pin ahub.hs' in p for p in probs) and ages == {}
+
+
+def test_post_ages_walk_inout_lef_sink_listed_first():
+    """KV-AHUB11 10-21 (a10b): the real elements.lef declares every hub / tile pin INOUT per bit ('PIN ap_WS[0]');
+    with the hub instance before its relays the hub's own sink pin was taken as the driver -> every age 0."""
+    import kv_fwd_lanes as FL
+    lines, _d, F = _walk_net()
+    hub = [ln for ln in lines if ln.strip().startswith('qkd_ahub ')]
+    lines = [ln for ln in lines if ln not in hub]
+    lines.insert(next(i for i, ln in enumerate(lines) if 'qkd_astk' in ln), hub[0])
+    dirs = {'qkd_astk': {'ap[0]': 'INOUT', 'ap[1]': 'INOUT'}, 'qkd_ahub': {'ap_WS[0]': 'INOUT', 'ap_WS[1]': 'INOUT'}}
+    ages, ends, probs = FL.ahub_post_ages(lines, F, dirs, sinks={'ap_WS': ('ahub', 'ap_WS')})
+    assert probs == [] and ages == {'ap_WS': 4} and ends == {'ap_WS': ['rly_ap_WS_2__s0_y7']}

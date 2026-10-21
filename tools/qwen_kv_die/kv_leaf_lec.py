@@ -167,9 +167,9 @@ def lec(a):
     cut_bb = {b_ for _f, b_ in cutf.values()}
     rd = [str(src / s_) for s_ in srcs if s_ not in cut_bb] + [str(f) for f, _b in cutf.values()]
     # 1. gold
-    # Actual native gold primitives and gate use the same Liberty models.
     G = ['read_verilog -sv cells.v', f'read_verilog -sv -DSYNTHESIS {" ".join(rd)}']
-    # Keep sized Verilog literals for exact wide parameter values.
+    # KV-AHUB8 10-20: a sized Verilog literal (64'hffddffdeffdcffdc: the hub's 4 x 16-bit AP_OFS, > 32 bits) goes to chparam
+    # verbatim; every other value as an integer
     G += [f'chparam -set {k} {_pval(v)} {a.top}' for k, v in sorted(params.items())]
     if a.wrapper:
         wt = Path(a.wrapper).read_text()
