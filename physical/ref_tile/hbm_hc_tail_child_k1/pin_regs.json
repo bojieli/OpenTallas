@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_hc_tail_child_static",
+ "enable": false,
+ "reason": "The netlist is the gate-level cloned ot_hbm_hc_tail_child_static: the RTL registers every data pin itself (input pin flop + 2nd stage, output pin flops, priced +2 edges in the root TAILC schedule); generated pin regs would add an unpriced stage."
+}

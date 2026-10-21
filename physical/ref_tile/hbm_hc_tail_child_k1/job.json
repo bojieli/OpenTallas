@@ -1,0 +1,211 @@
+{
+ "name": "hbm_hc_tail_child_k1-k1-COMMIT",
+ "block": "ot_hbm_hc_tail_child_static",
+ "ref_tile": true,
+ "owner": "Claude:HBM-HC7-TAILK (HBM-HC7 / LEAD5-HBM)",
+ "purpose": "H.STA.BLK.1 HC Sinkhorn tail child (hard child x2 in the HC root, TAILC=1). Source = the gate-level CLONED netlist (fp32_add_native_clone_1020 method: per-module ABC map, bound_fanout_clone --limit 24, retained re-synth, compact_netlist.py): flat RTL synthesis never finished (ABC >1.5 h) and the uncloned map fails native32 (2,483 drivers >32). Primary: square 358.56 x 358.56 (util ~0.49), mixes W / bases+scales+launch N / result E (<=2.5 pins/um), clk+rst_n S. | SAFE checklist (HBM-HC7-TAILK 10-20): 1 pins PASS (RTL pin flops + 2nd stage on every data pin; rst_n reset_landing 2 stages then ot_rst_relay 3 regions + kept leaf per region) | 2 reach: outline <=360 um/side, every pin->core hop registered; post-GRT 405 check by gate | 3 fanout PASS: gate-level clone (bound_fanout_clone --limit 24, 6,734 clones, same-type/same-input ledger), native32 PASS max 24 / 0 violations (uncloned 2,483 > 32) | 4 depth: units are the released LAT fp32/Sinkhorn pipelines (no new comb path) | 5 storage: no flop array >2 kb indexed at runtime (index delay lines replaced by age-decoded write-backs) | 6 floorplan: no macros, util ~0.49 of synthesis area 62,976 um2, full std-cell band | 7 clock: one core root (clk) + generated /7 sclk (create_generated_clock -edges {1 3 15}); spread <=80 checked by --cts gate; io_hold_margin 0.03 | 8 schedule: static, +2 edges handed to the root (TAILC, HC_MIX +2).",
+ "threads": 32,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/hbm-hcroot6-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_bfc24.v",
+   "physical/hbm_hc_tail_child",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+   "results/rtl/hbm_hc_root_safe_1020/tail_child_hc7",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+   "rtl/test/run_hbm_hc_tail_child_eq.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_tail_child_static u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_bfc24.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tailc_native_lockstep",
+    "cmd": "python3 tools/prepare_fp32_fan32_models.py --out {RUN}/cells.v && bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/nat 0 48 1 rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_bfc24.v {RUN}/cells.v",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS cases=48",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_bfc24.v",
+     "tools/prepare_fp32_fan32_models.py",
+     "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh"
+    ],
+    "pass_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc7/tailc_native_m0.log"
+   },
+   {
+    "name": "tailc_rtl_lockstep",
+    "cmd": "bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/m0 0 48 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS cases=48",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh"
+    ],
+    "pass_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc7/tailc_m0.log"
+   },
+   {
+    "name": "tailc_rtl_mut1_rowmax",
+    "cmd": "bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/m1 1 48 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS",
+    "fail_regex": "TAILC FAIL",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh"
+    ],
+    "fail_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc7/tailc_mut1.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hc_tail_child_k1/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hc_tail_child_k1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hc_tail_child_k1 --out {RUN}/record/views/ot_hbm_hc_tail_child_static  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hc_tail_child_k1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hc_tail_child_k1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hc_tail_child_k1/hbm_hc_tail_child_k1-k1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new hardened tail child: registered one-hot operand selects, age-decoded write-backs, own reset relay regions, own clock root + generated /7 sink clock, gate-level fanout clones <=24"
+}
