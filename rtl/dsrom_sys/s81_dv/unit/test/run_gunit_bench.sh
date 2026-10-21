@@ -19,7 +19,7 @@ SRC="rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv
- rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel.sv
+ rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel_n32.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1c.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv
  rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.sv"
