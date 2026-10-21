@@ -82,3 +82,13 @@ Rate arithmetic uses the composition engine's rounded833ps period
 (1.200480192GHz):279731cycles =4291.6tok/s. At exact1.2GHz the same count
 is4289.8tok/s. Baseline272641/4403.2 also uses833ps (exact1.2GHz gives4401.4).
 The report records this clock basis explicitly; no new RTL measurement is involved.
+
+Source mapping follow-through (r14 measurement snapshot8eff10d70):55/58explicit XT1
+source files matchc0; slice2/faces/vm differ because r14 lacksARF/RP/CRH. The current
+XT1 carve setsMU_NU4 only and uses HD_W1300: actual leafREAD0/FILL0, headFILL_LEAD2,
+DX10. Selected w130READ1/FILL1 maps actual head constantsFILL_LEAD5/DX14 (+4source
+edges), and xhead3 adds its actual registered input stage (+1). Those different
+selected parameters require the owning lane's matching-source timing receipt; this
+187/248 result does not measure them. r14 flatCTLM also lacksSEGCAL; the selected
+hardleaf's separate exact-head wrapper proof owns that difference. Coherent RoPE
+still requires actual RPconsumer source integration before a final73image claim.

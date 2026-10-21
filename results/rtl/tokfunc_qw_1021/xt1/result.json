@@ -445,5 +445,15 @@
   "oldtags/log_nominal_l8_g4.txt",
   "oldtags/result_nominal_l8_g4.txt",
   "oldtags/sim_nominal_l8_g4.out"
- ]
+ ],
+ "source_vehicle_parameters": {
+  "MU_NU": 4,
+  "HD_W130": 0,
+  "LEAF_W130": 0,
+  "READ_PIN_PIPE": 0,
+  "FILL_PIPE": 0,
+  "FILL_LEAD": 2,
+  "DX": 10
+ },
+ "selected_hardware_scope": "Source-carve default 0/0 leaf timing; selected w130 1/1 and xhead3 require their exact matching-source timing receipt. No transfer of this price to those different parameters."
 }
