@@ -204,12 +204,12 @@
   ],
   "inter": [],
   "job": {
-    "owner": "Codex:CODEX-HBM-HC-1021",
-    "branch": "codex/qhub-replicate-1021",
-    "tag": "c5r",
+    "owner": "Codex:CODEX-HBM-1021",
+    "branch": "codex/hbm-c5-native-clock-1340-1021",
+    "tag": "c6r",
     "purpose": "HC quarter hub CLUSTER (H.STA.BLK.17.2): SAFE 2 glue (native32 FAN32 forms) + 4 hard tree slices with their own clock entries",
-    "views_to": "physical/ref_tile/hbm_hcq_hub_c5r/views",
-    "record_to": "results/rtl/ref_tile/hbm_hcq_hub_c5r",
+    "views_to": "physical/ref_tile/hbm_hcq_hub_c6r/views",
+    "record_to": "results/rtl/ref_tile/hbm_hcq_hub_c6r",
     "extra_paths": [
       "rtl/test/run_hbm_hc_eng4_ring.sh",
       "rtl/test/tb_hbm_hc_eng4_static.sv",
