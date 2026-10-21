@@ -1,0 +1,38 @@
+{
+  "source": "6881/b004+FP731 predecessor",
+  "actual": "FAIL201/1490/0roles/93SRAM",
+  "parser": "expectedpre7ebe/8f11STA0171; currentfix exactENGparentread/linkPASS",
+  "families": {
+    "read_mux": {
+      "violations": 453,
+      "max": 201,
+      "successor": "3b current onehotreadrepair; representativecomponentPASS6/fullnativeR33live"
+    },
+    "ibb": {
+      "violations": 427,
+      "max": 132,
+      "next": "same-edge actualperdecode/portbase capture consumer partitions, source/modelneeded"
+    },
+    "halfselect_ahc_bhc": {
+      "violations": 186,
+      "max": 64,
+      "next": "same-edge byte/8bit actualoutputselector capture copies"
+    },
+    "mem_go": {
+      "violations": 48,
+      "max": 60,
+      "next": "real commandgroup copies, guard sourceinputload"
+    },
+    "ed_q2": {
+      "violations": 32,
+      "max": 60,
+      "next": "same-edge peractualecolcapture-owner data copies"
+    },
+    "RSQ_consumers": {
+      "max": 62,
+      "next": "source-local retained normalization consumerpartition; genericleafnative doesnotqualifyconstantparent specialization"
+    }
+  },
+  "no_current_source_failure_claim": true,
+  "next": "R33actualcurrentnative beforeonecombinedfollowup; preserveR31golden/nativeimmutable"
+}
