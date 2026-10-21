@@ -1,0 +1,5 @@
+# ENG lookup native33 successor
+
+Actual40110edcd MAIN mapped census has one33-load driver _222999_/Y, AND3 fed by m1_45 bits26/25 and conditional subtract cone. This is column45 final m1->m2 residue reduction, not acceptance/reset or hash-copy fanout. Preserve actual failed run ep7 ref_gate/s81engm_lkp_ra640a-20261021-131714.
+
+Use two genuine kept12-bit output-consumer reduction cones for column45. Each gets original27-bit m1_45, computes the same28-bit 3q/2q/q subtracts and priority selects its own half of24-bit result. Existing m2_45 register and edge unchanged, all othercolumns unchanged. No added protocol stages, RETURN_AGE640 and II704 unchanged. Additional cost one duplicated compare/subtract cone; no storage/ports/geometry/pin/clock/reset changes. Existing SAFE8 review from ELEM-ENG applies; actual native<=32 still required, then original MAIN259.2x302.4/FB345.6x216 gates. Existing run_eng_rr base/seeds2/3 and6mutants qualify source, no new campaign. Critical layout images go to parent/root before publication.
