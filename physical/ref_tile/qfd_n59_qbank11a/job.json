@@ -108,7 +108,7 @@
      "verilator"
     ],
     "fail_regex": "^N59QB10_MUTANT_REJECTED mut_old_offsets$",
-    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_old_offsets.log"
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_old_offsets.otrun.log"
    },
    {
     "name": "qb10_mut_qb1",
@@ -120,7 +120,7 @@
      "verilator"
     ],
     "fail_regex": "^N59QB10_MUTANT_REJECTED mut_qb1$",
-    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_qb1.log"
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_qb1.otrun.log"
    },
    {
     "name": "qb10_mut_mask",
@@ -132,7 +132,7 @@
      "verilator"
     ],
     "fail_regex": "^N59QB10_MUTANT_REJECTED mut_mask$",
-    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_mask.log"
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_mask.otrun.log"
    },
    {
     "name": "qb10_mut_select",
@@ -144,7 +144,7 @@
      "verilator"
     ],
     "fail_regex": "^N59QB10_MUTANT_REJECTED mut_select$",
-    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_select.log"
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_select.otrun.log"
    }
   ],
   "calibrate": {
