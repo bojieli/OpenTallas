@@ -134,6 +134,16 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   ot_hbm_svc_local_and2 u_len2(.a(length[2]),.b(1'b1),.y(length_local[gr][2]));
  end
  wire fire=k_v&&k_ready;
+ wire fire_ticket_lo,fire_ticket_hi,fire_cursor;
+ ot_hbm_svc_local_and2 u_ftl(.a(fire),.b(1'b1),.y(fire_ticket_lo));
+ ot_hbm_svc_local_and2 u_fth(.a(fire),.b(1'b1),.y(fire_ticket_hi));
+ ot_hbm_svc_local_and2 u_fc(.a(fire),.b(1'b1),.y(fire_cursor));
+ wire[3:0] beat_local[0:3];
+ for(genvar bg=0;bg<4;bg=bg+1)begin:g_beat_local
+  for(genvar bb=0;bb<4;bb=bb+1)begin:g_bit
+   ot_hbm_svc_local_and2 u_buf(.a(kr_beat==bb),.b(1'b1),.y(beat_local[bg][bb]));
+  end
+ end
  wire [3:0] seen_ret=seen_r|(4'b1<<kr_beat);
  wire[3:0] response_take_local;
  genvar rt;
@@ -154,7 +164,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   else begin
    issuing_q<=issuing;
    if(blk_start&&issuing_q)sticky<=1;
-   if(fire)ticket<=ticket+1'b1;
+   if(fire_ticket_lo)ticket[8:0]<=ticket[8:0]+1'b1;
+   if(fire_ticket_hi)ticket[16:9]<=ticket[16:9]+(&ticket[8:0]);
    if(kr_v&&!response_ok)sticky<=1;
   end
  end
@@ -169,7 +180,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  // datapath: cursor + tag table (no reset)
  always @(posedge clk)begin
   if(blk_start)cursor<=0;
-  if(fire)cursor<=t+length;
+  if(fire_cursor)cursor<=t+length;
   for(e=0;e<ENTRIES;e=e+1)begin
    // Kept free copies bound actual mux pins, not just the number of flops:
    // each hold mux consumes two enable pins. Epoch16 =>32; generation12 =>24.
@@ -180,7 +191,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
     length_q[e]<=length_local[e/8];
     seen_q[e]<=0;permuted_q[e]<=length_local[e/8][2];row_low_q[e]<=row_local[e/8];
    end
-   else if(response_take_local[e/8]&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
+   else if(response_take_local[e/8]&&ret==e)seen_q[e]<=seen_q[e]|beat_local[e/8];
   end
  end
 endmodule
