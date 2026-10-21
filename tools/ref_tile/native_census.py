@@ -72,6 +72,40 @@ def ktree_scoped_admission(report):
     return len(rows) == 15 and actual == expected
 
 
+# COORD 2026-10-20 20:05 (rule freeze): the MC3c7 PC-controller timing-fix kits
+# (TritonCTS + WE_LOCAL kept regional copies) map with 51-55-load drivers; the
+# census is guidance here and route timing decides. Admits ONLY these two kits,
+# their mapped top, no role errors and every violating driver <=56 loads.
+MC3C7_SCOPE = 'coord-20261020-2005-mc3c7-pc-ctrl-census-56'
+MC3C7_KITS = frozenset(('hdie_pc_ctrl_mc3c7_wel', 'hdie_pc_ctrl_mc3c7_cts'))
+MC3C7_TOP = 'ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face'
+MC3C7_MAX = 56
+
+
+def mc3c7_scoped_admission(report, kit=None):
+    """Kit-scoped coordinator waiver; raw FAIL receipt is retained unchanged."""
+    if not isinstance(report, dict) or not isinstance(report.get('netlist'), dict):
+        return False
+    rk = report.get('kit')
+    if rk not in MC3C7_KITS or (kit is not None and kit != rk):
+        return False
+    sha = report['netlist'].get('sha256')
+    libs = report.get('liberty')
+    rows = report.get('violations')
+    if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
+            or report.get('top') != MC3C7_TOP or report.get('status') != 'FAIL'
+            or report.get('limit') != 32 or report.get('role_errors') != []
+            or not isinstance(sha, str) or not re.fullmatch('[a-f0-9]{64}', sha)
+            or not isinstance(libs, list) or not libs
+            or any(not isinstance(r, dict) or not re.fullmatch('[a-f0-9]{64}', str(r.get('sha256', ''))) for r in libs)
+            or type(report.get('max_dynamic_loads')) is not int
+            or not 32 < report['max_dynamic_loads'] <= MC3C7_MAX
+            or not isinstance(rows, list) or not rows):
+        return False
+    return all(isinstance(r, dict) and type(r.get('loads')) is int and 32 < r['loads'] <= MC3C7_MAX
+               for r in rows)
+
+
 BUF = re.compile(r'^  (BUFx\w+) (_\d+_) \(\n(.*?)\n  \);', re.M | re.S)
 PIN = re.compile(r'^    \.(\w+)\(([^()]+)\)(,?)$')
 
@@ -374,8 +408,11 @@ def main():
     p.add_argument('--top', required=True)
     p.add_argument('--liberty', action='append', required=True)
     p.add_argument('--out', required=True)
+    p.add_argument('--kit', default='', help='kit name (recorded; only scoped waivers read it)')
     a = p.parse_args()
     report = {'schema': 'opentallas.pre_gate_native_census.v1'}
+    if a.kit:
+        report['kit'] = a.kit
     try:
         roles, report['liberty'] = liberty_roles(a.liberty)
         raw = Path(a.netlist).read_bytes()
@@ -405,6 +442,11 @@ def main():
     if scoped:
         report['admission'] = {'status': 'PASS_WITH_SCOPED_WAIVER', 'authority': KTREE_SCOPE,
                                'raw_status': 'FAIL', 'waived_nodes': 15, 'global_limit': 32}
+    elif mc3c7_scoped_admission(report):
+        scoped = True
+        report['admission'] = {'status': 'PASS_WITH_SCOPED_WAIVER', 'authority': MC3C7_SCOPE,
+                               'raw_status': 'FAIL', 'kit': report['kit'], 'scoped_limit': MC3C7_MAX,
+                               'global_limit': 32}
     Path(a.out).write_text(json.dumps(report, indent=2) + '\n')
     print('PRE_GATE_NATIVE_CENSUS ' + report['status'] + ' report=' + a.out)
     return 0 if report['status'] == 'PASS' or scoped else 1
