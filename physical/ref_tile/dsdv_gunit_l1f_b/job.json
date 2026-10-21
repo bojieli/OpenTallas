@@ -40,7 +40,7 @@
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "pass_witness": "results/rtl/drives81_gunit_l1f_1020/gunit_m0.log"
+    "pass_witness": "results/rtl/drives81_gunit_l1f_1020/gunit2/gunit_m0.log"
    },
    {
     "name": "gunit_mut1",
@@ -49,7 +49,7 @@
     "fail_regex": "^MUT=1: GUNIT FAIL ",
     "threads": 6,
     "peak_ram_gb": 24,
-    "fail_witness": "results/rtl/drives81_gunit_l1f_1020/gunit_m1.log"
+    "fail_witness": "results/rtl/drives81_gunit_l1f_1020/gunit2/gunit_m1.log"
    }
   ],
   "calibrate": {
