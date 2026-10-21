@@ -1,0 +1,27 @@
+{
+  "base_commit": "dcc1858f4fb593ff9d9ea56c80811a6ef3d32cf2",
+  "rtl_candidate_commit": "4b027d3be",
+  "port_signature_audit": [
+    {
+      "module": "dsdv_svc_att",
+      "normalized_port_sha256": "d873cfd6adbec00df5230714fbb422d2554cac9432067a74501f7f636778a53d",
+      "unchanged": true
+    },
+    {
+      "module": "dsdv_svc_rs_c",
+      "normalized_port_sha256": "dda7a56f205977e37dcfa9320aa69d6504ec25b6689b5d8a68b697c8be4c9b88",
+      "unchanged": true
+    },
+    {
+      "module": "dsdv_svc_rs_entry",
+      "normalized_port_sha256": "b8cf73ffb9a6d78955228166a7fe69ef6336183a647dc942d2d38e7d6df4f22c",
+      "unchanged": true
+    },
+    {
+      "module": "dsdv_svc_rs",
+      "normalized_port_sha256": "0147509dd66ae7cba5c844b3f503d520ef0c7a9c50748801058e44069ab937f1",
+      "unchanged": true
+    }
+  ],
+  "scope": "Declared ports unchanged; NTP0 remains default. This is interface inspection only, not equivalence or behavioral proof."
+}
