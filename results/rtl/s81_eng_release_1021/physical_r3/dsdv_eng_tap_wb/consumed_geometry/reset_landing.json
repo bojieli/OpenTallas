@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsdv_eng_tap_w",
+ "enable": false,
+ "reason": "RTL pin landing:2 shared literal1 root flops,2 middle(data/reset)groups,62finalcontrolleaves, eachreleaseedge1/2/3 unchanged. Directrst_n sinkcount2; groupD/RESETpinloads<=32."
+}
