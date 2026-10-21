@@ -25,14 +25,88 @@
 // 1-bit calendar token is a related-clock timed path (STA at the measured phase), the 514/546-bit records cross only
 // through the static CDC SRAM with its publication check.  PHY = the PHY's fixed latency (off-chip, modelled).
 // ---------------------------------------------------------------------------
-module ot_coll_dly1 #(parameter integer N = 1) (input wire clk, input wire rs_n, input wire d, output wire q);
+module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, input wire rs_n, input wire d, output wire q);
     generate if (N == 0) begin : g_wire
         assign q = d;
+    end else if (SAFE_RING && N >= 3) begin : g_ring
+        // A pin-capture copy, a stationary ring, and registered read preserve
+        // exactly N edges. Banks of <=16 tokens bound data/select fanout.
+        // Only the pointer/warm-up/output reset; stale ring bits stay hidden.
+        localparam integer D = N-2;
+        localparam integer A = D>1 ? $clog2(D) : 1;
+        localparam integer B = (D+15)/16;
+        localparam integer H = A>4 ? A-4 : 1;
+        reg [A-1:0] pos_q;
+        reg [$clog2(N):0] filled_q;
+        (* keep="true", dont_touch="true" *) reg [H-1:0] wr_bank_q,rd_bank_q;
+        wire [B-1:0] bank_out;
+        reg selected;
+        reg out_q;
+        always @(posedge clk) begin
+            wr_bank_q <= pos_q>>4;
+            rd_bank_q <= pos_q>>4;
+        end
+        for(genvar b=0;b<B;b=b+1)begin:g_bank
+            localparam integer W = D-16*b<16 ? D-16*b : 16;
+            reg [W-1:0] bits_q;
+            (* keep="true", dont_touch="true" *) reg data_q;
+            (* keep="true", dont_touch="true" *) reg [3:0] local_pos_q;
+            always @(posedge clk) begin
+                data_q<=d;
+                local_pos_q<=pos_q;
+                if(wr_bank_q==b && local_pos_q<W)
+                    bits_q[local_pos_q]<=data_q;
+            end
+            assign bank_out[b]=local_pos_q<W ? bits_q[local_pos_q] : 1'b0;
+        end
+        always @* begin
+            selected=1'b0;
+            for(integer k=0;k<B;k=k+1)
+                selected=selected | (bank_out[k] & (rd_bank_q==k));
+        end
+        always @(posedge clk or negedge rs_n) begin
+            if(!rs_n) begin pos_q<=0;filled_q<=0;out_q<=0;end
+            else begin
+                pos_q <= pos_q==D-1 ? 0 : pos_q+1'b1;
+                if(filled_q<N-1)filled_q<=filled_q+1'b1;
+`ifdef OT_COLL_MUT_RING_EARLY
+                out_q <= filled_q<N-2 ? 1'b0 : d;
+`else
+                out_q <= filled_q<N-1 ? 1'b0 : selected;
+`endif
+            end
+        end
+        assign q=out_q;
     end else begin : g_sr
         reg [N-1:0] sr;
         always @(posedge clk or negedge rs_n) if (!rs_n) sr <= {N{1'b0}}; else sr <= {sr, d};
         assign q = sr[N-1];
     end endgenerate
+endmodule
+
+// Four stationary token slots cross related regional roots. E=2 leaves two
+// complete write/read phase windows; q is registered at the destination.
+// Both reset copies have the same two-edge release depth. No flow control.
+module ot_coll_token_landing(input wire ck_w,ck_r,rs_w,rs_r,d,output wire q);
+    reg[3:0]bits_q;
+    reg[1:0]wp_q,rp_q,warm_q;
+    reg out_q;
+    always @(posedge ck_w)if(rs_w)bits_q[wp_q]<=d;
+    always @(posedge ck_w or negedge rs_w)
+        if(!rs_w)wp_q<=0;else wp_q<=wp_q+1'b1;
+    always @(posedge ck_r or negedge rs_r)begin
+        if(!rs_r)begin rp_q<=0;warm_q<=0;out_q<=0;end
+        else begin
+            rp_q<=rp_q+1'b1;
+            if(warm_q<2)warm_q<=warm_q+1'b1;
+            out_q<=warm_q<2 ? 1'b0 : bits_q[(rp_q-2)&3];
+        end
+    end
+`ifdef OT_COLL_MUT_LAND_UNLANDED
+    assign q=d;
+`else
+    assign q=out_q;
+`endif
 endmodule
 
 // slot counter: 6-bit address + lap parity (version = 1 on lap 0: the CDC publication map resets to 0)
@@ -43,7 +117,7 @@ module ot_coll_slotcnt (input wire clk, input wire rs_n, input wire en, output w
     assign version = ~c[6];
 endmodule
 
-module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2) (
+module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2, SAFE_RING = 0, LAND_CORE = 0) (
     input  wire clk, lck, rs_c, rs_l,
     input  wire slot,                                       // core: compiled send slot
     output wire w_slot, output wire [5:0] w_addr, output wire w_version,
@@ -53,17 +127,24 @@ module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2) (
 );
     assign w_slot = slot;
     ot_coll_slotcnt u_wc (.clk(clk), .rs_n(rs_c), .en(slot), .addr(w_addr), .version(w_version));
-    ot_coll_dly1 #(.N(KC)) u_x (.clk(lck), .rs_n(rs_l), .d(slot), .q(r_slot));   // first flop = the crossing
+    if(LAND_CORE)begin:g_land_tx
+        wire landed;
+        initial if(KC<3)$error("landed calendar needs KC>=3");
+        ot_coll_token_landing u_land(.ck_w(clk),.ck_r(lck),.rs_w(rs_c),.rs_r(rs_l),.d(slot),.q(landed));
+        ot_coll_dly1 #(.N(KC-3),.SAFE_RING(SAFE_RING))u_tail(.clk(lck),.rs_n(rs_l),.d(landed),.q(r_slot));
+    end else begin:g_direct_tx
+        ot_coll_dly1 #(.N(KC),.SAFE_RING(SAFE_RING)) u_x (.clk(lck), .rs_n(rs_l), .d(slot), .q(r_slot));
+    end
     ot_coll_slotcnt u_rc (.clk(lck), .rs_n(rs_l), .en(r_slot), .addr(r_addr), .version(r_version));
-    ot_coll_dly1 #(.N(4)) u_w (.clk(lck), .rs_n(rs_l), .d(r_slot), .q(wr_v));
+    ot_coll_dly1 #(.N(4),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l), .d(r_slot), .q(wr_v));
     wire unused_v1, unused_v2;
     ot_coll_slotcnt u_cw (.clk(lck), .rs_n(rs_l), .en(wr_v), .addr(wr_slot), .version(unused_v1));
-    ot_coll_dly1 #(.N(KW)) u_r (.clk(lck), .rs_n(rs_l), .d(wr_v), .q(rd_v));
+    ot_coll_dly1 #(.N(KW),.SAFE_RING(SAFE_RING)) u_r (.clk(lck), .rs_n(rs_l), .d(wr_v), .q(rd_v));
     ot_coll_slotcnt u_cr (.clk(lck), .rs_n(rs_l), .en(rd_v), .addr(rd_slot), .version(unused_v2));
 endmodule
 
 module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, parameter integer PHY = 14,
-                         parameter integer L = 40, parameter integer R = 0, parameter integer PEER_R = R) (
+                         parameter integer L = 40, parameter integer R = 0, parameter integer PEER_R = R, SAFE_RING = 0, LAND_CORE = 0) (
     input  wire clk, lck, rs_c, rs_l,
     input  wire exp,                                        // core: the peer's compiled send slot
     output wire rx_expect_v, output wire [5:0] rx_expect_slot,
@@ -77,18 +158,29 @@ module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, par
     // exp travelled local R; the peer frame travelled PEER_R before its CDC.
     // Opposite SerDes ports are paired 0<->2,1<->1; unequal placement ages
     // must adjust the expected PHY slot rather than invent a same-R path.
+    if(LAND_CORE)begin:g_land_rx
+        wire landed;
+        ot_coll_token_landing u_land(.ck_w(clk),.ck_r(lck),.rs_w(rs_c),.rs_r(rs_l),.d(exp),.q(landed));
 `ifdef OT_LCAL_MUT_PEER_AGE
-    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY)) u_e
+        ot_coll_dly1 #(.N(KC+4+KW+4+PHY-3),.SAFE_RING(SAFE_RING))u_tail(
 `else
-    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY + PEER_R - R)) u_e
+        ot_coll_dly1 #(.N(KC+4+KW+4+PHY+PEER_R-R-3),.SAFE_RING(SAFE_RING))u_tail(
+`endif
+            .clk(lck),.rs_n(rs_l),.d(landed),.q(rx_expect_v));
+    end else begin:g_direct_rx
+`ifdef OT_LCAL_MUT_PEER_AGE
+    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY),.SAFE_RING(SAFE_RING)) u_e
+`else
+    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY + PEER_R - R),.SAFE_RING(SAFE_RING)) u_e
 `endif (.clk(lck), .rs_n(rs_l), .d(exp), .q(rx_expect_v));
+    end
     ot_coll_slotcnt u_ec (.clk(lck), .rs_n(rs_l), .en(rx_expect_v), .addr(rx_expect_slot), .version(unused_v));
-    ot_coll_dly1 #(.N(2)) u_w (.clk(lck), .rs_n(rs_l), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + RX 1
+    ot_coll_dly1 #(.N(2),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + RX 1
     ot_coll_slotcnt u_wc (.clk(lck), .rs_n(rs_l), .en(w_slot), .addr(w_addr), .version(w_version));
 `ifdef OT_LCAL_MUT_RX_EARLY
-    ot_coll_dly1 #(.N(L - 5 - 2 * R)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));    // negative control: read 1 early
+    ot_coll_dly1 #(.N(L - 5 - 2 * R),.SAFE_RING(SAFE_RING)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));    // negative control: read 1 early
 `else
-    ot_coll_dly1 #(.N(L - 4 - 2 * R)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));
+    ot_coll_dly1 #(.N(L - 4 - 2 * R),.SAFE_RING(SAFE_RING)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));
 `endif
     ot_coll_slotcnt u_rc (.clk(clk), .rs_n(rs_c), .en(r_slot), .addr(r_addr), .version(r_version));
 endmodule
