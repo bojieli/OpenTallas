@@ -1,0 +1,67 @@
+{
+  "status": "PASS_ALL19_APPLICABLE_CONTROLS",
+  "patch_commit": "b436805e0",
+  "base_failed_jobs_source": "03c22c10d",
+  "unit": "oth-ubuntu-1980904-1792625071",
+  "host": "ot-epyc7",
+  "mem_GiB": 16,
+  "threads": 16,
+  "RTL_geometry_changes": false,
+  "active_unit_controls_detected": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    14,
+    16,
+    19,
+    23
+  ],
+  "normal": "seed1/2, pairedseed1/2, COLLIDE andSTDROP PASS",
+  "N32_positive": {
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "segments_each": 600,
+    "status": "PASS"
+  },
+  "mandatory_N32_controls": {
+    "BYP": {
+      "status": "CAUGHT",
+      "mismatches": 1112
+    },
+    "GOD": {
+      "status": "CAUGHT",
+      "mismatches": 772
+    },
+    "WIN": {
+      "status": "CAUGHT",
+      "mismatches": 108308
+    },
+    "KIND": {
+      "status": "CAUGHT",
+      "mismatches": 246
+    },
+    "FQS": {
+      "status": "CAUGHT",
+      "mismatches": 106522
+    },
+    "CQR": {
+      "status": "CAUGHT",
+      "mismatches": 107
+    }
+  },
+  "unchanged_source_sha256": {
+    "rtl/hdc/ingest/ot_s81_ing_stream_n32.sv": "49b9039bc7d92cabf5ef412f4f850e27710ad8db7ece7fe1f39b28180b0a2ad1",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "9326ec63dc10994ee5c21936d6295204e4459f9567d43879b28950c3e1c35e13"
+  },
+  "open": "Rootintegration owns review/publication and normal resubmission. These receipts do not erase03c failed aggregate snapshots or qualify die calendar/geometry.",
+  "runner_sha256": "c50034d0d41dc275dea17313a4f9951325b41776687957573ca88052d19b453b"
+}
