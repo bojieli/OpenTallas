@@ -1,0 +1,33 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-prefix-model-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-prefix-model-1021
+ot-run: ot-epyc9       admits    75 GB (avail 324, growth 271, headroom 0, waiters 0/0 GB) load 109/128 running 34 disk 2200 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-prefix-model-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-prefix-model-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-prefix-model-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-prefix-model-1021
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-309803-1792619953 after 0 s
+PREFIX_SOURCE_BINDING_PASS 68
+PREFIX_MODEL_EXIT baseline tt 0
+E2_PREFIX_MODEL case=baseline corner=tt stage=before_repair rc=platform source=clk_w1 ALL_pins=1035 min_ps=822.884521 max_ps=956.472656 spread_ps=133.58813500000008
+E2_PREFIX_MODEL case=baseline corner=tt stage=before_repair rc=calibrated source=clk_w1 ALL_pins=1035 min_ps=756.760254 max_ps=786.492371 spread_ps=29.732117000000017
+E2_PREFIX_REPAIR case=baseline before_cells=96454 after_cells=96454
+E2_PREFIX_MODEL case=baseline corner=tt stage=after_repair rc=platform source=clk_w1 ALL_pins=1035 min_ps=822.884521 max_ps=956.472656 spread_ps=133.58813500000008
+E2_PREFIX_MODEL case=baseline corner=tt stage=after_repair rc=calibrated source=clk_w1 ALL_pins=1035 min_ps=756.760254 max_ps=786.492371 spread_ps=29.732117000000017
+E2_PREFIX_BUILD_DONE case=baseline unchanged_hard_entries=20
+PREFIX_MODEL_EXIT baseline ff 0
+E2_PREFIX_MODEL case=baseline corner=ff stage=after_repair rc=platform source=clk_w1 ALL_pins=1035 min_ps=677.44519 max_ps=826.26416 spread_ps=148.81896999999992
+E2_PREFIX_MODEL case=baseline corner=ff stage=after_repair rc=calibrated source=clk_w1 ALL_pins=1035 min_ps=620.225403 max_ps=663.66272 spread_ps=43.43731700000001
+PREFIX_MODEL_EXIT candidate tt 0
+E2_PERIMETER same_root=clk_w1 ALL_sinks=1035 west=240 east=795 leaves=132 equal_subtree_depth=7 hard_children=20
+E2_PREFIX_MODEL case=candidate corner=tt stage=before_repair rc=platform source=clk_w1 ALL_pins=1035 min_ps=573.874817 max_ps=591.56073 spread_ps=17.685913000000028
+E2_PREFIX_MODEL case=candidate corner=tt stage=before_repair rc=calibrated source=clk_w1 ALL_pins=1035 min_ps=509.569 max_ps=523.753052 spread_ps=14.184052000000008
+E2_PREFIX_REPAIR case=candidate before_cells=95297 after_cells=95297
+E2_PREFIX_MODEL case=candidate corner=tt stage=after_repair rc=platform source=clk_w1 ALL_pins=1035 min_ps=573.874817 max_ps=591.56073 spread_ps=17.685913000000028
+E2_PREFIX_MODEL case=candidate corner=tt stage=after_repair rc=calibrated source=clk_w1 ALL_pins=1035 min_ps=509.569 max_ps=523.753052 spread_ps=14.184052000000008
+E2_PREFIX_BUILD_DONE case=candidate unchanged_hard_entries=20
+PREFIX_MODEL_EXIT candidate ff 0
+E2_PREFIX_MODEL case=candidate corner=ff stage=after_repair rc=platform source=clk_w1 ALL_pins=1035 min_ps=500.820557 max_ps=516.286682 spread_ps=15.466125000000034
+E2_PREFIX_MODEL case=candidate corner=ff stage=after_repair rc=calibrated source=clk_w1 ALL_pins=1035 min_ps=443.72348 max_ps=456.179382 spread_ps=12.45590199999998
+PREFIX_MODELS_COMPLETED_DIAGNOSTIC_ONLY
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-309803-1792619953): exit 0
