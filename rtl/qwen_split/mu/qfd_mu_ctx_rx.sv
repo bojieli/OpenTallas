@@ -49,14 +49,23 @@ module qfd_mu_ctx_rx #(
         r[36 * (ul - 1) + 18 +: 18] = rx_tag[36:19];
         r[36 * (ul - 1) +: 18] = {5'd0, rx_tag[18:6]};
     end
+    // QW-MU 10-20 (owner 10-20 09:05: reset only control / valid bits; SAFE-DESIGN item 3 fan-out): the load bit, ctx_user and
+    // mu_fault are reset control flops; the 128-b record is an UNRESET, UN-ENABLED datapath register that samples r on every
+    // edge.  On the load edge (ctx_x[128] = 1) the record is exactly the previous form's; between loads the record bits
+    // are don't-care (the ctlm reads ctx_q[127:0] only when ctx_q[128], qfd_tt_ctlm_dv x_ld).  No 128-load enable net and
+    // no 132-load reset net; edges unchanged (one register edge after the slot).
+    reg          ld_q;
+    reg  [127:0] rec_q;
+    always @(posedge ck) rec_q <= r;
+    always @(*) ctx_x = {ld_q, rec_q};
     always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin ctx_x <= 129'd0; ctx_user <= 2'd0; mu_fault <= 1'b0; end
+        if (!rst_n) begin ld_q <= 1'b0; ctx_user <= 2'd0; mu_fault <= 1'b0; end
         else begin
-            ctx_x[128] <= 1'b0;
+            ld_q <= 1'b0;
             if (rx_v !== context_slot && context_slot) mu_fault <= 1'b1;
             if (context_slot && rx_v) begin
                 if (!good || {1'b0, u} >= 3'(NU)) mu_fault <= 1'b1;
-                else if (u != 2'd0) begin ctx_x <= {1'b1, r}; ctx_user <= ul; end
+                else if (u != 2'd0) begin ld_q <= 1'b1; ctx_user <= ul; end
             end
         end
     end
