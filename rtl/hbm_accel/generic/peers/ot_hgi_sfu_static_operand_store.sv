@@ -30,7 +30,9 @@ module ot_hgi_sfu_static_operand_store #(
  // four operand groups): slot b of sector s = the word j = (b - addr_lo) mod 16 when j < 8 (its mask bit), with the
  // row hi or hi+1 (wrap = b < addr_lo). Each group bank then takes the highest-numbered sector hitting it (the same
  // last-writer-wins order and same-bank collision fault as the per-word loop). Same edges; no schedule change.
- parameter integer WROT=0
+ parameter integer WROT=0,
+ // Same-edge kept scalar select copies; default off preserves released users.
+ parameter integer NATIVE32=0
 )(
  input wire clk,rst_n,
  input wire [4:0] clk_grp,
@@ -146,17 +148,35 @@ module ot_hgi_sfu_static_operand_store #(
   wire [15:0] req;
   wire [383:0] addr;
   wire [511:0] data;
-  reg [511:0] scalar_read;
-  reg scalar_selected;
-  always @(posedge clk)begin
-   scalar_selected<=scalar_enable[g];
-   for(integer l=0;l<16;l=l+1)if(rd_re[4*l+g] && scalar_enable[g])scalar_read[32*l+:32]<=scalar_data_q[g];
+  wire [511:0] scalar_read;
+  wire [31:0] scalar_selected;
+  if(NATIVE32)begin:g_scalar_leaf
+   (* keep=1, dont_touch=1 *) reg [31:0] selected_q;
+   always @(posedge clk)selected_q<={32{scalar_enable[g]}};
+   assign scalar_selected=selected_q;
+   for(genvar sl=0;sl<16;sl=sl+1)begin:g_l
+    for(genvar by=0;by<4;by=by+1)begin:g_b
+     ot_hgi_sfu_scalar_byte u_byte(.clk(clk),.enable(rd_re[4*sl+g] && scalar_enable[g]),
+      .d(scalar_data_q[g][8*by+:8]),.q(scalar_read[32*sl+8*by+:8]));
+    end
+   end
+  end else begin:g_scalar_original
+   reg [511:0] read_q;
+   reg selected_q;
+   always @(posedge clk)begin
+    selected_q<=scalar_enable[g];
+    for(integer sl=0;sl<16;sl=sl+1)if(rd_re[4*sl+g] && scalar_enable[g])read_q[32*sl+:32]<=scalar_data_q[g];
+   end
+   assign scalar_selected={32{selected_q}};
+   assign scalar_read=read_q;
   end
   wire [7:0] sw;
   for(genvar l=0;l<16;l=l+1)begin:g_lane
    assign req[l]=rd_re[4*l+g] && rd_src[8*l+2*g+:2]==0 && !scalar_enable[g];
    assign addr[24*l+:24]=rd_addr[(4*l+g)*24+:24];
-   assign rd_q[(4*l+g)*32+:32]=scalar_selected?scalar_read[32*l+:32]:data[32*l+:32];
+   for(genvar h=0;h<2;h=h+1)begin:g_half
+    assign rd_q[(4*l+g)*32+16*h+:16]=scalar_selected[2*l+h]?scalar_read[32*l+16*h+:16]:data[32*l+16*h+:16];
+   end
   end
   for(genvar b=0;b<8;b=b+1)begin:g_stage
    assign sw[b]=w_stage_v[b] && w_stage_group[2*b+:2]==g;
@@ -177,5 +197,9 @@ module ot_hgi_sfu_static_operand_store #(
   .sw_v(2'd0),.sw_addr({2*LWB{1'b0}}),.sw_mask(16'd0),.sw_d(512'd0),
   .lw(w_vm_we),.lwa(w_vm_waddr),.lwd(w_vm_wdata),.s1_v(1'b0),.s1_a({LWB{1'b0}}),.s1_d(32'd0),
   .flt(group_fault[4]));
+endmodule
+// Isolate each enabled byte so ABC cannot share one 32-bit mux-enable driver.
+(* keep_hierarchy=1 *) module ot_hgi_sfu_scalar_byte(input wire clk,enable,input wire[7:0]d,output reg[7:0]q);
+ always @(posedge clk)if(enable)q<=d;
 endmodule
 `default_nettype wire

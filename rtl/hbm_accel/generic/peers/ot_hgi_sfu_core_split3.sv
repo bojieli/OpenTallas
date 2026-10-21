@@ -33,7 +33,7 @@ module ot_hgi_sfu_core_split3 #(
  //  among the 8 sectors' slot-b words (8:1 one-hot priority) instead of all 64 sector words with a per-word add and
  //  decode: cuts the 735 ps / 20-level WPIPE sa_q -> bank w_addr_in stage and the 2,048-bit x 64-bank write
  //  crossbar to 256 bits per bank. Pure restructuring: same edges, same last-sector-wins / collision-fault behaviour.
- parameter integer WROT=1,
+ parameter integer WROT=1, NATIVE32=0,
  // LH-SU (10-19, safe-design item 3; k9 default 16): the 16 lane maps' 460-bit pass rings keep one one-hot copy per
  //  16 bits (29 copies x 3 flops per lane) instead of one shared one-hot driving 1,381 loads. Same edges.
  parameter integer PASS_OHREP=16,
@@ -69,7 +69,7 @@ module ot_hgi_sfu_core_split3 #(
  wire [7:0] a_vi_re_w,a_vi_re_e,a_ro_v_w,a_ro_v_e,a_kv_we_w,a_kv_we_e;
  wire [191:0] a_vi_addr_w,a_vi_addr_e,a_kv_waddr_w,a_kv_waddr_e;
  wire [255:0] a_ro_x_w,a_ro_x_e,a_kv_wdata_w,a_kv_wdata_e;
- ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.TAP_RR(TAP_RR),.TAP_WR(TAP_WR),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP),.RST_TREE(RST_TREE),.BTREE(BTREE),.BRING(BRING)) u_core(
+ ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.TAP_RR(TAP_RR),.TAP_WR(TAP_WR),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32),.PASS_OHREP(PASS_OHREP),.RST_TREE(RST_TREE),.BTREE(BTREE),.BRING(BRING)) u_core(
   .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_st(clk_st),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .io_word(io_word),.compiler_control(compiler_control),

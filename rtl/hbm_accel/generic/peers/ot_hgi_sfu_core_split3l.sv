@@ -18,7 +18,7 @@ module ot_hgi_sfu_core_split3l #(
  parameter integer DRAIN_PIPE=1,
  parameter integer WPIPE=1,
  parameter integer GCLK=1,
- parameter integer WROT=1,
+ parameter integer WROT=1, NATIVE32=0,
  parameter integer PASS_OHREP=16,
  parameter integer RST_TREE=1,
  parameter integer BTREE=0,
@@ -47,7 +47,7 @@ module ot_hgi_sfu_core_split3l #(
  output wire [95:0] kv_waddr_w,kv_waddr_n,kv_waddr_e,kv_waddr_s,
  output wire fault
 );
- ot_hgi_sfu_core_split3 #(.LWB(LWB),.LG_PATH(LG_PATH),.TAP_RR(TAP_RR),.TAP_WR(TAP_WR),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP),.RST_TREE(RST_TREE),.BTREE(BTREE),.BRING(BRING)) u_s3(
+ ot_hgi_sfu_core_split3 #(.LWB(LWB),.LG_PATH(LG_PATH),.TAP_RR(TAP_RR),.TAP_WR(TAP_WR),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32),.PASS_OHREP(PASS_OHREP),.RST_TREE(RST_TREE),.BTREE(BTREE),.BRING(BRING)) u_s3(
   .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_st(clk_st),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
   .clk_lane({clk_lane_15,clk_lane_14,clk_lane_13,clk_lane_12,clk_lane_11,clk_lane_10,clk_lane_9,clk_lane_8,clk_lane_7,clk_lane_6,clk_lane_5,clk_lane_4,clk_lane_3,clk_lane_2,clk_lane_1,clk_lane_0}),
   .clk_map({clk_map_15,clk_map_14,clk_map_13,clk_map_12,clk_map_11,clk_map_10,clk_map_9,clk_map_8,clk_map_7,clk_map_6,clk_map_5,clk_map_4,clk_map_3,clk_map_2,clk_map_1,clk_map_0}),

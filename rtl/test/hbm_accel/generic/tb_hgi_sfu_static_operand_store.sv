@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_sfu_static_operand_store;
+ parameter integer NATIVE32=0,WROT=0,WPIPE=0;
  localparam LWB=15,WORDS=28672;
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0;
@@ -23,7 +24,7 @@ module tb_hgi_sfu_static_operand_store;
  wire fault;
  integer checks=0;
  function automatic [31:0] value(input integer g,a);value=32'h3e000000+32'(100000*g+a*7);endfunction
- ot_hgi_sfu_static_operand_store dut(.clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),
+ ot_hgi_sfu_static_operand_store #(.NATIVE32(NATIVE32),.WROT(WROT),.WPIPE(WPIPE)) dut(.clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),
  .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),.stage_v(stage_v),.stage_group(stage_group),
  .stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));

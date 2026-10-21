@@ -21,7 +21,7 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  // HBM-SAFE-K9 (10-19): passed to the operand store (WPIPE bank-write landing stage, GCLK per-group regional roots)
  parameter integer WPIPE=0, GCLK=0,
  // LH-SU (10-19): WROT passed to the operand store (bank-aligned shared sector rotate)
- parameter integer WROT=0,
+ parameter integer WROT=0, NATIVE32=0,
  // LH-SU (10-19): lane_map pass-ring one-hot replication (ot_hdc_delay_ring OHREP)
  parameter integer PASS_OHREP=0,
  // L2H-SU-FB k9x (10-19): BTREE passed to the quarter's arithmetic grid (3 = four-level kept-copy broadcast tree)
@@ -68,7 +68,7 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
   .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.ro_v(ro_v),.ro_x(ro_x),
   .fault(lane_fault),.coll(lane_coll));
- ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT)) u_memory(
+ ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32)) u_memory(
   .clk(clk),.rst_n(rst_n),.clk_grp(clk_grp),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),
