@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s6b_lp",
+ "enable": false,
+ "reason": "landed parent: every input port is a face-leaf pin register or a landing ring at the pin; every output is a face-region flop; lp.py lag / offsets are the compiler record"
+}

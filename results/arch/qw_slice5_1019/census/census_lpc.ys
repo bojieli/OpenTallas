@@ -1,0 +1,8 @@
+read_verilog -sv -DSYNTHESIS rtl/qwen_dv/qfd_dv_slice2_lpf_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/qfd_dv_redstn2.sv rtl/qwen_dv/qfd_dv_scalar2.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_vstream_sfu_t.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv rtl/qwen_dv/qfd_dv_su_lane.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv
+read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+hierarchy -top qfd_dv_slice2_lpc -chparam SU_TLS 1 -chparam SU_LT 1 -chparam MU_NU 4 -chparam HD_W130 1 -chparam MUT 0
+proc
+opt_clean
+memory -nomap
+opt_clean
+tee -o stat_w.txt stat -width
