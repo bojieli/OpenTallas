@@ -238,7 +238,7 @@ step S2a synth_a_r14_masters
 # ROWS256 changes the source and parameters; old r14 S2 receipts cannot be reused wholesale.
 [ -z "${R14_REUSE_PRIMARY:-}" ] || { echo R15_REFUSES_R14_PRIMARY_REUSE; exit 12; }
 if [ -z "${R15_REUSE_COMPLETED_S2:-}" ]; then
-synth_round $A/net/pre_relay_r14.json $A/vplan_a a /home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_native32_bays_1021/plan$VAR/vplan_changed || { echo S2A_SYNTH_FAIL; exit 12; }
+synth_round $A/net/pre_relay_r14.json $A/vplan_a a $A/vplan_changed || { echo S2A_SYNTH_FAIL; exit 12; }
 else
   python3 - "$A/net/pre_relay_r14.json" "$A/vplan_a" <<'PYS2'
 import hashlib,json,sys
