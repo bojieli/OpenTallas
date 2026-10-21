@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hgi_qw_dec",
+ "view": "physical/hgi_quant_wide_views/2b1df5142_dec_s260/ot_hgi_qw_dec",
+ "lib_cell": "ot_hgi_qw_dec",
+ "insertion": false,
+ "ref_src": [
+  "lib midrange"
+ ],
+ "R_ps": 299.8,
+ "spread_ps": 42.7,
+ "outputs": 515,
+ "inputs": 1044,
+ "launch_ps": 206.5,
+ "launch_pin": "y[255]",
+ "capture_ps": 188.8,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 38.5,
+ "ff_launch_min_ps": 102.9,
+ "ff_hold_need_ps": -74.3,
+ "pass": true,
+ "fail_why": ""
+}
