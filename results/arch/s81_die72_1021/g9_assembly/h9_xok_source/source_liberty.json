@@ -1,0 +1,120 @@
+{
+ "scope": "Bounded source/Liberty proof only, actual placedbuffertrace pending. No sharedhelperchange/defaultwaiver.",
+ "source_ref": "21b97190eba0b3b306026f23a2408867cd099726",
+ "parent_top": "col_h9_l4_lp_kit_rf3r",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3r.sv": "668fe404be8da6d122c46e7d9de3b77f389b817cce16d5eb4db2a1ce2ffd3e93",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+  "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS/dsfd_dvrly_276_NS_tt.lib": "85f36c17078b64b88f33a8f229f7a3050b9439ce24c1fbada936f830bd7ea6bb",
+  "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS/dsfd_dvrly_276_NS_ff.lib": "2e3e8f377eff482820002950c83f5b9bb10f115dace204e2fc45bd04566ed2fe",
+  "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS/dsfd_dvrly_276_NS_ss.lib": "69c3ae8e76f84d43534830fbf2268c3db08acad97ea4339afca80b8590008470"
+ },
+ "pairs": [
+  {
+   "instance": "u_xo0",
+   "master": "dsfd_dvrly_276_NS",
+   "root_input": "xk[0]",
+   "forwarded_output": "xok[0]",
+   "source_ancestry": [
+    "xk[0]",
+    "u_xo0.ck",
+    "two keptinverters",
+    "u_xo0.ck_o",
+    "xok[0]"
+   ]
+  },
+  {
+   "instance": "u_xo1",
+   "master": "dsfd_dvrly_276_NS",
+   "root_input": "xk[1]",
+   "forwarded_output": "xok[1]",
+   "source_ancestry": [
+    "xk[1]",
+    "u_xo1.ck",
+    "two keptinverters",
+    "u_xo1.ck_o",
+    "xok[1]"
+   ]
+  },
+  {
+   "instance": "u_xo2",
+   "master": "dsfd_dvrly_276_NS",
+   "root_input": "xk[2]",
+   "forwarded_output": "xok[2]",
+   "source_ancestry": [
+    "xk[2]",
+    "u_xo2.ck",
+    "two keptinverters",
+    "u_xo2.ck_o",
+    "xok[2]"
+   ]
+  },
+  {
+   "instance": "u_xo3",
+   "master": "dsfd_dvrly_276_NS",
+   "root_input": "xk[3]",
+   "forwarded_output": "xok[3]",
+   "source_ancestry": [
+    "xk[3]",
+    "u_xo3.ck",
+    "two keptinverters",
+    "u_xo3.ck_o",
+    "xok[3]"
+   ]
+  }
+ ],
+ "relay_transfer": {
+  "source_path": [
+   "ck",
+   "u_ck0.a->y inverter",
+   "ckn",
+   "u_ck1.a->y inverter",
+   "ck_o"
+  ],
+  "inversions": 2,
+  "edge_delta": 0,
+  "gating": false,
+  "data_dependency": false,
+  "multiple_drivers": false,
+  "hierarchy_kept": true
+ },
+ "liberty": {
+  "tt": {
+   "ck_o_direction": "output",
+   "arcs": [
+    {
+     "related_pin": "ck",
+     "timing_sense": "positive_unate",
+     "timing_type": "combinational"
+    }
+   ]
+  },
+  "ff": {
+   "ck_o_direction": "output",
+   "arcs": [
+    {
+     "related_pin": "ck",
+     "timing_sense": "positive_unate",
+     "timing_type": "combinational"
+    }
+   ]
+  },
+  "ss": {
+   "ck_o_direction": "output",
+   "arcs": [
+    {
+     "related_pin": "ck",
+     "timing_sense": "positive_unate",
+     "timing_type": "combinational"
+    }
+   ]
+  }
+ },
+ "pure_source_causal_rejections": {
+  "datamux": "REJECT",
+  "gating": "REJECT",
+  "multidriver": "REJECT"
+ },
+ "actual_snapshot": "ep9:/srv/opentallas-scratch2/claude/codex-s81-h9cts-1021/run_cachefix",
+ "actual_snapshot_hashes_match": "All5hashes read from actualsrc agree with pinned21b; original3_place.odb untouched"
+}
