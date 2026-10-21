@@ -1,0 +1,15 @@
+{
+  "status": "source_repair_pending_actual_native_and_existing_witness",
+  "base": "cbbe8b3d0",
+  "root_cause": "D4 writer rq actual120load resetmux control",
+  "repair": "parallel same-edge reset capture per slot plus original control reset",
+  "chunk_bits": 24,
+  "D": 4,
+  "E": 2,
+  "added_cycles": 0,
+  "original_data_reset_guards_preserved": true,
+  "reader_and_reset_forest_modules_byte_exact": true,
+  "shared_primitive_files_unchanged": true,
+  "estimated_per_slot_loads": 30,
+  "requires_actual_native_max32": true
+}
