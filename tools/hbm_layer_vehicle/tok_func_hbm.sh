@@ -110,11 +110,28 @@ python3 "$T/gen_slice_tb.py" --boundary "$B" --out "$OUT/bundle/slice" --nev "$N
 say "$(tail -1 "$L/tb.log")"
 [ "$RUN" = 1 ] || { say "ASSEMBLED (RUN=0)"; exit 0; }
 
+# Optional current-source attention/index leg of the same entrypoint. Staged job
+# scripts preserve shell variables; the driver includes all originally required
+# DS L0/L2/L14 full+s32, Qwen L0/chain, TOPK/n12, and dependent SU merge cases.
+# Use RUN_ATT=1 for that coverage; positive component results never imply a full token.
+if [ "${RUN_ATT:-0}" = 1 ]; then
+  SRC_REV="$SRC_REV" LOGD="$OUT/att/log" bash "$T/run_att14.sh" \
+    "${ATT_BENCH_REV:-cf2b071fdc8874526640746288eee68248c16fa7}" "$OUT/bundle" \
+    "$REMOTE/att" "${ATT_STAGE_HOST:-${STAGE_HOSTS%% *}}" > "$L/att_driver.log" 2>&1 &
+  ATT_PID=$!
+  say "ATT driver_pid=$ATT_PID log=$L/att_driver.log"
+fi
+
 # 4. stage + build + run (fleet, unpinned) ---------------------------------------------------------------------------
 for h in $STAGE_HOSTS; do timeout 600 ssh "$h" "mkdir -p $REMOTE" && timeout 1800 rsync -a --delete "$OUT/bundle/" "$h:$REMOTE/" && say "STAGED $h:$REMOTE"; done
 /home/ubuntu/bin/ot-run --mem "$MEM" --threads "$JOBS" --disk 200 --dir "$REMOTE" -- env SRC="$REMOTE" OUT="$REMOTE/out" JOBS="$JOBS" BUILD_ONLY=1 bash run_slice_vehicle.sh > "$L/build.log" 2>&1
 BRC=$?; H=$(grep -o 'RAN on [a-z0-9-]*' "$L/build.log" | tail -1 | awk '{print $3}'); say "BUILD rc=$BRC host=$H"
 [ -n "$H" ] && timeout 120 ssh "$H" "test -x $REMOTE/out/obj/Vtb_hbm_slice" || { say NO_BINARY; exit 4; }
+ATT_RC=0
+if [ -n "${ATT_PID:-}" ]; then
+  wait "$ATT_PID" || ATT_RC=$?
+  say "ATT rc=$ATT_RC log=$L/att_driver.log"
+fi
 for n in $REPLAYS; do
   # --dir = the build's obj dir: it exists only on the build host, so the unpinned run lands where the binary is
   ( /home/ubuntu/bin/ot-run --mem "${RUN_MEM:-64}" --threads 1 --dir "$REMOTE/out/obj" -- bash -c "cd $REMOTE && mkdir -p out_$n && /usr/bin/time -v -o out_$n/run.time out/obj/Vtb_hbm_slice +verilator+rand+reset+0 +REPLAY=slice/replay/$n > out_$n/run.log 2>&1; echo RUN_RC=\$?; python3 check_slice_run.py --replay slice/replay/$n --run-log out_$n/run.log --out out_$n/acceptance.json >/dev/null 2>&1; grep -E '^SLICE_(SUMMARY|PASS|FAIL)' out_$n/run.log | tail -2" > "$L/rpl_$n.log" 2>&1 || true
@@ -125,5 +142,6 @@ wait
 for n in $REPLAYS; do timeout 300 rsync -a "$H:$REMOTE/out_$n/" "$OUT/runs/$n/" 2>/dev/null; done
 python3 "$T/tok_func_hbm_report.py" --out "$OUT" --mode "$MODE" --rev "$SRC_REV" --contract "$CONTRACT" $REPLAYS
 RRC=$?
+[ "$ATT_RC" = 0 ] || RRC=1
 say "DONE replay_rc=$RRC report=$OUT/report.json token=INCOMPLETE"
 exit "$RRC"
