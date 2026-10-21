@@ -4272,6 +4272,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # members carry frames (relays, pads, LAND_CROSS) gets the one-frame landing too (forwarded lanes), or plain relay
     # pads to the bundle's frame count (no forwarded lanes); the lane pass below then gives the bundle ONE E
     # (lane_groups.equalize, group = the bundle) and the GEN fails closed if a built bundle still arrives on two edges.
+    # A measured early-write overrun is repaired by real forwarded-clock
+    # delay stations, using the SAME legal pad allocator as other lane frames.
+    # D remains the native D4 ring; no timing exception or virtual delay.
+    if _os.environ.get('OT_SPLIT_FWD_PHASE_TRANSPORT'):
+        from qwen_split.fwd_phase_transport import reserve as _phase_transport
+        _phase_transport(m, buses, plans, tpads, _os.environ['OT_SPLIT_FWD_PHASE_TRANSPORT'], depth=4)
     sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
     import record_bundles as _RB
     _rbm, _rbp = _RB.bundle_map([(bid, eps) for idx, (bid, cl, bits, eps) in buses])
@@ -4861,6 +4867,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                               stations=sum(len(r_['stations']) for r_ in fwd_rows), landings=len(fwd_rows),
                               plain_relays_left=sum(r_['n'] for r_ in fwd_skip))
         m['fwd_lanes']['bus_groups'] = fwd_groups
+        if m.get('fwd_phase_transport'):
+            _actual_phase_lanes = {r_['bid']: r_ for r_ in fwd_rows}
+            for _phase_req in m['fwd_phase_transport']['requests']:
+                _actual = _actual_phase_lanes.get(_phase_req['bid'])
+                if _actual is not None:
+                    _phase_req.update(emitted_frames=_actual['n'], emitted_E=_actual['E'],
+                                      emitted_E_sta=_actual['E_sta'], emitted_landing=_actual['landing'])
+                    _actual['phase_transport'] = dict(_phase_req)
+            m['fwd_lanes']['phase_transport'] = m['fwd_phase_transport']
         # QXF-SEAMC 10-18: fail closed on a torn record bundle as BUILT (a member left a plain relay chain or a direct
         # wire beside landed members, or two Ks): the compiler's static calendar has one seam age per bundle
         if _rbm:
@@ -7327,7 +7342,7 @@ def _gen16_fwd_ck_names(m):
         st = ln.get('stations') or []
         h0 = st[0] if st else ln.get('landing')
         if h0:
-            ln['src_ck'] = net.get((h0, 'ck'), net.get((h0, 'ck_s'), ln.get('src_ck')))
+            ln['src_ck'] = net.get((h0, 'ck_s'), net.get((h0, 'ck'), ln.get('src_ck')))
         if ln.get('landing'):
             ln['dst_ck'] = net.get((ln['landing'], 'ck'), ln.get('dst_ck'))
 
