@@ -5,6 +5,8 @@
 // own centre-fed root (~457 x 454 um).  Hardened once, used 32x per slice (lane strap jpos, region strap rpos, slice pos).
 // Reset lands at the face in 2 registered stages (the parent issues it 2 edges early: release unchanged).
 // Control lands in the lane's replica register (the pin register; NU = 1382 of the 1742 control bits are KIND0 inputs).
+// r3 (HBM-OWN/PHY-PG 10-21, d4g TT -163 fix): face registers on rf_u / fill / delivery inputs (see FACE REGISTERS) and
+// the store mux regrouped so vm_we is the last select; RF / fill retimed from u_sin (0 cycles), delivery +1 (compiler).
 `ifdef SYNTHESIS
  `define OT_PGRG_UCK(p) .p(),
 `else
@@ -19,8 +21,8 @@ module ot_hbm_su_pgrg_kff #(parameter integer W=1, ID=0)(input wire ck, input wi
  assign q=r;
 endmodule
 (* keep_hierarchy = "yes" *)
-module ot_hbm_su_pgrg_kand #(parameter integer ID=0)(input wire a, b, c, output wire y);
- assign y=a&b&c;
+module ot_hbm_su_pgrg_kmux #(parameter integer W=8, ID=0)(input wire s, input wire [W-1:0] a, b, output wire [W-1:0] y);
+ assign y=s?a:b;
 endmodule
 
 module ot_hbm_su_pgrg_pair #(
@@ -46,9 +48,16 @@ module ot_hbm_su_pgrg_pair #(
  reg [1381:0] ctlr;
  always @(posedge ck) ctlr<=ctl_u;
  wire [1741:0] ctl0={ctlr[1381:1380],72'd0,ctlr[1379:1212],72'd0,ctlr[1211:1044],72'd0,ctlr[1043:876],72'd0,ctlr[875:708],72'd0,ctlr[707:0]};
- wire [127:0] rfw=rf_u[163:36]; wire [35:0] rfc=rf_u[35:0];
  wire [8:0] frow_l, ra5_l, dwr_l; wire [31:0] fdat_l, dwd_l; wire rv5_l;
  assign {frow_l,fdat_l,rv5_l,ra5_l,dwr_l,dwd_l}=dl;
+ // ---- r3 FACE REGISTERS (HBM-OWN/PHY-PG 10-21): every input that reached a hard-child pin or the fault flop through
+ // glue lands here first.  rf_u and the fill fields (fw copies, frow, fdat) are the parent's u_sin registers MOVED here
+ // (rgf_lph u_sin FACE=1 emits their D inputs: 0 added cycles, bit-exact); the delivery write fields (dwn copies, dwr,
+ // dwd) are issued 1 serial edge EARLIER by the compiler (calendar re-time, +1 edge on the collective delivery write).
+ // rv5 / ra5 stay wires to the bank read port 5 (no glue).  Datapath unreset (pure retiming of reset-cleared sources).
+ reg [163:0] rfq; reg [8:0] frow_q, dwr_q; reg [31:0] fdat_q, dwd_q; reg [4:0] fwq, dwq;
+ always @(posedge ck)begin rfq<=rf_u;frow_q<=frow_l;fdat_q<=fdat_l;dwr_q<=dwr_l;dwd_q<=dwd_l;fwq<=fwc;dwq<=dwnc;end
+ wire [127:0] rfw=rfq[163:36]; wire [35:0] rfc=rfq[35:0];
  wire [10:0] lid; wire [127:0] rdq; wire [281:0] lo; wire [5:0] brv; wire [53:0] bra; wire [0:0] bwv; wire [8:0] bwa;
  wire [31:0] bwd; wire [191:0] bq;
  // Static physical identity lands locally before the two-stage reset release.
@@ -75,17 +84,20 @@ module ot_hbm_su_pgrg_pair #(
  assign ra[5*9+:9]=ra5_l; assign rv[5]=rv5_l;
  assign brv=rv; assign bra=ra;
  wire lw=vm_we|kv_we;
- // lane store word: per write-data byte g the VM select is formed once in a kept gate (vm_we & !fw & !dwn of that
- // byte's copy), so the lane's vm_we pin feeds 4 gates + the 9-bit address mux
- wire [3:0] s_vm;
+ // lane store word (r3): fw ? fdat : dwn ? dwd : vm_we ? vm : kv, regrouped so the registered fill / delivery word is
+ // selected first and the lane's late vm_we is the LAST select: one kept 8-bit 2:1 per byte (vm_we pin -> 4 kept muxes
+ // + the 9-bit address mux + lw + idf), then one 2:1 on the registered fw/dwn copy of that byte.
  for(genvar g=0;g<4;g=g+1)begin:g_sel
-  ot_hbm_su_pgrg_kand #(.ID(g)) u_svm (.a(vm_we), .b(~fwc[1+g]), .c(~dwnc[1+g]), .y(s_vm[g]));
-  assign bwd[8*g+:8]=fwc[1+g]?fdat_l[8*g+:8]:dwnc[1+g]?dwd_l[8*g+:8]:s_vm[g]?vm_wdata[8*g+:8]:kv_wdata[8*g+:8];
+  wire [7:0] vk;
+  ot_hbm_su_pgrg_kmux #(.W(8),.ID(g)) u_vk (.s(vm_we), .a(vm_wdata[8*g+:8]), .b(kv_wdata[8*g+:8]), .y(vk));
+  wire pv=fwq[1+g]|dwq[1+g];
+  wire [7:0] pd=fwq[1+g]?fdat_q[8*g+:8]:dwd_q[8*g+:8];
+  assign bwd[8*g+:8]=pv?pd:vk;
  end
  wire [8:0] la9=vm_we?{vm_waddr[17:16],vm_waddr[13:7]}:{kv_waddr[17:16],kv_waddr[13:7]};
- wire st_conflict=(fwc[0]&&lw)||(fwc[0]&&dwnc[0])||(dwnc[0]&&lw);
- assign bwv[0]=lw|fwc[0]|dwnc[0];
- assign bwa=fwc[0]?frow_l:dwnc[0]?dwr_l:la9;
+ wire st_conflict=(fwq[0]&&lw)||(fwq[0]&&dwq[0])||(dwq[0]&&lw);
+ assign bwv[0]=lw|fwq[0]|dwq[0];
+ assign bwa=(fwq[0]|dwq[0])?(fwq[0]?frow_q:dwr_q):la9;
  reg idf; integer p2;
  always @*begin
   idf=(vm_we&&(vm_waddr[6:0]!=st_lid||vm_waddr[15:14]!=q_id))||(kv_we&&!vm_we&&(kv_waddr[6:0]!=st_lid||kv_waddr[15:14]!=q_id));

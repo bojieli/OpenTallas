@@ -67,6 +67,13 @@ module tb_hbm_su_pgslice_rg;
   dl_lgw[0]=lgw; dl_fwq[0]=farwq; dl_lgwd[0]=lgwd;
  end
  wire [1:0] lgw_d=dl_lgw[SWQ-1], lgwd_d=dl_lgwd[SWQ-1]; wire [561:0] farwq_d=dl_fwq[SWQ-1];
+ // r3 pair tiles (HBM-OWN/PHY-PG 10-21): the hardened pair lands the delivery write (dw_v / dw_row / dw_d) in a face
+ // register, so the compiler issues dw DWE serial edges EARLIER to the region-form slice (HREG 1); equivalently the flat
+ // reference receives the same dw stream DWE edges later.  HREG 0 (soft lp regions) is unchanged (DWE 0).
+ localparam integer DWE=(HREG!=0)?1:0;
+ reg [1:0] dwv_e=0; reg [17:0] dwr_e=0; reg [1023:0] dwd_e=0;
+ always @(posedge sclk) begin #2; dwv_e=dwv; dwr_e=dwr; dwd_e=dwd; end
+ wire [1:0] dwv_f=(DWE!=0)?dwv_e:dwv; wire [17:0] dwr_f=(DWE!=0)?dwr_e:dwr; wire [1023:0] dwd_f=(DWE!=0)?dwd_e:dwd;
  `define PGF(NAME,PS,PT) \
  wire [31:0] NAME``_sx; wire [66:0] NAME``_to; wire [1023:0] NAME``_iq; wire NAME``_f, NAME``_lf; wire [33:0] NAME``_rq; \
  wire [561:0] NAME``_wq; wire [513:0] NAME``_frr; wire [1:0] NAME``_fwd; \
@@ -76,7 +83,7 @@ module tb_hbm_su_pgslice_rg;
   .rst_bcast_n({4{por}}),.clk_bank({32{sclk}}),.clk_bank_macro({192{sclk}}),.clk_ctl(sclk),.clk_side({6{sclk}}), \
   .rst_n(por),.pos(PS),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw),.rf_bcmd(rfc), \
   .rf_dsec(rfd),.red_sel(rsel),.slice_x(NAME``_sx),.tree_cmd(tcmd),.tree_o(NAME``_to),.inj_rd(injrd),.inj_addr(inja), \
-  .inj_q(NAME``_iq),.dw_v(dwv),.dw_row(dwr),.dw_d(dwd),.fault(NAME``_f),.lg_rq(NAME``_rq),.lg_wq(NAME``_wq),.lg_rr(lgrr), \
+  .inj_q(NAME``_iq),.dw_v(dwv_f),.dw_row(dwr_f),.dw_d(dwd_f),.fault(NAME``_f),.lg_rq(NAME``_rq),.lg_wq(NAME``_wq),.lg_rr(lgrr), \
   .lg_w_done(lgwd),.lg_read(lgr),.lg_write(lgw),.far_rq(farrq),.far_wq(farwq),.far_rr(NAME``_frr),.far_w_done(NAME``_fwd), \
   .lg_fault(NAME``_lf));
  `define PGR(NAME,PS,PT,MM) \

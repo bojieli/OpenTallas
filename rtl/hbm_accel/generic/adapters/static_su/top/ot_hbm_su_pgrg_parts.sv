@@ -41,7 +41,10 @@ endmodule
 // ------------------------------------------------------------------------------------------------ S: inbound service
 // di<r> = {fw, row9, data256, rv5, row9, dwn, row9, words256} = the store-command bundle of store group r (h r%2, hi r/2)
 module ot_hbm_su_pgrg_sin #(
- parameter integer QID=1,G=2,READ_RETURN=10,MULTIRATE=1,COLLPORT=1,RF_LOCAL=1,STRAP=1,MUT=0
+ parameter integer QID=1,G=2,READ_RETURN=10,MULTIRATE=1,COLLPORT=1,RF_LOCAL=1,STRAP=1,MUT=0,
+ // FACE 1 (r3 pair tiles, HBM-OWN/PHY-PG 10-21): the RF-local and fill-output registers live in the pair tile's face
+ // registers instead: rf_u and the fill fields of di<r> carry those registers' D inputs (same values one edge earlier).
+ FACE=0
 )(
  input wire ck, input wire rst_n,
  input wire [3:0] pos,
@@ -93,8 +96,11 @@ module ot_hbm_su_pgrg_sin #(
   always @(posedge ck)
    if(!rst_n)rf_bv_l<=4'd0;
    else for(vb=0;vb<4;vb=vb+1)rf_bv_l[vb]<=rf_bcmd[vb*9+8];
-  assign rf_bword_u=rf_bword_l;
-  assign rf_bcmd_u={rf_bv_l[3],rf_badr_l[24+:8],rf_bv_l[2],rf_badr_l[16+:8],rf_bv_l[1],rf_badr_l[8+:8],rf_bv_l[0],rf_badr_l[0+:8]};
+  // FACE: the D inputs of rf_bword_l / rf_badr_l / rf_bv_l (sync reset folded in)
+  wire [3:0] rf_bv_d={rst_n&&rf_bcmd[3*9+8],rst_n&&rf_bcmd[2*9+8],rst_n&&rf_bcmd[1*9+8],rst_n&&rf_bcmd[0*9+8]};
+  assign rf_bword_u=(FACE!=0)?rf_bword:rf_bword_l;
+  assign rf_bcmd_u=(FACE!=0)?{rf_bv_d[3],rf_bcmd[3*9+:8],rf_bv_d[2],rf_bcmd[2*9+:8],rf_bv_d[1],rf_bcmd[1*9+:8],rf_bv_d[0],rf_bcmd[0*9+:8]}
+                            :{rf_bv_l[3],rf_badr_l[24+:8],rf_bv_l[2],rf_badr_l[16+:8],rf_bv_l[1],rf_badr_l[8+:8],rf_bv_l[0],rf_badr_l[0+:8]};
  end else begin:g_rf_direct
   assign rf_bword_u=rf_bword; assign rf_bcmd_u=rf_bcmd;
  end
@@ -108,7 +114,10 @@ module ot_hbm_su_pgrg_sin #(
  wire [541:0] di [0:3]; wire [3:0] st_inj_drain;
  for(genvar r=0;r<4;r=r+1)begin:g_dis
   localparam integer H=r%2, HI=r/2;
-  wire fw=fr_v[H]&&fr_hi[H]==1'(HI);
+  // FACE: the D inputs of fr_v / fr_hi / fr_row / fr_dat (sync reset of fr_v folded in)
+  wire fw=(FACE!=0)?(rst_n&&fd[H][FD][10]&&fd[H][FD][9]==1'(HI)):(fr_v[H]&&fr_hi[H]==1'(HI));
+  wire [8:0] frw=(FACE!=0)?fd[H][FD][8:0]:fr_row[H];
+  wire [255:0] frd=(FACE!=0)?su_rr[H*257+:256]:fr_dat[H];
   wire drn=dr_v[H]&&dr_hi[H]==1'(HI);
   wire ijn=ij_v[2*HI+H];
   wire [8:0] ra5=ijn?ij_row[9*(2*HI+H)+:9]:dr_row[H];
@@ -118,7 +127,7 @@ module ot_hbm_su_pgrg_sin #(
    assign dwd[j*32+:32]=dw_d[512*HI+32*((MUT==10)?15-(8*H+j):(8*H+j))+:32];
   end
   assign st_inj_drain[r]=drn&&ijn;
-  assign di[r]={fw,fr_row[H],fr_dat[H],drn||ijn,ra5,dwn,dw_row[9*HI+:9],dwd};
+  assign di[r]={fw,frw,frd,drn||ijn,ra5,dwn,dw_row[9*HI+:9],dwd};
  end
  assign di0=di[0]; assign di1=di[1]; assign di2=di[2]; assign di3=di[3];
  // ---- S checks: pipelined 3 (the region checks reach u_sout as rflt + 2 return stages)
@@ -126,6 +135,9 @@ module ot_hbm_su_pgrg_sin #(
  reg [2:0] cp;
  always @(posedge ck) if(!rst_n) cp<=3'd0; else cp<={cp[1:0],c0};
  assign s_cond=cp[2];
+`ifndef SYNTHESIS
+ initial if (FACE != 0 && RF_LOCAL == 0) $fatal(1, "ot_hbm_su_pgrg_sin: FACE=1 needs RF_LOCAL=1 (the moved register)");
+`endif
 endmodule
 
 // ------------------------------------------------------------------------------------------------ region glue (r)
