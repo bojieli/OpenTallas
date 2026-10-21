@@ -1,0 +1,183 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tt_ctlm_dv_wtn/views/qfd_tt_ctlm_dv_wtn/qfd_tt_ctlm_dv_wtn_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tt_ctlm_dv_wtn/views/qfd_tt_ctlm_dv_wtn/qfd_tt_ctlm_dv_wtn_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 4580 FIRM hold cells / drivers for DPL
+OT_OFLOP released 1527 output-port flops for DPL
+OT_LCD un-grouped movable cells inside regions: 11309 core / 2164 hr; outside (pin bands) 12423
+OT_LCD PASS dissolved 2 groups / 2 regions (137237 members keep their GPL region placement)
+detailed_placement
+[INFO DPL-0006] Core area: 564556.26 um^2
+[INFO DPL-0007] Movable instances area: 22822.85 um^2
+[INFO DPL-0008] Fixed instances area within core: 246154.52 um^2
+[INFO DPL-0009] Utilization: 47.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (5 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 200407 cells
+[INFO DPL-0393]   height 233 row(s): 5 cells
+[INFO DPL-0393]   height 288 row(s): 1 cells
+[INFO DPL-0393]   height 571 row(s): 6 cells
+[INFO DPL-0393]   height 824 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |     104886 |     10750 |     72276
+        1 |      67161 |      5795 |     48616
+        2 |      35762 |      3480 |     28516
+        3 |      22242 |      2426 |     19033
+        4 |      14009 |      1675 |     12154
+        5 |       9910 |      1250 |      8390
+        6 |       7000 |       932 |      6026
+        7 |       5237 |       739 |      4489
+        8 |       3922 |       604 |      3309
+        9 |       3259 |       501 |      2758
+       10 |       2504 |       404 |      2100
+       20 |        518 |        82 |       427
+       30 |        172 |        30 |       142
+       37 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 37.
+[INFO DPL-0500] Runtime: 34.15s
+Placement Analysis
+---------------------------------
+total displacement     252992.8 u
+average displacement        1.3 u
+max displacement          106.1 u
+original HPWL         3200766.2 u
+legalized HPWL        3301133.2 u
+delta HPWL                    3 %
+
+Took 34 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 46331 fixed cells.
+[INFO DPL-0318] Collected 163133 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (775440, 732240)
+[INFO DPL-0310] Assigned 163133 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 3.300408e+09.
+[INFO DPL-0302] End of matching; objective is 3.297246e+09, improvement is 0.10 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 3.263809e+09.
+[INFO DPL-0306] Pass   2 of global swaps; hpwl is 3.257821e+09.
+[INFO DPL-0307] End of global swaps; objective is 3.257821e+09, improvement is 1.20 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 3.254012e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 3.254012e+09, improvement is 0.12 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 3.249956e+09.
+[INFO DPL-0305] End of reordering; objective is 3.249956e+09, improvement is 0.12 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 3262660 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 3262660, swaps 247665, moves 1057461 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 3.247403e+09, Scratch cost 3.228267e+09, Incremental cost 3.228267e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 3.228267e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.59 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.589278 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 58803 cell flips.
+[INFO DPL-0384] End of flipping; objective is 3.211055e+09, improvement is 0.61 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          3301133.2 u ( 1302780.5,  1998352.7)
+Final HPWL             3208704.8 u ( 1232745.1,  1975959.7)
+Delta HPWL                  -2.8 % (      -5.4,       -1.1)
+
+Took 67 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 5873 instances
+[INFO DPL-0021] HPWL before          3208704.8 u
+[INFO DPL-0022] HPWL after           3208292.5 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 564556.26 um^2
+[INFO DPL-0007] Movable instances area: 22822.85 um^2
+[INFO DPL-0008] Fixed instances area within core: 246154.52 um^2
+[INFO DPL-0009] Utilization: 47.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (5 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 200407 cells
+[INFO DPL-0393]   height 233 row(s): 5 cells
+[INFO DPL-0393]   height 288 row(s): 1 cells
+[INFO DPL-0393]   height 571 row(s): 6 cells
+[INFO DPL-0393]   height 824 row(s): 1 cells
+[INFO DPL-0500] Runtime: 2.93s
+Placement Analysis
+---------------------------------
+total displacement      30355.4 u
+average displacement        0.2 u
+max displacement            2.1 u
+original HPWL         3208292.5 u
+legalized HPWL        3231580.9 u
+delta HPWL                    1 %
+
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 13 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 268977 um^2 48% utilization.
+write_db /work/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 3:59.93[h:]min:sec. CPU time: user 286.62 sys 47.06 (139%). Peak memory: 3379148KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          239           3299 d8cbea0ab4af09ca90e3

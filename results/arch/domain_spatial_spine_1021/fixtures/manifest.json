@@ -126,9 +126,9 @@
     "source_snapshot_archive_sha256": "b5bcdd7673b8dbba0cdc6e6786345d3db71f01a2587e6d0a4c16630e1bb1a8c6",
     "source_clock_sdc_sha256": "e6667ff0da529a27d68b65b7e7991a29db3e7080b0fd7fedc36f631f78d18647",
     "origin_host": "ot-epyc9",
-    "origin_odb": "/srv/opentallas-scratch/claude/q-ctlm13-placement-1021/placed.odb",
-    "odb_sha256": "a57462fc148fcf455bf024ed63bcff30c2291b2145ab2d514efb8d8d0daca2ed",
-    "compressed_odb_sha256": "8b9e2ab8da1b4dc038455ccbfde3ed8b40e87b7ec040bed58715c47f148bb3ab",
+    "origin_odb": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_dv_safe12c-20261021-131509/routes/gate/work/orfs/results/asap7/opentallas_qfd_tt_ctlm_dv_np_lp_asap7_ref_gate/base/3_place.odb",
+    "odb_sha256": "6780a6479402db782c5cb3d1586ae18172770636c022e9091b990d16472f68cd",
+    "compressed_odb_sha256": "fac213f10edb50ec5dba4877ff9a83acbe53ed74c2b795843363547bf819314b",
     "scene_archive_sha256": "597ea90b5a3f3821e9b013f21f72e21a32a09f46ec6f7e07c27e60300228fd0f",
     "scene_files": {
       "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json": "6d02924cf06c0271d4d350a6dc6e20bb5aa3daa2b0ffe33033c36c74fbd3c618",
@@ -1899,8 +1899,8 @@
     "frozen_recorded_tool_version": "26Q3-1510-g6cb3f2b704",
     "original_gate_image_digest": "NOT_RECORDED",
     "current_preparation_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
-    "scope": "Actual immutable PRECTS savedODB+frozen scene; not original gate timing replay or current FRAME signoff proof.",
-    "expected_count_basis": "Actual current production collector 11940/5188, preserving all17127 source-native contacts plus exactly one existing physical HR pin-flop clone; no exemption",
+    "scope": "Actual immutable final detailed-placed PRECTS source ODB plus same exact frozen source scene; current FRAME/engine qualification NOTRUN. Original GPL fixture and actual ownership PASS/engine FAIL retained separately.",
+    "expected_count_basis": "Expected physical contacts11940/5188 retained from source/GPL scene; corrected detailed-placed scene production collector NOTRUN, must refuse any unproven difference",
     "original_STA_sinkcounts": "Not used as physical count acceptance",
     "expected_source_native_contacts": {
       "ck_core": 11940,
@@ -1915,6 +1915,28 @@
       "evidence": "../ctlm_contact_delta/receipt.json",
       "comparison": "../ctlm_contact_delta/compare.py",
       "receipt_sha256": "746b59aa198d03c1b0e23b2cafe24b0ac788eafe95550362147962f46c1ce490"
+    },
+    "placement_stage": "3_place.odb == final3_5_place_dp.odb after detailed placement, original saved stage13:55",
+    "previous_fixture": {
+      "odb_file": "ctlm2_gpl.odb.gz",
+      "raw_sha256": "a57462fc148fcf455bf024ed63bcff30c2291b2145ab2d514efb8d8d0daca2ed",
+      "compressed_sha256": "8b9e2ab8da1b4dc038455ccbfde3ed8b40e87b7ec040bed58715c47f148bb3ab",
+      "stage": "3_3_place_gp.odb global placement before resize/detailed legalization",
+      "evidence": "../ctlm_gpl_engine_fail/original_gpl_fixture.json"
+    },
+    "contact_lineage": {
+      "same_source_snapshot_identity": "5766296c62314c3d1b0a2de1ba4f3a5d79150aaa3f0d6d0418a1dfe5ee569b05",
+      "same_source_scene_archive_sha256": "597ea90b5a3f3821e9b013f21f72e21a32a09f46ec6f7e07c27e60300228fd0f",
+      "source_native_contacts": {
+        "ck_core": 11940,
+        "ck_hr": 5187
+      },
+      "prior_GPL_actual_contacts": {
+        "ck_core": 11940,
+        "ck_hr": 5188
+      },
+      "prior_physical_delta": "ot_prs_00000_ff/CLK HR pin clone, source-proven",
+      "detailed_placed_actual_contacts": "NOTRUN; ROOT production collector required before engine; no expected roles changed"
     }
   }
 }

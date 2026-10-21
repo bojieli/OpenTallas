@@ -1,0 +1,14 @@
+{
+  "classification": "Fixture prerequisite mismatch: global-placed unlegalized scene supplied to canonical PRECTS spine legalizer",
+  "old_GPL_raw_sha256": "a57462fc148fcf455bf024ed63bcff30c2291b2145ab2d514efb8d8d0daca2ed",
+  "actual_original_3_3_GP_sha256": "a57462fc148fcf455bf024ed63bcff30c2291b2145ab2d514efb8d8d0daca2ed",
+  "new_final_3_place_raw_sha256": "6780a6479402db782c5cb3d1586ae18172770636c022e9091b990d16472f68cd",
+  "original_engine_failure": "DPL0033 after fallback. Initial check140334 site alignment failures; insertion7005 spine buffers. Final4817 row/4073 overlap/4073 padding.",
+  "source_of_inherited_misalignment": "The input is proven exact3_3_place_gp before3_4 resizing and3_5 detailed placement. Canonical engine expects original placement clean before insertion.",
+  "scope_limit": "No standalone baseline check_placement or per-cell failed ownership table was executed; not proof engine will pass corrected scene. All existing failures remain.",
+  "corrected_original_stage_evidence": "3_5_place_dp.log original normal detailed placement: max displacement2.1um, completed to estimates/metrics; raw3_place hash differs and new fixture proven exact.",
+  "production_changes": false,
+  "EDA_launches_by_lane": 0,
+  "collector_expectation": "Retained11940/5188; actual corrected scene admission NOTRUN. No relaxation or expected-role change.",
+  "pure_preparation": "PASS fresh frozen prepared-ctlm2-final3_place-frozen, no EDA; first local preparation raced file freeze and correctly refused raw hash mismatch, failed directory preserved separately"
+}
