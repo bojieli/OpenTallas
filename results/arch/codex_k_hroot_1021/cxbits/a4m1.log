@@ -1,0 +1,7 @@
+head mismatch t=80000 gold=468acf13579bde30 got=8d159e26af37bc60
+head mismatch t=84000 gold=468acf13579bde30 got=8d159e26af37bc60
+head mismatch t=90000 gold=468acf13579bde30 got=8d159e26af37bc60
+CX_BITS FAIL AW=4 MUT=1 errors=5126 checks=5143
+[30153000] %Fatal: tb.sv:49: Assertion failed in tb: CX_BITS mismatch
+%Error: tb.sv:49: Verilog $stop
+Aborting...

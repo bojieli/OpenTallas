@@ -1,0 +1,22 @@
+{
+  "purpose": "Minimal original W64 vs 64 unmodified W1 FIFO slices, AW4 production and AW2; strict simultaneous cycle/status/data comparison; rotation mutant",
+  "native": "W1 AW4 standalone PASS max30; integrated tile census pending",
+  "area_basis": "Yosys stat mapped ASAP7 TT Liberty area",
+  "gold_area": 557.6121,
+  "bits_area": 2712.57984,
+  "delta_area": 2154.96774,
+  "gold_cells": 4419,
+  "bits_cells": 20929,
+  "delta_cells": 16510,
+  "gold_flops": 1073,
+  "bits_flops": 4160,
+  "delta_cycles": 0,
+  "checks_each": 5143,
+  "pass_regex": "^CX_BITS PASS .*MUT=0 .*delta_cycles=0",
+  "fail_regex": "^CX_BITS FAIL .*MUT=1",
+  "source_sha256": {
+    "rtl/qwen_sys/host_cluster_cdc_20261018/qkc_afifo_bits_1021.sv": "80b0e7f5e2fc570bd602d4c282d87de24eebcf83a97f61543efc5fdcb82ff285",
+    "rtl/test/qwen_host/qm_cx_bits_1021/tb.sv": "1c93e35e6c4a2c013268745c7e80f691b0d760116ba4162037957555108e146d",
+    "rtl/test/qwen_host/qm_cx_bits_1021/run.sh": "0616e6d4fdd4f0fa0ce645bfb2db0765037961b4e8858ad211ac5326ca92b450"
+  }
+}
