@@ -274,7 +274,7 @@
  "reset_relay_split": {
   "max_loads": 32
  },
- "structural_change": "Source unchanged leaf7406d282a/coherentcallsite7754785b7: native32,600-programme edge miter+3causal mutants and production DS_RS144218->215rows862/872PASS. Original physical gate boundaryspread122/142ps, dataSRAM172.824x41.064 at41.088pitch leaves0.024um channels/all1536outputsW. Structural grid correction: eachbank low/high SRAM onW/E columns with86.4rowpitch=>45.336realrowgap and86.376centralgap MAIN/129.576FB; fourmetadata2x2footer, all43.2origins, existing1536-bit W output bus on taller432/475.2edge (3.56/3.23pins/um), unchanged RTL/port interface. Continuous std/clock bands and symmetry address actual macro/IOfanout geometry; retain real clk_control, real SRAM CLK refs, same OT_SPINE_SYM1. No roots relabeled/no cycle/ISA change/no waiver. Larger bbox must beexplicitly adopted by parent; no oldbboxalias.",
+ "structural_change": "Source unchanged leaf7406d282a/coherentcallsite7754785b7: native32,600-programme edge miter+3causal mutants and production DS_RS144218->215rows862/872PASS. Original physical gate boundaryspread122/142ps, dataSRAM172.824x41.064 at41.088pitch leaves0.024um channels/all1536outputsW. Structural grid correction: eachbank low/high SRAM onW/E columns with86.4rowpitch=>45.336realrowgap and86.376centralgap MAIN/129.576FB; fourmetadata2x2footer, all43.2origins, existing1536-bit W output bus on taller432/475.2edge (3.56/3.23pins/um), unchanged RTL/port interface. Continuous std/clock bands and symmetry address actual macro/IOfanout geometry; retain real clk_control, real SRAM CLK refs, same OT_SPINE_SYM1. No roots relabeled/no cycle/ISA change/no waiver. Larger bbox must beexplicitly adopted by parent; no oldbboxalias. Actual clk_control N entry is explicitly ranged at the centre of the continuous central clock band (existing scalar pin_ranges mechanism), not left in the sorted generic control-pin group. Real metadata/data clock refs and one clock root unchanged; actual TT/FF boundary spread must pass.",
  "slot_change_request": {
   "reason": "True256 native-qualified source requires real SRAM/clock bands and taller W IOfacing edge; original tight-stack physical view unqualified. Parent must explicitly adopt this bbox and pin plan; no old bbox alias.",
   "outline_um": [
@@ -285,5 +285,11 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "why": "Native32 ROWS256 successor of selected r15 issuer_m256/v7 (mapped108drivers>32,max1537): safe128v8 architecture widened to exact8-bit PC/row fields + true256x256/256x64 SRAM,16PCnibblecopies,40rowvalidresetgroups54totalkeptresetleaves,segmenteduopmask/controlselects. Same cfg37 ISA/lid<32/programconstraints and transactionedges, no128view alias."
+ },
+ "pin_ranges": {
+  "clk_control": [
+   280.368,
+   281.232
+  ]
  }
 }
