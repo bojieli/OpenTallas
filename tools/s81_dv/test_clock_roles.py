@@ -74,6 +74,12 @@ class WholeSpareFrameClockTests(unittest.TestCase):
         self.bits[self.inst]['xok']=[('outclk',b) for b in range(4)]
         self.assertEqual(self.unused(),set())
         with self.assertRaisesRegex(ValueError,'unreached declared clock source'):self.run_it({'laneclk'})
+    def test_missing_declared_root_input_never_skipped(self):
+        del self.bits[self.inst]['ck']
+        with self.assertRaisesRegex(ValueError,'expected connected input'):self.run_it()
+    def test_no_declared_root_never_skipped(self):
+        del self.masters['frame']['clk']
+        with self.assertRaisesRegex(ValueError,'no declared input clock'):self.run_it()
     def test_partial_connected_output_not_classified_spare(self):
         self.bits[self.inst]['xok']=[('outclk',0)]
         self.assertEqual(self.unused(),set())
