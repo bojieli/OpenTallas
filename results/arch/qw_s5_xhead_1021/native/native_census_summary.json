@@ -8,16 +8,16 @@
  ],
  "netlist": {
   "path": "out/nat/mapped.v",
-  "sha256": "9cffb6d0373387e821730eeaaabad709e8a94294867ae732a664fca7e2fecfbe"
+  "sha256": "49e11ea3a1a76b9be579fcbb3734a706ef1afd088e92e23be027522709465a06"
  },
  "top": "qfd_dv_s5_xhead3",
  "status": "PASS",
  "limit": 32,
- "roots_examined": 40878,
+ "roots_examined": 40068,
  "max_dynamic_loads": 32,
  "constant_output_bits": [
   {
-   "port_bit": "n_d[510]",
+   "port_bit": "s_d[514]",
    "source": {
     "kind": "literal",
     "net": "1'0"
@@ -25,7 +25,7 @@
    "transparent_path": []
   },
   {
-   "port_bit": "s_d[514]",
+   "port_bit": "n_d[510]",
    "source": {
     "kind": "literal",
     "net": "1'0"
@@ -38,6 +38,5 @@
  "storage_contract": "NOT_EVALUATED",
  "independent_source_contract_audit_required": true,
  "role_errors": [],
- "violations": [],
- "driver_counts_note": "dropped (13 MB); max_dynamic_loads/violations retained"
+ "violations": []
 }

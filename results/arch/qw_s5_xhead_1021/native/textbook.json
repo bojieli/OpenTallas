@@ -1,6 +1,6 @@
 {
- "cells": 48752,
- "flops": 12136,
+ "cells": 47899,
+ "flops": 12127,
  "icgs": 0,
  "macros": 0,
  "findings": {
@@ -17,14 +17,14 @@
   "clock_roots": [
    {
     "root": "port:ck",
-    "ff": 12136,
+    "ff": 12127,
     "icg": 0,
     "macro_pins": 0,
     "example": "IKc[0]_INVx1_ASAP7_75t_R_Y_1_A_DFFHQNx1_ASAP7_75t_R_QN"
    }
   ],
   "hier_subblocks": 0,
-  "clock_max_root_sinks": 12136,
+  "clock_max_root_sinks": 12127,
   "clock_max_root": "port:ck",
   "high_fanout_top": [],
   "hf_max_port": 0,
@@ -42,16 +42,16 @@
   "in_to_reg_levels": 0,
   "reg_to_out_levels": 0,
   "icg_enable_from_port": 0,
-  "depth_ps": 408.4,
+  "depth_ps": 390.1,
   "depth_path": [
-   "k_i_n_AND3x1_ASAP7_75t_R_Y_2_C_OAI31xp33_ASAP7_75t_R_Y_B_DFFHQNx1_ASAP7_75t_R_QN",
-   "keq_c_INVx1_ASAP7_75t_R_Y_1_A_DFFHQNx1_ASAP7_75t_R_QN/D"
+   "lw_ctl_INVx1_ASAP7_75t_R_Y_123_A_DFFHQNx1_ASAP7_75t_R_QN_D_O2A1O1Ixp33_ASAP7_75t_R_Y_A1_DFFHQNx1_ASAP7_75t_R_QN_D_AO21x1_ASAP7_75t_R_Y_A1_INVx1_ASAP7_75t_R_Y_A_DFFHQNx1_ASAP7_75t_R_QN_D_XOR2xp5_ASAP7_75t_R_Y_A_NOR2xp33_ASAP7_75t_R_A_Y_AO21x1_ASAP7_75t_R_A1_Y_XOR2xp5_ASAP7_75t_R_A_B_XOR2xp5_ASAP7_75t_R_Y_A_DFFHQNx1_ASAP7_75t_R_QN",
+   "ctl_OR3x1_ASAP7_75t_R_Y_1_C_NOR4xp25_ASAP7_75t_R_Y_A_XNOR2xp5_ASAP7_75t_R_Y_B_AOI21xp33_ASAP7_75t_R_Y_A1_INVx1_ASAP7_75t_R_Y_A_DFFHQNx1_ASAP7_75t_R_QN_D_OAI21xp33_ASAP7_75t_R_Y_B_NAND2xp33_ASAP7_75t_R_Y_B_XNOR2xp5_ASAP7_75t_R_Y_A_DFFHQNx1_ASAP7_75t_R_QN/D"
   ],
   "depth_levels": 12
  },
  "top": "qfd_dv_s5_xhead3",
  "netlist": "out/nat/mapped.v",
- "seconds": 1.2,
+ "seconds": 2.0,
  "thresholds": {
   "clk_sinks_max": 15000,
   "clk_span_um": 600.0,
@@ -81,10 +81,10 @@
   "channel_um": 20.0
  },
  "clock_rule": {
-  "max_root_sinks": 12136,
+  "max_root_sinks": 12127,
   "root": "port:ck",
   "ok": true,
-  "text": "12,136 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "text": "12,127 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
   "enforce": false,
   "closed_stands": false,
   "limits": {

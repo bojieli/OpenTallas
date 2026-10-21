@@ -258,8 +258,12 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     (* keep = "true" *) reg [NR-1:0] b_pool;                 // per-row copies
     reg              b_poolm, b_pf128;
     (* keep = "true" *) reg [7:0] b_fm8 [0:1];
-    (* keep = "true" *) reg [5:0] b_k [0:4];                 // [0..3] rows 4c .. 4c+3, [4] epoch store / forwarding
-    (* keep = "true" *) reg [7:0] b_k3 [0:2];                // [0..1] rows 8c .., [2] epoch store / forwarding
+    reg  [5:0]       b_k;                                    // epoch store / forwarding
+    reg  [7:0]       b_k3;
+    // pooled-read integrity threshold: every element i of row r reads up to start + (i+1) k - 1 <= start + 4k - 1
+    // (no 8-bit wrap: start <= 63, 3k <= 189), so the old per-(r, i) check is start + 4k - 1 >= 128 (k != 0)
+    (* keep = "true" *) reg [8:0] b_k4m1 [0:3];              // 4k - 1 (k != 0), else 0; copy per 4 rows
+    (* keep = "true" *) reg [3:0] b_knz;
     always @(posedge ck or negedge rr[4])
         if (!rr[4]) begin b_v <= 1'b0; b_vc[15:0] <= 16'd0; end
         else begin b_v <= a_v; b_vc[15:0] <= {16{a_vc[0]}}; end
@@ -275,14 +279,13 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
         b_poolm <= (a_fm >= 64);
         b_pf128 <= (a_fm >= 128);
         for (c = 0; c < 2; c = c + 1) b_fm8[c] <= a_fm[7:0];
-        for (c = 0; c < 5; c = c + 1) b_k[c] <= a_k;
-        for (c = 0; c < 3; c = c + 1) b_k3[c] <= 8'(3 * a_k);
+        b_k <= a_k;
+        b_k3 <= 8'(3 * a_k);
+        for (c = 0; c < 4; c = c + 1) begin b_k4m1[c] <= 9'(4 * a_k) - 9'd1; b_knz[c] <= (a_k != 6'd0); end
     end
     // write stage (old end of stage C): W (beat), start, pool fault, pooled-read integrity (old stage D input)
     reg  [BW-1:0]    w_W [0:NR-1];
     reg              pfault_n, pbad_n;
-    reg  [7:0]       fa;
-    reg  [7:0]       ik;
     always @* begin
         pfault_n = b_pf128;
         pbad_n = 1'b0;
@@ -294,15 +297,12 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
 `endif
             if (r < NH && b_pool[r])
                 if (b_emin[r] != b_emin[NH + NH - 1 - r] || {1'b0, b_emin[r][5:0]} + b_fm8[r / 4] >= 8'd128) pfault_n = 1'b1;
-            for (i = 0; i < 4; i = i + 1) begin
-                ik = (i == 0) ? 8'd0 : (i == 1) ? {2'b00, b_k[r / 4]} : (i == 2) ? {1'b0, b_k[r / 4], 1'b0} : b_k3[r / 8];
-                fa = {2'b00, b_emin[r][5:0]} + ik;
-                if (fa[7] || ((b_k[r / 4] != 6'd0) && ({1'b0, fa} + {3'b000, b_k[r / 4]} - 9'd1 >= 9'd128))) pbad_n = 1'b1;
-            end
+            if (b_knz[r / 4] && ({3'b000, b_emin[r][5:0]} + b_k4m1[r / 4] >= 9'd128)) pbad_n = 1'b1;
         end
     end
     reg  [BW-1:0]    e_W  [0:1][0:NR-1];
     reg  [5:0]       e_lo [0:1][0:NR-1];
+    (* keep = "true" *) reg [3:0] e_poolc [0:1];              // per-epoch pool flag, copy per 4 rows (write control start)
     reg              e_pool [0:1];
     reg  [5:0]       e_k6 [0:1];
     reg  [7:0]       e_k3 [0:1];
@@ -315,9 +315,9 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
                     e_lo[e][r] <= b_emin[r][5:0];
                 end
             end
-        if (b_vk[0]) e_pool[b_epk[0]] <= b_poolm;
-        if (b_vk[1]) e_k6[b_epk[1]] <= b_k[4];
-        if (b_vk[2]) e_k3[b_epk[2]] <= b_k3[2];
+        if (b_vk[0]) begin e_pool[b_epk[0]] <= b_poolm; e_poolc[b_epk[0]] <= {4{b_poolm}}; end
+        if (b_vk[1]) e_k6[b_epk[1]] <= b_k;
+        if (b_vk[2]) e_k3[b_epk[2]] <= b_k3;
     end
     // old stage D: the epoch's pooled-read integrity flag
     reg dq_v, dq_ep, dq_pool, dq_bad;
@@ -368,7 +368,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
             dm1 = r_fbnao[r/4] &&
                   (r_fep[7*r + 4] ? (r_fbp1[r/4][8:0] == e_W[1][r][8:0]) : (r_fbp1[r/4][8:0] == e_W[0][r][8:0])) &&
                   (r_fep[7*r + 5] ? (r_fbp1[r/4][17:9] == e_W[1][r][17:9]) : (r_fbp1[r/4][17:9] == e_W[0][r][17:9])) && (MUT != 8);
-            plr = r_fep[7*r + 6] ? e_pool[1] : e_pool[0];
+            plr = r_fep[7*r + 6] ? e_poolc[1][r / 4] : e_poolc[0][r / 4];
             lor = r_fep[7*r + 6] ? e_lo[1][r] : e_lo[0][r];
             wo_s = plr ? 6'd0 : lor;
             ctl[18*lf(r) + 9*tb(r) +: 9] = {d0 || dp1 || dm1, dm1 ? 2'b10 : dp1 ? 2'b01 : 2'b00, wo_s};
@@ -489,8 +489,8 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
 `else
     wire          fwd    = b_v && (b_ep == REP_k);
 `endif
-    wire [5:0]    k6_x   = fwd ? b_k[4] : e_k6[REP_k];
-    wire [7:0]    k3_x   = fwd ? b_k3[2] : e_k3[REP_k];
+    wire [5:0]    k6_x   = fwd ? b_k : e_k6[REP_k];
+    wire [7:0]    k3_x   = fwd ? b_k3 : e_k3[REP_k];
     wire          pool_x = fwd ? b_poolm : e_pool[REP_k];
     always @(posedge ck or negedge rr[6])
         if (!rr[6]) begin
