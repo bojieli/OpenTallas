@@ -23,6 +23,10 @@ module ot_qwen_fixed_issue_pw_ld #(
  parameter integer SEG=0,
  // QW-H16X (10-20, default 0 = h16v; SEG only): pre-registered calendar row write decode (from pw_addr_pre = pw_addr one
  // edge earlier), g_present registered with gdesc_q, the next-row compare as a late select.  Exact, 0 edges.
+ // QW-H16Y (10-21): H16X = 2 adds (a) the calendar start compares registered one edge early from start_base_pre
+ // (start_base = start_base_pre delayed one edge, no reset), (b) the calendar read register q loaded every edge with a
+ // late start/run select (q is consumed only on the edge after a read: pending), (c) the issue fault split in two sticky
+ // halves.  Exact at every consumer, 0 edges.
  parameter integer H16X=0
 )(
  input wire clk,input wire rst_n,
@@ -30,6 +34,7 @@ module ot_qwen_fixed_issue_pw_ld #(
  input wire [9:0]pw_addr_pre,
  input wire start,input wire[5:0]stage,
  input wire[11:0]start_base,
+ input wire[11:0]start_base_pre,
  input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
  input wire available,input wire end_ok,input wire cp_available,
  output wire issue_v,output wire end_v,output wire[55:0]cp_cmd,output wire cp_v,output wire[11:0]issue_pc,output wire[1:0]issue_unit,
@@ -57,6 +62,7 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  input wire [9:0]pw_addr_pre,
  input wire start,input wire[5:0]stage,
  input wire[11:0]start_base,
+ input wire[11:0]start_base_pre,
  input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
  input wire available,input wire end_ok,input wire cp_available,
  output wire issue_v,output wire end_v,output wire[55:0]cp_cmd,output wire cp_v,output wire[11:0]issue_pc,output wire[1:0]issue_unit,
@@ -98,9 +104,22 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  wire[3:0]g_count=gdesc_q[27:24];
  wire[11:0]g_base=gdesc_q[11:0];
  // calendar start selection (registered start; the selection is combinational on that edge, as the core's first read)
- wire start_g=sealed&&g_present&&start_base!=12'd0&&start_base==g_base;
- wire start_cal=start&&(start_base==12'd0||start_g);
- wire sel_g=(start_cal&&!active)?(start_base!=12'd0):seg_q;
+ // QW-H16Y (H16X >= 2): start_base==0 and start_base==g_base (start_base != 0) registered one edge early: start_base is
+ // start_base_pre delayed one edge (u_isd, IS 1); g_base's next state = the GDESC write of this edge (pw_v && !active &&
+ // pw_addr == GDESC, the only writer; reset holds gdesc_q at 0 while these flops keep sampling).  h16x: g_base -> 12-b
+ // compare -> start_cal -> sel_g / read enable fan-out -> q -227.9 ps TT.
+ reg sbz_r,sbg_r;
+ wire[11:0] g_base_n=(pw_v&&!active&&pw_addr==GDESC)?pw_data[11:0]:g_base;
+ always @(posedge clk)begin sbz_r<=start_base_pre==12'd0; sbg_r<=start_base_pre!=12'd0&&start_base_pre==g_base_n; end
+ wire sb_z=(H16X>=2)?sbz_r:(start_base==12'd0);
+ wire sbm_g=(H16X>=2)?sbg_r:(start_base!=12'd0&&start_base==g_base);
+ wire start_g=sealed&&g_present&&sbm_g;
+ wire start_cal=start&&(sb_z||start_g);
+ wire sel_g=(start_cal&&!active)?!sb_z:seg_q;
+`ifndef SYNTHESIS
+ always @(posedge clk) if(H16X>=2&&rst_n&&(sbz_r!==(start_base==12'd0)||sbg_r!==(start_base!=12'd0&&start_base==g_base)))
+  $fatal(1,"H16Y early start compare diverged: %b/%b start_base %0d g_base %0d",sbz_r,sbg_r,start_base,g_base);
+`endif
  integer k;reg seal_bad;
  // QW-H16V (10-20): copies = #{k < min(count,DEPTH) : rows[k][45:44]==3} enters seal_bad only as copies >= 1..4.  The
  // as-built loop accumulated it serially over the 8 rows after the k<count masks (h16t: count -> cfg_fault 35 levels,
@@ -189,11 +208,52 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  always @(posedge clk) if(rst_n&&pw_v&&!active&&pw_addr==1023&&seal_bad!==seal_ref)
   $fatal(1,"H16V seal_bad %b != reference %b",seal_bad,seal_ref);
 `endif
+ // QW-H16Y (H16X >= 2): q's next value as a late select.  Start edge (start_cal && !active: read address 0, segment
+ // !sb_z) and run edges (segment seg_q, address read_addr_run = second_read ? 1 : index+2) are formed in parallel from
+ // registered state; start_sel picks last.  q loads every edge: u_issue reads slot_q only when pending (= a read on the
+ // previous edge), and on those edges q holds exactly the as-built read; read_fault keeps the as-built read-enable gate.
+ wire start_sel=start_cal&&!active;
+ wire ra_ok=read_addr_run<DEPTH;
+ wire[46:0] r_run=rows[read_addr_run], g_run=grows[read_addr_run];
+`ifdef OT_SEG_MUT
+ wire[46:0] q_st=valid[0]?rows[0]:47'd0;
+ wire f_st=!valid[0];
+ wire[46:0] q_rn=(ra_ok&&valid[read_addr_run])?r_run:47'd0;
+ wire f_rn=!(ra_ok&&valid[read_addr_run]);
+`else
+ wire[46:0] q_st=sb_z?(valid[0]?rows[0]:47'd0):(gvalid[0]?grows[0]:47'd0);
+ wire f_st=sb_z?!valid[0]:!gvalid[0];
+ wire[46:0] q_rn=seg_q?((ra_ok&&gvalid[read_addr_run])?g_run:47'd0):((ra_ok&&valid[read_addr_run])?r_run:47'd0);
+ wire f_rn=seg_q?!(ra_ok&&gvalid[read_addr_run]):!(ra_ok&&valid[read_addr_run]);
+`endif
+ wire[46:0] q_d=start_sel?q_st:q_rn;
+ wire rd_flt=start_sel?f_st:(read_en_run&&f_rn);
+`ifndef SYNTHESIS
+ reg[46:0] q_ref; reg pend_ref;               // the as-built enabled read register (reference)
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin q_ref<=0;pend_ref<=0;end
+  else begin
+   pend_ref<=read_en;
+   if(read_en)begin
+    if(sel_g)q_ref<=(read_addr<DEPTH&&gvalid[read_addr])?grows[read_addr]:47'd0;
+    else q_ref<=(read_addr<DEPTH&&valid[read_addr])?rows[read_addr]:47'd0;
+   end
+  end
+ always @(posedge clk) if(H16X>=2&&rst_n)begin
+  if(read_en!==(start_sel||read_en_run)) $fatal(1,"H16Y read enable split diverged");
+  if(!start_sel&&read_en&&read_addr!==read_addr_run) $fatal(1,"H16Y run read address diverged");
+`ifndef OT_SEG_MUT
+  if(pend_ref&&q!==q_ref) $fatal(1,"H16Y calendar read %h != as-built %h",q,q_ref);
+`endif
+ end
+`endif
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin valid<=0;gvalid<=0;cp_valid<=0;q<=0;stop_q<=0;meta_q<=0;gstop_q<=0;gdesc_q<=0;gstop_seen<=0;gdesc_seen<=0;
    loading<=0;sealed<=0;stop_seen<=0;meta_seen<=0;cfg_fault<=0;read_fault<=0;seg_q<=0;gp_r<=0;end
   else begin
-   if(read_en)begin
+   if(H16X>=2)begin
+    q<=q_d; if(rd_flt)read_fault<=1;
+   end else if(read_en)begin
 `ifdef OT_SEG_MUT
     if(read_addr<DEPTH&&valid[read_addr])q<=rows[read_addr];else begin q<=0;read_fault<=1;end
 `else
@@ -250,8 +310,10 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
    end
   end
  end endgenerate
+ wire read_en_run;wire[RAW-1:0]read_addr_run;
  ot_qwen_fixed_issue_ld #(.ROW_AW(RAW),.OWN(1),.SREG(SREG),.SLATE(SLATE),.NRL(H16X))u_issue(
  .clk(clk),.rst_n(rst_n),.start(start_cal),.stop_cycle((start_base!=12'd0)?gstop_q[31:0]:stop_q),.slot_re(read_en),.slot_addr(read_addr),.slot_q(q),
+ .slot_re_run(read_en_run),.slot_addr_run(read_addr_run),
  .candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),.available(available),.end_ok(end_ok),.cp_available(cp_available),
  .issue_v(issue_v),.end_v(end_v),.cp_v(cp_v),.cp_index(cp_index),.issue_pc(issue_pc),.issue_unit(issue_unit),.active(active),.done(done),.cycle(cycle),.fault(core_fault));
  assign cp_cmd={(cp_index<3?cp_rows[cp_index][55:1]:55'd0),cp_v};
@@ -289,6 +351,7 @@ module ot_qwen_fixed_issue_ld #(
     input wire clk, input wire rst_n,
     input wire start, input wire [31:0] stop_cycle,
     output wire slot_re, output wire [ROW_AW-1:0] slot_addr,
+    output wire slot_re_run, output wire [ROW_AW-1:0] slot_addr_run,   // QW-H16Y: the read without the start case
     input wire [46:0] slot_q,
     input wire candidate_v, input wire [11:0] candidate_pc,
     input wire [1:0] candidate_unit,
@@ -297,8 +360,13 @@ module ot_qwen_fixed_issue_ld #(
     output wire [11:0] issue_pc, output wire [1:0] issue_unit,
     output reg active, output reg done,
     output reg [31:0] cycle,
-    output reg fault
+    output wire fault
 );
+    // QW-H16Y (NRL >= 2): the sticky fault in two halves -- fault_s (the slot_q / next-row checks: pending index, next
+    // present / next row > cycle) and fault_c (everything else) -- both cleared on start, fault = fault_c | fault_s.
+    // Every set is 'fault <= 1', so the OR equals the as-built register on every edge (h16x: q -> core_fault -153.6 ps).
+    reg fault_c, fault_s;
+    assign fault=fault_c|((NRL>=2)?fault_s:1'b0);
     reg [31:0] stop_q;
     reg [46:0] head, tail;
     reg head_v, tail_v;
@@ -387,18 +455,27 @@ module ot_qwen_fixed_issue_ld #(
     assign slot_re=(start && !active) || (active && second_read) || (scheduled && !head[46] && !(next_present && next_row[46]));
     assign slot_addr=(start && !active) ? {ROW_AW{1'b0}} :
                      second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
+    assign slot_re_run=(active && second_read) || (scheduled && !head[46] && !(next_present && next_row[46]));
+    assign slot_addr_run=second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
+    wire fs_set=active && !(start && !active) && pending && (pending_index!=index) && !(pending_index==index+1'b1 && !scheduled)
+                && (pending_index!=index+1'b1);
+    wire fs_set2=active && scheduled && !head[46] && (!next_present || !nrow_gt_cyc);
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n) fault_s<=1'b0;
+      else if(start && !active) fault_s<=1'b0;
+      else if(NRL>=2 && (fs_set || fs_set2)) fault_s<=1'b1;
     always @(posedge clk or negedge rst_n) begin
       if(!rst_n) begin
-        active<=0;done<=0;cycle<=0;fault<=0;stop_q<=0;
+        active<=0;done<=0;cycle<=0;fault_c<=0;stop_q<=0;
         head<=0;tail<=0;head_v<=0;tail_v<=0;index<=0;
         pending<=0;pending_index<=0;second_read<=0;cp_index<=0;
       end else begin
         done<=0;
         pending<=slot_re;
         if(slot_re) pending_index<=slot_addr;
-        if(start && active) fault<=1;
+        if(start && active) fault_c<=1;
         if(start && !active) begin
-          active<=1;cycle<=0;stop_q<=stop_cycle;fault<=0;
+          active<=1;cycle<=0;stop_q<=stop_cycle;fault_c<=0;
           head_v<=0;tail_v<=0;index<=0;second_read<=1;cp_index<=0;
         end else if(active) begin
           cycle<=cycle_p1;
@@ -406,28 +483,28 @@ module ot_qwen_fixed_issue_ld #(
           if(pending) begin
             if(pending_index==index) begin head<=slot_q;head_v<=1;end
             else if(pending_index==index+1'b1 && !scheduled) begin tail<=slot_q;tail_v<=1;end
-            else if(pending_index!=index+1'b1) fault<=1;
+            else if(pending_index!=index+1'b1 && NRL<2) fault_c<=1;
           end
-          if(head_v && cyc_gt_head) fault<=1;
+          if(head_v && cyc_gt_head) fault_c<=1;
           if(scheduled) begin
-            if(!candidate_v || candidate_pc!=head[43:32] || candidate_unit!=(head[45:44]==3?2'd1:head[45:44])) fault<=1;
-            if(head[45:44]==0 ? !end_ok : head[45:44]==3 ? !cp_available : !available) fault<=1;
-            if(cp_v)begin cp_index<=cp_index+1'b1;if(cp_index==3)fault<=1;end
-            if(head[45:44]!=0 && head[45:44]!=OWN && !(OWN==1&&head[45:44]==3)) fault<=1;
+            if(!candidate_v || candidate_pc!=head[43:32] || candidate_unit!=(head[45:44]==3?2'd1:head[45:44])) fault_c<=1;
+            if(head[45:44]==0 ? !end_ok : head[45:44]==3 ? !cp_available : !available) fault_c<=1;
+            if(cp_v)begin cp_index<=cp_index+1'b1;if(cp_index==3)fault_c<=1;end
+            if(head[45:44]!=0 && head[45:44]!=OWN && !(OWN==1&&head[45:44]==3)) fault_c<=1;
             if(head[46]) begin
-              if(head[45:44]!=0 || cycle!=stop_q) fault<=1;
+              if(head[45:44]!=0 || cycle!=stop_q) fault_c<=1;
               active<=0;done<=1;head_v<=0;tail_v<=0;
             end else begin
-              if(!next_present || !nrow_gt_cyc) fault<=1;
+              if((!next_present || !nrow_gt_cyc) && NRL<2) fault_c<=1;
               head<=next_row;head_v<=next_present;tail_v<=0;index<=index+1'b1;
-              if(&index) fault<=1;
+              if(&index) fault_c<=1;
             end
           end
           if(cycle==stop_q) begin
             active<=0;done<=1;
-            if(!head_v || head[31:0]!=stop_q || !head[46] || head[45:44]!=0) fault<=1;
+            if(!head_v || head[31:0]!=stop_q || !head[46] || head[45:44]!=0) fault_c<=1;
           end
-          if(&cycle) begin fault<=1;active<=0;done<=1;end
+          if(&cycle) begin fault_c<=1;active<=0;done<=1;end
         end
       end
     end

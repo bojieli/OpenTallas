@@ -1,0 +1,135 @@
+{
+ "name": "qfd_tt_head_static_h16y-h16y-COMMIT",
+ "block": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+ "ref_tile": true,
+ "owner": "Claude:QW-H16Y",
+ "purpose": "h16x successor: program stores R0 + H16X=2 RTL + fixed-issue flop fence (main).",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/qw-h16y-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/rtl/qw_head_safe32_1020",
+   "results/rtl/qlb_c4b_1018/lmh_cal",
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/physical",
+   "rtl/qwen_split/mu",
+   "rtl/qwen_sys",
+   "physical/asap7_memory_macros",
+   "physical/asap7_memory_macros_v2",
+   "physical/ref_tile/qfd_tt_head_static_h16y"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_tt_ctlm_static_hr_safe32_native32_1r u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv results/rtl/qw_head_safe32_1020/h16y/net_ifg2/native32_1r_param.v results/rtl/qw_head_safe32_1020/h16y/net_ifg2/native32_helpers.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bench_h16y_img0",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16y/run_bench.sh {RUN}/bench/bench_h16y_img0 img0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16y_imgh",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16y/run_bench.sh {RUN}/bench/bench_h16y_imgh imgh",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16y_bmut3",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16y/run_bench.sh {RUN}/bench/bench_h16y_bmut3 imgh 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_PROG MUT=0 BMUT=3 HARD_HR=1 HRA=0 DECODE=3: FAIL [0-9]+/131",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16y/bench_witness/bench_h16y_bmut3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tt_head_static_h16y/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tt_head_static_h16y/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_head_static_h16y --out {RUN}/record/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tt_head_static_h16y/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tt_head_static_h16y/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tt_head_static_h16y/qfd_tt_head_static_h16y-h16y-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "h16x route (QW-H16Y, 6_final.odb + SPEF TT, h16x_violators in kit h16y_paths.txt): 164 endpoints.  (1) program SRAM rd_out -> raw capture p_cap -190.8 (108): the capture has no logic but the two 64x512 program stores sat MY, i.e. their rd_out face (LEF x=0) faced EAST, away from the FIFO column/prog_q (west): 3 x BUFx16 + ~480 ps wire (443 ps slew) per bit.  (2) calendar read q -227.9 (47): g_base -> 12-b start compare -> start_cal -> sel_g/read-enable fan-out over long wire -> 47-b row mux (fixed-issue flops spread over x 166-320 / y 39-291 um at 12% std-cell density).  (3) q -> issue fault -153.6, pending_index -> sched_q -104, rows -> cfg_fault -95.7 / sealed -57 / loading -40 (same spread cluster).  Clock skew 140 ps tile-wide.  h16y: program stores R0 (rd_out face west, 35 um from the FIFO column); RTL H16X=2 (exact, 0 edges; claude/qw-h16y-1021): start compares registered one edge early from prog_base (start_base_pre), q loaded every edge with a late start/run select (q consumed only when pending), issue fault split fault_c|fault_s. Fixed-issue flops fenced in the 155 x 40 um channel between the program stores (x 140-295, y 127-167, beside the E-face pw/prog_base pins), released before DPL/CTS."
+}

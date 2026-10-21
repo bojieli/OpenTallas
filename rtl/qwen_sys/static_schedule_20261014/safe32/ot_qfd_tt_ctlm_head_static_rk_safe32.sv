@@ -370,7 +370,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     ot_hdc_add_ks #(.W(12)) u_fi_cand_pc (.a(12'(q_prog_base)),.b(12'(candidate_pc)),.s(fi_cand_pc),.cout());
     ot_qwen_fixed_issue_pw_ld #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE),.SEG(SEGCAL),.H16X(H16X)) u_fixed_issue (   // QW-H16V: safe32 log-depth copy
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.pw_addr_pre(pw_addr),
-      .start(q_h_start && (q_prog_base==0 || SEGCAL!=0)),.stage(schedule_stage),.start_base(q_prog_base),
+      .start(q_h_start && (q_prog_base==0 || SEGCAL!=0)),.stage(schedule_stage),.start_base(q_prog_base),.start_base_pre(prog_base),
       .candidate_v(candidate_v),.candidate_pc(fi_cand_pc),.candidate_unit(candidate_unit),
       .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
       .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
