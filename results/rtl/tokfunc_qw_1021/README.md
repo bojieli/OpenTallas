@@ -27,3 +27,19 @@ low until stg/xt1/tp8/kv land (record REL terms re-graded DIAG until re-measured
 - compute GEN die_params default image is still d2d_cal_image.svh (shift0/sd0) unless OT_QWEN_D2D_IMAGE -> ew595_r16; ROPE build includes a missing ew1627 image.
 - head landed parent qfd_tt_ctlm_dv_lpf / lpf_lp predates SEGCAL: imgh lockstep 3,317 mismatches in the LM-head stage (NOTICE FAM-QW2).
 - assembly mu_calendar lacked the OVL compiler consumer -> f98fd830f; release D2D end has no OVL form (NOTICE MU-D2D-OVL).
+
+## Codex collection repair, 10-21 09:40
+
+Collection expands legacy stage-prefixed evidence paths and bench placeholders, and retains
+existing local evidence if a remote fetch fails. STG publishes rel slice/vec/stn ages for
+composition and requires all 36 x 7 nominal stages in both configurations, lm/emb, scheduled
+mutants and successful fixture reproduction. Future STG runs retain completed build objects.
+The interim report now records each stage source/grade and `diagnostic_stages=[ovl4u]`;
+a diagnostic stage cannot qualify a TOKEN PASS. Rates above remain interim composition.
+
+The die rerun interface routes the compute GEN directory to compute stages and the second
+colon-separated directory to KV. It remains an unproven closure hook: STG and XDIE explicitly
+refuse netlist mode until their carves are wired; head requires head_leaf.v, KV requires
+sources.txt for its attention carve, ctx4u requires ctx_sources.f, and ovl4u requires
+xq_stages.txt. TP8 currently consumes netlist lane latencies while its collective stays RTL.
+A complete die-netlist token claim requires those replacements and source provenance.

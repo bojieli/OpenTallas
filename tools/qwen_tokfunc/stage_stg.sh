@@ -135,6 +135,6 @@ fi
 } > $S/runlist.txt
 xargs -P $PAR -L 1 bash -c 'job "$@"' _ < $S/runlist.txt > $S/runs.log 2>&1
 echo "total $(( $(date +%s) - t0 )) s" >> $S/timing.txt
-# keep the run outputs, drop the multi-GB Verilator objects (rebuildable from src)
-for c in rel pos mut; do sha256sum $S/$c/build/obj_n12/Vtb 2>/dev/null > $S/$c/vtb.sha256; rm -rf $S/$c/build/obj_n12; done
+# Preserve completed objects for incremental recovery and collection.
+for c in rel pos mut; do sha256sum $S/$c/build/obj_n12/Vtb 2>/dev/null > $S/$c/vtb.sha256; done
 python3 $HERE/stage_stg.collect.py $RUNROOT

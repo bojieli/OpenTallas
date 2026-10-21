@@ -14,7 +14,7 @@
 #                  (compute die.v/rom_bind.vh/die.v.params.json; KV die.v) instead of source RTL; grade "die-netlist".
 #   --collect-only skip assembly/launch; fetch RUNROOT/<stage>/result.json from the fleet hosts and compose.
 #   --no-wait      launch and exit (re-run later with --collect-only).
-set -u
+set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 REPO=${OT_REPO:-/home/ubuntu/OpenTallas}
 ASM=$(python3 -c "import json;print(json.load(open('$HERE/asm_recipe.json'))['commit'])")
@@ -49,8 +49,10 @@ if [ $COLLECT = 0 ]; then
   for s in ${STAGES//,/ }; do
     read -r name script mem <<<"$(awk -v s="$s" '$1==s {print $1, $2, $3}' "$TABLE")"
     [ -z "${name:-}" ] && { echo "no stage $s in $TABLE"; exit 2; }
+    STAGE_DIE=${DIE%%:*}
+    [ "$s" = kv ] && STAGE_DIE=${DIE#*:}
     nohup /home/ubuntu/bin/ot-run --mem "$mem" --dir "$RUNROOT" -- \
-      bash "$RUNROOT/tokfunc_tools/$script" "$RUNROOT" ${DIE:+--die-netlist "$DIE"} > "$OUT/logs/$s.otrun.log" 2>&1 &
+      bash "$RUNROOT/tokfunc_tools/$script" "$RUNROOT" ${STAGE_DIE:+--die-netlist "$STAGE_DIE"} > "$OUT/logs/$s.otrun.log" 2>&1 &
     echo "$s launched (pid $!, mem $mem GB) log $OUT/logs/$s.otrun.log"
   done
   [ $NOWAIT = 1 ] && { echo "launched; collect later: $0 --asm $ASM --collect-only ${DIE:+--die-netlist $DIE}"; exit 0; }
@@ -65,9 +67,12 @@ for s in ${STAGES//,/ }; do
     [ -n "$t" ] && [ "$t" -gt "$bt" ] && { bt=$t; best=$h; }
   done
   if [ -n "$best" ]; then
-    rm -rf "$OUT/results/$s"; mkdir -p "$OUT/results/$s"
-    ssh "$best" "cd $RUNROOT/$s && tar -c result.json \$(python3 -c \"import json;r=json.load(open('result.json'));print(' '.join(p for p in r.get('logs',[])+list((r.get('ages') or {}).values())))\") 2>/dev/null" |
-      tar -x -C "$OUT/results/$s"; echo "$s collected from $best"
+    mkdir -p "$OUT/results/$s"
+    files="$OUT/logs/$s.files"
+    if ssh "$best" "python3 - '$RUNROOT/$s'" < "$HERE/collect_files.py" > "$files" &&
+      ssh "$best" "cd '$RUNROOT/$s' && tar --null -c -T -" < "$files" | tar -x -C "$OUT/results/$s"; then
+      echo "$s collected from $best"
+    else echo "$s: collection failed"; exit 4; fi
   else echo "$s: NO result.json yet"; fi
 done
 # 4. compose the token (1u) and the 4-user frame; report vs the MODEL 4,403.2 / 11,750.6 tok/s

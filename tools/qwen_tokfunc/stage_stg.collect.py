@@ -90,6 +90,18 @@ def main():
         cy['stn_ages_json'] = cc['stn_ages']
         cycles[c] = cy
     missing_fx = [L for L, v in fx.items() if not v['ok']]
+    for L, v in fx.items():
+        if v['ok'] and not v['reproduction']:
+            bad.append(f'fixture L{L} reproduction failed')
+    required = {f'L{L}_{family}' for L in layers_req for family in FAMS} | {'lm', 'emb'}
+    for c in ('rel', 'pos'):
+        missing = required - set(cfgs.get(c, {}).get('stages', {}))
+        if missing:
+            bad.append(f'{c} missing {len(missing)} required stages: {sorted(missing)[:8]}')
+    for line in (S / 'runlist.txt').read_text().splitlines() if (S / 'runlist.txt').exists() else []:
+        c, name, *_ = line.split()
+        if name not in cfgs.get(c, {}).get('stages', {}):
+            bad.append(f'{c}/{name} NOT_RUN')
     for c in ('rel', 'pos'):
         if c in cfgs and not cfgs[c]['built']:
             bad.append(f'{c} build failed')
@@ -104,7 +116,11 @@ def main():
                 f'cut to TP8 compute die 0): bench hdc_golden expectation bit-exact on the RTL outputs AND == ISA gold '
                 f'words; ISA-gold words matched {gold_ok}/{gold_n} (resid 4097, qk 768, silu 1536, qkv 768, gu 3072 per '
                 f'layer per cfg; od = bench golden only, TP8 partials have no TP4 value); lm / emb bench golden'),
-        cycles=cycles, mutants=mutants, failures=bad[:60],
+        cycles=cycles, ages={k: f'rel/{v}' for k, v in
+                            [('slice', 'build/slice_ages.json'), ('vec', 'build/vec_ages.json'),
+                             ('stn', 'cal_mat/stn_ages.json')]
+                            if (S / 'rel' / v).exists()},
+        mutants=mutants, failures=bad[:60],
         fixtures=dict(layers_ok=sorted(L for L, v in fx.items() if v['ok']), missing={L: fx[L]['why'] for L in missing_fx}),
         stand_ins=[
             'behavioural SRAM models (rtl/test/full_sm_service/sram_models.sv, rtl/test/hbm_rf_visibility/scale_sram_model.sv, '
