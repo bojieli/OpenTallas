@@ -1,0 +1,16 @@
+{
+  "source_commit": "2e57d4cda",
+  "qualified": false,
+  "m0": "PASS40commands STRETCH0+48commands STRETCH1,NEG1-3faults",
+  "mutants": {
+    "1": "detected",
+    "2": "detected",
+    "3": "detected",
+    "4": "detected",
+    "5": "detected"
+  },
+  "source_manifest_identical_all_six": true,
+  "token_age_delta_cycles": 0,
+  "fault_latency_delta_cycles": 0,
+  "required": "actualnative32,CTS/GRT gate,rootgeometry review,routeTT/FF/DRC"
+}

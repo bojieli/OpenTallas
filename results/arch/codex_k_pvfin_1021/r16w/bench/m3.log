@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   729 GB (avail 624, growth 113, headroom 0, waiters 0/0 GB) load 88/128 running 38 disk 2173 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-k-pvfin-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-k-pvfin-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-k-pvfin-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-k-pvfin-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-k-pvfin-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-k-pvfin-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4060237-1792605546 after 0 s
+SIM Verilator 5.050 2026-07-01 rev v5.050
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+MISMATCH cmd 1 beat 0 at k 40 (ref out -1) db 0
+COLD MISMATCH cycle=183 valid=1/0 fault=0/0
+MISMATCH cmd 1 beat 1 at k 41 (ref out -1) db 1
+COLD MISMATCH cycle=184 valid=1/0 fault=0/0
+MISMATCH cmd 1 beat 2 at k 42 (ref out 42) db 2
+PVFIN_KIT FAIL mut=3 detected (49 mismatch/fault lines)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4060237-1792605546): exit 1

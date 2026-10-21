@@ -1,0 +1,233 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v; prep -top m; flatten; opt; sat -verify -prove same 1 -show x -show lo' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v' to AST representation.
+Generating RTLIL representation for module `\m'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \m
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \m
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 10 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\m.$proc$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$15'.
+Creating decoders for process `\m.$proc$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$6'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\m.\dut$func$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$2.$result' from process `\m.$proc$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$15'.
+No latch inferred for signal `\m.\gold$func$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$1.$result' from process `\m.$proc$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$6'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `m.$proc$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$15'.
+Removing empty process `m.$proc$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:14$6'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 0 unused cells and 15 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module m...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 15 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 15 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 10 bits (of 16) from port B of cell m.$add$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:2$12 ($add).
+Removed top 10 bits (of 11) from port B of cell m.$add$/srv/opentallas-scratch/claude/codex-k-pvfin-1021/results/arch/codex_k_pvfin_1021/win_proof/m0.v:9$23 ($add).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 15 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== m ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       23 wires
+      148 wire bits
+       11 public wires
+      111 public wire bits
+        3 ports
+       33 port bits
+       15 cells
+        2   $add
+        3   $eq
+        2   $ge
+        4   $logic_and
+        1   $logic_not
+        1   $logic_or
+        1   $lt
+        1   $ne
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module m...
+Found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 15 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 15 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+4.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 15 cells to SAT database.
+Import proof-constraint: \same = 1'1
+Final proof equation: \same = 1'1
+Import show expression: \x
+Import show expression: \lo
+
+Solving problem with 609 variables and 1676 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 48765b8e40, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 24.59 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 50% 1x sat (0 sec), 12% 2x read_verilog (0 sec), ...
