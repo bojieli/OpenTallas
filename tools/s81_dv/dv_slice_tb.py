@@ -26,6 +26,15 @@ import re
 from pathlib import Path
 
 
+def ep_paths(spec):
+    """TOK-FUNC-S81 (10-21): --ep-probe INST[:CORE[:MF]] -> (inst, lep core path, landed MU-land fault path).  The 72-frame
+    MU72 tops hold the lep core at u_lep.u and the landed dsdv_mu_land fault on the top wire mf; the defaults are the old
+    ot_s81sl_slice_lep*_mu hierarchy (u.g_mu.u_lep.u, u.g_mu.mf)"""
+    inst, *rest = spec.split(':')
+    return (inst, f'u_slice.{inst}.' + (rest[0] if rest else 'u.g_mu.u_lep.u'),
+            f'u_slice.{inst}.' + (rest[1] if len(rest) > 1 else 'u.g_mu.mf'))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--ports', required=True)
@@ -140,9 +149,10 @@ def main(argv=None):
     # src: ep = the master .fault port; te = TX window fault (window over an open one / non-XB-XQ beat in a window / ab
     # with user 0 or AB_EN 0); land = dsdv_mu_land fault; mcol = replay against a cut-through beat; sl = slice fault;
     # ln = link lane tile faults {meso, gearbox, endpoint}; io = TX landing overflow / RX pair-protocol / host-plane fault.
-    for j, inst in enumerate(a.ep_probe):
-        c = f'u_slice.{inst}.u.g_mu.u_lep.u'
-        g = f'u_slice.{inst}.u.g_mu'
+    for j, spec in enumerate(a.ep_probe):
+        # TOK-FUNC-S81 (10-21): INST[:CORE[:MF]] -- the 72-frame MU72 tops hold the lep core at u_lep.u and the landed
+        # dsdv_mu_land fault on the top wire mf (defaults = the old slice_lep*_mu hierarchy u.g_mu.u_lep.u / u.g_mu.mf)
+        inst, c, mfp = ep_paths(spec)
         v += [f'    // ---- endpoint probe {inst}',
               f'    reg [6:0] epf{j} = 0;',
               f'    always @(negedge ck) if (rst_n && cyc >= 0 && fep != 0) begin',
@@ -150,7 +160,7 @@ def main(argv=None):
               f'{c}.fr[1077:1045]);',
               f'        if ({c}.fault && !epf{j}[0]) begin epf{j}[0] = 1; $fdisplay(fep, "EPF %0d {inst} ep 1", cyc); end',
               f'        if ({c}.terr && !epf{j}[1]) begin epf{j}[1] = 1; $fdisplay(fep, "EPF %0d {inst} te 1", cyc); end',
-              f'        if ({g}.mf && !epf{j}[2]) begin epf{j}[2] = 1; $fdisplay(fep, "EPF %0d {inst} land 1", cyc); end',
+              f'        if ({mfp} && !epf{j}[2]) begin epf{j}[2] = 1; $fdisplay(fep, "EPF %0d {inst} land 1", cyc); end',
               f'        if ({c}.mcol_w && !epf{j}[3]) begin epf{j}[3] = 1; $fdisplay(fep, "EPF %0d {inst} mcol 1", cyc); end',
               f'        if ({c}.sl_f && !epf{j}[4]) begin epf{j}[4] = 1; $fdisplay(fep, "EPF %0d {inst} sl 1", cyc); end',
               f'        if ((|{c}.l0_f || |{c}.l1_f) && !epf{j}[5]) begin epf{j}[5] = 1; $fdisplay(fep, "EPF %0d {inst} ln 1", cyc); end',
@@ -182,8 +192,8 @@ def main(argv=None):
               '        while (have_ex && ex_c == cyc) begin',
               '            n_ep = n_ep + 1; if (ex_h != 0) n_ep_hop = n_ep_hop + 1;',
               '            case (ex_i)']
-        for j, inst in enumerate(a.ep_probe):
-            c = f'u_slice.{inst}.u.g_mu.u_lep.u'
+        for j, spec in enumerate(a.ep_probe):
+            inst, c, mfp = ep_paths(spec)
             v += [f'                {j}: begin ep_seen[{j}] = 1;',
                   f'                    if (!{c}.rov) ep_bad(cyc, {j}, 1);',
                   f'                    else if ({c}.bsel != ex_p[0] || {c}.roq[3:1] != ex_k[2:0] || '
@@ -193,12 +203,11 @@ def main(argv=None):
               '            endcase',
               '            next_ex();',
               '        end']
-        for j, inst in enumerate(a.ep_probe):
-            c = f'u_slice.{inst}.u.g_mu.u_lep.u'
-            g = f'u_slice.{inst}.u.g_mu'
+        for j, spec in enumerate(a.ep_probe):
+            inst, c, mfp = ep_paths(spec)
             v += [f'        if ({c}.rov && !ep_seen[{j}] && (ep_strict != 0 || |{c}.fr[1077:1045])) ep_bad(cyc, {j}, 3);',
                   f'        if ({c}.terr && !epm[{3 * j}]) begin epm[{3 * j}] = 1; ep_bad(cyc, {j}, 4); end',
-                  f'        if ({g}.mf && !epm[{3 * j + 1}]) begin epm[{3 * j + 1}] = 1; ep_bad(cyc, {j}, 4); end',
+                  f'        if ({mfp} && !epm[{3 * j + 1}]) begin epm[{3 * j + 1}] = 1; ep_bad(cyc, {j}, 4); end',
                   f'        if ({c}.mcol_w && !epm[{3 * j + 2}]) begin epm[{3 * j + 2}] = 1; ep_bad(cyc, {j}, 4); end']
         v += ['    end']
     v += ['    initial begin',
