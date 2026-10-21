@@ -6,7 +6,7 @@ import argparse, hashlib, json, subprocess
 from pathlib import Path
 BASE='d2c8e45a7'
 HP='9add100c4'
-HEAD_SHA='44d54f850a06'
+HEAD_HASHES={'native32_1r_param.v':'44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7','native32_helpers.sv':'1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88'}
 def blob(rev,path): return subprocess.check_output(['git','show',rev+':'+path])
 def sha(b): return hashlib.sha256(b).hexdigest()
 def main():
@@ -39,7 +39,7 @@ def main():
  head_paths=[]
  for name in ['native32_1r_param.v','native32_helpers.sv']:
   data=(Path(a.head_dir)/name).read_bytes()
-  if name=='native32_1r_param.v' and not sha(data).startswith(HEAD_SHA):raise SystemExit('actual H16X3 generated3 head source hash mismatch')
+  if sha(data)!=HEAD_HASHES[name]:raise SystemExit('actual H16ZA source hash mismatch: '+name)
   path='rtl/qwen_dv/headprep13/h16za/'+name;put(path,data,'c0ad783cd generated3 actual H16X3; supplied immutable artifact');head_paths.append(path)
  extra='physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v'
  put(extra,blob(BASE,extra),BASE+':'+extra);deps.append(extra)
