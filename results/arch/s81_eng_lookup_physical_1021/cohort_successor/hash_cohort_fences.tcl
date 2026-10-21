@@ -1,3 +1,5 @@
+# SUPERSEDED by c486a646c halfcycle landing model. DO NOT source as a physical kit.
+error "Superseded hash cohort fence model: bind actual mapped halfcycle owners first"
 # Candidate physical binding only; source97fd22a11, model e94f5f1e5.
 # Install before GPL, retain through DPL/CTS. Empty/misbound groups fail closed.
 set b [ord::get_db_block]
