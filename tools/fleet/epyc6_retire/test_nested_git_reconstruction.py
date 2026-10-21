@@ -109,6 +109,17 @@ class NestedGit(unittest.TestCase):
             P.verify(out, self.base/'bad-proof.json')
         self.assertFalse((self.base/'bad-proof.json').exists())
 
+    def test_broken_nested_git_pointer_preserves_full_copy(self):
+        broken = self.root/'broken'; broken.mkdir()
+        (broken/'.git').write_text('gitdir: /missing/preexisting-worktree-metadata\n')
+        (broken/'source').write_text('unique surviving source\n')
+        out, proofs = self.preservation()
+        manifest = json.loads((out/'source_manifest.json').read_text())
+        self.assertIn(str(broken), manifest['errors'])
+        self.assertNotIn(str(broken), proofs)
+        self.assertEqual(W.pristine_files(str(broken), proofs, True), set())
+        self.assertIn('pristine', W.pristine_files(str(self.repo), proofs, True))
+
     def test_new_unique_ref_invalidates_same_head_index_proof(self):
         _, proofs = self.preservation()
         tree = self.git('rev-parse', 'HEAD^{tree}').decode().strip()
