@@ -1,0 +1,18 @@
+%Warning-LATCH: rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:157:5: Latch inferred for signal 'dsdv_seq_host_mux_h.u.u_u.u_core.u_l0.u_sd.kk' (not all control paths of combinational always assign a value)
+                                                             : ... Suggest use of always_latch for intentional latches
+  157 |     always @* begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:56:30: Signal has multiple driving blocks with different clocking: 'dsdv_seq_host_mux_h.u.u_u.u_core.u_l0.__Vcellout__u_sd__hw'
+                      rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:341:59: ... Location of first driving block
+  341 |         for (s = 0; s < NS; s = s + 1) if (pop && dst[s]) hw[292*s + 1 +: 291] <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};
+      |                                                           ^~
+                      rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:307:17: ... Location of other driving block
+  307 |                 hw[292*s] <= pop && dst[s];
+      |                 ^~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 7.251 MB sources in 64 modules, into 26.817 MB in 27 C++ files needing 0.000 MB
+- Verilator: Walltime 7.606 s (elab=0.510, cvt=6.387, bld=0.000); cpu 7.596 s on 1 threads; allocated 317.387 MB

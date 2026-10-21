@@ -1,0 +1,5 @@
+CR2_RESULT checks=4797 output_bits=1567 errors=0 missing_rung_mismatches=4613
+- tools/s81_dv/seqmux_source_1021/tb_cr2.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 0.126 s; speed 430.058 us/s
+- Verilator: cpu 0.126 s on 1 threads; allocated 7 MB

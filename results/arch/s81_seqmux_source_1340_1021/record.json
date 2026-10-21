@@ -1,0 +1,31 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY",
+  "available_view": null,
+  "proof": {
+    "unit": "oth-ubuntu-1197480-1792617769",
+    "host": "ot-epyc9 (fleet spill, copied back ep7)",
+    "exit": 0,
+    "actual_children_lint": "PASS",
+    "rung_miter": {
+      "checks": 4797,
+      "output_bits": 1567,
+      "errors": 0,
+      "missing_rung_mismatches": 4613,
+      "epochs": 3,
+      "scope": "Rung graph/age with HOST/job traffic idle; identical selected APIPE10/ACKP leaves. Not HOST numerical/programme/fullmux equivalence."
+    }
+  },
+  "prior_diagnostics": {
+    "r1_r2": "Missing wrapper port block, fixed",
+    "r3": "Missing real SRAM/walk/vstop/hslot models, fixture closure fixed",
+    "r4": "Unconstrained HOST random descriptors hit existing ingest hx_pop replica assertion; retained diagnostic, no HOST pass/waiver."
+  },
+  "open": [
+    "Actual separate new mux view and physical sizing/clock/reset proof",
+    "Child hardview exact-source receipt/binding",
+    "NEV8 -> NEV16 and CFG_RELAY compiler/calendar pricing",
+    "HOST legal programme on new mux",
+    "HWIN LOCAL_RECORD native/fences/occupancy and SRAMhold",
+    "No G8 slot squeeze or legacy view alias"
+  ]
+}
