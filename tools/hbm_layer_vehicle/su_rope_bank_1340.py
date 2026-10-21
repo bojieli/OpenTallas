@@ -48,6 +48,16 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
     def refuse(reason):
         return dict(status="unsupported_lowering", reasons=[reason], sut=sut,
                     lowering=dict(supported=False, owner="CODEX-SU-ROPE-1340"))
+    # Source inspection found that the old coefficient preparation drains RF
+    # src1 through ports k%8. Actual pgslice permits src1 only on G0/h0 (port0).
+    # Preserve the code below as diagnostic history until the owner supplies a
+    # real RF->SU store->VM replacement and its newly measured/priced schedule.
+    result = refuse("KNOWN_PROTOCOL_VIOLATION: RF_src1_VM_drain_requires_port0_G0_h0; "
+                    "runtime_RF_to_SU_store_to_all_bank_drain_repair_required")
+    result.update(execution_qualified=False, known_protocol_violation=True,
+                  diagnostic_prior_serial_edges=2088, diagnostic_prior_stream_edges=2784,
+                  diagnostic_prior_price_qualified=False)
+    return result
     profile = dict.fromkeys(sut, 0)
     profile.update(c_pair=1, b_half=1, m1=1, qm=sut["qm"], ad=1, dst=1, rnd=sut["rnd"])
     if unit != 2 or sut != profile or sut["qm"] not in (3, 4) or set(desc) != {"A", "B", "D", "O"}:
