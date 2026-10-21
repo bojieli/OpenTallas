@@ -34,6 +34,15 @@ class CoordMap:
     """bands [{name, y0, y1, cuts: [[x, dx], ..], shift}], ycuts [[y, dy], ..] (all ORIGINAL coordinates)"""
 
     def __init__(self, spec):
+        self.maps = None
+        if 'steps' in spec:
+            if not spec['steps']:
+                raise ValueError('coordinate composition requires at least one step')
+            self.maps = [CoordMap(step) for step in spec['steps']]
+            self.dX = sum(step.dX for step in self.maps)
+            self.dY = sum(step.dY for step in self.maps)
+            self.bands = []; self.ycuts = []
+            return
         self.bands = spec['bands']; self.ycuts = sorted(spec.get('ycuts', []))
         tot = {b['name']: sum(dx for _, dx in b.get('cuts', [])) + b.get('shift', 0.0) for b in self.bands}
         self.dX = max(tot.values()); self.dY = sum(dy for _, dy in self.ycuts)
@@ -51,6 +60,11 @@ class CoordMap:
 
     def dxy(self, x, y):
         """shift (dx, dy) of a point / of a rigid block centred at (x, y)"""
+        if self.maps is not None:
+            u, v = x, y
+            for step in self.maps:
+                u, v = step.point(u, v)
+            return u - x, v - y
         b = self.band(y)
         dx = b.get('shift', 0.0) + sum(d for cx, d in b.get('cuts', []) if cx < x)
         dy = sum(d for cy, d in self.ycuts if cy < y)
