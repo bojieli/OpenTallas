@@ -149,7 +149,7 @@
   "kind": "rtl_change",
   "cell": "hbfd_rly_1136_WE_rfc",
   "base_kit": "hbfd_rly_1136_we",
-  "fix": "new master: station-hosted reset carrier stage (2-stage landing + carrier flop) added",
-  "why_route": "new master hbfd_rly_1136_WE_rfc: no closed view exists; the hbfd_rly_1136_we stage is instantiated unchanged; rfi/rfo and 3 reset flops are new"
+  "fix": "new master: station-hosted reset carrier stage (2-stage landing + carrier flop) added; station stage reset fanned out <= 32 loads/driver (ot_hbm_rly_f32, HBM-RSTFB10: pre-gate native census refused the 136/256-load relay copy)",
+  "why_route": "new master hbfd_rly_1136_WE_rfc: no closed view exists; the hbfd_rly_1136_we stage function/reset timing is unchanged (ot_hbm_rly_f32: same data stage, release 3 edges, reset tree <= 32 loads); rfi/rfo and 3 reset flops are new"
  }
 }

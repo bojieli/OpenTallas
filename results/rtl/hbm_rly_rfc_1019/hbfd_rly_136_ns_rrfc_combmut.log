@@ -1,2 +1,11 @@
+ot-run: ot-epyc5       admits   230 GB (avail 274, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 32 disk 62 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-rstfb10/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-rstfb10/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hbm-rstfb10/src
+ot-run: ot-pve1        admits   266 GB (avail 210, growth 24, headroom 0, waiters 0/0 GB) load 24/28 running 15 disk 1135 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-rstfb10/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-207750-1792580426 after 0 s
 Verilator 5.050 2026-07-01 rev v5.050
 RLY_RFC_BENCH FAIL 0 errors 0 rso_errors 23386 rfc_errors 0 assert_errors 3960 age_errors trials=401 ages_checked=259 (hbfd_rly_136_NS_rrfc W=136) rfc_age=3 release_edges=3 window_words=36
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-207750-1792580426): exit 1
