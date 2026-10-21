@@ -1,0 +1,7 @@
+# DBK CP to CPLW source and calendar binding
+
+This is an explicit upgrade of selected `ot_hgi_dma_back_static_vp4_banks_cp`; retain the admitted CP snapshot until a fresh source/calendar bind succeeds. The closed CPLW view is source98344bac6, record3d6ffe7fc, outline606.96x542.16um, TT114.12/FF18.65/DRC0. SS sensitivity is-137.63ps and remains unqualified.
+
+`binding.json` is the cumulative port/clock/edge ledger. Relative CP: rq+1, wd/fill+2, reserve/status+1, rr input landing+1, wa/ready input landing+1. The external rq-to-rr interval becomes78 for fixed internal controllerRR_RT80 because rq output+1 and rr input+1 consume two edges. For the same internal controller issue, rq is1later and rr at the parent port1earlier; the interval reduction2 does not mean absolute rr arrival2earlier. Readiness must be presented1earlier for the internal first-drain check; acknowledgements follow actual delayed writeback payload and the added input landing. Pending/quiet feedback cannot be replaced by a blanket fixed shift.
+
+The physical kit has top params{} and `OT_DBK_HARD`. Its wrapper RR_RT default7 is ignored while the actual hard controller view is RR_RT80. Soft die RTL must model80; strict source/view parameter binding must handle this explicitly and cannot claim a different physical top signature. Fifteen additional forwarded clock ports are land8/rly3/out4. Physical slot fit and actual parent/die STA remain required. No new gate or proof campaign was launched for this artifact.
