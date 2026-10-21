@@ -286,7 +286,17 @@ module ot_hdc_v41x_attn_tile_s #(
                 F12 != 1) begin : g_bad_hard
                 initial $error("ot_hdc_v41x_attn_tile_s: OT_ATTN_HGRP_HARD needs the S81 engine parameters");
             end
+`ifdef OT_ATTN_HGRP8
+            // ATTN1 (10-20): the S81-SVC8 successor group (kit physical/ref_tile/s81svc_attn_hgrp8, top
+            // ot_s81svc8_hgrp_s81_bounded; same ports, same cycles: tb_svc8_hgrp lockstep).  Simulations may set
+            // -DOT_HGRP8_MOD=ot_s81svc8_hgrp_s81 (the RTL, -DSVC8_WRITE_PREDECODE as the kit) instead of the netlist.
+`ifndef OT_HGRP8_MOD
+`define OT_HGRP8_MOD ot_s81svc8_hgrp_s81_bounded
+`endif
+            `OT_HGRP8_MOD u_g (
+`else
             ot_hdc_v41x_attn_hgrp_s81 u_g (
+`endif
                 .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
                 .ld_grp(ld_grp), .ld_w(ld_w), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
                 .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));

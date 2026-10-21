@@ -93,7 +93,11 @@ module dsdv_svc_att_core #(
     parameter bit QMEM_SRAM = 0,               // opt-in: native 8x32x64, same capture edge
     parameter integer TEXT = 0,                   // SVC4: 1 = engine tiles outside (landed parent dsdv_svc_attw_f_lp), see
     parameter integer TLX = 0,                    //   ot_hdc_v41x_attn_s TEXT / TLX / TXD; tile bundles on tx_i / tx_o
-    parameter integer TXD = 0                     //   (4 tiles x 1,618 b out, 4 x 529 b back)
+    parameter integer TXD = 0,                    //   (4 tiles x 1,618 b out, 4 x 529 b back)
+    parameter integer NTP = 0,                    // ATTN1 (10-20, opt-in): physical engine tiles (0 = 4 as built; 1 = the
+                                                  //   narrowed attw: ot_hdc_v41x_attn_s NTP, 4 virtual tiles a tile) --
+                                                  //   the compiled p feed offers a step every PACE = 4 / NTP cycles
+    parameter integer NTX = (NTP > 0) ? NTP : 4   // derived: tile bundles
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -139,8 +143,8 @@ module dsdv_svc_att_core #(
     output reg  [1:0]           hack,
     output wire                 fault,
     output wire [31:0]          fault_code,
-    output wire [4*1618-1:0]    tx_i,
-    input  wire [4*529-1:0]     tx_o
+    output wire [NTX*1618-1:0]  tx_i,
+    input  wire [NTX*529-1:0]   tx_o
 );
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
@@ -522,7 +526,10 @@ module dsdv_svc_att_core #(
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
     wire pvown = tile[3:2] == 2'(ST);
-    wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
+    // static: from PO, a step every PACE cycles (PACE 1 as built; ATTN1 NTP 1: 4, the engine's p.v beat rate)
+    localparam integer PACE = 4 / NTX;
+    wire [15:0] jpo = jc - po;
+    wire ep_v = job_active && p_left != 0 && jc >= po && ((PACE == 1) || (jpo % PACE == 0));
     wire ep_ready;
     wire p_wr = pay_mine && f_type == 4'd5;
     // the pr of the next cycle (the step's address one cycle ahead): registered state only
@@ -563,7 +570,7 @@ module dsdv_svc_att_core #(
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(0), .PV_CRED(0), .TEXT(TEXT), .TLX(TLX), .TXD(TXD)) u_eng (
+                         .SC_CRED(0), .PV_CRED(0), .TEXT(TEXT), .TLX(TLX), .TXD(TXD), .NTP(NTP)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
@@ -846,7 +853,8 @@ module dsdv_svc_att #(
     parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0, parameter integer PFIFO = 512,
     parameter integer PMEM = 1, parameter integer PVQ = 8, parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0, parameter bit QMEM_SRAM = 0,
-    parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0
+    parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0,
+    parameter integer NTP = 0, parameter integer NTX = (NTP > 0) ? NTP : 4
 ) (
     input  wire clk, input wire rst_n, input wire [3:0] sid, input wire [3:0] tile, input wire [7:0] gd,
     input  wire [7:0] pvs, input wire root,
@@ -858,7 +866,7 @@ module dsdv_svc_att #(
     output wire [2:0] sm_rj, output wire [511:0] sm_rd,
     output wire go_o, output wire [9:0] tjob_o, output wire done, output wire [7:0] tagj,
     output wire [1:0] hcr, output wire [1:0] hack, output wire fault, output wire [31:0] fault_code,
-    output wire [4*1618-1:0] tx_i, input wire [4*529-1:0] tx_o
+    output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
 );
 `ifdef OT_SVC_ATT_PINREG
     reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
@@ -876,7 +884,8 @@ module dsdv_svc_att #(
     assign fault = fault_c;
 `endif
     dsdv_svc_att_core #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .PFIFO(PFIFO), .PMEM(PMEM), .PVQ(PVQ), .DQ(DQ),
-                        .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD)) u_core (
+                        .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD),
+                        .NTP(NTP)) u_core (
         .clk(clk), .rst_n(rst_n), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
         .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
         .qrq(qrq), .qrk(pqrk), .qwd(pqwd), .qrv(pqrv), .qr_data(pqr_data), .qr_tag(pqr_tag), .qr_beat(pqr_beat),
