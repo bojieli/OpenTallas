@@ -1,0 +1,105 @@
+{
+ "schema": "opentallas.qwen.phy-up-sync-source-intent.v1",
+ "source_base": "3210325f8",
+ "master": "qfd_collective_static_io_production",
+ "required_params": {
+  "UP_SYNC": 1
+ },
+ "default": 0,
+ "source_sha256": {
+  "rtl/physical/ot_qfd_coll_static_face.sv": "be2dfc07c891a3fb73bd171296564ce989e29f31d6d59f84e6deb500d618875a",
+  "rtl/physical/ot_qfd_collective_static_io.sv": "0a2607caf85e759a4cd8d37911bb740276070dd82e7e6cc0215e9a1711efd9c4",
+  "rtl/physical/ot_qfd_collective_static_io_production.sv": "c3a4856c2e63e0954a5faeef49daa2780ac5765b978238a15e472991e71eba97",
+  "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv": "ce4e5fcfd3016496039a5617a859410a531638fea5f9e0a8526dfa2404699c06",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "2192caf5ea882c771d30a3ba1776f98458d79050073a6f7f2f8948b40a0151f5"
+ },
+ "state": "SOURCE_READY; successor native binding and closure not yet observed",
+ "qualified": false,
+ "structural_observation": null,
+ "source_facts_policy": "Keep current ucie_up C1. This intent is not a captured-level receipt and never authorizes blanket C1 removal.",
+ "stages": 2,
+ "status_observation_latency_edges": 2,
+ "packet_schedule_added_edges": 0,
+ "captures": [
+  {
+   "face": 0,
+   "producer_pin": "ucie_up",
+   "logical_root": "face_ck[6]",
+   "plain_root": "codec_ck[0]",
+   "plain_registers": [
+    "u_codec/u_ctl/g_up_sync/up_meta",
+    "u_codec/u_ctl/g_up_sync/up_sync"
+   ],
+   "pland_root": "codec_phy_ck (codec0p entry of this face codec0 source)",
+   "pland_registers": [
+    "u_codec/g_up_sync/up_meta",
+    "u_codec/g_up_sync/up_sync"
+   ],
+   "pland_downstream": "existing u_rx_land ring to codec_ck[0]"
+  },
+  {
+   "face": 1,
+   "producer_pin": "ucie_up",
+   "logical_root": "face_ck[17]",
+   "plain_root": "codec_ck[0]",
+   "plain_registers": [
+    "u_codec/u_ctl/g_up_sync/up_meta",
+    "u_codec/u_ctl/g_up_sync/up_sync"
+   ],
+   "pland_root": "codec_phy_ck (codec0p entry of this face codec0 source)",
+   "pland_registers": [
+    "u_codec/g_up_sync/up_meta",
+    "u_codec/g_up_sync/up_sync"
+   ],
+   "pland_downstream": "existing u_rx_land ring to codec_ck[0]"
+  },
+  {
+   "face": 2,
+   "producer_pin": "serdes_up[0]",
+   "logical_root": "face_ck[28]",
+   "plain_root": "codec_ck[0]",
+   "plain_registers": [
+    "u_codec/u_ctl/g_up_sync/up_meta",
+    "u_codec/u_ctl/g_up_sync/up_sync"
+   ],
+   "pland_root": "codec_phy_ck (codec0p entry of this face codec0 source)",
+   "pland_registers": [
+    "u_codec/g_up_sync/up_meta",
+    "u_codec/g_up_sync/up_sync"
+   ],
+   "pland_downstream": "existing u_rx_land ring to codec_ck[0]"
+  },
+  {
+   "face": 3,
+   "producer_pin": "serdes_up[1]",
+   "logical_root": "face_ck[39]",
+   "plain_root": "codec_ck[0]",
+   "plain_registers": [
+    "u_codec/u_ctl/g_up_sync/up_meta",
+    "u_codec/u_ctl/g_up_sync/up_sync"
+   ],
+   "pland_root": "codec_phy_ck (codec0p entry of this face codec0 source)",
+   "pland_registers": [
+    "u_codec/g_up_sync/up_meta",
+    "u_codec/g_up_sync/up_sync"
+   ],
+   "pland_downstream": "existing u_rx_land ring to codec_ck[0]"
+  },
+  {
+   "face": 4,
+   "producer_pin": "serdes_up[2]",
+   "logical_root": "face_ck[50]",
+   "plain_root": "codec_ck[0]",
+   "plain_registers": [
+    "u_codec/u_ctl/g_up_sync/up_meta",
+    "u_codec/u_ctl/g_up_sync/up_sync"
+   ],
+   "pland_root": "codec_phy_ck (codec0p entry of this face codec0 source)",
+   "pland_registers": [
+    "u_codec/g_up_sync/up_meta",
+    "u_codec/g_up_sync/up_sync"
+   ],
+   "pland_downstream": "existing u_rx_land ring to codec_ck[0]"
+  }
+ ]
+}
