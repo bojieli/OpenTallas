@@ -109,6 +109,23 @@ REVIEWED = {
         sha256=('6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b',),
         chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
         valid='link', read_stage=None, min_ptr_bits=3),
+    # HBM-SVGREL8 2026-10-20 (the L2H-IDXSCORE/SVG e1c2c2ab1 profile, FIFO part only): the HBM service SPSC FIFO,
+    # ot_async_fifo structure -- binary/Gray wr_/rd_ pointers updated on their own edge, async_reg 2-flop syncs wr_gray ->
+    # wr_gray_r1 -> wr_gray_r2 (reader) and rd_gray -> rd_gray_w1 -> rd_gray_w2 (writer), online flags synchronised the
+    # same way; storage mem[wr_bin] written on wr_fire on the Gray update edge; rd_data = mem[rd_bin] (FWFT).
+    # read-valid = rd_reset && wr_online_r2 && !empty, empty = (rd_gray == wr_gray_r2) COMBINATIONAL:
+    # 'conditioned_neq' = the conditioned reset/online terms AND the 'link' Gray inequality.  The sha256 set is the
+    # async_gray_fifo_constraints.SOURCES entry of the same file.
+    'ot_hbm_svc_async_fifo': dict(
+        path='rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv',
+        sha256=('e83b7120ff9c6b00eb1a7892bdfd0d4a8e9717fdf055f975f96fa879bb6c91b8',
+                '3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1',
+                '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
+        chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
+                ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
+                ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
+                ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
+        valid='conditioned_neq', read_stage=None, rd_rst_wire='rd_reset', rd_rst_conditioner='u_rd_reset'),
 }
 # HOST-SRAM opt-in: exact reviewed source, unchanged Gray/publication/rendezvous semantics.
 REVIEWED['ot_host_async_fifo_sram'] = dict(REVIEWED['ot_qwen_async_fifo_w'], path='rtl/physical/ot_host_async_fifo_sram.sv',
@@ -809,6 +826,9 @@ def _valid_lit(net, aig, fifo, memo):
     kind, terms = fifo['valid']
     if kind == 'false':
         return 0
+    if kind == 'and_neq':   # AND(terms[0]) & OR_i(a_i ^ b_i)
+        neq = _valid_lit(net, aig, dict(valid=('neq', terms[1])), memo)
+        return aig.and_(_valid_lit(net, aig, dict(valid=('and', terms[0])), memo), neq)
     if kind == 'neq':
         valid = 0
         for a, b in terms:
@@ -1036,19 +1056,26 @@ def _lint(spec, root):
         elif r['valid'] == 'link':
             valid = ('neq', tuple(zip(stage['rptr'][4], stage['wptr'][5][-1])))
         else:
-            empty = bits_of(scope, 'rd_empty')
+            empty = bits_of(scope, 'rd_empty') if r['valid'] == 'conditioned' else [None]
             # rd_domain_rst_n: the reviewed source's own wire; if synthesis dropped the name, the reviewed
             # rd_reset_conditioner output (ot_async_fifo EXT_RST 0 places it in a generate block).
-            rst = [net.bit_of.get(prefix + 'rd_domain_rst_n')]
+            rst = [net.bit_of.get(prefix + r.get('rd_rst_wire', 'rd_domain_rst_n'))]
             if not isinstance(rst[0], int):
+                cname = re.escape(r.get('rd_rst_conditioner', 'rd_reset_conditioner'))
                 conditioner = [c for c, b in scopes if b == RESET_SYNC[0] and
-                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?rd_reset_conditioner', c)]
+                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?' + cname, c)]
                 rst = bits_of(conditioner[0], 'reset_pipe')[-1:] if len(conditioner) == 1 else [None]
             if len(empty) != 1 or not isinstance(rst[0], int) or len(stage['wonl'][5][-1]) != 1:
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
-            if net.domain(empty[0]) != reader:
-                raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
-            valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
+            if r['valid'] == 'conditioned_neq':
+                pairs = tuple(zip(stage['rptr'][4], stage['wptr'][5][-1]))
+                if not pairs or net.domain(rst[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
+                valid = ('and_neq', (((rst[0], 1), (stage['wonl'][5][-1][0], 1)), pairs))
+            else:
+                if net.domain(empty[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
+                valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
         head = {b for k, b in net.bit_of.items() if isinstance(b, int) and b not in net.flops and
                 re.fullmatch(re.escape(prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')) + r'(?:\[\d+\])?', k)}
         fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid, head=head,
@@ -1181,11 +1208,14 @@ def _lint(spec, root):
         kind, terms = fifo['valid']
         if kind == 'false':
             v = 0
-        elif kind == 'neq':
+        elif kind in ('neq', 'and_neq'):
             v = 0
-            for a, b in terms:
+            for a, b in (terms[1] if kind == 'and_neq' else terms):
                 x, y = _bdd_of(net, bdd, a, level, cache), _bdd_of(net, bdd, b, level, cache)
                 v = bdd.ite(v, 1, bdd.ite(x, bdd.neg(y), y))
+            for b, polarity in (terms[0] if kind == 'and_neq' else ()):
+                x = _bdd_of(net, bdd, b, level, cache)
+                v = bdd.ite(v, x if polarity else bdd.neg(x), 0)
         else:
             v = 1
             for b, polarity in terms:
@@ -1220,14 +1250,27 @@ def _lint(spec, root):
     # may keep either one (qkd_hr_cdc_host r2: ot_async_fifo rd_gray[MSB] folded into rd_bin[MSB], Gray MSB == binary
     # MSB).  Its names carry the launch role so the SDC binds whichever survives; a signature shared by two different
     # tagged roles aliases nothing.
+    # An enabled register reaches the lint netlist (dffunmap) as D = MUX(S, hold = its own Q, next); two such registers
+    # with the same enable and next value are the same register for ORFS (one $_DFFE_ each, opt_merge keeps one): the
+    # signature replaces its own-Q hold input by a marker (L2H-IDXSCORE/SVG a8b4a48f2, HBM-SVGREL8 10-20 port:
+    # ot_hbm_svc_async_fifo rd_gray[MSB] folded into rd_bin[MSB] under rd_fire).
+    def alias_sig(q):
+        f = net.flops[q]
+        drv = net.driver.get(f['d'])
+        if drv and drv[0] == 'comb' and drv[2] == '$_MUX_':
+            pins = drv[3]
+            if pins.get('A') == q and pins.get('B') != q:
+                return (f.get('t'), ('hold_a', pins.get('S'), pins.get('B')), f['c'], f['r'])
+            if pins.get('B') == q and pins.get('A') != q:
+                return (f.get('t'), ('hold_b', pins.get('S'), pins.get('A')), f['c'], f['r'])
+        return (f.get('t'), f['d'], f['c'], f['r'])
     sig = {}
-    for p, f in net.flops.items():
-        sig.setdefault((f.get('t'), f['d'], f['c'], f['r']), []).append(p)
+    for p in net.flops:
+        sig.setdefault(alias_sig(p), []).append(p)
     for q, r in sorted(role.items(), key=lambda x: str(x[0])):
         if r[0] not in ('src', 'esrc', 'lsrc'):
             continue
-        f = net.flops[q]
-        group = sig[(f.get('t'), f['d'], f['c'], f['r'])]
+        group = sig[alias_sig(q)]
         if len({role[x] for x in group if x in role}) != 1:
             continue
         for p in group:
@@ -1264,6 +1307,33 @@ def _lint(spec, root):
         record['straps'] = sorted({p for p, _ in straps_used})
         record['strap_crossings'] = sorted(f'{p}->{d}' for p, d in straps_used)
         record['macros'] = {c.lstrip('\\'): macro_domain[c] for c in sorted(macro_domain)}
+        dual_macros = {}
+        for cname, mc in sorted(net.macros.items()):
+            if not isinstance(mc['clock'], dict):
+                continue
+            info = mc['clock']
+            clocks = {}
+            for cp in (info['read_clock'], info['write_clock']):
+                bit = mc['conn'][cp][0]
+                roots = []
+                for d in spec['clock_entry_domains'].values():
+                    for port in d['ports']:
+                        bits = m['ports'].get(port, {}).get('bits', [])
+                        bus = re.fullmatch(r'([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]', port)
+                        if not bits and bus and bus.group(1) in m['ports']:
+                            p = m['ports'][bus.group(1)]
+                            idx = int(bus.group(2)) - p.get('offset', 0)
+                            bits = [p['bits'][idx]] if not p.get('upto') and 0 <= idx < len(p['bits']) else []
+                        if bits == [bit]:
+                            roots.append(port)
+                if len(roots) != 1:
+                    raise GrayFifoError(f'dual-clock SRAM {cname}: ambiguous actual root for {cp}')
+                clocks[cp] = [roots[0], net.clock_domain[bit]]
+            dual_macros[cname.lstrip('\\')] = dict(master=mc['type'], clocks=clocks,
+                input_clocks={pin: info['pin_clock'][pin] for pin in mc['conn']
+                              if mc['dirs'][pin] == 'input' and pin not in clocks})
+        if dual_macros:
+            record['dual_clock_macros'] = dual_macros
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
     return record
 
@@ -1408,6 +1478,14 @@ def bindings(record):
     periods = ' '.join(f'{n} {p!r}' for n, p in sorted(record['periods_ps'].items()))
     text = (f'set ::ot_gf_roles [dict create {roles}]\nset ::ot_gf_fifos [dict create {fifos}]\n'
             f'set ::ot_gf_periods [dict create {periods}]\nset ::ot_gf_uncertainty {SETUP_UNCERTAINTY_PS!r}\n')
+    if record.get('dual_clock_macros'):
+        entries = []
+        for name, m in sorted(record['dual_clock_macros'].items()):
+            clocks = ' '.join(_word(cp) + ' {' + _word(root) + ' ' + _word(domain) + '}'
+                              for cp, (root, domain) in sorted(m['clocks'].items()))
+            pins = ' '.join(_word(pin) + ' ' + _word(cp) for pin, cp in sorted(m['input_clocks'].items()))
+            entries.append(_word(name) + ' {master ' + _word(m['master']) + ' clocks {' + clocks + '} inputs {' + pins + '}}')
+        text += 'set ::ot_gf_dual_macros [dict create ' + ' '.join(entries) + ']\n'
     if 'levels' not in record:
         return text
     levels = ' '.join('{' + lid + '} {src ' + v['src'] + ' dst ' + v['dst'] + ' bound ' + repr(v['max_delay_ps']) + '}'
@@ -1431,6 +1509,22 @@ def extend(body, spec, root):
                                     '          continue\n')
     body = body.replace(ASYNC_GUARD, '    if {[dict exists $async_pins [get_full_name $pin]]} {ot_gf_async $pin $cells $inputs; continue}')
     body = body.replace(S.MARKER, '  ot_gf_complete $cells\n' + S.MARKER)
+    if record.get('dual_clock_macros'):
+        marker = '    set expected [dict get $cells $cell]\n'
+        if body.count(marker) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM input ownership hook changed')
+        body = body.replace(marker, marker + '    set expected [ot_gf_dual_input_domain $cell $pin $expected]\n')
+        start = 'proc ot_ce_leaf_ownership {inputs outputs} {\n'
+        if body.count(start) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM ownership cache boundary changed')
+        body = body.replace(start, start + '  set ::ot_gf_dual_checked {}\n  set ::ot_gf_dual_constant_counts {}\n')
+        fanin = '    foreach start [get_fanin -flat -startpoints_only -to $pin] {\n'
+        if body.count(fanin) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM fanin hook changed')
+        body = body.replace(fanin, fanin + '      if {[ot_gf_dual_constant_self $start $pin]} continue\n')
+        body = body.replace('  ot_gf_complete $cells\n',
+                            '  ot_gf_complete $cells\n  puts \"OT_GF DUAL_LIBERTY_CONSTANT_INPUTS $::ot_gf_dual_constant_counts\"\n')
+        body = DUAL_CLOCK_TCL + '\n' + body
     if 'levels' not in record:
         return bindings(record) + _event_tcl(TCL, record) + '\n' + body
     if body.count(STRAP_GUARD) != 1:
@@ -1771,5 +1865,112 @@ proc ot_gf_complete {cells} {
     if {[dict get $info store_read] && ![dict exists $::ot_gf_seen [list $f mem mem 0]]} {error "OT_GF: missing actual storage crossing $f"}
   }
   puts "OT_GF STRUCTURAL_PASS [dict size $::ot_gf_seen] crossing classes (bounded reviewed FIFO crossings only; no physical closure claim)"
+}
+'''
+
+# Only the explicitly source/three-corner-role-verified dual-clock SRAM mode uses this hook.
+# No crossing is excepted: the original ownership loop checks the same actual input cone
+# against this pin's own clock family instead of the macro output/read-clock family.
+DUAL_CLOCK_TCL = r'''
+proc ot_gf_dual_root_port {pin} {
+  set block [ord::get_db_block]
+  set instance [$block findInst [get_full_name [get_cells -of_objects $pin]]]
+  if {$instance in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock instance"}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock pin"}
+  set net [$iterm getNet];set seen {}
+  for {set step 0} {$step < 256 && $net ni {"" NULL}} {incr step} {
+    set n [$net getName]
+    if {[dict exists $seen $n]} {error "OT_GF: cyclic dual SRAM clock cone"}
+    dict set seen $n 1
+    set ports [$net getBTerms]
+    if {[llength $ports]} {
+      if {[llength $ports] != 1 || [[lindex $ports 0] getIoType] ne "INPUT"} {
+        error "OT_GF: ambiguous dual SRAM clock port"
+      }
+      return [[lindex $ports 0] getName]
+    }
+    set drivers {}
+    foreach term [$net getITerms] {if {[$term isOutputSignal]} {lappend drivers $term}}
+    if {[llength $drivers] != 1} {error "OT_GF: missing unique dual SRAM clock driver"}
+    set driver [lindex $drivers 0];set cell [$driver getInst];set inputs {};set outputs {}
+    foreach term [$cell getITerms] {
+      if {[$term isInputSignal]} {lappend inputs $term}
+      if {[$term isOutputSignal]} {lappend outputs $term}
+    }
+    if {[llength $inputs] != 1 || [llength $outputs] != 1} {
+      error "OT_GF: dual SRAM clock cone must contain only actual unary BUF/INV functions"
+    }
+    set input [lindex $inputs 0];set input_name [[$input getMTerm] getName]
+    set master [[$cell getMaster] getName];set output_name [[$driver getMTerm] getName]
+    set truth {};set matched 0
+    foreach library [get_libs -quiet *] {
+      set lc [$library find_liberty_cell $master]
+      if {$lc in {"" NULL}} continue
+      set lp [$lc find_liberty_port $output_name]
+      if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {
+        error "OT_GF: dual SRAM clock buffer lacks actual Liberty output role"
+      }
+      set function [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$lp function]]
+      if {$function eq $input_name} {set value 1} elseif {$function in [list !$input_name ~$input_name ${input_name}']} {
+        set value -1
+      } else {error "OT_GF: dual SRAM clock cone is not Liberty-functional BUF/INV"}
+      dict set truth $value 1;incr matched
+    }
+    if {!$matched || [dict size $truth] != 1} {error "OT_GF: dual SRAM clock buffer Liberty corners disagree"}
+    set net [$input getNet]
+  }
+  error "OT_GF: dual SRAM clock root is not a unique declared input"
+}
+proc ot_gf_dual_constant_self {start pin} {
+  # OpenSTA constant-prunes an input's upstream graph and can return that input
+  # itself as the startpoint. Prove its OpenDB NET from actual Liberty functions;
+  # never infer constancy from a pin/cell name, clock absence, or case analysis.
+  if {[sta::object_type $start] ne "Pin" || [get_full_name $start] ne [get_full_name $pin]} {return 0}
+  set cell [get_cells -of_objects $pin];set full [string map {\\ {}} [get_full_name $cell]]
+  set reviewed 0
+  foreach n [ot_gf_names [list $full]] {if {[dict exists $::ot_gf_dual_macros $n]} {set reviewed 1}}
+  if {!$reviewed} {return 0}
+  set instance [[ord::get_db_block] findInst [get_full_name $cell]]
+  if {$instance in {"" NULL}} {return 0}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL} || ![$iterm isInputSignal]} {return 0}
+  if {![ot_ce_constant_net [$iterm getNet] {} 64]} {return 0}
+  set base [get_property $pin lib_pin_name];regsub {\[[0-9]+\]$} $base {} base
+  dict incr ::ot_gf_dual_constant_counts "$full/$base" 1
+  return 1
+}
+proc ot_gf_dual_input_domain {cell pin fallback} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set found {}
+  foreach n [ot_gf_names [list $full]] {
+    if {[dict exists $::ot_gf_dual_macros $n]} {lappend found $n}
+  }
+  if {![llength $found]} {return $fallback}
+  if {[llength $found] != 1} {error "OT_GF: ambiguous reviewed dual SRAM identity"}
+  set info [dict get $::ot_gf_dual_macros [lindex $found 0]]
+  if {[get_property [get_cells $cell] ref_name] ne [dict get $info master]} {
+    error "OT_GF: mapped dual SRAM master differs from reviewed source/Liberty role"
+  }
+  if {![dict exists $::ot_gf_dual_checked $full]} {
+    dict for {cp role} [dict get $info clocks] {
+      lassign $role root domain
+      set pins [get_pins -quiet $cell/$cp]
+      if {[llength $pins] != 1 || [ot_gf_dual_root_port [lindex $pins 0]] ne $root} {
+        error "OT_GF: mapped dual SRAM clock $cell/$cp differs from its exact reviewed root $root"
+      }
+    }
+    if {$fallback ne [lindex [dict get $info clocks rclk] 1]} {
+      error "OT_GF: mapped dual SRAM output ownership differs from its reviewed read-clock family"
+    }
+    dict set ::ot_gf_dual_checked $full 1
+  }
+  set base [get_property $pin lib_pin_name]
+  regsub {\[[0-9]+\]$} $base {} base
+  if {![dict exists $info inputs $base] || [get_property $pin direction] ne "input"} {
+    error "OT_GF: unreviewed actual dual SRAM input pin [get_full_name $pin]"
+  }
+  set cp [dict get $info inputs $base]
+  return [lindex [dict get $info clocks $cp] 1]
 }
 '''

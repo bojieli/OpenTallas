@@ -557,9 +557,10 @@ PIN_REGS_FAIL_AFTER = "2026-10-16T19:50:00-07:00"   # OWNER RULE 19:50 PT 10-15 
 
 
 def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
-    """OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin.  A leaf-tile
-    kit whose route does not insert pin registers (kit.env without OT_PIN_REGS=1) and records no opt-out reason is WARNed
-    until PIN_REGS_FAIL_AFTER and refused after it; re-kit it (ref_tile.py gen with recipe 3).  CLOSED tiles stand (they
+    """OWNER 10-20 09:05 (strict form: OWNER RULE 19:50 PT 2026-10-15, every pin registered).  A leaf-tile
+    kit whose route does not insert pin registers (kit.env without OT_PIN_REGS=1), records no opt-out reason and either
+    asks for the strict form (spec pin_regs_rule "every_pin") or declares region_crossing_ports is WARNed until
+    PIN_REGS_FAIL_AFTER and refused after it (any other such kit: INFO); re-kit it (ref_tile.py gen with recipe 3).  CLOSED tiles stand (they
     are not re-routed); a loop successor of an already-routed parent stays a WARN."""
     import datetime as dt
     if spec.get("kind", "tile") != "tile":
@@ -581,9 +582,22 @@ def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
     if pr.get("enable") is False and str(pr.get("reason", "")).strip():
         g.add("INFO", "pin_regs", f"pin registers opted out: {pr['reason'][:300]}")
         return
+    # OWNER 10-20 09:05: pin registers are required only at region crossings (landing rings) and on wires over 405 um.
+    # Without the strict form or declared region_crossing_ports a kit without pin registers is INFO: same-region
+    # direct connections are judged by the die / parent STA, and a stage beyond the reach stays a textbook wire_reach
+    # REFUSE in this gate.
+    strict = RT.pin_regs_strict(spec)
+    crossing = str(spec.get("region_crossing_ports") or "").strip()
+    if not strict and not crossing:
+        g.add("INFO", "pin_regs", f"{RT.PIN_REGS_RULE}: no pin registers in this kit (no region_crossing_ports declared; "
+              "wire_reach and die / parent STA judge the direct connections)")
+        return
     late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
     sev = "FAIL" if late and not spec.get("auto_react_parent") else "WARN"
-    g.add(sev, "pin_regs", f"{RT.PIN_REGS_RULE}: this kit's ports are not registered at the pins and no opt-out is recorded"
+    what = (f"{RT.PIN_REGS_RULE_STRICT}: this kit's ports are not registered at the pins and no opt-out is recorded" if strict
+            else f"{RT.PIN_REGS_RULE}: ports matching region_crossing_ports {crossing!r} cross a region boundary and "
+                 "this kit registers no pin")
+    g.add(sev, "pin_regs", what
           + ("" if late else f" (WARN until {PIN_REGS_FAIL_AFTER}, then refused)"),
           "re-kit with recipe 3 (python3 tools/ref_tile/ref_tile.py gen <spec> with \"recipe\": 3, or delete kit.env "
           "for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"}")
@@ -1166,10 +1180,9 @@ class _BlobFiles(dict):
             self.proc.wait()
 
 
-def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
-    """The consumed-file record of a gate that predates it (snapshot v1 without "consumed"), derived by the same closure
-    from the gate's own staged bytes (manifest git blobs, read back from the object store) -- never from today's tree.
-    None when any needed staged blob is unavailable: the gate is then validated exactly as before (full snapshot)."""
+def _staged_closure(binding: dict, kd: Path, extra: bool = True):
+    """(kit, paths): the consumed closure over a gate's own staged manifest blobs (never today's tree), or None when any
+    needed staged blob is unavailable.  extra=False leaves out the job's source.extra_paths prefixes."""
     # kd may be the submit hook's materialised copy (a temp dir): the kit path is the staged spec.json path it ends with
     kits = sorted({e["path"][:-len("/spec.json")] for e in binding.get("files") or []
                    if e["path"].endswith(f"/{kd.name}/spec.json") and kd.as_posix().endswith(e["path"][:-len("/spec.json")])},
@@ -1182,16 +1195,58 @@ def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
         spec = json.loads(files[f"{kit}/spec.json"])
         fp = json.loads(files[f"{kit}/floorplan.json"]) if f"{kit}/floorplan.json" in files else {}
         job = json.loads(files[f"{kit}/job.json"]) if f"{kit}/job.json" in files else {}
-        extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
+        more = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])] if extra else []
         views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
         seeds = list(spec.get("sources") or []) + list(fp.get("referenced") or []) + list(SB.GATE_TOOLS) + \
             list(binding.get("daemon_overlays") or [])
-        paths = SB.consumed_closure(files, seeds, [kit, *views, *extra], PATH_RE) - {f"{kit}/job.json"}
+        paths = SB.consumed_closure(files, seeds, [kit, *views, *more], PATH_RE) - {f"{kit}/job.json"}
     except (KeyError, ValueError, TypeError, OSError):
         return None
     finally:
         files.close()
-    return SB.consumed_record(paths, binding["files"], "reconstructed from the gate's staged manifest blobs")
+    return kit, paths
+
+
+def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
+    """The consumed-file record of a gate that predates it (snapshot v1 without "consumed"), derived by the same closure
+    from the gate's own staged bytes (manifest git blobs, read back from the object store) -- never from today's tree.
+    None when any needed staged blob is unavailable: the gate is then validated exactly as before (full snapshot)."""
+    got = _staged_closure(binding, kd)
+    if got is None:
+        return None
+    return SB.consumed_record(got[1], binding["files"], "reconstructed from the gate's staged manifest blobs")
+
+
+# GATE-EXECUTED TOOLS (ROOT8-CONSUMED 2026-10-20, owner 09:05 "no regates forced by unrelated tool changes"): the gate's
+# consumed record also holds every staged file under the job's source.extra_paths and their Python import closure (route
+# / bench inputs: a job naming tools/qwen_split swept ~390 tools/*.py into it), so any main commit to an unrelated tool
+# refused the submit (pv_join P216, lane8, sh_lk, sf7w: 1-4 h regates).  At submit the TOOL files (tools/**) are bound
+# only when the gate executed them: the closure over the gate-run seeds (kit directory and hooks, spec sources, floorplan
+# referenced, child/macro views, GATE_TOOLS, shipped overlays) from the gate's own staged blobs, without extra_paths.
+# Non-tool files keep the full record; a changed executed tool, its imports, a tool a kit hook names, or a changed
+# overlay still refuse.  Unresolvable closure (missing staged blob) or an inconsistent record: the record stands as is.
+def gate_executed_tools(binding: dict, kd: Path) -> set | None:
+    got = _staged_closure(binding, kd, extra=False) if isinstance(binding, dict) else None
+    return None if got is None else {p for p in got[1] if p.startswith("tools/")}
+
+
+def narrow_consumed_tools(binding: dict, executed: set | None) -> dict:
+    """binding with its consumed record narrowed to the gate-executed tool files (other paths unchanged); the binding
+    itself when there is nothing to narrow or the record is not intact (validate then judges it exactly as before)."""
+    c = binding.get("consumed") if isinstance(binding, dict) else None
+    if executed is None or not isinstance(c, dict) or c.get("schema") != SB.CONSUMED_SCHEMA \
+            or not isinstance(c.get("paths"), list) or SB.canonical_digest(c["paths"]) != c.get("digest"):
+        return binding
+    staged = {e.get("path"): e.get("sha256") for e in binding.get("files") or []}
+    if any(staged.get(q) != h for q, h in (c.get("sha256") or {}).items()) or set(c["paths"]) - staged.keys():
+        return binding
+    drop = {p for p in c["paths"] if p.startswith("tools/") and p not in executed}
+    if not drop:
+        return binding
+    rec = SB.consumed_record([p for p in c["paths"] if p not in drop], binding["files"],
+                             f"{c.get('basis')}; tools narrowed at submit to the gate-executed closure (ROOT8-CONSUMED)")
+    rec["tools_not_executed"] = len(drop)
+    return {**binding, "consumed": rec}
 
 
 def absent_working_inputs(seeds, spec=None):
@@ -1598,7 +1653,7 @@ def check_textbook_execution(g: Gate, out: str):
     return True
 
 
-def check_native_census(g: Gate, out: str):
+def check_native_census(g: Gate, out: str, kit: str | None = None):
     """Missing native admission is an execution failure, never a WARN."""
     rows = re.findall(r'^GATE_NATIVE_CENSUS_RESULT (\{.*\})$', out, re.M)
     try:
@@ -1610,6 +1665,11 @@ def check_native_census(g: Gate, out: str):
             g.add('WARN', 'native_census',
                   'raw native census FAIL max34; exact coordinator waiver for 15 library-adder nodes',
                   NC.KTREE_SCOPE + '; all other drivers retain limit32; timing and physical checks required')
+            return True
+        if kit is not None and NC.mc3c7_scoped_admission(report, kit):
+            g.add('WARN', 'native_census',
+                  f"raw native census FAIL max{report['max_dynamic_loads']}; scoped coordinator waiver <={NC.MC3C7_MAX} for kit {kit}",
+                  NC.MC3C7_SCOPE + '; guidance under rule freeze; route timing decides')
             return True
         if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
                 or report.get('status') != 'PASS' or report.get('limit') != 32
@@ -1626,13 +1686,23 @@ def check_native_census(g: Gate, out: str):
     return True
 
 
+def native_scope_kit(kd: Path, spec: dict) -> str | None:
+    """Kit identity for kit-scoped census waivers: bound to the gated tile's spec (its name is the kit dir and,
+    for the MC3c7 scope, its top is the waived top); otherwise no scoped waiver can apply."""
+    if not isinstance(spec, dict) or spec.get("name") != kd.name:
+        return None
+    if kd.name in NC.MC3C7_KITS and spec.get("top") != NC.MC3C7_TOP:
+        return None
+    return kd.name
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     check_textbook_execution(g,out)
-    check_native_census(g,out)
+    check_native_census(g,out,native_scope_kit(kd, spec))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
@@ -1801,7 +1871,15 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
             if graph is None:
                 issues.append("landed cluster: the parent RTL cannot be read, cross-region links not verified")
             else:
-                bad, landed = cross_region_links(graph)
+                cdc = None
+                if spec.get("landed_record"):
+                    try:
+                        lrec = json.loads((ROOT / spec["landed_record"]).read_text())
+                        cdc = {c["inst"]: {p: f"ck_{r}" for p, r in c.get("pin_regions", {}).items()
+                                           if f"ck_{r}" in expected} for c in lrec.get("cdc_children") or []}
+                    except (OSError, ValueError, KeyError, TypeError):
+                        cdc = None
+                bad, landed = cross_region_links(graph, cdc)
                 issues += bad
                 rec["landed_child_links"] = [dict(a=a.lstrip("*"), b=b.lstrip("*"), landing=n) for a, b, n in landed]
         if not cts:
@@ -1999,8 +2077,11 @@ def linked_child_pairs(spec: dict | None) -> list | None:
     for mod, inst, conns in inst_re.findall(body):
         if mod in VLOG_KEYWORDS:
             continue
+        # FRH10 10-20: a child bound inside a wires-only wrapper (spec inst "u_e1e.u_view": Yosys-flattened name of
+        # ot_v41_bf_col u_view inside dsfd_bf_col u_e1e) is the parent RTL's top-level instance u_e1e
         kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
-                    or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+                    or fnmatch.fnmatchcase(inst, ch["inst"])
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid is None:
             continue
         seen.add(kid["inst"])
@@ -2109,7 +2190,7 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             if ids and not set(ids) & ports:        # a port assign (z = y2) is the boundary, not a link
                 for a in ids[1:]:
                     parent[find(a)] = find(ids[0])
-    insts, nets, seen = {}, {}, set()
+    insts, nets, seen, pinsof = {}, {}, set(), {}
     for st in stmts:
         m = re.match(r"([A-Za-z_]\w*)\s*", st)
         if not m or m[1] in VLOG_KEYWORDS:
@@ -2128,38 +2209,51 @@ def parent_link_graph(spec: dict | None) -> dict | None:
         if e is None or st[e:].strip():
             continue
         # top-level names: the pattern without its hierarchy '*' (else "*u0" would claim reset run u_lprc_u0)
-        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
+        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid:
             seen.add(kid)
-        conns, exprs, j = st[k + 1:e - 1], [], 0
+        conns, exprs, pnames, j = st[k + 1:e - 1], [], [], 0
         while True:
-            pm = re.compile(r"\.\s*\w+\s*\(").search(conns, j)
+            pm = re.compile(r"\.\s*(\w+)\s*\(").search(conns, j)
             if not pm:
                 break
             q = balanced(conns, pm.end() - 1)
             if q is None:
                 break
             exprs.append(conns[pm.end():q - 1])
+            pnames.append(pm[1])
             j = q
         root = sorted({x.strip() for x in exprs if x.strip() in cks})
         insts[inst] = dict(kid=kid, root=root[0] if len(root) == 1 else None, module=mod)
-        for expr in exprs:
+        for pname, expr in zip(pnames, exprs):
             for n in set(ident.findall(expr)) - ports - VLOG_KEYWORDS:
                 nets.setdefault(find(n), set()).add(inst)
+                pinsof.setdefault((find(n), inst), set()).add(pname)
     if seen != {ch["inst"] for ch in kids}:
         return None
-    return dict(insts=insts, nets=nets)
+    return dict(insts=insts, nets=nets, pinsof=pinsof)
 
 
-def cross_region_links(graph: dict) -> tuple:
+def cross_region_links(graph: dict, cdc: dict | None = None) -> tuple:
     """(issues, landed) of a landed parent's link graph: every net class whose instances sit on DIFFERENT clock roots must
     be a landing (only the two halves u_lpl_<n>_w / u_lpl_<n>_r of one landing on it) or a regional reset run
     (u_lpr_* / u_lprc_*); anything else is an "unlanded cross-region link".  landed = [(child A, child B, landing)]:
     hard-child pairs linked through one landing (A -> <n>_w ... <n>_r -> B)."""
     insts, nets = graph["insts"], graph["nets"]
     issues, halves = [], {}
+    # LEAD2-S81/LINK 10-19: a declared lp.py CDC child (landed record cdc_children: inst -> {pin: clock root}, e.g. the
+    # SerDes column rate matcher u_rm / status sync u_sts) owns the only crossing between its pin regions; on each net
+    # it sits on the root of the pins it connects there (all of one root, else it stays unresolved = FAIL)
+    def root_on(i, net):
+        r = insts[i]["root"]
+        if r is None and cdc and i in cdc:
+            rs = {cdc[i].get(p) for p in graph.get("pinsof", {}).get((net, i), ())}
+            if len(rs) == 1 and None not in rs:
+                return rs.pop()
+        return r
     for net, members in sorted(nets.items()):
-        roots = {insts[i]["root"] for i in members}
+        roots = {root_on(i, net) for i in members}
         if len(roots) < 2:
             continue
         mm = sorted(members)
@@ -2415,6 +2509,12 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files"):
+            try:
+                binding = narrow_consumed_tools(binding, gate_executed_tools(binding, kd))
+                d["source_binding"] = binding        # the relaxing-rule allowlist record is read from here
+            except Exception:  # noqa: BLE001 -- unresolvable: the recorded consumed set stands (strict)
+                pass
         tile = [kd.name, d.get("kit")]
         policy_spec = spec
         if policy_spec is None:
@@ -2444,6 +2544,9 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
                 ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
+        n_tools = ((binding.get("consumed") or {}).get("tools_not_executed") or 0) if isinstance(binding, dict) else 0
+        if n_tools:
+            reason += f"; {n_tools} staged tool file(s) outside the gate-executed closure not bound (ROOT8-CONSUMED)"
         if note is not None:
             note.append(reason)
         if binding.get("staged_remeasurement"):
@@ -2719,7 +2822,8 @@ def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
     items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
     if not isinstance(w, dict) or not items:
         return
-    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w,
+                                          tile=spec.get("block"))
     if not applied:
         for i in items:
             i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"

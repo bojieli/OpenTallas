@@ -105,7 +105,19 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 RECIPE_LATEST = 4
 RESET_LANDING_RULE = ("ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth "
                       "fan-out; reset release latency is a scheduled constant")
-PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
+PIN_REGS_RULE_STRICT = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
+# OWNER 10-20 ~09:05 (supersedes the 10-15 rule): pin registers are required only at region crossings (landing rings)
+# and on wires over the 405 um reach; touching tiles in the SAME region may connect directly when the combined path
+# meets timing (die / parent STA checks it).  The strict 10-15 form stays available: spec "pin_regs_rule": "every_pin"
+# (or env OT_PIN_REGS_STRICT=1).  Spec "region_crossing_ports": "<regexp>" names ports that cross a region boundary
+# with no landing ring inside the kit: those still need pin registers (the gate refuses a kit without them).
+PIN_REGS_RULE = ("OWNER RULE 10-20 09:05: pin registers only at region crossings (landing rings) and on wires over "
+                 "405 um; same-region touching tiles may connect directly when the path meets timing")
+
+
+def pin_regs_strict(s: dict) -> bool:
+    """True when the kit asks for the strict 10-15 every-pin form (spec pin_regs_rule / env OT_PIN_REGS_STRICT=1)"""
+    return s.get("pin_regs_rule") == "every_pin" or os.environ.get("OT_PIN_REGS_STRICT") == "1"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
@@ -255,9 +267,10 @@ def pin_regs_plan(s: dict) -> dict | None:
     if not isinstance(pr, dict):
         raise SpecError('spec: pin_regs must be an object ({"enable": true} | {"enable": false, "reason": ...})')
     if pr.get("enable") is False:
-        if not str(pr.get("reason", "")).strip():
-            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({PIN_REGS_RULE})")
-        return {"enable": False, "reason": pr["reason"]}
+        if not str(pr.get("reason", "")).strip() and (pin_regs_strict(s) or s.get("region_crossing_ports")):
+            why = PIN_REGS_RULE_STRICT if pin_regs_strict(s) else PIN_REGS_RULE + " (this kit declares region_crossing_ports)"
+            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({why})")
+        return {"enable": False, "reason": pr.get("reason") or PIN_REGS_RULE}
     if pr.get("exclude") and not str(pr.get("reason", "")).strip():
         raise SpecError("spec: pin_regs.exclude needs a recorded reason")
     declared = s.get("clock_ports", [])
@@ -279,7 +292,7 @@ def pin_regs_plan(s: dict) -> dict | None:
         raise SpecError("spec: pin_regs.clock must name a declared clock port or bit")
     return {"enable": True, "clock": ck, "clock_ports": cks, "reset_ports": resets, "exclude": pr.get("exclude", ""),
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
-            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
+            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE_STRICT,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
 
 
@@ -301,6 +314,77 @@ def pin_regs_vars(s: dict) -> list:
     return out
 
 
+SOURCE_NATIVE_RESET_LANDINGS = {
+    # This source already contains the two plain-FF landing levels. Counts
+    # remain a mandatory balanced_reset_proof obligation on the actual map.
+    "host_order_n32_1020": {
+        "source": "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+        "sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+        "top": "qkd_hr_core_order_n32", "clock": "ck_core", "reset_ports": ["host_rst_n"],
+        "first_copies": {"host_rst_n": 12}, "copies": {"host_rst_n": 288},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v":
+                "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba",
+        },
+    },
+    "host_prompt_n32_1020": {
+        # MU0 component only. A production MU4 source/shape needs a separate
+        # fingerprint and its own exactness, cold-state and mapped proof.
+        "source": "rtl/qwen_sys/host_cluster_20261017/prompt_native32/qkd_hr_core_prompt_n32.sv",
+        "sha256": "ddced4a80043ea79b4f2b95c47f745ea946f4646d9dba0fb1d5b28e793697426",
+        "top": "qkd_hr_core_prompt_n32", "clock": "ck_core", "reset_ports": ["u_rank__u_control__por_n"],
+        "first_copies": {"u_rank__u_control__por_n": 1}, "copies": {"u_rank__u_control__por_n": 4},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v":
+                "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+            "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v":
+                "f9074a0e2e16dacebdc30e8c8e8e66386165c6b2cf704da4ceb26209e4ade77c",
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v":
+                "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+        },
+    },
+}
+
+
+def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
+    """Exact source admission for an existing forest, never a proof/threshold waiver."""
+    if "source_native" not in rl:
+        return None
+    key = rl["source_native"]
+    if not isinstance(key, str) or key not in SOURCE_NATIVE_RESET_LANDINGS:
+        raise SpecError("spec: reset_landing.source_native must name a reviewed source fingerprint")
+    entry = SOURCE_NATIVE_RESET_LANDINGS[key]
+    if type(rl.get("stages", 2)) is not int or any(
+            not isinstance(rl.get(k), dict) or any(type(n) is not int for n in rl[k].values())
+            for k in ("first_copies", "copies")):
+        raise SpecError("spec: source-native reset stages and copy counts must be exact integers")
+    if (s.get("top") != entry["top"] or s.get("params", {}) != {} or s.get("defines", []) != []
+            or s.get("reset_ports") != entry["reset_ports"] or rl.get("enable") is not True
+            or rl.get("stages", 2) != 2 or rl.get("clock", entry["clock"]) != entry["clock"]
+            or s.get("clock_port") != entry["clock"]
+            or any(rl.get(k) != entry[k] for k in ("first_copies", "copies"))):
+        raise SpecError("spec: source-native reset top/parameters/defines/clock/counts differ from reviewed source")
+    if any(k in rl for k in ("waive", "max_sinks")) or s.get("reset_relay_split") is not None:
+        raise SpecError("spec: source-native reset forbids threshold waivers and reset-copy rewiring")
+    overrides = s.get("orfs_vars") or {}
+    if any(k in overrides for k in ("SYNTH_PARAMETERS", "SYNTH_DEFINES", "VERILOG_DEFINES", "VERILOG_FILES", "SYNTH_ARGS")) \
+            or any(k.startswith(("OT_RST_", "OT_PIN_REGS")) for k in overrides):
+        raise SpecError("spec: source-native reset forbids source/landing ORFS overrides")
+    pr = s.get("pin_regs") or {}
+    if pr.get("enable") is not False:
+        raise SpecError("spec: source-native reset requires existing source pin registers")
+    closure = {entry["source"]: entry["sha256"], **entry.get("source_dependencies", {})}
+    sources = s.get("sources", [])
+    if (not isinstance(sources, list) or any(not isinstance(p, str) for p in sources)
+            or len(sources) != len(closure) or set(sources) != set(closure)):
+        raise SpecError("spec: source-native reset complete source closure differs from reviewed source")
+    for path, digest in closure.items():
+        source = ROOT / path
+        if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise SpecError("spec: source-native reset source fingerprint changed or missing: " + path)
+    return {"id": key, "source": entry["source"], "sha256": entry["sha256"], "source_closure": closure}
+
+
 def reset_landing_plan(s: dict) -> dict | None:
     """the kit's reset landing plan or None; SpecError on a malformed record or an opt-out without a reason"""
     rl = s.get("reset_landing")
@@ -309,6 +393,7 @@ def reset_landing_plan(s: dict) -> dict | None:
     if not isinstance(rl, dict):
         raise SpecError('spec: reset_landing must be an object ({"enable": true, "stages": 2} | {"enable": false, '
                         '"reason": ...})')
+    native = source_native_reset_landing(s, rl)
     if not rl.get("enable"):
         if not str(rl.get("reason") or rl.get("waive") or "").strip():
             raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
@@ -326,6 +411,10 @@ def reset_landing_plan(s: dict) -> dict | None:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
     plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    if native:
+        if ck != SOURCE_NATIVE_RESET_LANDINGS[native["id"]]["clock"]:
+            raise SpecError("spec: source-native reset effective landing clock differs from reviewed source")
+        plan["source_native"] = native
     fc = rl.get("first_copies")
     if fc is not None:
         if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
@@ -333,7 +422,7 @@ def reset_landing_plan(s: dict) -> dict | None:
             raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
         if st != 2:
             raise SpecError('spec: balanced first_copies requires exactly two landing stages')
-        if not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32:
+        if not native and (not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32):
             raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
         plan['first_copies'] = dict(fc)
     cp = rl.get("copies")
@@ -345,7 +434,7 @@ def reset_landing_plan(s: dict) -> dict | None:
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
         if st < 2:
             raise SpecError("spec: reset_landing.copies needs stages >= 2")
-        if not reset_relay_split_plan(s):
+        if not native and not reset_relay_split_plan(s):
             raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
         if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
             raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
@@ -394,7 +483,7 @@ def reset_relay_split_vars(s: dict) -> list:
 
 def reset_landing_vars(s: dict) -> list:
     plan = reset_landing_plan(s)
-    if not plan or not plan["enable"]:
+    if not plan or not plan["enable"] or plan.get("source_native"):
         return []
     out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
     pp = pin_regs_plan(s)
@@ -1255,12 +1344,15 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     reason_kind = "pin-bound"
     structural = fr.get("lattice_channel_bound")
     if structural is not None:
-        errors = lattice_band_errors(s, W, H, blocks, float(std_area))
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area), planning=True, root=ROOT)
         if errors:
             return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
                     "fix measured sizing geometry; actual placement verification is also required")
         reason = str(structural["why"]).strip()
         reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
+        if "planning_birth_budget" in s:
+            reason_kind += (f"; PLANNING ONLY birth budget {s['planning_std_area_um2']:.3f} um2, "
+                            f"source {float(std_area):.3f} um2; actual placed 40..60% still required")
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
@@ -1592,7 +1684,7 @@ def pin_wrapper(s: dict) -> bool:
     reset_landing on (a landing-only wrapper); the design's core is then instance u_ot_pr_core of <top>__ot_pr_core"""
     pr = pin_regs_plan(s)
     rl = reset_landing_plan(s)
-    return bool((pr and pr.get("enable")) or (rl and rl.get("enable")))
+    return bool((pr and pr.get("enable")) or (rl and rl.get("enable") and not rl.get("source_native")))
 
 
 def gen_place(s: dict, blocks: list) -> str:
@@ -1997,6 +2089,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # macros whose pins sit on their W/E faces free of cells without widening the N/S gaps between stacked macros
         hx = float(s["route"].get("macro_halo_x_um", h))
         extra.append(f"--macro-place-halo {hx:g} {h:g}" if hx != h else f"--macro-place-halo {h} {h}")
+        # Fixed macro placement bypasses rtl_macro_placer: tapcell cuts rows using these separate variables.
+        # Honour declared pin-face halos; retain the platform's 2 um default when no halo was declared.
+        if "macro_halo_um" in s["route"] or "macro_halo_x_um" in s["route"]:
+            rows_y = float(s["route"].get("macro_halo_um", 2.0))
+            rows_x = float(s["route"].get("macro_halo_x_um", rows_y))
+            extra += [f"--orfs-var MACRO_ROWS_HALO_X={rows_x:g}",
+                      f"--orfs-var MACRO_ROWS_HALO_Y={rows_y:g}"]
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
@@ -2381,6 +2480,9 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
     if s.get("registered_cluster_candidate"):
         from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
+    if s.get("planning_birth_budget"):
+        from planning_birth_budget import evidence_paths
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])
