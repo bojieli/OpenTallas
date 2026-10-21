@@ -29,7 +29,7 @@ def _fields():
 
 
 def lower_broadcast(raw, *, q, timing, rf_address, scalar_ready, rf_local,
-                    place=None, data=None, tag=""):
+                    place=None, data=None, tag="", su_options=None):
     """Compile VM scalar B -> RF class1 -> SU, with explicit ingress obligation.
 
     scalar_ready is the serial edge at which the real bridge presents rr_wv;
@@ -50,7 +50,7 @@ def lower_broadcast(raw, *, q, timing, rf_address, scalar_ready, rf_local,
         return dict(status="unlowered", reasons=["outer-varying broadcast/reducer calendar"])
     # The existing compiler emits A/C/D fills, arithmetic and O drains, while
     # refusing B's repeated non-sector addresses. Replace only that refusal.
-    res = LI.su_record(raw, q=q, place=place, data=data, tag=tag, timing=timing)
+    res = LI.su_record(raw, q=q, place=place, data=data, tag=tag, timing=timing, **(su_options or {}))
     allowed = lambda reason: (reason.startswith("operand B group ") or
                               reason == "operand B broadcast/strided: needs RF-broadcast (srcs) calendar")
     remaining = [r for r in res.get("reasons", []) if not allowed(r)]

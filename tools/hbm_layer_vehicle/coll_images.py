@@ -140,7 +140,7 @@ def calendar_window(loops):
     return prog, word
 
 
-def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm_rt=0):
+def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm_rt=0, src_idx=None):
     """COLL.ALL_GATHER of the n-word vector O (uint32) on the 4 quadrants, quadrant q's view.  Returns dict with
     events (replay.v1 D / C / M), the checks split by kind, cycles, and the model numbers."""
     from hbm_layer_vehicle.layer_images import CpBus
@@ -154,10 +154,12 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
     if F >= 1024:
         return dict(status="format_open", reasons=[f"F={F} sectors exceeds the 10-b descriptor field"])
     stride = -(-F // 8) * 8
-    if dst_idx + 4 * stride > 1 << 13:
+    if dst_idx + 4 * stride > 1 << 13 or (src_idx is not None and src_idx + F > 1 << 13):
         return dict(status="format_open", reasons=["gathered vector exceeds the quadrant VM slice"])
     sl = {s: [word256(O[s * sw + 8 * j: s * sw + 8 * j + 8]) for j in range(F)] for s in range(4)}
-    src = sec16(q, dst_idx + q * stride)              # own slice in place (segment q), self_land 0
+    # own slice in place (segment q) by default; TOK-FUNC2-HBM-CX: src_idx = the layer placement of the own slice
+    # (ot_hgi_coll_gq.sv reads g_src + i independently of the landing run dst + stride*s + i; self_land 0)
+    src = sec16(q, dst_idx + q * stride if src_idx is None else src_idx)
     dst = sec16(q, dst_idx)
     period = t_start + 1
     payload = gq_row(F, R, t_start, src, dst, stride, period)

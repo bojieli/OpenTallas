@@ -181,49 +181,13 @@ def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
 
 
 
-def lower_hc_post_io(*, D, quadrant, y_word, residual_word, coefficient_word,
-                     output_word, one_word, component_allocation, selected_core):
-    """Runtime scalar + real VM round-trip lowering; no output fixture argument.
-
-    Each segment is a separate resident install/launch. Intermediate results are
-    drained to VM before the next segment stages them into input group C. The
-    returned fixed source schedule still requires the selected coupled RTL proof.
-    All addresses are caller allocations in SW VM words, never logical defaults.
-    """
+def _sfu_runtime_io(segments, read_return, write_return):
     from hbm_layer_vehicle import sfu_images as SI
-    from hbm_layer_vehicle import sfu_fused_compile as SF
     from sfu_vector_calendar import compile_vector
-    from sfu_control_image import pack, unpack
-
-    expected = dict(LWB=15, LG_PATH=15, TAP_RR=24, TAP_WR=21)
-    if selected_core.get("master") != "ot_hgi_sfu_core_split3":
-        raise ValueError("HC_POST requires the actual selected split3 core")
-    params = selected_core.get("params", {})
-    if any(int(params.get(k, -1)) != v for k,v in expected.items()):
-        raise ValueError(f"unsupported selected SFU parameters: {params}")
-    if D <= 0 or D % 32 or quadrant not in range(4):
-        raise ValueError("HC_POST requires four sector-aligned quadrant slices")
-    n = D // 4
-    if n > (1 << 15):
-        raise ValueError("HC_POST slice exceeds the actual operand group capacity")
-    spans = [(y_word,D), (residual_word,4*D), (coefficient_word,20),
-             (output_word,4*D), (one_word,1)]
-    if any(a < 0 or a+size > 8192*8 for a,size in spans):
-        raise ValueError("HC_POST caller allocation is outside SW VM")
-    if any(a % 8 for a in (y_word,residual_word,output_word)):
-        raise ValueError("vector allocations must be sector aligned")
-    for j,(a,size) in enumerate(spans):
-        for b,other in spans[j+1:]:
-            if max(a,b) < min(a+size,b+other):
-                raise ValueError("HC_POST caller allocations overlap")
-    # Actual selected split3 bridge: LG_PATH+1 registers in each direction.
-    read_return = expected["TAP_RR"] + 2*(expected["LG_PATH"]+1)
-    write_return = expected["TAP_WR"] + 2*(expected["LG_PATH"]+1)
-    segments = SF.hc_post_passes(D=D, quadrant=quadrant, A=y_word,
-                                B=residual_word, C=coefficient_word,
-                                O=output_word, one=one_word)
+    from sfu_control_image import pack
     payloads=[]
     for seg in segments:
+        n = seg["n"]
         # Four physical input groups are independent of the output SRAM group.
         ctl = compile_vector(words=n, bases=(0,0,0,0,0), m1=1, ad=1,
                              strides=(1,0,1,0,1), rnd=seg["rnd"])
@@ -281,6 +245,48 @@ def lower_hc_post_io(*, D, quadrant, y_word, residual_word, coefficient_word,
                              first_control_io_row=control_start, first_drain_io_row=drain_start,
                              io_cycles=len(io), ctl_cycles=len(control),
                              next_segment_requires="all fixed VM completion edges, then reinstall/launch"))
+    return payloads
+
+
+def lower_hc_post_io(*, D, quadrant, y_word, residual_word, coefficient_word,
+                     output_word, one_word, component_allocation, selected_core):
+    """Runtime scalar + real VM round-trip lowering; no output fixture argument.
+
+    Each segment is a separate resident install/launch. Intermediate results are
+    drained to VM before the next segment stages them into input group C. The
+    returned fixed source schedule still requires the selected coupled RTL proof.
+    All addresses are caller allocations in SW VM words, never logical defaults.
+    """
+    from hbm_layer_vehicle import sfu_fused_compile as SF
+
+    expected = dict(LWB=15, LG_PATH=15, TAP_RR=24, TAP_WR=21)
+    if selected_core.get("master") != "ot_hgi_sfu_core_split3":
+        raise ValueError("HC_POST requires the actual selected split3 core")
+    params = selected_core.get("params", {})
+    if any(int(params.get(k, -1)) != v for k,v in expected.items()):
+        raise ValueError(f"unsupported selected SFU parameters: {params}")
+    if D <= 0 or D % 32 or quadrant not in range(4):
+        raise ValueError("HC_POST requires four sector-aligned quadrant slices")
+    n = D // 4
+    if n > (1 << 15):
+        raise ValueError("HC_POST slice exceeds the actual operand group capacity")
+    spans = [(y_word,D), (residual_word,4*D), (coefficient_word,20),
+             (output_word,4*D), (one_word,1)]
+    if any(a < 0 or a+size > 8192*8 for a,size in spans):
+        raise ValueError("HC_POST caller allocation is outside SW VM")
+    if any(a % 8 for a in (y_word,residual_word,output_word)):
+        raise ValueError("vector allocations must be sector aligned")
+    for j,(a,size) in enumerate(spans):
+        for b,other in spans[j+1:]:
+            if max(a,b) < min(a+size,b+other):
+                raise ValueError("HC_POST caller allocations overlap")
+    # Actual selected split3 bridge: LG_PATH+1 registers in each direction.
+    read_return = expected["TAP_RR"] + 2*(expected["LG_PATH"]+1)
+    write_return = expected["TAP_WR"] + 2*(expected["LG_PATH"]+1)
+    segments = SF.hc_post_passes(D=D, quadrant=quadrant, A=y_word,
+                                B=residual_word, C=coefficient_word,
+                                O=output_word, one=one_word)
+    payloads = _sfu_runtime_io(segments, read_return, write_return)
     return dict(schema="opentallas.hc_post_runtime_io.v1", status="source_assembly_only",
                 execution_qualified=False, qualifies_native_layer=False,
                 component_allocation=component_allocation, D=D, quadrant=quadrant,
@@ -292,6 +298,45 @@ def lower_hc_post_io(*, D, quadrant, y_word, residual_word, coefficient_word,
                 physical_operand_groups=dict(A=0,B=1,C=2,D=3,output="separate SRAM drained to VM"),
                 calendar_integration_required=True, segments=payloads)
 
+
+
+
+def lower_hc_pre_mix(*, D, residual_word, pre_word, mixed_word, one_word,
+                     selected_core, component_allocation, chunk_words=1280):
+    """Actual runtime three-pass HC_PRE mix; RMSNorm remains a separate join.
+
+    Split elementwise work into resident chunks without changing any element's
+    summation order. Pre coefficients are actual VM inputs from HC root output.
+    """
+    expected=dict(LWB=15,LG_PATH=15,TAP_RR=24,TAP_WR=21)
+    if selected_core.get("master")!="ot_hgi_sfu_core_split3" or any(
+            int(selected_core.get("params",{}).get(k,-1))!=v for k,v in expected.items()):
+        raise ValueError("HC_PRE mix requires the exact selected SFU core")
+    if D<=0 or D%8 or chunk_words<=0 or chunk_words%8 or chunk_words>1280:
+        raise ValueError("HC_PRE mix requires sector-aligned resident chunks<=1280words")
+    spans=[(residual_word,4*D),(pre_word,4),(mixed_word,D),(one_word,1)]
+    if any(a<0 or a+n>65536 for a,n in spans) or residual_word%8 or mixed_word%8:
+        raise ValueError("HC_PRE explicit allocations must fit aligned SW VM")
+    for i,(a,n) in enumerate(spans):
+        if any(max(a,b)<min(a+n,b+m) for b,m in spans[i+1:]):
+            raise ValueError("HC_PRE input/output allocations overlap")
+    segments=[]
+    for p in range(3):
+        for offset in range(0,D,chunk_words):
+            n=min(chunk_words,D-offset)
+            if p==0:
+                a,b,c,d=residual_word+offset,pre_word,residual_word+D+offset,pre_word+1
+            else:
+                a,b,c,d=residual_word+(p+1)*D+offset,pre_word+p+1,mixed_word+offset,one_word
+            segments.append(dict(a=a,b=b,c=c,d=d,o=mixed_word+offset,p=p,k=offset,n=n,rnd=int(p==2)))
+    return dict(schema="opentallas.hc_pre_runtime_mix.v1",status="mix_source_assembly_only",
+                execution_qualified=False,qualifies_native_layer=False,
+                component_allocation=component_allocation,D=D,selected_core=selected_core,
+                constant_input=dict(vm_word=one_word,required_bits="3f800000",must_be_installed=True),
+                arithmetic="BF16(seqsum_j pre[j]*residual[j]); FP32 intermediates; exactly three passes",
+                segments=_sfu_runtime_io(segments,56,53),
+                remaining=["real VM producer mapping and calendar", "coupled selected RTL execution",
+                           "RMSNorm square/reduction/rsqrt/RF/gain joins"])
 
 
 def lower_qdq_fp8(*, words, a_sector, o_sector, selected_engine,
@@ -338,6 +383,47 @@ def lower_qdq_fp8(*, words, a_sector, o_sector, selected_engine,
                                       vm_writes=list(range(o_sector,o_sector+sectors)),f20_targets=[48]),
                 calendar_integration_required=True,
                 cross_quadrant_producer_mapping_qualified=False)
+
+
+
+def hc_pre_global_sum_fragment(*, words, selected_core, first_tree_edge, tag):
+    """Emit runtime-only whole-row PRETREE/reducer commands for HC_PRE squares.
+
+    This fragment requires the real square producer to present global blocks in
+    the returned order on one quarter's 128 lane outputs. It supplies no square
+    values, expected sum, RF join or rsqrt substitute. Padding follows csum8.
+    """
+    from hbm_static import su_pretree_lower as PT
+    if (selected_core.get("master") != "ot_hbm_su_static_qcore_r13" or
+            int(selected_core.get("params",{}).get("PRETREE",0)) != 1):
+        raise ValueError("HC_PRE sum requires the selected native PRETREE core")
+    if words<=0 or words%128 or words>8192 or not 0<=tag<1<<32:
+        raise ValueError("whole-row PRETREE fragment requires complete aligned128 blocks")
+    # This compiler's control is shape-only. Zero values establish its tree
+    # structure; neither its dummy operands nor expected exports leave here.
+    sc=PT.Schedule()
+    sc.lower("sum",[0]*words,tag,first_tree_edge)
+    tree=[]
+    for block,(edge,(_,count,_)) in enumerate(sc.tree.items()):
+        cmd=PT.tree_cmd_word(0,count)
+        tree.append(dict(block=block,first_global_word=128*block,words=count,
+                         serial_edge=edge,tree_cmd_hex=f"{cmd:012x}",
+                         programme_mask_hex=f"{cmd<<2422:0618x}",
+                         required_producer="actual lane ro_x=FP32(mixed_BF16 * mixed_BF16), never fixture squares"))
+    red=[dict(serial_edge=e,red_cmd_hex=f"{PT.red_cmd_word(cmd):019x}",
+              programme_mask_hex=f"{PT.red_cmd_word(cmd):0618x}")
+         for e,cmd in sorted(sc.red.items())]
+    return dict(schema="opentallas.hc_pre_runtime_sum_fragment.v1",status="producer_join_open",
+                execution_qualified=False,qualifies_native_layer=False,
+                words=words,selected_core=selected_core,programme_bits=2470,
+                arithmetic_order="global csum8 and padded aligned binary tree, one whole-row quarter",
+                required_runtime_square_blocks=tree,reducer_commands=red,
+                tree_to_reducer_edges=PT.PT_RED,reducer_dependency_edges=PT.DEP,
+                export_command_edge=sc.exps[0][0],export_tag=tag,
+                remaining=["real all-row square producer/VM allocation at each declared edge",
+                           "scalar export/RF stage and KIND2 rsqrt control",
+                           "gain from released checkpoint HBM input and final BF16 multiply pass",
+                           "current selected coupled RTL execution"])
 
 
 def main():
