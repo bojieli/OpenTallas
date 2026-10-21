@@ -14,12 +14,13 @@
 // Reset: one 2-edge synchroniser per clock (wrapper), then kept per-ring sync copies (each <= 12 pointer groups),
 // identical depth on both sides -> write and read release on the same nominal edge.  Only pointers, warm-up and the
 // control bits (valid / fault) reset; slot data and output data are unreset (validity owns observation).
-// Fanout: pointers are replicated per G-bit group (kept copies), so no pointer drives more than ~2G loads.
+// Fanout: pointers are replicated per G-bit group (kept copies); each pointer bit drives ~4 loads per data bit
+// (slot enables + read mux), so G=6 keeps it <= ~25 (QW-COLLIO3: G=12 gave 49-50 loads, native census FAIL).
 // The calendar consumes the added edges exactly (qfd_coll_static_face PLAND): phy_tx_slot +1+K, expected PHY pin
 // cycle +1+K (peer TX), RX CDC write +K, face latency L + 1 + 2K.  Priced in the die schedule (NOTICE QW-TOKSCHED).
 // MUT: +define+OT_COLL_MUT_PHYLAND_SHORT reads one slot early (offset K-1): exact-latency bench must FAIL.
 module ot_coll_meso_ring #(
-    parameter integer W = 8, D = 2, K = 1, C = 1, G = 12, REG_OUT = 0
+    parameter integer W = 8, D = 2, K = 1, C = 1, G = 6, REG_OUT = 0
 )(
     input  wire         ck_w, rs_w,          // write region root + its released reset (sync, active low)
     input  wire         ck_r, rs_r,          // read region root + its released reset

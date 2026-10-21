@@ -41,13 +41,18 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
         // copies, so each counter fans out to one register per bank (native census: 53 loads > 32).
         (* keep="true", dont_touch="true" *) reg [A-1:0] rpos_q;
         reg [$clog2(N):0] filled_q;
-        (* keep="true", dont_touch="true" *) reg [H-1:0] wr_bank_q,rd_bank_q;
+        // QW-COLLIO3 10-21: kept bank-index copies per <=12 banks (native census: one wr_bank_q drove 37 loads > 32
+        // at B=24). Same value, same edge, so behaviour is unchanged.
+        localparam integer BC = (B+11)/12;
+        (* keep="true", dont_touch="true" *) reg [BC*H-1:0] wr_bank_q,rd_bank_q;
         wire [B-1:0] bank_out;
         reg selected;
         reg out_q;
+        wire [H-1:0] wr_bank_d = pos_q>>4;
+        wire [H-1:0] rd_bank_d = rpos_q>>4;
         always @(posedge clk) begin
-            wr_bank_q <= pos_q>>4;
-            rd_bank_q <= rpos_q>>4;
+            wr_bank_q <= {BC{wr_bank_d}};
+            rd_bank_q <= {BC{rd_bank_d}};
         end
         for(genvar b=0;b<B;b=b+1)begin:g_bank
             localparam integer W = D-16*b<16 ? D-16*b : 16;
@@ -61,7 +66,7 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
                 data_q<=d;
                 local_pos_q<=pos_q;
                 local_rpos_q<=rpos_q;
-                if(wr_bank_q==b && local_pos_q<W)
+                if(wr_bank_q[(b/12)*H +: H]==b && local_pos_q<W)
                     bits_q[local_pos_q]<=data_q;
             end
             assign bank_out[b]=local_rpos_q<W ? bits_q[local_rpos_q] : 1'b0;
@@ -69,7 +74,7 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
         always @* begin
             selected=1'b0;
             for(integer k=0;k<B;k=k+1)
-                selected=selected | (bank_out[k] & (rd_bank_q==k));
+                selected=selected | (bank_out[k] & (rd_bank_q[(k/12)*H +: H]==k));
         end
         always @(posedge clk or negedge rs_n) begin
             if(!rs_n) begin pos_q<=0;rpos_q<=0;filled_q<=0;out_q<=0;end
