@@ -108,38 +108,39 @@ module ot_hgi_coll_tkm_m_tp192_lp #(
  assign cl7 = ho6[345];
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region SW holds the root)
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_SW), .d(rst_n), .q(lpr_root));
-    wire lpr_SW_p;  ot_pl_pad #(.W(1), .N(4)) u_lpr_SW_p (.ck(ck_SW), .d(lpr_root), .q(lpr_SW_p));   // 0 hop(s) from SW; last stage = 3 kept copies
-    wire lpr_SW_c0;  ot_pl_land_rst_copy #(.ID(0)) u_lpr_SW_c0 (.ck(ck_SW), .d(lpr_SW_p), .q(lpr_SW_c0));   // regional_reset_copies: 32 loads
+    wire lpr_SW_p;  ot_pl_pad #(.W(1), .N(4)) u_lpr_SW_p (.ck(ck_SW), .d(lpr_root), .q(lpr_SW_p));   // 0 hop(s) from SW; last stage = 4 kept copies
+    wire lpr_SW_c0;  ot_pl_land_rst_copy #(.ID(0)) u_lpr_SW_c0 (.ck(ck_SW), .d(lpr_SW_p), .q(lpr_SW_c0));   // regional_reset_copies: 28 loads
     wire lpr_SW_c1;  ot_pl_land_rst_copy #(.ID(1)) u_lpr_SW_c1 (.ck(ck_SW), .d(lpr_SW_p), .q(lpr_SW_c1));   // regional_reset_copies: 30 loads
     wire lpr_SW_c2;  ot_pl_land_rst_copy #(.ID(2)) u_lpr_SW_c2 (.ck(ck_SW), .d(lpr_SW_p), .q(lpr_SW_c2));   // regional_reset_copies: 30 loads
+    wire lpr_SW_c3;  ot_pl_land_rst_copy #(.ID(3)) u_lpr_SW_c3 (.ck(ck_SW), .d(lpr_SW_p), .q(lpr_SW_c3));   // regional_reset_copies: 30 loads
     wire lpr_NW_p;  ot_pl_pad #(.W(1), .N(4)) u_lpr_NW_p (.ck(ck_NW), .d(lpr_root), .q(lpr_NW_p));   // 3 hop(s) from SW; last stage = 4 kept copies
-    wire lpr_NW_c0;  ot_pl_land_rst_copy #(.ID(3)) u_lpr_NW_c0 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c0));   // regional_reset_copies: 30 loads
-    wire lpr_NW_c1;  ot_pl_land_rst_copy #(.ID(4)) u_lpr_NW_c1 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c1));   // regional_reset_copies: 30 loads
-    wire lpr_NW_c2;  ot_pl_land_rst_copy #(.ID(5)) u_lpr_NW_c2 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c2));   // regional_reset_copies: 30 loads
-    wire lpr_NW_c3;  ot_pl_land_rst_copy #(.ID(6)) u_lpr_NW_c3 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c3));   // regional_reset_copies: 30 loads
+    wire lpr_NW_c0;  ot_pl_land_rst_copy #(.ID(4)) u_lpr_NW_c0 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c0));   // regional_reset_copies: 30 loads
+    wire lpr_NW_c1;  ot_pl_land_rst_copy #(.ID(5)) u_lpr_NW_c1 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c1));   // regional_reset_copies: 30 loads
+    wire lpr_NW_c2;  ot_pl_land_rst_copy #(.ID(6)) u_lpr_NW_c2 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c2));   // regional_reset_copies: 30 loads
+    wire lpr_NW_c3;  ot_pl_land_rst_copy #(.ID(7)) u_lpr_NW_c3 (.ck(ck_NW), .d(lpr_NW_p), .q(lpr_NW_c3));   // regional_reset_copies: 30 loads
     wire lpr_NE_p;  ot_pl_pad #(.W(1), .N(4)) u_lpr_NE_p (.ck(ck_NE), .d(lpr_root), .q(lpr_NE_p));   // 5 hop(s) from SW; last stage = 4 kept copies
-    wire lpr_NE_c0;  ot_pl_land_rst_copy #(.ID(7)) u_lpr_NE_c0 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c0));   // regional_reset_copies: 30 loads
-    wire lpr_NE_c1;  ot_pl_land_rst_copy #(.ID(8)) u_lpr_NE_c1 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c1));   // regional_reset_copies: 30 loads
-    wire lpr_NE_c2;  ot_pl_land_rst_copy #(.ID(9)) u_lpr_NE_c2 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c2));   // regional_reset_copies: 30 loads
-    wire lpr_NE_c3;  ot_pl_land_rst_copy #(.ID(10)) u_lpr_NE_c3 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c3));   // regional_reset_copies: 30 loads
+    wire lpr_NE_c0;  ot_pl_land_rst_copy #(.ID(8)) u_lpr_NE_c0 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c0));   // regional_reset_copies: 30 loads
+    wire lpr_NE_c1;  ot_pl_land_rst_copy #(.ID(9)) u_lpr_NE_c1 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c1));   // regional_reset_copies: 30 loads
+    wire lpr_NE_c2;  ot_pl_land_rst_copy #(.ID(10)) u_lpr_NE_c2 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c2));   // regional_reset_copies: 30 loads
+    wire lpr_NE_c3;  ot_pl_land_rst_copy #(.ID(11)) u_lpr_NE_c3 (.ck(ck_NE), .d(lpr_NE_p), .q(lpr_NE_c3));   // regional_reset_copies: 30 loads
     wire lpr_SE_p;  ot_pl_pad #(.W(1), .N(4)) u_lpr_SE_p (.ck(ck_SE), .d(lpr_root), .q(lpr_SE_p));   // 3 hop(s) from SW; last stage = 3 kept copies
-    wire lpr_SE_c0;  ot_pl_land_rst_copy #(.ID(11)) u_lpr_SE_c0 (.ck(ck_SE), .d(lpr_SE_p), .q(lpr_SE_c0));   // regional_reset_copies: 30 loads
-    wire lpr_SE_c1;  ot_pl_land_rst_copy #(.ID(12)) u_lpr_SE_c1 (.ck(ck_SE), .d(lpr_SE_p), .q(lpr_SE_c1));   // regional_reset_copies: 30 loads
-    wire lpr_SE_c2;  ot_pl_land_rst_copy #(.ID(13)) u_lpr_SE_c2 (.ck(ck_SE), .d(lpr_SE_p), .q(lpr_SE_c2));   // regional_reset_copies: 30 loads
+    wire lpr_SE_c0;  ot_pl_land_rst_copy #(.ID(12)) u_lpr_SE_c0 (.ck(ck_SE), .d(lpr_SE_p), .q(lpr_SE_c0));   // regional_reset_copies: 30 loads
+    wire lpr_SE_c1;  ot_pl_land_rst_copy #(.ID(13)) u_lpr_SE_c1 (.ck(ck_SE), .d(lpr_SE_p), .q(lpr_SE_c1));   // regional_reset_copies: 30 loads
+    wire lpr_SE_c2;  ot_pl_land_rst_copy #(.ID(14)) u_lpr_SE_c2 (.ck(ck_SE), .d(lpr_SE_p), .q(lpr_SE_c2));   // regional_reset_copies: 30 loads
     // ---- LANDING 0: up2 NW -> SW, 344 b (u_hu0.i)
     wire [4*((343) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((343) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [343:0] up2__l_SW, lpl_0_o;
     ot_pl_land_n32_chunk_w #(.W(((343) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_NW), .rsi(lpr_NW_c0), .i(up2), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
-    ot_pl_land_chunk_r #(.W(((343) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_SW), .rsi(lpr_SW_c0), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    ot_pl_land_chunk_r #(.W(((343) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_SW), .rsi(lpr_SW_c1), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
     assign up2__l_SW = (MUT == 1) ? up2 : lpl_0_o;
     // ---- LANDING 1: up8 SW -> NW, 344 b (u_hu1.i)
     wire [4*((343) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((343) - (0) + 1))+24-1)/24)-1:0] lpl_1_vld;  wire [343:0] up8__l_NW, lpl_1_o;
-    ot_pl_land_n32_chunk_w #(.W(((343) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_SW), .rsi(lpr_SW_c0), .i(up8), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_n32_chunk_w #(.W(((343) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_SW), .rsi(lpr_SW_c1), .i(up8), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
     ot_pl_land_chunk_r #(.W(((343) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_NW), .rsi(lpr_NW_c0), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
     assign up8__l_NW = lpl_1_o;
     // ---- LANDING 2: up12 NW -> SW, 344 b (u_hu2.i)
     wire [4*((343) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((((343) - (0) + 1))+24-1)/24)-1:0] lpl_2_vld;  wire [343:0] up12__l_SW, lpl_2_o;
     ot_pl_land_n32_chunk_w #(.W(((343) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_NW), .rsi(lpr_NW_c1), .i(up12), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
-    ot_pl_land_chunk_r #(.W(((343) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_SW), .rsi(lpr_SW_c1), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+    ot_pl_land_chunk_r #(.W(((343) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_SW), .rsi(lpr_SW_c2), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
     assign up12__l_SW = lpl_2_o;
     // ---- LANDING 3: up15 NE -> NW, 344 b (u_hu3.i)
     wire [4*((343) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [4*(((((343) - (0) + 1))+24-1)/24)-1:0] lpl_3_vld;  wire [343:0] up15__l_NW, lpl_3_o;
@@ -163,17 +164,17 @@ module ot_hgi_coll_tkm_m_tp192_lp #(
     assign up30__l_NE = lpl_6_o;
     // ---- LANDING 7: hd0 SW -> NW, 353 b (u_hd0.i)
     wire [4*((352) - (0) + 1)-1:0] lpl_7_bank;  wire [11:0] lpl_7_epo;  wire [4*(((((352) - (0) + 1))+24-1)/24)-1:0] lpl_7_vld;  wire [352:0] hd0__l_NW, lpl_7_o;
-    ot_pl_land_n32_chunk_w #(.W(((352) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_7_w (.ck(ck_SW), .rsi(lpr_SW_c1), .i(hd0), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
+    ot_pl_land_n32_chunk_w #(.W(((352) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_7_w (.ck(ck_SW), .rsi(lpr_SW_c2), .i(hd0), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
     ot_pl_land_chunk_r #(.W(((352) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_7_r (.ck(ck_NW), .rsi(lpr_NW_c2), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
     assign hd0__l_NW = lpl_7_o;
     // ---- LANDING 8: hd1 NW -> SW, 352 b (u_hd1.i)
     wire [4*((351) - (0) + 1)-1:0] lpl_8_bank;  wire [11:0] lpl_8_epo;  wire [4*(((((351) - (0) + 1))+24-1)/24)-1:0] lpl_8_vld;  wire [351:0] hd1__l_SW, lpl_8_o;
     ot_pl_land_n32_chunk_w #(.W(((351) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_8_w (.ck(ck_NW), .rsi(lpr_NW_c2), .i(hd1), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
-    ot_pl_land_chunk_r #(.W(((351) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_8_r (.ck(ck_SW), .rsi(lpr_SW_c2), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
+    ot_pl_land_chunk_r #(.W(((351) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_8_r (.ck(ck_SW), .rsi(lpr_SW_c3), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
     assign hd1__l_SW = lpl_8_o;
     // ---- LANDING 9: hd2 SW -> NW, 351 b (u_hd2.i)
     wire [4*((350) - (0) + 1)-1:0] lpl_9_bank;  wire [11:0] lpl_9_epo;  wire [4*(((((350) - (0) + 1))+24-1)/24)-1:0] lpl_9_vld;  wire [350:0] hd2__l_NW, lpl_9_o;
-    ot_pl_land_n32_chunk_w #(.W(((350) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_9_w (.ck(ck_SW), .rsi(lpr_SW_c2), .i(hd2), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
+    ot_pl_land_n32_chunk_w #(.W(((350) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_9_w (.ck(ck_SW), .rsi(lpr_SW_c3), .i(hd2), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
     ot_pl_land_chunk_r #(.W(((350) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_9_r (.ck(ck_NW), .rsi(lpr_NW_c3), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld), .o(lpl_9_o));
     assign hd2__l_NW = lpl_9_o;
     // ---- LANDING 10: hd3 NW -> NE, 350 b (u_hd3.i)

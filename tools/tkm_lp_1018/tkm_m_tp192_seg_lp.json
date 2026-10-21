@@ -10,7 +10,8 @@
   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "rtl/common/landed_parent/ot_pl_land.sv"
  ],
  "out_dir": "rtl/hbm_accel/generic/collective/tkm/lp",
  "record_dir": "results/arch/pl_tp192_1018",
@@ -107,7 +108,7 @@
   "cycles": 7000,
   "reset_cycles": 16,
   "sim": "verilator",
-  "drive": {
+  "expr": {
    "start": "((cyc >= 16 && cyc < 80) || (($urandom % 64) == 0)) ? 1'b1 : 1'b0",
    "arg_mode": "1'b0",
    "cfg_n": "12'd128",
@@ -369,5 +370,11 @@
     "up_bits": 344
    }
   ]
+ },
+ "landing_chunk_bits": 24,
+ "landing_writer": "n32",
+ "regional_reset_copies": true,
+ "regional_reset_child_loads": {
+  "u_ctl": 27
  }
 }

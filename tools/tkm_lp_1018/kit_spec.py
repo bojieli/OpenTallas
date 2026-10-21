@@ -86,8 +86,12 @@ def main():
                           "chain seams pre-scheduled in the ctl calendar (SETTLE+42, per-segment conv strobes) and LANDED "
                           "(14 landings, 4-slot, +3 edges, no backpressure); flat lockstep + golden benches. HBM-TP192 "
                           "10-20 after gate4 FAIL 8: ctl face flops on every port + all IO on the S face (reach), ctl "
-                          "ingress/re-read pipeline PIPE 4 (depth), kept registered enables/selects (4,226-load capture net)",
-        job=dict(owner="Claude HBM-TP192 1020", branch="claude/hbm-tp192-1020", tag="tp192_1020",
+                          "ingress/re-read pipeline PIPE 4 (depth), kept registered enables/selects (4,226-load capture net). "
+                          "HBM-DIEGAP/TP192 10-21: child = e86v4b (302.4 sq, the route the daemon runs); outline ENLARGED "
+                          "so every child keeps a channel (main 345.6 pitch / 43.2-um channels, fallback 388.8 / 86.4-um) "
+                          "instead of abutting at 302.4; e86 internal-only roots clk_r1/clk_r2 measured on their region "
+                          "root (landed internal entries) instead of the hand-edited check-only SDC (OT_LANDED 96/160)",
+        job=dict(owner="Claude HBM-DIEGAP/TP192 1021", branch="claude/hbm-tp192-1021", tag="tp192_1021",
                  purpose="HBM d4g tkm_SW sub-cluster (TP192 top-k merge, 32 x e86) as a landed parent",
                  submit=not standin, extra_paths=[str(Path(REC).parent)],   # the landed_record (ref_tile reads it in the loop)
                  **({"hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until "

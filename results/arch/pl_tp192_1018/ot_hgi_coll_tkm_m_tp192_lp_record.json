@@ -469,6 +469,12 @@
    "note": "the flat parent's calendar already carries these N edges"
   }
  ],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
  "reset": {
   "port": "rst_n",
   "root_region": "SW",
@@ -479,12 +485,95 @@
    "NE": 5,
    "SE": 3
   },
+  "regional_reset_copies": {
+   "SW": {
+    "loads": 118,
+    "copies": [
+     {
+      "net": "lpr_SW_c0",
+      "loads": 28
+     },
+     {
+      "net": "lpr_SW_c1",
+      "loads": 30
+     },
+     {
+      "net": "lpr_SW_c2",
+      "loads": 30
+     },
+     {
+      "net": "lpr_SW_c3",
+      "loads": 30
+     }
+    ]
+   },
+   "NW": {
+    "loads": 120,
+    "copies": [
+     {
+      "net": "lpr_NW_c0",
+      "loads": 30
+     },
+     {
+      "net": "lpr_NW_c1",
+      "loads": 30
+     },
+     {
+      "net": "lpr_NW_c2",
+      "loads": 30
+     },
+     {
+      "net": "lpr_NW_c3",
+      "loads": 30
+     }
+    ]
+   },
+   "NE": {
+    "loads": 120,
+    "copies": [
+     {
+      "net": "lpr_NE_c0",
+      "loads": 30
+     },
+     {
+      "net": "lpr_NE_c1",
+      "loads": 30
+     },
+     {
+      "net": "lpr_NE_c2",
+      "loads": 30
+     },
+     {
+      "net": "lpr_NE_c3",
+      "loads": 30
+     }
+    ]
+   },
+   "SE": {
+    "loads": 90,
+    "copies": [
+     {
+      "net": "lpr_SE_c0",
+      "loads": 30
+     },
+     {
+      "net": "lpr_SE_c1",
+      "loads": 30
+     },
+     {
+      "net": "lpr_SE_c2",
+      "loads": 30
+     }
+    ]
+   }
+  },
+  "copies_note": "last regional stage as kept parallel copies (<= 32 loads each), same reset age, no added edge",
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 24472,
+  "landing": 28700,
   "pads": 0,
-  "reset": 21
+  "reset": 32
  },
  "communicating_region_pairs": {
   "landed": [
@@ -577,9 +666,26 @@
    "stat_cycles": 0
   },
   "reset_release_added_edges": 6,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
   "max_added_edges": 0
  },
  "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "writer": "n32",
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
   "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",

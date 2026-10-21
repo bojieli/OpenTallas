@@ -935,7 +935,14 @@ class Parent:
         for ins in self.insts:
             if any(self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst
                    for pin, ex in ins["conns"].items()):
-                items[self.region[ins["inst"]]].append((('c', ins["inst"]), 1))
+                # A soft child may consume reset at multiple control flops. A hard
+                # child presents one reset pin; optional measured counts keep the
+                # same-age copy allocation honest for source-level soft children.
+                child_loads = self.S.get("regional_reset_child_loads", {})
+                count = child_loads.get(ins["inst"], 1)
+                if not isinstance(count, int) or isinstance(count, bool) or count < 1:
+                    raise SystemExit("regional_reset_child_loads must contain positive integer counts")
+                items[self.region[ins["inst"]]].append((('c', ins["inst"]), count))
         out, ident = {}, 0
         for r in self.regions:
             bins = []

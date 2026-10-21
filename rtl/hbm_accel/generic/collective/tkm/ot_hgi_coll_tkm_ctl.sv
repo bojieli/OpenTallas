@@ -29,7 +29,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  output wire read_v,output wire[9:0]read_addr,input wire buf_valid,input wire[4*EW_-1:0]buf_data
 );
  localparam integer EW=78+RANK_W,KW=EW-2,VB=EW-2,RB=EW-1,ID_LO=12+RANK_W,ID_HI=43+RANK_W,VAL_LO=44+RANK_W,VAL_HI=75+RANK_W,NT=(KMAX+63)/64,XS=2*HOP*(NSEG-1),PIPE=4,SETTLE=3*NT+8+XS+PIPE;
- localparam integer NCB=(2180+31)/32,NLS=(545+31)/32,NHS=(256+31)/32,NSR=(EW+31)/32,NC1=(4*EW+31)/32,NC2=16;   // qsel copies: ids s / values 4+s / oline 8+s / rl 12+s (<= 32 loads per bit)
+ localparam integer NCB=(2180+15)/16,NLS=(545+31)/32,NHS=(256+15)/16,NSR=(EW+31)/32,NC1=(4*EW+31)/32,NC2=64;   // qsel copies: ids s / values 4+s / oline 8+s / rl 12+s (<= 32 loads per bit)
     function automatic [31:0] okey(input [31:0] x);
         reg [31:0] c;
         begin
@@ -83,9 +83,11 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  //    one-hot (no runtime part-select).
  // ---------------- pin stage (face flops)
  reg start_q,arg_q;reg[3:0]dslot_q,dval_q;reg[2179:0]del_flit_q;
- reg[11:0]cfg_n_q;reg[12:0]cfg_k_q,cfg_nout_q;reg[7:0]cfg_g_q,cfg_gbase_q;reg[15:0]cfg_pf_q;reg[39:0]cfg_obase_q,cfg_rbase_q;reg cfg_has_r_q;
+ reg[11:0]cfg_n_q;reg[12:0]cfg_k_q,cfg_nout_q;(* keep="true", dont_touch="true" *) reg[7:0]cfg_g_q;
+ reg[7:0]cfg_gbase_q;
+ (* keep="true", dont_touch="true" *) reg[7:0]cfg_g_fault_q;reg[15:0]cfg_pf_q;reg[39:0]cfg_obase_q,cfg_rbase_q;reg cfg_has_r_q;
  always @(posedge clk)begin
-  del_flit_q<=del_flit;cfg_n_q<=cfg_n;cfg_k_q<=cfg_k;cfg_nout_q<=cfg_nout;cfg_g_q<=cfg_g;cfg_gbase_q<=cfg_gbase;cfg_pf_q<=cfg_pf;
+  del_flit_q<=del_flit;cfg_n_q<=cfg_n;cfg_k_q<=cfg_k;cfg_nout_q<=cfg_nout;cfg_g_q<=cfg_g;cfg_g_fault_q<=cfg_g;cfg_gbase_q<=cfg_gbase;cfg_pf_q<=cfg_pf;
   cfg_obase_q<=cfg_obase;cfg_rbase_q<=cfg_rbase;cfg_has_r_q<=cfg_has_r;
  end
  always @(posedge clk or negedge rst_n)begin
@@ -106,14 +108,15 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  //  * decode (s3): s2bv / invalid / buffered VB,RB / okey equality and sign as kept copies per 16-bit chunk.
  // Function and the done timeline are unchanged; w_* write edges +1 (compiler_delta hbm_tp192_1021).
  // core outputs -> face flops
- reg busy_c,done_c,fault_c,wv_c;reg[31:0]stat_c;reg[39:0]wa_c;reg[15:0]wm_c;reg[511:0]wd_c;
+ (* keep="true", dont_touch="true" *) reg busy_c,busy_sel;
+ reg done_c,fault_c,wv_c;reg[31:0]stat_c;reg[39:0]wa_c;reg[15:0]wm_c;reg[511:0]wd_c;
  always @(posedge clk)begin w_addr<=wa_c;w_mask<=wm_c;w_data<=wd_c;stat_cycles<=stat_c;end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin w_v<=0;busy<=0;done<=0;fault<=0;end
   else begin w_v<=wv_c;busy<=busy_c;done<=done_c;fault<=fault_c;end
  end
  // ---------------- calendar state
- reg[31:0]tick,tickc,ingress_end,first,clear2,read2,second,finish;
+ (* keep="true", dont_touch="true" *) reg[31:0]tick,tickc,ingress_end,first,clear2,read2,second,finish;
  reg[31:0]valid_pairs;reg[12:0]k;
  reg[23:0]flits;reg[12:0]nout,cells;reg[7:0]gb,g;
  reg[15:0]pf;reg[39:0]ob,rb;reg hr;
@@ -121,9 +124,9 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  reg pending_r,pending_o,r_after_o;
  reg[2:0]conv_pipe;
  wire[31:0]rel=tick-8;
- wire ingest=busy_c&&tick>=8&&tick<ingress_end;
+ wire ingest=busy_sel&&tick>=8&&tick<ingress_end;
  wire capture=ingest&&(rel[2:0]==0);
- wire issue1=busy_c&&tick>=9&&tick<=ingress_end;
+ wire issue1=busy_sel&&tick>=9&&tick<=ingress_end;
  wire[31:0]irel=tick-9;
  wire[1:0]lane=irel[2:1];
  wire[31:0]group_index=rel>>3;
@@ -137,17 +140,17 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  endfunction
  wire[31:0]tick1=tick+1,tick2=tick+2;
  wire[31:0]irel1=tick1-9;
- wire cap_early=busy_c&&cap_at(tick2);
+ wire cap_early=busy_sel&&cap_at(tick2);
  // beat: 69 x 32-bit slices, each with its own kept capture-enable flop (2-level kept tree, no driver > 32 loads)
- wire[NCB*32-1:0]beat_w;wire[2179:0]beat=beat_w[2179:0];
- wire[NCB*32-1:0]dfx=(NCB*32)'(del_flit_q);
- for(genvar m=0;m<3;m=m+1)begin:g_capm
+ wire[NCB*16-1:0]beat_w;wire[2179:0]beat=beat_w[2179:0];
+ wire[NCB*16-1:0]dfx=(NCB*16)'(del_flit_q);
+ for(genvar m=0;m<6;m=m+1)begin:g_capm
   (* keep="true", dont_touch="true" *) reg cm;
   always @(posedge clk)cm<=cap_early;
-  for(genvar c=m*23;c<((m*23+23)<NCB?(m*23+23):NCB);c=c+1)begin:g_capl
-   (* keep="true", dont_touch="true" *) reg cl;reg[31:0]b;
-   always @(posedge clk)begin cl<=cm;if(cl)b<=dfx[32*c+:32];end
-   assign beat_w[32*c+:32]=b;
+  for(genvar c=m*24;c<((m*24+24)<NCB?(m*24+24):NCB);c=c+1)begin:g_capl
+   (* keep="true", dont_touch="true" *) reg cl;reg[15:0]b;
+   always @(posedge clk)begin cl<=cm;if(cl)b<=dfx[16*c+:16];end
+   assign beat_w[16*c+:16]=b;
   end
  end
  // ---------------- s1: lane select (registered one-hot lane, kept copy per 32 bits) + buffer re-read capture
@@ -164,7 +167,8 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
    end
   end
  end
- reg s1v,s1h,s1bv;reg[544:0]s1f;reg[4*EW-1:0]s1bd;
+ reg s1v,s1bv;
+ (* keep="true", dont_touch="true" *) reg s1h;reg[544:0]s1f;reg[4*EW-1:0]s1bd;
  always @(posedge clk)begin
   s1v<=issue1;s1h<=irel[0];s1f<=flit1[544:0];
   s1bv<=buf_valid;s1bd<=buf_data;
@@ -180,13 +184,13 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  for(genvar c=0;c<NHS;c=c+1)begin:g_hsel
   (* keep="true", dont_touch="true" *) reg hs;
   always @(posedge clk)hs<=irel[0];
-  for(genvar b=0;b<32;b=b+1)begin:g_b
-   localparam integer BI=32*c+b;           // 0..127 values, 128..255 ids
+  for(genvar b=0;b<16;b=b+1)begin:g_b
+   localparam integer BI=16*c+b;           // 0..127 values, 128..255 ids
    localparam integer SRC=(BI<128)?BI:(256+BI-128);
    assign half2[BI]=hs?s1f[SRC+128]:s1f[SRC];
   end
  end
- localparam integer NDC=(EW+15)/16;       // decode chunks of 16 key-form bits per slot
+ localparam integer NDC=(EW+7)/8;       // decode chunks of 16 key-form bits per slot
  reg s2v,s2h,s2bv;reg[127:0]s2vv,s2id;reg[7:0]s2rank;reg[15:0]s2f16;reg[23:0]s2prod;reg[4*EW-1:0]s2bd;
  always @(posedge clk)begin:st2
   reg[7:0]r_;
@@ -194,6 +198,8 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   s2v<=s1v;s2h<=s1h;s2bv<=s1bv;s2bd<=s1bd;
   s2vv<=half2[127:0];s2id<=half2[255:128];s2rank<=r_;s2f16<=s1f[527:512];s2prod<=24'(r_)*24'(pf);
  end
+ (* keep="true", dont_touch="true" *) reg[1:0]s1bv_copy;
+ always @(posedge clk)s1bv_copy<={2{buf_valid}};
  // per slot s, per decode chunk c: kept copies of the re-read select, the invalid flag, the buffered VB / RB bits;
  // per slot: kept copies (2) of the okey equality (value == 8000_0000) and of the value sign bit
  wire[NDC-1:0]bvc[0:3],invc[0:3],bdvc[0:3],bdrc[0:3];
@@ -203,7 +209,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   wire eq_n=(half2[32*s+:32]==32'h80000000);
   for(genvar c=0;c<NDC;c=c+1)begin:g_c
    (* keep="true", dont_touch="true" *) reg bv,iv,dv,dr;
-   always @(posedge clk)begin bv<=s1bv;iv<=inv_n;dv<=s1bd[EW*s+VB];dr<=s1bd[EW*s+RB];end
+   always @(posedge clk)begin bv<=s1bv_copy[s/2];iv<=inv_n;dv<=s1bd[EW*s+VB];dr<=s1bd[EW*s+RB];end
    assign bvc[s][c]=bv;assign invc[s][c]=iv;assign bdvc[s][c]=dv;assign bdrc[s][c]=dr;
   end
   for(genvar c=0;c<2;c=c+1)begin:g_e
@@ -230,7 +236,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   wire[23:0]j3=f3*8+24'(4*s2h)+24'(s);
   wire[EW-1:0]bd=s2bd[EW*s+:EW];
   for(genvar p=0;p<EW;p=p+1)begin:g_p
-   localparam integer C=p/16;
+   localparam integer C=p/8;
    wire bv=bvc[s][C],iv=invc[s][C],dv=bdvc[s][C],dr=bdrc[s][C];
    wire eqp=eqc[s][(p>=VAL_LO+16)?1:0],sgp=sgc[s][(p>=VAL_LO+16)?1:0];
    wire dec;   // decoded key-form bit
@@ -277,30 +283,38 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  end
  always @(posedge clk)begin entry_v<=busy_c&&s4v;entry<=entry_n;end
  // ---------------- chain strobes (calendar): tickc = kept copy of tick for the strobe comparators
- wire conv1=busy_c&&tickc>=first&&tickc<first+32'(cells);
- wire conv2=busy_c&&tickc>=second&&tickc<second+32'(cells);
+ wire conv1=busy_sel&&tickc>=first&&tickc<first+32'(cells);
+ wire conv2=busy_sel&&tickc>=second&&tickc<second+32'(cells);
  // segment s conveys HOP*s edges ahead of segment 0 (each up crossing adds HOP edges) and its strobe rides s down
  // crossings (HOP edges each): emitted 2*HOP*s edges before segment 0's window. MUT 3: HOP*s (the up crossings
  // are not compensated: the readout tears at the first seam).
  for(genvar s=0;s<NSEG;s=s+1)begin:g_conv
   localparam integer AD=(MUT==3)?HOP*s:2*HOP*s;
   wire[31:0]ta=tickc+32'(AD);
-  assign conv_s[s]=busy_c&&((ta>=first&&ta<first+32'(cells))||(ta>=second&&ta<second+32'(cells)));
+  assign conv_s[s]=busy_sel&&((ta>=first&&ta<first+32'(cells))||(ta>=second&&ta<second+32'(cells)));
  end
  assign clr=busy_c&&(tick==1||tick==clear2);
- assign read_v=busy_c&&tick>=read2&&tick<read2+32'(cells);
+ assign read_v=busy_sel&&tick>=read2&&tick<read2+32'(cells);
  assign read_addr=10'(tick-read2);
  // conv capture enables: up0 is registered (u0q), so the captures are one edge after the 10-20 ctl: built from
  // conv_pipe[1] (= conv_pipe[0] one edge earlier) and tick (= tick1 one edge earlier); registered, kept copies
  wire c1_early=busy_c&&conv_pipe[1]&&(tickc<clear2);
  wire c2_early=busy_c&&conv_pipe[1]&&(tickc>=second);
- localparam integer NBG=(EW+31)/32;      // buffer-tag chunks per slot
+ wire[1:0]c1_local;
+ for(genvar k_=0;k_<2;k_=k_+1)begin:g_c1copy
+  ot_tkm_capture_select_copy #(.ID(k_)) u(.b(busy_c),.p(conv_pipe[1]),.t(tickc<clear2),.q(c1_local[k_]));
+ end
+ localparam integer NBG=(EW+7)/8;      // buffer-tag chunks per slot
  wire c1x,c1y,c2s;wire[NBG-1:0]c1c[0:3];
  (* keep="true", dont_touch="true" *) reg c1xq,c1yq,c2sq;
  always @(posedge clk)begin c1xq<=c1_early;c1yq<=c1_early;c2sq<=c2_early;end
  assign c1x=c1xq;assign c1y=c1yq;assign c2s=c2sq;
  // readout capture stage + kept copies of the tinv selects (v = T[EW-1], r = T[EW-2]) per consumer group
  reg[4*EW-1:0]u0q;always @(posedge clk)u0q<=up0;
+ (* keep="true", dont_touch="true" *) reg[4*EW-1:0]u0q_copy[0:3];
+ for(genvar k_=0;k_<4;k_=k_+1)begin:g_ucopy
+  always @(posedge clk)u0q_copy[k_]<=up0;
+ end
  function automatic [EW-1:0] tinv_l(input [EW-1:0] t, input v, input r);
   reg [EW-4:0] b_;
   begin
@@ -309,7 +323,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   end
  endfunction
  // groups per slot: 0..NBG-1 buffer tag chunks, then ids lo/hi, values lo/hi, oline lo/hi, rl lo/hi
- localparam integer NVG=NBG+8;
+ localparam integer NVG=NBG+16;
  wire[NVG-1:0]vg[0:3],rg_[0:3];
  for(genvar s=0;s<4;s=s+1)begin:g_vr
   for(genvar c=0;c<NVG;c=c+1)begin:g_c
@@ -318,16 +332,19 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
    assign vg[s][c]=v;assign rg_[s][c]=r;
   end
   for(genvar c=0;c<NBG;c=c+1)begin:g_c1
-   (* keep="true", dont_touch="true" *) reg q;always @(posedge clk)q<=c1_early;assign c1c[s][c]=q;
+   (* keep="true", dont_touch="true" *) reg q;always @(posedge clk)q<=c1_local[s/2];assign c1c[s][c]=q;
   end
  end
  // output-cell word group (cap2[1:0]) as a registered one-hot, kept copies (16 ids/values words: 4 groups x 4)
  wire[15:0]cap2n=cap2+(c2s?16'd1:16'd0);
  wire[15:0]cap1n=cap1+(c1x?16'd1:16'd0);
- wire[3:0]q_early=c2_early?(4'b1<<cap2n[1:0]):4'b0;
+ wire[3:0]q_early[0:3];
+ for(genvar k_=0;k_<4;k_=k_+1)begin:g_qcopy
+  ot_tkm_q_select_copy #(.ID(k_)) u(.e(c2_early),.a(cap2n[1:0]),.q(q_early[k_]));
+ end
  wire[3:0]qsel[0:NC2-1];
  for(genvar c=0;c<NC2;c=c+1)begin:g_q
-  (* keep="true", dont_touch="true" *) reg[3:0]q;always @(posedge clk)q<=q_early;assign qsel[c]=q;
+  (* keep="true", dont_touch="true" *) reg[3:0]q;always @(posedge clk)q<=q_early[c/16];assign qsel[c]=q;
  end
  // buffer write tag (pass 1 capture of the chain readout): per slot per chunk, kept nout-compare copy (next value)
  reg[NBG-1:0]okc[0:3];
@@ -337,7 +354,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
    (* keep="true", dont_touch="true" *) reg ok;always @(posedge clk)ok<=ok_n;
    wire[EW-1:0]e=tinv_l(u0q[EW*s+:EW],vg[s][c],rg_[s][c]);
    wire[EW-1:0]tw=ok?(e|{e[VB],{(EW-1){1'b0}}}):{EW{1'b0}};
-   for(genvar b=32*c;b<((32*c+32)<EW?(32*c+32):EW);b=b+1)begin:g_b
+   for(genvar b=8*c;b<((8*c+8)<EW?(8*c+8):EW);b=b+1)begin:g_b
     always @(posedge clk)if(c1c[s][c])buf_wdata[EW*s+b]<=tw[b];
    end
   end
@@ -346,29 +363,33 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  reg[31:0]ids[0:15],values[0:15];
  wire[31:0]oid[0:3],orl[0:3];     // the output-cell candidates of slot s (oline id word / rl value word)
  for(genvar s=0;s<4;s=s+1)begin:g_ow
-  for(genvar h=0;h<2;h=h+1)begin:g_h
-   wire[EW-1:0]ei=tinv_l(u0q[EW*s+:EW],vg[s][NBG+0+h],rg_[s][NBG+0+h]);
-   wire[EW-1:0]ev=tinv_l(u0q[EW*s+:EW],vg[s][NBG+2+h],rg_[s][NBG+2+h]);
-   wire[EW-1:0]eo=tinv_l(u0q[EW*s+:EW],vg[s][NBG+4+h],rg_[s][NBG+4+h]);
-   wire[EW-1:0]er=tinv_l(u0q[EW*s+:EW],vg[s][NBG+6+h],rg_[s][NBG+6+h]);
+  for(genvar h=0;h<4;h=h+1)begin:g_h
+   wire[EW-1:0]ei=tinv_l(u0q_copy[h][EW*s+:EW],vg[s][NBG+0+h],rg_[s][NBG+0+h]);
+   wire[EW-1:0]ev=tinv_l(u0q_copy[h][EW*s+:EW],vg[s][NBG+4+h],rg_[s][NBG+4+h]);
+   wire[EW-1:0]eo=tinv_l(u0q_copy[h][EW*s+:EW],vg[s][NBG+8+h],rg_[s][NBG+8+h]);
+   wire[EW-1:0]er=tinv_l(u0q_copy[h][EW*s+:EW],vg[s][NBG+12+h],rg_[s][NBG+12+h]);
    wire[31:0]idw=~ei[ID_HI:ID_LO];
    wire[31:0]vaw=unkey(ev[VAL_HI:VAL_LO],ev[0]);
-   assign oid[s][16*h+:16]=~eo[ID_LO+16*h+:16];
+   assign oid[s][8*h+:8]=~eo[ID_LO+8*h+:8];
    wire[31:0]rlw=unkey(er[VAL_HI:VAL_LO],er[0]);
-   assign orl[s][16*h+:16]=rlw[16*h+:16];
+   assign orl[s][8*h+:8]=rlw[8*h+:8];
    for(genvar q=0;q<4;q=q+1)begin:g_q
     always @(posedge clk)begin
-     if(qsel[s][q])ids[4*q+s][16*h+:16]<=idw[16*h+:16];
-     if(qsel[4+s][q])values[4*q+s][16*h+:16]<=vaw[16*h+:16];
+     if(qsel[s+16*h][q])ids[4*q+s][8*h+:8]<=idw[8*h+:8];
+     if(qsel[4+s+16*h][q])values[4*q+s][8*h+:8]<=vaw[8*h+:8];
     end
    end
   end
  end
  // ---------------- next state of the control registers (single source; the early group selects read it)
  wire les,hrs;
- reg busy_nx,po_nx,pr_nx,ra_nx;
+ wire busy_nx,busy_write_nx;
+ reg po_nx,pr_nx,ra_nx;
+ ot_tkm_busy_next_copy #(.ID(0)) u_busy_cfg(.b(busy_c),.f(tick==finish),.s(start_q),.q(busy_nx));
+ ot_tkm_busy_next_copy #(.ID(1)) u_busy_write(.b(busy_sel),.f(tick==finish),.s(start_q),.q(busy_write_nx));
+ always @(posedge clk or negedge rst_n)if(!rst_n)busy_sel<=0;else busy_sel<=busy_nx;
  always @*begin
-  busy_nx=busy_c;po_nx=pending_o;pr_nx=pending_r;ra_nx=r_after_o;
+  po_nx=pending_o;pr_nx=pending_r;ra_nx=r_after_o;
   if(busy_c)begin
    if(pending_o)begin po_nx=1'b0;pr_nx=r_after_o;ra_nx=1'b0;end
    else if(pending_r)pr_nx=1'b0;
@@ -376,9 +397,8 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
     if(pending_r&&MUT!=2)begin po_nx=1'b1;ra_nx=hrs;end
     else if(hrs)pr_nx=1'b1;
    end
-   if(tick==finish)busy_nx=1'b0;
   end
-  if(start_q&&!busy_c)begin busy_nx=1'b1;po_nx=1'b0;pr_nx=1'b0;ra_nx=1'b0;end
+  if(start_q&&!busy_c)begin po_nx=1'b0;pr_nx=1'b0;ra_nx=1'b0;end
  end
  // line end / zero masks for the NEXT cap2 (cap2n), registered: kept copies per word (oline, rl, byte mask)
  wire signed[31:0]cnt_n=$signed(32'(nout))-$signed(32'(16*(cap2n>>2)));
@@ -396,25 +416,29 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  wire[511:0]oline,rl;
  for(genvar q=0;q<4;q=q+1)for(genvar s=0;s<4;s=s+1)begin:g_ol
   localparam integer W_=4*q+s;
-  assign oline[32*W_+:32]=zo[W_]?32'd0:(qsel[8+s][q]?oid[s]:ids[W_]);
-  assign rl[32*W_+:32]=zr[W_]?32'd0:(qsel[12+s][q]?orl[s]:values[W_]);
+  for(genvar h=0;h<4;h=h+1)begin:g_h
+   assign oline[32*W_+8*h+:8]=zo[W_]?8'd0:(qsel[8+s+16*h][q]?oid[s][8*h+:8]:ids[W_][8*h+:8]);
+   assign rl[32*W_+8*h+:8]=zr[W_]?8'd0:(qsel[12+s+16*h][q]?orl[s][8*h+:8]:values[W_][8*h+:8]);
+  end
  end
  wire[15:0]mask_=~zm;
  wire[39:0]oaddr_n=ob+40'(16*(cap2>>2)),raddr_n=rb+40'(16*(cap2>>2));
  // write-port / stash early selects (state at the next edge) -> NWG groups of <= 24 bits, kept one-hot copies
- wire seln_e=busy_nx&&c2_early&&le_n&&!(pr_nx&&MUT!=2);
- wire selo_e=busy_nx&&po_nx&&!seln_e;
- wire selr_e=busy_nx&&!po_nx&&pr_nx&&!seln_e;
- wire enoq_e=busy_nx&&c2_early&&le_n&&pr_nx&&(MUT!=2);
- wire enrl_e=busy_nx&&c2_early&&le_n&&hr_n;
- localparam integer WW=40+16+512,WG=24,NWG=(WW+WG-1)/WG;
+ localparam integer WW=40+16+512,WG=12,NWG=(WW+WG-1)/WG;
+ localparam integer NSELC=(NWG+23)/24;
+ wire[NSELC-1:0]sel_o,sel_r,sel_n,sel_a,sel_eo,sel_er;
+ for(genvar k_=0;k_<NSELC;k_=k_+1)begin:g_selcopy
+  ot_tkm_write_select_copy #(.ID(k_),.MUT(MUT)) u(
+   .b(busy_write_nx),.c(c2_early),.l(le_n),.p(pr_nx),.o(po_nx),.h(hr_n),
+   .so(sel_o[k_]),.sr(sel_r[k_]),.sn(sel_n[k_]),.sa(sel_a[k_]),.eo(sel_eo[k_]),.er(sel_er[k_]));
+ end
  reg[39:0]oaddr_q,raddr;reg[15:0]omask_q,rmask;reg[511:0]oline_q,rline;
  wire[WW-1:0]wcur={wa_c,wm_c,wd_c},woq={oaddr_q,omask_q,oline_q},wrl={raddr,rmask,rline};
  wire[WW-1:0]wnew={oaddr_n,mask_,oline},wrnew={raddr_n,mask_,rl};
  reg[WW-1:0]wcur_n,woq_n,wrl_n;
  for(genvar gi=0;gi<NWG;gi=gi+1)begin:g_wg
   (* keep="true", dont_touch="true" *) reg so,sr,sn,sa,eo,er;
-  always @(posedge clk)begin so<=selo_e;sr<=selr_e;sn<=seln_e;sa<=selo_e|selr_e|seln_e;eo<=enoq_e;er<=enrl_e;end
+  always @(posedge clk)begin so<=sel_o[gi/24];sr<=sel_r[gi/24];sn<=sel_n[gi/24];sa<=sel_a[gi/24];eo<=sel_eo[gi/24];er<=sel_er[gi/24];end
   for(genvar b=WG*gi;b<((WG*gi+WG)<WW?(WG*gi+WG):WW);b=b+1)begin:g_b
    always @*begin
     wcur_n[b]=sa?((so&woq[b])|(sr&wrl[b])|(sn&wnew[b])):wcur[b];
@@ -429,11 +453,12 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  // ---------------- configure + counters (no reset: rst_n is not an enable of these registers); 24 groups, each with
  // its own kept start copy (face flop from the start pin) and kept busy copy -> go / busy selects <= 32 loads
  localparam integer NCG=24;
- wire[NCG-1:0]gog,bsg;
+ wire[NCG-1:0]gog,goh,bsg;
  for(genvar c=0;c<NCG;c=c+1)begin:g_cfg
   (* keep="true", dont_touch="true" *) reg sq,bq;
   always @(posedge clk)begin sq<=start;bq<=busy_nx;end
-  assign gog[c]=sq&&!bq;assign bsg[c]=bq;
+  ot_tkm_cfg_enable_copy #(.ID(2*c)) u_lo(.s(sq),.b(bq),.go(gog[c]),.en(bsg[c]));
+  ot_tkm_cfg_enable_copy #(.ID(2*c+1)) u_hi(.s(sq),.b(bq),.go(goh[c]),.en());
  end
  wire[31:0]i_n,c_n,a_n,b_n,r_n,s_n,f_n,fl_n;
  assign fl_n=32'(cfg_g_q)*32'(cfg_pf_q);assign i_n=8+((fl_n+3)/4)*8;assign c_n=(32'(cfg_nout_q)+3)/4;
@@ -447,22 +472,36 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   if(gog[3])tickc[31:16]<=0;else if(bsg[3])tickc[31:16]<=tickc[31:16]+16'(((tickc[15:0]==16'hffff))?1:0);
   if(gog[4])stat_c[15:0]<=0;else if(bsg[4])stat_c[15:0]<=tick1[15:0];
   if(gog[5])stat_c[31:16]<=0;else if(bsg[5])stat_c[31:16]<=tick1[31:16];
-  if(gog[6])ingress_end<=i_n;
-  if(gog[7])first<=a_n;
-  if(gog[8])clear2<=b_n;
-  if(gog[9])read2<=r_n;
-  if(gog[10])second<=s_n;
-  if(gog[11])finish<=f_n;
+  if(gog[6])ingress_end[15:0]<=i_n[15:0];
+  if(goh[6])ingress_end[31:16]<=i_n[31:16];
+  if(gog[7])first[15:0]<=a_n[15:0];
+  if(goh[7])first[31:16]<=a_n[31:16];
+  if(gog[8])clear2[15:0]<=b_n[15:0];
+  if(goh[8])clear2[31:16]<=b_n[31:16];
+  if(gog[9])read2[15:0]<=r_n[15:0];
+  if(goh[9])read2[31:16]<=r_n[31:16];
+  if(gog[10])second[15:0]<=s_n[15:0];
+  if(goh[10])second[31:16]<=s_n[31:16];
+  if(gog[11])finish[15:0]<=f_n[15:0];
+  if(goh[11])finish[31:16]<=f_n[31:16];
   if(gog[12])valid_pairs[15:0]<=0;else if(bsg[12]&&s3iss)valid_pairs[15:0]<=16'(valid_pairs+32'(added));
   if(gog[13])valid_pairs[31:16]<=0;else if(bsg[13]&&s3iss)valid_pairs[31:16]<=16'((valid_pairs+32'(added))>>16);
-  if(gog[14])begin k<=cfg_k_q;cells<=13'(c_n);end
-  if(gog[15])flits<=24'(fl_n);
-  if(gog[16])begin nout<=cfg_nout_q;gb<=cfg_gbase_q;end
-  if(gog[17])begin g<=cfg_g_q;pf<=cfg_pf_q;end
-  if(gog[18])ob[19:0]<=cfg_obase_q[19:0];
-  if(gog[19])ob[39:20]<=cfg_obase_q[39:20];
-  if(gog[20])rb[19:0]<=cfg_rbase_q[19:0];
-  if(gog[21])rb[39:20]<=cfg_rbase_q[39:20];
+  if(gog[14])k<=cfg_k_q;
+  if(goh[14])cells<=13'(c_n);
+  if(gog[15])flits[11:0]<=fl_n[11:0];
+  if(goh[15])flits[23:12]<=fl_n[23:12];
+  if(gog[16])nout<=cfg_nout_q;
+  if(goh[16])gb<=cfg_gbase_q;
+  if(gog[17])g<=cfg_g_q;
+  if(goh[17])pf<=cfg_pf_q;
+  if(gog[18])ob[9:0]<=cfg_obase_q[9:0];
+  if(goh[18])ob[19:10]<=cfg_obase_q[19:10];
+  if(gog[19])ob[29:20]<=cfg_obase_q[29:20];
+  if(goh[19])ob[39:30]<=cfg_obase_q[39:30];
+  if(gog[20])rb[9:0]<=cfg_rbase_q[9:0];
+  if(goh[20])rb[19:10]<=cfg_rbase_q[19:10];
+  if(gog[21])rb[29:20]<=cfg_rbase_q[29:20];
+  if(goh[21])rb[39:30]<=cfg_rbase_q[39:30];
   if(gog[22])begin hr<=cfg_has_r_q;cap1<=0;end else if(bsg[22]&&c1x)cap1<=cap1n;
   if(gog[23])cap2<=0;else if(bsg[23]&&c2s)cap2<=cap2n;
  end
@@ -490,9 +529,42 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
    end
    if(start_q)begin
     if(busy_c)fault_c<=1;
-    else fault_c<=cfg_g_q==0||cfg_g_q>TP||cfg_pf_q!=(16'(cfg_n_q)+7)/8||cfg_nout_q==0||cfg_nout_q>KMAX||cfg_k_q>KMAX||
+    else fault_c<=cfg_g_fault_q==0||cfg_g_fault_q>TP||cfg_pf_q!=(16'(cfg_n_q)+7)/8||cfg_nout_q==0||cfg_nout_q>KMAX||cfg_k_q>KMAX||
         cfg_nout_q>cfg_k_q||cfg_obase_q[3:0]!=0||cfg_rbase_q[3:0]!=0;
    end
   end
  end
+endmodule
+
+// Same-edge select copies retain distinct mapped AND drivers, limiting each
+// configure mux enable to <=16 data bits (two physical load pins per bit).
+(* keep_hierarchy="yes" *)
+module ot_tkm_cfg_enable_copy #(parameter integer ID=0)(input wire s,b,output wire go,en);
+ assign go=s&&!b;
+ assign en=s||b;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_tkm_write_select_copy #(parameter integer ID=0,MUT=0)(
+ input wire b,c,l,p,o,h,output wire so,sr,sn,sa,eo,er);
+ assign sn=b&&c&&l&&!(p&&MUT!=2);
+ assign so=b&&o&&!sn;
+ assign sr=b&&!o&&p&&!sn;
+ assign sa=so|sr|sn;
+ assign eo=b&&c&&l&&p&&(MUT!=2);
+ assign er=b&&c&&l&&h;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_tkm_capture_select_copy #(parameter integer ID=0)(input wire b,p,t,output wire q);
+ assign q=b&&p&&t;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_tkm_q_select_copy #(parameter integer ID=0)(input wire e,input wire[1:0]a,output wire[3:0]q);
+ assign q=e?(4'b1<<a):4'b0;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_tkm_busy_next_copy #(parameter integer ID=0)(input wire b,f,s,output wire q);
+ assign q=(s&&!b)||(b&&!f);
 endmodule
