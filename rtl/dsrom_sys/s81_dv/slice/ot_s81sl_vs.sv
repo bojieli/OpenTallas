@@ -187,11 +187,28 @@ module ot_s81sl_vs #(
         if (!rs_c) begin busy <= 1'b0; op <= 4'd0; end
         else if (acc_cmd) begin busy <= 1'b1; op <= c_op; end
         else if (done) busy <= 1'b0;
+`ifdef OT_S81SL_VS_SRAM
+    (* keep="true" *) reg [3:0] region_busy,region_sv;
+    always @(posedge clk or negedge rsv[35])
+      if(!rsv[35]) region_busy<=0;
+      else if(acc_cmd) region_busy<=4'hf;
+      else if(done) region_busy<=0;
+    always @(posedge clk or negedge rsv[36])
+      if(!rsv[36]) region_sv<=0;else region_sv<={4{s_v}};
+    wire [79:0] cmd_payload={c_a0,c_a1,c_ph,c_n,c_imm[9:0],c_imm[10],c_uq,c_j0,c_imm[63:32],c_wr,c_imm[28:26]};
+    wire [79:0] cmd_latched;
+    assign {a0,a1,ph,n,ob,wb,uq,j0,lim,wr,wsel}=cmd_latched;
+    genvar cb;
+    generate for(cb=0;cb<10;cb=cb+1) begin:g_cmd_byte
+      ot_s81sl_vs_cmd8 u_cmd(.clk(clk),.sv(region_sv[cb/3]),.busy(region_busy[cb/3]),.bad(c_bad),.d(cmd_payload[8*cb+:8]),.q(cmd_latched[8*cb+:8]));
+    end endgenerate
+`else
     always @(posedge clk)
         if (acc_cmd) begin
             a0 <= c_a0; a1 <= c_a1; ph <= c_ph; n <= c_n; ob <= c_imm[9:0]; wb <= c_imm[10]; uq <= c_uq; j0 <= c_j0;
             lim <= c_imm[63:32]; wr <= c_wr; wsel <= c_imm[28:26];
         end
+`endif
     // SW weights: from the immediate, or (wr) from word wsel of the row pair a1 = the op's first arrival
     wire w_arr;
 `ifdef OT_S81SL_VS_SRAM
@@ -200,7 +217,7 @@ module ot_s81sl_vs #(
       wire [7:0] wi;
       if(wb0<4) assign w0[8*wb0+:8]=wi;
       else assign w1[8*(wb0-4)+:8]=wi;
-      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.sv(sv_c),.busy(busy),.bad(c_bad),.sel(c_imm[28:26]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(w_arr),.row(xq_c),.w(wi));
+      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.sv(region_sv[wb0/2]),.busy(region_busy[wb0/2]),.bad(c_bad),.sel(c_imm[28:26]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(w_arr),.row(xq_c),.w(wi));
     end endgenerate
 `else
     always @(posedge clk)
@@ -261,7 +278,7 @@ module ot_s81sl_vs #(
     wire [7:0] region_ka[0:19];
     genvar cr;
     generate for(cr=0;cr<20;cr=cr+1) begin:g_data_region
-      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[cr<16?40+cr:26+cr-16]),.sv(sv_c),.busy(busy),.bad(c_bad),.cop(c_op),.xqv(xqv_c),.op(region_op[cr]),.ka(region_ka[cr]));
+      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[cr<16?40+cr:26+cr-16]),.sv(region_sv[cr/5]),.busy(region_busy[cr/5]),.bad(c_bad),.cop(c_op),.xqv(xqv_c),.op(region_op[cr]),.ka(region_ka[cr]));
     end endgenerate
 `endif
     // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
@@ -702,6 +719,14 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
             endcase
         end
 `ifdef OT_S81SL_VS_SRAM
+    (* keep="true" *) reg [15:0] swprev_capture;
+    genvar spb;
+    generate for(spb=0;spb<16;spb=spb+1) begin:g_swprev_byte
+      always @(posedge clk) begin
+        swprev_capture[spb]<=rsv[37] && sw_vi;
+        if(swprev_capture[spb]) sw_prev[8*spb+:8]<=sw_w32[8*spb+:8];
+      end
+    end endgenerate
     wire [255:0] out_sw={128'd0,sw_w32};
     wire [255:0] out_usw={sw_w32,sw_prev};
     wire [255:0] out_qb=(MUT==5)?{xq_c[127:0],xq_c[255:128]}:xq_c;
@@ -716,7 +741,7 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
     end endgenerate
     always @(posedge clk) begin
         if (acc_cmd) begin um_q <= c_imm[12]; um_b <= c_imm[13]; um_i <= c_imm[21:14]; end
-        if (swv_c) sw_prev <= sw_w32;
+
         case (op)
             OP_SW: begin
                 x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F;
@@ -824,5 +849,9 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_vs_xresult8 #(parameter integer LOW=0)(input wire clk,input wire[3:0]op,input wire[7:0]full,bf,qr,output reg[7:0]y);
   always @(posedge clk) y<=(LOW && op==4'd12)?qr:(op==4'd11)?full:bf;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_cmd8(input wire clk,sv,busy,bad,input wire[7:0]d,output reg[7:0]q);
+  always @(posedge clk) if(sv && !busy && !bad) q<=d;
 endmodule
 `endif
