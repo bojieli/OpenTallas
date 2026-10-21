@@ -1,0 +1,21 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T14:33:42.118093-07:00",
+  "gate_commit": "6c886241a21ccd8cf572bf27da1f3aebd2f8792d",
+  "geometry_sha256": "67c3f519ce0ee376083538c353dd99ed98d232f53e8a602fcdc700667cadf7db",
+  "verdict": "APPROVED",
+  "approval_source": "ROOT personally viewed all4PNGs+packet+actualgateitems and explicitly APPROVED BOTH exactsource6c886/a793 SAFE2; delegated collector records approval.",
+  "source_rtl_sha256": "a793db00b096599c989990fcb8facd20d107d92ed22cd16e12d844023732961f",
+  "source_manifest_sha256": "3e45fecc18981cee0daa0b8a8527413b0f9ae2c0968a08338401ef80a3939e9d",
+  "original_archive_sha256": "e080f9b3f2a13661e5eb320e0530a82dd27a31806bc60fcbdacbb582f0af2902",
+  "checklist": {
+    "macros": "8SRAM2x4; x full43.2lattice, y explicitOWNERaccepted21.6half43.2origins151.2/367.2 ONLY thisgeometry (not43.2latticePASS)",
+    "channels": "217.512um continuouscentre +>=30.216umrowchannels, continuousstdcellrows",
+    "density": "actualblue/green withbottomcentreolive/no red, GRT0, native31",
+    "pins": "ActualN/S~97%629.7/629.8 spans,2400/2416S+2219N. No newaccessibilityPASS.",
+    "clock": "boundaryTT44.6 FF44.6; literalEupper symmetricspine,31635sinks/insertion843/883guidance disclosed"
+  },
+  "owner_disposition": "r5yhalf43.2origin explicitlyaccepted under existingguidancefreeze for thisexactgeometry. r5xexistingfrozenpin_bound accepted. No newrule/threshold/native/reach/timing waiver.",
+  "obligations": "OnlyactualCLOSED qualifies; bind actualparent new650x561.6/650x518.4 bbox+SAFE2 source+allclockreferences, no oldviewalias. Actualroute timing/DRC decides; no timingPASS/SSclaim. Originalfrozenrunrecovered, no regate.",
+  "binding_note": "gate.commit null exactcontent snapshot; gate_commit namesactualfrozenstart, geometry+manifest+archive primarybinding."
+}
