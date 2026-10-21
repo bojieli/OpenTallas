@@ -17,10 +17,12 @@
   "OT_COLL_NATIVE32_OFF",
   "OT_S81ENG_TAP_N32R2"
  ],
- "source_inputs_manifest_sha256": "6f0cec8cae29909a0ee320ffa992d3231677e45955a1209dc56b5b5f563455e3",
  "port_bind_sha256": "309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398",
  "source_audit_sha256": "5e2de380659740383ab311382803d92b34b8cf49359a3167d6f9aa3c56e6d7ee",
  "evidence": "Read-only sha256sum of literal actualG9src canonicalpaths after 7373 actualPB selected-source audit; filebytes match scopedABI, not inferred from historical191sixprofile.",
  "whole0N_source_qualified": false,
- "runtime_performed": false
+ "runtime_performed": false,
+ "expected_source_inputs_manifest_sha256": "6f0cec8cae29909a0ee320ffa992d3231677e45955a1209dc56b5b5f563455e3",
+ "source_inputs_manifest_sha256": null,
+ "full_selected_readset_verified": false
 }
