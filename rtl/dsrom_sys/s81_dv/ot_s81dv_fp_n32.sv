@@ -944,10 +944,11 @@ endmodule
  for(genvar g=0;g<6;g=g+1)begin:g_nibble
    ot_s81dv_xfin_fp_lead4 u_l(.x(padded[g*4+:4]),.z(zero4[g]),.oh(local_lead[g*4+:4]));
  end
- wire[22:0] lead;
- for(genvar k=0;k<23;k=k+1)begin:g_lead
-   assign lead[k]=local_lead[k] && ((zero4 >> (k/4+1)) == (6'b111111 >> (k/4+1)));
+ wire[23:0] qualified_lead;
+ for(genvar g=0;g<6;g=g+1)begin:g_qualified
+   ot_s81dv_xfin_fp_lead_enable #(.G(g)) u_e(.zero4(zero4),.local_oh(local_lead[g*4+:4]),.oh(qualified_lead[g*4+:4]));
  end
+ wire[22:0] lead=qualified_lead[22:0];
  for(genvar b=0;b<8;b=b+1)begin:g_out
    wire[22:0] term;
    for(genvar k=0;k<23;k=k+1)begin:g_term
@@ -965,4 +966,9 @@ endmodule
  assign oh[2]=x[2] && !x[3];
  assign oh[1]=x[1] && !(|x[3:2]);
  assign oh[0]=x[0] && !(|x[3:1]);
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_lead_enable #(parameter integer G=0)(input wire[5:0] zero4,input wire[3:0] local_oh,output wire[3:0] oh);
+ wire higher_zero=(zero4 >> (G+1)) == (6'b111111 >> (G+1));
+ assign oh=local_oh & {4{higher_zero}};
 endmodule
