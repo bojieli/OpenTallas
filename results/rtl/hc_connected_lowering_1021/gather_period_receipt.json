@@ -1,0 +1,92 @@
+{
+  "status": "source_structure_only_pending_coupled_RTL",
+  "source_files_match_final_9f_before_patch": true,
+  "phase_not_modulo": true,
+  "legacy_default_preserved": true,
+  "selected_phase": 39,
+  "selected_period": 40,
+  "selected_width": 6,
+  "multi_position_extra_edges_per_interval": 16,
+  "k31_npos1_first_return_unchanged": true,
+  "shape_checks": [
+    {
+      "phase": 19,
+      "period": 24,
+      "counter_width": 5,
+      "request_edges": [
+        0,
+        24,
+        48,
+        72,
+        96,
+        120,
+        144,
+        168
+      ],
+      "response_edges": [
+        19,
+        43,
+        67,
+        91,
+        115,
+        139,
+        163,
+        187
+      ]
+    },
+    {
+      "phase": 23,
+      "period": 24,
+      "counter_width": 5,
+      "request_edges": [
+        0,
+        24,
+        48,
+        72,
+        96,
+        120,
+        144,
+        168
+      ],
+      "response_edges": [
+        23,
+        47,
+        71,
+        95,
+        119,
+        143,
+        167,
+        191
+      ]
+    },
+    {
+      "phase": 39,
+      "period": 40,
+      "counter_width": 6,
+      "request_edges": [
+        0,
+        40,
+        80,
+        120,
+        160,
+        200,
+        240,
+        280
+      ],
+      "response_edges": [
+        39,
+        79,
+        119,
+        159,
+        199,
+        239,
+        279,
+        319
+      ]
+    }
+  ],
+  "modified_source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "229b9b5409eb830b13e56cac5b90d4a0557297c8f2bd5feb94ae9a4c2cf8b5a3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "c071058009751f1f850eadaf45985f4035238187af098fd2126ff2d52a9fe32b"
+  }
+}
