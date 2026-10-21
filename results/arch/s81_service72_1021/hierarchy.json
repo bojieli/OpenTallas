@@ -1,5 +1,5 @@
 {
- "source": "edd3f4a9e",
+ "source": "current PPATH/SMWIRE controller + isolated edd3f4a9e NT1 engine",
  "placement": "329d6c07a",
  "grid": [
   2,
@@ -497,5 +497,12 @@
    "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
   }
  ],
- "scope": "source construction only; existing LP resets/child views and current service static program remain obligations"
+ "sm_landing": {
+  "command_bits": 534,
+  "return_bits": 555,
+  "edges_each": 3,
+  "roundtrip_edges": 6
+ },
+ "pv_x": "actual dsdv_sm_gx from current SOT configuration and return-word producer",
+ "scope": "source construction only; physical child binding/reset closure and calendar pricing of NT1 plus six SM landing edges remain obligations"
 }
