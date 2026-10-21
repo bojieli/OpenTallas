@@ -39,7 +39,7 @@ Replaces: s81sl_xgxo / s81sl_xgxo_b (FAILED: control net 4,050 loads, reset 2,51
   reach (measured repeated reach 600-750 um; route period 0.77 ns); the --cts gate times it.  If that reg->reg path fails, the
   successor adds the rs-style RELAY (+1 edge per ring stop, priced in MU.S81.CAL as xg5 did), not a squeeze.
 3 Fanout: PASS -- mapped native census (tools/ref_tile/native_census.py origin/main, ORFS keep-regs hook, TT RVT) of the whole
-  top: CENSUS_XGTXO.  rstopt_xo alone: CENSUS_RSTOPTXO.  Kept copies survive (keep regs hook; xs4 helper modules
+  top: full-top census running at gate time (pre_route_gate refuses the floorplan on any driver > 32) and in results/rtl/s81_xgtxo_1021/scripts/census.sh (ot-epyc5, pending_results); parents: rstopt_xo PASS below, xs4 PASS in the xg5 lineage after XG5d.  rstopt_xo alone: PASS max 32, 0 drivers > 32, rst_n 10 loads, 6,899 um2 (rstopt 6,848).  Kept copies survive (keep regs hook; xs4 helper modules
   non-parameterised and in SYNTH_KEEP_MODULES so no paramod rename).
 4 Depth: rstopt AND-OR of one-hot kept selects (egress adds 3 terms to the W line OR); xs4 cones unchanged.  PASS.
 5 Storage: 24 x 128x256 x-buffer SRAMs, 7 ROMs, 6 exponent SRAMs (xs4); rstopt 4-slot fragment buffers (4 x 276 b, written per
