@@ -7,7 +7,7 @@
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "codex/q-slice2-native-1021",
+  "branch": "codex/q-crh-submit-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
@@ -15,7 +15,8 @@
    "physical/asap7_memory_macros_v2",
    "results/arch/qw_vm8split_1020",
    "tools/qwen_dv",
-   "results/arch/codex_slice2_native_1021/s8"
+   "results/arch/codex_slice2_native_1021/s8",
+   "physical/ref_tile/qfd_dv_s8_crh_rp1"
   ]
  },
  "stages": {
@@ -34,6 +35,30 @@
     "name": "rp1_crh_eightbeats",
     "cmd": "bash tools/qwen_dv/run_s8_rp1.sh {RUN}/rp1",
     "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rp1_bank_mutant",
+    "cmd": "bash tools/qwen_dv/run_s8_crh_gate_bench.sh {RUN}/bank bank",
+    "expect": "fail",
+    "fail_regex": "RP1 beat mismatch",
+    "fail_witness": "results/arch/codex_slice2_native_1021/s8/bank.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rp1_mask_mutant",
+    "cmd": "bash tools/qwen_dv/run_s8_crh_gate_bench.sh {RUN}/mask mask",
+    "expect": "fail",
+    "fail_regex": "CROM bank0 word0",
+    "fail_witness": "results/arch/codex_slice2_native_1021/s8/full.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
