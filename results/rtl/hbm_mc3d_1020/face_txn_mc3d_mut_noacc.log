@@ -1,0 +1,10 @@
+BW_SAFE_TXN_FAULT dut1 of=000010 edge82
+BW_SAFE_TXN_FAULT dut1 of=000010 edge83
+BW_SAFE_TXN_FAULT dut1 of=000010 edge84
+BW_SAFE_TXN_FAULT dut1 of=000010 edge85
+BW_SAFE_TXN_COUNT beats 12944/0 wcols 759/4 wdone 759/4
+BW_SAFE_TXN_VACUOUS beats12944 wcols759
+BW_SAFE_TXN_RATE h9b 88783 safe 0
+[409804800000] %Fatal: tb_hbm_pc_bw_face_txn.sv:76: Assertion failed in tb: BW_FACE_TXN FAIL errors=400122 MUT_ID_TAG=0
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv:76: Verilog $stop
+Aborting...
