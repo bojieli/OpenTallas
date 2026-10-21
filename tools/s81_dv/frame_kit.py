@@ -537,5 +537,99 @@ def kit(master, r, spec, soft=(), suffix=None):
     print('wrote', out.relative_to(ROOT))
 
 
+# ------------------------------------------------------------------------------------------------ variant (FRH10 10-20)
+RST_LAND = ('    // FRH10 10-20 (safe-design item 1, textbook reset_landing): rst_n lands in 2 plain registered stages on the\n'
+            '    // core root ck_r0 before crs4 rst and the u_xo* forwarded-clock relays (rst_n port -> 1 flop).  Assertion and\n'
+            '    // release +2 ck_r0 edges for the whole frame (crs4 then gates every regional reset run): a die-schedule constant.\n'
+            '    wire rst_n__frl;\n'
+            '    ot_pl_pad #(.W(1), .N(2)) u_frl_rst (.ck(ck_r0), .d(rst_n), .q(rst_n__frl));\n')
+LK_PAD = ('    // FRH10 10-20 fallback: lk (static strap, crs4 only) relayed by {n} plain stages on ck_r0 so the E-face pin ->\n'
+          '    // u_cf wire (790 um) is split under the 405 um reach; static, so the added edges are irrelevant after config.\n'
+          '    wire [11:0] lk__frp;\n'
+          '    ot_pl_pad #(.W(12), .N({n})) u_frp_lk (.ck(ck_r0), .d(lk), .q(lk__frp));\n')
+
+
+def variant_rtl(master, base_kit, out, lk_stages=0):
+    """kit RTL of a variant: the base kit RTL + the 2-stage rst_n landing (+ optional lk relay).  Exactly the listed
+    port-pin rewrites; everything else byte-identical (asserted)."""
+    t = (ROOT / base_kit).read_text()
+    n_rs = len(re.findall(r'\.(rs|rst)\(rst_n\)', t))
+    if n_rs != 5:
+        raise SystemExit(f'{base_kit}: expected 5 rst_n child pins (crs4 rst + 4 u_xo rs), found {n_rs}')
+    t2 = re.sub(r'\.(rs|rst)\(rst_n\)', r'.\1(rst_n__frl)', t)
+    add = RST_LAND
+    if lk_stages:
+        if t2.count('.lk(lk)') != 1:
+            raise SystemExit(f'{base_kit}: expected one .lk(lk)')
+        t2 = t2.replace('.lk(lk)', '.lk(lk__frp)')
+        add += LK_PAD.format(n=lk_stages)
+    # declared before first use (`default_nettype none): right after the top module's port list
+    m = re.search(r'^module\s+\w+\s*#\((?:[^()]|\([^()]*\))*\)\s*\((?:[^()]|\([^()]*\))*\);\n', t2, re.M)
+    if not m:
+        raise SystemExit(f'{base_kit}: top module header not found')
+    t2 = t2[:m.end()] + add + t2[m.end():]
+    hdr = (f'// FRH10 VARIANT of {base_kit} (sha256 {hashlib.sha256(t.encode()).hexdigest()}) by tools/s81_dv/frame_kit.py '
+           f'variant: rst_n 2-stage landing{f", lk {lk_stages}-stage relay" if lk_stages else ""}\n')
+    (ROOT / out).write_text(hdr + t2)
+    return hashlib.sha256(t.encode()).hexdigest()
+
+
+def variant(base, name, lk_stages=0, pins_near_cf=False):
+    """FRH10 10-20: a gate variant of an existing frame kit spec (tools/ref_tile/specs_s81frame/<base>.json):
+      * raw ot_rom_4096x72_m8 macros clocked by their region root (main clock_entries.tcl ot_ce_raw_memory_sink: CTS root
+        ck_r0 'must reach only standard-cell clock pins' failed rf2n h9 CTS): soft_root_macro_masters + exact bindings,
+        root read from the kit RTL .clk(ck_rX) of every instance;
+      * kit RTL with rst_n landed in 2 stages (textbook reset_landing FAIL rf2n h9: rst_n -> 5 hard pins);
+      * lk reach (rf2n h9: lk -> u_cf/lk 790 um comb): pins_near_cf moves the lk / rst_n E-face pins beside crs4 (u_cf
+        lk/rst pins are on its W edge at y + 34.6..37.7), else lk_stages > 0 relays lk in the kit RTL."""
+    sp = ROOT / 'tools/ref_tile/specs_s81frame' / f'{base}.json'
+    s = json.loads(sp.read_text())
+    master = s['top'].removesuffix('_l4_lp')
+    base_kit = next(f for f in s['sources'] if f.endswith('_l4_lp_kit.sv'))
+    out = base_kit.replace('_l4_lp_kit.sv', f'_l4_lp_kit_{name.split("_")[-1]}.sv')
+    variant_rtl(master, base_kit, out, lk_stages)
+    s['sources'] = [out if f == base_kit else f for f in s['sources']]
+    s['name'] = name
+    kt = (ROOT / out).read_text()
+    roms = dict(re.findall(rf'\b{ROM}\s+(u_c\w+)\s*\(.*?\.clk\((ck_r\d)\)', kt))
+    insts = [m['inst'] for m in s['macros'] if Path(m['view']).name == ROM]
+    if set(roms) != set(insts):
+        raise SystemExit(f'{name}: ROM instances in the kit RTL {len(roms)} != spec macros {len(insts)}')
+    s['soft_root_macro_masters'] = [ROM]
+    s['soft_root_macro_bindings'] = {i: dict(master=ROM, clock_pin='clk', root=roms[i]) for i in sorted(insts)}
+    s['reset_landing'] = {'enable': False, 'reason': 'the RTL lands it: kit u_frl_rst = 2 plain ot_pl_pad stages on ck_r0 '
+                          '(rst_n -> 1 flop) before crs4 rst (its own 2-stage rsync_q on cr, then crs4 rs gates the lp '
+                          'regional reset runs) and the 4 u_xo forwarded-clock relays (rs); +2 edges reset epoch'}
+    rng = s['pin_ranges']
+    if pins_near_cf:
+        cf = next(c for c in s['children'] if c['inst'] == 'u_cf')
+        y0 = cf['at'][1]
+        # crs4 W-edge pins rst (34.56) / lk (35.04..37.70) above its origin; E-face pins just below xo (140): keep the
+        # ranges between the crs4 rows and the xo band, 2 pins / um
+        rng['lk'] = [round(y0 + 48.0, 1), round(y0 + 54.0, 1)]
+        rng['rst_n'] = [round(y0 + 56.0, 1), round(y0 + 59.0, 1)]
+        if rng['rst_n'][1] >= rng['xo'][0]:
+            raise SystemExit('lk / rst_n pins collide with the xo band')
+    s['pins'] = dict(E=sorted(rng, key=lambda k: rng[k][0]))
+    s['pin_ranges'] = dict(sorted(rng.items(), key=lambda kv: kv[1][0]))
+    s['structural_change'] = (s.get('structural_change', '') + f' | {name} (DRIVE-S81-FRH10 10-20): raw ROM CTS-root '
+                              f'bindings ({len(insts)}), rst_n 2-stage kit-RTL landing, ' +
+                              ('lk/rst_n E pins beside crs4' if pins_near_cf else f'lk {lk_stages}-stage relay'))
+    s['job']['owner'] = 'Claude:DRIVE-S81-FRH10'
+    s['job']['branch'] = 'claude/s81-frame-rf2p-1020'
+    s['job']['views_to'] = f'physical/ref_tile/{name}/views'
+    s['job']['record_to'] = f'results/rtl/ref_tile/{name}'
+    o = ROOT / 'tools/ref_tile/specs_s81frame' / f'{name}.json'
+    o.write_text(json.dumps(s, indent=1) + '\n')
+    print('wrote', o.relative_to(ROOT), out)
+
+
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == 'variant':
+        va = argparse.ArgumentParser()
+        va.add_argument('cmd'); va.add_argument('--base', required=True); va.add_argument('--name', required=True)
+        va.add_argument('--lk-stages', type=int, default=0); va.add_argument('--pins-near-cf', action='store_true')
+        x = va.parse_args()
+        variant(x.base, x.name, x.lk_stages, x.pins_near_cf)
+    else:
+        main()
