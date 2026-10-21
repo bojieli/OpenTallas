@@ -125,12 +125,15 @@ def _docker_ok():
     return r.returncode == 0
 
 
-def _run(tmp_path, mutant, tag=None, check=True, design_v=DESIGN_V, setup=SETUP_TCL, legalize='dpl', extra='', **kw):
+def _run(tmp_path, mutant, tag=None, check=True, design_v=DESIGN_V, setup=SETUP_TCL, legalize='dpl', extra='', files=None, **kw):
     w = tmp_path / (tag or ('mut' if mutant else 'base'))
     w.mkdir()
     (w / 't.v').write_text(design_v)
+    for fn, txt in (files or {}).items():
+        (w / fn).write_text(txt)
     step.copy(w)
-    call = step.tcl_call('cluster', '/work/die_repeaters.json', legalize=legalize, reach_um=400.0, **kw)
+    kw.setdefault('reach_um', 400.0)
+    call = step.tcl_call('cluster', '/work/die_repeaters.json', legalize=legalize, **kw)
     (w / 'run.tcl').write_text(setup + (MUTANT if mutant else '') + call + (CHECK_TCL if check else '') + extra)
     r = subprocess.run(['docker', 'run', '--rm', '--memory=2g', '-v', f'{w}:/work', IMAGE, 'bash', '-lc',
                         'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -no_splash -exit '
@@ -235,3 +238,133 @@ def test_bus_bit_clock_net_untouched(tmp_path):
     assert 'OT_CLKNET 3' in r.stdout, [l for l in r.stdout.splitlines() if l.startswith('OT_')]
     assert not any(l.split()[1].startswith('n_clk') or 'clk' in l.split()[1] for l in r.stdout.splitlines()
                    if l.startswith('OT_CELL') and l.split()[2].startswith('BUF')), r.stdout[-2000:]
+
+
+# ---- S81-DIECHAIN 10-19: corridor placement + odb census -------------------------------------------------------
+def _tcl_procs(*names):
+    tcl = Path(__file__).with_name('die_repeaters.tcl').read_text()
+    out = []
+    for n in names:
+        b = tcl[tcl.index('proc %s ' % n):]
+        out.append(b[:b.index('\nproc ', 1)] if '\nproc ' in b[1:] else b)
+    return '\n'.join(out)
+
+
+@pytest.mark.skipif(not shutil.which('tclsh'), reason='no tclsh')
+def test_corridor_targets_pure(tmp_path):
+    """free-arc spacing: a 1000-long path with a 300-long block at 300..600 and k=3 -> 700 free / 4 = 175 apart in free
+    length; the repeaters skip the block; the longest stop-to-stop segment spans it (175 + 300 = 475 on the path... here
+    min-max stops 300, 600, 900 -> longest segment 300 = the span itself); all-blocked -> no points; merge clips/joins"""
+    f = tmp_path / 't.tcl'
+    f.write_text(_tcl_procs('ot_die_rep_merge_iv', 'ot_die_rep_greedy_stops', 'ot_die_rep_minmax_stops', 'ot_die_rep_corridor_targets') + '''
+puts [ot_die_rep_merge_iv {{5 9} {1 3} {2 4} {20 30}} 0 25]
+set r [ot_die_rep_corridor_targets [list [list 0 0 1000 0 {{300 600}}]] 3]
+puts [lindex $r 0]; puts [lindex $r 1]; puts [lindex $r 2]
+set r [ot_die_rep_corridor_targets [list [list 0 0 0 500 {}] [list 0 500 -500 500 {}]] 4]
+puts [lindex $r 0]; puts [lindex $r 1]
+set r [ot_die_rep_corridor_targets [list [list 0 0 100 0 {{0 100}}]] 2]
+puts "[llength [lindex $r 0]]"
+''')
+    r = subprocess.run(['tclsh', str(f)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    lines = r.stdout.splitlines()
+    assert lines[0] == '{1 4} {5 9} {20 25}'
+    pts = [tuple(float(v) for v in p.split()) for p in lines[1].strip('{}').split('} {')]
+    # min-max stops: the block span 300..600 gets stops on both edges, segments 300 / 300(over the block) / 300 / 100
+    assert [round(p[0]) for p in pts] == [300, 600, 900] and all(not (300 < p[0] < 600) for p in pts), pts
+    assert abs(float(lines[2]) - 300.0) < 1e-3 and float(lines[3]) == 300.0
+    pts = [tuple(float(v) for v in p.split()) for p in lines[4].strip('{}').split('} {')]
+    assert pts == [(0, 200), (0, 400), (-100, 500), (-300, 500)] and float(lines[5]) == 200.0   # turns the L corner
+    assert lines[6] == '0'
+
+
+
+@pytest.mark.skipif(not shutil.which('tclsh'), reason='no tclsh')
+def test_corridor_targets_stop_outside_free(tmp_path):
+    """S81-MU5 10-19 (mu4 die chain crash 'can't read "ls0"'): one 100-um free gap between two blocks and more stops than
+    the gap needs -> minmax_stops falls back to the segment start (0 = on a block); the stop is snapped to free space"""
+    f = tmp_path / 't.tcl'
+    f.write_text(_tcl_procs('ot_die_rep_merge_iv', 'ot_die_rep_greedy_stops', 'ot_die_rep_minmax_stops', 'ot_die_rep_corridor_targets') + '''
+set r [ot_die_rep_corridor_targets [list [list 0 0 1000 0 {{0 450} {550 1000}}]] 5]
+puts [llength [lindex $r 0]]
+foreach p [lindex $r 0] { puts [lindex $p 0] }
+puts [lindex $r 1]
+''')
+    r = subprocess.run(['tclsh', str(f)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    lines = r.stdout.splitlines()
+    assert lines[0] == '5'
+    xs = [float(v) for v in lines[1:6]]
+    assert all(450 - 1e-3 <= x <= 550 + 1e-3 for x in xs), xs
+    assert abs(float(lines[6]) - 450.0) < 1e-3
+
+def test_s81_corridor_and_405_reach():
+    c = step.config('s81', '/work/r.json')
+    assert c['corridor'] == 1 and c['reach_um'] == 405.0          # owner planning hop, not the measured 455
+    t = step.tcl_call('s81', '/work/r.json')
+    assert 'corridor 1' in t and 'reach_um 405' in t
+    assert 'corridor' not in step.config('qwen_kv', '/work/r.json')
+
+
+def test_check_flags_broken_census(tmp_path):
+    p = tmp_path / 'r.json'
+    p.write_text(json.dumps({'schema': 'opentallas.die_repeaters.v1', 'verdict': 'PASS', 'violations': 0,
+                             'long_wires_scanned': 5001, 'longest_um': 0.0}))
+    ok, s = step.check(p)
+    assert not ok and 'CENSUS_BROKEN' in s
+
+
+# a CLASS BLOCK macro (no pins) across a 12-bit bus of register pairs 890 um apart: with the corridor the repeaters
+# sit on the free part of each bit's path (none inside the block), evenly spaced, and every legal segment <= 405 um.
+BLOCK_LEF = '''VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+MACRO otblk
+  CLASS BLOCK ;
+  ORIGIN 0 0 ;
+  SIZE 200.016 BY 150.12 ;
+  OBS
+    LAYER M1 ; RECT 0 0 200.016 150.12 ;
+    LAYER M2 ; RECT 0 0 200.016 150.12 ;
+    LAYER M3 ; RECT 0 0 200.016 150.12 ;
+  END
+END otblk
+END LIBRARY
+'''
+NC = 12
+CBUS_V = ('module top(input clk, input [%d:0] d, output [%d:0] q);\n' % (NC - 1, NC - 1) + ''.join(
+    f'  wire a{i};\n  DFFHQNx1_ASAP7_75t_R s{i} (.CLK(clk), .D(d[{i}]), .QN(a{i}));\n'
+    f'  DFFHQNx1_ASAP7_75t_R e{i} (.CLK(clk), .D(a{i}), .QN(q[{i}]));\n' for i in range(NC)) + 'endmodule\n')
+CBUS_SETUP = SETUP_TCL.replace('read_verilog /work/t.v', 'read_lef /work/blk.lef\nread_verilog /work/t.v').split('foreach {i x}')[0] + (
+    'for {set i 0} {$i < %d} {incr i} { foreach {n x} [list s$i 10 e$i 900] { set inst [[ord::get_db_block] findInst $n]; '
+    '$inst setLocation [expr {int($x*1000)}] [expr {40500 + 270*$i}]; $inst setPlacementStatus FIRM } }\n' % NC +
+    'set b0 [odb::dbInst_create [ord::get_db_block] [[ord::get_db] findMaster otblk] b0]\n'
+    '$b0 setLocation 300024 1080; $b0 setPlacementStatus FIRM\n')
+INBLK_TCL = '''set inb 0; set nb 0
+foreach i [[ord::get_db_block] getInsts] { if {![string match BUF* [[$i getMaster] getName]]} { continue }; incr nb
+  set b [$i getBBox]; if {[$b xMax] > 300024 && [$b xMin] < 500040 && [$b yMax] > 1080 && [$b yMin] < 151200} { incr inb } }
+puts "OT_INBLOCK $inb OT_BUFS $nb"
+'''
+
+
+@pytest.mark.skipif(os.environ.get('OT_SKIP_DOCKER') == '1' or not _docker_ok(), reason='no docker / ORFS image')
+def test_corridor_over_block(tmp_path):
+    res = {}
+    for tag, corr in (('corr', 1), ('nocorr', 0)):
+        d = tmp_path / tag
+        d.mkdir()
+        r, w = _run(d, False, tag='w', design_v=CBUS_V, setup=CBUS_SETUP, legalize='spread', check=False,
+                    extra=INBLK_TCL, corridor=corr, reach_um=405.0, files={'blk.lef': BLOCK_LEF})
+        assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+        res[tag] = (json.loads((w / 'die_repeaters.json').read_text()),
+                    [l for l in r.stdout.splitlines() if l.startswith('OT_INBLOCK')][0].split())
+    rep, inb = res['corr']
+    cs = rep['corridor_stats']
+    assert rep['verdict'] == 'PASS' and rep['corridor'] == 1 and cs['chains'] >= NC and cs['trees'] == 0 and cs['port_rooted'] >= NC, rep
+    assert inb[1] == '0' and int(inb[3]) == rep['repeaters']
+    assert cs['max_seg_um'] < 405 and rep['post_segments_over_reach'] == 0 and rep['post_longest_segment_um'] < 405
+    assert rep['longest_um'] > 800 and rep['over_reach_nets'] >= NC      # pre-repair census measures the 890-um bits
+    assert rep['post_slew_violators'] == 0
+    rep0, inb0 = res['nocorr']
+    assert inb0[1] == '0' and rep0['corridor'] == 0
+    assert rep['spread_max_disp_um'] <= rep0['spread_max_disp_um'] + 1e-6
