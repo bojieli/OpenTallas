@@ -1,0 +1,321 @@
+{
+ "scope": "existing detailed CTS report, not new STA; TT signoff summary retained separately",
+ "startpoint": "u_eng.u80525_c0/u_cell",
+ "launch_clock": "ot_entry_0",
+ "launch_root": "ck_ingest",
+ "endpoint": "eng_waddr[29]",
+ "capture_clock": "core_clk (virtual)",
+ "report_mode": "ss",
+ "report_corner": "WC",
+ "report_period_ps": 1540,
+ "signoff_period_ps": 1666.667,
+ "launch_CLK_arrival_ps": 541.74,
+ "launch_Q_arrival_ps": 600.06,
+ "output_arrival_ps": 2565.43,
+ "required_ps": 1633.45,
+ "slack_ps": -931.98,
+ "post_Q_to_output_ps": 1965.37,
+ "output_wire_last_hop_ps": 172.47,
+ "output_slew_ps": 548.24,
+ "data_combinational_output_arcs": 48,
+ "sum_data_cell_arcs_ps": 1737.7099999999996,
+ "data_path_cells": [
+  {
+   "pin": "u_eng.u16130_c0/u_cell/Y",
+   "master": "AND5x2_ASAP7_75t_R",
+   "cell_arc_ps": 52.32,
+   "arrival_ps": 652.45
+  },
+  {
+   "pin": "u_eng.u16134_c0/u_cell/Y",
+   "master": "AND5x2_ASAP7_75t_R",
+   "cell_arc_ps": 43.99,
+   "arrival_ps": 698.45
+  },
+  {
+   "pin": "u_eng.u16137_c0/u_cell/Y",
+   "master": "AND5x2_ASAP7_75t_R",
+   "cell_arc_ps": 38.72,
+   "arrival_ps": 738.3
+  },
+  {
+   "pin": "u_eng.u16140_c0/u_cell/Y",
+   "master": "AND5x2_ASAP7_75t_R",
+   "cell_arc_ps": 35.94,
+   "arrival_ps": 774.49
+  },
+  {
+   "pin": "u_eng.u16143_c0/u_cell/Y",
+   "master": "AND5x2_ASAP7_75t_R",
+   "cell_arc_ps": 36.89,
+   "arrival_ps": 811.51
+  },
+  {
+   "pin": "u_eng.u16147_c0/u_cell/Y",
+   "master": "NAND5xp2_ASAP7_75t_R",
+   "cell_arc_ps": 42.05,
+   "arrival_ps": 853.99
+  },
+  {
+   "pin": "place54602/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 36.39,
+   "arrival_ps": 890.73
+  },
+  {
+   "pin": "u_eng.u16150_c0/u_cell/Y",
+   "master": "NOR5xp2_ASAP7_75t_R",
+   "cell_arc_ps": 55.6,
+   "arrival_ps": 946.41
+  },
+  {
+   "pin": "place54311/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 35.88,
+   "arrival_ps": 982.37
+  },
+  {
+   "pin": "place54310/Y",
+   "master": "BUFx6f_ASAP7_75t_R",
+   "cell_arc_ps": 17.02,
+   "arrival_ps": 999.64
+  },
+  {
+   "pin": "u_eng.u16153_c0/u_cell/Y",
+   "master": "NAND4xp25_ASAP7_75t_R",
+   "cell_arc_ps": 38.36,
+   "arrival_ps": 1038.07
+  },
+  {
+   "pin": "u_eng.u16610_c0/u_cell/Y",
+   "master": "OR3x1_ASAP7_75t_R",
+   "cell_arc_ps": 48.8,
+   "arrival_ps": 1086.98
+  },
+  {
+   "pin": "u_eng.u16612_c0/u_cell/Y",
+   "master": "XNOR2xp5_ASAP7_75t_R",
+   "cell_arc_ps": 30.98,
+   "arrival_ps": 1118.09
+  },
+  {
+   "pin": "u_eng.u16629_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 38.53,
+   "arrival_ps": 1156.66
+  },
+  {
+   "pin": "u_eng.u16631_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 35.33,
+   "arrival_ps": 1192.18
+  },
+  {
+   "pin": "u_eng.u16632_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 32.96,
+   "arrival_ps": 1225.37
+  },
+  {
+   "pin": "place51984/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 26.78,
+   "arrival_ps": 1252.25
+  },
+  {
+   "pin": "u_eng.u16634_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 17.32,
+   "arrival_ps": 1269.71
+  },
+  {
+   "pin": "u_eng.u16635_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 30.27,
+   "arrival_ps": 1300.06
+  },
+  {
+   "pin": "place51819/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 26.93,
+   "arrival_ps": 1327.08
+  },
+  {
+   "pin": "u_eng.u16637_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 20.52,
+   "arrival_ps": 1347.73
+  },
+  {
+   "pin": "u_eng.u16638_c0/u_cell/Y",
+   "master": "O2A1O1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 45.35,
+   "arrival_ps": 1393.3
+  },
+  {
+   "pin": "u_eng.u17295_c0/place51547/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 31.31,
+   "arrival_ps": 1424.8
+  },
+  {
+   "pin": "u_eng.u17295_c0/u_cell/Y",
+   "master": "NOR2xp33_ASAP7_75t_R",
+   "cell_arc_ps": 51.53,
+   "arrival_ps": 1476.47
+  },
+  {
+   "pin": "place51419/Y",
+   "master": "BUFx8_ASAP7_75t_R",
+   "cell_arc_ps": 51.59,
+   "arrival_ps": 1529.77
+  },
+  {
+   "pin": "u_eng.u17299_c0/u_cell/Y",
+   "master": "XNOR2xp5_ASAP7_75t_R",
+   "cell_arc_ps": 29.77,
+   "arrival_ps": 1559.69
+  },
+  {
+   "pin": "u_eng.u17334_c0/u_cell/Y",
+   "master": "XNOR2xp5_ASAP7_75t_R",
+   "cell_arc_ps": 37.85,
+   "arrival_ps": 1597.65
+  },
+  {
+   "pin": "u_eng.u17338_c0/u_cell/Y",
+   "master": "XNOR2xp5_ASAP7_75t_R",
+   "cell_arc_ps": 37.02,
+   "arrival_ps": 1634.79
+  },
+  {
+   "pin": "u_eng.u17372_c0/u_cell/Y",
+   "master": "XNOR2xp5_ASAP7_75t_R",
+   "cell_arc_ps": 38.09,
+   "arrival_ps": 1673.0
+  },
+  {
+   "pin": "u_eng.u17402_c0/u_cell/Y",
+   "master": "XNOR2xp5_ASAP7_75t_R",
+   "cell_arc_ps": 37.58,
+   "arrival_ps": 1710.76
+  },
+  {
+   "pin": "u_eng.u17403_c0/u_cell/Y",
+   "master": "NAND2xp33_ASAP7_75t_R",
+   "cell_arc_ps": 26.81,
+   "arrival_ps": 1737.72
+  },
+  {
+   "pin": "u_eng.u17646_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 33.88,
+   "arrival_ps": 1771.65
+  },
+  {
+   "pin": "u_eng.u17651_c0/u_cell/Y",
+   "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+   "cell_arc_ps": 45.94,
+   "arrival_ps": 1817.83
+  },
+  {
+   "pin": "u_eng.u17653_c0/u_cell/Y",
+   "master": "OAI21xp33_ASAP7_75t_R",
+   "cell_arc_ps": 43.96,
+   "arrival_ps": 1862.05
+  },
+  {
+   "pin": "u_eng.u17658_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 34.73,
+   "arrival_ps": 1897.08
+  },
+  {
+   "pin": "u_eng.u17661_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 35.26,
+   "arrival_ps": 1932.41
+  },
+  {
+   "pin": "u_eng.u17665_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 38.62,
+   "arrival_ps": 1971.38
+  },
+  {
+   "pin": "u_eng.u17668_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 35.33,
+   "arrival_ps": 2006.91
+  },
+  {
+   "pin": "u_eng.u17672_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 34.62,
+   "arrival_ps": 2041.74
+  },
+  {
+   "pin": "u_eng.u17675_c0/u_cell/Y",
+   "master": "A2O1A1Ixp33_ASAP7_75t_R",
+   "cell_arc_ps": 28.32,
+   "arrival_ps": 2070.16
+  },
+  {
+   "pin": "u_eng.u17678_c0/u_cell/Y",
+   "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+   "cell_arc_ps": 45.86,
+   "arrival_ps": 2116.13
+  },
+  {
+   "pin": "place50774/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 30.63,
+   "arrival_ps": 2147.09
+  },
+  {
+   "pin": "u_eng.u17680_c0/u_cell/Y",
+   "master": "OA21x2_ASAP7_75t_R",
+   "cell_arc_ps": 23.6,
+   "arrival_ps": 2170.76
+  },
+  {
+   "pin": "u_eng.u18046_c0/place50753/Y",
+   "master": "BUFx3_ASAP7_75t_R",
+   "cell_arc_ps": 17.63,
+   "arrival_ps": 2188.55
+  },
+  {
+   "pin": "u_eng.u18046_c0/u_cell/Y",
+   "master": "OAI21xp33_ASAP7_75t_R",
+   "cell_arc_ps": 19.72,
+   "arrival_ps": 2208.34
+  },
+  {
+   "pin": "u_eng.u18053_c0/u_cell/Y",
+   "master": "AOI21xp33_ASAP7_75t_R",
+   "cell_arc_ps": 36.86,
+   "arrival_ps": 2245.39
+  },
+  {
+   "pin": "wire65260/Y",
+   "master": "BUFx8_ASAP7_75t_R",
+   "cell_arc_ps": 50.4,
+   "arrival_ps": 2296.03
+  },
+  {
+   "pin": "wire44821/Y",
+   "master": "BUFx24_ASAP7_75t_R",
+   "cell_arc_ps": 53.87,
+   "arrival_ps": 2392.96
+  }
+ ],
+ "TT_signoff_summary": {
+  "reg_to_out_worst_ps": -810.5,
+  "endpoint": "eng_waddr[29]",
+  "reg_to_reg_worst_ps": 126.8,
+  "input_to_reg_worst_ps": 265.3,
+  "hold_worst_ps": 49.6,
+  "full_startpoint_recorded": false
+ },
+ "mapping_limit": "singleton original cell80525 absent from copied_cells; no exact RTL register identity asserted"
+}

@@ -1,0 +1,91 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rl can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rl can not be propagated.
+OT_HYBRID CLOCK_RULE tt ck_ingest WARN pin_spread=51.0 scope=boundary sinks=17372 WARN: sinks 17372 > 15000 (guidance); insertion all_mean 536.9 / pin_mean 535.0 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt ck_ingest sinks=17372 reference_scope=boundary boundary_sinks=6861 min=520.6101681684312 mean=534.9909434650049 max=571.5691831577432 all_mean=536.8642749138584
+OT_HYBRID CLOCK_RULE tt ck_rl PASS pin_spread=25.8 scope=all_internal_only sinks=36
+OT_HYBRID CTS_MEASURE tt ck_rl sinks=36 reference_scope=all_internal_only boundary_sinks=36 min=208.9087106103928 mean=222.97410110845456 max=234.75166349139988 all_mean=222.97410110845456
+OT_ENTRIES LEVEL ck_ingest deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_ingest -> u_eng.u74030_c0/u_cell/CLK wire=0 R=534.9909434650049 latency=0.0 phi=534.9909434650049
+OT_ENTRIES LEVEL ck_rl deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_rl -> g_l0[0].u_l0/q$_DFF_PN0_/CLK wire=0 R=222.97410110845456 latency=312.01684235655034 phi=534.9909434650049
+OT_ENTRIES DOMAIN core 1666.666992ps IO774/389 boundary=520.6101681684313..571.5691831577433
+OT_ENTRIES DOMAIN rl 1666.666992ps IO0/0 boundary=520.9255529669431..546.7685058479502
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_rv -> eng_rv
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[0] -> eng_raddr[0]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[10] -> eng_raddr[10]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[11] -> eng_raddr[11]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[12] -> eng_raddr[12]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[13] -> eng_raddr[13]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[14] -> eng_raddr[14]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[15] -> eng_raddr[15]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[16] -> eng_raddr[16]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[17] -> eng_raddr[17]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[18] -> eng_raddr[18]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[19] -> eng_raddr[19]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[1] -> eng_raddr[1]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[20] -> eng_raddr[20]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[21] -> eng_raddr[21]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[22] -> eng_raddr[22]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[23] -> eng_raddr[23]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[24] -> eng_raddr[24]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[25] -> eng_raddr[25]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[26] -> eng_raddr[26]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[27] -> eng_raddr[27]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[28] -> eng_raddr[28]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[29] -> eng_raddr[29]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[2] -> eng_raddr[2]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[30] -> eng_raddr[30]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[31] -> eng_raddr[31]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[3] -> eng_raddr[3]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[4] -> eng_raddr[4]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[5] -> eng_raddr[5]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[6] -> eng_raddr[6]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[7] -> eng_raddr[7]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[8] -> eng_raddr[8]
+OT_MULTI_ROOT LIBERTY_CONSTANT eng_raddr[9] -> eng_raddr[9]
+OT_MULTI_ROOT RELATED_PATH rl -> core max slack=815.769104 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH rl -> core min slack=93.995537 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=17408 inputs=774 outputs=389 async_control_pins=1800
+OT_ENTRIES COMP DONE tt 2 entries phi=534.9909434650049 boundary=520.6101681684313..571.5691831577433
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_rl can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/qkd_hr_ingest_eng_e4a/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->out      300 paths, worst slack -810.5 ps (e.g. eng_waddr[29])
+GATE_PC reg->reg      383 paths, worst slack 126.8 ps (e.g. u_eng.u77917_c0/u_cell/D)
+GATE_PC in->reg       217 paths, worst slack 265.3 ps (e.g. u_eng.u89966_c0/u_cell/D)
+GATE_PC setup WNS -8.105268678448851e-10 hold WNS 4.9637516319478436e-11
+GATE_XCLK_SCOPE clocks=2 names=ot_entry_0,ot_entry_1 exceptions=0
+GATE_XCLK launch=ot_entry_0 capture=ot_entry_1 kind=max timed=0 declared=0 violating=0 worst_ps=- uncertainty_ps=- startpoint=- endpoint=- declared_kinds=- capped=0
+GATE_XCLK launch=ot_entry_0 capture=ot_entry_1 kind=min timed=0 declared=0 violating=0 worst_ps=- uncertainty_ps=- startpoint=- endpoint=- declared_kinds=- capped=0
+GATE_XCLK launch=ot_entry_1 capture=ot_entry_0 kind=max timed=2000 declared=0 violating=0 worst_ps=815.8 uncertainty_ps=210.0 startpoint=g_rst[4].u_leaf/q$_DFF_PN0_/QN endpoint=u_eng.u89966_c0/u_cell/D declared_kinds=- capped=1
+GATE_XCLK launch=ot_entry_1 capture=ot_entry_0 kind=min timed=2000 declared=0 violating=0 worst_ps=94.0 uncertainty_ps=100.0 startpoint=g_rst[4].u_leaf/q$_DFF_PN0_/QN endpoint=u_eng.u89616_c0/u_cell/D declared_kinds=- capped=1
+GATE_XCLK_DONE pairs=4
