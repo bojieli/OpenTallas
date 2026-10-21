@@ -18,6 +18,27 @@ from pathlib import Path
 SCHEMA = "opentallas.ref_tile.source_snapshot.v1"
 EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
+# Exact reviewed terminal-stdout repair; this is not a general benchmark exemption.
+HC_TREE16_WRAPPER = "rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh"
+HC_TREE16_WRAPPER_OLD_SHA256 = "14367ffb347ca66d58588eaa345ff20981fe066af60278492f2a74ec78b6e2e0"
+HC_TREE16_WRAPPER_NEW_SHA256 = "5d63e91835e6a7590c86a1b0d15fe50e8e94bcfcf0e19df703afb3a980d61b4a"
+
+
+def reviewed_bench_wrapper_change(path, old, new):
+    """Only the reviewed HC wrapper byte pair preserves physical gate inputs.
+
+    It prints the terminal raw verdict separately from bounded mismatch detail.
+    Compilation, simulation and the final PASS acceptance command stay identical.
+    Benchmark receipts and failed gate verdicts are never rewritten by this check.
+    """
+    return (path == HC_TREE16_WRAPPER
+            and hashlib.sha256(old).hexdigest() == HC_TREE16_WRAPPER_OLD_SHA256
+            and hashlib.sha256(new).hexdigest() == HC_TREE16_WRAPPER_NEW_SHA256)
+
+# Helpers that only NEW gates execute (pre_route_gate.ship_tar ships them beside the route-plan overlays, captured at the
+# same main head), never members of a frozen route plan.  validate() must resolve their current effective bytes the
+# same way, or a byte-identical gate-only helper reads as "blob unknown" and every post-native32 gate is refused.
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
@@ -226,6 +247,12 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                 effective = HO.committed_frozen_payloads(root, frozen)
             else:
                 current, effective = HO.capture_plan(daemon, root, paths=paths, pg_strict=pg_strict)
+                gate_only = sorted(e["path"] for e in entries if e["source"] == "daemon_overlay"
+                                   and e["path"] in GATE_ONLY_HELPERS and e["path"] not in effective
+                                   and (Path(daemon) / e["path"]).exists())
+                if gate_only:   # same head as the route helpers, exactly as ship_tar captured them
+                    _, gate_bytes = HO.capture_plan(daemon, root, paths=gate_only, head=current.get("origin_main"))
+                    effective = {**effective, **gate_bytes}
         except (OSError, ValueError, subprocess.SubprocessError) as ex:
             return False, f"cannot resolve effective route helpers: {ex}"
         if frozen and not frozen_recovery:
@@ -283,6 +310,33 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         unconsumed = sorted(q for q in source_diff + missing if q not in used)
         source_diff = [q for q in source_diff if q in used]
         missing = [q for q in missing if q in used]
+    # HC-TREE16 terminal stdout repair (963640b19): accept this one exact
+    # wrapper delta only when EVERY other consumed source and executed overlay
+    # matches. Evaluate before other drift allowances so they cannot broaden it.
+    wrapper_ok = []
+    if (source_diff == [HC_TREE16_WRAPPER] and not overlay_diff and not missing
+            and isinstance(consumed, dict) and type(consumed.get("count")) is int
+            and consumed["count"] == len(used)
+            and consumed.get("sha256") == {q: staged[q] for q in used}
+            and len(staged) == len(entries)):
+        try:
+            entry = next(e for e in entries if e["path"] == HC_TREE16_WRAPPER)
+            old = subprocess.run(["git", "-C", str(root), "cat-file", "blob", entry["git_blob"]],
+                                 capture_output=True, timeout=60)
+            if tree is not None:
+                new = subprocess.run(["git", "-C", str(root), "cat-file", "blob", tree[HC_TREE16_WRAPPER]],
+                                     capture_output=True, timeout=60)
+                payload = new.stdout if not new.returncode else None
+            else:
+                payload = (root / HC_TREE16_WRAPPER).read_bytes()
+            if (entry.get("kind") == "file" and entry.get("source") == "working_tree"
+                    and not old.returncode and payload is not None
+                    and hashlib.sha256(old.stdout).hexdigest() == entry["sha256"]
+                    and reviewed_bench_wrapper_change(HC_TREE16_WRAPPER, old.stdout, payload)):
+                wrapper_ok = [HC_TREE16_WRAPPER]
+        except (OSError, KeyError, subprocess.SubprocessError):
+            pass  # Unresolvable bytes keep the strict source mismatch.
+    source_diff = [q for q in source_diff if q not in wrapper_ok]
     # LINT-TOLERANT (ROOT 2026-10-16, coordinator): a gate stays valid across a tools/textbook_lint.py change from one main
     # revision to a later one when the change touches only comments/docstrings or SUBMIT-ONLY constants (CLOSED-STANDS
     # kinds/text; helper_overlay.lint_change_is_submit_only): the gate's own checks are unchanged.  Reported, not refused.
@@ -385,6 +439,8 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                           if unconsumed else "") + (f" [{relax_why}]" if relax_why else "")
     notes = [f"{len(unconsumed)} staged file(s) the gate did not consume differ (reported, not refused): {name(unconsumed)}"] \
         if unconsumed else []
+    if wrapper_ok:
+        notes.append("exact reviewed HC terminal-verdict stdout repair compatible: " + name(wrapper_ok))
     if lint_ok:
         notes.append(f"lint-only drift tolerated (earlier main revision): {name(lint_ok)}")
     if bench_ok:

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # QW-S5-SCRED 10-21 pre-gate native census of ONE bounded variant (run inside openroad/orfs:asap7lock on the fleet).
-# Usage: native_k.sh OUT TOP NAME "chparam args" SRC...   constructor flags: $CFLAGS (default = the red2 k79 kit flags)
+# Usage: native_k.sh OUT TOP NAME "chparam args" SRC...   constructor flags = the red2 k79 kit flags, load cap $CAP (default 8)
 # OUT/NAME.sv + NAME_helpers.sv = the kit netlist; OUT/census.json = rtl/test/qwen_dv/s5/ctlsafe/native_census.py on its
 # ASAP7 RVT TT mapping (every non-clock driver incl. reset and raw ports, TT stage depth).
 set -euo pipefail
 O=$1; TOP=$2; NAME=$3; CHP=$4; shift 4; SRC="$*"; mkdir -p "$O"
 FLOW=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
-F=${CFLAGS:---load-cap 8 --transparent-inverters --retain-mux --shared-helpers --retain-keep}
+F="--load-cap ${CAP:-8} --transparent-inverters --retain-mux --shared-helpers --retain-keep"
 python3 rtl/test/qwen_dv/s5/ctlsafe/merge_lib.py "$FLOW" "$O/cells.lib"
 CH=""; [[ -z "$CHP" ]] || CH="chparam $CHP $TOP;"
 yosys -V > "$O/yosys_version.txt"; echo "chparam: $CHP" > "$O/flags.txt"; echo "flags: $F" >> "$O/flags.txt"
