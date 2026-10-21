@@ -1,0 +1,76 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_c32d-c32d-104fb88b7/cl/io_ref_routed.sdc"
+ ],
+ "orfs": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_c32d-c32d-104fb88b7/routes/qkd_kvs_ctl_c32d_c32d_104fb88b7/work/orfs",
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -164.64,
+  "tns_ps": -77928.04,
+  "worst_reg_to_reg_slack_ps": -164.64,
+  "worst_input_to_reg_slack_ps": 350.23,
+  "worst_output_port_slack_ps": -61.14,
+  "violating_d_pins": "1600",
+  "registers": 17875,
+  "registers_clocked": 17875,
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 597.5,
+    "min": 549.4,
+    "max": 680.1,
+    "n": 6728,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 6728,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "dfeefa5dbada78817e7d843c951412ea62a3f690b6d1c53fed5a7bed2b501bc6"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -45.62,
+  "tns_ps": -17004.66,
+  "worst_reg_to_reg_slack_ps": -45.62,
+  "worst_input_to_reg_slack_ps": -43.61,
+  "worst_output_port_slack_ps": 52.42,
+  "violating_d_pins": "555",
+  "registers": 17875,
+  "registers_clocked": 17875,
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 492.2,
+    "min": 449.5,
+    "max": 563.3,
+    "n": 6728,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 6728,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "3ea88d4f351493b97c313edc226f1e84c6d25bd0492446ee858f8cb28677f4ad"
+ }
+}
