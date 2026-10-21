@@ -127,5 +127,13 @@
     "clock_model": "NOTRUN",
     "physical_gate": "NOTRUN",
     "selected_die_adoption": false
+  },
+  "die_clock_mapping_candidate": {
+    "commit": "4359fec30",
+    "branch": "codex/hbm-hc-clock-candidate-1610-1021",
+    "path": "results/arch/hbm_hc_clock_candidate_1021",
+    "qualification": "mapping only; parent arrival/reset/startup/fullsource/calendar/native OPEN; selected N unchanged",
+    "hard_child_source": "qtree16 SHA9dca5d61c83cc13138b31811abce517321c8a9a16170693b24f4def48abf5271 matches CLOSED e91f source",
+    "insertion_reference_scope": "each of four SAME actual master clock entries has FULL min/mean/max; not three individual child values"
   }
 }
