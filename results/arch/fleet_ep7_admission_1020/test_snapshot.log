@@ -1,0 +1,15 @@
+test_admission_arithmetic_and_lock_code_unchanged (__main__.Snapshot.test_admission_arithmetic_and_lock_code_unchanged) ... ok
+test_empty_failed_or_unparseable_bus_preserves_fallback (__main__.Snapshot.test_empty_failed_or_unparseable_bus_preserves_fallback) ... ok
+test_missing_or_malformed_snapshot_uses_per_unit_fallback (__main__.Snapshot.test_missing_or_malformed_snapshot_uses_per_unit_fallback) ... ok
+test_mixed_active_inactive_nested_rows_match_and_calls_drop (__main__.Snapshot.test_mixed_active_inactive_nested_rows_match_and_calls_drop) ... /tmp/codex-ep7-admission-audit-1020/ot-heavy-reconcile.original.py:519: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/tmp/ot-heavy/reconcile.state.json' mode='r' encoding='UTF-8'>
+  st = json.load(open(STATE))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/codex-ep7-admission-audit-1020/ot-heavy-reconcile.proposed.py:545: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/tmp/ot-heavy/reconcile.state.json' mode='r' encoding='UTF-8'>
+  st = json.load(open(STATE))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.060s
+
+OK

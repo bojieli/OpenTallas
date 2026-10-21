@@ -1,0 +1,181 @@
+{
+  "timestamp": "2026-10-20 23:04:02 PDT",
+  "host": "ot-epyc7",
+  "lock_rows": [
+    "1: FLOCK  ADVISORY  WRITE 1526547 09:00:147460447 0 EOF",
+    "1: -> FLOCK  ADVISORY  WRITE 1526605 09:00:147460447 0 EOF",
+    "1:  -> FLOCK  ADVISORY  WRITE 1526708 09:00:147460447 0 EOF",
+    "1:   -> FLOCK  ADVISORY  WRITE 1526789 09:00:147460447 0 EOF",
+    "1:    -> FLOCK  ADVISORY  WRITE 1527448 09:00:147460447 0 EOF",
+    "1:     -> FLOCK  ADVISORY  WRITE 1527140 09:00:147460447 0 EOF",
+    "1:      -> FLOCK  ADVISORY  WRITE 1527791 09:00:147460447 0 EOF",
+    "1:       -> FLOCK  ADVISORY  WRITE 1527786 09:00:147460447 0 EOF",
+    "1:        -> FLOCK  ADVISORY  WRITE 1527852 09:00:147460447 0 EOF",
+    "1:         -> FLOCK  ADVISORY  WRITE 1525984 09:00:147460447 0 EOF",
+    "1:          -> FLOCK  ADVISORY  WRITE 1527987 09:00:147460447 0 EOF",
+    "1:           -> FLOCK  ADVISORY  WRITE 1527985 09:00:147460447 0 EOF"
+  ],
+  "waiter_count": 122,
+  "small_waiters": [
+    {
+      "pid": 1593338,
+      "ppid": 1593228,
+      "mem_gb": 16,
+      "age_s": 1090,
+      "state": "S",
+      "tag": "otrun-ubuntu-2859099-561552414",
+      "cwd": "/srv/opentallas-scratch/claude/drives81-gunit2",
+      "children": [
+        {
+          "pid": 1593350,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1654802,
+      "ppid": 1654594,
+      "mem_gb": 16,
+      "age_s": 966,
+      "state": "S",
+      "tag": "otrun-ubuntu-2965806-561676082",
+      "cwd": "/srv/opentallas-scratch/claude/qw-su8-1020",
+      "children": [
+        {
+          "pid": 1654812,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1655089,
+      "ppid": 1654912,
+      "mem_gb": 8,
+      "age_s": 965,
+      "state": "S",
+      "tag": "otrun-ubuntu-2965800-561676703",
+      "cwd": "/srv/opentallas-scratch/claude/qw-su8-1020",
+      "children": [
+        {
+          "pid": 1655157,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1655141,
+      "ppid": 1654925,
+      "mem_gb": 8,
+      "age_s": 965,
+      "state": "S",
+      "tag": "otrun-ubuntu-2965801-561676710",
+      "cwd": "/srv/opentallas-scratch/claude/qw-su8-1020",
+      "children": [
+        {
+          "pid": 1655163,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1655321,
+      "ppid": 1655206,
+      "mem_gb": 8,
+      "age_s": 965,
+      "state": "S",
+      "tag": "otrun-ubuntu-2965795-561676831",
+      "cwd": "/srv/opentallas-scratch/claude/qw-su8-1020",
+      "children": [
+        {
+          "pid": 1655450,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1655446,
+      "ppid": 1655323,
+      "mem_gb": 8,
+      "age_s": 965,
+      "state": "S",
+      "tag": "otrun-ubuntu-2965799-561676852",
+      "cwd": "/srv/opentallas-scratch/claude/qw-su8-1020",
+      "children": [
+        {
+          "pid": 1655458,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1937528,
+      "ppid": 1937418,
+      "mem_gb": 32,
+      "age_s": 330,
+      "state": "S",
+      "tag": "otrun-ubuntu-3178092-562311699",
+      "cwd": "/srv/opentallas-scratch/claude/codex-kv-reset-sites-2257",
+      "children": [
+        {
+          "pid": 1937544,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1977497,
+      "ppid": 1977389,
+      "mem_gb": 24,
+      "age_s": 238,
+      "state": "S",
+      "tag": "otrun-ubuntu-3189061-562403877",
+      "cwd": "/srv/opentallas-scratch/claude/kv-mu7-hroot",
+      "children": [
+        {
+          "pid": 1977635,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 1977615,
+      "ppid": 1977495,
+      "mem_gb": 24,
+      "age_s": 238,
+      "state": "S",
+      "tag": "otrun-ubuntu-3189060-562403893",
+      "cwd": "/srv/opentallas-scratch/claude/kv-mu7-hroot",
+      "children": [
+        {
+          "pid": 1977661,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    },
+    {
+      "pid": 2037311,
+      "ppid": 2037202,
+      "mem_gb": 16,
+      "age_s": 118,
+      "state": "S",
+      "tag": "otrun-ubuntu-3209034-562524122",
+      "cwd": "/srv/opentallas-scratch/claude/codex-hbm-r13-portbasis-1020",
+      "children": [
+        {
+          "pid": 2037325,
+          "comm": "flock",
+          "wchan": "locks_lock_inode_wait"
+        }
+      ]
+    }
+  ]
+}

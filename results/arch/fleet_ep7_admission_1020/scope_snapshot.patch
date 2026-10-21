@@ -1,0 +1,66 @@
+--- ot-heavy-reconcile.original
++++ ot-heavy-reconcile.proposed
+@@ -507,10 +507,36 @@
+     return d["MemTotal"], d["MemAvailable"]
+ 
+ 
+-def fast_cg(unit):
++def scope_cgroup_snapshot(units):
++    """One read-only systemd lookup, including scopes outside the usual app slice.
++
++    Return None on unavailable/empty bus output so callers preserve the old
++    per-unit fallback. A successful snapshot includes inactive scopes explicitly.
++    """
++    if not units:
++        return {}
++    raw = sh("systemctl", "--user", "show", "--property=Id", "--property=ControlGroup",
++             *[f"{u}.scope" for u in units])
++    if not raw:
++        return None
++    out = {}
++    for block in raw.split("\n\n"):
++        fields = dict(ln.split("=", 1) for ln in block.splitlines() if "=" in ln)
++        name = fields.get("Id", "")
++        if not name.startswith("oth-") or not name.endswith(".scope"):
++            continue
++        cg = fields.get("ControlGroup", "")
++        path = f"/sys/fs/cgroup{cg}" if cg.startswith("/") else None
++        out[name[:-6]] = path if path and os.path.isdir(path) else None
++    return out or None
++
++
++def fast_cg(unit, snapshot=None):
+     """the scope's cgroup directory without asking systemd (a dozen file reads instead of one D-Bus call per unit)"""
+     hit = glob.glob(f"/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/{unit}.scope")
+-    return hit[0] if hit else scope_cg(unit)
++    if hit:
++        return hit[0]
++    return snapshot[unit] if snapshot is not None and unit in snapshot else scope_cg(unit)
+ 
+ 
+ def read_units():
+@@ -520,7 +546,14 @@
+     except (OSError, ValueError):
+         st = {}
+     rows = []
+-    for f in glob.glob(f"{D}/res.*"):
++    files = glob.glob(f"{D}/res.*")
++    units = set()
++    for f in files:
++        fields = rd(f).split()
++        if len(fields) == 2:
++            units.add(fields[0])
++    cg_snapshot = scope_cgroup_snapshot(sorted(units))
++    for f in files:
+         try:
+             unit, m = rd(f).split()
+             m = int(m)
+@@ -529,7 +562,7 @@
+             continue
+         meta = rd(f"{D}/meta.{unit}").split()          # written by ot-heavy v8: request GB, class
+         s = st.get(unit, {})
+-        cg = fast_cg(unit)
++        cg = fast_cg(unit, cg_snapshot)
+         if not cg:                                     # not started yet, or finished
+             rows.append(dict(unit=unit, res=m, active=False, file=f, file_age=NOW - mt, req=m, now=0.0, obs=0.0, age=0.0,
+                              cls=meta[1] if len(meta) > 1 else s.get("cls")))
