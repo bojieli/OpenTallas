@@ -64,8 +64,12 @@
    "git_blob": "33e9dfed6bb07e00e732af594b45e0398341240e",
    "sha256": "3ae8469a4272d6e881ceb76559685aab3855b7a5ace73685cc13a56837267b86"
   },
-  "mechanism": "EXISTING_MECHANISMS_PASS unit402396; native/physical PENDING",
-  "adopted": false
+  "mechanism": "Actual existingmechanism402396 PASS and authoritative MAIN/FB nativePASS32/0violations/0roles receipt7800bff3c; physicalglobalplacementlive noCLOSED",
+  "adopted": false,
+  "materialized_source": "Exactf5XS4 file now imported; other8componentRTL/BBfiles already byteexactf5 inG9baseline",
+  "native_receipt": "7800bff3c",
+  "adopted_source_only": true,
+  "adopted_physical_view": false
  },
  "successors": {
   "idx_rg3": {
@@ -227,7 +231,8 @@
     "physical/ref_tile/s81_mu72_assembly/lepw_mab_mu.json"
    ],
    "qualification": "Exact CLOSED guarded CRED8 child views now materialized+bound to2S+4N existingR0slots. No CRED12/E alias. Parent unchanged/unhardened.",
-   "grid_hold": "Actual originalglobalplacement allWpins8nmofftrack. ALLavailable46S/48N descendants admitcommondelta(-64nm,-8nm),actualfullpincheck0 atcandidatephase/bodyviolations0. Tenstandins+3missingXGT/XRT/LEP perparent preventparentphysicalqualification; phase notadopted."
+   "grid_hold": "Actual originalglobalplacement allWpins8nmofftrack. ALLavailable46S/48N descendants admitcommondelta(-64nm,-8nm),actualfullpincheck0 atcandidatephase/bodyviolations0. Tenstandins+3missingXGT/XRT/LEP perparent preventparentphysicalqualification; phase notadopted.",
+   "publication_main": "8da2cab50"
   }
  }
 }

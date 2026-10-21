@@ -102,7 +102,11 @@ endmodule
 endmodule
 // S81-FIX2/XG: BF arrival-line one-hot (80 = parity x 40 units) through a kept 2-level predecode, one instance per lookup
 // copy (the shared AND3 decode of par / bu mapped to 72 loads in the xgt_xo census)
-(* keep_hierarchy = 1 *) module ot_s81sl_xs4_bdec (input wire par, input wire [5:0] bu, output wire [79:0] ln);
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_bdec (input wire [8:0] h, output wire [79:0] ln);
+    // Keep each lookup copy's parity/subtract cone local: a shared par root
+    // reached 33 mapped loads through the two copy predecoders. No new edge.
+    wire par = h >= 9'd48;
+    wire [5:0] bu = 6'(h - (par ? 9'd48 : 9'd0));
     wire [9:0] hi; wire [7:0] lo;
     genvar j;
     generate for (j = 0; j < 10; j = j + 1) begin : g_hi
@@ -342,6 +346,7 @@ module ot_s81sl_xs4_ctl (
     output wire [169:0]  hq_o,
     output wire [4:0]    qc_o,
     output wire [42:0]   hb_o,
+    output wire [42:7]   hbk_o,    // ELEM-XFV: kept same-edge copy of hb_q[42:7] for BF lookup copy 1 (native fanout <= 32)
     output wire          bc_o,
     output wire [609:0]  bc_hr_o,
     output wire [68:0]   bv_o,     // XG5: 69 copies (16 lane bits each; was 36 x 32 -> 64 mapped loads)
@@ -428,15 +433,20 @@ module ot_s81sl_xs4_ctl (
         assign qc_o[gq] = c;
     end endgenerate
     (* keep = "true" *) reg [42:0] hb_q;
+    (* keep = "true" *) reg [42:7] hb_q1;   // ELEM-XFV: same D/enable/edge as hb_q[42:7]; drives lookup copy 1 only
     always @(posedge clk) begin
         if (rh[30]) hb_q[10:0]  <= hb_d[10:0];
         if (rx[18]) hb_q[21:11] <= hb_d[21:11];
         if (rh[31]) hb_q[31:22] <= hb_d[31:22];
         if (rx[19]) hb_q[42:32] <= hb_d[42:32];
+        if (rh[30]) hb_q1[10:7]  <= hb_d[10:7];
+        if (rx[22]) hb_q1[21:11] <= hb_d[21:11];   // spare same-release hold leaf (rx[18] reached 33 with both copies)
+        if (rh[31]) hb_q1[31:22] <= hb_d[31:22];
+        if (rx[23]) hb_q1[42:32] <= hb_d[42:32];   // spare same-release hold leaf (rx[19] reached 33 with both copies)
     end
     (* keep = "true" *) reg bc_c;
     always @(posedge clk or negedge rc[3]) if (!rc[3]) bc_c <= 1'b0; else bc_c <= bc_d;
-    assign hb_o = hb_q; assign bc_o = bc_c;
+    assign hb_o = hb_q; assign hbk_o = hb_q1; assign bc_o = bc_c;
     reg qc_q, bc_q;
     always @(posedge clk or negedge rc[3])
         if (!rc[3]) begin qc_q <= 1'b0; bc_q <= 1'b0; end
@@ -757,10 +767,10 @@ module ot_s81sl_xs4 (
     end
 
     // ================================================================== production stream path (native ctl copy)
-    wire ctl_fault; wire [169:0] hq; wire [4:0] qc; wire [42:0] hb; wire bcs; wire [609:0] bc_hr; wire [68:0] bvc;
+    wire ctl_fault; wire [169:0] hq; wire [4:0] qc; wire [42:0] hb; wire [42:7] hbk; wire bcs; wire [609:0] bc_hr; wire [68:0] bvc;
     ot_s81sl_xs4_ctl u_ctl (.clk(clk), .rc(rst_k[3:0]), .rh(rst_k[35:4]), .rb(rst_k[38:36]), .rx(rst_x), .calendar_v(cal_v),
         .calendar_action(cal_action), .go(o_go), .i_ph(o_ph), .i_np(o_np), .rom_gobf(ph_rd[0]), .rom_sq(st_sq),
-        .hq_o(hq), .qc_o(qc), .hb_o(hb), .bc_o(bcs), .bc_hr_o(bc_hr), .bv_o(bvc), .fault(ctl_fault));
+        .hq_o(hq), .qc_o(qc), .hb_o(hb), .hbk_o(hbk), .bc_o(bcs), .bc_hr_o(bc_hr), .bv_o(bvc), .fault(ctl_fault));
 
     // ================================================================== x buffer write side (level B -> macro pins)
     // gather source s, beat g, family f: level-B decodes from capture copy c of source s:
@@ -843,7 +853,8 @@ module ot_s81sl_xs4 (
         localparam integer FB = gc >= 12 ? 1 : 0, G = gc >= 12 ? gc - 12 : gc;
         wire gwx = o_gw[gc % NG], gwf = o_gwf[gc % NG], gwp = o_gwp[gc % NG];
         (* keep = "true" *) reg wp, wpv;   // main wpar_q (FB 0) / wpar_b (FB 1): wpv for the valid sets, wp the rest
-        (* keep = "true" *) reg wps;       // XG5: kept copy of wp for the s0 / s1 source writes (wp mapped to 39-50 loads)
+        (* keep = "true" *) reg wps, wps0; // XG5: kept copies of wp for the s1 (wps) / s0 (wps0) source writes (wp mapped to
+                                           // 39-50 loads; one shared wps reached 33 in the native census)
 `ifdef OT_S81SL_XS4_MUT_TPAR
         wire open_f = (gc == 5) ? 1'b0 : (gwx && gwf == FB[0]);
 `else
@@ -857,9 +868,9 @@ module ot_s81sl_xs4 (
         wire [7:0] vc = wp ? v1 : v0;
         wire cl0 = open_f && !gwp, cl1 = open_f && gwp;
         always @(posedge clk or negedge rst_l[6 + gc]) begin
-            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; wps <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
+            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; wps <= 1'b0; wps0 <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
             else begin
-                if (open_f) begin wp <= gwp; wpv <= gwp; wps <= gwp; end
+                if (open_f) begin wp <= gwp; wpv <= gwp; wps <= gwp; wps0 <= gwp; end
                 v0 <= cl0 ? (any & {8{!wpv}} & ~v0) : (v0 | (any & {8{!wpv}}));
                 v1 <= cl1 ? (any & {8{wpv}} & ~v1) : (v1 | (any & {8{wpv}}));
             end
@@ -868,8 +879,8 @@ module ot_s81sl_xs4 (
         always @(posedge clk)
             for (i = 0; i < 8; i = i + 1)
                 if (!vc[i] && any[i]) begin
-                    if (wps) s1[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
-                    else    s0[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
+                    if (wps)   s1[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
+                    if (!wps0) s0[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
                 end
         wire [2:0] hit = {|(o2 & vc), |(o1 & vc), |(o0 & vc)};
         if (FB) begin : g_fb
@@ -974,19 +985,20 @@ module ot_s81sl_xs4 (
                 (qc[4] && hg[4][0] && hg[4][1] && p0r != p1r);
     end
     // BF groups k: lookup copies c (hi: parity x bu[5:3], lo: bu[2:0]), mac one-hots (sel c0 / c1, read port)
-    wire [35:0] hhi = hb[42:7]; wire [3:0] hwb = hb[6:3]; wire [2:0] hwm = hb[2:0];
+    wire [35:0] hhi = hb[42:7]; wire [35:0] hhi1 = hbk[42:7]; wire [3:0] hwb = hb[6:3]; wire [2:0] hwm = hb[2:0];
     wire [79:0] bln1 [0:3][0:1]; wire [7:0] bms [0:3][0:1]; wire [7:0] bmr [0:3];
     wire [6:0] brw [0:3]; wire [3:0] bbad_k, bgf;
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_bl
         wire [8:0] h = hhi[9*gc +: 9];
+        wire [8:0] h1 = hhi1[9*gc +: 9];   // ELEM-XFV: copy-1 decoder reads the kept hb_q1 copy
         wire par = h >= 9'd48;
         wire [5:0] bu = 6'(h - (par ? 9'd48 : 9'd0));
         wire [2:0] mac = 3'(hwm + 3'(bu));
         wire gate = hwb[gc] && bcs;
         (* keep = "true" *) reg [79:0] ln0, ln1;   // [40 parity + bu]
         wire [79:0] ld0, ld1;                       // S81-FIX2/XG: one kept predecode per copy
-        ot_s81sl_xs4_bdec u_bd0 (.par(par), .bu(bu), .ln(ld0));
-        ot_s81sl_xs4_bdec u_bd1 (.par(par), .bu(bu), .ln(ld1));
+        ot_s81sl_xs4_bdec u_bd0 (.h(h), .ln(ld0));
+        ot_s81sl_xs4_bdec u_bd1 (.h(h1), .ln(ld1));
         (* keep = "true" *) reg [7:0] ms0, ms1, mr;
         reg [6:0] rw; reg bb, gf;
         integer x;
