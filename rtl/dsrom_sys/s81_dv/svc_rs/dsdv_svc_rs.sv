@@ -60,7 +60,7 @@ module dsdv_svc_rs_c #(
     parameter integer ST = 0,
     parameter bit SRAM_MACRO = 0,
     parameter bit SMT = 1,
-    parameter integer NTP = 0
+    parameter integer PV_IDENTITY = 0, parameter integer NTP = 0
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -199,7 +199,7 @@ module dsdv_svc_rs_c #(
     wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
-    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NTP(NTP)) u_att (
+    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NTP(NTP), .PV_IDENTITY(PV_IDENTITY)) u_att (
         .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
@@ -454,7 +454,7 @@ endmodule
 // S81-SMWIRE (10-19): the SM face is internal (the SO target); w_* are bench observation ports (RS_OBS) only.  The
 // entry adds pv_x[47:0] (the 48 spare bits of the 562-b pv lane: the SO gather-word stamp).
 module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                           parameter bit SRAM_MACRO = 0, parameter bit SMT = 1, parameter integer NTP = 0) (
+                           parameter bit SRAM_MACRO = 0, parameter bit SMT = 1, parameter integer PV_IDENTITY = 0, parameter integer NTP = 0) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
@@ -474,7 +474,7 @@ module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID =
 `ifndef RS_OBS
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .NTP(NTP)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .NTP(NTP), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i),
         .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
@@ -488,7 +488,7 @@ endmodule
 
 // the other 14 slices (incl. the chain roots rsv_07 / rsv_09: their P.V return lane toward the entry is `ro`)
 module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                     parameter bit SRAM_MACRO = 0, parameter bit SMT = 1, parameter integer NTP = 0) (
+                     parameter bit SRAM_MACRO = 0, parameter bit SMT = 1, parameter integer PV_IDENTITY = 0, parameter integer NTP = 0) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
@@ -506,7 +506,7 @@ module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, pa
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
     wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [47:0] pv_x; wire [1:0] st_rg;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .NTP(NTP)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .NTP(NTP), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v),
         .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),
