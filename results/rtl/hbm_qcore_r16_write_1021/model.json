@@ -1,0 +1,23 @@
+{
+  "baseline_sha256": "7dbe0bd904d02f77b78388e37db16f79eda0a33ef9b09af63cce890886335877",
+  "baseline": "r15a consumed source, gate manifest hash verified",
+  "worst": {
+    "start": "g_sec[7].u_s/g_rw[2].u_rw/q[1]",
+    "end": "g_sec[7].u_s/g_b[4].g_h[0].g_r[3].q[14]",
+    "clock": "core_clk",
+    "TT_slack_ps": -226.31,
+    "launch_clock_ps": 373.99,
+    "capture_clock_ps": 338.39,
+    "data_delay_ps": 957.38,
+    "c2q_ps": 83.98,
+    "buffer_increment_ps": 390.99,
+    "logic_increment_ps": 482.23,
+    "delay_note": "reported incremental cell+net delays; cannot separate pure wire without additional STA, no new campaign"
+  },
+  "change": "COLL sector+row decode before existing k capture, four kept row hits per2bank group instead of raw5bit address+valid; same k+1 storage commit, existing data priority unchanged",
+  "storage_delta_flops_per_sector": -8,
+  "storage_note": "old4groups*(5addr+1valid)=24, new4groups*4rowhits=16; resettable bits4->16",
+  "native": "pending including changed reset load",
+  "function": "pending existing actual qcore lockstep",
+  "physical": "no gate/no geometry alias"
+}

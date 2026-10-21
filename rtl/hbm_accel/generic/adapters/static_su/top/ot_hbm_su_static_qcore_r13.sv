@@ -88,10 +88,14 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1)(
  ot_hbm_su_qcore_r13_kq #(.W(256)) u_rr(.clk(clk),.d(rrd),.q(rrd_c));
   // r13b: row fields straight from wa_c (16 writer loads each; r13a: 4 row copies loaded the rf_wa pins 40x)
  wire [7:0] row_c={wa_c[30+:2],wa_c[22+:2],wa_c[14+:2],wa_c[6+:2]};
- wire [4:0] rra_g [0:3]; wire rrv_g [0:3];
+ // r16 candidate: real collective sector/row decode BEFORE the existing raw-capture edge.
+ // Each kept row bit serves only two banks / four half-word writers; commit remains k+1.
+ wire [3:0] rr_hit_g [0:3];
  for(genvar g=0;g<4;g=g+1)begin:g_rw
-  ot_hbm_su_qcore_r13_kq #(.W(5)) u_rw(.clk(clk),.d(rra),.q(rra_g[g]));
-  ot_hbm_su_qcore_r13_kqr u_rv(.clk(clk),.rst_v(g==0?rst_rv0:g==1?rst_rv1:g==2?rst_rv2:rst_rv3),.d(rrv),.q(rrv_g[g]));
+  for(genvar r=0;r<4;r=r+1)begin:g_row
+   ot_hbm_su_qcore_r13_kqr u_rh(.clk(clk),.rst_v(g==0?rst_rv0:g==1?rst_rv1:g==2?rst_rv2:rst_rv3),
+    .d((COLLPORT!=0)&&rrv&&(rra=={2'(r),3'(S)})),.q(rr_hit_g[g][r]));
+  end
  end
  // bank hit predecode (wa[w*8+:6] == 8*S+b): sector match once per writer, 3-bit bank decode
  // r13: the 3-bit bank compare is done INSIDE each (bank, half) writer (r12 census: hit_b[b][3] = sel[3] fanned into both
@@ -128,7 +132,7 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1)(
   for(genvar hf=0;hf<2;hf=hf+1)begin:g_h
    wire [3:0] en; wire [15:0] d; wire [63:0] wd16;
    for(genvar w=0;w<4;w=w+1)begin:g_w assign wd16[w*16+:16]=wd_c[w*32+hf*16+:16]; end
-   ot_hbm_su_qcore_r13_wb #(.S(S),.B(b),.COLLPORT(COLLPORT)) u_wb(.sm(smatch),.wbk(wbk),.row(row_c),.wd16(wd16),.rrv(rrv_g[b/2]),.rra(rra_g[b/2]),
+   ot_hbm_su_qcore_r13_wb #(.S(S),.B(b),.COLLPORT(COLLPORT)) u_wb(.sm(smatch),.wbk(wbk),.row(row_c),.wd16(wd16),.rr_hit(rr_hit_g[b/2]),
     .rrd16(rrd_c[32*((MUT==128)?7-b:b)+hf*16+:16]),.en(en),.d(d),.conf(cf[hf]));
    for(genvar r=0;r<4;r=r+1)begin:g_r
     reg [15:0] q;
@@ -297,7 +301,7 @@ endmodule
 (* keep_hierarchy *)
 module ot_hbm_su_qcore_r13_wb #(parameter integer S=0,B=0,COLLPORT=1)(
  input wire [3:0] sm, input wire [11:0] wbk, input wire [7:0] row, input wire [63:0] wd16,
- input wire rrv, input wire [4:0] rra, input wire [15:0] rrd16,
+ input wire [3:0] rr_hit, input wire [15:0] rrd16,
  output wire [3:0] en, output wire [15:0] d, output wire conf
 );
  wire [3:0] hit, sel; wire wvb, multi;
@@ -305,10 +309,12 @@ module ot_hbm_su_qcore_r13_wb #(parameter integer S=0,B=0,COLLPORT=1)(
  ot_hbm_su_qcore_r13_selq u_q(.hit(hit),.sel(sel),.any(wvb),.multi(multi));
  wire [15:0] wdb=({16{sel[0]}}&wd16[0+:16])|({16{sel[1]}}&wd16[16+:16])|({16{sel[2]}}&wd16[32+:16])|({16{sel[3]}}&wd16[48+:16]);
  wire [1:0] wab=({2{sel[0]}}&row[0+:2])|({2{sel[1]}}&row[2+:2])|({2{sel[2]}}&row[4+:2])|({2{sel[3]}}&row[6+:2]);
- wire rrb=(COLLPORT!=0)&&rrv&&rra[2:0]==3'(S);
- wire bwv=wvb||rrb; wire [1:0] bwa=rrb?rra[4:3]:wab;
+ wire rrb=(COLLPORT!=0)&&(|rr_hit);
  assign d=rrb?rrd16:wdb;
- for(genvar r=0;r<4;r=r+1)begin:g_en assign en[r]=bwv&&bwa==2'(r); end
+ // A collective write overrides all lane writers, including writes to another row.
+ for(genvar r=0;r<4;r=r+1)begin:g_en
+  assign en[r]=rr_hit[r]||(!rrb&&wvb&&(wab==2'(r)));
+ end
  assign conf=multi||(rrb&&wvb);
 endmodule
 
