@@ -1,0 +1,32 @@
+{
+  "source": "46e31db84",
+  "actual_all18_binding": "MATCH",
+  "top": "tb_s81dv_xfin16e",
+  "defines": [
+    "OT_S81DV_XFIN_SRAM"
+  ],
+  "mode": "16realXFIN,128results expected",
+  "s1": {
+    "ORD": 0,
+    "GAP": 0,
+    "SEED": 1,
+    "GO_to_last": 526,
+    "last_partial_to_last": 464,
+    "err": 0,
+    "fault_cycles": 0
+  },
+  "s7": {
+    "ORD": 1,
+    "GAP": 2,
+    "SEED": 7,
+    "GO_to_last": 542,
+    "last_partial_to_last": 362,
+    "err": 0,
+    "fault_cycles": 0
+  },
+  "cap": "32GiB actualhardcap/resmetadata verified Diskfleet; peakelab21.44GB",
+  "prior8and16": "MEMCG_OOM infrastructure retained, noRTLverdict",
+  "scope": "completion-byte + FP96 candidate source only; later bank partition/FP normalization requires current exact proofs",
+  "native": "r9 failed infrastructure16GiB before mappednetlist; no nativequalification",
+  "raw_logs": "direct remote terminal simulator logs; local ot-run admission-only logs lag actual results"
+}
