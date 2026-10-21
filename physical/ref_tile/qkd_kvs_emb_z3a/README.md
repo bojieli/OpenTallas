@@ -32,4 +32,8 @@ e2a (spine fix, 32.7/29.9 at gate) keeps the pin registers, so it has the same e
 8 Schedule: +1 word-stream edge (PIPE_JOIN) inside the CONTEXT->header embed fill budget (d2d_link_calendar --emb-fill-edges = fork + 2 + join last + 1: join last +1); OPEN: die calendar recompile confirms the budget. Reset release +2 kit + 6 NATIVE32 (startup).
 
 ## Gate
-(filled after the gate: PNG review + numbers)
+--cts --remote auto (10-20 ~22:20): PRE_ROUTE_GATE WARN (0 fail, 6 warn). Pre-gate native census PASS (max 32, 9107 roots, 0 role errors).
+Clock: one root ck, 2,929 sinks, TT pin-flop spread 37.9 ps, FF pin-flop spread 35.1 ps (<=80), insertion ~470 TT (guidance). Trial GRT overflow 0 (M3 5.8%). Placement setup/hold WNS >= 0.
+Fill 29% (pin-bound outline, E face 75%). WARNs: macro_grid 0.024 off lattice (as e1), 34 px_tok/px_tep feedthrough pins (owner 10-20 same-region rule).
+PNG review (Claude KV-EMB4, gate_layout/floorplan.png + density.png): one hard child centred, std cells in one band hugging the S/W pin faces and the
+child's W edge, peak density < 1.0, no islands, clock root at the S face beside the register mass. Checklist above holds.
