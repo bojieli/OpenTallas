@@ -248,13 +248,13 @@ ES_CFG_TARGETS, ES_CFG_WORDS = (12, 13), (1024, 8)
 ES_CFG_CTRL_LAT = 92          # KVJ-C3 bench model of the controller es -> er latency (open: measured per-PC value owed)
 
 
-def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0)):
+def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0), return_relay=(0, 0, 0, 0)):
     """KVJ-SMALL b2 10-17: boot dispatcher targets 12 / 13 (qkd_static_kv_boot_dispatch ESCFG=1) for the shared boot bus
     of qkd_kv_es_fan_root + qkd_embedding_static_join4_cal (KVJ-C3).  Image = kvjc3_pc_chain.boot_words.  Target 12 word
     a = {stack[1:0], pc[4:0], reg[2:0]} (the dispatcher's es_cfg_addr = a[7:0]; data[17:16] = stack is checked against
     a[9:8]); target 13 word a = beat segment a (8 words, unused segments {len 0, off 0} = never a slot)."""
     import kvjc3_pc_chain as C3
-    words = C3.boot_words(C3.emb_calendar(ctrl_lat, list(relay)))
+    words = C3.boot_words(C3.emb_calendar(ctrl_lat, list(relay), return_relay=return_relay))
     pc, beat = [None] * ES_CFG_WORDS[0], [(1 << 62)] * ES_CFG_WORDS[1]
     for addr, data in words:
         if data >> 62 == 0:
@@ -292,6 +292,24 @@ def _face_land():
                 rst_release={k: v['rst_release'] for k, v in t.items()})
 
 
+def hroot_landing(ksd=None):
+    """Increment over the unlanded HROOT, per actual selected RTL implementation.
+
+    Gather is an observer transport age, not an extra compute cycle. Its
+    boot/ownership qualification still requires the die observer deadline audit.
+    Do not use this delta model as proof of the unlanded die's absolute ages.
+    """
+    if ksd is None:
+        from tools.qwen_kv_die import kv_static_die as ksd
+    if not ksd.HROOT_LAND:
+        return dict(chain=0, fan=0, gather=0, embedding=0)
+    if ksd.HROOT_S32:
+        raise ValueError('HROOT safe32 is retired; no production calendar law')
+    if ksd.HROOT_ESH_MOD != 'qkd_kv_es_fan_stack_bl' or ksd.HROOT_RLY_MOD != 'qkd_kv_stack_relays_l':
+        raise ValueError('HROOT landing implementation has no executable calendar law')
+    return dict(chain=1, fan=1, gather=1, embedding=1)
+
+
 def profile(kind, ages=None):
     if kind == 'component':
         return dict(kind='component', start_relays=0, att=0, rx=0, writer=0, kvn=0, groups=0, crossing=False,
@@ -301,10 +319,11 @@ def profile(kind, ages=None):
     fl = _face_land()
     from tools.qwen_kv_die import kv_static_die as KSD
     ofs = KSD.ahub_ofs_bound()
+    hl = hroot_landing(KSD)
     return dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
-                face_land=fl,
+                face_land=fl, hroot_landing=hl,
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
-                groups=L['programme_to_groups']['edges'], crossing=True,
+                groups=L['programme_to_groups']['edges'] + hl['fan'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
@@ -727,7 +746,9 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
         cal = link_calendar(td, status_delay)
         link_words = link_cfg_words(Path(td) / 'cal')
     link_check = link_image_check(link_words, cal)        # KV-LINKCFG-MU: target 11 == the bound image (fail closed)
-    es_pc, es_beat = es_cfg_words()
+    hl = pr.get('hroot_landing', dict(chain=0, fan=0, gather=0, embedding=0))
+    es_relay, es_return = [hl['chain']] * 4, [hl['embedding']] * 4
+    es_pc, es_beat = es_cfg_words(relay=es_relay, return_relay=es_return)
     prog_cal = cal['program']
     lay = prog_cal['layers']
     starts = [l['start'] for l in lay]
@@ -957,7 +978,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
                 link_cfg=dict(target=LINK_CFG_TARGET, program=link_words, check=link_check),
                 # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
                 # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note
-                es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=[0, 0, 0, 0]))
+                es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=es_relay, return_relay=es_return))
 
 
 # ---- MU-KV-BOOT 10-19: the multi-user boot images (OT_KV_MU=1) ---------------------------------------------------------
