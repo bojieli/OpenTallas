@@ -5,7 +5,10 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 160
-set ::ot_ce_check_only [dict create {ot_hgi_coll_tkm_tile_e86/clk} 1 {ot_hgi_coll_tkm_tile_e86/clk_r3} 1]
+# HBM-TP192B 10-21 DIAG ONLY (stand-in child): clk_r1/clk_r2 are the e86 internal-only CTS roots (no boundary flops, no ETM
+# check arcs) -> all_registers never returns them (gate 22:49: 96/160 = clk,clk_r0,clk_r3 only). The real view path is
+# clock_entry_constraints.landed_record_pins multi_root (internal_roots from the CLOSED record); kit_spec.py --view regenerates.
+set ::ot_ce_check_only [dict create {ot_hgi_coll_tkm_tile_e86/clk} 1 {ot_hgi_coll_tkm_tile_e86/clk_r1} 1 {ot_hgi_coll_tkm_tile_e86/clk_r2} 1 {ot_hgi_coll_tkm_tile_e86/clk_r3} 1]
 set ::ot_ce_refs [dict create {ot_hgi_coll_tkm_tile_e86/clk} {tt {193.7 201.4 252.1} ff {159.7 167.1 212.6} ss {261.495 271.89000000000004 340.33500000000004}} {ot_hgi_coll_tkm_tile_e86/clk_r0} {tt {213.5 231.3 241.1} ff {171.7 188.8 197.8} ss {288.225 312.25500000000005 325.485}} {ot_hgi_coll_tkm_tile_e86/clk_r1} {tt {206.2 224.1 242.9} ff {165.7 182.5 199.5} ss {278.37 302.535 327.915}} {ot_hgi_coll_tkm_tile_e86/clk_r2} {tt {219.5 238.3 254.3} ff {178.8 195.7 210.0} ss {296.32500000000005 321.70500000000004 343.30500000000006}} {ot_hgi_coll_tkm_tile_e86/clk_r3} {tt {247.0 283.1 322.9} ff {200.8 233.7 271.2} ss {333.45000000000005 382.18500000000006 435.915}}]
 set ::ot_ce_counts [dict create {ot_hgi_coll_tkm_tile_e86} 32]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {start} {arg_mode} {cfg_n} {cfg_k} {cfg_nout} {cfg_g} {cfg_gbase} {cfg_pf} {cfg_obase} {cfg_rbase} {cfg_has_r} {del_slot} {del_valid} {del_flit}} outputs {{w_v} {w_addr} {w_mask} {w_data} {busy} {done} {fault} {stat_cycles}}} {NW} {clock ot_io_NW io_budget_ps 166.667 inputs {} outputs {}} {NE} {clock ot_io_NE io_budget_ps 166.667 inputs {} outputs {}} {SE} {clock ot_io_SE io_budget_ps 166.667 inputs {} outputs {}}]
