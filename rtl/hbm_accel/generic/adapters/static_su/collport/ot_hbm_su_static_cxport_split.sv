@@ -325,7 +325,8 @@ endmodule
 
 // composition with the old leaf ports (bench lockstep vs the hub; the die binds ij_s + ij_q as two abutted leaves)
 module ot_hbm_su_static_cxport_ij #(
- parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0,
+ parameter integer SAFE_GATHER=0   // HBM-COLLECT10/SU 10-21: ij_q closed view hbm_su_cx_ijq_1019t = SAFE_GATHER 1 (kit hbm_su_cx_ij_1021 binds it)
 )(
  input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
  input wire [1:0] inj_rd,
@@ -338,7 +339,7 @@ module ot_hbm_su_static_cxport_ij #(
  ot_hbm_su_static_cxport_ij_s #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT)) u_s(
   .clk_s(clk_s),.rst_s_n(rst_s_n),.inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(inj_d),.jb0(jb0),.jb1(jb1),.ob0(ob0),.ob1(ob1),
   .sfault_s(sfs),.ins_coll(icl));
- ot_hbm_su_static_cxport_ij_q #(.SD(SD),.MUT(MUT)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.jb0(jb0),.jb1(jb1),
+ ot_hbm_su_static_cxport_ij_q #(.SD(SD),.MUT(MUT),.SAFE_GATHER(SAFE_GATHER)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.jb0(jb0),.jb1(jb1),
   .inj_q0(inj_q0),.inj_q1(inj_q1),.inj_q2(inj_q2),.inj_q3(inj_q3),.ob0(ob0),.ob1(ob1),.sfault_s(sfs),.ins_coll(icl),.fault(fault));
 endmodule
 
