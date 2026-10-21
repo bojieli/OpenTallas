@@ -1,0 +1,1116 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv original.sv candidate.sv; proc; equiv_make original candidate equiv; prep -top equiv; equiv_simple; equiv_status -assert' --
+
+1. Executing Verilog-2005 frontend: original.sv
+Parsing SystemVerilog input from `original.sv' to AST representation.
+Generating RTLIL representation for module `\original'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: candidate.sv
+Parsing SystemVerilog input from `candidate.sv' to AST representation.
+Generating RTLIL representation for module `\candidate'.
+Warning: Replacing memory \af_add32$func$candidate.sv:66$70.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:66$70.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:65$69.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:65$69.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:64$68.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:64$68.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:63$67.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:63$67.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:60$66.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:60$66.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$65.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$65.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$64.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$64.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$63.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$63.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$62.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:59$62.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:58$61.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:58$61.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:58$60.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:58$60.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:54$59.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:54$59.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:46$58.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:46$58.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:51$56.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:51$56.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:30$55.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:30$55.g with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:50$53.p with list of registers. See candidate.sv:15, candidate.sv:8
+Warning: Replacing memory \af_add32$func$candidate.sv:50$53.g with list of registers. See candidate.sv:15, candidate.sv:8
+Successfully finished Verilog frontend.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:66$11233'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:65$10495'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:64$9757'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:63$9019'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:60$8280'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:59$7540'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:59$6801'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:59$6062'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:59$5328'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:58$4589'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:58$3850'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:54$3112'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:54$2320'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:51$1580'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:51$812'.
+Found and cleaned up 160 empty switches in `\candidate.$proc$candidate.sv:50$78'.
+Cleaned up 2560 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 10404 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\candidate.$proc$candidate.sv:66$11233'.
+Creating decoders for process `\candidate.$proc$candidate.sv:65$10495'.
+Creating decoders for process `\candidate.$proc$candidate.sv:64$9757'.
+Creating decoders for process `\candidate.$proc$candidate.sv:63$9019'.
+Creating decoders for process `\candidate.$proc$candidate.sv:60$8280'.
+Creating decoders for process `\candidate.$proc$candidate.sv:59$7540'.
+Creating decoders for process `\candidate.$proc$candidate.sv:59$6801'.
+Creating decoders for process `\candidate.$proc$candidate.sv:59$6062'.
+Creating decoders for process `\candidate.$proc$candidate.sv:59$5328'.
+Creating decoders for process `\candidate.$proc$candidate.sv:58$4589'.
+Creating decoders for process `\candidate.$proc$candidate.sv:58$3850'.
+Creating decoders for process `\candidate.$proc$candidate.sv:54$3112'.
+Creating decoders for process `\candidate.$proc$candidate.sv:54$2320'.
+Creating decoders for process `\candidate.$proc$candidate.sv:51$1580'.
+Creating decoders for process `\candidate.$proc$candidate.sv:51$812'.
+Creating decoders for process `\candidate.$proc$candidate.sv:50$78'.
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:66$52.$result' from process `\candidate.$proc$candidate.sv:66$11233'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:65$51.$result' from process `\candidate.$proc$candidate.sv:65$10495'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:64$50.$result' from process `\candidate.$proc$candidate.sv:64$9757'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:63$49.$result' from process `\candidate.$proc$candidate.sv:63$9019'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:60$48.$result' from process `\candidate.$proc$candidate.sv:60$8280'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:59$47.$result' from process `\candidate.$proc$candidate.sv:59$7540'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:59$46.$result' from process `\candidate.$proc$candidate.sv:59$6801'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:59$45.$result' from process `\candidate.$proc$candidate.sv:59$6062'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:59$44.$result' from process `\candidate.$proc$candidate.sv:59$5328'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:58$43.$result' from process `\candidate.$proc$candidate.sv:58$4589'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:58$42.$result' from process `\candidate.$proc$candidate.sv:58$3850'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:54$41.$result' from process `\candidate.$proc$candidate.sv:54$3112'.
+No latch inferred for signal `\candidate.\af_mul5$func$candidate.sv:54$40.$result' from process `\candidate.$proc$candidate.sv:54$2320'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:51$39.$result' from process `\candidate.$proc$candidate.sv:51$1580'.
+No latch inferred for signal `\candidate.\af_mul3$func$candidate.sv:51$38.$result' from process `\candidate.$proc$candidate.sv:51$812'.
+No latch inferred for signal `\candidate.\af_add32$func$candidate.sv:50$37.$result' from process `\candidate.$proc$candidate.sv:50$78'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `candidate.$proc$candidate.sv:66$11233'.
+Removing empty process `candidate.$proc$candidate.sv:65$10495'.
+Removing empty process `candidate.$proc$candidate.sv:64$9757'.
+Removing empty process `candidate.$proc$candidate.sv:63$9019'.
+Removing empty process `candidate.$proc$candidate.sv:60$8280'.
+Removing empty process `candidate.$proc$candidate.sv:59$7540'.
+Removing empty process `candidate.$proc$candidate.sv:59$6801'.
+Removing empty process `candidate.$proc$candidate.sv:59$6062'.
+Removing empty process `candidate.$proc$candidate.sv:59$5328'.
+Removing empty process `candidate.$proc$candidate.sv:58$4589'.
+Removing empty process `candidate.$proc$candidate.sv:58$3850'.
+Removing empty process `candidate.$proc$candidate.sv:54$3112'.
+Removing empty process `candidate.$proc$candidate.sv:54$2320'.
+Removing empty process `candidate.$proc$candidate.sv:51$1580'.
+Removing empty process `candidate.$proc$candidate.sv:51$812'.
+Removing empty process `candidate.$proc$candidate.sv:50$78'.
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module candidate.
+<suppressed ~407 debug messages>
+Optimizing module original.
+<suppressed ~12 debug messages>
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: final3_gold ($add$original.sv:19$34_Y_gold), final3_gate ($xor$candidate.sv:18$11972_Y_gate) -> final3
+Presumably equivalent wires: final2_gold ($add$original.sv:18$31_Y_gold), final2_gate ($xor$candidate.sv:18$11232_Y_gate) -> final2
+Presumably equivalent wires: final1_gold ($add$original.sv:17$30_Y_gold), final1_gate ($xor$candidate.sv:18$10494_Y_gate) -> final1
+Presumably equivalent wires: final0_gold ($add$original.sv:16$29_Y_gold), final0_gate ($xor$candidate.sv:18$9756_Y_gate) -> final0
+Presumably equivalent wires: u_kscal_gold ($add$original.sv:13$28_Y_gold), u_kscal_gate ($xor$candidate.sv:18$9018_Y_gate) -> u_kscal
+Presumably equivalent wires: u_kcode_gold ($add$original.sv:12$26_Y_gold), u_kcode_gate ($xor$candidate.sv:18$8279_Y_gate) -> u_kcode
+Presumably equivalent wires: u_raddr_gold ($add$original.sv:7$13_Y_gold), u_raddr_gate ($xor$candidate.sv:18$3849_Y_gate) -> u_raddr
+Presumably equivalent wires: k_scal_gold ($add$original.sv:13$28_Y_gold), k_scal_gate ($xor$candidate.sv:18$9018_Y_gate) -> k_scal
+Presumably equivalent wires: k_code_gold ($add$original.sv:12$26_Y_gold), k_code_gate ($xor$candidate.sv:18$8279_Y_gate) -> k_code
+Presumably equivalent wires: k_blk_gold ($add$original.sv:11$18_Y_gold), k_blk_gate ($xor$candidate.sv:18$5327_Y_gate) -> k_blk
+Presumably equivalent wires: k_q_gold (\s_gs_gold [5:0]), k_q_gate (\s_gs_gate [5:0]) -> k_q
+Presumably equivalent wires: k_sb_gold ({ 6'000000 \s_gs_gold [31:6] }), k_sb_gate ({ 6'000000 \s_gs_gate [31:6] }) -> k_sb
+Presumably equivalent wires: s_raddr_gold ($add$original.sv:7$13_Y_gold), s_raddr_gate ($xor$candidate.sv:18$3849_Y_gate) -> s_raddr
+Presumably equivalent wires: s_pitch_gold (\st_d_gold [84:80]), s_pitch_gate (\st_d_gate [84:80]) -> s_pitch
+Presumably equivalent wires: s_rb_gold (\st_d_gold [183:168]), s_rb_gate (\st_d_gate [183:168]) -> s_rb
+Presumably equivalent wires: s_rbase_gold ($add$original.sv:4$11_Y_gold), s_rbase_gate ($xor$candidate.sv:18$2319_Y_gate) -> s_rbase
+Presumably equivalent wires: s_local_gold ($ternary$original.sv:3$7_Y_gold), s_local_gate ($ternary$candidate.sv:50$76_Y_gate) -> s_local
+Presumably equivalent wires: s_ring_gold (\st_d_gold [143:112]), s_ring_gate (\st_d_gate [143:112]) -> s_ring
+Presumably equivalent wires: addresses_gold ({ $ternary$original.sv:3$7_Y_gold $add$original.sv:4$11_Y_gold $add$original.sv:7$13_Y_gold $add$original.sv:11$18_Y_gold $add$original.sv:12$26_Y_gold $add$original.sv:13$28_Y_gold $add$original.sv:16$29_Y_gold $add$original.sv:17$30_Y_gold $add$original.sv:18$31_Y_gold $add$original.sv:19$34_Y_gold }), addresses_gate ({ $ternary$candidate.sv:50$76_Y_gate $xor$candidate.sv:18$2319_Y_gate $xor$candidate.sv:18$3849_Y_gate $xor$candidate.sv:18$5327_Y_gate $xor$candidate.sv:18$8279_Y_gate $xor$candidate.sv:18$9018_Y_gate $xor$candidate.sv:18$9756_Y_gate $xor$candidate.sv:18$10494_Y_gate $xor$candidate.sv:18$11232_Y_gate $xor$candidate.sv:18$11972_Y_gate }) -> addresses
+Presumably equivalent wires: st_sec_gold (\st_sec_gold), st_sec_gate (\st_sec_gate) -> st_sec
+Presumably equivalent wires: st_ph_gold (\st_ph_gold), st_ph_gate (\st_ph_gate) -> st_ph
+Presumably equivalent wires: s_stk_gold (\s_stk_gold), s_stk_gate (\s_stk_gate) -> s_stk
+Presumably equivalent wires: s_gs_gold (\s_gs_gold), s_gs_gate (\s_gs_gate) -> s_gs
+Presumably equivalent wires: st_row_gold (\st_row_gold), st_row_gate (\st_row_gate) -> st_row
+Presumably equivalent wires: st_d_gold (\st_d_gold), st_d_gate (\st_d_gate) -> st_d
+Changing input A of cell $reduce_xor$candidate.sv:17$11225_gate ($reduce_xor): $xor$candidate.sv:18$8279_Y_gate -> \addresses [191:160]
+Changing input A of cell $reduce_xor$candidate.sv:17$11224_gate ($reduce_xor): $xor$candidate.sv:18$8279_Y_gate -> \addresses [191:160]
+Changing input A of cell $xor$candidate.sv:8$10516_gate ($xor): $xor$candidate.sv:18$8279_Y_gate -> \addresses [191:160]
+Changing input A of cell $and$candidate.sv:8$10515_gate ($and): $xor$candidate.sv:18$8279_Y_gate -> \addresses [191:160]
+Changing input A of cell $reduce_xor$candidate.sv:17$10487_gate ($reduce_xor): $xor$candidate.sv:18$3849_Y_gate -> \addresses [255:224]
+Changing input A of cell $reduce_xor$candidate.sv:17$10486_gate ($reduce_xor): $xor$candidate.sv:18$3849_Y_gate -> \addresses [255:224]
+Changing input A of cell $xor$candidate.sv:8$9778_gate ($xor): $xor$candidate.sv:18$3849_Y_gate -> \addresses [255:224]
+Changing input A of cell $and$candidate.sv:8$9777_gate ($and): $xor$candidate.sv:18$3849_Y_gate -> \addresses [255:224]
+Changing input A of cell $reduce_xor$candidate.sv:17$9011_gate ($reduce_xor): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $reduce_xor$candidate.sv:17$9010_gate ($reduce_xor): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $xor$candidate.sv:8$8302_gate ($xor): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $and$candidate.sv:8$8301_gate ($and): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $reduce_xor$candidate.sv:17$6793_gate ($reduce_xor): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $reduce_xor$candidate.sv:17$6792_gate ($reduce_xor): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $xor$candidate.sv:8$6084_gate ($xor): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $and$candidate.sv:8$6083_gate ($and): $xor$candidate.sv:18$5327_Y_gate -> \addresses [223:192]
+Changing input A of cell $and$candidate.sv:8$11255_gate ($and): $xor$candidate.sv:18$9018_Y_gate -> \addresses [159:128]
+Changing input A of cell $xor$candidate.sv:8$11256_gate ($xor): $xor$candidate.sv:18$9018_Y_gate -> \addresses [159:128]
+Changing input A of cell $reduce_xor$candidate.sv:17$4581_gate ($reduce_xor): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $reduce_xor$candidate.sv:17$4580_gate ($reduce_xor): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $xor$candidate.sv:8$3872_gate ($xor): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $and$candidate.sv:8$3871_gate ($and): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $reduce_xor$candidate.sv:17$3842_gate ($reduce_xor): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $reduce_xor$candidate.sv:17$3841_gate ($reduce_xor): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $xor$candidate.sv:8$3133_gate ($xor): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $and$candidate.sv:8$3132_gate ($and): $xor$candidate.sv:18$2319_Y_gate -> \addresses [287:256]
+Changing input A of cell $reduce_xor$candidate.sv:45$2387_gate ($reduce_xor): $ternary$candidate.sv:50$76_Y_gate -> \addresses [319:288]
+Changing input A of cell $reduce_xor$candidate.sv:45$2386_gate ($reduce_xor): $ternary$candidate.sv:50$76_Y_gate -> \addresses [319:288]
+Changing input A of cell $and$candidate.sv:43$2377_gate ($and): { $ternary$candidate.sv:50$76_Y_gate [27:0] 4'0000 } -> { \addresses [315:288] 4'0000 }
+Changing input A of cell $and$candidate.sv:41$2367_gate ($and): { $ternary$candidate.sv:50$76_Y_gate [28:0] 3'000 } -> { \addresses [316:288] 3'000 }
+Changing input A of cell $and$candidate.sv:39$2357_gate ($and): { $ternary$candidate.sv:50$76_Y_gate [29:0] 2'00 } -> { \addresses [317:288] 2'00 }
+Changing input A of cell $and$candidate.sv:38$2355_gate ($and): { $ternary$candidate.sv:50$76_Y_gate [30:0] 1'0 } -> { \addresses [318:288] 1'0 }
+Changing input A of cell $reduce_xor$candidate.sv:17$11964_gate ($reduce_xor): $xor$candidate.sv:18$9018_Y_gate -> \addresses [159:128]
+Changing input A of cell $and$candidate.sv:37$2353_gate ($and): $ternary$candidate.sv:50$76_Y_gate -> \addresses [319:288]
+Changing input A of cell $reduce_xor$candidate.sv:17$11965_gate ($reduce_xor): $xor$candidate.sv:18$9018_Y_gate -> \addresses [159:128]
+Changing input A of cell $add$original.sv:13$28_gold ($add): $add$original.sv:11$18_Y_gold -> \addresses [223:192]
+Changing input A of cell $add$original.sv:12$21_gold ($add): $add$original.sv:11$18_Y_gold -> \addresses [223:192]
+Changing input A of cell $add$original.sv:17$30_gold ($add): $add$original.sv:7$13_Y_gold -> \addresses [255:224]
+Changing input A of cell $add$original.sv:11$16_gold ($add): $add$original.sv:4$11_Y_gold -> \addresses [287:256]
+Changing input A of cell $add$original.sv:18$31_gold ($add): $add$original.sv:12$26_Y_gold -> \addresses [191:160]
+Changing input A of cell $add$original.sv:7$13_gold ($add): $add$original.sv:4$11_Y_gold -> \addresses [287:256]
+Changing input A of cell $mul$original.sv:7$12_gold ($mul): $ternary$original.sv:3$7_Y_gold -> \addresses [319:288]
+Changing input A of cell $add$original.sv:19$34_gold ($add): $add$original.sv:13$28_Y_gold -> \addresses [159:128]
+
+5. Executing PREP pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\candidate'.
+Removing unused module `\original'.
+Removed 2 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.3. Executing FUTURE pass.
+
+5.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 1185 unused cells and 9733 unused wires.
+<suppressed ~1204 debug messages>
+
+5.6. Executing CHECK pass (checking for obvious problems).
+Checking module equiv...
+Found and reported 0 problems.
+
+5.7. Executing OPT pass (performing simple optimizations).
+
+5.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 5705 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 5663 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 5660 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+<suppressed ~135 debug messages>
+Removed a total of 45 cells.
+
+5.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \equiv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+5.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \equiv.
+Performed a total of 0 changes.
+
+5.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 5660 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 5659 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+5.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 0 unused cells and 46 unused wires.
+<suppressed ~1 debug messages>
+
+5.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \equiv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+5.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \equiv.
+Performed a total of 0 changes.
+
+5.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 5659 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Removed a total of 0 cells.
+
+5.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+
+5.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+5.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 31 bits (of 32) from port B of cell equiv.$sub$original.sv:3$2_gold ($sub).
+Removed top 31 bits (of 32) from port A of cell equiv.$add$original.sv:12$19_gold ($add).
+Removed top 28 bits (of 32) from port B of cell equiv.$add$original.sv:12$19_gold ($add).
+Removed top 27 bits (of 32) from port Y of cell equiv.$add$original.sv:12$19_gold ($add).
+Removed top 20 bits (of 32) from port B of cell equiv.$add$original.sv:12$21_gold ($add).
+Removed top 25 bits (of 32) from port B of cell equiv.$add$original.sv:13$28_gold ($add).
+Removed top 25 bits (of 32) from port B of cell equiv.$add$original.sv:12$23_gold ($add).
+Removed top 27 bits (of 32) from port B of cell equiv.$add$original.sv:12$26_gold ($add).
+Removed top 28 bits (of 32) from port B of cell equiv.$or$candidate.sv:50$75_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:28$852_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:28$852_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:28$852_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$861_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$861_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$861_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$1602_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$1602_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$1602_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:40$2364_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:40$2364_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:40$2364_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:42$2374_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:42$2374_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:42$2374_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:44$2384_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:44$2384_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:44$2384_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$2393_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$2393_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$2393_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$3132_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$3132_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$3132_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$3871_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$3871_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$3871_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$4610_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$4610_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$4610_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$11255_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$11255_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$11255_gate ($and).
+Removed top 28 bits (of 32) from port A of cell equiv.$xor$candidate.sv:18$6060_gate ($xor).
+Removed top 27 bits (of 32) from port B of cell equiv.$xor$candidate.sv:18$6060_gate ($xor).
+Removed top 27 bits (of 32) from port Y of cell equiv.$xor$candidate.sv:18$6060_gate ($xor).
+Removed top 27 bits (of 32) from port A of cell equiv.$xor$candidate.sv:18$6061_gate ($xor).
+Removed top 7 bits (of 32) from port Y of cell equiv.$xor$candidate.sv:18$6061_gate ($xor).
+Removed top 7 bits (of 32) from port B of cell equiv.$xor$candidate.sv:18$6061_gate ($xor).
+Removed top 31 bits (of 32) from mux cell equiv.$ternary$candidate.sv:66$11254_gate ($mux).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$6083_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$6083_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$6083_gate ($and).
+Removed top 25 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$6822_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$6822_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$6822_gate ($and).
+Removed top 25 bits (of 32) from port B of cell equiv.$xor$candidate.sv:8$6823_gate ($xor).
+Removed top 27 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$7562_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$7562_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$7562_gate ($and).
+Removed top 27 bits (of 32) from port B of cell equiv.$xor$candidate.sv:8$7563_gate ($xor).
+Removed top 25 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$8301_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$8301_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$8301_gate ($and).
+Removed top 25 bits (of 32) from port B of cell equiv.$xor$candidate.sv:8$8302_gate ($xor).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$9039_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$9039_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$9039_gate ($and).
+Removed top 27 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$9777_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$9777_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$9777_gate ($and).
+Removed top 27 bits (of 32) from port B of cell equiv.$xor$candidate.sv:8$9778_gate ($xor).
+Removed top 29 bits (of 32) from port B of cell equiv.$and$candidate.sv:8$10515_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:8$10515_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:8$10515_gate ($and).
+Removed top 29 bits (of 32) from port B of cell equiv.$xor$candidate.sv:8$10516_gate ($xor).
+Removed top 31 bits (of 32) from port B of cell equiv.$add$original.sv:19$34_gold ($add).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:28$850_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:28$850_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:28$850_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:28$851_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:28$851_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:28$851_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:40$2362_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:40$2362_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:40$2362_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:40$2363_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:40$2363_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:40$2363_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:42$2372_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:42$2372_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:42$2372_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:42$2373_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:42$2373_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:42$2373_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$or$candidate.sv:44$2382_gate ($or).
+Removed top 1 bits (of 32) from port A of cell equiv.$or$candidate.sv:44$2382_gate ($or).
+Removed top 1 bits (of 32) from port B of cell equiv.$or$candidate.sv:44$2382_gate ($or).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:44$2383_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:44$2383_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:44$2383_gate ($and).
+Removed top 31 bits (of 32) from port B of cell equiv.$xor$candidate.sv:8$11256_gate ($xor).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:28$848_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:28$848_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:28$848_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:28$849_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:28$849_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:28$849_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:40$2360_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:40$2360_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:40$2360_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:40$2361_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:40$2361_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:40$2361_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:42$2370_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:42$2370_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:42$2370_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:42$2371_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:42$2371_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:42$2371_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:44$2380_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:44$2380_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:44$2380_gate ($and).
+Removed top 1 bits (of 32) from port Y of cell equiv.$and$candidate.sv:44$2381_gate ($and).
+Removed top 1 bits (of 32) from port A of cell equiv.$and$candidate.sv:44$2381_gate ($and).
+Removed top 1 bits (of 32) from port B of cell equiv.$and$candidate.sv:44$2381_gate ($and).
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.p[4][31:0]$6080_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.p[3][31:0]$6079_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.g[0][31:0]$7548_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.g[1][31:0]$7549_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.g[2][31:0]$7550_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.g[3][31:0]$7551_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.g[4][31:0]$7552_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.g[5][31:0]$7553_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.p[1][31:0]$7555_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.p[2][31:0]$7556_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.p[3][31:0]$7557_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$65.p[4][31:0]$7558_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.p[2][31:0]$6078_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.p[1][31:0]$6077_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.g[5][31:0]$6075_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.g[4][31:0]$6074_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.g[3][31:0]$6073_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.g[2][31:0]$6072_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.g[1][31:0]$6071_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$63.g[0][31:0]$6070_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.g[0][31:0]$10503_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.g[1][31:0]$10504_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.g[2][31:0]$10505_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.g[3][31:0]$10506_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.g[4][31:0]$10507_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.g[5][31:0]$10508_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.p[1][31:0]$10510_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.p[2][31:0]$10511_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.p[3][31:0]$10512_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:65$69.p[4][31:0]$10513_gate.
+Removed top 27 bits (of 32) from wire equiv.$xor$candidate.sv:18$6060_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.p[4][31:0]$1598_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.p[3][31:0]$1597_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.p[2][31:0]$1596_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.p[1][31:0]$1595_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.g[5][31:0]$1593_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.g[4][31:0]$1592_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.g[3][31:0]$1591_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.g[2][31:0]$1590_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.g[1][31:0]$1589_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:51$56.g[0][31:0]$1588_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.g[0][31:0]$4597_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.g[0][31:0]$6809_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.g[1][31:0]$6810_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.g[2][31:0]$6811_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.g[3][31:0]$6812_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.p[4][31:0]$3130_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.p[3][31:0]$3129_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.p[2][31:0]$3128_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.p[1][31:0]$3127_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.g[5][31:0]$3125_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.g[4][31:0]$3124_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.g[3][31:0]$3123_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.g[2][31:0]$3122_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.g[1][31:0]$3121_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:54$59.g[0][31:0]$3120_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.g[4][31:0]$6813_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.g[1][31:0]$4598_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.g[5][31:0]$6814_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.p[1][31:0]$6816_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.p[2][31:0]$6817_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.p[3][31:0]$6818_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$64.p[4][31:0]$6819_gate.
+Removed top 28 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$62.p[1][31:0]$5342_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.g[2][31:0]$4599_gate.
+Removed top 28 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$62.p[0][31:0]$5341_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.g[3][31:0]$4600_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.g[4][31:0]$4601_gate.
+Removed top 31 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.b[31:0]$11237_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.g[0][31:0]$11241_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.g[1][31:0]$11242_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.g[2][31:0]$11243_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.g[3][31:0]$11244_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.g[4][31:0]$11245_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.g[5][31:0]$11246_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.p[1][31:0]$11248_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.p[2][31:0]$11249_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.p[3][31:0]$11250_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:66$70.p[4][31:0]$11251_gate.
+Removed top 28 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$62.g[2][31:0]$5337_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.g[0][31:0]$9765_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.g[1][31:0]$9766_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.g[2][31:0]$9767_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.g[3][31:0]$9768_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.g[4][31:0]$9769_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.g[5][31:0]$9770_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.p[1][31:0]$9772_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.p[2][31:0]$9773_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.p[3][31:0]$9774_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:64$68.p[4][31:0]$9775_gate.
+Removed top 30 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:59$62.g[1][31:0]$5336_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.g[5][31:0]$4602_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:28$852_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:28$851_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:28$850_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:28$849_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:28$848_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.p[4][31:0]$839_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.p[3][31:0]$838_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.p[2][31:0]$837_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.p[1][31:0]$836_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.g[5][31:0]$834_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.g[4][31:0]$833_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.g[3][31:0]$832_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.g[2][31:0]$831_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.g[1][31:0]$830_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:30$55.g[0][31:0]$829_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.p[4][31:0]$3868_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.p[3][31:0]$3867_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.p[2][31:0]$3866_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.p[1][31:0]$3865_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.g[5][31:0]$3863_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.g[4][31:0]$3862_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.g[3][31:0]$3861_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.g[2][31:0]$3860_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.g[1][31:0]$3859_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$60.g[0][31:0]$3858_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.p[1][31:0]$4604_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.p[2][31:0]$4605_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.p[3][31:0]$4606_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.g[0][31:0]$8288_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.g[1][31:0]$8289_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.g[2][31:0]$8290_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.g[3][31:0]$8291_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.g[4][31:0]$8292_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.g[5][31:0]$8293_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.p[1][31:0]$8295_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.p[2][31:0]$8296_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.p[3][31:0]$8297_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:60$66.p[4][31:0]$8298_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:58$61.p[4][31:0]$4607_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.g[0][31:0]$9027_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:44$2384_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:44$2383_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:44$2382_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:44$2381_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:44$2380_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.g[1][31:0]$9028_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.g[2][31:0]$9029_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.g[3][31:0]$9030_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:42$2374_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:42$2373_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:42$2372_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:42$2371_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:42$2370_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.g[4][31:0]$9031_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.g[5][31:0]$9032_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:40$2364_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:40$2363_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$or$candidate.sv:40$2362_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:40$2361_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$and$candidate.sv:40$2360_Y_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.p[1][31:0]$9034_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.p[2][31:0]$9035_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.p[3][31:0]$9036_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:63$67.p[4][31:0]$9037_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.p[4][31:0]$2351_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.p[3][31:0]$2350_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.p[2][31:0]$2349_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.p[1][31:0]$2348_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.g[5][31:0]$2346_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.g[4][31:0]$2345_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.g[3][31:0]$2344_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.g[2][31:0]$2343_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.g[1][31:0]$2342_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:46$58.g[0][31:0]$2341_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.p[4][31:0]$95_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.p[3][31:0]$94_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.p[2][31:0]$93_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.p[1][31:0]$92_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.g[5][31:0]$90_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.g[4][31:0]$89_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.g[3][31:0]$88_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.g[2][31:0]$87_gate.
+Removed top 1 bits (of 32) from wire equiv.$0\af_add32$func$candidate.sv:50$53.g[1][31:0]$86_gate.
+Removed top 7 bits (of 32) from wire equiv.af_add32$func$candidate.sv:59$44.$result_gate.
+Removed top 6 bits (of 32) from wire equiv.k_sb_gate.
+Removed top 27 bits (of 32) from wire equiv.$add$original.sv:12$19_Y_gold.
+Removed top 6 bits (of 32) from wire equiv.k_sb_gold.
+
+5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 0 unused cells and 183 unused wires.
+<suppressed ~1 debug messages>
+
+5.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.11. Executing OPT pass (performing simple optimizations).
+
+5.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 5659 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Removed a total of 0 cells.
+
+5.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+
+5.11.4. Finished fast OPT passes.
+
+5.12. Executing SORT pass.
+
+5.13. Printing statistics.
+
+=== equiv ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2538 wires
+    21253 wire bits
+      363 public wires
+    12126 public wire bits
+        7 ports
+      651 port bits
+     5659 cells
+       13   $add
+     3311   $and
+        1   $eq
+      320   $equiv
+        2   $mul
+        5   $mux
+        2   $not
+     1885   $or
+        1   $reduce_bool
+       31   $reduce_xor
+        1   $sub
+       87   $xor
+
+5.14. Executing CHECK pass (checking for obvious problems).
+Checking module equiv...
+Found and reported 0 problems.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 320 unproven $equiv cells (1 groups) in equiv:
+ Grouping SAT models for \addresses:
+  Trying to prove $equiv for \addresses [0]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [1]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [2]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [3]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [4]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [5]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [6]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [7]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [8]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [9]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [10]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [11]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [12]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [13]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [14]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [15]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [16]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [17]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [18]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [19]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [20]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [21]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [22]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [23]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [24]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [25]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [26]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [27]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [28]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [29]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [30]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [31]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [32]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [33]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [34]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [35]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [36]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [37]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [38]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [39]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [40]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [41]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [42]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [43]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [44]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [45]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [46]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [47]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [48]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [49]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [50]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [51]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [52]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [53]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [54]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [55]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [56]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [57]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [58]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [59]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [60]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [61]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [62]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [63]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [64]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [65]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [66]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [67]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [68]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [69]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [70]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [71]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [72]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [73]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [74]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [75]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [76]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [77]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [78]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [79]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [80]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [81]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [82]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [83]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [84]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [85]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [86]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [87]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [88]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [89]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [90]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [91]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [92]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [93]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [94]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [95]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [96]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [97]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [98]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [99]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [100]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [101]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [102]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [103]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [104]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [105]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [106]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [107]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [108]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [109]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [110]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [111]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [112]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [113]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [114]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [115]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [116]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [117]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [118]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [119]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [120]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [121]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [122]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [123]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [124]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [125]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [126]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [127]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [128]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [129]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [130]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [131]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [132]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [133]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [134]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [135]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [136]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [137]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [138]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [139]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [140]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [141]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [142]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [143]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [144]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [145]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [146]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [147]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [148]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [149]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [150]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [151]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [152]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [153]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [154]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [155]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [156]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [157]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [158]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [159]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [160]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [161]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [162]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [163]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [164]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [165]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [166]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [167]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [168]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [169]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [170]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [171]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [172]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [173]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [174]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [175]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [176]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [177]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [178]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [179]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [180]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [181]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [182]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [183]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [184]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [185]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [186]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [187]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [188]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [189]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [190]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [191]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [192]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [193]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [194]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [195]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [196]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [197]:ezsat
+ success!
+  Trying to prove $equiv for \ad

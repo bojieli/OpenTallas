@@ -1,0 +1,64 @@
+{
+  "candidate_source_sha256": "b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63",
+  "baseline_source_sha256": "1540cea1b3687b179edbffb6c690985f24c6bd7dcc115b8214e2f6a3e9925564",
+  "candidate_mapped_sha256": "4c4b1fa2eca4e65190a0203eea33fb2ff871928c9b5e26cbbef3e4952694fbb6",
+  "baseline_mapped_sha256": "8f5059041cbff629f2fa76006e96ed4fd573593e12d475385252a04193ca6c6e",
+  "candidate_map_log_sha256": "5f4ae499cac6d79744708b15f62977bb8cdc1904694ec36aed9730a4e2101086",
+  "baseline_map_log_sha256": "4154973f9620cef8af2d8879ef2a5e9bf68acb7d9787b108ae9fa95f578b12ea",
+  "candidate_warnings": 608,
+  "baseline_warnings": 576,
+  "normalized_missing": [],
+  "normalized_extra": [
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.p with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE",
+    "Warning: Replacing memory \\af_add32$func$qkd_host_native_engine.sv:LINE$N.g with list of registers. See qkd_host_native_engine.sv:LINE, qkd_host_native_engine.sv:LINE"
+  ],
+  "warned_temporary_connectivity": {
+    ".w2": {
+      "candidate_occurrences": 0,
+      "baseline_occurrences": 0
+    },
+    "ob": {
+      "candidate_occurrences": 0,
+      "baseline_occurrences": 0
+    },
+    "oh": {
+      "candidate_occurrences": 0,
+      "baseline_occurrences": 0
+    },
+    "g_qp.l": {
+      "candidate_occurrences": 0,
+      "baseline_occurrences": 0
+    }
+  },
+  "scope": "same exact selected params/script/toolimage/library; semantic warning headers paired after generated-ID/source-line normalization; full diagnostic logs retained; no blanket whole mapping/cold qualification"
+}

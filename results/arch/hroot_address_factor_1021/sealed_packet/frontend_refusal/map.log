@@ -1,0 +1,34 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command ` read_liberty -lib libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib; read_liberty -lib libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib; read_liberty -lib libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; read_liberty -lib libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; read_liberty -lib libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; read_verilog -lib ot_sram_1r1w_32x128_m1_bb.v; read_verilog -sv -DSYNTHESIS qkd_host_native_engine.sv ot_hdc_ingest_fp8q.sv; chparam -set AW 32 -set HDMAX 128 -set KVHMAX 2 -set QKV 1 -set APIPE 0 -set QPIPE 2 -set NATIVE_ROWS 1 -set QMUT 0 qkd_host_native_engine; hierarchy -check -top qkd_host_native_engine; synth -flatten -top qkd_host_native_engine; dfflibmap -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; abc -liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; hilomap -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L; opt_clean; stat; write_verilog -noattr original.v' --
+
+1. Executing Liberty frontend: libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: ot_sram_1r1w_32x128_m1_bb.v
+Parsing Verilog input from `ot_sram_1r1w_32x128_m1_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_32x128_m1'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: qkd_host_native_engine.sv
+Parsing SystemVerilog input from `qkd_host_native_engine.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_host_native_engine'.
+qkd_host_native_engine.sv:133: ERROR: Can't resolve task name `$fatal'.

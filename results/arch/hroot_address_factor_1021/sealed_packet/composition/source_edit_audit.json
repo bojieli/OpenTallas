@@ -1,0 +1,48 @@
+{
+  "original_sha256": "1540cea1b3687b179edbffb6c690985f24c6bd7dcc115b8214e2f6a3e9925564",
+  "candidate_sha256": "b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63",
+  "changed_expression_lines": [
+    {
+      "original": "    wire [31:0] s_local = (s_ring != 0) ? (st_row & (s_ring - 32'd1)) : ((s_gs << 4) | (st_row & 32'd15));",
+      "candidate": "    wire [31:0] s_local = (s_ring != 0) ? (st_row & af_add32(s_ring, 32'hffffffff)) : ((s_gs << 4) | (st_row & 32'd15));"
+    },
+    {
+      "original": "    wire [31:0] s_rbase = st_d[47:16] + ((s_ring != 0) ? 32'd0 : s_stk * st_d[79:48]);",
+      "candidate": "    wire [31:0] s_rbase = af_add32(st_d[47:16], ((s_ring != 0) ? 32'd0 : af_mul3(st_d[79:48], s_stk)));"
+    },
+    {
+      "original": "    wire [31:0] s_raddr = s_rbase + s_local * s_pitch;          // pitch <= 31: shifts and adds",
+      "candidate": "    wire [31:0] s_raddr = af_add32(s_rbase, af_mul5(s_local, s_pitch));          // pitch <= 31: shifts and adds"
+    },
+    {
+      "original": "    wire [31:0] k_blk = s_rbase + (k_sb << 11) + (k_sb << 7);",
+      "candidate": "    wire [31:0] k_blk = af_add32(af_add32(s_rbase, (k_sb << 11)), (k_sb << 7));"
+    },
+    {
+      "original": "    wire [31:0] k_code = k_blk + ((32'd1 + {28'd0, k_q[5:2]}) << 7) + ({30'd0, k_q[1:0]} << 5) + ((st_row & 32'd15) << 1);",
+      "candidate": "    wire [31:0] k_code = af_add32(af_add32(af_add32(k_blk, (af_add32(32'd1, {28'd0, k_q[5:2]}) << 7)), ({30'd0, k_q[1:0]} << 5)), ((st_row & 32'd15) << 1));"
+    },
+    {
+      "original": "    wire [31:0] k_scal = k_blk + ({26'd0, k_q} << 1);",
+      "candidate": "    wire [31:0] k_scal = af_add32(k_blk, ({26'd0, k_q} << 1));"
+    },
+    {
+      "original": "                    st_pop = 6'd32; st_wv = 1'b1; st_wd = ra_head; st_wa = st_d[47:16] + st_row; st_adv = 1'b1;",
+      "candidate": "                    st_pop = 6'd32; st_wv = 1'b1; st_wd = ra_head; st_wa = (AW == 32) ? af_add32(st_d[47:16], st_row) : (st_d[47:16] + st_row); st_adv = 1'b1;"
+    },
+    {
+      "original": "                    st_wa = u_raddr + st_sec;",
+      "candidate": "                    st_wa = (AW == 32) ? af_add32(u_raddr, {27'd0, st_sec}) : (u_raddr + st_sec);"
+    },
+    {
+      "original": "                            st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;",
+      "candidate": "                            st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = (AW == 32) ? af_add32(u_kcode, {29'd0, st_ph}) : (u_kcode + st_ph);"
+    },
+    {
+      "original": "                        st_wa = u_kscal + (st_ph == 3'd4 ? 1 : 0);",
+      "candidate": "                        st_wa = (AW == 32) ? af_add32(u_kscal, (st_ph == 3'd4 ? 32'd1 : 32'd0)) : (u_kscal + (st_ph == 3'd4 ? 1 : 0));"
+    }
+  ],
+  "other_source_bytes_identical_after_replacement": true,
+  "scope": "actual production combinational address projection over arbitrary state cutpoints; not native copy convergence, CDC or timing"
+}

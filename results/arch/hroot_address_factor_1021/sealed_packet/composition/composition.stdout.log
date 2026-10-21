@@ -1,0 +1,452 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv original.sv candidate_lowered.sv; proc; equiv_make original candidate_lowered equiv; prep -top equiv; equiv_simple; equiv_status -assert' --
+
+1. Executing Verilog-2005 frontend: original.sv
+Parsing SystemVerilog input from `original.sv' to AST representation.
+Generating RTLIL representation for module `\original'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: candidate_lowered.sv
+Parsing SystemVerilog input from `candidate_lowered.sv' to AST representation.
+Generating RTLIL representation for module `\candidate_lowered'.
+Successfully finished Verilog frontend.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module candidate_lowered.
+<suppressed ~12 debug messages>
+Optimizing module original.
+<suppressed ~12 debug messages>
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: final3_gold ($add$original.sv:19$34_Y_gold), final3_gate ($add$candidate_lowered.sv:19$68_Y_gate) -> final3
+Presumably equivalent wires: final2_gold ($add$original.sv:18$31_Y_gold), final2_gate ($add$candidate_lowered.sv:18$65_Y_gate) -> final2
+Presumably equivalent wires: final1_gold ($add$original.sv:17$30_Y_gold), final1_gate ($add$candidate_lowered.sv:17$64_Y_gate) -> final1
+Presumably equivalent wires: final0_gold ($add$original.sv:16$29_Y_gold), final0_gate ($add$candidate_lowered.sv:16$63_Y_gate) -> final0
+Presumably equivalent wires: u_kscal_gold ($add$original.sv:13$28_Y_gold), u_kscal_gate ($add$candidate_lowered.sv:13$62_Y_gate) -> u_kscal
+Presumably equivalent wires: u_kcode_gold ($add$original.sv:12$26_Y_gold), u_kcode_gate ($add$candidate_lowered.sv:12$60_Y_gate) -> u_kcode
+Presumably equivalent wires: u_raddr_gold ($add$original.sv:7$13_Y_gold), u_raddr_gate ($add$candidate_lowered.sv:7$47_Y_gate) -> u_raddr
+Presumably equivalent wires: k_scal_gold ($add$original.sv:13$28_Y_gold), k_scal_gate ($add$candidate_lowered.sv:13$62_Y_gate) -> k_scal
+Presumably equivalent wires: k_code_gold ($add$original.sv:12$26_Y_gold), k_code_gate ($add$candidate_lowered.sv:12$60_Y_gate) -> k_code
+Presumably equivalent wires: k_blk_gold ($add$original.sv:11$18_Y_gold), k_blk_gate ($add$candidate_lowered.sv:11$52_Y_gate) -> k_blk
+Presumably equivalent wires: k_q_gold (\s_gs_gold [5:0]), k_q_gate (\s_gs_gate [5:0]) -> k_q
+Presumably equivalent wires: k_sb_gold ({ 6'000000 \s_gs_gold [31:6] }), k_sb_gate ({ 6'000000 \s_gs_gate [31:6] }) -> k_sb
+Presumably equivalent wires: s_raddr_gold ($add$original.sv:7$13_Y_gold), s_raddr_gate ($add$candidate_lowered.sv:7$47_Y_gate) -> s_raddr
+Presumably equivalent wires: s_pitch_gold (\st_d_gold [84:80]), s_pitch_gate (\st_d_gate [84:80]) -> s_pitch
+Presumably equivalent wires: s_rb_gold (\st_d_gold [183:168]), s_rb_gate (\st_d_gate [183:168]) -> s_rb
+Presumably equivalent wires: s_rbase_gold ($add$original.sv:4$11_Y_gold), s_rbase_gate ($add$candidate_lowered.sv:4$45_Y_gate) -> s_rbase
+Presumably equivalent wires: s_local_gold ($ternary$original.sv:3$7_Y_gold), s_local_gate ($ternary$candidate_lowered.sv:3$41_Y_gate) -> s_local
+Presumably equivalent wires: s_ring_gold (\st_d_gold [143:112]), s_ring_gate (\st_d_gate [143:112]) -> s_ring
+Presumably equivalent wires: addresses_gold ({ $ternary$original.sv:3$7_Y_gold $add$original.sv:4$11_Y_gold $add$original.sv:7$13_Y_gold $add$original.sv:11$18_Y_gold $add$original.sv:12$26_Y_gold $add$original.sv:13$28_Y_gold $add$original.sv:16$29_Y_gold $add$original.sv:17$30_Y_gold $add$original.sv:18$31_Y_gold $add$original.sv:19$34_Y_gold }), addresses_gate ({ $ternary$candidate_lowered.sv:3$41_Y_gate $add$candidate_lowered.sv:4$45_Y_gate $add$candidate_lowered.sv:7$47_Y_gate $add$candidate_lowered.sv:11$52_Y_gate $add$candidate_lowered.sv:12$60_Y_gate $add$candidate_lowered.sv:13$62_Y_gate $add$candidate_lowered.sv:16$63_Y_gate $add$candidate_lowered.sv:17$64_Y_gate $add$candidate_lowered.sv:18$65_Y_gate $add$candidate_lowered.sv:19$68_Y_gate }) -> addresses
+Presumably equivalent wires: st_sec_gold (\st_sec_gold), st_sec_gate (\st_sec_gate) -> st_sec
+Presumably equivalent wires: st_ph_gold (\st_ph_gold), st_ph_gate (\st_ph_gate) -> st_ph
+Presumably equivalent wires: s_stk_gold (\s_stk_gold), s_stk_gate (\s_stk_gate) -> s_stk
+Presumably equivalent wires: s_gs_gold (\s_gs_gold), s_gs_gate (\s_gs_gate) -> s_gs
+Presumably equivalent wires: st_row_gold (\st_row_gold), st_row_gate (\st_row_gate) -> st_row
+Presumably equivalent wires: st_d_gold (\st_d_gold), st_d_gate (\st_d_gate) -> st_d
+Changing input A of cell $add$candidate_lowered.sv:13$62_gate ($add): $add$candidate_lowered.sv:11$52_Y_gate -> \addresses [223:192]
+Changing input A of cell $add$candidate_lowered.sv:12$55_gate ($add): $add$candidate_lowered.sv:11$52_Y_gate -> \addresses [223:192]
+Changing input A of cell $add$candidate_lowered.sv:17$64_gate ($add): $add$candidate_lowered.sv:7$47_Y_gate -> \addresses [255:224]
+Changing input A of cell $add$candidate_lowered.sv:11$50_gate ($add): $add$candidate_lowered.sv:4$45_Y_gate -> \addresses [287:256]
+Changing input A of cell $add$candidate_lowered.sv:18$65_gate ($add): $add$candidate_lowered.sv:12$60_Y_gate -> \addresses [191:160]
+Changing input A of cell $add$candidate_lowered.sv:7$47_gate ($add): $add$candidate_lowered.sv:4$45_Y_gate -> \addresses [287:256]
+Changing input A of cell $mul$candidate_lowered.sv:7$46_gate ($mul): $ternary$candidate_lowered.sv:3$41_Y_gate -> \addresses [319:288]
+Changing input A of cell $add$candidate_lowered.sv:19$68_gate ($add): $add$candidate_lowered.sv:13$62_Y_gate -> \addresses [159:128]
+Changing input A of cell $add$original.sv:13$28_gold ($add): $add$original.sv:11$18_Y_gold -> \addresses [223:192]
+Changing input A of cell $add$original.sv:12$21_gold ($add): $add$original.sv:11$18_Y_gold -> \addresses [223:192]
+Changing input A of cell $add$original.sv:17$30_gold ($add): $add$original.sv:7$13_Y_gold -> \addresses [255:224]
+Changing input A of cell $add$original.sv:11$16_gold ($add): $add$original.sv:4$11_Y_gold -> \addresses [287:256]
+Changing input A of cell $add$original.sv:18$31_gold ($add): $add$original.sv:12$26_Y_gold -> \addresses [191:160]
+Changing input A of cell $add$original.sv:7$13_gold ($add): $add$original.sv:4$11_Y_gold -> \addresses [287:256]
+Changing input A of cell $mul$original.sv:7$12_gold ($mul): $ternary$original.sv:3$7_Y_gold -> \addresses [319:288]
+Changing input A of cell $add$original.sv:19$34_gold ($add): $add$original.sv:13$28_Y_gold -> \addresses [159:128]
+
+5. Executing PREP pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\candidate_lowered'.
+Removing unused module `\original'.
+Removed 2 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.3. Executing FUTURE pass.
+
+5.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 507 unused cells and 58 unused wires.
+<suppressed ~526 debug messages>
+
+5.6. Executing CHECK pass (checking for obvious problems).
+Checking module equiv...
+Found and reported 0 problems.
+
+5.7. Executing OPT pass (performing simple optimizations).
+
+5.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 368 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 358 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 355 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 354 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 353 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+<suppressed ~45 debug messages>
+Removed a total of 15 cells.
+
+5.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \equiv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+5.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \equiv.
+Performed a total of 0 changes.
+
+5.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 353 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 352 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 351 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 0 unused cells and 11 unused wires.
+<suppressed ~1 debug messages>
+
+5.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \equiv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+5.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \equiv.
+Performed a total of 0 changes.
+
+5.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 351 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Removed a total of 0 cells.
+
+5.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+
+5.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+5.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 31 bits (of 32) from port B of cell equiv.$sub$original.sv:3$2_gold ($sub).
+Removed top 31 bits (of 32) from mux cell equiv.$ternary$candidate_lowered.sv:19$67_gate ($mux).
+Removed top 28 bits (of 32) from port B of cell equiv.$or$candidate_lowered.sv:3$40_gate ($or).
+Removed top 29 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:18$65_gate ($add).
+Removed top 27 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:17$64_gate ($add).
+Removed top 31 bits (of 32) from port A of cell equiv.$add$candidate_lowered.sv:12$53_gate ($add).
+Removed top 28 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:12$53_gate ($add).
+Removed top 27 bits (of 32) from port Y of cell equiv.$add$candidate_lowered.sv:12$53_gate ($add).
+Removed top 20 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:12$55_gate ($add).
+Removed top 25 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:13$62_gate ($add).
+Removed top 25 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:12$57_gate ($add).
+Removed top 27 bits (of 32) from port B of cell equiv.$add$candidate_lowered.sv:12$60_gate ($add).
+Removed top 6 bits (of 32) from wire equiv.k_sb_gate.
+Removed top 31 bits (of 32) from wire equiv.$ternary$candidate_lowered.sv:19$67_Y_gate.
+Removed top 27 bits (of 32) from wire equiv.$add$candidate_lowered.sv:12$53_Y_gate.
+Removed top 6 bits (of 32) from wire equiv.k_sb_gold.
+
+5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+5.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.11. Executing OPT pass (performing simple optimizations).
+
+5.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module equiv.
+
+5.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\equiv'.
+Computing hashes of 351 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+Computing hashes of 349 cells of `\equiv'.
+Finding duplicate cells in `\equiv'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+
+5.11.4. Finished fast OPT passes.
+
+5.12. Executing SORT pass.
+
+5.13. Printing statistics.
+
+=== equiv ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       74 wires
+     3410 wire bits
+       57 public wires
+     2955 public wire bits
+        7 ports
+      651 port bits
+      349 cells
+       15   $add
+        2   $and
+        1   $eq
+      320   $equiv
+        3   $mul
+        5   $mux
+        1   $or
+        1   $reduce_bool
+        1   $sub
+
+5.14. Executing CHECK pass (checking for obvious problems).
+Checking module equiv...
+Found and reported 0 problems.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 64 unproven $equiv cells (1 groups) in equiv:
+ Grouping SAT models for \addresses [319:256]:
+  Trying to prove $equiv for \addresses [256]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [257]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [258]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [259]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [260]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [261]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [262]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [263]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [264]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [265]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [266]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [267]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [268]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [269]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [270]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [271]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [272]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [273]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [274]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [275]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [276]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [277]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [278]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [279]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [280]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [281]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [282]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [283]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [284]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [285]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [286]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [287]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [288]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [289]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [290]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [291]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [292]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [293]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [294]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [295]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [296]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [297]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [298]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [299]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [300]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [301]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [302]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [303]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [304]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [305]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [306]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [307]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [308]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [309]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [310]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [311]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [312]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [313]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [314]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [315]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [316]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [317]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [318]:ezsat
+ success!
+  Trying to prove $equiv for \addresses [319]:ezsat
+ success!
+Proved 64 previously unproven $equiv cells.
+
+7. Executing EQUIV_STATUS pass.
+Found 320 $equiv cells in equiv:
+  Of those cells 320 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 8e29c17a99, time: 0.23s, user: 0.23s, system: 0.01s, MEM: 33.16 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 82% 1x equiv_simple (0 sec), 5% 5x opt_clean (0 sec), ...

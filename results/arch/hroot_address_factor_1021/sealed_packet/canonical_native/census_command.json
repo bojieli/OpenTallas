@@ -1,0 +1,26 @@
+{
+  "cmd": [
+    "python3",
+    "native_census.py",
+    "--netlist",
+    "resynth.v",
+    "--top",
+    "qkd_host_native_engine_n32",
+    "--out",
+    "native_canonical.json",
+    "--liberty",
+    "ot_sram_1r1w_32x128_m1_tt.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+  ],
+  "rc": 0,
+  "resynth_sha256": "5cc67dceeac44c07d02851c9921e88edf8273291180ac8af42305f19d3f584e7"
+}

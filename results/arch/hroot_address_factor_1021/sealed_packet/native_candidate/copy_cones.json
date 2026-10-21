@@ -1,0 +1,4539 @@
+{
+ "qualified": false,
+ "audit_script_sha256": "ef3406d270c2f4c7b31ace99cc7ba39f34ba7871e1429e2405d0e8656c1e7aba",
+ "input_driver_bit_examples": [
+  {
+   "port_bit": "clk_bank[1]",
+   "driver_port_bit": "clk_bank[1]",
+   "net": 5
+  },
+  {
+   "port_bit": "clk_bank[0]",
+   "driver_port_bit": "clk_bank[0]",
+   "net": 6
+  },
+  {
+   "port_bit": "d_data[255]",
+   "driver_port_bit": "d_data[255]",
+   "net": 11
+  },
+  {
+   "port_bit": "d_data[254]",
+   "driver_port_bit": "d_data[254]",
+   "net": 12
+  }
+ ],
+ "causal_negative": {
+  "refused": true,
+  "origin": 75722,
+  "cell": "u75722_c16.u_cell",
+  "replacement_physical_input": "__negative_independent_D[1]",
+  "distinct_structural_D_cones": 2,
+  "remaining_cohorts_canonicalized": true
+ },
+ "mapped_binding_sha256": "f0f2b0a1963e9e5f5a003207490deda1bcf862c9eec544594a013131925d5779",
+ "record_sha256": "8a2ff7314dee5f040a9ceee7902bedb9e07b99cd82b4e114ab4fb53fa9319e59",
+ "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+ "summary": {
+  "groups": 454,
+  "async_reset_groups": 26,
+  "proven_unreset_groups": 428,
+  "unproved_groups": 0,
+  "max_cohort_convergence_edges": 1,
+  "rounds": [
+   {
+    "edge": 1,
+    "newly_proved_groups": 428
+   }
+  ]
+ },
+ "proven_groups": [
+  {
+   "origin": 75765,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 75766,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 76426,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79190,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79191,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79192,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79193,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79194,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79195,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79196,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 79197,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 80532,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 80533,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 80974,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 80975,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 80976,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84620,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84621,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84622,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84652,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84757,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84760,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84763,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 84764,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 88928,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 88931,
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "method": "actual common asynchronous reset contract",
+   "bound_edges": 0
+  },
+  {
+   "origin": 75722,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377,
+    14377
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77840,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    84122,
+    84122
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77841,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    84117,
+    84117
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77842,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    84112,
+    84112
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77843,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    84107,
+    84107
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77844,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    84102,
+    84102
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77893,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83902,
+    83902,
+    83902
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77894,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83900,
+    83900,
+    83900
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77903,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83875,
+    83875
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 77904,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    94163,
+    94163
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78071,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83050,
+    83050
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78072,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83049,
+    83049
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78073,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83048,
+    83048
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78074,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83047,
+    83047
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78075,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83046,
+    83046
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78076,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83045,
+    83045
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78077,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83044,
+    83044
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78078,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83043,
+    83043
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78079,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83042,
+    83042
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78080,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83041,
+    83041
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78081,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83040,
+    83040
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78082,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83039,
+    83039
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78083,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83038,
+    83038
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78084,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83037,
+    83037
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78085,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83036,
+    83036
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78086,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83035,
+    83035
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78087,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83034,
+    83034
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78088,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83033,
+    83033
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78089,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83032,
+    83032
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78090,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83031,
+    83031
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78091,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83030,
+    83030
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78092,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83029,
+    83029
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78093,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83028,
+    83028
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78094,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83027,
+    83027
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78095,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83026,
+    83026
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78096,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83023,
+    83023
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78097,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83022,
+    83022
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78098,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83021,
+    83021
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78099,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83020,
+    83020
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78100,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83019,
+    83019
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78101,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83018,
+    83018
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78102,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83017,
+    83017
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78103,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83016,
+    83016
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78104,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83015,
+    83015
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78105,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83014,
+    83014
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78106,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83013,
+    83013
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78107,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83012,
+    83012
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78108,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83011,
+    83011
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78109,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83010,
+    83010
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78110,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83009,
+    83009
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78111,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83008,
+    83008
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78112,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83007,
+    83007
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78113,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83006,
+    83006
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78114,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83005,
+    83005
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78115,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83004,
+    83004
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78116,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83003,
+    83003
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78117,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83002,
+    83002
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78118,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83001,
+    83001
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78119,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    83000,
+    83000
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78120,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82999,
+    82999
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78121,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82998,
+    82998
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78122,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82997,
+    82997
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78123,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82996,
+    82996
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78124,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82995,
+    82995
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78125,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82994,
+    82994
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78126,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82993,
+    82993
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78127,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82992,
+    82992
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78128,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82991,
+    82991
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78129,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82990,
+    82990
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78130,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82989,
+    82989
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78131,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82988,
+    82988
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78132,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82987,
+    82987
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78133,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82986,
+    82986
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78134,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82985,
+    82985
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78135,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82984,
+    82984
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78136,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82983,
+    82983
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78137,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82982,
+    82982
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78138,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82981,
+    82981
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78139,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82980,
+    82980
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78140,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82979,
+    82979
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78141,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82978,
+    82978
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78142,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82977,
+    82977
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78143,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82976,
+    82976
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78144,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82975,
+    82975
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78145,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82974,
+    82974
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78146,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82973,
+    82973
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78147,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82972,
+    82972
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78148,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82971,
+    82971
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78149,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82970,
+    82970
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78150,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82969,
+    82969
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78151,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82968,
+    82968
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78152,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82967,
+    82967
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78153,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82966,
+    82966
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78154,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82965,
+    82965
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78155,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82964,
+    82964
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78156,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82963,
+    82963
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78157,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82962,
+    82962
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78158,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82961,
+    82961
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78159,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82957,
+    82957
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78160,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82956,
+    82956
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78161,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82955,
+    82955
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78162,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82954,
+    82954
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78163,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82953,
+    82953
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78164,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82952,
+    82952
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78165,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82951,
+    82951
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78166,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82950,
+    82950
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78167,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82949,
+    82949
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78168,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82948,
+    82948
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78169,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82947,
+    82947
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78170,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82946,
+    82946
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78171,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82945,
+    82945
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78172,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82944,
+    82944
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78173,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82943,
+    82943
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78174,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82942,
+    82942
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78175,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82941,
+    82941
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78176,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82940,
+    82940
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78177,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82939,
+    82939
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78178,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82938,
+    82938
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78179,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82937,
+    82937
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78180,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82936,
+    82936
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78181,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82935,
+    82935
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78182,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82934,
+    82934
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78183,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82933,
+    82933
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78184,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82932,
+    82932
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78185,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82931,
+    82931
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78186,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82930,
+    82930
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78187,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82929,
+    82929
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78188,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82922,
+    82922
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78189,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82921,
+    82921
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78190,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82920,
+    82920
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78191,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82919,
+    82919
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78192,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82918,
+    82918
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78193,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82917,
+    82917
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78194,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82916,
+    82916
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78195,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82915,
+    82915
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 78196,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    82914,
+    82914
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 80403,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    80054,
+    80054
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81007,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    71330,
+    71330
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81008,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    71325,
+    71325
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81814,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67480,
+    67480
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81815,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67479,
+    67479
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81816,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67478,
+    67478
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81817,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67477,
+    67477
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81818,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67476,
+    67476
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81819,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67475,
+    67475
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81820,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67474,
+    67474
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81821,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67473,
+    67473
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81822,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67472,
+    67472
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81823,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67471,
+    67471
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81824,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67470,
+    67470
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81825,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67469,
+    67469
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81826,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67468,
+    67468
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81827,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67467,
+    67467
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81828,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67466,
+    67466
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81829,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67465,
+    67465
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81830,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67464,
+    67464
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81831,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67463,
+    67463
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81832,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67462,
+    67462
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81833,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67461,
+    67461
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81834,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67460,
+    67460
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81835,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67459,
+    67459
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81836,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67458,
+    67458
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81837,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67457,
+    67457
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81838,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67456,
+    67456
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81839,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67455,
+    67455
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81840,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67454,
+    67454
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81841,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67453,
+    67453
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81842,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67452,
+    67452
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81843,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67451,
+    67451
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81844,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67450,
+    67450
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81845,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67449,
+    67449
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81846,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67448,
+    67448
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81847,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67447,
+    67447
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81848,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67446,
+    67446
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81849,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67445,
+    67445
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81850,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67444,
+    67444
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81851,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67443,
+    67443
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81852,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67442,
+    67442
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81853,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67441,
+    67441
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81854,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67440,
+    67440
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81855,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67439,
+    67439
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81856,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67438,
+    67438
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81857,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67434,
+    67434
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81858,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67433,
+    67433
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81859,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67432,
+    67432
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81860,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67431,
+    67431
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81861,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67430,
+    67430
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81862,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67429,
+    67429
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81863,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67428,
+    67428
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81864,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67427,
+    67427
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81865,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67426,
+    67426
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81866,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67425,
+    67425
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81867,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67424,
+    67424
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81868,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67423,
+    67423
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81869,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67422,
+    67422
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81870,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67421,
+    67421
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81871,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67420,
+    67420
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81872,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67419,
+    67419
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81873,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67418,
+    67418
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81874,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67417,
+    67417
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81875,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67416,
+    67416
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81876,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67415,
+    67415
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81877,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67414,
+    67414
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81878,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67413,
+    67413
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81879,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67412,
+    67412
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81880,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67411,
+    67411
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81881,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67410,
+    67410
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81882,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67409,
+    67409
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81883,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67408,
+    67408
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81884,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67407,
+    67407
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81885,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67406,
+    67406
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81886,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67405,
+    67405
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81887,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67404,
+    67404
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81888,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67403,
+    67403
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81889,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67402,
+    67402
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81890,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67401,
+    67401
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81891,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67400,
+    67400
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81892,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67399,
+    67399
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81893,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67398,
+    67398
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81894,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67397,
+    67397
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81895,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67396,
+    67396
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81896,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67395,
+    67395
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81897,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67394,
+    67394
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81898,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67393,
+    67393
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81899,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67392,
+    67392
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81900,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67391,
+    67391
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81901,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67390,
+    67390
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81902,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67386,
+    67386
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81903,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67385,
+    67385
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81904,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67384,
+    67384
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81905,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67383,
+    67383
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81906,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67382,
+    67382
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81907,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67381,
+    67381
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81908,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67380,
+    67380
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81909,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67379,
+    67379
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81910,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67378,
+    67378
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81911,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67377,
+    67377
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81912,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67376,
+    67376
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81913,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67375,
+    67375
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81914,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67374,
+    67374
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81915,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67373,
+    67373
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81916,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67372,
+    67372
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81917,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67371,
+    67371
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81918,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67370,
+    67370
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81919,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67369,
+    67369
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81920,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67368,
+    67368
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81921,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67367,
+    67367
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81922,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67366,
+    67366
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81923,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67365,
+    67365
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81924,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67364,
+    67364
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81925,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67363,
+    67363
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81926,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67362,
+    67362
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81927,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67361,
+    67361
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81928,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67360,
+    67360
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81929,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67359,
+    67359
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81930,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67358,
+    67358
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81931,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67357,
+    67357
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81932,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67356,
+    67356
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81933,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67355,
+    67355
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81934,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67354,
+    67354
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81935,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67353,
+    67353
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81936,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67352,
+    67352
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81937,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67351,
+    67351
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81938,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67350,
+    67350
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81939,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67349,
+    67349
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81940,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    67348,
+    67348
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 81941,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    72291,
+    72291
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83235,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    55298,
+    55298
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83363,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    55042,
+    55042
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83395,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    54978,
+    54978
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83459,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    54850,
+    54850
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83491,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    54786,
+    54786
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83555,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    54658,
+    54658
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83619,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    54529,
+    54529
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83715,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    54336,
+    54336
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 83853,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    81665,
+    81665,
+    81665,
+    81665,
+    81665,
+    81665,
+    81665
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84167,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    51559,
+    51559
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84168,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    51557,
+    51557
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84169,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    51555,
+    51555
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84170,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    93432,
+    93432
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84307,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418,
+    50418
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84308,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    50415,
+    50415,
+    50415,
+    50415,
+    50415,
+    50415,
+    50415,
+    50415,
+    50415,
+    50415
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84309,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    50412,
+    50412,
+    50412,
+    50412,
+    50412
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84310,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    93685,
+    93685,
+    93685,
+    93685,
+    93685,
+    93685
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84311,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    50409,
+    50409
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84312,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    50406,
+    50406
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84313,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    50403,
+    50403
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84314,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    94220,
+    94220
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84492,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45636,
+    45636
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84493,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45633,
+    45633
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84494,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45626,
+    45626
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84495,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45619,
+    45619
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84496,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45614,
+    45614
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84497,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45602,
+    45602
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84498,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45596,
+    45596
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84499,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45586,
+    45586
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84500,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45480,
+    45480
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84501,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45474,
+    45474
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84502,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45470,
+    45470
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84503,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45465,
+    45465
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84504,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45457,
+    45457
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84505,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45445,
+    45445
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84506,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45438,
+    45438
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84507,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45428,
+    45428
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84508,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45291,
+    45291
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84509,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45286,
+    45286
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84510,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45280,
+    45280
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84511,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45272,
+    45272
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84512,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45264,
+    45264
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84513,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45254,
+    45254
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84514,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45247,
+    45247
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84515,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45235,
+    45235
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84516,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45110,
+    45110
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84517,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45105,
+    45105
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84518,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45100,
+    45100
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84519,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45091,
+    45091
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84520,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45084,
+    45084
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84521,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45080,
+    45080
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84522,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45068,
+    45068
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84523,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    45057,
+    45057
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84524,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44908,
+    44908
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84525,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44903,
+    44903
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84526,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44898,
+    44898
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84527,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44893,
+    44893
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84528,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44889,
+    44889
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84529,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44884,
+    44884
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84530,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44872,
+    44872
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84531,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44861,
+    44861
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84532,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44735,
+    44735
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84533,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44730,
+    44730
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84534,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44725,
+    44725
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84535,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44719,
+    44719
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84536,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44712,
+    44712
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84537,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44700,
+    44700
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84538,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44692,
+    44692
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84539,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44680,
+    44680
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84540,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44529,
+    44529
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84541,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44524,
+    44524
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84542,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44518,
+    44518
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84543,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44512,
+    44512
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84544,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44507,
+    44507
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84545,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44496,
+    44496
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84546,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44489,
+    44489
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84547,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44478,
+    44478
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84548,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44356,
+    44356
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84549,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44349,
+    44349
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84550,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44344,
+    44344
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84551,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44337,
+    44337
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84552,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44329,
+    44329
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84553,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44324,
+    44324
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84554,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44320,
+    44320
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84555,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44299,
+    44299
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84556,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44157,
+    44157
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84557,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44151,
+    44151
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84558,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44145,
+    44145
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84559,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44139,
+    44139
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84560,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44135,
+    44135
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84561,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44123,
+    44123
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84562,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44115,
+    44115
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84563,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    44105,
+    44105
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84564,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43998,
+    43998
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84565,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43993,
+    43993
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84566,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43988,
+    43988
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84567,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43983,
+    43983
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84568,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43976,
+    43976
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84569,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43971,
+    43971
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84570,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43967,
+    43967
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84571,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43942,
+    43942
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84572,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43803,
+    43803
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84573,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43795,
+    43795
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84574,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43789,
+    43789
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84575,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43782,
+    43782
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84576,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43776,
+    43776
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84577,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43763,
+    43763
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84578,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43755,
+    43755
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84579,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43745,
+    43745
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84580,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43627,
+    43627
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84581,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43621,
+    43621
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84582,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43617,
+    43617
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84583,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43612,
+    43612
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84584,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43605,
+    43605
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84585,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43600,
+    43600
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84586,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43595,
+    43595
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84587,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43572,
+    43572
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84588,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43422,
+    43422
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84589,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43416,
+    43416
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84590,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43410,
+    43410
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84591,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43404,
+    43404
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84592,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43399,
+    43399
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84593,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43389,
+    43389
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84594,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43382,
+    43382
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84595,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43370,
+    43370
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84596,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43265,
+    43265
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84597,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43260,
+    43260
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84598,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43256,
+    43256
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84599,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43249,
+    43249
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84600,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43242,
+    43242
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84601,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43237,
+    43237
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84602,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43222,
+    43222
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84603,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43211,
+    43211
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84604,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43073,
+    43073
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84605,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43066,
+    43066
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84606,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43060,
+    43060
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84607,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43054,
+    43054
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84608,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43050,
+    43050
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84609,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43046,
+    43046
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84610,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43031,
+    43031
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84611,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    43021,
+    43021
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84612,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42911,
+    42911
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84613,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42904,
+    42904
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84614,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42897,
+    42897
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84615,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42888,
+    42888
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84616,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42660,
+    42660
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84617,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42653,
+    42653
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84618,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42650,
+    42650
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84619,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    94427,
+    94427
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84639,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42535,
+    42535
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84640,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42532,
+    42532
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84641,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    42529,
+    42529
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 84642,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    94464,
+    94464
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89006,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14707,
+    14707
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89007,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14705,
+    14705
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89008,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14703,
+    14703
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89009,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    8730,
+    8730
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89010,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14701,
+    14701
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89011,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14699,
+    14699
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89012,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    14697,
+    14697
+   ],
+   "bound_edges": 1
+  },
+  {
+   "origin": 89013,
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "method": "same physical D wire",
+   "physical_D_roots": [
+    5154,
+    5154
+   ],
+   "bound_edges": 1
+  }
+ ],
+ "unproved": [],
+ "scope": "cohort convergence among actual physical replicas; exact explicit bound input aliases; common clock within each cohort, edges are local to that cohort domain; held common asynchronous reset; does not prove full RTL/mapped cold equivalence or valid-data observability; no canonical mapped-source CDC admission"
+}
