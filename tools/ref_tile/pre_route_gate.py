@@ -1686,13 +1686,23 @@ def check_native_census(g: Gate, out: str, kit: str | None = None):
     return True
 
 
+def native_scope_kit(kd: Path, spec: dict) -> str | None:
+    """Kit identity for kit-scoped census waivers: bound to the gated tile's spec (its name is the kit dir and,
+    for the MC3c7 scope, its top is the waived top); otherwise no scoped waiver can apply."""
+    if not isinstance(spec, dict) or spec.get("name") != kd.name:
+        return None
+    if kd.name in NC.MC3C7_KITS and spec.get("top") != NC.MC3C7_TOP:
+        return None
+    return kd.name
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     check_textbook_execution(g,out)
-    check_native_census(g,out,kd.name)
+    check_native_census(g,out,native_scope_kit(kd, spec))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
