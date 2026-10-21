@@ -1,0 +1,74 @@
+{
+  "status": "PREPARED_REVIEW_REQUIRED_NOT_LAUNCHED",
+  "source": "00c9d068e",
+  "runtime_readset_files": 67,
+  "actual_gate_snapshot_matched_src_files": 63,
+  "runtime_readset": "source_manifest.json",
+  "actual_hook_hashes": {
+    "symmetric_spine.tcl": "ff7e59e04b33a51aaa3dc8c8798daabed3ef13209d3fa35e5dd6e1f0be5dbe1f",
+    "clock_entry.sdc": "ca76f34afabe9cd0e8ce84ab3fd9f3d1675a6c452256244b177bee9c3a53b3bf",
+    "spec.json": "c8b89af133c197d3cfbd55eb1a4ba9e90a6943496c936d6cdce4df87fd1c730f"
+  },
+  "actual_library_hashes": {
+    "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": "6d043397b0f7a42ce63a02796f2fdc17c6e155adea56bad12c1e7cf7696962e0",
+    "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib": "51240a0ad457c0290788a03f7ce3d2675257dd1dc6e9a16a3333c4cf899e97fb",
+    "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+    "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+    "/src/physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes_ff.lib": "3664ac0a00a30acacab7e6a0ee5efa8be1b1a9a620c046752bc2716a84ec0d07",
+    "/src/physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes_tt.lib": "0f2380b6f29efdce98a3046a7bd85c043cdd7be0e714b285fdf4fe9335a6a1a0"
+  },
+  "tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "RC": {
+    "platform": "pinned image /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl, unmodified before and after clock_spine",
+    "calibrated_diagnostic": "actual source ot_rc_cal_apply spine, R0.014 C0.105, no substitution for platform verdict"
+  },
+  "source_calls": [
+    "actual clock_spine_child_ins.tcl",
+    "actual e2_write_perimeter_spine.tcl sourcing unchanged e2_perimeter_spine.tcl",
+    "ot_clock_spines with ALL23 actualglue roots",
+    "same production scoped rsz repair_net_cmd for all23 then platformRCrestore"
+  ],
+  "clock_settings": {
+    "BIN": 60,
+    "LEAF_N": 8,
+    "SEG": 150,
+    "SYM": 1,
+    "REST": 0
+  },
+  "hard_entries": 20,
+  "root_count": 23,
+  "expected_glue_pins": 11287,
+  "corners": [
+    "TT build from exact3place",
+    "FF reload SAME builtODB, no alternate topology"
+  ],
+  "measurement_sets": [
+    "TT before repair platform/calibrated",
+    "TT after repair platform/calibrated",
+    "FF after repair platform/calibrated"
+  ],
+  "expected_aggregate_rows": 138,
+  "first_acceptance": "TT afterrepair/platform clk_d2 must round130.2ps and previously observed write/rootspans match actualfailedgate; otherwise reproductionMISMATCH and no inference/qualification",
+  "scope": "cause capture including ALLinternal spans; exportedboundary rule unchanged, no inventedALLinternal80 requirement",
+  "remaining_qualifications": [
+    "all old actualFF and laterTT remainNOTRUN; replay is MODEL only",
+    "selectedNvsWR3 source/clock upgrade147729 must qualify before adoption",
+    "no new topology,SDC,RC,Libedit, physical gate or B0expansion"
+  ],
+  "local_runtime_dir": "/home/ubuntu/scratch/codex-hc-e2-fullroot-baseline-1021",
+  "remote_stage": "/srv/opentallas-scratch/claude/codex-hc-e2-fullroot-baseline-1021",
+  "invocation": [
+    "ot-run",
+    "--mem",
+    "16",
+    "--threads",
+    "1",
+    "--disk",
+    "3",
+    "--dir",
+    "/srv/opentallas-scratch/claude/codex-hc-e2-fullroot-baseline-1021",
+    "--",
+    "python3",
+    "run_prefix_checked.py"
+  ]
+}
