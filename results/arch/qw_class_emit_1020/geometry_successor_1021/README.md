@@ -29,3 +29,12 @@ Canonical ew595_r16 remains diagnostic: old sysface physical image mask,
 reset-capture calendar HOLD and missing RoPE/OVL successor parents preclude a
 paired release claim. Existing class functional evidence is reused; no new
 unit/audit/proof campaigns were run under the owner directive.
+
+Actual0125 terminal: class packing progressed past the former E1 site and failed
+at rly_dv_ch_E2_ar_ard_0, same104x106 EN master, blocked by dvs_E3. The actual
+E1/E2 remedy therefore cleared that first obstruction, without a405um exception.
+Next single successor0150 adds129.6 to E2/E3 (total259.2), translates replicated
+array west129.6 again and places the actual corefeed at17150.4,12096. E1/E2 stays
+259.2, outline stays32983.176x24288.824, total western clearance consumed259.2.
+The recorded ROOT contract is33x26mm; raw widthheadroom16.824um is disclosed.
+No500um exterior-margin requirement or unrecorded reserved outside area is assumed.
