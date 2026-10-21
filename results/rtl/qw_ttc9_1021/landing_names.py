@@ -7,6 +7,9 @@ on every ring->read cone (safe8u/8bu gate: 46 / 72 failing ring->read endpoints,
 namemap.json = the exact construct replay (same construct_parent7.py, same parent.json; replay RTL byte-identical, sha
 recorded) listing the source cell name of every idx.  Every instance u_<idx> whose source cell sits under u_lpl_<n>_w /
 u_lpl_<n>_r is renamed \\u_lpl_<n>_<w|r>.u<idx> ; nothing else changes (connections, modules, parameters, order).
+Also drops the sim-only #(.INSTANCE("calendar_m*")) on the two ROM266 calendar macros: ORFS reads the macro from its
+liberty (no parameters) and yosys refuses the parameter; content binds by instance path (die ROM_BIND / bench model by
+instance suffix, QW-CALR README).
 usage: landing_names.py namemap.json in.sv out.sv
 """
 import json, re, sys, hashlib, collections
@@ -25,6 +28,9 @@ def sub(mo):
     cnt[g.group(1)] += 1
     return f'{mo.group(1)}\\{g.group(1)}.u{idx} ('
 out = pat.sub(sub, text)
+out, ninst = re.subn(r'^(ot_rom_4096x266_m8) #\(\.INSTANCE\("calendar_m[01]"\)\) ', r'\1 ', out, flags=re.M)
+assert ninst == 2, ninst
+print('ROM266_INSTANCE_PARAMS_DROPPED', ninst)
 open(dst, 'w').write(out)
 w = sum(v for k, v in cnt.items() if k.endswith('_w')); r = sum(v for k, v in cnt.items() if k.endswith('_r'))
 lands = sorted({int(k.split('_')[2]) for k in cnt})
