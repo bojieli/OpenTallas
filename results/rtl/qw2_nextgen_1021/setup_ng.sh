@@ -56,9 +56,10 @@ sed -i "/^S=/a $CLS" $S/pre.sh $S/chain.sh
 if [ "$CLASSES" = 0 ]; then
   # QW-G5R3 E: no landing-class emission (classgeom0030 + BEND_RESERVE fails class packing at every 129.6-um slice gap
   # filled by the two 64.8-um data-landing columns: dv2f21g5r3c W4 rt_rd 104x106); physical fallback = g5r2b-style GEN
-  sed -i 's#^export OT_SPLIT_FWD_CLASS_BEND_RESERVE=1 OT_SPLIT_FWD_CLASSES=1 OT_SPLIT_FWD_CLASS_PACK=1 OT_BIND_FWD_CLASSES=1#export OT_SPLIT_FWD_CLASSES=0 OT_SPLIT_FWD_CLASS_PACK=0 OT_BIND_FWD_CLASSES=0#' $S/run_candidate.sh
+  # QW2-NEXTGEN: the MAXW/COLS prefix (QW-G5R3N) is stripped too (c3/diefix kits never matched here: 'classes not switched off')
+  sed -i 's#^export \(OT_SPLIT_FWD_CLASS_MAXW=[^ ]* OT_SPLIT_FWD_CLASS_COLS=[^ ]* \)\?OT_SPLIT_FWD_CLASS_BEND_RESERVE=1 OT_SPLIT_FWD_CLASSES=1 OT_SPLIT_FWD_CLASS_PACK=1 OT_BIND_FWD_CLASSES=1#export OT_SPLIT_FWD_CLASSES=0 OT_SPLIT_FWD_CLASS_PACK=0 OT_BIND_FWD_CLASSES=0#' $S/run_candidate.sh
   grep -q '^export OT_SPLIT_FWD_CLASSES=0' $S/run_candidate.sh || { echo "classes not switched off"; exit 4; }
-  sed -i 's#^export OT_BIND_FWD_CLASSES=1 OT_SPLIT_FWD_CLASSES=1 OT_SPLIT_FWD_CLASS_PACK=1 OT_SPLIT_FWD_CLASS_BEND_RESERVE=1 #export OT_BIND_FWD_CLASSES=0 OT_SPLIT_FWD_CLASSES=0 OT_SPLIT_FWD_CLASS_PACK=0 #' $S/pre.sh $S/chain.sh
+  sed -i 's#^export \(OT_SPLIT_FWD_CLASS_MAXW=[^ ]* OT_SPLIT_FWD_CLASS_COLS=[^ ]* \)\?OT_BIND_FWD_CLASSES=1 OT_SPLIT_FWD_CLASSES=1 OT_SPLIT_FWD_CLASS_PACK=1 OT_SPLIT_FWD_CLASS_BEND_RESERVE=1 #export OT_BIND_FWD_CLASSES=0 OT_SPLIT_FWD_CLASSES=0 OT_SPLIT_FWD_CLASS_PACK=0 #' $S/pre.sh $S/chain.sh
   grep -q '^export OT_BIND_FWD_CLASSES=0' $S/chain.sh || { echo "chain classes not switched off"; exit 4; }
 fi
 if [ "$FAULT" = 1 ]; then
