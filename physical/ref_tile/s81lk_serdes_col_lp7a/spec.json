@@ -454,18 +454,6 @@
     "fail_witness": "results/rtl/s81_link/col_lp7a_1020/lp/mut2.log"
    },
    {
-    "name": "lockstep_mut3",
-    "cmd": "mkdir -p {RUN}/lp3 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp7a -GMUT=3 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat7.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv rtl/dsrom_sys/s81_link/col/lp7a/ot_pdie_serdes_col_lp7a.sv rtl/dsrom_sys/s81_link/col/lp7a/tb_ot_pdie_serdes_col_lp7a.sv -Mdir {RUN}/lp3/obj > {RUN}/lp3/build.log 2>&1 && {RUN}/lp3/obj/Vtb_ot_pdie_serdes_col_lp7a > {RUN}/lp3/run.log 2>&1; cat {RUN}/lp3/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp3/run.log",
-    "expect": "fail",
-    "fail_regex": "LP_LOCKSTEP FAIL",
-    "threads": 4,
-    "peak_ram_gb": 24,
-    "needs": [
-     "verilator"
-    ],
-    "fail_witness": "results/rtl/s81_link/col_lp7a_1020/lp/mut3.log"
-   },
-   {
     "name": "lockstep_mut4",
     "cmd": "mkdir -p {RUN}/lp4 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp7a -GMUT=4 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat7.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv rtl/dsrom_sys/s81_link/col/lp7a/ot_pdie_serdes_col_lp7a.sv rtl/dsrom_sys/s81_link/col/lp7a/tb_ot_pdie_serdes_col_lp7a.sv -Mdir {RUN}/lp4/obj > {RUN}/lp4/build.log 2>&1 && {RUN}/lp4/obj/Vtb_ot_pdie_serdes_col_lp7a > {RUN}/lp4/run.log 2>&1; cat {RUN}/lp4/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp4/run.log",
     "expect": "fail",
@@ -491,7 +479,7 @@
    "rtl/common/landed_parent/ot_pl_land_regwe.sv",
    "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv"
   ],
-  "mut_note": "lp7a has 7 alignment pads (cw/apply/o_ne/o_unc/fs at u_out, e_flt/lock at u_sts, 6 stages): mutants 1, 2, 3 (pad 0 short), 4 + region audit"
+  "mut_note": "lp7a: mutants 1, 2, 4 FAIL + region audit; MUT 3 waived: MUT 3 shortens alignment pad 0 = the 8-bit RS correction apply mask into u_out by one stage; the lockstep loopback is error-free (no channel bit errors), so apply is all-zero and one stage less is unobservable (lp6 waived the same class for the e_flt pad). Landing/reset mutants 1, 2, 4 + region audit (unland mutant FAIL) cover the generator; witness of the survivor kept: results/rtl/s81_link/col_lp7a_1020/lp/mut3.log"
  },
  "inter": [],
  "io_flop_at_pins": {

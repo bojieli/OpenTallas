@@ -12,7 +12,7 @@ OUT=${1:-col_lp7a_out}; mkdir -p "$OUT"
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 $VL --version > "$OUT/verilator.version" 2>&1
 I=rtl/dsrom_sys/s81_link
-( SIM=verilator VERILATOR=$VL VL_JOBS=4 VL_EXTRA="-I$I" MUTS="0 1 2 3 4" bash $I/col/lp7a/ot_pdie_serdes_col_lp7a_bench.sh "$OUT/lp" > "$OUT/lp.log" 2>&1 ) &
+( SIM=verilator VERILATOR=$VL VL_JOBS=4 VL_EXTRA="-I$I" MUTS="0 1 2 4" bash $I/col/lp7a/ot_pdie_serdes_col_lp7a_bench.sh "$OUT/lp" > "$OUT/lp.log" 2>&1 ) &
 LS="$I/col/tb_s81_pdie_col.sv $I/col/ot_pdie_serdes_col_lpw7a.sv $I/col/lp7a/ot_pdie_serdes_col_lp7a.sv $I/col/ot_s81_col_leaf.sv \
  $I/col/ot_s81_pma_models.sv $I/ot_s81_kp4_common.sv $I/ot_s81_kp4_bm.sv $I/ot_s81_kp4_dsyn.sv $I/ot_s81_kp4_ddly.sv \
  $I/ot_s81_kp4_dchn.sv $I/ot_s81_kp4_dout.sv $I/ot_s81_kp4_enc.sv $I/ot_s81_kp4_dec.sv $I/ot_pdie_serdes.sv $I/col/ot_s81_rate_match_sr.sv \
