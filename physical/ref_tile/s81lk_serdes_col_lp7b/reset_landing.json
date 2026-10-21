@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_pdie_serdes_col_lp7b",
+ "enable": false,
+ "reason": "lp6 regional_reset_ports: each region's reset port rst_<r> is landed by the lp.py regional reset forest (4 registered stages on that region's own clock, beside its pin); no plain fanout from a port, no cross-region reset path"
+}

@@ -246,6 +246,9 @@ CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pai
 SCOPED_CLOCK_WAIVER_CAPS = {
     "qkd_pv_fin_s32": {"tt": 88.4, "ff": 84.6},     # KV PVFIN R15c, 38k-sink single root, COORD 10-20 19:25
     "qfd_native59_svc": {"tt": 84.6},               # Qwen N59 svc4 (TT 84.6 / FF 77.5), 21,950-sink root, COORD 10-20 17:33
+    # DRIVE-S81 COORD 10-21 00:35 (rule freeze): S81 SerDes column lp7b merged decoder region ck_dec (hard children only;
+    # lpk6b CTS u_dly pairs TT 243 / 285): judged by ROUTED timing (TT setup / FF hold), not hard-child pin balance
+    "s81lk_serdes_col_lp7b": {"tt": 300.0, "ff": 300.0},
 }
 
 
@@ -259,7 +262,9 @@ def clock_waiver_eval(evidence, waiver, tile=None):
         return False, "", ["no clock_rule_waiver"]
     ev = evidence if isinstance(evidence, dict) else {}
     lim = CLK_SPREAD_MAX_PS
-    pair = {x.strip().removeprefix("u_") for x in str(waiver.get("pair", "")).split("-") if x.strip()}
+    # DRIVE-S81-PHY2 10-21: "pair" may name several linked pairs, comma separated ("syn-dly,dly-out"); each is one a-b pair
+    pairs = [{x.strip().removeprefix("u_") for x in part.split("-") if x.strip()}
+             for part in str(waiver.get("pair", "")).split(",") if part.strip()]
     why = []
     if not str(waiver.get("by", "")).strip():
         why.append("no 'by'")
@@ -268,8 +273,8 @@ def clock_waiver_eval(evidence, waiver, tile=None):
 
     def named(p):     # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
         inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
-        return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
-            and all(any(t.endswith(x) for x in inst) for t in pair)
+        return any(len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst)
+                   and all(any(t.endswith(x) for x in inst) for t in pair) for pair in pairs)
     over = 0
     for c, (v, basis) in clock_spreads(ev).items():
         if v <= lim:

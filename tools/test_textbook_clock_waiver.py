@@ -56,3 +56,19 @@ def test_relaxing_rule_requirement_honours_waiver():
     ok, rows = SB.relaxed_rule_requirement(["clock_pin_spread"], dict(EV, clock_rule_waiver=WV))
     assert ok and "WAIVED" in rows[0]["text"]
     assert not SB.relaxed_rule_requirement(["clock_pin_spread"], dict(EV, clock_rule_waiver=dict(WV, pair="dchn-dsyn")))[0]
+
+
+def test_scoped_multi_pair_waiver_serdes_lp7b():
+    """DRIVE-S81-PHY2 10-21: comma-separated pairs + the scoped s81lk_serdes_col_lp7b cap (COORD 10-21 00:35)."""
+    pairs = [{"corner": "tt", "a": "u_syn", "b": "u_dly", "ps": 243.0}, {"corner": "tt", "a": "u_dly", "b": "u_out", "ps": 285.0},
+             {"corner": "tt", "a": "u_syn", "b": "u_chn", "ps": 59.0}]
+    ev = dict(EV, tt_pin_spread_ps=285.0, ff_pin_spread_ps=60.0, child_pairs=pairs)
+    wv = {"pair": "syn-dly,dly-out,chn-out", "tt_ps": 300.0, "ff_ps": 300.0, "limit_ps": 80, "by": "DRIVE-S81 COORD 10-21 00:35",
+          "scope": "s81lk_serdes_col_lp7b"}
+    ok, _, why = TL.clock_waiver_eval(ev, wv, tile="s81lk_serdes_col_lp7b")
+    assert ok, why
+    assert not TL.clock_waiver_eval(ev, wv, tile="s81lk_serdes_col_lp7a")[0]          # scope binds to the tile
+    assert not TL.clock_waiver_eval(ev, dict(wv, pair="syn-dly"), tile="s81lk_serdes_col_lp7b")[0]   # dly-out unnamed
+    assert not TL.clock_waiver_eval(dict(ev, tt_pin_spread_ps=320.0, child_pairs=[dict(pairs[1], ps=320.0)]), wv,
+                                    tile="s81lk_serdes_col_lp7b")[0]                  # over the scoped cap
+    assert not TL.clock_waiver_eval(ev, dict(wv, scope=""), tile="s81lk_serdes_col_lp7b")[0]   # unscoped: +2 ps only
