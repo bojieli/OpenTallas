@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_dv_s5_red2b",
- "verdict": "FAIL",
- "generated": "2026-10-21T06:19:25-0700",
- "host": "ot-epyc5",
+ "verdict": "WARN",
+ "generated": "2026-10-21T08:22:43-0700",
+ "host": "ot-epyc7",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "d4a256c3727ecb426b3b697fa05cc6d20ecd8d67",
+  "start_commit": "1b96a6a3ed94205b52b0f1fe3fda8b8192b32317",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "f3a3401595f9636f174193f90740594aa504f738503ef56b8020d7bab0a75e7d",
-  "manifest_sha256": "882bb652da0d020b6e4bd31f41ff791d61a1b66be64b239f51ba1553a1e03507",
+  "archive_sha256": "5408c4c436e808bc0c5de9c09ca90983e25d31be46e4ec6502560b67dc63ea58",
+  "manifest_sha256": "3988f6e58e2a9de77c0b7142b20478a56a4a55dce98f4d461f61703702ac5a41",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -1207,8 +1207,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_red2b/README.md",
     "kind": "file",
-    "sha256": "f48f49aa6dc0a1a763a92a6c0de4c3edd15bc1cd72e9603eb8c0c8de790f98c2",
-    "git_blob": "4261303ca8207958503eeae16372b14b9c9c49ca",
+    "sha256": "f95fbaaf0769344c4d1ded21b4ed4c1c1abd295aaf33373593023eedfef13e9c",
+    "git_blob": "8c4fe36e5390a4717cce485c935720e5788c41e1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1223,8 +1223,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_red2b/floorplan.json",
     "kind": "file",
-    "sha256": "b03f679db93da5942d204776d1d01cfb7f0e60eb1d120190aa4b4b16c9667783",
-    "git_blob": "07961db20ef0785448d4ac67df2907c7072a4330",
+    "sha256": "d6c4befafa06b0954a54b14774378aed3c221e0dd9d1092d45bde820163299ea",
+    "git_blob": "bf3266518771cebc58f4c5e58bf225984de45767",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1239,8 +1239,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_red2b/kit.env",
     "kind": "file",
-    "sha256": "d257e13bb22c82cf06305f51f855a9a94d7bcf054bc0863616c4cdddf591cab6",
-    "git_blob": "b4b8549b270be98e06dd59985e9f3c2d1802f33e",
+    "sha256": "5b2af239570bdf5bfd3e34b461da1b67765ac7503d25d0b75e972eee145ece8d",
+    "git_blob": "c7aa33e8b47a21338c321a710017ffc879617aaf",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1327,8 +1327,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_red2b/reset_landing.json",
     "kind": "file",
-    "sha256": "bd4c3e1cdeb43e4ff591a6ca1517ddcbf9f52fd3e4e8542d0c5d0c846fdc4e6e",
-    "git_blob": "e8a87c501b027f874741a677bf06fe3e48c01559",
+    "sha256": "b8c7e559356dbe967aaa88149018f594fc2fa71d9ced23a645d0dbfd44e28215",
+    "git_blob": "05a25e54a796dded26d7bfe0e4f7efbdc4430d73",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1343,8 +1343,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_red2b/spec.json",
     "kind": "file",
-    "sha256": "d88ca70e9a32b13268764a09cda3d5d497e9ba73b413e3078184906f65bf2c73",
-    "git_blob": "6bdf64bc9fb83a01238373c464ee3717641429c7",
+    "sha256": "e071363f53292743de76b8b9e3bfcca724f172616b94ec61f1590fe122219fd9",
+    "git_blob": "cf00da5d0e5606146448f183cc98b259fc0ee1b2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -5943,16 +5943,32 @@
    {
     "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2.sv",
     "kind": "file",
-    "sha256": "ea35f08e855a5105c2964393c92c98255813add29280167af22a483f7c101e79",
-    "git_blob": "f97f2e0b7f906148bfd50e143e217db028f17f5d",
+    "sha256": "90a5ed901dce13c09d3fe014095b04c33dea4b363b0d55ee00b2cfab07ff8c19",
+    "git_blob": "34ad2a5e2f58f7014e578f6505cf7bb121121d3e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+    "kind": "file",
+    "sha256": "af467263c9a76c2b77fe629773538f4a7aea779f108bfa3a25c8af94dda3bfd3",
+    "git_blob": "3081d2dfa0019d912ebd992ef192c3d0b334f8c0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
+    "kind": "file",
+    "sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+    "git_blob": "bbb1e7287722af6e8f374edaee93497a2e5c4ebe",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
     "kind": "file",
-    "sha256": "3da1975a82c60561b17a30df2e9bf8ea0e2c41843f48d5c8c7abdb3d2a14148b",
-    "git_blob": "3f3a1df036928d7f58efced34cdd8b6e616cbb37",
+    "sha256": "efb1f3e68eca4b82e9daef83754187d6a4ec36dd53567e850c25073af1f4588b",
+    "git_blob": "ef0cf7e059b6b3459fe7611718fd514aa829771e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -6023,8 +6039,8 @@
    {
     "path": "rtl/test/qwen_dv/s5_scred2/make_specs.py",
     "kind": "file",
-    "sha256": "71e120b81fab4131a8bccc6883359d95f3d2758515a277025a018bce364b07ee",
-    "git_blob": "57b81078dd9dc1f9990cb9f18308e162bd5d2c90",
+    "sha256": "b8394a642eda0dd554cc7e26c8a09e6681d6843f68677abfb6a70d5bc6066e92",
+    "git_blob": "37deec06f88d9a5e30d5e3b0a26dfb54882eddd9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -6039,16 +6055,16 @@
    {
     "path": "rtl/test/qwen_dv/s5_scred2/native_k.sh",
     "kind": "file",
-    "sha256": "497d00f1e16fcbb52c666fb8b87057ccd55678b63f6db7644d1f8343def7b57d",
-    "git_blob": "b8c17180bfc239c5a5b51d366e9151fc18b172c7",
+    "sha256": "06b2c1ddb6beceb028cf797bac8c950209b0d4ce2a2e648c707c31d75da16e04",
+    "git_blob": "6076f23410d0c965eaeea8ed8b8e57f0388e878a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/test/qwen_dv/s5_scred2/run_kit.sh",
     "kind": "file",
-    "sha256": "acab5774b6ec14d5db0479840416966de7b1ab2fb84ee5ae9251fa5491b0de74",
-    "git_blob": "374fb564d5ecd4281b309a60b25644c2b0f23c19",
+    "sha256": "a1d090c532aba5854c7fb63506ca0c604ce48223772226d4a3c7eff59e410ac5",
+    "git_blob": "42d25e8b8704b22717fbe26e46ef8d75c0c6e58a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -6063,8 +6079,8 @@
    {
     "path": "rtl/test/qwen_dv/s5_scred2/run_sc2.sh",
     "kind": "file",
-    "sha256": "7da3255a4a796ac7e9fa1d3fb286b0d3ebe6195dec32f877b029777e75d667a1",
-    "git_blob": "d8bd3937e5a2d7517a46cb98b64ea831c5a94161",
+    "sha256": "7d4997e9fd6ad37a5527754a07c61697029301d7992aa31cef7e5e6c753bf973",
+    "git_blob": "9d7396decc8721f796505ebe0acff2b044a44dd8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -6079,8 +6095,8 @@
    {
     "path": "rtl/test/qwen_dv/s5_scred2/tb_sc2.sv",
     "kind": "file",
-    "sha256": "d67a7387a6fb97f5e0352762c4504e6af7251158e2058eae7ea2520afc6f7936",
-    "git_blob": "7007a8d5c9b4a4d7464d651690606ffa120046e1",
+    "sha256": "a745ad5a549ab66802cbbcbb2433eeb8700b8e3604bd01e2335141769bfad5a4",
+    "git_blob": "38a1aae0583b11fe2faef6d3f8e6a2ed6f1fbfcc",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -26823,8 +26839,8 @@
    {
     "path": "tools/qwen_dv/bound_math_netlist.py",
     "kind": "file",
-    "sha256": "e6f419c2c3a4f490d76a8636e5c8db68f7d0c36759a5bab8701ec52e71da090e",
-    "git_blob": "71dfadc1d9105ebf4f1f373bdaecd4d11dc20b49",
+    "sha256": "3b5b093872660f82a2bba06baab1d7e6e4631f393f3339f93d01c2d29845662a",
+    "git_blob": "c64cb19e70d3d14fdd8093f209d80cf31799c026",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -39681,6 +39697,22 @@
     "kind": "file",
     "sha256": "d88ca70e9a32b13268764a09cda3d5d497e9ba73b413e3078184906f65bf2c73",
     "git_blob": "6bdf64bc9fb83a01238373c464ee3717641429c7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_qw_slice7/qfd_dv_s5_sc2.json",
+    "kind": "file",
+    "sha256": "3356f8e0058b9301deb9e48e16ae61c1d1250532b175e2f41343e6b96ef00b8b",
+    "git_blob": "2c5a7667818e9c2e5d9cdef9cdcb53659c9bc9f6",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_qw_slice7/qfd_dv_s5_sc2b.json",
+    "kind": "file",
+    "sha256": "ff6e20e23edab55ecdfa4b0546c11115abbaa30d42c191a721448086806383a0",
+    "git_blob": "e2acbbf5a6c5e541ef1744d6a571d9f3e5d366b5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -56831,14 +56863,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 21359748,
-   "unpacked_bytes": 138567680,
+   "archive_bytes": 23943476,
+   "unpacked_bytes": 159809536,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "a2557c7e4e6f82f0407eab865947a855ea12c794",
+   "origin_main": "81add7c4657a04f79c93a28759a4479581ecb169",
    "content_sha256": "01377d22bb4c1fab998bf16096f48d5d00e258d9f2bc500a637265378f7e8765",
    "files": [
     {
@@ -57246,7 +57278,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 655,
+   "count": 657,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/clock_family.tcl",
@@ -57859,6 +57891,8 @@
     "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_red_ring32.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_sc2.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_vreduce_rb.sv",
@@ -57924,10 +57958,10 @@
     "physical/qwen_die_masters/pre_cts_skew.tcl": "e845548e8349af78b8865a971e034e8666ee720501ebe83d9c2a9bf54528f8f6",
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
-    "physical/ref_tile/qfd_dv_s5_red2b/README.md": "f48f49aa6dc0a1a763a92a6c0de4c3edd15bc1cd72e9603eb8c0c8de790f98c2",
+    "physical/ref_tile/qfd_dv_s5_red2b/README.md": "f95fbaaf0769344c4d1ded21b4ed4c1c1abd295aaf33373593023eedfef13e9c",
     "physical/ref_tile/qfd_dv_s5_red2b/clock.sdc": "3d4420a09f59e570fb91ffaf6891fb4935bcf62606980e60ffa7669faefb45f6",
-    "physical/ref_tile/qfd_dv_s5_red2b/floorplan.json": "b03f679db93da5942d204776d1d01cfb7f0e60eb1d120190aa4b4b16c9667783",
-    "physical/ref_tile/qfd_dv_s5_red2b/kit.env": "d257e13bb22c82cf06305f51f855a9a94d7bcf054bc0863616c4cdddf591cab6",
+    "physical/ref_tile/qfd_dv_s5_red2b/floorplan.json": "d6c4befafa06b0954a54b14774378aed3c221e0dd9d1092d45bde820163299ea",
+    "physical/ref_tile/qfd_dv_s5_red2b/kit.env": "5b2af239570bdf5bfd3e34b461da1b67765ac7503d25d0b75e972eee145ece8d",
     "physical/ref_tile/qfd_dv_s5_red2b/pdn.tcl": "8dc11a3a3c67932f22bd80d57ef577fa5796cb3e2f61ec81b4711cbdb59e1035",
     "physical/ref_tile/qfd_dv_s5_red2b/pin_regs.json": "53b9791fd02f9697fde4904d09a7f5f42ac08382c67f56621d3aa253272bebe1",
     "physical/ref_tile/qfd_dv_s5_red2b/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
@@ -57938,9 +57972,9 @@
     "physical/ref_tile/qfd_dv_s5_red2b/pre_drt.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
     "physical/ref_tile/qfd_dv_s5_red2b/pre_fill.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
     "physical/ref_tile/qfd_dv_s5_red2b/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
-    "physical/ref_tile/qfd_dv_s5_red2b/reset_landing.json": "bd4c3e1cdeb43e4ff591a6ca1517ddcbf9f52fd3e4e8542d0c5d0c846fdc4e6e",
+    "physical/ref_tile/qfd_dv_s5_red2b/reset_landing.json": "b8c7e559356dbe967aaa88149018f594fc2fa71d9ced23a645d0dbfd44e28215",
     "physical/ref_tile/qfd_dv_s5_red2b/signoff.sdc": "fb9cbc4776f71e53a408672e6c1867e952916b691b762425b57a0b0c28ca6b07",
-    "physical/ref_tile/qfd_dv_s5_red2b/spec.json": "d88ca70e9a32b13268764a09cda3d5d497e9ba73b413e3078184906f65bf2c73",
+    "physical/ref_tile/qfd_dv_s5_red2b/spec.json": "e071363f53292743de76b8b9e3bfcca724f172616b94ec61f1590fe122219fd9",
     "rtl/hdc/hbm/ot_hbm_hc_flat_operand_sram.sv": "bedb9325906a79433ef81a4a201df67b410d8cd0d22f2e740d3d91638cab5fcf",
     "rtl/hdc/hbm/ot_hbm_hc_row_operand_epoch.sv": "d5cf451051814d2f262bc5a214b8a8b548b6495e207566f1767d7a9d6e0027d2",
     "rtl/hdc/hbm/ot_hbm_hc_row_operand_sram.sv": "a18fb067b00fba53b3e2a8078aef91464164d36b7d1aa8486226360f42866758",
@@ -58515,8 +58549,10 @@
     "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv": "f4acdc20e57a6c194e0bef662890fbd689e189caaf95d54881e62ac5ff23c1fd",
     "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv": "825eaf6a1a50517ba0796e9d8903654d4a97b7e4cb0442b28ba2f46fdcb77e64",
     "rtl/qwen_dv/s5/qfd_dv_s5_red_ring32.sv": "aa8aabe498c8eb324fc23a62ec09e84f795eecbfc13d773caf886fcdd44d33c1",
-    "rtl/qwen_dv/s5/qfd_dv_s5_sc2.sv": "ea35f08e855a5105c2964393c92c98255813add29280167af22a483f7c101e79",
-    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv": "3da1975a82c60561b17a30df2e9bf8ea0e2c41843f48d5c8c7abdb3d2a14148b",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2.sv": "90a5ed901dce13c09d3fe014095b04c33dea4b363b0d55ee00b2cfab07ff8c19",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv": "af467263c9a76c2b77fe629773538f4a7aea779f108bfa3a25c8af94dda3bfd3",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv": "efb1f3e68eca4b82e9daef83754187d6a4ec36dd53567e850c25073af1f4588b",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv": "6bc5223f4ff8e4d6d7921c941709ab2b6c051d3c806a033b60ea589f31035e68",
     "rtl/qwen_dv/s5/qfd_dv_s5_vreduce_rb.sv": "66027d44a0585482ddbc809f886bf450a1e405cde703ff984324e84ab56368c0",
     "rtl/test/qwen_dv/s5/ctlsafe/merge_lib.py": "49df99d3985d7ebe274139ee5a22eb78cded19c7f72d19d5c09506d7d633c304",
@@ -58525,14 +58561,14 @@
     "rtl/test/qwen_dv/s5_scred2/extract_ref.py": "5ef03deac06a8e5b37a7644c6fb8cbbf5fb86483b478daf6cf5e67e20953c968",
     "rtl/test/qwen_dv/s5_scred2/gen_leaf.py": "73438d6912aec443dfb0e68495d4e56406958d5405e689a3380d2eda7b6f69b3",
     "rtl/test/qwen_dv/s5_scred2/generic2.sh": "b060c35997d23bc48119e0bcf9b997f2a23ef0b8d63c27cf120238210bbb7cb7",
-    "rtl/test/qwen_dv/s5_scred2/make_specs.py": "71e120b81fab4131a8bccc6883359d95f3d2758515a277025a018bce364b07ee",
+    "rtl/test/qwen_dv/s5_scred2/make_specs.py": "b8394a642eda0dd554cc7e26c8a09e6681d6843f68677abfb6a70d5bc6066e92",
     "rtl/test/qwen_dv/s5_scred2/native.sh": "1191eb11a6c47a04e4ccce8f252330ae70cf7c04c1040c1843c7259be5922674",
-    "rtl/test/qwen_dv/s5_scred2/native_k.sh": "497d00f1e16fcbb52c666fb8b87057ccd55678b63f6db7644d1f8343def7b57d",
-    "rtl/test/qwen_dv/s5_scred2/run_kit.sh": "acab5774b6ec14d5db0479840416966de7b1ab2fb84ee5ae9251fa5491b0de74",
+    "rtl/test/qwen_dv/s5_scred2/native_k.sh": "06b2c1ddb6beceb028cf797bac8c950209b0d4ce2a2e648c707c31d75da16e04",
+    "rtl/test/qwen_dv/s5_scred2/run_kit.sh": "a1d090c532aba5854c7fb63506ca0c604ce48223772226d4a3c7eff59e410ac5",
     "rtl/test/qwen_dv/s5_scred2/run_red2.sh": "ff0a16197ece6181b8d1c1e31c27526c7a3e0d32644d6f66ab816cddd695d7f6",
-    "rtl/test/qwen_dv/s5_scred2/run_sc2.sh": "7da3255a4a796ac7e9fa1d3fb286b0d3ebe6195dec32f877b029777e75d667a1",
+    "rtl/test/qwen_dv/s5_scred2/run_sc2.sh": "7d4997e9fd6ad37a5527754a07c61697029301d7992aa31cef7e5e6c753bf973",
     "rtl/test/qwen_dv/s5_scred2/tb_red2.sv": "48c8e679057a615fbb6f41b770625b1616c6fa675c2c4c545ef864ea48db2dc4",
-    "rtl/test/qwen_dv/s5_scred2/tb_sc2.sv": "d67a7387a6fb97f5e0352762c4504e6af7251158e2058eae7ea2520afc6f7936",
+    "rtl/test/qwen_dv/s5_scred2/tb_sc2.sv": "a745ad5a549ab66802cbbcbb2433eeb8700b8e3604bd01e2335141769bfad5a4",
     "rtl/test/qwen_dv/s5_scred2/variant.sh": "f6775301f63783f176d605cba41d40f543415e9277865c1a7061518c37d7c681",
     "tools/closure_loop/ck_insertion.py": "0671fc9136f9cdb25d66b8397832a5ac1d5de76678ae10bf35d5797a3e73d53c",
     "tools/fp_margin_lint.py": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
@@ -58545,7 +58581,7 @@
     "tools/landed_parent/specs/qfd_tt_ctlm_dv_lpf.json": "0125683f22c33924a7911fb170d585131e82c510f17e3c2bbeb2d4936afb8979",
     "tools/orfs_hold_mm.py": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
     "tools/orfs_hold_mm.tcl": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
-    "tools/qwen_dv/bound_math_netlist.py": "e6f419c2c3a4f490d76a8636e5c8db68f7d0c36759a5bab8701ec52e71da090e",
+    "tools/qwen_dv/bound_math_netlist.py": "3b5b093872660f82a2bba06baab1d7e6e4631f393f3339f93d01c2d29845662a",
     "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
     "tools/ref_tile/kit_orfs_vars.py": "1e4348cfaf9e0140d382be94b51b03e4376190552d20f9c507b7c5dd52b8a5bf",
     "tools/ref_tile/layout_dump.tcl": "cc1a9fa11ecdbe323644c251fcd061eee26535894995967ed26b63d13d08d747",
@@ -58561,18 +58597,18 @@
     "tools/w18/corner_sta.py": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "ad5076cebe93984e3873ccf503600e890f867c098be6f6b16290de6d4bf26652"
+   "digest": "7bc5c09014b5a6f2864cfe7a4cbe209bfed16b57a1004daaa0e376d4b400a2c7"
   },
-  "captured": "2026-10-21T05:44:02-0700",
+  "captured": "2026-10-21T07:30:41-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_dv_s5_red2b/signoff.sdc"
   },
-  "remote_script_sha256": "57020225710066234fa60accbda6a2c05bfb1a04a28f8087ef097b3426660fe8",
+  "remote_script_sha256": "fec0ba821d23e7e568c570e168d514026d68aad627b0e0f67c5193ce99de27a0",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_red2b-20261021-054354",
+  "remote_host": "ot-epyc7",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_red2b-20261021-073006",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -58580,15 +58616,15 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 34272,
+  "max_root_sinks": 34274,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 334.2,
-  "tt_spread_ps": 17.7,
-  "tt_pin_spread_ps": 14.7,
-  "ff_insertion_ps": 272.6,
-  "ff_spread_ps": 15.9,
-  "ff_pin_spread_ps": 13.3,
+  "tt_insertion_ps": 337.7,
+  "tt_spread_ps": 20.4,
+  "tt_pin_spread_ps": 13.9,
+  "ff_insertion_ps": 276.9,
+  "ff_spread_ps": 19.7,
+  "ff_pin_spread_ps": 13.4,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -58601,19 +58637,19 @@
     "clock": "core_clk",
     "tt": {
      "clock_family": {
-      "core_clk": 34216
+      "core_clk": 34218
      },
      "boundary": {
-      "n": 377,
-      "mean": 325.5,
+      "n": 378,
+      "mean": 325.6,
       "min": 319.0,
-      "max": 333.7
+      "max": 332.9
      },
      "all": {
-      "n": 34216,
-      "mean": 324.8,
-      "min": 316.5,
-      "max": 334.2
+      "n": 34218,
+      "mean": 325.7,
+      "min": 317.3,
+      "max": 337.7
      },
      "errors": [],
      "macros": null,
@@ -58621,16 +58657,16 @@
     },
     "ff": {
      "boundary": {
-      "n": 377,
+      "n": 378,
       "mean": 264.9,
-      "min": 258.8,
-      "max": 272.1
+      "min": 258.5,
+      "max": 271.9
      },
      "all": {
-      "n": 34216,
-      "mean": 263.9,
-      "min": 256.7,
-      "max": 272.6
+      "n": 34218,
+      "mean": 264.8,
+      "min": 257.2,
+      "max": 276.9
      },
      "child_flop": null,
      "macros": null
@@ -58639,38 +58675,32 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "WARN",
-  "text": "34,272 sinks on the largest root; measured TT insertion 334.2 ps, FF insertion 272.6 ps, TT pin-flop spread 14.7 ps, FF pin-flop spread 13.3 ps; WARN: 34,272 sinks on one clock root > 15,000 (guidance); insertion 334.2 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+  "text": "34,274 sinks on the largest root; measured TT insertion 337.7 ps, FF insertion 276.9 ps, TT pin-flop spread 13.9 ps, FF pin-flop spread 13.4 ps; WARN: 34,274 sinks on one clock root > 15,000 (guidance); insertion 337.7 ps > 300 (guidance; boundary matched by parent compensation / landing)",
   "other_roots": []
  },
  "items": [
   {
    "severity": "WARN",
    "check": "textbook.clock_domain",
-   "message": "clock root port ck: 34,272 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. u.u_0.Q$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "message": "clock root port ck: 34,274 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
    "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
-  },
-  {
-   "severity": "FAIL",
-   "check": "textbook.reset_landing",
-   "message": "reset port rst_n: 8 sinks (8 flops, 0 hard-child / macro pins, e.g. u.u_150722.Q$_DFF_PN0_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile \"reset_landing\": {\"enable\": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth",
-   "fix": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit \"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant"
   },
   {
    "severity": "WARN",
    "check": "textbook.logic_depth",
-   "message": "reg->reg stage u.u_149399.Q$_DFF_P_ -> u.u_6952.Q$_DFF_P_/D: ~627 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "message": "reg->reg stage u_ot_pr_core.u.u_148307.Q$_DFF_P_ -> u_ot_pr_core.u.u_7116.Q$_DFF_P_/D: ~622 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
    "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
   },
   {
    "severity": "WARN",
    "check": "textbook.clock_guidance",
-   "message": "clock root port:ck: 34,272 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 34,272 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "message": "clock root port:ck: 34,274 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 34,274 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
    "fix": ""
   },
   {
    "severity": "WARN",
    "check": "clock_rule",
-   "message": "root port:ck: 34,272 sinks on the largest root; measured TT insertion 334.2 ps, FF insertion 272.6 ps, TT pin-flop spread 14.7 ps, FF pin-flop spread 13.3 ps; WARN: 34,272 sinks on one clock root > 15,000 (guidance); insertion 334.2 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "message": "root port:ck: 34,274 sinks on the largest root; measured TT insertion 337.7 ps, FF insertion 276.9 ps, TT pin-flop spread 13.9 ps, FF pin-flop spread 13.4 ps; WARN: 34,274 sinks on one clock root > 15,000 (guidance); insertion 337.7 ps > 300 (guidance; boundary matched by parent compensation / landing)",
    "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
   }
  ],
@@ -58680,7 +58710,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 455,
+  "grt_s": 754,
   "layers": [
    {
     "layer": "M1",
@@ -58691,36 +58721,36 @@
    },
    {
     "layer": "M2",
-    "capacity": 1553857,
-    "usage": 597097,
-    "pct": 38.43,
+    "capacity": 1553674,
+    "usage": 599425,
+    "pct": 38.58,
     "overflow": 0
    },
    {
     "layer": "M3",
     "capacity": 1900962,
-    "usage": 457361,
-    "pct": 24.06,
+    "usage": 455680,
+    "pct": 23.97,
     "overflow": 0
    },
    {
     "layer": "M4",
     "capacity": 1461104,
-    "usage": 72544,
-    "pct": 4.97,
+    "usage": 72328,
+    "pct": 4.95,
     "overflow": 0
    },
    {
     "layer": "M5",
     "capacity": 1405330,
-    "usage": 34513,
-    "pct": 2.46,
+    "usage": 34730,
+    "pct": 2.47,
     "overflow": 0
    }
   ],
   "worst_layer_usage": [
    "M2",
-   38.43
+   38.58
   ],
   "hotspot": null,
   "congestion_png": null
@@ -58730,15 +58760,13 @@
   "ports": [
    {
     "port": "rst_n",
-    "sinks": 8,
-    "flops": 8,
+    "sinks": 1,
+    "flops": 1,
     "macros": 0
    }
   ],
-  "over": [
-   "rst_n"
-  ],
+  "over": [],
   "waived": false,
-  "ok": false
+  "ok": true
  }
 }
