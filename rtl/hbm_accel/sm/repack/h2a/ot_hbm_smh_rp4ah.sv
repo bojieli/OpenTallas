@@ -92,10 +92,10 @@ endmodule
 // -187 ps).  LR = 2 FIRM stations in the W channel keep every rl1 hop <= ~330 um.  ohl1 gets its OWN kept 13-bit copy
 // (u_oh) so it can be stationed at the x-store W face apart from the 2,069-bit bk1 stages (stand-in reg->macro -360 ps).
 // MUT 6 (bench only): rl1 one relay short -> must FAIL.  The halves pad gin by LR so every gout lane is +LR uniform.
-module ot_rp4a_leaf #(parameter integer LR = 0, parameter integer MUT = 0) (input wire clk, input wire rst_n,
+module ot_rp4a_leaf #(parameter integer LR = 0, parameter integer MUT = 0, parameter integer OS = 0) (input wire clk, input wire rst_n,
     input wire [25:0] st, input wire [4:0] at, input wire [817:0] rl1, input wire [2068:0] bk1, output wire [49:0] g);
     generate if (LR == 0) begin : g_nolr
-        ot_rp4a_leaf_core u_c (.clk(clk), .rst_n(rst_n), .st(st), .at(at), .rl1(rl1), .bk1(bk1), .ohl(bk1[2060:2048]), .g(g));
+        ot_rp4a_leaf_core #(.OS(OS)) u_c (.clk(clk), .rst_n(rst_n), .st(st), .at(at), .rl1(rl1), .bk1(bk1), .ohl(bk1[2060:2048]), .g(g));
     end else begin : g_lr
         (* keep *) reg [LR-1:0] rd;
         always @(posedge clk) rd <= {rd, rst_n};
@@ -105,11 +105,16 @@ module ot_rp4a_leaf #(parameter integer LR = 0, parameter integer MUT = 0) (inpu
         ot_rp4a_relay #(.W(13), .N(LR)) u_oh (.clk(clk), .rst_n(1'b1), .d(bk1[2060:2048]), .q(ohl_r));
         ot_rp4a_relay #(.W(26), .N(LR)) u_st (.clk(clk), .rst_n(1'b1), .d(st), .q(st_r));
         ot_rp4a_relay #(.W(5), .N(LR)) u_at (.clk(clk), .rst_n(1'b1), .d(at), .q(at_r));
-        ot_rp4a_leaf_core u_c (.clk(clk), .rst_n(rd[LR-1]), .st(st_r), .at(at_r), .rl1(rl1_r), .bk1(bk1_r), .ohl(ohl_r), .g(g));
+        ot_rp4a_leaf_core #(.OS(OS)) u_c (.clk(clk), .rst_n(rd[LR-1]), .st(st_r), .at(at_r), .rl1(rl1_r), .bk1(bk1_r), .ohl(ohl_r), .g(g));
     end endgenerate
 endmodule
 
-module ot_rp4a_leaf_core (input wire clk, input wire rst_n, input wire [25:0] st, input wire [4:0] at,
+// OS (HBM-SMATT10, native census of the r1 gate: input_pv 257 loads, attn_column 130/65/49, r_x 253, bdc ov 98,
+// merge pub_v 89): OS = 1 adds two uniform stages inside the core, g +2: (XO) every x-store output registered, the PV
+// select input_pv rebuilt per 32-bit fx slice from 8 KEPT copies of its three inputs and the PV broadcast word from 16
+// KEPT one-hot attn_column copies; (GO) the bdc / tct / merge outputs registered before the g select with 3 KEPT copies
+// of each valid; the publication delay line reset from 16 KEPT copies.  OS = 0 = the original core (bench reference).
+module ot_rp4a_leaf_core #(parameter integer OS = 0) (input wire clk, input wire rst_n, input wire [25:0] st, input wire [4:0] at,
     input wire [817:0] rl1, input wire [2068:0] bk1, input wire [12:0] ohl, output wire [49:0] g);
     localparam integer LBS = 2, LSB = 16, IL = 8, TAGW = 16, NBEAT = 13;
     wire [2:0] attn_column = at[2:0];
@@ -117,17 +122,60 @@ module ot_rp4a_leaf_core (input wire clk, input wire rst_n, input wire [25:0] st
     (* keep *) reg [4:0] rq;
     always @(posedge clk) rq <= {5{rst_n}};
     wire r_xs = rq[0], r_bdc = rq[1], r_tcc = rq[2], r_g = rq[3], r_x = rq[4];
+    (* keep *) reg [15:0] rpp;
+    always @(posedge clk) rpp <= {16{rst_n}};
+    wire x_iv_b, x_iv_f, x_ifirst, x_ilast, x_ifp4, x_ifirst_e, x_ilast_e;
+    wire [TAGW-1:0] x_itag, x_itag_e;
+    wire [LBS*266+LSB*16-1:0] x_iw, x_ix;
     wire iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e;
     wire [TAGW-1:0] itag, itag_e;
     wire [LBS*266+LSB*16-1:0] iw, ix;
+    wire [255:0] pvx;          // fx when input_pv (the broadcast x word)
+    wire [7:0] ipv;            // input_pv per 32-bit fx slice
+    generate if (OS != 0) begin : g_xo
+        reg q_iv_b, q_iv_f, q_ifirst, q_ilast, q_ifp4, q_ifirst_e, q_ilast_e;
+        reg [TAGW-1:0] q_itag, q_itag_e;
+        reg [LBS*266+LSB*16-1:0] q_iw, q_ix;
+        (* keep *) reg [7:0] k_ivf, k_fp4, k_w129;
+        reg [7:0] oh;
+        (* keep *) reg [7:0] k_oh [0:15];
+        integer i;
+        always @(posedge clk) begin
+            q_iv_b <= x_iv_b; q_iv_f <= x_iv_f; q_ifirst <= x_ifirst; q_ilast <= x_ilast; q_ifp4 <= x_ifp4;
+            q_ifirst_e <= x_ifirst_e; q_ilast_e <= x_ilast_e; q_itag <= x_itag; q_itag_e <= x_itag_e; q_iw <= x_iw; q_ix <= x_ix;
+            k_ivf <= {8{x_iv_f}}; k_fp4 <= {8{x_ifp4}}; k_w129 <= {8{x_iw[129]}};
+            for (i = 0; i < 8; i = i + 1) oh[i] <= (attn_column == i[2:0]);
+            for (i = 0; i < 16; i = i + 1) k_oh[i] <= oh;
+        end
+        assign {iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e} = {q_iv_b, q_iv_f, q_ifirst, q_ilast, q_ifp4, q_ifirst_e, q_ilast_e};
+        assign itag = q_itag; assign itag_e = q_itag_e; assign iw = q_iw; assign ix = q_ix;
+        genvar s, b, c;
+        for (s = 0; s < 8; s = s + 1) begin : g_ipv
+            assign ipv[s] = k_ivf[s] && k_fp4[s] && k_w129[s];
+        end
+        for (s = 0; s < 16; s = s + 1) begin : g_bw
+            for (b = 0; b < 16; b = b + 1) begin : g_b
+                wire [7:0] t;
+                for (c = 0; c < 8; c = c + 1) begin : g_c
+                    assign t[c] = k_oh[s][c] & q_iw[16*c + b];
+                end
+                assign pvx[16*s + b] = |t;
+            end
+        end
+    end else begin : g_noxo
+        assign {iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e} = {x_iv_b, x_iv_f, x_ifirst, x_ilast, x_ifp4, x_ifirst_e, x_ilast_e};
+        assign itag = x_itag; assign itag_e = x_itag_e; assign iw = x_iw; assign ix = x_ix;
+        assign pvx = {16{x_iw[16*attn_column +: 16]}};
+        assign ipv = {8{x_iv_f && x_ifp4 && x_iw[129]}};
+    end endgenerate
     ot_hbm_accel_smh_xs
 `ifndef OT_RP4A_HARD
         #(.TAGW(TAGW), .NBEAT(NBEAT))
 `endif
         u_xs (.clk(clk), .rst_a(r_xs), .xs_a1(st[8:0]), .xs_g1(st[13:9]),
-        .xs_a2(st[20:14]), .xs_g2(st[25:21]), .rl1(rl1), .bk1(bk1), .ohl1(ohl), .o_iv_b(iv_b), .o_iv_f(iv_f),
-        .o_ifirst(ifirst), .o_ilast(ilast), .o_ifp4(ifp4), .o_itag(itag), .o_iw(iw), .o_ix(ix), .o_ifirst_e(ifirst_e),
-        .o_ilast_e(ilast_e), .o_itag_e(itag_e));
+        .xs_a2(st[20:14]), .xs_g2(st[25:21]), .rl1(rl1), .bk1(bk1), .ohl1(ohl), .o_iv_b(x_iv_b), .o_iv_f(x_iv_f),
+        .o_ifirst(x_ifirst), .o_ilast(x_ilast), .o_ifp4(x_ifp4), .o_itag(x_itag), .o_iw(x_iw), .o_ix(x_ix), .o_ifirst_e(x_ifirst_e),
+        .o_ilast_e(x_ilast_e), .o_itag_e(x_itag_e));
     wire marker = iv_f && ifp4;
     wire input_pv = marker && iw[129];
     wire input_arithmetic = iv_f && (!marker || iw[137]);
@@ -137,6 +185,7 @@ module ot_rp4a_leaf_core (input wire clk, input wire rst_n, input wire [25:0] st
     reg [255:0] fw, fx;
     reg [4:0] publish0;
     reg fold0; reg [2:0] fold0_a, fold0_b;
+    integer fs;
     always @(posedge clk)
         if (!r_x) begin bv <= 0; fv <= 0; publish0 <= 0; fold0 <= 0; end
         else begin
@@ -151,7 +200,7 @@ module ot_rp4a_leaf_core (input wire clk, input wire rst_n, input wire [25:0] st
         ffirst <= ifirst_e; fqlast <= ilast_e && !input_pv; fplast <= ilast_e && input_pv;
         frfirst <= iw[132]; frlast <= iw[133]; ftag <= itag_e;
         fw <= iw[LBS*266 +: 256];
-        fx <= input_pv ? {16{iw[16*attn_column +: 16]}} : ix[LBS*266 +: 256];
+        for (fs = 0; fs < 8; fs = fs + 1) fx[32*fs +: 32] <= ipv[fs] ? pvx[32*fs +: 32] : ix[LBS*266 + 32*fs +: 32];
     end
     wire bov, bfault, fov, qf, mf, ps_v;
     wire [31:0] by, fy, ps_data;
@@ -168,11 +217,9 @@ module ot_rp4a_leaf_core (input wire clk, input wire rst_n, input wire [25:0] st
     reg [4:0] pub_pipe [0:48];
     integer d;
     always @(posedge clk)
-        if (!r_x) for (d = 0; d < 49; d = d + 1) pub_pipe[d] <= 0;
-        else begin
-            pub_pipe[0] <= publish0;
-            for (d = 1; d < 49; d = d + 1) pub_pipe[d] <= pub_pipe[d-1];
-        end
+        for (d = 0; d < 49; d = d + 1)
+            if (!((OS != 0) ? rpp[d % 16] : r_x)) pub_pipe[d] <= 0;
+            else pub_pipe[d] <= (d == 0) ? publish0 : pub_pipe[(d == 0) ? 0 : d - 1];
     wire [4:0] pc = pub_pipe[{attn_row, 4'b0000}];
     wire [2:0] selected_slot = pc[2] ? (pc[4] ? {2'b00, attn_column[0]} : {attn_column[0], pc[1:0]}) : attn_column;
     reg published_h128;
@@ -212,18 +259,39 @@ module ot_rp4a_leaf_core (input wire clk, input wire rst_n, input wire [25:0] st
     reg gv_q, gf_q;
     reg [31:0] gy_q;
     reg [TAGW-1:0] gt_q;
+    wire [2:0] kb, kf, kp;
+    wire [31:0] gby, gfy, gpd;
+    wire [TAGW-1:0] gbt, gft;
+    wire [11:0] gsr;
+    wire gbf, gff;
+    generate if (OS != 0) begin : g_go
+        (* keep *) reg [2:0] k_b, k_f, k_p;
+        reg [31:0] q_by, q_fy, q_pd;
+        reg [TAGW-1:0] q_bt, q_ft;
+        reg [11:0] q_sr;
+        reg q_bf, q_ff;
+        always @(posedge clk) begin
+            k_b <= {3{bov}}; k_f <= {3{fov}}; k_p <= {3{ps_v}};
+            q_by <= by; q_fy <= fy; q_pd <= ps_data; q_bt <= bt; q_ft <= ft; q_sr <= scalar_row; q_bf <= bfault; q_ff <= ffault;
+        end
+        assign kb = k_b; assign kf = k_f; assign kp = k_p; assign gby = q_by; assign gfy = q_fy; assign gpd = q_pd;
+        assign gbt = q_bt; assign gft = q_ft; assign gsr = q_sr; assign gbf = q_bf; assign gff = q_ff;
+    end else begin : g_nogo
+        assign kb = {3{bov}}; assign kf = {3{fov}}; assign kp = {3{ps_v}}; assign gby = by; assign gfy = fy; assign gpd = ps_data;
+        assign gbt = bt; assign gft = ft; assign gsr = scalar_row; assign gbf = bfault; assign gff = ffault;
+    end endgenerate
     always @(posedge clk)
         if (!r_g) begin gv_q <= 0; gf_q <= 0; end
-        else begin gv_q <= bov | fov | ps_v; gf_q <= bfault | ffault | (bov && fov) | (ps_v && (bov || fov)); end
+        else begin gv_q <= kb[0] | kf[0] | kp[0]; gf_q <= gbf | gff | (kb[0] && kf[0]) | (kp[0] && (kb[0] || kf[0])); end
     always @(posedge clk) begin
-        gy_q <= ps_v ? ps_data : bov ? by : fy;
-        gt_q <= ps_v ? {scalar_row, 1'b1, 3'd0} : bov ? bt : ft;
+        gy_q <= kp[1] ? gpd : kb[1] ? gby : gfy;
+        gt_q <= kp[2] ? {gsr, 1'b1, 3'd0} : kb[2] ? gbt : gft;
     end
     assign g = {gv_q, gf_q, gy_q, gt_q};
 endmodule
 
 // n half: ot_hbm_smh_rp4h_n with the attention leaf; attn = {attn_rowbase[1:0], attn_column[2:0]} (static strap)
-module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1, parameter integer GN = 2, parameter integer XB = 1, parameter integer LR = 0) (
+module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1, parameter integer GN = 2, parameter integer XB = 1, parameter integer LR = 0, parameter integer OS = 0) (
     input wire clk, input wire rst_n,
     input wire [8:0] xs_a1, input wire [4:0] xs_g1, input wire [6:0] xs_a2, input wire [4:0] xs_g2, input wire [4:0] attn,
     input wire [817:0] rin_n, input wire [2068:0] bin, input wire [99:0] gin,
@@ -255,9 +323,9 @@ module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEA
     end endgenerate
     ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_landn (.clk(clk), .rst_n(r[4]), .d(bin_l), .q(bk1_n));
     ot_smh_tr_group_row_e u_rowe0 (.clk(clk), .rst_a(r[5]), .d(rpm_n), .last(rout_n));
-    ot_rp4a_leaf #(.LR(LR), .MUT(MUT)) u_lf0 (.clk(clk), .rst_n(r[7]), .st(st_n), .at(at_n), .rl1(rl1_n), .bk1(bk1_n), .g(g0));
+    ot_rp4a_leaf #(.LR(LR), .MUT(MUT), .OS(OS)) u_lf0 (.clk(clk), .rst_n(r[7]), .st(st_n), .at(at_n), .rl1(rl1_n), .bk1(bk1_n), .g(g0));
     wire [99:0] gin_r;
-    ot_rp4a_relay #(.W(100), .N(LR), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_gip (.clk(clk), .rst_n(r[8]), .d(gin), .q(gin_r));
+    ot_rp4a_relay #(.W(100), .N(LR + 2 * OS), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_gip (.clk(clk), .rst_n(r[8]), .d(gin), .q(gin_r));
     ot_rp4l_gn u_gn (.clk(clk), .rst_n(r[8]), .g0(g0), .gin(gin_r), .g0m(g0m), .gpm(gpm));
     ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xb1 (.clk(clk), .rst_n(r[9]), .d(bin_l), .q(xb1));
     generate if (MUT == 1) begin : g_m1
@@ -285,7 +353,7 @@ module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEA
 endmodule
 
 // s half: ot_hbm_smh_rp4h_s with the attention leaf (leaf 1 = attn_rowbase + 1)
-module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0, parameter integer GN = 2, parameter integer GS = 1, parameter integer XB = 1, parameter integer LR = 0) (
+module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0, parameter integer GN = 2, parameter integer GS = 1, parameter integer XB = 1, parameter integer LR = 0, parameter integer OS = 0) (
     input wire clk, input wire rst_n,
     input wire [8:0] xss_a1, input wire [4:0] xss_g1, input wire [6:0] xss_a2, input wire [4:0] xss_g2, input wire [4:0] attn,
     input wire [817:0] rin_s, output wire [817:0] rout_s,
@@ -334,12 +402,12 @@ module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0, parameter integer GN = 2,
     ot_smh_tr_group_row_e u_rowe1 (.clk(clk), .rst_a(r[2]), .d(rpm_s), .last(rout_s));
     ot_pl_pad #(.W(818), .N(((MUT == 3) ? 2 : 3) + XB)) u_pp_rl1 (.ck(clk), .d(rl1_s), .q(rl1_s_p));
     ot_pl_pad #(.W(26), .N(3 + XB)) u_pp_st (.ck(clk), .d(st_s), .q(st_s_p));
-    ot_rp4a_leaf #(.LR(LR), .MUT(MUT)) u_lf1 (.clk(clk), .rst_n(r_lf1), .st(st_s_p), .at(at_s), .rl1(rl1_s_p), .bk1(bk1_s), .g(g1));
+    ot_rp4a_leaf #(.LR(LR), .MUT(MUT), .OS(OS)) u_lf1 (.clk(clk), .rst_n(r_lf1), .st(st_s_p), .at(at_s), .rl1(rl1_s_p), .bk1(bk1_s), .g(g1));
     ot_rp4l_gs u_gs (.clk(clk), .rst_n(r_gs), .g1in(g1p), .g0m(g0m), .gpm(gpm), .gout(gout));
 endmodule
 
 // the SM frame slot: both halves abutted (die binder form; also the bench DUT)
-module ot_hbm_smh_rp4ah2 #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1, parameter integer GN = 2, parameter integer GS = 1, parameter integer XB = 1, parameter integer LR = 0) (
+module ot_hbm_smh_rp4ah2 #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1, parameter integer GN = 2, parameter integer GS = 1, parameter integer XB = 1, parameter integer LR = 0, parameter integer OS = 0) (
     input wire rst_n, input wire [4:0] attn,
     input wire [8:0] xs_a1, input wire [4:0] xs_g1, input wire [6:0] xs_a2, input wire [4:0] xs_g2,
     input wire [8:0] xss_a1, input wire [4:0] xss_g1, input wire [6:0] xss_a2, input wire [4:0] xss_g2,
@@ -349,10 +417,10 @@ module ot_hbm_smh_rp4ah2 #(parameter integer MUT = 0, parameter integer SOFTBEAT
     input wire ck_n, input wire ck_s
 );
     wire [2068:0] x_b; wire [49:0] x_g0; wire [99:0] x_gp;
-    ot_hbm_smh_rp4ah_n #(.MUT(MUT), .SOFTBEAT(SOFTBEAT), .GN(GN), .XB(XB), .LR(LR)) u_n (.clk(ck_n), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1),
+    ot_hbm_smh_rp4ah_n #(.MUT(MUT), .SOFTBEAT(SOFTBEAT), .GN(GN), .XB(XB), .LR(LR), .OS(OS)) u_n (.clk(ck_n), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1),
         .xs_a2(xs_a2), .xs_g2(xs_g2), .attn(attn), .rin_n(rin_n), .bin(bin), .gin(gin), .rout_n(rout_n), .bout(bout),
         .xo_b(x_b), .xo_g0(x_g0), .xo_gp(x_gp));
-    ot_hbm_smh_rp4ah_s #(.MUT(MUT), .GN(GN), .GS(GS), .XB(XB), .LR(LR)) u_s (.clk(ck_s), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2),
+    ot_hbm_smh_rp4ah_s #(.MUT(MUT), .GN(GN), .GS(GS), .XB(XB), .LR(LR), .OS(OS)) u_s (.clk(ck_s), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2),
         .xss_g2(xss_g2), .attn(attn), .rin_s(rin_s), .rout_s(rout_s), .xi_b(x_b), .xi_g0(x_g0), .xi_gp(x_gp), .gout(gout));
 endmodule
 
