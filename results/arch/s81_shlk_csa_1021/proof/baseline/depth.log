@@ -1,0 +1,4 @@
+textbook_lint: WARN sum_gate cells 577 flops 160 depth 700.1 ps util None reach None um (0.0 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[]}
+textbook_lint: INFO clock_roots max_root_sinks=160 root=port:clk rule=PASS: 160 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN(refuse-tier) logic_depth: reg->reg stage _0996_ -> _0960_/D: ~700 ps estimated (22 logic levels) > 600 ps: pipeline / restructure the stage

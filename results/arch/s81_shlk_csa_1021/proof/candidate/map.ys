@@ -1,0 +1,13 @@
+read_verilog -defer -sv -DSYNTHESIS  /src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv /src/tools/s81_dv/shlk_csa_1021/sum_gate.sv
+hierarchy -check -top sum_gate
+read_liberty -lib /techlib/SEQ.lib
+read_liberty -lib /techlib/SIMPLE.lib
+read_liberty -lib /techlib/AO.lib
+read_liberty -lib /techlib/OA.lib
+read_liberty -lib /techlib/INVBUF.lib
+synth -top sum_gate -flatten -noshare
+dfflibmap -liberty /techlib/SEQ.lib
+abc -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+opt_clean
+tee -o /out/stat.txt stat -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+write_verilog -noattr /out/flat.v

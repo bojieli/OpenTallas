@@ -1,0 +1,52 @@
+
+14. Printing statistics.
+
+=== sum_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      597        - wires
+      949        - wire bits
+       18        - public wires
+      370        - public wire bits
+        6        - ports
+      161        - port bits
+      644   88.019 cells
+        1        -   $scopeinfo
+        7    0.612   A2O1A1Ixp33_ASAP7_75t_R
+        1    0.131   A2O1A1O1Ixp25_ASAP7_75t_R
+        4     0.35   AND2x2_ASAP7_75t_R
+       11    0.962   AND3x1_ASAP7_75t_R
+        1    0.102   AND4x1_ASAP7_75t_R
+        6    0.525   AO21x1_ASAP7_75t_R
+        2    0.175   AOI211xp5_ASAP7_75t_R
+       27    1.968   AOI21xp33_ASAP7_75t_R
+        1    0.102   AOI221xp5_ASAP7_75t_R
+        1    0.087   AOI22xp33_ASAP7_75t_R
+        1    0.087   AOI31xp33_ASAP7_75t_R
+      160   46.656   DFFHQNx1_ASAP7_75t_R
+       58    2.537   INVx1_ASAP7_75t_R
+       24    2.449   MAJIxp5_ASAP7_75t_R
+       23    3.018   MAJx2_ASAP7_75t_R
+       62    3.616   NAND2xp33_ASAP7_75t_R
+       27    1.968   NAND3xp33_ASAP7_75t_R
+       36      2.1   NOR2xp33_ASAP7_75t_R
+       28    2.041   NOR3xp33_ASAP7_75t_R
+        5    0.437   O2A1O1Ixp33_ASAP7_75t_R
+        2    0.233   OA211x2_ASAP7_75t_R
+       16    1.633   OA21x2_ASAP7_75t_R
+        3    0.262   OAI211xp5_ASAP7_75t_R
+       17    1.239   OAI21xp33_ASAP7_75t_R
+        2    0.204   OAI311xp33_ASAP7_75t_R
+        2    0.175   OAI31xp33_ASAP7_75t_R
+       11    0.962   OR2x2_ASAP7_75t_R
+        9    0.787   OR3x1_ASAP7_75t_R
+       64    8.398   XNOR2xp5_ASAP7_75t_R
+       32    4.199   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\sum_gate': 88.019460
+     of which used for sequential elements: 46.656000 (53.01%)
+

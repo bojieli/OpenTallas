@@ -1,0 +1,845 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/map.ys' --
+
+1. Executing Verilog-2005 frontend: /src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_s81_ing_stream_n32'.
+Storing AST representation for module `$abstract\ot_s81_ing_sum4_csa32'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /src/tools/s81_dv/shlk_csa_1021/sum_gate.sv
+Parsing SystemVerilog input from `/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv' to AST representation.
+Storing AST representation for module `$abstract\sum_gate'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\sum_gate'.
+Generating RTLIL representation for module `\sum_gate'.
+
+4.1. Analyzing design hierarchy..
+Top module:  \sum_gate
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_ing_sum4_csa32'.
+Generating RTLIL representation for module `\ot_s81_ing_sum4_csa32'.
+
+4.3. Analyzing design hierarchy..
+Top module:  \sum_gate
+Used module:     \ot_s81_ing_sum4_csa32
+
+4.4. Analyzing design hierarchy..
+Top module:  \sum_gate
+Used module:     \ot_s81_ing_sum4_csa32
+Removing unused module `$abstract\sum_gate'.
+Removing unused module `$abstract\ot_s81_ing_sum4_csa32'.
+Removing unused module `$abstract\ot_s81_ing_stream_n32'.
+Removed 3 unused modules.
+
+5. Executing Liberty frontend: /techlib/SEQ.lib
+Imported 33 cell types from liberty file.
+
+6. Executing Liberty frontend: /techlib/SIMPLE.lib
+Imported 56 cell types from liberty file.
+
+7. Executing Liberty frontend: /techlib/AO.lib
+Imported 42 cell types from liberty file.
+
+8. Executing Liberty frontend: /techlib/OA.lib
+Imported 34 cell types from liberty file.
+
+9. Executing Liberty frontend: /techlib/INVBUF.lib
+Imported 37 cell types from liberty file.
+
+10. Executing SYNTH pass.
+
+10.1. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1.1. Analyzing design hierarchy..
+Top module:  \sum_gate
+Used module:     \ot_s81_ing_sum4_csa32
+
+10.1.2. Analyzing design hierarchy..
+Top module:  \sum_gate
+Used module:     \ot_s81_ing_sum4_csa32
+Removed 0 unused modules.
+
+10.2. Executing PROC pass (convert processes to netlists).
+
+10.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+10.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 5 assignments to connections.
+
+10.2.4. Executing PROC_INIT pass (extract init attributes).
+
+10.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+10.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+10.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+
+10.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\sum_gate.\y' using process `\sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+  created $dff cell `$procdff$73' with positive edge clock.
+Creating register for signal `\sum_gate.\ar' using process `\sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+  created $dff cell `$procdff$74' with positive edge clock.
+Creating register for signal `\sum_gate.\br' using process `\sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+  created $dff cell `$procdff$75' with positive edge clock.
+Creating register for signal `\sum_gate.\cr' using process `\sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+  created $dff cell `$procdff$76' with positive edge clock.
+Creating register for signal `\sum_gate.\dr' using process `\sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+  created $dff cell `$procdff$77' with positive edge clock.
+
+10.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `sum_gate.$proc$/src/tools/s81_dv/shlk_csa_1021/sum_gate.sv:3$16'.
+Cleaned up 0 empty switches.
+
+10.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+Optimizing module ot_s81_ing_sum4_csa32.
+<suppressed ~3 debug messages>
+
+10.3. Executing CHECK pass (checking for obvious problems).
+Checking module sum_gate...
+Checking module ot_s81_ing_sum4_csa32...
+Found and reported 0 problems.
+
+10.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_s81_ing_sum4_csa32.
+<suppressed ~1 debug messages>
+
+10.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 15 unused cells and 40 unused wires.
+<suppressed ~17 debug messages>
+
+10.7. Executing CHECK pass (checking for obvious problems).
+Checking module sum_gate...
+Found and reported 0 problems.
+
+10.8. Executing OPT pass (performing simple optimizations).
+
+10.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 44 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \sum_gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+10.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \sum_gate.
+Performed a total of 0 changes.
+
+10.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 44 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.9. Executing FSM pass (extract and optimize FSM).
+
+10.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+10.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+10.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+10.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+10.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+10.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+10.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+10.10. Executing OPT pass (performing simple optimizations).
+
+10.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 44 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \sum_gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+10.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \sum_gate.
+Performed a total of 0 changes.
+
+10.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 44 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 7 bits (of 8) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$69 ($add).
+Removed top 1 bits (of 9) from port A of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$67 ($add).
+Removed top 1 bits (of 9) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$67 ($add).
+Removed top 1 bits (of 9) from port Y of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$67 ($add).
+Removed top 7 bits (of 8) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$63 ($add).
+Removed top 1 bits (of 9) from port A of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$61 ($add).
+Removed top 1 bits (of 9) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$61 ($add).
+Removed top 7 bits (of 8) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$57 ($add).
+Removed top 1 bits (of 9) from port A of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$55 ($add).
+Removed top 1 bits (of 9) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$55 ($add).
+Removed top 1 bits (of 9) from port A of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$49 ($add).
+Removed top 1 bits (of 9) from port B of cell sum_gate.$flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$49 ($add).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$31 ($or).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$31 ($or).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$31 ($or).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$30 ($and).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$30 ($and).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$30 ($and).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$29 ($or).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$29 ($or).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$29 ($or).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$28 ($and).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$28 ($and).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$28 ($and).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$27 ($and).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$27 ($and).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$27 ($and).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$23 ($or).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$23 ($or).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$23 ($or).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$22 ($and).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$22 ($and).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$22 ($and).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$21 ($or).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$21 ($or).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$21 ($or).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$20 ($and).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$20 ($and).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$20 ($and).
+Removed top 1 bits (of 32) from port Y of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$19 ($and).
+Removed top 1 bits (of 32) from port A of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$19 ($and).
+Removed top 1 bits (of 32) from port B of cell sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$19 ($and).
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$30_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$29_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$28_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$27_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:771$31_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$23_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$22_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$or$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$21_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$20_Y.
+Removed top 1 bits (of 32) from wire sum_gate.$flatten\u.$and$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:769$19_Y.
+
+10.12. Executing PEEPOPT pass (run peephole optimizers).
+
+10.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~1 debug messages>
+
+10.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module sum_gate:
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$49 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$55 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$56 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$57 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$61 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$62 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$63 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$67 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$68 ($add).
+  creating $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$69 ($add).
+  merging $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$68 into $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$69.
+  merging $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$62 into $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$63.
+  merging $macc model for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$56 into $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$57.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$63.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$67.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$61.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$57.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$69.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$55.
+  creating $alu model for $macc $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$49.
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$49: $auto$alumacc.cc:548:replace_alu$89
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$55: $auto$alumacc.cc:548:replace_alu$92
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$57: $auto$alumacc.cc:548:replace_alu$95
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$69: $auto$alumacc.cc:548:replace_alu$98
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$67: $auto$alumacc.cc:548:replace_alu$101
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780$61: $auto$alumacc.cc:548:replace_alu$104
+  creating $alu cell for $flatten\u.$add$/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:781$63: $auto$alumacc.cc:548:replace_alu$107
+  created 7 $alu and 0 $macc cells.
+
+10.15. Executing OPT pass (performing simple optimizations).
+
+10.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 44 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \sum_gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+10.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \sum_gate.
+Performed a total of 0 changes.
+
+10.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 44 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 3 unused cells and 3 unused wires.
+<suppressed ~4 debug messages>
+
+10.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+10.15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \sum_gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+10.15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \sum_gate.
+Performed a total of 0 changes.
+
+10.15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 41 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.15.16. Finished fast OPT passes. (There is nothing left to do.)
+
+10.16. Executing MEMORY pass.
+
+10.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+10.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+10.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+10.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+10.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+10.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+10.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+10.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+10.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.18. Executing OPT pass (performing simple optimizations).
+
+10.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+<suppressed ~36 debug messages>
+
+10.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 41 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~1 debug messages>
+
+10.18.5. Finished fast OPT passes.
+
+10.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10.20. Executing OPT pass (performing simple optimizations).
+
+10.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 41 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \sum_gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+10.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \sum_gate.
+Performed a total of 0 changes.
+
+10.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 41 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.20.6. Executing OPT_SHARE pass.
+
+10.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+
+10.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.20.10. Finished fast OPT passes. (There is nothing left to do.)
+
+10.21. Executing TECHMAP pass (map to technology primitives).
+
+10.21.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+10.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$a1bc51c02ce12ac21eb18988e83292af48ed7d72\_90_alu for cells of type $alu.
+Using template $paramod$4ccbe221165818e15f326ddee3d1183c7924e12f\_90_alu for cells of type $alu.
+Using template $paramod$5e422c97d4648c7864402691d7b06fc43e6ffb33\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001001 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~711 debug messages>
+
+10.22. Executing OPT pass (performing simple optimizations).
+
+10.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+<suppressed ~281 debug messages>
+
+10.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 1048 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Computing hashes of 960 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Computing hashes of 936 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Computing hashes of 922 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Computing hashes of 919 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Computing hashes of 916 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+<suppressed ~396 debug messages>
+Removed a total of 132 cells.
+
+10.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 46 unused cells and 349 unused wires.
+<suppressed ~47 debug messages>
+
+10.22.5. Finished fast OPT passes.
+
+10.23. Executing ABC pass (technology mapping using ABC).
+
+10.23.1. Extracting gate netlist of module `\sum_gate' to `<abc-temp-dir>/input.blif'..
+
+10.23.1.1. Executed ABC.
+Extracted 709 gates and 837 wires to a netlist network with 128 inputs and 32 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+10.23.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      113
+ABC RESULTS:            ANDNOT cells:        7
+ABC RESULTS:               MUX cells:       27
+ABC RESULTS:              NAND cells:      263
+ABC RESULTS:               NOR cells:        8
+ABC RESULTS:               NOT cells:        1
+ABC RESULTS:                OR cells:      108
+ABC RESULTS:             ORNOT cells:        9
+ABC RESULTS:              XNOR cells:       57
+ABC RESULTS:               XOR cells:       31
+ABC RESULTS:        internal signals:      677
+ABC RESULTS:           input signals:      128
+ABC RESULTS:          output signals:       32
+Removing temp directory.
+Removing global temp directory.
+
+10.24. Executing OPT pass (performing simple optimizations).
+
+10.24.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module sum_gate.
+
+10.24.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\sum_gate'.
+Computing hashes of 785 cells of `\sum_gate'.
+Finding duplicate cells in `\sum_gate'.
+Removed a total of 0 cells.
+
+10.24.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.24.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 0 unused cells and 270 unused wires.
+<suppressed ~5 debug messages>
+
+10.24.5. Finished fast OPT passes.
+
+10.25. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `sum_gate'. Setting top module to sum_gate.
+
+10.25.1. Analyzing design hierarchy..
+Top module:  \sum_gate
+
+10.25.2. Analyzing design hierarchy..
+Top module:  \sum_gate
+Removed 0 unused modules.
+
+10.26. Printing statistics.
+
+=== sum_gate ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      618 wires
+     1218 wire bits
+       26 public wires
+      626 public wire bits
+        6 ports
+      161 port bits
+      785 cells
+        7   $_ANDNOT_
+      113   $_AND_
+      160   $_DFF_P_
+       27   $_MUX_
+      263   $_NAND_
+        8   $_NOR_
+        1   $_NOT_
+        9   $_ORNOT_
+      108   $_OR_
+       57   $_XNOR_
+       31   $_XOR_
+        1   $scopeinfo
+
+10.27. Executing CHECK pass (checking for obvious problems).
+Checking module sum_gate...
+Found and reported 0 problems.
+
+11. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+11.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\sum_gate':
+  mapped 160 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+12. Executing ABC pass (technology mapping using ABC).
+
+12.1. Extracting gate netlist of module `\sum_gate' to `<abc-temp-dir>/input.blif'..
+
+12.1.1. Executed ABC.
+Extracted 784 gates and 944 wires to a netlist network with 160 inputs and 64 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_431a9ba7.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+12.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:        7
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:        4
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       11
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:        2
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:       27
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       58
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       24
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       23
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:       62
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:       27
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:       36
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       28
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:        5
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       16
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:        3
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:       17
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:       11
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        9
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:       64
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:       32
+ABC RESULTS:        internal signals:      720
+ABC RESULTS:           input signals:      160
+ABC RESULTS:          output signals:       64
+Removing temp directory.
+Removing global temp directory.
+
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \sum_gate..
+Removed 0 unused cells and 824 unused wires.
+<suppressed ~9 debug messages>
+
+14. Printing statistics.
+
+=== sum_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      597        - wires
+      949        - wire bits
+       18        - public wires
+      370        - public wire bits
+        6        - ports
+      161        - port bits
+      644   88.019 cells
+        1        -   $scopeinfo
+        7    0.612   A2O1A1Ixp33_ASAP7_75t_R
+        1    0.131   A2O1A1O1Ixp25_ASAP7_75t_R
+        4     0.35   AND2x2_ASAP7_75t_R
+       11    0.962   AND3x1_ASAP7_75t_R
+        1    0.102   AND4x1_ASAP7_75t_R
+        6    0.525   AO21x1_ASAP7_75t_R
+        2    0.175   AOI211xp5_ASAP7_75t_R
+       27    1.968   AOI21xp33_ASAP7_75t_R
+        1    0.102   AOI221xp5_ASAP7_75t_R
+        1    0.087   AOI22xp33_ASAP7_75t_R
+        1    0.087   AOI31xp33_ASAP7_75t_R
+      160   46.656   DFFHQNx1_ASAP7_75t_R
+       58    2.537   INVx1_ASAP7_75t_R
+       24    2.449   MAJIxp5_ASAP7_75t_R
+       23    3.018   MAJx2_ASAP7_75t_R
+       62    3.616   NAND2xp33_ASAP7_75t_R
+       27    1.968   NAND3xp33_ASAP7_75t_R
+       36      2.1   NOR2xp33_ASAP7_75t_R
+       28    2.041   NOR3xp33_ASAP7_75t_R
+        5    0.437   O2A1O1Ixp33_ASAP7_75t_R
+        2    0.233   OA211x2_ASAP7_75t_R
+       16    1.633   OA21x2_ASAP7_75t_R
+        3    0.262   OAI211xp5_ASAP7_75t_R
+       17    1.239   OAI21xp33_ASAP7_75t_R
+        2    0.204   OAI311xp33_ASAP7_75t_R
+        2    0.175   OAI31xp33_ASAP7_75t_R
+       11    0.962   OR2x2_ASAP7_75t_R
+        9    0.787   OR3x1_ASAP7_75t_R
+       64    8.398   XNOR2xp5_ASAP7_75t_R
+       32    4.199   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\sum_gate': 88.019460
+     of which used for sequential elements: 46.656000 (53.01%)
+
+15. Executing Verilog backend.
+
+15.1. Executing BMUXMAP pass.
+
+15.2. Executing DEMUXMAP pass.
+Dumping module `\sum_gate'.
+
+End of script. Logfile hash: 33d7ca1bc1, time: 1.19s, user: 0.56s, system: 0.10s, MEM: 80.27 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 48% 2x abc (0 sec), 23% 2x stat (0 sec), ...

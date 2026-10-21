@@ -1,0 +1,72 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY",
+  "source_commit": "e98377d84",
+  "flag": "OT_N32_ADDR_CSA",
+  "new_state_bits": 0,
+  "extra_edges": 0,
+  "source_path": "rtl/hdc/ingest/ot_s81_ing_stream_n32.sv",
+  "source_sha256": "05c070cb86bb89551ed030dff2843033dbf8aa4ce8264cbf22d3ce9f603d4553",
+  "unit": "oth-ubuntu-3547732-1792618239",
+  "host": "ot-epyc5 (fleet spill from ep7)",
+  "aggregate_exit": 1,
+  "arithmetic": {
+    "status": "PASS",
+    "checks": 1000098,
+    "overflow_cases": 951495,
+    "width": 32
+  },
+  "actual_stream_lockstep": {
+    "status": "PASS",
+    "seeds": [
+      1,
+      2
+    ],
+    "segments_each": 300,
+    "cycles": [
+      121529,
+      122026
+    ],
+    "writes": [
+      71387,
+      71622
+    ],
+    "done": [
+      151,
+      144
+    ],
+    "WIN_negative_mismatches": 100989
+  },
+  "mapped_component": {
+    "baseline": {
+      "area_um2": 86.50314,
+      "depth_estimate_ps": 700.1,
+      "logic_levels": 22,
+      "native": "PASS",
+      "max_dynamic_loads": 4,
+      "violations": 0,
+      "role_errors": 0
+    },
+    "candidate": {
+      "area_um2": 88.01946,
+      "depth_estimate_ps": 510.1,
+      "logic_levels": 16,
+      "native": "PASS",
+      "max_dynamic_loads": 5,
+      "violations": 0,
+      "role_errors": 0
+    },
+    "area_delta_um2": 1.51632,
+    "same_endpoint_flops": 160,
+    "scope": "identical FF endpoints and Libs/ABC; component only, not physical SHLK/wholeingress timing"
+  },
+  "host_fixture": {
+    "status": "OPEN",
+    "first_attempt": "same existing source bench but incomplete profile flags; hx_pop replica assertion at62ns bothseeds; preserved rawdiagnostic, no sourcePASS/waiver",
+    "corrected_recipe": "run_seq.sh uses exact10cbb committed profile flags +CSA; freshout_seq_exact pending"
+  },
+  "open": [
+    "Exact-profile legal HOST fixture terminal",
+    "Wholeingress/SHLK mapped native and exactphysical timing, clock/reset/geometry",
+    "Current immutable gs/hs gates terminal; no successor gate launched"
+  ]
+}

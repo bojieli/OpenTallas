@@ -16,6 +16,5 @@ for k in pos win;do
  done
 done
 bash tools/s81_dv/shlk_csa_1021/native.sh
-VL_EXTRA='-DOT_N32_ADDR_CSA -DOT_S81_SH_S10E -DOT_S81_SH_ACKP -DTB_HSH=8 -DTB_HSC=9' bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh "$O/seqhost" '1 2' base > "$O/seqhost.log" 2>&1
-cat "$O/seqhost.log"
+bash tools/s81_dv/shlk_csa_1021/run_seq.sh
 echo CSA_SOURCE_PROOF_DONE
