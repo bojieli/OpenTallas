@@ -1,0 +1,15 @@
+# Five actual native roots, model before successor RTL
+
+Baseline source166b99363 / RTL33ec02b71 has exact full-protocol/goldens/6causal PASS and identical578 output/age records percase. Authoritative loaded-Liberty native FAIL215/5/0roles,15actual macros; immutable exactfive witnesses and netlist/census hashes are sealedr5_actual. OpenROAD signedFPformal parser failure is separate and collector-owned.
+
+Counter consumer repair, same registers/edges/priority, zero new storage or ports:
+
+* BC six-bit complete row field: compute `row=bc-1` once in a real kept row owner, expose that same field to both original SRAM write-address ports, and predecode all64 rows using3+3 factored onehots. Each existing RV byte consumes its actual8-bit row mask. This removes8 repeated subtract/decode consumers from BC[0]/[2], preserving all64counter phases and all8byte banks, including modulo wrap. RawBC enters one subtract plus original nextstate/guard. Each row bit drives atmost8 decoder gates+2macro pins; each low/high onehot drives8pairANDs; each fullrowmask bit servesone actual data bit and one byte-selectionOR.
+* FC full7-bit terminal decode is a genuine kept word `last=(fc==95)`. Each RV byte has a kept word-select consumer computing `clear=tx_local&&last`, `set=bw&&(|mask8)`. These are the actual eight-bit state-write predicates; each predicate serves<=8statebits. RawFC loses repeated terminal-comparator consumers. Mainfc and its next-state ordering remain unchanged, including increment96 on trainfinish and reset-to0 on nextstart. No tail-bit-only replacement or phantom copies.
+* Fault read selection: replace `rv[fc_probe[6:2]]` by complete5-bit3+2 predecode and32-way onehotAND/OR of the same lower32rv bits (the original five-bit index can address only0..31). Each raw index bit has<=8 predecode gates; this removes the36-load raw probe bit without changing an edge or selecting a different field.
+
+Static exhaustive checks before full existing mechanisms: all64BCvalues×8banks×256priorbyte states×bw/clear controls; all32probeindices×64onehot RVwitnesses; all128FCvalues. Full existing bench+seeds2/3+6causals and exact record-age comparison remain required after actual source integration, then exact native. No source-independent fanout waiver.
+
+AQamax215 model/coordination: AQsource has exactly one scalar31-bit consumer, LAT5u_scale withpositiveamax andconstant1/448. All BF16 inputs have low16zero; FLOOR=38d1b717, so several lowamaxbits are the same floor-selection state and may be coalesced intoamax[15]. GenericFPnative32 does not qualify this constant-specialized parent. Collector owns exact endpoint trace and newdefault-offFPconsumer hook. This owner will provide complete31-bit same-S5-edge captures only for actual named consumer families once that hook is concrete; no guessed8copies/tailbit patch or resetphase change. Existing earlyreset1+internal2 contract remains. Import only qualified7ebe patchdelta onto560, never wholesale laterFPfile.
+
+No physical implementation/clock/bbox adoption is authorized by this model. Lookupcohort work remains separately sealed/no gate pending actual native/halfcycle/row ownership evidence.
