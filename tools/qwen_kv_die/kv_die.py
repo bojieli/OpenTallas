@@ -4056,6 +4056,14 @@ def _krs_top_lane(m, bid):
     ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_{e}')
     if ak is None or ec is None:
         return None
+    # LEAD-KV 10-21: an ECTL re-homed beside its own group (OT_KV_KRT_ES6_HOME: same side of the ASTK column as slg)
+    # no longer crosses the column; the far-channel lane would route out and back (prep es6p3: wp1 -> wp2 unroutable,
+    # 579 um unrepaired hop).  Its K response word takes the short direct path.
+    sg = by.get(f'slg_{st}_{e}')
+    acx = ak.x + ak.w / 2
+    home = (m.get('geo') or {}).get('krt_es6_home') or {}
+    if home.get('instance') == ec.name and sg is not None and ((sg.x + sg.w / 2) - acx) * ((ec.x + ec.w / 2) - acx) > 0:
+        return None
     if st[1] == 'S':
         if e < 6:
             return None
