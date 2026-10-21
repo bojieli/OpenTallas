@@ -621,7 +621,9 @@ def _bdd_of(net, bdd, bit, level, cache, cut=frozenset()):
         drv = net.driver.get(b)
         if drv is None:
             raise GrayFifoError(f'reviewed_gray_fifos undriven bit {b} in a storage-gating cone')
-        if drv[0] in ('flop', 'port') or b in cut:
+        # SQK-INGEST 10-21: a hard-macro output (e.g. a dual-clock SRAM read port, extension mode) is a leaf like a
+        # flop Q: a free variable (sound, every value), as _cone_cut already treats it
+        if drv[0] in ('flop', 'port', 'macro') or b in cut:
             cache[b] = bdd.var(level(b))
             stack.pop()
             continue
@@ -1534,8 +1536,28 @@ def _word(value):
     return '{' + value + '}'
 
 
+def _rst_copy_aliases(roles):
+    """SQK-INGEST 10-21: kit reset_relay_split (physical/common_flow/ot_rst_copies.py) names each KEPT reset-bank
+    leaf copy k of family F `ot_rrs__<F mangled, last 60>__c<k>`; synthesis then carries only that name on the leaf
+    flop. Alias exactly those names (bare and pin-register-wrapped family) to the leaf's own reset-pipe role, so OT_GF
+    still recognises the reviewed bank leaf (no new role, nothing else admitted)."""
+    out = {}
+    for k, r in roles.items():
+        m = re.fullmatch(r'(.+\.last)\[(\d+)\]', k)
+        if not m or not r or r[0] != 'rst':
+            continue
+        for fam in (m.group(1), 'u_ot_pr_core.' + m.group(1)):
+            alias = 'ot_rrs__' + re.sub(r'[^A-Za-z0-9_]', '_', fam)[-60:] + '__c' + m.group(2)
+            if alias in roles or out.get(alias, r) != r:
+                raise GrayFifoError(f'reviewed_gray_fifos reset-copy alias {alias} collides')
+            out[alias] = r
+    return out
+
+
 def bindings(record):
-    roles = ' '.join(_word(k) + ' {' + ' '.join(str(x) for x in r) + '}' for k, r in sorted(record['roles'].items()))
+    allroles = dict(record['roles'])
+    allroles.update(_rst_copy_aliases(record['roles']))
+    roles = ' '.join(_word(k) + ' {' + ' '.join(str(x) for x in r) + '}' for k, r in sorted(allroles.items()))
     fifos = ' '.join('{' + fid + '} {writer ' + f['writer'] + ' reader ' + f['reader'] + ' ptr '
                      + repr(f['pointer_max_delay_ps']) + ' store ' + repr(f['storage_max_delay_ps'])
                      + ' store_read ' + str(int(f['storage_read'])) + ' chains {'
