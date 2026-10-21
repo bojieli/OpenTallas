@@ -1,0 +1,80 @@
+{
+   "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+   "invocation": "stat -json ",
+   "modules": {
+      "\\pvso_cost_top": {
+         "num_wires":         26,
+         "num_wire_bits":     1707,
+         "num_pub_wires":     26,
+         "num_pub_wire_bits": 1707,
+         "num_ports":         26,
+         "num_port_bits":     1707,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         0,
+         "num_submodules":       1,
+         "num_cells_by_type": {
+            "$paramod\\dsdv_pv_so_ingress\\ENABLE=s32'00000000000000000000000000000001": 1
+         }
+      },
+      "$paramod\\dsdv_pv_so_ingress\\ENABLE=s32'00000000000000000000000000000001": {
+         "num_wires":         2366,
+         "num_wire_bits":     27903,
+         "num_pub_wires":     89,
+         "num_pub_wire_bits": 12422,
+         "num_ports":         26,
+         "num_port_bits":     1707,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         14465,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 1576,
+            "$_DFFE_PN0P_": 94,
+            "$_DFFE_PP_": 47,
+            "$_DFF_PN0_": 197,
+            "$_DFF_PN1_": 1,
+            "$_DFF_P_": 1172,
+            "$_MUX_": 9297,
+            "$_NOT_": 242,
+            "$_OR_": 1087,
+            "$_SDFFCE_PN0P_": 457,
+            "$_SDFFCE_PN1P_": 8,
+            "$_XOR_": 151,
+            "ot_sram_1r1w_32x64_m1": 136
+         }
+      }
+   },
+      "design": {
+         "num_wires":         2392,
+         "num_wire_bits":     29610,
+         "num_pub_wires":     115,
+         "num_pub_wire_bits": 14129,
+         "num_ports":         52,
+         "num_port_bits":     3414,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         14465,
+         "num_submodules":       1,
+         "num_cells_by_type": {
+            "$_AND_": 1576,
+            "$_DFFE_PN0P_": 94,
+            "$_DFFE_PP_": 47,
+            "$_DFF_PN0_": 197,
+            "$_DFF_PN1_": 1,
+            "$_DFF_P_": 1172,
+            "$_MUX_": 9297,
+            "$_NOT_": 242,
+            "$_OR_": 1087,
+            "$_SDFFCE_PN0P_": 457,
+            "$_SDFFCE_PN1P_": 8,
+            "$_XOR_": 151,
+            "ot_sram_1r1w_32x64_m1": 136,
+            "$paramod\\dsdv_pv_so_ingress\\ENABLE=s32'00000000000000000000000000000001": 1
+         }
+      }
+}
+

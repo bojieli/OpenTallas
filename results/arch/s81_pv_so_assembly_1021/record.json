@@ -1,0 +1,122 @@
+{
+  "status": "DEFAULT_OFF_REAL_SOURCE_HIERARCHY__COMPONENT_PASS__RELEASE_ASSEMBLY_OPEN",
+  "base": "136a3dcae",
+  "producer_commits": [
+    "6c9113349",
+    "8a85496ae"
+  ],
+  "parameters": {
+    "PV_IDENTITY": {
+      "default": 0,
+      "tested": 1
+    },
+    "PVSO_ENABLE": {
+      "default": 0,
+      "tested": 1
+    },
+    "final_hierarchy_NTP": 1
+  },
+  "transport": {
+    "unit": "ot-epyc7 oth-ubuntu-1135723-1792603173",
+    "exit": 0,
+    "checks": {
+      "positive": "2 fullshape transactions,16384 FP32 values,1068q words,first launch+2,last launch+535;actual ot_s81_svc_job gate passed every word",
+      "1": {
+        "code": "0xc",
+        "required_causal_bit": "0x4"
+      },
+      "2": {
+        "code": "0x20",
+        "required_causal_bit": "0x20"
+      },
+      "3": {
+        "code": "0x40",
+        "required_causal_bit": "0x40"
+      },
+      "4": {
+        "code": "0x80",
+        "required_causal_bit": "0x80"
+      },
+      "5": {
+        "code": "0xc",
+        "required_causal_bit": "0x4"
+      },
+      "6": {
+        "code": "0x20",
+        "required_causal_bit": "0x20"
+      },
+      "7": {
+        "code": "0x100",
+        "required_causal_bit": "0x100"
+      }
+    },
+    "negative_names": {
+      "1": "wrongsourceowner",
+      "2": "wrongparameterowner",
+      "3": "wrongSEjid",
+      "4": "earlylaunch",
+      "5": "wrongsourceposition",
+      "6": "wrongparameterposition",
+      "7": "producerflags"
+    }
+  },
+  "source_identity": {
+    "unit": "ot-epyc7 oth-ubuntu-1169437-1792603243",
+    "exit": 0,
+    "checks": "default0,CFG-afterGO frozen context,nextowner,wrongtag,resetstale,invalidGO"
+  },
+  "final_real_hierarchy": {
+    "unit": "ot-epyc7 oth-ubuntu-1223747-1792603381",
+    "exit": 0,
+    "parameters": "PVSO_ENABLE1 NTP1",
+    "consumer": "actual dsdv_svc_rs_entry -> actual ot_s81_svc_job/ATT/SMS/SOT/target/GW/GX"
+  },
+  "sizing": {
+    "scope": "consumer-only full-shape technology-independent synthesis, no ABC/mapped area/timing",
+    "cells": 14465,
+    "FF": 1976,
+    "SRAM": 136,
+    "macro_area_um2": 75127.35744,
+    "physical_storage_bits": 278528,
+    "input_records": 640,
+    "data_records": 512,
+    "output_qwords": 534,
+    "q_II_edges": 1,
+    "first_q_after_launch_capture_edges": 2,
+    "last_q_after_launch_capture_edges": 535,
+    "source_macro": "b65718325 generated32x64",
+    "unit": "ot-epyc7 oth-ubuntu-1147942-1792603199",
+    "exit": 0,
+    "mapped_area_um2": null,
+    "clock_wire_area": null,
+    "global_instance_count": null,
+    "mux_cells": 9297
+  },
+  "reproduction_note": "run.sh now additionally requires each recorded causal bit; the immutable existing logs were checked against that stronger condition without rerunning hardware. No RTL changed after the final positive/negative runs.",
+  "scope_limits": [
+    "protocol patterns test transpose, not attention math; no fixture substitution in token replay",
+    "actual four-quarter link/pin/calendar binding open",
+    "16-head source-owned SE proof binding open",
+    "actual position-owned coefficient source open",
+    "entry-specific SOT/currenttree/SM and target-age booking open",
+    "SS/FF native/physical gates not launched"
+  ],
+  "sha256": {
+    "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress.sv": "ae5a9fd79b588ecd075fbba01d5e036bf2636c157e99f8894c7e93fc4f3390e0",
+    "rtl/dsrom_sys/s81_dv/pv_so/dsdv_svc_rs_pvso_entry.sv": "7cd5bfe39d55b0305b5a62f6d36bb4753cbfff63428395a842f2e6daf2b1b89f",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "33e3c153e465f58161e1314cb0bb4d07f89e12f339fb2aa110ced340f44dcc1c",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv": "f3156f399c2e89461e963c1104e45f57eb7a2a05da6a4355dc3105fa146cbbe9",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv": "6ae753c3fea9594fdfab849f8338dfb002af8d974a807de6725fc5df2f1258df",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v": "6fcf8a3b8584a9ea4c1c63cfc678f579fa40d5eb5159b8aa259f2c86d0a0059a",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02",
+    "tools/s81_dv/pv_so_assembly_1021/qualify.sh": "c6c8ed2acc46b1449ed6aba1021c364fb8767f54d64b8ac967ea660971a7d934",
+    "tools/s81_dv/pv_so_assembly_1021/cost_top.sv": "1d3b6b11b77421095700951a12a25cf3c0b8025acbe97ec7e2c0f8a958c51a9c",
+    "tools/s81_dv/pv_so_assembly_1021/lint.sh": "15c4c4a4aca710194f5f9a4934830cf73af9f7b32bb190d1f4c11a882a72c7ea",
+    "tools/s81_dv/pv_so_assembly_1021/tb_pv_so_ingress.sv": "c558ab6e550f9ad4058830de555e5055996dca01e5a67ccfc9c3cc316c55ec05",
+    "tools/s81_dv/pv_so_assembly_1021/tb_pv_identity.sv": "ea252a7b02d7cbfa40963c77dafe7a0663dda125a09abe689fc9eee2a2223f9b",
+    "tools/s81_dv/pv_so_assembly_1021/synth.sh": "1e2d98f2b6e70731a2edc0b167f6211894ba29ba04d96141f7deeb867d1d8c6a",
+    "tools/s81_dv/pv_so_assembly_1021/identity.sh": "c1d45f44dc326fc498163060966120e2f020040e4811f4514be4de7ff2a85abb",
+    "tools/s81_dv/pv_so_assembly_1021/run.sh": "90634e40fa8dbbdec6377d2e34c3717ccd000ad5898a83922159ab1e64e7682c"
+  }
+}

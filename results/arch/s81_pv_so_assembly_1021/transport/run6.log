@@ -1,0 +1,7 @@
+PVSO_CAUGHT mut=6 code=020
+- tools/s81_dv/pv_so_assembly_1021/tb_pv_so_ingress.sv:60: Verilog $finish
+PVSO_PASS jobs2 checks0
+- tools/s81_dv/pv_so_assembly_1021/tb_pv_so_ingress.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 663ns; walltime 0.003 s; speed 208.382 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
