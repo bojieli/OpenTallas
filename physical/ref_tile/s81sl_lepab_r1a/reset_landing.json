@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81sl_lep_mu_ab_regional",
+ "enable": false,
+ "reason": "Source has independent ot_rst_relay_tree3 on every clock root and equal-depth 7-stage bounded landing reset forests; all control/valid reset locally. No extra generated primary-root reset wrapper."
+}

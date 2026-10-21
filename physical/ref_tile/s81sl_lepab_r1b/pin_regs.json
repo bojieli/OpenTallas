@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_lep_mu_ab_regional",
+ "enable": false,
+ "reason": "Source registers at all interfaces/region crossings, existing two-stage lane relays; adding generic pin registers would change priced ages."
+}

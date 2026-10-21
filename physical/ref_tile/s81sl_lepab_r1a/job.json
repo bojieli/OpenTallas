@@ -1,0 +1,157 @@
+{
+ "name": "s81sl_lepab_r1a-s81sl_lepab_r1a-7ea9cc368",
+ "block": "ot_s81sl_lep_mu_ab_regional",
+ "ref_tile": true,
+ "owner": "Codex:CODEX-S81-1021/LEPAB",
+ "purpose": "Regional structural successor after t5c/t5d one-root/1.6mm setup -0.9ns. Two native32 pair-A cores, C dispatch/registered onehot merge; all C<->A/B buses real D4K2 rings, three independent related CTS roots. Every path receives ordinary same-frequency STA (no data multicycle or async cuts). Two-edge matched outer lane payload/valid and reverse return relays; endpoint DR/CRED12 and peer CORE_CRED12. New ML E-face matched bus bands, old N-face fit invalid. Parent R0 land and existing ML E2 landing chunk placement pending, with +1 eachway owed if those stages cannot cover<=405um segments. Cycle model: +4 centre-to-pair, +5 pair-to-centre, +2 lane data/valid and +2 reverse returns, RTT+4. New strict view/ports required, no alias of old AB or CRED8.",
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/s81-lepab-regional-1021",
+  "commit": "7ea9cc3687c82c9255803a1bba584b3e6cb50ec1",
+  "extra_paths": [
+   "tools/s81_slice/lepab_regional_bench.sh",
+   "results/rtl/s81_lepab_regional_1021",
+   "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lepab_regional.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep_mu_ab_regional #(.DR(12), .CRED(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lepab_none",
+    "cmd": "bash tools/s81_slice/lepab_regional_bench.sh {RUN}/none none 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160"
+   },
+   {
+    "name": "lepab_tagdrop",
+    "cmd": "bash tools/s81_slice/lepab_regional_bench.sh {RUN}/TAGDROP TAGDROP 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_TAGDROP.log"
+   },
+   {
+    "name": "lepab_wrongcopy",
+    "cmd": "bash tools/s81_slice/lepab_regional_bench.sh {RUN}/WRONGCOPY WRONGCOPY 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_WRONGCOPY.log"
+   },
+   {
+    "name": "lepab_landcut",
+    "cmd": "bash tools/s81_slice/lepab_regional_bench.sh {RUN}/LANDCUT LANDCUT 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_LANDCUT.log"
+   },
+   {
+    "name": "lepab_stalehd",
+    "cmd": "bash tools/s81_slice/lepab_regional_bench.sh {RUN}/STALEHD STALEHD 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_STALEHD.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81sl_lepab_r1a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lepab_r1a/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lepab_r1a --out {RUN}/record/views/ot_s81sl_lep_mu_ab_regional --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lepab_r1a/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lepab_r1a/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lepab_r1a/s81sl_lepab_r1a-s81sl_lepab_r1a-7ea9cc368"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Regional structural successor after t5c/t5d one-root/1.6mm setup -0.9ns. Two native32 pair-A cores, C dispatch/registered onehot merge; all C<->A/B buses real D4K2 rings, three independent related CTS roots. Every path receives ordinary same-frequency STA (no data multicycle or async cuts). Two-edge matched outer lane payload/valid and reverse return relays; endpoint DR/CRED12 and peer CORE_CRED12. New ML E-face matched bus bands, old N-face fit invalid. Parent R0 land and existing ML E2 landing chunk placement pending, with +1 eachway owed if those stages cannot cover<=405um segments. Cycle model: +4 centre-to-pair, +5 pair-to-centre, +2 lane data/valid and +2 reverse returns, RTT+4. New strict view/ports required, no alias of old AB or CRED8."
+}
