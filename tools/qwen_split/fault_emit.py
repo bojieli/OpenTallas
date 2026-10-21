@@ -374,7 +374,7 @@ def pre(v, m, G):
             # rfs try 2 (dv2f20g5rh 'flt_root_dvs_E2 has no input'): the primary root sits within CAP_UM of one of the
             # owner's landings (nearest the gap target), so it always captures at least one source; a hard fault owner
             # (no landing pts) within CAP_UM of its fault port median (rfs try 8: 'flt_root_mu_dhobs has no input')
-            own_ = [p_ for p_ in (r.get('pts') or []) if len(p_) < 3 or cknet.get(p_[2], cj) == cj]
+            own_ = list(r.get('pts') or [])
             pts_ = sorted((tuple(p_[:2]) for p_ in (own_ or [r['xy']])), key=lambda p_: _man(p_, (tx, ty)))
             for p_ in pts_[:8]:
                 s = occ.site(v, p_[0], p_[1], rmax=CAP_UM, step=8.64,
@@ -479,15 +479,14 @@ def pre(v, m, G):
     if ROOT_MODE == 'cover':
         cand_pts = collections.defaultdict(list)
         for o_, r_ in owners.items():
-            if o_ in roots:
-                for p_ in (r_.get('pts') or []):
-                    cand_pts[cknet.get(p_[2], roots[o_]['cj']) if len(p_) > 2 else roots[o_]['cj']].append(tuple(p_[:2]))
+            for p_ in (r_.get('pts') or []):
+                cand_pts[o_].append(tuple(p_[:2]))
         dropped = []
         for key in sorted(roots):
             r_ = roots[key]
-            if key == ROOT_OWNER or key in hard or any(_man(r_['xy'], p_) <= CAP_UM for p_ in cand_pts[r_['cj']]):
+            if key == ROOT_OWNER or key in hard or any(_man(r_['xy'], p_) <= CAP_UM for p_ in cand_pts[r_['owner']]):
                 continue
-            if not any(k2 != key and roots[k2]['cj'] == r_['cj'] for k2 in roots):
+            if not any(k2 != key and roots[k2].get('owner') == r_['owner'] for k2 in roots):
                 continue
             dropped.append(key)
             del roots[key]
@@ -547,17 +546,14 @@ def _cover_roots(v, m, o, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unpl
     site must be within CAP_UM of EVERY member (tiers: 350 um wide-end keep-clear -> GROUP_KEEP_UM -> none -> any box,
     reserved base relay sites always kept); no site -> half the members -> the seed alone -> recorded unplaced."""
     cknet = getattr(v, '_ot_fault_cknet', {})
-    byck = collections.defaultdict(list)
-    for p_ in pts:
-        byck[cknet.get(p_[2], roots[o]['cj']) if len(p_) > 2 else roots[o]['cj']].append((p_[0], p_[1]))
-    n_new = 0
-    for cj0, pl_ in sorted(byck.items()):
-        n_new += _cover_clock(v, m, o, cj0, pl_, roots, by, q, occ, occ_g, occ_0, zn, follow, unplaced, tiers)
-    return n_new
+    # rfs try 13: the FINAL clock of a landing and of a fault node is its ck_follow owner's region (_gen16_clock_refile
+    # moves every follower pin to its owner's region after post), so coverage is per OWNER, not per interim clock bus
+    return _cover_clock(v, m, o, roots[o]['cj'], [(p_[0], p_[1]) for p_ in pts], roots, by, q, occ, occ_g, occ_0, zn,
+                        follow, unplaced, tiers)
 
 
 def _cover_clock(v, m, o, cj0, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unplaced, tiers):
-    same = lambda: [rr['xy'] for rr in roots.values() if rr['cj'] == cj0]
+    same = lambda: [rr['xy'] for rr in roots.values() if rr.get('owner') == o]
     unc = sorted(tuple(p_) for p_ in pts if not any(_man(p_, c_) <= CAP_UM for c_ in same()))
     n_new = 0
     while unc:
@@ -660,15 +656,29 @@ def post(v, m, G):
     if bad:
         raise ValueError(f'fault emit: {len(bad)} bad sources: {bad[:8]}')
     roots = {o: by[r['inst']] for o, r in rec['roots'].items()}
+    # rfs try 13 (orphan flt_leaf86: rly_q3h_col_5_1_0 on interim clk_r1, final n_clk_r9): match sources and nodes by their
+    # ck_follow OWNER -- the region _gen16_clock_refile gives them after post -- not by the interim clock bus
+    fol0 = m.setdefault('ck_follow', {})
+    # a fault-edge landing follows its receiving fault root, which itself follows an owner: the refile only resolves real
+    # owners, so such pins are pointed at the root's owner (same final region as the root)
+    inst_owner = {r['inst']: r.get('owner', o) for o, r in rec['roots'].items()}
+    for k_, o_ in list(fol0.items()):
+        if o_ in inst_owner:
+            fol0[k_] = inst_owner[o_]
+    src = [(s_[0], s_[1], s_[2], s_[3], fol0.get((s_[0], 'ck')) or s_[0], s_[5], s_[6]) for s_ in src]
     root_ck = collections.defaultdict(list)
+    kcj, krs = {}, {}
     for o, it in roots.items():
-        root_ck[ckx[(it.name, 'ck')]].append(it)
+        k_ = rec['roots'][o].get('owner', o)
+        root_ck[k_].append(it)
+        kcj.setdefault(k_, ckx[(it.name, 'ck')])
+        krs.setdefault(k_, rsx[(it.name, 'rs')])
     occ = RasterOcc(m) if os.environ.get('OT_SPLIT_FAULT_RASTER', '1') == '1' else Occ(m)
     follow = m.setdefault('ck_follow', {})
     # node table: name -> dict(inst, n_in, ck, rs, owner)
     nodes = {}
     for o, it in roots.items():
-        nodes[it.name] = dict(it=it, n=len(rec['roots'][o]['children']), ck=ckx[(it.name, 'ck')],
+        nodes[it.name] = dict(it=it, n=len(rec['roots'][o]['children']), ck=rec['roots'][o].get('owner', o),
                               rs=rsx[(it.name, 'rs')], owner=rec['roots'][o].get('owner', o), root=True, up=None)
     q16 = make_master(v, FANIN)
     new_buses, nn = [], [0]
@@ -690,7 +700,7 @@ def post(v, m, G):
                     domain='stream_1p2')
         m['insts'].append(it)
         by[nm] = it
-        _join(m, cj, (nm, 'ck'))
+        _join(m, kcj[cj], (nm, 'ck'))
         _join(m, rj, (nm, 'rs'))
         follow[(nm, 'ck')] = owner
         nodes[nm] = dict(it=it, n=0, ck=cj, rs=rj, owner=owner, root=False, up=None)
@@ -715,7 +725,7 @@ def post(v, m, G):
     worst_src = 0.0
     for inst, port, real, bit, cj, rj, xy in sorted(src, key=lambda t: (t[4], t[6][0], t[6][1])):
         if cj not in root_ck:
-            raise ValueError(f'fault emit: {inst}.{port} clock {m["buses"][cj][0]} has no region root (plan stale)')
+            raise ValueError(f'fault emit: {inst}.{port} clock {cj} has no region root (plan stale)')
         # QW-G5FROOT: a region / group root of the same clock within LOCAL_UM captures the source itself (no leaf)
         cand = [l for l in leaves[cj] + [r_.name for r_ in root_ck[cj]]
                 if nodes[l]['n'] < FANIN and _man(_ctr(nodes[l]['it']), xy) <=
@@ -726,7 +736,7 @@ def post(v, m, G):
         else:
             r0 = root_ck[cj][0]
             owner = owner_of_root[r0.name]
-            lf = new_node('leaf', xy[0], xy[1], cj, rj if rj is not None else nodes[r0.name]['rs'], owner)
+            lf = new_node('leaf', xy[0], xy[1], cj, krs[cj], owner)
             leaves[cj].append(lf)
         worst_src = max(worst_src, _man(_ctr(nodes[lf]['it']), xy))
         new_buses.append((f'flt_s_{inst}_{port}', CLS, 1, [(inst, port), (lf, take(lf))]))
@@ -896,7 +906,7 @@ def post(v, m, G):
                 c0 = _ctr(nodes[cur]['it'])
                 okp = [a for a in att if nodes[a]['n'] < FANIN]
                 if not okp:
-                    raise ValueError(f'fault emit: clock {m["buses"][cj][0]}: no attached node with a free input')
+                    raise ValueError(f'fault emit: clock {cj}: no attached node with a free input')
                 tgt = min(okp, key=lambda a: _man(c0, _ctr(by[a])))
                 d = _man(c0, _ctr(by[tgt]))
                 if d <= REACH_UM:
@@ -929,11 +939,11 @@ def post(v, m, G):
                         # the y 18697 row gap, its clock root's nodes in the y 13409 gap; 31k boxes searched).  Recorded
                         # ORPHAN: the leaf is withdrawn, its sources stay open (as on the base g5 die); a region root per
                         # (owner, row gap) in pre is the structural fix (owed).
-                        orphans.append(dict(leaf=lf, xy=[round(c0[0], 1), round(c0[1], 1)], clock=m['buses'][cj][0],
+                        orphans.append(dict(leaf=lf, xy=[round(c0[0], 1), round(c0[1], 1)], clock=cj,
                                             nearest=tgt, nearest_um=round(d, 1), stats=st2 or st1))
                         break
                     if route is None:
-                        raise ValueError(f'fault emit: no hop route from {cur} {c0} (clock {m["buses"][cj][0]}, sources '
+                        raise ValueError(f'fault emit: no hop route from {cur} {c0} (clock {cj}, sources '
                                          f'{[b_[3][0] for b_ in new_buses if b_[3][1][0] == lf][:6]}) to any of {len(okp)} attached nodes, nearest {tgt} {t} '
                                          f'(A* {st1} / wide {st2}; free boxes within 340 um of the leaf: '
                                          f'{sum(1 for gx in range(-8, 9) for gy in range(-8, 9) if abs(gx) + abs(gy) <= 8 and occ.free((c0[0] - W / 2 + 40 * gx, c0[1] - H / 2 + 40 * gy, c0[0] + W / 2 + 40 * gx, c0[1] + H / 2 + 40 * gy)))}/145 sampled)')
