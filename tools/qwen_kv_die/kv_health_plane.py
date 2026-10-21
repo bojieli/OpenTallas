@@ -243,6 +243,8 @@ def inventory(die):
                                         'flt; OT_KV_DCAL_FLT=1 routes it to afr d[8])'))
         else:
             add('dcal', port, 'ck', 'rst_n', True, owner='KV-DCAL2')
+    if 'kvs_emb' in die.cells and die.cells['kvs_emb'][0] == 'qkd_kvs_emb_rope':
+        add('kvs_emb', 'emb_fault', 'ck', 'rst_n', True, owner='KV RoPE accepted context / HBM join / row transmitter')
     # KV-BIND4: PC fault export family (pc__hfx, sticky per bit)
     pport, pw = PC_HFX
     for i, (m, p, c) in sorted(die.cells.items()):
