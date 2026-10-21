@@ -1,0 +1,25 @@
+{
+  "source": "54aa19348e6d1efb0897fd7ada0aee5e95329eed",
+  "functional_unit": "oth-ubuntu-877450-1792606709",
+  "functional_host": "ot-epyc5",
+  "builds": "all7rc0, allsimulatorspresent",
+  "existing_positives": [
+    "base",
+    "seed2_LAT160",
+    "seed3_LAT60"
+  ],
+  "existing_causals": [
+    "xq1",
+    "xq2",
+    "tap1",
+    "tap2",
+    "rpar",
+    "onesc"
+  ],
+  "mechanism": "PASS actual RTL+Python positives; all6causal failures witnessed, no missing build classified as failure",
+  "RETURN_AGE": 640,
+  "II": 704,
+  "added_cycles": 0,
+  "native": "PENDING original-config immutable two-file overlay unit1988488-1792606618 gold1; baselineFAIL189/286roles0 preserved",
+  "physical": "NOT RUN new source; no adopted production view/clock/SSFF/wholelayer or token qualification"
+}
