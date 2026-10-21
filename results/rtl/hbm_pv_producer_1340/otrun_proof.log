@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   533 GB (avail 738, growth 365, headroom 0, waiters 0/0 GB) load 75/128 running 20 disk 1867 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-gold1       admits   537 GB (avail 448, growth 72, headroom 0, waiters 0/0 GB) load 93/112 running 28 disk 2191 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: -> ot-epyc5
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 64 = 45 GB, admissible -340 GB: available 738 GB, growth charged 976 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 953 GB at x1), young 28 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 64 = 45 GB, admissible -44 GB: available 753 GB, growth charged 784 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 761 GB at x1), young 26 GB, floor 57 GB): bash tools/hbm_layer_vehicle/run_pv_vm_producer.sh /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/proof
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340 (0.0 GB) ot-epyc5 -> ot-epyc9 (no host with --dir admits 64 GB now)
+ot-run: SPILL: copied 1109 changed entries in 9 s; running on ot-epyc9; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3631035-1792616314 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PVROW_EXPECTATIONS_MET
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3631035-1792616314): exit 0
+ot-run: SPILL: outputs copied back ot-epyc9 -> ot-epyc5; RAN on ot-epyc9: exit 0

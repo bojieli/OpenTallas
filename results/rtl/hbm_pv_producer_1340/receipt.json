@@ -1,0 +1,48 @@
+{
+  "status": "PASS_REAL_VM_BOUNDARY_TO_PSTORE_COMPONENT",
+  "rtl_source": "3a855d928d32253ccfe782521f8f5ff935483f8a",
+  "harness_source": "b8efc5069236039b916861e40396c6254911bc86",
+  "scope": "Actual selected ctlx RLM55/LEAD8 +2pairs ofrealBFQg +realpair-egress +realpstore, samePLL/directT0 as frozenconn_p40 die.v. Format0 quantizer/BD inactive cut asserted. VM inputs ATT.PV A atgenuineSUemittedphysicaladdresses; runtimeSU production/fulltoken NOT qualified.",
+  "field_abi": {
+    "payload108": "{xb7,fmt2,space2,stride32,p4,n21,base40}",
+    "space": 2,
+    "format": 0,
+    "p": 1,
+    "n": 1,
+    "stride": 0,
+    "base": "physical VM FP32 wordaddress, arbitrarylow3 supported",
+    "xb": "pstore destination row0..127",
+    "result": "one grp127,last1,xwdata={1920zero,8replicas ofexistingBF16RNE(scalar)}"
+  },
+  "coverage": {
+    "rows": 128,
+    "pairs": 2,
+    "columns_per_row": 8,
+    "vm_bank_requests": 1024,
+    "pstore_reads": 256,
+    "p_v_valid_each_pair": 128,
+    "faults": 0
+  },
+  "causals": {
+    "wrong_space": "FAIL errors641 pstorefault11 ctlfault1",
+    "wrong_scalar_word_offset": "FAIL errors384 pstorefault00 ctlfault0"
+  },
+  "actual_edge_dates": {
+    "launch": 555,
+    "command": 629,
+    "start": 630,
+    "first_rq": 632,
+    "first_xw": 709,
+    "first_pstore_write": 710,
+    "last_xw": 33221,
+    "command_to_xw": 80,
+    "command_to_pstore_write": 81,
+    "tested_row_interval": 256
+  },
+  "unqualified": "No faster interval, native, placement, SS/FF, coherent SU runtime or fulltoken claim. 640rows requirefive128-rowpstore/tablepages andrealcalendarprice/clear/read/reuse bytokenowner. Normalspace1 compatibility stilllive.",
+  "original_failure": "Original harness negatives printed bothFAIL andtrailingPASS after $finish; rawlogs preserved separately. Exclusive if/elseverdict receipt2 correctedthis only, RTL unchanged. First receipt2a NOTRUN due staleSPILLroot refusal; fresh authoritative receipt2root used without changingmarker/tool.",
+  "rtl_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "ac8e1c63b455c745de62e6cab65e3dfdbe014bda163d3bec7800c66bd11e36af",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv": "8eb7bd27d513f130ed4010d98f4b2d6318b0dbc79e9106d8809724039a70df76"
+  }
+}

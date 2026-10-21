@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-receipt2-1340/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-receipt2-1340/src
+ot-run: ot-epyc9       admits   634 GB (avail 494, growth 27, headroom 0, waiters 0/0 GB) load 64/128 running 29 disk 2288 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-receipt2-1340/src
+ot-run: ot-gold1       admits -1402 GB (avail 475, growth 1457, headroom 0, waiters 0/0 GB) load 104/112 running 27 disk 2186 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-receipt2-1340/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-receipt2-1340/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3679586-1792616591 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+PVROW_EXPECTATIONS_MET
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3679586-1792616591): exit 0

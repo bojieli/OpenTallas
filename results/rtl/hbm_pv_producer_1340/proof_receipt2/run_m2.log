@@ -1,0 +1,12 @@
+PVROW_MISMATCH pair0 cyc709 row0 grp127 data3e223e223e223e223e223e223e223e22 gold3e47
+PVROW_MISMATCH pair1 cyc709 row0 grp127 data3e223e223e223e223e223e223e223e22 gold3e47
+PVROW_MISMATCH pair0 cyc965 row1 grp127 data3e473e473e473e473e473e473e473e47 gold3e22
+PVROW_MISMATCH pair1 cyc965 row1 grp127 data3e473e473e473e473e473e473e473e47 gold3e22
+PVROW_MISMATCH pair0 cyc1221 row2 grp127 data3e083e083e083e083e083e083e083e08 gold3dce
+PVROW_BOUNDARY cmd629 start630 xw709 write710 last_xw33221 readvalid128/128
+PVROW_TIMING launch555 first_rq632 first_xw709 delta_rq77 delta_xw154
+PVROW FAIL errors384 pstorefault00 ctlfault0
+- rtl/test/hbm_layer/tb_hbm_pv_vm_producer.sv:104: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 69us; walltime 0.709 s; speed 96.774 us/s
+- Verilator: cpu 0.709 s on 1 threads; allocated 9 MB

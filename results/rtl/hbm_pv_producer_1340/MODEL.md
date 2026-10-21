@@ -11,3 +11,5 @@ Timing model: existing BF issue-to-emission wait is8+RLM+LAND4+2 edges forP1; em
 DS actual source probabilities are genuine SU attend.bf16_p VM results (logicalO55360,128/640 rows). Physicalwords come from the frozen SU emitter record, not Opreloads. TOKowner controls that emission/proof; this component test may supply VMboundary inputs but cannot claim actualSU/fulltoken qualification.
 
 Selected frozenconn_p40 graph: ctlx PMAX8/RD_LAT={45,43,55,53,29,27,40,37} (bank0..7=[37,40,27,29,53,55,43,45], RLM55), NR32, LEAD8. Pair-egress andallBFQg ports are direct in the actualdie.v; component T0, no invented tree. Both paircopies use the same control. HardBFQg has real8SRAMs/quartile, exactpublishedtile RTL, allrelatedclocks connect tosamePLLstream root asactualgraph. Actualphysical lane/relaycalendar and SS/FF closure remain die-owner obligations.
+
+Actual receipt2: command629→firstRQ632→xw709→SRAMwrite710; commandtoxw80edges, commandtowrite81. Tested static command spacing256;128rows lastxw33221, firstxw709, intervalspan32512=127×256. This spacing was tested, not optimized; no tighter throughput claim.
