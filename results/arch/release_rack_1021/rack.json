@@ -223,8 +223,8 @@
     "head_dies": 12,
     "total_dies": 1168,
     "hbm_stacks": 1204,
-    "stage_source": "MODEL allocator (input file)",
-    "grade": "MODEL"
+    "stage_source": "stage map results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json (qualified)",
+    "grade": "spec"
    },
    "die_links": {
     "rank": {
@@ -279,23 +279,23 @@
     },
     "by_medium_D": {
      "board trace": {
-      "circuits": 2332,
+      "circuits": 2312,
       "cables": 0,
       "max_len_m": 0.513,
       "max_loss_db": 24.2,
       "all_reach_ok": true
      },
      "passive DAC": {
-      "circuits": 612,
-      "cables": 1224,
+      "circuits": 628,
+      "cables": 1256,
       "max_len_m": 1.5,
       "max_loss_db": 0.0,
       "all_reach_ok": true
      },
      "AEC": {
-      "circuits": 20,
-      "cables": 40,
-      "max_len_m": 2.2,
+      "circuits": 24,
+      "cables": 48,
+      "max_len_m": 2.25,
       "max_loss_db": 0.0,
       "all_reach_ok": true
      }
@@ -389,13 +389,13 @@
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 168,
+      "serdes_macros": 160,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 733.8,
+      "serdes_w": 698.9,
       "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
      },
      {
       "tray": 5,
@@ -437,25 +437,25 @@
       "tray": 7,
       "quads": {
        "0": "S011",
-       "1": "B2.0",
+       "1": "S012",
        "3": "S225",
        "2": "S226"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 8,
       "quads": {
-       "0": "B2.1",
-       "1": "B2.2",
+       "0": "S013",
+       "1": "S014",
        "3": "S223",
        "2": "S224"
       },
@@ -472,28 +472,10 @@
      {
       "tray": 9,
       "quads": {
-       "0": "B2.3",
-       "1": "B2.4",
-       "3": "S221",
+       "0": "S015",
+       "1": "S016",
+       "3": "B36.5",
        "2": "S222"
-      },
-      "dies": 16,
-      "hbm_stacks": 16,
-      "serdes_macros": 160,
-      "die_w": 1345.6,
-      "hbm_w": 44.8,
-      "serdes_w": 698.9,
-      "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
-     },
-     {
-      "tray": 10,
-      "quads": {
-       "0": "B2.5",
-       "1": "S012",
-       "3": "S219",
-       "2": "S220"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -506,12 +488,30 @@
       "dc_input_w": 2510.6
      },
      {
+      "tray": 10,
+      "quads": {
+       "0": "S017",
+       "1": "B2.0",
+       "3": "B36.3",
+       "2": "B36.4"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
       "tray": 11,
       "quads": {
-       "0": "S013",
-       "1": "S014",
-       "3": "S217",
-       "2": "S218"
+       "0": "B2.1",
+       "1": "B2.2",
+       "3": "B36.1",
+       "2": "B36.2"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -526,10 +526,10 @@
      {
       "tray": 12,
       "quads": {
-       "0": "S015",
-       "1": "S016",
-       "3": "S215",
-       "2": "S216"
+       "0": "B2.3",
+       "1": "B2.4",
+       "3": "S221",
+       "2": "B36.0"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -544,28 +544,28 @@
      {
       "tray": 13,
       "quads": {
-       "0": "S017",
+       "0": "B2.5",
        "1": "S018",
-       "3": "S213",
-       "2": "S214"
+       "3": "S219",
+       "2": "S220"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 14,
       "quads": {
        "0": "S019",
        "1": "S020",
-       "3": "S211",
-       "2": "S212"
+       "3": "S217",
+       "2": "S218"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -582,26 +582,26 @@
       "quads": {
        "0": "S021",
        "1": "S022",
-       "3": "S209",
-       "2": "S210"
+       "3": "S215",
+       "2": "S216"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 16,
       "quads": {
        "0": "S023",
        "1": "S024",
-       "3": "S207",
-       "2": "S208"
+       "3": "S213",
+       "2": "S214"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -618,8 +618,8 @@
       "quads": {
        "0": "S025",
        "1": "S026",
-       "3": "S205",
-       "2": "S206"
+       "3": "S211",
+       "2": "S212"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -636,8 +636,8 @@
       "quads": {
        "0": "S027",
        "1": "S028",
-       "3": "S203",
-       "2": "S204"
+       "3": "S209",
+       "2": "S210"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -654,8 +654,8 @@
       "quads": {
        "0": "S029",
        "1": "S030",
-       "3": "S201",
-       "2": "S202"
+       "3": "S207",
+       "2": "S208"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -672,26 +672,26 @@
       "quads": {
        "0": "S031",
        "1": "S032",
-       "3": "S199",
-       "2": "S200"
+       "3": "S205",
+       "2": "S206"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 168,
+      "serdes_macros": 160,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 733.8,
+      "serdes_w": 698.9,
       "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
      },
      {
       "tray": 21,
       "quads": {
        "0": "S033",
        "1": "S034",
-       "3": "S197",
-       "2": "S198"
+       "3": "S203",
+       "2": "S204"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -708,8 +708,8 @@
       "quads": {
        "0": "S035",
        "1": "S036",
-       "3": "S195",
-       "2": "S196"
+       "3": "S201",
+       "2": "S202"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -726,8 +726,8 @@
       "quads": {
        "0": "S037",
        "1": "S038",
-       "3": "S193",
-       "2": "S194"
+       "3": "S199",
+       "2": "S200"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -742,28 +742,28 @@
      {
       "tray": 24,
       "quads": {
-       "0": "B8.0",
-       "1": "B8.1",
-       "3": "S191",
-       "2": "S192"
+       "0": "S039",
+       "1": "S040",
+       "3": "B32.5",
+       "2": "S198"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 25,
       "quads": {
-       "0": "B8.2",
-       "1": "B8.3",
-       "3": "S189",
-       "2": "S190"
+       "0": "S041",
+       "1": "S042",
+       "3": "B32.3",
+       "2": "B32.4"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -778,10 +778,10 @@
      {
       "tray": 26,
       "quads": {
-       "0": "B8.4",
-       "1": "B8.5",
-       "3": "S187",
-       "2": "S188"
+       "0": "S043",
+       "1": "S044",
+       "3": "B32.1",
+       "2": "B32.2"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -796,28 +796,10 @@
      {
       "tray": 27,
       "quads": {
-       "0": "S039",
-       "1": "S040",
-       "3": "S185",
-       "2": "S186"
-      },
-      "dies": 16,
-      "hbm_stacks": 16,
-      "serdes_macros": 168,
-      "die_w": 1345.6,
-      "hbm_w": 44.8,
-      "serdes_w": 733.8,
-      "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
-     },
-     {
-      "tray": 28,
-      "quads": {
-       "0": "S041",
-       "1": "S042",
-       "3": "S183",
-       "2": "S184"
+       "0": "S045",
+       "1": "S046",
+       "3": "S197",
+       "2": "B32.0"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -830,12 +812,30 @@
       "dc_input_w": 2470.4
      },
      {
+      "tray": 28,
+      "quads": {
+       "0": "S047",
+       "1": "S048",
+       "3": "S195",
+       "2": "S196"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
       "tray": 29,
       "quads": {
-       "0": "S043",
-       "1": "S044",
-       "3": "S181",
-       "2": "S182"
+       "0": "S049",
+       "1": "S050",
+       "3": "S193",
+       "2": "S194"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -850,28 +850,28 @@
      {
       "tray": 30,
       "quads": {
-       "0": "S045",
-       "1": "S046",
-       "3": "S179",
-       "2": "S180"
+       "0": "S051",
+       "1": "S052",
+       "3": "S191",
+       "2": "S192"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 31,
       "quads": {
-       "0": "S047",
-       "1": "S048",
-       "3": "S177",
-       "2": "S178"
+       "0": "S053",
+       "1": "B8.0",
+       "3": "S189",
+       "2": "S190"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -886,10 +886,10 @@
      {
       "tray": 32,
       "quads": {
-       "0": "S049",
-       "1": "S050",
-       "3": "S175",
-       "2": "S176"
+       "0": "B8.1",
+       "1": "B8.2",
+       "3": "S187",
+       "2": "S188"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -904,10 +904,10 @@
      {
       "tray": 33,
       "quads": {
-       "0": "S051",
-       "1": "S052",
-       "3": "S173",
-       "2": "S174"
+       "0": "B8.3",
+       "1": "B8.4",
+       "3": "S185",
+       "2": "S186"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -922,28 +922,28 @@
      {
       "tray": 34,
       "quads": {
-       "0": "S053",
+       "0": "B8.5",
        "1": "S054",
-       "3": "S171",
-       "2": "S172"
+       "3": "S183",
+       "2": "S184"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 35,
       "quads": {
        "0": "S055",
        "1": "S056",
-       "3": "S169",
-       "2": "S170"
+       "3": "S181",
+       "2": "S182"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -960,8 +960,8 @@
       "quads": {
        "0": "S057",
        "1": "S058",
-       "3": "S167",
-       "2": "S168"
+       "3": "S179",
+       "2": "S180"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -978,26 +978,26 @@
       "quads": {
        "0": "S059",
        "1": "S060",
-       "3": "S165",
-       "2": "S166"
+       "3": "S177",
+       "2": "S178"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 168,
+      "serdes_macros": 160,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 733.8,
+      "serdes_w": 698.9,
       "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
      },
      {
       "tray": 38,
       "quads": {
        "0": "S061",
        "1": "S062",
-       "3": "S163",
-       "2": "S164"
+       "3": "S175",
+       "2": "S176"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1014,8 +1014,8 @@
       "quads": {
        "0": "S063",
        "1": "S064",
-       "3": "S161",
-       "2": "S162"
+       "3": "B28.5",
+       "2": "S174"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1031,9 +1031,9 @@
       "tray": 40,
       "quads": {
        "0": "S065",
-       "1": "B14.0",
-       "3": "B36.4",
-       "2": "B36.5"
+       "1": "S066",
+       "3": "B28.3",
+       "2": "B28.4"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1048,10 +1048,10 @@
      {
       "tray": 41,
       "quads": {
-       "0": "B14.1",
-       "1": "B14.2",
-       "3": "B36.2",
-       "2": "B36.3"
+       "0": "S067",
+       "1": "S068",
+       "3": "B28.1",
+       "2": "B28.2"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1066,10 +1066,10 @@
      {
       "tray": 42,
       "quads": {
-       "0": "B14.3",
-       "1": "B14.4",
-       "3": "B36.0",
-       "2": "B36.1"
+       "0": "S069",
+       "1": "S070",
+       "3": "S173",
+       "2": "B28.0"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1084,28 +1084,28 @@
      {
       "tray": 43,
       "quads": {
-       "0": "B14.5",
-       "1": "S066",
-       "3": "S159",
-       "2": "S160"
+       "0": "S071",
+       "1": "S072",
+       "3": "S171",
+       "2": "S172"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 168,
+      "serdes_macros": 160,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 733.8,
+      "serdes_w": 698.9,
       "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
      },
      {
       "tray": 44,
       "quads": {
-       "0": "S067",
-       "1": "S068",
-       "3": "S157",
-       "2": "S158"
+       "0": "S073",
+       "1": "S074",
+       "3": "S169",
+       "2": "S170"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1120,28 +1120,10 @@
      {
       "tray": 45,
       "quads": {
-       "0": "S069",
-       "1": "S070",
-       "3": "S155",
-       "2": "S156"
-      },
-      "dies": 16,
-      "hbm_stacks": 16,
-      "serdes_macros": 160,
-      "die_w": 1345.6,
-      "hbm_w": 44.8,
-      "serdes_w": 698.9,
-      "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
-     },
-     {
-      "tray": 46,
-      "quads": {
-       "0": "S071",
-       "1": "S072",
-       "3": "S153",
-       "2": "S154"
+       "0": "S075",
+       "1": "S076",
+       "3": "S167",
+       "2": "S168"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1154,12 +1136,30 @@
       "dc_input_w": 2510.6
      },
      {
+      "tray": 46,
+      "quads": {
+       "0": "S077",
+       "1": "S078",
+       "3": "S165",
+       "2": "S166"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
       "tray": 47,
       "quads": {
-       "0": "S073",
-       "1": "S074",
-       "3": "S151",
-       "2": "S152"
+       "0": "S079",
+       "1": "S080",
+       "3": "S163",
+       "2": "S164"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1174,10 +1174,10 @@
      {
       "tray": 48,
       "quads": {
-       "0": "S075",
-       "1": "S076",
-       "3": "S149",
-       "2": "S150"
+       "0": "S081",
+       "1": "S082",
+       "3": "S161",
+       "2": "S162"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1192,28 +1192,28 @@
      {
       "tray": 49,
       "quads": {
-       "0": "S077",
-       "1": "S078",
-       "3": "S147",
-       "2": "S148"
+       "0": "S083",
+       "1": "S084",
+       "3": "S159",
+       "2": "S160"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 50,
       "quads": {
-       "0": "S079",
-       "1": "S080",
-       "3": "S145",
-       "2": "S146"
+       "0": "S085",
+       "1": "S086",
+       "3": "S157",
+       "2": "S158"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1228,28 +1228,28 @@
      {
       "tray": 51,
       "quads": {
-       "0": "S081",
-       "1": "S082",
-       "3": "S143",
-       "2": "S144"
+       "0": "S087",
+       "1": "S088",
+       "3": "S155",
+       "2": "S156"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 168,
+      "serdes_macros": 160,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 733.8,
+      "serdes_w": 698.9,
       "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
      },
      {
       "tray": 52,
       "quads": {
-       "0": "S083",
-       "1": "S084",
-       "3": "B32.4",
-       "2": "B32.5"
+       "0": "S089",
+       "1": "B14.0",
+       "3": "S153",
+       "2": "S154"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1264,10 +1264,28 @@
      {
       "tray": 53,
       "quads": {
-       "0": "S085",
-       "1": "S086",
-       "3": "B32.2",
-       "2": "B32.3"
+       "0": "B14.1",
+       "1": "B14.2",
+       "3": "S151",
+       "2": "S152"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 54,
+      "quads": {
+       "0": "B14.3",
+       "1": "B14.4",
+       "3": "B24.5",
+       "2": "S150"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1280,48 +1298,30 @@
       "dc_input_w": 2510.6
      },
      {
-      "tray": 54,
-      "quads": {
-       "0": "S087",
-       "1": "S088",
-       "3": "B32.0",
-       "2": "B32.1"
-      },
-      "dies": 16,
-      "hbm_stacks": 16,
-      "serdes_macros": 160,
-      "die_w": 1345.6,
-      "hbm_w": 44.8,
-      "serdes_w": 698.9,
-      "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
-     },
-     {
       "tray": 55,
       "quads": {
-       "0": "S089",
+       "0": "B14.5",
        "1": "S090",
-       "3": "S141",
-       "2": "S142"
+       "3": "B24.3",
+       "2": "B24.4"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 56,
       "quads": {
        "0": "S091",
-       "1": "B20.0",
-       "3": "S139",
-       "2": "S140"
+       "1": "S092",
+       "3": "B24.1",
+       "2": "B24.2"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1336,10 +1336,10 @@
      {
       "tray": 57,
       "quads": {
-       "0": "B20.1",
-       "1": "B20.2",
-       "3": "S137",
-       "2": "S138"
+       "0": "S093",
+       "1": "S094",
+       "3": "S149",
+       "2": "B24.0"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1354,46 +1354,10 @@
      {
       "tray": 58,
       "quads": {
-       "0": "B20.3",
-       "1": "B20.4",
-       "3": "S135",
-       "2": "S136"
-      },
-      "dies": 16,
-      "hbm_stacks": 16,
-      "serdes_macros": 168,
-      "die_w": 1345.6,
-      "hbm_w": 44.8,
-      "serdes_w": 733.8,
-      "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
-     },
-     {
-      "tray": 59,
-      "quads": {
-       "0": "B20.5",
-       "1": "S092",
-       "3": "S133",
-       "2": "S134"
-      },
-      "dies": 16,
-      "hbm_stacks": 16,
-      "serdes_macros": 168,
-      "die_w": 1345.6,
-      "hbm_w": 44.8,
-      "serdes_w": 733.8,
-      "misc_w": 60.0,
-      "it_w": 2184.2,
-      "dc_input_w": 2510.6
-     },
-     {
-      "tray": 60,
-      "quads": {
-       "0": "S093",
-       "1": "S094",
-       "3": "S131",
-       "2": "S132"
+       "0": "S095",
+       "1": "S096",
+       "3": "S147",
+       "2": "S148"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1406,12 +1370,48 @@
       "dc_input_w": 2470.4
      },
      {
+      "tray": 59,
+      "quads": {
+       "0": "S097",
+       "1": "S098",
+       "3": "S145",
+       "2": "S146"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 60,
+      "quads": {
+       "0": "S099",
+       "1": "S100",
+       "3": "S143",
+       "2": "S144"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
       "tray": 61,
       "quads": {
-       "0": "S095",
-       "1": "S096",
-       "3": "S129",
-       "2": "S130"
+       "0": "S101",
+       "1": "S102",
+       "3": "S141",
+       "2": "S142"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1426,10 +1426,10 @@
      {
       "tray": 62,
       "quads": {
-       "0": "S097",
-       "1": "S098",
-       "3": "S127",
-       "2": "S128"
+       "0": "S103",
+       "1": "S104",
+       "3": "S139",
+       "2": "S140"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1444,28 +1444,28 @@
      {
       "tray": 63,
       "quads": {
-       "0": "S099",
-       "1": "S100",
-       "3": "S125",
-       "2": "S126"
+       "0": "S105",
+       "1": "S106",
+       "3": "S137",
+       "2": "S138"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 176,
+      "serdes_macros": 160,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 768.8,
+      "serdes_w": 698.9,
       "misc_w": 60.0,
-      "it_w": 2219.2,
-      "dc_input_w": 2550.8
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
      },
      {
       "tray": 64,
       "quads": {
-       "0": "S101",
-       "1": "S102",
-       "3": "B28.4",
-       "2": "B28.5"
+       "0": "S107",
+       "1": "S108",
+       "3": "S135",
+       "2": "S136"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1480,10 +1480,10 @@
      {
       "tray": 65,
       "quads": {
-       "0": "S103",
-       "1": "S104",
-       "3": "B28.2",
-       "2": "B28.3"
+       "0": "S109",
+       "1": "S110",
+       "3": "S133",
+       "2": "S134"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1498,10 +1498,10 @@
      {
       "tray": 66,
       "quads": {
-       "0": "S105",
-       "1": "S106",
-       "3": "B28.0",
-       "2": "B28.1"
+       "0": "S111",
+       "1": "S112",
+       "3": "S131",
+       "2": "S132"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1516,10 +1516,10 @@
      {
       "tray": 67,
       "quads": {
-       "0": "B24.0",
-       "1": "B24.1",
-       "3": "S123",
-       "2": "S124"
+       "0": "S113",
+       "1": "S114",
+       "3": "S129",
+       "2": "S130"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1534,10 +1534,10 @@
      {
       "tray": 68,
       "quads": {
-       "0": "B24.2",
-       "1": "B24.3",
-       "3": "S121",
-       "2": "S122"
+       "0": "S115",
+       "1": "S116",
+       "3": "S127",
+       "2": "S128"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1552,46 +1552,46 @@
      {
       "tray": 69,
       "quads": {
-       "0": "B24.4",
-       "1": "B24.5",
-       "3": "S119",
-       "2": "S120"
+       "0": "S117",
+       "1": "S118",
+       "3": "B20.5",
+       "2": "S126"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 160,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 698.9,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2149.3,
-      "dc_input_w": 2470.4
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 70,
       "quads": {
-       "0": "S107",
-       "1": "S108",
-       "3": "S117",
-       "2": "S118"
+       "0": "S119",
+       "1": "S120",
+       "3": "B20.3",
+       "2": "B20.4"
       },
       "dies": 16,
       "hbm_stacks": 16,
-      "serdes_macros": 176,
+      "serdes_macros": 168,
       "die_w": 1345.6,
       "hbm_w": 44.8,
-      "serdes_w": 768.8,
+      "serdes_w": 733.8,
       "misc_w": 60.0,
-      "it_w": 2219.2,
-      "dc_input_w": 2550.8
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
      },
      {
       "tray": 71,
       "quads": {
-       "0": "S109",
-       "1": "S110",
-       "3": "S115",
-       "2": "S116"
+       "0": "S121",
+       "1": "S122",
+       "3": "B20.1",
+       "2": "B20.2"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1606,10 +1606,10 @@
      {
       "tray": 72,
       "quads": {
-       "0": "S111",
-       "1": "S112",
-       "3": "S113",
-       "2": "S114"
+       "0": "S123",
+       "1": "S124",
+       "3": "S125",
+       "2": "B20.0"
       },
       "dies": 16,
       "hbm_stacks": 16,
@@ -1634,9 +1634,9 @@
       "rack": "R1",
       "trays": 25,
       "spare_trays": 1,
-      "it_kw": 54.1,
-      "dc_kw": 62.2,
-      "wall_kw": 64.8,
+      "it_kw": 54.2,
+      "dc_kw": 62.3,
+      "wall_kw": 64.9,
       "shelves": "3 + 3 (2N), 82.5 kW usable a side",
       "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
      },
@@ -1646,7 +1646,7 @@
       "spare_trays": 1,
       "it_kw": 53.9,
       "dc_kw": 62.0,
-      "wall_kw": 64.5,
+      "wall_kw": 64.6,
       "shelves": "3 + 3 (2N), 82.5 kW usable a side",
       "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
      },
@@ -1654,9 +1654,9 @@
       "rack": "R3",
       "trays": 23,
       "spare_trays": 1,
-      "it_kw": 49.7,
-      "dc_kw": 57.1,
-      "wall_kw": 59.5,
+      "it_kw": 49.6,
+      "dc_kw": 57.0,
+      "wall_kw": 59.4,
       "shelves": "3 + 3 (2N), 82.5 kW usable a side",
       "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
      }
@@ -1959,9 +1959,9 @@
    "power": {
     "it_kw": 157.8,
     "dc_kw": 181.3,
-    "wall_kw_D": 189.2,
+    "wall_kw_D": 189.3,
     "wall_kw_S": 520.4,
-    "D_link_w": 300,
+    "D_link_w": 360,
     "S_switch_w": 229500.0,
     "S_aec_w": 88740.0,
     "grade": "derived on die power (spec where a die report exists, else MODEL)"
@@ -2006,17 +2006,17 @@
    },
    "compare": {
     "D": {
-     "cables": 948,
-     "aec": 30,
+     "cables": 978,
+     "aec": 36,
      "optics": 0,
-     "board_trace_circuits": 2332,
-     "cable_circuits": 632,
+     "board_trace_circuits": 2312,
+     "cable_circuits": 652,
      "switch_chips": 0,
      "latency_ns_range": [
       209.0,
-      220.7
+      221.0
      ],
-     "link_power_w": 300,
+     "link_power_w": 360,
      "racks": 3,
      "sparing": "tray is the FRU; a failed die/tray is swapped (~30 min, MODEL); circuits are fixed copper, so a spare tray must take the failed tray's slot and cables",
      "repointing": "none: a new copy count or stage map means re-cabling the affected tray boundaries"
@@ -2094,30 +2094,31 @@
       "board trace",
       "passive DAC"
      ],
-     "D_ns_max": 220.7,
-     "D_cycles_max": 265,
+     "D_ns_max": 221.0,
+     "D_cycles_max": 266,
      "D_ns_min": 209.0,
      "D_cycles_min": 251,
      "S_ns": 379.6,
      "S_cycles": 456,
      "S_budget_ns": 377.6,
      "S_budget_cycles": 454,
-     "saved_cycles_D_vs_S_budget": 189
+     "saved_cycles_D_vs_S_budget": 188
     },
     "copyb_in": {
      "circuits": 32,
      "D_media": [
+      "AEC",
       "passive DAC"
      ],
-     "D_ns_max": 214.3,
-     "D_cycles_max": 258,
-     "D_ns_min": 214.0,
+     "D_ns_max": 221.0,
+     "D_cycles_max": 266,
+     "D_ns_min": 213.8,
      "D_cycles_min": 257,
      "S_ns": 379.6,
      "S_cycles": 456,
      "S_budget_ns": 377.6,
      "S_budget_cycles": 454,
-     "saved_cycles_D_vs_S_budget": 196
+     "saved_cycles_D_vs_S_budget": 188
     },
     "copyb_hop": {
      "circuits": 160,
@@ -2139,18 +2140,17 @@
     "copyb_out": {
      "circuits": 32,
      "D_media": [
-      "board trace",
-      "passive DAC"
+      "board trace"
      ],
-     "D_ns_max": 213.6,
-     "D_cycles_max": 257,
+     "D_ns_max": 209.0,
+     "D_cycles_max": 251,
      "D_ns_min": 209.0,
      "D_cycles_min": 251,
      "S_ns": 379.6,
      "S_cycles": 456,
      "S_budget_ns": 377.6,
      "S_budget_cycles": 454,
-     "saved_cycles_D_vs_S_budget": 197
+     "saved_cycles_D_vs_S_budget": 203
     },
     "host": {
      "circuits": 12,
@@ -2173,8 +2173,8 @@
     "collective_phases": 290,
     "stage_crossings": 244,
     "token_cycles": 980428,
-    "D_saved_cycles": 105474,
-    "D_rate_gain_pct": 12.1,
+    "D_saved_cycles": 105290,
+    "D_rate_gain_pct": 12.0,
     "grade": "derived (token cycles and phase count from the 81-stage calendar / links report; the 241-stage calendar is not priced)"
    },
    "sparing": {

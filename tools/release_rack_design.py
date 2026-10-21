@@ -242,6 +242,7 @@ S81_HOST = dict(
 def s81_inputs():
     inp = json.loads(S81_INPUT.read_text())
     stages, layer_dies, src = inp["stages"], inp["layer_dies"], "MODEL allocator (input file)"
+    inp["_map_first_stage"] = {}
     if inp.get("stage_map_path"):
         p = Path(inp["stage_map_path"])
         p = p if p.is_absolute() else ROOT / p
@@ -249,6 +250,9 @@ def s81_inputs():
             m = json.loads(p.read_text())
             stages = m.get("stages_count") or len(m["stages"])
             layer_dies = inp["tp"] * stages
+            for i, st in enumerate(m["stages"]):          # copy-A run start = first stage holding the layer
+                for L in st.get("layers", []):
+                    inp["_map_first_stage"].setdefault(L, i)
             src = "stage map %s (%s)" % (p.relative_to(ROOT) if p.is_relative_to(ROOT) else p,
                                          "qualified" if inp.get("qualified") else "unqualified")
     plan = json.loads(CHAIN_PLAN.read_text())
@@ -263,7 +267,7 @@ def s81_units():
     run = per_copy // 4                                     # stages in a duplicated group
     groups = []
     for name, layer in sorted(cb["groups_81map"].items(), key=lambda kv: kv[1]):
-        s0 = round(int(name[1:]) * stages / cb["stages_81map"])
+        s0 = inp["_map_first_stage"].get(layer, round(int(name[1:]) * stages / cb["stages_81map"]))
         groups.append(dict(group81=name, layer=layer, start=s0, stop=s0 + run, pre=s0 - 1, post=s0 + run))
     hd = inp["head"]["dies"]
     units, die = [], 0

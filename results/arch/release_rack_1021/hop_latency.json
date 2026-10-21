@@ -57,30 +57,31 @@
      "board trace",
      "passive DAC"
     ],
-    "D_ns_max": 220.7,
-    "D_cycles_max": 265,
+    "D_ns_max": 221.0,
+    "D_cycles_max": 266,
     "D_ns_min": 209.0,
     "D_cycles_min": 251,
     "S_ns": 379.6,
     "S_cycles": 456,
     "S_budget_ns": 377.6,
     "S_budget_cycles": 454,
-    "saved_cycles_D_vs_S_budget": 189
+    "saved_cycles_D_vs_S_budget": 188
    },
    "copyb_in": {
     "circuits": 32,
     "D_media": [
+     "AEC",
      "passive DAC"
     ],
-    "D_ns_max": 214.3,
-    "D_cycles_max": 258,
-    "D_ns_min": 214.0,
+    "D_ns_max": 221.0,
+    "D_cycles_max": 266,
+    "D_ns_min": 213.8,
     "D_cycles_min": 257,
     "S_ns": 379.6,
     "S_cycles": 456,
     "S_budget_ns": 377.6,
     "S_budget_cycles": 454,
-    "saved_cycles_D_vs_S_budget": 196
+    "saved_cycles_D_vs_S_budget": 188
    },
    "copyb_hop": {
     "circuits": 160,
@@ -102,18 +103,17 @@
    "copyb_out": {
     "circuits": 32,
     "D_media": [
-     "board trace",
-     "passive DAC"
+     "board trace"
     ],
-    "D_ns_max": 213.6,
-    "D_cycles_max": 257,
+    "D_ns_max": 209.0,
+    "D_cycles_max": 251,
     "D_ns_min": 209.0,
     "D_cycles_min": 251,
     "S_ns": 379.6,
     "S_cycles": 456,
     "S_budget_ns": 377.6,
     "S_budget_cycles": 454,
-    "saved_cycles_D_vs_S_budget": 197
+    "saved_cycles_D_vs_S_budget": 203
    },
    "host": {
     "circuits": 12,

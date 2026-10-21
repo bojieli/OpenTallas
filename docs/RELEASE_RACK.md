@@ -21,9 +21,9 @@ Every number carries one of four grades:
 
 | | **OPTION D**: direct (board traces + cables) | **OPTION S**: static circuits through a one-tier switch |
 |---|---|---|
-| S81 cables off the board | **948** (918 passive DAC + 30 AEC; 24 of them are the head-tray host links) [der] | **8,874** AEC [der] |
+| S81 cables off the board | **978** (942 passive DAC + 36 AEC; 24 of them are the head-tray host links) [der] | **8,874** AEC [der] |
 | S81 switch chips | **0** | **153** Tomahawk-Ultra class in 5 switch racks [der/MODEL] |
-| S81 latency per crossing | **209-221 ns** (251-265 cycles) [der] | **380 ns** (456 cycles). The budget is 377.6 ns, and 367 ns is reached only with passive DAC legs [der] |
+| S81 latency per crossing | **209-221 ns** (251-266 cycles) [der] | **380 ns** (456 cycles). The budget is 377.6 ns, and 367 ns is reached only with passive DAC legs [der] |
 | S81 wall power | **189 kW** [der] | **520 kW** (+230 kW switch trays, +89 kW AEC) [der/MODEL] |
 | S81 per-user rate | **+12%** vs the 377.6 ns contract (534 crossings a token x 190-203 cycles saved) [der, 81-stage calendar] | today's contract |
 | sparing | Tray swap, about 30 min [MODEL] | Hot re-point, about 1 s, but only onto a die that holds the same ROM [MODEL] |
@@ -42,8 +42,8 @@ Every number carries one of four grades:
 
 | item | value | grade |
 |---|---|---|
-| stages / layer dies | **241 / 964** (72-frame allocator, HANDOFF 10-21 01:59). The count is read from `s81_stage_map_input.json`. Set `stage_map_path` there and a rerun picks up the qualified map | MODEL |
-| copy-B dies | 8 groups x 24 = **192**: the chain-plan rule `round(layer_dies / 40)` rounded up to whole TP4 groups. The positions are scaled from the 81-stage map | MODEL |
+| stages / layer dies | **241 / 964**, the QUALIFIED 72-frame map `results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json` (static capacity receipt PASS, 6/6 exact chunks, ccff664a5). `s81_stage_map_input.json` points `stage_map_path` at it; the generator reads the stage count from it | spec |
+| copy-B dies | 8 groups x 24 = **192**: the chain-plan rule `round(layer_dies / 40)` rounded up to whole TP4 groups. Each copy-A run starts at the first qualified-map stage holding its layer (R012/R048/R084/R120/R144/R168/R192/R216); the copy-B run length stays MODEL | MODEL |
 | head dies | **12**, 4 HBM stacks each (10-06 rack record). No 72-frame head die exists yet | MODEL |
 | total | **1,168 dies, 1,204 HBM3E stacks** | der |
 | links on a rank die | **10 SerDes = 5 lane pairs**, the 5-circuit lane plan (`lanes/S81-LINK5.md`): s_0S pair A (WS0/1) <-> rank r-1 s_7S; s_7S pair A (ES0/1) <-> rank r+1 s_0S; TP d+2 = s_7N pair A (EN0/1) <-> rank r+2 s_7N pair A, one bidirectional circuit; stage NEXT = s_0N pair A (WN0/1) -> next stage, same rank, s_0N pair B (WN2/3); stage PREV = s_0N pair B (WN2/3) <- previous stage s_0N pair A (5th pair, OWNER 10-21). E column B (EN2/3) is the copy-A/B reserve and is unwired on ordinary rank dies | spec |
@@ -95,8 +95,8 @@ Each 1 OU ORv3 tray (533 x 800 mm) carries **4 quads of 2 x 2 single-die package
   - 1 management switch.
 - Racks are liquid cooled: a cold plate on every package, a rear manifold and an in-row CDU.
 - OPTION D cable lengths:
-  - adjacent trays: 1.3-1.44 m passive DAC (2 m reach [pub]);
-  - the two rack-to-rack turns: 2.15-2.2 m AEC (7 m reach [pub]).
+  - adjacent trays: 1.3-1.39 m passive DAC (2 m reach [pub]);
+  - the two rack-to-rack turns: 2.15-2.25 m AEC (7 m reach [pub]).
 - No switch trays.
 
 ### 2.4 Power and thermal
@@ -134,11 +134,11 @@ Array total:
 
 | | D | S |
 |---|---|---|
-| cables | 948 | 8,874 (every die lane to a switch port; legs average 2.6 m, so AEC) |
+| cables | 978 | 8,874 (every die lane to a switch port; legs average 2.6 m, so AEC) |
 | switch chips | 0 | 153: 139 by bandwidth (die lanes / 512) plus a 10% chip-domain boundary allowance. One crossing requires both circuit ends on one chip |
 | racks | 3 | 3 + 5 switch racks |
 | latency per crossing | 209 ns full KP4 hop (includes 0.3 m of flight [spec]) + flight + 3 ns AEC | 100 PHY/FEC + 250 switch [pub] + 2 legs of flight + 2 x 3 ns AEC = 380 ns |
-| power on links | 0.3 kW AEC | 230 kW switch trays (1.5 kW each, MODEL) + 89 kW AEC |
+| power on links | 0.4 kW AEC | 230 kW switch trays (1.5 kW each, MODEL) + 89 kW AEC |
 | sparing | tray swap | hot re-point onto copy-B / standby groups |
 | re-pointing | re-cable | table rewrite |
 
@@ -154,8 +154,8 @@ For S81 under OPTION D:
 | class | D cycles |
 |---|---|
 | TP mesh and token return | **251** |
-| stage hop | 251-265 |
-| copy-B | 257-265 |
+| stage hop | 251-266 |
+| copy-B | 251-266 |
 
 All of these replace the 453-454 cycles the xdie co-sims model today [der].
 
@@ -197,7 +197,7 @@ All of these replace the 453-454 cycles the xdie co-sims model today [der].
 | accelerators | 1,168 ROM dies (single model replica) | 72 B200 + 36 Grace | 384 Ascend 910C + 192 Kunpeng |
 | racks | 3 | 1 | 16 (12 compute + 4 communication) |
 | power | 189 kW wall | about 120-132 kW | about 559 kW |
-| scale-up cables | 948 copper (918 passive) | over 5,000 active copper (NVLink cartridges) | optical, 2-tier UB switch |
+| scale-up cables | 978 copper (942 passive) | over 5,000 active copper (NVLink cartridges) | optical, 2-tier UB switch |
 | switch chips | 0 | 18 NVLink switch chips (9 trays) | 7 planes x 16 L2 switch chips |
 | fabric | static point-to-point circuits, TP4 mesh on board | NVLink 5 all-to-all, 0.9 TB/s/GPU/dir | Unified Bus all-to-all, 392 GB/s/NPU/dir |
 
@@ -205,7 +205,7 @@ The release arrays wire a fixed, known traffic pattern. That is why S81 needs ab
 
 ## 6. Open items
 
-1. The 72-frame stage map, the copy-B positions and the head-die count are all MODEL. Rerun the generator on the qualified map.
+1. The stage map is qualified (ccff664a5). The copy-B run length and the head-die count are still MODEL.
 2. No 72-frame die power report exists. SerDes power may double-count with the die figure.
 3. The macro lane count (6 x 112G) is a placeholder abstract.
 4. The trace loss model must be checked against the chosen laminate. The 8 turnaround circuits at 24 dB have the least margin.
