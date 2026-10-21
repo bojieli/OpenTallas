@@ -872,11 +872,24 @@ module ot_hgi_coll_link_e2(
  reg [16:0] write_sequence,tx_sequence,rx_sequence;
  reg [7:0] active_epoch;
  reg epoch_active;
- wire seq_bad=(wr_v_pin && (write_sequence[16] || wr_seq_pin!==write_sequence[15:0])) ||
-              (rd_v_pin && (tx_sequence[16] || rd_seq_pin!==tx_sequence[15:0])) ||
-              (rx_expect_v_pin && (rx_sequence[16] || rx_expect_seq_pin!==rx_sequence[15:0]));
- wire epoch_bad=(epoch_active && epoch_pin!=active_epoch) ||
-                (!epoch_active && (wr_v_pin||rd_v_pin||rx_expect_v_pin||rx_pin_v_pin));
+ // HBM-COLLECT10/LINK 10-21 (e2u/e2v gates: rx_v cone = 16-b sequence compares -> abort_in -> fault -> rx_v across the
+ // tile, ~9 levels + ~300 ps wire, TT -72/-105): seq_bad / epoch_bad are RETIMED across the pin stage -- computed from
+ // the ports and the NEXT state of the counters / epoch registers, registered as seq_bad_q / epoch_bad_q.  Edge- and
+ // bit-identical to the old (pin-register compare) form: reset 0 = the old value with every *_v_pin 0; 0 added cycles.
+ wire [16:0] write_sequence_nx=eb[0]?17'd0:(wr_v_pin && !write_sequence[16])?write_sequence+1'b1:write_sequence;
+ wire [16:0] tx_sequence_nx=eb[1]?17'd0:(rd_v_pin && !tx_sequence[16])?tx_sequence+1'b1:tx_sequence;
+ wire [16:0] rx_sequence_nx=eb[2]?17'd0:(rx_expect_v_pin && !rx_sequence[16])?rx_sequence+1'b1:rx_sequence;
+ wire [7:0] epoch_pin_nx=epoch_begin?epoch_new:held_epoch;
+ wire epoch_active_nx=eb[3]?1'b1:epoch_active;
+ wire [7:0] active_epoch_nx=eb[3]?epoch_pin:active_epoch;
+ wire seq_bad_nx=(wr_v && (write_sequence_nx[16] || wr_seq!==write_sequence_nx[15:0])) ||
+                 (rd_v && (tx_sequence_nx[16] || rd_seq!==tx_sequence_nx[15:0])) ||
+                 (rx_expect_v && (rx_sequence_nx[16] || rx_expect_seq!==rx_sequence_nx[15:0]));
+ wire epoch_bad_nx=(epoch_active_nx && epoch_pin_nx!=active_epoch_nx) ||
+                   (!epoch_active_nx && (wr_v||rd_v||rx_expect_v||rx_pin_v));
+ reg seq_bad,epoch_bad;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin seq_bad<=0;epoch_bad<=0;end else begin seq_bad<=seq_bad_nx;epoch_bad<=epoch_bad_nx;end
  wire abort_in=seq_bad|epoch_bad;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)write_sequence<=0;else if(eb[0])write_sequence<=0;
