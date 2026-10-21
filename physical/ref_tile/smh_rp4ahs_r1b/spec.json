@@ -56,7 +56,8 @@
   "GN": 2,
   "GS": 1,
   "XB": 2,
-  "LR": 2
+  "LR": 2,
+  "OS": 1
  },
  "defines": [
   "OT_SMH_CG_ENREG",
@@ -225,7 +226,7 @@
   "branch": "claude/hbm-smatt10-1020",
   "tag": "rp4ahs_r1b",
   "purpose": "H.STA.BLK.9.1 / 14.6: HBM SM attention tile rp4a (s half, frame 691.2 x 1209.6) on the CLOSED XS bay view (smh_xs_p192d_bay f61a12bcc); clock variant K=8 k-means roots.",
-  "structural_change": "re-plan of the stand-in rp4a halves after their gate FAIL (spread 132/130, GRT rc137, rl1 -188, ohl1 -361, xb1 -313): frame 691.2 wide with a 172.8 W channel; LR=2 uniform leaf-input relays (rl1 hops <= ~330 um, own ohl1 copy), XB=2 beat-crossing relays FIRM down the W channel (<= ~390 um), PV merge moved E, rows R0, GRT 192 GB; gout +LR uniform (priced).",
+  "structural_change": "re-plan of the stand-in rp4a halves after their gate FAIL (spread 132/130, GRT rc137, rl1 -188, ohl1 -361, xb1 -313): frame 691.2 wide with a 172.8 W channel; LR=2 uniform leaf-input relays (rl1 hops <= ~330 um, own ohl1 copy), XB=2 beat-crossing relays FIRM down the W channel (<= ~390 um), PV merge moved E, rows R0, GRT 192 GB; core OS stages for the native census (kept per-slice copies); gout +LR+2 uniform (priced).",
   "extra_paths": [
    "tools/hbm_sm_repack_1015",
    "rtl/hbm_accel/sm/repack/h2",
@@ -236,7 +237,7 @@
   "benches": [
    {
     "name": "h2a_lockstep_r1",
-    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2a 0 1 13 2 1 2 2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2a 0 1 13 2 1 2 2 1",
     "expect": "pass",
     "pass_regex": "^H2A_LOCKSTEP PASS MUT=0 compared=",
     "pass_witness": "results/arch/hbm_smatt10_1020/bench/mut0.log",
@@ -245,7 +246,7 @@
    },
    {
     "name": "h2a_r1_mut1",
-    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am1 1 1 13 2 1 2 2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am1 1 1 13 2 1 2 2 1",
     "expect": "fail",
     "fail_regex": "^H2A_LOCKSTEP FAIL MUT=1 mismatches=[1-9]",
     "fail_witness": "results/arch/hbm_smatt10_1020/bench/mut1.log",
@@ -254,7 +255,7 @@
    },
    {
     "name": "h2a_r1_mut2",
-    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am2 2 1 13 2 1 2 2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am2 2 1 13 2 1 2 2 1",
     "expect": "fail",
     "fail_regex": "^H2A_LOCKSTEP FAIL MUT=2 mismatches=[1-9]",
     "fail_witness": "results/arch/hbm_smatt10_1020/bench/mut2.log",
@@ -263,7 +264,7 @@
    },
    {
     "name": "h2a_r1_mut3",
-    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am3 3 1 13 2 1 2 2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am3 3 1 13 2 1 2 2 1",
     "expect": "fail",
     "fail_regex": "^H2A_LOCKSTEP FAIL MUT=3 mismatches=[1-9]",
     "fail_witness": "results/arch/hbm_smatt10_1020/bench/mut3.log",
@@ -272,7 +273,7 @@
    },
    {
     "name": "h2a_r1_mut5",
-    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am5 5 1 13 2 1 2 2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am5 5 1 13 2 1 2 2 1",
     "expect": "fail",
     "fail_regex": "^H2A_LOCKSTEP FAIL MUT=5 mismatches=[1-9]",
     "fail_witness": "results/arch/hbm_smatt10_1020/bench/mut5.log",
@@ -281,7 +282,7 @@
    },
    {
     "name": "h2a_r1_mut6",
-    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am6 6 1 13 2 1 2 2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am6 6 1 13 2 1 2 2 1",
     "expect": "fail",
     "fail_regex": "^H2A_LOCKSTEP FAIL MUT=6 mismatches=[1-9]",
     "fail_witness": "results/arch/hbm_smatt10_1020/bench/mut6.log",
