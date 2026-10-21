@@ -314,6 +314,12 @@ def run_base(name):
         return bases[0]
     cached = FLEET_REF.probe_cache.get(name)
     info = cached[1] if isinstance(cached, tuple) and len(cached) > 1 else None
+    # SCRATCH2-1021 (2026-10-21): every placement calls fleet.launched(h) -- which drops probe_cache[h] -- right before
+    # run_base(h), so the cache was always empty here and every new run dir went to the base (ot-epyc5 scratch hit 100 %
+    # with 2.4 TB free on scratch2).  Fall back to the last good probe.
+    if not (info or {}).get("bases_gb"):
+        good = FLEET_REF.last_good.get(name)
+        info = good[1] if isinstance(good, tuple) and len(good) > 1 else info
     free = (info or {}).get("bases_gb") or {}
     return max(bases, key=lambda b: (free.get(b, -1), b == bases[0]))
 
