@@ -16,7 +16,7 @@ module qkd_host_boot_dispatch #(parameter integer MUT=0)(
  wire[24:0]logical_e=addr[24:0];wire[24:0]scale_e=logical_e-25'd19447808;
  wire[1:0]stack=(logical_e<25'd19447808)?logical_e[6:5]:scale_e[6:5];
  wire[6:0]target=embed?{stack,(logical_e<25'd19447808)?logical_e[4:0]:scale_e[4:0]}:addr[6:0];
- wire good=we&&(marker||(embed?(addr[30:25]==0&&logical_e<25'd19457304):(addr[30:24]==0)));
+ wire good=we&&(marker||(embed?(addr[30:25]==0&&logical_e<25'd19588376):(addr[30:24]==0)));
  wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(issued==landed&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));
  reg issue_v;reg[6:0]issue_pc;wire order_fault;
  qkd_host_commit_order #(.MUT(MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(landed),.fault(order_fault));

@@ -24,6 +24,8 @@ package ot_qfd_emb_pkg;
   localparam integer E_SCALE = VOCAB * NSEC;       // 19,447,808: first scale sector
   localparam integer NSCALE = VOCAB / 16;          // 9,496 scale sectors
   localparam integer E_END = E_SCALE + NSCALE;     // 19,457,304 logical sectors
+  localparam integer E_ROPE = E_END;
+  localparam integer E_ROPE_END = E_ROPE + 1024*128;
   localparam integer ROWS = 149;                   // row indices a copy
   localparam integer SCALE_P0 = 384;               // first PC-local index of the scale sectors (row ROW0 + 148)
 
@@ -37,10 +39,12 @@ package ot_qfd_emb_pkg;
     begin
       if (e < 25'(E_SCALE)) begin
         t = 18'(e >> 7); i = e[6:0]; k = i[6:5]; q = i[4:0]; p = t[9:0]; ro = 8'(t >> 10);
+      end else if(e >= 25'(E_ROPE))begin
+        s=e-25'(E_ROPE);t=18'(s>>7);i=s[6:0];k=i[6:5];q=i[4:0];p=t[9:0];ro=8'd149;
       end else begin
         s = e - 25'(E_SCALE); k = s[6:5]; q = s[4:0]; p = 10'(SCALE_P0) + 10'(s[13:7]); ro = 8'(ROWS - 1);
       end
-      emb_loc = {e < 25'(E_END), k, q, p[9:7], p[1:0], p[6:2], ro};
+      emb_loc = {e < 25'(E_ROPE_END), k, q, p[9:7], p[1:0], p[6:2], ro};
     end
   endfunction
 
@@ -62,7 +66,8 @@ package ot_qfd_emb_pkg;
     reg [24:0] s;
     begin
       s = e - 25'(E_SCALE);
-      stack_of = (e < 25'(E_SCALE)) ? e[6:5] : s[6:5];
+      if(e>=25'(E_ROPE))begin s=e-25'(E_ROPE);stack_of=s[6:5];end
+      else stack_of = (e < 25'(E_SCALE)) ? e[6:5] : s[6:5];
     end
   endfunction
 

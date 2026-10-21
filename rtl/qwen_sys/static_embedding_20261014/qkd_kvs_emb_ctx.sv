@@ -12,7 +12,7 @@
 //     register together);
 //   - emb_fault = ctx_start | join | row_tx sticky faults (previously internal; owner of the health sink: KV-HEALTH).
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0) (
+module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [98:0]   i_ctx,
@@ -29,7 +29,31 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     input  wire [298:0]  i_hroot_ES,
     input  wire [298:0]  i_hroot_EN
 );
-    wire        st;
+    wire st;
+    wire [60:0] accepted_owner;
+    reg [12:0] position;
+    reg [15:0] rope_count;
+    reg rope_pending, rope_start;
+    reg [17:0] rope_id;
+    reg [15:0] rope_epoch;
+    always @(posedge ck or negedge rst_n)
+      if(!rst_n)begin rope_count<=0;rope_pending<=0;rope_start<=0;end
+      else begin
+        rope_start<=0;
+        if(st && ROPE)begin
+          position<=accepted_owner[18:6];
+          rope_id<=18'd151936+{8'd0,accepted_owner[18:9]};
+          rope_epoch<=tep;rope_count<=16'(ROPE_DELAY-2);rope_pending<=1;
+        end else if(rope_pending)begin
+          if(rope_count==0)begin rope_start<=1;rope_pending<=0;end
+          else rope_count<=rope_count-1;
+        end
+      end
+    wire sweep_start=st|rope_start;
+    reg rope_phase;
+    always @(posedge ck or negedge rst_n)
+      if(!rst_n)rope_phase<=0;
+      else if(st)rope_phase<=0;else if(rope_start)rope_phase<=1;
     wire [17:0] tok;
     wire [15:0] tep;
     wire        cf, jf, rf, row_open;
@@ -38,18 +62,25 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     wire [17:0] w_token;
     wire [5:0]  w_index;
     wire [15:0] w_epoch;
-    qkd_embedding_ctx_start #(.NATIVE32(NATIVE32)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]), .ctx_observed_v(i_ctx[97]),
-        .ctx_hdr(i_ctx[96:61]), .ctx_owner(i_ctx[60:0]), .start(st), .token(tok), .epoch(tep), .owner(), .fault(cf));
+    qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]), .ctx_observed_v(i_ctx[97]),
+        .ctx_hdr(i_ctx[96:61]), .ctx_owner(i_ctx[60:0]), .start(st), .token(tok), .epoch(tep), .owner(accepted_owner), .fault(cf));
     qkd_embedding_static_join4_cal #(.MUT(0), .NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join (.ck(ck), .rst_n(rst_n), .up0(i_hroot_WS), .up1(i_hroot_WN),
-        .up2(i_hroot_ES), .up3(i_hroot_EN), .start(st), .cfg_we(i_ctl[72]), .cfg_addr(i_ctl[7:0]), .cfg_data(i_ctl[71:8]),
+        .up2(i_hroot_ES), .up3(i_hroot_EN), .start(sweep_start), .rope_sweep(ROPE && rope_start), .cfg_we(i_ctl[72]), .cfg_addr(i_ctl[7:0]), .cfg_data(i_ctl[71:8]),
         .word_v(w_v), .word_data(w_data), .word_token(w_token), .word_index(w_index), .word_scale(w_scale),
         .word_epoch(w_epoch), .fault(jf));
+    generate if(ROPE)begin:g_rope
+    qkd_embedding_row_tx_rope u_rowtx (.ck(ck),.rst_n(rst_n),.fill_begin(st),.fill_token(tok),.fill_epoch(tep),
+        .fill_position(accepted_owner[18:6]),.word_v(w_v),.word_data(w_data),.word_token(w_token),
+        .word_index(w_index),.word_scale(w_scale),.word_epoch(w_epoch),.emb_tx_slot(d2d__emb_tx_slot[0]),
+        .emb_tx_v(rowtx__emb_tx_v),.emb_tx_payload(rowtx__emb_tx_payload),.fault(rf),.row_ready(),.row_open(row_open));
+    end else begin:g_legacy
     qkd_embedding_row_tx_ctx u_rowtx (.ck(ck), .rst_n(rst_n), .fill_begin(st), .fill_token(tok), .fill_epoch(tep),
         .word_v(w_v), .word_data(w_data), .word_token(w_token), .word_index(w_index), .word_scale(w_scale),
         .word_epoch(w_epoch), .emb_tx_slot(d2d__emb_tx_slot[0]), .emb_tx_v(rowtx__emb_tx_v), .emb_tx_payload(rowtx__emb_tx_payload),
         .fault(rf), .row_ready(), .row_open(row_open));
-    assign px_st = st;
-    assign px_tok = tok;
-    assign px_tep = tep;
+    end endgenerate
+    assign px_st = sweep_start;
+    assign px_tok = (!st&&(rope_start||rope_phase))?rope_id:tok;
+    assign px_tep = (!st&&(rope_start||rope_phase))?rope_epoch:tep;
     assign emb_fault = cf | jf | rf;
 endmodule
