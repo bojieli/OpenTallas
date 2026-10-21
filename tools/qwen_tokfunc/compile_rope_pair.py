@@ -31,7 +31,8 @@ def main():
     # fallback: a measured zero is allowed when the actual GEN establishes it.
     for key in ('compute_source', 'kv_source', 'compute_gen_sha256', 'kv_gen_sha256',
                 'head_producer', 'held_descriptor', 'user0_host_match_source',
-                'tt_to_native_path', 'native_to_sysface_path', 'die_stages'):
+                'tt_to_native_path', 'native_to_sysface_path', 'die_stages',
+                'selected_slice_source', 'selected_slice_timing_receipt'):
         value = receipt.get(key)
         if not isinstance(value, str) or not value.strip() or value.upper() in ('UNKNOWN', 'PENDING', '?'):
             raise SystemExit(f'unknown required source/GEN fact: {key}')
