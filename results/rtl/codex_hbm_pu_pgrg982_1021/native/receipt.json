@@ -1,0 +1,16 @@
+{
+  "status": "PASS_ACTUAL_CANONICAL_NATIVE_ONLY",
+  "source_ref": "982c1f5494dd141baae7216fe7195806e65b32e9",
+  "helper_ref": "46f5246efda404c54c7925269213bc41300c5eae",
+  "executed_assets": "af72715688e67f07c985bce8fbc40b5e6c345be7",
+  "root": "ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021",
+  "native": {
+    "roots": 4173,
+    "max": 26,
+    "violations": 0,
+    "role_errors": 0,
+    "netlist_sha256": "f00f32f483379acd9fe0b5e2b3adad30d86f0bacdd8924b5395875da9f18a1f6"
+  },
+  "wrapper_status": "Original wrapper1 retained: native-only hook exited before initialize, latermake could notfindfloorplanODB; collector additionally usedwrongwork/native_census path. ActualJSONfoundwork/orfs; marker authentic. Collectorpathcorrected9880f9dec locally only, no rerun.",
+  "limits": "No placement/CTS/route/gate qualification. M0 thenM4 existing bench live at STOP. Otheractualtimingcones remain."
+}
