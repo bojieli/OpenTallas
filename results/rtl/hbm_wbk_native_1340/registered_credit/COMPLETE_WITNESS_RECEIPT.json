@@ -1,0 +1,74 @@
+{
+  "time_utc": "2026-10-21T23:10:33.788686+00:00",
+  "source_commit": "e0bfd10e57005aadb120f02494661c53b902c549",
+  "production_source_sha256": "8c416020aaaca60604ac97e0fa42b831cf6716729ed26b166da2fa69611ffb2d",
+  "unit": "ot-gold1:oth-ubuntu-3190535-1792620529",
+  "controller_exit": 0,
+  "cases": {
+    "wbq_e": {
+      "outcome": "PASS",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "87fa22b42c8b971d8f30ba2140f9b4ea200afd3b72218601acfcf6b6fcb53164"
+    },
+    "wbq_w": {
+      "outcome": "PASS",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "022f7283213587556a9384d0c3b213c21095870de4ba2e4f88e6d6eea98b0dc9"
+    },
+    "wbq_e_wopen": {
+      "outcome": "PASS",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "7bd6af1fabf00924b31e17a88f9ba1d3c03c984392e8496d8d3f3e11cb4337f1"
+    },
+    "wbq_mut_quad": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "7ae8048cf9953428c48392097481b926e8b6dad397552fa50b52cbf68ac4cd7b"
+    },
+    "wbq_mut_span": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "a3245bd1473973aec491c2151d90ea16df86a6a1433c951432460058403dc321"
+    },
+    "wbq_mut_premature": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "cd32f9bbf3d41040f694cad08aa6f1253300d7cb5075dbd3c18a07d9854b2c36"
+    },
+    "wbq_mut_ksaddr": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "eee4a05c928ffe22a31075fb831b355a63fd26dac05737982b0a74a0cbf85622"
+    },
+    "wbq_mut_slice": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "ed2210743ff37b65a4b4c1acab32f71b206644e36b1414b0fcacd98434fab119"
+    },
+    "wbq_mut_commit": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "08822f9e5362696093ce2141f912b96e7e5b3d525eb7131c197f3c6071c49305"
+    },
+    "wbq_mut_credit": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "829e978c790d8928a1ae37a6d425b5d2efb0c0965597016600e1d74343f70f42"
+    },
+    "wbq_mut_pp": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "de000becc1a25215c5c2dd6e4063ebed54a3144c8faf1251e45645c575cc79c9"
+    },
+    "wbq_mut_lock": {
+      "outcome": "expected WB_INTEGRITY rejection",
+      "source_manifest_sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "raw_log_sha256": "de000becc1a25215c5c2dd6e4063ebed54a3144c8faf1251e45645c575cc79c9"
+    }
+  },
+  "per_pp_counterexample": "actual production ledger M0 PASS9 grants/A4B3; pooled MUT11 intended FAIL A5B3/grants9, raw logs separately retained",
+  "credit_feedback_stream_edge_delta": 1,
+  "payload_edge_delta": 0,
+  "service_price": "three_positive_service_cost.json: overlapping actual workload-dependent fences, nonadditive; no universal +1 service or production-rate claim.",
+  "remaining": "Canonical changed-source GEN/CDC/native and physical closure, area/slotfit, service-price/calendar/parent-source adoption OPEN. Old e886 native cancelled obsolete after full preservation; not a finalsource result. Corrected census helper pending ROOT publication; no unpublished helper used."
+}

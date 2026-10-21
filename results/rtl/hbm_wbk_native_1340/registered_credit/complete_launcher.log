@@ -1,0 +1,35 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-pipe-1340-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-pipe-1340-1021
+ot-run: ot-epyc9       admits   332 GB (avail 394, growth 162, headroom 0, waiters 0/0 GB) load 85/128 running 30 disk 2216 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-pipe-1340-1021
+ot-run: ot-gold1       admits   386 GB (avail 446, growth 176, headroom 0, waiters 0/0 GB) load 43/112 running 12 disk 2125 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-pipe-1340-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-pipe-1340-1021
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-3190535-1792620529 after 1 s
+- Verilator: cpu 37.135 s on 1 threads; allocated 33 MB
+STK_WBQ PASS wbq_e
+- Verilator: cpu 37.052 s on 1 threads; allocated 33 MB
+STK_WBQ PASS wbq_w
+- Verilator: cpu 32.378 s on 1 threads; allocated 33 MB
+STK_WBQ PASS wbq_e_wopen
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_quad
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_span
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_premature
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_ksaddr
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_slice
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_commit
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_credit
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_pp
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_lock
+WBK1340_EXISTING_WITNESSES_COMPLETE
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-3190535-1792620529): exit 0
