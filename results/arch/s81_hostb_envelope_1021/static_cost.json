@@ -1,0 +1,23 @@
+{
+  "protocol": "HBE1 candidate",
+  "ring_beat_bits": 1104,
+  "legacy_host_bits": 514,
+  "hfwd_body_bits": 512,
+  "beats_per_hostword": 2,
+  "fixed_single_record_opcodes": [
+    "KS_DESCRIPTOR",
+    "ARM",
+    "STAGE_RETURN"
+  ],
+  "existing_link_rate_beats_per_cycle_fraction": "58311/76288",
+  "wire_only_host_cycles_per_word_fraction": "152576/58311",
+  "wire_only_host_cycles_per_word": 2.616590351734664,
+  "fixture_words_per_job": 417,
+  "fixture_ring_beats": 834,
+  "wire_only_fixture_min_cycles": 1092,
+  "old_legacy_fixture_wire_min_cycles": 546,
+  "scope": "Wire-only lowerbound; excludes actual head holding/calendar gaps, propagation/landing/relay, CSRboot and ingest rate. No programme/globalphase qualification.",
+  "actual_programme": "21fbf0c14 unsealed NORMR80+XFIN16, noEND/HOSTboot/globalepoch",
+  "correct_fixture_ks_hex": "0x1000082e4fffff",
+  "incorrect_unexecuted_inherited_ks_hex": "0x1001ffffe04172"
+}
