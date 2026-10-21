@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3
+ot-run: ot-epyc9       admits   792 GB (avail 647, growth 92, headroom 0, waiters 0/0 GB) load 68/128 running 32 disk 2541 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1747789-1792603802 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+MUT 5: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1747789-1792603802): exit 0

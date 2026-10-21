@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.selector_landing.qualification.v1",
+  "source_commit": "fa943c85d",
+  "tar_sha256": "41c2a1701ecc8c2cd7cec54b6429d01bf2b2a1e5547756291d150ff8247bede0",
+  "remote_host": "ot-epyc9",
+  "remote_source": "/srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src3",
+  "remote_out": "/srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/out3",
+  "same_edges": {
+    "D": 4,
+    "E": 2,
+    "reset_age": 2
+  },
+  "positive": "PASS",
+  "mutants": {
+    "1": "REJECTED",
+    "2": "REJECTED",
+    "4": "REJECTED",
+    "5": "REJECTED"
+  },
+  "audit": "PASS",
+  "unland_mutant": "REJECTED",
+  "aggregate_exit": 0
+}
