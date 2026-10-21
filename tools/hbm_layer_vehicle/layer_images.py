@@ -721,8 +721,16 @@ def main():
     ap.add_argument("--connected-lowering", action="store_true", help="selected source-bound L0 reduction/scalar implementation; execution remains unqualified")
     ap.add_argument("--side-source", type=Path, help="actual repaired scoped SIDE source in compiled bundle")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
+    ap.add_argument("--sm-lowering", action="store_true",
+                    help="opt-in (TOK-FUNC2-HBM-SM 10-21): lower every SM.MATVEC record onto the slice's real SM chain "
+                         "(sm_slice_lower.py: cp_svg/svg/xc + xl_SW_ctl x load + smw_SW writer + HBM image); writes "
+                         "OUT/sm/replay.json (separate component replay) and marks those records emitted")
+    ap.add_argument("--smw", type=Path, help="with --sm-lowering: SM weight root (ds_sm_weights.py OUT, holds L<LL>/)")
+    ap.add_argument("--sm-count", type=int, default=4, help="with --sm-lowering: SW SM service groups driven (sm_SW0..)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if a.sm_lowering and (a.smw is None or a.fixtures is None):
+        ap.error("--sm-lowering needs --fixtures and --smw")
     if (a.native_read_return is None) != (a.native_write_return is None):
         ap.error("native read/write return contracts must be specified together")
     if a.safe_calendar and a.native_read_return is None:
@@ -952,6 +960,27 @@ def main():
                             f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
                events=events)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
+    sm_summary = None
+    if a.sm_lowering:
+        from hbm_layer_vehicle import sm_slice_lower as SML
+        by_tag = {}
+        for r_ in recs:
+            by_tag.setdefault(r_["tag"], []).append(r_["i"])
+        rep_sm, per_sm, sm_summary = SML.lower(a.fixtures, a.smw / a.fixtures.name, lay, bnd, nsm=a.sm_count,
+                                               priced_by_tag=by_tag)
+        (a.out / "sm").mkdir(parents=True, exist_ok=True)
+        (a.out / "sm" / "replay.json").write_text(json.dumps(rep_sm) + "\n")
+        by_i = {m["i"]: m for m in manifest}
+        for pr_ in per_sm:
+            for i in pr_["priced"]:
+                m = by_i.get(i)
+                if m is None or m["op"] != "SM.MATVEC":
+                    continue
+                m.update(status="emitted", reasons=[], lowering="sm_slice_v1", replay="sm/replay.json",
+                         sm_record=dict(pr_), coverage_gaps_superseded=m.get("blocked_by") or [],
+                         coverage_note="10-18 coverage gaps (static x-load issuer / host loader calendar) are bound "
+                                       "in the r15 die: xl_SW_ctl MODE1 table, calendar_SW target 96")
+                m["blocked_by"] = []
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
                scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,
                state_seed_provenance=rep["state_seed_provenance"],
@@ -959,6 +988,7 @@ def main():
                fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
+               **({"sm_lowering": sm_summary} if sm_summary is not None else {}),
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
     (a.out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     print(json.dumps(dict(records=len(manifest), events=len(events), counts=man["counts"], t0_serial=t0)))
