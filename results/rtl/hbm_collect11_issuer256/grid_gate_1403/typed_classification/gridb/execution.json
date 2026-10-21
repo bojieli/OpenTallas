@@ -1,0 +1,32 @@
+{
+ "execution_kind": "metadata-classification",
+ "classification_source_commit": "9d06896b6111376b34348abcce35e36ee0489d4c",
+ "classification_manifest_sha256": "867c0cb42a1e6c3198f9b3c906271a9e1f9f6fcee90e2c036c9bf1344def1dbc",
+ "classification_archive_sha256": "77d1203399880df26af419af0303a17752b01610064b729bca47d642a0e075ae",
+ "executed_modules": {
+  "tools/check_macro_track_alignment.py": "cf4a96bfa60d9c534497bf364d409ba6bc0149ad49d71b9083d2ce4f82363742",
+  "tools/closure_loop/helper_overlay.py": "c9079ffdb04aee03f1efe1294b7bd3be057ce7133de723f0b928ee13b0504ffd",
+  "tools/hier_contract/child_lint.py": "8622591ab7b8a8b84e4858061086cbc6cc9c957d27877bf4057c22b066de0ac2",
+  "tools/pin_fit.py": "b790caa2756ed4201266163b6a0c2af90a27a0f602058b77d48bc3cd99d31c17",
+  "tools/ref_tile/async_fifo_hierarchy_audit.py": "fdb8b757aedd709f8ea1373766df523967edeca5ce7d64cb81b2e5e56316f107",
+  "tools/ref_tile/async_gray_fifo_constraints.py": "d32a9fb02571560f9b6f056f869669a7e8dd6b3f2213c07fea656afb466ace10",
+  "tools/ref_tile/cdc_fsm_guard.py": "97cbdb58795efa159c62da78c5f51c59e0f69b148a67781c84c47af4e4e7a769",
+  "tools/ref_tile/cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+  "tools/ref_tile/clock_entry_constraints.py": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c",
+  "tools/ref_tile/direct_macro_clock_entries.py": "282dc4bfdbc6a027485373a045591864be20e27bbb99302d29dbdc34f029ea93",
+  "tools/ref_tile/forwarded_clock_outputs.py": "6bbfe96b926f83e34624e6b4910af8b6d272a86d0bfab4988154ff2ca3d3546e",
+  "tools/ref_tile/gray_fifo_cdc_constraints.py": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
+  "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
+  "tools/ref_tile/kit_orfs_vars.py": "1e4348cfaf9e0140d382be94b51b03e4376190552d20f9c507b7c5dd52b8a5bf",
+  "tools/ref_tile/layout_png.py": "652816e6b820bcfc2e2cb1e174aa70d28f61ca3fd20b2c461037b779eecb58a9",
+  "tools/ref_tile/measured_band_fill.py": "8708a7d46126e53805a6730ee70277e01621c78bb3c7ed87c7185c2cdadc411b",
+  "tools/ref_tile/native_census.py": "b8be220bb5d08b82d1574a9b416fb1c788dcd4df99e92adca70183d7dad8c393",
+  "tools/ref_tile/pre_route_gate.py": "2446bacc9d76f249a5db39f08cb149bbc2c050f693e8b66e65d8b07c3fcc1ce3",
+  "tools/ref_tile/raw_macro_clocks.py": "178341a37d2613961625401dbe1a9a265f4869f59dbdabab5a35048f7cffb5a5",
+  "tools/ref_tile/ref_tile.py": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
+  "tools/ref_tile/single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52",
+  "tools/ref_tile/source_binding.py": "1897ba96a252aa2ef209d2bed2c983cb8c7d67a8a53afc7690d573b98429845a",
+  "tools/textbook_lint.py": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b"
+ },
+ "published_commit": "1a872af33c8d10d8123f8d4c69198e09cc04fd43"
+}

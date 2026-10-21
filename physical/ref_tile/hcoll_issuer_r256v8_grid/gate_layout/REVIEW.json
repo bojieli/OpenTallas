@@ -1,11 +1,11 @@
 {
  "reviewer": "codex coordinator",
  "time": "2026-10-21T14:08:15.878329-07:00",
- "gate_commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
+ "gate_commit": "9d06896b6111376b34348abcce35e36ee0489d4c",
  "geometry_sha256": "35abe916ded48c6af303d5549dbc0d949e6e5dc9b81650d267b45be189b1658f",
  "verdict": "APPROVED",
  "approval_source": "ROOT explicit coordinator approval after personally inspecting4actualPNGs+packet; exact35abe/0979 sourcea10 and manifestc401/7ed2. Recorded by delegated collector.",
- "source_manifest_sha256": "903cf680da856a6af08a848d5c3f9a6ee6f8c5d1173e5e241ab2e7eb01feb8f7",
+ "source_manifest_sha256": "2d051a706a839458d3c96ff7427aef914f44b2c6faf005560e611e5cd4f2c4d4",
  "source_rtl": [
   {
    "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
@@ -76,9 +76,9 @@
   }
  ],
  "obligations": "Native256 exactISA/DS_RS144 source only; no ROWS128alias. New518.4x432/561.6x475.2 requires parent source/slot/clock bind; no oldviewalias. Geometry approval only, no timingPASS/SSclaim; actual route decides.",
- "binding_note": "Exact ROOT-approved geometry and source RTL unchanged. ROOT metadata-only authorization uses existing spec.fill_reason.pin_bound; new classification source/key f05ec8ef1 with published54b canonical classifier bytes. Original physical FAIL, binding and raw log preserved. No physical rerun, no timing PASS; final admission requires normal guard.",
+ "binding_note": "Exact ROOT-approved geometry and physical source unchanged; metadata-only classification against published1a872af33 all23 modules. Existing fill_reason.pin_bound only. Original physical FAIL/binding/rawlog/archive preserved; remote_archive_verifiedFalse. Typed provenance and normal admission required; no new physical execution or timing PASS.",
  "original_physical_gate_commit": "a10a87c55816b956b5195a8d53e04e8f8f87a674",
  "original_physical_manifest_sha256": "c401b9bd3a04563333a7785ce9305059868534ecc446333ec74d1a6cda64798d",
- "classification_archive_sha256": "8b46936547b882a1e2e271181bbfeda430821d1fcba2e41ee3541cb9a44cf6fd",
+ "classification_archive_sha256": "a32fa4f99e599aa55bf0f8c9e88ec97c5b59c7a6ac11850e053f4030a208620e",
  "execution_kind": "metadata-classification"
 }

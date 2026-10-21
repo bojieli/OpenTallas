@@ -2,20 +2,20 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hcoll_issuer_r256v8_grid",
  "verdict": "WARN",
- "generated": "2026-10-21T14:57:53-0700",
- "host": "local-metadata-classification",
+ "generated": "2026-10-21T15:46:45-0700",
+ "host": "metadata-classification",
  "cts": true,
- "commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
+ "commit": "9d06896b6111376b34348abcce35e36ee0489d4c",
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
-  "commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
+  "start_commit": "9d06896b6111376b34348abcce35e36ee0489d4c",
+  "commit": "9d06896b6111376b34348abcce35e36ee0489d4c",
   "identity": "commit",
   "daemon_tree": "/home/ubuntu/wt/codex-hbm-issuer-grid-collect-1403",
-  "daemon_start_commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
+  "daemon_start_commit": "9d06896b6111376b34348abcce35e36ee0489d4c",
   "daemon_overlays": [],
-  "archive_sha256": "8b46936547b882a1e2e271181bbfeda430821d1fcba2e41ee3541cb9a44cf6fd",
-  "manifest_sha256": "903cf680da856a6af08a848d5c3f9a6ee6f8c5d1173e5e241ab2e7eb01feb8f7",
+  "archive_sha256": "a32fa4f99e599aa55bf0f8c9e88ec97c5b59c7a6ac11850e053f4030a208620e",
+  "manifest_sha256": "2d051a706a839458d3c96ff7427aef914f44b2c6faf005560e611e5cd4f2c4d4",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.json",
@@ -548,8 +548,8 @@
    {
     "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classify_snapshot.py",
     "kind": "file",
-    "sha256": "37bdc58e9fd524d1566150b3025b9f60f9e6a38027797fde32c9203d7159269f",
-    "git_blob": "be195b2ffdc6de86ae4d05852125ad60f1860fa1",
+    "sha256": "8eb4d3a839be6cbd8d9f764ed5803f931c181e4d3fe0f33ee5cc6d0d1209e88f",
+    "git_blob": "14672080fa30dcd1772188c0ead09e2e329bd91e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -27988,8 +27988,8 @@
    {
     "path": "tools/ref_tile/clock_entry_constraints.py",
     "kind": "file",
-    "sha256": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
-    "git_blob": "f6d9ad8a8fd27c2aa8a813563b583bbd372c9823",
+    "sha256": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c",
+    "git_blob": "45ec4d9e82765a5d2f9faad0d16d9b0b3e43a2f8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -28162,6 +28162,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/ref_tile/forwarded_clock_outputs.py",
+    "kind": "file",
+    "sha256": "6bbfe96b926f83e34624e6b4910af8b6d272a86d0bfab4988154ff2ca3d3546e",
+    "git_blob": "e0f36a67c7cefb4d13fb10237790234989f166c1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/ref_tile/gray_fifo_cdc_constraints.py",
     "kind": "file",
     "sha256": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
@@ -28284,8 +28292,8 @@
    {
     "path": "tools/ref_tile/pre_route_gate.py",
     "kind": "file",
-    "sha256": "b36a6e315486905117063a147e6502e89c78a75177fcd6be1f0376c28940c664",
-    "git_blob": "23fb9b86abc1c8db2d7b142420e42de1c350a26b",
+    "sha256": "2446bacc9d76f249a5db39f08cb149bbc2c050f693e8b66e65d8b07c3fcc1ce3",
+    "git_blob": "69426d2f294b027cb5d983583775283249719133",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -28412,8 +28420,8 @@
    {
     "path": "tools/ref_tile/source_binding.py",
     "kind": "file",
-    "sha256": "bea005be33a2be11a846f23fc8da05dd487d6da2744c878cc9a8b4b7ece541ef",
-    "git_blob": "1aa6c71bf9f6e99c8eefcbe2e3ec126608ca7424",
+    "sha256": "1897ba96a252aa2ef209d2bed2c983cb8c7d67a8a53afc7690d573b98429845a",
+    "git_blob": "005debc461c96501dbff69fdffde73b454bf731f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -54135,7 +54143,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "actual staged classification input verification plus canonical parser/tool closure; no new physical execution",
-   "count": 6763,
+   "count": 6764,
    "paths": [
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.json",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
@@ -57655,6 +57663,7 @@
     "tools/ref_tile/examples/val_good_clt6.json",
     "tools/ref_tile/export_provenance.py",
     "tools/ref_tile/face_land.py",
+    "tools/ref_tile/forwarded_clock_outputs.py",
     "tools/ref_tile/gray_fifo_cdc_constraints.py",
     "tools/ref_tile/keep_module_audit.py",
     "tools/ref_tile/kit_orfs_vars.py",
@@ -60968,7 +60977,7 @@
     "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classification_inputs/grid/original.execution.log": "563458b18083434b61fa5ee383dfb3a42e758b1e30bd69b14564e509860f3116",
     "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classification_inputs/grid/original_binding.json": "8972b7b984f27b45e92df60bd7d3e2b6e5f18b37a12791c81e619b18aa4dd215",
     "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classification_inputs/grid/original_gate_result.json": "6712d663cb623069ef5116909edd2beb40051be471a1425fce74ec316bf2f713",
-    "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classify_snapshot.py": "37bdc58e9fd524d1566150b3025b9f60f9e6a38027797fde32c9203d7159269f",
+    "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classify_snapshot.py": "8eb4d3a839be6cbd8d9f764ed5803f931c181e4d3fe0f33ee5cc6d0d1209e88f",
     "results/rtl/hbm_collect11_issuer256/grid_gate_1403/grid.original_spec.json": "85e61805ab6decf4c598369588e5ba5bfdbdfad38028f9a7c206dfbedd458bf1",
     "rtl/hbm_accel/generic/collective/p2p/IDX_TKM_NATIVE_JOIN.md": "54642f21774de96d91a7a3c8284da6964d9d3a9e11d2b1afeeec97551364a128",
     "rtl/hbm_accel/generic/collective/p2p/NATIVE_VM.md": "8b4519077399ea25342d450112da18d5725d8ef9b697ee921cb1116a25539e18",
@@ -64398,7 +64407,7 @@
     "tools/ref_tile/ccfbp_s_aligned_pins.py": "8f3e6937e7ea13bc5a7bc0608424253455d5f087ce6dcce09eb148b75eaba741",
     "tools/ref_tile/cdc_fsm_guard.py": "97cbdb58795efa159c62da78c5f51c59e0f69b148a67781c84c47af4e4e7a769",
     "tools/ref_tile/cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
-    "tools/ref_tile/clock_entry_constraints.py": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
+    "tools/ref_tile/clock_entry_constraints.py": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c",
     "tools/ref_tile/cluster_pg_phase.py": "116b0ab7c1326839c0117f06d9196e35f6257521dc63d4cc1685c9fc05555abe",
     "tools/ref_tile/composition_gates.json": "a7c638b7bc9e94b7d06b2e57caa17589323b55107f80c219e7e3a126c555d8a5",
     "tools/ref_tile/cross_clock_paths.tcl": "fa335ba51c5b7ec58d4565ce787d9af8429136ad2d6636397285eb8d4d5f0f59",
@@ -64420,6 +64429,7 @@
     "tools/ref_tile/examples/val_good_clt6.json": "46d348f2f469bd36af7593e9cc4d8d2582c532e8b1b61d41fe3dac8faeab6c1a",
     "tools/ref_tile/export_provenance.py": "2b771016bfc50bf0f0ca1aebdb5be42efc8e64c033c2ab573028992931addff1",
     "tools/ref_tile/face_land.py": "c40ffe9b76efd6820e055fae1897f046f82a2da8fc8909db1a5b0d5b64bf77ed",
+    "tools/ref_tile/forwarded_clock_outputs.py": "6bbfe96b926f83e34624e6b4910af8b6d272a86d0bfab4988154ff2ca3d3546e",
     "tools/ref_tile/gray_fifo_cdc_constraints.py": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
     "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
     "tools/ref_tile/kit_orfs_vars.py": "1e4348cfaf9e0140d382be94b51b03e4376190552d20f9c507b7c5dd52b8a5bf",
@@ -64435,7 +64445,7 @@
     "tools/ref_tile/path_classes.tcl": "9785ffb341d5d2a845307c6e314d7c63e89bac9b9dcc3d04f1ccf228f913568a",
     "tools/ref_tile/planning_birth_budget.py": "95dc9743fc09a4626681bab961f0019f7ad6d1d0628f14a01b1ae3599e9567d0",
     "tools/ref_tile/port_latency.py": "9e2a71397fd070a67ff2d7b843e9a159fade0474b32c85a541668653d82c1315",
-    "tools/ref_tile/pre_route_gate.py": "b36a6e315486905117063a147e6502e89c78a75177fcd6be1f0376c28940c664",
+    "tools/ref_tile/pre_route_gate.py": "2446bacc9d76f249a5db39f08cb149bbc2c050f693e8b66e65d8b07c3fcc1ce3",
     "tools/ref_tile/probe_clock_entries.py": "7348ac6aa996c14184b1f0de7369cd97eb7b5b870a81451ced3fa303e3b0fcb8",
     "tools/ref_tile/probe_dual_clock_etm.py": "feb47a402f406b87de461754f65c346484046a00ea2cf1efe91a507f9b89a593",
     "tools/ref_tile/raw_macro_clocks.py": "178341a37d2613961625401dbe1a9a265f4869f59dbdabab5a35048f7cffb5a5",
@@ -64451,7 +64461,7 @@
     "tools/ref_tile/secondary_clock_source_audit_1013.json": "09fcaae3a1793f0717e14fa090fe273406ba694e62f0d0996f29ac14cf3a197e",
     "tools/ref_tile/signal_layer_audit.tcl": "4303011a36908eeec918f96b399a9fe9145563e3b1e71c79673a6099f6e09a7b",
     "tools/ref_tile/single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52",
-    "tools/ref_tile/source_binding.py": "bea005be33a2be11a846f23fc8da05dd487d6da2744c878cc9a8b4b7ece541ef",
+    "tools/ref_tile/source_binding.py": "1897ba96a252aa2ef209d2bed2c983cb8c7d67a8a53afc7690d573b98429845a",
     "tools/ref_tile/specs/dsfd_vm_bgl28_a.json": "bf10b693a2db72aef7d59a3bd694d3524c0c588b71fb16002c3180b3470dc2d1",
     "tools/ref_tile/specs/dsfd_vm_bgl28_h1a.json": "2539317df8c869be14ee701317dfc83aef9dd6cdcdf5b06cc2d5b0256ac824f0",
     "tools/ref_tile/specs/dsfd_vm_bgl28_h1e.json": "43126b1b8cfea29370405ab8b12d4e9c3af1e49225d43d7e2794b94d74415357",
@@ -67666,7 +67676,64 @@
     "tools/xdie_hbm_step_compile.py": "b5362f48f188ba0bb4057a80bf21037cb4b3ae0fb012da53ea86a0b95e3cea9e",
     "tools/xdie_hbm_step_compose.py": "a349538288aa62fcb84bec11df41b1a815db9ea68d8d6cb879e4e2b20a15acdd"
    },
-   "digest": "64178d7870768821fbd5fc3e998e03ba6f448726b84d1bff20ed1a4057086c1d"
+   "digest": "f657404d0fc1fe2560723a9e4502ace5db7712cf7b636219662e257cd032c898"
+  },
+  "metadata_classification": {
+   "schema": "opentallas.ref_tile.metadata_classification.v1",
+   "parent": {
+    "binding": {
+     "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classification_inputs/grid/original_binding.json",
+     "sha256": "8972b7b984f27b45e92df60bd7d3e2b6e5f18b37a12791c81e619b18aa4dd215"
+    },
+    "gate": {
+     "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classification_inputs/grid/original_gate_result.json",
+     "sha256": "6712d663cb623069ef5116909edd2beb40051be471a1425fce74ec316bf2f713"
+    },
+    "log": {
+     "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/classification_inputs/grid/original.execution.log",
+     "sha256": "563458b18083434b61fa5ee383dfb3a42e758b1e30bd69b14564e509860f3116"
+    },
+    "spec": {
+     "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/grid.original_spec.json",
+     "sha256": "85e61805ab6decf4c598369588e5ba5bfdbdfad38028f9a7c206dfbedd458bf1"
+    }
+   },
+   "archive": {
+    "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/typed_classification/grid/classification_inputs.tar.gz",
+    "sha256": "a32fa4f99e599aa55bf0f8c9e88ec97c5b59c7a6ac11850e053f4030a208620e"
+   },
+   "classifier": {
+    "published_commit": "1a872af33c8d10d8123f8d4c69198e09cc04fd43",
+    "executed_modules": {
+     "tools/check_macro_track_alignment.py": "cf4a96bfa60d9c534497bf364d409ba6bc0149ad49d71b9083d2ce4f82363742",
+     "tools/closure_loop/helper_overlay.py": "c9079ffdb04aee03f1efe1294b7bd3be057ce7133de723f0b928ee13b0504ffd",
+     "tools/hier_contract/child_lint.py": "8622591ab7b8a8b84e4858061086cbc6cc9c957d27877bf4057c22b066de0ac2",
+     "tools/pin_fit.py": "b790caa2756ed4201266163b6a0c2af90a27a0f602058b77d48bc3cd99d31c17",
+     "tools/ref_tile/async_fifo_hierarchy_audit.py": "fdb8b757aedd709f8ea1373766df523967edeca5ce7d64cb81b2e5e56316f107",
+     "tools/ref_tile/async_gray_fifo_constraints.py": "d32a9fb02571560f9b6f056f869669a7e8dd6b3f2213c07fea656afb466ace10",
+     "tools/ref_tile/cdc_fsm_guard.py": "97cbdb58795efa159c62da78c5f51c59e0f69b148a67781c84c47af4e4e7a769",
+     "tools/ref_tile/cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+     "tools/ref_tile/clock_entry_constraints.py": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c",
+     "tools/ref_tile/direct_macro_clock_entries.py": "282dc4bfdbc6a027485373a045591864be20e27bbb99302d29dbdc34f029ea93",
+     "tools/ref_tile/forwarded_clock_outputs.py": "6bbfe96b926f83e34624e6b4910af8b6d272a86d0bfab4988154ff2ca3d3546e",
+     "tools/ref_tile/gray_fifo_cdc_constraints.py": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
+     "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
+     "tools/ref_tile/kit_orfs_vars.py": "1e4348cfaf9e0140d382be94b51b03e4376190552d20f9c507b7c5dd52b8a5bf",
+     "tools/ref_tile/layout_png.py": "652816e6b820bcfc2e2cb1e174aa70d28f61ca3fd20b2c461037b779eecb58a9",
+     "tools/ref_tile/measured_band_fill.py": "8708a7d46126e53805a6730ee70277e01621c78bb3c7ed87c7185c2cdadc411b",
+     "tools/ref_tile/native_census.py": "b8be220bb5d08b82d1574a9b416fb1c788dcd4df99e92adca70183d7dad8c393",
+     "tools/ref_tile/pre_route_gate.py": "2446bacc9d76f249a5db39f08cb149bbc2c050f693e8b66e65d8b07c3fcc1ce3",
+     "tools/ref_tile/raw_macro_clocks.py": "178341a37d2613961625401dbe1a9a265f4869f59dbdabab5a35048f7cffb5a5",
+     "tools/ref_tile/ref_tile.py": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
+     "tools/ref_tile/single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52",
+     "tools/ref_tile/source_binding.py": "1897ba96a252aa2ef209d2bed2c983cb8c7d67a8a53afc7690d573b98429845a",
+     "tools/textbook_lint.py": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b"
+    },
+    "proof": {
+     "path": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/typed_classification/grid/execution.json",
+     "sha256": "61ab0fc0a27c926473fdbe26c0a81113393064a9bfb8e6a94fc568f087ffbc4a"
+    }
+   }
   }
  },
  "clock": {
@@ -68093,7 +68160,5 @@
   "start_commit": "a10a87c55816b956b5195a8d53e04e8f8f87a674",
   "original_verdict": "FAIL"
  },
- "classification_packet": "results/rtl/hbm_collect11_issuer256/grid_gate_1403/grid.classification_snapshot.json",
- "qualification_status": "canonical_metadata_classification_reviewed_pending_normal_guard",
- "provenance": "Full canonical analyse_remote+gate_layout over preserved original physical log, published54b classifier modules, new spec.fill_reason.pin_bound. No new physical flow or physical archive verification. Original FAIL remains preserved as exact original input/history."
+ "remote_archive_verified": false
 }
