@@ -1,0 +1,144 @@
+{
+ "routing": "CONSTRUCTED_PENDING_REAL_PIN_PROJECTION_AND_SOURCE_GEN",
+ "failures": 0,
+ "links": 439,
+ "stations": 2573,
+ "bit_mm": 301561.6,
+ "longest_station_hop_um": 403.2,
+ "over_reach": [],
+ "bus565_with_station": [],
+ "longest_hops": [
+  {
+   "link": "c_ln_mesh0_t_l2",
+   "hop_um": 403.2,
+   "b": 276,
+   "stations": 35,
+   "L": 12568.176
+  },
+  {
+   "link": "c_ln_host0_r_l0",
+   "hop_um": 394.6,
+   "b": 276,
+   "stations": 36,
+   "L": 12625.353
+  },
+  {
+   "link": "c_ln_host0_r_l1",
+   "hop_um": 393.8,
+   "b": 276,
+   "stations": 36,
+   "L": 12603.549
+  },
+  {
+   "link": "c_ln_mesh1_t_l0",
+   "hop_um": 393.3,
+   "b": 276,
+   "stations": 22,
+   "L": 7938.0
+  },
+  {
+   "link": "c_ln_host1_t_l1",
+   "hop_um": 392.0,
+   "b": 276,
+   "stations": 30,
+   "L": 10760.027
+  },
+  {
+   "link": "c_ln_mesh1_t_l1",
+   "hop_um": 391.1,
+   "b": 276,
+   "stations": 22,
+   "L": 7982.928
+  },
+  {
+   "link": "c_ln_mesh3_r_l2",
+   "hop_um": 390.0,
+   "b": 276,
+   "stations": 27,
+   "L": 9545.04
+  },
+  {
+   "link": "c_ln_mesh4_r_l2",
+   "hop_um": 389.9,
+   "b": 276,
+   "stations": 39,
+   "L": 13981.68
+  }
+ ],
+ "longest_links": [
+  {
+   "link": "c_ln_mesh4_r_l2",
+   "L": 13981.68,
+   "stations": 39,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_r_l1",
+   "L": 13971.312,
+   "stations": 39,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_r_l0",
+   "L": 13960.944,
+   "stations": 39,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_t_l2",
+   "L": 13950.576,
+   "stations": 39,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_t_l1",
+   "L": 13940.208,
+   "stations": 39,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_t_l0",
+   "L": 13929.84,
+   "stations": 39,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh0_r_l2",
+   "L": 12702.96,
+   "stations": 36,
+   "b": 276
+  },
+  {
+   "link": "c_ln_draft4_r_l2",
+   "L": 12659.76,
+   "stations": 36,
+   "b": 276
+  }
+ ],
+ "by_class": {
+  "chain": {
+   "links": 279,
+   "stations": 92,
+   "bit_mm": 43635.7
+  },
+  "coll": {
+   "links": 42,
+   "stations": 126,
+   "bit_mm": 14036.3
+  },
+  "spine": {
+   "links": 28,
+   "stations": 66,
+   "bit_mm": 18954.8
+  },
+  "unit": {
+   "links": 90,
+   "stations": 2289,
+   "bit_mm": 224934.8
+  }
+ },
+ "station_widths": {
+  "682": 158,
+  "276": 2415
+ }
+}

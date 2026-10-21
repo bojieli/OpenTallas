@@ -17,7 +17,7 @@ def build(src,out,glue_size=1036.8):
     t=(e[3]-old['y'])/old['h'];e[2]=round(c['x']+(c['w'] if face=='E' else 0),4);e[3]=round(c['y']+t*c['h'],4)
  # Preserve canonical relay sites after reprojection: two face seeds otherwise leave408um grid gaps.
  for link in p['links']:
-  if link['i'] in ('c_ln_host0_r_l0','c_ln_mesh0_t_l1'):
+  if link['i'] in ('c_ln_host0_r_l0','c_ln_mesh0_t_l1','c_ln_mesh2_r_l2'):
    for e in link['e']:
     if e[0]==ci:e[3]=round(e[3]+21.6,4)
  seq=dict(name='mtp_seq',master='dsfd_mtp_seq',kind='ctl_peer',group='clctl',x=round(c['x']+c['w']/2-75.6,4),y=round(c['y']+c['h']+86.4,4),w=151.2,h=151.2,reg=False,orient='R0')
