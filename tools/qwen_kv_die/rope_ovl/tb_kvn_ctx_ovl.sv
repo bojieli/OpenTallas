@@ -35,9 +35,20 @@ module tb_kvn_ctx_ovl;
  for(u=0;u<4;u=u+1)begin o=own(16'(64+u),18'(10+u),13'(100+u));send(2'(u),o);start(2'(u),1);expect_owner(o,1);end
  for(u=0;u<4;u=u+1)begin o=own(16'(64+u),18'(10+u),13'(100+u));start(2'(u),0);expect_owner(o,2);end
  o=own(16'd68,18'd20,13'd101);send(0,o);start(0,1);expect_owner(o,1);
+ // Consecutive accepted HEAD records exercise the real pending-write bypass.
+ @(negedge ck);ovl_users=0;o=own(16'd76,18'd40,13'd110);
+ head_record={5'd0,4'd12,6'd63,o[58:43],5'd0,451'd0,o,1'b1,1'b0,2'd0};tick(1);
+ @(negedge ck);o=own(16'd80,18'd41,13'd111);
+ head_record={5'd0,4'd12,6'd63,o[58:43],5'd0,451'd0,o,1'b1,1'b0,2'd0};tick(1);
+ @(negedge ck);head_record=0;tick(4);start(0,1);expect_owner(o,1);
+ // A drained programme boundary clears ownership, including local shard enables.
+ @(negedge ck);adm_done=0;reseed=1;tick(1);
+ @(negedge ck);reseed=0;tick(4);adm_done=1;
+ o=own(16'd64,18'd10,13'd100);send(0,o);start(0,1);expect_owner(o,1);
+ o=own(16'd68,18'd20,13'd101);send(0,o);start(0,1);expect_owner(o,1);
  send(0,own(16'd64,18'd10,13'd100));if(!fault)$fatal(1,"STALE_TOKEN_NOT_REJECTED");
  reset();send(1,own(16'd64,18'd10,13'd100));if(!fault)$fatal(1,"WRONG_USER_NOT_REJECTED");
  reset();send(0,own(16'd64,18'd10,13'd100));send(0,own(16'd64,18'd11,13'd100));if(!fault)$fatal(1,"SAME_EPOCH_TOKEN_NOT_REJECTED");
- $display("KVN_CTX_OVL_PASS users4 stages2 advance stale wronguser sameepoch");$finish;
+ $display("KVN_CTX_OVL_PASS users4 stages2 consecutive reseed advance stale wronguser sameepoch");$finish;
  end
 endmodule

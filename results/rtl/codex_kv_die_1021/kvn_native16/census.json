@@ -1,0 +1,685 @@
+{
+  "source_sha256": "a6f4eddc78419adb14dc6618b22cb906b8af113461017fe842abb0c1b7c3af65",
+  "source_commit": null,
+  "scope": "hierarchy traversed into every scalar primitive; INV transparent; generic technology-map before ABC, diagnostic only",
+  "layout": false,
+  "limits": {
+    "max_driver_pins": 32
+  },
+  "over32": [],
+  "top": [
+    {
+      "bit": [
+        "top/",
+        677
+      ],
+      "names": [
+        "top/reset_last"
+      ],
+      "drivers": [
+        [
+          "top/$auto$ff.cc:337:slice$2320",
+          "Q"
+        ]
+      ],
+      "loads": 31
+    },
+    {
+      "bit": [
+        "top/",
+        1311
+      ],
+      "names": [
+        "top/$logic_not$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:50$32_Y",
+        "top/reseed"
+      ],
+      "drivers": [
+        [
+          "@PORT",
+          "reseed"
+        ]
+      ],
+      "loads": 22
+    },
+    {
+      "bit": [
+        "top/",
+        1320
+      ],
+      "names": [
+        "top/$logic_not$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:50$34_Y",
+        "top/reseed_bank",
+        "top/g_owner_shard[0].bank/reseed",
+        "top/g_owner_shard[1].bank/reseed",
+        "top/g_owner_shard[2].bank/reseed",
+        "top/g_owner_shard[3].bank/reseed"
+      ],
+      "drivers": [
+        [
+          "top/$auto$ff.cc:337:slice$1758",
+          "Q"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        245
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3281",
+        "top/g_owner_shard[0].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$219_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3284",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        246
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3471",
+        "top/g_owner_shard[0].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$217_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3474",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        248
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3481",
+        "top/g_owner_shard[0].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$215_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3484",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        245
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:277:simplemap_eqne$3281",
+        "top/g_owner_shard[1].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$219_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:157:simplemap_reduce$3284",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        246
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:277:simplemap_eqne$3471",
+        "top/g_owner_shard[1].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$217_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:157:simplemap_reduce$3474",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        248
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:277:simplemap_eqne$3481",
+        "top/g_owner_shard[1].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$215_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:157:simplemap_reduce$3484",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        245
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/$auto$simplemap.cc:277:simplemap_eqne$3281",
+        "top/g_owner_shard[2].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$219_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$simplemap.cc:157:simplemap_reduce$3284",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        246
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/$auto$simplemap.cc:277:simplemap_eqne$3471",
+        "top/g_owner_shard[2].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$217_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$simplemap.cc:157:simplemap_reduce$3474",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        248
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/$auto$simplemap.cc:277:simplemap_eqne$3481",
+        "top/g_owner_shard[2].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$215_Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$simplemap.cc:157:simplemap_reduce$3484",
+          "Y"
+        ]
+      ],
+      "loads": 18
+    },
+    {
+      "bit": [
+        "top/",
+        831
+      ],
+      "names": [
+        "top/reset_bank",
+        "top/g_owner_shard[0].bank/rst_n",
+        "top/g_owner_shard[1].bank/rst_n",
+        "top/g_owner_shard[2].bank/rst_n",
+        "top/g_owner_shard[3].bank/rst_n"
+      ],
+      "drivers": [
+        [
+          "top/$auto$ff.cc:337:slice$2322",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        59
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$ff.cc:337:slice$3494",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        125
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$ff.cc:337:slice$3495",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        108
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$ff.cc:337:slice$3496",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        91
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$ff.cc:337:slice$3497",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        160
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3071",
+        "top/g_owner_shard[0].bank/$procmux$264_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3074",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        161
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3261",
+        "top/g_owner_shard[0].bank/$procmux$265_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3264",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        163
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3271",
+        "top/g_owner_shard[0].bank/$procmux$266_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3274",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        59
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$ff.cc:337:slice$3494",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        125
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$ff.cc:337:slice$3495",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        108
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$ff.cc:337:slice$3496",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        91
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$ff.cc:337:slice$3497",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        160
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:277:simplemap_eqne$3071",
+        "top/g_owner_shard[1].bank/$procmux$264_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:157:simplemap_reduce$3074",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        161
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:277:simplemap_eqne$3261",
+        "top/g_owner_shard[1].bank/$procmux$265_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:157:simplemap_reduce$3264",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        163
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:277:simplemap_eqne$3271",
+        "top/g_owner_shard[1].bank/$procmux$266_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:157:simplemap_reduce$3274",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        59
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$ff.cc:337:slice$3494",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        125
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$ff.cc:337:slice$3495",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        108
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$ff.cc:337:slice$3496",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        91
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/load_owner"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$ff.cc:337:slice$3497",
+          "Q"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        160
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/$auto$simplemap.cc:277:simplemap_eqne$3071",
+        "top/g_owner_shard[2].bank/$procmux$264_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$simplemap.cc:157:simplemap_reduce$3074",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        161
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/$auto$simplemap.cc:277:simplemap_eqne$3261",
+        "top/g_owner_shard[2].bank/$procmux$265_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$simplemap.cc:157:simplemap_reduce$3264",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[2].bank/",
+        163
+      ],
+      "names": [
+        "top/g_owner_shard[2].bank/$auto$simplemap.cc:277:simplemap_eqne$3271",
+        "top/g_owner_shard[2].bank/$procmux$266_CMP"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[2].bank/$auto$simplemap.cc:157:simplemap_reduce$3274",
+          "Y"
+        ]
+      ],
+      "loads": 17
+    },
+    {
+      "bit": [
+        "top/",
+        1324
+      ],
+      "names": [
+        "top/write_accept",
+        "top/g_owner_shard[0].bank/write_accept",
+        "top/g_owner_shard[1].bank/write_accept",
+        "top/g_owner_shard[2].bank/write_accept",
+        "top/g_owner_shard[3].bank/write_accept"
+      ],
+      "drivers": [
+        [
+          "top/$auto$simplemap.cc:256:simplemap_logbin$1299",
+          "Y"
+        ]
+      ],
+      "loads": 16
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        164
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:189:logic_reduce$3079"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:198:logic_reduce$3080",
+          "Y"
+        ]
+      ],
+      "loads": 16
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        249
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:189:logic_reduce$3289"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:198:logic_reduce$3290",
+          "Y"
+        ]
+      ],
+      "loads": 16
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[0].bank/",
+        337
+      ],
+      "names": [
+        "top/g_owner_shard[0].bank/$shiftx$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:99$222.Y"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[0].bank/$auto$simplemap.cc:298:simplemap_mux$3522",
+          "Y"
+        ]
+      ],
+      "loads": 16
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        164
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:189:logic_reduce$3079"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:198:logic_reduce$3080",
+          "Y"
+        ]
+      ],
+      "loads": 16
+    },
+    {
+      "bit": [
+        "top/g_owner_shard[1].bank/",
+        249
+      ],
+      "names": [
+        "top/g_owner_shard[1].bank/$auto$simplemap.cc:189:logic_reduce$3289"
+      ],
+      "drivers": [
+        [
+          "top/g_owner_shard[1].bank/$auto$simplemap.cc:198:logic_reduce$3290",
+          "Y"
+        ]
+      ],
+      "loads": 16
+    }
+  ],
+  "cells": 1943
+}

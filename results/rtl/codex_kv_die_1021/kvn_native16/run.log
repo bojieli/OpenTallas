@@ -1,0 +1,88 @@
+ot-run: ot-epyc5       admits   696 GB (avail 601, growth 113, headroom 0, waiters 0/0 GB) load 88/128 running 35 disk 2172 GB 
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/kvn-hier16-final
+ot-run: ot-epyc9       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/kvn-hier16-final
+ot-run: ot-gold2       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/kvn-hier16-final
+ot-run: ot-gold1       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/kvn-hier16-final
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/kvn-hier16-final
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/kvn-hier16-final
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3951076-1792605423 after 0 s
+good rc=0 expected-verdict PASS
+wrong_user rc=1 expected-verdict PASS
+stale rc=1 expected-verdict PASS
+boot_phase rc=1 expected-verdict PASS
+KVN_GENERIC_NATIVE 1943 max 31 over32 0
+[
+  {
+    "bit": [
+      "top/",
+      677
+    ],
+    "names": [
+      "top/reset_last"
+    ],
+    "drivers": [
+      [
+        "top/$auto$ff.cc:337:slice$2320",
+        "Q"
+      ]
+    ],
+    "loads": 31
+  },
+  {
+    "bit": [
+      "top/",
+      1311
+    ],
+    "names": [
+      "top/$logic_not$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:50$32_Y",
+      "top/reseed"
+    ],
+    "drivers": [
+      [
+        "@PORT",
+        "reseed"
+      ]
+    ],
+    "loads": 22
+  },
+  {
+    "bit": [
+      "top/",
+      1320
+    ],
+    "names": [
+      "top/$logic_not$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:50$34_Y",
+      "top/reseed_bank",
+      "top/g_owner_shard[0].bank/reseed",
+      "top/g_owner_shard[1].bank/reseed",
+      "top/g_owner_shard[2].bank/reseed",
+      "top/g_owner_shard[3].bank/reseed"
+    ],
+    "drivers": [
+      [
+        "top/$auto$ff.cc:337:slice$1758",
+        "Q"
+      ]
+    ],
+    "loads": 18
+  },
+  {
+    "bit": [
+      "top/g_owner_shard[0].bank/",
+      245
+    ],
+    "names": [
+      "top/g_owner_shard[0].bank/$auto$simplemap.cc:277:simplemap_eqne$3281",
+      "top/g_owner_shard[0].bank/$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-hier16-final/qkd_kvn_ctx_ovl_rope.sv:97$219_Y"
+    ],
+    "drivers": [
+      [
+        "top/g_owner_shard[0].bank/$auto$simplemap.cc:157:simplemap_reduce$3284",
+        "Y"
+      ]
+    ],
+    "loads": 18
+  }
+]
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3951076-1792605423): exit 0

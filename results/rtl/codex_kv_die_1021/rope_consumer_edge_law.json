@@ -5,7 +5,7 @@
     "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv": "bee876907f161315740a28d7643c28284ccd359d3b6d883cbc5634b4e6002b2d",
     "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv": "dd07c5a54416ba67fef0a49d33b19915861b6938cdcb7f70fc3b259a4c211dac",
     "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_rope.sv": "a0b1db8bf5035478b0f9f6eea387d973a30e21bd2cd24e84d55900360d1615c7",
-    "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": "1ad2dd720ee91a9a8344996ae6ef7bc39de0272d52f47bf26f21ede4c2831f46"
+    "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": "a6f4eddc78419adb14dc6618b22cb906b8af113461017fe842abb0c1b7c3af65"
   },
   "boundary_definition": "Input valid/owner stable before edge0; observe registered outputs after the listed edge. These are local source edges, not endpoint-to-endpoint transport ages.",
   "ctx_N32": {
@@ -23,10 +23,14 @@
     "sampled_edges_fill_pin_to_armed_state": 3
   },
   "kvn_bank": {
-    "edge0": "capture raw HEAD and calendar callbacks",
-    "edge1": "validate/install owner and update stage",
-    "edge2": "register expected O61 stage identity",
-    "sampled_edges_head_pin_to_expected_identity": 3
+    "edge0": "capture raw HEAD/calendar callbacks and each local storage partition selector",
+    "edge1": "validate owner/replay, prepare bounded local write controls and pending owner; update validity/stage",
+    "edge2": "retire owner into four real <=16-bit payload storage partitions",
+    "edge3": "register expected O61 stage identity from stored owner",
+    "sampled_edges_head_pin_to_expected_identity": 4,
+    "delta_vs_19e0e1d63": 1,
+    "reseed": "one registered bank-clear edge; accept and stage advance masked through clear, explicit drained programme boundary only",
+    "native_status": "generic recursive hierarchy census31 max logical sinks; ASAP7/mapped physical qualification pending"
   },
   "unknowns": {
     "K_raw552_GEN_age": null,
@@ -36,6 +40,6 @@
     "kv_descriptor_to_header_edges": null
   },
   "adoption": "HOLD until selected final GEN composes equal-edge raw/user/slot/return paths and sole image/fullMU playback",
-  "source_base_commit": "b4677dad9",
+  "source_base_commit": "4d9a558b9",
   "phase": "Only actual adm_done recurring phase qualifies Ckind12; boot/admission filler user labels are not owner-equality evidence."
 }

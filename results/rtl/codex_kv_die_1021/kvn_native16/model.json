@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.kv.rope.owner_model.v1",
+  "source_sha256": "a6f4eddc78419adb14dc6618b22cb906b8af113461017fe842abb0c1b7c3af65",
+  "source_base": "4d9a558b9",
+  "owners": 4,
+  "payload_bits_per_owner": 61,
+  "storage_shards": [
+    16,
+    16,
+    16,
+    13
+  ],
+  "clock": "K local core",
+  "registered_bits_generic": 531,
+  "generic_cells": 1943,
+  "native_generic_max_logical_sinks": 31,
+  "native_generic_over32": 0,
+  "boundary_bits": {
+    "input": 564,
+    "output": 62
+  },
+  "rate": "1 sampled HEAD per edge; consecutive records preserve replay causality through pending-write bypass",
+  "latency": {
+    "head_pin_to_expected_sampled_edges": 4,
+    "delta_vs_19e0e1d63": 1,
+    "bank_clear": "registered one-edge clear masked through drained programme boundary"
+  },
+  "slot": {
+    "w_um": 86.4,
+    "h_um": 86.4,
+    "area_um2": 7464.96,
+    "physical_fit": "NOT QUALIFIED; actual ASAP7 mapped area/pins/reach/clock pending"
+  },
+  "physical_build_allowed": false,
+  "qualification_remaining": [
+    "actual ASAP7 mapping/native census",
+    "source-specific analytical mapped area/channel fit",
+    "selected GEN raw/user/slot ages and reset crossings",
+    "sole image composition and full MU OVL playback"
+  ]
+}
