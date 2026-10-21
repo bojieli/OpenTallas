@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits   418 GB (avail 406, growth 113, headroom 0, waiters 0/0 GB) load 103/128 running 32 disk 2404 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-epyc9       admits   243 GB (avail 246, growth 76, headroom 0, waiters 10/320 GB) load 57/128 running 36 disk 35 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: -> ot-epyc9
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 32 = 22 GB, admissible 3 GB: available 237 GB, growth charged 235 GB (x0.5), young 287 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-752860-1792596347 after 79 s
+MUT=1 PHI=0 ERR fault at 138 cdc 0000/1000 abort 00 cause 00000000/00000000
+MUT=1 PHI=0 ERR fault at 139 cdc 0000/1000 abort 00 cause 00000000/00000000
+MUT=1 PHI=0 ERR fault at 140 cdc 0000/1000 abort 00 cause 00000000/00000000
+MUT=1 PHI=0 ERR fault at 141 cdc 0000/1000 abort 00 cause 00000000/00000000
+MUT=1 PHI=0 ERR face 1 word 0 at 144 (sent 89, expected 145) data  ok
+MUT=1 PHI=0 ERR face 1 word 1 at 145 (sent 90, expected 146) data  ok
+MUT=1 PHI=0 ERR face 1 word 2 at 146 (sent 91, expected 147) data  ok
+MUT=1 PHI=0 ERR face 1 word 3 at 147 (sent 92, expected 148) data  ok
+MUT=1 PHI=0 ERR face 1 word 4 at 148 (sent 93, expected 149) data  ok
+MUT=1 PHI=0 ERR face 1 word 5 at 149 (sent 94, expected 150) data  ok
+MUT=1 PHI=0 COLL_FACE_BENCH PLAND=1 PLD=2 PLK=1 PPH=0 TOK_REG=1 FW=514 PHY=20 L=56 R=5 PEER_R=5 XS=0 PHI=0 words 240 240 got 240 240 latency 55 errors 480 faults 580 unexpected 0
+MUT=1 PHI=0 COLL_STATIC_FACE FAIL
+COLL_STATIC_FACE_BENCH FAIL MUT=1
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-752860-1792596347): exit 1
