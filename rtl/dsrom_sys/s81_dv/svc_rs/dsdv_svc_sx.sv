@@ -101,7 +101,12 @@ module dsdv_svc_sx #(
             end
         end
         for (b = 0; b < 2; b = b + 1) begin : g_h
-            dsdv_svc_sx_hrow #(.MUT(MUT), .FX(FX), .F12(F12)) u_hrow (.ck(ck), .rst(rst), .sid(sid), .hb(b[0]),
+            `ifndef OT_SVC_RS_HARD
+            dsdv_svc_sx_hrow #(.MUT(MUT), .FX(FX), .F12(F12)) u_hrow (
+`else
+            dsdv_svc_sx_hrow u_hrow (   // hardened view: no overrides (defaults = the hardened config)
+`endif
+            .ck(ck), .rst(rst), .sid(sid), .hb(b[0]),
                 .l_i({l_v, g_half(l_d, r, b)}),
                 .gi_n(lgi[4*b + 0]), .gi_e(lgi[4*b + 1]), .gi_s(lgi[4*b + 2]), .gi_w(lgi[4*b + 3]),
                 .go_n(lgo[4*b + 0]), .go_e(lgo[4*b + 1]), .go_s(lgo[4*b + 2]), .go_w(lgo[4*b + 3]),
