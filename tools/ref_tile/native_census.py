@@ -372,13 +372,25 @@ def census(g, roles):
     drivers, loads, ports, transparent = {}, {}, {}, {}
     output_sources, constant_sources = {}, {}
     values, value_sources, errors = {}, {}, []
+    constant_conflicts, conflict_keys, proven_outputs = [], set(), set()
+
+    def known_value(net, value, source):
+        if net in values:
+            key = (net, value, source.get('kind'), source.get('instance'), source.get('pin'))
+            if values[net] != value and key not in conflict_keys:
+                conflict_keys.add(key)
+                errors.append(f'contradictory known constant net {g.net_name[net]}: {values[net]} vs {value}')
+                constant_conflicts.append({'net': g.net_name[net],
+                                          'existing': {'value': values[net], 'source': value_sources[net]},
+                                          'conflicting': {'value': value, 'source': source}})
+            return False
+        values[net], value_sources[net] = value, source
+        return True
+
     for name, i in g.net_id.items():
         if name in ("1'0", "1'1"):
             net, value = g.find(i), int(name[-1])
-            if net in values and values[net] != value:
-                errors.append(f'conflicting constant literals net {g.net_name[net]}')
-            values[net] = value
-            value_sources[net] = {'kind': 'literal', 'net': name}
+            known_value(net, value, {'kind': 'literal', 'net': name})
     constants = set(values)
     combinational, reductions = [], []
     for name, (direction, net) in g.ports.items():
@@ -452,10 +464,11 @@ def census(g, roles):
                 except (KeyError, RecursionError):
                     value = None
                 if value is not None:
-                    constants.add(dst)
-                    values[dst] = value
-                    constant_sources[dst] = output_sources[dst]
-                    value_sources[dst] = output_sources[dst]
+                    known_value(dst, value, output_sources[dst])
+                    if values[dst] == value:
+                        constants.add(dst)
+                        constant_sources[dst] = output_sources[dst]
+                        proven_outputs.add((ci, dst))
     # Partial evaluation is based on actual function text and connected pin
     # values, never a cell-name family. Iterate to cover upstream tie logic and
     # transparent paths irrespective of instance order.
@@ -481,14 +494,15 @@ def census(g, roles):
                 except (KeyError, RecursionError):
                     continue
                 if truth[0] == truth[1]:
-                    if dst not in values:
-                        values[dst] = truth[0]; changed = True
-                        value_sources[dst] = dict(output_sources[dst], constant_inputs=[
-                            {'pin': p, 'net': g.net_name[n], 'value': values[n], 'source': value_sources[n]}
-                            for p, n in ins if n in values and n != dst])
+                    source = dict(output_sources[dst], constant_inputs=[
+                        {'pin': p, 'net': g.net_name[n], 'value': values[n], 'source': value_sources[n]}
+                        for p, n in ins if n in values])
+                    changed = known_value(dst, truth[0], source) or changed
+                    if values[dst] == truth[0]:
+                        proven_outputs.add((ci, dst))
                         if ci not in transparent:
                             constants.add(dst)
-                            constant_sources[dst] = value_sources[dst]
+                            constant_sources.setdefault(dst, source)
                 elif len(outs) == 1 and dynamic and ci not in transparent:
                     transparent[ci] = (dynamic[0][1], dst)
                     reductions.append(dict(output_sources[dst], dynamic_pin=dynamic[0][0],
@@ -496,6 +510,22 @@ def census(g, roles):
                         {'pin': p, 'net': g.net_name[n], 'value': values[n],
                          'source': value_sources[n]}
                         for p, n in ins if n in values]))
+    # A literal/tie is not proof that a different driver is itself constant.
+    # In particular a top input or FF Q aliased onto that net must refuse.
+    dynamic_conflicts = []
+    for name, (direction, net) in g.ports.items():
+        if direction == 'input' and net in values:
+            dynamic_conflicts.append((net, {'kind': 'input_port', 'port': name}))
+    for net, driver in drivers.items():
+        if net in values and driver[0] != 'port' and (driver[0], net) not in proven_outputs:
+            ci, pin = driver
+            dynamic_conflicts.append((net, {'kind': 'cell_output', 'instance': g.cells[ci][1],
+                                           'master': g.cells[ci][0], 'pin': pin}))
+    for net, driver in dynamic_conflicts:
+        errors.append(f'dynamic driver aliased to known constant net {g.net_name[net]}: {driver}')
+        constant_conflicts.append({'net': g.net_name[net],
+                                  'existing': {'value': values[net], 'source': value_sources[net]},
+                                  'conflicting_dynamic_driver': driver})
     for net in loads:
         if net not in drivers and net not in constants:
             errors.append(f'undriven dynamic net {g.net_name[net]}')
@@ -550,6 +580,7 @@ def census(g, roles):
             'driver_counts': counts, 'constant_output_bits': output_bits,
             'physical_nonclock_driver_counts': physical_counts,
             'constant_input_transparent_cells': reductions,
+            'constant_conflicts': constant_conflicts,
             'functional_pin_contract': 'NOT_EVALUATED',
             'pin_registration_contract': 'NOT_EVALUATED', 'storage_contract': 'NOT_EVALUATED',
             'independent_source_contract_audit_required': True,

@@ -120,3 +120,37 @@ def test_unknown_function_never_grants_transparency(roles, function):
     result = run(candidate, 'AND2x2_ASAP7_75t_R', "1'b1")
     assert result['constant_input_transparent_cells'] == []
     assert result['violations'][0]['driver'] == 'gate/Y'
+
+
+@pytest.mark.parametrize('master,pins', [
+    ('TIEHIx1_ASAP7_75t_R', {'H': "1'0"}),
+    ('AND2x2_ASAP7_75t_R', {'A': "1'1", 'B': "1'1", 'Y': "1'0"}),
+])
+def test_conflicting_literal_and_actual_constant_function_refuse_with_both_sources(roles, master, pins):
+    graph = N.TL.Graph()
+    graph.cells = [(master, 'conflict', {p: [graph.net(n)] for p, n in pins.items()})]
+    result = N.census(graph, roles)
+    assert result['status'] == 'FAIL'
+    assert any('contradictory known constant' in e for e in result['role_errors'])
+    conflict = result['constant_conflicts'][0]
+    assert conflict['existing'] == {'value': 0, 'source': {'kind': 'literal', 'net': "1'0"}}
+    assert conflict['conflicting']['value'] == 1
+    assert conflict['conflicting']['source']['master'] == master
+
+
+def test_top_input_alias_to_literal_is_not_silently_a_proven_tie(roles):
+    graph, _ = N.TL.flatten(N.TL.parse_verilog("module top(d); input d; assign d=1'b0; endmodule"), 'top')
+    result = N.census(graph, roles)
+    assert result['status'] == 'FAIL'
+    assert any('dynamic driver aliased to known constant' in e for e in result['role_errors'])
+    assert result['constant_conflicts'][0]['conflicting_dynamic_driver'] == {'kind': 'input_port', 'port': 'd'}
+
+
+def test_dynamic_cell_output_alias_to_literal_refuses(roles):
+    graph, _ = N.TL.flatten(N.TL.parse_verilog('''module top(a,b); input a,b;
+        AND2x2_ASAP7_75t_R dynamic(.A(a),.B(b),.Y(1'b0)); endmodule'''), 'top')
+    result = N.census(graph, roles)
+    assert result['status'] == 'FAIL'
+    conflict = result['constant_conflicts'][0]
+    assert conflict['conflicting_dynamic_driver']['instance'] == 'dynamic'
+    assert conflict['existing']['source']['kind'] == 'literal'
