@@ -1,9 +1,8 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Actual r1a gate found C reset driving A/B reset forests. This successor has
-// independent same-age C/A/B inputs. Every original state and reset depth is
-// preserved; only each reset forest root is assigned to its actual clock root.
-// Original regional master and its failed gate remain unchanged.
+// R2 actual gate requires raw reset entrance landing on every root.
+// Successor adds2same-root reset-release stages C/A/B before existing forests;
+// traffic register paths and credit/RTT edges are unchanged. Oldr3r is preserved.
 module ot_s81sl_lep_mu_ab_regional_r4l #(
     parameter integer DT = 512, parameter integer DR = 12, parameter integer CRED = 12, parameter integer SRAM = 1,
     parameter integer NB = 80, parameter integer RX_SRAM = 1, parameter integer IN_PIPE = 1, parameter integer NATIVE32 = 1
