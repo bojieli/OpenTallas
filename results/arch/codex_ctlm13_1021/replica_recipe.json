@@ -1,0 +1,31 @@
+{
+  "scope": "Existing exact source transformation machinery only, no application to HP13 and no old XY reuse",
+  "role_command": [
+    "python3",
+    "tools/qwen_dv/replica_role_split.py",
+    "NEW_NATIVE.sv",
+    "NEW_RR.sv",
+    "NEW_RR.json"
+  ],
+  "identity_command": [
+    "python3",
+    "tools/qwen_dv/replica_role_equiv.py",
+    "NEW_NATIVE.sv",
+    "NEW_RR.sv"
+  ],
+  "placed_command": [
+    "python3",
+    "tools/qwen_dv/replica_placed_split.py",
+    "NEW_RR.sv",
+    "NEW_RRLOC.sv",
+    "NEW_RRLOC.json",
+    "NEW_SOURCE_BOUND_PLACEMENT.tsv"
+  ],
+  "placement_law": "Actual sink locations must belong to this new source instance identity, or have an independently proven identity mapping. Do not use old safe12c numeric instance locations on HP13. Unlocated groups remain explicitly unchanged.",
+  "old_record": "Historical role split npl SHAaa869644 -> rr7b81ef21, copies24/groups43/moved2139; not HP13 result",
+  "scripts": {
+    "tools/qwen_dv/replica_role_split.py": "95c7fcd1fbd0a4bf891a0af7ace07401ddc41ce689ebf7db26240c7bbfcb0130",
+    "tools/qwen_dv/replica_role_equiv.py": "aec21b2cd813b837eea36fade0795158814b3123c9edf48be00cce00b8d5742d",
+    "tools/qwen_dv/replica_placed_split.py": "89c933229e57a9f6aeca2308f846dd4de8ea138010bbd19621f5a37194aeca0f"
+  }
+}
