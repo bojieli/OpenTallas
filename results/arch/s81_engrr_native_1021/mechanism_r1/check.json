@@ -1,0 +1,37 @@
+{
+ "bench": "tb_dsdv_eng_rr",
+ "ref": "602383e79f829b47e7043c452b3f175c1ab7c377",
+ "mutants": [
+  {
+   "name": "xq1",
+   "failed": true,
+   "log": "xq1.log"
+  },
+  {
+   "name": "xq2",
+   "failed": true,
+   "log": "xq2.log"
+  },
+  {
+   "name": "tap1",
+   "failed": true,
+   "log": "tap1.log"
+  },
+  {
+   "name": "tap2",
+   "failed": true,
+   "log": "tap2.log"
+  },
+  {
+   "name": "rpar",
+   "failed": true,
+   "log": "rpar.log"
+  },
+  {
+   "name": "onesc",
+   "failed": true,
+   "log": "onesc.log"
+  }
+ ],
+ "pass": true
+}
