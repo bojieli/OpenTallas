@@ -19,11 +19,14 @@ g.REC=f'{src.REC_DIR}/{g.TOP}_record.json'
 g.SOURCES=[f'{src.OUT_DIR}/{g.TOP}.sv']+[p for p in g.SOURCES[1:] if p not in oldchildren]+src.CHILD_SOURCES
 g.KEEP=[p.replace('qfd_dv_s5_vm8q','qfd_dv_s8_vm8q_rp1') for p in g.KEEP]
 g.SOFT['r_ctl']=g.SOFT['r_ctl']+['u_rp']
+g.VSTN='physical/ref_tile/qfd_dv_s8_station_tail1/views/qfd_dv_s8_station_tail1'
 g.VVM8['crh']='physical/ref_tile/qfd_dv_s8_crh_rp1/views/qfd_dv_s8_crh_rp1'
 
 def main():
     if not (R/g.VVM8['crh']/'qfd_dv_s8_crh_rp1.lef').exists():
         raise SystemExit('HOLD exact new RP1 CRH CLOSED view absent; old CRH alias forbidden')
+    if not (R/g.VSTN/'qfd_dv_s8_station_tail1.lef').exists():
+        raise SystemExit('HOLD exact LASTK-tail station CLOSED view absent; old station alias forbidden')
     g.main()
     p=R/f'{g.SPEC_DIR}/{g.NAME}.json';s=json.loads(p.read_text())
     for b in s['job']['benches']:

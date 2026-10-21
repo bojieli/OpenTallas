@@ -690,7 +690,7 @@ module qfd_dv_s8_flat (
     qfd_dv_s6_btab u_btab (.ck(ck), .bt_re(bre0), .bt_word(bw0), .bt_q(bt_q), .tw_we(tw_we), .tw_kind(tw_kind),
         .tw_addr(tw_addr), .tw_data(tw_data));
     // ---- station: 8 x qfd_dv_redstn2_region (closed stnrgc), fault ring 0<-2<-4<-6<-7<-5<-3<-1<-0
-    qfd_dv_redstn2_region u_r0 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r0 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r0[63:0]), .rs_s_hi_p(rss_r0[127:64]), .rs_n_lo_p(rsn_r0[63:0]), .rs_n_hi_p(rsn_r0[127:64]),
@@ -698,7 +698,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r0[63:0]), .nb_c_p(nb_r0[65:64]), .nb_od(l9d0), .nb_oc(oc0),
         .bt_re(bre0), .bt_word(bw0), .bt_q_p(bt_q0), .r_v(rv0), .r_idx(ri0), .r_last(rl0),
         .r_d(r_d0), .flt_bank_i(flt_b2), .flt_vld_i(flt_v2), .flt_bank_o(flt_b0), .flt_vld_o(flt_v0), .fault(fl0));
-    qfd_dv_redstn2_region u_r1 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r1 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r1[63:0]), .rs_s_hi_p(rss_r1[127:64]), .rs_n_lo_p(rsn_r1[63:0]), .rs_n_hi_p(rsn_r1[127:64]),
@@ -706,7 +706,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r1[63:0]), .nb_c_p(nb_r1[65:64]), .nb_od(l9d1), .nb_oc(oc1),
         .bt_re(bre1), .bt_word(bw1), .bt_q_p(bt_q1), .r_v(rv1), .r_idx(ri1), .r_last(rl1),
         .r_d(r_d1), .flt_bank_i(flt_b0), .flt_vld_i(flt_v0), .flt_bank_o(flt_b1), .flt_vld_o(flt_v1), .fault(fl1));
-    qfd_dv_redstn2_region u_r2 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r2 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r2[63:0]), .rs_s_hi_p(rss_r2[127:64]), .rs_n_lo_p(rsn_r2[63:0]), .rs_n_hi_p(rsn_r2[127:64]),
@@ -714,7 +714,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r2[63:0]), .nb_c_p(nb_r2[65:64]), .nb_od(l9d2), .nb_oc(oc2),
         .bt_re(bre2), .bt_word(bw2), .bt_q_p(bt_q2), .r_v(rv2), .r_idx(ri2), .r_last(rl2),
         .r_d(r_d2), .flt_bank_i(flt_b4), .flt_vld_i(flt_v4), .flt_bank_o(flt_b2), .flt_vld_o(flt_v2), .fault(fl2));
-    qfd_dv_redstn2_region u_r3 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r3 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r3[63:0]), .rs_s_hi_p(rss_r3[127:64]), .rs_n_lo_p(rsn_r3[63:0]), .rs_n_hi_p(rsn_r3[127:64]),
@@ -722,7 +722,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r3[63:0]), .nb_c_p(nb_r3[65:64]), .nb_od(l9d3), .nb_oc(oc3),
         .bt_re(bre3), .bt_word(bw3), .bt_q_p(bt_q3), .r_v(rv3), .r_idx(ri3), .r_last(rl3),
         .r_d(r_d3), .flt_bank_i(flt_b1), .flt_vld_i(flt_v1), .flt_bank_o(flt_b3), .flt_vld_o(flt_v3), .fault(fl3));
-    qfd_dv_redstn2_region u_r4 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r4 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r4[63:0]), .rs_s_hi_p(rss_r4[127:64]), .rs_n_lo_p(rsn_r4[63:0]), .rs_n_hi_p(rsn_r4[127:64]),
@@ -730,7 +730,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r4[63:0]), .nb_c_p(nb_r4[65:64]), .nb_od(l9d4), .nb_oc(oc4),
         .bt_re(bre4), .bt_word(bw4), .bt_q_p(bt_q4), .r_v(rv4), .r_idx(ri4), .r_last(rl4),
         .r_d(r_d4), .flt_bank_i(flt_b6), .flt_vld_i(flt_v6), .flt_bank_o(flt_b4), .flt_vld_o(flt_v4), .fault(fl4));
-    qfd_dv_redstn2_region u_r5 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r5 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r5[63:0]), .rs_s_hi_p(rss_r5[127:64]), .rs_n_lo_p(rsn_r5[63:0]), .rs_n_hi_p(rsn_r5[127:64]),
@@ -738,7 +738,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r5[63:0]), .nb_c_p(nb_r5[65:64]), .nb_od(l9d5), .nb_oc(oc5),
         .bt_re(bre5), .bt_word(bw5), .bt_q_p(bt_q5), .r_v(rv5), .r_idx(ri5), .r_last(rl5),
         .r_d(r_d5), .flt_bank_i(flt_b3), .flt_vld_i(flt_v3), .flt_bank_o(flt_b5), .flt_vld_o(flt_v5), .fault(fl5));
-    qfd_dv_redstn2_region u_r6 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r6 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r6[63:0]), .rs_s_hi_p(rss_r6[127:64]), .rs_n_lo_p(rsn_r6[63:0]), .rs_n_hi_p(rsn_r6[127:64]),
@@ -746,7 +746,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r6[63:0]), .nb_c_p(nb_r6[65:64]), .nb_od(l9d6), .nb_oc(oc6),
         .bt_re(bre6), .bt_word(bw6), .bt_q_p(bt_q6), .r_v(rv6), .r_idx(ri6), .r_last(rl6),
         .r_d(r_d6), .flt_bank_i(flt_b7), .flt_vld_i(flt_v7), .flt_bank_o(flt_b6), .flt_vld_o(flt_v6), .fault(fl6));
-    qfd_dv_redstn2_region u_r7 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_s8_station_tail1 u_r7 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),
         .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),
         .rs_s_lo_p(rss_r7[63:0]), .rs_s_hi_p(rss_r7[127:64]), .rs_n_lo_p(rsn_r7[63:0]), .rs_n_hi_p(rsn_r7[127:64]),
