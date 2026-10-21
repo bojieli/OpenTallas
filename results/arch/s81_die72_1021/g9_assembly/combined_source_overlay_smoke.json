@@ -1,0 +1,24 @@
+{
+  "source_ref": "48f8eb9f1a561de0975e64d06fd81d521fe308cf",
+  "scope": "Pure source-overlay CLI smoke only; no RTL/native/GEN/runtime",
+  "ctrl_instances": 16,
+  "kv_wrapper": "ot_s81sl_slice_kv512",
+  "kv_params": {},
+  "kv_physical": "UNBOUND",
+  "coll_defines": [
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF"
+  ],
+  "source_hashes_verified": 11,
+  "routing": "INVALIDATED_BY_CTRL_PHASE",
+  "output_hashes": {
+    "plan.json": "3c4449c1ddc078987deac4c8c3e4ae1659a12b770d48e8c1092968b674c0539e",
+    "table.json": "04902d6d460ec6627e54e694a24ac1c65af744cf3a6e170bef878513bc35609f"
+  },
+  "sampled_at": "2026-10-21T15:28:00-07:00",
+  "commands": [
+    "apply_ctrl_g9.py --plan COPY --table COPY",
+    "apply_kv_g9.py --plan COPY --table COPY --source-ref 48f8eb9f1a561de0975e64d06fd81d521fe308cf",
+    "apply_coll_g9.py --table COPY --source-ref 48f8eb9f1a561de0975e64d06fd81d521fe308cf"
+  ]
+}
