@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r10fp-1021
+ot-run: ot-epyc7       admits   246 GB (avail 547, growth 375, headroom 0, waiters 0/0 GB) load 67/96 running 25 disk 4524 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r10fp-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r10fp-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r10fp-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r10fp-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r10fp-1021
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc7 at 1.28 x cores
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1238183-1792618590 after 0 s
+EQ_MUL done bad=0 badr=0
+- diagnostics/r8_tbm.sv:26: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4ms; walltime 57.572 s; speed 69.478 us/s
+- Verilator: cpu 57.539 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1238183-1792618590): exit 0

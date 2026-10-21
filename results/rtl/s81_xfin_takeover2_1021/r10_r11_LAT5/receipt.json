@@ -1,0 +1,14 @@
+{
+  "r10": {
+    "source": "0995ddb5b",
+    "native": "FAIL49/26 inputport violations, 0sequential,0internalcomb",
+    "equiv": "existing2M PASSbad0/badr0"
+  },
+  "r11": {
+    "source": "0cbffc884",
+    "native": "FAIL48/22 inputport violations,0sequential,0internalcomb",
+    "equiv": "existing2M PASSbad0/badr0"
+  },
+  "next_source": "36270dd0c explicit localleading-one OR decode; existing2M PASS, nativepending",
+  "scope": "diagnostic leaf, no fullXFINnativequalification"
+}

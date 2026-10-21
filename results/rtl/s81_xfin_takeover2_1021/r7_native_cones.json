@@ -1,0 +1,582 @@
+[
+  {
+    "driver": "_262000_/Y",
+    "loads": 155,
+    "fanin": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_grp[*]",
+        156
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_t[*].g_rdy[*].g_a",
+        120
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e",
+        24
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values",
+        57
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values.g_bank[*]",
+        9
+      ],
+      [
+        "_262970_",
+        1
+      ],
+      [
+        "_263087_",
+        1
+      ],
+      [
+        "_263091_",
+        1
+      ],
+      [
+        "_263083_",
+        1
+      ],
+      [
+        "_263089_",
+        1
+      ],
+      [
+        "_263085_",
+        1
+      ],
+      [
+        "_263061_",
+        1
+      ],
+      [
+        "_263092_",
+        1
+      ],
+      [
+        "_263057_",
+        1
+      ],
+      [
+        "_268222_",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "_198763_/Y",
+    "loads": 146,
+    "fanin": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_grp[*]",
+        156
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_t[*].g_rdy[*].g_a",
+        120
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e",
+        24
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values",
+        53
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values.g_bank[*]",
+        11
+      ],
+      [
+        "_274116_",
+        1
+      ],
+      [
+        "_274113_",
+        1
+      ],
+      [
+        "_274128_",
+        1
+      ],
+      [
+        "_274015_",
+        1
+      ],
+      [
+        "_274103_",
+        1
+      ],
+      [
+        "_274096_",
+        1
+      ],
+      [
+        "_274125_",
+        1
+      ],
+      [
+        "_274017_",
+        1
+      ],
+      [
+        "_274107_",
+        1
+      ],
+      [
+        "_274089_",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "_236435_/Y",
+    "loads": 136,
+    "fanin": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_grp[*]",
+        156
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_t[*].g_rdy[*].g_a",
+        120
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e",
+        24
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values",
+        69
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values.g_bank[*]",
+        12
+      ],
+      [
+        "_314746_",
+        1
+      ],
+      [
+        "_314745_",
+        1
+      ],
+      [
+        "_242971_",
+        1
+      ],
+      [
+        "_243011_",
+        1
+      ],
+      [
+        "_242954_",
+        1
+      ],
+      [
+        "_242977_",
+        1
+      ],
+      [
+        "_270640_",
+        1
+      ],
+      [
+        "_270708_",
+        1
+      ],
+      [
+        "_270719_",
+        1
+      ],
+      [
+        "_270552_",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "_165350_/Y",
+    "loads": 135,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.g_grp[*]",
+        52
+      ],
+      [
+        "u_ot_pr_core.u_f.g_rdy[*].g_a",
+        40
+      ],
+      [
+        "u_ot_pr_core.u_f",
+        11
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_values",
+        65
+      ],
+      [
+        "u_ot_pr_core.u_f.u_values.g_bank[*]",
+        10
+      ],
+      [
+        "u_ot_pr_core.u_f",
+        2
+      ],
+      [
+        "_275109_",
+        1
+      ],
+      [
+        "_274497_",
+        1
+      ],
+      [
+        "_211518_",
+        1
+      ],
+      [
+        "_275119_",
+        1
+      ],
+      [
+        "_275114_",
+        1
+      ],
+      [
+        "_275049_",
+        1
+      ],
+      [
+        "_275112_",
+        1
+      ],
+      [
+        "_275140_",
+        1
+      ],
+      [
+        "_274358_",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "_220690_/Y",
+    "loads": 133,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f",
+        8
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_values.g_bank[*]",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "_251943_/Y",
+    "loads": 116,
+    "fanin": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_grp[*]",
+        156
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.g_t[*].g_rdy[*].g_a",
+        120
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e",
+        24
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values",
+        57
+      ],
+      [
+        "u_ot_pr_core.g_cp[*].u_e.u_values.g_bank[*]",
+        10
+      ],
+      [
+        "_269336_",
+        1
+      ],
+      [
+        "_269366_",
+        1
+      ],
+      [
+        "_269365_",
+        1
+      ],
+      [
+        "_269251_",
+        1
+      ],
+      [
+        "_269347_",
+        1
+      ],
+      [
+        "_269259_",
+        1
+      ],
+      [
+        "_269355_",
+        1
+      ],
+      [
+        "_269353_",
+        1
+      ],
+      [
+        "_269351_",
+        1
+      ],
+      [
+        "_269345_",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[0].m_hm.g_l5.u.u_k5c.q[7]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[0].m_y.g_l5.u.u_k5c.q[7]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[1].m_hm.g_l5.u.u_k5c.q[7]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[1].m_y.g_l5.u.u_k5c.q[7]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[1].m_yy.g_l5.u.u_k5c.q[8]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[2].m_hm.g_l5.u.u_k5c.q[7]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[2].m_y.g_l5.u.u_k5c.q[7]$_DFF_P_/QN",
+    "loads": 104,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[0].m_yy.g_l5.u.u_k5c.q[8]$_DFF_P_/QN",
+    "loads": 103,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[2].m_yy.g_l5.u.u_k5c.q[8]$_DFF_P_/QN",
+    "loads": 103,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[0].m_hm.g_l5.u.u_k5c.q[6]$_DFF_P_/QN",
+    "loads": 96,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[0].m_y.g_l5.u.u_k5c.q[6]$_DFF_P_/QN",
+    "loads": 96,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[1].m_hm.g_l5.u.u_k5c.q[6]$_DFF_P_/QN",
+    "loads": 96,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[1].m_y.g_l5.u.u_k5c.q[6]$_DFF_P_/QN",
+    "loads": 96,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.u_f.u_rsq.g_nr[2].m_hm.g_l5.u.u_k5c.q[6]$_DFF_P_/QN",
+    "loads": 96,
+    "fanin": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ],
+    "fanout": [
+      [
+        "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.g_l5.u.u_k5c",
+        1
+      ]
+    ]
+  }
+]
