@@ -815,7 +815,20 @@ def sfu_lane_golden(sut, ops):
     if ad:
         x = add(x, cc if ad == 2 else -b if ad == 3 else f(sut["imm2"]) if ad == 4 else d)
     s = sut["sfu"]
-    if s == 1:
+    if s in (2, 3, 6, 7):                      # FULL lane 0 scalar side pipe (ot_hbm_su_static_side.sv)
+        from hdc_golden import rsqrt
+        from hdc_golden_v41 import sqrt, softplus, sigmoid
+        with np.errstate(all="ignore"):
+            if s == 2:
+                x = np.asarray(rsqrt(x), np.float32)
+            elif s == 3:
+                x = np.asarray(sqrt(x), np.float32)
+            elif s == 6:
+                x = np.asarray(sqrt(softplus(x)), np.float32)
+            else:
+                mag = np.asarray(sqrt(np.maximum(np.abs(x), np.float32(1e-6)).astype(np.float32)), np.float32)
+                x = np.asarray(sigmoid(np.where(x < 0, -mag, mag).astype(np.float32)), np.float32)
+    elif s == 1:
         x = np.asarray(exp(x), np.float32)
     elif s in (4, 5):
         den = add(np.asarray(exp(-x), np.float32), np.float32(1.0))
@@ -1166,4 +1179,192 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
         source_contract=dict(lanes="quarter-local 0..31 (KIND 1/2)", divider_depth=19, exp_depth=56,
                              sigmoid_silu_depth=78, MLAT=4, ALAT=3, RF_LOCAL=rf_local, B_srcs_code=1 if bcast else 0),
         timing_obligations=dict(issue_to_output=lat, serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
+                                old_price_preserved=False, connected_selected_case_RTL_required=True))
+
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Scalar side-pipe records on words at ANY sector position (router_act, engram.rH/rK/gate): the side pipe exists only
+# in quarter lane 0 (KIND 2) and a lane reads only its own bank, so every input word is moved laterally on real
+# hardware: VM sector -> store group -> lane 8p+j copy op -> reducer LOAD of that lane's ro_x (red_cmd osel 0, lane
+# 8p+j, at the lane output edge issue+28: su_top_compile's lane-operand rule) -> EXPORT -> stree -> RF word; lane 0 then
+# takes each operand as an RF class stream (srcs 1), its side output goes back lane0 -> reducer -> EXPORT -> RF word
+# (O.base+j) & 255, and one class-5 RF-sector drain writes all n outputs to their own sector positions.
+SIDE_DEPTH = {2: 46, 3: 31, 6: 180, 7: 111}          # lane.sv H_RSQ / H_SQRT / H_SP / H_EG at MLAT 4, ALAT 3
+
+
+def scalar_rf_profile(sut, desc):
+    if sut["red"] or sut["qm"] or sut["b_half"] or sut["c_pair"] or sut["a_ind"] or sut["dst"] != 1 or sut["ad"] == 1:
+        return False
+    if sut["sfu"] not in SIDE_DEPTH or "O" not in desc or "A" not in desc or not set(desc) <= set("ABCDO"):
+        return False
+    n = desc["O"].n
+    for md in desc.values():
+        if (md.space != "VM" or md.fmt != "FP32" or md.m != 1 or md.n != n or (md.istride or 1) != 1 or md.ibcast
+                or md.indexed or md.base // 8 != (md.base + n - 1) // 8):
+            return False
+    return 1 <= n <= 8
+
+
+def lower_scalar_rf(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=None, **unused):
+    from hbm_layer_vehicle import layer_images as LI
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    from su_program_inventory import decode
+    from su_arith_compile import pack, physical_word
+    import su_pretree_lower as PT
+    _, unit, sut, desc = decode(raw)
+    refusal = lambda why, st="unsupported_lowering": dict(status=st, reasons=[why], sut=sut,
+                                                          lowering=dict(supported=False, owner="TOK-FUNC2-HBM-SU"))
+    if unit != 2 or not scalar_rf_profile(sut, desc):
+        return refusal("scalar_side_pipe_small_vector_profile_only")
+    if q != 0 or not isinstance(timing, NativeTiming) or timing != NativeTiming(18, 15) or rf_local not in (0, 1):
+        return refusal("selected_quarter0_native_timing_and_RF_LOCAL_required")
+    if data is None:
+        return refusal("real_pre_operation_VM_words_required")
+    place = place if place is not None else LI.Placement(q)
+    o = desc["O"]
+    n = o.n
+    roles = [r for r in "ABCD" if r in desc]
+    o_rf = o.base & 255
+    if (o_rf & 7) + n > 8:
+        return refusal("outputs_must_share_one_RF_sector")
+    # RF words for the moved inputs: role sectors away from the output sector
+    in_rf = {}
+    for k, r in enumerate(roles):
+        base = ((o_rf & ~7) + 8 * (k + 1)) & 255
+        in_rf[r] = [base + ((desc[r].base + j) & 7) for j in range(n)]
+    ql = TreeLines()
+    # 1. fills: each role's sector into the group of its VM port, row = role index
+    fills, preload, lanes, next_fill = [], {}, {}, [0] * 8
+    for k, r in enumerate(roles):
+        md = desc[r]
+        ls_ = md.base // 8
+        port = place.map[ls_] % 8 if ls_ in place.map else 0
+        ps = place.get(ls_, port, f"{tag}:{r}")
+        ql.vmr(next_fill[port], port, ps, port, k)
+        fills.append((ls_, next_fill[port]))
+        next_fill[port] += 1
+        if ls_ not in place.written:
+            preload[ps] = list(range(8 * ls_, 8 * ls_ + 8))
+        lanes[r] = [8 * port + ((md.base + j) & 7) for j in range(n)]
+        for w in range(8 * ls_, 8 * ls_ + 8):
+            data.setdefault(w, np.float32(0))
+    S1 = max(e for _, e in fills) + timing.fill_commit + 1
+    ident = 0
+    for s_ in range(4):
+        for b in range(7):
+            ident |= (1 << b) << (24 * (s_ * 10 + b))
+    copies = [(r, j) for r in roles for j in range(n)]
+    max_lane = max(l for r in roles for l in lanes[r])
+    copy_ctl = dict(no=1, ni=max_lane + 1, ls=7, lvw=7, srcs=0, dst=0, co_dst=0, ld_c=ident)
+    ql.f["control"][S1] = pack(dict(copy_ctl, ld=1, vb=sum(physical_word(q, 0) << (24 * s_) for s_ in range(4))))
+    exports, red_d, last_load = [], 0, 0
+    for c, (r, j) in enumerate(copies):
+        k = roles.index(r)
+        issue = S1 + LI.SETUP_TO_EMIT + c
+        vb = sum(physical_word(q, k) << (24 * s_) for s_ in range(4))
+        ql.f["control"][issue] = pack(dict(copy_ctl, emit=1, vb=vb))
+        load = issue + LI.FIRST_OUT - LI.SETUP_TO_EMIT
+        ql.f["red"][load] = PT.red_cmd_word(dict(op=PT.OP_LOAD, a=0, b=0, d=red_d, tag=0, osel=0, lane=lanes[r][j]))
+        ex = load + PT.DEP
+        while ex in ql.f["red"]:
+            ex += 1
+        ql.f["red"][ex] = PT.red_cmd_word(dict(op=PT.OP_EXPORT, a=red_d, b=0, d=0, tag=0x100 | in_rf[r][j], osel=0,
+                                               lane=0))
+        exports.append(ex)
+        red_d += 1
+        last_load = load
+    for e in range(S1, last_load + 1):
+        ql.f["control"].setdefault(e, pack(dict(copy_ctl, vb=sum(physical_word(q, 0) << (24 * s_) for s_ in range(4)))))
+    rf_ready = max(exports) + 12 + 32           # rf write pins of the last moved operand
+    # 2. scalar side ops on lane 0, operands from the RF
+    extra = (15 if sut["m1"] in (4, 5) else 0) + SIDE_DEPTH[sut["sfu"]]
+    lat = LI.FIRST_OUT - LI.SETUP_TO_EMIT + extra
+    srcs = sum(1 << (2 * "ABCD".index(r)) for r in roles)
+    ctl = dict(no=1, ni=1, ls=0, lvw=0, srcs=srcs, dst=0, co_dst=0, aind=0, cpair=0,
+               cx_arnd=sut["a_rnd"], cx_arelu=sut["a_relu"], cx_amin=sut["a_min"], cx_cclip=sut["c_clip"],
+               cx_imm3=sut["imm3"], cp_m1=sut["m1"], cp_imm1=sut["imm1"], cm_m1=sut["m1"], cm_m2=sut["m2"], cm_qm=0,
+               cm_imm1=sut["imm1"], ca_ad=sut["ad"], ca_imm2=sut["imm2"], ci_sfu=sut["sfu"], cs_sfu=sut["sfu"],
+               cs_e1=sut["e1"], cs_imm2=sut["imm2"], ce_e2=sut["e2"], ce_imm1=sut["imm1"], co_rnd=sut["rnd"], ld_c=0)
+
+    def vb_op(j):
+        v = 0
+        for s_, r in enumerate("ABCD"):
+            v |= (in_rf[r][j] if r in roles else physical_word(q, 0)) << (24 * s_)
+        return v
+    S2 = max(last_load + 1, rf_ready + 4 + rf_local)
+    ql.f["control"][S2] = pack(dict(ctl, ld=1, vb=vb_op(0)))
+    W = LI.FIRST_OUT + 12
+    issues, out_ex = [], []
+    for j in range(n):
+        I = S2 + LI.SETUP_TO_EMIT + j * W
+        issues.append(I)
+        ql.f["control"][I] = pack(dict(ctl, emit=1, vb=vb_op(j)))
+        for e in range(I - LI.SETUP_TO_EMIT - 1 - rf_local, I + LI.FIRST_OUT + 1):
+            for r in roles:
+                ql.put("rf", e, 9 * "ABCD".index(r), 9, 256 | in_rf[r][j])
+        load = I + lat
+        if load in ql.f["red"]:
+            return refusal("reducer_slot_collision")
+        ql.f["red"][load] = PT.red_cmd_word(dict(op=PT.OP_LOAD, a=0, b=0, d=red_d, tag=0, osel=0, lane=0))
+        ex = load + PT.DEP
+        while ex in ql.f["red"]:
+            ex += 1
+        ql.f["red"][ex] = PT.red_cmd_word(dict(op=PT.OP_EXPORT, a=red_d, b=0, d=0, tag=0x100 | (o_rf + j), osel=0,
+                                               lane=0))
+        out_ex.append(ex)
+        red_d += 1
+    end_ops = max(out_ex)
+    for j, I in enumerate(issues):
+        nxt = issues[j + 1] if j + 1 < n else end_ops + 1
+        for e in range(I, nxt):
+            ql.f["control"].setdefault(e, pack(dict(ctl, vb=vb_op(j))))
+    for e in range(S2, issues[0]):
+        ql.f["control"].setdefault(e, pack(dict(ctl, vb=vb_op(0))))
+    rf_commit = end_ops + 12 + 32 + 1
+    de = rf_commit + 4
+    rf_read = de - 2
+    ql.put("rf", rf_read, 5 * 9, 9, 0x100 | (o_rf & ~7))
+    lo = o.base // 8
+    if lo in place.map and place.map[lo] % 8:
+        return refusal("RF_sector_drain_requires_VM_port0_placement")
+    po = place.get(lo, 0, tag + ":O")
+    mask = sum(1 << ((o.base + j) & 7) for j in range(n))
+    ql.vmw(de, 0, 1, 0, 0, po, mask)
+    commit = de + timing.drain_done
+    for e in range(0, commit + 1):
+        ql.f["control"].setdefault(e, pack(dict(ctl, vb=vb_op(n - 1))))
+    lines = ql.lines()
+    if len(lines) > LI.EDGES_MAX:
+        return refusal("native_programme_capacity_exceeded")
+    ops = {r: np.array([data[desc[r].base + j] for j in range(n)], np.float32) for r in roles}
+    with np.errstate(all="ignore"):
+        outbits = sfu_lane_golden(sut, ops)
+    if not np.isfinite(outbits.view(np.float32)).all():
+        return refusal("finite_side_output_required")
+    pre_words = {str(w): f"{int(np.float32(data[w] if w in data else 0).view(np.uint32)):08x}"
+                 for ws in preload.values() for w in ws}
+    vals = [None] * 8
+    post = {}
+    for j in range(n):
+        vals[(o.base + j) & 7] = int(outbits[j])
+        post[str(o.base + j)] = f"{int(outbits[j]):08x}"
+        data[o.base + j] = np.uint32(outbits[j]).view(np.float32)
+    place.written.add(lo)
+    return dict(status="emitted", reasons=[], ql=ql, lines=lines, fills=fills, drains=[(lo, commit)],
+        preload=preload, data=pre_words, inputs_placeholder=False,
+        expect=[dict(sector=po, mask=mask, edge=commit, words=list(range(8 * lo, 8 * lo + 8)), value=vals)],
+        setup_edge=S1, issue_edges=issues, last_commit=commit, fill_sectors=len(preload), drain_sectors=1, sut=sut,
+        native_timing=timing.as_dict(),
+        lowering=dict(supported=True, owner="TOK-FUNC2-HBM-SU", execution_qualified=False,
+                      mode="lane->reducer->stree->RF operand moves; lane0 side pipe on RF streams; RF-sector drain",
+                      words=n, side_depth=extra),
+        rf_events=[dict(kind="operand_exports", edges=exports), dict(kind="output_exports", edges=out_ex),
+                   dict(kind="class5_read", edge=rf_read), dict(kind="RF_to_VM_drain", edge=de, vm_commit=commit)],
+        control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
+        expected_post_state=post, expected_post_state_only=True,
+        expected_reference=dict(role="comparison_only", source="hdc_golden / hdc_golden_v41 side-pipe forms"),
+        source_contract=dict(lane_operand_rule="red_cmd osel0 lane L at the lane output edge (su_top_compile S+FO)",
+                             side_lane="su_SW0 lane 0 KIND 2", RF_LOCAL=rf_local, side_depth=extra),
+        timing_obligations=dict(serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
                                 old_price_preserved=False, connected_selected_case_RTL_required=True))
