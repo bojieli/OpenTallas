@@ -18,7 +18,8 @@
    "rtl/lib",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5",
-   "results/rtl/s81_idx3r_1020"
+   "results/rtl/s81_idx3r_1020",
+   "results/rtl/codex_idxnq_local_1021"
   ]
  },
  "stages": {
@@ -74,7 +75,7 @@
     "cmd": "env IDX3R_NQ_NATIVE=1 bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m3 '-GMUT=3 -GSRAM_MACRO=1' 1 'fail_small|+N=4096 +B=13 +T0=400 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m3/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m3.log",
+    "fail_witness": "results/rtl/codex_idxnq_local_1021/m3/client.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -86,7 +87,7 @@
     "cmd": "env IDX3R_NQ_NATIVE=1 bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m4 '-GMUT=4 -GSRAM_MACRO=1' 1 'fail_small|+N=4096 +B=13 +T0=400 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m4/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m4.log",
+    "fail_witness": "results/rtl/codex_idxnq_local_1021/m4/client.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
