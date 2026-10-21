@@ -77,11 +77,40 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  assign k_addr={row,bhi,col,pc_q^col^hi5,blo};
  assign k_len={1'b0,length};assign k_tag=ticket;
  wire [OWNER_AW-1:0] alloc=ticket[OWNER_AW-1:0],ret=kr_tag[OWNER_AW-1:0];
+ // Local row-select branches drive <=16 bits each. The binary tag decoder
+ // feeds four real gate inputs, instead of one selected-row net driving51 bits.
+ wire [ENTRIES-1:0] rgen_sel,rep_sel,rord_sel,rctl_sel;
+ for(genvar rs=0;rs<ENTRIES;rs=rs+1)begin:g_return_select
+  wire hit=ret==rs;
+  ot_hbm_svc_local_and2 u_g(.a(hit),.b(1'b1),.y(rgen_sel[rs]));
+  ot_hbm_svc_local_and2 u_e(.a(hit),.b(1'b1),.y(rep_sel[rs]));
+  ot_hbm_svc_local_and2 u_o(.a(hit),.b(1'b1),.y(rord_sel[rs]));
+  ot_hbm_svc_local_and2 u_c(.a(hit),.b(1'b1),.y(rctl_sel[rs]));
+ end
+ reg [GW-1:0] generation_r;
+ reg [15:0] epoch_r;reg [LB-1:0]bank_r;reg [10:0]ordinal_r;
+ reg [2:0]length_r;reg permuted_r;reg [1:0]row_low_r;
+ reg [3:0]seen_r;reg valid_r;integer rr;
+ always @*begin
+  generation_r=0;epoch_r=0;bank_r=0;ordinal_r=0;
+  length_r=0;permuted_r=0;row_low_r=0;seen_r=0;valid_r=0;
+  for(rr=0;rr<ENTRIES;rr=rr+1)begin
+   generation_r=generation_r|(generation_q[rr]&{GW{rgen_sel[rr]}});
+   epoch_r=epoch_r|(epoch_q[rr]&{16{rep_sel[rr]}});
+   bank_r=bank_r|(bank_q[rr]&{LB{rord_sel[rr]}});
+   ordinal_r=ordinal_r|(ordinal_q[rr]&{11{rord_sel[rr]}});
+   length_r=length_r|(length_q[rr]&{3{rctl_sel[rr]}});
+   permuted_r=permuted_r|(permuted_q[rr]&rctl_sel[rr]);
+   row_low_r=row_low_r|(row_low_q[rr]&{2{rctl_sel[rr]}});
+   seen_r=seen_r|(seen_q[rr]&{4{rctl_sel[rr]}});
+   valid_r=valid_r|(valid_q[rr]&rctl_sel[rr]);
+  end
+ end
  assign k_v=block_active&&!blk_start&&selected&&t<words&&!valid_q[alloc]&&!sticky&&!stop;
- assign response_ok=kr_v&&valid_q[ret]&&generation_q[ret]==kr_tag[16:OWNER_AW]&&kr_beat<length_q[ret]&&!seen_q[ret][kr_beat]&&!sticky&&!stop;
- wire [1:0] word_offset=permuted_q[ret]?(kr_beat[1:0]^row_low_q[ret]):2'd0;
- assign response_ordinal=ordinal_q[ret]+{7'd0,word_offset,2'b0};
- assign response_epoch=epoch_q[ret];assign response_bank=bank_q[ret];assign fault=sticky;
+ assign response_ok=kr_v&&valid_r&&generation_r==kr_tag[16:OWNER_AW]&&kr_beat<length_r&&!seen_r[kr_beat]&&!sticky&&!stop;
+ wire [1:0] word_offset=permuted_r?(kr_beat[1:0]^row_low_r):2'd0;
+ assign response_ordinal=ordinal_r+{7'd0,word_offset,2'b0};
+ assign response_epoch=epoch_r;assign response_bank=bank_r;assign fault=sticky;
  wire issuing=block_active&&selected&&t<words;
  assign issue_done=!issuing;
  function automatic [3:0] mask_for(input [2:0] n);
@@ -105,8 +134,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   ot_hbm_svc_local_and2 u_len2(.a(length[2]),.b(1'b1),.y(length_local[gr][2]));
  end
  wire fire=k_v&&k_ready;
- wire [3:0] seen_ret=seen_q[ret]|(4'b1<<kr_beat);
- wire ret_done=response_take&&seen_ret==mask_for(length_q[ret]);
+ wire [3:0] seen_ret=seen_r|(4'b1<<kr_beat);
+ wire ret_done=response_take&&seen_ret==mask_for(length_r);
  // next valid (allocate at fire, free at the last beat)
  reg [ENTRIES-1:0] valid_n;integer e;
  always @*begin
