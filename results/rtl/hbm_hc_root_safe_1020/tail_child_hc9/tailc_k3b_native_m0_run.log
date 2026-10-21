@@ -1,0 +1,5 @@
+TAILC PASS cases=48 seed=1 child result = unit result + 285 edges, faults agree (fault 0)
+- rtl/test/tb_hbm_hc_tail_child_eq.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 78us; walltime 18.631 s; speed 4.188 us/s
+- Verilator: cpu 18.630 s on 1 threads; allocated 50 MB

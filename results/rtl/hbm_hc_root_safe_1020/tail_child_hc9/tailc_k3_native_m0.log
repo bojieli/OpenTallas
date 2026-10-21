@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+TAILC PASS cases=48 seed=1 child result = unit result + 453 edges, faults agree (fault 0)
+TAILC PASS cases=48 seed=1 child result = unit result + 453 edges, faults agree (fault 0)
+HC_TAIL_CHILD_EQ MUT=0 N=48 SEED=1 rc=0
+BENCH_RC nat rc=0
