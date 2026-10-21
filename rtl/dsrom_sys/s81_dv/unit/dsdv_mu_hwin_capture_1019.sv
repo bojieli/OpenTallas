@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Private exact selected-anchor HWIN source; namespace projection only.
 module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0, parameter integer DUE_COPIES = 0, parameter integer SAFE_NATIVE = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0, parameter integer DUE_COPIES = 0, parameter integer SAFE_NATIVE = 0, parameter integer LOCAL_RECORD = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -42,7 +42,14 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     // HWIN21g CFG_RELAY: 2 relay copies x {f_mw, f_mc}, one reset region each (26 sinks), so the copies stay distinct.
     localparam integer RNATIVE_BASE=RCFG_BASE+((CFG_RELAY!=0)?4:0);
     localparam integer NATIVE_LW=(NSLOT+11)/12, NATIVE_GN=(NEV+3)/4;
-    localparam integer RESET_REGIONS=RNATIVE_BASE+((SAFE_NATIVE!=0)?2*NATIVE_LW+NATIVE_GN+NEV:0);
+    // HWIN structural successor: private duplicate/admission cones for each group of
+    // four event memories and each group of eight slot writes.  Same edge, 0 cycles.
+    // Each user copy compares <=24 identities; each cone feeds <=8 record flops.
+    localparam integer RECORD_EVENT_GROUPS=(NEV+3)/4;
+    localparam integer RECORD_SLOT_GROUPS=(NSLOT+7)/8;
+    localparam integer RECORD_GROUPS=RECORD_EVENT_GROUPS+RECORD_SLOT_GROUPS;
+    localparam integer RECORD_RST_BASE=RNATIVE_BASE+((SAFE_NATIVE!=0)?2*NATIVE_LW+NATIVE_GN+NEV:0);
+    localparam integer RESET_REGIONS=RECORD_RST_BASE+((LOCAL_RECORD!=0)?RECORD_GROUPS*NC_REC:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_hwin_capture_1019_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // HWIN21g CFG_RELAY=1 (opt-in, default 0 = HWIN21cb bytes-equivalent logic): the config word ports f_mw / f_mc
     // land in a relay register stage before ANY consumer, so every config consumer sees the port one edge later
@@ -143,6 +150,25 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     end endgenerate
     reg udup; integer i;
     always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == cmp_user[i/24]) udup = 1'b1; end
+    wire [RECORD_GROUPS-1:0] regional_dup;
+    wire [10*NSLOT-1:0] regional_ids;
+    generate for(genvar ri=0;ri<NSLOT;ri=ri+1) begin:g_regional_identity
+        assign regional_ids[10*ri+:10]=eu[ri];
+    end
+    for(genvar rg=0;rg<RECORD_GROUPS;rg=rg+1) begin:g_regional_admission
+        if(LOCAL_RECORD!=0) begin:g_local
+            wire [10*NC_REC-1:0] user_q;
+            for(genvar cp=0;cp<NC_REC;cp=cp+1) begin:g_user_pin
+                (* keep *) reg [9:0] user_r;
+                always @(posedge ck or negedge rr[RECORD_RST_BASE+rg*NC_REC+cp])
+                    if(!rr[RECORD_RST_BASE+rg*NC_REC+cp]) user_r<=10'd0;
+                    else user_r<=f_ks[51:42];
+                assign user_q[10*cp+:10]=user_r;
+            end
+            (* keep=1 *) dsdv_mu_hwin_capture_1019_duplicate_region #(.NSLOT(NSLOT),.NC(NC_REC)) u_duplicate
+                (.valid(vld),.ids(regional_ids),.user_copy(user_q),.duplicate(regional_dup[rg]));
+        end else begin:g_original assign regional_dup[rg]=udup;end
+    end endgenerate
     wire col = |(vld & ss);
     wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use (= calendar slots per period)
     wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;
@@ -413,7 +439,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [PTR_CTL-1:0] record_group;
     generate for(genvar rg=0;rg<PTR_CTL;rg=rg+1) begin:g_record_control
         if(LOCAL_BOOT!=0) begin:g_local
-            (* keep=1 *) dsdv_mu_hwin_capture_1019_record u_record(.start(start_event[rg%NEV]),.on_calendar(on_cal),.collision(col),.duplicate(udup),.armed(armed_event[rg%NEV]),.bad(bad_group[(rg/2)%BAD_GROUPS]),.record(record_group[rg]));
+            (* keep=1 *) dsdv_mu_hwin_capture_1019_record u_record(.start(start_event[rg%NEV]),.on_calendar(on_cal),.collision(col),.duplicate(regional_dup[RECORD_EVENT_GROUPS+rg]),.armed(armed_event[rg%NEV]),.bad(bad_group[(rg/2)%BAD_GROUPS]),.record(record_group[rg]));
         end else begin:g_direct assign record_group[rg]=rec;end
     end endgenerate
     genvar ws, wc;
@@ -558,7 +584,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         end
         (* keep *) reg [1:0] cfg_attr_r;
         assign cfg_addr[ce]=cfg_addr_r; assign cfg_attr[ce]=cfg_attr_r;
-        assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!arm_r && bad_group[ce/4]);
+        assign rec_local[ce]=start_r && on_cal && !col && !regional_dup[ce/4] && !(!arm_r && bad_group[ce/4]);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
             if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_attr_r<=0;end
             else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=ev_mw[25] && ev_mw[22:21]==2'd0;cfg_w1_r<=ev_mw[25] && ev_mw[22:21]==2'd1;cfg_w2_r<=ev_mw[25] && ev_mw[22:21]==2'd2;cfg_gap_r<=ev_mc[25] && !ev_mc[24];cfg_rl_r<=ev_mc[25] && ev_mc[24];start_r<=f_ks[52];cfg_addr_r<=ev_mw[SI-1:0];cfg_attr_r<=ev_mw[11:10];end
@@ -817,4 +843,27 @@ endmodule
 (* keep_hierarchy=1 *) module dsdv_mu_hwin_capture_1019_cfg_accept #(parameter integer NSLOT=47,parameter integer SJ=7)
 (input wire valid,kind,armed,empty,input wire [SJ-1:0] count,output wire accept);
  assign accept=valid && !kind && !armed && empty && count!=SJ'(NSLOT);
+endmodule
+
+// Kept region boundary prevents ABC from factoring every record consumer through
+// a single distributed duplicate flag.  Eight-entry partials bound reduction depth.
+(* keep_hierarchy=1 *) module dsdv_mu_hwin_capture_1019_duplicate_region #(
+    parameter integer NSLOT=47, parameter integer NC=(NSLOT+23)/24
+) (
+    input wire [NSLOT-1:0] valid,
+    input wire [10*NSLOT-1:0] ids,
+    input wire [10*NC-1:0] user_copy,
+    output wire duplicate
+);
+    localparam integer NG=(NSLOT+7)/8;
+    wire [NSLOT-1:0] hit;
+    wire [NG-1:0] partial;
+    generate for(genvar i=0;i<NSLOT;i=i+1) begin:g_match
+        assign hit[i]=valid[i] && ids[10*i+:10]==user_copy[10*(i/24)+:10];
+    end
+    for(genvar g=0;g<NG;g=g+1) begin:g_partial
+        localparam integer N=((NSLOT-8*g)<8)?(NSLOT-8*g):8;
+        assign partial[g]=|hit[8*g+:N];
+    end endgenerate
+    assign duplicate=|partial;
 endmodule

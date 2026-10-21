@@ -1,0 +1,77 @@
+{
+  "status": "DEFAULT_OFF_SOURCE_CANDIDATE__NO_PHYSICAL_GATE",
+  "source_base": "aff1c1ca862cc0cda48be402cbd5d993171a0ea9",
+  "frozen_reference_package": "e20095385d2024cabe267f4227e1fb17c24dac90:tools/hwin_private_package_1019",
+  "parameter": {
+    "LOCAL_RECORD_default": 0,
+    "tested": 1,
+    "NSLOT": 47,
+    "NEV": 16
+  },
+  "bench_unit": "ot-epyc5 oth-ubuntu-3505568-1792601223",
+  "bench_exit": 0,
+  "bench_results": {
+    "ns47": {
+      "expected_result": "MUWIN starts 188 fires 2528 expected 2528 K 2 t_mf 0000 hslot 0000 hwin 00",
+      "miter_edges": [
+        "CBREF_MITER edges 17545",
+        "EARLY_MITER edges 17545"
+      ]
+    },
+    "ns2": {
+      "expected_result": "MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00",
+      "miter_edges": [
+        "CBREF_MITER edges 1705",
+        "EARLY_MITER edges 1705"
+      ]
+    },
+    "norelay": {
+      "expected_result": "[9000] %Fatal: tb_dsdv_mu_hwin_cfg_relay.sv:154: Assertion failed in tb_dsdv_mu_hwin_cfg_relay: CBREF_MITER CONTROL c9",
+      "miter_edges": []
+    },
+    "eastcopy": {
+      "expected_result": "[20000] %Fatal: tb_dsdv_mu_hwin_cfg_relay.sv:159: Assertion failed in tb_dsdv_mu_hwin_cfg_relay: CBREF_MITER EVENT_STATE c20 e8",
+      "miter_edges": []
+    },
+    "eastdue": {
+      "expected_result": "[1159000] %Fatal: tb_dsdv_mu_hwin_cfg_relay.sv:258: Assertion failed in tb_dsdv_mu_hwin_cfg_relay.g_assert_dut[4]: event boot count differs event4",
+      "miter_edges": []
+    },
+    "mut2": {
+      "expected_result": "[1068000] %Fatal: tb_dsdv_mu_hwin_cfg_relay.sv:164: Assertion failed in tb_dsdv_mu_hwin_cfg_relay: CBREF_MITER QUALIFIED_HEAD c1068 e0",
+      "miter_edges": []
+    }
+  },
+  "tested_dut_sha256": "5411189dfd12abe926a9facd5f4982f5c5715206a7fa8ae0b9b861623c69cda7",
+  "post_bench_change": "One DUT comment clarified the regional fanout bound8->32; no RTL token changed. Runners gained git-archive fallback for the same frozen dependency; no bench/assertion changed.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv": "5411189dfd12abe926a9facd5f4982f5c5715206a7fa8ae0b9b861623c69cda7",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv": "01fe5414845ec1afc78be06102178f463818689b84477d8d9b5d0dcc3069ad41",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv": "ed6762af861412bac1536d1fb4bba96d2828854dc09b2ccb97db51318e73d6d2",
+    "tools/s81_dv/hwin_struct_1021/tb_dsdv_mu_hwin_cfg_relay.sv": "07fc3c38e94bbcc28d282421e328a53e77258f4f2ca251c7c62e286f4410203d",
+    "tools/s81_dv/hwin_struct_1021/synth.sh": "86115f615ba0572e18f05d2788863fb44d4c8e2eb77f4e86eecdf4177e0281f6",
+    "tools/s81_dv/hwin_struct_1021/run_all.sh": "182d66f537829103c8987913826deb9082961ff44f20488656a6888b2cc60f04",
+    "tools/s81_dv/hwin_struct_1021/run.sh": "d1f9091fcb37e76fa905f3a003671bf4589d1bd5669a25824b4119d1ec72fa28"
+  },
+  "added_cycles": 0,
+  "physical_gate_launched": false,
+  "remaining": [
+    "mapped/native sizing and fanout",
+    "new exact source/cell/fence manifests and occupancy/clock/reach proof",
+    "independent SRAM FF hold path",
+    "new reviewed physical kit and route"
+  ],
+  "sizing": {
+    "scope": "technology-independent synth -noabc, full47slots16events, not mapped area/timing",
+    "baseline_cells": 69564,
+    "candidate_cells": 80098,
+    "cells_added": 10534,
+    "cells_pct": 15.142890000575004,
+    "baseline_FF": 12224,
+    "candidate_FF": 12424,
+    "SRAM_macros_both": 84,
+    "added_decode_cycles": 0,
+    "unit": "ot-epyc7 oth-ubuntu-35900-1792601365",
+    "exit": 0
+  }
+}

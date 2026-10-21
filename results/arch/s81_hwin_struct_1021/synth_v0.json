@@ -1,0 +1,409 @@
+{
+   "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+   "invocation": "stat -json ",
+   "modules": {
+      "$paramod$871233919a1efeae4a81660bcfd50cc983184c0f\\dsdv_mu_hwin_capture_1019_mem_early_capture": {
+         "num_wires":         82,
+         "num_wire_bits":     798,
+         "num_pub_wires":     61,
+         "num_pub_wire_bits": 715,
+         "num_ports":         9,
+         "num_port_bits":     155,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         369,
+         "num_submodules":       8,
+         "num_cells_by_type": {
+            "$_AND_": 1,
+            "$_DFFE_PP_": 63,
+            "$_DFF_PN0_": 28,
+            "$_DFF_PN1_": 1,
+            "$_DFF_P_": 126,
+            "$_MUX_": 126,
+            "$_NOT_": 1,
+            "$_OR_": 13,
+            "$_XOR_": 6,
+            "ot_sram_1r1w_64x16_m1": 4,
+            "$paramod\\dsdv_mu_hwin_capture_1019_early_current_hit\\AW=s32'00000000000000000000000000000110": 8
+         }
+      },
+      "\\ot_cost_top": {
+         "num_wires":         9,
+         "num_wire_bits":     353,
+         "num_pub_wires":     9,
+         "num_pub_wire_bits": 353,
+         "num_ports":         9,
+         "num_port_bits":     353,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         0,
+         "num_submodules":       1,
+         "num_cells_by_type": {
+            "$paramod$ad585ce042449679d01bd7716c70183246f75932\\dsdv_mu_hwin_capture_1019": 1
+         }
+      },
+      "$paramod$3ae51ed7ea25d64ab13d7e53e8626087701f1111\\dsdv_mu_hwin_capture_1019_mem_early_capture": {
+         "num_wires":         33,
+         "num_wire_bits":     137,
+         "num_pub_wires":     26,
+         "num_pub_wire_bits": 122,
+         "num_ports":         9,
+         "num_port_bits":     26,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         40,
+         "num_submodules":       1,
+         "num_cells_by_type": {
+            "$_AND_": 1,
+            "$_DFFE_PP_": 2,
+            "$_DFF_PN0_": 14,
+            "$_DFF_PN1_": 1,
+            "$_DFF_P_": 4,
+            "$_MUX_": 4,
+            "$_NOT_": 1,
+            "$_OR_": 6,
+            "$_XOR_": 6,
+            "ot_sram_1r1w_64x16_m1": 1,
+            "$paramod\\dsdv_mu_hwin_capture_1019_early_current_hit\\AW=s32'00000000000000000000000000000110": 1
+         }
+      },
+      "$paramod\\dsdv_mu_hwin_capture_1019_early_current_hit\\AW=s32'00000000000000000000000000000110": {
+         "num_wires":         9,
+         "num_wire_bits":     26,
+         "num_pub_wires":     4,
+         "num_pub_wire_bits": 14,
+         "num_ports":         4,
+         "num_port_bits":     14,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         13,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 1,
+            "$_NOT_": 1,
+            "$_OR_": 5,
+            "$_XOR_": 6
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_phase_action": {
+         "num_wires":         18,
+         "num_wire_bits":     105,
+         "num_pub_wires":     8,
+         "num_pub_wire_bits": 54,
+         "num_ports":         8,
+         "num_port_bits":     54,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         54,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 4,
+            "$_NOT_": 3,
+            "$_OR_": 23,
+            "$_XOR_": 24
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_cfg_bad": {
+         "num_wires":         129,
+         "num_wire_bits":     380,
+         "num_pub_wires":     6,
+         "num_pub_wire_bits": 69,
+         "num_ports":         5,
+         "num_port_bits":     62,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         227,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 108,
+            "$_NOT_": 43,
+            "$_OR_": 57,
+            "$_XOR_": 19
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_fire_flag": {
+         "num_wires":         5,
+         "num_wire_bits":     5,
+         "num_pub_wires":     4,
+         "num_pub_wire_bits": 4,
+         "num_ports":         4,
+         "num_port_bits":     4,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         2,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 2
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_decode24": {
+         "num_wires":         54,
+         "num_wire_bits":     96,
+         "num_pub_wires":     2,
+         "num_pub_wire_bits": 30,
+         "num_ports":         2,
+         "num_port_bits":     30,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         79,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_NOT_": 29,
+            "$_OR_": 50
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_record": {
+         "num_wires":         15,
+         "num_wire_bits":     15,
+         "num_pub_wires":     7,
+         "num_pub_wire_bits": 7,
+         "num_ports":         7,
+         "num_port_bits":     7,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         9,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 5,
+            "$_NOT_": 4
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_slot_step": {
+         "num_wires":         18,
+         "num_wire_bits":     105,
+         "num_pub_wires":     7,
+         "num_pub_wire_bits": 53,
+         "num_ports":         7,
+         "num_port_bits":     53,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         54,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 3,
+            "$_NOT_": 3,
+            "$_OR_": 24,
+            "$_XOR_": 24
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_retire_advance": {
+         "num_wires":         18,
+         "num_wire_bits":     137,
+         "num_pub_wires":     7,
+         "num_pub_wire_bits": 69,
+         "num_ports":         7,
+         "num_port_bits":     69,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         70,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 3,
+            "$_NOT_": 3,
+            "$_OR_": 32,
+            "$_XOR_": 32
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_retire_due": {
+         "num_wires":         13,
+         "num_wire_bits":     132,
+         "num_pub_wires":     5,
+         "num_pub_wire_bits": 67,
+         "num_ports":         5,
+         "num_port_bits":     67,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         66,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 2,
+            "$_NOT_": 1,
+            "$_OR_": 31,
+            "$_XOR_": 32
+         }
+      },
+      "\\dsdv_mu_hwin_capture_1019_boot_enable": {
+         "num_wires":         12,
+         "num_wire_bits":     21,
+         "num_pub_wires":     5,
+         "num_pub_wire_bits": 11,
+         "num_ports":         5,
+         "num_port_bits":     11,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         11,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 3,
+            "$_NOT_": 2,
+            "$_OR_": 6
+         }
+      },
+      "$paramod$ad585ce042449679d01bd7716c70183246f75932\\dsdv_mu_hwin_capture_1019": {
+         "num_wires":         24578,
+         "num_wire_bits":     84256,
+         "num_pub_wires":     3557,
+         "num_pub_wire_bits": 37031,
+         "num_ports":         9,
+         "num_port_bits":     353,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         53979,
+         "num_submodules":       354,
+         "num_cells_by_type": {
+            "$_AND_": 17149,
+            "$_DFFE_PN0P_": 698,
+            "$_DFFE_PN1P_": 558,
+            "$_DFFE_PP_": 1845,
+            "$_DFF_PN0_": 3548,
+            "$_DFF_PN1_": 35,
+            "$_DFF_P_": 1538,
+            "$_MUX_": 982,
+            "$_NOT_": 5204,
+            "$_OR_": 16061,
+            "$_XOR_": 6361,
+            "$paramod$3ae51ed7ea25d64ab13d7e53e8626087701f1111\\dsdv_mu_hwin_capture_1019_mem_early_capture": 16,
+            "$paramod$8518ed3c2aca1a4d31968d320509eb7ab109465b\\dsdv_mu_hwin_capture_1019_mem_early_capture": 1,
+            "$paramod$871233919a1efeae4a81660bcfd50cc983184c0f\\dsdv_mu_hwin_capture_1019_mem_early_capture": 16,
+            "$paramod$d69dad68be675550308071d832b8b34aa7efa09c\\dsdv_mu_hwin_capture_1019_mem": 1,
+            "$paramod$e1297cc1018fccc57d77b8dbc3a3350b67031105\\dsdv_mu_hwin_capture_1019_cfg_accept": 9,
+            "$paramod\\dsdv_mu_hwin_capture_1019_reset_tree\\REGIONS=s32'00000000000000000000001100011000": 1,
+            "dsdv_mu_hwin_capture_1019_boot_enable": 150,
+            "dsdv_mu_hwin_capture_1019_cfg_bad": 4,
+            "dsdv_mu_hwin_capture_1019_decode24": 32,
+            "dsdv_mu_hwin_capture_1019_fire_flag": 96,
+            "dsdv_mu_hwin_capture_1019_phase_action": 3,
+            "dsdv_mu_hwin_capture_1019_record": 6,
+            "dsdv_mu_hwin_capture_1019_retire_advance": 6,
+            "dsdv_mu_hwin_capture_1019_retire_due": 4,
+            "dsdv_mu_hwin_capture_1019_slot_step": 9
+         }
+      },
+      "$paramod\\dsdv_mu_hwin_capture_1019_reset_tree\\REGIONS=s32'00000000000000000000001100011000": {
+         "num_wires":         822,
+         "num_wire_bits":     1637,
+         "num_pub_wires":     822,
+         "num_pub_wire_bits": 1637,
+         "num_ports":         3,
+         "num_port_bits":     794,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         3,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_DFF_PN0_": 3
+         }
+      },
+      "$paramod$d69dad68be675550308071d832b8b34aa7efa09c\\dsdv_mu_hwin_capture_1019_mem": {
+         "num_wires":         25,
+         "num_wire_bits":     267,
+         "num_pub_wires":     20,
+         "num_pub_wire_bits": 255,
+         "num_ports":         7,
+         "num_port_bits":     65,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         97,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 1,
+            "$_DFF_PN0_": 10,
+            "$_DFF_P_": 48,
+            "$_MUX_": 24,
+            "$_NOT_": 1,
+            "$_OR_": 5,
+            "$_XOR_": 6,
+            "ot_sram_1r1w_64x16_m1": 2
+         }
+      },
+      "$paramod$e1297cc1018fccc57d77b8dbc3a3350b67031105\\dsdv_mu_hwin_capture_1019_cfg_accept": {
+         "num_wires":         19,
+         "num_wire_bits":     28,
+         "num_pub_wires":     6,
+         "num_pub_wire_bits": 12,
+         "num_ports":         6,
+         "num_port_bits":     12,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         17,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$_AND_": 4,
+            "$_NOT_": 7,
+            "$_OR_": 6
+         }
+      },
+      "$paramod$8518ed3c2aca1a4d31968d320509eb7ab109465b\\dsdv_mu_hwin_capture_1019_mem_early_capture": {
+         "num_wires":         54,
+         "num_wire_bits":     429,
+         "num_pub_wires":     41,
+         "num_pub_wire_bits": 381,
+         "num_ports":         9,
+         "num_port_bits":     89,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         200,
+         "num_submodules":       4,
+         "num_cells_by_type": {
+            "$_AND_": 1,
+            "$_DFFE_PP_": 32,
+            "$_DFF_PN0_": 20,
+            "$_DFF_PN1_": 1,
+            "$_DFF_P_": 64,
+            "$_MUX_": 64,
+            "$_NOT_": 1,
+            "$_OR_": 9,
+            "$_XOR_": 6,
+            "ot_sram_1r1w_64x16_m1": 2,
+            "$paramod\\dsdv_mu_hwin_capture_1019_early_current_hit\\AW=s32'00000000000000000000000000000110": 4
+         }
+      }
+   },
+      "design": {
+         "num_wires":         33821,
+         "num_wire_bits":     116924,
+         "num_pub_wires":     7900,
+         "num_pub_wire_bits": 59862,
+         "num_ports":         2380,
+         "num_port_bits":     11335,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         69564,
+         "num_submodules":       1,
+         "num_cells_by_type": {
+            "$_AND_": 18536,
+            "$_DFFE_PN0P_": 698,
+            "$_DFFE_PN1P_": 558,
+            "$_DFFE_PP_": 2917,
+            "$_DFF_PN0_": 4253,
+            "$_DFF_PN1_": 68,
+            "$_DFF_P_": 3730,
+            "$_MUX_": 3150,
+            "$_NOT_": 6931,
+            "$_OR_": 20502,
+            "$_XOR_": 8137,
+            "ot_sram_1r1w_64x16_m1": 84,
+            "$paramod$ad585ce042449679d01bd7716c70183246f75932\\dsdv_mu_hwin_capture_1019": 1
+         }
+      }
+}
+

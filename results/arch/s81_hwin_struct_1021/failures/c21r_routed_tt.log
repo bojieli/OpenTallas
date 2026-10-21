@@ -1,0 +1,591 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 254 input pin flops (0 hard-child clock pins at +insertion), median arrival 395.356079 (range 346.108856 .. 403.080688)
+QDM reference pin u_ot_pr_core.rt_valid[0]$_DFF_PN0_/CLK clock arrival max 395.356079 min 372.169586 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 372.169586 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_IOREF clock-port ck (core_clk): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 453 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 380.9 min 335.6 max 403.1 n 453 boundary
+OT_REGS 13035
+OT_REGS_CLOCKED 13035
+OT_CORNER tt
+OT_WS -1.417259642977342e-10
+OT_TNS -1.3612850402466847e-8
+Startpoint: u_ot_pr_core.u_rr.g_group[22].group_r$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ot_pr_core.u_rr.g_local[731].local_r$_DFF_PN0_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  46.87   46.87 ^ wire22617/Y (BUFx12f_ASAP7_75t_R)
+  26.25   73.12 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  25.63   98.75 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  24.07  122.81 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.20  155.02 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.69  187.71 ^ clkbuf_1_0_1_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.22  223.93 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  37.54  261.47 ^ clkbuf_3_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  37.41  298.88 ^ clkbuf_5_15_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  45.89  344.77 ^ clkbuf_leaf_147_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   4.83  349.61 ^ u_ot_pr_core.u_rr.g_group[22].group_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  58.13  407.74 v u_ot_pr_core.u_rr.g_group[22].group_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  22.07  429.81 v hold26954/Y (BUFx2_ASAP7_75t_R)
+  19.91  449.71 v hold23862/Y (BUFx2_ASAP7_75t_R)
+  32.50  482.22 ^ _92115_/Y (INVx3_ASAP7_75t_R)
+  91.97  574.19 ^ place17265/Y (BUFx3_ASAP7_75t_R)
+ 106.71  680.90 ^ place17264/Y (BUFx3_ASAP7_75t_R)
+  86.51  767.41 ^ place17263/Y (BUFx3_ASAP7_75t_R)
+  33.30  800.71 ^ u_ot_pr_core.u_rr.g_local[731].local_r$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         800.71   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck (in)
+  44.63  877.97 ^ wire22617/Y (BUFx12f_ASAP7_75t_R)
+  25.45  903.42 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  24.90  928.31 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.79  952.11 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.28  983.38 ^ clkbuf_1_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.76 1015.14 ^ clkbuf_1_1_1_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.93 1047.07 ^ clkbuf_2_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.35 1083.42 ^ clkbuf_3_7_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  34.05 1117.47 ^ clkbuf_5_30_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.48 1153.95 ^ clkbuf_leaf_286_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   1.28 1155.23 ^ u_ot_pr_core.u_rr.g_local[731].local_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1095.23   clock uncertainty
+   4.04 1099.27   clock reconvergence pessimism
+  26.26 1125.53   library recovery time
+        1125.53   data required time
+---------------------------------------------------------
+        1125.53   data required time
+        -800.71   data arrival time
+---------------------------------------------------------
+         324.82   slack (MET)
+
+
+Startpoint: u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ot_pr_core.g_event_mem[15].g_record_copy[1].rec_r$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  46.87   46.87 ^ wire22617/Y (BUFx12f_ASAP7_75t_R)
+  26.25   73.12 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  25.63   98.75 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  24.07  122.81 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.20  155.02 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.69  187.71 ^ clkbuf_1_0_1_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.22  223.93 ^ clkbuf_2_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  41.19  265.11 ^ clkbuf_3_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  38.13  303.24 ^ clkbuf_5_4_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  81.39  384.63 ^ clkbuf_leaf_378_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   7.04  391.68 ^ u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  89.27  480.95 v u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  35.55  516.50 v place21026/Y (BUFx6f_ASAP7_75t_R)
+  50.87  567.36 ^ _79860_/Y (XOR2x2_ASAP7_75t_R)
+  16.13  583.50 ^ _79862_/Y (OR4x1_ASAP7_75t_R)
+  46.17  629.67 ^ _79871_/Y (OR5x1_ASAP7_75t_R)
+  40.47  670.14 ^ place17166/Y (BUFx6f_ASAP7_75t_R)
+  77.05  747.19 ^ _79885_/Y (AND4x2_ASAP7_75t_R)
+  57.34  804.52 ^ _79886_/Y (AND5x2_ASAP7_75t_R)
+  24.42  828.94 v _79887_/Y (NAND2x2_ASAP7_75t_R)
+ 113.20  942.14 v place16867/Y (BUFx12f_ASAP7_75t_R)
+  41.87  984.01 v _79919_/Y (OR3x2_ASAP7_75t_R)
+  24.22 1008.24 v place16796/Y (BUFx12f_ASAP7_75t_R)
+ 148.39 1156.62 v place16794/Y (BUFx12f_ASAP7_75t_R)
+  66.00 1222.63 ^ _83981_/Y (AOI211x1_ASAP7_75t_R)
+   0.12 1222.75 ^ u_ot_pr_core.g_event_mem[15].g_record_copy[1].rec_r$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+        1222.75   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck (in)
+  44.63  877.97 ^ wire22617/Y (BUFx12f_ASAP7_75t_R)
+  25.45  903.42 ^ delaybuf_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  24.90  928.31 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.79  952.11 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.28  983.38 ^ clkbuf_1_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.76 1015.14 ^ clkbuf_1_1_1_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.93 1047.07 ^ clkbuf_2_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.35 1083.42 ^ clkbuf_3_7_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  33.91 1117.33 ^ clkbuf_5_31_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  38.46 1155.79 ^ clkbuf_leaf_297_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   0.93 1156.72 ^ u_ot_pr_core.g_event_mem[15].g_record_copy[1].rec_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1096.72   clock uncertainty
+   4.04 1100.76   clock reconvergence pessimism
+ -19.74 1081.02   library setup time
+        1081.02   data required time
+---------------------------------------------------------
+        1081.02   data required time
+        -1222.75   data arrival time
+---------------------------------------------------------
+        -141.73   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 635
+OT_WS_REG_D -141.725967
+OT_WS_OUT -12.610080
+OT_WS_R2R -141.725967
+OT_WS_I2R 92.815643
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_record_copy[1].rec_r$_DFF_PN0_/D -141.725967
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[10].g_record_copy[0].rec_r$_DFF_PN0_/D -141.418106
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[10].g_record_copy[1].rec_r$_DFF_PN0_/D -141.185059
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_record_copy[0].rec_r$_DFF_PN0_/D -141.017975
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_record_copy[1].rec_r$_DFF_PN0_/D -139.362183
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_record_copy[0].rec_r$_DFF_PN0_/D -139.094849
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_record_copy[0].rec_r$_DFF_PN0_/D -138.530304
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_record_copy[1].rec_r$_DFF_PN0_/D -138.334351
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_record_copy[1].rec_r$_DFF_PN0_/D -130.569229
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_record_copy[0].rec_r$_DFF_PN0_/D -130.407135
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_record_copy[0].rec_r$_DFF_PN0_/D -120.820023
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_record_copy[1].rec_r$_DFF_PN0_/D -120.766289
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_record_copy[1].rec_r$_DFF_PN0_/D -118.685951
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_record_copy[0].rec_r$_DFF_PN0_/D -118.664299
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.g_native_lower.low_r[1]$_DFFE_PN0P_/D -77.220451
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_record_copy[0].rec_r$_DFF_PN0_/D -76.995522
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[1].g_copy[0].we_r$_DFF_PN0_/D -76.851189
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[1].g_copy[2].we_r$_DFF_PN0_/D -76.525787
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[1].g_copy[1].we_r$_DFF_PN0_/D -76.170181
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[5].g_copy[0].we_r$_DFF_PN0_/D -75.737526
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[15].g_collision_raw.tx_r$_DFF_PN0_/D -71.582077
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[0].g_copy[2].we_r$_DFF_PN0_/D -70.665253
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[15].g_slice[0].select_r$_DFF_PN0_/D -70.063179
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[15].g_slice[0].select_r$_DFF_PN0_/D -69.732330
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -69.658279
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -69.633965
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[5].g_copy[2].we_r$_DFF_PN0_/D -68.106964
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[5].g_copy[1].we_r$_DFF_PN0_/D -67.829079
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_record_copy[1].rec_r$_DFF_PN0_/D -66.654793
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -64.105385
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[0].g_copy[0].we_r$_DFF_PN0_/D -63.899109
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[0].g_copy[1].we_r$_DFF_PN0_/D -63.700710
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[14].g_collision_raw.tx_r$_DFF_PN0_/D -63.537952
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[14].g_slice[0].select_r$_DFF_PN0_/D -63.532955
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -63.107853
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -61.657013
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -61.590733
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -61.589066
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -61.189163
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -60.419559
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -60.396912
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.upper_pointer_r[0]$_DFFE_PN0P_/D -58.344109
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[9].g_copy[2].we_r$_DFF_PN0_/D -58.292370
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[9].g_copy[1].we_r$_DFF_PN0_/D -58.226757
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[9].g_copy[0].we_r$_DFF_PN0_/D -58.203552
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.g_native_lower.low_r[0]$_DFFE_PN0P_/D -58.152706
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[15].g_collision_raw.rp_r$_DFF_PN0_/D -57.908566
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[15].replay_r$_DFF_PN0_/D -57.386318
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[15].replay_r$_DFF_PN0_/D -56.043949
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[15].g_collision_raw.rp_r$_DFF_PN0_/D -55.816906
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[20].g_copy[1].we_r$_DFF_PN0_/D -55.151329
+OT_PATH u_ot_pr_core.eD[15][11]$_DFFE_PP_/QN u_ot_pr_core.t_wf[1]$_DFFE_PN0P_/D -55.073944
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[3].g_copy[0].we_r$_DFF_PN0_/D -54.655613
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[3].g_copy[2].we_r$_DFF_PN0_/D -54.649731
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[3].g_copy[1].we_r$_DFF_PN0_/D -54.647621
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[15].g_collision_raw.rp_r$_DFF_PN0_/D -54.085625
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[15].replay_r$_DFF_PN0_/D -53.973049
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[7].g_copy[3].we_r$_DFF_PN0_/D -53.966164
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[16].g_copy[2].we_r$_DFF_PN0_/D -52.516548
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[16].g_copy[0].we_r$_DFF_PN0_/D -52.449711
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[16].g_copy[1].we_r$_DFF_PN0_/D -52.376991
+OT_PATH u_ot_pr_core.g_live_count.count_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_broadcast[15].cfg_sel_r$_DFF_PN0_/D -52.107651
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -51.949890
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[3].g_copy[3].we_r$_DFF_PN0_/D -51.663231
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -51.109673
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[14].g_collision_raw.rp_r$_DFF_PN0_/D -50.954685
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[15].g_collision_raw.tx_r$_DFF_PN0_/D -50.923042
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -50.881523
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[8].g_copy[1].we_r$_DFF_PN0_/D -50.717876
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[8].g_copy[0].we_r$_DFF_PN0_/D -50.715321
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[8].g_copy[2].we_r$_DFF_PN0_/D -50.690674
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[14].replay_r$_DFF_PN0_/D -50.325188
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[7].g_copy[0].we_r$_DFF_PN0_/D -50.261353
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[7].g_copy[2].we_r$_DFF_PN0_/D -50.030090
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_payload.ra_r[0]$_DFF_PN1_/D -49.278580
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_early.u_attr.ra_r[0]$_DFF_PN1_/D -49.232063
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[14].replay_r$_DFF_PN0_/D -49.198200
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[14].g_slice[0].select_r$_DFF_PN0_/D -48.638206
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[15].g_copy[2].we_r$_DFF_PN0_/D -48.516190
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[14].g_collision_raw.tx_r$_DFF_PN0_/D -48.507198
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[15].g_copy[1].we_r$_DFF_PN0_/D -48.500202
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[14].g_collision_raw.rp_r$_DFF_PN0_/D -48.416492
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[15].g_copy[0].we_r$_DFF_PN0_/D -48.407501
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[15].g_slice[2].select_r$_DFF_PN0_/D -48.356209
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[2].g_copy[2].we_r$_DFF_PN0_/D -48.124615
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[15].g_collision_raw.tx_r$_DFF_PN0_/D -47.927662
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[2].g_copy[1].we_r$_DFF_PN0_/D -47.864380
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -47.820415
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -47.712944
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -47.632454
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[10].g_copy[0].we_r$_DFF_PN0_/D -47.477798
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[10].g_copy[2].we_r$_DFF_PN0_/D -47.438385
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[2].g_copy[0].we_r$_DFF_PN0_/D -47.400307
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[15].g_slice[0].select_r$_DFF_PN0_/D -47.382431
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[10].g_copy[1].we_r$_DFF_PN0_/D -47.350014
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[14].replay_r$_DFF_PN0_/D -47.335468
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[15].g_copy[3].we_r$_DFF_PN0_/D -47.290173
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[7].g_copy[1].we_r$_DFF_PN0_/D -46.637028
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[14].g_collision_raw.tx_r$_DFF_PN0_/D -46.021519
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[14].g_slice[0].select_r$_DFF_PN0_/D -45.867756
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[15].g_slice[1].select_r$_DFF_PN0_/D -45.744629
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[14].g_slice[2].select_r$_DFF_PN0_/D -45.711323
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[14].g_slice[1].select_r$_DFF_PN0_/D -45.530357
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[14].g_slice[1].select_r$_DFF_PN0_/D -45.409344
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[14].g_slice[2].select_r$_DFF_PN0_/D -45.238480
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[4].g_copy[3].we_r$_DFF_PN0_/D -44.859783
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[14].g_slice[2].select_r$_DFF_PN0_/D -44.448555
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[14].g_slice[2].select_r$_DFF_PN0_/D -44.379055
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[15].g_slice[0].select_r$_DFF_PN0_/D -44.326210
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[15].g_slice[2].select_r$_DFF_PN0_/D -43.957836
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[13].g_collision_raw.rp_r$_DFF_PN0_/D -43.897774
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[15].g_slice[1].select_r$_DFF_PN0_/D -43.824722
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[13].replay_r$_DFF_PN0_/D -43.686501
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -43.157368
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[14].g_slice[0].select_r$_DFF_PN0_/D -42.615578
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[14].g_collision_raw.tx_r$_DFF_PN0_/D -42.451153
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[13].replay_r$_DFF_PN0_/D -42.447823
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[14].g_slice[1].select_r$_DFF_PN0_/D -42.365223
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[1].g_copy[3].we_r$_DFF_PN0_/D -42.282513
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[13].g_collision_raw.rp_r$_DFF_PN0_/D -42.233440
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -41.961544
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -41.790569
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -41.779137
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -41.536774
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[9].g_copy[3].we_r$_DFF_PN0_/D -41.501690
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -41.474602
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -41.448734
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[12].g_copy[2].we_r$_DFF_PN0_/D -40.730862
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[12].g_copy[1].we_r$_DFF_PN0_/D -40.720982
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -40.404015
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -40.347393
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[14].g_collision_raw.rp_r$_DFF_PN0_/D -40.275227
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -40.150326
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -39.999115
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -39.811932
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[11].replay_r$_DFF_PN0_/D -39.809822
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -39.624416
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[11].replay_r$_DFF_PN0_/D -39.589664
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -39.307224
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[14].g_copy[2].we_r$_DFF_PN0_/D -39.301895
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -39.257599
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -39.163338
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -39.072300
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[13].replay_r$_DFF_PN0_/D -38.556046
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[14].g_copy[1].we_r$_DFF_PN0_/D -38.523075
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[14].g_copy[0].we_r$_DFF_PN0_/D -38.509972
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_attr.ra_r[0]$_DFF_PN1_/D -38.500538
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_payload.ra_r[0]$_DFF_PN1_/D -38.413383
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[13].g_collision_raw.tx_r$_DFF_PN0_/D -38.210880
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -38.203552
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[12].g_slice[0].select_r$_DFF_PN0_/D -38.203442
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[12].g_slice[0].select_r$_DFF_PN0_/D -38.190895
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[13].g_slice[0].select_r$_DFF_PN0_/D -37.990166
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].pb_r[0]$_DFFE_PN0P_/D -37.795544
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[14].g_slice[1].select_r$_DFF_PN0_/D -37.757908
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[4].g_copy[0].we_r$_DFF_PN0_/D -37.641335
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_attr.ra_r[0]$_DFF_PN1_/D -37.466698
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[13].g_collision_raw.tx_r$_DFF_PN0_/D -37.405746
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_payload.ra_r[0]$_DFF_PN1_/D -37.349346
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -36.892490
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -36.877056
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[12].g_collision_raw.tx_r$_DFF_PN0_/D -36.682770
+OT_PATH u_ot_pr_core.esel[2]$_DFFE_PP_/QN u_ot_pr_core.g_event_mem[5].g_early.u_attr.wv$_DFF_PN0_/D -36.549210
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[12].g_collision_raw.tx_r$_DFF_PN0_/D -36.533997
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[11].g_slice[0].select_r$_DFF_PN0_/D -36.455063
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -36.415539
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -36.139423
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[9].g_collision_raw.rp_r$_DFF_PN0_/D -36.084358
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[13].g_collision_raw.tx_r$_DFF_PN0_/D -35.893955
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[15].g_collision_raw.rp_r$_DFF_PN0_/D -35.724758
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -34.628189
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -34.595993
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[17].g_copy[3].we_r$_DFF_PN0_/D -34.570347
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_payload.ra_r[5]$_DFF_PN0_/D -34.506844
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -34.502735
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -34.444668
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -34.241943
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_attr.ra_r[5]$_DFF_PN0_/D -34.105942
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -34.095837
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[14].g_collision_raw.rp_r$_DFF_PN0_/D -33.984703
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -33.948845
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[15].g_slice[2].select_r$_DFF_PN0_/D -33.813286
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[15].g_slice[1].select_r$_DFF_PN0_/D -33.765102
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[14].replay_r$_DFF_PN0_/D -33.466785
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[11].g_collision_raw.tx_r$_DFF_PN0_/D -33.354652
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -32.982838
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[9].g_collision_raw.rp_r$_DFF_PN0_/D -32.977177
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[15].g_collision_raw.tx_r$_DFF_PN0_/D -32.131966
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[9].g_slice[1].select_r$_DFF_PN0_/D -32.064796
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[15].replay_r$_DFF_PN0_/D -31.970316
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[13].g_collision_raw.tx_r$_DFF_PN0_/D -31.807556
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[4].g_slice[2].select_r$_DFF_PN0_/D -31.654236
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[11].g_collision_raw.rp_r$_DFF_PN0_/D -31.576075
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[11].replay_r$_DFF_PN0_/D -31.515457
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[8].g_slice[0].select_r$_DFF_PN0_/D -31.320057
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[13].g_slice[0].select_r$_DFF_PN0_/D -31.021852
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[13].g_slice[2].select_r$_DFF_PN0_/D -30.505377
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[11].g_collision_raw.rp_r$_DFF_PN0_/D -30.475401
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[13].g_slice[1].select_r$_DFF_PN0_/D -29.657831
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[13].g_slice[1].select_r$_DFF_PN0_/D -29.591551
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -29.587666
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[11].g_collision_raw.rp_r$_DFF_PN0_/D -29.533932
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[19].g_copy[1].we_r$_DFF_PN0_/D -29.407698
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[19].g_copy[2].we_r$_DFF_PN0_/D -29.363401
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[19].g_copy[0].we_r$_DFF_PN0_/D -29.191206
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[4].g_slice[1].select_r$_DFF_PN0_/D -29.146685
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[9].g_collision_raw.tx_r$_DFF_PN0_/D -29.034554
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -28.768654
+OT_PATH u_ot_pr_core.g_live_count.count_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_broadcast[11].cfg_sel_r$_DFF_PN0_/D -28.171909
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -28.081203
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[9].g_slice[0].select_r$_DFF_PN0_/D -27.978619
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[12].g_collision_raw.tx_r$_DFF_PN0_/D -27.815750
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_attr.ra_r[0]$_DFF_PN1_/D -27.730373
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_payload.ra_r[0]$_DFF_PN1_/D -27.720160
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[15].g_slice[2].select_r$_DFF_PN0_/D -27.660318
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -27.158386
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[9].replay_r$_DFF_PN0_/D -26.974312
+OT_PATH u_ot_pr_core.esel[2]$_DFFE_PP_/QN u_ot_pr_core.g_event_mem[4].g_early.u_attr.wv$_DFF_PN0_/D -26.947777
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[15].g_slice[1].select_r$_DFF_PN0_/D -26.690428
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[21].g_copy[3].we_r$_DFF_PN0_/D -26.638691
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[9].g_collision_raw.rp_r$_DFF_PN0_/D -26.474710
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[12].g_collision_raw.rp_r$_DFF_PN0_/D -26.315506
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[9].g_collision_raw.tx_r$_DFF_PN0_/D -26.046387
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_binary_head.g_native_lower.low_r[3]$_DFFE_PN0P_/D -25.964342
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[12].replay_r$_DFF_PN0_/D -25.905500
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[8].g_slice[0].select_r$_DFF_PN0_/D -25.765835
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[12].g_collision_raw.rp_r$_DFF_PN0_/D -25.748737
+OT_PATH u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[2].g_slice[1].select_r$_DFF_PN0_/D -25.688562
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[8].g_collision_raw.tx_r$_DFF_PN0_/D -25.627722
+OT_PATH u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[2].g_slice[1].select_r$_DFF_PN0_/D -25.414448
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[9].replay_r$_DFF_PN0_/D -25.302427
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_binary_head.upper_pointer_r[4]$_DFFE_PN0P_/D -25.090929
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[8].replay_r$_DFF_PN0_/D -24.891977
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -24.837465
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -24.803270
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -24.560354
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[12].g_collision_raw.rp_r$_DFF_PN0_/D -24.488745
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[4].g_copy[2].we_r$_DFF_PN0_/D -24.315884
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[11].g_slice[1].select_r$_DFF_PN0_/D -23.757662
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -23.558378
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[9].g_collision_raw.tx_r$_DFF_PN0_/D -23.268610
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[8].g_slice[1].select_r$_DFF_PN0_/D -23.104074
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[9].replay_r$_DFF_PN0_/D -23.018808
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -22.818857
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -22.783331
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -22.617020
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[8].g_collision_raw.tx_r$_DFF_PN0_/D -22.560619
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].pb_r[2]$_DFFE_PN0P_/D -22.469915
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[11].g_slice[2].select_r$_DFF_PN0_/D -22.376324
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[20].g_copy[2].we_r$_DFF_PN0_/D -22.202129
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[0].g_copy[3].we_r$_DFF_PN0_/D -22.190250
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[20].g_copy[0].we_r$_DFF_PN0_/D -22.117418
+OT_PATH u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[2].g_slice[2].select_r$_DFF_PN0_/D -21.993629
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -21.536661
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_payload.ra_r[4]$_DFF_PN0_/D -21.494917
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[11].g_collision_raw.tx_r$_DFF_PN0_/D -21.420977
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[11].g_slice[1].select_r$_DFF_PN0_/D -21.325052
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[4].g_slice[1].select_r$_DFF_PN0_/D -21.304180
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[13].g_collision_raw.rp_r$_DFF_PN0_/D -20.934366
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[6].g_slice[1].select_r$_DFF_PN0_/D -20.734747
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[9].g_slice[2].select_r$_DFF_PN0_/D -20.416668
+OT_PATH u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[2].g_slice[2].select_r$_DFF_PN0_/D -20.367041
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[6].g_slice[2].select_r$_DFF_PN0_/D -20.274117
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[9].g_slice[2].select_r$_DFF_PN0_/D -20.230150
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[13].replay_r$_DFF_PN0_/D -20.200953
+OT_PATH u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[2].g_slice[2].select_r$_DFF_PN0_/D -20.104807
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[13].g_collision_raw.rp_r$_DFF_PN0_/D -20.085711
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[8].g_slice[2].select_r$_DFF_PN0_/D -20.013325
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[11].g_collision_raw.tx_r$_DFF_PN0_/D -19.920509
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[12].g_slice[2].select_r$_DFF_PN0_/D -19.625967
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_payload.ra_r[0]$_DFF_PN1_/D -19.121038
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[8].g_slice[1].select_r$_DFF_PN0_/D -19.043211
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[9].g_slice[0].select_r$_DFF_PN0_/D -18.932301
+OT_PATH u_ot_pr_core.g_write_slot[3].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[5].g_slice[2].select_r$_DFF_PN0_/D -18.438028
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[12].g_collision_raw.rp_r$_DFF_PN0_/D -18.056223
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[13].g_slice[0].select_r$_DFF_PN0_/D -18.053003
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[12].replay_r$_DFF_PN0_/D -18.052671
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[9].g_slice[0].select_r$_DFF_PN0_/D -17.919001
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[4].g_copy[1].we_r$_DFF_PN0_/D -17.906454
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_binary_head.upper_pointer_r[5]$_DFFE_PN0P_/D -17.863934
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -17.751356
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[12].g_collision_raw.tx_r$_DFF_PN0_/D -17.618462
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[12].g_slice[1].select_r$_DFF_PN0_/D -17.331913
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[8].replay_r$_DFF_PN0_/D -17.245760
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[12].g_slice[1].select_r$_DFF_PN0_/D -17.229441
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_binary_head.g_native_lower.low_r[4]$_DFFE_PN0P_/D -17.042257
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[11].g_slice[0].select_r$_DFF_PN0_/D -16.884827
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[8].g_slice[0].select_r$_DFF_PN0_/D -16.845968
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.g_native_lower.low_r[3]$_DFFE_PN0P_/D -16.834312
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[12].g_slice[0].select_r$_DFF_PN0_/D -16.809221
+OT_PATH u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[2].g_slice[1].select_r$_DFF_PN0_/D -16.510681
+OT_PATH u_ot_pr_core.esel[2]$_DFFE_PP_/QN u_ot_pr_core.g_event_mem[7].g_early.u_attr.wv$_DFF_PN0_/D -16.500801
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[8].g_collision_raw.rp_r$_DFF_PN0_/D -16.063484
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[13].g_slice[2].select_r$_DFF_PN0_/D -15.790813
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].pb_r[2]$_DFFE_PN0P_/D -15.726975
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[8].g_slice[2].select_r$_DFF_PN0_/D -15.531021
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -15.408119
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -15.377255
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[9].g_slice[1].select_r$_DFF_PN0_/D -15.223823
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[12].g_slice[0].select_r$_DFF_PN0_/D -15.183743
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[13].g_slice[0].select_r$_DFF_PN0_/D -15.114687
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[9].g_collision_raw.rp_r$_DFF_PN0_/D -14.867440
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[11].g_slice[0].select_r$_DFF_PN0_/D -14.791390
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[8].g_slice[1].select_r$_DFF_PN0_/D -14.739432
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[4].g_record_copy[0].rec_r$_DFF_PN0_/D -14.497625
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[4].g_record_copy[1].rec_r$_DFF_PN0_/D -14.203527
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_binary_head.g_native_lower.low_r[1]$_DFFE_PN0P_/D -14.081847
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[8].g_slice[2].select_r$_DFF_PN0_/D -14.071189
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[6].g_copy[3].we_r$_DFF_PN0_/D -13.643864
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[13].g_slice[2].select_r$_DFF_PN0_/D -13.392954
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[12].g_slice[1].select_r$_DFF_PN0_/D -13.306800
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[4].g_slice[2].select_r$_DFF_PN0_/D -13.284928
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[32].g_copy[1].we_r$_DFF_PN0_/D -13.225865
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[32].g_copy[2].we_r$_DFF_PN0_/D -13.209211
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[4].g_slice[1].select_r$_DFF_PN0_/D -12.886025
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[22].g_copy[2].we_r$_DFF_PN0_/D -12.680745
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[22].g_copy[1].we_r$_DFF_PN0_/D -12.664980
+OT_PATH u_ot_pr_core.t_wf[1]$_DFFE_PN0P_/QN t_wf[1] -12.610080
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -12.284951
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[8].g_copy[3].we_r$_DFF_PN0_/D -11.873058
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[8].replay_r$_DFF_PN0_/D -11.781576
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -11.731504
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -11.656898
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[38].g_copy[2].we_r$_DFF_PN0_/D -11.526003
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].pb_r[1]$_DFFE_PN0P_/D -11.514790
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[16].g_copy[3].we_r$_DFF_PN0_/D -11.312174
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[12].g_binary_head.upper_pointer_r[3]$_DFFE_PN0P_/D -11.310064
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[8].g_collision_raw.rp_r$_DFF_PN0_/D -11.098011
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.upper_pointer_r[5]$_DFFE_PN0P_/D -10.936141
+OT_PATH u_ot_pr_core.esel[3]$_DFFE_PP_/QN u_ot_pr_core.g_event_broadcast[10].cfg_sel_r$_DFF_PN0_/D -10.693668
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[12].replay_r$_DFF_PN0_/D -10.547119
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[34].g_copy[0].we_r$_DFF_PN0_/D -10.311196
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[34].g_copy[2].we_r$_DFF_PN0_/D -10.286994
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[34].g_copy[1].we_r$_DFF_PN0_/D -10.233814
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[13].g_slice[1].select_r$_DFF_PN0_/D -10.177081
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.upper_pointer_r[4]$_DFFE_PN0P_/D -10.081602
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[8].g_collision_raw.rp_r$_DFF_PN0_/D -10.025980
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[0].g_record_copy[0].rec_r$_DFF_PN0_/D -9.924172
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[1].g_record_copy[0].rec_r$_DFF_PN0_/D -9.848678
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[9].replay_r$_DFF_PN0_/D -9.819367
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[6].g_slice[1].select_r$_DFF_PN0_/D -9.768409
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[18].g_copy[0].we_r$_DFF_PN0_/D -8.924528
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[18].g_copy[2].we_r$_DFF_PN0_/D -8.894330
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[18].g_copy[1].we_r$_DFF_PN0_/D -8.858691
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -8.769541
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[39].g_copy[3].we_r$_DFF_PN0_/D -8.744117
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[8].g_slice[1].select_r$_DFF_PN0_/D -8.619105
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[12].g_slice[1].select_r$_DFF_PN0_/D -8.382739
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[12].g_copy[0].we_r$_DFF_PN0_/D -8.273937
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_payload.ra_r[3]$_DFF_PN0_/D -8.110846
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[12].g_slice[2].select_r$_DFF_PN0_/D -8.037904
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[8].g_collision_raw.tx_r$_DFF_PN0_/D -7.995937
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[8].g_slice[2].select_r$_DFF_PN0_/D -7.873035
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[12].g_copy[3].we_r$_DFF_PN0_/D -7.694290
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[9].g_slice[2].select_r$_DFF_PN0_/D -7.677969
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[11].g_copy[3].we_r$_DFF_PN0_/D -7.468692
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[1].g_event[9].g_slice[1].select_r$_DFF_PN0_/D -7.422729
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[46].g_copy[3].we_r$_DFF_PN0_/D -7.347345
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.g_native_lower.low_r[4]$_DFFE_PN0P_/D -7.102097
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[12].g_slice[2].select_r$_DFF_PN0_/D -7.057466
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[37].g_copy[1].we_r$_DFF_PN0_/D -6.907475
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[6].g_slice[1].select_r$_DFF_PN0_/D -6.811996
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[25].g_copy[3].we_r$_DFF_PN0_/D -6.728174
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[37].g_copy[2].we_r$_DFF_PN0_/D -6.571743
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -6.527668
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[11].g_slice[1].select_r$_DFF_PN0_/D -6.325829
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[14].g_copy[3].we_r$_DFF_PN0_/D -6.173950
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[14].pb_r[0]$_DFFE_PN0P_/D -6.106226
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -5.979106
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[6].g_slice[0].select_r$_DFF_PN0_/D -5.693223
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[6].g_slice[2].select_r$_DFF_PN0_/D -5.423995
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[31].g_copy[3].we_r$_DFF_PN0_/D -5.339840
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[10].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -5.339174
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[11].g_copy[0].we_r$_DFF_PN0_/D -5.316858
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[11].g_copy[1].we_r$_DFF_PN0_/D -5.291101
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[10].g_early.u_attr.ra_r[1]$_DFF_PN0_/D -5.254353
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[5].g_copy[3].we_r$_DFF_PN0_/D -4.923173
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[41].g_copy[2].we_r$_DFF_PN0_/D -4.912626
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[28].g_copy[2].we_r$_DFF_PN0_/D -4.798828
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[1].g_record_copy[1].rec_r$_DFF_PN0_/D -4.710787
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[9].g_slice[1].select_r$_DFF_PN0_/D -4.557577
+OT_PATH u_ot_pr_core.g_pointer_reset[25].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[12].replay_r$_DFF_PN0_/D -4.550360
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[13].g_copy[0].we_r$_DFF_PN0_/D -4.322320
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[46].g_copy[0].we_r$_DFF_PN0_/D -4.222511
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[13].g_copy[2].we_r$_DFF_PN0_/D -4.144351
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[46].g_copy[2].we_r$_DFF_PN0_/D -4.055201
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[13].g_slice[1].select_r$_DFF_PN0_/D -3.997358
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[46].g_copy[1].we_r$_DFF_PN0_/D -3.953726
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].pb_r[1]$_DFFE_PN0P_/D -3.531508
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[36].g_copy[0].we_r$_DFF_PN0_/D -3.519074
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[33].g_copy[2].we_r$_DFF_PN0_/D -3.502865
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[35].g_copy[3].we_r$_DFF_PN0_/D -3.326783
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[11].g_copy[2].we_r$_DFF_PN0_/D -3.276712
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[36].g_copy[1].we_r$_DFF_PN0_/D -3.247402
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_attr.ra_r[4]$_DFF_PN0_/D -3.159251
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[36].g_copy[2].we_r$_DFF_PN0_/D -3.099965
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[9].g_collision_raw.tx_r$_DFF_PN0_/D -3.068101
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[13].g_copy[3].we_r$_DFF_PN0_/D -3.045897
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[6].g_collision_raw.tx_r$_DFF_PN0_/D -2.859046
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[3].g_record_copy[0].rec_r$_DFF_PN0_/D -2.767342
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[3].g_record_copy[1].rec_r$_DFF_PN0_/D -2.749023
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[27].g_copy[3].we_r$_DFF_PN0_/D -2.655320
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[36].g_copy[3].we_r$_DFF_PN0_/D -2.593148
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].pb_r[4]$_DFFE_PN0P_/D -2.569056
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[0].g_record_copy[1].rec_r$_DFF_PN0_/D -2.390310
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_binary_head.g_native_lower.low_r[5]$_DFFE_PN0P_/D -2.039813
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[3].g_event[8].g_slice[0].select_r$_DFF_PN0_/D -1.992850
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_early.u_payload.ra_r[0]$_DFF_PN1_/D -1.898925
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[2].g_event[11].g_slice[2].select_r$_DFF_PN0_/D -1.870726
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[22].g_copy[0].we_r$_DFF_PN0_/D -1.824319
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -1.687206
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_attr.ra_r[2]$_DFF_PN0_/D -1.664779
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[9].g_early.u_payload.ra_r[2]$_DFF_PN0_/D -1.556089
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[37].g_copy[3].we_r$_DFF_PN0_/D -1.507239
+OT_PATH u_ot_pr_core.g_pointer_reset[3].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_broadcast[12].g_boot_local.count_r[6]$_DFF_PN0_/D -1.256106
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_binary_head.g_native_lower.low_r[4]$_DFFE_PN0P_/D -1.233680
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[11].g_early.u_attr.ra_r[0]$_DFF_PN1_/D -1.227129
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[13].g_binary_head.upper_pointer_r[5]$_DFFE_PN0P_/D -1.203260
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[32].g_copy[0].we_r$_DFF_PN0_/D -0.963341
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[6].g_early.u_payload.ra_r[1]$_DFF_PN0_/D -0.900502
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_output_select[0].g_event[6].g_slice[0].select_r$_DFF_PN0_/D -0.871081
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[24].g_copy[0].we_r$_DFF_PN0_/D -0.826228
+OT_PATH u_ot_pr_core.g_pointer_reset[10].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[8].g_binary_head.g_native_lower.low_r[4]$_DFFE_PN0P_/D -0.662248
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[33].g_copy[1].we_r$_DFF_PN0_/D -0.639933
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[23].g_copy[3].we_r$_DFF_PN0_/D -0.574874
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[24].g_copy[2].we_r$_DFF_PN0_/D -0.525358
+OT_PATH u_ot_pr_core.g_pointer_reset[12].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[6].g_early.u_attr.ra_r[3]$_DFF_PN0_/D -0.373701
+OT_PATH u_ot_pr_core.g_pointer_reset[36].vld_r$_DFF_PN0_/QN u_ot_pr_core.g_event_mem[15].g_binary_head.upper_pointer_r[3]$_DFFE_PN0P_/D -0.273004
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[45].g_copy[1].we_r$_DFF_PN0_/D -0.213940
+OT_PATH u_ot_pr_core.g_compare_copy[1].cmp_r[8]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[21].g_copy[0].we_r$_DFF_PN0_/D -0.169753
+OT_PATH u_ot_pr_core.g_compare_copy[0].cmp_r[2]$_DFF_PN0_/QN u_ot_pr_core.g_write_slot[24].g_copy[1].we_r$_DFF_PN0_/D -0.162426
