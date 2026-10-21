@@ -1,0 +1,12 @@
+Verilator 5.050 2026-07-01 rev v5.050
+m_latespc EQ_MISMATCH port=program_fault cyc=2441
+m_latespc EQ_MISMATCH port=fault_cause cyc=2441
+m_latespc EQ_MISMATCH port=program_fault cyc=2442
+m_latespc EQ_MISMATCH port=hgi_busy cyc=2442
+EQ_MUTANT m_latespc REJECTED
+COLL_LP_ARS_PTMUT_EXIT 1
+--- m_latespc.log tail
+- rtl/hbm_accel/generic/collective/p2p/tb_hfd_coll_n1s0_lpf_ars_eq.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.189 s; speed 16.775 us/s
+- Verilator: cpu 0.189 s on 1 threads; allocated 11 MB

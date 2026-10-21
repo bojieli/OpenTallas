@@ -62,17 +62,17 @@
     "note": "OT_PT_MUT_LATE_SPC in programme_target_s128: start_pc only at launch -> v7 never primed -> parent EQ must fail"
    },
    {
-    "name": "coll_n1s0_fj_mut_s128",
-    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh n1s0 {RUN}/bench/n1s0_fjmut fjmut",
+    "name": "pt_s128_mut_lastale",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_pt_s128_miter.sh {RUN}/bench/m_la lastale",
     "expect": "fail",
-    "fail_regex": "COLL_LP_ARS_FJMUT_EXIT 1",
-    "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_fjmut_n1s0.log",
-    "threads": 16,
-    "peak_ram_gb": 48,
+    "fail_regex": "PT_S128_MUTANT lastale REJECTED",
+    "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_miter_lastale.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "note": "SAFE-body mutant OT_PT_MUT_LA_STALE (SRAM flow read + loaded lookahead frozen) -> parent EQ must fail"
+    "note": "OT_PT_MUT_LA_STALE (s128 SRAM flow read + loaded lookahead frozen) -> beyond-contract miter vs programme_target #(ROWS 128) must fail. The n1s0 parent-EQ form is blind: the define also freezes the reference fj_n1s0 PT_LOOKAHEAD path (both sides stall, EQ PASS, results/rtl/landed_parent_1018/collq/bench_witness_5050_n1s0_ars note)"
    },
    {
     "name": "pt_s128_miter",
