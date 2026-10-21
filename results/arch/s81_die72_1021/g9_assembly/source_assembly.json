@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.s81.g9_source_assembly.v1",
- "observed_at": "2026-10-21T14:34:22.829179-07:00",
+ "observed_at": "2026-10-21T15:15:09.477715-07:00",
  "status": "PREPARED_SOURCE_NOT_SELECTED_G9",
  "base": "d7fc45b6725c4ba9365d24721afcd51754e892f9",
- "source_candidate_commit": "c779add25d63590fc1ad67ee564a1deb39575be5",
+ "source_candidate_commit": "b8b17a965fd7adda6c5a162b33f8280b761b8885",
  "normal_slice": {
   "module": "ot_s81sl_slice",
   "source_pins": {
@@ -120,11 +120,12 @@
    "master": "ot_s81sl_kv_leaf",
    "qualification": "functional real VP/SRAM component PASS; not bound/physical",
    "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open",
-   "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist"
+   "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist",
+   "source_policy_hold": "Currentlogicalkey emits publicot_s81sl_slice #(KV_ENABLE1); rendererselectsviews bypublicmaster, notparams. Nocurrentdefaultsliceview exists, but futuredefaultoffview mustneverqualifythisvariant. Parentreviewpendingforuniqueparameter-freepassthroughtop pinningactualproductionparams; no selectedG9GEN untilunique/configuredviewguard settled."
   },
   "eng_taps": {
-   "source": "f6e939df7",
-   "gate_candidate": "92080c424",
+   "source": "4c587294c/c8056173e",
+   "gate_candidate": "27ffa71c6",
    "masters": [
     "dsdv_eng_tap",
     "dsdv_eng_tap_w"
@@ -135,9 +136,9 @@
    ],
    "native": "all4actualPASSmax32/0violations/0roles",
    "functional": "existingbase+seed2/3+6mutantsPASS perowner",
-   "scope": "Native/functional source candidate only; four physicalgates live, no CLOSED/wholeRRalias",
+   "scope": "All4native32/reset2/GRT0 +existingbase/seeds2/3/6causalsPASS; rootapprovedactualgeometry, fournormalroutesRUNNING; noneCLOSED, no wholeRRalias",
    "boot": "staticSID settles2clocks while reset; original3 resetreleaseedges; no protocolagechange",
-   "handover": "owner /root/s81_lead/lepab_struct14:05; exactsource receipt supplied by owner before selection"
+   "handover": "Owner15:00 actualsource/geometry results/rtl/s81_eng_release_1021/physical_r3"
   },
   "ctrl": {
    "master": "dsfd_ctrl_rg3",
@@ -192,7 +193,8 @@
    "master": "dsdv_idx_qf",
    "source_candidate": "f7412b6c2",
    "receipt": "ed9c179a2",
-   "qualification": "Owner14:34actualMAIN/FBnativePASSmax30/0violations/roles; publicports3edgesunchanged, existingmechanism+MUT1/2+6seedG8eqPASS. CTS/physicalpending, noCLOSED"
+   "qualification": "Owner14:34actualMAIN/FBnativePASSmax30/0violations/roles; publicports3edgesunchanged, existingmechanism+MUT1/2+6seedG8eqPASS. CTS/physicalpending, noCLOSED",
+   "normal_routes": "MAIN d20b68c2b and FB617c496ef approvednormalroutes RUNNING perowner15:06; neitherCLOSED, no bindingadoption"
   },
   "idx_nq": {
    "master": "dsdv_idx_rg3_nq",
@@ -244,5 +246,6 @@
    "grid_hold": "Actual originalglobalplacement allWpins8nmofftrack. ALLavailable46S/48N descendants admitcommondelta(-64nm,-8nm),actualfullpincheck0 atcandidatephase/bodyviolations0. Tenstandins+3missingXGT/XRT/LEP perparent preventparentphysicalqualification; phase notadopted.",
    "publication_main": "8da2cab50"
   }
- }
+ },
+ "initial_transport_preparation_commit": "c779add25d63590fc1ad67ee564a1deb39575be5"
 }
