@@ -22,6 +22,7 @@ module qfd_native59_svc #(
  input wire[1:0]tx_user,rx_user, // scheduled metadata, same age as TX/RX events
  input wire tx_slot,input wire[3:0]tx_slot_kind,input wire[4:0]tx_slot_beat,
  output wire native_tx_v,output wire[547:0]native_tx_payload,
+ output reg head_descriptor_v,output reg[58:0]head_descriptor_tag,output reg[1:0]head_descriptor_generation,
  input wire native_rx_v,input wire[547:0]native_rx_payload,
  input wire rx_slot,input wire[3:0]rx_slot_kind,input wire[4:0]rx_slot_beat,
  output reg[519:0]dr_o,
@@ -414,6 +415,19 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault),
   .context_v_pub(nc_pub[10:7]));
  end endgenerate
+ // Actual stage-1 head authority, independent of terminal RESULT ownership.  Kind-12 CONTEXT uses
+ // stage zero on the wire; epoch/user, token, position and generation come from this exact begin.
+ // Available one service edge after begin_slot; the sole paired calendar must price this output age
+ // and its physical landing before reserving a C->K CONTEXT slot ahead of the matching HBM fetch.
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin head_descriptor_v<=0;head_descriptor_tag<=0;head_descriptor_generation<=0;end
+  else begin
+   head_descriptor_v<=begin_slot&&(begin_tag[42:37]==6'd1);
+   if(begin_slot&&(begin_tag[42:37]==6'd1))begin
+    head_descriptor_tag<={begin_tag[58:43],6'd0,begin_tag[36:0]};
+    head_descriptor_generation<=p_hg;
+   end
+  end
  // ---------------------------------------------------------------- dd word decode (the bank relays bnd_dd_i one edge: see the header)
  wire dd_v=p_dd[547];wire[1:0]dd_kind=p_dd[546:545];wire[7:0]dd_mask=p_dd[544:537];
  wire dd_q=dd_v&&dd_kind==2'd0,dd_kv=dd_v&&(dd_kind==2'd1||dd_kind==2'd2);
