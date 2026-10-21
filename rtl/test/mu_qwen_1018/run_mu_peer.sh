@@ -9,7 +9,8 @@
 #               MU 0: coordinator, codec, services, lifecycle, POST collector, allocator, cohort) |
 #               ex_lifecycle / ex_lifecycle_mu0 (existing lifecycle bench; lifecycle, allocator, cohort _mu at MU 0) |
 #               ex_tsvc / ex_tsvc_mu0 (existing 8-die token-service bench on the collected token service; _mu at MU 0)
-#   mutants (must FAIL): ts1 ts2 co1 lc1 cd1 cd2 pc1 ep3 sv1 ab1
+#   KV-MU6 10-20 die config: tb_mu_peer_e2e_uid | tb_mu_peer_abort_uid (POST_UID_SLOT 1, raw positions + slot)
+#   mutants (must FAIL): ts1 ts2 co1 lc1 cd1 cd2 pc1 ep3 sv1 ab1 | uid0 pr1 pr2 (on the UIDSLOT 1 bench)
 # Every file a case reads is in lists/<list>.f.
 set -u
 ROOT=$(cd "${1:?root}" && pwd); OUT=${2:?out}; CASE=${3:?case}
@@ -25,6 +26,15 @@ sub(){ SUBS="$SUBS$1"$'\x1f'"$2"$'\x1f'"$3"$'\x1e'; }
 case "$CASE" in
  tb_mu_peer_e2e|lint_peer_mu) ;;
  tb_mu_peer_abort) TB=tb_mu_peer_e2e; LIST=$TB; PA=+ABORT;;
+ # KV-MU6 10-20: the KV die HOST root configuration (POST_UID_SLOT 1, raw positions + real slot on the step/CQ faces)
+ tb_mu_peer_e2e_uid) TB=tb_mu_peer_e2e; LIST=$TB; sub rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;';;
+ tb_mu_peer_abort_uid) TB=tb_mu_peer_e2e; LIST=$TB; PA=+ABORT; sub rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;';;
+ # (must FAIL) die observer faces (raw positions) with the legacy pos[17:16] POST decode: every user decodes as user 0
+ uid0) TB=tb_mu_peer_e2e; LIST=$TB; sub rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;'; sub rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv '.POST_UID_SLOT(UIDSLOT)' '.POST_UID_SLOT(0)';;
+ # (must FAIL) POST keeps the released-rank vector of the previous head (global release_seen not cleared at POST)
+ pr1) TB=tb_mu_peer_e2e; LIST=$TB; sub rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;'; sub $PC "pr<=pr+1'b1;release_seen<=0;" "pr<=pr+1'b1;";;
+ # (must FAIL) POST does not wait for the 8 rank releases of its terminal
+ pr2) TB=tb_mu_peer_e2e; LIST=$TB; sub rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;'; sub $PC '((release_seen&release_required[h])==release_required[h])&&' '';;
  # lifecycle does not acknowledge a cancel of a user's already-terminated identity (abort case must then FAIL)
  ab1) TB=tb_mu_peer_e2e; LIST=$TB; PA=+ABORT; sub $LC '((pp[cu] || lt_v[cu]) && cancel_tag' '((pp[cu]) && cancel_tag';;
  ex_peer_lifecycle) TB=tb_qkd_host_peer_lifecycle; LIST=$TB;;
