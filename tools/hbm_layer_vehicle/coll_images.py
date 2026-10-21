@@ -83,10 +83,18 @@ def issue_rel(k):
     return 1 + 3 * (k >> 1) + (k & 1)
 
 
-def span(F, R):
-    """fire -> last bank write sample (collq_gather_1018.span)."""
+def span(F, R, vm_rt=0):
+    """fire -> last bank write sample (collq_gather_1018.span; --vm-rt V: span +V)."""
     K = (F + R - 1) // R
-    return issue_rel(K - 1) + 38 + KQ_SHARE
+    return issue_rel(K - 1) + 38 + KQ_SHARE + vm_rt
+
+
+def vm_rt_from_contract(contract, q="SW"):
+    """TOK-FUNC-HBM-PAY (10-21): hcollgi_<q> VM_RT of a die revision's functional contract (l12 applied; 0 = GEN2 timing).
+    ot_hgi_coll_gq.sv header: read REQUESTS keep their edges, every stage from the rr capture moves VM_RT later (ring-A
+    inject c = issue + 29 + V, every landing write +V)."""
+    c = json.loads(Path(contract).read_text())["instances"]
+    return int(c[f"hcollgi_{q}"]["params"].get("VM_RT") or 0)
 
 
 def flit(src, ttl, tag, data):
@@ -132,7 +140,7 @@ def calendar_window(loops):
     return prog, word
 
 
-def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0):
+def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm_rt=0):
     """COLL.ALL_GATHER of the n-word vector O (uint32) on the 4 quadrants, quadrant q's view.  Returns dict with
     events (replay.v1 D / C / M), the checks split by kind, cycles, and the model numbers."""
     from hbm_layer_vehicle.layer_images import CpBus
@@ -156,7 +164,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0):
     ev, chk_vm, chk_ring, chk_misc = [], [], [], []
     # ---- programme on ONE ingress stream (layer_images.CpBus, ingress rate): gq row + desc, calendar row + desc, one
     # global launch (F30) that starts both armed targets
-    sp = span(F, R)
+    sp = span(F, R, vm_rt)
     win = t_start + FIRE_FROM_LAUNCH + sp + 96           # calendar grant window (edges), from calendar start
     cal, cal_word = calendar_window(win)
     bus = CpBus(t_frames, src="image:COLL")
@@ -186,7 +194,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0):
         r, k = i % R, i // R
         d = k & 1
         IE = FE + issue_rel(k)
-        c = IE + ISSUE_TO_INJECT
+        c = IE + ISSUE_TO_INJECT + vm_rt
         key = (OUT_PORTS[(r, d)], c + 1)
         assert key not in outc, ("ring output double-booked", key)
         outc[key] = flit(q, 3, k, sl[q][i])
@@ -200,7 +208,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0):
                 key = (OUT_PORTS[(r, d)], A + 1)
                 assert key not in outc, ("ring output double-booked", key)
                 outc[key] = flit(s, 3 - h, k, sl[s][i])
-            w = IE + PUBLISH_WRITE + 2 * h
+            w = IE + PUBLISH_WRITE + vm_rt + 2 * h
             last_w = max(last_w, w)
             landed[dst + s * stride + i] = (sl[s][i], w)
     for p, m in drv.items():
@@ -239,10 +247,12 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0):
     # (edge relative to the descriptor fire, bank, owner)
     rsv = sorted([(issue_rel(i // R) + 16, (src + i) % 8, "r3") for i in range(F)] +
                  [(w - FE, s_ % 8, "w2") for s_, (_, w) in landed.items()])
+    # read requests keep their edges; with VM_RT they reach the bank through the l12 request pads (hcollrs BANK_RT):
+    # the window grant above covers them (it spans the whole gather)
     reservations = dict(reads=F, writes=len(landed), first=rsv[0][0], last=rsv[-1][0],
                         rule="read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + "
                              "edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)")
-    return dict(status="emitted", F=F, R=R, stride=stride, src_sector=src, dst_sector=dst, t_start=t_start,
+    return dict(status="emitted", F=F, R=R, stride=stride, src_sector=src, dst_sector=dst, t_start=t_start, vm_rt=vm_rt,
                 n_words=n, launch_cyc=cL, L=L, fire=FE, last_write=last_w, check_cyc=T,
                 model_span_fire_to_last_write=sp, launch_to_last_write=last_w - L,
                 calendar=dict(target=CAL_TGT, loops=win, word={k: hex(v) for k, v in cal_word.items()},
@@ -306,7 +316,10 @@ def main():
     ap.add_argument("--name-prefix", default=None)
     ap.add_argument("--rank", default="0")
     ap.add_argument("--pre-events", type=Path, help="also write <name>.events.txt for tb_coll_replay.sv here")
+    ap.add_argument("--contract", type=Path, help="die functional contract: hcollgi_SW VM_RT (default 0 = GEN2)")
+    ap.add_argument("--lane", default="VEH-FMT-COLL")
     a = ap.parse_args()
+    vm_rt = vm_rt_from_contract(a.contract) if a.contract else 0
     meta, z, recs = load_fixture_records(a.fixtures, a.rank)
     L = int(meta["layer"]) if str(meta["layer"]).isdigit() else meta["layer"]
     prefix = a.name_prefix or (f"ds_l{L}" if isinstance(L, int) else f"ds_{L}")
@@ -330,7 +343,7 @@ def main():
             man.append(ent)
             continue
         O = np.asarray(z[x["outputs"]["O"]["array"]], np.uint32)
-        g = gather_record(O, i_rec, R=a.R, t_start=a.t_start)
+        g = gather_record(O, i_rec, R=a.R, t_start=a.t_start, vm_rt=vm_rt)
         if g["status"] != "emitted":
             ent.update(g)
             man.append(ent)
@@ -346,7 +359,7 @@ def main():
                     assert e["port"] in outs, e["port"]
             evs = sorted(evs, key=lambda e: (e["dom"], e["cyc"], e["k"]))
             rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design="ds", layer=str(L),
-                       record=i_rec, tag=x["tag"], lane="VEH-FMT-COLL",
+                       record=i_rec, tag=x["tag"], lane=a.lane, scope="component_probe", vm_rt=vm_rt,
                        assumptions=["quadrant q holds contiguous quarter q of the gathered vector O (plain FP32, no QBG)",
                                     "on-die quadrant phase only (cross-die hb_coll link programme: no compiler)",
                                     "calendar_SW = COLL-only window grant (sole VM owner in this replay)"],
