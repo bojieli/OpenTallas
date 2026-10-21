@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.s81.selected_frame_pair_source_guard.v1",
+ "status": "SELECTED_RF3R_ACTUAL_BODY_PAIR_EXTRACTION_PASS",
+ "source_sha256": "c773586e5cb41288e1a296329a6d82780c6c300af60c3c4a26800bba081250d4",
+ "q_pairs": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  12,
+  14
+ ],
+ "bf_pairs": [
+  4,
+  8,
+  13
+ ],
+ "canonical_body_opened": false,
+ "compiler_run": false,
+ "simulator_run": false,
+ "scope": "Read-onlyexact selectedbody pairlayout; frameages/runtime/CAP stillunqualified"
+}

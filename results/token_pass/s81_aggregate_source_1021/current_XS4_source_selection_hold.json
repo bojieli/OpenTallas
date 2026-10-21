@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81.current_XS4_source_selection_hold.v1",
+ "status": "SOURCE_SELECTION_HOLD_BEFORE_MAT_GENERATION",
+ "reason": "ambiguous selected source identity: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv; first /srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv SHA256=50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808; next /srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv SHA256=974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9; executed module-selection witness required",
+ "actual_port_bind_sha256": "309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398",
+ "recorded_PB_child_selection": {
+  "chosen": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "by": "prefer",
+  "differ": [
+   "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv"
+  ],
+  "iface_differ": []
+ },
+ "chosen_file_sha256": "974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9",
+ "differing_extra_file_sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+ "prospective_f5_basis_adopted_as_current": false,
+ "actual_source_readset_sha256": "c07ebc7ee7ebe7347bb6ad45899fcfb67d73d1868122bfe4fa37c8c6fe33a5a3",
+ "source_generation_request_status": "77966CANCELLED_NOT_RUN_NO_COMPILER_NO_LAUNCH_RECEIPT",
+ "compiler_run": false,
+ "simulator_run": false,
+ "source_assets_emitted": false,
+ "owner_obligation": "Confirm exact executedGEN/index module winner/configuration before selecting or regenerating an actualG9programme",
+ "source_owner_followup": {
+  "strict_PB": "SRC974ec selected as recorded in final309cPB",
+  "GEN_argument_replay": "8aoverride50485a59 f5 selected at explicitprefer23; GENrtl_ports ignores strictpreferlist/ref-tile expansions",
+  "GEN_case_RTL_emitted": false,
+  "GEN_success": false,
+  "decision": "genuine divergentmaps; sourceprofileHELD untilownerreconcilesselection; no fallback/resubmit"
+ }
+}

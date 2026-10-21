@@ -147,3 +147,14 @@ class ComponentDie:
       chain.append(nexts[0]);net=nexts[0]['output']
      routes.append(dict(source=dict(instance=n,port=port,lane=i,net=start),destination=sinks.get(net) if not reason else None,chain=chain,unbound=reason,age_edges=None,clock_phase_qualified=False))
   return routes
+
+def require_selected_profile(profile,bindings,readset):
+ """Refuse ambiguous/mismatched prospective source before MAT legalisation."""
+ from layer_prog.kv_operand_feed import source_profile_files
+ selected=source_profile_files(readset,bindings)
+ for name,binding in profile['bindings'].items():
+  rel=binding['source']
+  if rel.startswith('rtl_extra/'):rel=rel.split('/',2)[2]
+  if selected.get(rel)!=binding['sha256']:
+   raise ValueError('prospective selected module body is unbound or differs from component basis: '+name+' '+rel)
+ return selected

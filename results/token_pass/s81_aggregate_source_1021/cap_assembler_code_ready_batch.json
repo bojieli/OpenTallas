@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.s81.cap_assembler_code_ready_batch.v1",
+ "status": "CODE_ONLY_READY_SOURCE_SELECTION_HELD",
+ "project_owned_files": [
+  "tools/s81_dv/tokfunc/selected_cap_phase.py",
+  "tools/s81_dv/tokfunc/stage_aggregate_programme.py",
+  "tools/s81_dv/tokfunc/aggregate_tb.py",
+  "tools/s81_dv/tokfunc/generate_wkv_phase_source.py"
+ ],
+ "apply_only_narrow_hunks": {
+  "tools/s81_dv/frame_bench.py": "frame_pairs(master,source=None), hashguard exactselectedbody; defaultunchanged",
+  "tools/s81_dv/layer_prog/lower_xs.py": "frame_programme optionalframe_source, forward toactualframe_pairs; defaultunchanged"
+ },
+ "file_sha256": {
+  "tools/s81_dv/tokfunc/selected_cap_phase.py": "973e2aadbf940a4caf321b1233ab47d111455639e2fd80e593a6adfa4472c567",
+  "tools/s81_dv/tokfunc/stage_aggregate_programme.py": "852bf6303963c45e166bf258c2dd0c6c206ab050d5cb02dbc1c4e32cf9b1d80d",
+  "tools/s81_dv/tokfunc/aggregate_tb.py": "b0f5ab3e07d5baba9ecc97bc6349baa2320e79f97207e901b7b159aca05bd440",
+  "tools/s81_dv/tokfunc/generate_wkv_phase_source.py": "95544edcfd1b8f752f56c2db4309ac2c2a08717801e0f1ba7c8b71526992ca31",
+  "tools/s81_dv/frame_bench.py": "f3c98b7ffb41c7d67b26259cf52b55e26411ebee7dc305ade5d0d36b2ca7b11a",
+  "tools/s81_dv/layer_prog/lower_xs.py": "c2f6523293d8e0a1ef0ca40a213d91a99f0a923652a65d42902cb42fbc36d205"
+ },
+ "required_shared_feed_commits": [
+  "0f1c7ba2691cb936d3e0295cd938afd1705f6771",
+  "599730369",
+  "823f3062bb571fd0a6dc714c4eb798a9cbaa899d"
+ ],
+ "historical_recipe_commit": "f71601f10f0d067a3955880f98c562f4d5f3467b",
+ "exclude_from_projection": [
+  "aggregatebranchancestry",
+  "privatecherry-pickduplicates0b6d82fdf/1b1055fc0/d2a93235e",
+  "tools/s81_dv/tokfunc/launch_wkv_source.py archivalNOTRUNlauncher",
+  "unsealedcandidateassets/oldA_Breplays"
+ ],
+ "implementation": "24realwkvrow explicitcomponentMAT/CAP+directheldKVfeed sourceconnection; actualG9die/plan/frame/strap/exactlanechains; actualVNtraceplanning/weights-meta only; noopscheckpointinput",
+ "pure_guards": [
+  "Python syntax checks",
+  "192frozen source/topbyteSHAchecks+11unique selectedmodulebindings",
+  "actual007die/5aplan/6frames+straps and112exactlanechains; agesNone",
+  "actualrf3r12Q+3BFpair extraction withcanonicalbodyunopened",
+  "actualfull289readset rejectedbeforeMAT onXS4 sourceambiguity"
+ ],
+ "source_generation_request": "77966 supportedcancel exactownclient125894; exit143NOTRUN, bothhostscompiler=False/launch_receipt=False; no admittedjobstopped",
+ "missing_owner_obligation": "StrictPB974ec vsGENf5504 source-selection reconciliation; keepdistinctmaps, nofallback/resubmit",
+ "compiler_run": false,
+ "simulator_run": false,
+ "actual_CAP_data_or_commit_or_lease_emitted": false,
+ "KV_completeness_admitted": false
+}

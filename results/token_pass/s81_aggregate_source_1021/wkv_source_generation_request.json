@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81.wkv_source_generation_request.v1",
- "status": "REQUESTED_NOT_ADMITTED",
+ "status": "CANCELLED_NOT_RUN_SOURCE_SELECTION_HOLD",
  "source_commit": "37000808832dfe7193557c45f8e4e42991570cf1",
  "compiler_archive_sha256": "ae30b8605239d4b8f1c12679a1ff5fc9cda27a66a7e7c286ad2ef51c1bf46582",
  "compiler_archive_members": "exactgitarchive370008088 tools +results/arch/s81_dv_1016/frame/return_plan",
@@ -30,5 +30,10 @@
  "address_readset_fullmanifest_bound": false,
  "admitted_KV_rows": 0,
  "capacity_guard_bypassed": false,
- "staging": "sameimmutableownlane staged gold2+EP5 for normalre-placement; originalrequest preserved, nosecondlaunch"
+ "staging": "sameimmutableownlane staged gold2+EP5 for normalre-placement; originalrequest preserved, nosecondlaunch",
+ "cancelled_client_pid": 125894,
+ "request_exit_code": 143,
+ "admitted": false,
+ "admitted_job_stopped": false,
+ "actual_materialized_or_generated_assets": false
 }

@@ -38,12 +38,12 @@ def main():
     p.add_argument('--actual-source-audit', type=Path, help='Immutable actualG9 die/table/source audit for explicitphase')
     p.add_argument('--actual-port-bind',type=Path)
     p.add_argument('--actual-tap-consumer',type=Path)
-    p.add_argument('--actual-address-readset',type=Path)
+    p.add_argument('--actual-source-readset','--actual-address-readset',dest='actual_address_readset',type=Path,help='Fullactualmanifest/PB289/orderedhashes;3ABIproxyisrejected')
     a = p.parse_args()
     import dv_layer_compile as C
     import lower_xs as L
     from layer_prog.aproj_native import phase_material, programme
-    from selected_cap_phase import configured_profile, explicit_capture, local_programme, produced_fixture, ComponentDie
+    from selected_cap_phase import configured_profile, explicit_capture, local_programme, produced_fixture, ComponentDie, require_selected_profile
     profile = None
     if a.configured_receipt:
         assert a.configured_source_root
@@ -103,6 +103,16 @@ def main():
         assert set(pb['defines'])==set(actual_audit['defines'])
         profile['prospective_target']=dict(source_audit_sha256=digest(a.actual_source_audit),port_bind_sha256=digest(a.actual_port_bind),defines=actual_audit['defines'],final_ordered_rtl_files=pb['rtl_files'],rtl_roots=pb['rtl_roots'],tap_consumer_sha256=digest(a.actual_tap_consumer),TAP_macro='OT_S81ENG_TAP_N32R2',executed=False)
         profile['configuration_gap']='ProspectiveactualG9sevenprofile selected; historical191sixdefine is independent. Fullactualselectedmodule/clockcone readset preflight required before build; no alias or sevenprofile execution claimed.'
+        assert a.actual_address_readset, 'fullactualselectedreadset is required before MATgeneration'
+        full_readset=json.loads(a.actual_address_readset.read_text())
+        try:
+            selected_files=require_selected_profile(profile,actual_audit,full_readset)
+        except ValueError as error:
+            a.out.mkdir(parents=True,exist_ok=False)
+            hold=dict(status='SOURCE_SELECTION_HOLD_BEFORE_MAT_GENERATION',reason=str(error),actual_source_audit_sha256=digest(a.actual_source_audit),actual_port_bind_sha256=digest(a.actual_port_bind),source_readset_sha256=digest(a.actual_address_readset),compiler_run=False,simulation_performed=False,source_assets_emitted=False)
+            (a.out/'receipt.json').write_text(json.dumps(hold,indent=1)+'\n')
+            raise SystemExit(str(error))
+        profile['prospective_target']['selected_files_sha256']=selected_files
     else:
         assert die.die_sha == inventory['die_sha256']
     if profile:
@@ -162,10 +172,7 @@ def main():
         if a.rank_rows:
             native=local_programme(die.slices()[sl]['sid'],sl,shared,capture,profile)
             assert a.actual_address_readset, 'realaddressABI source readset needed for unsealedfeedassembly'
-            address=json.loads(a.actual_address_readset.read_text())
-            assert address['source_audit_sha256']==digest(a.actual_source_audit)
-            assert address['port_bind_sha256']==digest(a.actual_port_bind)
-            assert address['die_sha256']==die.die_sha
+            address=full_readset
             from layer_prog.kv_operand_feed import assemble
             feed=assemble(die,[dict(rank=fx['meta']['rank'],programme=native['manifest'])],a.actual_source_audit.read_bytes(),address)
             (out/'kv_operand_feed.json').write_text(json.dumps(feed,indent=1)+'\n')
