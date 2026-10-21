@@ -846,6 +846,13 @@ def apply_dv(v, m):
                     raise ValueError(f'head prepare requires actual tt_ctlm.{sp_}->native59.{dp_}')
                 out.append((f'hp_tt_{sp_}', 'spine_local', M[by['tt_ctlm'].master].ports[sp_][1],
                             [('tt_ctlm',sp_),('native59',dp_)]))
+            # Native is still the historical master during the earlier compute-spine bind.
+            # Join these ports only after the exact DV-native source ABI is installed above.
+            for p_ in ('head_descriptor_v','head_descriptor_tag','head_descriptor_generation'):
+                if not (has('native59',p_) and has('sys_face',p_)):
+                    raise ValueError(f'head descriptor requires actual native59.{p_}->sys_face.{p_}')
+                out.append((f'hp_native_{p_}', 'spine_local', M[by['native59'].master].ports[p_][1],
+                            [('native59',p_),('sys_face',p_)]))
         if dhobs is not None:
             _dhobs_buses(m, out, dh_crt, has)
         if ctxrx is not None:
