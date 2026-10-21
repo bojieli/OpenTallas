@@ -7702,7 +7702,21 @@ assign n_4987 = (n_175) & (n_173);
 assign n_4756 = (n_4984) & (n_4752);
 assign n_4988 = (n_4986) & (n_4985);
 assign n_4762 = (n_4988) & (n_4756);
-assign n_4761 = (n_169) & (n_4759);
+wire mul_pfx_0_0, mul_pfx_0_1, mul_pfx_0_2, mul_pfx_0_3, mul_pfx_0_4, mul_pfx_0_5, mul_pfx_0_6, mul_pfx_0_7, mul_pfx_0_8, mul_pfx_1_0, mul_pfx_1_1, mul_pfx_1_2, mul_pfx_2_0;
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(0)) u_mul_pfx_0_0(.i({n_169,n_167,n_165,n_163}),.y(mul_pfx_0_0));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(1)) u_mul_pfx_0_1(.i({n_161,n_159,n_7148,n_155}),.y(mul_pfx_0_1));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(2)) u_mul_pfx_0_2(.i({n_153,n_151,n_149,n_147}),.y(mul_pfx_0_2));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(3)) u_mul_pfx_0_3(.i({n_145,n_143,n_141,n_139}),.y(mul_pfx_0_3));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(4)) u_mul_pfx_0_4(.i({n_137,n_135,n_133,n_131}),.y(mul_pfx_0_4));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(5)) u_mul_pfx_0_5(.i({n_129,n_127,n_125,n_123}),.y(mul_pfx_0_5));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(6)) u_mul_pfx_0_6(.i({n_121,n_119,n_117,n_115}),.y(mul_pfx_0_6));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(7)) u_mul_pfx_0_7(.i({n_113,n_111,n_109,n_107}),.y(mul_pfx_0_7));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(8)) u_mul_pfx_0_8(.i({n_157,1'b1,1'b1,1'b1}),.y(mul_pfx_0_8));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(100)) u_mul_pfx_1_0(.i({mul_pfx_0_0,mul_pfx_0_1,mul_pfx_0_2,mul_pfx_0_3}),.y(mul_pfx_1_0));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(101)) u_mul_pfx_1_1(.i({mul_pfx_0_4,mul_pfx_0_5,mul_pfx_0_6,mul_pfx_0_7}),.y(mul_pfx_1_1));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(102)) u_mul_pfx_1_2(.i({mul_pfx_0_8,1'b1,1'b1,1'b1}),.y(mul_pfx_1_2));
+(* keep_hierarchy="yes" *) qfd_dv_s8s_mul_prefix_and4 #(.ID(200)) u_mul_pfx_2_0(.i({mul_pfx_1_0,mul_pfx_1_1,mul_pfx_1_2,1'b1}),.y(mul_pfx_2_0));
+assign n_4761 = mul_pfx_2_0;
 assign n_4759 = (n_4985) & (n_4756);
 assign n_4765 = (n_177) & (n_4764);
 assign n_4764 = (n_4987) & (n_4762);
@@ -11456,4 +11470,8 @@ assign y = (i[0]) ? (i[1]) : (i[2]);
 endmodule
 (* keep_hierarchy="yes" *) module qfd_s8s_dup_n_7202 #(parameter integer ID=0)(input wire [1:0] i,output wire y);
 assign y = (i[0]) & (i[1]);
+endmodule
+
+(* keep_hierarchy="yes" *) module qfd_dv_s8s_mul_prefix_and4 #(parameter integer ID=0)(input wire[3:0] i,output wire y);
+assign y=&i;
 endmodule
