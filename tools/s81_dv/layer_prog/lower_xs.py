@@ -177,7 +177,8 @@ def dense_split2():
     v = os.environ.get('OT_XS_DENSE_SPLIT2', '')
     assert v in ('', 'A', 'B', 'X'), ('OT_XS_DENSE_SPLIT2', v)
     assert not v or aproj_topology_enabled(), 'DENSE2 split requires the actual topology owner map (OT_XS_APROJ_TOPO=1)'
-    assert not (v and aproj_rank_tags_enabled()), 'DENSE2 split: rank-tag CAP contract not extended to split halves'
+    assert not (v and aproj_rank_tags_enabled()) or os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1', \
+        'DENSE2 rank-tag CAP requires the aligned native-row ownership contract'
     return v or None
 
 
@@ -220,10 +221,23 @@ def placement(die, sl, fx=None):
             starts = [a for _, a, _ in rng]
             tensors = [(name, n) for name, _, n in rng]
         total = sum(n for _, n in tensors)
-        numer = [n * len(all_frames) for _, n in tensors]
-        counts = [n // total for n in numer]
-        for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
-            counts[i] += 1
+        align4 = os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1'
+        source_frames = all_frames
+        if align4:
+            # RD transports whole 256-bit pairs: choose even active frame counts
+            # per slice, so every owner boundary is eight captured values aligned.
+            source_frames = [frame for sl_ in slices for frame in die.frames_of(sl_)[:2 * (len(die.frames_of(sl_)) // 2)]]
+            # Whole native SRAM rows: four captured FP32/BF16-expanded values.
+            # Real frames beyond this subset are idle, never phantom owners.
+            assert own is not None, 'aligned a_proj map requires a selected DENSE2 stage'
+            assert all(n % 8 == 0 and start % 8 == 0 for (_, n), start in zip(tensors, starts))
+            counts = [n // 4 for _, n in tensors]
+            assert sum(counts) <= len(source_frames), ('aligned a_proj actual capacity', counts, len(source_frames))
+        else:
+            numer = [n * len(all_frames) for _, n in tensors]
+            counts = [n // total for n in numer]
+            for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
+                counts[i] += 1
         assigned, row0, fi = {}, 0, 0
         for (name, nrows), nf, start in zip(tensors, counts, starts):
             assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
@@ -233,12 +247,14 @@ def placement(die, sl, fx=None):
             off = row0
             for j in range(nf):
                 n = q + (j < rem)
-                assigned[all_frames[fi]] = list(range(off, off + n))
+                assigned[source_frames[fi]] = list(range(off, off + n))
                 off += n
                 fi += 1
             assert off == row0 + nrows
             row0 += nrows
-        assert fi == len(all_frames) and row0 == (total if own is None else own[1])
+        assert fi == sum(counts) and row0 == (total if own is None else own[1])
+        for frame in all_frames:
+            assigned.setdefault(frame, [])
         return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
@@ -285,6 +301,18 @@ def land_e(lk):
     return ks.pop()
 
 
+def source_frame_schedule(master):
+    """LP models are immutable source-qualified inputs, never inferred flat timing."""
+    if not master.endswith('_lp'):
+        return None
+    directory = Path(os.environ.get('OT_XS_FRAME_SCHEDULE_DIR',
+                     str(ROOT / 'results/arch/s81_dv_1016/frame_l4_cluster/compiler')))
+    path = directory / (base_master(master) + '_schedule.json')
+    if not path.is_file():
+        raise ValueError('selected LP master requires its exact source frame schedule: ' + str(path))
+    return path
+
+
 # ------------------------------------------------------------------------------------------------ one frame programme
 def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None):
     """legalise + place one a_proj phase on one frame (field phase 0); returns (field, ph, plan, pairs)"""
@@ -293,6 +321,8 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
     q, _bf = B.frame_pairs(base_master(master))
+    # plan_phase verifies every source hash in this extracted compiler schedule.
+    frame_schedule = source_frame_schedule(master)
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'
     ret_score = None
     if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1':
@@ -315,7 +345,8 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
             return cache[key]
     best = None
     for cand in ([pairs] if pairs else [q[:NPAIRS], q[len(q) - NPAIRS:], q[1:1 + NPAIRS]]):
-        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters, land_e=land_e(lk), ret_score=ret_score)
+        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters,
+                            land_e=land_e(lk), frame_schedule=frame_schedule, ret_score=ret_score)
         finish_faults = ret_score(plan['ret']) if ret_score is not None else 0
         key = (plan['faults'] + finish_faults, plan['ret_words'])
         if best is None or key < best[0]:
@@ -416,7 +447,7 @@ def lower(die, op, ctx):
     frames = []
     for p in pl:
         if not p['rows']:
-            frames.append(dict(p, phase=None, note='no a_proj rows (28 rows / slice = 7 frames x 4)'))
+            frames.append(dict(p, phase=None, note='idle actual frame: no a_proj rows in selected ownership map'))
             continue
         mats, gidx = frame_mats(fx, p['rows'])
         field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
@@ -497,6 +528,10 @@ def cmd_gen(a):
                                                                          'weights/wkv.bin', 'weights/wkv.scale.bin',
                                                                          'ops/attn.norm.scale.bin', 'ops/attn.a_proj.bin')}),
                 images={n: sha((out / n).read_bytes()) for n in names + xsn})
+    schedule = source_frame_schedule(p['master'])
+    if schedule is not None:
+        (out / 'frame_schedule.json').write_bytes(schedule.read_bytes())
+        meta['frame_schedule'] = dict(file='frame_schedule.json', sha256=sha(schedule.read_bytes()))
     (out / 'return_plan.json').write_text(json.dumps(plan, indent=1) + '\n')
     (out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     (out / 'T').write_text(f'{a.cycles}\n')

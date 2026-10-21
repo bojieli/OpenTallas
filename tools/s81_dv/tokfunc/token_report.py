@@ -16,10 +16,12 @@ def main():
     p.add_argument('--mu')
     p.add_argument('--layers')
     p.add_argument('--owner-fold')
+    p.add_argument('--kv-consumer')
+    p.add_argument('--dense-source')
     p.add_argument('--die-v')
     a = p.parse_args()
     evidence = {}
-    for name in ('head', 'mu', 'layers', 'owner_fold'):
+    for name in ('head', 'mu', 'layers', 'owner_fold', 'kv_consumer', 'dense_source'):
         path = getattr(a, name)
         f = Path(path) if path else None
         evidence[name] = dict(path=path, status='PENDING')

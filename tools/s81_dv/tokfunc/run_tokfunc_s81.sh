@@ -7,6 +7,7 @@ REF=; WORK=; FIX=; DIE=; PB=; PLAN=; LAND=; REPORT=0; ASM=; SRC=
 HEAD_PREP=; HEAD_FIX=; MU_STAGE=; HEAD_JSON=; MU_JSON=; LAYERS_JSON=
 CAL_AR=; CAL_MTP=
 FOLD_JSON=
+KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
 while (($#)); do
   case "$1" in
     --ref) REF=$2; shift 2;; --work) WORK=$2; shift 2;;
@@ -19,6 +20,8 @@ while (($#)); do
     --layers-json) LAYERS_JSON=$2; shift 2;; --report-only) REPORT=1; shift;;
     --calendar-ar) CAL_AR=$2; shift 2;; --calendar-mtp) CAL_MTP=$2; shift 2;;
     --owner-fold-json) FOLD_JSON=$2; shift 2;;
+    --kv-baseline) KV_BASELINE=$2; shift 2;; --kv-json) KV_JSON=$2; shift 2;;
+    --dense-source-vectors) DENSE_VECTORS=$2; shift 2;; --dense-source-json) DENSE_JSON=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
 done
@@ -60,6 +63,16 @@ if [ "$REPORT" = 0 ]; then
   fi
   bash "$H/run_owner_fold.sh" "$SRC" "$WORK/owner_fold" > "$WORK/owner_fold.log" 2>&1 || true
   FOLD_JSON=$WORK/owner_fold/receipt.json
+  if [ -n "$KV_BASELINE" ]; then
+    python3 "$SRC/tools/s81_dv/kv_vp_1021/gate.py" --baseline "$KV_BASELINE" --out "$WORK/kv_consumer" \
+      --jobs "${J:-2}" > "$WORK/kv_consumer.log" 2>&1 || true
+    KV_JSON=$WORK/kv_consumer/result.json
+  fi
+  if [ -n "$DENSE_VECTORS" ]; then
+    (cd "$SRC"; bash tools/s81_dv/tokfunc/run_dense_xs_cap.sh "$WORK/dense_source" "$DENSE_VECTORS") \
+      > "$WORK/dense_source.log" 2>&1 || true
+    DENSE_JSON=$WORK/dense_source/check.json
+  fi
   # These component benches use their source-pinned RTL, even in netlist mode.
   if [ -n "$HEAD_PREP" ] && [ -n "$HEAD_FIX" ]; then
     (cd "$SRC"; bash "$H/head_mtp_fleet.sh" "$HEAD_PREP" "$HEAD_FIX" "$WORK/head") > "$WORK/head.log" 2>&1 || true
@@ -85,5 +98,7 @@ ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$MU_JSON" ] || ARGS+=(--mu "$MU_JSON")
 [ -z "$LAYERS_JSON" ] || ARGS+=(--layers "$LAYERS_JSON")
 [ -z "$FOLD_JSON" ] || ARGS+=(--owner-fold "$FOLD_JSON")
+[ -z "$KV_JSON" ] || ARGS+=(--kv-consumer "$KV_JSON")
+[ -z "$DENSE_JSON" ] || ARGS+=(--dense-source "$DENSE_JSON")
 [ -z "$DIE" ] || ARGS+=(--die-v "$DIE")
 python3 "$H/token_report.py" "${ARGS[@]}"

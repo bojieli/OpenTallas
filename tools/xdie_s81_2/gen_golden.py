@@ -64,12 +64,18 @@ from __future__ import annotations
 from fractions import Fraction
 
 import argparse
+import gzip
 import hashlib
 import json
 import math
 from pathlib import Path
 
 import numpy as np
+
+
+def calendar_bytes(path):
+    raw = Path(path).read_bytes()
+    return gzip.decompress(raw) if raw.startswith(b'\x1f\x8b') else raw
 
 ND, NP = 4, 4
 BEAT_B = 128
@@ -190,7 +196,7 @@ def main():
     MU_SPARE = bool(U) or a.reserve_mu_tag
     shifts = None
     if U and a.mu_mode == "real":
-        cal = json.loads(Path(a.mu_cal).read_text())
+        cal = json.loads(calendar_bytes(a.mu_cal))
         shifts = {sl["user"]: int(sl["shift"]) for sl in cal["slots"]}
     users = list(range(U))
     if U and a.mu_users_of and shifts is not None:
@@ -371,7 +377,7 @@ def main():
              dl_model=dict(model=a.dl_model, R="4096/3069", flat=a.fluid_lat, guard=a.fluid_guard, window=2)
              if a.dl_model == "fluid" else dict(model="linear"))
     if a.mu_cal and (a.xl5 or a.reserve_mu_tag):
-        g['mu']['cal_sha256'] = hashlib.sha256(Path(a.mu_cal).read_bytes()).hexdigest()
+        g['mu']['cal_sha256'] = hashlib.sha256(calendar_bytes(a.mu_cal)).hexdigest()
     if a.dl_model == "linear" and not (a.mu_copy_a_only or a.mu_users_of or a.reserve_mu_tag):
         # Preserve the exact main output format for all callers without new opt-ins.
         g.pop('dl_model', None)
