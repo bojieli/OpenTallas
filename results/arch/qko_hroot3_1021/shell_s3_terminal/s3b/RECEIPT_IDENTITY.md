@@ -1,0 +1,1 @@
+gate_result.json is the full original canonical kit receipt (opentallas.ref_tile.gate_result.v2), copied without regeneration. scratch_verdict_summary.json preserves the original scratch --json summary byte-for-byte; the earlier packet named that summary gate_result.json. Both source-bound failed verdicts remain preserved. No gate or source was changed.
