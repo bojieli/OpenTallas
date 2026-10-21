@@ -426,8 +426,19 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
     if frame_schedule:
         import hashlib
         schedule = json.loads(Path(frame_schedule).read_text())
+        source_root = ROOT
+        if schedule.get('source_root_kind') == 'functional_kit_src':
+            # A selected rtl_extra body need not be the canonical same-name
+            # file. Verify the exact selected closure instead of substituting
+            # a canonical source hash or trusting a path without provenance.
+            source_root = (Path(frame_schedule).parent / schedule['source_root_relative_to_schedule']).resolve()
+            kit_path = source_root.parent / 'kit.json'
+            assert hashlib.sha256(kit_path.read_bytes()).hexdigest() == schedule['functional_kit_sha256'], 'stale selected functional kit'
+            kit = json.loads(kit_path.read_text())
+            assert not kit['problems'], 'selected functional kit has unresolved source problems'
+            assert {f['path']: f['sha256'] for f in kit['files']} == schedule['source_sha256'], 'frame model is not the exact selected source closure'
         for f, sha in schedule['source_sha256'].items():
-            assert hashlib.sha256((ROOT/f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
+            assert hashlib.sha256((source_root/f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
         assert land_e is not None, 'landed frame schedule requires the actual cfifo landing E'
         assert schedule['topology']['master'] == master
         topo = schedule['topology']

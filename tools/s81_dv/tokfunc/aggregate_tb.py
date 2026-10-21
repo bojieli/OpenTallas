@@ -23,7 +23,7 @@ def main():
     s='dut.u_s_0N.u_sl';xs=s+'.u_xg.u_s';cap=s+'.u_cap'
     v=['`timescale 1ns/1ps','module tb_s0N_aggregate;',
        'reg tick=0;always #0.5 tick=~tick;reg rst_n=1;integer cyc=-1,T=5000,mut=0;',
-       'integer bad=0,nraw=0,nctl=0,ngather=0,nis=0,ncfg=0,ngw=0,ntable=0,nmw=0,ncap=0;',
+       'integer bad=0,nraw=0,nctl=0,ngather=0,nis=0,ncfg=0,ngw=0,ntable=0,nmw=0,ncap=0,ncomplete=0;',
        'reg[95:0]seen=0,previous_table=0;reg[1103:0]packet[0:255];integer at[0:255];integer nev=0,ep=0;',
        'reg[1103:0]drive=0;reg[531:0]source_q[0:79];string dir;integer fd,rc,i,j,k,t;reg[1103:0]word;',
        'integer cfgs[0:5],gos[0:5],rets[0:5];real release_t;']
@@ -68,6 +68,8 @@ def main():
           '#(T+1);',
           f'if(ep!=nev||nraw!=80||nctl!=6||ngather!=80||nis!=5||ncfg!=1||ngw!=1||ntable!=80||seen!=96\'h0000ffffffffffffffffffff||{xs}.tqv[0]!=96\'h0000ffffffffffffffffffff||ncap!=24)bad++;',
           'for(i=0;i<6;i=i+1)if(cfgs[i]!=1||gos[i]!=1||rets[i]!=12)bad++;',
+          f'if(ncomplete!=24||{cap}.u_rt.any_open)bad++;',
+          f'$display("AGG_FIN_COUNTS complete=%0d open=%b",ncomplete,{cap}.u_rt.any_open);',
           '$display("AGG_COUNTS raw=%0d ctl=%0d gather=%0d is=%0d cfg=%0d windows=%0d table=%0d macro=%0d cap=%0d bad=%0d mut=%0d",nraw,nctl,ngather,nis,ncfg,ngw,ntable,nmw,ncap,bad,mut);',
           'for(i=0;i<6;i=i+1)$display("AGG_FRAME_COUNTS frame=%0d cfg=%0d go=%0d ret=%0d",i,cfgs[i],gos[i],rets[i]);',
           'if(bad)$fatal(1,"AGGREGATE_SOURCE_FAIL");$display("AGGREGATE_SOURCE_COUNTS_PASS");$finish;end',
@@ -102,6 +104,11 @@ def main():
         v += [f'always@(posedge {landing}.ck_f)if(rst_n&&{landing}.i[1])$display("AGG_RETURN_FLIGHT_IN t=%0.3f frame={frame} data=%018h",$realtime,{landing}.i);',
               f'always@(posedge {landing}.ck)if(rst_n&&{landing}.o[1])$display("AGG_RETURN_LANDED t=%0.3f frame={frame} data=%018h",$realtime,{landing}.o);']
     v += [f'always@(posedge {cap}.ck_rt)if(rst_n)begin',
+          f'if({cap}.u_rt.n6_v)$display("AGG_FIN_ROOT t=%0.3f tag=%08h data=%08h",$realtime,{cap}.u_rt.n6_t,{cap}.u_rt.n6_d);',
+          f'if({cap}.u_rt.do_ins||{cap}.u_rt.do_mrg||{cap}.u_rt.do_rel)$display("AGG_FIN_STEP t=%0.3f insert=%b merge=%b release=%b slot=%0d tag=%08h data=%08h",$realtime,{cap}.u_rt.do_ins,{cap}.u_rt.do_mrg,{cap}.u_rt.do_rel,{cap}.u_rt.s_slot,{cap}.u_rt.s_t,{cap}.u_rt.s_d);',
+          f'if({cap}.u_rt.re_v)$display("AGG_FIN_REENTRY t=%0.3f tag=%08h data=%08h",$realtime,{cap}.u_rt.re_t,{cap}.u_rt.re_d);',
+          f'if({cap}.u_rt.fa_v&&{cap}.u_rt.ca)begin ncomplete++;$display("AGG_FIN_COMPLETE t=%0.3f path=A tag=%08h data=%08h",$realtime,{cap}.u_rt.fa_t,{cap}.u_rt.fa_d);end',
+          f'if({cap}.u_rt.fb_v&&{cap}.u_rt.cb)begin ncomplete++;$display("AGG_FIN_COMPLETE t=%0.3f path=B tag=%08h data=%08h",$realtime,{cap}.u_rt.fb_t,{cap}.u_rt.fb_d);end',
           f'if({cap}.u_rt.cfg_v)$display("AGG_CAP_CFG_LANDED t=%0.3f data=%040h",$realtime,{cap}.u_rt.cfg_d);',
           f'if({cap}.u_rt.w_v)$display("AGG_CAP_RT t=%0.3f face=W tag=%08h data=%08h err=%b fault=%b",$realtime,{cap}.u_rt.w_t,{cap}.u_rt.w_d,{cap}.u_rt.w_e,{cap}.u_rt.w_f);',
           f'if({cap}.u_rt.e_v)$display("AGG_CAP_RT t=%0.3f face=E tag=%08h data=%08h err=%b fault=%b",$realtime,{cap}.u_rt.e_t,{cap}.u_rt.e_d,{cap}.u_rt.e_e,{cap}.u_rt.e_f);end']

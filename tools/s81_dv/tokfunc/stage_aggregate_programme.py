@@ -26,6 +26,7 @@ def main():
     p.add_argument('--tree', type=Path, required=True)
     p.add_argument('--fixtures', type=Path, required=True)
     p.add_argument('--frame-schedule', type=Path, required=True)
+    p.add_argument('--functional-kit', type=Path)
     p.add_argument('--out', type=Path, required=True)
     a = p.parse_args()
     import dv_layer_compile as C
@@ -34,10 +35,20 @@ def main():
     from layer_prog.slice_source import resolve
     inventory = json.loads(a.inventory.read_text())
     for rel, receipt in inventory['sources'].items():
-        assert digest(ROOT/rel) == receipt['sha256'], ('shipping source mismatch', rel)
+        source_root = ROOT
+        if receipt.get('source_root_kind') == 'functional_kit_src':
+            assert a.functional_kit, 'selected emitted source requires exact functional kit'
+            source_root = a.functional_kit/'src'
+        assert digest(source_root/rel) == receipt['sha256'], ('shipping source mismatch', rel)
     for schedule in a.frame_schedule.glob('*_schedule.json'):
-        for rel, expected in json.loads(schedule.read_text())['source_sha256'].items():
-            assert digest(ROOT/rel) == expected, ('LP source schedule mismatch', rel)
+        model = json.loads(schedule.read_text())
+        source_root = ROOT
+        if model.get('source_root_kind') == 'functional_kit_src':
+            assert a.functional_kit, 'emitted frame model requires exact functional kit'
+            assert digest(a.functional_kit/'kit.json') == model['functional_kit_sha256']
+            source_root = a.functional_kit/'src'
+        for rel, expected in model['source_sha256'].items():
+            assert digest(source_root/rel) == expected, ('LP source schedule mismatch', rel)
     os.environ.update(OT_XS_APROJ_TOPO='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_ALIGN4='1',
                       OT_XS_DENSE_SPLIT2_ROWS=inventory['placement_environment']['OT_XS_DENSE_SPLIT2_ROWS'],
                       OT_XS_APROJ_CAP_PLAN='1', OT_XS_FRAME_SCHEDULE_DIR=str(a.frame_schedule.resolve()))
