@@ -108,7 +108,7 @@
     "threads": 16,
     "peak_ram_gb": 32,
     "fail_regex": "COLLQ_IA MUTANT slot REJECTED|COLLQ FAIL errors=[1-9]",
-    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/slot_fail.log"
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/slot_fail.log"
    },
    {
     "name": "collq_ia_dep",
@@ -117,7 +117,7 @@
     "threads": 16,
     "peak_ram_gb": 32,
     "fail_regex": "COLLQ_IA MUTANT dep REJECTED|COLLQ FAIL errors=[1-9]",
-    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/dep_fail.log"
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/dep_fail.log"
    },
    {
     "name": "collq_ia_iaign",
@@ -126,7 +126,7 @@
     "threads": 16,
     "peak_ram_gb": 32,
     "fail_regex": "COLLQ_IA MUTANT iaign REJECTED|COLLQ FAIL errors=[1-9]",
-    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/iaign_fail.log"
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/iaign_fail.log"
    },
    {
     "name": "collq_ia_ia1_inv",
