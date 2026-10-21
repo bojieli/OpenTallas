@@ -65,9 +65,12 @@ python3 "$T/die_filelist.py" --contract "$FC" --repo "$REPO" --rev "$SRC_REV" --
 VIEWS=${VIEWS:-}
 if [ -z "$VIEWS" ]; then
   VIEWS=$OUT/source_compile_defines.json
-  python3 - "$VIEWS" <<'PYDEFS'
+  python3 - "$VIEWS" "$FC" <<'PYDEFS'
 import json, sys
-json.dump({"ot_hbm_accel_smh_attn": {"env": "DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY"}}, open(sys.argv[1], "w"), indent=2)
+contract = json.load(open(sys.argv[2]))
+params = [i.get("params", {}) for i in contract["instances"].values() if i["master"] == "ot_hbm_accel_smh_attn"]
+assert params and all(p == params[0] for p in params), "SMH instances need distinct parameter-specialized unit vehicles"
+json.dump({"ot_hbm_accel_smh_attn": {"env": "DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY", "params": params[0]}}, open(sys.argv[1], "w"), indent=2)
 PYDEFS
 fi
 VA=(--views "$VIEWS")
