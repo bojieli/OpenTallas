@@ -1,0 +1,16 @@
+{
+ "pre_cts_orig": "/work/hooks/pre_cts_pre_cts.tcl",
+ "fixes": [
+  {
+   "path": "physical/common_flow/cg_pushdown.tcl",
+   "name": "ot_cts_fix_0_cg_pushdown.tcl",
+   "sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118"
+  },
+  {
+   "path": "physical/common_flow/clk_net_protect.tcl",
+   "name": "ot_cts_fix_1_clk_net_protect.tcl",
+   "sha256": "092f6cc9f89e11191e4b39424406bdaf7562614659a25bdd4ef5c56e149f61a4"
+  }
+ ],
+ "env_knobs": {}
+}
