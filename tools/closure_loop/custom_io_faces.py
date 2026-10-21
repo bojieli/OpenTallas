@@ -18,7 +18,9 @@ PLACE = re.compile(
     r"place_pin\s+-pin_name\s+\{(?P<pin>[A-Za-z_][A-Za-z_0-9]*(?:\[\d+\])?)\}"
     r"\s+-layer\s+(?P<layer>M\d+)\s+-location\s+\{\s*(?P<x>" + NUMBER + r")\s+(?P<y>" + NUMBER + r")\s*\}"
     r"(?:\s+-pin_size\s+\{\s*" + NUMBER + r"\s+" + NUMBER + r"\s*\})?"   # spread_face_pins.py writes the pin size
-    r"\s+-force_to_die_boundary\s*;?\s*"
+    # (RESUB-2 2026-10-19) -force_to_die_boundary is optional: the face is proven by the literal location
+    # (<= 0.5 um from exactly one face), not by the flag (tools/qwen_split/qfd_d2d_n_face_pins.py omits it)
+    r"(?:\s+-force_to_die_boundary)?\s*;?\s*"
 )
 
 
@@ -157,8 +159,35 @@ def compare(new, old):
         return dict(evidence, status="absent")
     if new["status"] != "verified" or old["status"] != "verified":
         return dict(evidence, status="unverified", error="both source-pinned custom IO maps must be readable")
-    if new["faces"].keys() != old["faces"].keys():
+    nf, of = new["faces"], old["faces"]
+    if nf.keys() != of.keys() and "pin_regions" in (new.get("source"), old.get("source")):
+        # (RESUB-2 2026-10-19) a per-bit custom map against a per-port pin-region map: compare per PORT when every
+        # bit of each port sits on one face and both maps name exactly the same ports (two custom maps still need
+        # the exact same pin set)
+        nf, of = port_faces(nf), port_faces(of)
+        if nf is None or of is None or nf.keys() != of.keys():
+            return dict(evidence, status="unverified", error="custom IO pin sets differ; no complete face comparison")
+        evidence["level"] = "port"
+    elif nf.keys() != of.keys():
         return dict(evidence, status="unverified", error="custom IO pin sets differ; no complete face comparison")
-    changed = {p: [old["faces"][p], face] for p, face in new["faces"].items() if face != old["faces"][p]}
+    changed = {p: [of[p], face] for p, face in nf.items() if face != of[p]}
     return dict(evidence, status="changed" if changed else "same", changed_pins=len(changed),
                 examples=dict(list(sorted(changed.items()))[:8]))
+
+
+def port_faces(faces):
+    """{pin or pin[bit]: face} -> {port: face}; None when the bits of one port sit on different faces."""
+    out = {}
+    for pin, face in faces.items():
+        port = re.sub(r"\[\d+\]$", "", pin)
+        if out.setdefault(port, face) != face:
+            return None
+    return out
+
+
+def regions_as_map(regions):
+    """a verified, non-empty pin-region map as a compare() operand (per-port faces); absent otherwise."""
+    if (regions or {}).get("status") == "verified" and regions.get("faces"):
+        return {"status": "verified", "source": "pin_regions", "faces": dict(regions["faces"]),
+                "pins": len(regions["faces"])}
+    return {"status": "absent"}

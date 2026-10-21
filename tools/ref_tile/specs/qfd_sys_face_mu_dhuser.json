@@ -1,0 +1,231 @@
+{
+ "name": "qfd_sys_face_mu_dhuser",
+ "top": "qfd_sys_face_mu_dhuser",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "params": {
+  "NU": 4,
+  "OPSEG": 1,
+  "LAST_STAGE": 37,
+  "PINREG": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 84.24,
+  "h": 69.12,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    23.76,
+    2.16
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "dh_run",
+   "rst_n",
+   "ck",
+   "op_v",
+   "op_user",
+   "op_stage",
+   "op_first",
+   "op_cnt",
+   "op_ff",
+   "op_fcode",
+   "mu_fault",
+   "dh_user",
+   "res_user"
+  ],
+  "N": [],
+  "S": [],
+  "E": []
+ },
+ "pin_ranges": {
+  "dh_run": [
+   3.0,
+   31.0
+  ],
+  "rst_n": [
+   31.5,
+   33.0
+  ],
+  "ck": [
+   33.5,
+   35.5
+  ],
+  "op_v": [
+   36.0,
+   37.5
+  ],
+  "op_user": [
+   37.5,
+   40.0
+  ],
+  "op_stage": [
+   40.0,
+   44.5
+  ],
+  "op_first": [
+   44.5,
+   51.5
+  ],
+  "op_cnt": [
+   51.5,
+   58.5
+  ],
+  "op_ff": [
+   58.5,
+   60.0
+  ],
+  "op_fcode": [
+   60.0,
+   63.0
+  ],
+  "mu_fault": [
+   63.0,
+   64.0
+  ],
+  "dh_user": [
+   64.0,
+   65.0
+  ],
+  "res_user": [
+   65.0,
+   66.5
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every used pin (qfd_sys_face_mu_dhuser PINREG 1): dh_run[42:36] lands in the pin flop dh_q7 with the anchor compensated (fc = tc = 1 on the anchor edge), so op starts stay cycle-identical to PINREG 0 (lockstep tb_dhuser_pinreg.sv, Verilator 5.050: MUT0 PASS, MUT4/5/6/7 FAIL); every output is a flop (op_v/op_user/op_stage/op_first/op_cnt/op_ff/op_fcode, mu_fault = mu_q) or constant 0 (dh_user/res_user); dh_run[43],[35:0] unused. A synthesis wrapper would add 2 unpriced edges."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.025,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "structural_change": "NEW leaf (MU-LEAF-KIT 10-19, MU-QW-B1 4b): the Qwen ROM 4-user op-start observer leaf qfd_sys_face_mu_dhuser NU 4 OPSEG 1 PINREG 1 hardened on its own: one ot_rom_4096x72_m8 (v2 aligned, F16 image rom/qfd_tt_ctlm_opseg.viamap.hex, content-independent macro; ROM instance parameters dropped under SYNTHESIS) 20 um from the E edge (its E face carries PG rects: macro_edge rule) with its W pin edge toward a W std-cell band (~200 flops: fc/tc 44, prefetch entry ~55, outputs 31, header ~56), all pins on the W face, ck mid-face beside the register band. PINREG 1 (opt-in, default 0 unchanged): pin flop on dh_run[42:36], compensated anchor, op starts cycle-identical. MU-LEAF-KIT2 10-19: (1) PINREG 1 lands ROM rd_out in a 72-flop capture register rq before any decode (gate k1 TT -134 ps: rom_q -> header/entry decode -> regs and -> ROM address); op starts unchanged (fire edge t_rom), compiler LEAF_MIN_GAP 2 -> 3 (F16 image min gap 7, unchanged). (2) pins spread over the full W face (3..66.5 um) with per-port pin_ranges + pin_balance (dh_run low, ck/rst_n mid, outputs high) instead of one region bunched low.",
+ "slot_change_request": "none: new observer leaf, no die slot yet; the compute-die integration (MU.TOK.QW B3) places it beside the qfd_tt_ctlm_dv cluster's dh_q register (it observes seq_dh only).",
+ "job": {
+  "owner": "Claude:MU-LEAF-KIT2",
+  "branch": "claude/mu-leaf-kit2-1019",
+  "tag": "k2",
+  "cycles_added": 0,
+  "purpose": "Qwen ROM 4-user op-start leaf (MU-QW-B1 B1 option 2) as its own hard leaf: ROM + frame counter; lockstep PINREG 1 vs PINREG 0 on the F16 image, 2 frames (8.09M edges, 8,113 starts), +DRIFT fault equivalence, 4 mutants FAIL.",
+  "views_to": "physical/ref_tile/qfd_sys_face_mu_dhuser/views",
+  "record_to": "results/rtl/ref_tile/qfd_sys_face_mu_dhuser",
+  "extra_paths": [
+   "rtl/qwen_split/mu",
+   "rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh",
+   "rtl/test/mu_qwen_seq/tb_dhuser_pinreg.sv",
+   "results/rtl/mu_qwen_1018/b1/rom",
+   "results/rtl/mu_qwen_1018/b1/runs/kit",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+  ],
+  "benches": [
+   {
+    "name": "pinreg_lockstep",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/pinreg_lockstep 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TB_DHUSER_PINREG PASS MUT=0 drift=0 edges=[0-9]+ starts=8113 per_user=1481/3463/3169 mism=0 ",
+    "min_count_regex": "^TB_DHUSER_PINREG PASS MUT=0 .* starts=(\\d+) ",
+    "pass_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m0.log"
+   },
+   {
+    "name": "pinreg_lockstep_drift",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/pinreg_lockstep_drift 0 +DRIFT",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TB_DHUSER_PINREG PASS MUT=0 drift=1 edges=[0-9]+ starts=8113 per_user=1481/3463/3169 mism=0 ",
+    "min_count_regex": "^TB_DHUSER_PINREG PASS MUT=0 .* starts=(\\d+) ",
+    "pass_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m0d.log"
+   },
+   {
+    "name": "entry_late_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/entry_late_mutant 4",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=4 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m4.log",
+    "note": "entry consumed one edge late"
+   },
+   {
+    "name": "reanchor_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/reanchor_mutant 5",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=5 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m5.log",
+    "note": "counters re-anchor on every L0 start"
+   },
+   {
+    "name": "drift_check_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/drift_check_mutant 6 +DRIFT",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=6 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m6d.log",
+    "note": "drift / missing check dropped"
+   },
+   {
+    "name": "pinreg_nocomp_mutant",
+    "cmd": "bash rtl/test/mu_qwen_seq/run_dhuser_pinreg.sh {RUN}/pinreg_nocomp_mutant 7",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TB_DHUSER_PINREG FAIL MUT=7 .* mism=[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/b1/runs/kit/pinreg_m7.log",
+    "note": "PINREG without the anchor compensation: every op start one edge late"
+   }
+  ]
+ }
+}
