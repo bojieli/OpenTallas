@@ -1,0 +1,149 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+read_liberty /src/physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static/ot_hbm_hc_qtree16_static_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib
+read_liberty /src/physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static/ot_hbm_hc_qtree16_static_ff.lib
+read_db /work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_ENTRIES entry clk_t[0] -> u_ot_pr_core.u_cen.g_hard.g_qt\[0\].u_t/clk (ot_hbm_hc_qtree16_static) wire 147.4 um LONG
+OT_ENTRIES entry clk_t[1] -> u_ot_pr_core.u_cen.g_hard.g_qt\[1\].u_t/clk (ot_hbm_hc_qtree16_static) wire 68.0 um LONG
+OT_ENTRIES entry clk_t[2] -> u_ot_pr_core.u_cen.g_hard.g_qt\[2\].u_t/clk (ot_hbm_hc_qtree16_static) wire 197.0 um LONG
+OT_ENTRIES entry clk_t[3] -> u_ot_pr_core.u_cen.g_hard.g_qt\[3\].u_t/clk (ot_hbm_hc_qtree16_static) wire 326.0 um LONG
+OT_HYBRID excluded hard entries: in-CTS -repair_clock_nets disabled; selected-root trees repaired after CTS
+OT_MACRO_CTS 5 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: clk.
+[INFO CTS-0095] Net "clk" found.
+[INFO CTS-0011]  Clock net "clk" for macros has 1 sinks.
+[INFO CTS-0011]  Clock net "clk_regs" for registers has 14989 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 5 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 1.
+[INFO CTS-0029]  Macro  sinks will be clustered in groups of up to 2 and with maximum cluster diameter of 40.0 um.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(259212, 303180), (259212, 303180)].
+[INFO CTS-0024]  Normalized sink region: [(192.009, 224.578), (192.009, 224.578)].
+[INFO CTS-0025]     Width:  0.0000.
+[INFO CTS-0026]     Height: 0.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 0.0000 X 0.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 1.
+[INFO CTS-0201] 5 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk_regs.
+[INFO CTS-0028]  Total number of sinks: 14989.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 95.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 807.
+[INFO CTS-0024]  Normalized sink region: [(144.076, 144.3), (399.321, 399.553)].
+[INFO CTS-0025]     Width:  255.2450.
+[INFO CTS-0026]     Height: 255.2526.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 404
+    Sub-region size: 255.2450 X 127.6263
+[INFO CTS-0034]     Segment length (rounded): 64.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 202
+    Sub-region size: 127.6225 X 127.6263
+[INFO CTS-0034]     Segment length (rounded): 64.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 101
+    Sub-region size: 127.6225 X 63.8132
+[INFO CTS-0034]     Segment length (rounded): 32.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 51
+    Sub-region size: 63.8112 X 63.8132
+[INFO CTS-0034]     Segment length (rounded): 32.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 26
+    Sub-region size: 63.8112 X 31.9066
+[INFO CTS-0034]     Segment length (rounded): 16.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 31.9056 X 31.9066
+[INFO CTS-0034]     Segment length (rounded): 16.
+ Level 7
+    Direction: Vertical
+    Sinks per sub-region: 7
+    Sub-region size: 31.9056 X 15.9533
+[INFO CTS-0034]     Segment length (rounded): 8.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 807.
+[INFO CTS-0018]     Created 2 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 2 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 1036 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 10.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 10.
+[INFO CTS-0015]     Created 1036 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1, 2:6, 3:14, 4:30, 5:21, 6:26, 7:21, 8:18, 9:16, 10:18, 11:16, 12:18, 13:18, 14:33, 15:36, 16:42, 17:48, 18:62, 19:77, 20:101, 21:98, 22:85, 23:67, 24:31, 25:21, 26:8, 27:1, 28:1, 29:1..
+[INFO CTS-0017]     Max level of the clock tree: 7.
+[INFO CTS-0124] Clock net "clk"
+[INFO CTS-0125]  Sinks 1
+[INFO CTS-0098] Clock net "clk_regs"
+[INFO CTS-0099]  Sinks 15715
+[INFO CTS-0100]  Leaf buffers 807
+[INFO CTS-0101]  Average sink wire length 330.50 um
+[INFO CTS-0102]  Path depth 9 - 10
+[INFO CTS-0207]  Dummy loads inserted 726
+[INFO CTS-0033] Balancing latency for clock 
+[INFO CTS-0036]  inserted 14 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 14
+[INFO CTS-0500] Runtime: 14.48s
+[INFO RSZ-0058] Using max wire length 163um.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 4 buffers in 1 nets.
+OT_HYBRID post-CTS scoped net repair on selected roots; 4 hard entries unchanged
+OT_HYBRID CTS roots clk; hard-child entries excluded
+OT_ENTRIES done: 4 independent hard entries, 1 glue CTS roots, 4 entry wires over 60.0 um
+QDM PINFLOP reference: 3317 input pin flops (4 hard-child clock pins at +insertion), median arrival 873.155945 (range 245.59403700000001 .. 944.20282)
+QDM reference pin u_ot_pr_core.u_q.target.data_q[151]$_DFF_P_/CLK clock arrival max 873.155945 min 739.023499 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_HYBRID CLOCK_RULE tt clk FAIL pin_spread=89.3 scope=boundary sinks=14990 WARN: insertion all_mean 684.1 / pin_mean 686.3 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root clk pin-flop spread 89.3 ps > 80 at tt (boundary, 7896 of 14990 sinks)
+Elapsed time: 0:53.13[h:]min:sec. CPU time: user 89.86 sys 14.17 (195%). Peak memory: 1337924KB.
