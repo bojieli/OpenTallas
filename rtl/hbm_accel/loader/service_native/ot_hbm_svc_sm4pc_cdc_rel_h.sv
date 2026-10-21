@@ -146,6 +146,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
   wire[3:0]pr;
+  wire local_start,local_active;
+  ot_hbm_svc_local_and2 u_startbuf(.a(h_fresh),.b(1'b1),.y(local_start));
+  ot_hbm_svc_local_and2 u_activebuf(.a(h_active),.b(1'b1),.y(local_active));
   ot_hbm_svc_local_and2 u_stopbuf(.a(hbm_fault),.b(1'b1),.y(owner_stop[pc]));
   ot_hbm_svc_local_and2 u_ownbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_owner[pc]));
   ot_hbm_svc_local_and2 u_popbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_pop[pc]));
@@ -153,8 +156,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_hbm_svc_local_and2 u_countbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_count[pc]));
   ot_rst_fanout #(.N(4)) u_pr(.clk(hbm_clk),.rst_n_in(h_rst[2+pc]),.rst_n(pr));
   ot_hbm_svc_prefetch_owner_rel_h #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
-   .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[2:0]),.blk_start(h_fresh),
-   .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
+   .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[2:0]),.blk_start(local_start),
+   .block_active(local_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(owner_stop[pc]),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
    .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_owner[pc]),
@@ -251,13 +254,19 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_hbm_svc_local_and2 u_t(.a(allocated[ac]),.b(1'b1),.y(alloc_total[ac]));
   ot_hbm_svc_local_and2 u_c(.a(allocated[ac]),.b(1'b1),.y(alloc_done[ac]));
  end endgenerate
+ wire out_epoch_capture,out_ordinal_capture,out_bank_capture;
+ ot_hbm_svc_local_and2 u_oec(.a(draining),.b(!fault),.y(out_epoch_capture));
+ ot_hbm_svc_local_and2 u_ooc(.a(draining),.b(!fault),.y(out_ordinal_capture));
+ ot_hbm_svc_local_and2 u_obc(.a(draining),.b(!fault),.y(out_bank_capture));
  integer si,sb;
  always @(posedge stream_clk)begin
   for(sb=0;sb<LBANKS;sb=sb+1)begin
    if(!alloc_epoch[sb])bank_epoch[sb]<=reserve_epoch;
    if(!alloc_total[sb])bank_total[sb]<=reserve_total;
   end
-  if(draining&&!fault)begin out_bank<=drain_bank;out_epoch<=bank_epoch[drain_bank];out_ordinal<=drain_ordinal;end
+  if(out_bank_capture)out_bank<=drain_bank;
+  if(out_epoch_capture)out_epoch<=bank_epoch[drain_bank];
+  if(out_ordinal_capture)out_ordinal<=drain_ordinal;
  end
  // sc[1]: completion masks (32)
  always @(posedge stream_clk or negedge sc[1])begin
