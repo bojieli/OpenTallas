@@ -96,3 +96,24 @@ for m in ('qkd_host_tp8_coordinator_rr', 'qkd_host_ctrl_token_service_packet_col
     k = len(re.findall(r'\b' + m + r'\b(?!_)', s)); assert k == 1, (m, k)
     s = re.sub(r'\b' + m + r'\b(?!_)', m + '_mu', s)
 w('qkd_hr_core_peer_sram_mu.v', TAG + s)
+
+# ---------------------------------------------------------------- MU 1-only flat copies (synthesis)
+# Yosys resolves a name used before its declaration at module scope (the _pd forks do this, e.g. pd2 load_cmd) but NOT
+# inside a named generate block ("Failed to detect width of signal access g_mu.load_cmd").  The PEER tile is MU 1 only,
+# so every MU member it uses is written MU 1-only: the g_mu body at module scope, the g_plain branch dropped (MU kept as
+# a parameter; any other value is an elaboration error).  Same logic; hierarchical names lose the g_mu level.
+GEN = re.compile(r'generate\s+if\s*\(\s*MU\s*==\s*0\s*\)\s*begin\s*:\s*g_plain\b(.*?)\bend\s+else\s+begin\s*:\s*g_mu\b', re.S)
+def flat(text, mod):
+    m = GEN.search(text); assert m, mod
+    k = text.rindex('endgenerate'); e = text.rindex('end', 0, k)
+    assert text[e:k].strip() == 'end', mod
+    body = text[m.end():e]
+    chk = ("`ifndef SYNTHESIS\n initial if(MU!=1)$error(\"%s: MU 1-only copy (KV-PEER12 flat)\");\n`endif\n" % mod)
+    return text[:m.start()] + '// KV-PEER12: MU 1-only flat copy (g_plain dropped, g_mu body at module scope)\n' + chk + body + text[k + len('endgenerate'):]
+M = R / 'rtl/qwen_sys/mu_qwen_20261018'
+for name in ('qkd_host_coordinator_services_mu', 'qkd_host_lifecycle_collected_mu', 'qkd_host_post_collector_mu',
+             'ot_qwen_tp8_token_cohort_mu', 'ot_qwen_tp8_token_epoch_allocator_mu'):
+    w(name + '.sv', TAG + flat((M / (name + '.sv')).read_text(), name))
+for name in ('qkd_host_peer_coordinator_codec_pd_mu', 'qkd_host_ctrl_token_service_packet_collected_pd2_mu',
+             'qkd_host_tp8_coordinator_pd_mu'):
+    w(name + '.sv', flat((OD / (name + '.sv')).read_text(), name))

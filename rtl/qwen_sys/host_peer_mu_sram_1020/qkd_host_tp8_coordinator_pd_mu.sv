@@ -22,9 +22,11 @@ module qkd_host_tp8_coordinator_pd_mu #(parameter integer MU=1,parameter integer
  output wire program_consensus,output wire[15:0]program_epoch,output wire[63:0]program_digest,
  output wire[7:0]certificate_valid,output wire[527:0]certificate,output wire[255:0]certificate_prefix,
  output wire wrap_locked,identity_fault,recovery_complete,post_pending,output wire fault);
-generate if(MU==0)begin:g_plain
- qkd_host_tp8_coordinator_pd  u_plain(.ck_codec(ck_codec),.ck_lifecycle(ck_lifecycle),.ck_post(ck_post),.por_n(por_n),.peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),.token_request_valid(token_request_valid),.token_request_token(token_request_token),.token_request_position(token_request_position),.token_request_gen(token_request_gen),.token_request_ready(token_request_ready),.token_grant_valid(token_grant_valid),.token_grant_ready(token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_gen(token_grant_gen),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.engine_admit_ready(engine_admit_ready),.dispatch_valid(dispatch_valid),.dispatched(dispatched),.cohort_tag(cohort_tag),.cohort_gen(cohort_gen),.accepted_ranks(accepted_ranks),.participant_trace(participant_trace),.participant_token(participant_token),.participant_pos(participant_pos),.engine_result_v(engine_result_v),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.engine_result_cr(engine_result_cr),.program_consensus(program_consensus),.program_epoch(program_epoch),.program_digest(program_digest),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.wrap_locked(wrap_locked),.identity_fault(identity_fault),.recovery_complete(recovery_complete),.post_pending(post_pending),.fault(fault));
-end else begin:g_mu
+// KV-PEER12: MU 1-only flat copy (g_plain dropped, g_mu body at module scope)
+`ifndef SYNTHESIS
+ initial if(MU!=1)$error("qkd_host_tp8_coordinator_pd_mu: MU 1-only copy (KV-PEER12 flat)");
+`endif
+
 
  wire[7:0]participant_valid,participant_accepted,cancel_valid,cancel_done,cancel_fault,cancel_accepted;
  wire[471:0]participant_tag,cancel_tag;wire[15:0]participant_gen,cancel_gen;
@@ -82,5 +84,5 @@ end else begin:g_mu
  .recovery_start(recovery_start),.links_drained(links_drained),.link_reset_seen(link_reset_seen),.retraining_done(retrained),.link_reset_request(link_reset_request),.retraining_request(retraining_request),.recovery_complete(recovery_complete),.wrap_locked(wrap_locked),.identity_fault(identity_fault),.terminal_accepted(terminal_accepted),.lifecycle_fault(lifecycle_fault),
  .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cancel_released(terminal_released),.cancel_release_required(8'hff),.result_transport_idle(result_transport_idle),.host_observer_fault(codec_fault),.post_fault(post_fault));
-end endgenerate
+
 endmodule

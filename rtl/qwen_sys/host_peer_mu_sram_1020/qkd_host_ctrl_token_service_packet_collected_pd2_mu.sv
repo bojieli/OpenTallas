@@ -42,43 +42,11 @@ module qkd_host_ctrl_token_service_packet_collected_pd2_mu #(parameter integer D
  output reg cancel_valid,output reg[58:0]cancel_tag,output reg[1:0]cancel_generation,
  output reg cancel_done,cancel_fault,output reg[3:0]cancel_drained,input wire terminal_accepted
 );
-generate if(MU==0)begin:g_plain
- wire w_rx_cr;
- wire w_tx_v;
- wire[511:0] w_tx_d;
- wire w_cmd_cr;
- wire[181:0] w_hc;
- wire[743:0] w_tk8;
- wire[79:0] w_kst8;
- wire[15:0] w_boot8;
- wire[7:0] w_seen;
- wire w_fault;
- wire w_begin_cr;
- wire w_begin_available;
- wire w_service_begin_v;
- wire[15:0] w_service_begin_epoch;
- wire w_pending_advertised;
- wire[15:0] w_pending_epoch;
- wire[7:0] w_service_ready8;
- wire[7:0] w_pending_ack8;
- wire[127:0] w_service_epoch8;
- wire w_ingest_permission;
- wire w_token_request_valid;
- wire[17:0] w_token_request_token;
- wire[17:0] w_token_request_position;
- wire[1:0] w_token_request_generation;
- wire w_token_grant_ready;
- wire w_token_epoch_valid;
- wire[15:0] w_token_epoch;
- wire w_cancel_valid;
- wire[58:0] w_cancel_tag;
- wire[1:0] w_cancel_generation;
- wire w_cancel_done;
- wire w_cancel_fault;
- wire[3:0] w_cancel_drained;
- qkd_host_ctrl_token_service_packet_collected_pd2 #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.CMD_READ32(CMD_READ32),.RX_SRAM32(RX_SRAM32),.RX_HEAD_ONLY(RX_HEAD_ONLY)) u_plain(.ck(ck),.rst_n(rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(w_rx_cr),.tx_v(w_tx_v),.tx_d(w_tx_d),.tx_cr(tx_cr),.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(w_cmd_cr),.hc(w_hc),.tk8(w_tk8),.kst8(w_kst8),.boot8(w_boot8),.seen(w_seen),.fault(w_fault),.startup_allowed(startup_allowed),.local_service_ready(local_service_ready),.local_service_epoch(local_service_epoch),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(w_begin_cr),.begin_available(w_begin_available),.service_begin_v(w_service_begin_v),.service_begin_epoch(w_service_begin_epoch),.pending_advertised(w_pending_advertised),.pending_epoch(w_pending_epoch),.service_ready8(w_service_ready8),.pending_ack8(w_pending_ack8),.service_epoch8(w_service_epoch8),.ingest_permission(w_ingest_permission),.por_n(por_n),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.token_allocator_fault(token_allocator_fault),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(w_token_request_valid),.token_request_ready(token_request_ready),.token_request_token(w_token_request_token),.token_request_position(w_token_request_position),.token_request_generation(w_token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(w_token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(w_token_epoch_valid),.token_epoch(w_token_epoch),.cancel_valid(w_cancel_valid),.cancel_tag(w_cancel_tag),.cancel_generation(w_cancel_generation),.cancel_done(w_cancel_done),.cancel_fault(w_cancel_fault),.cancel_drained(w_cancel_drained),.terminal_accepted(terminal_accepted));
- always @*begin rx_cr=w_rx_cr;tx_v=w_tx_v;tx_d=w_tx_d;cmd_cr=w_cmd_cr;hc=w_hc;tk8=w_tk8;kst8=w_kst8;boot8=w_boot8;seen=w_seen;fault=w_fault;begin_cr=w_begin_cr;begin_available=w_begin_available;service_begin_v=w_service_begin_v;service_begin_epoch=w_service_begin_epoch;pending_advertised=w_pending_advertised;pending_epoch=w_pending_epoch;service_ready8=w_service_ready8;pending_ack8=w_pending_ack8;service_epoch8=w_service_epoch8;ingest_permission=w_ingest_permission;token_request_valid=w_token_request_valid;token_request_token=w_token_request_token;token_request_position=w_token_request_position;token_request_generation=w_token_request_generation;token_grant_ready=w_token_grant_ready;token_epoch_valid=w_token_epoch_valid;token_epoch=w_token_epoch;cancel_valid=w_cancel_valid;cancel_tag=w_cancel_tag;cancel_generation=w_cancel_generation;cancel_done=w_cancel_done;cancel_fault=w_cancel_fault;cancel_drained=w_cancel_drained;end
-end else begin:g_mu
+// KV-PEER12: MU 1-only flat copy (g_plain dropped, g_mu body at module scope)
+`ifndef SYNTHESIS
+ initial if(MU!=1)$error("qkd_host_ctrl_token_service_packet_collected_pd2_mu: MU 1-only copy (KV-PEER12 flat)");
+`endif
+
  reg[3:0]rr,u_granted;reg rr_seen;reg[17:0]job_tok[0:3],job_pos[0:3];reg[1:0]job_gen[0:3];reg[15:0]u_ep[0:3];
  reg[3:0]pe_seen;reg[13:0]pe_last[0:3];
  wire retained_request;
@@ -441,5 +409,5 @@ wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
  assign cu=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;
  assign cu_latest=allocated_token_q==job_tok[cu]&&allocated_position_q==job_pos[cu]&&allocated_generation_q==job_gen[cu];
  assign cu_epoch=cu_latest?allocated_epoch_q:u_ep[cu];
-end endgenerate
+
 endmodule

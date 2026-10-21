@@ -33,58 +33,11 @@ module qkd_host_peer_coordinator_codec_pd_mu #(parameter integer MU=1)(
  output reg cq_commit_v,output reg[15:0]cq_client_tag,output reg[7:0]cq_slot,output reg[17:0]cq_pos,cq_token,
  output reg[7:0]certificate_valid,output reg[527:0]certificate,output reg[255:0]certificate_prefix,
  output reg fault);
-generate if(MU==0)begin:g_plain
- wire[4095:0] w_tx_data;
- wire[7:0] w_participant_valid;
- wire[471:0] w_participant_tag;
- wire[15:0] w_participant_gen;
- wire[255:0] w_participant_trace;
- wire[143:0] w_participant_token;
- wire[143:0] w_participant_pos;
- wire[7:0] w_cancel_valid;
- wire[7:0] w_cancel_done;
- wire[7:0] w_cancel_fault;
- wire[471:0] w_cancel_tag;
- wire[15:0] w_cancel_gen;
- wire[7:0] w_service_ready;
- wire[7:0] w_native_ready;
- wire[7:0] w_kv_drained;
- wire[7:0] w_vm_drained;
- wire[7:0] w_collective_drained;
- wire[7:0] w_host_drained;
- wire[7:0] w_context_owned;
- wire[7:0] w_links_drained;
- wire[7:0] w_link_reset_seen;
- wire[7:0] w_retrained;
- wire[127:0] w_service_epoch;
- wire[127:0] w_certificate_epoch;
- wire[7:0] w_program_ready;
- wire[127:0] w_program_epoch;
- wire[511:0] w_program_digest;
- wire w_result_cr;
- wire[7:0] w_terminal_released;
- wire w_step_issue_v;
- wire[15:0] w_step_client_tag;
- wire[7:0] w_step_slot;
- wire[17:0] w_step_pos;
- wire w_step_retire_v;
- wire w_step_retire_cq;
- wire[15:0] w_step_retire_client_tag;
- wire[7:0] w_step_retire_slot;
- wire[17:0] w_step_retire_pos;
- wire[17:0] w_step_retire_token;
- wire w_cq_commit_v;
- wire[15:0] w_cq_client_tag;
- wire[7:0] w_cq_slot;
- wire[17:0] w_cq_pos;
- wire[17:0] w_cq_token;
- wire[7:0] w_certificate_valid;
- wire[527:0] w_certificate;
- wire[255:0] w_certificate_prefix;
- wire w_fault;
- qkd_host_peer_coordinator_codec_pd  u_plain(.ck(ck),.por_n(por_n),.rx_valid(rx_valid),.rx_data(rx_data),.rx_ready(rx_ready),.tx_valid(tx_valid),.tx_data(w_tx_data),.tx_ready(tx_ready),.allocated_valid_i(allocated_valid_i),.allocated_delivered_i(allocated_delivered_i),.allocated_tag_i(allocated_tag_i),.allocated_gen_i(allocated_gen_i),.allocated_position_i(allocated_position_i),.participant_valid(w_participant_valid),.participant_tag(w_participant_tag),.participant_gen(w_participant_gen),.participant_trace(w_participant_trace),.participant_token(w_participant_token),.participant_pos(w_participant_pos),.participant_accepted(participant_accepted),.cancel_valid(w_cancel_valid),.cancel_done(w_cancel_done),.cancel_fault(w_cancel_fault),.cancel_tag(w_cancel_tag),.cancel_gen(w_cancel_gen),.cancel_accepted(cancel_accepted),.service_ready(w_service_ready),.native_ready(w_native_ready),.kv_drained(w_kv_drained),.vm_drained(w_vm_drained),.collective_drained(w_collective_drained),.host_drained(w_host_drained),.context_owned(w_context_owned),.links_drained(w_links_drained),.link_reset_seen(w_link_reset_seen),.retrained(w_retrained),.service_epoch(w_service_epoch),.certificate_epoch(w_certificate_epoch),.program_ready(w_program_ready),.program_epoch(w_program_epoch),.program_digest(w_program_digest),.result_v(result_v),.result_tag(result_tag),.result_gen(result_gen),.result_done(result_done),.result_fault(result_fault),.result_cause(result_cause),.result_token(result_token),.result_value(result_value),.result_cycles(result_cycles),.result_cr(w_result_cr),.terminal_accepted(terminal_accepted),.terminal_tag(terminal_tag),.terminal_gen(terminal_gen),.post_retired(post_retired),.terminal_released(w_terminal_released),.result_transport_idle(result_transport_idle),.link_reset_request(link_reset_request),.retraining_request(retraining_request),.step_issue_v(w_step_issue_v),.step_client_tag(w_step_client_tag),.step_slot(w_step_slot),.step_pos(w_step_pos),.step_retire_v(w_step_retire_v),.step_retire_cq(w_step_retire_cq),.step_retire_client_tag(w_step_retire_client_tag),.step_retire_slot(w_step_retire_slot),.step_retire_pos(w_step_retire_pos),.step_retire_token(w_step_retire_token),.cq_commit_v(w_cq_commit_v),.cq_client_tag(w_cq_client_tag),.cq_slot(w_cq_slot),.cq_pos(w_cq_pos),.cq_token(w_cq_token),.certificate_valid(w_certificate_valid),.certificate(w_certificate),.certificate_prefix(w_certificate_prefix),.fault(w_fault));
- always @*begin tx_data=w_tx_data;participant_valid=w_participant_valid;participant_tag=w_participant_tag;participant_gen=w_participant_gen;participant_trace=w_participant_trace;participant_token=w_participant_token;participant_pos=w_participant_pos;cancel_valid=w_cancel_valid;cancel_done=w_cancel_done;cancel_fault=w_cancel_fault;cancel_tag=w_cancel_tag;cancel_gen=w_cancel_gen;service_ready=w_service_ready;native_ready=w_native_ready;kv_drained=w_kv_drained;vm_drained=w_vm_drained;collective_drained=w_collective_drained;host_drained=w_host_drained;context_owned=w_context_owned;links_drained=w_links_drained;link_reset_seen=w_link_reset_seen;retrained=w_retrained;service_epoch=w_service_epoch;certificate_epoch=w_certificate_epoch;program_ready=w_program_ready;program_epoch=w_program_epoch;program_digest=w_program_digest;result_cr=w_result_cr;terminal_released=w_terminal_released;step_issue_v=w_step_issue_v;step_client_tag=w_step_client_tag;step_slot=w_step_slot;step_pos=w_step_pos;step_retire_v=w_step_retire_v;step_retire_cq=w_step_retire_cq;step_retire_client_tag=w_step_retire_client_tag;step_retire_slot=w_step_retire_slot;step_retire_pos=w_step_retire_pos;step_retire_token=w_step_retire_token;cq_commit_v=w_cq_commit_v;cq_client_tag=w_cq_client_tag;cq_slot=w_cq_slot;cq_pos=w_cq_pos;cq_token=w_cq_token;certificate_valid=w_certificate_valid;certificate=w_certificate;certificate_prefix=w_certificate_prefix;fault=w_fault;end
-end else begin:g_mu
+// KV-PEER12: MU 1-only flat copy (g_plain dropped, g_mu body at module scope)
+`ifndef SYNTHESIS
+ initial if(MU!=1)$error("qkd_host_peer_coordinator_codec_pd_mu: MU 1-only copy (KV-PEER12 flat)");
+`endif
+
  reg[58:0]tq_tag[0:3];reg[1:0]tq_gen[0:3];reg[1:0]tq_w,tq_r;reg[2:0]tq_n;
  reg[3:0]al_v,term_v;reg[58:0]al_tag[0:3],term_tag[0:3];reg[1:0]al_gen[0:3],term_gen[0:3];reg[58:0]al_last;reg al_last_v;
  wire tq_push;
@@ -227,5 +180,5 @@ end else begin:g_mu
  assign head_done=terminal_active&&terminal_send==0&&(&terminal_released);
  assign tq_pop=post_retired&&head_done;
  assign tq_next=tq_n+3'(tq_push)-3'(tq_pop);
-end endgenerate
+
 endmodule
