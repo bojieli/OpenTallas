@@ -1,1 +1,0 @@
-module realmini(input ck,input rs,input [7:0] in,output [7:0] q,output [7:0] serial); wire [7:0] ab,bc; hbfd_rly_8_WE a(.ck(ck),.rs(rs),.i(in),.o(ab)); hbfd_rly_8_WE b(.ck(ck),.rs(rs),.i(ab),.o(bc)); hbfd_rly_8_WE d(.ck(ck),.rs(rs),.i(bc),.o(q)); hbfd_rly_8_WE c(.ck(ck),.rs(rs),.i(bc),.o(serial)); endmodule

@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_sys_face_n32obo-n32obo-ca3ab89c1 bench bench_sysface_actual_producer_clock_negative host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qfd_sys_face_n32obo-n32obo-ca3ab89c1 log cl/bench_sysface_actual_producer_clock_negative.a1b1.log captured 2026-10-20T12:59:00-07:00
-# fail_regex '^SYSFACE_ROUTE_ACTUAL_PRODUCER_CLOCK_MUTANT_CAUGHT$'
-[945000] %Fatal: tb_qfd_sys_face_n32.sv:413: Assertion failed in tb_qfd_sys_face: SYSFACE32_WRAPPER_MISMATCH port=prog_tx_observed_v cyc=1134
-%Error: /srv/opentallas-scratch/claude/closure-loop/qfd_sys_face_n32obo-n32obo-ca3ab89c1/clock_negative/fixture/tb_qfd_sys_face_n32.sv:413: Verilog $stop
-SYSFACE_ROUTE_ACTUAL_PRODUCER_CLOCK_MUTANT_CAUGHT

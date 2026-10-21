@@ -1,8 +1,0 @@
-HCRPL MISMATCH cyc=2351 port=23 sec=ffff got=00000000000000000000000000000000000000000000000000000000c2e678b1 exp=00000000000000000000000000000000000000000000000000000000c2e67891
-HCRPL MISMATCH cyc=2920 port=30 sec=0040 got=c2a36c83c2727e28c3372331c36cff3242e41521c28b2e50c2e678b1c2c77f32 exp=c2a36c83c2727e28c3372331c36cff3242e41521c28b2e50c2e67891c2c77f32
-HCRPL TRACE word0_after_edge=2324 lg_rq_after=3 gm_v_after=2349 lg_wq_after=3 result_v_after=2876 NRD=14 NWD=11
-HCRPL FAIL fails=2 vm_errors=0 internal_fault_cyc=0 checks=107 reads=3 writes=3
-- /srv/opentallas-scratch/claude/veh-coll2-hc/pre/tb_hc_replay.sv:153: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 0.009 s; speed 342.528 us/s
-- Verilator: cpu 0.009 s on 1 threads; allocated 11 MB

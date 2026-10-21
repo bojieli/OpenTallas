@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_dma_back_cp_collar",
- "enable": false,
- "reason": "ot_static_cmd_target_core registers every pin in RTL (owner pin rule 19:50): cfg/desc/launch/tgt/tgt_active/tgt_fault land in pin flops (cv/dv/lv/act_q/flt_q/target_q/addr_q/data_q/base_q/limit_q/loops_q/tgt_q), cmd_v/cmd/cycle/configured/fault/active are registers; rst_n loads one pin flop (rst_q). A kit flop stage would add a redundant edge to the compiled calendar."
-}

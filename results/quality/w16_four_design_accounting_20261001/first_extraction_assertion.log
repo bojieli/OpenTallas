@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/opentallas-w16-four-design-accounting/tools/w16_four_design_accounting.py", line 205, in <module>
-    if __name__=="__main__": main()
-  File "/tmp/opentallas-w16-four-design-accounting/tools/w16_four_design_accounting.py", line 182, in main
-    result=build(c)
-  File "/tmp/opentallas-w16-four-design-accounting/tools/w16_four_design_accounting.py", line 114, in build
-    assert abs(qh_us-1e6/qh["ar_tokens_s_b1"]) < 0.02
-AssertionError

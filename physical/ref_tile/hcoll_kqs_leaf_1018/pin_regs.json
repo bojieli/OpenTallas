@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_coll_kq_share2_leaf",
- "enable": false,
- "reason": "RTL registers every pin: a_kq/b_kq land in pin flops (a_d/a_v, b_d/b_v), vm_kq and fault leave flops (KQ_SHARE_EDGES = 2 at the bank sample edge, recorded for the COLL calendar: tools/hgi_sim/collq_gather_1018.py KQ_SHARE_EDGES); a synthesis wrapper would add unpriced stages. clk/rst_n pass through (rst_n drives only ot_rst_relay)."
-}

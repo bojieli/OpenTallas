@@ -1,7 +1,0 @@
-{
-  "verdict": "FAIL_TOOL_RELATIVE_PATH_RECEIPT",
-  "exit_code": 1,
-  "cause": "Path.relative_to(ROOT) was called on a relative attempt path; allocation/rowtree/overlap verification had completed, receipt construction failed",
-  "preserved_error": "ValueError: 'results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/assignments.jsonl.gz' is not in the subpath of '/home/ubuntu/w17-dsrom-fixed4096-owner-compiler' OR one path is relative and the other is absolute.",
-  "no_allocation_retry": true
-}

@@ -1,3 +1,0 @@
-{"schema":"opentallas.tile_visual_review.v1","tile":"hbm_sfu_store_stripe_r10_1017","reviewer":"coordinator (2026-10-18 ~00:35)","verdict":"APPROVED","time":"2026-10-18T00:35:00-07:00","gate_commit":"2026-10-17T20:29:23-0700",
- "checklist":{"lattice":"PASS: four 512x256 SRAMs on the lattice, two columns","std_cell_band":"PASS: central spine band plus side strips","pin_spread":"PASS: N face full width; S face in/out buses beside the clock","clock_entry":"PASS: S centre beside the register mass; 270.6 / 40.9","shape":"PASS 285.1x194.4 util 0.50"},
- "notes":"r10n + in-face chain stage (KH-NATIVE3, 9f66f3448): probe capture 76.4 (was 236.1 routed), launch 143.8; setup +146.9, hold +27.9, GRT 0."}

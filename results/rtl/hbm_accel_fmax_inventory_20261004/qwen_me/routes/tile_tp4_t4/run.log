@@ -1,7 +1,0 @@
-view=asap7 corner=TT block=ot_qwen_rom_tile_logic_w12 top=ot_qwen_rom_tile_logic_w12 purpose=signoff_target
-  synth: cells=524938 area=72655.303 um2 seq_area=34800.000 um2 macros=0
-  pnr:   wirelength=3037952 um vias=5217930 DRC=0 antenna_nets=0 Fmax=1173.84 MHz
-  drv:   max_slew=6 max_cap=0 max_fanout=0
-  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
-  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
-  wrote /srv/opentallas-scratch/claude/hbm-fmax-qme/routes/tile_tp4_t4/physical.json

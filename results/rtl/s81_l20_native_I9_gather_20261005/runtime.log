@@ -1,9 +1,0 @@
-IMPORT_ACK rank=0 producer=2478 words=320 cycle=383
-IMPORT_ACK rank=1 producer=2478 words=320 cycle=763
-IMPORT_ACK rank=2 producer=2478 words=320 cycle=1143
-IMPORT_ACK rank=3 producer=2478 words=320 cycle=1523
-GATHER_ACCEPT rank=0 pc=9 producer=2480 cycle=3763
-GATHER_ACCEPT rank=1 pc=9 producer=2480 cycle=3763
-GATHER_ACCEPT rank=2 pc=9 producer=2480 cycle=3763
-GATHER_ACCEPT rank=3 pc=9 producer=2480 cycle=3763
-GATHER_COMPLETE native_drain_cycle=5608 readback_terminal_cycle=31208 rank_words=1280 mismatches=0 scope=native_I9_native_produced_boundary_imports_NO_fulltoken_or_physical_timing

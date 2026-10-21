@@ -1,5 +1,0 @@
-PASS SFU bank lifetime checks=533 returns=77 commits=78 LQ10 full_identity_queue_no_credit_overcommit=1 wraps=7 earlycredit_delayedACK_externaldrain=1 warm_reset=1 invalid_bank=1 grant_loss_while_lease_held=1
-- rtl/test/hbm_accel/generic/tb_hgi_sfu_bank_lifetime.sv:53: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 445ns; walltime 0.002 s; speed 261.395 us/s
-- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

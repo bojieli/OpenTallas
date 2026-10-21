@@ -1,8 +1,0 @@
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:3: error: Unable to bind parameter `NW' in `tb_pc21_window_admission'
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:3: error: Cast size expression must be constant and greater than zero.
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:3: error: Unable to bind parameter `NW' in `tb_pc21_window_admission'
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:3: error: Cast size expression must be constant and greater than zero.
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:3: internal error: Found a zero width constant!
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:3: internal error: Found a zero width constant!
-/home/ubuntu/w17-PC21-focused-gate-20261001-r1/corrected/actual_admission.svh:1: internal error: Failed to synthesize expression: ((((((1'd1)&&((d_unit[2:0])==(3'd2)))&&((dst[1:0])==(2'd3)))&&((a_src[1:0])==(2'd0)))&&((su_nout[29:0])==(0'd0)))&&((su_nin[29:0])==(0'd0)))&&((a_base[29:0])==(win_cap_src_base[29:0]))
-5 error(s) during elaboration.

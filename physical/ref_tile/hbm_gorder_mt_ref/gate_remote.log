@@ -1,8 +1,0 @@
-GATE INFO layer: tile: PG M6 stripes as pins, signals M2-M6, parent strap M7
-GATE INFO remote: remote log /tmp/ref_gate_hbm_gorder_mt_ref_20261011-234407.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_gorder_mt_ref-20261011-234407
-GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 878 s (gate total 1012 s)
-GATE INFO util: synthesized std area 14790 um2 + macros 0 in core 29860: util 50%
-GATE INFO textbook: WARN ot_hbm_index_global_order_mt cells 113,523 flops 19,628 depth 543.4 ps util 0.4973 reach 174.1 um (6.3 s)
-GATE WARN textbook.clock_domain: clock root port clk: 19,628 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. done$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
-GATE WARN textbook.boundary: 32 input->register endpoint(s) > 3 levels (worst start->u_in0.in_ready$_SDFF_PN1_/D 6 lv, rsp_v->u_in1.in_ready$_SDFF_PN1_/D 6 lv, read_r->u_out0.in_ready$_SDFF_PN1_/D 6 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
-PRE_ROUTE_GATE: WARN (0 fail, 2 warn)

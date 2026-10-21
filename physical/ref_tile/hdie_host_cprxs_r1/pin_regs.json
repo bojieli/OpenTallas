@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_host_cp_rxs",
- "enable": false,
- "reason": "RTL registers every pin: link capture all-input capture (wr_*/rd_*/rx_pin_*/epoch/phy_up), seq pin flops (ep_rx_block_ready, ep_phy_up), session pin flop, landing PINREG=1 and packet AXI/status pin flops; every output is a flop Q (link tx_pin_*, seq ep_* controls, packet AXI, fault flops)"
-}

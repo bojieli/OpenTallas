@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hbfd_rly_304_ew_rrfc-rfc-88b390dd7 bench bench_neg_nogatemut host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hbfd_rly_304_ew_rrfc-rfc-88b390dd7-bench log cl/bench_neg_nogatemut.a1b1.log captured 2026-10-21T03:55:47-07:00
-# fail_regex 'RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors \\d+ rfc_errors [1-9]\\d* assert_errors'
-Verilator 5.050 2026-07-01 rev v5.050
-RLY_RFC_BENCH FAIL 0 errors 0 rso_errors 8142 rfc_errors 2118 assert_errors 1275 age_errors trials=401 ages_checked=279 (hbfd_rly_304_EW_rrfc W=304) rfc_age=3 release_edges=3 window_words=36

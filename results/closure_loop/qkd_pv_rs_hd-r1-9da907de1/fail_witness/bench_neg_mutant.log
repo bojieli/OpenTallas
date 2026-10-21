@@ -1,4 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_pv_rs_hd-r1-9da907de1 bench bench_neg_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_pv_rs_hd-r1-9da907de1 log cl/bench_neg_mutant.a1b1.log captured 2026-10-18T03:13:08-07:00
-# fail_regex 'RTRUNK_LEAF FAIL'
-RTRUNK_LEAF FAIL 5014 errors in 20000 cycles (qkd_pv_rs_hd)

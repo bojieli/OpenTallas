@@ -1,5 +1,0 @@
-PR0_RESET_PASS epochs=4 checks=64 regions=211 landing=2 relay_release=5 first_capture=6
-- tb_pr0_reset.sv:31: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 144ns; walltime 0.001 s; speed 103.687 us/s
-- Verilator: cpu 0.001 s on 1 threads; allocated 8 MB

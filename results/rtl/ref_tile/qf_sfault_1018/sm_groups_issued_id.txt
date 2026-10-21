@@ -1,6 +1,0 @@
-SVG_ID REPORT_IDENTICAL lines=9
-SM_GROUPS_ISSUED PASS stack=0 rows=40 epochs=8 lbanks=4 first_done_ps=213751.914000 last_done_ps=543751.782000 steady_epoch_ps=47083.314500 bytes_per_epoch_per_SM=5440 tb_issue=0
-SVG_ID MUTANT_REJECTED msm1: SM_STACK actualPC mapping
-SVG_ID MUTANT_REJECTED msm4: SM_STACK actualPC mapping
-SVG_ID MUTANT_REJECTED mst: SM_STACK DUT fault cycle125 maskff
-SVG_ID_GATE PASS stack=0

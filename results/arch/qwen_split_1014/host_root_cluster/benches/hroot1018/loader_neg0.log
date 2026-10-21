@@ -1,6 +1,0 @@
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2594965-1792375344 after 3 s
-PASS actual_HOST_target images14 all14targets real4SRAM exactreplay targetboundauth footerISAonly
-- rtl/test/qwen_static_kv/tb_host_program_target.sv:46: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 293us; walltime 0.011 s; speed 25.921 ms/s
-- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB

@@ -1,7 +1,0 @@
-view=asap7 corner=TT block=ot_hbm_r14_stream_stack_aq_slot_ready_cut top=ot_hbm_r14_stream_stack_aq_slot_ready_cut purpose=signoff_target
-  synth: cells=20746 area=3143.252 um2 seq_area=1536.640 um2 macros=0
-  pnr:   wirelength=121081 um vias=291943 DRC=0 antenna_nets=0 Fmax=1162.89 MHz
-  drv:   max_slew=0 max_cap=0 max_fanout=0
-  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
-  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
-  wrote /srv/opentallas-scratch/jobs/euclid-svc-a-slot-u50-r1/physical.json

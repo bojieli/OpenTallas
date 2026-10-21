@@ -1,7 +1,0 @@
-ot-run: ot-epyc1tb     admits   381 GB (avail 608, growth 51, headroom 64, waiters 0/0 GB) load 42/128 running 14 disk 898 GB
-ot-run: ot-epyc4       admits   743 GB (avail 970, growth 24, headroom 48, waiters 0/0 GB) load 39/128 running 11 disk 747 GB
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/ectl-direct2-1014-pm/ready
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/ectl-direct2-1014-pm/ready
-ot-run: -> ot-epyc4
-ECTL3 FAIL lockstep 2835 layers 4/4 rows 1005 vrows 504 nodes 6 cycles 3705
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-299790-1792016859): exit 0

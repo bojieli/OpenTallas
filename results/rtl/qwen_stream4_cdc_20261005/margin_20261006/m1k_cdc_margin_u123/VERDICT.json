@@ -1,7 +1,0 @@
-{"run": "m1k_cdc_margin_u123", "date": "2026-10-06", "host": "ot-epyc1tb",
- "design": "ot_qwen_stream4_cdc_pc MARGIN=1 (pin-registered inputs, credit landing), route 833.333 with setup uncertainty 123 (= 770 effective)",
- "signoff": "tools/w18/corner_sta.py --post-sdc physical/qwen_stream4_cdc/io_skew90.sdc (OT_IO_SKEW 90 intra-region, hold allowance 50)",
- "ss_setup_ps_at_unc123": -17.01, "ss_setup_ps_at_833_unc60": 45.99, "ss_worst_class": "lr_gray -> lgrp[1].g_hot.u_sel (internal)",
- "ff_hold_ps": -2.67, "ff_worst_class": "h_ldata input -> g_pin.hld_q (2 pins); output hold +5.2",
- "verdict": "NOT CLOSED: SS +46.0 passes (>= +40) but FF hold -2.7 < +15 (hold repair margin 10 ps did not cover the 50 ps IO hold allowance at FF)",
- "next": "m1h_cdc_margin_u123_hm40: same RTL/route, hold repair margin 40 ps (hold by repair)"}

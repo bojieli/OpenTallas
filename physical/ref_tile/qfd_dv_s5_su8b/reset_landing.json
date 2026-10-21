@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qfd_dv_s5_su8_rst3",
- "enable": false,
- "reason": "the RTL lands rst_n in two registered stages (rs0 -> rs1) and fans out through kept local reset leaves (<= 32 loads each)"
-}

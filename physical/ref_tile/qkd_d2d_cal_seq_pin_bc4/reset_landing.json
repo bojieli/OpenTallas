@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qkd_d2d_cal_seq_pin_bc4",
- "enable": false,
- "reason": "The RTL owns the 2-stage landing at the face: rst_n -> land0 (1 load) -> 4 kept land1 copies (synchronous assert and release, as the frozen generated landing), then rel0 -> 19 kept rel1 release copies; every reset source drives <= 23 loads (bc3safe census c494be2d7: raw reset 1, outer Q max 23, inner Q max 16). A flow landing would add 2 more release edges to the scheduled constant."
-}

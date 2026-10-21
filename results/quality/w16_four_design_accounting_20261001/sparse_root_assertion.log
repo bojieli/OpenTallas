@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/opentallas-w16-four-design-accounting/results/quality/w16_four_design_accounting_20261001/generate.py", line 17, in <module>
-    ROOT = next(p for p in Path(__file__).resolve().parents if (p/"AGENTS.md").is_file())
-StopIteration

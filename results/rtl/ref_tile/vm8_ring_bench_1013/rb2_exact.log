@@ -1,7 +1,0 @@
-VM_RING_SRC tile=rb2 sha256=3be9a80a490795a2e73c7b54214daf2eaaaae2b8ba8652d0436ba594f99d253f mut=none
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=50411 beatsA=20000(main 9996 stn 10004) beatsB=20000(main 10059 stn 9941) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3327/3327 stallA=8385/8288 fullA=621/616 zeroA=1051/1076 stallB=8289/8402 fullB=637/630 zeroB=1044/1040 cfg=0
-VM_RING_RUN PASS tile=rb2 beats=40000
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=50469 beatsA=20000(main 9996 stn 10004) beatsB=20000(main 9979 stn 10021) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3327/3327 stallA=8333/8288 fullA=638/594 zeroA=1143/1039 stallB=8324/8397 fullB=632/598 zeroB=1067/1026 cfg=0
-VM_RING_RUN PASS tile=rb2 beats=40000
-VM_RING_BENCH PASS tile=rb2 mut=none beats=80000/1
-rc=0

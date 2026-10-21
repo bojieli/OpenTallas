@@ -1,7 +1,0 @@
-make: Entering directory '/srv/opentallas-scratch/codex/pv256-parallel-1013/obj-0'
-g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -Os  -c -o tb_qwen_tp8_pv256_pair.o ../rtl/test/nearhbm/tb_qwen_tp8_pv256_pair.cpp
-g++    sim_nhb_fp_lat_dpi.o tb_qwen_tp8_pv256_pair.o verilated.o verilated_dpi.o verilated_threads.o Vot_qwen_tp8_pv256_pair__ALL.a    -pthread -lpthread -latomic   -o Vot_qwen_tp8_pv256_pair
-make: Leaving directory '/srv/opentallas-scratch/codex/pv256-parallel-1013/obj-0'
-- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
-- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
-- Verilator: Walltime 0.688 s (elab=0.000, cvt=0.000, bld=0.687); cpu 0.001 s on 4 threads; alloced 7.000 MB

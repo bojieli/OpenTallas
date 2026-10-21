@@ -1,8 +1,0 @@
-  unexpected event class 10 arg 0 at T+34231
-ERR @35475 event off its compiled cycle
-SYS_FACE_FAIL MUT=4 timeout (errors 1, face_fault 1 cal_fault 1)
-- /srv/opentallas-scratch/claude/codex-qw-syscal32-protocol-1020/src/protocol/tb_qfd_sys_face_n32.sv:333: Verilog $finish
-SYSFACE32_WRAPPER_CHECKS 0
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 450us; walltime 4.945 s; speed 91.004 us/s
-- Verilator: cpu 4.945 s on 1 threads; allocated 8 MB

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kv_grp_ctl_p",
- "enable": false,
- "reason": "The RTL registers every core-domain input itself (qkd_kv_grp_ctl_p: one kept pin flop per bit, rst_n -> rst_q); synthesis pin registers take one clock and the tile has two (ck / hck). Every output is flop-driven in the RTL (boot_cdc sink_*/applied/fault, phase *_h/fault/idle, drain drained/fault)."
-}

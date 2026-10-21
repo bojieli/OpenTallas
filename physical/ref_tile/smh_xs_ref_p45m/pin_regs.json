@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_accel_smh_xs",
- "enable": false,
- "reason": "HF-5b: the RTL registers every pin already: inputs land in u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 (behind ot_hdly) and the leaf's strap / reset pin flops, outputs are the leaf's operand (i) stage registers (o_*_e: kept copy u_ctle under OT_SMH_XSE); flow pin registers would add a cycle on every link"
-}

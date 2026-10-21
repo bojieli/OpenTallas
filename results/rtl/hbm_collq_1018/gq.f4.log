@@ -1,8 +1,0 @@
-COLLQ FAULT PASS scenario=4 gq1100 ra0000 rb1110 ks0000
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:259: Verilog $finish
-COLLQ unexpected fault gq1100 ra0000 rb1110 rs0000 ks0000
-COLLQ FAIL errors=1
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.154 s; speed 13.191 us/s
-- Verilator: cpu 0.155 s on 1 threads; alloced 1023 MB

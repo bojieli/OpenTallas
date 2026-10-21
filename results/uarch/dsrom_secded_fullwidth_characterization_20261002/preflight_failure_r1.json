@@ -1,7 +1,0 @@
-{
-  "status": "FAIL_LIBRARY_TEMPLATE_PREFLIGHT",
-  "mapped_jobs_started": 0,
-  "test": "test_both_corner_complete_cells_and_capture_load",
-  "failure": "actual FF library families reuse template identifiers with different LUT definitions",
-  "repair": "namespace per-family template identifiers and references only; no timing values modified"
-}

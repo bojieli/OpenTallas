@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qfd_sys_face_control_safe",
- "enable": false,
- "reason": "RTL lands rst_n in 2 registered synchronous stages (ot_explicit_reset_stages=2, wrapper reset2)"
-}

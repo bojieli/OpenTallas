@@ -1,8 +1,0 @@
-# ROOT-0330-CDC 2026-10-18: same lint, RTL with the one-line gate of wbk_q_cdc_gate_fix.patch applied to ot_hbm_svc_wb_cutthrough_cdc.sv (scratch copy, NOT committed RTL)
-# VERDICT: PASS
-LINT PASS {"counts": {"consumer": 62, "gated": 9599, "lsrc": 2, "macro": 32, "mem": 36712, "rst": 12, "rstage": 0, "src": 204, "stage": 204, "sync1": 204}, "families": {"f0": ["ot_hbm_accel_cdc_fifo", "core", "hbm", 773.333, 964.0], "f1": ["ot_hbm_accel_cdc_fifo", "core", "hbm", 773.333, 964.0], "f2": ["ot_hbm_accel_cdc_fifo", "core", "hbm", 773.333, 964.0]}, "fifos": 34, "levels": {"l0": {"dst": "core", "max_delay_ps": 773.333, "name": "hbm_fault_to_stream", "src": "hbm", "stages": 2}, "l1": {"dst": "hbm", "max_delay_ps": 773.333, "name": "stream_fault_to_hbm", "src": "core", "stages": 2}}, "macros": 32, "straps": ["quad->hbm"]}
-GENERATE PASS 5075310 bytes; False False
-elapsed_s 566.5 maxrss_GB 41.4
-	Command being timed: "python3 /home/ubuntu/wt/root-0330-cdc-out/real_lint.py results/rtl/rbh_stk_1018/wbk_q_cdc_lint_spec.json /home/ubuntu/wt/root-0330-cdc-gated"
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:30.72
-	Maximum resident set size (kbytes): 41396160

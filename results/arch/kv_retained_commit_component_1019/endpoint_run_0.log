@@ -1,8 +1,0 @@
-PASS real result cleanup edge=23
-PASS protocol fault real matching cleanup edge=47
-PASS same-edge new issue cut edge=60
-ENDPOINT_PASS M=0 edges=106
-- endpoint_tb.sv:112: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.000 s; speed 7.655 ms/s
-- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

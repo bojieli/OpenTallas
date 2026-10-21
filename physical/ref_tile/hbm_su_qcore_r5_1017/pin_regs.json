@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_static_qcore_r5",
- "enable": false,
- "reason": "The RF read commands, relay writers and COLL writer are captured raw at the pins (the hub bank rung moved to the pin); reducer command, slice/SFU operands and drain decode land in clk_ctl registers; every output is a flop. A wrapper stage would add an edge to the fixed n+1 commit / n+3 read / E+11 scalar calendar."
-}

@@ -1,3 +1,0 @@
-{"schema":"opentallas.tile_visual_review.v1","tile":"qkd_hslice","reviewer":"coordinator (2026-10-17 ~19:05)","verdict":"APPROVED","time":"2026-10-17T19:05:00-07:00","gate_commit":"2026-10-17T18:03:08-0700",
- "checklist":{"lattice":"n/a no macros","std_cell_band":"accepted: pin-limited slot (util 9%), logic clusters by function","pin_spread":"PASS: N/S/E/W faces","clock_entry":"PASS: single ck root 6.7k sinks, ~305 / 71-75 (<15k sinks)","shape":"accepted: the die's exact pin-limited slot (tall); re-plan only if die STA names it"},
- "notes":"es2: 4 same-source clock pins -> one ck (the -110 hold cause); recipe 4 die hold budget; no added cycles."}

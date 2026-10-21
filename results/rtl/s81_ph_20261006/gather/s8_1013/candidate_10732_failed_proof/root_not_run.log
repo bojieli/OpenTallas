@@ -1,8 +1,0 @@
-ot-run: ot-epyc1tb     admits   496 GB (avail 722, growth 54, headroom 64, waiters 0/0 GB) load 34/128 running 10 disk 855 GB 
-ot-run: ot-epyc4       admits   274 GB (avail 500, growth 171, headroom 48, waiters 0/0 GB) load 21/128 running 9 disk 1050 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-gather-leaf-v18/10732e4ef
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-gather-leaf-v18/10732e4ef
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2013259-1791974243 after 0 s
-/usr/bin/bash: root.sh: No such file or directory
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2013259-1791974243): exit 127

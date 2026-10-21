@@ -1,9 +1,0 @@
-{
-  "status": "FAIL_INVOKER_WORKING_DIRECTORY",
-  "exit_code": 1,
-  "command": "sha256sum -c results/uarch/ds_mtp_coverage_independent_review_20261003/receipt.sha256",
-  "cwd": "worktree root",
-  "reason": "receipt paths are relative to receipt directory; all51 entries failed open, not a source/hash mismatch",
-  "correction": "run sha256sum from receipt directory as HANDOFF specifies",
-  "preserved": true
-}

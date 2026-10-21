@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qfd_dv_s5_btab_s4",
- "enable": false,
- "reason": "no reset port: pure data path (macros + capture flops, no state that outlives a word; valids live in the station)"
-}

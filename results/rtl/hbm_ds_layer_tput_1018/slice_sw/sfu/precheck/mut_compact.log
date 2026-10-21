@@ -1,7 +1,0 @@
-SFUCOL launch=10709 io_first=-1 ctl_first=-1 launch_to_io=-10710 io_to_ctl=0 ctl_rows=0 io_rows=0
-SFUCOL collar_fault_at=1347 store_fault_at=-1 ready_at_launch=0 programme_done=0 io_done=0 active_end=0
-SFUCOL FAIL errs=0
-- /srv/opentallas-scratch/claude/veh-coll2-sfu/pre/tb_sfu_collar.sv:85: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 12us; walltime 0.104 s; speed 120.047 us/s
-- Verilator: cpu 0.104 s on 1 threads; allocated 8 MB

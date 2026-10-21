@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81_pq_qb_bankp_native",
- "enable": false,
- "reason": "RTL already registers every data pin at the face: wr0/wr1/wq0/wq1/aq_q/i0/i1/rq0/rq1 land in one capture flop each (*_c) before any decode, mux or SRAM access, and rd is the SRAM output register driving only the port. These two stages ARE the canonical QB +2 pipeline (ot_s81_pq_qb_pipe_native, matched by ot_s81_pq_qb_align_native 2 fixed stages); wrapper pin registers would add 2 more edges per bank read and break the fixed +2 alignment with headp/headpc and align. io_flop_at_pins anchors the RTL pin flops at their faces."
-}

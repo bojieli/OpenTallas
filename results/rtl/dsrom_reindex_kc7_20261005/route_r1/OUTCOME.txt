@@ -1,8 +1,0 @@
-kc7 base TERMINAL FAIL, not adopted.
-Independent SS setup -40.71ps / FF hold +1.67ps; ORFS multi-corner hold -0.68473ps retained as a different reported scene.
-req_rdy_in SS 122.79ps < 166.6ps required; dr_ready_in 196.09ps passes. All group min checks remain in groups.json.
-512 slew failures, worst 447.77ps vs 320ps. Standard-cell area 35166.3um2; core 93630.5um2; construction cap 37452.2um2.
-Same-context measured delta +886.8um2 vs kc6 includes mapped material, not parent die net debit. Mapped data endpoints +771 despite source FFdelta0; physical clock/load delta0 is not proven.
-20case exact functional gate remains PASS; worst738cycles/.614754us only at conditional833ps conversion, no operating-clock or token-rate qualification.
-Third design failure escalated to Claude; finish only already-live u40/u45/split2. No fourth rescue/source mutation/new route.
-Raw logs and source/corner/artifact identities preserved; no rerun needed to read this result.
