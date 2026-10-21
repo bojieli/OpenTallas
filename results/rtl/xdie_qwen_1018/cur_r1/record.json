@@ -1,0 +1,149 @@
+{
+  "verdict": "FAIL",
+  "source_branch": "claude/qw-xdie-2150",
+  "branch_base_commit": "f752fc0b04a590e50384f6acb7adf2ddec12c9fc",
+  "source_identity": "immutable remote source snapshot; branch base alone does not identify run inputs",
+  "manifest_sha256": "e069b78218da400a298da2f1bc379ac7d5576b31fc0e3f4d8998471c2452b8a7",
+  "source_files_verified": 40,
+  "fleet_unit": "oth-ubuntu-3250269-1792559118",
+  "remote": "ot-epyc5:/srv/opentallas-scratch/claude/qw-xdie-2150/r1",
+  "exit_code": 1,
+  "cases": [
+    {
+      "case": "cur_bound_image",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_bound_image_tile_sd0",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_c_rx_codec1",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_kseam_d22bu_bound",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_kseam_d22bu_route_r",
+      "expected": "PASS",
+      "actual": "FAIL",
+      "comparison": "UNEXPECTED"
+    },
+    {
+      "case": "cur_mut_kseam_rx_torn",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_mut_kv_run_late",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_mut_phy_bit",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_mut_result_bit",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_mut_status_done",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_mut_txdp_c_off1",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_no_status_tail",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "comparison": "OK"
+    },
+    {
+      "case": "cur_pair",
+      "expected": "PASS",
+      "actual": "FAIL",
+      "comparison": "UNEXPECTED"
+    },
+    {
+      "case": "cur_pair_l0",
+      "expected": "PASS",
+      "actual": "FAIL",
+      "comparison": "UNEXPECTED"
+    },
+    {
+      "case": "cur_pair_phy9",
+      "expected": "PASS",
+      "actual": "FAIL",
+      "comparison": "UNEXPECTED"
+    },
+    {
+      "case": "cur_pair_t8192",
+      "expected": "PASS",
+      "actual": "FAIL",
+      "comparison": "UNEXPECTED"
+    },
+    {
+      "case": "cur_shift_only_sd0",
+      "expected": "PASS",
+      "actual": "FAIL",
+      "comparison": "UNEXPECTED"
+    },
+    {
+      "case": "pair",
+      "expected": "PASS",
+      "actual": "PASS",
+      "comparison": "OK"
+    }
+  ],
+  "first_failure": {
+    "cycle": 183,
+    "layer": 1,
+    "relative_cycle": 1,
+    "component": "KV D2D end",
+    "end_fault": 1,
+    "epoch_abort": 0,
+    "fault_cause": "00000000"
+  },
+  "secondary_failures": [
+    {
+      "cycle": 816,
+      "component": "KV r17 programme record_fault",
+      "age": 4
+    },
+    {
+      "cycle": 2595,
+      "component": "compute native59 record_fault",
+      "codec_cause": "0010",
+      "variant": "cur_pair X8"
+    }
+  ],
+  "token_compose": {
+    "grade": "unqualified-current-RTL",
+    "verdict": "FAIL",
+    "usable_for_rate_claim": false,
+    "reason": "Current K_REAL4 positives fail before exchange; negative/sentinel XQ_E values are not measured latencies."
+  }
+}

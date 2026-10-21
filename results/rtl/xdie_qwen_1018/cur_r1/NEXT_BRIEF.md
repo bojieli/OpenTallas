@@ -1,0 +1,11 @@
+# Current Qwen/KV exchange fails before first command exchange
+
+Immutable receipt from ot-epyc5 unit oth-ubuntu-3250269-1792559118, exit 1. Every source in source.sha256 is reproduced under source/ and SHA256 verified. The branch base f752fc0b0 alone is insufficient to identify these run inputs; use this manifest/snapshot.
+
+Six expected-positive current configurations FAIL: cur_pair, cur_pair_l0, cur_pair_phy9, cur_pair_t8192, cur_kseam_d22bu_route_r, cur_shift_only_sd0. Historical pair K_REAL3/X5 PASSes 35 layers; it does not qualify current K_REAL4.
+
+Earliest observed failure is cycle183, layer1 relative1: KV D2D end_fault=1, epoch_abort=0, fault_cause=00000000; compute D2D remains clean. At cycle816/relative634/age4, KV r17 ctl record_fault=1 with local/guard/slot/face/root/cal/pvfin fault0. At cycle2594(X7) or2595(X8), compute native59 record_fault=1, codec cause0010 (rx_time); service=1 follows missing exchange. X7->8 and STATUS_DELAY213->0 leave first failure unchanged. Negative XQ_E values are missing-event sentinels, not usable latencies.
+
+Classification: current ABI/calendar/initialization-contract failure, not arithmetic mismatch or a fleet infrastructure failure. The first fault predates the record mismatch; current logs do not identify which end-local predicate fired. In source/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv inspect end_fault/efc update and its stray/multi/tf/rf/bad_port predicates, activation/epoch reset, calendar record validity, and current producer enable defaults at relative0/1. K_REAL4 wrapper uses r17 RETIRE_STATIC/STATUS_DELAY and i_ctl advance; compare first valid controls against K_REAL3 without transferring its PASS claim. Then reconcile compiled command/Q windows and TXDP with r17 programme ctl record expectations and both die seam bundle stages. Price all edge changes in one compiler ledger before a rerun.
+
+Owner: root/token_qualification diagnosis/repair; coordinate root/die_qwen + root/die_kv for compiled seam/calendar corrections. Do not rerun unchanged source or accept global X shifts as a repair. After model/source fix use the existing incremental vehicle and all current positive cases plus independent mutants; preserve this failure receipt. No source repair or new simulation was performed during collection.
