@@ -557,10 +557,12 @@ def main():
                                  '(<landing>__fault), not yet ORed into the regional fault tree (hbm_fault_1017.py fr_<Q>)',
                                  owner='HBM-LANDING / HBM-FAULT') if a.land_fault == 'pins' else
                          dict(id='G-D4G-LAND-FAULT', what='landing fault outputs left OPEN (diagnostic --land-fault open)'))
-    from row_sites import transport
-    row_site_receipt = transport(spec, dict(stations=a.stations, contract=a.contract, manifest=a.manifest,
-                                           root_sites=a.root_sites, region_map=a.region_map, land_plan=a.land_plan),
-                                 export=a.row_site_export, plan=a.row_sites)
+    row_site_receipt = dict(status='NOT_REQUESTED', geometry_qualified=False)
+    if a.row_site_export or a.row_sites:
+        from row_sites import transport
+        row_site_receipt = transport(spec, dict(stations=a.stations, contract=a.contract, manifest=a.manifest,
+                                               root_sites=a.root_sites, region_map=a.region_map, land_plan=a.land_plan),
+                                     export=a.row_site_export, plan=a.row_sites)
     with gzip.open(a.out, 'wt') as f:
         json.dump(spec, f)
     import re as _re
