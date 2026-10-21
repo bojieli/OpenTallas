@@ -53,6 +53,7 @@ build tap1 -GTAP_MUT=1 &
 build tap2 -GTAP_MUT=2 &
 wait
 run base; run xq1; run xq2; run tap1; run tap2
+n=base; for a in "+SEED=2 +LAT=160" "+SEED=3 +LAT=60"; do /usr/bin/time -v -o $W/var.run.time $W/obj_base/sim +OT_ROM_DIR=$W/rom $a > $W/var_${a//[ +=]/_}.log 2>&1; python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/var_${a//[ +=]/_}.log $W/src >> $W/var_${a//[ +=]/_}.log 2>&1; echo "base $a: $(grep -h 'TB_ENG_RR PASS\|TB_ENG_RR FAIL' $W/var_${a//[ +=]/_}.log) $(grep -h 'ENG_RR_PY PASS\|ENG_RR_PY FAIL' $W/var_${a//[ +=]/_}.log)" >> $W/status; done
 python3 - $W <<'PY'
 import json, sys, re
 from pathlib import Path

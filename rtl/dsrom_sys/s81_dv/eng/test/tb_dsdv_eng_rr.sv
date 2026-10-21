@@ -145,6 +145,16 @@ module tb_dsdv_eng_rr;
         $display("OB %0d %0d %0d %h", win_n - 1, u_rr.o_col, u_rr.o_beat, u_rr.o_d);
         ob_n = ob_n + 1;
     end
+    // latency record (priced into the compiler schedule): f_ks start -> win_v / first request / max response age at the
+    // lookup engine / first and last XQ fragment on the rung
+    longint t_ks = 0, l_win = 0, l_rq = 0, l_x0 = 0, l_x1 = 0; integer age_max = 0, nfr = 0;
+    always @(negedge ck) if (rst) begin
+        if (f_ks[52]) begin t_ks = cyc; nfr = 0; end
+        if (u_rr.win_v) l_win = cyc - t_ks;
+        if (u_rr.hq_v && u_rr.hq_tag == 0) l_rq = cyc - t_ks;
+        if (u_rr.u_lkp.u_e.hr_valid && u_rr.u_lkp.u_e.age > age_max) age_max = u_rr.u_lkp.u_e.age;
+        if (u_rr.u_xq.tx) begin if (nfr == 0) l_x0 = cyc - t_ks; nfr = nfr + 1; l_x1 = cyc - t_ks; end
+    end
     // ------------------------------------------------------------------ windows: NgramHashState model
     function automatic [16:0] cid(input [20:0] t); cid = 17'((longint'(t) * 7919 + 11) % 99092); endfunction
     reg [16:0] hist [0:63][0:2];
@@ -267,6 +277,8 @@ module tb_dsdv_eng_rr;
         if (st !== 4'd0 || tf !== 16'd0) begin e_flt = e_flt + 1; $display("TB_ENG_RR faults st %b taps %b", st, tf); end
         for (kk = 0; kk < 16; kk = kk + 1) if (rd[kk][561] !== 1'b0) begin e_flt = e_flt + 1; $display("TB_ENG_RR controller %0d status fault", kk); end
         errs = e_win + e_ob + e_xq + e_rd + e_rung + e_flt;
+        $display("TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v %0d first_request %0d max_response_age %0d / RETURN_AGE %0d first_fragment %0d last_fragment %0d",
+                 l_win, l_rq, age_max, RETURN_AGE, l_x0 + 1, l_x1 + 1);
         $display("TB_ENG_RR_STATS xq_mut %0d tap_mut %0d seed %0d lat %0d windows %0d row_beats %0d xq %0d/%0d reader rq %0d beats %0d pops %0d rung %0d errs win %0d ob %0d xq %0d rd %0d rung %0d flt %0d",
                  XQ_MUT, TAP_MUT, SEED, LAT, win_n, ob_n, xq_n[0], xq_n[1], rd_rq, rd_beats, rd_pops, rung_n, e_win, e_ob, e_xq, e_rd, e_rung, e_flt);
         if (errs != 0 || rd_rq == 0 || rung_n == 0) $display("TB_ENG_RR FAIL"); else $display("TB_ENG_RR PASS");
