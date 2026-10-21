@@ -26,6 +26,334 @@
       "full_original_parent_restoration": true,
       "local_state_declarations_and_all_always_statements_unchanged_except_dq_rhs": true,
       "D": 4,
+      "raw_input_alias_contract": {
+        "equations": [
+          {
+            "writer_signal": "rss_r0",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r0 = {rs_s[1027:1026],rs_s[513:512],rs_s[577:514],rs_s[63:0]};"
+          },
+          {
+            "writer_signal": "rss_r1",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r1 = {rs_s[1027:1026],rs_s[513:512],rs_s[641:578],rs_s[127:64]};"
+          },
+          {
+            "writer_signal": "rss_r2",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r2 = {rs_s[1027:1026],rs_s[513:512],rs_s[705:642],rs_s[191:128]};"
+          },
+          {
+            "writer_signal": "rss_r3",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r3 = {rs_s[1027:1026],rs_s[513:512],rs_s[769:706],rs_s[255:192]};"
+          },
+          {
+            "writer_signal": "rss_r4",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r4 = {rs_s[1027:1026],rs_s[513:512],rs_s[833:770],rs_s[319:256]};"
+          },
+          {
+            "writer_signal": "rss_r5",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r5 = {rs_s[1027:1026],rs_s[513:512],rs_s[897:834],rs_s[383:320]};"
+          },
+          {
+            "writer_signal": "rss_r6",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r6 = {rs_s[1027:1026],rs_s[513:512],rs_s[961:898],rs_s[447:384]};"
+          },
+          {
+            "writer_signal": "rss_r7",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r7 = {rs_s[1027:1026],rs_s[513:512],rs_s[1025:962],rs_s[511:448]};"
+          },
+          {
+            "writer_signal": "rsn_r0",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r0 = {rs_n[1027:1026],rs_n[513:512],rs_n[577:514],rs_n[63:0]};"
+          },
+          {
+            "writer_signal": "rsn_r1",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r1 = {rs_n[1027:1026],rs_n[513:512],rs_n[641:578],rs_n[127:64]};"
+          },
+          {
+            "writer_signal": "rsn_r2",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r2 = {rs_n[1027:1026],rs_n[513:512],rs_n[705:642],rs_n[191:128]};"
+          },
+          {
+            "writer_signal": "rsn_r3",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r3 = {rs_n[1027:1026],rs_n[513:512],rs_n[769:706],rs_n[255:192]};"
+          },
+          {
+            "writer_signal": "rsn_r4",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r4 = {rs_n[1027:1026],rs_n[513:512],rs_n[833:770],rs_n[319:256]};"
+          },
+          {
+            "writer_signal": "rsn_r5",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r5 = {rs_n[1027:1026],rs_n[513:512],rs_n[897:834],rs_n[383:320]};"
+          },
+          {
+            "writer_signal": "rsn_r6",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r6 = {rs_n[1027:1026],rs_n[513:512],rs_n[961:898],rs_n[447:384]};"
+          },
+          {
+            "writer_signal": "rsn_r7",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r7 = {rs_n[1027:1026],rs_n[513:512],rs_n[1025:962],rs_n[511:448]};"
+          },
+          {
+            "writer_signal": "nb_r0",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r0 = {l9_i[513:512],l9_i[63:0]};"
+          },
+          {
+            "writer_signal": "nb_r1",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r1 = {l9_i[513:512],l9_i[127:64]};"
+          },
+          {
+            "writer_signal": "nb_r2",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r2 = {l9_i[513:512],l9_i[191:128]};"
+          },
+          {
+            "writer_signal": "nb_r3",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r3 = {l9_i[513:512],l9_i[255:192]};"
+          },
+          {
+            "writer_signal": "nb_r4",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r4 = {l9_i[513:512],l9_i[319:256]};"
+          },
+          {
+            "writer_signal": "nb_r5",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r5 = {l9_i[513:512],l9_i[383:320]};"
+          },
+          {
+            "writer_signal": "nb_r6",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r6 = {l9_i[513:512],l9_i[447:384]};"
+          },
+          {
+            "writer_signal": "nb_r7",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r7 = {l9_i[513:512],l9_i[511:448]};"
+          }
+        ],
+        "source_files": {
+          "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036",
+          "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": "7473ca01737c663fd00746bbc01a3a185158fcc276b6d5fe69b9ddc83bf71fdd"
+        }
+      },
       "source_input_gate_loads": 12,
       "rs_s_source_input_loads_with_existing_direct_consumer": 13
     },
@@ -36,6 +364,334 @@
       "full_original_parent_restoration": true,
       "local_state_declarations_and_all_always_statements_unchanged_except_dq_rhs": true,
       "D": 8,
+      "raw_input_alias_contract": {
+        "equations": [
+          {
+            "writer_signal": "rss_r0",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r0 = {rs_s[1027:1026],rs_s[513:512],rs_s[577:514],rs_s[63:0]};"
+          },
+          {
+            "writer_signal": "rss_r1",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r1 = {rs_s[1027:1026],rs_s[513:512],rs_s[641:578],rs_s[127:64]};"
+          },
+          {
+            "writer_signal": "rss_r2",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r2 = {rs_s[1027:1026],rs_s[513:512],rs_s[705:642],rs_s[191:128]};"
+          },
+          {
+            "writer_signal": "rss_r3",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r3 = {rs_s[1027:1026],rs_s[513:512],rs_s[769:706],rs_s[255:192]};"
+          },
+          {
+            "writer_signal": "rss_r4",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r4 = {rs_s[1027:1026],rs_s[513:512],rs_s[833:770],rs_s[319:256]};"
+          },
+          {
+            "writer_signal": "rss_r5",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r5 = {rs_s[1027:1026],rs_s[513:512],rs_s[897:834],rs_s[383:320]};"
+          },
+          {
+            "writer_signal": "rss_r6",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r6 = {rs_s[1027:1026],rs_s[513:512],rs_s[961:898],rs_s[447:384]};"
+          },
+          {
+            "writer_signal": "rss_r7",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_s[1027]",
+              "rs_s[1026]",
+              "rs_s[513]",
+              "rs_s[512]"
+            ],
+            "equation": "assign rs_s_r7 = {rs_s[1027:1026],rs_s[513:512],rs_s[1025:962],rs_s[511:448]};"
+          },
+          {
+            "writer_signal": "rsn_r0",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r0 = {rs_n[1027:1026],rs_n[513:512],rs_n[577:514],rs_n[63:0]};"
+          },
+          {
+            "writer_signal": "rsn_r1",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r1 = {rs_n[1027:1026],rs_n[513:512],rs_n[641:578],rs_n[127:64]};"
+          },
+          {
+            "writer_signal": "rsn_r2",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r2 = {rs_n[1027:1026],rs_n[513:512],rs_n[705:642],rs_n[191:128]};"
+          },
+          {
+            "writer_signal": "rsn_r3",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r3 = {rs_n[1027:1026],rs_n[513:512],rs_n[769:706],rs_n[255:192]};"
+          },
+          {
+            "writer_signal": "rsn_r4",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r4 = {rs_n[1027:1026],rs_n[513:512],rs_n[833:770],rs_n[319:256]};"
+          },
+          {
+            "writer_signal": "rsn_r5",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r5 = {rs_n[1027:1026],rs_n[513:512],rs_n[897:834],rs_n[383:320]};"
+          },
+          {
+            "writer_signal": "rsn_r6",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r6 = {rs_n[1027:1026],rs_n[513:512],rs_n[961:898],rs_n[447:384]};"
+          },
+          {
+            "writer_signal": "rsn_r7",
+            "field": [
+              131,
+              128
+            ],
+            "raw_bits": [
+              "rs_n[1027]",
+              "rs_n[1026]",
+              "rs_n[513]",
+              "rs_n[512]"
+            ],
+            "equation": "assign rs_n_r7 = {rs_n[1027:1026],rs_n[513:512],rs_n[1025:962],rs_n[511:448]};"
+          },
+          {
+            "writer_signal": "nb_r0",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r0 = {l9_i[513:512],l9_i[63:0]};"
+          },
+          {
+            "writer_signal": "nb_r1",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r1 = {l9_i[513:512],l9_i[127:64]};"
+          },
+          {
+            "writer_signal": "nb_r2",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r2 = {l9_i[513:512],l9_i[191:128]};"
+          },
+          {
+            "writer_signal": "nb_r3",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r3 = {l9_i[513:512],l9_i[255:192]};"
+          },
+          {
+            "writer_signal": "nb_r4",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r4 = {l9_i[513:512],l9_i[319:256]};"
+          },
+          {
+            "writer_signal": "nb_r5",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r5 = {l9_i[513:512],l9_i[383:320]};"
+          },
+          {
+            "writer_signal": "nb_r6",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r6 = {l9_i[513:512],l9_i[447:384]};"
+          },
+          {
+            "writer_signal": "nb_r7",
+            "field": [
+              65,
+              64
+            ],
+            "raw_bits": [
+              "l9_i[513]",
+              "l9_i[512]"
+            ],
+            "equation": "assign l9_r7 = {l9_i[513:512],l9_i[511:448]};"
+          }
+        ],
+        "source_files": {
+          "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036",
+          "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": "7473ca01737c663fd00746bbc01a3a185158fcc276b6d5fe69b9ddc83bf71fdd"
+        }
+      },
       "source_input_gate_loads": 24,
       "rs_s_source_input_loads_with_existing_direct_consumer": 25
     }
