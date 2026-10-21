@@ -272,7 +272,7 @@ def calendar_collision(target, candidate, offset, *, exclusive_controls=False):
 
 
 def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False,
-              identity_inactive_terms=False):
+              identity_inactive_terms=False, absent_readers_identity=False, drain_guard=0):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
     from hbm_layer_vehicle.native_profile import NativeTiming
@@ -351,6 +351,19 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                     terms |= (terms & ((1 << 240) - 1)) << (240 * index)
                     vb |= (vb & 0xffffff) << (24 * index)
             words[q] = put(put(w, "ld_c", terms), "vb", vb)
+    if absent_readers_identity and not safe_calendar:
+        # opt-in (TOK-FUNC2-HBM-SU): every lane reads all four operand ports; pgslice.sv:303 faults a live lane whose
+        # read address is not its own bank, so an absent role reads the live A stream's own-bank address (as the safe
+        # calendar profile does) instead of address 0
+        sched = [list(words) for words in sched]
+        for words in sched:
+            w = words[q]
+            t_, vb_ = get(w, "ld_c"), get(w, "vb")
+            for index, role in enumerate("ABCD"):
+                if role not in desc:
+                    t_ = (t_ & ~(((1 << 240) - 1) << (240 * index))) | ((t_ & ((1 << 240) - 1)) << (240 * index))
+                    vb_ = (vb_ & ~(0xffffff << (24 * index))) | ((vb_ & 0xffffff) << (24 * index))
+            words[q] = put(put(w, "ld_c", t_), "vb", vb_)
     if identity_inactive_terms and not safe_calendar and desc["A"].m == 1:
         # TOK-FUNC2-HBM-SU (opt-in): a single-row record (no == 1) leaves lanes >= 2**ls inactive; their lane-bit terms
         # (outer stride 0) alias every lane onto lanes 0..2**ls-1, so a group's 8 lane addresses are not one sector.
@@ -424,7 +437,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     def with_vb(w, G):
         vb = 0
         for s, r in enumerate("ABCDO"):
-            if r in desc or (safe_calendar and r in "ABCD"):
+            if r in desc or ((safe_calendar or absent_readers_identity) and r in "ABCD"):
                 rr = G["srow"].get(r, G["srow"].get("A", 0)) if r != "O" else G["orow"]
                 vb |= physical_word(q, rr) << (24 * s)
         return (w & ~vbmask) | (vb << off["vb"])
@@ -447,7 +460,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         for g, G in enumerate(groups):
             # Pin-captured write and read coincide under the old calendar.
             # OLD-read SRAM requires the DRAIN to sample one serial edge later.
-            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar)
+            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar) + drain_guard
             for k in range(16):
                 ln = slice(8 * k, 8 * k + 8)
                 m = G["act"][ln]
@@ -747,7 +760,13 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
     def attempt(name, fn):
         snap = place_snapshot(place)
         dsnap = dict(vm_data)
-        res = fn()
+        try:
+            res = fn()
+        except (AssertionError, ValueError) as ex:    # e.g. quarter VM slice full: refuse, restore, continue
+            res = dict(status="adapter_refused", reasons=[f"{name}: {ex}"], lowering=dict(supported=False), sut=sut)
+        if res.get("status") == "emitted" and len(place.conflicts) > snap[3]:
+            res = dict(res, status="v1_unsupported", reasons=list(res.get("reasons", [])) + [
+                f"VM placement conflict: {place.conflicts[snap[3]]}"])
         if res.get("status") != "emitted":
             place_restore(place, snap)
             vm_data.clear()
@@ -777,9 +796,15 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
         res = attempt("scalar_rsqrt", lambda: SL.lower_rsqrt(raw, a.quarter, data=vm_data, place=place, tag=tag,
                                                              timing=timing, side_profile=(4, 3),
                                                              side_source_path=a.side_source))
+    elif unit == 2 and SL.sfu_profile(sut, desc) and (tree_ok or not (desc.get("B") and desc["B"].ibcast)):
+        res = attempt("sfu_lanes", lambda: SL.lower_sfu_lanes(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                              timing=timing, rf_local=a.rf_local))
     else:
+        # every live lane reads all four operand ports (absent roles = A's own-bank address) and the drain samples
+        # one edge after the lane write (OLD-read SRAM), as the safe-calendar profile
         res = attempt("su_record", lambda: su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=tag,
-                                                     pad_zero=fr is not None, timing=timing))
+                                                     pad_zero=fr is not None, timing=timing,
+                                                     absent_readers_identity=True, drain_guard=1))
         if res.get("status") == "v1_unsupported":
             b = desc.get("B")
             if b is not None and b.ibcast and tree_ok:
@@ -788,7 +813,7 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
             elif desc["A"].m == 1:
                 res2 = attempt("identity_inactive_terms", lambda: su_record(
                     raw, a.quarter, rng, data=vm_data, place=place, tag=tag, pad_zero=fr is not None, timing=timing,
-                    identity_inactive_terms=True))
+                    identity_inactive_terms=True, absent_readers_identity=True, drain_guard=1))
             else:
                 res2 = None
             if res2 is not None and res2.get("status") == "emitted":

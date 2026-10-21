@@ -355,8 +355,13 @@ def pretree_blocks(nb, t0):
 def reduce_profile(sut, desc):
     """(kind, lane_m1, imm1) of a whole-record SU reduction to one R word, or None"""
     allowed = {"red", "red_sq", "red_tree", "red_whole", "m1", "imm1"}
-    if any(v for k, v in sut.items() if k not in allowed) or not sut["red"] or set(desc) != {"A", "R"}:
+    if any(v for k, v in sut.items() if k not in allowed) or not sut["red"] or set(desc) not in ({"A", "R"},
+                                                                                              {"A", "B", "R"}):
         return None
+    if "B" in desc:                     # dot product: lane A*B (m1 1), B an ordinary vector operand
+        if sut["m1"] != 1 or sut["red_sq"] or sut["red"] != 1 or desc["B"].ibcast:
+            return None
+        return "sum", 1, 0
     if sut["red"] not in (1, 2):
         return None
     kind = "sum" if sut["red"] == 1 else "max"
@@ -393,7 +398,7 @@ class TreeLines:
 
 
 def reduce_to_rf(ql, *, a_base, nwords, kind, lane_m1, imm1, rf_addr, q, data, place, tag, timing,
-                 fill_row0=0, edge0=0):
+                 fill_row0=0, edge0=0, b_base=None):
     """Lane arithmetic -> pretree -> reducer -> EXPORT -> stree -> RF word rf_addr, programmed into ql from edge0.
 
     Returns dict(value, rf_commit, ...) or dict(refusal=why).  Every operand word enters through real VM fills of its
@@ -404,12 +409,19 @@ def reduce_to_rf(ql, *, a_base, nwords, kind, lane_m1, imm1, rf_addr, q, data, p
     from hdc_golden import mul
     nb = -(-nwords // PT.BLOCK)
     addresses = list(range(a_base, a_base + nwords))
+    if b_base is not None:
+        addresses += list(range(b_base, b_base + nwords))
     if data is None or any(x not in data for x in addresses):
         return dict(refusal="missing_real_operand_words:" + str(sum(x not in (data or {}) for x in addresses)))
-    before = np.asarray([data[x] for x in addresses], dtype=np.float32)
-    if not np.isfinite(before).all():
+    before = np.asarray([data[x] for x in addresses[:nwords]], dtype=np.float32)
+    bvals = None if b_base is None else np.asarray([data[x] for x in addresses[nwords:]], dtype=np.float32)
+    if not np.isfinite(before).all() or (bvals is not None and not np.isfinite(bvals).all()):
         return dict(refusal="finite_operand_profile_required")
-    if lane_m1 == 2:
+    if lane_m1 == 1:
+        if bvals is None:
+            return dict(refusal="lane_A_times_B_requires_B_operand")
+        lane_x = np.asarray(mul(before, bvals), np.float32)
+    elif lane_m1 == 2:
         lane_x = np.asarray(mul(before, before), np.float32)
     elif lane_m1 == 3:
         lane_x = np.asarray(mul(before, np.uint32(imm1).view(np.float32)), np.float32)
@@ -421,23 +433,27 @@ def reduce_to_rf(ql, *, a_base, nwords, kind, lane_m1, imm1, rf_addr, q, data, p
     want = PT.golden(kind, lane_bits)
     fills, preload, reads = [], {}, []
     next_fill = [edge0] * 8
+    srcs = [("A", a_base, fill_row0)] + ([] if b_base is None else [("B", b_base, fill_row0 + nb)])
     for block in range(nb):
         cnt = min(PT.BLOCK, nwords - PT.BLOCK * block)
-        for sector in range(-(-cnt // 8)):
-            first = a_base + 128 * block + 8 * sector
-            logical = first // 8
-            port = sector % 8
-            physical = place.get(logical, port, tag + ":A")
-            if physical % 8 != port:
-                return dict(refusal="operand_VM_port_placement_conflict")
-            edge = next_fill[port]
-            next_fill[port] += 1
-            ql.vmr(edge, port, physical, sector, fill_row0 + block)
-            fills.append((logical, edge))
-            reads.append(dict(logical_sector=logical, physical_sector=physical, edge=edge,
-                              words=list(range(first, first + 8)), local_row=fill_row0 + block, group=sector))
-            if logical not in place.written:
-                preload[physical] = list(range(first, first + 8))
+        for role, rbase, row0 in srcs:
+            if rbase % 8:
+                return dict(refusal=f"operand_{role}_not_sector_aligned")
+            for sector in range(-(-cnt // 8)):
+                first = rbase + 128 * block + 8 * sector
+                logical = first // 8
+                port = sector % 8
+                if logical in place.map and place.map[logical] % 8 != port:
+                    return dict(refusal="operand_VM_port_placement_conflict")
+                physical = place.get(logical, port, tag + ":" + role)
+                edge = next_fill[port]
+                next_fill[port] += 1
+                ql.vmr(edge, port, physical, sector, row0 + block)
+                fills.append((logical, edge))
+                reads.append(dict(logical_sector=logical, physical_sector=physical, edge=edge, role=role,
+                                  words=list(range(first, first + 8)), local_row=row0 + block, group=sector))
+                if logical not in place.written:
+                    preload[physical] = list(range(first, first + 8))
     setup = max(edge for _, edge in fills) + timing.fill_commit + 1
     first_issue = setup + 8
     issue_to_tree = LI.FIRST_OUT - LI.SETUP_TO_EMIT + 1
@@ -460,6 +476,8 @@ def reduce_to_rf(ql, *, a_base, nwords, kind, lane_m1, imm1, rf_addr, q, data, p
         edge = tree_edge - issue_to_tree
         cnt = min(PT.BLOCK, nwords - PT.BLOCK * block)
         vb = sum(physical_word(q, fill_row0 + block) << (24 * role) for role in range(4))
+        if b_base is not None:
+            vb = (vb & ~(0xffffff << 24)) | (physical_word(q, fill_row0 + nb + block) << 24)
         ql.f["control"][edge] = pack(dict(base, emit=1, i_v=128 * block, vb=vb))
         ql.f["tree"][tree_edge] = PT.tree_cmd_word(mx, cnt)
         issue_edges.append(edge)
@@ -529,14 +547,19 @@ def lower_reduce(raw, q=0, data=None, place=None, tag="", timing=None, expected_
     place = place if place is not None else LI.Placement(q)
     ql = TreeLines()
     rf_addr = r.base & 255
+    bd = desc.get("B")
+    if bd is not None and (bd.space != "VM" or bd.fmt != "FP32" or bd.n != a.n or bd.m != a.m or (bd.istride or 1) != 1
+                           or bd.base % 8 or (per_row and bd.stride % 8) or (not per_row and a.m > 1 and bd.stride != bd.n)):
+        return refusal("dot_product_B_must_match_A_layout")
     rows = ([(a.base + k * a.stride, a.n) for k in range(a.m)] if per_row else [(a.base, nwords)])
+    brow = ([bd.base + k * bd.stride for k in range(a.m)] if per_row else [bd.base]) if bd is not None else None
     if expected_reduction_word is not None and not isinstance(expected_reduction_word, (list, tuple)):
         expected_reduction_word = [expected_reduction_word]
     cores, edge0, wants = [], 0, []
     for k, (row_base, row_words) in enumerate(rows):
         c = reduce_to_rf(ql, a_base=row_base, nwords=row_words, kind=kind, lane_m1=lane_m1, imm1=imm1,
                          rf_addr=rf_addr + k, q=q, data=data, place=place, tag=f"{tag}:row{k}", timing=timing,
-                         edge0=edge0)
+                         edge0=edge0, b_base=None if brow is None else brow[k])
         if "refusal" in c:
             return refusal(c["refusal"])
         cores.append(c)
@@ -689,7 +712,8 @@ def lower_bcast(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=N
         pro.f["control"].setdefault(e, core["hold"])
     scalar_ready = core["rf_event"]["rf_write_pins_serial"]
     main = IX.lower_broadcast(raw, q=q, timing=timing, rf_address=rf_addr, scalar_ready=scalar_ready,
-                              rf_local=rf_local, place=place, data=data, tag=tag)
+                              rf_local=rf_local, place=place, data=data, tag=tag,
+                              su_options=dict(absent_readers_identity=True))
     if main.get("status") != "candidate_requires_binding":
         return dict(refusal("; ".join(main.get("reasons", ["broadcast main op unlowered"]))),
                     status="unsupported_lowering" if any("unsupported" in x or "native_" in x
@@ -749,4 +773,257 @@ def lower_bcast(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=N
                              RF_external_drive=False),
         timing_obligations=dict(scalar_ready_serial=scalar_ready, rf_commit=core["rf_commit"],
                                 serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
+                                old_price_preserved=False, connected_selected_case_RTL_required=True))
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# SFU-lane lowering (TOK-FUNC2-HBM-SU 10-21): divider (M1 A/B, A/imm1) and S-stage exp / sigmoid / SiLU exist only in
+# KIND>=1 lanes, i.e. quarter-local lanes 0..31 (ot_hbm_su_static_pgslice.sv:129 KIND=(L<32)?1:0, lane 0 FULL).
+# A 128-element quarter block therefore issues as four 32-lane sub-issues: element 32s+t on lane t, its operand sector
+# 4s+j filled into store group j (VM port j), O drained from group j.  Depths (ot_hbm_su_static_lane.sv, MLAT 4 /
+# ALAT 3): divider 19 vs multiply 4 (+15); S exp 7*MLAT+8*ALAT+4 = 56, sigmoid/SiLU exp+ALAT+19 = 78.
+SFU_LANES = 32
+SFU_EXTRA = {0: 0, 1: 56, 4: 78, 5: 78}
+
+
+def sfu_lane_golden(sut, ops):
+    """vop_golden + the KIND-1 lane's divider and S stage (hdc_golden_v41 div / exp / sigmoid / silu forms)"""
+    from hdc_golden import add, mul, to_bf16, exp
+    from hdc_golden_v41 import div
+    f = lambda u: np.uint32(u).view(np.float32)
+    a, b, c, d = (ops.get(k) for k in "ABCD")
+    aa = to_bf16(a) if sut["a_rnd"] else a.copy()
+    if sut["a_relu"]:
+        aa = np.where(np.signbit(aa), np.float32(0), aa).astype(np.float32)
+    if sut["a_min"]:
+        aa = np.minimum(aa, f(sut["imm3"])).astype(np.float32)
+    cc = np.clip(c, -f(sut["imm3"]), f(sut["imm3"])) if (sut["c_clip"] and c is not None) else c
+    x, m = aa.copy(), sut["m1"]
+    if m in (1, 2, 3):
+        x = mul(aa, b if m == 1 else aa if m == 2 else f(sut["imm1"]))
+    elif m == 4:
+        x = np.asarray(div(aa, b), np.float32)
+    elif m == 5:
+        x = np.asarray(div(aa, np.full_like(aa, f(sut["imm1"]))), np.float32)
+    elif m == 6:
+        x = np.maximum(aa, b).astype(np.float32)
+    if sut["m2"]:
+        x = mul(x, cc if sut["m2"] == 1 else f(sut["imm1"]))
+    if sut["qm"]:
+        raise ValueError("qm not in the SFU-lane profile")
+    ad = sut["ad"]
+    if ad:
+        x = add(x, cc if ad == 2 else -b if ad == 3 else f(sut["imm2"]) if ad == 4 else d)
+    s = sut["sfu"]
+    if s == 1:
+        x = np.asarray(exp(x), np.float32)
+    elif s in (4, 5):
+        den = add(np.asarray(exp(-x), np.float32), np.float32(1.0))
+        x = np.asarray(div(x if s == 5 else np.ones_like(x), den), np.float32)
+    e1 = sut["e1"]
+    if e1 in (1, 3):
+        x = mul(x, cc if e1 == 1 else f(sut["imm2"]))
+    if e1 in (2, 4):
+        x = add(x, cc if e1 == 2 else f(sut["imm2"]))
+    if sut["e2"]:
+        x = mul(x, b if sut["e2"] == 1 else f(sut["imm1"]))
+    bits = np.asarray(x, np.float32).view(np.uint32).copy()
+    if sut["rnd"]:
+        bits = ((bits.astype(np.uint64) + 0x7fff + ((bits >> 16) & 1)) & 0xffff0000).astype(np.uint32)
+    return bits
+
+
+def sfu_profile(sut, desc):
+    """True for an elementwise single-row SU.VOP needing the divider and/or exp/sigmoid/SiLU (no reducer)"""
+    if sut["red"] or sut["qm"] or sut["b_half"] or sut["c_pair"] or sut["a_ind"] or sut["dst"] != 1:
+        return False
+    if sut["sfu"] not in SFU_EXTRA or (sut["m1"] not in (4, 5) and not sut["sfu"]) or sut["ad"] == 1:
+        return False
+    return "O" in desc and "A" in desc and set(desc) <= set("ABCDO")
+
+
+def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=None, **unused):
+    from hbm_layer_vehicle import layer_images as LI
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    from su_program_inventory import decode
+    from su_arith_compile import pack, physical_word
+    from su_arith_generate import FIELDS
+    _, unit, sut, desc = decode(raw)
+    refusal = lambda why, st="unsupported_lowering": dict(status=st, reasons=[why], sut=sut,
+                                                          lowering=dict(supported=False, owner="TOK-FUNC2-HBM-SU"))
+    if unit != 2 or not sfu_profile(sut, desc):
+        return refusal("sfu_lane_elementwise_profile_only")
+    if q != 0 or not isinstance(timing, NativeTiming) or timing != NativeTiming(18, 15) or rf_local not in (0, 1):
+        return refusal("selected_quarter0_native_timing_and_RF_LOCAL_required")
+    n = desc["O"].n
+    bcast = "B" in desc and desc["B"].ibcast
+    for role, md in desc.items():
+        if role == "B" and bcast:
+            if md.m != 1 or md.indexed or md.base % 8 or md.space != "VM":
+                return refusal("broadcast_B_must_be_one_sector_position0_VM_scalar")
+            continue
+        if (md.space != "VM" or md.fmt != "FP32" or md.m != 1 or md.n != n or (md.istride or 1) != 1 or md.ibcast
+                or md.base % 8 or any(getattr(md, x) for x in ("lstride", "dyn_sel", "dyn_mul", "n_sel", "l1stride",
+                                                                  "indexed"))):
+            return refusal(f"contiguous_aligned_m1_operand_{role}_required", "v1_unsupported")
+    if data is None:
+        return refusal("real_pre_operation_VM_words_required")
+    place = place if place is not None else LI.Placement(q)
+    owned = [e for e in range(n) if (e // 128) % 4 == q]
+    subs = sorted({(e // 128) * 128 + 32 * ((e % 128) // 32) for e in owned})
+    roles = [r for r in "ABCD" if r in desc and not (r == "B" and bcast)]
+    for role in roles + ["O"]:
+        for st in subs:
+            for j in range(4):
+                if st + 8 * j >= n:
+                    continue
+                ls_ = (desc[role].base + st + 8 * j) // 8
+                if ls_ in place.map and place.map[ls_] % 8 != j:
+                    return refusal(f"operand_{role}_sector_placed_on_port_{place.map[ls_] % 8}_not_SFU_group_{j}",
+                                   "v1_unsupported")
+    ql = TreeLines()
+    edge0, scalar_ready, pro_core, rf_addr = 0, None, None, None
+    if bcast:
+        b = desc["B"]
+        if b.base not in data:
+            return refusal("broadcast_scalar_VM_word_unknown")
+        rf_addr = b.base & 255
+        pro_core = reduce_to_rf(ql, a_base=b.base, nwords=1, kind="sum", lane_m1=0, imm1=0, rf_addr=rf_addr, q=q,
+                                data=data, place=place, tag=tag + ":Bxfer", timing=timing)
+        if "refusal" in pro_core:
+            return refusal("broadcast_transfer: " + pro_core["refusal"])
+        if pro_core["value"] != int(np.float32(data[b.base]).view(np.uint32)):
+            return refusal("broadcast_transfer_changes_value (-0 through +0 pretree padding)")
+        for e in range(0, max(ql.f["tree"]) + 1):
+            ql.f["control"].setdefault(e, pro_core["hold"])
+        scalar_ready = pro_core["rf_event"]["rf_write_pins_serial"]
+        edge0 = 1
+    # fills: (role, sub) -> store row; sectors 4s+j -> group j on port j
+    for role in roles:
+        for st in subs:
+            for j in range(4):
+                if st + 8 * j < n:
+                    for w in range(desc[role].base + st + 8 * j, desc[role].base + st + 8 * j + 8):
+                        data.setdefault(w, np.float32(0))      # words of a fetched sector beyond n: inactive pad
+    rows, row_next = {}, 1 if bcast else 0
+    fills, preload, next_fill, last_fill = [], {}, [edge0] * 8, -1
+    for role in roles:
+        for u, st in enumerate(subs):
+            rows[(role, u)] = row_next
+            row_next += 1
+            for j in range(4):
+                if st + 8 * j >= n:
+                    continue
+                first = desc[role].base + st + 8 * j
+                ls_ = first // 8
+                ps = place.get(ls_, j, f"{tag}:{role}")
+                e = next_fill[j]
+                next_fill[j] += 1
+                ql.vmr(e, j, ps, j, rows[(role, u)])
+                fills.append((ls_, e))
+                last_fill = max(last_fill, e)
+                if ls_ not in place.written:
+                    preload[ps] = list(range(first, first + 8))
+    orow = {u: row_next + u for u in range(len(subs))}
+    # control
+    terms = 0
+    for s_, role in enumerate("ABCDO"):
+        # every physical reader (absent roles too) carries the lane identity: pgslice.sv:303 checks all four
+        if role == "O" and role not in desc or (role == "B" and bcast):
+            continue
+        for k in range(7):
+            terms |= (1 << k) << (24 * (s_ * 10 + k))
+    ctl = dict(no=1, ni=n, ls=5, lvw=5, srcs=(1 << 2) if bcast else 0, dst=1, co_dst=1, aind=0, cpair=0,
+               cx_arnd=sut["a_rnd"], cx_arelu=sut["a_relu"], cx_amin=sut["a_min"], cx_cclip=sut["c_clip"],
+               cx_imm3=sut["imm3"], cp_m1=sut["m1"], cp_imm1=sut["imm1"], cm_m1=sut["m1"], cm_m2=sut["m2"], cm_qm=0,
+               cm_imm1=sut["imm1"], ca_ad=sut["ad"], ca_imm2=sut["imm2"], ci_sfu=sut["sfu"], cs_sfu=sut["sfu"],
+               cs_e1=sut["e1"], cs_imm2=sut["imm2"], ce_e2=sut["e2"], ce_imm1=sut["imm1"], co_rnd=sut["rnd"],
+               ld_c=terms)
+
+    def vb_of(u):
+        v = 0
+        for s_, role in enumerate("ABCDO"):
+            if role == "O":
+                v |= physical_word(q, orow[u]) << (24 * s_)
+            elif role == "B" and bcast:
+                v |= rf_addr << (24 * s_)
+            elif role in desc:
+                v |= physical_word(q, rows[(role, u)]) << (24 * s_)
+            else:
+                v |= physical_word(q, rows[(roles[0], u)]) << (24 * s_)
+        return v
+    setup = last_fill + timing.fill_commit + 1
+    if bcast:
+        setup = max(setup, scalar_ready + 4 + rf_local, max(ql.f["tree"]) + 1)
+    issues = [setup + LI.SETUP_TO_EMIT + u for u in range(len(subs))]
+    ql.f["control"][setup] = pack(dict(ctl, ld=1, vb=vb_of(0)))
+    for u, st in enumerate(subs):
+        ql.f["control"][issues[u]] = pack(dict(ctl, emit=1, i_v=st, vb=vb_of(u)))
+    extra = (15 if sut["m1"] in (4, 5) else 0) + SFU_EXTRA[sut["sfu"]]
+    lat = LI.FIRST_OUT - LI.SETUP_TO_EMIT + extra
+    if bcast:
+        for e in range(setup - 1 - rf_local, issues[-1] + LI.FIRST_OUT + 1):
+            ql.put("rf", e, 9, 9, 256 | rf_addr)
+    # golden (quarter q's elements only) and drains
+    ops = {}
+    for role in "ABCD":
+        if role in desc:
+            md = desc[role]
+            if role == "B" and bcast:
+                ops[role] = np.full(n, np.float32(data[md.base]), np.float32)
+            else:
+                ops[role] = np.array([data[md.base + e] for e in range(n)], np.float32)
+    with np.errstate(all="ignore"):
+        outbits = sfu_lane_golden(sut, ops)
+    o = desc["O"]
+    drain_e, expect, drains, commits = [0] * 8, [], [], []
+    for u, st in enumerate(subs):
+        ready = issues[u] + lat + 1
+        for j in range(4):
+            lo = st + 8 * j
+            if lo >= n:
+                continue
+            m = [lo + t < n for t in range(8)]
+            de = max(ready, drain_e[j])
+            drain_e[j] = de + 1
+            ls_ = (o.base + lo) // 8
+            ps = place.get(ls_, j, f"{tag}:O")
+            mask = sum(1 << t for t in range(8) if m[t])
+            ql.vmw(de, j, 0, j, orow[u], ps, mask)
+            c = de + timing.drain_done
+            commits.append(c)
+            drains.append((ls_, c))
+            expect.append(dict(sector=ps, mask=mask, edge=c, words=list(range(o.base + lo, o.base + lo + 8)),
+                               value=[int(outbits[lo + t]) if m[t] else None for t in range(8)]))
+    commit = max(commits)
+    hold = pack(dict(ctl, vb=vb_of(0)))
+    for e in range(0, commit + 1):
+        ql.f["control"].setdefault(e, hold)
+    lines = ql.lines()
+    if len(lines) > LI.EDGES_MAX:
+        return refusal("native_programme_capacity_exceeded")
+    if pro_core:
+        preload = dict(preload, **pro_core["preload"])
+    pre_words = {str(w): f"{int(np.float32(data[w] if w in data else 0).view(np.uint32)):08x}"
+                 for ws in preload.values() for w in ws}
+    for ls_, _ in drains:
+        place.written.add(ls_)
+    post = {}
+    for e in owned:
+        post[str(o.base + e)] = f"{int(outbits[e]):08x}"
+        data[o.base + e] = np.uint32(outbits[e]).view(np.float32)
+    return dict(status="emitted", reasons=[], ql=ql, lines=lines,
+        fills=(pro_core["fills"] if pro_core else []) + fills, drains=drains, preload=preload, data=pre_words,
+        inputs_placeholder=False, expect=expect, setup_edge=setup, issue_edges=issues, last_commit=commit,
+        fill_sectors=len(preload), drain_sectors=len(expect), sut=sut, native_timing=timing.as_dict(),
+        lowering=dict(supported=True, owner="TOK-FUNC2-HBM-SU", execution_qualified=False,
+                      mode="KIND1 lanes 0..31 sub-issues" + (" + RF class-1 broadcast B" if bcast else ""),
+                      sub_issues=len(subs), extra_depth=extra, quarter_elements=len(owned)),
+        rf_events=[pro_core["rf_event"]] if pro_core else [],
+        control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
+        expected_post_state=post, expected_post_state_only=True,
+        expected_reference=dict(role="comparison_only", source="hdc_golden(+v41 div) KIND-1 lane model"),
+        source_contract=dict(lanes="quarter-local 0..31 (KIND 1/2)", divider_depth=19, exp_depth=56,
+                             sigmoid_silu_depth=78, MLAT=4, ALAT=3, RF_LOCAL=rf_local, B_srcs_code=1 if bcast else 0),
+        timing_obligations=dict(issue_to_output=lat, serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
                                 old_price_preserved=False, connected_selected_case_RTL_required=True))
