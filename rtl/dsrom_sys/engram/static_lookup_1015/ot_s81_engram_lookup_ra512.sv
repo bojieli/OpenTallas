@@ -392,7 +392,11 @@ module ot_s81_engram_lookup_ra512 #(
         r_off <= q_off; r_j <= q_j; r_k <= q_k; r_s <= q_s;
     end
     always @(posedge clk_rd) if (e1_vn) begin
+`ifdef OT_ENGRAM_MUT_RA512_PAR
+        e1_lo <= rd_e;                       // NEGATIVE CONTROL ONLY: ignores the odd-ek macro swap
+`else
         e1_lo <= r_k[0] ? rd_o : rd_e;
+`endif
         e1_hi <= r_k[0] ? rd_e : rd_o;
         e1_a8 <= rd_a;
         e1_off <= r_off; e1_j <= r_j; e1_k <= r_k; e1_s <= r_s;

@@ -53,8 +53,10 @@ build xq1 -GXQ_MUT=1 &
 build xq2 -GXQ_MUT=2 &
 build tap1 -GTAP_MUT=1 &
 build tap2 -GTAP_MUT=2 &
+build rpar +define+OT_ENGRAM_MUT_RA512_PAR &
+build onesc +define+OT_ENGRAM_MUT_ONESCALE &
 wait
-run base; run xq1; run xq2; run tap1; run tap2
+run base; run xq1; run xq2; run tap1; run tap2; run rpar; run onesc
 n=base; for a in "+SEED=2 +LAT=160" "+SEED=3 +LAT=60"; do /usr/bin/time -v -o $W/var.run.time $W/obj_base/sim +OT_ROM_DIR=$W/rom $a > $W/var_${a//[ +=]/_}.log 2>&1; python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/var_${a//[ +=]/_}.log $W/src >> $W/var_${a//[ +=]/_}.log 2>&1; echo "base $a: $(grep -h 'TB_ENG_RR PASS\|TB_ENG_RR FAIL' $W/var_${a//[ +=]/_}.log) $(grep -h 'ENG_RR_PY PASS\|ENG_RR_PY FAIL' $W/var_${a//[ +=]/_}.log)" >> $W/status; done
 python3 - $W <<'PY'
 import json, sys, re
@@ -63,7 +65,7 @@ w = Path(sys.argv[1])
 def verdict(n):
     t = (w / f'{n}.log').read_text()
     return ('TB_ENG_RR PASS' in t) and ('ENG_RR_PY PASS' in t)
-muts = [dict(name=n, failed=not verdict(n), log=f'{n}.log') for n in ('xq1', 'xq2', 'tap1', 'tap2')]
+muts = [dict(name=n, failed=not verdict(n), log=f'{n}.log') for n in ('xq1', 'xq2', 'tap1', 'tap2', 'rpar', 'onesc')]
 j = dict(bench='tb_dsdv_eng_rr', ref=(w / 'ref.txt').read_text().strip(), pass_=verdict('base'), mutants=muts)
 j['pass'] = j.pop('pass_')
 (w / 'check.json').write_text(json.dumps(j, indent=1) + '\n')
