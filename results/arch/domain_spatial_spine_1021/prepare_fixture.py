@@ -103,12 +103,14 @@ def main():
     lines += [f'read_liberty /src/{path}' for path in macro_libs]
     lines += ['read_db /w/placed.odb', f'read_sdc /src/{kd}/clock.sdc',
               f'source /src/{kd}/pre_cts.tcl',
+              'source /w/contact_trace.tcl',
               'set expected [dict create '+ ' '.join(f'{k} {v}' for k,v in fixture['expected_physical_liberty_contacts'].items())+']',
               'set actual [ot_dsp::admit]',
               'dict for {root count} $expected {if {[dict get $actual $root] != $count} {error "physical/source count mismatch $root"}}',
               'puts "ACTUAL_COLLECTOR_BASELINE PASS (physical Liberty contacts, not STA sinkcount)"']
     (out/'load.tcl').write_text('\n'.join(lines)+'\n')
     shutil.copy2(HERE/'fixture_modes.tcl', out/'fixture_modes.tcl')
+    shutil.copy2(HERE/'contact_trace.tcl', out/'contact_trace.tcl')
     receipt = dict(case=a.case, fixture=fixture, api_root=str(api),
                    api_source_hashes={str(p.relative_to(api)):digest(p) for p in
                        [api/'tools/ref_tile/ref_tile.py', api/'tools/ref_tile/clock_entry_constraints.py',
