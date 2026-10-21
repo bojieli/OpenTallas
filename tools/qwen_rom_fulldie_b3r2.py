@@ -1150,6 +1150,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
     if before_relays is not None and getattr(v, 'FACE_PACK_FINAL', False):
         _face_pack_final(v, m)   # outermost: after every pin-moving wrapper
+    from qwen_split.gen_safety_facts import install as _install_gen_safety
+    _install_gen_safety(v, m, lambda: _pin_pos(v, m, strict=True))
     return v, m
 
 
@@ -5381,20 +5383,24 @@ def _reset_tree(v, m):
     return rec
 
 
-def _pin_pos(v, m):
+def _pin_pos(v, m, strict=False):
     """(inst, port) -> die position of the port's pin centroid (instance orientation applied)."""
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
-    cen, ext = {}, {}
+    cen, ext, bitcen = {}, {}, {}
     for name, mst in M.items():
-        acc = {}
+        acc, bitacc = {}, {}
         for nm, layer, r in v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}):
             a = acc.setdefault(nm.split('[')[0], [0.0, 0.0, 0, 1e18, -1e18, 1e18, -1e18])
             cx_, cy_ = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
             a[0] += cx_
             a[1] += cy_
             a[2] += 1
+            if strict:
+                z = bitacc.setdefault(nm, [0., 0., 0])
+                z[0] += cx_; z[1] += cy_; z[2] += 1
             a[3], a[4], a[5], a[6] = min(a[3], cx_), max(a[4], cx_), min(a[5], cy_), max(a[6], cy_)
+        bitcen[name] = {p: (a[0]/a[2], a[1]/a[2]) for p, a in bitacc.items()}
         cen[name] = {p: (a[0] / a[2], a[1] / a[2]) for p, a in acc.items()}
         ext[name] = {p: ((a[4] - a[3]) / 2, (a[6] - a[5]) / 2) for p, a in acc.items()}
     by = {i.name: i for i in m['insts']}
@@ -5405,8 +5411,11 @@ def _pin_pos(v, m):
         if (inst, port) in extra:
             return extra[(inst, port)]
         i = by[inst]
-        c = cen.get(i.master, {}).get(port.lstrip('*'))
+        base = re.sub(r'\[.*\]$', '', port.lstrip('*')) if strict else port.lstrip('*')
+        c = cen.get(i.master, {}).get(base)
         if c is None:
+            if strict:
+                raise ValueError(f'GEN safety: no pin geometry for {inst}/{port} ({i.master})')
             return (i.cx, i.cy)
         x, y = c
         if i.orient in ('MY', 'R180'):
@@ -5419,6 +5428,36 @@ def _pin_pos(v, m):
         """r10: half extents (x, y) of the port's pin group (a relay in front of it must leave the difference room)"""
         return ext.get(by[inst].master, {}).get(port.lstrip('*'), (0.0, 0.0))
     pos.ext = pin_ext
+
+    def pin_bits(inst, port, width):
+        # Verilog part selects are returned from the rightmost (LSB) bit to
+        # leftmost, so source and destination lists preserve net bit identity.
+        i = by[inst]
+        port = port.lstrip('*')
+        q = re.fullmatch(r'(.*)\[(\d+)(?::(\d+))?\]', port)
+        base = q[1] if q else port
+        if q:
+            left, right = int(q[2]), int(q[3] or q[2])
+            indexes = list(range(right, left + (1 if left >= right else -1), 1 if left >= right else -1))
+        else:
+            indexes = list(range(width))
+        if len(indexes) != width:
+            return None
+        out = []
+        for k in indexes:
+            c = bitcen.get(i.master, {}).get(f'{base}[{k}]')
+            if c is None and width == 1 and not q:
+                c = bitcen.get(i.master, {}).get(base)
+            if c is None:
+                return None   # explicit centroid-only placeholder, never invented bit pins
+            x, y = c
+            if i.orient in ('MY', 'R180'):
+                x = i.w - x
+            if i.orient in ('MX', 'R180'):
+                y = i.h - y
+            out.append((i.x + x, i.y + y))
+        return out
+    pos.bits = pin_bits
 
     def pin_face(inst, port):
         """Q-DIEPLAN5 10-17: the instance face (N/S/E/W) the port's pin group sits on (nearest instance edge)"""
