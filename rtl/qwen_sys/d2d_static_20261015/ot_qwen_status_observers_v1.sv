@@ -588,16 +588,25 @@ endmodule
 // Each kept leaf owns its grammar decision and <=16 payload capture bits.
 // Caller supplies same-phase regional reset copies; no data/event edge is added.
 (* keep_hierarchy = "yes" *)
+module ot_qwen_status_obs_rx_body(input wire [511:0] d,output wire good);
+ wire extension_good;
+ ot_qwen_status_obs_v1_valid u_check(.x(d[511:304]),.good(extension_good));
+ assign good=extension_good && !(|d[303:156]);
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_qwen_status_obs_epoch_equal(input wire [15:0] a,b,output wire equal);
+ assign equal=a==b;
+endmodule
+(* keep_hierarchy = "yes" *)
 module ot_qwen_status_obs_rx_chunk #(parameter integer W=16)(
- input wire ck,rst_n,ev,rs,hk,fc,
+ input wire ck,rst_n,ev,rs,hk,fc,body_good,
  input wire [15:0] he,epoch16,
- input wire [511:0] d,
  input wire [W-1:0] capture_d,
  output reg [W-1:0] q
 );
- wire good;
- ot_qwen_status_obs_v1_valid u_check(.x(d[511:304]),.good(good));
- wire en=ev && rs && hk && he==epoch16 && good && !(|d[303:156]) && !fc;
+ wire epoch_good;
+ ot_qwen_status_obs_epoch_equal u_epoch(.a(he),.b(epoch16),.equal(epoch_good));
+ wire en=ev && rs && hk && epoch_good && body_good && !fc;
  always @(posedge ck or negedge rst_n)
   if(!rst_n) q<=0; else if(en) q<=capture_d;
 endmodule
@@ -628,14 +637,14 @@ module ot_qwen_d2d_status_rx_sfm3_obs1 #(parameter integer NG = 24) (
     // KV-D2D3: as-built bad_hdr = rx_payload[547:543] != 0 || [542:539] != 15 || [538:533] != 63 || [532:517] != epoch16
     // || [516:512] != 0 || d[511:156] != 0, evaluated per capture group from its own registered copies (hk_c, he_c), so
     // no shared header net reaches more than one group (ABC folded the single bad_hdr into all 156 capture bits)
-    wire extension_good;
-    ot_qwen_status_obs_v1_valid u_ext_check(.x(rx_payload[511:304]),.good(extension_good));
-    wire [NG-1:0] bad_g;
-    genvar gh;
-    for (gh = 0; gh < NG; gh = gh + 1) begin : g_bad
-        assign bad_g[gh] = !hk_c[gh] || he_c[16*gh +: 16] != epoch16 || !extension_good || |rx_payload[303:156];
+    localparam integer NB=(NG+2)/3;
+    wire [NB-1:0] body_good;
+    for(genvar vg=0;vg<NB;vg=vg+1)begin:g_body
+        ot_qwen_status_obs_rx_body u_body(.d(d),.good(body_good[vg]));
     end
-    wire bad_hdr = bad_g[0];
+    wire epoch_good0;
+    ot_qwen_status_obs_epoch_equal u_fault_epoch(.a(he_c[15:0]),.b(epoch16),.equal(epoch_good0));
+    wire bad_hdr = !hk_c[0] || !epoch_good0 || !body_good[0];
     // sticky fault: master + NG copies on one D net
     (* keep = "true", dont_touch = "true" *) reg [NG:0] fc;      // fc[0] = master
     wire fault_d = (rx_event != rx_slot || (rx_event && bad_hdr)) ? 1'b1 : fc[0];
@@ -653,7 +662,7 @@ module ot_qwen_d2d_status_rx_sfm3_obs1 #(parameter integer NG = 24) (
         localparam integer WG = (364 * (g + 1)) / NG - LO;
         ot_qwen_status_obs_rx_chunk #(.W(WG)) u_cap(
             .ck(ck),.rst_n(rst_k[g]),.ev(ev_c[g]),.rs(rs_c[g]),.hk(hk_c[g]),
-            .fc(fc[g+1]),.he(he_c[16*g+:16]),.epoch16(epoch16),.d(d),
+            .fc(fc[g+1]),.he(he_c[16*g+:16]),.epoch16(epoch16),.body_good(body_good[g/3]),
             .capture_d(capture_d[LO+:WG]),.q(cap[LO+:WG]));
     end
     wire en0 = ev_c[0] && rs_c[0] && !bad_hdr && !fc[1];
