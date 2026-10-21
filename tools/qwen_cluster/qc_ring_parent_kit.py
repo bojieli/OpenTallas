@@ -33,6 +33,10 @@ s['sources'] = [x for x in s['sources'] if not x.endswith('qfd_c_b16_fullm.sv') 
     ['rtl/physical/qcluster/qfd_c_land_k.sv', 'rtl/physical/qcluster/qfd_c_ring_t.sv', 'rtl/physical/qcluster/qfd_c_b16_rgx.sv']
 s['orfs_vars']['OT_QC_SITES'] = 'physical/qcluster/qfd_c_b16_rgx_sites.tsv'
 s['pre_cts_extra'] = ['tools/qwen_cluster/cb16_km/cb16_ckkm.tcl']
+moved = place.get('stations_moved', {})   # rgxb (ring_tile_place_b.py): free stn514/516 re-placed on 43.2, orientation kept
+for c in s['children']:
+    if c.get('inst') in moved: c['at'] = moved[c['inst']]
+assert sum(c.get('inst') in moved for c in s['children']) == len(moved), 'moved station not a child'
 for r, p in sorted(place['tiles'].items()):
     n = r.split('u_land_', 1)[1]; W = table[n]['W']
     s['children'].append({'view': f'physical/ref_tile/qfd_c_ring{W}/views/qfd_c_ring{W}', 'count': 1, 'inst': r,
@@ -44,10 +48,11 @@ s['structural_change'] = (
     "replace the 138 soft ring halves (161k flops) of qfd_c_b16_fulln; each region root now reaches only hard-child clock pins "
     "(A0, stations, xstn, ring tiles) + the scalar control / reset FFs, balanced by cb16_ckkm.tcl.  Ring tiles placed by "
     "tools/qwen_cluster/ring_tile_place.py (CP-SAT, 43.2 lattice, writer anchors -> tile in face and tile out face -> reader anchors "
-    f"<= 405 um planned; {len(exc)} crossings planned above 405 with repeaters: {exc}).  RTL qfd_c_b16_rgx.sv "
+    f"<= 405 um planned; {len(exc)} crossings planned above 405 with repeaters: {exc}; {len(moved)} relay stations re-placed "
+    f"(ring_tile_place_b.py, hard hops <= 405, 0 cycles)).  RTL qfd_c_b16_rgx.sv "
     "(qc_ring_parent.py) = qfd_c_b16_fullm with the soft pairs replaced; same ports / stations / A0 / xstn / reset trees / edges.  "
     "Why: fulln/fullnb/fullm within-region TT spread 410-813 ps, WNS -1.4..-1.7 ns after 10-16 h.  Prior: " + s['structural_change'][:600])
-s['job'].update({'owner': 'Claude:QW-CB16REG', 'branch': 'claude/qw-cb16reg-1020', 'tag': 'rgx',
+s['job'].update({'owner': 'Claude:FAM-QK-CB16', 'branch': 'claude/fam-qk-cb16-1021', 'tag': name.rsplit('_', 1)[-1],
                  'purpose': 'MAIN (a) of QW-CB16REG: CB16 parent with hardened ring crossings (critical prefix qfd_c_b16: gate + coordinator review only, no submit)'})
 d = ROOT / 'physical/ref_tile' / name; d.mkdir(parents=True, exist_ok=True)
 (d / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')
