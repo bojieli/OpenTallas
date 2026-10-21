@@ -1,0 +1,21 @@
+{
+  "state": "LIVE_GEN_RESUME_NOT_PHYSICAL_CLOSURE",
+  "unit": "oth-ubuntu-2876832-1792608006",
+  "host": "ot-gold2",
+  "run": "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq",
+  "source_ref": "553741303923ab6bab36d67d17f914b1f11896c5",
+  "reviewed_tool_ref": "5333856dc2aa8f1f80fabc86fafe08a4caea0969",
+  "strict_bind_reused": "PASS",
+  "paired_focused_cases": 18,
+  "paired_new_failures": 0,
+  "actual_failed_case_checker": {
+    "status": "PASS",
+    "instances": 30170,
+    "clock_net_names": 982,
+    "clock_inputs": 72,
+    "whole_absent_spare_clock_outputs": 48
+  },
+  "authorization": "parent via ROOT after exclusive tool review, paired checks, exact runtime publication/sync and actual failed-case checker PASS",
+  "original_failed_case_preserved": "/srv/opentallas-scratch/claude/codex-s81-g8-iqready-1021/die72-g8iq",
+  "sequence": "GEN only then unchanged automatic GRT/TTFFSS/clock/IR; no rebind or new physical variant"
+}
