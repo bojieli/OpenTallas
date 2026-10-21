@@ -1,0 +1,43 @@
+{
+  "source_commit": "8916a1cb6284d60fdfdef138d1913643427edaba",
+  "files": [
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv",
+      "sha256": "810fb6fc419566aaf8683b1f03cf18447ef21e9671b5ca943ea94e8290ad832c"
+    },
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+      "sha256": "2c8c00e66db78fae2b5fab6d3752874155e80df221e14fec4744a54267abedf8"
+    },
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+      "sha256": "620328daa27ef27c9193e1c5ce5395564b612415289dc26bc5c1b7ebf9f76da1"
+    },
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+      "sha256": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111"
+    },
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+      "sha256": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee"
+    },
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/lib/ot_rst_relay_tree3.sv",
+      "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7"
+    },
+    {
+      "path": "results/arch/s81_hostb_envelope_1021/head_producer_r1/source/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+    }
+  ],
+  "scope": "Actual HFWD producer component with real dsfd_mtp_seq held reset by its actual unconfigured c_run=0; no stage programme or global phase fabricated.",
+  "input": "835 genuine HBE fixture records wrapped in HSF0 type7, same independently named TEST context. Static header/body input slots remain TEST local dates.",
+  "measure": "Observe actual host-pin accept to kind6 ring valid latency and payload/count; no guessed producer age. Re-run same immutable binary with inactive ri upper bits nonzero to test documented HFWD reserved upper-zero contract.",
+  "expected": "835 payloads in original order, kind6/hops1, reserved571 zero; no controller fault. The inactive ordinary input has valid=0 and must not contribute to generated HOST content.",
+  "open": [
+    "G9 source adoption",
+    "production head/receiver clocks and delivery books",
+    "HSF0 return egress connection",
+    "production programme anchor"
+  ]
+}
