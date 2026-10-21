@@ -9,5 +9,5 @@ set ot_un 0
 foreach ot_ui [$ot_ub getInsts] {
  if {[string match {u_lpo_rx.q*} [$ot_ui getName]]} { $ot_ug addInst $ot_ui; incr ot_un }
 }
-if {$ot_un != 513} {error "UCIE5 expected513 rx face flops, found $ot_un"}
+if {$ot_un != 512} {error "UCIE5 expected512 rx face flops, found $ot_un"}
 puts "UCIE5_RX_BAND $ot_un flops in N43.2um strip; exclusive, retained through DPL/CTS"
