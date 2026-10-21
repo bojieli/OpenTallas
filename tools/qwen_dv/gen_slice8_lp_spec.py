@@ -12,7 +12,7 @@ ROOT=g7.ROOT
 OUT_DIR='rtl/qwen_dv/s5/s8/lp'
 REC_DIR='results/arch/codex_slice2_native_1021/s8'
 CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv','rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv']]+[
-    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1','qfd_dv_s8_tap_bounded','qfd_dv_s8_tap_bounded_helpers']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv']
+    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1','qfd_dv_s8_station_safe','qfd_dv_s8_station_math_g','qfd_dv_s8_tap_bounded','qfd_dv_s8_tap_bounded_helpers']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv','rtl/common/landed_parent/ot_pl_land_n32.sv']
 
 def make_flat():
     import gen_slice8_rp_source

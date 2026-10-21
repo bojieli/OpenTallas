@@ -1,0 +1,61 @@
+{
+  "recorded_at": "2026-10-21T13:48:03.797756-07:00",
+  "geometry": {
+    "source": "ced0cbf41",
+    "slot_um": [
+      2462.376,
+      4319.976
+    ],
+    "packing": "o734.4 R0/MX on-track",
+    "matching_bit_max_um": 403.686
+  },
+  "station": {
+    "source": "5de01e82f",
+    "exact_files": true,
+    "params": {
+      "ADD_LAT": 7,
+      "SKEW": 14,
+      "SCALE_LAT": 6,
+      "MUT": 0,
+      "JB": 8,
+      "PIN_IN": 1,
+      "BT_LAT": 1
+    },
+    "jobs": [
+      "qfd_dv_s8_station_tail1-t1a-5de01e82f",
+      "qfd_dv_s8_station_tail1_b-t1b-5de01e82f"
+    ],
+    "status": "Both actual RUNNING route since13:24, not future13:55lane/queued; no CLOSED alias"
+  },
+  "crh": {
+    "source": "007819fb9",
+    "record": "e57994fb6ff5365eaecf746d3da74cae1e7929a2",
+    "job": "qfd_dv_s8_crh_rp1-rp1b-007819fb9",
+    "params": {},
+    "exact_source": true,
+    "view": "physical/ref_tile/qfd_dv_s8_crh_rp1/views/qfd_dv_s8_crh_rp1",
+    "TT_ps": 166.12,
+    "FF_ps": 19.36,
+    "DRC": 0,
+    "SSsens_ps": -17.91
+  },
+  "tap": {
+    "change": "Only private helper namespace qfd_bmath_ -> qfd_s8tap_bmath_; same Boolean equations/FFs/ports/stages",
+    "old_failure": "Both w12c/w12cb synthesis frontend duplicate qfd_bmath_and; native absent terminal13:17/13:15"
+  },
+  "programme": {
+    "landings": 187,
+    "pads_D4": 3,
+    "pads_D8": 5,
+    "existing_lp0": "Verilator5.050 LP_LOCKSTEP PASS exact ced0 source; no rerun",
+    "ages": "OWED selected actual programme, no old187/248 or projected192/253"
+  },
+  "sha256": {
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv": "ed6a647b87a4e97c69ed3687d6f4d5b1b2bcca45b0085ba535158d0bff049d69",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv": "6f9fc2569768cc770e229a0a154bce77e60d5555c65766403d5cbc1bf87615e2",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv": "84e9d3a9d5e8499d7b1e7295c51945d769c889eefe0b825d3d7a8af2b4fbb0fc",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv": "bb3a6a1644b16da9b82ec1707685ff9211a8fff5da14ae79e9afb397e3ca5c34",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv": "bc7d1047d0f159855320900342be7e7832d2c11cacd60b698a2116067332cbd4",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv": "6a62fadc7e6239e14a7e4bd2183faa85a4edf2148f57cf9ff1b3f1abb451c135"
+  }
+}

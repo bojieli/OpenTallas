@@ -20,3 +20,6 @@ Path(sys.argv[1]+'/tap_seed.sv').write_text(text)
 GEN
 yosys -p "read_verilog -sv -DSYNTHESIS $out/tap_seed.sv; hierarchy -check -top qfd_dv_s8_tap_seed; synth -top qfd_dv_s8_tap_seed -flatten -noabc -nofsm -noshare; dffunmap; write_json $out/tap.json" > "$out/yosys.log" 2>&1
 python3 tools/qwen_dv/ctlm6_bound_macro.py "$out/tap.json" --top qfd_dv_s8_tap_seed --name qfd_dv_s8_tap_bounded --out "$out/qfd_dv_s8_tap_bounded.sv" --helpers "$out/qfd_dv_s8_tap_bounded_helpers.sv" --record "$out/source_record.json" --load-cap 16 --transparent-inverters --retain-mux --shared-helpers --retain-all-comb
+
+# Private TAP helper namespace avoids collision with existing red/sc bounded math.
+sed -i "s/qfd_bmath_/qfd_s8tap_bmath_/g" "$out/qfd_dv_s8_tap_bounded.sv" "$out/qfd_dv_s8_tap_bounded_helpers.sv"

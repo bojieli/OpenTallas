@@ -37,6 +37,12 @@ bash census/source_route.sh physical/ref_tile/${KIT}/kit.env census "$PWD/census
 rc=$?
 set -e
 echo "SOURCE_DRIVER_RC=$rc (no physical verdict: census-only stop omits layout outputs)"
+if [ ! -f census/run/census/work/orfs/native_census.json ]; then
+ phase=source_flow_failed_before_native
+ echo 'TERMINAL source flow failed before native census; not a pending layout job'
+ tail -50 census/run/census/flow.log || true
+ exit 1
+fi
 python3 - <<'PYCODE'
 import pathlib,json
 p=pathlib.Path('census/run/census/work/orfs/native_census.json')
