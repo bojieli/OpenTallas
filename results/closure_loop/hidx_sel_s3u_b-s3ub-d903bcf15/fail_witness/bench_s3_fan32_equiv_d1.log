@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_sel_s3u_b-s3ub-d903bcf15 bench bench_s3_fan32_equiv_d1 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3u_b-s3ub-d903bcf15 log cl/bench_s3_fan32_equiv_d1.a1b1.log captured 2026-10-21T06:59:25-07:00
+# fail_regex 'S3_EQUIV FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+S3_EQUIV MISMATCH quadrant cyc 63182 sv 1/1 ret 0838000/0838000 qf 1/1 line_eq 0
+[400001000] %Fatal: tb_hidx_s3_equiv.sv:65: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT1 CMUT0 errors 1
+%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:65: Verilog $stop
+Aborting...
