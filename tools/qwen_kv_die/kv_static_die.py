@@ -1698,6 +1698,11 @@ def rtl_text():
     """one module per tile kind; every replica must produce the identical text"""
     mods = OrderedDict()
     for d, t in all_tiles().items():
+        # S6C modules are registered native RTL, not the wires-only tile model.
+        # Keep the tile for placement/connections, but never emit a second body
+        # with the same module name into the active compilation unit.
+        if GRP_S6C and t['kind'] in GRP_S6C_RTL:
+            continue
         name = KIND_MASTER[t['kind']]
         txt = module_text(t, name)
         if name in mods and mods[name][0] != txt:
@@ -1720,6 +1725,8 @@ def sources():
     for t in all_tiles().values():
         for n in t['members']:
             s.add(ins()[n]['source'])
+    if GRP_S6C:
+        s.update(GRP_S6C_RTL.values())
     s.update(K.pc_emb_sources())
     if BOOT:
         s.update(BOOT_PC_DEPS)
