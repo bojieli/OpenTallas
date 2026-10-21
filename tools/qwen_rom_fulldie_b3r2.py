@@ -4189,6 +4189,40 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     def _in_xchan(x0, y0, W_, H_):
         return any(a_ - 1e-3 <= x0 and x0 + W_ <= c_ + 1e-3 and b_ - 1e-3 <= y0 and y0 + H_ <= d_ + 1e-3 for a_, b_, c_, d_ in _xch)
+
+    def _xchan_spot(qx, qy, W_, H_, Q_, S_):
+        """QW-G5REACH 10-20: free spot INSIDE a slice landing channel minimising the longer hop (Q_ -> station,
+        station -> sink S_).  dv2f20g5l (b23a11d9d): the slice pads (LAND_LIST rows, not LAND_CROSS) never searched the
+        channels -- the sink is in the tile field with no corridor, so the corridor / ring searches skipped the channel
+        and 130 1- / 32-b dv_ch_* stations fell 600-680 um away.  Only side-by-side slice buses (_ew_bids) use this."""
+        best_ = None
+        ys_ = max(4 * v.GY, 2.16)
+        for a_, b_, c_, d_ in _xch:
+            if c_ - a_ < W_ - 1e-3 or abs((a_ + c_) / 2 - qx) > 2 * RELAY_REACH_UM:
+                continue
+            xs_ = sorted({v.up(a_, v.GX), v.dn(c_ - W_, v.GX), v.dn((a_ + c_ - W_) / 2, v.GX)})
+            lo_, hi_ = max(b_, qy - H_ / 2 - RELAY_REACH_UM), min(d_ - H_, qy - H_ / 2 + RELAY_REACH_UM)
+            if hi_ < lo_:
+                continue
+            k_max = int((hi_ - lo_) / ys_) + 1
+            y_mid = v.dn(min(max(qy - H_ / 2, lo_), hi_), v.GY)
+            for k_ in range(0, k_max + 1):
+                for sgn in ((1,) if k_ == 0 else (1, -1)):
+                    y0 = v.dn(y_mid + sgn * k_ * ys_, v.GY)
+                    if y0 < lo_ - 1e-3 or y0 > hi_ + 1e-3 or y0 < g['y0'] or y0 + H_ > die_top:
+                        continue
+                    for x0 in xs_:
+                        if x0 < a_ - 1e-3 or x0 + W_ > c_ + 1e-3:
+                            continue
+                        cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                        sc_ = max(abs(cx_ - Q_[0]) + abs(cy_ - Q_[1]), abs(cx_ - S_[0]) + abs(cy_ - S_[1]))
+                        if best_ is not None and sc_ >= best_[0]:
+                            continue
+                        if free((x0, y0, x0 + W_, y0 + H_)):
+                            best_ = (sc_, (x0, y0))
+                if best_ is not None and k_ * ys_ > best_[0]:
+                    break
+        return best_[1] if best_ else None
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -4231,6 +4265,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
                 sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
+                if sp is None and _xch and bid in _ew_bids and bid not in _lc_bids:
+                    sp = _xchan_spot(qx, qy, w + v.SHAVE, h + v.SHAVE, Q, (x1, y1))
                 if sp is None and bid in _lc_bids:
                     # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
                     # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
