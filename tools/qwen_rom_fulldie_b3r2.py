@@ -2936,9 +2936,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
         if _os_r.environ.get("OT_SPLIT_FWD_CLASSES") == "1":
-            from qwen_split.fwd_class_emit import reservation
+            from qwen_split.fwd_class_emit import reservation, lane_maxw
             group = ('H' if bid in _ew_bids else 'V') if _os_r.environ.get('OT_SPLIT_FWD_CLASS_PACK') == '1' else None
-            return reservation(bits, group)
+            return reservation(bits, group, lane_maxw(m, bid))   # QW-G5R3N: per-lane class part width
         span1 = bits * 0.048 + 4.0
         if (bid is not None and bid in _ew_bids and _os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1'
                 and bits > int(_os_r.environ.get('OT_SPLIT_FWD_LAND_BITS', '136'))):

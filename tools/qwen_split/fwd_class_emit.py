@@ -23,14 +23,26 @@ def slice_max():
     return w
 
 
-def slices(bits):
-    n = math.ceil(bits / slice_max())
+def lane_maxw(m, bid):
+    """Per-lane part width. Narrow split exempts the W0|E0 seam-lane words (m['dv_seam_lane']): their one
+    station sits in the seam channel, where the 600-b class frame fits (dv2f21g5r3c/d passed it) and a
+    column of 128-b parts does not (dv2f21g5r3f/g/f2/g2/f3: 'dv seam lane: no free station dv_x0_dr_dr').
+    OT_SPLIT_FWD_CLASS_SEAM_WIDE=0 narrows them too."""
+    w = slice_max()
+    if w < 600 and os.environ.get('OT_SPLIT_FWD_CLASS_SEAM_WIDE', '1') == '1' and m is not None \
+            and m.get('dv_seam') and bid in set(m.get('dv_seam_lane') or ()):
+        return 600
+    return w
+
+
+def slices(bits, maxw=None):
+    n = math.ceil(bits / (maxw or slice_max()))
     width = math.ceil(bits / n)
     return [(lo, min(bits, lo + width)) for lo in range(0, bits, width)]
 
 
-def reservation(bits, group=None):
-    parts = slices(bits)
+def reservation(bits, group=None, maxw=None):
+    parts = slices(bits, maxw)
     wc = C.wclass(max(hi - lo for lo, hi in parts))
     groups = [group] if group else list(C.REP)
     # Side-by-side paths can turn into EN/ES/WS/WN at a hop. Reserve
@@ -40,17 +52,17 @@ def reservation(bits, group=None):
         groups += ['HV', 'VH']
     frames = [C.frame(wc, g) for g in groups]
     w, h = max(f[0] for f in frames), max(f[1] for f in frames)
-    cols = grid_cols(len(parts), group)
+    cols = grid_cols(len(parts), group, maxw)
     rows = math.ceil(len(parts) / cols)
     return round((w + C.SHAVE) * cols - C.SHAVE, 3), round((h + C.SHAVE) * rows - C.SHAVE, 3)
 
 
-def grid_cols(n, group=None):
+def grid_cols(n, group=None, maxw=None):
     """Narrow split (MAXW < 600) only: parts sit in a grid of columns. An E/W side-by-side lane ('H',
     the slice-gap landing columns) keeps one 64.8-um column; any other station (seam / corridor, vertical
     flow) takes up to OT_SPLIT_FWD_CLASS_COLS (default 2) columns, so its height stays near the 600-b
     frame's (dv2f21g5r3f/g: a 520-b seam station 5 x 30.24 = 151 um tall found no seam site)."""
-    if slice_max() >= 600 or group == 'H':
+    if (maxw or slice_max()) >= 600 or group == 'H':
         return 1
     return max(1, min(n, int(os.environ.get('OT_SPLIT_FWD_CLASS_COLS', '2'))))
 
@@ -69,6 +81,7 @@ def install(v, m):
     by = {i.name: i for i in m['insts']}
     mapping, classes, receipts, extra = {}, {}, [], []
     for lane in rows:
+        mw = lane_maxw(m, lane['bid'])
         names = lane['stations'] + ([lane['landing']] if lane.get('landing') else [])
         for name in names:
             it = by[name]
@@ -78,10 +91,10 @@ def install(v, m):
             fam, bits, faces = g[1], int(g[2]), g[3]
             if bits != lane['bits']:
                 raise ValueError(f'{name}: source width {bits} != calendar width {lane["bits"]}')
-            parts = slices(bits)
+            parts = slices(bits, mw)
             made = []
             compact = os.environ.get('OT_SPLIT_FWD_CLASS_PACK') == '1'
-            reserve_w, reserve_h = (it.w,it.h) if compact else reservation(bits)
+            reserve_w, reserve_h = (it.w,it.h) if compact else reservation(bits, None, mw)
             if not compact and (it.w + 1e-3 < reserve_w or it.h + 1e-3 < reserve_h):
                 raise ValueError(f'{name}: class reservation missing: {it.w}x{it.h} < {reserve_w}x{reserve_h}')
             for part, (lo, hi) in enumerate(parts):
@@ -91,7 +104,7 @@ def install(v, m):
                 ni.master, ni.orient = row['cls'], row['orient']
                 ni.w, ni.h = row['class_frame']
                 # narrow split: as many columns as the reserved frame holds (1 in a 64.8-um landing column)
-                cols = 1 if slice_max() >= 600 else max(1, min(len(parts), int((reserve_w + C.SHAVE + 1e-6) // (ni.w + C.SHAVE))))
+                cols = 1 if mw >= 600 else max(1, min(len(parts), int((reserve_w + C.SHAVE + 1e-6) // (ni.w + C.SHAVE))))
                 rows = math.ceil(len(parts) / cols)
                 slot_w=(reserve_w+C.SHAVE)/cols-C.SHAVE
                 slot_h=(reserve_h+C.SHAVE)/rows-C.SHAVE
@@ -108,7 +121,7 @@ def install(v, m):
                     if land is None:
                         raise ValueError(f'{name}: no native tie source for spare inputs')
                     landpart = part if len(parts) > 1 else 0
-                    landname = land if len(slices(lane['bits'])) == 1 else slice_name(land,landpart)
+                    landname = land if len(slices(lane['bits'], mw)) == 1 else slice_name(land,landpart)
                     extra.append((f'fc_tie_{ni.name}', 'constant', 1,
                                   [(landname, 'tie_lo')] + [(ni.name, f'a[{j}]') for j in range(hi-lo,row['class_bits'])]))
             mapping[name] = made
@@ -116,7 +129,8 @@ def install(v, m):
     for bid, cl, bits, eps in m['buses']:
         data = [(i,p) for i,p in eps if i in mapping and p.lstrip('*') in ('a','b')]
         if data:
-            parts = slices(bits)
+            # parts of this net = the parts of its (per-lane width) class endpoints
+            parts = [(il, ih) for _, il, ih, _ in mapping[data[0][0]]]
             for part,(lo,hi) in enumerate(parts):
                 ne = []
                 for i,p in eps:
@@ -157,7 +171,7 @@ def install(v, m):
     m['buses'] = merged
     physical_rows=[]
     for lane in rows:
-        parts=slices(lane['bits'])
+        parts=slices(lane['bits'], lane_maxw(m, lane['bid']))
         for part,(lo,hi) in enumerate(parts):
             r=copy.deepcopy(lane)
             if len(parts)>1:
