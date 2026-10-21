@@ -1,0 +1,267 @@
+{
+  "B0": {
+    "status": "EXPLICIT_SOURCE_CLOCK_ABI_UPGRADE_REQUIRED_NOT_ALIAS",
+    "selected_release": "017b32285/N",
+    "selected_instance": "hcb_SW0",
+    "selected_master": "ot_hbm_hc_bankq0_static",
+    "selected_source": "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv",
+    "selected_sha256": "c1cac051af81d2286ee2efeab50aa83d5ad7a16ec063910f32304cb86c5371e5",
+    "selected_params": {
+      "DRLY": 2,
+      "CPO": 1
+    },
+    "candidate_master": "ot_hbm_hc_bankq0_rw8_static",
+    "candidate_source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankrc_static.sv",
+    "candidate_source_sha256": "a9f2ad0f4e384d1cf755d06ac49187bebb7d12ec4e95eef22af4fba3e3f644b7",
+    "candidate_WR": 3,
+    "added_ports": {
+      "clk_c": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_o": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_q0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_q1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_q2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_q3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_s0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_s1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "ck_l": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ck_w": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ck_x": {
+        "direction": "input",
+        "bits": 4
+      }
+    },
+    "removed_ports": {},
+    "changed_ports": {},
+    "retained_ports": 24,
+    "source_header_scope": "generic source preprocessed with actual SYNTHESIS define; no synthesis or newmodel run"
+  },
+  "E2": {
+    "status": "EXPLICIT_SOURCE_CLOCK_ABI_UPGRADE_REQUIRED_NOT_ALIAS",
+    "selected_release": "017b32285/N",
+    "selected_instance": "hcb_SW2",
+    "selected_master": "ot_hbm_hc_bankq_ft_static",
+    "selected_source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+    "selected_sha256": "f0e3ce7f344cf98d03512fdc2804fb7c3d58a43c29c6ed204374f0e25a9e082c",
+    "selected_params": {},
+    "candidate_master": "ot_hbm_hc_bankq_ft_rw8_static",
+    "candidate_source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankrc_static.sv",
+    "candidate_source_sha256": "a9f2ad0f4e384d1cf755d06ac49187bebb7d12ec4e95eef22af4fba3e3f644b7",
+    "candidate_WR": 3,
+    "added_ports": {
+      "clk_c": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_ce": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_w3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_x3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_e3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_d3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h0": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h1": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h2": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_h3": {
+        "direction": "input",
+        "bits": 1
+      },
+      "ck_l": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ck_w": {
+        "direction": "input",
+        "bits": 8
+      },
+      "ck_x": {
+        "direction": "input",
+        "bits": 4
+      }
+    },
+    "removed_ports": {},
+    "changed_ports": {},
+    "retained_ports": 60,
+    "source_header_scope": "generic source preprocessed with actual SYNTHESIS define; no synthesis or newmodel run"
+  }
+}
