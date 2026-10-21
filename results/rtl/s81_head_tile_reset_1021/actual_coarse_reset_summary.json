@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.head.tile-reset-coarse-evidence.v1",
+ "source": "5bd07167a",
+ "path": "/srv/opentallas-scratch/claude/ref_gate/s81hd_tile_r3m-20261021-113630/routes/gate/work/orfs/results/asap7/opentallas_ot_s81hd_tile_r3_asap7_ref_gate/base/ot_rst_copies.tsv",
+ "raw_sha256": "48f21dc146fea0381f46e1a5a8de42429d8245aa67d00b1752ffce5ec716da09",
+ "rows": [
+  {
+   "family": "tile_r0",
+   "copies": 2,
+   "total_loads": 64,
+   "max_group": 32,
+   "min_group": 32,
+   "status": "OK"
+  },
+  {
+   "family": "tile_r1",
+   "copies": 64,
+   "total_loads": 1536,
+   "max_group": 24,
+   "min_group": 24,
+   "status": "OK"
+  },
+  {
+   "family": "tile_r2",
+   "copies": 1536,
+   "total_loads": 38684,
+   "max_group": 26,
+   "min_group": 0,
+   "status": "OK"
+  }
+ ],
+ "scope": "actual coarse redistribution witness only; final mapped census pending"
+}
