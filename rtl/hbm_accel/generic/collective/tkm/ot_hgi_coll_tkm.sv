@@ -648,12 +648,49 @@ module ot_tkm_lt_live #(parameter integer W = 85) (input wire [W-1:0] a, input w
 endmodule
 
 
+// E86 V5: exact original bitwise comparator regrouped into live5-bit chunks.
+// No relational< / logical== shortcut: X/Z behavior follows the same AND/OR
+// formula. Suffix equality has only LIVE kept combine nodes, no padding aliases.
+module ot_tkm_lt_chunked #(parameter integer W=85, G=5)
+ (input wire [W-1:0] a,b, output wire lt);
+ localparam integer NG=(W+G-1)/G, L=$clog2(NG);
+ (* keep *) wire [NG-1:0] gl,ge,term;
+ wire [NG-1:0] suffix[0:L];
+ for(genvar g=0;g<NG;g=g+1)begin:g_chunk
+  localparam integer B=g*G,CW=(W-B<G)?W-B:G;
+  wire [CW-1:0] bl=(~a[B+:CW])&b[B+:CW];
+  wire [CW-1:0] be=~(a[B+:CW]^b[B+:CW]);
+  wire [CW:0] local_lt;assign local_lt[0]=1'b0;
+  for(genvar k=0;k<CW;k=k+1)begin:g_bit
+   assign local_lt[k+1]=bl[k]|(be[k]&local_lt[k]);
+  end
+  assign gl[g]=local_lt[CW];assign ge[g]=&be;
+ end
+ assign suffix[0]=ge;
+ for(genvar l=0;l<L;l=l+1)begin:g_prefix
+  for(genvar g=0;g<NG;g=g+1)begin:g_node
+   if(g+(1<<l)<NG)begin:g_live
+    (* keep *) wire eq_live=suffix[l][g]&suffix[l][g+(1<<l)];
+    assign suffix[l+1][g]=eq_live;
+   end else begin:g_pass
+    assign suffix[l+1][g]=suffix[l][g];
+   end
+  end
+ end
+ for(genvar g=0;g<NG;g=g+1)begin:g_term
+  if(g+1<NG)assign term[g]=gl[g]&suffix[L][g+1];
+  else assign term[g]=gl[g];
+ end
+ assign lt=|term;
+endmodule
+
 // ot_tkm_gn_leaf (HBM-E86-5 2026-10-20, e86 FAN32 V3): the GN next-state of one position from ITS OWN kept count
 // copies (cg/cv: gt / valid copies of positions d-0..d-4), the four-position compare outputs g2 (g2f of d-k) and the
 // group block compares gb. Logic = the FAN32 1 g_gn32 g_new block, verbatim; DMIN = min(d, 5) carries the d >= k and
 // d - k - 1 < 0 position conditions. Instantiated with keep_hierarchy at FAN32 2 so ABC cannot fold it into the copies.
-module ot_tkm_gn_leaf #(parameter integer DMIN = 5) (
-    input wire [19:0] cg, input wire [4:0] cv, input wire [19:0] g2, input wire [15:0] gb, output reg [3:0] gn);
+module ot_tkm_gn_leaf #(parameter integer DMIN = 5, FOLD = 0) (
+    input wire [19:0] cg, input wire [4:0] cv, input wire [19:0] g2, input wire [15:0] gb,
+    input wire clear, input wire [3:0] flags, output reg [3:0] gn, output wire [3:0] gn_next);
     wire [2:0] count [0:4];
     for (genvar k = 0; k < 5; k = k + 1) begin : g_count
         wire [3:0] v = cg[4*k +: 4];
@@ -667,6 +704,8 @@ module ot_tkm_gn_leaf #(parameter integer DMIN = 5) (
             if (cv[0] && DMIN >= k && count[k] > 3'(k) && (k == DMIN || count[(k < 4) ? k + 1 : 4] <= 3'(k)))
                 gn = gn | gb[4*k +: 4];
     end
+    // EXACT original ternary, now inside hierarchy so mapping can absorb the late mux.
+    assign gn_next=(FOLD!=0)?(clear?flags:gn):gn;
 endmodule
 
 
@@ -703,7 +742,7 @@ endmodule
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
                                  parameter integer LW = 7, parameter integer PRE = 0,
                                  parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0,
-                                 parameter integer SEAM = 0) (
+                                 parameter integer SEAM = 0, parameter integer LT_GROUP = 0, parameter integer GCFOLD = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -829,10 +868,12 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     function automatic integer wv(input integer w); wv = (w >= FN) ? w - FN : (NV == 1) ? 0 : (w < 2) ? 0 : (w < 4) ? 1 : 2; endfunction
     wire [3:0] gt_copy [0:NP-1][0:NWD-1][0:4];
     wire valid_copy [0:NP-1][0:NWD-1][0:4];
+    wire clear_copy [0:NP-1][0:NWD-1][0:4];
     wire valid_gn [0:NP-1], clear_gn [0:NP-1];
     wire pclear_w [0:NP-1][0:NV-1], pvalid_w [0:NP-1][0:NV-1];
     wire [3:0] pflags_w [0:NP-1][0:NV-1];
     wire [3:0] gnv [0:NP-1][0:NV-1];
+    wire [3:0] gnv_next [0:NP-1][0:NV-1];
     if (FAN32 != 0) begin : g_fan32_state
         // Keep every input-to-control provenance edge bounded: NPIN pin copies (PG positions x NV variants each),
         // per-variant p-stage copies, then the q-stage copies of each (position, word).
@@ -871,11 +912,11 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                     (* keep="true",dont_touch="true" *) reg [3:0] gc;
                     always @(posedge ckr[rg(SRC/GP)])begin
                         qc<=pclear_w[SRC][V];qv<=pvalid_w[SRC][V];
-                        for(integer b=0;b<4;b=b+1)gc[b]<=(SRC>=PT)?pflags_w[SRC][V][b]:(qc?pflags_w[SRC][V][b]:gnv[SRC][V][b]);
+                        for(integer b=0;b<4;b=b+1)gc[b]<=(SRC>=PT)?pflags_w[SRC][V][b]:((GCFOLD!=0)?gnv_next[SRC][V][b]:(qc?pflags_w[SRC][V][b]:gnv[SRC][V][b]));
                     end
-                    assign gt_copy[d][w][k]=gc;assign valid_copy[d][w][k]=qv;
+                    assign gt_copy[d][w][k]=gc;assign valid_copy[d][w][k]=qv;assign clear_copy[d][w][k]=qc;
                     end else begin:g_absent
-                        assign gt_copy[d][w][k]=0;assign valid_copy[d][w][k]=0;
+                        assign gt_copy[d][w][k]=0;assign valid_copy[d][w][k]=0;assign clear_copy[d][w][k]=0;
                     end
                 end
             end
@@ -903,7 +944,11 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 wire [KT-1:0] ka = xs[EW-1:1];
                 wire [KT-1:0] kb = compare_s[gp / GP][EW*gj + 1 +: KT];
                 wire lt_;
-                ot_tkm_lt_live #(.W(KT)) u_c (.a(ka), .b(kb), .lt(lt_));
+                if(LT_GROUP!=0)begin:g_chunked
+                    ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_c (.a(ka),.b(kb),.lt(lt_));
+                end else begin:g_binary
+                    ot_tkm_lt_live #(.W(KT)) u_c (.a(ka),.b(kb),.lt(lt_));
+                end
                 assign g2s[4*gp + gj] = lt_;
             end
         end else begin : g_off
@@ -916,8 +961,12 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             wire [KT-1:0] ka = SX[gp][EW-1:1];
             wire [KT-1:0] kb = compare_bg[gp / GP][(gp % GP) / 4][EW*gj + 1 +: KT];
             wire lt_;
-            ot_tkm_lt_live #(.W(KT)) u_c (.a(ka), .b(kb), .lt(lt_));
-            assign g2f[4*gp + gj] = lt_;
+            if(LT_GROUP!=0)begin:g_chunked
+                    ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_c (.a(ka),.b(kb),.lt(lt_));
+                end else begin:g_binary
+                    ot_tkm_lt_live #(.W(KT)) u_c (.a(ka),.b(kb),.lt(lt_));
+                end
+            assign g2f[4*gp + gj] = (CMUT==5&&gp==14&&gj==0)?~lt_:lt_;
         end
         assign cp[gp] = valid_gn[gp] ? (3'(gt[gp][0]) + 3'(gt[gp][1]) + 3'(gt[gp][2]) + 3'(gt[gp][3])) : 3'd0;
     end
@@ -927,7 +976,11 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 wire [KT-1:0] ka = q_bg[gg][EW*gj + 1 +: KT];
                 wire [KT-1:0] kb = p_bg[gg][EW*gk + 1 +: KT];
                 wire lt_;
-                ot_tkm_lt_live #(.W(KT)) u_b (.a(ka), .b(kb), .lt(lt_));
+                if(LT_GROUP!=0)begin:g_chunked
+                    ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b (.a(ka),.b(kb),.lt(lt_));
+                end else begin:g_binary
+                    ot_tkm_lt_live #(.W(KT)) u_b (.a(ka),.b(kb),.lt(lt_));
+                end
                 assign gbf[16*gg + 4*gj + gk] = lt_;
             end
         end
@@ -958,8 +1011,8 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     for(genvar d=0;d<NP;d=d+1)begin:g_gn32
         assign gn[d]=gnv[d][0];
         for(genvar v=0;v<NV;v=v+1)begin:g_v
-        if(FAN32==0)begin:g_old assign gnv[d][v]=gn_legacy[d];end
-        else if(d>=PT)begin:g_tail assign gnv[d][v]=pflags_w[d][v];end
+        if(FAN32==0)begin:g_old assign gnv[d][v]=gn_legacy[d];assign gnv_next[d][v]=gnv[d][v];end
+        else if(d>=PT)begin:g_tail assign gnv[d][v]=pflags_w[d][v];assign gnv_next[d][v]=gnv[d][v];end
         else begin:g_new
             wire [19:0] cg_, g2_; wire [4:0] cv_;
             for(genvar k=0;k<5;k=k+1)begin:g_in
@@ -969,9 +1022,11 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 assign g2_[4*k+:4]=(d>=k&&!(CMUT==3&&d==20&&v==1&&k==1))?g2src:4'd0;  // CMUT 3 (bench only): V3 variant-1 GN of position 20 drops its k=1 compare leg
             end
             if(FAN32==2)begin:g_kh
-                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
+                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5),.FOLD(GCFOLD)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]),.gn_next(gnv_next[d][v]),
+                 .clear((CMUT==6&&d==20&&v==1)?1'b1:clear_copy[d][FN+v][0]),.flags(pflags_w[d][v]));
             end else begin:g_flat
-                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
+                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5),.FOLD(GCFOLD)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]),.gn_next(gnv_next[d][v]),
+                 .clear((CMUT==6&&d==20&&v==1)?1'b1:clear_copy[d][FN+v][0]),.flags(pflags_w[d][v]));
             end
         end
         end
