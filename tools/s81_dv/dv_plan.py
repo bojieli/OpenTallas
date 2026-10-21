@@ -1720,6 +1720,9 @@ def main():
             assert facts['n_frames'] == want[0] and (want[1] is None or facts.get('rom_slots') == want[1]), \
                 ('stage map qualified on another die inventory', a.stage_map, want, facts['n_frames'], facts.get('rom_slots'))
         assert sm['stages_count'] == len(sm['stages']), ('stage map stage count mismatch', sm['stages_count'], len(sm['stages']))
+        # L5B-MAP72: the MAP141 560-vs-564 slip -- layer_dies must equal stages x dies/stage and the dies actually listed
+        assert sm['layer_dies'] == sm['stages_count'] * sm['rank_dies_per_stage'] == sum(len(s['dies']) for s in sm['stages']), \
+            ('stage map layer_dies mismatch', sm['layer_dies'], sm['stages_count'], sm['rank_dies_per_stage'])
         facts['stage_map'] = dict(path=str(a.stage_map), sha256=hashlib.sha256(raw).hexdigest(), stages=sm['stages_count'],
                                   rank_dies_per_stage=sm['rank_dies_per_stage'], layer_dies=sm['layer_dies'], plan=sm.get('plan'),
                                   die_frames=want and want[0], verdict=sm['verdict'])

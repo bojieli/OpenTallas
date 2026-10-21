@@ -54,12 +54,17 @@ STREAM_WORDS = 16384
 CAL_ROWS = 4096
 LAYER_CAL_ROWS = {'L0': 1868, 'L2': 2006}          # measured (CAL_SEGMENT, ROM12 b82da5c37); L2 class = idx layers
 KV_SRC, IDX_SRC, ENGRAM = (2, 8, 14, 20), (2, 8, 14, 20, 24, 28, 32, 36), (1, 14)
+# L5B-MAP72 (10-21): the exact env the 72-frame f72r224gpq_241 campaign ran with (its summary.json env); the DENSE2 A/B/X half
+# and its 224 a_proj rows come per stage from the map spec (spec_env), not from a global pin.
 RELEASE_ENV = dict(OT_XS_QPAIRS='12', OT_XS_GU_MERGE='1', OT_XS_TOPO='1', OT_XS_PROP='1', OT_XS_CAL_SEGMENT='1',
-                   OT_XS_APROJ_TOPO='1')
+                   OT_XS_APROJ_TOPO='1', OT_XS_KSLOT='1', OT_XS_GU_PROP='1', OT_XS_COMPACT_TAILS='0',
+                   OT_XS_PAIR_ROTATE='0', OT_XS_Q_CPR='1')
 # DRIVE-S81-IDX4 (10-20, LEAD10-S81 stage pick): the release map is the 140-stage pinned map on the 122-frame die
 # (dv_plan --idxrd 4 keeps 122 frames / 1130 ROM slots; mu7i4b strict bind PASS); qualified with OT_XS_PAIR_ROTATE=0.
 # The 97-stage map stays at stage_map.json (pass OT_XS_STAGE_MAP to use it).
-MAP_DEFAULT = ROOT / 'results/arch/s81_romopt_1020/b/stage_map_f122_140.json'
+# L5B-MAP72 (10-21): release map = the exact-qualified 241-stage DENSE2 map on the 72-frame die (660 ROM slots,
+# 241 x 4 = 964 layer dies; receipt ccff664a5, merge --cover all_pass 241/241). The f122_140 map stays available via OT_XS_STAGE_MAP.
+MAP_DEFAULT = ROOT / 'results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json'
 
 
 class CompileFault(RuntimeError):
