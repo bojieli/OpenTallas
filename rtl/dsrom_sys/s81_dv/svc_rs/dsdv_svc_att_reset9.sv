@@ -53,8 +53,8 @@ module dsdv_svc_att_reset9 #(
     wire [2*4-1:0] pqr_beat = qr_beat; wire fault_c;
     assign fault = fault_c;
 `endif
-    wire[511:0]reset_leaf9;
-    ot_s81svc_reset9_rl2_n32 u_reset9(.clk(clk),.reset_early9(reset_early9),.reset_leaf(reset_leaf9));
+    wire[131:0]reset_leaf132;wire[511:0]reset_leaf9={380'd0,reset_leaf132};
+    ot_s81svc_reset132_n32 u_reset9(.clk(clk),.reset_early9(reset_early9),.reset_leaf(reset_leaf132));
     dsdv_svc_att_core #(.RESET_PROFILE(1),.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .PFIFO(PFIFO), .PMEM(PMEM), .PVQ(PVQ), .DQ(DQ),
                         .PV_IDENTITY(PV_IDENTITY), .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD),
                         .NTP(NTP)) u_core (

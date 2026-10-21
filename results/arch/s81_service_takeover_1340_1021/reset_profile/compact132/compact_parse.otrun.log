@@ -1,0 +1,56 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_compact_lp
+ot-run: ot-epyc7       admits    25 GB (avail 293, growth 275, headroom 0, waiters 0/0 GB) load 51/96 running 16 disk 4453 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_compact_lp
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_compact_lp
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_compact_lp
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_compact_lp
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_compact_lp
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1867691-1792623757 after 0 s
+
+-- Running command `read_verilog -sv -DSYNTHESIS -DOT_SVC_FMEM_N32 -DOT_SVC_PSEL_N32 -DOT_SVC_TAG_N32 -DOT_SVC_ATT_PINREG -DOT_SVC_MERGE_SRAM -DOT_SVC_TR_SRAM -DOT_SVC_LAND_SRAM -DOT_SVC_ATT_SRAM -DOT_FP_DATA_NORST /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv' --
+
+1. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv
+Parsing SystemVerilog input from `/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_svc_att_core'.
+Warning: Replacing memory \wk with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:756
+Warning: Replacing memory \fq_r with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:735
+Warning: Replacing memory \sc_n with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:734
+Warning: Replacing memory \wr_r with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:734
+Warning: Replacing memory \wr_on with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:734
+Warning: Replacing memory \wk_r with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:734
+Warning: Replacing memory \wk_w with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:756, /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:734
+Warning: Replacing memory \cr with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:734
+Warning: Replacing memory \wq_r with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:732
+Warning: Replacing memory \fq_w with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:735, /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:718
+Warning: Replacing memory \hold with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:708
+Warning: Replacing memory \wq_w with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:732, /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:683
+Warning: Replacing memory \lw_d with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:463
+Warning: Replacing memory \lw_a with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:491, /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:463
+Warning: Replacing memory \npop with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:755, /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:322
+Warning: Replacing memory \nreq with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:322
+Warning: Replacing memory \wpush_d with list of registers. See /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:256
+Generating RTLIL representation for module `\dsdv_svc_fmem'.
+Generating RTLIL representation for module `\dsdv_svc_att'.
+Generating RTLIL representation for module `\dsdv_pv_source_identity'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_merge_s'.
+Warning: Replacing memory \g[3].ring with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:58
+Warning: Replacing memory \g[2].ring with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:58
+Warning: Replacing memory \g[1].ring with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:58
+Warning: Replacing memory \g[0].ring with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:58
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_merge_x'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_s'.
+Warning: Replacing memory \blk_bank with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:574
+Warning: Replacing memory \bcnt with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:520
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_tr_x'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_tr_sram'.
+Successfully finished Verilog frontend.
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1867691-1792623757): exit 0

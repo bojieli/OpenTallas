@@ -11,7 +11,7 @@ module tb_attn1_current_att;
  integer copy_checks=0;
  always @(negedge clk) if(rst_n) begin
   copy_checks=copy_checks+1;
-  if(E[1].DUT.u.reset_leaf9 !== {512{rst_n}})$fatal(1,"actual profile reset leaf age");
+  if(E[1].DUT.u.reset_leaf132 !== {132{rst_n}})$fatal(1,"actual profile reset leaf age");
   if(E[1].DUT.u.u_core.pv_v_reps !== {9{E[1].DUT.u.u_core.pv_v}}) $fatal(1,"PV valid replicas differ");
  end
  integer T=46,seed=1,ns[0:1],np[0:1],ng[0:1],mism=0,cycles=0;

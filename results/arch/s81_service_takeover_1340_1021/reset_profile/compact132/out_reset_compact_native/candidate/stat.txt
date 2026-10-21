@@ -1,0 +1,25 @@
+
+17. Printing statistics.
+
+=== reset_compact_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     5316        - wires
+    18788        - wire bits
+      634        - public wires
+    14106        - public wire bits
+        4        - ports
+     8450        - port bits
+     9449 1.96E+03 cells
+       85        -   $scopeinfo
+     4488  1.7E+03   DFFASRHQNx1_ASAP7_75t_R
+      194    56.57   DFFHQNx1_ASAP7_75t_R
+     4682  204.791   INVx1_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\reset_compact_gate': 1962.672120
+     of which used for sequential elements: 1757.881440 (89.57%)
+

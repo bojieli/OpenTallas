@@ -1,0 +1,69 @@
+{
+  "status": "EXACT_PARTIAL_SOURCE_MECHANISMS_PASS_NOT_WHOLECORE",
+  "model_before_RTL": "492405d4e COMPACT_MODEL.md",
+  "active_shape": {
+    "transposers": 4,
+    "leaves_per_TR": 33,
+    "reset_contacts_per_TR": 1056,
+    "total_contacts": 4224,
+    "leaves": 132,
+    "plain_forest_FF": 194,
+    "ASR_FF": 264,
+    "forest_total_FF": 458,
+    "removed_unused_kept_FF_vs512": 1296,
+    "actual_source_additional_FF": 459,
+    "note": "458newforestFF+1LPearlytap; originalmaincore/u_rl/T0/landingresetpaths stay because otherstate stilluses them. No credit forremoving sharedoldreset."
+  },
+  "semantics": "Same9plain+ASR2; LP2prefix gives assertion11C/release13C. Dense33-leaf chunks map onlyactualTD32/DPT8 fields; unused adapterbits unreachable under guardedshape.",
+  "mechanism": {
+    "unit": "1794920-1792623071 ep7 mem16",
+    "transpose_cycles": 4658,
+    "vectors": 18632,
+    "collision_edges": 1995,
+    "errors": 0,
+    "actual_rl_age_checks": 4800,
+    "age_errors": 0,
+    "shortpath_negative": "Caught, exactcount in tr_run.log; originalsamegolden/sourcecontract unchanged"
+  },
+  "paired_native": {
+    "baseline": {
+      "status": "FAIL",
+      "max": 4224,
+      "violations": 1,
+      "roles": 0
+    },
+    "candidate": {
+      "status": "PASS",
+      "max": 32,
+      "violations": 0,
+      "roles": 0
+    }
+  },
+  "allLib_component_area_um2": {
+    "baseline": 1789.85538,
+    "candidate": 1962.67212,
+    "delta": 172.81674,
+    "note": "Fixture includes equal4224payloadFF loads; not actualwholecore/LP totalarea orgeometry proof."
+  },
+  "actual_LP_hierarchy": {
+    "unit": "1805862-1792623206 ep7 mem32",
+    "status": "PASS terminal0",
+    "flags": "compact132+TAG_N32+ATT_PINREG+PSEL_N32+FMEM_N32+actualallSRAM+NORST; realLP/controller/ATT/tile"
+  },
+  "actual_Yosys_frontend": {
+    "unit": "1867691-1792623757 ep7 mem2",
+    "status": "PASS terminal0",
+    "scope": "Actual selectedcore/HDC transpose source syntax/frontend only, no resynth/nativeclaim."
+  },
+  "immutable_previous": "Generic512helper/7a wrapper source and livefullATT3097102 unchanged; its results cannotqualify thislatercompact/PSEL/TAG/PINREGcaller source.",
+  "open": [
+    "remaining maincore/reset/issue/select/math source fanouts",
+    "actual selectedcaller/PINREG legalHBM/numerical behavior",
+    "wholecore native32/clock/reset/physical/calendar/currentG4slot geometry"
+  ],
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset132_n32.sv": "205ef24d455aee91bab7b5444137f322d7e489de5638a45d4d304beb528d6fc6",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv": "6599c1ffd6ad76da8ff1ba09a317262f0be7e5472d0c68bc12565edcb42b355d",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_reset9.sv": "5e5f7af3de895b3b105404dde1a0822f8fdc40e78a537c9cde055c5ce17e7c0d"
+  }
+}

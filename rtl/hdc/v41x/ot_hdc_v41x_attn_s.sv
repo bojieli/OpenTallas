@@ -800,7 +800,7 @@ module ot_hdc_v41x_attn_s #(
                 end
                 ot_hdc_v41x_attn_tr_x #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .RESET_SPLIT(TR_RESET_PROFILE)) u_tr (
                     .clk(clk), .rst_n(rst_n),
-                    .reset_leaf_i(TR_RESET_PROFILE?reset_tr_leaf_i[(gk%4)*64+:64]:64'd0),
+                    .reset_leaf_i(TR_RESET_PROFILE?{31'd0,reset_tr_leaf_i[(gk%4)*33+:33]}:64'd0),
                     .w_en_i((XD != 0) ? fill_wr : (fl_go && ((NSTAGE == 2) || !qk_go))),
                     .w_half_i((XD != 0) ? fill_blk_d[0] : fl_blk[0]),
                     .w_cnt_i((XD != 0) ? fill_cnt_d : fl_cnt),
