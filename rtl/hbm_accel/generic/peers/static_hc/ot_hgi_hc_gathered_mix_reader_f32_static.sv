@@ -13,7 +13,7 @@
 //   landing  load-only rows 1..23 (row 0 leaves on the response edge itself); the streamed row is picked by a ONE-HOT row
 //            register (2 kept copies per row, 16 AND loads each) instead of a 24:1 next_row mux; streaming has kept copies.
 // MUT (bench): 1 = response prediction one edge late (ld from pred one edge after LD; must FAIL).
-module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=23, parameter integer GL=11,
+module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=23, parameter integer GL=15,
                                                    parameter integer MUT=0)(
     input wire clk,rst_n,launch,
     input wire [GL-1:0] launch_c,
@@ -31,13 +31,16 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
 );
     localparam integer RP=RESP_PHASE, RSC=24;
     initial if(RP<2||RP>23)$fatal(1,"f32 reader: RESP_PHASE 2..23 (two-edge response prediction)");
-    initial if(GL!=11)$fatal(1,"f32 reader: GL 11 launch copies");
+    initial if(GL!=15)$fatal(1,"f32 reader: GL 15 launch copies");
     reg active,streaming;
     reg [15:0] return_sector,stride;
     // HBM-HC7-QHUB 10-20 (native32 census: issue_sector[k] 39, request_slot 35 loads): two KEPT issue-sector copies (own
     // next state each: copy 0 drives request lanes 0..3, copy 1 lanes 4..7) and four request-slot copies (see rq)
     (* keep = "true", dont_touch = "true" *) reg [15:0] is_c0, is_c1;
-    (* keep = "true", dont_touch = "true" *) reg [3*RSC-1:0] rs_c;
+    // Native census c1r: binary selectors reached 191 mapped loads despite kept decode wires.
+    // Register the eight-way decode on the SAME sector-update edge. Each kept select
+    // drives exactly one 32-bit chunk; three chunks share an independent load copy.
+    (* keep = "true", dont_touch = "true" *) reg [8*RSC-1:0] rs_oh;
     reg [3:0] positions,issued,returned;
     reg [4:0] phase,next_row;
     reg [2:0] output_pos;
@@ -56,7 +59,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     // ld2 copies: 0..45 landing rows 1..23 (2 x 16 b), 46..50 rs_c groups, 51 return_sector, 52..54 output data thirds,
     // 55/60 row-select state halves, 56/61 copy a halves, 57/62 copy b halves, 58 control A (returned, gathered_mix_*),
     // 59 control B (streaming)
-    localparam integer NLD=63;
+    localparam integer NLD=66;
     (* keep = "true", dont_touch = "true" *) reg [NLD-1:0] ld2;
     reg pred_late; always @(posedge clk) pred_late<=ld1[0];
     always @(posedge clk or negedge rst_n)
@@ -77,16 +80,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     wire [767:0] arr;
     for(genvar j=0;j<3;j=j+1)begin:g_j
         for(genvar c=0;c<8;c=c+1)begin:g_c
-            wire [2:0] rk=rs_c[(j*8+c)*3+:3]+3'(j);
-            // COL-HC 10-21 (gate native census, mapped: rs_c[] QN 139..217 loads -- ABC folded the rk == b decode into the
-            // 32-b AND-OR selects): the decode is a KEPT one-hot wire per copy (ABC boundary): a decode bit drives the 32
-            // select loads of its chunk, an rs_c bit one 3->8 decoder.  (Two identical half decoders would be merged by
-            // ABC structural hashing.)  Same function, same edge.
-            wire [7:0] oh;
-            for(genvar b=0;b<8;b=b+1)begin:g_oh
-                (* keep = "true" *) wire w=(rk==3'(b));
-                assign oh[b]=w;
-            end
+            wire [7:0] oh=rs_oh[(j*8+c)*8+:8];
             reg [31:0] v;
             always @*begin
                 v=32'd0;
@@ -191,7 +185,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
         else if(rq[0])is_c0<=is_c0+stride;
     always @(posedge clk or negedge rst_n)        // copy 1: the same next state (la[10] = the request-prediction group)
         if(!rst_n)is_c1<=0;
-        else if(la[10])is_c1<=base_sector;
+        else if(la[14])is_c1<=base_sector;
         else if(rq[3])is_c1<=is_c1+stride;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)return_sector<=0;
@@ -201,12 +195,15 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
         if(!rst_n)stride<=0;
         else if(la[2])stride<=position_stride_sector;
     wire [15:0] rs_next=return_sector+stride;
-    for(genvar g=0;g<5;g=g+1)begin:g_rs
-        localparam integer LO=g*15, HI=(g==4)?3*RSC:(g+1)*15;
-        always @(posedge clk or negedge rst_n)
-            if(!rst_n)rs_c[HI-1:LO]<=0;
-            else if(la[3+g])begin for(integer i=LO;i<HI;i=i+1)rs_c[i]<=base_sector[i%3]; end
-            else if(ld2[46+g])begin for(integer i=LO;i<HI;i=i+1)rs_c[i]<=rs_next[i%3]; end
+    for(genvar g=0;g<8;g=g+1)begin:g_rs
+        localparam integer LA=(g<5)?3+g:6+g, LD=(g<5)?46+g:58+g;
+        for(genvar t=0;t<3;t=t+1)begin:g_chunk
+            localparam integer K=g*3+t, J=K/8;
+            // Datapath is valid only following launch. Avoid adding reset fanout.
+            always @(posedge clk)
+                if(la[LA])rs_oh[K*8+:8]<=8'b1 << (3'(base_sector)+3'(J));
+                else if(ld2[LD])rs_oh[K*8+:8]<=8'b1 << (3'(rs_next)+3'(J));
+        end
     end
 endmodule
 `default_nettype wire

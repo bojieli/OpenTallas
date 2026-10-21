@@ -83,9 +83,11 @@ module ot_hbm_hc_qcal_static #(
     // shallow exact form (gate 10-19: the multiply form was captured -> gb 688 ps / 19 levels): the check is true only
     // for npos 1..8, i.e. n1 = npos - 1 in 0..7, so (npos-1)*stride is three masked shifted addends (no 33-b product)
     // and last < 2^19: last < 32768 <=> last[18:15] == 0.  Outside 1..8 the npos term is false in both forms.
-    // COL-HC 10-21 (gate native census, mapped: captured[23..25] QN 76..80 loads -- ABC folded npos - 1 into the 3 x 19-b
-    // masks): n1 on KEPT wires (ABC boundary), each bit then drives one 19-b mask.  Same function, same edge.
-    (* keep = "true" *) wire [2:0] gb_n1=3'(gb_npos-4'd1);
+    // Capture the predecoded mask controls beside the programme payload. Kept
+    // combinational subtraction was folded into the 19-bit masks by ABC (78 loads).
+    // These three parallel datapath registers preserve the exact capture edge.
+    (* keep = "true", dont_touch = "true" *) reg [2:0] gb_n1;
+    always @(posedge clk)gb_n1<=3'(macro_data[26:23]-4'd1);
     wire [18:0] gb_last=19'(gb_base)+19'(2)+({19{gb_n1[0]}}&19'(gb_stride))+({19{gb_n1[1]}}&(19'(gb_stride)<<1))
                        +({19{gb_n1[2]}}&(19'(gb_stride)<<2));
     wire gb_d=gb_npos>=1&&gb_npos<=8&&!gb_base[15]&&gb_last[18:15]==4'd0&&gb_last[14:13]==gb_base[14:13];

@@ -208,7 +208,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         // that fans out to a register group is a KEPT wire (an ABC boundary), so the shared terms cannot be pushed into each bit.
         (* keep = "true", dont_touch = "true" *) reg [19:0] cv_c;   // 17..19: addr_a copy enables
         (* keep = "true", dont_touch = "true" *) reg cv_l;
-        (* keep = "true", dont_touch = "true" *) reg [10:0] dv_c;
+        (* keep = "true", dont_touch = "true" *) reg [13:0] dv_c;
         (* keep = "true", dont_touch = "true" *) reg [2:0] lv_c;
         (* keep = "true", dont_touch = "true" *) reg [9:0] sc_c;        // copies of scanning (same D)
         (* keep = "true", dont_touch = "true" *) reg [7:0] tg_c [0:4];  // copies of the captured target id (4: scan load)
@@ -222,7 +222,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         end
         always @(posedge clk_in or negedge rl)
             if(!rl)begin cv_c<=0;cv_l<=0;dv_c<=0;lv_c<=0;end
-            else begin cv_c<={20{cfg_v}};cv_l<=cfg_v;dv_c<={11{desc_v}};lv_c<={3{launch_v}};end
+            else begin cv_c<={20{cfg_v}};cv_l<=cfg_v;dv_c<={14{desc_v}};lv_c<={3{launch_v}};end
         always @(posedge clk_in)begin
             for(integer k=0;k<5;k=k+1)tg_c[k]<=cfg_target;
             lo_pa<=4'd1<<desc_base[1:0];lo_pb<=8'd1<<desc_base[4:2];hi_pa<=4'd1<<desc_base[6:5];hi_pb<=8'd1<<desc_base[9:7];
@@ -270,9 +270,9 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         // value on every edge as the combinational compare; both reset to 0 -> slast 0), and the one-hot pointers move in
         // 8 groups of 8 bits (lo 0..3, hi 4..7), each with its own load / step select and slast copy.
         (* keep = "true", dont_touch = "true" *) reg [9:0] sl_c;        // 0 sc_n, 1 sstep, 2..9 pointer groups
-        (* keep = "true" *) wire sload=dv && tm[4] && !dbad && !reuse;    // scan_row[4:0]
-        (* keep = "true" *) wire sloadh=dv && tm[4] && !dbad && !reuse;   // scan_row[9:5]
-        (* keep = "true" *) wire sloadl=dv && tm[4] && !dbad && !reuse;   // scan_limit
+        (* keep = "true" *) wire sload=dv_c[11] && tm[4] && !dbad && !reuse;    // scan_row[4:0]
+        (* keep = "true" *) wire sloadh=dv_c[12] && tm[4] && !dbad && !reuse;   // scan_row[9:5]
+        (* keep = "true" *) wire sloadl=dv_c[13] && tm[4] && !dbad && !reuse;   // scan_limit
         wire sc_n=(sc_c[0] && sl_c[0])?1'b0:(dv && tm[4] && !dbad)?!reuse:sc_c[0];
         always @(posedge clk or negedge rl)
             if(!rl)sc_c<=0;
