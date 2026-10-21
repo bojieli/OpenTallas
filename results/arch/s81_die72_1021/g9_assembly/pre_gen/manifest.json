@@ -1,0 +1,32 @@
+{
+  "scope": "PRE_GEN immutable inputcandidate only; no strictbind/GEN/runtime or calendarqualification",
+  "original_basis": "ActualG8IQ553 copiedplan/table, immutableoriginal remainslive",
+  "source_refs": [
+    "62b8c2cca981b951fd487d31c3966babf5a6fb32",
+    "99991b0512e59a54cced41729a2d7392ab4a0631",
+    "21b97190eba0b3b306026f23a2408867cd099726",
+    "22595e8993ac83c9293f59ffb5fe6b4d7914589c",
+    "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+    "d20b68c2baec0cb1c095550c6b7f743a107b720c",
+    "869be1b5afc3983e67f34460adfba4bd79a6ce47",
+    "27ffa71c6aa40b6fc623cfbada2336ac67b81b49"
+  ],
+  "selected_RTL": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+  "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2"
+  ],
+  "input_sha256": {
+    "plan_unrouted_g9.json": "9b5daf86cdf350e656c46e9810e41839c3f524d1874e946cda31bfc1677978ab",
+    "bind_table_g9.json": "43b5c8c38cde425b80b7b06478055d5b2261c9a6b08045e4323a041464becb27"
+  },
+  "available_bound": "16CTRLnativeconfigured+CLOSEDQF+16TAPMAIN, exactW6childbindings/unhardenedMUparents; othermasters UNBOUND/diagnostic",
+  "route_status": "Alloldroutesinvalidated; onefresh819linkconstruction requiredbeforebind",
+  "fullviewcheck": "CTRL16/QF1/TAP16 exactnativephases +wholebodymodelseal100/minsep86.4; MUparentglobalphasehold persists",
+  "remaining": "Configuredminimalelaborationterminal +KVlowererrecognition +canonicalpublishedhelperpin +chosenvieworderguard; then one normalstrictbindGEN"
+}
