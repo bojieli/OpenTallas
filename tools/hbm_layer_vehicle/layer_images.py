@@ -59,7 +59,8 @@ ROOT = TOOLS.parent
 for p in (TOOLS, TOOLS / "hbm_static", TOOLS / "hgi_adapters"):
     sys.path.insert(0, str(p))
 
-SB_W, Q_W = 2422, dict(control=1742, vmr=240, vmw=312, rf=54, red=74)
+BASE_SB_W = 2422
+SB_W, Q_W = 2470, dict(control=1742, vmr=240, vmw=312, rf=54, red=74, tree=48)
 START_ADVANCE, CFG_LEAD, EDGES_MAX = 9, 2, 7111
 FILL_COMMIT, LANE_FETCH, DRAIN_DONE = 13, 3, 11       # pgslice.sv:14-22
 SETUP_TO_EMIT = 8                                       # su_arith_compile.py: ld at cycle 0, emits from cycle 8
@@ -206,7 +207,7 @@ class QLine:
         n = 1 + max([max(d) for d in s.f.values() if d] or [0])
         out = []
         for e in range(n):
-            v = s.f["control"].get(e, 0)
+            v = (s.f["tree"].get(e, 0) << Q_W["control"]) | s.f["control"].get(e, 0)
             for k in ("vmr", "vmw", "rf", "red"):
                 v = (v << Q_W[k]) | s.f[k].get(e, 0)
             out.append(v)
@@ -717,6 +718,8 @@ def main():
     ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
+    ap.add_argument("--connected-lowering", action="store_true", help="selected source-bound L0 reduction/scalar implementation; execution remains unqualified")
+    ap.add_argument("--side-source", type=Path, help="actual repaired scoped SIDE source in compiled bundle")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
@@ -785,7 +788,23 @@ def main():
             if fr is not None:
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
-                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None, timing=native_timing, safe_calendar=a.safe_calendar)
+                if a.connected_lowering and lay == 0 and r['i'] in (4, 8):
+                    from hbm_layer_vehicle import su_layer_lower_1021 as SL
+                    required = {'str_C', 'sucore_SW', 'sucore_SE', 'sucore_NW', 'sucore_NE'}
+                    if not required <= set(bnd['instances']):
+                        raise ValueError('selected reduction requires real four-core/stree cut; no RF return injection')
+                    if r['i'] == 4:
+                        expected = int(np.float32(fx[8]['vm_in'][49920]).view(np.uint32))
+                        su = SL.lower(raw, a.quarter, rng, data=vm_data, place=place, tag=r['tag'],
+                                      pad_zero=fr is not None, timing=native_timing, expected_reduction_word=expected)
+                        su['fixture_reduction_reference'] = dict(value=f'{expected:08x}', source='actual downstream fixture k10 A, not prior R input')
+                    else:
+                        su = SL.lower_norm_rs(raw, a.quarter, data=vm_data, place=place, tag=r['tag'],
+                                              timing=native_timing, side_profile=(4,3), side_source_path=a.side_source)
+                    for addr,bits in su.get('expected_post_state', {}).items():
+                        vm_data[int(addr)] = np.uint32(int(bits,16)).view(np.float32)
+                else:
+                    su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None, timing=native_timing, safe_calendar=a.safe_calendar)
             except AssertionError as ex:                # su_program_inventory.decode: adapter contract refusal
                 ent.update(status="adapter_refused", reasons=[f"su_record: {ex}"])
                 manifest.append(ent)
@@ -794,8 +813,21 @@ def main():
                 fixture_check(su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if su.get('timing_obligations'):
+                ent.update(timing_obligations=su['timing_obligations'], source_contract=su['source_contract'],
+                           execution_qualified=False, quarter_ownership=su.get('quarter_ownership'),
+                           expected_reference=su.get('expected_reference'),
+                           fixture_reduction_reference=su.get('fixture_reduction_reference'),
+                           compiled_record_stream_edges=su['timing_obligations']['stream_edges'],
+                           prior_record_price=r['end']-r['start'],
+                           prior_record_price_qualified=False,
+                           record_price_delta_stream_edges=su['timing_obligations']['stream_edges']-(r['end']-r['start']),
+                           price_scope='actual emitted bounded programme, no inherited layer/token throughput claim')
             if fx:
                 ent["fixture"] = dict(su.get("fixture", dict(matched=False)), pad_words_zero=su.get("pad_words_zero", 0))
+                if su.get('fixture_reduction_reference'):
+                    ent['fixture']['post_record_output_available'] = False
+                    ent['fixture']['comparison_reference'] = 'downstream input plus independent csum8; comparison only'
             if su.get("reducer_bound"):
                 rb = dict(su["reducer_bound"], priced_serial_edges=serial(r["end"]) - serial(r["start"]))
                 rb["bound_over_price"] = round(rb["min_serial_edges"] / max(1, rb["priced_serial_edges"]), 2)

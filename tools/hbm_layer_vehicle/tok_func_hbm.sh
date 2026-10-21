@@ -29,6 +29,13 @@ OUT=${OUT:?OUT}; SRC_REV=${SRC_REV:?SRC_REV}; CONTRACT=${CONTRACT:?CONTRACT}
 FIX_DS=${FIX_DS:?FIX_DS (dir with L00 L02 L14 fixtures: records.json operands.npz images/)}
 QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_images snap)}
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
+CONNECTED_LOWERING=${CONNECTED_LOWERING:-0}
+CONNECTED_ARGS=(); HC_ARGS=(); CUT_ARGS=()
+if [ "$CONNECTED_LOWERING" = 1 ]; then
+  CONNECTED_ARGS=(--connected-lowering --side-source "$OUT/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv")
+  HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}")
+  CUT_ARGS=(--include "^(hc_eng|hleaf_SE|sucore_(SW|SE|NW|NE)|stl_(SW|SE|NW|NE)|stu_(SW|SE|NW|NE)_[0-9]{2}|std_(SW|SE|NW|NE)_[0-9]{2}[ab]|str_C)$")
+fi
 STAGE_HOSTS=${STAGE_HOSTS:-"ot-gold1 ot-gold2"}
 OVERLAY=${OVERLAY-} # current coherent source defaults to no moving-main overlays
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -82,7 +89,7 @@ cp "$T/check_slice_run.py" "$OUT/bundle/"
 
 # 2. SW quadrant slice (input pads/relays pulled in: the die's own lane latency in front of the slice) --------------
 RLX=${RELAY_RE:-'^(l12p_|rf\d+_)'}
-python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays "$RLX" --out "$OUT/bundle/slice" > "$L/cut.log" 2>&1 || { say CUT_FAIL; exit 3; }
+python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays "$RLX" "${CUT_ARGS[@]}" --out "$OUT/bundle/slice" > "$L/cut.log" 2>&1 || { say CUT_FAIL; exit 3; }
 say "$(grep -m1 '^SLICE' "$L/cut.log")"
 
 # 3. replays (compiler of record on the die's own SU timing) ----------------------------------------------------------
@@ -91,7 +98,7 @@ say "SU native timing READ_RETURN=$RR WRITE_RETURN=$WR (contract su_SW0)"
 B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
 for LL in 00 02 14; do l=$((10#$LL))
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
-     --fixtures "$FIX_DS/L$LL" --boundary "$B" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
+     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
 done
 for st in L0 chain; do
@@ -115,7 +122,7 @@ if [ "${RUN_PAY:-1}" = 1 ]; then
   PAY_L12_ARGS=(); [ ! -f "${PAY_L12:-$OUT/l12.json}" ] || PAY_L12_ARGS=(--l12 "${PAY_L12:-$OUT/l12.json}")
   for LL in 00 02 14; do
     l=$((10#$LL))
-    python3 "$T/merge_layer_replay.py" --shared-calendar \
+    python3 "$T/merge_layer_replay.py" --shared-calendar "${HC_ARGS[@]}" \
       --su "$OUT/emit/ds_l$l/replay.json" --su-manifest "$OUT/emit/ds_l$l/manifest.json" \
       --fixtures "$FIX_DS/L$LL" --contract "$FC" "${PAY_L12_ARGS[@]}" \
       --boundary "$B" --nev "${PAY_NEV:-11651}" --out "$OUT/pay" --name "ds_l${l}_pay" \
