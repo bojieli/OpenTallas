@@ -47,6 +47,7 @@ import pin_fit  # noqa: E402
 import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
+import domain_spatial_spine  # noqa: E402
 from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
@@ -692,6 +693,8 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    if s.get("domain_spatial_spine") is not None and s.get("clock") != "multiple_cts_roots":
+        raise SpecError("domain_spatial_spine requires multiple_cts_roots")
     if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
@@ -713,7 +716,12 @@ def load_spec(path: str) -> dict:
                     clock_entry_constraints.landed_record(s, ROOT)
                 except (ValueError, OSError) as error:
                     raise SpecError(str(error)) from error
-            clock_entry_constraints.domains(s)
+            declared_domains = clock_entry_constraints.domains(s)
+            if s.get("domain_spatial_spine") is not None:
+                try:
+                    domain_spatial_spine.validate(s, declared_domains, ROOT)
+                except (ValueError, OSError) as error:
+                    raise SpecError(str(error)) from error
         elif s.get("clock") == "hybrid_entries":
             roots = s.get("clock_cts_roots")
             if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(cps):
@@ -1962,7 +1970,9 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
+        pre_cts.extend(domain_spatial_spine.before_entries(s))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
+        pre_cts.extend(domain_spatial_spine.after_entries(s))
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
         pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
@@ -2395,6 +2405,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(HDLY_TCL)
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
+    out += domain_spatial_spine.dependencies(s)
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
