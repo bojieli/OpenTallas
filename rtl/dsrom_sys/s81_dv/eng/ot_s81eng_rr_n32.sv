@@ -414,11 +414,11 @@ endmodule
     wire [7:0] xb = X[7:0] + 8'd127;
     wire signed [10:0] k = E + 11'sd133;              // >= -3 on every code and scale
     wire [1:0] r = (k < 0) ? (~k[1:0] + 2'd1) : 2'd0; // -k for k in -3..-1
-    wire [3:0] q = sig >> r;
+    wire [3:0] quotient = sig >> r;
     wire [3:0] rem = sig & ((4'd1 << r) - 4'd1);
     wire [3:0] half = (r == 0) ? 4'd0 : (4'd1 << (r - 2'd1));
-    wire       up = (r != 0) && ((rem > half) || (rem == half && q[0]));
-    wire [7:0] sub = (k >= 0) ? ({4'd0, sig} << k[2:0]) : ({4'd0, q} + {7'd0, up});
+    wire       up = (r != 0) && ((rem > half) || (rem == half && quotient[0]));
+    wire [7:0] sub = (k >= 0) ? ({4'd0, sig} << k[2:0]) : ({4'd0, quotient} + {7'd0, up});
     always @(*) begin
         if (e == 4'hF && m == 3'h7)        bf16 = {s, 15'h7FC0};
         else if (sig == 0)                 bf16 = {s, 15'd0};
