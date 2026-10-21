@@ -1488,7 +1488,15 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
  //   release on pg_clk edges, serial->stream crossing on a reviewed 1-bit synchroniser, as col_su r3). Serial and stream
  //   share one fixed-phase PLL lattice, so the release edge is deterministic: the first serial edge that samples
  //   rst_n=1, then the second following pg_clk edge. Datapath edges unchanged; only reset assert/release move.
- parameter integer PG_RSYNC=0
+ parameter integer PG_RSYNC=0,
+ // PRETREE (HBM-PRETREE2 2026-10-20, from HH-6 claude/hh11-qcore6-1019; default 0 = unchanged): the SU reducer ingress
+ //   widening. tree_cmd {v,max,cntB5,cntA5} at edge E takes ALL 32 lanes' ro_x/ro_v of the issue block (quarter words
+ //   16G..16G+15 = half A, 64+16G..+15 = half B; lanes >= the half's count are padding) into the CLOSED leaf
+ //   ot_hbm_su_red_pretree_s (hbm_su_pretree_s_1018-p3-1dad69123, clk_ctl): two golden csum8 16-word subtrees (or the
+ //   ordered canonical max, tree_cmd[10]) on tree_o, registered at E+58 (LAT 6, OPR 1). The quarter core joins the four
+ //   slices (qcore PRETREE). One block per edge; no stall. On the die the leaf is its own tile su_pt_<q><g> beside the
+ //   slice; tree_o / pt_ro_* are the same nets.
+ parameter integer PRETREE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -1507,6 +1515,8 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
  input wire [255:0] rf_dsec,
  input wire [11:0] red_sel,
  output reg [31:0] slice_x,
+ input wire [11:0] tree_cmd,           // PRETREE: {v, max, cntB5, cntA5} (this slice's counts, compiler-computed)
+ output wire [66:0] tree_o,            // PRETREE: {max, vB, xB, vA, xA}
  output wire [2*17-1:0] lg_rq, output wire [2*281-1:0] lg_wq,
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
  // COLLPORT ports (unused when COLLPORT=0)
@@ -1790,11 +1800,19 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
  wire ext=red_sel[10:8]==3'd0||red_sel[10:8]==3'd1||red_sel[10:8]==3'd3;
  wire red_bad=mine&&ext&&!ro_v[rn];
  always @(posedge clk_ctl)slice_x<=ro_x[rn*32+:32];
+ // ------------------------------------------------------------------ PRETREE: reducer ingress widening
+ wire pt_fault;
+ if(PRETREE!=0)begin:g_pretree
+  ot_hbm_su_red_pretree_s #(.LAT(6)) u_pt(.clk(clk_ctl),.rst_n(rst_n),.tree_cmd(tree_cmd),.ro_x(ro_x),.ro_v(ro_v),
+   .tree_o(tree_o),.fault(pt_fault));
+ end else begin:g_no_pretree
+  assign tree_o=67'd0; assign pt_fault=1'b0;
+ end
  // ------------------------------------------------------------------ sticky fault
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0;
   else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
-          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad)fault<=1'b1;
+          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad||pt_fault)fault<=1'b1;
 endmodule
 `default_nettype wire
 
@@ -1812,6 +1830,11 @@ endmodule
 // taps in the hardened leaf ot_hbm_su_static_pg_lg_tap, the leaves by pgslice PG_RSYNC=1. RSYNC=0 = the r8b structure
 // (one pg_clk flop of rst_n for the taps, raw async rst_n on the leaves), kept only as the bench reference.
 // Datapath edges unchanged; reset assert/release on the stream side move to the synchronised edges.
+// PRETREE (HBM-PRETREE3 2026-10-20, default 0 = unchanged; H.STA.BLK.16.6 die bind, placement (a)): passed to the slice
+//   (ot_hbm_su_static_pgslice__d4g_pgslice PRETREE): the closed HH-6 leaf ot_hbm_su_red_pretree_s (view hbm_su_pretree_s_1018-p3)
+//   is a HARD CHILD of this cluster (instance u_slice/g_pretree.u_pt, clk_ctl, rst_n); the cluster face gains only
+//   tree_cmd[11:0] (from pgp_<q> command[2422+12G +:12], same relay depth as red_sel) and tree_o[66:0] (to
+//   sucore_<q>.slice_t[67G +:67]).  PRETREE=0: tree_cmd unread, tree_o = 0.
 module ot_hbm_su_static_pgslice_lg #(
  parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
  parameter integer PIN_REG=0,
@@ -1819,7 +1842,8 @@ module ot_hbm_su_static_pgslice_lg #(
  parameter integer B39_NOOP=(QID==0),
  parameter integer RF_LOCAL=0,
  parameter integer RSYNC=1,
- parameter integer RSYNC_MUT=0
+ parameter integer RSYNC_MUT=0,
+ parameter integer PRETREE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane,
@@ -1857,10 +1881,12 @@ module ot_hbm_su_static_pgslice_lg #(
  input wire [561:0] far_wq,
  output wire [513:0] far_rr,
  output wire [1:0] far_w_done,
- output wire lg_fault
+ output wire lg_fault,
+ input wire [11:0] tree_cmd,
+ output wire [66:0] tree_o
 );
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
- ot_hbm_su_static_pgslice__d4g_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC)) u_slice(
+ ot_hbm_su_static_pgslice__d4g_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.PRETREE(PRETREE)) u_slice(
   .pg_clk(pg_clk),
   .clk_lane(clk_lane),
   .clk_insert(clk_insert),
@@ -1891,6 +1917,8 @@ module ot_hbm_su_static_pgslice_lg #(
   .dw_v(dw_v),
   .dw_row(dw_row),
   .dw_d(dw_d),
+  .tree_cmd(tree_cmd),
+  .tree_o(tree_o),
   .fault(fault));
  if(RSYNC)begin:g_tap
   ot_hbm_su_static_pg_lg_tap #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.RSYNC_MUT(RSYNC_MUT)) u_tap(
