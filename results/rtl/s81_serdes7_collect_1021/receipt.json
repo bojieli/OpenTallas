@@ -1,0 +1,11 @@
+{
+  "source_branch": "claude/s81-serdes7-1021",
+  "source_gate_commit": "53efe618a",
+  "source_bench_record": "7ded51f24",
+  "lp7b": "ACTUAL_DUT_FAIL: source-dependent status lock crossing\u2212283ps undeclared; TX403.3/363.1ps and PRXFF147ps violate80. GRT0 actual44594s. No gate submit or relaxed300ps rule adoption.",
+  "lp7a": "INFRASTRUCTURE_INCOMPLETE: ot-run25514:15 EP6 retirement; no verified DUTterminal. Await Disk finalarchive mapping; do not duplicate/retry blindly.",
+  "ownership": "S81-HEAD bounded collection/reconciliation under parent fullS81 delegation; source repair remains required release debt",
+  "live_jobs": "Original two clients dead; no lp7 daemon jobs found",
+  "next": "RecoverAactualterminalfromretirementarchive; classify source/clock/reset actual failures; source-exact redesign, no new campaign/gate fromwatchstaleness alone",
+  "rejected_assumption": "Oldlane300ps clock waiver plus raw-interface helpermerge is not current authorization and would not fix lp7b actualTX/PRX/status-crossing failures"
+}

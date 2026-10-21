@@ -1,0 +1,257 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_s81_kp4_dsyn': 'M5', 'ot_s81_kp4_ddly': 'M5', 'ot_s81_kp4_dchn': 'M5', 'ot_s81_kp4_dout': 'M5', 'ot_s81_kp4_enc': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc6 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81lk_serdes_col_lp7b_20261020-232337.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81lk_serdes_col_lp7b_20261020-232337.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_lp7b-20261020-232337",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc6 in 305 s (gate total 49373 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2129, 'pin_rectangles': 2129, 'pin_track_checked': 2129, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 88afe1fcec40d96f7cf07c924dd66b72801f18be52e2894ac6683c440bef834b",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 9872 um2 + macros 824744 in core 1974314: util 1% (std-cell density 0.9% of placeable 1071412 um2; total fill 42.3%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS ot_pdie_serdes_col_lp7b cells 70,093 flops 17,581 depth 268.4 ps util 0.4223 reach 2.2 um (2.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 236.5..1033.8 ps (spread 797.3), boundary mean 635.1; tt insertion all 176.3..845.3 ps (spread 669.0), boundary mean 510.8; ff insertion all 140.3..719.2 ps (spread 578.9), boundary mean 429.8; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81lk_serdes_col_lp7b/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg     1207 paths, worst slack -665.5 ps (e.g. u_lpl_0_r.g_chunk[22].u_local/o[10]$_SDFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->macro     599 paths, worst slack -355.4 ps (e.g. u_enc/tx_d[1])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         4 paths, worst slack -185.7 ps (e.g. u_lpr_tx.g_prefix[0].u_ff/q$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro    282 paths, worst slack -5.5 ps (e.g. u_rmm/w_ce_in)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->out    300 paths, worst slack 296.3 ps (e.g. pma_tx[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg     87 paths, worst slack 378.8 ps (e.g. u_lpo_rx.g_reg.r[0][411]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      300 paths, worst slack 399.9 ps (e.g. rx[102])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -6.65467236871109e-10 hold WNS 4.8433035360062604e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_1 max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_1 min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 1 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 1 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_2 max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_2 min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_3 max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_3 min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_5 max: 4 undeclared timed path(s), worst 235.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_5 min: 4 undeclared timed path(s), worst 166.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "2 undeclared ot_entry_5->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -283.0 ps u_sts.lock_r$_SDFF_PN0_/QN -> u_sts.lk_s[0]$_SDFF_PN0_/D",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_4 min: 1104 undeclared timed path(s), worst 249.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_5 max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_5 min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 545 declared (multicycle) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root_child_flop",
+   "message": "root ck_tx (u_enc + soft): TT 403.3 ps root_child_pair span 442.0..845.3, FF 363.1 ps root_child_pair span 356.1..719.2; REFUSE (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_child_pair",
+   "message": "TT root ck_tx linked soft-u_enc: boundary-flop arrival difference 403.3 ps (soft 570.7..845.3, u_enc 442.0..499.2; limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_child_pair",
+   "message": "FF root ck_tx linked soft-u_enc: boundary-flop arrival difference 363.1 ps (soft 474.2..719.2, u_enc 356.1..408.3; limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "ck_tx: 2,720 sinks on the largest root; measured TT insertion 845.3 ps, FF insertion 719.2 ps, TT pin-flop spread 403.3 ps, FF pin-flop spread 363.1 ps; TT pin-flop spread 403.3 ps > 80 and FF pin-flop spread 363.1 ps > 80; ck_prx: 2,702 sinks on the largest root; measured TT insertion 1277.7 ps, FF insertion 1092.8 ps, TT pin-flop spread 44.5 ps, FF pin-flop spread 147.0 ps; FF pin-flop spread 147.0 ps > 80 (declared clock 'multiple_cts_roots' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-serdes6-1020/physical/ref_tile/s81lk_serdes_col_lp7b/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-serdes6-1020/physical/ref_tile/s81lk_serdes_col_lp7b/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 42% = (hard macros 824743.9 + synthesized std cells 9003.9) / outline 1993144.3 um2; pin demand per face: S 1089 pins over 428.6/518.4 um (83%), N 1028 pins over 405.1/518.4 um (78%), W 54 pins over 1683.9/3844.8 um (44%), E 54 pins over 1323.9/3844.8 um (34%) (< 50%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 4.26% used; GRT 44594 s",
+   "fix": ""
+  }
+ ]
+}

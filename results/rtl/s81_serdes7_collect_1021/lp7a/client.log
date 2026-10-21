@@ -1,0 +1,8 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_s81_kp4_dsyn': 'M5', 'ot_s81_kp4_ddly': 'M5', 'ot_s81_kp4_dchn': 'M5', 'ot_s81_kp4_dout': 'M5', 'ot_s81_kp4_enc': 'M5'}
+GATE INFO remote: ot-run selected ot-epyc6 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81lk_serdes_col_lp7a_20261020-232335.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81lk_serdes_col_lp7a_20261020-232335.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_lp7a-20261020-232335
+GATE FAIL remote_incomplete: remote gate has no verified terminal completion (ot-run exit 255); original job may still run at ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_lp7a-20261020-232335; script /tmp/ref_gate_s81lk_serdes_col_lp7a_20261020-232335.sh; log /tmp/ref_gate_s81lk_serdes_col_lp7a_20261020-232335.log  -> FIX: inspect the original live handle and collect its terminal output; do not submit a duplicate
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)
+GATE: s81lk_serdes_col_lp7a/gate_result.json written (exact staged source binding; commit it with the kit)
