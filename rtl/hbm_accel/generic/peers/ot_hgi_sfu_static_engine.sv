@@ -38,7 +38,10 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  input wire [8*LWB-1:0] stage_addr,
  input wire [63:0] stage_mask,
  input wire [2047:0] stage_data,
+ input wire [8*8*4-1:0] stage_lo_replicas,
  input wire [1:0] drain_v,
+ input wire [2*16-1:0] drain_v_leaves,
+ input wire [2*16*LWB-1:0] drain_addr_leaves,
  input wire [2*LWB-1:0] drain_addr,
  output wire [511:0] drain_data,
  output wire [1:0] drain_result_v,
@@ -72,8 +75,8 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
   .clk(clk),.rst_n(rst_n),.clk_grp(clk_grp),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),
-  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
-  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),.fault(store_fault));
+  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(stage_mask),.stage_data(stage_data),
+  .drain_v(drain_v),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),.fault(store_fault));
  always @(posedge clk `OT_SFU_ARST(rst_n))
   if(!rst_n)fault<=0;
   else if(store_fault || |lane_fault || |lane_coll ||

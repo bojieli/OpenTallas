@@ -624,6 +624,8 @@ module ot_hgi_su_lgroup2 #(
     input  wire [N-1:0]      rr,                    // raw lane read enables
     input  wire [N*AW-1:0]   ra,
     output wire [N*32-1:0]   rd,
+    input wire [NS*N-1:0] sr_v_leaf,
+    input wire [NS*N*LWB-1:0] sr_addr_leaf,
     input  wire [NS-1:0]     sr_v,                  // per sector lane: 8 consecutive words (drain / STREAM-out)
     input  wire [NS*LWB-1:0] sr_addr,
     output wire [NS*256-1:0] sr_d,
@@ -660,6 +662,37 @@ module ot_hgi_su_lgroup2 #(
     reg  [N-1:0]  lok;                               // the lane's bank is one of its candidates
     integer b, l, k;
     reg src;                                         // sector-lane read conflict (this edge)
+    generate if(NATIVE32 && NLW>0 && NS==2 && N==16)begin:g_native_readsel
+        always @* begin:rsel
+            integer bb,ll,kk,ss;reg [LN-1:0] lo,diff,bank_id;reg [RB-1:0] row;reg any_sr;
+            lo=0;diff=0;row=0;bank_id=0;any_sr=0;src=0;
+            for(bb=0;bb<N;bb=bb+1)begin b_re[bb]=0;b_ra[bb]=0;end
+            for(ll=0;ll<N;ll=ll+1)begin
+                bank_id=ra[ll*AW+:LN];lok[ll]=(ll==0);
+                for(kk=0;kk<NCAND;kk=kk+1)if(cbank(ll,kk)==bank_id)lok[ll]=1;
+            end
+            for(bb=0;bb<N;bb=bb+1)begin
+                any_sr=0;
+                for(ss=0;ss<NS;ss=ss+1)any_sr=any_sr|sr_v_leaf[ss*N+bb];
+                if(any_sr)begin
+                    for(ss=0;ss<NS;ss=ss+1)if(sr_v_leaf[ss*N+bb])begin
+                        lo=sr_addr_leaf[(ss*N+bb)*LWB+:LN];
+                        diff=LN'(bb)-lo;
+                        if(diff<8)begin
+                            row=sr_addr_leaf[(ss*N+bb)*LWB+LN+:RB]+(LN'(bb)<lo);
+                            if(b_re[bb] && b_ra[bb]!=row)src=1;
+                            b_re[bb]=1;b_ra[bb]=row;
+                        end
+                    end
+                end else begin
+                    for(ll=N-1;ll>=0;ll=ll-1)
+                        if(rr[ll] && lok[ll] && ra[ll*AW+:LN]==LN'(bb))begin
+                            b_re[bb]=1;b_ra[bb]=ra[ll*AW+LN+:RB];
+                        end
+                end
+            end
+        end
+    end else begin:g_original_readsel
     always @* begin : rsel
         integer rj_, sl_; reg [LWB-1:0] sa; reg [LN-1:0] bl;
         sa = {LWB{1'b0}}; bl = {LN{1'b0}};
@@ -685,16 +718,38 @@ module ot_hgi_su_lgroup2 #(
                 end
         end
     end
-    reg [LN-1:0] lb_q [0:N-1]; reg [LN-1:0] sr_lo [0:NS-1];
+    end endgenerate
+    reg [LN-1:0] lb_q [0:N-1]; wire [LN-1:0] sr_lo [0:NS-1];
+    wire [128*LN-1:0] sr_pick [0:NS-1];
     reg [LN-1:0] lb_q2 [0:N-1]; reg [LN-1:0] sr_lo2 [0:NS-1]; reg [NS-1:0] srv1, srv2;
     integer s_;
     always @(posedge clk) begin
         for (l = 0; l < N; l = l + 1) if (rr[l]) lb_q[l] <= ra[l*AW +: LN];
-        for (s_ = 0; s_ < NS; s_ = s_ + 1) begin if (sr_v[s_]) sr_lo[s_] <= sr_addr[s_*LWB +: LN]; sr_lo2[s_] <= sr_lo[s_]; end
+        for (s_ = 0; s_ < NS; s_ = s_ + 1) sr_lo2[s_] <= sr_lo[s_];
         for (l = 0; l < N; l = l + 1) lb_q2[l] <= lb_q[l];
         srv2 <= srv1;
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) srv1 <= {NS{1'b0}}; else srv1 <= sr_v;
+    for(genvar sec=0;sec<NS;sec=sec+1)begin:g_sector_pick
+        if(NATIVE32 && NLW>0 && LAT==0)begin:g_native
+            // Capture each word's select on the original read edge. Sixteen
+            // same-D copies each feed one2-bit output mux; D fanout is16.
+            for(genvar word_=0;word_<8;word_=word_+1)begin:g_word
+                (* keep=1,dont_touch=1 *) reg [16*LN-1:0] pick_q;
+                wire [LN-1:0] next_pick=sr_v_leaf[sec*N+2*word_]?(sr_addr_leaf[(sec*N+2*word_)*LWB+:LN]+LN'(word_)):pick_q[0+:LN];
+                always @(posedge clk)pick_q<={16{next_pick}};
+                assign sr_pick[sec][16*LN*word_+:16*LN]=pick_q;
+            end
+            assign sr_lo[sec]=sr_pick[sec][0+:LN];
+        end else begin:g_original
+            reg [LN-1:0] lo_q;
+            always @(posedge clk)if(sr_v[sec])lo_q<=sr_addr[sec*LWB+:LN];
+            assign sr_lo[sec]=lo_q;
+            for(genvar word_=0;word_<8;word_=word_+1)begin:g_word
+                assign sr_pick[sec][16*LN*word_+:16*LN]={16{lo_q+LN'(word_)}};
+            end
+        end
+    end
     // the response valid and the network selects follow the banks' latency (LAT mutants move the data, valid and
     // selects together, so a valid-driven reader stays exact and a fixed-latency one does not)
     assign sr_rv = (LAT == 1) ? srv2 : (LAT == 2) ? sr_v : srv1;
@@ -723,7 +778,19 @@ module ot_hgi_su_lgroup2 #(
         wire [LN-1:0] sr_s = (LAT == 1) ? sr_lo2[gk] : (LAT == 2) ? sr_addr[gk*LWB +: LN] : sr_lo[gk];
         for (gj = 0; gj < 8; gj = gj + 1) begin : g_sr
             wire [LN-1:0] bj = sr_s + gj;
-            assign sr_d[256*gk + 32*gj +: 32] = b_rd[bj];
+            if(NATIVE32 && NLW>0 && LAT==0)begin:g_native
+                for(genvar pair_=0;pair_<16;pair_=pair_+1)begin:g_pair
+                    wire [2*N-1:0] data2;
+                    for(genvar bank_=0;bank_<N;bank_=bank_+1)begin:g_bank_data
+                        assign data2[2*bank_+:2]=b_rd[bank_][2*pair_+:2];
+                    end
+                    ot_hgi_su_select2 #(.N(N),.LN(LN)) u_pick(
+                        .sel(sr_pick[gk][LN*(16*gj+pair_)+:LN]),.data(data2),
+                        .q(sr_d[256*gk+32*gj+2*pair_+:2]));
+                end
+            end else begin:g_original
+                assign sr_d[256*gk + 32*gj +: 32] = b_rd[bj];
+            end
         end
     end
     // ---- write side: stage (8 words) > lane writes > the single-word STREAM landing (its own group in practice)
@@ -2712,4 +2779,9 @@ module ot_hgi_su_ctlw_slice #(
     always @(posedge clk or negedge rst_l)
         if (!rst_l) begin wst_dn <= 1'b1; wdr_dn <= 1'b1; ovf <= 1'b0; end
         else begin wst_dn <= (&wst_ldone) && dn_st_q; wdr_dn <= (&wdr_ldone) && dn_dr_q; ovf <= lane_ovf || dn_ov_q; end
+endmodule
+
+(* keep_hierarchy=1 *) module ot_hgi_su_select2 #(parameter integer N=16,LN=$clog2(N))
+(input wire [LN-1:0]sel,input wire[2*N-1:0]data,output wire[1:0]q);
+ assign q=data[2*sel+:2];
 endmodule

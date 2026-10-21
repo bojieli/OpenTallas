@@ -1,6 +1,13 @@
 `timescale 1ns/1ps
 module tb_hgi_sfu_vm_static_bridge;
+ parameter integer NATIVE32=0;
  localparam LWB=15;
+ wire [31:0] drain_v_leaves;
+ wire [2*16*LWB-1:0] drain_addr_leaves;
+ for(genvar sec=0;sec<2;sec=sec+1)for(genvar bank_=0;bank_<16;bank_=bank_+1)begin:g_drain_copies
+  assign drain_v_leaves[sec*16+bank_]=dv[sec];
+  assign drain_addr_leaves[(sec*16+bank_)*LWB+:LWB]=da[sec*LWB+:LWB];
+ end
  reg clk=0;always #0.416667 clk=~clk;
  wire [3:0] clk_lg;
  for(genvar g=0;g<4;g++)begin:lg_root
@@ -20,6 +27,7 @@ module tb_hgi_sfu_vm_static_bridge;
  wire [7:0] done,bdone,fdone0;
  wire [7:0] sv;wire [15:0] sg;wire [119:0] sa;
  wire [2047:0] sd;wire [63:0] sm;
+ wire [255:0] stage_lo_replicas;
  wire [3:0] sl;wire [95:0] sla;wire [127:0] sld;
  wire fault,sfault,t0f,t1f;
  reg [63:0] rd_re=0;reg [1535:0] rd_addr=0;
@@ -29,15 +37,15 @@ module tb_hgi_sfu_vm_static_bridge;
  wire [511:0] dd;wire [1:0] drv;
  wire [143:0] bs;
  function automatic [31:0] value(input integer a);value=32'h3e000000+32'(a*7);endfunction
- ot_hgi_sfu_vm_static_bridge dut(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
+ ot_hgi_sfu_vm_static_bridge #(.NATIVE32(NATIVE32)) dut(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
  .prefetch_local_addr(pf_addr),.prefetch_scalar(pf_scalar),.prefetch_word(24'd0),.scalar_addr(96'd0),
- .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_data(sd),.stage_mask(sm),
+ .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_lo_replicas(stage_lo_replicas),.stage_data(sd),.stage_mask(sm),
  .scalar_load(sl),.scalar_load_addr(sla),.scalar_data(sld),
  .drain_round_bf16(2'd0),.drain_v(dv),.drain_vm_sector(dsec),.drain_result_v(drv),.drain_data(dd),.local_wq(wq),.local_w_done(done),.fault(fault));
- ot_hgi_sfu_static_operand_store store(.clk(clk),.rst_n(rst_n),.scalar_load(sl),.scalar_enable(4'd0),.scalar_addr(sla),.scalar_data(sld),
+ ot_hgi_sfu_static_operand_store #(.NATIVE32(NATIVE32),.WPIPE(NATIVE32),.WROT(NATIVE32)) store(.clk(clk),.rst_n(rst_n),.scalar_load(sl),.scalar_enable(4'd0),.scalar_addr(sla),.scalar_data(sld),
  .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
- .stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_mask(sm),.stage_data(sd),
- .drain_v(dv),.drain_addr(da),.drain_data(dd),.drain_result_v(drv),.fault(sfault));
+ .stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_lo_replicas(stage_lo_replicas),.stage_mask(sm),.stage_data(sd),
+ .drain_v(dv),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(da),.drain_data(dd),.drain_result_v(drv),.fault(sfault));
  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(rq),.far_rq(136'd0),
  .local_wq(wq),.far_wq(2248'd0),.local_read(pf_v),.local_write({wq[2247],wq[1966],wq[1685],wq[1404],wq[1123],wq[842],wq[561],wq[280]}),
  .near_rq(nrq1),.near_wq(nwq1),.near_rr(frr0),.near_w_done(fdone0),.local_rr(rr),.local_w_done(done),.fault(t1f));
@@ -55,6 +63,11 @@ module tb_hgi_sfu_vm_static_bridge;
   .xq(276'd0),.xq_done(),.xq2(276'd0),.xq2_done(),.eg(),.pq(285'd0),.pr(),.status(bs[b*18+:18]));
  end
  task tick;begin @(negedge clk);if(fault||sfault||t0f||t1f||bs!=0)$fatal(1,"BRIDGE_FAULT bridge=%b store=%b taps=%b%b bank=%h",fault,sfault,t0f,t1f,bs);end endtask
+ always @(negedge clk)if(rst_n && NATIVE32)begin
+  for(integer sec=0;sec<8;sec=sec+1)if(sv[sec])
+   for(integer cp=0;cp<8;cp=cp+1)
+    if(stage_lo_replicas[4*(sec*8+cp)+:4]!==sa[15*sec+:4])$fatal(1,"BRIDGE_STAGE_COPY sector=%0d copy=%0d",sec,cp);
+ end
  integer checks=0;
  initial begin
   repeat(8)@(negedge clk);rst_n=1;

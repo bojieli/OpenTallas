@@ -2,6 +2,12 @@
 module tb_hgi_sfu_static_operand_store;
  parameter integer NATIVE32=0,WROT=0,WPIPE=0;
  localparam LWB=15,WORDS=28672;
+ wire [31:0] drain_v_leaves;
+ wire [2*16*LWB-1:0] drain_addr_leaves;
+ for(genvar sec=0;sec<2;sec=sec+1)for(genvar bank_=0;bank_<16;bank_=bank_+1)begin:g_drain_copies
+  assign drain_v_leaves[sec*16+bank_]=drain_v[sec];
+  assign drain_addr_leaves[(sec*16+bank_)*LWB+:LWB]=drain_addr[sec*LWB+:LWB];
+ end
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0;
  reg [3:0] scalar_load=0,scalar_enable=0;
@@ -10,6 +16,9 @@ module tb_hgi_sfu_static_operand_store;
  reg [63:0] rd_re=0;
  reg [1535:0] rd_addr=0;
  wire [2047:0] rd_q;
+ wire [8*8*4-1:0] stage_lo_replicas;
+ for(genvar s=0;s<8;s=s+1)for(genvar cp=0;cp<8;cp=cp+1)
+  assign stage_lo_replicas[4*(s*8+cp)+:4]=stage_addr[LWB*s+:4];
  reg [15:0] vm_we=0;
  reg [383:0] vm_addr=0;
  reg [511:0] vm_data=0;
@@ -26,8 +35,8 @@ module tb_hgi_sfu_static_operand_store;
  function automatic [31:0] value(input integer g,a);value=32'h3e000000+32'(100000*g+a*7);endfunction
  ot_hgi_sfu_static_operand_store #(.NATIVE32(NATIVE32),.WROT(WROT),.WPIPE(WPIPE)) dut(.clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),
  .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),.stage_v(stage_v),.stage_group(stage_group),
- .stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
- .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));
+ .stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
+ .drain_v(drain_v),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));
  initial begin
   repeat(8)@(negedge clk);rst_n=1;
   for(integer beat=0;beat<WORDS/16;beat++)begin

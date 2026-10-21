@@ -29,7 +29,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  // ot_sram_1r1w_128x256_m1_r2c2 on the same root (written and read every edge, read address = write address - READ_RETURN,
  // registered read = the last stage) plus a 7-bit fill counter that holds the output at 0 until READ_RETURN+1 edges
  // after reset release -- exactly the cleared chain's output. Same edges; 0 = the flop chains (bit-identical).
- parameter integer BRING=0
+ parameter integer BRING=0,NATIVE32=0
 )(
  input wire clk,rst_n,
  // Four related, same-frequency clock roots, one for each physical bank pair.
@@ -47,6 +47,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  output wire [7:0] stage_v,
  output wire [15:0] stage_group,
  output wire [8*LWB-1:0] stage_addr,
+ output wire [8*8*4-1:0] stage_lo_replicas,
  output wire [2047:0] stage_data,
  output wire [63:0] stage_mask,
  output reg [3:0] scalar_load,
@@ -150,6 +151,25 @@ module ot_hgi_sfu_vm_static_bridge #(
     end
    end
    assign meta_q=meta[READ_RETURN];
+   if(NATIVE32 && READ_RETURN>0)begin:g_lo_copies
+    // Same final metadata edge, unreset data copies (valid remains reset).
+    // Eight source copies each feed32 WPIPE control FFs downstream.
+    (* keep=1,dont_touch=1 *) reg [2*8*4-1:0] low_q;
+    for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
+     for(genvar cp=0;cp<8;cp=cp+1)begin:g_c
+      always @(posedge clk_lg[g])low_q[4*(sl*8+cp)+:4]<=meta[READ_RETURN-1][8+LWB*sl+:4];
+      assign stage_lo_replicas[4*((2*g+sl)*8+cp)+:4]=low_q[4*(sl*8+cp)+:4];
+     end
+    end
+   end
+
+  end
+  if(!NATIVE32 || BRING!=0 || READ_RETURN==0)begin:g_lo_original
+   for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
+    for(genvar cp=0;cp<8;cp=cp+1)begin:g_c
+     assign stage_lo_replicas[4*((2*g+sl)*8+cp)+:4]=meta_q[8+LWB*sl+:4];
+    end
+   end
   end
   reg [561:0] write_q;
   assign local_wq[562*g+:562]=write_q;

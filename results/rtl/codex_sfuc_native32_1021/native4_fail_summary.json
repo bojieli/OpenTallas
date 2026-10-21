@@ -1,0 +1,297 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "sfuc_operand_component",
+  "liberty": [
+    {
+      "path": "libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+    },
+    {
+      "path": "libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+    },
+    {
+      "path": "libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+    },
+    {
+      "path": "libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    },
+    {
+      "path": "src4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+      "sha256": "fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4"
+    },
+    {
+      "path": "src4/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+    },
+    {
+      "path": "src4/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
+      "sha256": "267e994041e8d97e6ff1a470e618058a8c790b7e71be52d9ba83e94be9f5816a"
+    }
+  ],
+  "netlist": {
+    "path": "mapped4.v",
+    "sha256": "3b9cf3117cc8cc29e85723388a7505c21ac87f5549ff3fdf014f333c3f04030f"
+  },
+  "top": "ot_hgi_sfu_static_operand_store",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 194685,
+  "max_dynamic_loads": 373,
+  "constant_output_bits": [],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violation_count": 1142,
+  "top_violations": [
+    {
+      "driver": "drain_v[1]",
+      "driver_role": "input_port",
+      "net": "drain_v[1]",
+      "loads": 373
+    },
+    {
+      "driver": "_338633_/QN",
+      "driver_role": "sequential",
+      "net": "_007398_",
+      "loads": 281
+    },
+    {
+      "driver": "_313655_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063925_",
+      "loads": 255
+    },
+    {
+      "driver": "_320971_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070906_",
+      "loads": 255
+    },
+    {
+      "driver": "drain_addr[15]",
+      "driver_role": "input_port",
+      "net": "drain_addr[15]",
+      "loads": 254
+    },
+    {
+      "driver": "_313576_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063846_",
+      "loads": 254
+    },
+    {
+      "driver": "_313623_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063893_",
+      "loads": 254
+    },
+    {
+      "driver": "_313633_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063903_",
+      "loads": 254
+    },
+    {
+      "driver": "_313665_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063935_",
+      "loads": 254
+    },
+    {
+      "driver": "_320962_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070897_",
+      "loads": 254
+    },
+    {
+      "driver": "_320985_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070920_",
+      "loads": 254
+    },
+    {
+      "driver": "_320989_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070924_",
+      "loads": 254
+    },
+    {
+      "driver": "_313501_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063771_",
+      "loads": 253
+    },
+    {
+      "driver": "_320979_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070914_",
+      "loads": 253
+    },
+    {
+      "driver": "_320973_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070908_",
+      "loads": 252
+    },
+    {
+      "driver": "_320986_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070921_",
+      "loads": 252
+    },
+    {
+      "driver": "_313611_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063881_",
+      "loads": 251
+    },
+    {
+      "driver": "_320975_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070910_",
+      "loads": 251
+    },
+    {
+      "driver": "_320981_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070916_",
+      "loads": 251
+    },
+    {
+      "driver": "_320997_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070932_",
+      "loads": 251
+    },
+    {
+      "driver": "_313503_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063773_",
+      "loads": 250
+    },
+    {
+      "driver": "_320987_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070922_",
+      "loads": 250
+    },
+    {
+      "driver": "_313540_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063810_",
+      "loads": 249
+    },
+    {
+      "driver": "_313589_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063859_",
+      "loads": 249
+    },
+    {
+      "driver": "_313600_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063870_",
+      "loads": 249
+    },
+    {
+      "driver": "_313644_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063914_",
+      "loads": 249
+    },
+    {
+      "driver": "_313675_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063945_",
+      "loads": 249
+    },
+    {
+      "driver": "_320993_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070928_",
+      "loads": 249
+    },
+    {
+      "driver": "_313519_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063789_",
+      "loads": 248
+    },
+    {
+      "driver": "_320999_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070934_",
+      "loads": 248
+    },
+    {
+      "driver": "_313553_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063823_",
+      "loads": 247
+    },
+    {
+      "driver": "_320991_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070926_",
+      "loads": 247
+    },
+    {
+      "driver": "_313565_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_063835_",
+      "loads": 245
+    },
+    {
+      "driver": "_320995_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070930_",
+      "loads": 244
+    },
+    {
+      "driver": "_320967_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_070902_",
+      "loads": 243
+    },
+    {
+      "driver": "drain_v[0]",
+      "driver_role": "input_port",
+      "net": "drain_v[0]",
+      "loads": 154
+    },
+    {
+      "driver": "_338642_/QN",
+      "driver_role": "sequential",
+      "net": "_007385_",
+      "loads": 151
+    },
+    {
+      "driver": "_338644_/QN",
+      "driver_role": "sequential",
+      "net": "_007375_",
+      "loads": 150
+    },
+    {
+      "driver": "_338647_/QN",
+      "driver_role": "sequential",
+      "net": "_000489_",
+      "loads": 134
+    },
+    {
+      "driver": "_338639_/QN",
+      "driver_role": "sequential",
+      "net": "_007390_",
+      "loads": 119
+    }
+  ],
+  "raw_receipt": "ep9:/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/native4.json"
+}

@@ -156,6 +156,34 @@ module ot_hgi_sfu_core_split2 #(
  wire [95:0] scalar_addr;
  wire [3:0] scalar_enable;
  wire [1:0] drain_v,drain_round_bf16;
+ wire [2*16-1:0] drain_v_leaves;
+ wire [2*16*LWB-1:0] drain_addr_leaves;
+ if(NATIVE32)begin:g_drain_copies
+  (* keep=1,dont_touch=1 *) reg [2*16-1:0] v_q;
+  (* keep=1,dont_touch=1 *) reg [2*16*LWB-1:0] addr_q;
+  for(genvar sec=0;sec<2;sec=sec+1)begin:g_s
+   for(genvar bank_=0;bank_<16;bank_=bank_+1)begin:g_b
+`ifdef OT_SFU_SYNC_RST
+    always @(posedge clk_pe)begin
+`else
+    always @(posedge clk_pe `OT_SFU_ARST(rr[3]))
+     if(!rr[3])begin v_q[sec*16+bank_]<=0;addr_q[(sec*16+bank_)*LWB+:LWB]<=0;end else begin
+`endif
+     v_q[sec*16+bank_]<=io_word[404+sec];
+     addr_q[(sec*16+bank_)*LWB+:LWB]<=LWB'(io_word[406+15*sec+:15]);
+    end
+   end
+  end
+  assign drain_v_leaves=v_q;assign drain_addr_leaves=addr_q;
+ end else begin:g_drain_original
+  for(genvar sec=0;sec<2;sec=sec+1)begin:g_s
+   for(genvar bank_=0;bank_<16;bank_=bank_+1)begin:g_b
+    assign drain_v_leaves[sec*16+bank_]=drain_v[sec];
+    assign drain_addr_leaves[(sec*16+bank_)*LWB+:LWB]=drain_addr[sec*LWB+:LWB];
+   end
+  end
+ end
+
  wire [29:0] drain_addr;
  wire [31:0] drain_vm_sector;
  wire arithmetic_start_unused;
@@ -164,6 +192,7 @@ module ot_hgi_sfu_core_split2 #(
  wire [7:0] stage_v;
  wire [15:0] stage_group;
  wire [8*LWB-1:0] stage_addr;
+ wire [8*8*4-1:0] stage_lo_replicas;
  wire [63:0] stage_mask;
  wire [2047:0] stage_data;
  wire [3:0] scalar_load;
@@ -197,18 +226,18 @@ module ot_hgi_sfu_core_split2 #(
   else begin {ro_v_e,ro_v_w}<=e_rov;{ro_x_e,ro_x_w}<=e_rox;end
 `endif
  localparam integer LGB=LG_PATH+1;
- ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(TAP_RR+2*LGB),.WRITE_RETURN(TAP_WR+2*LGB),.DRAIN_PIPE(DRAIN_PIPE),.BRING(BRING)) u_vm(
+ ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(TAP_RR+2*LGB),.WRITE_RETURN(TAP_WR+2*LGB),.DRAIN_PIPE(DRAIN_PIPE),.BRING(BRING),.NATIVE32(NATIVE32)) u_vm(
  .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_t),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(b_rq),.local_rr(b_rr),.local_wq(b_wq),.local_w_done(b_wd),
- .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
+ .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(stage_mask),.stage_data(stage_data),
  .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
  .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
  ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32),.PASS_OHREP(PASS_OHREP),.BTREE(BTREE)) u_engine(
   .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_t),.rst_map_n(rst_map_t),
   .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
-  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
-  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
+  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(stage_mask),.stage_data(stage_data),
+  .drain_v(drain_v),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
   .vi_re({vi_re_e,vi_re_w}),.vi_addr({vi_addr_e,vi_addr_w}),.vi_q({vi_q_e,vi_q_w}),.ro_v(e_rov),.ro_x(e_rox),
   .kv_we({kv_we_e,kv_we_w}),.kv_waddr({kv_waddr_e,kv_waddr_w}),.kv_wdata({kv_wdata_e,kv_wdata_w}),.fault(engine_fault));
  always @(posedge clk_pe `OT_SFU_ARST(rr[3]))
