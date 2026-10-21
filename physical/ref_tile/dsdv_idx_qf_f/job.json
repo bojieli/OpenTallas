@@ -2,12 +2,12 @@
  "name": "dsdv_idx_qf_f-dsdv_idx_qf_f-COMMIT",
  "block": "dsdv_idx_qf",
  "ref_tile": true,
- "owner": "Claude:TOK-FUNC2-IDX_QF",
- "purpose": "TOK-FUNC2 G8IQ stand-in: dsdv_idx_qf (S81 IDX query fan-out, NAT32 successor) to closure (TT setup / FF hold / DRC 0 + native audit) -> lanes/S81-DIE9.md G9 bind.",
+ "owner": "Codex:CODEX-S81-1021/HOST_TRANSPORT",
+ "purpose": "Current QF successor with kept same-edge valid/uid copies,24-bit payload and13-bit spec consumers after actual9/max108 native refusal; unchanged ports/latency.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/tokfunc2-idx-qf-1021",
+  "branch": "codex/s81-idxqf-n32fix-1348",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/idx",
