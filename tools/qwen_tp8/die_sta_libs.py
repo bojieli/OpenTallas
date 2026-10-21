@@ -92,7 +92,7 @@ def assumed_clock_refs(master, ports, physical_ports=None, clock_ports=None):
     return refs
 
 
-def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budget='tile'):
+def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budget='tile', generated=None):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
     # Source latency shifts the boundary while propagated ETMs retain insertion.
@@ -105,7 +105,33 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
     domain_clocks = {}
+    # QW-GENPREP 10-21 (QW-COLLIO NOTICE): a domain produced by a real on-die divider (generated[d] = dict(source=
+    # '<div>/ck', master=<master domain>, divide_by=N, pin='<div>/blk_o')) is a create_generated_clock at the divider
+    # output, related to its master clock by construction, so its crossings and the divider + trunk insertion are timed.
+    # Its leaf pins keep the measured boundary compensation (set_clock_latency -source per pin), as every root.
+    generated = generated or {}
+    gen_lines = []
     for d, entries in sorted(doms.items()):
+        if d in generated:
+            g = generated[d]
+            if g['master'] not in doms or g['master'] in generated:
+                raise ValueError(f'generated clock {d}: master domain {g["master"]} is not a created clock')
+            if any(leaves[master]['tt'][libpin] > 300.0 for _, master, libpin in entries):
+                raise ValueError(f'generated clock {d}: deep (>300 ps) leaf levels need their own generated clocks')
+            mlev = sorted({int(leaves[m_]['tt'][lp_] > 300.0) for _, m_, lp_ in doms[g['master']]})
+            mname = g['master'] if 0 in mlev else g['master'] + '__early'
+            gen_lines += [f'set p [get_pins -quiet {{{g["pin"]}}}]',
+                          f'if {{[llength $p] != 1}} {{ error "generated clock pin missing or ambiguous: {g["pin"]}" }}',
+                          f'create_generated_clock -name {d} -source [get_pins {{{g["source"]}}}] -master_clock '
+                          f'[get_clocks {mname}] -divide_by {int(g["divide_by"])} $p']
+            if periods is not None and abs(periods[d] - periods[g['master']] * int(g['divide_by'])) > 1e-3 * periods[d]:
+                raise ValueError(f'generated clock {d}: period {periods[d]} != {g["divide_by"]} x {periods[g["master"]]}')
+            for pin, master, libpin in entries:
+                r = leaves[master][corner][libpin]
+                gen_lines += [f'set_clock_latency -source -clock [get_clocks {d}] {-r:.6f} [get_pins {{{pin}}}]',
+                              'incr ot_clock_bound']
+            domain_clocks[d] = [d]
+            continue
         levels = {}
         for pin, master, libpin in entries:
             level = int(leaves[master]['tt'][libpin] > 300.0)
@@ -132,6 +158,12 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
                 lines += [f'# BUDGET {lname} -> {cname}: setup 60 + skew {skew:g} ps; ' + HOLD_NOTE[hold_budget],
                           f'set_clock_uncertainty -setup {60.0 + skew:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]',
                           f'set_clock_uncertainty -hold {HOLD_U[hold_budget]:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]']
+    lines += gen_lines
+    for d in sorted(generated):
+        if d in doms:
+            lines += [f'# BUDGET {d} -> {d}: setup 60 + skew 90 ps; ' + HOLD_NOTE[hold_budget],
+                      f'set_clock_uncertainty -setup 150.000000 -from [get_clocks {d}] -to [get_clocks {d}]',
+                      f'set_clock_uncertainty -hold {HOLD_U[hold_budget]:.6f} -from [get_clocks {d}] -to [get_clocks {d}]']
     # Preserve every relation explicitly declared by the source programme.
     # An asynchronous group is permitted only between independent groups.
     groups = []
@@ -161,6 +193,33 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
 
 
 CLOCK_SOURCE_PORTS = {('qfd_ckdiv6', 'blk_o'), ('ot_qfd_ucie_x64_phy', 'lclk')}
+
+
+DIVIDERS = {'qfd_ckdiv6': ('ck', 'blk_o', 6)}
+
+
+def divider_clocks(die_v, drivers, enabled=True):
+    """QW-GENPREP 10-21: domains driven by a real on-die divider (qfd_ckdiv6) -> generated-clock specs."""
+    if not enabled:
+        return {}
+    nets, _, _, instances = parse_die(die_v)
+    by = {inst: (master, conns) for master, inst, _, conns in instances}
+    out = {}
+    for net, pins in drivers.items():
+        for pin in pins:
+            inst, port = pin.split('/', 1)
+            master, conns = by.get(inst, (None, {}))
+            if master not in DIVIDERS or port != DIVIDERS[master][1]:
+                continue
+            ck, _, n = DIVIDERS[master]
+            bits = expr_bits(conns.get(ck, ''), nets) or []
+            if len(bits) != 1:
+                raise ValueError(f'{inst}/{ck}: divider source clock must be one scalar net')
+            d = domain(net)
+            if d in out:
+                raise ValueError(f'{d}: more than one divider output drives the domain')
+            out[d] = dict(source=f'{inst}/{ck}', master=domain(bits[0][0]), divide_by=n, pin=pin, net=net)
+    return out
 
 
 def validate_clock_drivers(drivers, sinks):
@@ -303,6 +362,7 @@ def main():
         raise ValueError(f'source-declared clock nets without drivers: {undriven}')
     periods = contract.get('periods_ps')
     related = contract.get('related_domains', ())
+    generated = divider_clocks(case / 'die.v', drv, os.environ.get('OT_STA_DIVIDER_GENERATED', '1') == '1')
     # Q-DIE11-RLY 10-18: forwarded-lane landings (case/landing.sdc from relay_data_run.py, LANDING-CONTRACT L5): the
     # lane is checked at the landing pins against the receiving root E edges later (MCP -setup E -hold D-1)
     land = (case / 'landing.sdc').read_text() if (case / 'landing.sdc').exists() else ''
@@ -311,9 +371,9 @@ def main():
     if (case / 'reset_sync.sdc').exists():
         land += (case / 'reset_sync.sdc').read_text()
     for c in ('tt', 'ff', 'ss'):
-        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget) + land)
+        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget, generated) + land)
     # Existing callers naming clocks.tcl are redirected by sta_tcl.py per corner.
-    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related, a.hold_budget) + land)
+    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related, a.hold_budget, generated) + land)
     views.update(source_clock_contract=contract, schema='opentallas.qwen-tp8.die-sta-libs.v1', clocks={d: len(p) for d, p in leaf_doms.items()},
                  clock_source_drivers={d: len(set(p)) for d, p in doms.items()},
                  clock_nets=len(sinks), clock_nets_without_driver=undriven[:40],
@@ -322,6 +382,8 @@ def main():
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
     views.update(clock_qualification(contract))
+    if generated:
+        views.update(generated_clocks={d: {k: v for k, v in g.items()} for d, g in generated.items()})
     fwd_m = sorted(m_ for m_ in dirs if E.FWD_RE.match(m_))
     if land or fwd_m:      # Q-DIE11-RLY (only on an OT_SPLIT_FWD_LANES case: older cases keep views.json byte-identical)
         views.update(fwd_landing_sdc=bool(land), fwd_lane_masters=fwd_m)
