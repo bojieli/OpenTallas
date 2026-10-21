@@ -1,6 +1,6 @@
 {
  "baseline_source_sha256": "05e730ee63a43318910614d7cdace925fc123c6275b71e325f427f77cc81dd9f",
- "candidate_sha256": "8a8c7b9cd3871cfdf7b79b1d12d6460e929489cefaa98d1eee87247231b7ef9b",
+ "candidate_sha256": "70bda9baa93874c077fb64a24d217ad33cde28846db521c72115fe61e5a34875",
  "candidate_source": "rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer_r2o.sv",
  "new_master": "ot_s81hd_ctl_glue_r2o",
  "new_functional_wrapper": "ot_s81hd_ctl_peer_r2o",
@@ -10,5 +10,7 @@
  "added_valid_cycles": 0,
  "added_reset_cycles": 0,
  "old_source_unchanged": true,
- "status": "UNVALIDATED_SOURCE_PROPOSAL_NO_KIT_NO_GATE"
+ "status": "UNVALIDATED_SOURCE_PROPOSAL_NO_KIT_NO_GATE",
+ "bench_baseline_sha256": "3fe53d9f1c3e1e5b369a1e26600b304b5a8fc45aee9497ec9290b50e54ee1cb8",
+ "validation": "Pending original two-position Golden controller mechanism plus parallel real candidate all-port capture/reset comparison and bypass negative"
 }
