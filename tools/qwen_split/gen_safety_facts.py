@@ -183,6 +183,19 @@ def export_model(model, pin_pos):
         lane_segments.add(lane['bid'])
         lane_segments.update(f"{lane['bid']}__r{k}" for k in range(1, n + 1))
         lane_segments.update(f"fep_{lane['bid']}__r{k}" for k in range(1, n))
+        capture = lane.get('reset_capture') or {}
+        ci = capture.get('inst')
+        if lane.get('lane') == 'reset' and ci in by and by[ci].master == 'qfd_rst_rep':
+            incoming = any(b[3] and b[3][0][0] == land and (ci, 'd') in b[3][1:] for b in model['buses'])
+            outgoing = any(b[3] and b[3][0] == (ci, 'q0') and tuple(capture.get('receiver', [])) in b[3][1:] for b in model['buses'])
+            same_clock = clock.get(ci) and clock.get(ci) == clock.get(lane['dst'])
+            source_proved = bool((model.get('reset_sync', {}).get('rep_check') or [False])[0])
+            if incoming and outgoing and same_clock and source_proved:
+                reset_landings.append(dict(id=lane['bid'], landing=ci, src=lane['src'], dst=lane['dst'],
+                    kind='observed_closed_two_stage_receiving_reset_capture',
+                    clock=sorted(clock[ci]), cold_reset_edges=2,
+                    calendar=capture.get('calendar'), source_feed_contract=lane.get('source_feed_contract')))
+                continue
         # Only an instantiated SRAM landing ring counts. rlyrl reset capture
         # flops are recorded as unlanded rather than mistaken for rings.
         ring = land if land in by and by[land].master.startswith(RING) else None

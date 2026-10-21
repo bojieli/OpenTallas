@@ -5630,6 +5630,10 @@ def _reset_tree(v, m):
                legalised=dict(sites=len(moved), moved_over_1um=sum(1 for q in moved if q > 1.0), median_um=moved[len(moved) // 2],
                               p90_um=moved[len(moved) * 9 // 10], max_um=moved[-1]),
                cycles_per_token=0)
+    if rec.get('forwarded_reset_capture'):
+        rec['cells'] += 1
+        rec['repeaters'] += 1
+        rec['nets'] += 1
     if any(len(s) != 1 for s in deps.values()):
         raise ValueError(f'reset tree: unequal leaf depth {rec["depth_cycles"]}')
     if over and _os.environ.get('OT_RESET_GATE') not in ('warn', 'diag'):
