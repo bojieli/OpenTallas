@@ -46,7 +46,9 @@ module dsdv_hbc1_loader #(
   wire[47:0] ks_capture=shadow[345:298],prev_input=shadow[393:346];
   wire[47:0] status_sample=shadow[441:394],return_send=shadow[489:442];
   wire[7:0] data_stage=shadow[497:490];wire[1:0] data_rank=shadow[499:498];
-  wire body_shape=words==417&&stride==16&&target_gap==4&&transit_gap==4&&data_stage<241&&data_rank<4&&
+  wire[48:0] commit_epoch_wide={1'b0,seed}+{1'b0,COMMIT_DELTA}+49'd1;
+  wire[48:0] end_header_wide={1'b0,first_header}+49'd6660;
+  wire body_shape=!commit_epoch_wide[48]&&!end_header_wide[48]&&words==417&&stride==16&&target_gap==4&&transit_gap==4&&data_stage<241&&data_rank<4&&
    shadow[511:500]==0&&shadow[163:100]==expected_programme&&
    first_header>seed+COMMIT_DELTA+4&&ks_capture>first_header+48'd6660&&
    prev_input>ks_capture&&status_sample<return_send&&return_send<prev_input;
@@ -60,15 +62,18 @@ module dsdv_hbc1_loader #(
    if(!rn)begin valid<=0;f<=0;body_seen<=0;end
    else begin
     if(load_header&&!load_good)f[0]<=1;
+    if(VALID_PROFILE&&boot_edge==BOOT_HEADER_EDGE&&!load_good)f[0]<=1;
     if(command&&addressed&&p[39:36]>1)f[1]<=1;
     if(boot_edge==BODY_EDGE&&(|pending))begin
      body_seen<=hv;
      if(!hv)f[2]<=1;
     end
+    if(hv&&(|pending)&&boot_edge!=BODY_EDGE)f[2]<=1;
     if(body_check&&!body_good)f[3]<=1;
     if(commit_header&&!commit_good)f[4]<=1;
     if(boot_edge==BOOT_COMMIT_EDGE&&!commit_good)f[5]<=1;
     if(command&&addressed&&(valid||job_active))f[6]<=1;
+    if(job_active&&((|pending)||(|ready)))f[6]<=1;
     if(command&&addressed&&!VALID_PROFILE)f[7]<=1;
     if(commit_good)valid<=1;
    end

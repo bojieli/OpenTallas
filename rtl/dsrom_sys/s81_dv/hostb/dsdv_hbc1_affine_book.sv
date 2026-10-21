@@ -8,7 +8,7 @@ module dsdv_hbc1_affine_book(input wire ck,rst_n,context_valid,input wire[511:0]
  output wire[15:0] tid,output wire[9:0] user_id,output wire[20:0] position,token,
  output wire[31:0] epoch_id,output wire[63:0] programme_id,
  output wire[7:0] expected_data_stage,output wire[1:0] expected_data_rank,
- output wire next_header_slot,next_forward_slot,prev_header_slot,prev_forward_slot,status_sample_slot,return_send_slot,
+ output wire next_header_slot,next_forward_slot,prev_header_slot,prev_forward_slot,status_sample_slot,return_send_slot,source_return_TX_slot,
  output wire[47:0] transit_body_edge);
  wire rn;ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  reg was_valid;reg[8:0] remaining;wire[47:0] next_header,last_header;
@@ -24,6 +24,7 @@ module dsdv_hbc1_affine_book(input wire ck,rst_n,context_valid,input wire[511:0]
  assign prev_forward_slot=context_valid&&receiver_edge==prev_date+1;
  assign status_sample_slot=context_valid&&receiver_edge==fields[441:394];
  assign return_send_slot=context_valid&&receiver_edge==fields[489:442];
+ assign source_return_TX_slot=context_valid&&receiver_edge==fields[489:442]+1;
  assign transit_body_edge=receiver_edge+4;
  always @(posedge ck or negedge rn)begin
   if(!rn)begin was_valid<=0;remaining<=0;end
