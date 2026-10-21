@@ -52,3 +52,16 @@ implementation inferred nonconstant ALDFFE loads from variable-index writes
 under two async resets. Constant-index per-bit ownership preserves the ring,
 pointer, regional resets and latency. Existing SAFE review above applies;
 collect existing exact benches and native census before accepting layout.
+
+CODEX fanout successor after r4 native65/126: write-data/mask selectors are
+8-bit groups; the first group per bank also owns the narrow bank address.
+Coefficient and row-swap selectors are16-bit groups. Explicit keep on sticky
+shared valid scalars prevents coalescing with an output-group replica.
+Ring write pointers/valids are local per8entries; the read pointer remains
+independent. tree3 reset forest preserves3-edge release with24leaves and
+max8 children per reset group. Control/valid resets split into <=32-bit
+leaves; data stays unreset. Existing MAIN63/FB65 POST budget unchanged.
+SAFE1 registered seams unchanged;2 physical relay fallback unchanged;3 fixed
+measured65/126 cones pending exact census;4 depth unchanged;5 ring and SRAM
+unchanged;6 outline/lattice unchanged;7 clock/hold0.03 unchanged;8 static
+schedule unchanged, only zero-edge control copies and3-edge reset forest.

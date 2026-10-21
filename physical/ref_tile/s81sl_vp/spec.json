@@ -8,6 +8,7 @@
  "hard_define": "OT_S81SL_VP_HARD",
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_relay_tree3.sv",
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv"
  ],
