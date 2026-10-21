@@ -414,7 +414,8 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                           for r in crow],
                                  rules=sorted({str(r.get("rule")) for r in crow if r.get("rule")}),
                                  needs=sorted({r["requires"] for r in crow if r.get("requires")
-                                               and (r["kind"] == "relaxing" or r.get("applies"))})))
+                                               and ((r["kind"] == "relaxing" and HO_.tile_matches(r.get("applies_to"), tile))
+                                                    or r.get("applies"))})))
             if rows:
                 needs = sorted({n for r in rows for n in r.pop("needs")})
                 req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root, pg_strict=pg_strict)
