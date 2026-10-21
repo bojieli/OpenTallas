@@ -6,6 +6,7 @@ Cases without a DONE marker are listed as pending (never as PASS)."""
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import re
@@ -17,7 +18,12 @@ GRADE_OK = 'RTL-functional (source assembly)'
 
 def rd(p):
     p = Path(p)
-    return json.loads(p.read_text()) if p.exists() else None
+    return json.loads(calendar_bytes(p)) if p.exists() else None
+
+
+def calendar_bytes(p):
+    raw = Path(p).read_bytes()
+    return gzip.decompress(raw) if raw.startswith(b'\x1f\x8b') else raw
 
 
 def main():
@@ -93,10 +99,13 @@ def main():
         record = rd(path) if path else None
         # A legacy PASS string cannot establish that the corrected checker ran.
         proof = record.get('checker', {}) if record else {}
-        corrected = proof.get('same_user_checked') is True
+        corrected = proof.get('same_user_checked') is True and all(
+            re.fullmatch(r'[0-9a-f]{64}', str(proof.get(k, '')))
+            for k in (('source_sha256', 'position_graph_sha256') if mode == 'mtp' else ('source_sha256',)))
         good = corrected and proof.get('result') == 'PASS' and record.get('users', 0) > 0
         calendars[mode] = dict(path=name,
-            sha256=hashlib.sha256(path.read_bytes()).hexdigest() if path and path.exists() else None,
+            sha256=hashlib.sha256(calendar_bytes(path)).hexdigest() if path and path.exists() else None,
+            artifact_sha256=hashlib.sha256(path.read_bytes()).hexdigest() if path and path.exists() else None,
             checker=proof, corrected_checker=corrected,
             verdict='PASS_MODEL' if good else 'FAIL' if record and proof.get('result') == 'FAULT' else 'PENDING',
             users=record.get('users') if record else None,

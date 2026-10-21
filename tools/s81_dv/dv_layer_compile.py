@@ -847,7 +847,41 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None):
+def dense_stage_schedule(sched, half):
+    """Select actual split-stage operations; preserve external dependency obligations.
+
+    A owns only its a_proj subset. B owns the remaining subset and reachable
+    downstream operations. These are source compilation schedules; inherited
+    model ages do not establish a measured stage completion time.
+    """
+    assert half in ('A', 'B')
+    ap = [o for o in sched['ops'] if o['op'] == 'attn.a_proj']
+    if len(ap) != 1:
+        raise ValueError('DENSE2 stage selection requires exactly one attn.a_proj')
+    ids = {ap[0]['id']}
+    if half == 'B':
+        while True:
+            nxt = ids | {d['dst'] for d in sched['deps'] if d['src'] in ids}
+            if nxt == ids:
+                break
+            ids = nxt
+    t0 = ap[0]['start']
+    ops = [dict(o, start=round(o['start']-t0, 1), end=round(o['end']-t0, 1))
+           for o in sched['ops'] if o['id'] in ids]
+    boundary = dict(half=half, full_stage_qualified=False, date_status='INHERITED_MODEL_ONLY',
+                    original_aproj_start=t0,
+                    incoming=[d for d in sched['deps'] if d['dst'] in ids and d['src'] not in ids],
+                    outgoing=[d for d in sched['deps'] if d['src'] in ids and d['dst'] not in ids],
+                    excluded=[o['id'] for o in sched['ops'] if o['id'] not in ids],
+                    obligation='actual input arrival, A-to-B row carriage, source capture completion and local static dates remain required')
+    return dict(sched, ops=ops, deps=[d for d in sched['deps'] if d['src'] in ids and d['dst'] in ids],
+                span=max(o['end'] for o in ops), crit=sum(o['cycles'] for o in ops if o['critical']),
+                dense_stage=boundary)
+
+
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None):
+    if dense_stage is not None and mu_ctx:
+        raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
     if svc_owner_epoch is not None and mu_ctx:
         raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)
@@ -855,6 +889,13 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     die = Die(tree)
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
     sched = layer_schedule(tree, layer, wl)
+    if dense_stage is not None:
+        required = dict(OT_XS_DENSE_SPLIT2=dense_stage, OT_XS_APROJ_TOPO='1',
+                        OT_XS_APROJ_ALIGN4='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_CAP_PLAN='1')
+        if any(os.environ.get(k) != v for k, v in required.items()):
+            raise ValueError('configured DENSE2 stage requires explicit aligned topology/rank/capture options: '+str(required))
+        sched = dense_stage_schedule(sched, dense_stage)
+        (out / 'prog/dense_stage_boundary.json').write_text(json.dumps(sched['dense_stage'], indent=1)+'\n')
     sl = sl if sl.startswith('u_') else f'u_{sl}'
     prog = Prog(die)
     prog.mu_ctx = mu_ctx
@@ -927,7 +968,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -959,6 +1000,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
              or k.startswith(('tvS_seqhost', 'tvN_seqhost', 'tvS_bk_sel'))}
     (out / 'schedule.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.layer_schedule.v1', layer=layer, workload=wl, slice=sl,
+        dense_stage=sched.get('dense_stage'),
         timing_contract=die.timing_contract,
         composition='the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same '
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
@@ -1040,7 +1082,11 @@ def main(argv=None):
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
+    ap.add_argument('--dense-stage', choices=('A', 'B'),
+                    help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
     a = ap.parse_args(argv)
+    if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
+        ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
     if a.svc_owner_epoch is not None and a.mu_cal:
         ap.error('--svc-owner-epoch requires per-user owner remapping before --mu-cal')
     if a.mu_cal:
@@ -1053,7 +1099,7 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

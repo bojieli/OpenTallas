@@ -1,7 +1,7 @@
 """D512 KV adapter source row contract; no fixture arithmetic or token claim.
 
-The shared adapter is being implemented by S81-DIE source integration. These
-functions encode its existing production KVT/KVQ storage ABI. Programme dates,
+The source adapter has a qualified real-VP consumer component. These functions
+encode its production KVT/KVQ storage ABI. Absolute programme dates,
 the real a_proj producer transfer, and service OWN_ROW handoff remain required.
 """
 from __future__ import annotations
@@ -67,7 +67,7 @@ def contract():
                         local_rows=[708 + 4 * i, 711 + 4 * i], mask16=65535) for i in range(16))
     return dict(schema='opentallas.s81.kv_bank_row_contract.v1', slice=SLICE, leaf=LEAF,
                 source='rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv',
-                adapter_ref='codex/s81-kvq-bind-1021@19170913b',
+                adapter_ref='codex/s81-kvq-bind-1021@286841a838132f393f3b387f2ecce0e20111c73b',
                 adapter='ot_s81sl_kv_leaf / ot_s81sl_kv_bank; requires KV_ENABLE=1',
                 dispatch_abi=dict(op=15, a0=672, a1_kv=692, a1_gain=676, n=32,
                     immediate='kind[3:0], gain_set[5:4], jid[13:6], measured_fixed_drain_age[31:16]',
@@ -82,6 +82,20 @@ def contract():
                 completion='Two exponent writes share one address; both masks must be preserved.',
                 output_drain_pair_writes=52,
                 output_drain_cycles=104, minimum_fixed_drain_age=128,
-                measured_fixed_drain_age=None,
-                qualification='ROW ABI ONLY; dispatch RTL, cycle dates, producer transfer, service OWN_ROW '
-                              'handoff, and whole-calendar lifetimes are not qualified.')
+                measured_fixed_drain_age=1024,
+                consumer_component=dict(
+                    receipt='results/token_pass/s81_kv_real_vp_1021/r3/result.json',
+                    boundary='Native VP sw fixture preload; VP command forwarding, real SRAM extension and readback',
+                    vp_extension_response_edges=4, gain_finish_adapter_age=1025,
+                    kv_finish_adapter_age=1130, first_result_adapter_age=266,
+                    last_result_adapter_age=285, input_and_readback_requests=190,
+                    input_and_readback_responses=190, exponent_drop_mismatches=8,
+                    vp_command_pre_capture_to_done_observation=dict(gain=1028, kv=1133),
+                    convention='Command start is benchmark negedge before VP pin capture; elapsed counts '
+                               'the following posedges through done observation. Adapter ages are dut.age '
+                               'observed at negedge. These are not global programme dates.'),
+                qualification='CONSUMER COMPONENT ONLY at the pinned source: real VP dispatch/storage, '
+                              'D512 arithmetic and masked output readback. Actual producer transfer, '
+                              'absolute issue dates, service OWN_ROW handoff and whole-calendar lifetimes '
+                              'remain unqualified. Source minimum 128 is an encoding bound; the measured '
+                              'fixed drain age is 1024.')
