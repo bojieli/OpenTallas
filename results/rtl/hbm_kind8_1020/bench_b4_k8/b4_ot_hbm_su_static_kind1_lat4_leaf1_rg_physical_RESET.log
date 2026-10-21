@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   322 GB (avail 339, growth 113, headroom 0, waiters 0/0 GB) load 69/128 running 47 disk 160 GB 
+ot-run: ot-epyc6       admits    -1 GB (avail 112, growth 113, headroom 0, waiters 1/32 GB) load 142/128 running 49 disk 1572 GB 
+ot-run: ot-epyc7       admits   925 GB (avail 748, growth 101, headroom 0, waiters 0/0 GB) load 77/96 running 36 disk 5001 GB 
+ot-run: ot-epyc9       admits   331 GB (avail 429, growth 197, headroom 0, waiters 0/0 GB) load 305/128 running 55 disk 68 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-kind8/src2
+ot-run: ot-agidock128  admits    40 GB (avail 40, growth 13, headroom 0, waiters 0/0 GB) load 36/64 running 19 disk 176 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2208847-1792562876 after 1 s
+[46000] %Fatal: tb_su_static_lane_leaf.sv:83: Assertion failed in tb_su_static_lane_leaf.unnamedblk1: SU_LANE FAIL reset release edge=1 (expected exactly 3)
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:83: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2208847-1792562876): exit 1

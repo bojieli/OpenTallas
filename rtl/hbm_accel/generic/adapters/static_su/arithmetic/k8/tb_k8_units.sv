@@ -11,7 +11,7 @@ module tb_k8_units;
     ot_hdc_fp32_mul_lat4i    u_ref (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y0), .err(r0), .valid_out(o0));
     ot_hdc_fp32_mul_lat4i_k8 u_k8  (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y1), .err(r1), .valid_out(o1));
     ot_hdc_v41x_exp    #(.LM(4), .LA(3)) x_ref (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(e0), .vo(eo0), .fault(ef0));
-    ot_hdc_v41x_exp_k8 #(.LM(4), .LA(3)) x_k8  (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(e1), .vo(eo1), .fault(ef1));
+    ot_hdc_v41x_exp_k8 #(.LM(4), .LA(3)) x_k8  (.clk(clk), .rst_n(rst_n), .rst_m(rst_n), .rst_a(rst_n), .v(v), .x(x), .y(e1), .vo(eo1), .fault(ef1));
     integer n = 0, err = 0, mchk = 0, echk = 0, subs = 0, N = 400000;
     bit mm, me;
     function automatic [31:0] rnd_fp(input integer mode);

@@ -45,7 +45,7 @@ endmodule
 '''
 
 # copies the pin-register wrapper supplies (field, width, copies)
-COPIES = [('lane_id', 11, 5), ('cx_imm3', 32, 4), ('ca_ad', 3, 4), ('cs_sfu', 3, 2), ('cm_m1', 3, 2),
+COPIES = [('lane_id', 11, 5), ('cx_imm3', 32, 8), ('ca_ad', 3, 4), ('cs_sfu', 3, 2), ('cm_m1', 3, 2),
           ('cm_m2', 2, 2), ('co_rnd', 1, 2), ('ce_e2', 2, 2), ('cs_e1', 3, 2), ('cp_m1', 3, 4), ('ci_sfu', 3, 4)]
 NS = 4                    # insertion-line slices (each slice's load select reads its own v / sel copy)
 
@@ -179,12 +179,28 @@ def lane():
     s = sub(s, '''        x_a <= rd_q[31:0]; x_b <= rd_q[63:32]; x_c <= rd_q[95:64]; x_d <= rd_q[127:96];
     end''', '''        x_a <= rd_q[31:0]; x_b <= rd_q[63:32]; x_c <= rd_q[95:64]; x_d <= rd_q[127:96];
     end
-    wire [31:0] x_a2;                                // HBM-KIND8: kept copy of x_a for the PRE select (x_a: compares)
-    ot_su_kff_k8 #(.W(32)) u_xa2 (.clk(clk_stage[0]), .d(rd_q[31:0]), .q(x_a2));''')
+    wire [31:0] x_a2, x_a3, x_c2;                    // HBM-KIND8: kept copies: x_a2 PRE select, x_a3 BF16 candidates, x_c2 lo compare
+    ot_su_kff_k8 #(.W(32)) u_xa2 (.clk(clk_stage[0]), .d(rd_q[31:0]), .q(x_a2));
+    ot_su_kff_k8 #(.W(32)) u_xa3 (.clk(clk_stage[0]), .d(rd_q[31:0]), .q(x_a3));
+    ot_su_kff_k8 #(.W(32)) u_xc2 (.clk(clk_stage[0]), .d(rd_q[95:64]), .q(x_c2));''')
+    s = sub(s, '''    wire [31:0] a_t  = {x_a[31:16], 16'd0};''', '''    wire [31:0] a_t  = {x_a3[31:16], 16'd0};''')
+    s = sub(s, '''    ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(x_a[31:16]), .inc(1'b1), .y(a_hi1));''',
+            '''    ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(x_a3[31:16]), .inc(1'b1), .y(a_hi1));''')
+    s = sub(s, "    ot_hdc_kge #(.W(32), .K(K)) u_cgl (.a(okey(x_c)), .b(okey(c_lo)), .ge(c_ge_lo));",
+            "    ot_hdc_kge #(.W(32), .K(K)) u_cgl (.a(okey(x_c2)), .b(okey(c_lo)), .ge(c_ge_lo));")
     # ---- PRE: imm3 copies [0] okey for the A compares, [1] A select, [2] C clip compares, [3] C select
-    s = sub(s, '    wire [31:0] k_imm3 = okey(cx_imm3);', '''    wire [31:0] imm3_0 = cx_imm3_c[0 +: 32], imm3_1 = cx_imm3_c[32 +: 32], imm3_2 = cx_imm3_c[64 +: 32],
-                imm3_3 = cx_imm3_c[96 +: 32];
-    wire [31:0] k_imm3 = okey(imm3_0), k_imm3c = okey(imm3_2);''')
+    s = sub(s, '    wire [31:0] k_imm3 = okey(cx_imm3);', '''    // HBM-KIND8: 8 imm3 copies: 0 lex, 1 A select, 2 c_lo, 3 C select, 4 let, 5 leu, 6 le0, 7 clh / clo
+    wire [31:0] imm3_0 = cx_imm3_c[0 +: 32], imm3_1 = cx_imm3_c[32 +: 32], imm3_2 = cx_imm3_c[64 +: 32],
+                imm3_3 = cx_imm3_c[96 +: 32], imm3_4 = cx_imm3_c[128 +: 32], imm3_5 = cx_imm3_c[160 +: 32],
+                imm3_6 = cx_imm3_c[192 +: 32], imm3_7 = cx_imm3_c[224 +: 32];
+    wire [31:0] k_imm3 = okey(imm3_0), k_imm3c = okey(imm3_7), k_imm3t = okey(imm3_4), k_imm3u = okey(imm3_5),
+                k_imm30 = okey(imm3_6);''')
+    s = sub(s, "    ot_hdc_kge #(.W(32), .K(K)) u_let (.a(k_imm3), .b(okey(a_t)), .ge(le_t));",
+            "    ot_hdc_kge #(.W(32), .K(K)) u_let (.a(k_imm3t), .b(okey(a_t)), .ge(le_t));")
+    s = sub(s, "    ot_hdc_kge #(.W(32), .K(K)) u_leu (.a(k_imm3), .b(okey(a_u)), .ge(le_u));",
+            "    ot_hdc_kge #(.W(32), .K(K)) u_leu (.a(k_imm3u), .b(okey(a_u)), .ge(le_u));")
+    s = sub(s, "    ot_hdc_kge #(.W(32), .K(K)) u_le0 (.a(k_imm3), .b(32'h80000000), .ge(le_0));",
+            "    ot_hdc_kge #(.W(32), .K(K)) u_le0 (.a(k_imm30), .b(32'h80000000), .ge(le_0));")
     s = sub(s, '''    wire [31:0] a_mx = pre_a2(x_a, cx_arelu, cx_amin, cx_imm3, le_x, le_0);
     wire [31:0] a_mt = pre_a2(a_t, cx_arelu, cx_amin, cx_imm3, le_t, le_0);
     wire [31:0] a_mu = pre_a2(a_u, cx_arelu, cx_amin, cx_imm3, le_u, le_0);''',
@@ -239,9 +255,30 @@ def lane():
             '''                ot_hbm_su_static_ins_k8 #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (''')
     s = sub(s, '''                    .v(v3), .sel(sel[2:0]), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),''',
             '''                    .v(v3c), .sel(l4_sel3), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),''')
+    # ---- stage-4 (SFU) reset leaves: extra relays with the same release edge (exp vline / muls / adds, div, lines)
+    s = sub(s, '''    /* verilator hier_block */''', '''    wire [6:0] rst4x;                                 // HBM-KIND8: stage-4 reset leaves (each its own relay, same edge)
+`ifdef OT_SU_SYNC_RST
+    for (genvar r = 0; r < 7; r = r + 1) begin : g_rst4x
+        ot_sync_rst_relay u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_stage[4]), .rst_n_in(rst_n), .rst_n(rst4x[r]));
+    end
+`else
+    assign rst4x = {7{rst_n}};
+`endif
+    /* verilator hier_block */''')
+    s = sub(s, '''ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk_stage[4]), .rst_n(rst_stage_n[4]),''',
+            '''ot_hdc_v41x_exp_k8 #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk_stage[4]), .rst_n(rst4x[0]), .rst_m(rst4x[1]), .rst_a(rst4x[2]),''')
+    s = sub(s, '''            ot_hdc_v41x_fdiv u_div (.clk(clk_stage[4]), .rst_n(rst_stage_n[4]),''',
+            '''            ot_hdc_v41x_fdiv u_div (.clk(clk_stage[4]), .rst_n(rst4x[3]),''')
+    s = sub(s, '''ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk_stage[4]), .rst_n(rst_stage_n[4]),''',
+            '''ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk_stage[4]), .rst_n(rst4x[4]),''')
+    s = sub(s, '''ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk_stage[4]), .rst_n(rst_stage_n[4]),''',
+            '''ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk_stage[4]), .rst_n(rst4x[5]),''')
+    s = sub(s, '''ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk_stage[4], rst_stage_n[4],''',
+            '''ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk_stage[4], rst4x[6],''')
+    s = sub(s, '''ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk_stage[4]), .rst_n(rst_stage_n[4]),''',
+            '''ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk_stage[4]), .rst_n(rst4x[6]),''')
     # ---- multipliers / exp: the k8 units
     s = sub(s, 'ot_hdc_qmul_lat #(MLAT)', 'ot_hdc_qmul_lat_k8 #(MLAT)', 5)
-    s = sub(s, 'ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp', 'ot_hdc_v41x_exp_k8 #(.LM(MLAT), .LA(ALAT)) u_exp')
     # ---- M1 out select (cm_m1): two copies, one per half
     s = sub(s, '''    wire [31:0] P = (cm_m1 == M1_DIVB || cm_m1 == M1_DIVIMM) ? div1_y :
                     (cm_m1 == M1_AB || cm_m1 == M1_AA || cm_m1 == M1_AIMM) ? mul1_y : byp1;''',

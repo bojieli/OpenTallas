@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits   322 GB (avail 339, growth 113, headroom 0, waiters 0/0 GB) load 69/128 running 47 disk 160 GB 
+ot-run: ot-epyc6       admits    -1 GB (avail 112, growth 113, headroom 0, waiters 1/32 GB) load 142/128 running 49 disk 1572 GB 
+ot-run: ot-epyc7       admits   925 GB (avail 748, growth 101, headroom 0, waiters 0/0 GB) load 77/96 running 36 disk 5001 GB 
+ot-run: ot-epyc9       admits   332 GB (avail 429, growth 197, headroom 0, waiters 0/0 GB) load 305/128 running 55 disk 68 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-kind8/src2
+ot-run: ot-agidock128  admits    40 GB (avail 40, growth 13, headroom 0, waiters 0/0 GB) load 36/64 running 19 disk 176 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2208975-1792562876 after 1 s
+SU_LANE SYNC_RESET release_edges=3 first_accept_edge=4 steady_schedule_added_edges=0
+SU_LANE ERROR op=0 cycle=41 output edge 41 want 40
+SU_LANE ERROR op=0 cycle=42 output edge 42 want 41
+SU_LANE ERROR op=0 cycle=43 output edge 43 want 42
+SU_LANE ERROR op=0 cycle=44 output edge 44 want 43
+SU_LANE ERROR op=0 cycle=45 output edge 45 want 44
+SU_LANE ERROR op=0 cycle=46 output edge 46 want 45
+SU_LANE ERROR op=0 cycle=47 output edge 47 want 46
+SU_LANE ERROR op=0 cycle=48 output edge 48 want 47
+[80260000] %Fatal: tb_su_static_lane_leaf.sv:111: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=1984 outputs=1984
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:111: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2208975-1792562876): exit 1

@@ -23,7 +23,9 @@ module ot_hdc_v41x_exp_k8 #(
     parameter integer LA = 3                    // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
 ) (
     input  wire        clk,
-    input  wire        rst_n,
+    input  wire        rst_n,                  // vline + table (HBM-KIND8: one reset leaf each group)
+    input  wire        rst_m,                  // the 7 multipliers' valid bits
+    input  wire        rst_a,                  // the 8 adders' valid bits
     input  wire        v,
     input  wire [31:0] x,
     output reg  [31:0] y,
@@ -320,7 +322,7 @@ module ot_hdc_v41x_exp_k8 #(
 
     wire [31:0] t;
     wire [2:0] f;
-    ot_hdc_qmul_lat_k8 #(LM) m_t (clk, rst_n, vd[1], xc, K_LOG2E, t, f[0]);   // 1 + LM
+    ot_hdc_qmul_lat_k8 #(LM) m_t (clk, rst_m, vd[1], xc, K_LOG2E, t, f[0]);   // 1 + LM
 
     // n = rint-to-even(t), |t| < 127.  With E = field - 127, the integer part
     // is the significand shifted right by 23 - E (E in [-1, 6]); below E = -1,
@@ -333,31 +335,39 @@ module ot_hdc_v41x_exp_k8 #(
     wire        thalf = tm[trb];
     wire        tstk = |(tm & ~({24{1'b1}} << trb));
     wire [7:0]  tmag = (te < 8'd126) ? 8'd0 : (tip[7:0] + {7'd0, thalf && (tstk || tip[0])});
-    // HBM-KIND8: n is registered as NK = 16 kept same-edge copies (nint drove the 254-entry table decode: 355 loads);
-    // copy j decodes table bits [4j +: 4] only, copy 0 also feeds the 2^n delay line.  Same values, 0 cycles.
-    localparam integer NK = 16;
+    // HBM-KIND8: n is registered once (nint, for the 2^n line) and, for the 254-entry ln2 table, as a ONE-HOT
+    // predecode of its low byte: TG = 4 kept groups, each a registered 16 + 16 one-hot (hi / lo nibble) driving its own
+    // 256-entry AND decode and the table bits [16g +: 16] (nint itself drove the decode: 355 loads; 16 binary copies
+    // still 66-87).  Same values, 0 cycles.
+    localparam integer TG = 4;
     wire [8:0]  n_d = t[31] ? -{1'b0, tmag} : {1'b0, tmag};
-    wire [9*NK-1:0] nint_c;
+    reg  [8:0]  nint;
+    always @(posedge clk) nint <= n_d;
+    wire [32*TG-1:0] n_oh;
     genvar nj;
-    for (nj = 0; nj < NK; nj = nj + 1) begin : g_nint
-        ot_hdc_kff9_k8 u_n (.clk(clk), .d(n_d), .q(nint_c[9*nj +: 9]));
+    for (nj = 0; nj < TG; nj = nj + 1) begin : g_noh
+        ot_hdc_kff32_k8 u_oh (.clk(clk), .d({16'd1 << n_d[7:4], 16'd1 << n_d[3:0]}), .q(n_oh[32*nj +: 32]));
     end
-    wire [8:0]  nint = nint_c[8:0];
-    reg [63:0] tab_q;
-    integer tj;
-    reg [63:0] tab_j;
-    always @(posedge clk)
-        for (tj = 0; tj < NK; tj = tj + 1) begin
-            tab_j = ln2_nk(nint_c[9*tj +: 8]);
-            tab_q[4*tj +: 4] <= tab_j[4*tj +: 4];
-        end
+    reg [63:0] tab_c, tab_q;                    // tab_c: the decode; tab_q: the table products, registered (T_K)
+    integer tg, te_i;
+    reg [63:0] tv;
+    always @* begin
+        tab_c = 64'd0;
+        for (tg = 0; tg < TG; tg = tg + 1)
+            for (te_i = 0; te_i < 256; te_i = te_i + 1) begin
+                tv = ln2_nk(te_i[7:0]);
+                if (n_oh[32*tg + 16 + te_i / 16] && n_oh[32*tg + te_i % 16])
+                    tab_c[16*tg +: 16] = tab_c[16*tg +: 16] | tv[16*tg +: 16];
+            end
+    end
+    always @(posedge clk) tab_q <= tab_c;
     wire [31:0] a_hi = tab_q[63:32], a_lo = tab_q[31:0];
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_a, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
     ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_a, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -372,8 +382,8 @@ module ot_hdc_v41x_exp_k8 #(
             if (k < 6) begin : g_rd
                 ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
-            ot_hdc_qmul_lat_k8 #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hdc_qmul_lat_k8 #(LM) u_m (clk, rst_m, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
+            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_a, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 
@@ -393,4 +403,11 @@ endmodule
 (* keep_hierarchy = "yes" *)
 module ot_hdc_kff9_k8 (input wire clk, input wire [8:0] d, output reg [8:0] q);
     always @(posedge clk) q <= d;
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module ot_hdc_kff32_k8 (input wire clk, input wire [31:0] d, output wire [31:0] q);
+    (* keep = 1 *) reg [31:0] r;
+    always @(posedge clk) r <= d;
+    assign q = r;
 endmodule

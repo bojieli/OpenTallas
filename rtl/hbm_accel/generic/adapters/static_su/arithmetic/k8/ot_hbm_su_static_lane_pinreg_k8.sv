@@ -133,8 +133,8 @@ module ot_hbm_su_static_lane_pinreg_k8 #(
     for (genvar j = 0; j < 5; j = j + 1) begin : g_k_lane_id
         ot_su_kff_k8 #(.W(11)) u_k (.clk(c0), .d(lane_id), .q(k_lane_id[j*11 +: 11]));
     end
-    wire [4*32-1:0] k_cx_imm3;
-    for (genvar j = 0; j < 4; j = j + 1) begin : g_k_cx_imm3
+    wire [8*32-1:0] k_cx_imm3;
+    for (genvar j = 0; j < 8; j = j + 1) begin : g_k_cx_imm3
         ot_su_kff_k8 #(.W(32)) u_k (.clk(c0), .d(cx_imm3), .q(k_cx_imm3[j*32 +: 32]));
     end
     wire [4*3-1:0] k_ca_ad;
