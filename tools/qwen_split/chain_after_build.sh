@@ -2,8 +2,18 @@
 # chain_after_build.sh TAG : (on the host, under ot-run) bind real views on TAG/out/case, build the STA libs, run the die chain
 # (real case -> PDN r8 -> GRT 12 iters -> STA tt / ff / ss; SS is reported sensitivity) into TAG/chain; port-bind verdict first
 set -u
-T=$1; S=/srv/opentallas-scratch/claude/qwen-split-compute/$T; R=$S/chain
-grep -q '^rc=0' $S/out.log || { echo "build $T not rc=0"; exit 7; }
+T=$1; S=/srv/opentallas-scratch/claude/qwen-split-compute/$T
+if [ "${OT_SAVED_CASE_PHYSICAL_DIAGNOSTIC:-0}" = 1 ]; then
+  S=${OT_SAVED_CASE_ROOT:?explicit captured case path required}
+  python3 "$(dirname "$0")/saved_case_diagnostic.py" "$S" "${OT_SAVED_CASE_MANIFEST:?exact source/case manifest required}" || exit 7
+  export OT_CHAIN_DIAGNOSTIC=1
+  # This physical path has no qualified schedule. The existing die-chain step
+  # records SKIPPED rather than a fabricated calendar PASS.
+  unset OT_RELAY_SCHEDULE
+else
+  grep -q '^rc=0' $S/out.log || { echo "build $T not rc=0"; exit 7; }
+fi
+R=$S/chain
 mkdir -p $R/libs $R/case_r22k
 cd $S/src
 # several closed revisions of one master name: bind the recorded choice (bind.json lists the others per master)

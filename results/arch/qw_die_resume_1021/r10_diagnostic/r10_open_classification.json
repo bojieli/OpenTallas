@@ -1,0 +1,489 @@
+{
+  "scope": "79 distinct master-port opens; not instance count; all remain FAIL",
+  "counts": {
+    "topology_tail_native_contract": 19,
+    "constant_source_literal": 36,
+    "clock_reset_terminal_contract_required": 6,
+    "active_offroot_CC_SS_debt": 10,
+    "actual_fault_root_missing_consumer": 1,
+    "true_STATUS_observer_source_debt": 3,
+    "distinct_phase_rso_s_reset_coverage_debt": 1,
+    "TT_HP_fields_and_cf_source_debt": 3
+  },
+  "rows": [
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "bco0",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "bco1",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "bco2",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "bco3",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "rs_o",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "tie_hi",
+      "category": "constant_source_literal",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_c_b16_dv",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "rtl/physical/qcluster/qfd_c_b16_dv.sv"
+    },
+    {
+      "master": "qfd_ckbump",
+      "port": "rs",
+      "category": "clock_reset_terminal_contract_required",
+      "rtl": "rtl/qwen_split/qfd_link_slots.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "ccm_eo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "cct_eo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "ccv_eo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "ccw_eo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "cmd_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "dr_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "hr_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "l9_eo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "rd_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "re_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "rl_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "rr_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "rv_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "sc_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "ss_eo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_e",
+      "port": "st_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "ccm_wo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "cct_wo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "ccv_wo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "ccw_wo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "l9_eo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "sc_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "ss_wo",
+      "category": "active_offroot_CC_SS_debt",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_dv_slice2_w",
+      "port": "st_wo",
+      "category": "topology_tail_native_contract",
+      "rtl": "rtl/qwen_dv/qfd_dv_slice2_faces.sv"
+    },
+    {
+      "master": "qfd_fault_or_n4",
+      "port": "o",
+      "category": "actual_fault_root_missing_consumer",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_1_EN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh0_1_ES_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_1_EW_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh0_1_NE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh0_1_NS_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh0_1_NW_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_1_SE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_1_SN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_1_WE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_1_WN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_32_EN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_4_NE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_4_NS_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_512_EN_89x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_5_ES_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh0_5_NE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_107_EN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1088_SN_186x60",
+      "port": "tie_hi",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_10_EN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_129_WE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_ES_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_EW_65x30",
+      "port": "tie_hi",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh_1_NE_65x30",
+      "port": "tie_hi",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh_1_NS_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_landh_1_SE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_SN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_SW_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_WE_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_WN_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_1_WS_65x30",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_548_NS_95x60",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_548_WE_95x60",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_597_EW_104x60",
+      "port": "tie_hi",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_landh_597_SN_104x60",
+      "port": "tie_lo",
+      "category": "constant_source_literal",
+      "rtl": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340/pre_bind/die_glue.sv"
+    },
+    {
+      "master": "qfd_mu_ctx_rx_die",
+      "port": "ctx_user",
+      "category": "true_STATUS_observer_source_debt",
+      "rtl": "rtl/qwen_split/mu/qfd_mu_ctx_rx.sv"
+    },
+    {
+      "master": "qfd_native59_dv_service",
+      "port": "completed",
+      "category": "true_STATUS_observer_source_debt",
+      "rtl": "rtl/qwen_split/qfd_native59_dv_service.sv"
+    },
+    {
+      "master": "qfd_rlyr_1_ES_65x30",
+      "port": "ck_o",
+      "category": "clock_reset_terminal_contract_required",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_rlyr_1_EW_65x30",
+      "port": "ck_o",
+      "category": "clock_reset_terminal_contract_required",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_rlyr_1_NS_65x30",
+      "port": "ck_o",
+      "category": "clock_reset_terminal_contract_required",
+      "rtl": "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+    },
+    {
+      "master": "qfd_rst_rep",
+      "port": "q1",
+      "category": "clock_reset_terminal_contract_required",
+      "rtl": "physical/qwen_rst_rep/qfd_rst_rep_masters.sv"
+    },
+    {
+      "master": "qfd_rst_rep_p8",
+      "port": "q1",
+      "category": "clock_reset_terminal_contract_required",
+      "rtl": "physical/qwen_rst_rep/qfd_rst_rep_masters.sv"
+    },
+    {
+      "master": "qfd_rstseq",
+      "port": "rso_s",
+      "category": "distinct_phase_rso_s_reset_coverage_debt",
+      "rtl": "rtl/qwen_split/qfd_link_slots.sv"
+    },
+    {
+      "master": "qfd_sys_face_mu_dhobs",
+      "port": "res_user",
+      "category": "true_STATUS_observer_source_debt",
+      "rtl": "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv"
+    },
+    {
+      "master": "qfd_tt_ctlm_dv",
+      "port": "cf",
+      "category": "TT_HP_fields_and_cf_source_debt",
+      "rtl": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv"
+    },
+    {
+      "master": "qfd_tt_ctlm_dv",
+      "port": "emb_position",
+      "category": "TT_HP_fields_and_cf_source_debt",
+      "rtl": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv"
+    },
+    {
+      "master": "qfd_tt_ctlm_dv",
+      "port": "emb_user",
+      "category": "TT_HP_fields_and_cf_source_debt",
+      "rtl": "rtl/qwen_dv/qfd_tt_ctlm_dv.sv"
+    }
+  ]
+}
