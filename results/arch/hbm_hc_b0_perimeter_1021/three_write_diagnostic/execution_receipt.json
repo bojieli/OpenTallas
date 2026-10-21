@@ -1,0 +1,30 @@
+[
+  {
+    "case": "baseline",
+    "corner": "tt",
+    "rc": 0,
+    "log": "baseline_tt.log",
+    "sha256": "ab682edc0a0932b6237e73997771b906031c8e9dec592fe5c9b8887249d4d246"
+  },
+  {
+    "case": "baseline",
+    "corner": "ff",
+    "rc": 0,
+    "log": "baseline_ff.log",
+    "sha256": "5bc3f1b799a6fd35589386b4bdbe3c9b32d3fc021176e8f5695a08a54ee1d748"
+  },
+  {
+    "case": "candidate",
+    "corner": "tt",
+    "rc": 0,
+    "log": "candidate_tt.log",
+    "sha256": "efa9295c2c4b5affd88c3d029277bf82b5a1d50865ceed6a7ae7914ec54f8982"
+  },
+  {
+    "case": "candidate",
+    "corner": "ff",
+    "rc": 0,
+    "log": "candidate_ff.log",
+    "sha256": "2d2f583a96a64af3754fba2571e8cfaf217a4ce344e766c37dc0349beda416b7"
+  }
+]
