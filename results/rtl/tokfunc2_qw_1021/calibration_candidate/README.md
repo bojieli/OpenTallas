@@ -1,0 +1,7 @@
+# Calibration XC pre-arm candidate
+
+Source-only candidate pending its minimal cal-only replay. Existing STG3 is not edited. The old positive calibration witness correctly raises an unarmed ARF-root fault: AR138..145 and360..367 precede firstXC502. The candidate arms each eight-word probe before STN, then uses a one-word gather marker for the actual single ARX word. XC latency is selected by its unique tag rather than the first CC pulse. No DUT, arithmetic, KC lowering, clock or data timing is changed.
+
+The original fresh STG3 binaries are independently identified without inventing a prospective build_identity manifest: all31 original Verilator source records perconfiguration match the committed c0 RTL, except the a83 station tail overlay. Each original content hash, size, inode and recorded times still matches. main2.cpp equals c0 and its unchanged source predates the compiled main2.o. Original commands, build output, compiler records, overlay digest and binary hashes are retained. The cache-hash formula and every comparison are explicit in original_source_verification.json.
+
+This verification does not satisfy the future211 reuse-guard manifest requirement and creates no new historical attestation. The only authorized reuse is a private, checksum-checked calibration-only probe of these already fresh-built binaries. No full527 duplicate or selected-S8/sole73 qualification follows. Historical STG2 remains DIAG. The current token price remains held.
