@@ -196,6 +196,8 @@ def _src_of(model, inst):
     rev = {v: k for k, v in NG_INST.items()}
     if inst in rev and rev[inst] in NG_MASTER:
         return NG_MASTER[rev[inst]][1]
+    if inst == 'd2d_rom':
+        return model['static_link_bind']['source']
     return dict(d2d_rom='rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv',
                 tt_ctlm='rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv',
                 io_collective='rtl/physical/ot_qfd_collective_static_io_production.sv',
