@@ -14,7 +14,8 @@ stage's worst-pair ROM load (dense intercept + N x per-expert slope, both from x
 allocator) is equal; the exact per-stage verdict is then a full xs_capacity run of each distinct stage.
 
     xs_stage_map.py build --stages 97 --probe PROBE_SUMMARY.json --out MAP.json --specs SPECS.json [--plan NAME]
-    xs_stage_map.py merge --map MAP.json --runs RUN_SUMMARY.json [...]      # writes the exact verdict into the map
+    xs_stage_map.py merge --map MAP.json --runs RUN_SUMMARY.json [...] [--cover] [--die-frames 122 --rom-slots 1130]
+                                                                        # writes the exact verdict into the map
     xs_stage_map.py minstages --probe PROBE_SUMMARY.json                   # the fewest stages the probe costs admit
 """
 from __future__ import annotations
@@ -191,17 +192,35 @@ def cmd_build(a):
     return 0
 
 
+def _pin_env(env):
+    """the OT_XS_* flags that change the allocator result (seconds/paths excluded): runs only cover each other on equal pins"""
+    return {k: v for k, v in sorted((env or {}).items()) if k.startswith('OT_XS_') and k != 'OT_XS_STAGE_MAP'}
+
+
 def cmd_merge(a):
     m = json.loads(Path(a.map).read_text())
-    res = {}
+    res, recs = {}, []
     for f in a.runs:
         r = json.loads(Path(f).read_text())
         for s in r['specs']:
             res[s['id']] = dict(s, run=str(f), env=r['env'])
+            recs.append(res[s['id']])
+    envs = {json.dumps(_pin_env(r['env'])) for r in recs}
+    if a.cover and len(envs) > 1:   # DRIVE-S81-MAP141: covering across runs is only sound on one pinned flag set
+        raise SystemExit(f'merge --cover: runs disagree on OT_XS_* pins: {sorted(envs)}')
     miss = []
     for s in m['stages']:
-        if s['spec'] in res:
-            cap = dict(res[s['spec']])
+        rec = res.get(s['spec'])
+        if rec is None and a.cover:
+            # DRIVE-S81-MAP141 (S81-SWEET coverage rule): a stage with dense layer L and N experts is covered by a PASS record
+            # of the SAME dense layer (None = expert-only) with >= N experts under the same pins -- the q/bf fill is monotone
+            # in N on a fixed dense op set; the calendar-row check is re-done below on this stage's own rows.
+            c = [r for r in recs if r.get('pass') and r.get('dense_layer') == s['dense_layer'] and r['experts'] >= s['n_experts']]
+            if c:
+                rec = dict(min(c, key=lambda r: (r['experts'], r['id'])))
+                rec['covered_by'] = rec['id']
+        if rec is not None:
+            cap = dict(rec)
             cap['calendar_rows'] = s['calendar_rows']
             cap['calendar_margin'] = XC.CAL_ROWS - s['calendar_rows']
             cap['pass'] = bool(cap['pass']) and s['calendar_rows'] <= XC.CAL_ROWS
@@ -211,6 +230,12 @@ def cmd_merge(a):
     m['verdict'] = dict(stages_checked=len(m['stages']) - len(miss), missing=sorted(set(miss)),
                         stages_pass=sum(1 for s in m['stages'] if s.get('capacity', {}).get('pass')),
                         all_pass=not miss and all(s['capacity']['pass'] for s in m['stages']))
+    if a.cover:
+        m['verdict']['rule'] = 'exact id, else covered by a PASS of the same dense layer with >= N experts (same OT_XS_* pins)'
+    if recs and len(envs) == 1:
+        m['verdict']['env'] = _pin_env(recs[0]['env'])
+    if a.die_frames is not None:   # DRIVE-S81-MAP141: the die inventory this map was qualified on (dv_plan --stage-map asserts it)
+        m['die_frames'], m['rom_slots'] = a.die_frames, a.rom_slots
     Path(a.out or a.map).write_text(json.dumps(m, indent=1) + '\n')
     print('STAGE_MAP_VERDICT', json.dumps(m['verdict']))
     return 0 if m['verdict']['all_pass'] else 1
@@ -260,6 +285,9 @@ def main(argv=None):
     g.add_argument('--map', required=True)
     g.add_argument('--runs', nargs='+', required=True)
     g.add_argument('--out')
+    g.add_argument('--cover', action='store_true', help='DRIVE-S81-MAP141: accept a PASS of the same dense layer with >= N experts')
+    g.add_argument('--die-frames', type=int, help='record the frame inventory the runs used (dv_plan --stage-map asserts it)')
+    g.add_argument('--rom-slots', type=int)
     n = sp.add_parser('minstages')
     n.add_argument('--probe', required=True)
     t = sp.add_parser('table')

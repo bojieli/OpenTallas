@@ -1605,7 +1605,7 @@ def main():
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
     ap.add_argument('--stage-map', default=None, help='DRIVE-S81-IDX4: bind a committed stage map (xs_stage_map v1) to the plan: '
-                    'facts.stage_map = path/sha/stages/dies; asserts the map verdict all_pass and the 122-frame / 1130-slot inventory for f122 maps')
+                    'facts.stage_map = path/sha/stages/dies; asserts the map verdict all_pass and the die inventory the map was qualified on (map die_frames/rom_slots, else 122/1130 for f122 maps)')
     ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3, 4), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped; 4 = S81-IDX3M: 8 NON-INLINE readers dsdv_idx_rg3 in the PHY corner strips as static-slot clients of dsfd_ctrl_rg3 (122 frames kept, svc_rs <-> ctrl links unchanged) (0 default, byte-identical)')
     ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='MODEL ONLY: actual controller body centered in each unchanged 531.25-um PHY pitch; rederive reader/service rows and all links')
     ap.add_argument('--rsv-vcol', type=int, default=0, help='S81-DIE11 mu7 (p4l MU): add K x 43.2-um lattice columns to every svc_rs column gap (V die channels)')
@@ -1713,11 +1713,16 @@ def main():
         import hashlib
         raw = Path(a.stage_map).read_bytes(); sm = json.loads(raw)
         assert sm.get('verdict', {}).get('all_pass'), ('stage map capacity verdict not all_pass', a.stage_map)
-        if '122-frame' in sm.get('plan', ''):
-            assert facts['n_frames'] == 122 and facts.get('rom_slots') == 1130, ('f122 stage map needs the 122-frame / 1130-slot die', facts['n_frames'], facts.get('rom_slots'))
+        # DRIVE-S81-MAP141: parameterised by the map file -- the map's own die_frames / rom_slots (written by xs_stage_map
+        # merge --die-frames) else the legacy '122-frame' plan text; a 98-frame die needs a map qualified on 98 frames.
+        want = (sm['die_frames'], sm.get('rom_slots')) if sm.get('die_frames') else ((122, 1130) if '122-frame' in sm.get('plan', '') else None)
+        if want:
+            assert facts['n_frames'] == want[0] and (want[1] is None or facts.get('rom_slots') == want[1]), \
+                ('stage map qualified on another die inventory', a.stage_map, want, facts['n_frames'], facts.get('rom_slots'))
+        assert sm['stages_count'] == len(sm['stages']), ('stage map stage count mismatch', sm['stages_count'], len(sm['stages']))
         facts['stage_map'] = dict(path=str(a.stage_map), sha256=hashlib.sha256(raw).hexdigest(), stages=sm['stages_count'],
                                   rank_dies_per_stage=sm['rank_dies_per_stage'], layer_dies=sm['layer_dies'], plan=sm.get('plan'),
-                                  verdict=sm['verdict'])
+                                  die_frames=want and want[0], verdict=sm['verdict'])
     if LK_SLOTS:   # MU-S81-2/DIE: p4l_lkcol rev2 slot geometry, post-hoc (facts unchanged, as p4l -> p4l_lkcol)
         ref = {b['name']: b for b in json.load(open(LK_SLOTS))['blocks'] if b['name'].startswith('lk_')}
         for b in P.blocks:
