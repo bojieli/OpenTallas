@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.tkm_adoption_source_plan.v1",
+ "status": "SOURCE_CANDIDATE_UNQUALIFIED_NO_RETRY",
+ "model_commit": "54cf32386",
+ "preserved_current_die_commit": "5e0e107d5",
+ "preserved_current_static_blob": "8b47ce72f",
+ "candidate_engine_base_commit": "39d901240",
+ "candidate_engine_base_blob": "d6ab055938dcda8eb47fb689e12b2cbd626b33a3",
+ "candidate_source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tp192_f32s1.sv",
+ "candidate_sha256": "61ac2f0d287156108eb762492844273f7483b51bfb0a4d3749a926ca55ec7660",
+ "new_graph_master": "ot_hgi_coll_tkm_m_tp192_f32s1",
+ "new_clock_abi": {
+  "tile_clk_bits": 160,
+  "old_bits": 32,
+  "tile_entry_mapping": "tile_clk[5*t+0]=clk; +1..4=clk_r0..3",
+  "distinct_references_required": true
+ },
+ "composition_layer": "new additive l31 after compose_release_r14 then l28/l29/l30, never rewrite inherited9d1a3f20 base",
+ "graph_instance": "tkm_SW",
+ "physical_child": {
+  "top": "ot_hgi_coll_tkm_tile_e86",
+  "params": {
+   "FAN32": 2,
+   "SEAM": 1
+  },
+  "bbox_um": [
+   302.4,
+   302.4
+  ],
+  "gate_verdict": "WARN",
+  "route_status": "CANCELLED_INFRA_ARCHIVED_NO_CLOSED_VIEW"
+ },
+ "unchanged_canonical_files": [
+  "ot_hgi_coll_tkm_static.sv",
+  "ot_hgi_coll_tkm.sv",
+  "ot_hfd_coll_q_hard_v5.sv"
+ ],
+ "next_necessary_checks": [
+  "source-cut compile and exact whole-engine TP192 calendar test for new named source, using actual fixture stream",
+  "existing tile lockstep FAN322/SEAM1 receipt does not qualify full engine or parent160clock ABI",
+  "coherent compiler/calendar first/clear/read+32, second/finish+64, cap_tap+1",
+  "parent geometry/160actualclockref delivery and future CLOSED exactleaf binding",
+  "normal continuation from verified archived E86 route only after selected-source binding and explicit admission; no alias/retry now"
+ ]
+}
