@@ -31,7 +31,11 @@ QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_imag
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
 CONNECTED_LOWERING=${CONNECTED_LOWERING:-0}
 CONNECTED_ARGS=(); HC_ARGS=(); CUT_ARGS=()
-SU_LOWER2=${SU_LOWER2:-0}   # TOK-FUNC2-HBM-SU opt-in: production SU lowerings by record profile (layer_images --su-lower2)
+# TOK-FUNC2-HBM-SU: production SU lowerings by record profile (layer_images --su-lower2). Token runs (CONNECTED_LOWERING=1)
+# use it by default: every su_record-based record gets the safe-calendar reader/drain contract (absent roles read A's
+# own bank -- pgslice.sv:303 -- and the drain samples one edge after the lane write). Plain --safe-calendar refuses
+# every record outside its single tested A->O profile (ValueError), so it cannot be the layer emission.
+SU_LOWER2=${SU_LOWER2:-$CONNECTED_LOWERING}
 if [ "$CONNECTED_LOWERING" = 1 ]; then
   CONNECTED_ARGS=(--connected-lowering --side-source "$OUT/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv")
   HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}")
