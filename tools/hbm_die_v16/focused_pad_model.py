@@ -30,6 +30,8 @@ def main():
     ap.add_argument('--slot',default='d4f_relay_sink:pgp_NE.command->su_NE1')
     ap.add_argument('--bus', required=True, help='exact relay_splice_v2 bus identity; a slot can contain several chains')
     ap.add_argument('--macro-only', action='store_true', help='diagnostic upper bound: all other relay rows require joint replanning; never a physical pass')
+    ap.add_argument('--landing-direction', choices=('WE','EW','NS','SN'),
+                    help='MODEL ONLY different physical landing wrapper; requires source generation/native view qualification before use')
     a=ap.parse_args(); packet,spec,man,sizes,end,stations=(load(getattr(a,n)) for n in
         ('sites','layer','manifest','size_manifest','endpoint','stations'))
     by_inst={i['name']: i for i in spec['instances']}
@@ -41,6 +43,9 @@ def main():
         target.append((key,packet['rows'][key]))
     if any(v['slot']!=a.slot or v['instances']!=names for (_,v),names in zip(target,sinkinfo['chain'])):
         raise ValueError('actual ordered splice stage/slot identity mismatch')
+    if a.landing_direction:
+        target[0][1]['master']=target[0][1]['master'].rsplit('_',1)[0]+'_'+a.landing_direction
+        target[0][1]['direction']=a.landing_direction
     if not target:raise ValueError('focused slot missing')
     exact={}
     for v in sizes['placement'].values():
@@ -168,6 +173,7 @@ def main():
                 selected=selected,missing_master_dimensions=sorted(missing),max_window_ratio=ratio,
                 conservative_family_dimension_fallbacks=fallback,
                 other_relay_rows_held_fixed=not a.macro_only,
+                source_orientation_change_required=a.landing_direction,
                 all_pin_envelope_hops_um=envelope,
                 input_sha256={n:hashlib.sha256(Path(getattr(a,n)).read_bytes()).hexdigest() for n in
                               ('sites','layer','manifest','size_manifest','endpoint','stations')},
