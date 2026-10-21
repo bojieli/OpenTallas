@@ -132,7 +132,7 @@ def write_replay_prog(die, prog, rows, host, pd, entry):
         timing_contract=die.timing_contract, events=sorted(prog.events, key=lambda e: e['cycle']),
         port_valid=prog.port_valid, links=links,
         calendar=[dict(i=i, issue=r['issue'], engine=r['eng'], arg=r['arg'], what=r.get('what')) for i, r in enumerate(rows)],
-        input_sources=entry['input_sources']), indent=1)+'\n')
+        input_sources=entry['input_sources'], fixture_meta_sha256=entry['fixture_meta_sha256']), indent=1)+'\n')
     (pd/'manifest.json').write_text(json.dumps(dict(schema='opentallas.s81.entry_replay_prog.v1',
         die_v_sha256=die.die_sha), indent=1)+'\n')
 
