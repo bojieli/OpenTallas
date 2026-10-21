@@ -74,6 +74,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   .rd_clk(hbm_clk),.rd_rst_n(h_rst[14]),.src_fault(stream_fault),.dst_fault(stf2),.wr_overflow(),.rd_underflow());
  wire desc_wr_ready,desc_rd_valid,desc_rd_ready,desc_ov,desc_un;
  wire [DW-1:0] desc_data;
+ wire desc_wr_reset,desc_rd_reset;
+ ot_hbm_svc_local_and2 u_dwrreset(.a(s_rst[2]),.b(1'b1),.y(desc_wr_reset));
+ ot_hbm_svc_local_and2 u_drdreset(.a(h_rst[1]),.b(1'b1),.y(desc_rd_reset));
  assign reserve_ready=sc[0]&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
  // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2): the descriptor FIFO is DSN BIT-SLICED instances of the
@@ -95,9 +98,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  generate for(ds=0;ds<DSN;ds=ds+1)begin:dsl
   localparam integer W=(ds==DSN-1)?(DW-DSW*(DSN-1)):DSW;
   ot_hbm_svc_async_fifo #(.WIDTH(W),.DEPTH(4)) u_descriptor(
-   .wr_clk(stream_clk),.wr_rst_n(s_rst[2]),.wr_valid(reserve_fire&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
+   .wr_clk(stream_clk),.wr_rst_n(desc_wr_reset),.wr_valid(reserve_fire&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
    .wr_data(desc_wd[ds*DSW+:W]),.wr_overflow(ds_ov[ds]),
-   .rd_clk(hbm_clk),.rd_rst_n(h_rst[1]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
+   .rd_clk(hbm_clk),.rd_rst_n(desc_rd_reset),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
    .rd_data(desc_data[ds*DSW+:W]),.rd_underflow(ds_un[ds]));
  end endgenerate
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);
