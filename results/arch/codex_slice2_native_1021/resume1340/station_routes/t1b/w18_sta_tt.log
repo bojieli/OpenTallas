@@ -1,0 +1,220 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 392 input pin flops (0 hard-child clock pins at +insertion), median arrival 244.194305 (range 224.551727 .. 300.337372)
+QDM reference pin g_pin.r[305]$_DFF_P_/CLK clock arrival max 244.194305 min 228.643051 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 228.643051 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CORNER tt
+OT_WS -6.79852840690387e-11
+OT_TNS -3.025395489686389e-9
+Startpoint: u_safe_reset.g_leaf[35].u_l/q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_nb[1].u_o/q[9]$_DFF_PN0_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  41.50   41.50 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.89   65.39 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.40   93.79 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.41  125.20 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  34.30  159.50 ^ clkbuf_4_7_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.86  188.36 ^ clkbuf_6_29__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  73.62  261.98 ^ clkbuf_leaf_468_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   1.08  263.06 ^ u_safe_reset.g_leaf[35].u_l/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  48.48  311.54 v u_safe_reset.g_leaf[35].u_l/q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  20.90  332.44 v u_safe_reset.g_leaf[35].u_l/hold3734/Y (BUFx2_ASAP7_75t_R)
+  19.98  352.42 v u_safe_reset.g_leaf[35].u_l/hold3653/Y (BUFx2_ASAP7_75t_R)
+  16.92  369.34 ^ u_safe_reset.g_leaf[35].u_l/_1_/Y (INVx3_ASAP7_75t_R)
+  51.28  420.62 ^ g_nb[1].u_o/hold3654/Y (BUFx2_ASAP7_75t_R)
+   5.81  426.43 ^ g_nb[1].u_o/q[9]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         426.43   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck (in)
+  39.51  872.84 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.49  896.33 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  27.40  923.74 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.90  953.64 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.22  985.86 ^ clkbuf_4_7_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  46.47 1032.33 ^ clkbuf_6_31__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.35 1068.68 ^ clkbuf_leaf_441_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   1.09 1069.77 ^ g_nb[1].u_o/q[9]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1009.77   clock uncertainty
+   6.97 1016.74   clock reconvergence pessimism
+  22.55 1039.29   library recovery time
+        1039.29   data required time
+---------------------------------------------------------
+        1039.29   data required time
+        -426.43   data arrival time
+---------------------------------------------------------
+         612.86   slack (MET)
+
+
+Startpoint: g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_sc[1].u_mul.g_exact.u_d.u_40/Q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  41.50   41.50 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.89   65.39 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.40   93.79 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.41  125.20 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  36.37  161.57 ^ clkbuf_4_4_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.27  192.84 ^ clkbuf_6_17__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  33.76  226.60 ^ clkbuf_leaf_502_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   2.72  229.32 ^ g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  56.93  286.25 v g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  11.16  297.42 ^ g_sc[1].u_mul.g_exact.u_d.u_3/_1_/Y (INVx3_ASAP7_75t_R)
+  38.46  335.88 ^ _44388_/Y (AND4x2_ASAP7_75t_R)
+  40.62  376.50 ^ _44389_/Y (AND5x2_ASAP7_75t_R)
+  38.98  415.48 ^ _44934_/Y (AND5x2_ASAP7_75t_R)
+  35.16  450.64 ^ _44935_/Y (AND5x2_ASAP7_75t_R)
+  21.16  471.80 ^ _44936_/Y (AND2x4_ASAP7_75t_R)
+  27.05  498.85 ^ _44937_/Y (AND3x4_ASAP7_75t_R)
+  10.55  509.40 v _44938_/Y (NAND2x2_ASAP7_75t_R)
+  40.39  549.78 v _44939_/Y (OR3x2_ASAP7_75t_R)
+  12.41  562.19 ^ _44940_/Y (NOR2x2_ASAP7_75t_R)
+  21.25  583.44 ^ _47543_/Y (AND2x2_ASAP7_75t_R)
+  37.52  620.96 v _47544_/Y (XNOR2x2_ASAP7_75t_R)
+  21.80  642.76 v g_sc[1].u_mul.g_exact.u_d.u_dup_n_7202_2/_0_/Y (AND2x4_ASAP7_75t_R)
+   8.18  650.94 ^ _44951_/Y (INVx4_ASAP7_75t_R)
+   8.53  659.47 v _44952_/Y (NAND2x2_ASAP7_75t_R)
+  20.24  679.70 v _45093_/Y (OA21x2_ASAP7_75t_R)
+  34.96  714.67 v _45096_/Y (OR4x1_ASAP7_75t_R)
+  28.41  743.08 v _45109_/Y (OR3x1_ASAP7_75t_R)
+  42.13  785.21 v _45121_/Y (OR5x1_ASAP7_75t_R)
+  30.70  815.90 v _45147_/Y (OR3x1_ASAP7_75t_R)
+  48.19  864.10 v _45182_/Y (OR5x1_ASAP7_75t_R)
+  39.24  903.34 v _45183_/Y (OR4x1_ASAP7_75t_R)
+  50.35  953.68 v _45208_/Y (OR5x1_ASAP7_75t_R)
+  13.19  966.87 ^ _45209_/Y (NOR2x1_ASAP7_75t_R)
+  29.97  996.84 ^ _45210_/Y (AO21x2_ASAP7_75t_R)
+  35.28 1032.12 ^ g_sc[1].u_mul.g_exact.u_d.u_dup_n_191_0/_0_/Y (OR2x6_ASAP7_75t_R)
+  13.34 1045.46 v g_sc[1].u_mul.g_exact.u_d.u_40/_4_/Y (INVx3_ASAP7_75t_R)
+  17.68 1063.14 v g_sc[1].u_mul.g_exact.u_d.u_40/_5_/Y (AND2x4_ASAP7_75t_R)
+   0.08 1063.22 v g_sc[1].u_mul.g_exact.u_d.u_40/Q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+        1063.22   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck (in)
+  39.51  872.84 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+  23.49  896.33 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  27.40  923.74 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.90  953.64 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  33.88  987.52 ^ clkbuf_4_4_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.43 1016.94 ^ clkbuf_6_17__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.35 1046.29 ^ clkbuf_leaf_501_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   0.99 1047.28 ^ g_sc[1].u_mul.g_exact.u_d.u_40/Q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  987.28   clock uncertainty
+   9.23  996.51   clock reconvergence pessimism
+  -1.28  995.23   library setup time
+         995.23   data required time
+---------------------------------------------------------
+         995.23   data required time
+        -1063.22   data arrival time
+---------------------------------------------------------
+         -67.99   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 82
+OT_WS_REG_D -67.985283
+OT_WS_OUT 320.322601
+OT_WS_R2R -67.985283
+OT_WS_I2R 386.756805
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_40/Q$_SDFF_PP0_/D -67.985283
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_44/Q$_SDFF_PP0_/D -67.436722
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_46/Q$_SDFF_PP0_/D -67.128525
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_41/Q$_SDFF_PP0_/D -67.095993
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_45/Q$_SDFF_PP0_/D -67.040817
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_42/Q$_SDFF_PP0_/D -66.958885
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_47/Q$_SDFF_PP0_/D -66.647797
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_43/Q$_SDFF_PP0_/D -66.562866
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_39/Q$_SDFF_PP0_/D -66.558540
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_48/Q$_SDFF_PP0_/D -66.512238
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_69/Q$_SDFF_PP0_/D -65.747078
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_59/Q$_SDFF_PP0_/D -65.721985
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_68/Q$_SDFF_PP0_/D -65.607521
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_58/Q$_SDFF_PP0_/D -65.337067
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_55/Q$_SDFF_PP0_/D -65.239594
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_57/Q$_SDFF_PP0_/D -65.181419
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_56/Q$_SDFF_PP0_/D -64.878654
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_70/Q$_SDFF_PP0_/D -64.469429
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_61/Q$_SDFF_PP0_/D -64.049324
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_50/Q$_SDFF_PP0_/D -64.022789
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_60/Q$_SDFF_PP0_/D -63.952732
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_62/Q$_SDFF_PP0_/D -63.952511
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_66/Q$_SDFF_PP0_/D -63.664631
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_64/Q$_SDFF_PP0_/D -63.287930
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_49/Q$_SDFF_PP0_/D -63.241634
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_65/Q$_SDFF_PP0_/D -63.217098
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_53/Q$_SDFF_PP0_/D -62.993721
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_51/Q$_SDFF_PP0_/D -62.959415
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_63/Q$_SDFF_PP0_/D -62.763241
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_52/Q$_SDFF_PP0_/D -62.649887
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_67/Q$_SDFF_PP0_/D -62.563511
+OT_PATH g_sc[1].u_mul.g_exact.u_d.u_3/Q$_DFF_P_/QN g_sc[1].u_mul.g_exact.u_d.u_54/Q$_SDFF_PP0_/D -62.447048
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_65/Q$_SDFF_PP0_/D -31.084690
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_56/Q$_SDFF_PP0_/D -30.885738
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_45/Q$_SDFF_PP0_/D -30.501490
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_67/Q$_SDFF_PP0_/D -30.452530
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_51/Q$_SDFF_PP0_/D -30.448421
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_68/Q$_SDFF_PP0_/D -30.408787
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_43/Q$_SDFF_PP0_/D -30.385471
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_41/Q$_SDFF_PP0_/D -30.370707
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_66/Q$_SDFF_PP0_/D -30.308867
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_44/Q$_SDFF_PP0_/D -30.221159
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_52/Q$_SDFF_PP0_/D -29.975466
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_69/Q$_SDFF_PP0_/D -29.870884
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_39/Q$_SDFF_PP0_/D -29.800718
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_46/Q$_SDFF_PP0_/D -29.777182
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_58/Q$_SDFF_PP0_/D -29.765745
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_64/Q$_SDFF_PP0_/D -29.741322
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_50/Q$_SDFF_PP0_/D -29.567682
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_40/Q$_SDFF_PP0_/D -29.524939
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_61/Q$_SDFF_PP0_/D -29.300117
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_63/Q$_SDFF_PP0_/D -29.222847
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_57/Q$_SDFF_PP0_/D -29.203196
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_70/Q$_SDFF_PP0_/D -29.043213
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_60/Q$_SDFF_PP0_/D -29.023895
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_55/Q$_SDFF_PP0_/D -29.016901
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_54/Q$_SDFF_PP0_/D -28.935965
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_48/Q$_SDFF_PP0_/D -28.931746
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_59/Q$_SDFF_PP0_/D -28.883562
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_53/Q$_SDFF_PP0_/D -28.786972
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_47/Q$_SDFF_PP0_/D -28.759106
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_49/Q$_SDFF_PP0_/D -28.580915
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_42/Q$_SDFF_PP0_/D -28.380299
+OT_PATH g_sc[0].u_mul.g_exact.u_d.u_1/Q$_DFF_P_/QN g_sc[0].u_mul.g_exact.u_d.u_62/Q$_SDFF_PP0_/D -28.359203

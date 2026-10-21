@@ -1,0 +1,35 @@
+{
+  "observed_at": "2026-10-21T14:20:30.174179-07:00",
+  "source": "5de01e82fa3fa56698e249d7c3f851f5bd2a8b8f",
+  "physical_verdict": "FAIL",
+  "daemon_status": "READY waiting benches; no CLOSED view",
+  "scope": "actual route final; functional48row proof is separate",
+  "jobs": {
+    "t1a": {
+      "setup_tt_ps": -58.05,
+      "hold_ff_ps": 14.65,
+      "violating_d_pins": 82,
+      "closes_signoff": false,
+      "sha256": {
+        "w18_sta_tt.log": "eb16517b783487e515c98ff80ca7efdf61c00a1a993b5eddb234028a5eb30840",
+        "physical.json": "32d96a6d573d5abd7303c841350586210557dbb506bdaa8e99f3125cbc9d2f5b",
+        "STATUS": "225a89cfd3591b97ee609e5da95bb64090ecc7827fbe394911794f9ef5f68f83",
+        "sta.log": "63adc4c9edd0f8d210c92ffca082ff6b2047fe90b5ddf8cf679be3596810f2d0",
+        "corner_sta.json": "530a833b3d4339b97a474ecb311a5a7b6dab73a7af5c372324682e494a9a01d1"
+      }
+    },
+    "t1b": {
+      "setup_tt_ps": -67.99,
+      "hold_ff_ps": 12.34,
+      "violating_d_pins": 82,
+      "closes_signoff": false,
+      "sha256": {
+        "w18_sta_tt.log": "6b1c6fc84a23ba9a43cede96f4793d615a3c51864e8772acdefcd5fef088062e",
+        "physical.json": "b17bb75e5fd07e8208fde53836486c1d6b27029fc1c78950f8ff7aafcc2d73c4",
+        "STATUS": "c6a8367b019dc86a848c6c1d4d699a8e247ef892189fb5eb98867d4b4fd3af1a",
+        "sta.log": "cd353139d53942f6a113ba8cd0408614d6a07cbdf8912faed9421a612e037383",
+        "corner_sta.json": "c6e8cca5d74ca22480e96f14ddc04c097f15678e60c9e99b1e88cbbb12c9490d"
+      }
+    }
+  }
+}
