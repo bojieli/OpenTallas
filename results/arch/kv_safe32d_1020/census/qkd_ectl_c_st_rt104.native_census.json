@@ -1,0 +1,2012 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "liberty": [
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+   "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+  },
+  {
+   "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+   "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+  }
+ ],
+ "netlist": {
+  "path": "/work/results/asap7/opentallas_qkd_ectl_c_st_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "7c961e504ab2b7e684711d958cfd3c239f7f4193e38bb21e4abafdb528ab969a"
+ },
+ "top": "qkd_ectl_c_st",
+ "status": "FAIL",
+ "limit": 32,
+ "roots_examined": 6774,
+ "max_dynamic_loads": 303,
+ "constant_output_bits": [
+  {
+   "port_bit": "so[319]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9418_"
+   ]
+  },
+  {
+   "port_bit": "so[331]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9430_"
+   ]
+  },
+  {
+   "port_bit": "so[347]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9446_"
+   ]
+  },
+  {
+   "port_bit": "so[6]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9372_"
+   ]
+  },
+  {
+   "port_bit": "so[392]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9491_"
+   ]
+  },
+  {
+   "port_bit": "so[408]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9507_"
+   ]
+  },
+  {
+   "port_bit": "so[379]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9478_"
+   ]
+  },
+  {
+   "port_bit": "so[397]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9496_"
+   ]
+  },
+  {
+   "port_bit": "so[407]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9506_"
+   ]
+  },
+  {
+   "port_bit": "so[306]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9405_"
+   ]
+  },
+  {
+   "port_bit": "so[333]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9432_"
+   ]
+  },
+  {
+   "port_bit": "so[349]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9448_"
+   ]
+  },
+  {
+   "port_bit": "so[320]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9419_"
+   ]
+  },
+  {
+   "port_bit": "so[348]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9447_"
+   ]
+  },
+  {
+   "port_bit": "so[7]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9373_"
+   ]
+  },
+  {
+   "port_bit": "so[290]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9389_"
+   ]
+  },
+  {
+   "port_bit": "so[399]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9498_"
+   ]
+  },
+  {
+   "port_bit": "so[409]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9508_"
+   ]
+  },
+  {
+   "port_bit": "so[386]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9485_"
+   ]
+  },
+  {
+   "port_bit": "so[396]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9495_"
+   ]
+  },
+  {
+   "port_bit": "so[313]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9412_"
+   ]
+  },
+  {
+   "port_bit": "so[363]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9462_"
+   ]
+  },
+  {
+   "port_bit": "so[340]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9439_"
+   ]
+  },
+  {
+   "port_bit": "so[356]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9455_"
+   ]
+  },
+  {
+   "port_bit": "so[350]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9449_"
+   ]
+  },
+  {
+   "port_bit": "so[327]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9426_"
+   ]
+  },
+  {
+   "port_bit": "so[368]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9467_"
+   ]
+  },
+  {
+   "port_bit": "so[292]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9391_"
+   ]
+  },
+  {
+   "port_bit": "so[365]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9464_"
+   ]
+  },
+  {
+   "port_bit": "so[355]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9454_"
+   ]
+  },
+  {
+   "port_bit": "so[304]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9403_"
+   ]
+  },
+  {
+   "port_bit": "so[12]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9378_"
+   ]
+  },
+  {
+   "port_bit": "so[388]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9487_"
+   ]
+  },
+  {
+   "port_bit": "so[25]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9380_"
+   ]
+  },
+  {
+   "port_bit": "so[297]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9396_"
+   ]
+  },
+  {
+   "port_bit": "so[291]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9390_"
+   ]
+  },
+  {
+   "port_bit": "so[1]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9367_"
+   ]
+  },
+  {
+   "port_bit": "so[284]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9383_"
+   ]
+  },
+  {
+   "port_bit": "so[403]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9502_"
+   ]
+  },
+  {
+   "port_bit": "so[342]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9441_"
+   ]
+  },
+  {
+   "port_bit": "so[329]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9428_"
+   ]
+  },
+  {
+   "port_bit": "so[357]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9456_"
+   ]
+  },
+  {
+   "port_bit": "so[367]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9466_"
+   ]
+  },
+  {
+   "port_bit": "so[283]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9382_"
+   ]
+  },
+  {
+   "port_bit": "so[385]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9484_"
+   ]
+  },
+  {
+   "port_bit": "so[3]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9369_"
+   ]
+  },
+  {
+   "port_bit": "so[372]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9471_"
+   ]
+  },
+  {
+   "port_bit": "so[311]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9410_"
+   ]
+  },
+  {
+   "port_bit": "so[321]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9420_"
+   ]
+  },
+  {
+   "port_bit": "so[298]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9397_"
+   ]
+  },
+  {
+   "port_bit": "so[405]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9504_"
+   ]
+  },
+  {
+   "port_bit": "so[308]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9407_"
+   ]
+  },
+  {
+   "port_bit": "so[326]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9425_"
+   ]
+  },
+  {
+   "port_bit": "so[359]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9458_"
+   ]
+  },
+  {
+   "port_bit": "so[346]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9445_"
+   ]
+  },
+  {
+   "port_bit": "so[387]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9486_"
+   ]
+  },
+  {
+   "port_bit": "so[364]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9463_"
+   ]
+  },
+  {
+   "port_bit": "so[358]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9457_"
+   ]
+  },
+  {
+   "port_bit": "so[374]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9473_"
+   ]
+  },
+  {
+   "port_bit": "so[351]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9450_"
+   ]
+  },
+  {
+   "port_bit": "so[300]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9399_"
+   ]
+  },
+  {
+   "port_bit": "so[402]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9501_"
+   ]
+  },
+  {
+   "port_bit": "so[10]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9376_"
+   ]
+  },
+  {
+   "port_bit": "so[318]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9417_"
+   ]
+  },
+  {
+   "port_bit": "so[287]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9386_"
+   ]
+  },
+  {
+   "port_bit": "so[328]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9427_"
+   ]
+  },
+  {
+   "port_bit": "so[338]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9437_"
+   ]
+  },
+  {
+   "port_bit": "so[305]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9404_"
+   ]
+  },
+  {
+   "port_bit": "so[315]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9414_"
+   ]
+  },
+  {
+   "port_bit": "so[343]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9442_"
+   ]
+  },
+  {
+   "port_bit": "so[393]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9492_"
+   ]
+  },
+  {
+   "port_bit": "so[366]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9465_"
+   ]
+  },
+  {
+   "port_bit": "so[2]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9368_"
+   ]
+  },
+  {
+   "port_bit": "so[394]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9493_"
+   ]
+  },
+  {
+   "port_bit": "so[404]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9503_"
+   ]
+  },
+  {
+   "port_bit": "so[381]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9480_"
+   ]
+  },
+  {
+   "port_bit": "so[391]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9490_"
+   ]
+  },
+  {
+   "port_bit": "so[307]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9406_"
+   ]
+  },
+  {
+   "port_bit": "so[317]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9416_"
+   ]
+  },
+  {
+   "port_bit": "so[294]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9393_"
+   ]
+  },
+  {
+   "port_bit": "so[335]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9434_"
+   ]
+  },
+  {
+   "port_bit": "so[345]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9444_"
+   ]
+  },
+  {
+   "port_bit": "so[322]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9421_"
+   ]
+  },
+  {
+   "port_bit": "so[332]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9431_"
+   ]
+  },
+  {
+   "port_bit": "so[4]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9370_"
+   ]
+  },
+  {
+   "port_bit": "so[299]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9398_"
+   ]
+  },
+  {
+   "port_bit": "so[9]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9375_"
+   ]
+  },
+  {
+   "port_bit": "so[383]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9482_"
+   ]
+  },
+  {
+   "port_bit": "so[286]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9385_"
+   ]
+  },
+  {
+   "port_bit": "so[401]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9500_"
+   ]
+  },
+  {
+   "port_bit": "so[395]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9494_"
+   ]
+  },
+  {
+   "port_bit": "so[398]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9497_"
+   ]
+  },
+  {
+   "port_bit": "so[337]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9436_"
+   ]
+  },
+  {
+   "port_bit": "so[324]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9423_"
+   ]
+  },
+  {
+   "port_bit": "so[334]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9433_"
+   ]
+  },
+  {
+   "port_bit": "so[375]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9474_"
+   ]
+  },
+  {
+   "port_bit": "so[336]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9435_"
+   ]
+  },
+  {
+   "port_bit": "so[352]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9451_"
+   ]
+  },
+  {
+   "port_bit": "so[339]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9438_"
+   ]
+  },
+  {
+   "port_bit": "so[11]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9377_"
+   ]
+  },
+  {
+   "port_bit": "so[380]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9479_"
+   ]
+  },
+  {
+   "port_bit": "so[288]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9387_"
+   ]
+  },
+  {
+   "port_bit": "so[8]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9374_"
+   ]
+  },
+  {
+   "port_bit": "x_a[50]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9512_"
+   ]
+  },
+  {
+   "port_bit": "so[316]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9415_"
+   ]
+  },
+  {
+   "port_bit": "so[384]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9483_"
+   ]
+  },
+  {
+   "port_bit": "so[293]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9392_"
+   ]
+  },
+  {
+   "port_bit": "so[400]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9499_"
+   ]
+  },
+  {
+   "port_bit": "so[344]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9443_"
+   ]
+  },
+  {
+   "port_bit": "so[354]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9453_"
+   ]
+  },
+  {
+   "port_bit": "so[325]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9424_"
+   ]
+  },
+  {
+   "port_bit": "so[341]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9440_"
+   ]
+  },
+  {
+   "port_bit": "so[382]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9481_"
+   ]
+  },
+  {
+   "port_bit": "so[353]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9452_"
+   ]
+  },
+  {
+   "port_bit": "so[0]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9366_"
+   ]
+  },
+  {
+   "port_bit": "so[369]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9468_"
+   ]
+  },
+  {
+   "port_bit": "so[285]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9384_"
+   ]
+  },
+  {
+   "port_bit": "so[295]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9394_"
+   ]
+  },
+  {
+   "port_bit": "so[5]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9371_"
+   ]
+  },
+  {
+   "port_bit": "so[282]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9381_"
+   ]
+  },
+  {
+   "port_bit": "so[323]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9422_"
+   ]
+  },
+  {
+   "port_bit": "so[310]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9409_"
+   ]
+  },
+  {
+   "port_bit": "so[361]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9460_"
+   ]
+  },
+  {
+   "port_bit": "so[371]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9470_"
+   ]
+  },
+  {
+   "port_bit": "so[373]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9472_"
+   ]
+  },
+  {
+   "port_bit": "so[389]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9488_"
+   ]
+  },
+  {
+   "port_bit": "so[376]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9475_"
+   ]
+  },
+  {
+   "port_bit": "so[360]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9459_"
+   ]
+  },
+  {
+   "port_bit": "so[370]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9469_"
+   ]
+  },
+  {
+   "port_bit": "so[309]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9408_"
+   ]
+  },
+  {
+   "port_bit": "so[302]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9401_"
+   ]
+  },
+  {
+   "port_bit": "so[296]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9395_"
+   ]
+  },
+  {
+   "port_bit": "so[312]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9411_"
+   ]
+  },
+  {
+   "port_bit": "so[314]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9413_"
+   ]
+  },
+  {
+   "port_bit": "so[289]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9388_"
+   ]
+  },
+  {
+   "port_bit": "x_b[50]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9563_"
+   ]
+  },
+  {
+   "port_bit": "so[330]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9429_"
+   ]
+  },
+  {
+   "port_bit": "so[301]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9400_"
+   ]
+  },
+  {
+   "port_bit": "so[362]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9461_"
+   ]
+  },
+  {
+   "port_bit": "so[378]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9477_"
+   ]
+  },
+  {
+   "port_bit": "so[390]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9489_"
+   ]
+  },
+  {
+   "port_bit": "so[406]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9505_"
+   ]
+  },
+  {
+   "port_bit": "so[377]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9476_"
+   ]
+  },
+  {
+   "port_bit": "so[303]",
+   "source": {
+    "kind": "liberty_function",
+    "instance": "_9365_",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "pin": "L",
+    "function": "0"
+   },
+   "transparent_path": [
+    "_9402_"
+   ]
+  }
+ ],
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true,
+ "role_errors": [],
+ "violations": [
+  {
+   "driver": "_7300_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_4008_",
+   "loads": 98,
+   "endpoints": 40
+  },
+  {
+   "driver": "_7308_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_4015_",
+   "loads": 93,
+   "endpoints": 40
+  },
+  {
+   "driver": "_7387_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_4094_",
+   "loads": 62,
+   "endpoints": 40
+  },
+  {
+   "driver": "_7390_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_4097_",
+   "loads": 62,
+   "endpoints": 40
+  },
+  {
+   "driver": "_7703_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_4377_",
+   "loads": 62,
+   "endpoints": 40
+  },
+  {
+   "driver": "_7869_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_4511_",
+   "loads": 62,
+   "endpoints": 40
+  },
+  {
+   "driver": "u_ot_pr_core.u.lmax_any[0]$_DFFE_PN0P_/QN",
+   "driver_role": "sequential",
+   "net": "_3078_",
+   "loads": 129,
+   "endpoints": 40
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_rc.q$_DFF_PN0_/QN",
+   "driver_role": "sequential",
+   "net": "u_ot_pr_core.u.u_rc._0_",
+   "loads": 303,
+   "endpoints": 40
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_rpin.rst_n$_DFF_PN0_/QN",
+   "driver_role": "sequential",
+   "net": "_3128_",
+   "loads": 134,
+   "endpoints": 40
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_rsc.q$_DFF_PN0_/QN",
+   "driver_role": "sequential",
+   "net": "u_ot_pr_core.u.u_rsc._0_",
+   "loads": 133,
+   "endpoints": 40
+  },
+  {
+   "driver": "u_ot_pr_core.u.x3[0]$_DFF_PN0_/QN",
+   "driver_role": "sequential",
+   "net": "_0242_",
+   "loads": 193,
+   "endpoints": 40
+  }
+ ]
+}
