@@ -1,0 +1,20 @@
+{
+  "source": "96fc13e64",
+  "fp_file_sha256": "9f9f1c2f3482543d41e52d15c2622c64533e2dfeb1f7e5bdf7fe771071bfc8b5",
+  "scope": "existing bounded leaf diagnostic, not authoritative full XFIN ORFS qualification",
+  "add": {
+    "LAT": 6,
+    "CUTS": "1101011",
+    "native": "PASS28/0",
+    "equiv": "2000024cycles seed12345 bad0"
+  },
+  "mul": {
+    "LAT": 5,
+    "CUTS": "01101010",
+    "native": "FAIL49/10comb/0seq",
+    "equiv": "2000024cycles seed12345 bad0 badr0"
+  },
+  "reset_contract": "rawreset input two edges earlier, existing finish_reset2 local2edge forest expanded3to6leaves samephase",
+  "equivalence_adapter": "Existing n32_equiv tb.sv/tbm.sv source/template; RSQ y payload compared only when either reference/DUT valid (vo0||vo1); every vo/fault compared. ADD/MUL payload comparisons unchanged everycycle. No qualification inferred from prevalid RSQ bits.",
+  "next_source": "0995ddb5b LAT5 localLZC normalization real4bitconsumers; currently native pending/equivPASS"
+}
