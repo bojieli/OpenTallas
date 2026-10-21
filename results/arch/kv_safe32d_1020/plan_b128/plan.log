@@ -1,0 +1,34 @@
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+kv die: plan pass pin-hop violations 731
+kv die: v1.4.3 narrow re-plan (1150 hinted pins on 49 instances) after: kv die relays: no spot for ks_kvs_attn__attn__tx_payload stage 12 after path index 151 at (6987.6, 28609.2) (ends kvs_attn.attn__tx_payload -> d2d_kv.att_tx_payload; path 152 cells, remaining 520 um, wide True, src (5828, 25952, 302, 302, (6130.488, 26078.647756838905)) dst (7019, 28341, 476, 283, (7196.741, 28341.36)))
+kv die: re-plan pass stopped: kv die relays: no spot for krs_WS_3 stage 12 after path index 140 at (2149.2000000000003, 11826.0) (ends slg_WS_3.krsp -> ectl_WS_3.rs; path 173 cells, remaining 905 um, wide True, src (1459, 8910, 222, 1188, (1681.0320000000002, 9222.309693228926)) dst (2478, 12247, 726, 261, None))
+kv die BUNDLE_EQ: K.rx_record 12, K.tx_slot 9, K.tx_record 11, K.emb_record 0, K.kvn_writer 5, S.seq_kvn 18 (20 pad relays)
+kv die K_RT_EQ: target 128 (QK_ISSUE_AGE 139), natural 13..96, 2670 pad relays
+kv die VPORT_SIDE_EQ: RT [16, 19] (tile 8), 82 pad relays
+kv die PVFIN_ALIGN: align [0, 0] -> [0, 0], pads {'pvfst': 0, 'pvp_0': 0, 'pvp_1': 0}
+kv die LANDSLOT: 308 crossing runs, tiers {'near': 243, 'unslotted': 4, 'abut': 61}, legality {'overlaps': 0, 'outside': 0, 'examples': []}
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+{"die_um": [14513.472, 29425.68], "die_mm2": 427.069, "instances": 22307, "fill": 0.5985, "legality": {"overlaps": 0, "overlap_examples": [], "outside": 0, "outside_examples": []}}
+	Command being timed: "python3 tools/qwen_kv_die/kv_die.py plan --kv-wq-mirror --split --host-v14 --host-north --host-trees --v143 --reserve-native-astk --out /srv/opentallas-scratch/claude/kv-safe32c/plan_b128/case_kv"
+	User time (seconds): 1157.35
+	System time (seconds): 1.16
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 19:18.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 687176
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 402633
+	Voluntary context switches: 8
+	Involuntary context switches: 1069
+	Swaps: 0
+	File system inputs: 920
+	File system outputs: 33736
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
