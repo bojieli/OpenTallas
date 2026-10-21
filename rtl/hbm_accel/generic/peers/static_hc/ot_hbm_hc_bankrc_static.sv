@@ -607,6 +607,19 @@ module ot_hbm_hc_bankq_ft_rw4_static #(parameter integer MUT = 0)(
 );
     `OT_HCB_FTRW4_BODY(clk)
 endmodule
+// _rw4c (HBM-FALLBACK10 10-21): rw4 with the stage-control / raw-capture glue root clk_c folded into the in-face root clk.
+// e2_rw4 --cts gate (91d749022): clk_c (291 sinks over 535 x 472 um, H-tree depth 14) boundary pin-flop spread 432.1 ps TT,
+// while clk (878 sinks) held 37.6 ps.  One balanced clk tree carries both; logic, register ages and data ABI are unchanged.
+module ot_hbm_hc_bankq_ft_rw4c_static #(parameter integer MUT = 0)(
+    input wire clk, clk_w0, clk_w1, clk_w2, clk_w3, clk_x0, clk_x1, clk_x2, clk_x3, clk_e0, clk_e1, clk_e2, clk_e3,
+    `OT_HCB_RW_CK input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out,
+    `OT_HCB_RCFT_PORTS
+);
+    wire clk_c = clk;
+    `OT_HCB_FTRW4_BODY(clk)
+endmodule
 `undef OT_HCB_FTRW4_BODY
 `undef OT_HCB_FTRW_BODY
 `undef OT_HCB_RW_CK
