@@ -1,0 +1,18 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T13:48:08-07:00",
+  "geometry_sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7",
+  "verdict": "APPROVED",
+  "approval_source": "ROOT explicit coordinator approval relayed by hbm_lead after personally viewing all4PNGs+exactpacket; both exactgeometry/sourceb9bba4246/gate98ae16cf3/RTL366bb approved for normal qualified submit. Recorded by delegated collector.",
+  "source_rtl_sha256": "366bb5231ab1c42209b318daf89635eeb5f954f302d3ff19e020242654fcf4c6",
+  "source_gate_start": "98ae16cf3048676c07effb93c0618b34bedd6e02",
+  "checklist": {
+    "lattice": "10macros on43.2lattice, exact two4-highstacks plus2VMringmacros.",
+    "std_cell_band": "Clearcontinuouscentre andhorizontalstdcellbands; actualblue/greendensity/no red.",
+    "pin_spread": "Exact TT59.8/FF62.9ps boundary spread; native32/GRT0; fullfaces5.1pins/um.",
+    "clock_entry": "Nclockcontact feedsclearcentregap withregionalKmeans roots;25590sinks and729..763psTTinsertion disclosedguidance.",
+    "shape": "475.2x561.6 aspect1.18,31%fill pinbound. Current237.6sqdie slot cannotfit; explicit slotupgrade owed."
+  },
+  "risks": "658ps/17levels logic, placementsetup-213/-171ps, quantSRAM negedgehalfcycle~-105ps are real risks. This is geometry approval, no timingPASS/SDCwaiver. Actualroute timing decides; quantwritefailure needs priced launchfix.",
+  "obligations": "VM_RT74/ISSUE_AHEAD1 exact; no74->76/localGQ/R10viewalias. Sourcefingerprint/clock/calendar/slot adoption owed. Preserve admittedR10 alternatives."
+}
