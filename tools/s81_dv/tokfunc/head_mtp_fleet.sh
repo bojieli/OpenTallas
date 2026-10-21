@@ -45,7 +45,7 @@ beat_one() {  # $1 = beat, $2 = mode (base | mutnormimm)
     rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv --build-jobs 1 -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
     > $O/build.log 2>&1 || { echo "BUILD_FAILED" > $O/run.log; return; }
   cp $PREP/beat/b$(printf %02d $B)/*.mem $O/run/ && (cd $O/run && ../obj/Vtb_s81sl_beat > ../run.log 2>&1)
-  rm -rf $O/obj
+  # Keep completed objects for incremental reruns.
 }
 export -f beat_one; export OUT PREP V
 
@@ -78,7 +78,7 @@ leg_tp4() {
 leg_wave() {
   python3 tools/mtp_wave_bench.py run --out $OUT/wave --case wave --case mut_sseq_earlydone --case mut_hep_stale -j 4 --sim verilator \
     > $OUT/wave.log 2>&1; echo "rc $?" >> $OUT/wave.log
-  rm -rf $OUT/wave/*/obj
+  # Keep completed wave objects; results are separate from build inventory.
 }
 
 leg_xfin & leg_beat & leg_egress & leg_bundle & leg_tp4 & leg_wave &
