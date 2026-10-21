@@ -79,7 +79,8 @@ def main(argv=None):
         else:
             v.append(f'    wire {rng} {n};')
             if 'fault' in p['net']:
-                bits = ' | '.join(f'(|{n}[{h}:{l}])' for h, l in p['bits'])
+                # a 1-bit port is declared without a range: select it whole (TOK-FUNC2-S81: o__bk_sel_vm_fault)
+                bits = ' | '.join(f'(|{n}[{h}:{l}])' if rng else f'(|{n})' for h, l in p['bits'])
                 flt.append(bits)
         conn.append(f'.{n}({n})')
     v.append(f'    {a.top} u_slice ({", ".join(conn)});')
