@@ -1,0 +1,40 @@
+{
+  "source": "/home/ubuntu/ot-scratch/claude/ref_gate/qfd_n59_qbank12b-20261021-122206/routes/gate/work/orfs/results/asap7/opentallas_qfd_native59_qbank_asap7_ref_gate/base/1_2_yosys.v",
+  "source_sha256": "944a1a111b71d2f2dd05a01aef6ae27f8cd359113ba45843c1450163bbe79e0d",
+  "cells": [
+    {
+      "master": "AO21x1_ASAP7_75t_R",
+      "instance": "_064921_",
+      "pins": {
+        "A1": "_023268_",
+        "A2": "_023269_",
+        "B": "_017336_",
+        "Y": "_023270_"
+      }
+    },
+    {
+      "master": "OA211x2_ASAP7_75t_R",
+      "instance": "_064927_",
+      "pins": {
+        "A1": "_017324_",
+        "A2": "_023267_",
+        "B": "_023270_",
+        "C": "_023275_",
+        "Y": "_023276_"
+      }
+    },
+    {
+      "master": "INVx1_ASAP7_75t_R",
+      "instance": "_064928_",
+      "pins": {
+        "A": "_023276_",
+        "Y": "\\u_ot_pr_core.qrow_part[176] "
+      }
+    }
+  ],
+  "original_intermediate_net_occurrences": 3,
+  "physical_failed_net": "net39744",
+  "physical_driver": "place39745/Y",
+  "actual_failed_sink": "_064927_/B",
+  "scope": "Existing mapped source only; physical place buffer insertion mapping identified by exact sink. No new EDA, mutation or repair."
+}
