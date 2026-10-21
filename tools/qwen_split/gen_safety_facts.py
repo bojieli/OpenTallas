@@ -25,11 +25,12 @@ def channels(model):
     """Y sweep of actual hard-block outlines, preserving every intervening gap."""
     w, h = model['die']['w'], model['die']['h']
     events = defaultdict(list)
-    for n, i in enumerate(model['insts']):
-        if i.kind in ('relay', 'reset_rep'):
-            continue
-        x0, x1 = max(0., i.x), min(w, i.x + i.w)
-        y0, y1 = max(0., i.y), min(h, i.y + i.h)
+    obstacles = [(i.x, i.y, i.x+i.w, i.y+i.h) for i in model['insts']
+                 if i.kind not in ('relay', 'reset_rep')]
+    obstacles += [tuple(k['rect']) for k in model.get('relay_keepouts', [])]
+    for n, (a, b, c, d) in enumerate(obstacles):
+        x0, x1 = max(0., a), min(w, c)
+        y0, y1 = max(0., b), min(h, d)
         if x0 < x1 and y0 < y1:
             events[y0].append((n, (x0, x1)))
             events[y1].append((n, None))
@@ -223,7 +224,7 @@ def export_model(model, pin_pos):
                 provenance=dict(generator='tools/qwen_rom_fulldie_b3r2.py:selected final model',
                                 pins='worst corresponding generated bit pins; centroid_only_segments lists every unresolved bit geometry fallback',
                                 wires='actual source-to-sink relay/reset chains, stitching registered frame input/output sites; each segment retains its exact bus and worst corresponding bit',
-                                channels='vacant row envelope outside placed hard-block bodies'))
+                                channels='vacant row envelope outside placed hard-block bodies and declared relay keepouts'))
 
 
 def write(model, pin_pos, path):

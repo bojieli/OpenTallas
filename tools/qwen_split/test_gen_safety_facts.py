@@ -148,3 +148,34 @@ def test_actual_two_stage_reset_landing_is_separately_described():
     assert f['reset_landings'][0]['landing'] == 'rstcap'
     assert f['reset_landings'][0]['kind'] == 'two_stage_reset_synchronizer'
     assert not [c for c in f['crossings'] if c['id'] == 'rst_x']
+
+
+def test_generator_strict_bit_geometry_preserves_orientation_and_slice_identity():
+    # Exercise the real helper without importing the whole die generator graph.
+    import ast
+    import re
+    from pathlib import Path
+    src = Path(__file__).resolve().parents[1] / 'qwen_rom_fulldie_b3r2.py'
+    fn = next(n for n in ast.parse(src.read_text()).body if isinstance(n, ast.FunctionDef) and n.name == '_pin_pos')
+    scope = dict(re=re)
+    exec(compile(ast.Module(body=[fn], type_ignores=[]), str(src), 'exec'), scope)
+    master = Inst(order=['q'])
+    v = Inst(masters=lambda m, k: {'block': master},
+             port_widths=lambda m, k: {('block', 'q'): 4},
+             pin_rects=lambda *a: [(f'q[{k}]', 'M4', (k*10, 0, k*10+2, 2)) for k in range(4)])
+    i = Inst(name='p', master='block', x=100, y=50, w=40, h=10, cx=120, cy=55, orient='MY')
+    model = dict(insts=[i])
+    pos = scope['_pin_pos'](v, model, strict=True)
+    assert pos.bits('p', 'q[3:2]', 2) == [(119, 51), (109, 51)]
+    assert pos.bits('p', 'q[2:3]', 2) == [(109, 51), (119, 51)]
+    assert pos('p', 'q') == (124, 51)
+    with pytest.raises(ValueError, match='no pin geometry'):
+        pos('p', 'missing')
+    legacy = scope['_pin_pos'](v, model)
+    assert legacy('p', 'q[3:2]') == (120, 55)  # original planning behavior
+
+
+def test_reserved_relay_keepout_is_not_claimed_as_cell_row():
+    m, pos = fixture()
+    m['relay_keepouts'] = [dict(rect=[50., 0., 80., 30.])]
+    assert not any(a < 60 < c and b < 15 < d for a,b,c,d in channels(m))
