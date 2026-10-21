@@ -346,5 +346,18 @@
     "path": "results/rtl/ref_tile/hv16_dbk_cpl_w1/witness",
     "declared_by": "physical/ref_tile/hv16_dbk_cpl_w1/spec.json",
     "mechanisms": "Exact fold and RR_RT80/DIE_PRE2 banklat; mutants cvraw/wsrelay/fill/nopre/rst/wa. Closure daemon reran source-pinned benches before CLOSED."
+  },
+  "banklat_mapper_convention": {
+    "baseline_from_die_owner": "Selected CP mapper rule ref7/ref_rtBANK_RD6 sets param80 raw graph target79. This raw age is not the bench physical rq-to-rr interval.",
+    "CPLW_rule": {
+      "reference_param": 7,
+      "reference_raw_round_trip": "BANK_RD-2 = 4",
+      "RR_RT_parameter": 80,
+      "raw_graph_target": 77
+    },
+    "reason": "Same unchanged controller/capture dependencies as selected CP, with one new rq face edge and one rr landing edge; subtract2 from existing raw79. Do not silently remove old captureoffset with literal ref80/raw78.",
+    "actual_committed_bench": "98344bac6 rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rlw.sv",
+    "bench_formula": "pad(b)=DIE_RT-DIE_PRE-FACES_D-lq(b)-lr(b), DIE_RT80/DIE_PRE2/FACES_D8/LANES1. Registered benchpipe interval=lq+pad+D+lr=78, printed controllerroundtrip=that+DIE_PRE=80.",
+    "validation": "No additional test campaign; this records exact committed bench formula and preserves selected mapper convention. Actual selected integration still requires equality-valid/calendar qualification."
   }
 }
