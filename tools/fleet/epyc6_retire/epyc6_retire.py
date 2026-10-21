@@ -591,6 +591,37 @@ def note_pending(roots_map, summ):
         log(f"C3: noted {len(lines)} archived path(s) in pending_results.txt")
 
 
+def check_required_archive_inputs():
+    """Known recovered source/input sets are part of C3, including their exact hashes."""
+    cfg = jload(f"{STATE}/required_archive_inputs.json", None)
+    if not isinstance(cfg, dict) or not cfg.get("jobs"):
+        return ["required recovered source/input manifest absent or empty"]
+    payload = {}
+    try:
+        for job, entry in cfg["jobs"].items():
+            if entry.get("missing_inputs") or not entry.get("roots"):
+                raise ValueError(f"{job}: required input closure incomplete")
+            for root, rows in entry["roots"].items():
+                if (not root.startswith(DEST.rstrip("/") + "/") or
+                        os.path.normpath(root) != root or not rows):
+                    raise ValueError(f"{job}: invalid/empty archive root")
+                for rel, size, digest in rows:
+                    if (os.path.isabs(rel) or ".." in rel.split("/") or
+                            not isinstance(size, int) or size < 0 or
+                            not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
+                        raise ValueError(f"{job}: invalid required file identity")
+                if root in payload:
+                    payload[root].extend(rows)
+                else:
+                    payload[root] = list(rows)
+        verified = agi_py("list", payload)
+        jsave(f"{STATE}/required_archive_inputs_verified.json", dict(at=now(), verification=verified))
+        return [f"required archived input hash verification failed: {root}"
+                for root in payload if not verified.get(root, {}).get("ok")]
+    except (KeyError, TypeError, ValueError, RuntimeError) as exc:
+        return [f"required recovered source/input verification: {exc}"]
+
+
 def check_pending(idle, st, args):
     why = []
     obs_p = f"{STATE}/observed_dirs.json"
@@ -647,6 +678,7 @@ def check_pending(idle, st, args):
     for dst, v in ver.items():
         if not v["ok"]:
             why.append(f"AGIdock copy {dst}: {v['missing']} missing / {v['size_mismatch']} size / {v.get('hash_mismatch', 0)} hash mismatch of {v['n']} e.g. {v['examples'][:2]}")
+    why.extend(check_required_archive_inputs())
     if not why:
         note_pending(roots_map, summ)
     return not why, why
