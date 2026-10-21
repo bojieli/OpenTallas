@@ -1,0 +1,33 @@
+{
+  "source": "7e3ee55f1",
+  "unit": "oth-ubuntu-2718144-1792607361",
+  "scope": "bounded programming/seal; no native timing or PPA",
+  "positive": {
+    "rc": 0,
+    "cases": 24,
+    "edges": 765,
+    "builtin_assertions": true,
+    "trace_comparison": "all outputs H16X2 vs H16X3 every edge"
+  },
+  "mutant_count": {
+    "rc": 1,
+    "trigger": "legal reload with META after rows",
+    "fatal": "H16V seal_bad 1 != reference 0",
+    "time_ns": 585
+  },
+  "mutant_prefix": {
+    "rc": 1,
+    "trigger": "legal copy row final write immediately before seal; all original19 cases PASS first",
+    "fatal": "H16V seal_bad 1 != reference 0",
+    "time_ns": 6355
+  },
+  "reproducer_hashes_verified": true,
+  "hashes": {
+    "candidate.sv": "0dd9f9e4fc22c0e8e4a99f7529eb5321c07657849b4034e28028e1d098ea6eee",
+    "mutant_count.sv": "4da34ef7e17053d042c9eee200343e2667d3f8042a3c16d0b480405a81cd6d1d",
+    "mutant_prefix.sv": "a5cc011ab64b4e480541adb9c8e94c115a3d0d287ace8a19d4be31c24c119e22",
+    "helpers.sv": "f46c4ff9d0f713ad2c0da8a8460b79dbd65dc51c4a20c6a41f50871009f4052a",
+    "tb.sv": "b444201c04fe3cac4c31c3df4c0eddefb5096f8f6b7225aef21db4d6941e82dd",
+    "run.sh": "2435d09566a48b61ce7466d6533c3c65caeb2aeb7f0e8c5aa9709afbf88d9cf8"
+  }
+}

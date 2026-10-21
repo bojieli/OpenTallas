@@ -1,0 +1,13 @@
+# H16 row predicates and prefix threshold cache
+
+Exact source: `7e3ee55f1`; subsequent commit `9967de637` changes only documentation and the generation label. Source SHA256: `0dd9f9e4fc22c0e8e4a99f7529eb5321c07657849b4034e28028e1d098ea6eee`.
+
+Independent static review found no correctness defect. `c3_next` uses precisely the row write enable and next row payload of the actual row flops, which carry no reset. Registered `pth` captures those next prefix thresholds on the same edge, while current `count` selects the prefix. H16X 0, 1 and 2 retain the original combinational threshold path. The row/grow seal cache also uses exact next META/GDESC and row values, preserving the original programming and seal edges.
+
+The positive bounded bench retains the original 19 cases and adds five copy cases: a legal single copy whose final row write immediately precedes seal, three legal copies, four invalid copies, an invalid missing copy descriptor, and a copy row outside the active count. The actual H16X2 and H16X3 modules compare every output on every edge. Built-in seal, decoder, start and read assertions remain enabled. Real programming inputs honor the one-edge `pw_addr_pre` law. No internal state is forced, and a poisoned row retained across reset is explicitly observed before the missing-row test.
+
+Fleet unit `oth-ubuntu-2718144-1792607361` on ep7 admits 8 GB and two threads. Positive result: **24 cases, 765 edges, PASS**. Verilator 5.050 reports a 7 MB simulation allocation. This is bounded programming/seal evidence, with no execution, native timing, PPA or full-head qualification claim.
+
+Two isolated causal mutants preserve every module assertion. The count mutant uses prior `count` instead of next `count_n`; the prefix mutant uses current `c3` instead of next `c3_next`. Their outcomes are recorded with the immutable positive and mutant logs and return codes. `prepare.py` extracts the exact source and real arithmetic helpers from the pinned commit, verifies SHA256, and creates only the isolated mutant copies. Run it before staging this directory to fleet scratch, then invoke the admitted `run.sh`. The original row-cache proof remains unchanged in the parent packet.
+
+Both causal mutants are rejected with rc 1 by the actual built-in `H16V seal_bad 1 != reference 0` assertion. The count mutant fails at 585 ns on the legal META-after-rows reload. The prefix mutant passes all original 19 cases, then fails at 6355 ns on the legal final-copy-row-to-seal case. Positive rc 0 and both expected mutant failures yield overall runner rc 0. The pinned extraction reproducer was executed locally and all generated source/helper/mutant hashes matched the actual fleet inputs; no local simulation ran.

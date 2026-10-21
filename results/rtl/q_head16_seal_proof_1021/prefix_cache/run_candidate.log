@@ -1,0 +1,29 @@
+CASE_PASS legal_meta_gdesc_before ready=11 fault=00 edge=33
+CASE_PASS legal_reload_rows_retained_meta_after ready=11 fault=00 edge=60
+CASE_PASS legal_full8_meta_before_gdesc_after ready=11 fault=00 edge=92
+CASE_PASS legal_gabsent_meta_after ready=11 fault=00 edge=124
+CASE_PASS bad_own_last ready=00 fault=11 edge=156
+CASE_PASS bad_own_inactive ready=00 fault=11 edge=188
+CASE_PASS bad_grow_unit ready=00 fault=11 edge=220
+CASE_PASS bad_grow_last ready=00 fault=11 edge=252
+CASE_PASS bad_grow_inactive ready=00 fault=11 edge=284
+CASE_PASS bad_duplicate_row ready=00 fault=11 edge=317
+CASE_PASS bad_upper_payload ready=00 fault=11 edge=349
+CASE_PASS bad_poison_all_rows ready=00 fault=11 edge=381
+CASE_PASS bad_missing_row_after_reset_retains_poison ready=00 fault=11 edge=412
+CASE_PASS bad_meta_count ready=00 fault=11 edge=444
+CASE_PASS bad_gdesc_reserved ready=00 fault=11 edge=476
+CASE_PASS bad_duplicate_meta_after_rows ready=00 fault=11 edge=509
+CASE_PASS legal_own_row_final_before_seal ready=11 fault=00 edge=541
+CASE_PASS legal_grow_final_before_seal ready=11 fault=00 edge=573
+CASE_PASS legal_recovery_reset_reload ready=11 fault=00 edge=605
+CASE_PASS legal_copy_final_row_immediate_seal ready=11 fault=00 edge=637
+CASE_PASS legal_three_copy_rows ready=11 fault=00 edge=669
+CASE_PASS bad_four_copy_rows ready=00 fault=11 edge=701
+CASE_PASS bad_copy_descriptor_missing ready=00 fault=11 edge=733
+CASE_PASS bad_copy_row_outside_count ready=00 fault=11 edge=765
+H16_SEAL_PASS cases=24 edges=765 old=2 new=3
+- tb.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.003 s; speed 2.806 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

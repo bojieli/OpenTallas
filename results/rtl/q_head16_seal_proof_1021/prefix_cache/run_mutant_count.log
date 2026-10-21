@@ -1,0 +1,4 @@
+CASE_PASS legal_meta_gdesc_before ready=11 fault=00 edge=33
+[585000] %Fatal: mutant_count.sv:237: Assertion failed in tb.new3: H16V seal_bad 1 != reference 0
+%Error: mutant_count.sv:237: Verilog $stop
+Aborting...
