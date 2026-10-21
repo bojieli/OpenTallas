@@ -464,6 +464,36 @@ def pre(v, m, G):
         rec['group_root_site_tiers'] = dict(tiers)
         print(f'FAULT_EMIT groups: {nz} group roots placed (site tiers keep350/keep{gk:.0f}/nokeep/anybox {dict(tiers)}), {len(unplaced)} groups without a free site within '
               f'{GROUP_UM:.0f} um: {unplaced[:20]}', flush=True)
+    # rfs try 10 (rf/rh 'flt_root_mu_dhobs has no input', rfw 'flt_root_dvs_W1 has no input'): a cover-mode root with no
+    # candidate source of its clock within CAP_UM (its owner's landings had no free box within CAP, so the primary root fell
+    # back to the gap target) is dropped BEFORE the MST, while another root of the same clock remains (sys_face kept)
+    if ROOT_MODE == 'cover':
+        cand_pts = collections.defaultdict(list)
+        for o_, r_ in owners.items():
+            if o_ in roots:
+                for p_ in (r_.get('pts') or []):
+                    cand_pts[roots[o_]['cj']].append(tuple(p_))
+        for inst_, ports_ in hard.items():
+            if inst_ in roots:
+                for p_ in ports_:
+                    cand_pts[roots[inst_]['cj']].append(pos(inst_, p_))
+        dropped = []
+        for key in sorted(roots):
+            r_ = roots[key]
+            if key == ROOT_OWNER or any(_man(r_['xy'], p_) <= CAP_UM for p_ in cand_pts[r_['cj']]):
+                continue
+            if not any(k2 != key and roots[k2]['cj'] == r_['cj'] for k2 in roots):
+                continue
+            dropped.append(key)
+            del roots[key]
+            m['insts'][:] = [i_ for i_ in m['insts'] if i_.name != r_['inst']]
+            by.pop(r_['inst'], None)
+            follow.pop((r_['inst'], 'ck'), None)
+            for j_ in (r_['cj'], r_['rj']):
+                bid_, cl_, bits_, eps_ = m['buses'][j_]
+                m['buses'][j_] = (bid_, cl_, bits_, [e_ for e_ in eps_ if e_[0] != r_['inst']])
+        rec['roots_dropped_no_source'] = dropped
+        print(f'FAULT_EMIT cover: {len(dropped)} roots without a same-clock source within {CAP_UM:.0f} um dropped: {dropped[:12]}', flush=True)
     # degree-capped Prim MST from the sys_face root
     done, parent = {ROOT_OWNER}, {}
     left = set(roots) - done
