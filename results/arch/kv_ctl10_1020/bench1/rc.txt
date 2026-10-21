@@ -1,0 +1,10 @@
+RC 1 m_dc7 C32 m_dc7 rc=0: FAIL KV_DCFG_A_C32 mismatches116487 cycles121469
+RC 0 dcfg C32 dcfg rc=0: PASS KV_DCFG_A_C32 mismatches0 cycles121469 compared118485 episodes400 sealed191 faulted224
+RC 1 m_dc6 C32 m_dc6 rc=0: FAIL KV_DCFG_A_C32 mismatches13538 cycles121469
+RC 0 tile_b C32 tile_b rc=0: PASS KV_CTL_C32_TILE mismatches0 cycles200000 compared199930 nonzero_output_cycles200000 outbits5078
+RC 0 tile_a C32 tile_a rc=0: PASS KV_CTL_C32_TILE mismatches0 cycles200000 compared199930 nonzero_output_cycles200000 outbits5078
+RC 0 kb_a C32 kb_a rc=0: PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault
+RC 0 first_a C32 first_a rc=0: PASS KV_CTL_C32_TILE mismatches0 cycles200000 compared199930 nonzero_output_cycles200000 outbits5078
+RC 0 m_tl C32 m_tl rc=0: PASS KV_CTL_C32_TILE mismatches0 cycles200000 compared199930 nonzero_output_cycles200000 outbits5078
+RC 0 kb_b C32 kb_b rc=0: PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault
+RC 0 kb_first C32 kb_first rc=0: PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault
