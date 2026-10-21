@@ -397,10 +397,19 @@ module ot_s81eng_xq #(
     // the beat being sent: full = {pad, payload 532, idx 8, src 4, hops 5, kind 3, v}
     reg  [538:0] cur;
     wire [1103:0] full = {551'd0, cur[531:0], {1'b0, cur[538:532]}, 4'd0, 5'd1, 3'd1, 1'b1};
+    // fanout (safe checklist 3): the 552 rung output muxes take their select from 48 KEPT copies of tx and of fc[1:0]
+    // (12 bits a copy), registered with the same next state as tx / fc
+    (* keep = "true" *) reg [47:0] txk;
+    (* keep = "true" *) reg [95:0] fck;
+    wire        tx_n = (first && !tx && tc == 8'(TXD - 1)) ? 1'b1 : (tx && fc == 7'd95) ? 1'b0 : tx;
+    wire [6:0]  fc_n = (first && !tx && tc == 8'(TXD - 1)) ? 7'd0 : tx ? fc + 7'd1 : fc;
     reg  [1:0] pa, pb;                     // pass-through train fragments still to come (a -> b, b -> a)
     reg  [275:0] ia, ib_;
     always @(posedge ck) begin ia <= vi_a; ib_ <= vi_b; end
     wire pva = ia[0] || pa != 2'd0, pvb = ib_[0] || pb != 2'd0;
+    integer oi;
+    always @(posedge ck or negedge rl[3]) if (!rl[3]) begin txk <= '0; fck <= '0; end
+                                          else begin txk <= {48{tx_n}}; fck <= {48{fc_n[1:0]}}; end
     always @(posedge ck or negedge rl[2])
         if (!rl[2]) begin
             bw <= 1'b0; bc <= 6'd0; first <= 1'b0; tc <= 8'd0; tx <= 1'b0; fc <= 7'd0; rv <= '0; fault <= 1'b0;
@@ -418,8 +427,10 @@ module ot_s81eng_xq #(
             end
             pa <= (ia[0] && (ia[3:1] == 3'd1 || ia[3:1] == 3'd2) && pa == 2'd0) ? 2'd3 : (pa != 2'd0) ? pa - 2'd1 : 2'd0;
             pb <= (ib_[0] && (ib_[3:1] == 3'd1 || ib_[3:1] == 3'd2) && pb == 2'd0) ? 2'd3 : (pb != 2'd0) ? pb - 2'd1 : 2'd0;
-            vo_b <= tx ? full[276 * fc[1:0] +: 276] : ia;
-            vo_a <= tx ? full[276 * fc[1:0] +: 276] : ib_;
+            for (oi = 0; oi < 276; oi = oi + 1) begin
+                vo_b[oi] <= txk[oi / 12] ? full[276 * fck[2 * (oi / 12) +: 2] + oi] : ia[oi];
+                vo_a[oi] <= txk[24 + oi / 12] ? full[276 * fck[2 * (24 + oi / 12) +: 2] + oi] : ib_[oi];
+            end
             if ((qv && af) || (tx && fc[1:0] == 2'd0 && !rv[fc[6:2]]) || (tx && (pva || pvb)) ||
                 (qv && qtag[0] && bc == 6'd24))
                 fault <= 1'b1;
