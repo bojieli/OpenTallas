@@ -164,6 +164,36 @@ def main():
         rowbits[bi].sort()
     for di, v in unmatched.items():
         notes.append(f'{di}: {v} driver bits with no list row of the same sink set (not relayed: local or new sink set)')
+    # A local remainder of a partially relayed functional word has no station
+    # row. It must still participate in equal-age alignment: otherwise e.g.
+    # red_tag[7:0] gets a sink pad while direct red_tag[31:8] stays at age0.
+    # Represent only missing bits sharing an existing exact producer/consumer
+    # port path. A zero-depth row adds no stage until the existing aligner
+    # prices a real sink pad to the already required word age.
+    word_rows = collections.defaultdict(list)
+    for bi, bits_ in rowbits.items():
+        di_ = st['rows'][bi]['driver'].split('.', 1)[0]
+        for p_, k_, ls_ in bits_:
+            for si_, sp_, sk_ in ls_:
+                word_rows[di_, p_, si_, sp_].append(bi)
+    direct_groups = collections.defaultdict(list)
+    for di_, entries_ in by_drv.items():
+        if di_ not in rows_of:
+            continue
+        for p_, k_, ls_ in entries_:
+            if (p_, k_) in claimed[di_]:
+                continue
+            shared_ = [bi for si_, sp_, sk_ in ls_ for bi in word_rows.get((di_, p_, si_, sp_), [])]
+            if shared_:
+                direct_groups[di_, p_, tuple(sorted({x[0] for x in ls_})), min(shared_)].append((p_, k_, ls_))
+    for (di_, p_, sinks_, template_), bits_ in sorted(direct_groups.items()):
+        template_row = st['rows'][template_];bi = len(st['rows'])
+        st['rows'].append(dict(driver=di_+'.'+p_, bits=len(bits_), sinks=list(sinks_),
+                              sink_depths=[0]*len(sinks_), pads=[], stations=[],
+                              domain=template_row['domain'], cls=template_row['cls'],
+                              direct_word_remainder=True))
+        rowbits[bi] = sorted(bits_);claimed[di_].update((p_, k_) for p_, k_, _ in bits_)
+        notes.append(f'PORT-AGE-DIRECT: {di_}.{p_} {len(bits_)} formerly unlisted direct bits now participate in exact word alignment')
     # HBM-DIE7 10-20 PORT-AGE: one producer->consumer port path carried by SEVERAL rows (the lane plan splits a driver port by sink
     # set, e.g. sucore_NW.red_tag[0:7] also feeds stl_NW (rf1176, 12 edges) while red_tag[8:31] + red_sv go p2p (rf1262,
     # 11 edges)) must see every bit at ONE age, else the word reaches the consumer torn (d4g_functional_bind 'unequal relay
