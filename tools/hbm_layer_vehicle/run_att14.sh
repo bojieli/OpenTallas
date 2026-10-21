@@ -95,7 +95,7 @@ cd $OUT/r14src; d=rtl/hbm_accel/generic/adapters/static_su; \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $OUT/merge/build.log 2>&1; \
 set +e; $OUT/merge/obj/Vtb_su_static_arithmetic +DIR=$OUT/merge/vec_pos > $OUT/merge/pos.log 2>&1; r=\$?; echo MERGE_POS_RC \$r; test \$r = 0 || exit \$r; \
 grep -h 'SU_ARITH' $OUT/merge/pos.log | cut -c1-300"
-if { [ "$ONLY" = all ] || [ "$ONLY" = merge ]; } && grep -q "DS_L2_S32_RC 0" "$LOGD/ds_s32.otrun.log"; then
+if { [ "$ONLY" = all ] || [ "$ONLY" = merge ]; } && timeout 120 ssh "$H" "python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1]))[\"summary\"][\"verdict\"]==\"PASS\" else 1)' $OUT/out/ds_L2_s32.json"; then
   stage_job job_merge "$M"
   /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$OUT/.fleet-ready" -- bash "$OUT/job_merge.sh" > "$LOGD/merge.otrun.log" 2>&1 || STATUS=1
 else echo "MERGE SKIPPED (DS L2 s32 not PASS)" > "$LOGD/merge.otrun.log"; fi
