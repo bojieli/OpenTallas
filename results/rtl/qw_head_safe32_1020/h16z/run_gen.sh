@@ -1,7 +1,7 @@
 #!/bin/bash
-# QW-H16Y 10-21: h16y head netlist (H16X=2) = prepare_generic (h16v sources) -> synth -noabc bit_generic -> ABC (variant) ->
+# QW-H16Z 10-21: h16z head netlist (H16X=3) = prepare_generic (h16v sources) -> synth -noabc bit_generic -> ABC (variant) ->
 # bound_head_netlist (load-cap 16, as bound_r4) -> param header + single clock region (as h16u make_1r) -> depth report.
-# usage (repo root): bash results/rtl/qw_head_safe32_1020/h16y/run_gen.sh OUT_DIR [ABC args...]
+# usage (repo root): bash results/rtl/qw_head_safe32_1020/h16z/run_gen.sh OUT_DIR [ABC args...]
 set -eu
 O=$1; shift; ABCARGS="$*"; mkdir -p $O
 H=results/rtl/qw_head_safe32_1020; IMG=openroad/orfs:asap7lock; Y=/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys
