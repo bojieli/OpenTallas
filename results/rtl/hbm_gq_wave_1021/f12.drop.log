@@ -1,0 +1,10 @@
+COLLQ FAULT ESCAPED scenario=4
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq_wave.sv:304: Verilog $finish
+COLLQ unexpected fault gq0000 ra0000 rb1110 rs0000 ks0000
+COLLQ DATA row0 q2 seg0 word1 got 0000000000000000000000000000000000000000000000000000000000000000 exp cc8e3c8b0e5ceac6531198f194a6472cd674f5671b09a3925cde51cd9e6cfff8
+COLLQ DATA row0 q3 seg0 word1 got 0000000000000000000000000000000000000000000000000000000000000000 exp cc8e3c8b0e5ceac6531198f194a6472cd674f5671b09a3925cde51cd9e6cfff8
+COLLQ FAIL errors=3
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq_wave.sv:324: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 922ns; walltime 0.047 s; speed 19.764 us/s
+- Verilator: cpu 0.047 s on 1 threads; allocated 13 MB

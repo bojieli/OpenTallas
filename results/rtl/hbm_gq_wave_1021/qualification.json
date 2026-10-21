@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.gq_single_sender_component_evidence.v1",
+ "proof_source_commit": "30d4f22c1caa3ba9f296428b201ab61fced8e54f",
+ "helper_commit": "869015b8b5de0ddc36e0de2959476a434d24bd2b",
+ "rtl_sha256": "4b244e6ff065b66c6109103cc72c57b691c3b820cbc3d9ecc27f71b3f53c192e",
+ "define": "OT_COLL_GQ_SINGLE_SENDER",
+ "tool": "Verilator5.050",
+ "host": "ot-epyc5",
+ "unit": "oth-ubuntu-1715005-1792616526",
+ "remote": "/srv/opentallas-scratch/claude/codex-gq-wave-30d4f22c1/run",
+ "original_driver_exit": 1,
+ "positive_f12_four_sources": "PASS actual4stops+VMreads+ringA/B+landing,48reads/192writes/192values",
+ "positive_f16_three_sources": "PASS same counts, q3NE noVMreads proven by exact per-quarter reservation check",
+ "negative_drop_ring_rejection": "OBSERVED rb1110 stickyfault and actual numerical FAILerrors3; missing2datawords. Negative transport rejected by ringB and numericalchecker.",
+ "negative_drop_land_fault_proof": "NOT_QUALIFIED: inherited scenario4 explicitly reports ESCAPED because it additionally requires landfault, which stays0 for missingheaderzeros matching sender0/tag0. Raw failure preserved. No landfault causalPASS.",
+ "architecture_fault_route": {
+  "status": "SOURCE_BOUND_WIRING_FACT_NOT_EXECUTED_IN_COMPONENT_BENCH",
+  "bundle_files_sha256": {
+   "die.v": "35350876531724e4d2cc33c71ef85724d8e85ff1685e0bc8b612dacce906b432",
+   "bundle/slice/slice.v": "1fa0834b571833fcac1f9ee7f662e4b8a957388d658a13cff0f5db849cb89c8a",
+   "bundle/slice/boundary.json": "43002cb1047435ec4b7e78b9f297fa7a98fee691b4797d8734b7ccf1510a2e69",
+   "bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv": "f63a819c48d8db4f1b973fd43748defada7d6f27724a534239bcabb4b15468f4",
+   "bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv": "c40691e286850538bf7d03f353d332e90aefb35eaf1b04225c58b96c494da851"
+  },
+  "route": "conn_idx die.v hcollb_{NE,NW,SE,SW}__fault each enters host_status.t_fault; host_status=ot_hbm_status_join_fa -> ot_hbm_status_join.tf_q -> program_fault=ORtf_q and jd=ORtf_q|ORhf_q -> wrapperdie_fault. Slice exports hcollb_SW.fault directly and coll_images.FAULT_OUTS checks0. Future4quartercut must include/check ALL ringB faults or actualhost_status; no landfault-only acceptance.",
+  "latency": "t_fault -> tf_q -> program_fault:2registerededges; die_fault adds wrapperregister (3). Source fact only, not measured in this component proof."
+ },
+ "scopes": {
+  "component_transport": true,
+  "real_quarter_su_producers": false,
+  "full_layer": false,
+  "native_chain": false,
+  "run0": true,
+  "closed_physical_view_alias": false
+ },
+ "binding_obligations": [
+  "actual4quarter producer sourcecut and allring faults before layer claim",
+  "exact request-lane4x8 mapping OR full-epoch exclusiveCOLL calendar owner3/write2",
+  "sourcefingerprint/re-synthesis for changedGQ, no physicalR9/R10/ca1 alias",
+  "topology/ports/clock/dataedges unchanged, serialized100+VM_RT wavegap priced; helperedgeorigin GQtl0"
+ ]
+}
