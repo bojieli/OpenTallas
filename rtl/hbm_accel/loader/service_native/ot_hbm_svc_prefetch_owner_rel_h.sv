@@ -87,6 +87,23 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  function automatic [3:0] mask_for(input [2:0] n);
   case(n)1:mask_for=1;4:mask_for=15;default:mask_for=0;endcase
  endfunction
+ // Actual local library gates distribute each issue field to eight table rows.
+ // The Boolean model is the official AND2 function with B tied high: zero cycles.
+ wire [GW-1:0] generation_local[0:RG-1];
+ wire [10:0] ordinal_local[0:RG-1];
+ wire [2:0] length_local[0:RG-1];
+ wire [10:0] ordinal_d={t[8:0],2'b0}+lane;
+ for(genvar gr=0;gr<RG;gr=gr+1)begin:g_issue_field_tree
+  for(genvar gb=0;gb<GW;gb=gb+1)begin:g_gen
+   ot_hbm_svc_local_and2 u_buf(.a(ticket[OWNER_AW+gb]),.b(1'b1),.y(generation_local[gr][gb]));
+  end
+  for(genvar ob=0;ob<11;ob=ob+1)begin:g_ord
+   ot_hbm_svc_local_and2 u_buf(.a(ordinal_d[ob]),.b(1'b1),.y(ordinal_local[gr][ob]));
+  end
+  ot_hbm_svc_local_and2 u_len0(.a(length[0]),.b(1'b1),.y(length_local[gr][0]));
+  assign length_local[gr][1]=1'b0;
+  ot_hbm_svc_local_and2 u_len2(.a(length[2]),.b(1'b1),.y(length_local[gr][2]));
+ end
  wire fire=k_v&&k_ready;
  wire [3:0] seen_ret=seen_q[ret]|(4'b1<<kr_beat);
  wire ret_done=response_take&&seen_ret==mask_for(length_q[ret]);
@@ -122,12 +139,12 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   for(e=0;e<ENTRIES;e=e+1)begin
    // Kept free copies bound actual mux pins, not just the number of flops:
    // each hold mux consumes two enable pins. Epoch16 =>32; generation12 =>24.
-   if(vfree_a[e])generation_q[e]<=ticket[16:OWNER_AW];
+   if(vfree_a[e])generation_q[e]<=generation_local[e/8];
    if(vfree_c[e])epoch_q[e]<=epoch_local[e/8];
-   if(vfree_d[e])begin bank_q[e]<=bank_local[e/8];ordinal_q[e]<={t[8:0],2'b0}+lane;end
+   if(vfree_d[e])begin bank_q[e]<=bank_local[e/8];ordinal_q[e]<=ordinal_local[e/8];end
    if(vfree_b[e])begin                                                                          // 23 flops
-    length_q[e]<=length;
-    seen_q[e]<=0;permuted_q[e]<=full_group;row_low_q[e]<=row_local[e/8];
+    length_q[e]<=length_local[e/8];
+    seen_q[e]<=0;permuted_q[e]<=length_local[e/8][2];row_low_q[e]<=row_local[e/8];
    end
    else if(response_take&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
   end
