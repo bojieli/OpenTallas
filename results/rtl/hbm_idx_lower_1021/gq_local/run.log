@@ -1,0 +1,12 @@
+RF_ARM stream=21 serial=16
+GQ_FIRE cyc=47
+VMREAD cyc=64
+LOCAL_LOAD cyc=148
+RING_RR cyc=157
+RF_INGRESS stream=160 serial=120
+GQ_DONE cyc=168
+SELECTED_I10_GQ_LOCAL_TO_RF_PASS reads=1 lp=1 rr=1 rf=417deb6d
+- tb_gq_local.sv:144: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.012 s; speed 125.019 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 11 MB

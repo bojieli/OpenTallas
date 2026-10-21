@@ -1,0 +1,18 @@
+{
+  "defines": [
+    "OT_COLL_GQ_LOCAL_READ"
+  ],
+  "sources": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv": {
+      "before": "d4990b482a26674449f61722eb44c246bce525c41d7682704e7d94bd5abcd0fa",
+      "after": "66aacb76882aaf824e989dcb51eac3e6f57e3ff63bc10ea678d435c0cc8d0107"
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv": {
+      "before": "a8f396ed04718a29a73d222d73c66c3f9b495a171066590dd2507e5bf7d44516",
+      "after": "7d59c9518f26cc682987b328d7423f8d83777a7a1de9d48dd468e988627309e6"
+    }
+  },
+  "status": "unbound_functional_source_candidate",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false
+}

@@ -86,6 +86,13 @@ module ot_hgi_coll_ring_ag_ctl #(
     reg [2:0] prep_add_tag,prep_tx_tag,prep_rr_tag;
     reg [1:0] prep_add_src;
     reg prep_add_rhs,prep_tx_acc;
+`ifdef OT_COLL_GQ_LOCAL_READ
+    // Pure sector copy from the EXISTING registered LOCAL TX read path.
+    // No adder or fabricated zero operand; exact payload bits are retained.
+    wire local_rr = rr_local && read_tx_v && !read_tx_acc && !read_rr_v;
+`else
+    wire local_rr = 1'b0;
+`endif
     reg [LAT-1:0] pv;
     reg [2:0] pt[0:LAT-1];
     assign acc_we=pv[LAT-1];assign acc_tag=pt[LAT-1];
@@ -116,7 +123,7 @@ module ot_hgi_coll_ring_ag_ctl #(
         reg [279:0] x;
         pin_p[0]<=cw_i[278:0];pin_p[1]<=ccw_i[278:0];
         out_p[0]<=nx_out[0][278:0];out_p[1]<=nx_out[1][278:0];
-        if(rr_local)begin rr_tag<=rr_local_tag;rr_d<=acc_rr;end
+        if(rr_local)begin rr_tag<=rr_local_tag;rr_d<=local_rr?state_tx:acc_rr;end
         for(integer d=0;d<2;d=d+1)begin
             x=pin[d];
             if(rx_slot[d] && x[278:277]==2)begin rr_tag<=x[270:268];rr_d<=x[255:0];end
@@ -147,10 +154,11 @@ module ot_hgi_coll_ring_ag_ctl #(
             read_add_v<=prep_add_v;read_tx_v<=prep_tx_v;read_rr_v<=prep_rr_v;
             read_add_tag<=prep_add_tag;read_add_src<=prep_add_src;read_add_rhs<=prep_add_rhs;
             read_tx_tag<=prep_tx_tag;read_tx_acc<=prep_tx_acc;read_rr_tag<=prep_rr_tag;
-            if(add_v!=read_add_v || (|tx_inject)!=read_tx_v || rr_local!=read_rr_v)fault<=1;
+            if(add_v!=read_add_v || ((|tx_inject)||local_rr)!=read_tx_v || rr_local!=(read_rr_v||local_rr))fault<=1;
+            if(local_rr && |tx_inject)fault<=1;
             if(add_v && (add_tag!=read_add_tag || add_src!=read_add_src || add_rhs_acc!=read_add_rhs))fault<=1;
             if((|tx_inject) && (tx_tag!=read_tx_tag || tx_acc!=read_tx_acc))fault<=1;
-            if(rr_local && rr_local_tag!=read_rr_tag)fault<=1;
+            if(rr_local && rr_local_tag!=(local_rr?read_tx_tag:read_rr_tag))fault<=1;
             if(state_read_add && (!carry_v[state_add_tag][state_add_src] || pending[state_add_tag] ||
                (state_add_rhs_acc ? !acc_v[state_add_tag] : !local_v[state_add_tag])))fault<=1;
             if(state_read_tx && (state_tx_acc ? (!acc_v[state_tx_tag] || pending[state_tx_tag]) : !local_v[state_tx_tag]))fault<=1;
@@ -163,8 +171,14 @@ module ot_hgi_coll_ring_ag_ctl #(
             ag_v<=0;
             result_slots=0;
             if(rr_local)begin
-                if(!acc_v[rr_local_tag] || pending[rr_local_tag])fault<=1;
-                acc_v[rr_local_tag]<=0;active[rr_local_tag]<=0;
+                if(local_rr)begin
+                    if(!local_v[rr_local_tag] || pending[rr_local_tag])fault<=1;
+                    local_v[rr_local_tag]<=0;
+                end else begin
+                    if(!acc_v[rr_local_tag] || pending[rr_local_tag])fault<=1;
+                    acc_v[rr_local_tag]<=0;
+                end
+                active[rr_local_tag]<=0;
             end
             if(lp_we)begin
                 if(local_v[lp_tag] || active[lp_tag])fault<=1;

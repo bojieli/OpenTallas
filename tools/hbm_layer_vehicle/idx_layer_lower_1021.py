@@ -129,3 +129,103 @@ def runtime_gather(raw, *, timing):
                                         "IDX.TOPK commit -> index read dependency",
                                         "masked output write with actual fixed return ages"],
         qualifies_native_layer=False, qualifies_native_chain=False)
+
+
+GQ_LOCAL_DEFINE = "OT_COLL_GQ_LOCAL_READ"
+GQ_LOCAL_ORIGINAL_SHA256 = {
+    "ot_hgi_coll_gq.sv": "d4990b482a26674449f61722eb44c246bce525c41d7682704e7d94bd5abcd0fa",
+    "ot_hgi_coll_ring_ag.sv": "a8f396ed04718a29a73d222d73c66c3f9b495a171066590dd2507e5bf7d44516",
+}
+
+
+def gq_local_program(*, source_sector, t_start, period, vm_rt,
+                     state_read_isa_row, row_to_isa, rf_sector):
+    """Actual F20 descriptor +1536-bit ISA rows for the source candidate.
+
+    row_to_isa is REQUIRED: caller must use its source-pinned issuer age.
+    Read/return ISA rows are two edges apart (GQ merge adds two to both).
+    Caller chooses their absolute phase after the live VM->LOCAL capture and
+    so the returned stream event occupies an allowed existing3:4 cxrc slot.
+    No fixture value, peer traffic, internal RR stimulus or +0 arithmetic.
+    """
+    if not (0 <= source_sector < 65536 and 0 <= rf_sector < 32
+            and 0 <= t_start < period < 65536 and vm_rt >= 0
+            and row_to_isa >= 0 and state_read_isa_row >= 0):
+        raise ValueError("invalid native source calendar")
+    # period includes the fixed ND40+V drain and descriptor retirement.
+    if period <= t_start + 42 + vm_rt:
+        raise ValueError("period ends before local fetch retirement")
+    payload = ((1 << 101) | (period << 85) | (8 << 69) |
+               (source_sector << 37) | (1 << 19) | (t_start << 3))
+    # Existing ring 1536-bit row field starts at630. LOCAL_TXread bit11;
+    # rr_local bit54. Tag0 is legal because exactly one localF1 is in flight.
+    rows = [dict(row=state_read_isa_row, word=(1 << 11) << 630),
+            dict(row=state_read_isa_row + 2, word=(1 << 54) << 630)]
+    halt = state_read_isa_row + 3
+    if halt >= 256:
+        raise ValueError("selected ROWS256 programme capacity")
+    sparse = {row["row"]: row["word"] for row in rows}
+    dense = []
+    for pc in range(halt + 1):
+        nxt = pc if pc == halt else pc + 1
+        # Exact cfg37/ROWS256 metadata: next highbits51/54; target52/55.
+        metadata = ((63 << 45) | (nxt & 63) | (((nxt >> 6) & 1) << 51) |
+                    (((nxt >> 7) & 1) << 54) | ((pc & 63) << 6) |
+                    (((pc >> 6) & 1) << 52) | (((pc >> 7) & 1) << 55))
+        if pc == halt:
+            metadata |= 1 << 44
+        dense.append(dict(row=pc, word=sparse.get(pc, 0), metadata=metadata))
+    return dict(status="source_candidate", defines=[GQ_LOCAL_DEFINE],
+                source_changes=list(GQ_LOCAL_ORIGINAL_SHA256),
+                gq_target=176, descriptor_row_bits=102,
+                configuration_word=(0xc7a1 << 240) | payload,
+                descriptor=dict(base=0, limit=1, loops=1),
+                issuer_target=52, issuer_rows=rows, issuer_dense_rows=dense,
+                issuer_descriptor=dict(base=0, limit=halt + 1, loops=1, rows_capacity=256),
+                issuer_configuration="F20segments0..5:256b uop, segment6:metadata64/upper192zero; target leaves55edges after lastframe and ROWS256descriptor scan258edges before launch",
+                isa_input_edges=[r["row"] + row_to_isa for r in rows],
+                rf_registration=dict(red_sv=1, red_tag=(1 << 13) | (1 << 23) | (rf_sector << 18),
+                                     reserve="cxrc carry epoch and returntag0 until capture"),
+                reservations=[dict(resource="COLL_read", owner=3, sector=source_sector,
+                                   bank=source_sector % 8, edge_from_fire=17),
+                              dict(resource="ringA_LOCAL_tag0", exclusive=True),
+                              dict(resource="cxrc_return_tag0", exclusive=True),
+                              dict(resource="RF_sector", sector=rf_sector, exclusive=True)],
+                binding_obligations=["match launch/fire/issuer source ages and cxrc legal phase",
+                                     "actual VM read owner at bank after selected relay path",
+                                     "source GQ+ringcontrol fingerprint rebind; no hardview alias"],
+                qualifies_native_layer=False, qualifies_native_chain=False)
+
+
+def stage_gq_local_sources(selected_bundle, overlay_dir):
+    """Write only a NEW two-file overlay after exact original hash checks.
+
+    The selected/live bundle is read-only. Caller clones its functional bundle
+    and applies this overlay with the explicit opt-in define; immutable physical
+    sources/views stay associated with their old fingerprint.
+    """
+    import hashlib
+    from pathlib import Path
+    selected_bundle, overlay_dir = Path(selected_bundle).resolve(), Path(overlay_dir).resolve()
+    if selected_bundle == overlay_dir or selected_bundle in overlay_dir.parents:
+        raise ValueError("overlay must be outside the selected immutable bundle")
+    if overlay_dir.exists() and any(overlay_dir.iterdir()):
+        raise ValueError("overlay destination must be new or empty")
+    rel = Path("rtl/hbm_accel/generic/collective/p2p")
+    canonical = Path(__file__).resolve().parents[2]
+    manifest = {}
+    pending = []
+    for name, expected in GQ_LOCAL_ORIGINAL_SHA256.items():
+        original = (selected_bundle / rel / name).read_bytes()
+        if hashlib.sha256(original).hexdigest() != expected:
+            raise ValueError("selected GQ/ring source differs: " + name)
+        replacement = (canonical / rel / name).read_bytes()
+        target = overlay_dir / rel / name
+        pending.append((target, replacement))
+        manifest[str(rel / name)] = dict(before=expected, after=hashlib.sha256(replacement).hexdigest())
+    for target, replacement in pending:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(replacement)
+    return dict(defines=[GQ_LOCAL_DEFINE], sources=manifest,
+                status="unbound_functional_source_candidate", qualifies_native_layer=False,
+                qualifies_native_chain=False)

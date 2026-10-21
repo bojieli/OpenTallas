@@ -1,0 +1,68 @@
+{
+  "status": "source_candidate",
+  "defines": [
+    "OT_COLL_GQ_LOCAL_READ"
+  ],
+  "source_changes": [
+    "ot_hgi_coll_gq.sv",
+    "ot_hgi_coll_ring_ag.sv"
+  ],
+  "gq_target": 176,
+  "descriptor_row_bits": 102,
+  "configuration_word": 90294719245499331163354418775466850751363564552368759820140652582740563591232,
+  "descriptor": {
+    "base": 0,
+    "limit": 1,
+    "loops": 1
+  },
+  "issuer_target": 52,
+  "issuer_rows": [
+    {
+      "row": 150,
+      "word": 9124881235244390437282343211400582649786457014497119861158385035798550334417354773011825622634742799557284619147188814621377409442750875996505322639444428376503989348720529900165748384493207552
+    },
+    {
+      "row": 152,
+      "word": 80263304161809898486953580976564463280492245526476651908848280381297792881730359224146523075524726123458602430056430323990164676669064390001339947061948865508349970567755807467524166227482951618519489314816
+    }
+  ],
+  "isa_input_edges": [
+    152,
+    154
+  ],
+  "rf_registration": {
+    "red_sv": 1,
+    "red_tag": 8658944,
+    "reserve": "cxrc carry epoch and returntag0 until capture"
+  },
+  "reservations": [
+    {
+      "resource": "COLL_read",
+      "owner": 3,
+      "sector": 6248,
+      "bank": 0,
+      "edge_from_fire": 17
+    },
+    {
+      "resource": "ringA_LOCAL_tag0",
+      "exclusive": true
+    },
+    {
+      "resource": "cxrc_return_tag0",
+      "exclusive": true
+    },
+    {
+      "resource": "RF_sector",
+      "sector": 1,
+      "exclusive": true
+    }
+  ],
+  "binding_obligations": [
+    "match launch/fire/issuer source ages and cxrc legal phase",
+    "actual VM read owner at bank after selected relay path",
+    "source GQ+ringcontrol fingerprint rebind; no hardview alias"
+  ],
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "calendar_note": "Example ISA input152/154; row_to_isa2 is example only, not qualified selected issuer age. Must bind actual existing issuer/callsite."
+}

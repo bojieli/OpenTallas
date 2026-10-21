@@ -16,6 +16,10 @@
 //   [0] qbg  [1] rings2  [2] self_land  [18:3] t_start  [28:19] F (flits per quadrant slice, incl. QBG exponent flits)
 //   [36:29] Bs (QBG code blocks per slice)  [52:37] src sector  [68:53] dst sector  [84:69] stride (words, mult. of 8)
 //   [100:85] period (used from the descriptor at desc_base only)
+// OT_COLL_GQ_LOCAL_READ opt-in: descriptor bit101 is LOCAL_READ_ONLY.
+// Only plain F1/R1/self_land0 is legal. It reads one live VM sector into
+// ringA local state tag0, with no ring traffic or VM landing. Existing ISA
+// state_read_rr/rr_local returns that state through the real cxrc/RF path.
 // desc frame: base = first row, limit = one past the last row, loops = number of periods. After launch the sequencer
 // runs `loops` periods of `period` edges; in each, row d fires when the period counter equals t_start[d] (rows in order).
 //
@@ -156,20 +160,31 @@ module ot_hgi_coll_gq_issue #(
         .launch_v(launch_v), .program_active(active), .program_cfg_we(p_we), .program_cfg_addr(p_wa),
         .program_cfg_data(p_wd), .program_start_v(p_sv), .program_start_base(p_sb), .program_start_limit(p_sl),
         .program_start_loops(p_lp), .configured(configured), .fault(tgt_fault));
+`ifdef OT_COLL_GQ_LOCAL_READ
+    localparam integer DW = 102;
+`else
     localparam integer DW = 101;
+`endif
     reg [DW-1:0] rf [0:15];
     always @(posedge clk) if (p_we && p_wa < 8'd16) rf[p_wa[3:0]] <= p_wd[DW-1:0];
     // ------------------------------------------------------------------ calendar
     reg run; reg [3:0] cur, b0; reg [4:0] lim; reg [15:0] tl, per, lps;
     wire [DW-1:0] rc = rf[cur];
+`ifdef OT_COLL_GQ_LOCAL_READ
+    wire local_request = rc[101];
+`else
+    wire local_request = 1'b0;
+`endif
     wire fire = run && {1'b0, cur} < lim && tl == rc[18:3];
     // gather state (held while busy)
+    reg g_local;
     reg busy; reg g_qbg, g_r2, g_self; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
     reg [9:0] g_kn;                                   // ring indices K = ceil(F / R)
     reg iss; reg [9:0] ik; reg [1:0] iph; localparam integer DRW = $clog2(ND); reg [DRW-1:0] drain;   // 6 b at VM_RT 0 (as built)
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
-    wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] ||
+    wire f_bad = (local_request && (rc[0] || rc[1] || rc[2] || rc[28:19] != 10'd1)) ||
+                 rc[28:19] == 10'd0 || |rc[71:69] ||
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
     wire ev_in_v = iss && iph != 2'd2;
     always @(posedge clk or negedge rn) begin
@@ -209,17 +224,18 @@ module ot_hgi_coll_gq_issue #(
         end
     end
     generate if (V == 0) begin : g_ld0
-        always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
+        always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire && !local_request;
         always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
     end else begin : g_ldv
         // fire delayed V edges; the descriptor comes from the gather state loaded at fire (held: fires never overlap)
         reg [V-1:0] fd;
         always @(posedge clk or negedge rn)
             if (!rn) begin fd <= '0; ld_fire <= 1'b0; end
-            else begin fd <= {fd, fire}; ld_fire <= fd[V-1]; end
+            else begin fd <= {fd, fire && !local_request}; ld_fire <= fd[V-1]; end
         always @(posedge clk) ld_desc <= {g_r2, g_self, g_qbg, g_f, g_bs, g_dst, g_str};
     end endgenerate
     always @(posedge clk) if (fire) begin
+        g_local <= local_request;
         g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
         g_src <= rc[52:37]; g_dst <= rc[68:53]; g_str <= rc[84:69]; g_kn <= f_kn;
     end
@@ -349,6 +365,12 @@ module ot_hgi_coll_gq_issue #(
                     if (h < 3) fwd[k[0]] = 1;
                 end
             end
+            if (g_local) begin
+                // RingA loads its own live sector; no peer lifetime or traffic
+                // is invented. ISA state-read/RR commands remain independent.
+                if (r != 0) lpw = 0;
+                rd=0;rdt=0;inj=0;fwd=0;ttg=0;ttl=0;rx=0;kind=0;src=0;rtag=0;
+            end
             cb[r] = {lpw, lpt, 256'd0, rd, rdt, inj, fwd, ttg, ttl, rx, kind, src, rtag};
         end
     end
@@ -359,7 +381,7 @@ module ot_hgi_coll_gq_issue #(
         if (!rn) begin a1 <= '0; b1 <= '0; end
         else begin a1 <= cb[0]; b1 <= cb[1]; end
     wire [255:0] a1_d = p_d[0], b1_d = p_d[1];
-    assign ld_ev_v = ev_v[V]; assign ld_ev_k = ev_k[V]; assign ld_p_v = p_v; assign ld_p_d = {p_d[1], p_d[0]};
+    assign ld_ev_v = ev_v[V] && !g_local; assign ld_ev_k = ev_k[V]; assign ld_p_v = g_local ? 2'd0 : p_v; assign ld_p_d = {p_d[1], p_d[0]};
     reg [290:0] b2; reg [255:0] b2_d;
     always @(posedge clk or negedge rn) if (!rn) b2 <= '0; else b2 <= b1;
     always @(posedge clk) b2_d <= b1_d;

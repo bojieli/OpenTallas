@@ -42,7 +42,7 @@
   },
   "rf": {
     "sector": "reserve all8 words; adapter replicates actual VMscalar across sector",
-    "tag_registration": "real red_tag[23] arms table, returntag red_tag[16:14], RFsector red_tag[22:18]; not driven internal rrwa",
+    "tag_registration": "real red_sv + red_tag bits13(emit)+23(arm), returntag[16:14], RFsector[22:18]; reserve and flush carryepoch. No internal RR stimulus.",
     "selected_RF_LOCAL": 1
   },
   "remaining": [
@@ -52,5 +52,6 @@
     "runtime physical placement and real IDXproducer dependency",
     "connected native SU arithmetic witness"
   ],
-  "current_scope": "partial19sets/RUN0 unchanged"
+  "current_scope": "partial19sets/RUN0 unchanged",
+  "i10_preferred_source": "GQlocal descriptorbit101 plus ringLOCAL_TX\u2192RR purecopy under OT_COLL_GQ_LOCAL_READ; new directVMbridge parked, not required fori10"
 }
