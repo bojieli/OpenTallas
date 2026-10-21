@@ -17,6 +17,7 @@ import async_gray_fifo_constraints
 import cdc_sync_constraints
 import gray_fifo_cdc_constraints
 import single_clock_contract
+import forwarded_clock_outputs
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -823,6 +824,8 @@ def clocks(spec, period):
         lines.append('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
             '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
             ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']')
+    if forwarded_clock_outputs.contract(spec):
+        lines.append(forwarded_clock_outputs.metadata(spec).rstrip('\n'))
     for e in soft:
         d = ds[e['domain']]
         value = period * d['ratio'][0] / d['ratio'][1]
@@ -841,7 +844,10 @@ def forwarded_pre_cts_tcl(spec, entry_sdc):
     if not forwarded_soft_clocks(spec):
         return []
     out = []
-    for prefix in ('set ::ot_ce_fwd_soft ', 'set ::ot_ce_refs '):
+    prefixes = ['set ::ot_ce_fwd_soft ', 'set ::ot_ce_refs ']
+    if forwarded_clock_outputs.contract(spec):
+        prefixes.append('set ::ot_ce_fwd_outputs ')
+    for prefix in prefixes:
         matches = [line for line in entry_sdc.splitlines() if line.startswith(prefix)]
         if len(matches) != 1:
             raise ValueError('forwarded pre-CTS: missing or duplicate generated contract ' + prefix)
@@ -1004,6 +1010,7 @@ def _generate(spec, root):
             + ('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
                 '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
                 ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']\n' if soft else '')
+            + forwarded_clock_outputs.metadata(spec, root)
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')

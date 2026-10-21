@@ -166,7 +166,7 @@ puts "LANDED_RESULT PASS"
 '''
             if restart_pre_cts is not None:
                 metadata = CE.forwarded_pre_cts_tcl(s, CE.generate(s, w)) if restart_pre_cts else []
-                restore = 'unset -nocomplain ::ot_ce_fwd_soft ::ot_ce_refs\n' + '\n'.join(metadata) + '\n'
+                restore = 'unset -nocomplain ::ot_ce_fwd_soft ::ot_ce_refs ::ot_ce_fwd_outputs\n' + '\n'.join(metadata) + '\n'
                 flow = flow.replace('source /src/physical/common_flow/clock_entries.tcl',
                                     restore + 'source /src/physical/common_flow/clock_entries.tcl')
             if pre:
