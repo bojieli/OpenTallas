@@ -291,6 +291,53 @@ def lower_hc_post_io(*, D, quadrant, y_word, residual_word, coefficient_word,
                 calendar_integration_required=True, segments=payloads)
 
 
+
+def lower_qdq_fp8(*, words, a_sector, o_sector, selected_engine,
+                   component_allocation, record=16, t0=16):
+    """Actual NW target48 runtime FP8 QDQ programme, without output injection.
+
+    Addresses are allocated NW-local sector addresses. Common calendar/bank
+    ownership and the current RL57 coupled execution remain mandatory.
+    """
+    expected = dict(RL=57, WC=4, COMPACT=1)
+    if selected_engine.get("master") != "ot_hgi_qdq_host_split" or any(
+            int(selected_engine.get("params",{}).get(k,-1)) != v for k,v in expected.items()):
+        raise ValueError("QDQ requires the exact selected RL57/WC4/COMPACT1 NW engine")
+    if not isinstance(words,int) or words < 128 or words % 32 or words//32 >= 1<<16:
+        raise ValueError("compact QDQ requires at least four 32-word beats")
+    sectors=words//8
+    if any(not isinstance(a,int) or a<0 or a+sectors>8192 or a%4
+           for a in (a_sector,o_sector)):
+        raise ValueError("QDQ requires explicit four-sector-aligned NW allocation")
+    if max(a_sector,o_sector)<min(a_sector+sectors,o_sector+sectors):
+        raise ValueError("QDQ input/output allocations overlap")
+    # record calendar current[31:0]=first timestamp; [47:32]=beats;
+    # [63:48]/[79:64]=source/destination sector; [85:80]=op4(FP8).
+    first=16;beats=words//32
+    row=(0xc7a1<<240)|(4<<80)|(o_sector<<64)|(a_sector<<48)|(beats<<32)|first
+    cp=CpBus(t0,src="image:QDQ_FP8_REAL_NW")
+    cp.install(48,[row],rec=record)
+    cp.desc(48,0,1,1,rec=record)
+    cp.launch(rec=record)
+    return dict(schema="opentallas.qdq_fp8_runtime.v1",status="source_assembly_only",
+                execution_qualified=False,qualifies_native_layer=False,
+                component_allocation=component_allocation,selected_engine=selected_engine,
+                required_instance_names=["hb_quant_NW","hleaf_NW","hb_idx__nwsh"],
+                required_request_padding_regex="^l12p_hb_quant_NW_hb_idx__nwsh_b_rq_",
+                programme_rows=[f"{row:064x}"],events=cp.ev,
+                local_counter_schedule=dict(first_command=first,last_command=first+beats-1,
+                                            beats=beats,sectors_per_beat=4),
+                fixed_source_parameters=dict(RL=57,WC=4,transport_NP=59,transport_ND=26),
+                launch_to_counter_origin_qualified=False,
+                command_footprints=[dict(counter=first+b,read_sectors=list(range(a_sector+4*b,a_sector+4*b+4)),
+                                        write_sectors=list(range(o_sector+4*b,o_sector+4*b+4)))
+                                    for b in range(beats)],
+                owner_footprints=dict(quadrant="NW",vm_reads=list(range(a_sector,a_sector+sectors)),
+                                      vm_writes=list(range(o_sector,o_sector+sectors)),f20_targets=[48]),
+                calendar_integration_required=True,
+                cross_quadrant_producer_mapping_qualified=False)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     for name in ("fixtures", "contract", "l12", "bundle", "checkpoint", "out"):
