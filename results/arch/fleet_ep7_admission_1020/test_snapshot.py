@@ -59,7 +59,7 @@ class Snapshot(unittest.TestCase):
  def test_empty_failed_or_unparseable_bus_preserves_fallback(self):
   fn=NEW['scope_cgroup_snapshot'];ns=fn.__globals__;old=ns['sh']
   try:
-   for raw in ('','garbled','ControlGroup=/orphan','Id=other.scope\nControlGroup=/wrong'):
+   for raw in ('','garbled','ControlGroup=/orphan','Id=other.scope\nControlGroup=/wrong','Id=oth-x.scope','Id=oth-x.scope\nControlGroup=garbled'):
     ns['sh']=lambda *args:raw
     self.assertIsNone(fn(['oth-x']))
    ns['sh']=lambda *args:'Id=oth-x.scope\nControlGroup='

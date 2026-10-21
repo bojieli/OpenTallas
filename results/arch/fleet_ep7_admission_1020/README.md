@@ -43,3 +43,8 @@ unclosed STATE read and preserved as output.
 Files original/proposed+unified patch are REVIEW ARTIFACTS, not deployed helpers.
 ROOT decides installation after reviewing the performance benefit against the
 remaining queue. The backlog was already draining at measurement time.
+
+Parser follow-up: missing ControlGroup property or nonempty nonabsolute value
+is now treated as unknown and falls back to the original per-unit query.
+Extra malformed cases pass in the same4-test compatibility suite. The recorded
+live benchmark used71e81aabd; this follow-up changes only malformed-input handling.

@@ -525,7 +525,11 @@ def scope_cgroup_snapshot(units):
         name = fields.get("Id", "")
         if not name.startswith("oth-") or not name.endswith(".scope"):
             continue
-        cg = fields.get("ControlGroup", "")
+        if "ControlGroup" not in fields:
+            continue
+        cg = fields["ControlGroup"]
+        if cg and not cg.startswith("/"):
+            continue
         path = f"/sys/fs/cgroup{cg}" if cg.startswith("/") else None
         out[name[:-6]] = path if path and os.path.isdir(path) else None
     return out or None

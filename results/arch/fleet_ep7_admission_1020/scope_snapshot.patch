@@ -1,6 +1,6 @@
 --- ot-heavy-reconcile.original
 +++ ot-heavy-reconcile.proposed
-@@ -507,10 +507,36 @@
+@@ -507,10 +507,40 @@
      return d["MemTotal"], d["MemAvailable"]
  
  
@@ -23,7 +23,11 @@
 +        name = fields.get("Id", "")
 +        if not name.startswith("oth-") or not name.endswith(".scope"):
 +            continue
-+        cg = fields.get("ControlGroup", "")
++        if "ControlGroup" not in fields:
++            continue
++        cg = fields["ControlGroup"]
++        if cg and not cg.startswith("/"):
++            continue
 +        path = f"/sys/fs/cgroup{cg}" if cg.startswith("/") else None
 +        out[name[:-6]] = path if path and os.path.isdir(path) else None
 +    return out or None
@@ -39,7 +43,7 @@
  
  
  def read_units():
-@@ -520,7 +546,14 @@
+@@ -520,7 +550,14 @@
      except (OSError, ValueError):
          st = {}
      rows = []
@@ -55,7 +59,7 @@
          try:
              unit, m = rd(f).split()
              m = int(m)
-@@ -529,7 +562,7 @@
+@@ -529,7 +566,7 @@
              continue
          meta = rd(f"{D}/meta.{unit}").split()          # written by ot-heavy v8: request GB, class
          s = st.get(unit, {})
