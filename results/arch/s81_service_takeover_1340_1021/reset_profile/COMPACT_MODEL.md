@@ -1,0 +1,7 @@
+Exact132-leaf transpose reset source construction, before RTL
+
+ActualG4 uses four transposers. Each has8 dimensions x64 rows x2 reset contacts plus32 selects:1024+32=1056 contacts, 33 leaves at32contacts/leaf. Four require132 leaves/4224 contacts, not a512-leaf physical reserve.
+
+Construct three levels of three plain edges, with fanout at most8 and only used branches: root has3outputs(ceil132/64); middle levels have8+8+1outputs; final groups have16x8+1x4=132outputs. Register count root2+3=5, middles3x2+17=23, finals17x2+132=166:194plain FF. Each used output feeds exact2FF asynchronous-assert/synchronous-release controller reset logic:264ASR FF. Total458 vs generic1754; all branch/leaf state has a real consumer. No unused kept spares claimed free.
+
+The profile input follows existingLP2 edges, hence assertion11C and release13C exactly as originalLP11 + u_rl ASR2. T0/maincore/landing resets are unchanged. Internal transpose mapping becomes dense33-leaf chunks; unused positions of existing64-bit local adapter ports remain unreachable by actual TD32/DPT8 guarded indices. No functional state is tied. No cycle, clock, memory, tag or arithmetic change. Minimum proof is existing four-XOFF transpose/refill/actual-u_rl age case at exact132shape and paired actual4224RESETN fixture; no wholecore resynthesis or physical adoption. Original512 helper and7a fullATT job remain immutable previous-source evidence.
