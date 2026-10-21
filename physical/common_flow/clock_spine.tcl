@@ -707,9 +707,14 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   }
   ot_sp_bind_pg
   if {$ot_rcc} { ot_rc_cal_restore; estimate_parasitics -placement }
+  # Typed source-record taps execute only after this root is balanced, before protection.
+  if {[info exists ::ot_sp_record_taps_v1]} {
+    if {[ot_srt::apply $port]} {ot_sp_bind_pg}
+  }
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }
   ot_sp_check_legal
+  if {[info exists ::ot_sp_record_taps_v1]} {ot_srt::protected $port}
   set ::ot_sp_port $port
   puts "OT_SPINE done port $port buffers $::ot_sp_nbuf"
   return 1

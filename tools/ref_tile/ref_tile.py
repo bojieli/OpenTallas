@@ -1972,7 +1972,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.extend(domain_spatial_spine.before_entries(s))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
-        pre_cts.extend(domain_spatial_spine.after_entries(s))
+        pre_cts.extend(domain_spatial_spine.after_entries(s, ROOT))
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
         pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
@@ -2405,7 +2405,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(HDLY_TCL)
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
-    out += domain_spatial_spine.dependencies(s)
+    out += domain_spatial_spine.dependencies(s, ROOT)
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]

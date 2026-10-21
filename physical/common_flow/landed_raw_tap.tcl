@@ -53,6 +53,7 @@ proc ot_lrt_corner {cell} {
   error "OT_LRT: no corner for the loaded library of [get_full_name $cell]"
 }
 proc ot_lrt_tap_batched {} {
+  if {[info exists ::ot_sp_record_taps_v1] && ![info exists ::ot_srt::active]} {return [ot_srt::verify]}
   if {![info exists ::ot_lrt_targets] || ![dict size $::ot_lrt_targets]} return
   if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_require_cts_placement_or_empty_context}
   set block [ord::get_db_block]
@@ -79,6 +80,7 @@ proc ot_lrt_tap_batched {} {
     foreach it [$inst getITerms] {
       set key "$master/[[$it getMTerm] getName]"
       if {![dict exists $::ot_lrt_targets $key]} continue
+      if {[info exists ::ot_srt::active] && ![ot_srt::selected $it]} continue
       set t [dict get $::ot_lrt_targets $key]
       set iname [$inst getName]
       set refit [$inst findITerm [dict get $t ref]]
@@ -122,16 +124,20 @@ proc ot_lrt_tap_batched {} {
           set prev $d
           # one more buffer in front of the raw pin: (net) -> buf -> new net -> raw pin
           set old [$it getNet]
-          set b [odb::dbInst_create $block $bm "ot_lrt_${iname}_${mterm}_$n"]
-          if {$b eq "NULL"} { error "OT_LRT: cannot create tap buffer" }
-          $b setLocation [expr {int($x)}] [expr {int($y)}]
-          $b setPlacementStatus PLACED
-          set nn [odb::dbNet_create $block "ot_lrt_n_${iname}_${mterm}_$n"]
-          $nn setSigType CLOCK
-          $it disconnect
-          [$b findITerm $ain] connect $old
-          [$b findITerm $aout] connect $nn
-          $it connect $nn
+          if {[info exists ::ot_srt::active]} {
+            lassign [ot_srt::create $it $bm "ot_lrt_${iname}_${mterm}_$n" $x $y] b nn old
+          } else {
+            set b [odb::dbInst_create $block $bm "ot_lrt_${iname}_${mterm}_$n"]
+            if {$b eq "NULL"} { error "OT_LRT: cannot create tap buffer" }
+            $b setLocation [expr {int($x)}] [expr {int($y)}]
+            $b setPlacementStatus PLACED
+            set nn [odb::dbNet_create $block "ot_lrt_n_${iname}_${mterm}_$n"]
+            $nn setSigType CLOCK
+            $it disconnect
+            [$b findITerm $ain] connect $old
+            [$b findITerm $aout] connect $nn
+            $it connect $nn
+          }
           # Bind before the next placement estimate and raw/ref arrival measurement.
           if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_bind_before_protect [ot_pg_prepare_targets $block [list $b]] $b}
           set last [list $b $nn $old]
@@ -153,10 +159,14 @@ proc ot_lrt_tap_batched {} {
       if {$n > 0 && $prev ne "" && $want - $prev < $d - $want} {
         lassign $last b nn old
         set made [lrange $made 0 end-2]
-        $it disconnect
-        odb::dbInst_destroy $b
-        odb::dbNet_destroy $nn
-        $it connect $old
+        if {[info exists ::ot_srt::active]} {
+          ot_srt::backout $it $b $nn $old
+        } else {
+          $it disconnect
+          odb::dbInst_destroy $b
+          odb::dbNet_destroy $nn
+          $it connect $old
+        }
         incr n -1
         lappend dropped $i
       }
@@ -183,7 +193,7 @@ proc ot_lrt_tap_batched {} {
       } else {
         ot_pg_standard_bind landed_raw_tap
       }
-      foreach o $made { $o setDoNotTouch 1 }
+      if {![info exists ::ot_srt::active]} {foreach o $made { $o setDoNotTouch 1 }}
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname $mterm $n $d $want [expr {$d - $want}]]
     }
     incr done
@@ -195,6 +205,7 @@ proc ot_lrt_tap_batched {} {
   puts "OT_LRT tapped $done raw child clock pins"
 }
 proc ot_lrt_tap {} {
+  if {[info exists ::ot_sp_record_taps_v1] && ![info exists ::ot_srt::active]} {return [ot_srt::verify]}
   # OT_LRT_BATCH=1 (ROOT3 10-19, opt-in; default = this per-pin loop, byte-identical behaviour for every existing kit):
   # the batched form below (L2H-PGVM 84d1b9ee6) advances all raw pins together with one estimate_parasitics per round.
   # Equal chains are shown only for independent pins (tools/ref_tile/tests/lrt_batched_mock.tcl); with a shared upstream
@@ -223,6 +234,7 @@ proc ot_lrt_tap {} {
     foreach it [$inst getITerms] {
       set key "$master/[[$it getMTerm] getName]"
       if {![dict exists $::ot_lrt_targets $key]} continue
+      if {[info exists ::ot_srt::active] && ![ot_srt::selected $it]} continue
       set t [dict get $::ot_lrt_targets $key]
       set iname [$inst getName]
       set refit [$inst findITerm [dict get $t ref]]
@@ -252,16 +264,20 @@ proc ot_lrt_tap {} {
         set prev $d
         # one more buffer in front of the raw pin: (net) -> buf -> new net -> raw pin
         set old [$it getNet]
-        set b [odb::dbInst_create $block $bm "ot_lrt_${iname}_[[$it getMTerm] getName]_$n"]
-        if {$b eq "NULL"} { error "OT_LRT: cannot create tap buffer" }
-        $b setLocation [expr {int($x)}] [expr {int($y)}]
-        $b setPlacementStatus PLACED
-        set nn [odb::dbNet_create $block "ot_lrt_n_${iname}_[[$it getMTerm] getName]_$n"]
-        $nn setSigType CLOCK
-        $it disconnect
-        [$b findITerm $ain] connect $old
-        [$b findITerm $aout] connect $nn
-        $it connect $nn
+        if {[info exists ::ot_srt::active]} {
+          lassign [ot_srt::create $it $bm "ot_lrt_${iname}_[[$it getMTerm] getName]_$n" $x $y] b nn old
+        } else {
+          set b [odb::dbInst_create $block $bm "ot_lrt_${iname}_[[$it getMTerm] getName]_$n"]
+          if {$b eq "NULL"} { error "OT_LRT: cannot create tap buffer" }
+          $b setLocation [expr {int($x)}] [expr {int($y)}]
+          $b setPlacementStatus PLACED
+          set nn [odb::dbNet_create $block "ot_lrt_n_${iname}_[[$it getMTerm] getName]_$n"]
+          $nn setSigType CLOCK
+          $it disconnect
+          [$b findITerm $ain] connect $old
+          [$b findITerm $aout] connect $nn
+          $it connect $nn
+        }
         # Bind before the next placement estimate and raw/ref arrival measurement.
         if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_bind_before_protect [ot_pg_prepare_targets $block [list $b]] $b}
         set last [list $b $nn $old]
@@ -273,10 +289,14 @@ proc ot_lrt_tap {} {
       if {$n > 0 && $prev ne "" && $want - $prev < $d - $want} {
         lassign $last b nn old
         set made [lrange $made 0 end-2]
-        $it disconnect
-        odb::dbInst_destroy $b
-        odb::dbNet_destroy $nn
-        $it connect $old
+        if {[info exists ::ot_srt::active]} {
+          ot_srt::backout $it $b $nn $old
+        } else {
+          $it disconnect
+          odb::dbInst_destroy $b
+          odb::dbNet_destroy $nn
+          $it connect $old
+        }
         incr n -1
         estimate_parasitics -placement
         set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}]
@@ -290,7 +310,7 @@ proc ot_lrt_tap {} {
       } else {
         ot_pg_standard_bind landed_raw_tap
       }
-      foreach o $made { $o setDoNotTouch 1 }
+      if {![info exists ::ot_srt::active]} {foreach o $made { $o setDoNotTouch 1 }}
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname [[$it getMTerm] getName] $n $d $want [expr {$d - $want}]]
       incr done
     }

@@ -111,7 +111,9 @@ proc ot_dsp::admit {} {
             error "OT_DOMAIN_SPINE physical/Liberty clock-pin coverage mismatch [$instance getName]"
         }
     }
-    return [ot_dsp::validate $::ot_dsp_roots $rootnets $contacts $nonclock]
+    set counts [ot_dsp::validate $::ot_dsp_roots $rootnets $contacts $nonclock]
+    if {[info exists ::ot_sp_record_taps_v1]} {ot_srt::admit $rootnets $contacts}
+    return $counts
 }
 
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_dsp_cts_orig] eq ""} {
