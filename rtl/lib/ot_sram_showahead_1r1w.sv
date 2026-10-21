@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+`ifndef OT_LEP_AR
+`ifdef OT_S81SL_LEP_SYNCRST
+// R7 (ELEM-LEP/A 10-21, opt-in): reset only gates control/valid D inputs (synchronous); no async RESETN pin, so no
+// removal check sits on two different clock leaves (r6v FF -34.22: local_r -> frame flop 1.7 um, 51 ps leaf skew).
+// Release edges are unchanged; assertion needs the clock running for >= 4 cycles (benches hold reset 8).
+`define OT_LEP_AR(r)
+`else
+`define OT_LEP_AR(r) or negedge r
+`endif
+`endif
 // Registered continuous SRAM read, NEW on a current logical same-address write.
 // WREG=1 registers macro write pins; its previous logical write also forwards.
 // Caller supplies ra = NEXT head and independent same-depth resets per16-bit slice.
@@ -20,7 +30,7 @@ module ot_sram_showahead_1r1w #(
   end else begin:g_shared assign read_addr_local[ar*AW+:AW]=ra;end
  end endgenerate
  reg wv; reg [AW-1:0] waddr; reg [W-1:0] wdata, prevdata;
- always @(posedge clk or negedge rst_n[0]) if(!rst_n[0]) wv<=1'b0; else wv<=we;
+ always @(posedge clk `OT_LEP_AR(rst_n[0])) if(!rst_n[0]) wv<=1'b0; else wv<=we;
  always @(posedge clk) begin waddr<=wa; wdata<=wd; prevdata<=wdata; end
  wire current_hit=we && wa==ra;
  wire previous_hit=(WREG!=0) && wv && waddr==ra;
@@ -61,7 +71,7 @@ module ot_sram_showahead_1r1w #(
  for(s=0;s<NS;s=s+1) begin:g_slice
   localparam integer LO=s*SB, SW=(W-LO<SB)?W-LO:SB;
   (* keep="true" *) reg cur_q, prev_q;
-  always @(posedge clk or negedge rst_n[s])
+  always @(posedge clk `OT_LEP_AR(rst_n[s]))
    if(!rst_n[s]) begin cur_q<=1'b0; prev_q<=1'b0; end
    else begin cur_q<=(MUT==1)?1'b0:local_current_hit[s/16]; prev_q<=(MUT==2)?1'b0:local_previous_hit[s/16]; end
   assign q[LO+:SW]=cur_q ? wdata[LO+:SW] : prev_q ? prevdata[LO+:SW] : raw[LO+:SW];
@@ -87,7 +97,7 @@ endmodule
  (* keep=1 *) reg [AW-1:0] ptr;
  wire advance=advance_a && advance_b;
  assign next_addr=advance?((ptr==AW'(DEPTH-1))?'0:ptr+1'b1):ptr;
- always @(posedge clk or negedge rn) if(!rn) ptr<=0;else ptr<=next_addr;
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) ptr<=0;else ptr<=next_addr;
 endmodule
 
 // Opt-in same-age write-pin copies; distinct retained flop drivers prevent a
@@ -97,7 +107,7 @@ endmodule
  output wire qwe,output wire [AW-1:0] qwa);
  (* keep=1 *) reg valid_q;
  (* keep=1 *) reg [AW-1:0] addr_q;
- always @(posedge clk or negedge rn) if(!rn) valid_q<=0;else valid_q<=we;
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) valid_q<=0;else valid_q<=we;
  always @(posedge clk) addr_q<=wa;
  assign qwe=valid_q;assign qwa=addr_q;
 endmodule
