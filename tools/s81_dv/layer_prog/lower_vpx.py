@@ -183,16 +183,13 @@ GAP_PLACE = dict(module='tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)'
                          'the real lep + lane tiles); the production rows of the own part at the 3 end slices (the '
                          'capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer '
                          'placement of the 3 received parts are not compiled yet')
-GAP_FOLD = dict(module='ot_s81sl_vs RB operand layout x ot_s81sl_xr RD receive (S81-ELEM / S81-SLICE)',
-                port='owner fold ((p0+p1)+(p2+p3)): RB n rows reads the PAIR (a0 + 2 s, a0 + 2 s + 1)',
-                missing='TOK-FUNC2-S81-L0B 10-21: the encoder exists (layer_prog/owner_fold.py, VS RB, bench '
-                        'run_owner_fold.sh PASS + MUT2 FAIL) but its operands cannot be assembled from the collective: '
-                        'RB adds row a0 + 2 s to row a0 + 2 s + 1 (ot_s81sl_vs.sv op 11), so p_a[r] and p_b[r] of two '
-                        'DIFFERENT ranks must share one even row pair, while an RD receive writes whole even pairs from '
-                        'ONE sender with mask 0xff (ot_s81sl_xr.sv:421; rows R, R + 1 = 8 consecutive elements of one '
-                        'partial) and target-5 rows are static.  (p2 + p3) has two remote operands: no placement '
-                        'exists.  Fix candidates: a vs RB2 op (row a0 + s + row a1 + s, a0 even / a1 odd -> one bank '
-                        'each), or a word-masked RD receive (dst row parity); RS ownership placement then follows')
+GAP_FOLD = dict(module='owner_fold.py / wo_b capture and current RD route compiler',
+                port='four actual rank partial pairs -> staged local RD -> three VS RB commands per128b half',
+                missing='The existing full-width RD/local-copy and VP odd-row write/read paths can assemble '
+                        'adjacent different-rank operands with reserved spill rows; no new add or masked transport '
+                        'is required. The emitted data-free vehicle is unscheduled: bind actual wo_b capture '
+                        'addresses/output indices, four-rank routes, SRAM commit epochs and tile/result lifetimes '
+                        'before issuing it. Typed V rejects odd rows and is not used for the overlapping copies.')
 GAP_FFN_COMBINE = dict(module='final_ffn.py / xs_calendar --final-ffn-placement',
                        port='output-row-owned VS13 then result allgather',
                        missing='actual VS13/POST words and capture/move map exist; bind VPX lifetimes, current RD paths '
@@ -372,6 +369,14 @@ def lower(die, op, ctx):
         if name == 'ffn.combine_allreduce':
             return dict(status='PARTIAL', unit='output-row-owned VS13 then combined-result allgather',
                         insts=[], rows=[], templates=[], events=[], gap=GAP_FFN_COMBINE, bench=BENCH)
+        if name == 'attn.out_allreduce' and ctx.get('layer') == 'L0':
+            from layer_prog.owner_fold import pair_vehicle
+            sl = ctx['slice']
+            vehicle = pair_vehicle(die.slices()[sl]['sid'], int(ctx.get('leaf', 0)), layer=ctx['layer'])
+            return dict(status='PARTIAL', unit='native full-width local RD operand assembly + VS11 TP4 owner fold',
+                        insts=[sl], rows=[], templates=[], events=[], gap=GAP_FOLD,
+                        files={f'prog/owner_fold/{op["id"]}.pair_vehicle.json': json.dumps(vehicle, indent=2)+'\n'},
+                        bench='tools/s81_dv/tokfunc/run_owner_fold.sh')
         return dict(status='GAP', unit='RS + AG over the end-slice endpoints + owner fold', insts=[], gap=GAP_FOLD,
                     bench=BENCH)
     return dict(status='GAP', unit='vpx', insts=[], gap=dict(module='lower_vpx', port='-', missing=f'{name} not lowered'))
