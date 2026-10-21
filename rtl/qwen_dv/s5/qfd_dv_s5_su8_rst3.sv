@@ -199,20 +199,22 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     wire [4*AW-1:0] cur_nx = {cura_nx, curb_nx, curc_nx, curd_nx};
     wire [4*AW-1:0] xs_cur = {asi, bsi, csi, dsi};
     wire [4*AW-1:0] xs_in  = {i_asi, i_bsi, i_csi, i_dsi};
-    wire [4*AW-1:0] xs_nx;
-    generate for (gc = 0; gc < NXS; gc = gc + 1) begin : g_xs
-        assign xs_nx[12*gc +: 12] = acc_k[NFA + NCH + 10 + gc] ? xs_in[12*gc +: 12] : xs_cur[12*gc +: 12];
-    end endgenerate
+    // r2 (gate 22:33 in-flow census: 73 xs_nx accept muxes drove 37-52 loads = the 8 lane stride multipliers): the
+    // accept mux is replicated per lane GROUP inside a kept module (lanes 0-5 | 6-7), so each copy feeds only its own
+    // group's multipliers; the 8 select replicas acc_k[NFA+NCH+10+gc] each drive 2 x 12 mux selects.  0 edges.
     wire [4*AW-1:0] cur_l [0:3];
     wire [4*AW-1:0] xs_l [0:7];
+    wire [6*4*AW-1:0] xo_a;
+    wire [2*4*AW-1:0] xo_b;
+    qfd_dv_su8_xsg #(.K0(0), .NK(6)) u_xsg_a (.sel(acc_k[NFA + NCH + 10 +: NXS]), .xin(xs_in), .xcur(xs_cur), .y(xo_a));
+    qfd_dv_su8_xsg #(.K0(6), .NK(2)) u_xsg_b (.sel(acc_k[NFA + NCH + 10 +: NXS]), .xin(xs_in), .xcur(xs_cur), .y(xo_b));
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_curl
         qfd_dv_su8_kff #(.W(4*AW), .ID(650 + gc)) u (.ck(ck), .d(cur_nx), .q(cur_l[gc]));
     end
     for (gc = 0; gc < 8; gc = gc + 1) begin : g_xsl
         wire [4*AW-1:0] lane_offsets;
-        for (genvar field = 0; field < 4; field = field + 1) begin : g_offset
-            qfd_dv_su8_stride #(.K(gc)) u_off (.x(xs_nx[24*field +: 24]), .y(lane_offsets[24*field +: 24]));
-        end
+        if (gc < 6) begin : g_a assign lane_offsets = xo_a[4*AW*gc +: 4*AW]; end
+        else begin : g_b assign lane_offsets = xo_b[4*AW*(gc - 6) +: 4*AW]; end
         qfd_dv_su8_kff #(.W(4*AW), .ID(660 + gc)) u (.ck(ck), .d(lane_offsets), .q(xs_l[gc]));
     end endgenerate
     wire retire = c_l_retire[0];
@@ -297,4 +299,20 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
 
 
 qfd_dv_su8_kff #(.W(1058),.ID(9010)) u_output_pins (.ck(ck),.d({c_gb,c_gv,c_lv1,c_pd1,c_su_nr,c_su_idle,c_su_fault,c_su_prog,c_su_rows}),.q({gb,gv,lv1,pd1,su_nr,su_idle,su_fault,su_prog,su_rows}));
+endmodule
+
+// QW-SU8 r2: one lane group's copy of the stride accept mux (12-bit chunk gc selected by sel[gc]) + its lane multipliers
+// K0 .. K0+NK-1 (lane_offset[k] = (K0+k) * stride per field, modulo 2^24).  Kept so the copies are never merged.
+(* keep_hierarchy = "yes" *) module qfd_dv_su8_xsg #(parameter integer K0 = 0, parameter integer NK = 1) (
+    input wire [7:0] sel, input wire [95:0] xin, input wire [95:0] xcur, output wire [NK*96-1:0] y);
+    wire [95:0] x;
+    genvar c, k, f;
+    generate for (c = 0; c < 8; c = c + 1) begin : g_m
+        assign x[12*c +: 12] = sel[c] ? xin[12*c +: 12] : xcur[12*c +: 12];
+    end
+    for (k = 0; k < NK; k = k + 1) begin : g_k
+        for (f = 0; f < 4; f = f + 1) begin : g_f
+            qfd_dv_su8_stride #(.K(K0 + k)) u_off (.x(x[24*f +: 24]), .y(y[96*k + 24*f +: 24]));
+        end
+    end endgenerate
 endmodule
