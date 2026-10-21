@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-s81-g8-bindfix-1021/die72-g8r2/src/tools/s81_dv/release72/check_spare_faces.py", line 33, in <module>
+    assert cur not in seen, ('frame X cycle',frame,lane)
+           ^^^^^^^^^^^^^^^
+AssertionError: ('frame X cycle', 'f_0L01', 0)
