@@ -87,7 +87,7 @@ put() {  # rev path dst-root  -> write file; echo blob
   local b; b=$(blob "$1" "$2") || return 1; mkdir -p "$(dirname "$3/$2")"; $G cat-file blob "$b" > "$3/$2"; echo "$b"
 }
 assemble() {  # variant -> $OUTROOT/$v/src + flist + defines + manifest
-  local v=$1 S="$OUTROOT/$1/src" man="$OUTROOT/$1/src.manifest.tsv" f b ovr=$DIE_REV fl defs="" dut=""
+  local v=$1 S="$OUTROOT/$1/src" man="$OUTROOT/$1/src.manifest.tsv" f b ovr=$DIE_REV fl defs="" dut="" sp=""
   rm -rf "$S"; mkdir -p "$S"; : > "$man"
   fl="$STEP_F"
   case $v in
@@ -95,7 +95,7 @@ assemble() {  # variant -> $OUTROOT/$v/src + flist + defines + manifest
     r14_lpars128) defs="+define+XDIE_AR_ITER=1 +define+XDIE_ROWS=128";;
     main_rows256) ovr=$MAIN256_REV; fl="$STEP_F $F256"; defs="+define+XDIE_AR_ITER=1 +define+XDIE_ROWS=256";;
     succ_lpars)
-      local sp; sp=$($G show "$SUCC_RL:$COLL_SPEC" | python3 -c "import json,sys;s=json.load(sys.stdin);print(' '.join(s['sources']+s['child_sources']))")
+      sp=$($G show "$SUCC_RL:$COLL_SPEC" | python3 -c "import json,sys;s=json.load(sys.stdin);print(' '.join(s['sources']+s['child_sources']))")
       fl=$(for f in $STEP_F $sp; do [ "$f" = "$P/ot_hfd_coll_q_hard_v8g.sv" ] || echo "$f"; done | awk '!s[$0]++' | tr '\n' ' ')
       dut=ot_hfd_coll_n1s0_lpf_ars; defs="+define+XDIE_AR_ITER=1 +define+XDIE_ROWS=128 +define+XDIE_DUT_MODULE=$dut";;
     gen)
@@ -111,12 +111,19 @@ assemble() {  # variant -> $OUTROOT/$v/src + flist + defines + manifest
   for f in $BENCH_ONLY; do b=$(put "$BENCH_REV" "$f" "$S") || { echo "ASSEMBLE FAIL $v: $f not in BENCH_REV"; return 1; }; printf '%s\t%s\t%s\tbench\n' "$f" "$BENCH_REV" "$b" >> "$man"; done
   for f in $fl $P/static_uop_layout_v4.json; do
     case " $BENCH_ONLY " in *" $f "*) continue;; esac
+    [ $v = succ_lpars ] && case " $sp " in *" $f "*) continue;; esac   # written by step 3
     if b=$(put "$ovr" "$f" "$S"); then printf '%s\t%s\t%s\tdie\n' "$f" "$ovr" "$b" >> "$man"
     elif b=$(put "$BENCH_REV" "$f" "$S"); then printf '%s\t%s\t%s\tbench-fallback\n' "$f" "$BENCH_REV" "$b" >> "$man"
     else echo "ASSEMBLE FAIL $v: $f in neither $ovr nor BENCH_REV"; return 1; fi
   done
+  # include files (*.svh / *.vh) of every source directory, from the same rev as the sources
+  local d inc
+  for d in $(for f in $fl; do dirname "$f"; done | sort -u); do
+    for inc in $($G ls-tree --name-only "$ovr" "$d/" 2>/dev/null | grep -E '\.(svh|vh)$'); do
+      [ -e "$S/$inc" ] || { b=$(put "$ovr" "$inc" "$S") && printf '%s\t%s\t%s\tinclude\n' "$inc" "$ovr" "$b" >> "$man"; }
+    done
+  done
   if [ $v = succ_lpars ]; then  # 3) successor parent + hard leaves: SUCC_RL, 3-way merged with SUCC_LINK and SUCC_ISS onto SUCC_BASE
-    local sp; sp=$($G show "$SUCC_RL:$COLL_SPEC" | python3 -c "import json,sys;s=json.load(sys.stdin);print(' '.join(s['sources']+s['child_sources']))")
     local tmp; tmp=$(mktemp -d)
     for f in $sp; do
       local br bb bl bi; br=$(blob $SUCC_RL "$f"); bb=$(blob $SUCC_BASE "$f"); bl=$(blob $SUCC_LINK "$f"); bi=$(blob $SUCC_ISS "$f")
