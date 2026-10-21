@@ -1,8 +1,8 @@
 """Prove the actual RR source inputs differ only by the true HP export delta."""
 from pathlib import Path
-import argparse,subprocess,hashlib,json,difflib
+import argparse,subprocess,hashlib,json,difflib,re
 ap=argparse.ArgumentParser(description=__doc__)
-ap.add_argument('qko_source',type=Path);ap.add_argument('out',type=Path);a=ap.parse_args()
+ap.add_argument('qko_source',type=Path);ap.add_argument('out',type=Path);ap.add_argument('--original-source',type=Path);a=ap.parse_args()
 repo=Path(__file__).resolve().parents[4];a.out.mkdir(parents=True,exist_ok=True)
 records=[]
 for base,hp in [('qfd_tt_ctlm_dv_lpf.sv','qfd_tt_ctlm_dv_lpf_hp.sv'),('qfd_tt_ctlm_dv_lpf_parts.sv','qfd_tt_ctlm_dv_lpf_hp_parts.sv')]:
@@ -24,6 +24,14 @@ for base,hp in [('qfd_tt_ctlm_dv_lpf.sv','qfd_tt_ctlm_dv_lpf_hp.sv'),('qfd_tt_ct
  (a.out/base).write_bytes(original)
  (a.out/hp).write_bytes(source)
  (a.out/(base+'.patch')).write_text(''.join(difflib.unified_diff(original.decode().splitlines(True),source.decode().replace('_hp','').splitlines(True),fromfile=base,tofile=hp)))
- records.append(dict(baseline=base,baseline_sha256=hashlib.sha256(original).hexdigest(),hp=hp,hp_sha256=hashlib.sha256(source).hexdigest(),exact_reverse_export_identity=True))
-(a.out/'symbolic_identity.json').write_text(json.dumps(dict(status='EXACT_SYMBOLIC_BODY_IDENTITY_ONLY_NOT_NATIVE_OR_SELECTED_AGE',hp_commit='9add100c4',files=records),indent=2)+'\n')
+ row=dict(baseline=base,baseline_sha256=hashlib.sha256(original).hexdigest(),hp=hp,hp_sha256=hashlib.sha256(source).hexdigest(),exact_reverse_export_identity=True)
+ if a.original_source:
+  archived=(a.original_source/'rtl/qwen_dv'/base).read_bytes()
+  specialized=re.sub(r'(?m)^    parameter integer CAL_MUT = 0.*\n','',restored)
+  specialized=specialized.replace('F16WTN = 0,                //','F16WTN = 0                 //').replace(', .CAL_MUT(CAL_MUT)','').replace('.MUT(CAL_MUT)','.MUT(0)')
+  if specialized.encode()!=archived:raise ValueError('original native-source specialization differs: '+base)
+  row.update(original_source_sha256=hashlib.sha256(archived).hexdigest(),original_default_specialization_identity=True,
+             specialization='bench CAL_MUT parameter fixed0 equals original literalMUT0; not byte-identical source')
+ records.append(row)
+(a.out/'symbolic_identity.json').write_text(json.dumps(dict(status='CURRENT_WT_HP_EXPORT_BODY_IDENTITY_AND_EXPLICIT_CAL_MUT0_SPECIALIZATION_NOT_SAME_ORIGINAL_SOURCE_OR_SELECTED_AGE',hp_commit='9add100c4',files=records),indent=2)+'\n')
 print('EXACT_RR_SYMBOLIC_HP_EXPORT_DELTA_PASS',len(records))
