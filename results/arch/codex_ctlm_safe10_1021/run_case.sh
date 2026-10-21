@@ -2,7 +2,7 @@
 # Closure-loop case adapter: one source-bound build shared by cases, mutants return failure after their expected witness.
 set -euo pipefail
 BASE=$(readlink -f "$1"); CASE=$2
-ROOT=$(cd "$(dirname "$0")/../../../.." && pwd)
+ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
 mkdir -p "$BASE"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 (
