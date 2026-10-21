@@ -85,9 +85,10 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  reg start_q,arg_q;reg[3:0]dslot_q,dval_q;reg[2179:0]del_flit_q;
  reg[11:0]cfg_n_q;reg[12:0]cfg_k_q,cfg_nout_q;(* keep="true", dont_touch="true" *) reg[7:0]cfg_g_q;
  reg[7:0]cfg_gbase_q;
- (* keep="true", dont_touch="true" *) reg[7:0]cfg_g_fault_q;reg[15:0]cfg_pf_q;reg[39:0]cfg_obase_q,cfg_rbase_q;reg cfg_has_r_q;
+ (* keep="true", dont_touch="true" *) reg[7:0]cfg_g_fault_q;
+ (* keep="true", dont_touch="true" *) reg[7:0]cfg_g_mul_lo_q,cfg_g_mul_hi_q;reg[15:0]cfg_pf_q;reg[39:0]cfg_obase_q,cfg_rbase_q;reg cfg_has_r_q;
  always @(posedge clk)begin
-  del_flit_q<=del_flit;cfg_n_q<=cfg_n;cfg_k_q<=cfg_k;cfg_nout_q<=cfg_nout;cfg_g_q<=cfg_g;cfg_g_fault_q<=cfg_g;cfg_gbase_q<=cfg_gbase;cfg_pf_q<=cfg_pf;
+  del_flit_q<=del_flit;cfg_n_q<=cfg_n;cfg_k_q<=cfg_k;cfg_nout_q<=cfg_nout;cfg_g_q<=cfg_g;cfg_g_fault_q<=cfg_g;cfg_g_mul_lo_q<=cfg_g;cfg_g_mul_hi_q<=cfg_g;cfg_gbase_q<=cfg_gbase;cfg_pf_q<=cfg_pf;
   cfg_obase_q<=cfg_obase;cfg_rbase_q<=cfg_rbase;cfg_has_r_q<=cfg_has_r;
  end
  always @(posedge clk or negedge rst_n)begin
@@ -123,11 +124,21 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  reg[15:0]cap1,cap2;
  reg pending_r,pending_o,r_after_o;
  reg[2:0]conv_pipe;
- wire[31:0]rel=tick-8;
- wire ingest=busy_sel&&tick>=8&&tick<ingress_end;
+ // Replicated counter taps share the exact counter D, preserving every edge.
+ wire[31:0]tick_d,tickc_d;
+ (* keep="true", dont_touch="true" *) reg[1:0]tick0_copy;
+ (* keep="true", dont_touch="true" *) reg[31:0]tickc_copy[0:NSEG-1];
+ wire[31:0]tick_cal={tick[31:1],tick0_copy[0]};
+ wire[31:0]tick_arith={tick[31:1],tick0_copy[1]};
+ always @(posedge clk)begin tick<=tick_d;tickc<=tickc_d;tick0_copy<={2{tick_d[0]}};end
+ for(genvar k_=0;k_<NSEG;k_=k_+1)begin:g_tickcopy
+  always @(posedge clk)tickc_copy[k_]<=tickc_d;
+ end
+ wire[31:0]rel=tick_arith-8;
+ wire ingest=busy_sel&&tick_cal>=8&&tick_cal<ingress_end;
  wire capture=ingest&&(rel[2:0]==0);
- wire issue1=busy_sel&&tick>=9&&tick<=ingress_end;
- wire[31:0]irel=tick-9;
+ wire issue1=busy_sel&&tick_cal>=9&&tick_cal<=ingress_end;
+ wire[31:0]irel=tick_arith-9;
  wire[1:0]lane=irel[2:1];
  wire[31:0]group_index=rel>>3;
  reg[3:0]expected;
@@ -138,7 +149,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  function automatic cap_at(input [31:0] t);
   reg[31:0]r_;begin r_=t-8;cap_at=t>=8&&t<ingress_end&&(r_[2:0]==0);end
  endfunction
- wire[31:0]tick1=tick+1,tick2=tick+2;
+ wire[31:0]tick1=tick+1,tick2=tick_arith+2;
  wire[31:0]irel1=tick1-9;
  wire cap_early=busy_sel&&cap_at(tick2);
  // beat: 69 x 32-bit slices, each with its own kept capture-enable flop (2-level kept tree, no driver > 32 loads)
@@ -290,12 +301,13 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  // are not compensated: the readout tears at the first seam).
  for(genvar s=0;s<NSEG;s=s+1)begin:g_conv
   localparam integer AD=(MUT==3)?HOP*s:2*HOP*s;
-  wire[31:0]ta=tickc+32'(AD);
+  wire[31:0]tc=tickc_copy[s];
+  wire[31:0]ta=tc+32'(AD);
   assign conv_s[s]=busy_sel&&((ta>=first&&ta<first+32'(cells))||(ta>=second&&ta<second+32'(cells)));
  end
- assign clr=busy_c&&(tick==1||tick==clear2);
- assign read_v=busy_sel&&tick>=read2&&tick<read2+32'(cells);
- assign read_addr=10'(tick-read2);
+ assign clr=busy_c&&(tick_cal==1||tick_cal==clear2);
+ assign read_v=busy_sel&&tick_cal>=read2&&tick_cal<read2+32'(cells);
+ assign read_addr=10'(tick_cal-read2);
  // conv capture enables: up0 is registered (u0q), so the captures are one edge after the 10-20 ctl: built from
  // conv_pipe[1] (= conv_pipe[0] one edge earlier) and tick (= tick1 one edge earlier); registered, kept copies
  wire c1_early=busy_c&&conv_pipe[1]&&(tickc<clear2);
@@ -385,8 +397,8 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
  wire les,hrs;
  wire busy_nx,busy_write_nx;
  reg po_nx,pr_nx,ra_nx;
- ot_tkm_busy_next_copy #(.ID(0)) u_busy_cfg(.b(busy_c),.f(tick==finish),.s(start_q),.q(busy_nx));
- ot_tkm_busy_next_copy #(.ID(1)) u_busy_write(.b(busy_sel),.f(tick==finish),.s(start_q),.q(busy_write_nx));
+ ot_tkm_busy_next_copy #(.ID(0)) u_busy_cfg(.b(busy_c),.f(tick_cal==finish),.s(start_q),.q(busy_nx));
+ ot_tkm_busy_next_copy #(.ID(1)) u_busy_write(.b(busy_sel),.f(tick_cal==finish),.s(start_q),.q(busy_write_nx));
  always @(posedge clk or negedge rst_n)if(!rst_n)busy_sel<=0;else busy_sel<=busy_nx;
  always @*begin
   po_nx=pending_o;pr_nx=pending_r;ra_nx=r_after_o;
@@ -461,15 +473,16 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   ot_tkm_cfg_enable_copy #(.ID(2*c+1)) u_hi(.s(sq),.b(bq),.go(goh[c]),.en());
  end
  wire[31:0]i_n,c_n,a_n,b_n,r_n,s_n,f_n,fl_n;
- assign fl_n=32'(cfg_g_q)*32'(cfg_pf_q);assign i_n=8+((fl_n+3)/4)*8;assign c_n=(32'(cfg_nout_q)+3)/4;
+ wire[15:0]fl_lo=16'(cfg_g_mul_lo_q)*16'(cfg_pf_q[7:0]);
+ wire[15:0]fl_hi=16'(cfg_g_mul_hi_q)*16'(cfg_pf_q[15:8]);
+ assign fl_n=32'(fl_lo)+(32'(fl_hi)<<8);assign i_n=8+((fl_n+3)/4)*8;assign c_n=(32'(cfg_nout_q)+3)/4;
  assign a_n=i_n+SETTLE;assign b_n=a_n+c_n+5;assign r_n=b_n+5;assign s_n=r_n+c_n+6+SETTLE;assign f_n=s_n+c_n+8;
  integer added;
  always @*begin added=0;for(integer s=0;s<4;s=s+1)added=added+int'(s3t[s][EW-1]);end
+ assign tick_d={gog[1]?16'd0:(bsg[1]?tick1[31:16]:tick[31:16]),gog[0]?16'd0:(bsg[0]?tick1[15:0]:tick[15:0])};
+ wire[31:0]tickc_inc=tickc+32'd1;
+ assign tickc_d={gog[3]?16'd0:(bsg[3]?tickc_inc[31:16]:tickc[31:16]),gog[2]?16'd0:(bsg[2]?tickc_inc[15:0]:tickc[15:0])};
  always @(posedge clk)begin
-  if(gog[0])tick[15:0]<=0;else if(bsg[0])tick[15:0]<=tick1[15:0];
-  if(gog[1])tick[31:16]<=0;else if(bsg[1])tick[31:16]<=tick1[31:16];
-  if(gog[2])tickc[15:0]<=0;else if(bsg[2])tickc[15:0]<=16'(tickc+1);
-  if(gog[3])tickc[31:16]<=0;else if(bsg[3])tickc[31:16]<=tickc[31:16]+16'(((tickc[15:0]==16'hffff))?1:0);
   if(gog[4])stat_c[15:0]<=0;else if(bsg[4])stat_c[15:0]<=tick1[15:0];
   if(gog[5])stat_c[31:16]<=0;else if(bsg[5])stat_c[31:16]<=tick1[31:16];
   if(gog[6])ingress_end[15:0]<=i_n[15:0];
@@ -511,7 +524,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
   if(!rst_n)begin busy_c<=0;done_c<=0;fault_c<=0;conv_pipe<=0;buf_wv<=0;wv_c<=0;pending_r<=0;pending_o<=0;r_after_o<=0;end
   else begin
    busy_c<=busy_nx;pending_o<=po_nx;pending_r<=pr_nx;r_after_o<=ra_nx;
-   done_c<=busy_c&&(tick==finish);
+   done_c<=busy_c&&(tick_cal==finish);
    wv_c<=busy_c&&(pending_o||pending_r||(c2s&&les));
    buf_wv<=busy_c&&c1y;
    conv_pipe<=(start_q&&!busy_c)?3'd0:{conv_pipe[1:0],conv1||conv2};
@@ -523,7 +536,7 @@ module ot_hgi_coll_tkm_ctl #(parameter integer KMAX=2048, MUT=0, TP=192, RANK_W=
      end
      if(!del_flit_q[545*l+544]||del_flit_q[545*l+528+:8]<gb||del_flit_q[545*l+528+:8]>=gb+g)fault_c<=1;
     end
-    if(tick==finish)begin
+    if(tick_cal==finish)begin
      if(32'(cap1)!=32'(cells)||32'(cap2)!=32'(cells)||pending_r||pending_o||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault_c<=1;
     end
    end
