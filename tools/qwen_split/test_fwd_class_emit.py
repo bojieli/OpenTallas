@@ -90,6 +90,20 @@ class Composition(unittest.TestCase):
         self.assertTrue(m['fwd_lanes']['class_emission']['packing']['moves'])
         self.assertTrue(all(r['worst_data_um']<=405 for r in m['fwd_lanes']['class_emission']['packing']['moves']))
 
+    def test_frontier_finds_sub_ring_lattice_corridor(self):
+        # An exact-width corridor can be legal on the 0.432um x lattice yet
+        # invisible to the old 4.32um ring search from the provisional origin.
+        relay=V.Inst('relay','class',99.792,100,64.776,30.216)
+        left=V.Inst('left','wall',0,0,101.928,500)
+        right=V.Inst('right','wall',166.752,0,833.248,500)
+        m=dict(insts=[relay,left,right],buses=[],die={'w':1000,'h':500},
+               fwd_lanes={'class_emission':{}})
+        with patch('qwen_rom_fulldie_b3r2._pin_pos',return_value=None), patch.dict(
+                'os.environ',{'OT_SPLIT_FWD_CLASS_PACK_FRONTIER':'1'}):
+            F.pack_classes(None,m,{'relay'})
+        self.assertAlmostEqual(relay.x,101.952)
+        self.assertLessEqual(relay.x+relay.w+F.C.SHAVE,right.x+1e-6)
+
     def test_reset_lane_data_and_wide_gate_enable_share_scalar_net(self):
         v,m=self.vehicle(1088)
         reset=V.Inst('rly_enable_0','qfd_rlyrl_1_WE_65x30',700,100,64.776,30.216)

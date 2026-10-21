@@ -337,6 +337,60 @@ def pack_classes(v,m,names):
                 if d>405.0001:return False,worst,bid
         return True,worst,None
     die=m['die']; moves=[]
+    frontier = os.environ.get('OT_SPLIT_FWD_CLASS_PACK_FRONTIER') == '1'
+    def domain(i):
+        # |x-cx|+|y-cy| <=405 is exactly four bounds on x+y and x-y.
+        # Intersect every matching bit, including the epoch words. This is
+        # a feasible region for this outline's origin, not a centroid budget.
+        ul=vl=-math.inf; uh=vh=math.inf
+        for bid,width,a,b in incident[i.name]:
+            if a[0] == b[0]: continue
+            own,peer = (a,b) if a[0] == i.name else (b,a)
+            j=by[peer[0]]
+            for qa,qb in zip(local[(own[0],own[1],width)],local[(peer[0],peer[1],width)]):
+                cx,cy=j.x+qb[0]-qa[0],j.y+qb[1]-qa[1]
+                ul=max(ul,cx+cy-405); uh=min(uh,cx+cy+405)
+                vl=max(vl,cx-cy-405); vh=min(vh,cx-cy+405)
+        return ul,uh,vl,vh
+    def frontier_sites(i):
+        ul,uh,vl,vh=domain(i)
+        yl=max(0,(ul-vh)/2); yh=min(die['h']-i.h,(uh-vl)/2)
+        if yl>yh: return
+        ys=range(math.ceil((yl-1e-7)/C.GY),math.floor((yh+1e-7)/C.GY)+1)
+        for yi in sorted(ys,key=lambda y:abs(y*C.GY-i.y)):
+            y=round(yi*C.GY,3)
+            xl=max(0,ul-y,vl+y); xh=min(die['w']-i.w,uh-y,vh+y)
+            if xl>xh: continue
+            probe=(xl,y,xh+i.w+C.SHAVE,y+i.h+C.SHAVE)
+            nearby=set().union(*(cells.get(k,set()) for k in keys(probe)))
+            blocked=[]
+            for name in nearby:
+                q=rect(by[name])
+                if y<q[3]-1e-6 and q[1]<y+i.h+C.SHAVE-1e-6:
+                    blocked.append((q[0]-i.w-C.SHAVE,q[2]))
+            # Sweep the occupied x intervals. In each remaining interval the
+            # closest lattice site to the old origin is sufficient: all sites
+            # have the same obstacle and exact matching-bit feasibility.
+            cursor=xl; gaps=[]
+            for lo,hi in sorted(blocked):
+                if hi<cursor: continue
+                if lo>xh: break
+                if lo>=cursor: gaps.append((cursor,min(lo,xh)))
+                cursor=max(cursor,hi)
+            if cursor<=xh:gaps.append((cursor,xh))
+            choices=[]
+            for lo,hi in gaps:
+                a=math.ceil((lo-1e-7)/C.GX); b=math.floor((hi+1e-7)/C.GX)
+                if a<=b:
+                    x=round(max(a,min(b,round(i.x/C.GX)))*C.GX,3)
+                    choices.append(x)
+            for x in sorted(choices,key=lambda x:abs(x-i.x)):
+                yield x,y
+    if frontier:
+        # Compact installation is provisional. Overlapping, unplaced class
+        # outlines must not reserve space against one another; each selected
+        # outline becomes an obstacle immediately, and the final audit is exact.
+        for name in names:remove(by[name])
     # Largest closed outlines first. Search is bounded by the data reach itself,
     # not a timing exception or a larger acceptable route length.
     order=sorted(names,key=lambda n:(-by[n].w*by[n].h,n))
@@ -345,10 +399,18 @@ def pack_classes(v,m,names):
         offsets.extend((x*4.32,y*4.32) for x,y in
                        [(x,sy*ring) for x in range(-ring,ring+1) for sy in (-1,1)] +
                        [(sx*ring,y) for y in range(-ring+1,ring) for sx in (-1,1)])
+    if frontier:
+        def difficulty(name):
+            ul,uh,vl,vh=domain(by[name])
+            return (max(0,uh-ul)*max(0,vh-vl),-by[name].w*by[name].h,name)
+        order=sorted(names,key=difficulty)
     for name in order:
-        i=by[name];origin=(i.x,i.y);remove(i);chosen=None;reason=None
-        for dx,dy in offsets:
-            i.x=round(origin[0]+dx,3);i.y=round(origin[1]+dy,3)
+        i=by[name];origin=(i.x,i.y)
+        if not frontier:remove(i)
+        chosen=None;reason=None
+        sites=frontier_sites(i) if frontier else ((round(origin[0]+dx,3),round(origin[1]+dy,3)) for dx,dy in offsets)
+        for x,y in sites:
+            i.x=x;i.y=y
             if i.x<0 or i.y<0 or i.x+i.w>die['w'] or i.y+i.h>die['h']:continue
             reason=collision(i)
             if reason:continue
