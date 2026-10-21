@@ -1,0 +1,186 @@
+{
+  "record": "d99d57391",
+  "route_source": "fbd8694b5ce19503928f51a4bcaadcedfe3daca5",
+  "qualified_source": "f5bcbdfbe",
+  "master": "dsfd_coll_lane_e_safe8_ntf",
+  "view_root": "physical/ref_tile/dscoll_lane_e_s12g/views/dsfd_coll_lane_e_safe8_ntf/",
+  "outline_um": {
+    "w": 725.76,
+    "h": 583.2
+  },
+  "params": {
+    "CORE_CRED": 12
+  },
+  "defines": [
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF"
+  ],
+  "effective_contract": "CORE_CRED12, DEPTH12/LOCAL_POP12, native32 W/E config; two-edge payload and reverse credit relays, +4 RTT; distinct from CRED8, no alias",
+  "source_hashes": {
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "rtl/lib/ot_rst_relay_tree3.sv": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
+    "rtl/lib/ot_sram_oldread_b64.sv": "161f89764da3f079cb91164b269cb6f725348396b4644336318663d20e8e7a14",
+    "rtl/lib/ot_sram_showahead_b64.sv": "cc40f94107dc230bec6fffbb5af17c781bf908ba3f243c4ead50a1aac6e47b9a",
+    "rtl/common/ot_link_credit_rx_b64.sv": "52076e97161fe616ea5f892f5bf9859a329b3ef753e7801a574e63e44e7e7b2d",
+    "rtl/common/ot_link_credit_tx_rc.sv": "41108469675c237202611513fdc868ce4c026b556b8400e0a15bc2ccc8dbb25a",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv": "87089dff259f7300acfec4969e6c0a1d0db83e31d2f5082dc54342676a8c5625",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv": "058960ccd28c3f635d1dcf5abb6b022eee111a1cd86071ade0d21d65b20625b5"
+  },
+  "view_hashes": {
+    "physical/ref_tile/dscoll_lane_e_s12g/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf.lef": "971cc02f87a275ce8160e0c6e75fabb475a2c95718ae24d97b69108387c0339a",
+    "physical/ref_tile/dscoll_lane_e_s12g/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf_tt.lib": "47486cf707c633e5447f6d91861d8fb325d2cee4db0a0c2276c91ad69c42720b",
+    "physical/ref_tile/dscoll_lane_e_s12g/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf_ff.lib": "4e3be2fb134e080867427be7559882bcc7544500445e549ff3f253e30e02d8cd",
+    "physical/ref_tile/dscoll_lane_e_s12g/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf_ss.lib": "0970d47fcc8a53d368d633bdaec3cad4eb931cc7b85ac9e6c015ee71b62ab0e2",
+    "physical/ref_tile/dscoll_lane_e_s12g/views/dsfd_coll_lane_e_safe8_ntf/insertion.json": "cabfc815347754ff761607baae9a4eb1ad33f26b73475decad9566c48462c559"
+  },
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5/routes/dscoll_lane_e_s12g_dscoll_lane_e_s12g_fbd8694b5/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5/routes/dscoll_lane_e_s12g_dscoll_lane_e_s12g_fbd8694b5/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_e_safe8_ntf_asap7_ref_dscoll_lane_e_s12g_dscoll_lane_e_s12g_fbd8694b5/base/5_2_route.json"
+    ],
+    "ff_ps": 1.62,
+    "clock_periods_ps": {
+      "core_clk": 833.333
+    },
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5/routes/dscoll_lane_e_s12g_dscoll_lane_e_s12g_fbd8694b5/work/orfs",
+    "post_sdc": [
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -261.43,
+    "ss_sensitivity_tns_ps": -91576.0,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5/routes/dscoll_lane_e_s12g_dscoll_lane_e_s12g_fbd8694b5/corner_sta.json",
+    "ss_ps": 41.69,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5/routes/dscoll_lane_e_s12g_dscoll_lane_e_s12g_fbd8694b5/work/orfs|0|ae0410-cecorner-1015-pfhc1019",
+      "at": "2026-10-21T16:39:45-07:00",
+      "available": true,
+      "meas_resta_sha256": "2dda1f79eb93ae00bd3e4a6c1b441ffee26aa9fc624d4fb060ccaffb14ad6e68",
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 2142,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 2142,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 41.69,
+      "ff": 1.62,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 733.7,
+            "min": 706.4,
+            "max": 783.7,
+            "n": 2142,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 597.7,
+            "min": 573.6,
+            "max": 651.2,
+            "n": 2142,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 88.92,
+      "tt_out": 41.69,
+      "ff_i2r": 9.44,
+      "ff_out": 19.13,
+      "ff_r2r": 1.62,
+      "json": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5/cl/routed_ioref.a1.json",
+      "registers": 19695,
+      "registers_clocked": 19695
+    },
+    "route_sdc_clock": {
+      "ss_ps": 41.69,
+      "ff_ps": 1.62
+    }
+  },
+  "gate_binding": {},
+  "status": "CLOSED exact component only; parent full-pin translated packing/native binding still required",
+  "pin_track_at_origin_zero": {
+    "R0": {
+      "orient": "R0",
+      "origin_nm": [
+        0,
+        0
+      ],
+      "layers": {
+        "M4": {
+          "pins": 2143,
+          "offtrack": 0,
+          "max_offset_nm": 0.0
+        }
+      }
+    },
+    "MX": {
+      "orient": "MX",
+      "origin_nm": [
+        0,
+        0
+      ],
+      "layers": {
+        "M4": {
+          "pins": 2143,
+          "offtrack": 2143,
+          "max_offset_nm": 24.0
+        }
+      }
+    },
+    "MY": {
+      "orient": "MY",
+      "origin_nm": [
+        0,
+        0
+      ],
+      "layers": {
+        "M4": {
+          "pins": 2143,
+          "offtrack": 0,
+          "max_offset_nm": 0.0
+        }
+      }
+    },
+    "R180": {
+      "orient": "R180",
+      "origin_nm": [
+        0,
+        0
+      ],
+      "layers": {
+        "M4": {
+          "pins": 2143,
+          "offtrack": 2143,
+          "max_offset_nm": 24.0
+        }
+      }
+    }
+  },
+  "orientation_note": "Actual full exported LEF at origin only; translated full-pin placement and legal channel packing still required. No CRED8/master-root alias."
+}
