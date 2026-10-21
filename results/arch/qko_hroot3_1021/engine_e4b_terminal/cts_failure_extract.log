@@ -1,0 +1,8 @@
+1249:[INFO CTS-0098] Clock net "ck_ingest"
+1250:[INFO CTS-0099]  Sinks 32
+1255:[INFO CTS-0098] Clock net "ck_ingest_regs"
+1256:[INFO CTS-0099]  Sinks 17727
+1261:[INFO CTS-0098] Clock net "ck_rl"
+1262:[INFO CTS-0099]  Sinks 39
+1275:OT_HYBRID CLOCK_RULE tt ck_ingest FAIL pin_spread=98.9 scope=boundary sinks=17372 WARN: sinks 17372 > 15000 (guidance); insertion all_mean 574.9 / pin_mean 578.0 ps > 300 (guidance)
+1276:Error: cts.tcl, 36 OT_HYBRID: glue root ck_ingest pin-flop spread 98.9 ps > 80 at tt (boundary, 6861 of 17372 sinks)
