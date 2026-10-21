@@ -108,6 +108,56 @@
    "role": "throughput"
   },
   {
+   "name": "ot-gold2",
+   "label": "GOLD2",
+   "cores": 112,
+   "cap": 123,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 56,
+   "max_job_ram_gb": 805,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1007,
+   "disk_roots": {
+    "/": 100
+   },
+   "note": "Onboarded 2026-10-21 (FLEET-GOLD, registered 07:4x/08:12 PT; pre-staged 10-19): Cherry 1037247 key-cardinal (ot-gold1) / 1037249 tolerant-swine (ot-gold2), US-Chicago, 2x Intel Xeon Gold 6330 (Ice Lake, AVX-512 F/BW/VL/VNNI; no AVX512_BF16/VP2INTERSECT), 1 TB RAM, 500 GB + 4 TB NVMe, role normal. bringup_gold.sh fills name/cores/ram_gb from nproc/MemTotal.",
+   "external_jobs": [],
+   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "role": "normal"
+  },
+  {
+   "name": "ot-gold1",
+   "label": "GOLD1",
+   "cores": 112,
+   "cap": 123,
+   "base": "/srv/opentallas-scratch/claude/closure-loop",
+   "max_job_threads": 56,
+   "max_job_ram_gb": 805,
+   "min_free_disk_gb": 200,
+   "caps": [
+    "verilator",
+    "yosys",
+    "iverilog",
+    "orfs"
+   ],
+   "ram_gb": 1007,
+   "disk_roots": {
+    "/": 100
+   },
+   "note": "Onboarded 2026-10-21 (FLEET-GOLD, registered 07:4x/08:12 PT; pre-staged 10-19): Cherry 1037247 key-cardinal (ot-gold1) / 1037249 tolerant-swine (ot-gold2), US-Chicago, 2x Intel Xeon Gold 6330 (Ice Lake, AVX-512 F/BW/VL/VNNI; no AVX512_BF16/VP2INTERSECT), 1 TB RAM, 500 GB + 4 TB NVMe, role normal. bringup_gold.sh fills name/cores/ram_gb from nproc/MemTotal.",
+   "external_jobs": [],
+   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
+   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
+   "role": "normal"
+  },
+  {
    "name": "ot-epyc7",
    "label": "EPYC7",
    "cores": 96,
