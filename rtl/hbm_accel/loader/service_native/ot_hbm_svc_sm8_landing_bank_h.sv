@@ -144,6 +144,10 @@ module ot_hbm_svc_sm8_landing_bank_h #(
                  {1'b0,row}<b_count&&!b_seen;
  wire take_b=h_v&&!sticky;
  wire landing_write=take_b&&identity_ok;
+ wire[LBANKS-1:0] received_capture;
+ for(genvar rcv=0;rcv<LBANKS;rcv=rcv+1)begin:g_received_capture
+  ot_hbm_svc_local_and2 u_capture(.a(landing_write),.b(h_bank==rcv),.y(received_capture[rcv]));
+ end
  for(genvar wb=0;wb<LBANKS;wb=wb+1)begin:g_seen_write
   for(genvar wg=0;wg<4;wg=wg+1)begin:g_group
    ot_hbm_svc_local_and2 u_w(.a(landing_write),.b(seen_sel[wb*4+wg]),.y(seen_write[wb*4+wg]));
@@ -196,7 +200,7 @@ module ot_hbm_svc_sm8_landing_bank_h #(
     else if(seen_set[b*64+c])seen_q[b*64+c]<=1'b1;
    end
    if(ren_k[b*4+3])received_q[b*7+:7]<=0;
-   else if(landing_write&&h_bank==b)received_q[b*7+:7]<=b_rcv+1'b1;
+   else if(received_capture[b])received_q[b*7+:7]<=b_rcv+1'b1;
   end
  end
  ot_sram_1r1w_256x256_m2_r2c2 u_payload(
