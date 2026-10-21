@@ -110,5 +110,5 @@ module ot_s81sl_slice_lepw_mab_mu_72 #(
     dsfd_coll_lane_w_safe8_ntf u_ln3 (.ck(ck_K), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));   // region K, t = 0 (pair B)
     ot_s81sl_lep_mu_ab u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
         .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o));   // region K, t = 0
-    dsdv_mu_land u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
+    dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule
