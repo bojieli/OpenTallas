@@ -91,21 +91,40 @@ module tb_coll_static_face #(
     wire [7:0] cause [0:1];
     wire [1:0] ptslot, prslot;
     genvar f;
+    // QW-C3-COLLIO 10-21: on-die relay stages R (core domain, each direction) between the collective and the face, as in
+    // production (qfd_coll_static_relay rows): tx_slot/tx_valid/tx_data/peer_slot reach the face R cycles late and
+    // rx_valid/rx_data reach the collective R cycles after the face pin.  Face 0 = the profile (R, PEER_R); face 1 = its
+    // mirrored partner (R = PEER_R, PEER_R = R) so asymmetric S0/S2 profiles meet a consistent peer.  Checked at the
+    // collective: t + L.  R = PEER_R = 0 is the previous bench exactly (zero-length relays).
+    wire [1:0] rxv_c;
+    wire [FW-1:0] rxd_c [0:1];
     generate for (f = 0; f < 2; f = f + 1) begin : g_face
-        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R), .TOK_REG(TOK_REG), .SAFE(SAFE),
+        localparam integer RF = (f == 0) ? R : PEER_R;
+        localparam integer PRF = (f == 0) ? PEER_R : R;
+        wire f_ts, f_ps, f_tv;
+        wire [FW-1:0] f_td;
+        tb_face_relay #(.W(FW + 3), .N(RF)) u_rly_in (.clk(clk), .d_in({send[f], send[1 - f], send[f], f == 0 ? txd0 : txd1}),
+            .d_out({f_ts, f_ps, f_tv, f_td}));
+        wire f_rv;
+        wire [FW-1:0] f_rd;
+        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(RF), .PEER_R(PRF), .TOK_REG(TOK_REG), .SAFE(SAFE),
             .PLAND(PLAND), .PLD(PLD), .PLK(PLK)) u_face (
             .cal_ck(clk), .cal_lck(lck), .tx_wck(clk), .tx_rck(lck), .rx_wck(lck), .rx_rck(clk),
             .codec_ck({5{lck}}), .codec_phy_ck(pck), .rst_n(rst_n),
-            .tx_slot(send[f]), .peer_slot(send[1 - f]), .tx_valid(send[f]), .tx_data(f == 0 ? txd0 : txd1),
-            .rx_valid(rxv[f]), .rx_data(rxd[f]),
+            .tx_slot(f_ts), .peer_slot(f_ps), .tx_valid(f_tv), .tx_data(f_td),
+            .rx_valid(f_rv), .rx_data(f_rd),
             .phy_up(1'b1), .phy_rx_valid(prv[f]), .phy_rx(prx[f]),
             .phy_tx_valid(ptv[f]), .phy_tx(ptx[f]), .phy_tx_slot(ptslot[f]), .phy_rx_slot(prslot[f]),
             .cdc_fault(cdcf[f]), .epoch_abort(abort[f]), .fault_cause(cause[f]));
+        assign rxv[f] = f_rv;
+        assign rxd[f] = f_rd;
+        tb_face_relay #(.W(FW + 1), .N(RF)) u_rly_out (.clk(clk), .d_in({f_rv, f_rd}), .d_out({rxv_c[f], rxd_c[f]}));
         tb_face_phy_pipe #(.W(PW), .L(PHY + XS)) u_phy (.clk(PLAND ? pck : lck), .rst_n(rst_n), .v_in(ptv[f]), .d_in(ptx[f]),
             .v_out(prv[1 - f]), .d_out(prx[1 - f]));
     end endgenerate
-    // receiver check: face 1 receives face 0's words (and face 0 face 1's) at exactly t + LAT, LAT = L - R
-    localparam integer LAT = L - R;
+    // receiver check (at the collective, after the R output relays): face 1's collective receives face 0's words (and
+    // face 0's face 1's) at exactly t + LAT, LAT = L (= L - R at the face pin + R relays)
+    localparam integer LAT = L;
     integer got0 = 0, got1 = 0;          // words received BY face 0 (from face 1) / BY face 1 (from face 0)
     integer errors = 0, faults = 0, unexpected = 0, lat_seen = -1;
     task automatic check(input integer r, input v, input [FW-1:0] d, inout integer got, input integer nsent,
@@ -133,8 +152,8 @@ module tb_coll_static_face #(
         end
     endtask
     always @(posedge clk) if (rst_n) begin
-        check(1, rxv[1], rxd[1], got1, sent0, tsend0[got1 < NW ? got1 : 0], word(0, got1));
-        check(0, rxv[0], rxd[0], got0, sent1, tsend1[got0 < NW ? got0 : 0], word(1, got0));
+        check(1, rxv_c[1], rxd_c[1], got1, sent0, tsend0[got1 < NW ? got1 : 0], word(0, got1));
+        check(0, rxv_c[0], rxd_c[0], got0, sent1, tsend1[got0 < NW ? got0 : 0], word(1, got0));
         if ((|cdcf[0]) || abort[0] || (|cause[0]) || (|cdcf[1]) || abort[1] || (|cause[1])) begin
             faults = faults + 1;
             if (faults <= 4) $display("ERR fault at %0d cdc %b/%b abort %b cause %b/%b", cyc, cdcf[0], cdcf[1], abort,
@@ -168,4 +187,22 @@ module tb_face_phy_pipe #(parameter integer W = 597, parameter integer L = 14) (
     end
     assign v_out = vp[L-1];
     assign d_out = dm[wp];
+endmodule
+
+// QW-C3-COLLIO 10-21: on-die relay row model, N core-cycle register pipe (N = 0: wire); no reset (datapath + valid
+// relays, as qfd_coll_static_relay with an unreset datapath: valid is 0 from the tb before START).
+module tb_face_relay #(parameter integer W = 1, parameter integer N = 0) (
+    input wire clk, input wire [W-1:0] d_in, output wire [W-1:0] d_out);
+    generate if (N == 0) begin : g_w
+        assign d_out = d_in;
+    end else begin : g_p
+        reg [W-1:0] p [0:N-1];
+        integer i;
+        initial for (i = 0; i < N; i = i + 1) p[i] = {W{1'b0}};
+        always @(posedge clk) begin
+            p[0] <= d_in;
+            for (i = 1; i < N; i = i + 1) p[i] <= p[i - 1];
+        end
+        assign d_out = p[N - 1];
+    end endgenerate
 endmodule
