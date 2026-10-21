@@ -43,6 +43,12 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  initial if(RSN*RSW!=IW)$fatal(1,"landing_bank_h: IW must be RSN x RSW");
  wire packet_v,packet_take,underflow;wire [IW-1:0] packet;
  wire [RSN-1:0] rs_wr_ready,rs_rd_valid,rs_ov,rs_un;
+ localparam integer FG=(RSN+15)/16;
+ wire [FG-1:0] write_group,pop_group;
+ for(genvar fg=0;fg<FG;fg=fg+1)begin:g_handshake_tree
+  ot_hbm_svc_local_and2 u_wr(.a(in_v),.b(in_ready),.y(write_group[fg]));
+  ot_hbm_svc_local_and2 u_rd(.a(packet_take),.b(1'b1),.y(pop_group[fg]));
+ end
  // Eight slices per reset leaf: one FIFO reset comb pin and one qualifier reset
  // per slice. Both-side reset still asserts asynchronously through every leaf.
  localparam integer RRG=(RSN+7)/8;
@@ -64,10 +70,13 @@ module ot_hbm_svc_sm8_landing_bank_h #(
    if(!wr_leaf[rs/8])wq_k[rs]<=0;else wq_k[rs]<=1'b1;
   always @(posedge stream_clk or negedge rd_leaf[rs/8])
    if(!rd_leaf[rs/8])cq_k[rs]<=0;else cq_k[rs]<=1'b1;
+  wire write_slice,pop_slice;
+  ot_hbm_svc_local_and2 u_wr_slice(.a(write_group[rs/16]),.b(wq_k[rs]),.y(write_slice));
+  ot_hbm_svc_local_and2 u_rd_slice(.a(pop_group[rs/16]),.b(cq_k[rs]),.y(pop_slice));
   ot_hbm_svc_async_fifo #(.WIDTH(RSW),.DEPTH(RESPONSE_DEPTH)) u_response(
-   .wr_clk(hbm_clk),.wr_rst_n(wr_leaf[rs/8]),.wr_valid(in_v&&in_ready&&wq_k[rs]),.wr_ready(rs_wr_ready[rs]),
+   .wr_clk(hbm_clk),.wr_rst_n(wr_leaf[rs/8]),.wr_valid(write_slice),.wr_ready(rs_wr_ready[rs]),
    .wr_data(in_data[rs*RSW+:RSW]),.wr_overflow(rs_ov[rs]),
-   .rd_clk(stream_clk),.rd_rst_n(rd_leaf[rs/8]),.rd_valid(rs_rd_valid[rs]),.rd_ready(packet_take&&cq_k[rs]),
+   .rd_clk(stream_clk),.rd_rst_n(rd_leaf[rs/8]),.rd_valid(rs_rd_valid[rs]),.rd_ready(pop_slice),
    .rd_data(packet[rs*RSW+:RSW]),.rd_underflow(rs_un[rs]));
  end endgenerate
  // HBM-COLLECT10 2026-10-21 (rel8c): REGISTERED FIFO HEAD.  r2 decoded the identity check / seen / received / sticky
