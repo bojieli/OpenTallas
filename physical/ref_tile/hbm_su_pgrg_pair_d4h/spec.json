@@ -283,5 +283,9 @@
   ]
  },
  "inter": [],
- "child_clock_ref": "boundary"
+ "child_clock_ref": "boundary",
+ "orfs_vars": {
+  "OT_SPINE_TOL_PS": "10",
+  "OT_SPINE_ITERS": "12"
+ }
 }

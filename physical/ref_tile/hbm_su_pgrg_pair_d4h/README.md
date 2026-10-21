@@ -35,3 +35,8 @@ Final TT STA (cl/routed_ioref.a1_meas, 15 violating D pins), every cone a one-cy
   io_hold_margin 0.03; no region crossing inside the tile.
 8 Schedule: static, no credits/backpressure; +1 bank write commit and RF word 1 edge early are recorded above for the
   compiler / die schedule (HBM-DIE15 bind notice will carry them).
+## Gate 1 (10-21 12:29, --cts, gold1) FAIL clock_rule only -> clock fix
+- main TT/FF pin-flop spread 79.4 / 82.4 ps, fb 74.8 / 82.5 (> 80; d4g 64.5 / 66.8 with 186 fewer sinks); GRT ovf 0 both;
+  census PASS (max 26). The spine stopped at its 25 ps leaf tolerance (leaf spread 28.4 ps on the RC-CAL wire) and the
+  added E-face RF / W-face staging sinks widened the measured flop spread.
+- Fix (item 7): spine balanced to OT_SPINE_TOL_PS 10 with up to OT_SPINE_ITERS 12 rounds (spec orfs_vars); no RTL change.
