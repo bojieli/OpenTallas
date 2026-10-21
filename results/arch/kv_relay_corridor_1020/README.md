@@ -130,3 +130,24 @@ No duplicate full chain was launched while paused d24pa/b/c and CTL11 portrait
 preps progressed. The next integrated source must take the die owner's
 actual source-direction/clock qualification fixes before another strict trial.
 Unbound dual-clock PC roots and other GEN failures remain explicit HOLDs.
+
+## Revised analytical A/B models in progress (22:56 PT)
+
+`plan_fixed.py` runs K.build() only at immutable sourcee0dc985f1, with the
+original A/B kv_flags.env plus OT_KV_RLY_FINE_XY=1 and OT_KV_PV_CONTROL_PIN=1.
+It saves the final actual pin-reach and relay/bundle-age ledger if build()
+returns. It performs no GEN qualification hook, P&R, or diagnostic bypass.
+Both original full chains and d24pa/b/c + CTL11 preps are now terminal FAIL.
+Future strict trials must additionally integrate the die owner's real source
+port-direction adapter/clock evidence; old unknown roots remain HOLD.
+
+- A: apron216; ep6unit2124570-1792562212, session7669,
+  `/srv/opentallas-scratch/claude/codex-kv-relay-plan-2210/fixed_plan_A.json`;
+  local log `/home/ubuntu/scratch/codex-kv-relay-plan-2210/fixed_plan_A.log`.
+- B: apron302.4; ep6unit2124796-1792562213, session86019;
+  same result/log names with suffix B.
+
+Initial allocation completed with728/736 actual pin-hop violations before the
+normal drawn-pin replan/repair. Both replan attempts encountered the existing
+WS group/PC narrow channel (`slg_WS_0.o_pc1 -> kvpc_WS_9.i_grp`, remaining697um).
+This is intermediate progress, not a final verdict. Preserve progressing jobs.
