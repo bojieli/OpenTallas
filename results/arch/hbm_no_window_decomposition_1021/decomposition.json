@@ -2046,6 +2046,24 @@
     "six_slot_corrections": "unchanged exact prepared O2 mappings, source/params/clock parents remain identical",
     "SVG_solid_quads": "unchanged O future geometry obligation; no old closed view alias",
     "other_changes": 0,
-    "expected_effect": "Remove XC from lower dominant window and move its cfg return/command anchors north; preserve real body sizes and H/full reticle. Capacity effect is unmeasured; mandatory actual GEN guard and S4 required only after ROOT disposition."
+    "expected_effect": "Remove XC from lower dominant window and move its cfg return/command anchors north; preserve real body sizes and H/full reticle. Capacity effect is unmeasured; mandatory actual GEN guard and S4 required only after ROOT disposition.",
+    "existing_clock_root_interaction": {
+      "status": "OPEN_NOT_A_ROOT_CLEAR_FIT",
+      "region": "pc_NW",
+      "actual_root": [
+        10720.8,
+        31445.7
+      ],
+      "station_keepout": [
+        10690.8,
+        31415.7,
+        10750.8,
+        31475.7
+      ],
+      "proposed_XC_intersects": true,
+      "current_O_VMKS_already_intersects": true,
+      "clock_region_or_root_relabel": false,
+      "required_disposition": "ROOT must resolve actual physical root/placement interaction before selecting a plan; no invented root relocation or qualified fit claim."
+    }
   }
 }
