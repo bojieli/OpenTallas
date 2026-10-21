@@ -129,7 +129,23 @@
   "readset": "required_readset.json",
   "route_post_overlay_src_verified": false,
   "tp192_generated_objects_verified": false,
-  "no_current_HEAD_reconstruction": true
+  "no_current_HEAD_reconstruction": true,
+  "actual_surviving_original_gate_source": {
+   "host": "ot-epyc7",
+   "root": "/srv/opentallas-scratch/claude/ref_gate/hcoll_v7_tkm_tile_e86v4b-20261020-223049/src",
+   "protected_by_disk": ".keep",
+   "full_files": 14032,
+   "full_bytes": 561531189,
+   "full_sha_mismatches": 0,
+   "consumed_files": 425,
+   "consumed_sha_mismatches": 0,
+   "readback_receipts": [
+    "ep7_surviving_gate_full_readback.json",
+    "ep7_surviving_gate_readback.json"
+   ],
+   "C3_transfer": "disk owns and copying; independentarchive verification pending",
+   "scope": "exact original component gate source only; final route source post-transform remains separate"
+  }
  },
  "normal_continuation_API_review": {
   "retry": "cmd_retry rejects CANCELLED; unsafe to relabel old job",
