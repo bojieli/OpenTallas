@@ -1,0 +1,92 @@
+{
+  "schema": "opentallas.hbm_sm_scope.v1",
+  "selected_die": {
+    "source": "5fbd4d07a",
+    "smh": {
+      "ENABLE_INT8": 1,
+      "INT8W": 0
+    },
+    "svg": {
+      "ID_COHORT": 1,
+      "XSLOT": 0,
+      "OPEN_IL": 0
+    },
+    "controller": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+  },
+  "families": {
+    "smmv_L00_L02_L14_head": {
+      "results": "4 component PASS",
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 0
+      },
+      "svg": "not instantiated; direct SM commands",
+      "scope": "bound-parameter matvec component, not full service/layer/token"
+    },
+    "toksim_ts_16": {
+      "results": "15PASS / DS-B220 issuerFAULT, DS-B240PASS separately priced",
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 0
+      },
+      "actual_svg": {
+        "ID_COHORT": 1,
+        "XSLOT": 0,
+        "OPEN_IL": 0
+      },
+      "controller": "h9b",
+      "actual_x_mode": "bench13 external X stimulus",
+      "qwen_weight_mode": "bf16w emulation; do not claim packed INT8 memory throughput",
+      "scope": "bound-parameter service mechanisms on r14 source; not full layers/token"
+    },
+    "qmv_L0_pos": {
+      "result": "PASS",
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 0
+      },
+      "svg": "not instantiated",
+      "scope": "standalone SM packed-INT8 arithmetic, not full service"
+    },
+    "qi8w_L0_pos": {
+      "result": "PASS",
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 1
+      },
+      "svg": "not instantiated",
+      "scope": "DIAGNOSTIC; INT8W1 differs selected die0"
+    },
+    "smb_pos_and_staticready": {
+      "result": "FAIL65/66, head21missing after staticgo missed",
+      "actual_smh": {
+        "ENABLE_INT8": 0,
+        "INT8W": 0
+      },
+      "actual_svg": {
+        "ID_COHORT": 0,
+        "XSLOT": 0,
+        "OPEN_IL": 0
+      },
+      "scope": "DIAGNOSTIC old binary; param0/cohort0 differ die1/1. Issuer hash identical; deadline mechanism failure remains actionable."
+    },
+    "att15recover": {
+      "actual_smh": {
+        "ENABLE_INT8": 0,
+        "INT8W": 0
+      },
+      "svg": "not instantiated",
+      "scope": "DIAGNOSTIC; first source-metadata fallback omitted contractparams. Existing builds/results preserved."
+    },
+    "att15int8": {
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 0
+      },
+      "svg": "not instantiated",
+      "scope": "correct current-r15 standalone ATT required cases RUNNING in fresh workdirs; no old wrong-param exe reuse"
+    }
+  },
+  "qualifies_full_token": false,
+  "verdict": "PARTIAL heterogeneous component evidence; no blanket production 17/18 pass"
+}
