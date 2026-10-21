@@ -203,9 +203,33 @@ module ot_s81dv_norm_finish_sram #(
     reg f_q; wire [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: issue mux -> adder)
     always @(posedge clk or negedge rc[4]) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NVP];
+    wire[7:0] read_fire;wire[71:0] read_tags;
+    wire[8*NG8-1:0] mem_reset;
+    ot_s81dv_finish_reset2 #(.LEAVES(8*NG8)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
+    for(genvar mc=0;mc<8;mc=mc+1)begin:g_mem_command
+      wire[NVP-1:0] mo;wire[NG8-1:0] mg;
+      for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
+        wire[7:0] mr=rdy[mq*8+:8];
+        (* keep *) reg[7:0] o;(* keep *) reg g;
+        always @(posedge clk or negedge mem_reset[mc*NG8+mq])
+          if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
+          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !go_t[(mq+2)%NGO];end
+        assign mo[mq*8+:8]=o;
+        assign mg[mq]=g && !go_t[(mq+7)%NGO];
+      end
+      wire[NG8-1:0] ms=mg & ~(mg-1'b1);
+      wire[NVP-1:0] mw;
+      wire[8:0] mt[0:NVP];assign mt[0]=0;
+      for(genvar mn=0;mn<NVP;mn=mn+1)begin:g_node
+        assign mw[mn]=mo[mn] && ms[mn/8] && !iss_v[mn];
+        assign mt[mn+1]=mt[mn] | ({9{mw[mn]}} & 9'(mn));
+      end
+      assign read_fire[mc]=|mw;
+      assign read_tags[mc*9+:9]=mt[NVP];
+    end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(1)) u_values(
       .clk(clk),.ivb(ivb),.itb({(NBK*P*2){1'b0}}),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
-      .rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
+      .read_fire(read_fire),.read_tags(read_tags),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
     wire [LAV:0] av;
     wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rc[5]), .v(f_q), .vd(av));
@@ -428,9 +452,33 @@ module ot_s81dv_eng_finish_sram #(
     reg f_q; wire [31:0] a_q, b_q; reg [CW-1:0] t_q;
     always @(posedge clk or negedge rc[4]) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NC];
+    wire[7:0] read_fire;wire[71:0] read_tags;
+    wire[8*NG8-1:0] mem_reset;
+    ot_s81dv_finish_reset2 #(.LEAVES(8*NG8)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
+    for(genvar mc=0;mc<8;mc=mc+1)begin:g_mem_command
+      wire[NC-1:0] mo;wire[NG8-1:0] mg;
+      for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
+        wire[7:0] mr=rdy[mq*8+:8];
+        (* keep *) reg[7:0] o;(* keep *) reg g;
+        always @(posedge clk or negedge mem_reset[mc*NG8+mq])
+          if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
+          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !go_t[(mq+3)%NGO];end
+        assign mo[mq*8+:8]=o;
+        assign mg[mq]=g && !go_t[(mq+17)%NGO];
+      end
+      wire[NG8-1:0] ms=mg & ~(mg-1'b1);
+      wire[NC-1:0] mw;
+      wire[8:0] mt[0:NC];assign mt[0]=0;
+      for(genvar mn=0;mn<NC;mn=mn+1)begin:g_node
+        assign mw[mn]=mo[mn] && ms[mn/8] && !iss_v[mn];
+        assign mt[mn+1]=mt[mn] | ({9{mw[mn]}} & 9'(mn));
+      end
+      assign read_fire[mc]=|mw;
+      assign read_tags[mc*9+:9]=mt[NC];
+    end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3)) u_values(
       .clk(clk),.ivb(ivb),.itb(itb),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag(ot[NC]),
-      .rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
+      .read_fire(read_fire),.read_tags(read_tags),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
     wire [LAV:0] av; wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rc[5]), .v(f_q), .vd(av));
     ot_s81dv_qadd_n32 #(.LAT(LAV)) u_a (clk, rst_n, f_q, a_q, b_q, wr_d, f_add);
@@ -472,7 +520,7 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  // per-port leaf hits ph (owner update) replace the shared iv/it/ib decode (census r1: 235-265-load enables)
  input wire clk,input wire[P*K*P-1:0] ivb,input wire[P*K*P*2-1:0] itb,input wire[P*K*P*8-1:0] ibb,
  input wire[TREES*NV*P-1:0] ph,input wire[P*K*32-1:0] id,
- input wire fire,input wire[8:0] issue_tag,input wire rd_active,output reg[31:0] a_q,b_q,
+ input wire fire,input wire[8:0] issue_tag,input wire[7:0] read_fire,input wire[71:0] read_tags,input wire rd_active,output reg[31:0] a_q,b_q,
  input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
 );
  localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM;
@@ -481,12 +529,21 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
   ot_s81dv_finish_SRAM_requires_NV80_K5_P3_T1or3 u_bad();
  end
  reg[1:0] owner[0:TREES*NV-1];
- // owner = lowest eligible port (the original P-1..0 loop's last write); ph[(t*NV+ix)*P+pp] == eligible(pp,t,ix)
+ (* keep *) reg[1:0] owner_read[0:8*TREES*NV-1];
+ // Each three-bank read region owns a same-edge copy of the selected flit
+ // owner, so retaining bank-local decode cannot move load onto owner flops.
  for(genvar t=0;t<TREES;t=t+1)begin:g_ot
   for(genvar ix=0;ix<NV;ix=ix+1)begin:g_ox
    wire[P-1:0] e=ph[(t*NV+ix)*P+:P];
    always @(posedge clk)begin
     if(e[0])owner[t*NV+ix]<=2'd0; else if(e[1])owner[t*NV+ix]<=2'd1; else if(e[2])owner[t*NV+ix]<=2'd2;
+   end
+   for(genvar c=0;c<8;c=c+1)begin:g_copy
+    always @(posedge clk)begin
+      if(e[0])owner_read[(c*TREES+t)*NV+ix]<=2'd0;
+      else if(e[1])owner_read[(c*TREES+t)*NV+ix]<=2'd1;
+      else if(e[2])owner_read[(c*TREES+t)*NV+ix]<=2'd2;
+    end
    end
   end
  end
@@ -1185,23 +1242,21 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
    descriptor={5'(bank),5'((slot>>1)%32),1'(slot%2)};
   end
  endfunction
- wire[10:0] da=descriptor(ca_node({1'b0,issue_tag[6:0]}),issue_tag[8:7]);
- wire[10:0] db=descriptor(cb_node({1'b0,issue_tag[6:0]}),issue_tag[8:7]);
  wire[10:0] dw=descriptor({1'b0,wr_tag[6:0]},wr_tag[8:7]);
  reg[NB-1:0] asel,bsel;
- // NATIVE32 (ELEM-XFV/XFIN 10-21): census r1 ah/bh 988-1068 loads -> one KEPT half-select register per bank (same
- // edge, same value for every bank that can be selected); asel/bsel are fire-gated one-hots, so the a_q/b_q
- // rd_active (= registered fire) gate was redundant and is dropped (f_q drove 71-73 loads).
  (* keep *) reg[NB-1:0] ahc,bhc;
- always @(posedge clk)begin
-  asel<=fire?({{(NB-1){1'b0}},1'b1}<<da[10:6]):{NB{1'b0}};
-  bsel<=fire?({{(NB-1){1'b0}},1'b1}<<db[10:6]):{NB{1'b0}};
-  ahc<={NB{da[0]}};bhc<={NB{db[0]}};
+ wire[8*TREES*NV*2-1:0] owner_bits;
+ for(genvar oi=0;oi<8*TREES*NV;oi=oi+1)begin:g_owner_bits
+   assign owner_bits[oi*2+:2]=owner_read[oi];
  end
  wire[63:0] rd[0:NB-1];
  for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank
-  wire ren=fire && (da[10:6]==bank || db[10:6]==bank);
-  wire[4:0] ra=(da[10:6]==bank)?da[5:1]:db[5:1];
+  wire ren,sa,sb,ha,hb;wire[4:0] ra;
+  ot_s81dv_finish_readbank #(.NV(NV),.K(K),.P(P),.TREES(TREES),.BANK(bank)) u_read(
+    .fire(read_fire[bank/3]),.tag(read_tags[(bank/3)*9+:9]),.owner(owner_bits[(bank/3)*TREES*NV*2+:TREES*NV*2]),.ren(ren),.ra(ra),.sa(sa),.sb(sb),.ha(ha),.hb(hb));
+  always @(posedge clk)begin
+    asel[bank]<=sa;bsel[bank]<=sb;ahc[bank]<=ha;bhc[bank]<=hb;
+  end
   wire[38:0] wp;
   if(bank<P*K)begin:g_leaf
    ot_s81dv_finish_leafw #(.NV(NV),.K(K),.P(P),.TREES(TREES),.PB(bank/K),.R(bank%K)) u_w(
@@ -1281,4 +1336,711 @@ module ot_s81dv_finish_reset2 #(parameter integer LEAVES=64)(input wire clk,rst_
   always @(posedge clk or negedge prefix[g/24])if(!prefix[g/24])r<=0;else r<=1;
   assign q[g]=r;
  end
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81dv_finish_readbank #(parameter integer NV=80,K=5,P=3,TREES=1,BANK=0)(input wire fire,input wire[8:0] tag,input wire[TREES*NV*2-1:0] owner,output wire ren,output wire[4:0] ra,output wire sa,sb,ha,hb);
+ localparam integer RM=(TREES==3)?2:1;
+ localparam integer MUT_ASSOC=`ifdef OT_S81DV_MUT_EASSOC (TREES==3) `else 0 `endif;
+    function automatic [7:0] ca_node(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd1: ca_node=8'd2;
+            8'd2: ca_node=8'd4;
+            8'd4: ca_node=8'd8;
+            8'd5: ca_node=8'd9;
+            8'd8: ca_node=8'd16;
+            8'd9: ca_node=8'd18;
+            8'd10: ca_node=8'd20;
+            8'd11: ca_node=8'd22;
+            8'd12: ca_node=8'd24;
+            8'd16: ca_node=8'd32;
+            8'd17: ca_node=8'd34;
+            8'd18: ca_node=8'd36;
+            8'd19: ca_node=8'd38;
+            8'd20: ca_node=8'd40;
+            8'd21: ca_node=8'd42;
+            8'd22: ca_node=8'd44;
+            8'd23: ca_node=8'd46;
+            8'd24: ca_node=8'd48;
+            8'd25: ca_node=8'd50;
+            8'd32: ca_node=8'd64;
+            8'd33: ca_node=8'd66;
+            8'd34: ca_node=8'd68;
+            8'd35: ca_node=8'd70;
+            8'd36: ca_node=8'd72;
+            8'd37: ca_node=8'd74;
+            8'd38: ca_node=8'd76;
+            8'd39: ca_node=8'd78;
+            8'd40: ca_node=8'd80;
+            8'd41: ca_node=8'd82;
+            8'd42: ca_node=8'd84;
+            8'd43: ca_node=8'd86;
+            8'd44: ca_node=8'd88;
+            8'd45: ca_node=8'd90;
+            8'd46: ca_node=8'd92;
+            8'd47: ca_node=8'd94;
+            8'd48: ca_node=8'd96;
+            8'd49: ca_node=8'd98;
+            8'd50: ca_node=8'd100;
+            8'd51: ca_node=8'd102;
+            8'd64: ca_node=8'd128;
+            8'd65: ca_node=8'd130;
+            8'd66: ca_node=8'd132;
+            8'd67: ca_node=8'd134;
+            8'd68: ca_node=8'd136;
+            8'd69: ca_node=8'd138;
+            8'd70: ca_node=8'd140;
+            8'd71: ca_node=8'd142;
+            8'd72: ca_node=8'd144;
+            8'd73: ca_node=8'd146;
+            8'd74: ca_node=8'd148;
+            8'd75: ca_node=8'd150;
+            8'd76: ca_node=8'd152;
+            8'd77: ca_node=8'd154;
+            8'd78: ca_node=8'd156;
+            8'd79: ca_node=8'd158;
+            8'd80: ca_node=8'd160;
+            8'd81: ca_node=8'd162;
+            8'd82: ca_node=8'd164;
+            8'd83: ca_node=8'd166;
+            8'd84: ca_node=8'd168;
+            8'd85: ca_node=8'd170;
+            8'd86: ca_node=8'd172;
+            8'd87: ca_node=8'd174;
+            8'd88: ca_node=8'd176;
+            8'd89: ca_node=8'd178;
+            8'd90: ca_node=8'd180;
+            8'd91: ca_node=8'd182;
+            8'd92: ca_node=8'd184;
+            8'd93: ca_node=8'd186;
+            8'd94: ca_node=8'd188;
+            8'd95: ca_node=8'd190;
+            8'd96: ca_node=8'd192;
+            8'd97: ca_node=8'd194;
+            8'd98: ca_node=8'd196;
+            8'd99: ca_node=8'd198;
+            8'd100: ca_node=8'd200;
+            8'd101: ca_node=8'd202;
+            8'd102: ca_node=8'd204;
+            8'd103: ca_node=8'd206;
+            default: ca_node=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd1: ca_node=8'd2;
+            8'd2: ca_node=8'd4;
+            8'd4: ca_node=8'd8;
+            8'd5: ca_node=8'd10;
+            8'd8: ca_node=8'd16;
+            8'd9: ca_node=8'd18;
+            8'd10: ca_node=8'd20;
+            8'd11: ca_node=8'd22;
+            8'd12: ca_node=8'd24;
+            8'd16: ca_node=8'd32;
+            8'd17: ca_node=8'd34;
+            8'd18: ca_node=8'd36;
+            8'd19: ca_node=8'd38;
+            8'd20: ca_node=8'd40;
+            8'd21: ca_node=8'd42;
+            8'd22: ca_node=8'd44;
+            8'd23: ca_node=8'd46;
+            8'd24: ca_node=8'd48;
+            8'd25: ca_node=8'd50;
+            8'd32: ca_node=8'd64;
+            8'd33: ca_node=8'd66;
+            8'd34: ca_node=8'd68;
+            8'd35: ca_node=8'd70;
+            8'd36: ca_node=8'd72;
+            8'd37: ca_node=8'd74;
+            8'd38: ca_node=8'd76;
+            8'd39: ca_node=8'd78;
+            8'd40: ca_node=8'd80;
+            8'd41: ca_node=8'd82;
+            8'd42: ca_node=8'd84;
+            8'd43: ca_node=8'd86;
+            8'd44: ca_node=8'd88;
+            8'd45: ca_node=8'd90;
+            8'd46: ca_node=8'd92;
+            8'd47: ca_node=8'd94;
+            8'd48: ca_node=8'd96;
+            8'd49: ca_node=8'd98;
+            8'd50: ca_node=8'd100;
+            8'd51: ca_node=8'd102;
+            8'd64: ca_node=8'd128;
+            8'd65: ca_node=8'd130;
+            8'd66: ca_node=8'd132;
+            8'd67: ca_node=8'd134;
+            8'd68: ca_node=8'd136;
+            8'd69: ca_node=8'd138;
+            8'd70: ca_node=8'd140;
+            8'd71: ca_node=8'd142;
+            8'd72: ca_node=8'd144;
+            8'd73: ca_node=8'd146;
+            8'd74: ca_node=8'd148;
+            8'd75: ca_node=8'd150;
+            8'd76: ca_node=8'd152;
+            8'd77: ca_node=8'd154;
+            8'd78: ca_node=8'd156;
+            8'd79: ca_node=8'd158;
+            8'd80: ca_node=8'd160;
+            8'd81: ca_node=8'd162;
+            8'd82: ca_node=8'd164;
+            8'd83: ca_node=8'd166;
+            8'd84: ca_node=8'd168;
+            8'd85: ca_node=8'd170;
+            8'd86: ca_node=8'd172;
+            8'd87: ca_node=8'd174;
+            8'd88: ca_node=8'd176;
+            8'd89: ca_node=8'd178;
+            8'd90: ca_node=8'd180;
+            8'd91: ca_node=8'd182;
+            8'd92: ca_node=8'd184;
+            8'd93: ca_node=8'd186;
+            8'd94: ca_node=8'd188;
+            8'd95: ca_node=8'd190;
+            8'd96: ca_node=8'd192;
+            8'd97: ca_node=8'd194;
+            8'd98: ca_node=8'd196;
+            8'd99: ca_node=8'd198;
+            8'd100: ca_node=8'd200;
+            8'd101: ca_node=8'd202;
+            8'd102: ca_node=8'd204;
+            8'd103: ca_node=8'd206;
+            default: ca_node=8'd0;
+          endcase
+        end
+      end
+    endfunction
+    function automatic [7:0] cb_node(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd1: cb_node=8'd12;
+            8'd2: cb_node=8'd5;
+            8'd4: cb_node=8'd10;
+            8'd5: cb_node=8'd11;
+            8'd8: cb_node=8'd17;
+            8'd9: cb_node=8'd19;
+            8'd10: cb_node=8'd21;
+            8'd11: cb_node=8'd23;
+            8'd12: cb_node=8'd25;
+            8'd16: cb_node=8'd33;
+            8'd17: cb_node=8'd35;
+            8'd18: cb_node=8'd37;
+            8'd19: cb_node=8'd39;
+            8'd20: cb_node=8'd41;
+            8'd21: cb_node=8'd43;
+            8'd22: cb_node=8'd45;
+            8'd23: cb_node=8'd47;
+            8'd24: cb_node=8'd49;
+            8'd25: cb_node=8'd51;
+            8'd32: cb_node=8'd65;
+            8'd33: cb_node=8'd67;
+            8'd34: cb_node=8'd69;
+            8'd35: cb_node=8'd71;
+            8'd36: cb_node=8'd73;
+            8'd37: cb_node=8'd75;
+            8'd38: cb_node=8'd77;
+            8'd39: cb_node=8'd79;
+            8'd40: cb_node=8'd81;
+            8'd41: cb_node=8'd83;
+            8'd42: cb_node=8'd85;
+            8'd43: cb_node=8'd87;
+            8'd44: cb_node=8'd89;
+            8'd45: cb_node=8'd91;
+            8'd46: cb_node=8'd93;
+            8'd47: cb_node=8'd95;
+            8'd48: cb_node=8'd97;
+            8'd49: cb_node=8'd99;
+            8'd50: cb_node=8'd101;
+            8'd51: cb_node=8'd103;
+            8'd64: cb_node=8'd129;
+            8'd65: cb_node=8'd131;
+            8'd66: cb_node=8'd133;
+            8'd67: cb_node=8'd135;
+            8'd68: cb_node=8'd137;
+            8'd69: cb_node=8'd139;
+            8'd70: cb_node=8'd141;
+            8'd71: cb_node=8'd143;
+            8'd72: cb_node=8'd145;
+            8'd73: cb_node=8'd147;
+            8'd74: cb_node=8'd149;
+            8'd75: cb_node=8'd151;
+            8'd76: cb_node=8'd153;
+            8'd77: cb_node=8'd155;
+            8'd78: cb_node=8'd157;
+            8'd79: cb_node=8'd159;
+            8'd80: cb_node=8'd161;
+            8'd81: cb_node=8'd163;
+            8'd82: cb_node=8'd165;
+            8'd83: cb_node=8'd167;
+            8'd84: cb_node=8'd169;
+            8'd85: cb_node=8'd171;
+            8'd86: cb_node=8'd173;
+            8'd87: cb_node=8'd175;
+            8'd88: cb_node=8'd177;
+            8'd89: cb_node=8'd179;
+            8'd90: cb_node=8'd181;
+            8'd91: cb_node=8'd183;
+            8'd92: cb_node=8'd185;
+            8'd93: cb_node=8'd187;
+            8'd94: cb_node=8'd189;
+            8'd95: cb_node=8'd191;
+            8'd96: cb_node=8'd193;
+            8'd97: cb_node=8'd195;
+            8'd98: cb_node=8'd197;
+            8'd99: cb_node=8'd199;
+            8'd100: cb_node=8'd201;
+            8'd101: cb_node=8'd203;
+            8'd102: cb_node=8'd205;
+            8'd103: cb_node=8'd207;
+            default: cb_node=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd1: cb_node=8'd12;
+            8'd2: cb_node=8'd5;
+            8'd4: cb_node=8'd9;
+            8'd5: cb_node=8'd11;
+            8'd8: cb_node=8'd17;
+            8'd9: cb_node=8'd19;
+            8'd10: cb_node=8'd21;
+            8'd11: cb_node=8'd23;
+            8'd12: cb_node=8'd25;
+            8'd16: cb_node=8'd33;
+            8'd17: cb_node=8'd35;
+            8'd18: cb_node=8'd37;
+            8'd19: cb_node=8'd39;
+            8'd20: cb_node=8'd41;
+            8'd21: cb_node=8'd43;
+            8'd22: cb_node=8'd45;
+            8'd23: cb_node=8'd47;
+            8'd24: cb_node=8'd49;
+            8'd25: cb_node=8'd51;
+            8'd32: cb_node=8'd65;
+            8'd33: cb_node=8'd67;
+            8'd34: cb_node=8'd69;
+            8'd35: cb_node=8'd71;
+            8'd36: cb_node=8'd73;
+            8'd37: cb_node=8'd75;
+            8'd38: cb_node=8'd77;
+            8'd39: cb_node=8'd79;
+            8'd40: cb_node=8'd81;
+            8'd41: cb_node=8'd83;
+            8'd42: cb_node=8'd85;
+            8'd43: cb_node=8'd87;
+            8'd44: cb_node=8'd89;
+            8'd45: cb_node=8'd91;
+            8'd46: cb_node=8'd93;
+            8'd47: cb_node=8'd95;
+            8'd48: cb_node=8'd97;
+            8'd49: cb_node=8'd99;
+            8'd50: cb_node=8'd101;
+            8'd51: cb_node=8'd103;
+            8'd64: cb_node=8'd129;
+            8'd65: cb_node=8'd131;
+            8'd66: cb_node=8'd133;
+            8'd67: cb_node=8'd135;
+            8'd68: cb_node=8'd137;
+            8'd69: cb_node=8'd139;
+            8'd70: cb_node=8'd141;
+            8'd71: cb_node=8'd143;
+            8'd72: cb_node=8'd145;
+            8'd73: cb_node=8'd147;
+            8'd74: cb_node=8'd149;
+            8'd75: cb_node=8'd151;
+            8'd76: cb_node=8'd153;
+            8'd77: cb_node=8'd155;
+            8'd78: cb_node=8'd157;
+            8'd79: cb_node=8'd159;
+            8'd80: cb_node=8'd161;
+            8'd81: cb_node=8'd163;
+            8'd82: cb_node=8'd165;
+            8'd83: cb_node=8'd167;
+            8'd84: cb_node=8'd169;
+            8'd85: cb_node=8'd171;
+            8'd86: cb_node=8'd173;
+            8'd87: cb_node=8'd175;
+            8'd88: cb_node=8'd177;
+            8'd89: cb_node=8'd179;
+            8'd90: cb_node=8'd181;
+            8'd91: cb_node=8'd183;
+            8'd92: cb_node=8'd185;
+            8'd93: cb_node=8'd187;
+            8'd94: cb_node=8'd189;
+            8'd95: cb_node=8'd191;
+            8'd96: cb_node=8'd193;
+            8'd97: cb_node=8'd195;
+            8'd98: cb_node=8'd197;
+            8'd99: cb_node=8'd199;
+            8'd100: cb_node=8'd201;
+            8'd101: cb_node=8'd203;
+            8'd102: cb_node=8'd205;
+            8'd103: cb_node=8'd207;
+            default: cb_node=8'd0;
+          endcase
+        end
+      end
+    endfunction
+    function automatic [7:0] node_role(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd2: node_role=8'd0;
+            8'd4: node_role=8'd0;
+            8'd5: node_role=8'd1;
+            8'd8: node_role=8'd0;
+            8'd9: node_role=8'd0;
+            8'd10: node_role=8'd1;
+            8'd11: node_role=8'd1;
+            8'd12: node_role=8'd1;
+            8'd16: node_role=8'd0;
+            8'd17: node_role=8'd1;
+            8'd18: node_role=8'd0;
+            8'd19: node_role=8'd1;
+            8'd20: node_role=8'd0;
+            8'd21: node_role=8'd1;
+            8'd22: node_role=8'd0;
+            8'd23: node_role=8'd1;
+            8'd24: node_role=8'd0;
+            8'd25: node_role=8'd1;
+            8'd32: node_role=8'd0;
+            8'd33: node_role=8'd1;
+            8'd34: node_role=8'd0;
+            8'd35: node_role=8'd1;
+            8'd36: node_role=8'd0;
+            8'd37: node_role=8'd1;
+            8'd38: node_role=8'd0;
+            8'd39: node_role=8'd1;
+            8'd40: node_role=8'd0;
+            8'd41: node_role=8'd1;
+            8'd42: node_role=8'd0;
+            8'd43: node_role=8'd1;
+            8'd44: node_role=8'd0;
+            8'd45: node_role=8'd1;
+            8'd46: node_role=8'd0;
+            8'd47: node_role=8'd1;
+            8'd48: node_role=8'd0;
+            8'd49: node_role=8'd1;
+            8'd50: node_role=8'd0;
+            8'd51: node_role=8'd1;
+            8'd64: node_role=8'd0;
+            8'd65: node_role=8'd1;
+            8'd66: node_role=8'd0;
+            8'd67: node_role=8'd1;
+            8'd68: node_role=8'd0;
+            8'd69: node_role=8'd1;
+            8'd70: node_role=8'd0;
+            8'd71: node_role=8'd1;
+            8'd72: node_role=8'd0;
+            8'd73: node_role=8'd1;
+            8'd74: node_role=8'd0;
+            8'd75: node_role=8'd1;
+            8'd76: node_role=8'd0;
+            8'd77: node_role=8'd1;
+            8'd78: node_role=8'd0;
+            8'd79: node_role=8'd1;
+            8'd80: node_role=8'd0;
+            8'd81: node_role=8'd1;
+            8'd82: node_role=8'd0;
+            8'd83: node_role=8'd1;
+            8'd84: node_role=8'd0;
+            8'd85: node_role=8'd1;
+            8'd86: node_role=8'd0;
+            8'd87: node_role=8'd1;
+            8'd88: node_role=8'd0;
+            8'd89: node_role=8'd1;
+            8'd90: node_role=8'd0;
+            8'd91: node_role=8'd1;
+            8'd92: node_role=8'd0;
+            8'd93: node_role=8'd1;
+            8'd94: node_role=8'd0;
+            8'd95: node_role=8'd1;
+            8'd96: node_role=8'd0;
+            8'd97: node_role=8'd1;
+            8'd98: node_role=8'd0;
+            8'd99: node_role=8'd1;
+            8'd100: node_role=8'd0;
+            8'd101: node_role=8'd1;
+            8'd102: node_role=8'd0;
+            8'd103: node_role=8'd1;
+            default: node_role=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd2: node_role=8'd0;
+            8'd4: node_role=8'd0;
+            8'd5: node_role=8'd1;
+            8'd8: node_role=8'd0;
+            8'd9: node_role=8'd1;
+            8'd10: node_role=8'd0;
+            8'd11: node_role=8'd1;
+            8'd12: node_role=8'd1;
+            8'd16: node_role=8'd0;
+            8'd17: node_role=8'd1;
+            8'd18: node_role=8'd0;
+            8'd19: node_role=8'd1;
+            8'd20: node_role=8'd0;
+            8'd21: node_role=8'd1;
+            8'd22: node_role=8'd0;
+            8'd23: node_role=8'd1;
+            8'd24: node_role=8'd0;
+            8'd25: node_role=8'd1;
+            8'd32: node_role=8'd0;
+            8'd33: node_role=8'd1;
+            8'd34: node_role=8'd0;
+            8'd35: node_role=8'd1;
+            8'd36: node_role=8'd0;
+            8'd37: node_role=8'd1;
+            8'd38: node_role=8'd0;
+            8'd39: node_role=8'd1;
+            8'd40: node_role=8'd0;
+            8'd41: node_role=8'd1;
+            8'd42: node_role=8'd0;
+            8'd43: node_role=8'd1;
+            8'd44: node_role=8'd0;
+            8'd45: node_role=8'd1;
+            8'd46: node_role=8'd0;
+            8'd47: node_role=8'd1;
+            8'd48: node_role=8'd0;
+            8'd49: node_role=8'd1;
+            8'd50: node_role=8'd0;
+            8'd51: node_role=8'd1;
+            8'd64: node_role=8'd0;
+            8'd65: node_role=8'd1;
+            8'd66: node_role=8'd0;
+            8'd67: node_role=8'd1;
+            8'd68: node_role=8'd0;
+            8'd69: node_role=8'd1;
+            8'd70: node_role=8'd0;
+            8'd71: node_role=8'd1;
+            8'd72: node_role=8'd0;
+            8'd73: node_role=8'd1;
+            8'd74: node_role=8'd0;
+            8'd75: node_role=8'd1;
+            8'd76: node_role=8'd0;
+            8'd77: node_role=8'd1;
+            8'd78: node_role=8'd0;
+            8'd79: node_role=8'd1;
+            8'd80: node_role=8'd0;
+            8'd81: node_role=8'd1;
+            8'd82: node_role=8'd0;
+            8'd83: node_role=8'd1;
+            8'd84: node_role=8'd0;
+            8'd85: node_role=8'd1;
+            8'd86: node_role=8'd0;
+            8'd87: node_role=8'd1;
+            8'd88: node_role=8'd0;
+            8'd89: node_role=8'd1;
+            8'd90: node_role=8'd0;
+            8'd91: node_role=8'd1;
+            8'd92: node_role=8'd0;
+            8'd93: node_role=8'd1;
+            8'd94: node_role=8'd0;
+            8'd95: node_role=8'd1;
+            8'd96: node_role=8'd0;
+            8'd97: node_role=8'd1;
+            8'd98: node_role=8'd0;
+            8'd99: node_role=8'd1;
+            8'd100: node_role=8'd0;
+            8'd101: node_role=8'd1;
+            8'd102: node_role=8'd0;
+            8'd103: node_role=8'd1;
+            default: node_role=8'd0;
+          endcase
+        end
+      end
+    endfunction
+    function automatic [7:0] node_rank(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd2: node_rank=8'd0;
+            8'd4: node_rank=8'd1;
+            8'd5: node_rank=8'd0;
+            8'd8: node_rank=8'd2;
+            8'd9: node_rank=8'd3;
+            8'd10: node_rank=8'd1;
+            8'd11: node_rank=8'd2;
+            8'd12: node_rank=8'd3;
+            8'd16: node_rank=8'd4;
+            8'd17: node_rank=8'd4;
+            8'd18: node_rank=8'd5;
+            8'd19: node_rank=8'd5;
+            8'd20: node_rank=8'd6;
+            8'd21: node_rank=8'd6;
+            8'd22: node_rank=8'd7;
+            8'd23: node_rank=8'd7;
+            8'd24: node_rank=8'd8;
+            8'd25: node_rank=8'd8;
+            8'd32: node_rank=8'd9;
+            8'd33: node_rank=8'd9;
+            8'd34: node_rank=8'd10;
+            8'd35: node_rank=8'd10;
+            8'd36: node_rank=8'd11;
+            8'd37: node_rank=8'd11;
+            8'd38: node_rank=8'd12;
+            8'd39: node_rank=8'd12;
+            8'd40: node_rank=8'd13;
+            8'd41: node_rank=8'd13;
+            8'd42: node_rank=8'd14;
+            8'd43: node_rank=8'd14;
+            8'd44: node_rank=8'd15;
+            8'd45: node_rank=8'd15;
+            8'd46: node_rank=8'd16;
+            8'd47: node_rank=8'd16;
+            8'd48: node_rank=8'd17;
+            8'd49: node_rank=8'd17;
+            8'd50: node_rank=8'd18;
+            8'd51: node_rank=8'd18;
+            8'd64: node_rank=8'd19;
+            8'd65: node_rank=8'd19;
+            8'd66: node_rank=8'd20;
+            8'd67: node_rank=8'd20;
+            8'd68: node_rank=8'd21;
+            8'd69: node_rank=8'd21;
+            8'd70: node_rank=8'd22;
+            8'd71: node_rank=8'd22;
+            8'd72: node_rank=8'd23;
+            8'd73: node_rank=8'd23;
+            8'd74: node_rank=8'd24;
+            8'd75: node_rank=8'd24;
+            8'd76: node_rank=8'd25;
+            8'd77: node_rank=8'd25;
+            8'd78: node_rank=8'd26;
+            8'd79: node_rank=8'd26;
+            8'd80: node_rank=8'd27;
+            8'd81: node_rank=8'd27;
+            8'd82: node_rank=8'd28;
+            8'd83: node_rank=8'd28;
+            8'd84: node_rank=8'd29;
+            8'd85: node_rank=8'd29;
+            8'd86: node_rank=8'd30;
+            8'd87: node_rank=8'd30;
+            8'd88: node_rank=8'd31;
+            8'd89: node_rank=8'd31;
+            8'd90: node_rank=8'd32;
+            8'd91: node_rank=8'd32;
+            8'd92: node_rank=8'd33;
+            8'd93: node_rank=8'd33;
+            8'd94: node_rank=8'd34;
+            8'd95: node_rank=8'd34;
+            8'd96: node_rank=8'd35;
+            8'd97: node_rank=8'd35;
+            8'd98: node_rank=8'd36;
+            8'd99: node_rank=8'd36;
+            8'd100: node_rank=8'd37;
+            8'd101: node_rank=8'd37;
+            8'd102: node_rank=8'd38;
+            8'd103: node_rank=8'd38;
+            default: node_rank=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd2: node_rank=8'd0;
+            8'd4: node_rank=8'd1;
+            8'd5: node_rank=8'd0;
+            8'd8: node_rank=8'd2;
+            8'd9: node_rank=8'd1;
+            8'd10: node_rank=8'd3;
+            8'd11: node_rank=8'd2;
+            8'd12: node_rank=8'd3;
+            8'd16: node_rank=8'd4;
+            8'd17: node_rank=8'd4;
+            8'd18: node_rank=8'd5;
+            8'd19: node_rank=8'd5;
+            8'd20: node_rank=8'd6;
+            8'd21: node_rank=8'd6;
+            8'd22: node_rank=8'd7;
+            8'd23: node_rank=8'd7;
+            8'd24: node_rank=8'd8;
+            8'd25: node_rank=8'd8;
+            8'd32: node_rank=8'd9;
+            8'd33: node_rank=8'd9;
+            8'd34: node_rank=8'd10;
+            8'd35: node_rank=8'd10;
+            8'd36: node_rank=8'd11;
+            8'd37: node_rank=8'd11;
+            8'd38: node_rank=8'd12;
+            8'd39: node_rank=8'd12;
+            8'd40: node_rank=8'd13;
+            8'd41: node_rank=8'd13;
+            8'd42: node_rank=8'd14;
+            8'd43: node_rank=8'd14;
+            8'd44: node_rank=8'd15;
+            8'd45: node_rank=8'd15;
+            8'd46: node_rank=8'd16;
+            8'd47: node_rank=8'd16;
+            8'd48: node_rank=8'd17;
+            8'd49: node_rank=8'd17;
+            8'd50: node_rank=8'd18;
+            8'd51: node_rank=8'd18;
+            8'd64: node_rank=8'd19;
+            8'd65: node_rank=8'd19;
+            8'd66: node_rank=8'd20;
+            8'd67: node_rank=8'd20;
+            8'd68: node_rank=8'd21;
+            8'd69: node_rank=8'd21;
+            8'd70: node_rank=8'd22;
+            8'd71: node_rank=8'd22;
+            8'd72: node_rank=8'd23;
+            8'd73: node_rank=8'd23;
+            8'd74: node_rank=8'd24;
+            8'd75: node_rank=8'd24;
+            8'd76: node_rank=8'd25;
+            8'd77: node_rank=8'd25;
+            8'd78: node_rank=8'd26;
+            8'd79: node_rank=8'd26;
+            8'd80: node_rank=8'd27;
+            8'd81: node_rank=8'd27;
+            8'd82: node_rank=8'd28;
+            8'd83: node_rank=8'd28;
+            8'd84: node_rank=8'd29;
+            8'd85: node_rank=8'd29;
+            8'd86: node_rank=8'd30;
+            8'd87: node_rank=8'd30;
+            8'd88: node_rank=8'd31;
+            8'd89: node_rank=8'd31;
+            8'd90: node_rank=8'd32;
+            8'd91: node_rank=8'd32;
+            8'd92: node_rank=8'd33;
+            8'd93: node_rank=8'd33;
+            8'd94: node_rank=8'd34;
+            8'd95: node_rank=8'd34;
+            8'd96: node_rank=8'd35;
+            8'd97: node_rank=8'd35;
+            8'd98: node_rank=8'd36;
+            8'd99: node_rank=8'd36;
+            8'd100: node_rank=8'd37;
+            8'd101: node_rank=8'd37;
+            8'd102: node_rank=8'd38;
+            8'd103: node_rank=8'd38;
+            default: node_rank=8'd0;
+          endcase
+        end
+      end
+    endfunction
+ function automatic [10:0] descriptor(input [7:0] n,input integer tree);
+  integer ix,slot,bank;
+  begin
+   if(n>=128)begin
+    ix=n-128;
+`ifdef OT_S81DV_MUT_LEAF
+    if(TREES==1 && ix==1)ix=2;
+`endif
+    slot=tree*16+ix/5;bank=owner[(tree*NV+ix)*2+:2]*K+ix%K;
+   end else begin
+    slot=tree*39+node_rank(n);bank=P*K+node_role(n)*RM+slot/64;
+   end
+   descriptor={5'(bank),5'((slot>>1)%32),1'(slot%2)};
+  end
+ endfunction
+ wire[10:0] da=descriptor(ca_node({1'b0,tag[6:0]}),tag[8:7]);
+ wire[10:0] db=descriptor(cb_node({1'b0,tag[6:0]}),tag[8:7]);
+ assign sa=fire && da[10:6]==BANK;
+ assign sb=fire && db[10:6]==BANK;
+ assign ren=sa||sb;
+ assign ra=(da[10:6]==BANK)?da[5:1]:db[5:1];
+ assign ha=da[0];assign hb=db[0];
 endmodule
