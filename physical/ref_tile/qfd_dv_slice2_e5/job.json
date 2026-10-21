@@ -1,0 +1,155 @@
+{
+ "name": "qfd_dv_slice2_e5-g1e-COMMIT",
+ "block": "qfd_dv_s5_lp",
+ "ref_tile": true,
+ "owner": "Claude:QW-SLICE2E",
+ "purpose": "QW-SLICE6: hardened one-level slice2 parent (CRITICAL: coordinator review before any route)",
+ "threads": 32,
+ "peak_ram_gb": 192,
+ "source": {
+  "branch": "claude/qw-slice2e-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/hdc",
+   "rtl/common/landed_parent",
+   "rtl/lib",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/test",
+   "tools/landed_parent",
+   "tools/qwen_dv",
+   "physical/asap7_memory_macros_v2",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/ref_tile/qfd_dv_slice2_stnrgc/views",
+   "physical/ref_tile/qfd_dv_lane_h_safe2/views",
+   "physical/ref_tile/qfd_su_sfu_exp/views",
+   "physical/ref_tile/qfd_su_sfu_rcp/views",
+   "physical/ref_tile/qfd_su_sfu_rsq/views",
+   "physical/hbm_accel_die_views/stations/bench",
+   "results/arch/qw_slice6_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_s5_lp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S5_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/s5/lp/qfd_dv_s5_lp.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/qwen_dv/s5/qfd_dv_s5_vm.sv rtl/qwen_dv/qfd_dv_scalar2.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_slice_tload.sv rtl/qwen_dv/qfd_dv_table_rom_loader.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_flat0_eq_slice2",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/eq eq 0",
+    "expect": "pass",
+    "pass_regex": "S5_EQ PASS",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_lp_lockstep_mut0",
+    "cmd": "SPEC=qfd_dv_s5 bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/lp lp 0",
+    "expect": "pass",
+    "pass_regex": "LP_LOCKSTEP PASS",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_lp_mut1_bypass",
+    "cmd": "SPEC=qfd_dv_s5 bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/lp1 lp 1",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_audit",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/audit audit",
+    "expect": "pass",
+    "pass_regex": "AUDIT qfd_dv_s5 PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_dv_slice2_e5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_dv_slice2_e5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 192
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_dv_slice2_e5 --out {RUN}/record/views/qfd_dv_s5_lp --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 --macro-view physical/ref_tile/qfd_dv_lane_h_safe2/views/qfd_dv_lane_h_safe2 --macro-view physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region --macro-view physical/ref_tile/qfd_su_sfu_exp/views/ot_hdc_sfu_exp_t --macro-view physical/ref_tile/qfd_su_sfu_rcp/views/ot_hdc_sfu_rcp_t --macro-view physical/ref_tile/qfd_su_sfu_rsq/views/ot_hdc_sfu_rsq_t > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_dv_slice2_e5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile/qfd_dv_lane_h_safe2/views/qfd_dv_lane_h_safe2",
+   "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "physical/ref_tile/qfd_su_sfu_exp/views/ot_hdc_sfu_exp_t",
+   "physical/ref_tile/qfd_su_sfu_rcp/views/ot_hdc_sfu_rcp_t",
+   "physical/ref_tile/qfd_su_sfu_rsq/views/ot_hdc_sfu_rsq_t"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_dv_slice2_e5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_dv_slice2_e5/qfd_dv_slice2_e5-g1e-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "CRITICAL qfd_dv_slice2 prefix: coordinator PNG review first; soft leaves pending their views",
+ "structural_change": "QW-SLICE6 10-20 Q.STA.SLICE.2: slice2 rebuilt as a hardened ONE-LEVEL landed parent of leaves (LEAD3-QW decision (a)), replacing the failed one-root slice2_e / slice2_wh cores; variant e: E master (MY mirror of w5)"
+}
