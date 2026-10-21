@@ -33,6 +33,13 @@ if [ "$REPORT" = 0 ]; then
       fi
       bash "$H/assemble_rtl72.sh" "$REF" "$ASM" > "$WORK/assembly.log" 2>&1
     fi
+    ACTUAL_REF=$(awk '$1 == "REF" {print $2; exit}' "$ASM/snapshot.refs")
+    G=${OT_GIT_DIR:-/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git}
+    EXPECTED_REF=$(git --git-dir="$G" rev-parse "$REF^{commit}")
+    if [ "$ACTUAL_REF" != "$EXPECTED_REF" ]; then
+      echo "Assembly source ref differs from --ref; preserve existing assembly and use a fresh work directory" >&2
+      exit 3
+    fi
     DIE=$ASM/bind/bind/die.v; PB=$ASM/bind/bind/port_bind.json
     PLAN=$ASM/plan_routed_g7.json; LAND=$ASM/land_plan_g7.json
   else
