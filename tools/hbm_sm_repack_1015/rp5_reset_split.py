@@ -47,7 +47,7 @@ def main():
             for p in [base/f"ot_hbm_smh_rp5{h}_{v}_bench.sh"]:
                 s=p.read_text()
                 s=s.replace("rtl/common/landed_parent/ot_pl_land_reset_forest.sv",RTL)
-                s=s.replace(f'SRCS="{RTL} {RTL} ',f'SRCS="{RTL} ')
+                s=s.replace(f'SRCS="{RTL} ', 'SRCS="',1) if s.count(RTL)>1 else s
                 p.write_text(s)
             p=ROOT/f"physical/ref_tile/smh_rp5{h}_{v}/spec.json"
             d=json.loads(p.read_text())
