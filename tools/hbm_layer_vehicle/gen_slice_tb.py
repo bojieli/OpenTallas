@@ -40,6 +40,7 @@ def main():
     ap.add_argument("--trace-bit", action="append", default=[], metavar="NET:BIT",
                     help="opt-in (TOK-FUNC2-HBM-SM 10-21): print 'SLICE_TRACE NET cyc' on every stream edge where slice net "
                          "dut.NET[BIT] is 1 (measured commit cycles of internal writers); default none = TB unchanged")
+    ap.add_argument("--sm-node-scoreboard", type=Path, help="opt-in exact512-value unnormalized PV node scoreboard on actual rv/rrow/rdata boundary")
     a = ap.parse_args()
     b = json.loads(Path(a.boundary).read_text())
     if 'hb_ckgen' not in b['instances']:
@@ -49,6 +50,25 @@ def main():
     ins = [e for e in b["inputs"] if e["driver"].split(".")[0] != "<die_pin>"]
     pins = {e["name"] for e in b["inputs"] if e["driver"].split(".")[0] == "<die_pin>"}
     outs = b["outputs"]
+    node = None
+    if a.sm_node_scoreboard:
+        node = json.loads(a.sm_node_scoreboard.read_text())
+        output_map = {e['name']:e for e in outs}
+        for key, bits in [('rv',1),('row',12),('data',256)]:
+            endpoint = output_map.get(node.get(key))
+            if endpoint is None or endpoint['width'] != bits:
+                sys.exit('gen_slice_tb: SM node scoreboard requires actual1/12/256-bit boundary outputs')
+            if endpoint['driver'].rsplit('.',1)[-1] != {'rv':'rv','row':'rrow','data':'rdata'}[key]:
+                sys.exit('gen_slice_tb: SM scoreboard endpoint is not the actual result-interface port')
+        if len({output_map[node[key]]['driver'].rsplit('.',1)[0] for key in ('rv','row','data')})!=1:
+            sys.exit('gen_slice_tb: scoreboard output ports must belong to one selected actual SM')
+        if len(node.get('expected_words',[]))!=512 or any(not isinstance(w,str) or len(w)!=8 for w in node['expected_words']):
+            sys.exit('gen_slice_tb: exactly512 comparison-only FP32 hex words required')
+        try:
+            if any(not 0<=int(w,16)<(1<<32) for w in node['expected_words']):raise ValueError()
+        except ValueError:sys.exit('gen_slice_tb: invalid FP32 scoreboard word')
+        if any(type(node.get(k)) is not int for k in ('begin_edge','end_edge')) or not 0<=node['begin_edge']<node['end_edge']:
+            sys.exit('gen_slice_tb: explicit fixed nonnegative scoreboard bounds required')
     maxw = max([e["width"] for e in ins + outs] + [1])
     iidx = {e["name"]: k for k, e in enumerate(ins)}
     oidx = {e["name"]: k for k, e in enumerate(outs)}
@@ -171,6 +191,12 @@ def main():
         L.append(f"    reg [{e['width'] - 1}:0] {e['name']} = '0;")
     for e in outs:
         L.append(f"    wire [{e['width'] - 1}:0] {e['name']};")
+    if node:
+        L += ["    reg [31:0] sm_node_gold[0:511]; reg [63:0] sm_node_seen = 0;",
+              "    integer sm_node_total = 0, sm_node_unique = 0, sm_node_first = -1, sm_node_last = -1;",
+              "    initial begin"]
+        L += [f"        sm_node_gold[{i}] = 32'h{w};" for i,w in enumerate(node['expected_words'])]
+        L += ["    end"]
     conns = []
     for e in b["inputs"]:
         n = e["name"]
@@ -310,12 +336,31 @@ def main():
         L.append(f"    reg [{e['width'] - 1}:0] po{k} = '0; integer f{k} = -1, l{k} = -1, n{k} = 0;")
     L += ["    always @(posedge ck0) if (rs0) begin",
           "        step(0);"]
+    if node:
+        rv,row,data = (node[k] for k in ('rv','row','data'))
+        L += [f"        if ({rv}) begin",
+              "            sm_node_total = sm_node_total + 1;",
+              "            if (sm_node_first < 0) sm_node_first = cnt[0]; sm_node_last = cnt[0];",
+              f"            if (cnt[0] < {node['begin_edge']} || cnt[0] > {node['end_edge']}) begin fails=fails+1; $display(\"SLICE_CHECK_FAIL SM node outside fixed source window cyc=%0d\",cnt[0]); end",
+              f"            if ({row} >= 64) begin fails=fails+1; $display(\"SLICE_CHECK_FAIL SM node row range row=%0d\",{row}); end",
+              f"            else if (sm_node_seen[{row}]) begin fails=fails+1; $display(\"SLICE_CHECK_FAIL SM node duplicate row=%0d\",{row}); end",
+              "            else begin",
+              f"                sm_node_seen[{row}]=1; sm_node_unique=sm_node_unique+1;",
+              "                for (integer cc=0;cc<8;cc=cc+1) begin",
+              f"                    if ({data}[cc*32+:32] !== sm_node_gold[8*{row}+cc]) begin fails=fails+1; $display(\"SLICE_CHECK_FAIL SM node value row=%0d column=%0d got=%h expected=%h\",{row},cc,{data}[cc*32+:32],sm_node_gold[8*{row}+cc]); end",
+              "                end",
+              "            end",
+              f"            $display(\"SLICE_SM_ROW cyc=%0d row=%0d data=%064h\",cnt[0],{row},{data});",
+              "        end"]
     for tb_ in a.trace_bit:            # sampled value of the edge cnt[0] (opt-in; absent = TB unchanged)
         net, bit = tb_.rsplit(":", 1)
         L.append(f"        if (dut.{net}[{int(bit)}]) $display(\"SLICE_TRACE {net} %0d\", cnt[0]);")
     for k, e in enumerate(outs):
         L.append(f"        if ({e['name']} != po{k}) begin if (f{k} < 0) f{k} = cnt[0]; l{k} = cnt[0]; n{k} = n{k} + 1; po{k} = {e['name']}; end")
     L += ["        if (cnt[0] >= cycles) begin"]
+    if node:
+        L += ["            if (sm_node_total != 64 || sm_node_unique != 64 || sm_node_seen != 64'hffffffffffffffff) begin fails=fails+1; $display(\"SLICE_CHECK_FAIL SM node incomplete total=%0d unique=%0d seen=%h\",sm_node_total,sm_node_unique,sm_node_seen); end",
+              "            $display(\"SLICE_SM_SUMMARY total=%0d unique=%0d first=%0d last=%0d\",sm_node_total,sm_node_unique,sm_node_first,sm_node_last);"]
     for k, e in enumerate(outs):
         L.append(f"            if (n{k} > 0) $display(\"SLICE_OUT {e['name']} first=%0d last=%0d changes=%0d\", f{k}, l{k}, n{k});")
     L += ["            if (drives != expected_drives || checks != expected_checks) begin",
