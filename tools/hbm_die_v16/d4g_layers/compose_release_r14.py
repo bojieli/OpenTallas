@@ -29,7 +29,8 @@ def compose(inp, out):
     steps = (
         ('l23_su_pretree.py', inp, out / 'pre_relay_l23.json'),
         ('l23q_qcore_r13.py', out / 'pre_relay_l23.json', out / 'pre_relay_l23q.json'),
-        ('l25_h9c_fallback.py', out / 'pre_relay_l23q.json', out / 'pre_relay_release.json'),
+        ('l25_h9c_fallback.py', out / 'pre_relay_l23q.json', out / 'pre_relay_h9c.json'),
+        ('l26_closed_views.py', out / 'pre_relay_h9c.json', out / 'pre_relay_release.json'),
     )
     for tool, src, dst in steps:
         args = [sys.executable, str(LAYERS / tool)]
