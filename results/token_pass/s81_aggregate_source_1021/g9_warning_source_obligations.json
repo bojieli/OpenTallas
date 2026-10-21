@@ -1,0 +1,173 @@
+{
+ "schema": "opentallas.s81.g9_warning_source_obligations.v1",
+ "status": "0N_SYNTAX_ELAB_EXIT0_WITH_WARNINGS_KV_DEPENDENCY_GAP",
+ "source_unit": "ot-epyc5/oth-ubuntu-3181539-1792622565",
+ "unconnected_inputs": {
+  "classification": "UNREACHABLE_COMPANIONS_IN_CONSERVATIVE_SELECTED_0N_GRAPH",
+  "parents": [
+   "ot_s81_pq_core_native",
+   "ot_s81ph_coll_core"
+  ],
+  "ports": [
+   "aq_p",
+   "ln_y",
+   "ln_yv",
+   "ln_ye",
+   "ln_pe"
+  ],
+  "proof": "g9_warning_classification_interim.json: all191sourcefileSHA +preprocessed6defines module edges/directions/root reachability",
+  "count": 5
+ },
+ "active_open_outputs": {
+  "count": 23,
+  "ports": [
+   "12 actual ROM-element walking outputs",
+   "final station u_t8.cc",
+   "four terminal frame xo/xok pairs",
+   "0N bo/ck_rt cut boundary"
+  ],
+  "qualification": "open outputs retained explicitly; no full-die functional completeness inferred"
+ },
+ "multidriven": {
+  "count": 6,
+  "classification": "DISJOINT_DESTINATION_BITS_WITH_DISTINCT_RESET_EVENT_SETS",
+  "xs4": {
+   "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+   "lines": [
+    488,
+    490,
+    492,
+    494
+   ],
+   "bits": [
+    [
+     17,
+     0
+    ],
+    [
+     34,
+     18
+    ],
+    [
+     52,
+     35
+    ],
+    [
+     68,
+     53
+    ]
+   ],
+   "clock": "posedge clk",
+   "resets": [
+    "rb[1]",
+    "rx[20]",
+    "rb[2]",
+    "rx[21]"
+   ]
+  },
+  "lep": {
+   "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+   "lines": [
+    315,
+    316,
+    317
+   ],
+   "bits": "each generate mb drives only mcq[mb], mb0..33",
+   "clock": "posedge clk",
+   "resets": "per-group command_reset"
+  },
+  "gearbox": {
+   "source": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+   "sha256": "87089dff259f7300acfec4969e6c0a1d0db83e31d2f5082dc54342676a8c5625",
+   "lines": [
+    83,
+    91,
+    135
+   ],
+   "bits": [
+    "beat_tx[2:0]",
+    "beat_tx[BW-1:3]"
+   ],
+   "clock": "posedge clk",
+   "resets": "low3control reset; highpayload unreset",
+   "instances": 4
+  }
+ },
+ "unoptflat": {
+  "count": 4,
+  "source": "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "sha256": "9095cfd2553c96355713c205750fa0c285ec88dc3eafde06005c81b24d3d81cd",
+  "classification": "ARRAY_AGGREGATE_DEPENDENCY_WARNING_WITH_STRICTLY_ORDERED_INDEX_GRAPH",
+  "tree": {
+   "lines": [
+    324,
+    333
+   ],
+   "variables": [
+    "V",
+    "VD"
+   ],
+   "rule": "combinational bypass n reads2*n, 1<=n<NVP; strictlyincreasing index until registered leaf/node"
+  },
+  "fold": {
+   "lines": [
+    368,
+    373,
+    374,
+    377
+   ],
+   "variables": [
+    "oa",
+    "ob"
+   ],
+   "rule": "initial index0 constant, C+1 readsC; finite increasing-index fold"
+  }
+ },
+ "latch_semantics": {
+  "count": 2,
+  "classification": "ACTIVE_SOURCE_SIMULATOR_SEMANTICS_OBLIGATION",
+  "source": "rtl/s81/ot_s81_bf_front_roots.sv",
+  "sha256": "1f3ec5b8008dfdecd16305cd5519bfbb677b379b349fe933ef5571a8467f84a2",
+  "line": 272,
+  "context": "STATIC_PROGRAM!=0 g_static_status_lockup",
+  "statement": "always_latch if (!clk) begin busy_l <= busy_e; fault_l <= fault_e; end",
+  "verilator_diagnostic": "COMBDLY: nonblocking assignments executed as blocking",
+  "warning_suppressed": false,
+  "source_changed": false
+ },
+ "other_warnings": {
+  "SELRANGE": "10 statically unselected ternary arms: gj4..7 selects mhi; Q gc10/11 FB0 selects96bitohq, not80bitohb",
+  "WIDTHCONCAT": "CRC static mask replication size warning",
+  "ALWNEVER": "unused fcore constant helper in XRT FOREG0 direct-fault branch"
+ },
+ "functional_qualified": false,
+ "coherence_qualified": false,
+ "runtime_performed": false,
+ "physical_or_timing_qualified": false,
+ "known_module_graph_qualification": "Saved conservative graph covers known source definitions. Actual0N elaboration EXIT0 establishes the missing KV-only types are inactive there; no reachability claim is made for failed KV512 or any whole-die source.",
+ "companion_open_outputs": {
+  "count": 2,
+  "parent": "ot_s81ph_coll_core",
+  "instance": "u_eng",
+  "ports": [
+   "ln_v",
+   "ln_d"
+  ],
+  "selected_module": "ot_w15_rom_oneshot_px_acceptedpop",
+  "declaration_source": "rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv",
+  "declaration_lines": [
+   143,
+   144
+  ],
+  "direction": "output",
+  "classification": "UNREACHABLE_COMPANION_IN_CONSERVATIVE_SELECTED_0N_GRAPH"
+ },
+ "pinmissing_reconciliation": {
+  "total": 30,
+  "companion_inputs": 5,
+  "companion_outputs": 2,
+  "active_open_outputs": 23,
+  "all_directions_classified": true
+ }
+}

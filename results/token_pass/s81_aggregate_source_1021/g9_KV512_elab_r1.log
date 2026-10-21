@@ -1,0 +1,321 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'
+  274 |     ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
+      |                       ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv:11:22: ... Location of port declaration
+   11 |     input wire [9:0] aq_p,  
+      |                      ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_v'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:143:30: ... Location of port declaration
+  143 |     output wire              ln_v,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_d'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:144:30: ... Location of port declaration
+  144 |     output wire [N*FW-1:0]   ln_d,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_y'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:145:30: ... Location of port declaration
+  145 |     input  wire [FW-1:0]     ln_y,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_yv'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:146:30: ... Location of port declaration
+  146 |     input  wire [LANES-1:0]  ln_yv,
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_ye'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:147:31: ... Location of port declaration
+  147 |     input  wire [2*LANES-1:0] ln_ye,
+      |                               ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_pe'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:148:30: ... Location of port declaration
+  148 |     input  wire [LANES-1:0]  ln_pe
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv:12:24: ... Location of port declaration
+   12 |     output wire [14:0] cc,
+      |                        ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xo'
+11055 |   col_h9_l4_lp #(.INSTANCE("u_f_0L13")) u_f_0L13 (.ck_r0(ck_frame_f_0L13_r0), .ck_r1(ck_frame_f_0L13_r1), .ck_r2(ck_frame_f_0L13_r2), .xk({nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}), .rst_n(rs_2_44_2), .lk(12'h492), .x({w_x_f_0L13_l3_dst[275:0], w_x_f_0L13_l2_dst[275:0], w_x_f_0L13_l1_dst[275:0], w_x_f_0L13_l0_dst[275:0]}), .ret({w_r_f_0L13_src[69:0]}));
+      |                                         ^~~~~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xok'
+11055 |   col_h9_l4_lp #(.INSTANCE("u_f_0L13")) u_f_0L13 (.ck_r0(ck_frame_f_0L13_r0), .ck_r1(ck_frame_f_0L13_r1), .ck_r2(ck_frame_f_0L13_r2), .xk({nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}), .rst_n(rs_2_44_2), .lk(12'h492), .x({w_x_f_0L13_l3_dst[275:0], w_x_f_0L13_l2_dst[275:0], w_x_f_0L13_l1_dst[275:0], w_x_f_0L13_l0_dst[275:0]}), .ret({w_r_f_0L13_src[69:0]}));
+      |                                         ^~~~~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'bo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv:25:25: ... Location of port declaration
+   25 |     output wire [512:0] bo,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'ck_rt'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv:31:23: ... Location of port declaration
+   31 |     output wire [7:0] ck_rt,
+      |                       ^~~~~
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:66:13: Cannot find file containing module: 'ot_s81_su_kve'
+   66 |             ot_s81_su_kve #(.RP(0), .LM(LM), .LA(LA)) u_kve (
+      |             ^~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... Looked in:
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/s81_pq_hier/pinned/rtl/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/s81_pq_hier/pinned/rtl/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/physical/s81_pq_hier/pinned/rtl/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/common/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/common/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/common/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/common/landed_parent/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/common/landed_parent/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/common/landed_parent/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/engram/mix/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/engram/mix/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/engram/mix/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_die_bind/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_die_bind/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_die_bind/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/eng/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/eng/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/eng/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/frame/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/frame/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/frame/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/land/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/land/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/land/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/lp/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/lp/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/lp/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_fill2/gen19b/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_fill2/gen19b/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_fill2/gen19b/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_glue/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_glue/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_glue/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/coll/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/coll/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/coll/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ctrl/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ctrl/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ctrl/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_control/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_control/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_control/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/gen/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/gen/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_static_net/gen/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/v41/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/v41/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/v41/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/v41x/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/v41x/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/hdc/v41x/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/lib/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/lib/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/lib/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/link/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/link/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/link/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/proto/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/proto/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/proto/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/rom/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/s81/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/s81/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/s81/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41die/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41die/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41die/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/v41rom/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/ot_s81_su_kve.sv
+                        ot_s81_su_kve
+                        ot_s81_su_kve.v
+                        ot_s81_su_kve.sv
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/ot_s81sl_slice_kv512_obj/ot_s81_su_kve
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/ot_s81sl_slice_kv512_obj/ot_s81_su_kve.v
+                        /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/ot_s81sl_slice_kv512_obj/ot_s81_su_kve.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021'
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:62:13: Cannot find file containing module: 'ot_s81_su_kve'
+   62 |             ot_s81_su_kve #(.RP(1), .LM(LM), .LA(LA)) u_kve (
+      |             ^~~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:83:13: Cannot find file containing module: 'ot_s81_su_qnh'
+   83 |             ot_s81_su_qnh #(.NE(16), .LA(LA)) u_qnh (
+      |             ^~~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:87:9: Cannot find file containing module: 'ot_s81_su_qnr'
+   87 |         ot_s81_su_qnr #(.NE(NKH), .NV(1), .D(KV_N), .LM(LM), .LA(LA)) u_kvr (
+      |         ^~~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:107:9: Cannot find file containing module: 'ot_s81_su_kvq'
+  107 |         ot_s81_su_kvq #(.N(KV_N), .MLAT(LM)) u_kvq (
+      |         ^~~~~~~~~~~~~
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:131:17: Cannot find file containing module: 'ot_s81_su_kvt'
+  131 |                 ot_s81_su_kvt #(.N(KV_N), .S_RD(S_RD), .NFI(NKE + 1), .MUT(MUT)) u_kvt (
+      |                 ^~~~~~~~~~~~~
+%Error: Exiting due to 6 error(s)

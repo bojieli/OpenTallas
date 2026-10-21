@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.s81.g9_configured_terminal_collection.v1",
+ "status": "0N_SYNTAX_ELAB_PASS_WITH_WARNINGS_KV_DEPENDENCY_FAIL",
+ "unit": "ot-epyc5/oth-ubuntu-3181539-1792622565",
+ "unit_exit_code": 1,
+ "selected_source_ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+ "manifest_sha256": "120ce473f90bddeb40ee35c4fe28cf7ec3ab3b127f46fc95351d97cf4da66b75",
+ "runner_sha256": "2684e2ad410c0a892d578d9648a23bd6d765ab6decfa5945a3e9b20a330c694d",
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32"
+ ],
+ "actual0N": {
+  "exit_code": 0,
+  "errors": 0,
+  "warnings": {
+   "PINMISSING": 30,
+   "WIDTHCONCAT": 1,
+   "SELRANGE": 10,
+   "ALWNEVER": 1,
+   "COMBDLY": 2,
+   "MULTIDRIVEN": 6,
+   "UNOPTFLAT": 4
+  },
+  "scope": "syntax/elaboration only; all54 warnings retained",
+  "verilator_report": "wall1052.284s cpu1052.223s allocated58763.387MB; bld0.000"
+ },
+ "KV512": {
+  "exit_code": 1,
+  "missing_modules": [
+   "ot_s81_su_kve",
+   "ot_s81_su_qnh",
+   "ot_s81_su_qnr",
+   "ot_s81_su_kvq",
+   "ot_s81_su_kvt"
+  ],
+  "missing_instances": 6,
+  "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+  "lines": [
+   62,
+   66,
+   83,
+   87,
+   107,
+   131
+  ],
+  "action": "HOLD until owner selects exact8a495 transitive source/hash/params; complete only failed KVtop if authorized; never rerun successful0N"
+ },
+ "warnings_classification": "g9_warning_source_obligations.json + g9_warning_classification_interim.json; interim graph pins unchanged191sources, terminal rawlogs authoritative for finalcounts",
+ "source_archive_verified": true,
+ "source_archive_files": 193,
+ "preserved_original_G8_failure": "f83d5919a",
+ "initial_staging_NOT_RUN": "oldlane spill OT_SPILL_REAL refused existing archivedgitmirror; only exact unadmitted waiter cancelled. Fresh minimal source lane admitted normally.",
+ "functional_qualified": false,
+ "coherent_source_qualified": false,
+ "physical_qualified": false,
+ "global_programme_qualified": false,
+ "simulator_run": false,
+ "file_sha256": {
+  "g9_configured_terminal_r1.json": "63665a86ebdc87d47435674d4c6bfb397bd538a8300acc97e0e2ce41e9e023b7",
+  "g9_0N_elab_r1.log": "4e84d37adf9c637b3664bd8468ead001dd9917c3d59bdbb85411e25e570c787b",
+  "g9_KV512_elab_r1.log": "3daadf9720c564c3bc89909890bc13398936076c75dfff2b30085e2dce8f0ca5",
+  "g9_configured_source_r1.tgz": "227bfd46662faafebb6e8b2c1768751bec1653898c93b16eca3cf2c325c3b8dd",
+  "g9_warning_classification_interim.json": "e7dd9e62ce1dcf92090c0a34d596d40c6b54a3b706f96401ae249c26b518d443",
+  "g9_warning_source_obligations.json": "6d6b5095754efafdf0ab83dd08a1249186d18e28fbf80e4813ab30b970bd097b"
+ },
+ "pinmissing_reconciliation": {
+  "total": 30,
+  "companion_inputs": 5,
+  "companion_outputs": 2,
+  "active_open_outputs": 23
+ }
+}
