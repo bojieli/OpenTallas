@@ -192,6 +192,12 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT11 10-20: XS bay record merge (f61a12bcc lineage). 9a21b1c63 only re-synced main's CX-IJ cross-clock gate
+    # (check_cross_clock, tightening, multi-clock kits only) into the HF-5 branch; the merged tree keeps main's file.
+    "9a21b1c6382c404f803e8f954db08024701dcb23": dict(
+        kind="tightening", paths=("tools/ref_tile/pre_route_gate.py",),
+        what="branch re-sync of main's CX-IJ cross-clock gate (multi-clock kits only); no new rule"),
+
     # QW STREAM: the only guarded path is a NEW, tile-specific spec generator.
     # It adds no gate/submit/route validator code and changes no existing helper.
     "6ebf7706a64edfe81bfbde75defed9c374c5bfd8": dict(
