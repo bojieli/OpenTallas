@@ -6,7 +6,7 @@ Rebuilt after the k2b --cts gate STRUCTURAL FAIL (10-21 04:36): Sinkhorn step 7,
 budget (234 cells), and ~2,100 single-period tail paths (~38 levels, 1.65 ns, -417 ps: row max 4-way scan, operand
 24:1 AND-OR select into unit stage 1, unit-internal stages of add/mul/exp, the radix-4 divider recurrence).
 
-## Structural changes (RTL @26d9af0f9)
+## Structural changes (RTL @26d9af0f9; netlist made there, where the SKP Sinkhorn block was still named g_skce -- renamed g_skcp in 5688f40f8, function identical)
 - Sinkhorn step: ot_hdc_sinkhorn_cp (rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv + ot_hdc_sk_arith_cp.sv). The step cone is cut by
   free-running registers; its inputs (er / a_* / st) change only on a ce edge and are held, so the cuts settle the exact
   value D <= 15 edges after a ce edge (steady step P1 M1 X1 M2 X2 M3 X3 ME XE S1 S2 S3 Q1 Q2 Q3). SDIV 16 >= D + 1.
