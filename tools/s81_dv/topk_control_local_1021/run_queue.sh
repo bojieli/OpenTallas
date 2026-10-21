@@ -12,9 +12,11 @@ for mut in 0 1 2 3;do
  "$out/obj$mut/Vtb_queue" > "$out/run$mut.log" 2>&1 || rc=$?
  printf '%s\n' "$rc" > "$out/rc$mut.txt"
  if [ "$mut" = 0 ];then
-  [ "$rc" = 0 ] && grep -q QUEUE_PASS "$out/run$mut.log"
+  if [ "$rc" != 0 ];then cat "$out/run$mut.log";exit 1;fi
+  grep -q QUEUE_PASS "$out/run$mut.log"
  else
-  [ "$rc" != 0 ] && grep -q HEAD "$out/run$mut.log"
+  if [ "$rc" = 0 ];then echo "MUTANT_ESCAPE $mut";exit 1;fi
+  grep -q HEAD "$out/run$mut.log"
  fi
  echo "QUEUE_CASE mut=$mut rc=$rc accepted"
 done

@@ -5,7 +5,7 @@ module tb_queue;
  reg clk=0;always #5 clk=~clk;
  reg[NS-1:0]rst_n=0;
  reg push=0,want_pop=0;
- wire pop=want_pop&&(n!=0); // exact original take/lv rule
+ wire pop=want_pop&&(count!=0); // exact original take/lv rule
  reg[W-1:0]data=0;
  wire[W-1:0]head;wire[2:0]count;
  ot_s81pa_queue #(.W(W),.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.push(push),.pop(pop),.data(data),.head(head),.count(count));
