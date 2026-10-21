@@ -122,10 +122,18 @@ def fences(g):
     half = (ch - 11.8) / 2
     y0, y1 = LEP_Y - 43.2, LEP_Y + LEP_H
     gapx = g["lane_x"] - 21.6                                 # 43.2 column between endpoint/land and the lanes
-    F = [("S", (sx0, y0, sx0 + half, y1), [r"u_lpl_(0_r|1_w|2_w)[./]"]),
-         ("Kw", (sx0 + half + 1.0, y0, lx - 5.4, y1), [r"u_lpl_(0_w|1_r|2_r)[./]"]),
-         ("Kn", (lx, y1 + 5.4, lx + LEP_W, y1 + 48.6), [r"u_lpl_(3_r|4_r|5_r|6_w|7_w)[./]"]),
-         ("ML", (lx, g["land_y"] - 48.6, lx + LAND_W, g["land_y"] - 5.4), [r"u_lpl_(3_w|4_w|5_w|6_r|7_r)[./]"])]
+    # ENDP 10-21: halves -> boxes from the lp record (landing numbers move with spec mut_landing), never hard-coded:
+    # write half in its source region's box toward the peer, read half in its destination region's box toward the peer
+    box = lambda reg, peer: {"S": "S", "ML": "ML"}.get(reg) or ("Kw" if peer == "S" else "Kn")
+    halves = {"S": [], "Kw": [], "Kn": [], "ML": []}
+    for L in json.load(open(ROOT / RECORD))["landings"]:
+        halves[box(L["src_region"], L["dst_region"])].append(f'{L["name"]}_w')
+        halves[box(L["dst_region"], L["src_region"])].append(f'{L["name"]}_r')
+    rx = lambda k: [r"u_lpl_(" + "|".join(sorted(halves[k])) + r")[./]"]
+    F = [("S", (sx0, y0, sx0 + half, y1), rx("S")),
+         ("Kw", (sx0 + half + 1.0, y0, lx - 5.4, y1), rx("Kw")),
+         ("Kn", (lx, y1 + 5.4, lx + LEP_W, y1 + 48.6), rx("Kn")),
+         ("ML", (lx, g["land_y"] - 48.6, lx + LAND_W, g["land_y"] - 5.4), rx("ML"))]
     sy, my, ky = g["ln0_y"] - 40.0, g["ln1_y"] + LANE_H + 30.0, g["mid"]
     kgap = y1 + (g["land_y"] - y1) / 2                        # between the Kn and ML boxes
     polys = {"S": [(W - 60, sy), (lx - ch / 2, sy), (lx - ch / 2, y0 - 60)],
