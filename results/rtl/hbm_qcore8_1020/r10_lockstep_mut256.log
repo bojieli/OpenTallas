@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-qcore8/src10
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-qcore8/src10
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-qcore8/src10
+ot-run: ot-epyc9       admits   928 GB (avail 819, growth 170, headroom 0, waiters 0/0 GB) load 188/128 running 42 disk 155 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-qcore8/src10
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-qcore8/src10
+ot-run: LOAD SPILL: ot-epyc9 would run at 1.53 x cores; moving to ot-epyc5
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/hbm-qcore8 (0.9 GB) ot-epyc9 -> ot-epyc5 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 2141 changed entries in 31 s; running on ot-epyc5; written files go back to ot-epyc9 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1910965-1792557639 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RF WORD MISMATCH t=236000 class 2 00000000/8cf4bde5
+RF WORD MISMATCH t=266000 class 2 8cf4bde5/6249f0ea
+RF WORD MISMATCH t=266000 class 3 00000000/fda7d4d9
+RF WORD MISMATCH t=286000 class 1 00000000/b3df5464
+RF WORD MISMATCH t=286000 class 3 fda7d4d9/00000000
+QCORE_RG FAIL errors=12150 checks=9104 scalars=312
+- rtl/test/hbm_qcore_physical_1016/tb_qcore_r10_lockstep.sv:69: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 91us; walltime 0.237 s; speed 385.349 us/s
+- Verilator: cpu 0.237 s on 1 threads; allocated 11 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1910965-1792557639): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-epyc9; RAN on ot-epyc5: exit 0
