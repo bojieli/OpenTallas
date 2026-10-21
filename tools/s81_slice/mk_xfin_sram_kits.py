@@ -30,7 +30,8 @@ G = 2.16
 CM = RT.CORE_MARGIN
 FIN = ["g_cp[0].u_e", "g_cp[1].u_e", "u_f", "g_cp[2].u_e", "g_cp[3].u_e"]   # W -> E
 NB = {"u_f": 17}
-EXTRA_SRC = ["rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv", VIEW + "/ot_sram_1r1w_32x64_m1_bb.v"]
+EXTRA_SRC = ["rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv", "rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv",
+             VIEW + "/ot_sram_1r1w_32x64_m1_bb.v"]
 
 
 def snap(v, g=G):
