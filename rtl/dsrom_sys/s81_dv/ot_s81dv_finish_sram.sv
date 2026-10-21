@@ -591,7 +591,7 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  input wire fire,input wire[8:0] issue_tag,input wire[7:0] read_fire,input wire[71:0] read_tags,input wire rd_active,output reg[31:0] a_q,b_q,
  input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
 );
- localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM,NREAD=(NB+2)/3,NOWNER=(NREAD+2)/3;
+ localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM,NREAD=(NB+2)/3,NOWNER=(P*K+8)/9;
  localparam integer MUT_ASSOC=`ifdef OT_S81DV_MUT_EASSOC (TREES==3) `else 0 `endif;
  if(NV!=80 || K!=5 || P!=3 || (TREES!=1 && TREES!=3))begin:g_bad_profile
   ot_s81dv_finish_SRAM_requires_NV80_K5_P3_T1or3 u_bad();
@@ -1325,7 +1325,7 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  for(genvar rg=0;rg<(NB+2)/3;rg=rg+1)begin:g_read_group
    localparam integer CNT=(NB-rg*3>=3)?3:NB-rg*3;
    ot_s81dv_finish_readgroup #(.NV(NV),.K(K),.P(P),.TREES(TREES),.FIRST(rg*3),.CNT(CNT)) u_read(
-     .fire(read_fire[rg]),.tag(read_tags[rg*9+:9]),.owner(owner_bits[(rg/3)*TREES*NV*2+:TREES*NV*2]),
+     .fire(read_fire[rg]),.tag(read_tags[rg*9+:9]),.owner(owner_bits[((rg/3<NOWNER)?rg/3:NOWNER-1)*TREES*NV*2+:TREES*NV*2]),
      .ren(read_ren[rg*3+:CNT]),.ra(read_ra[rg*15+:CNT*5]),.sa(read_sa[rg*3+:CNT]),.sb(read_sb[rg*3+:CNT]),.ha(read_ha[rg*3+:CNT]),.hb(read_hb[rg*3+:CNT]));
  end
  for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank
