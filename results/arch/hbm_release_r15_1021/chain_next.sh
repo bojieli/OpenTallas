@@ -389,6 +389,13 @@ echo 'R14_S10_COMPLETE; proceeding scoped diagnostic physical run with declared 
 dense $B/case $B/views/contract.json case_final
 ft_usage $A/case_manifest.json case
 echo "DIAGNOSTIC_PHYSICAL_SCOPE: available views; final child/native/GEN qualification outstanding"
+# Reuse the actual GEN geometry verdict before spending on a physical route.
+python3 - "$A/case_manifest.json" <<'PYGEOM'
+import json,sys
+m=json.load(open(sys.argv[1])); bad=m.get('placement_problems', [])
+if bad: raise SystemExit('GRT_HELD_FOR_GEOMETRY: '+repr(bad))
+PYGEOM
+[ $? = 0 ] || exit 20
 step S11 grt_sta_clk
 $OTRUN --mem 160 --threads 16 --disk 60 --priority die --dir $B/case -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/case/run.sh > $A/grt.otrun 2>&1; echo "GRT ot-run rc=$? $(date -Is)"
 ssh $HOST "cat $B/case/out/run.exit; grep -E 'OT_PG_|OT_DIE_REP|overflow|Total wire|tns|wns' $B/case/out/run.log | tail -15; cat $B/case/out/neighbour_skew_gate.log; tail -5 $B/case/out/hold_budget.log" > $A/grt_summary.txt 2>&1
