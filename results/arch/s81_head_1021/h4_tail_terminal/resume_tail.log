@@ -1,0 +1,121 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+HEAD_RESUME_RESTORED pre=25171 skip=18760 obstacles=25219 buckets=8346 new_repeaters=1935707 occupancy_slots=1935707
+OT_CLUSTER_BOUNDS resumed_diagnostic instances=1960878 outside=0 unplaced=0 ports=18760 ports_unplaced=18760 port_pins_outside=0 port_pins_off_outline=0 single_terminal_nets=22047 violations=18760
+HEAD_RESUME_SCOPE diagnostic_only original_ideal_top_ports_preserved bounds=18760 inserted_repeaters=1935707
+OT_DIE_REP_FCLK fclk_nets=2813 broadcast_nets=0 hops=2813 judged=2813 mismatch_over_1=0 pairing_errors=0 vacuous=0
+[WARNING STA-0351] clock 'ck_head_lep_A' not found.
+[WARNING STA-0351] clock 'ck_head_lep_B' not found.
+[WARNING STA-0351] clock 'ck_head_lep_C' not found.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.1100
+[INFO GRT-0003] Macros: 6501
+[INFO GRT-0004] Blockages: 2773803
+[INFO GRT-0019] Found 8704 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 9
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   33980004      15857805          53.33%
+M3         Vertical     34019920      16259114          52.21%
+M4         Horizontal   453130026      318603782          29.69%
+M5         Vertical     456286065      319748314          29.92%
+M6         Horizontal   346196243      276944019          20.00%
+M7         Vertical     506142511      404912987          20.00%
+M8         Horizontal   505616923      404493173          20.00%
+M9         Vertical     505927693      505927693          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 20545797
+[INFO GRT-0198] Via related Steiner nodes: 1611
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 30388678
+[INFO GRT-0112] Final usage 3D: 129782881
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2            15857805        645669            4.07%            69 /  0 / 814
+M3            16259114       1373998            8.45%             0 / 113 / 288159
+M4           318603782       11382125            3.57%            203 /  1 / 7176
+M5           319748314       10862332            3.40%             0 / 223 / 618362
+M6           276944019       4959516            1.79%            141 /  0 / 6914
+M7           404912987       6317732            1.56%             0 / 167 / 644003
+M8           404493173       3069443            0.76%            129 /  1 / 7394
+M9           505927693          6032            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        -2032220409       38616847           -1.90%            542 / 505 / 1572822
+
+[INFO GRT-0018] Total wirelength: 426392707 um
+[INFO GRT-0014] Routed nets: 3036636
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 01:22:42
+OT_GRT_S 4962
+OT_DIE_REP post-GRT resize: resized=19654 blocked=11616 driver_not_a_repeater=903 at_ladder_top=0
+OT_DIE_REP post-GRT resize: resized=18131 blocked=12830 driver_not_a_repeater=903 at_ladder_top=0
+OT_DIE_REP_FCLK fclk_nets=2813 broadcast_nets=0 hops=2813 judged=2813 mismatch_over_1=41 pairing_errors=0 vacuous=0
+OT_DIE_REP post-GRT violators slew=31574 cap=219 worst_slew=12213.06 (on untouched clock/reset/skip nets: 0)
+OT_DONE
+OT_DIE_REP_FCLK fclk_nets=2813 broadcast_nets=0 hops=2813 judged=2813 mismatch_over_1=41 pairing_errors=0 vacuous=0
+HEAD_PHYSICAL_TAIL post_grt=31834 fclk=41
+Error: resume_tail.tcl, 47 unchanged post-GRT checks failed
