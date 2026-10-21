@@ -8,6 +8,8 @@
 module ot_hdc_fp32_mul_lat_ncr #(
     parameter integer LAT = 6,
     parameter integer MUT = 0,
+    // HEAD actual mapped exponent-select51 repair; default source structure retained.
+    parameter integer SPLIT_EXP = 0,
     // BCONST_EN = 1: operand b is the constant BCONST (the K-tree SCALE); the b port is ignored, so the b-side decode folds
     parameter integer BCONST_EN = 0,
     parameter [31:0]  BCONST = 32'd0
@@ -232,7 +234,16 @@ module ot_hdc_fp32_mul_lat_ncr #(
 
     // ---- S3a: select, subnormal shift, round/sticky bits ------------------------------------------
     wire is_sub = s2_isc[8];
-    wire signed [11:0] fl = s2_top[12] ? s2_fl47 : s2_fl46;
+    wire signed [11:0] fl;
+    generate if (SPLIT_EXP != 0) begin : g_exp_copies
+        (* keep="true",dont_touch="true" *) reg [3:0] top_q;
+        always @(posedge clk) top_q <= {4{top_d}};
+        for (genvar fc=0;fc<4;fc=fc+1) begin:g_fl
+            assign fl[3*fc +: 3] = top_q[fc] ? s2_fl47[3*fc +: 3] : s2_fl46[3*fc +: 3];
+        end
+    end else begin:g_exp_original
+        assign fl = s2_top[12] ? s2_fl47 : s2_fl46;
+    end endgenerate
     wire [23:0] main;
     reg  [23:0] s_main;
     integer si, sk;

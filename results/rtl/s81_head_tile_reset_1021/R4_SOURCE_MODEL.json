@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.head.tile-native-r4.v1",
+ "baseline": "5bd07167a",
+ "failed_roots": 564391,
+ "failed_native_max": 51,
+ "failed_violations": 2,
+ "failed_driver_role": "sequential exponent-select s2_top[12] in g_a[0].g_m[10/14]",
+ "new_optin": "SPLIT_EXP=1 only in ot_s81hd_tile_r3",
+ "default_shared_mul": "SPLIT_EXP=0 original expression retained",
+ "state": "4 unreset same-edge replicas per multiplier,5elements*16muls=320 source FF per tile",
+ "extra_data_cycles": 0,
+ "extra_reset_cycles_vs_r3": 0,
+ "reset_cycles_vs_original_kit": 1,
+ "qualification": "actual mapped native + exact existing reset-aware ALL mini required, pending",
+ "shared_source_sha256": "a02dd744f81d14e2bfe48e2cfae3a89b099850e553432a9770860ab096383c66"
+}

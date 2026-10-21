@@ -211,7 +211,7 @@ module ot_s81hd_elem_r3 #(
         if (NC) begin : g_nc
             wire [1:0] me;
             wire       mv;
-            ot_hdc_fp32_mul_lat_ncr #(.LAT(6)) u_m (.clk(clk), .rst_v({21{rst_n}}), .valid_in(w_v),
+            ot_hdc_fp32_mul_lat_ncr #(.LAT(6), .SPLIT_EXP(1)) u_m (.clk(clk), .rst_v({21{rst_n}}), .valid_in(w_v),
                 .a({w_r[16*l +: 16], 16'd0}), .a_nrm({2{w_r[16*l +: 16], 16'd0}}), .b({x_r[16*l +: 16], 16'd0}),
                 .y(p[l]), .err(me), .valid_out(mv));
             assign pf[l] = me != 2'd0;          // qualified by the chain valid (cerr), as bmul3's fault
