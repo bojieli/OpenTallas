@@ -33,3 +33,13 @@ end_parent_1 (s_0N) = ot_s81sl_slice_lepw_mab_mu_72 2851.2 x 6825.6 (s_0S stays 
 `tools/s81_dv/dv_plan72_g4.py` (G3 base + lk_WN2/3 + links lt/lr_lk_WN2/3: s_0N tx2/tx3 512 b -> SerDes tx, SerDes rx
 562 b -> s_0N rx2/rx3, copied from lt/lr_lk_WN0/1); 144 blocks, 752 links, 2 blockages. Route + chain in
 `release72/run_die72_g4.sh` (land plan + 4 sibling rows via `release72/mk_land_plan_g4.py`).
+
+## G5 (S81-LINK5B L5B-G4 10-21)
+
+`g5/placement_g5.json` = `dv_floorplan72_g4.py --wb-rows 2 3`: the W column-B real SerDes slots link_0_4/0_5 (lk_WN2/3)
+move from rows 0/1 (y 86.4 / 4017.6) to rows 2/3 (y 7948.8 / 11880), beside lk_WN0/1 (column A rows 2/3) and nearest
+s_0N; every other block/street identical to G4 (overlap/street asserts pass). `g5/plan_unrouted_g5.json` (dv_plan72_g4.py,
+144 blocks, 752 links): s_0N <-> lk_WN2/3 seed Manhattan 24.8-24.9 mm -> 16.9-17.1 mm (= pair A lk_WN0/1). Source adds
+L5-RTL e93685328 (u_land #(SRAM 1) = CLOSED dsdv_mu_land 263e13fc3) and S81-RTLGAP/head 589110357 (end-slice
+u_xg -> ot_s81sl_xg_xo; assembly specs list ot_s81sl_xg_xo/rstop_xo sources, u_sl.u_xg UNBOUND until the xg_xo view gates).
+UNBOUND: s_0N u_lep ot_s81sl_lep_mu_ab (kit s81sl_lepmu; binds in G6), safe8_ntf lanes. Chain: `release72/run_die72_g5.sh`.

@@ -42,7 +42,7 @@ SEQHOST = (475.2, 993.6)
 CTRL_UP = 43.2
 
 
-def construct(template, W=32648.0, H=25200.0):
+def construct(template, W=32648.0, H=25200.0, wb_rows=(0, 1)):
     d = copy.deepcopy(template); allb = {b['name']: b for b in d['rectangles'] + d['fixed']}; bs = []
     for j in REAL_W_LINKS:                 # G4: new real W SerDes slots (template has only link_<s>_0..3)
         allb[f'link_0_{j}'] = dict(copy.deepcopy(allb['link_0_0']), name=f'link_0_{j}')
@@ -75,8 +75,10 @@ def construct(template, W=32648.0, H=25200.0):
         for j in range(4):
             put(f'link_{side}_{j}', colA[side], ly0 + j * lp, sw_, sh_,
                 scope='G3 real SerDes column slot (s81lk_serdes_col_lp7a/b 518.4 x 3844.8)')
-    for j, yy in zip(REAL_W_LINKS, (ly0, ly0 + lp)):
-        put(f'link_0_{j}', colB[0], yy, sw_, sh_,
+    # G5 (L5B-G4 10-21, --wb-rows 2 3): W column B real slots move up beside lk_WN0/1 (column A rows 2/3 = link_0_2/0_3),
+    # the rows nearest s_0N -> the s_0N <-> lk_WN2/3 links shorten ~8 mm (y 7948.8..15724.8 in column B is free).
+    for j, r in zip(REAL_W_LINKS, wb_rows):
+        put(f'link_0_{j}', colB[0], ly0 + r * lp, sw_, sh_,
             scope='G4 real SerDes column-B slot (5th lane pair, s_0N pair B; ot_pdie_serdes 518.4 x 3844.8)')
     assert (n9, n10) == (60, 12)
     # ctrl row (fixed, centre-referenced) up 43.2 and shifted dW/2; service group bottom = ctrl top + 86.4
@@ -139,8 +141,10 @@ def construct(template, W=32648.0, H=25200.0):
 
 def main():
     a = argparse.ArgumentParser(); a.add_argument('template'); a.add_argument('out')
-    a.add_argument('--die', nargs=2, type=float, default=[32648.0, 25200.0]); v = a.parse_args()
-    d = construct(json.load(open(v.template)), *v.die); Path(v.out).write_text(json.dumps(d, indent=1))
+    a.add_argument('--die', nargs=2, type=float, default=[32648.0, 25200.0])
+    a.add_argument('--wb-rows', nargs=2, type=int, default=[0, 1], help='column-A row index of the two W column-B real slots (G5: 2 3)')
+    v = a.parse_args()
+    d = construct(json.load(open(v.template)), *v.die, wb_rows=tuple(v.wb_rows)); Path(v.out).write_text(json.dumps(d, indent=1))
     print('SELECTED72_G4_CONSTRUCTED', len(d['best']['blocks']), 'reserves', len(d['reserves']), 'die', d['die'])
 
 

@@ -24,6 +24,8 @@
     "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
     "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop_xo.sv",
     "rtl/lib/ot_rst_relay.sv",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
   ],
@@ -290,13 +292,14 @@
       ]
     },
     {
-      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg",
       "count": 1,
       "inst": "u_sl.u_xg",
       "at": [
         86.4,
         3456.0
-      ]
+      ],
+      "master": "ot_s81sl_xg_xo",
+      "binding_state": "UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias"
     },
     {
       "view": "physical/ref_tile/s81sl_capc5k/views/ot_s81sl_capc5c",

@@ -60,6 +60,13 @@ def assemble(normal, flavor, bindings):
         c = copy.deepcopy(child)
         c["inst"] = "u_sl." + c["inst"]
         c["at"] = [round(c["at"][0]+slx,3), round(c["at"][1]+sly,3)]
+        if c["inst"] == "u_sl.u_xg":
+            # S81-RTLGAP/head 589110357: the cap5r_lp end slice instantiates u_xg as ot_s81sl_xg_xo (head XB egress, no
+            # port/net/strap/cycle change). The old ot_s81sl_xg stand-in view is NOT this master -> UNBOUND until the
+            # xg_xo view gates (never alias the old xg view onto the changed successor).
+            c.pop("view", None)
+            c.update(master="ot_s81sl_xg_xo",
+                     binding_state="UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias")
         children.append(c)
     modules = {"u_ln0":f"dsfd_coll_lane_{side}_safe8_ntf",
                "u_ln1":f"dsfd_coll_lane_{side}_safe8_ntf",
@@ -83,6 +90,8 @@ def assemble(normal, flavor, bindings):
             "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
             "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
             "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+            "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",      # S81-RTLGAP/head 589110357: u_sl.u_xg master
+            "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop_xo.sv",
             "rtl/lib/ot_rst_relay.sv",   # S81-LINK5: u_land #(SRAM 1) = the CLOSED dsdv_mu_land view's sources
             "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
         defines=normal.get("defines", []),
