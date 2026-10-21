@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       admits   594 GB (avail 529, growth 113, headroom 0, waiters 0/0 GB) load 81/128 running 42 disk 321 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-cal1/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-cal1/root
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-cal1/root
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-cal1/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-cal1/root
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-548701-1792476636 after 0 s
+ar: SAME /srv/opentallas-scratch/claude/s81-cal1/root/results/arch/mu_s81_1018/calendar_ar.json
+ar: users 46 (+0 fillers) x 1224.0 tok/s = 56302 agg; slot 21313.7 period 980428; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal1/root/results/arch/mu_s81_1018/calendar_mtp.json
+mtp: users 10 (+1 fillers) x 3829.1 tok/s = 39211 agg; slot 124524 period 1303400; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: users 46 (+0 fillers) x 1213.0 tok/s = 55799 agg; slot 21505.7 period 989260; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: users 10 (+1 fillers) x 3801.3 tok/s = 38927 agg; slot 126112 period 1312908; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: SAME /srv/opentallas-scratch/claude/s81-cal1/root/results/arch/mu_s81_1018/calendar_ar_cal1.json
+ar: users 46 (+0 fillers) x 1213.0 tok/s = 55799 agg; slot 21505.7 period 989260; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal1/root/results/arch/mu_s81_1018/calendar_mtp_cal1.json
+mtp: users 10 (+1 fillers) x 3801.3 tok/s = 38927 agg; slot 126112 period 1312908; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+    import dv_layer_compile as C  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'dv_layer_compile'
+ot-epyc5
+4af806a75459896746b7b85df5ace64ae97a4f90d3ac2f53d17a59117f4ba0cc  results/arch/mu_s81_1018/calendar_ar_cal1.json
+6c8b3ab62ad704ba7cd9a89f242f238aa64452054105d6154d316a670fc4ffa5  results/arch/mu_s81_1018/calendar_mtp_cal1.json
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-548701-1792476636): exit 0

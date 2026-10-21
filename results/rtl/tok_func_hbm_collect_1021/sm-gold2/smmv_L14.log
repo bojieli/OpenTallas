@@ -1,0 +1,7 @@
+SM_MV k8 engram.wkv FP8 m=266 K=6144 PASS sm0 R=9 lines=432 cyc=567 priced=738.71 fault=None
+SM_MV k27 wq_a FP8 m=13 K=5120 PASS sm0 R=1 lines=40 cyc=182 priced=199.97 fault=None
+SM_MV k29 wkv FP8 m=5 K=5120 PASS sm0 R=1 lines=40 cyc=182 priced=199.97 fault=None
+SM_MV k32 compressor.wkv|wgate BF16 m=10 K=5120 PASS sm0 R=1 lines=80 cyc=261 priced=275.94 fault=None
+SM_MV k36 indexer.wq_b FP8 m=42 K=1280 PASS sm0 R=2 lines=32 cyc=167 priced=174.98 fault=None
+SM_MV k41 wq_b (head-aligned: head FP8 m=512 K=1280 PASS sm0 R=16 lines=256 cyc=363 priced=482.82 fault=None
+SM_MV k63 wo_a K-split: the die's  BF16 m=1024 K=512 PASS sm0 R=32 lines=256 cyc=367 priced=489.83 fault=None

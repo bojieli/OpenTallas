@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_grp_h_s2",
+ "enable": false,
+ "reason": "The RTL lands both resets (qkd_kvs_grp_s2_rst): rst_n on ck and hrst_n on hck, each 2 stages in its own domain (async assert, synchronous release) + one kept final-stage copy per leaf; the flow landing takes one clock and would land hrst_n on ck. s3: the port clears only the first stage; the copies are cleared by the landed first stage."
+}

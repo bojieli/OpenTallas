@@ -170,6 +170,9 @@ class FullVM:
         return f
 
 
+NATIVE_TIMING = None   # TOK-FUNC-HBM 10-21: die SU READ/WRITE_RETURN (native_profile.NativeTiming), None = legacy pgslice constants
+
+
 # --------------------------------------------------------------------------------------------------------- compile
 def compile_rank(stage, rank, vm, out, boundary=BOUNDARY, variant="landed", quarter=0, load_gap=16,
                  reload_gap=600, img=None, disp_raw=None):
@@ -201,7 +204,7 @@ def compile_rank(stage, rank, vm, out, boundary=BOUNDARY, variant="landed", quar
         written0 = set(place.written)
         try:
             su = LI.su_record(raw, quarter, rng, data=VMData(chained, vm.before(j)), place=place,
-                              tag=f"{r['tag']}@L{L}")
+                              tag=f"{r['tag']}@L{L}", timing=NATIVE_TIMING)
         except AssertionError as ex:
             place.written = written0
             ent.update(status="adapter_refused", reasons=[f"su_program_inventory.decode: {ex}"])
@@ -514,11 +517,19 @@ def main():
         p.add_argument("--variant", default="landed", choices=["landed", "base"])
         p.add_argument("--boundary", type=Path, default=BOUNDARY)
         p.add_argument("--out", type=Path, required=True)
+        p.add_argument("--native-read-return", type=int, help="die SU READ_RETURN (MULTIRATE pgslice); with --native-write-return")
+        p.add_argument("--native-write-return", type=int, help="die SU WRITE_RETURN")
         if n == "snap":
             p.add_argument("--fix", type=Path, required=True, help="fixture dir of the stage (program.hgi1, die*.u8...)")
         else:
             p.add_argument("--operands", type=Path, required=True)
     a = ap.parse_args()
+    global NATIVE_TIMING
+    if (a.native_read_return is None) != (a.native_write_return is None):
+        ap.error("--native-read-return and --native-write-return go together")
+    if a.native_read_return is not None:
+        from hbm_layer_vehicle.native_profile import NativeTiming
+        NATIVE_TIMING = NativeTiming(a.native_read_return, a.native_write_return)
     cmd_snap(a) if a.cmd == "snap" else cmd_emit(a)
 
 

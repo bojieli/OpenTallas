@@ -21,6 +21,10 @@ Schedule (handed to the die / compiler, KV-GEN9 inbox): +1 core edge per group o
 chain depth d from its stack root, d = 0 at slot 7, sees the root word d + 1 edges later than the combinational
 chain), +1 per group on the 18-b status gather, +1 on EST (boot-ready level), +1 on the boot cfg words (boot FIFOs are
 elastic), reset release +2 core / +2 HBM edges.  K / V request -> response (8 edges) and the PC faces are unchanged.
+KV-GRP3 (after the s2 gates): o_ctl and o_dn leave EXIT face flops beside their own pins (ocq N / odq S): +1 more core
+edge per group hop on the control fan word (o_dn: 2 edges per hop, a group at depth d sees the root word 2d + 1 edges
+later) and on the status gather (2 per hop; a group's own 18 status bits +1); the reset ports clear only the first
+landing stage (the per-leaf copies are cleared by it; same release edges).
 
     python3 tools/qwen_kv_die/kv_grp_safe2.py            # writes rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv
     python3 tools/qwen_kv_die/kv_grp_safe2.py --check    # regenerate in memory, fail on any difference
@@ -28,6 +32,7 @@ elastic), reset release +2 core / +2 HBM edges.  K / V request -> response (8 ed
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -58,6 +63,7 @@ MUTANTS = {
     5: 'gather i_up face flop bypassed (combinational i_up -> o_ctl)',
     6: 'landing row data path: SRAM read word bit 0 inverted (p192 macro on the compared path)',
     7: 'o_dn chain face copy: bits 0 and 1 swapped',
+    8: 'exit face flops bypassed (o_ctl / o_dn leave the entry-face / leaf flops combinationally)',
 }
 
 
@@ -142,7 +148,11 @@ def leaves():
 RST = """// KV-GRP2: per-domain reset landing of one group tile: rst_n (core ck) and hrst_n (HBM hck) each land in two
 // registered stages beside the tile's register mass (asynchronous assert, release on the second edge of its own clock),
 // and the second stage is one KEPT flop per consumer leaf (NC core / NH HBM copies), so no reset port drives the leaves.
-// MUT 4 (bench negative control): the core copies take rst_n through one stage.
+// KV-GRP3: the port reaches ONLY the first stage (c1 / h1); every second-stage copy is asynchronously cleared by the
+// landed first stage (c1 -> RESETN, recovery/removal timed by STA in its own domain) and takes D = 1: assert stays
+// asynchronous (rst_n low -> c1 low -> copies low in the same instant), release lands on the 2nd own-clock edge exactly
+// as before (gate textbook.reset_landing: the port fans out to 1 flop, not NC + 1).
+// MUT 4 (bench negative control): the core copies are cleared by rst_n directly (release one edge early).
 module qkd_kvs_grp_s2_rst #(parameter integer NC = 1, parameter integer NH = 1, parameter integer MUT = 0) (
     input wire ck, input wire rst_n, input wire hck, input wire hrst_n,
     output wire [NC-1:0] rc, output wire [NH-1:0] rh
@@ -155,12 +165,13 @@ module qkd_kvs_grp_s2_rst #(parameter integer NC = 1, parameter integer NH = 1, 
     generate
         for (i = 0; i < NC; i = i + 1) begin : g_c
             (* keep *) reg c2;
-            always @(posedge ck or negedge rst_n) if (!rst_n) c2 <= 1'b0; else c2 <= (MUT == 4) ? 1'b1 : c1;
+            wire cr = (MUT == 4) ? rst_n : c1;
+            always @(posedge ck or negedge cr) if (!cr) c2 <= 1'b0; else c2 <= 1'b1;
             assign rc[i] = c2;
         end
         for (i = 0; i < NH; i = i + 1) begin : g_h
             (* keep *) reg h2;
-            always @(posedge hck or negedge hrst_n) if (!hrst_n) h2 <= 1'b0; else h2 <= h1;
+            always @(posedge hck or negedge h1) if (!h1) h2 <= 1'b0; else h2 <= 1'b1;
             assign rh[i] = h2;
         end
     endgenerate
@@ -266,6 +277,22 @@ def tile(base_body, name, new):
                        'o_ctl gather')
         decl.append('    (* keep *) reg [125:0] iuq;      // gather face: the upstream groups\' status words\n'
                     '    always @(posedge ck) iuq <= i_up[125:0];')
+    # (5) KV-GRP3 exit faces: o_ctl (N face) and o_dn (S face) leave a KEPT flop row beside their own pins.  The s2
+    # gate (qkd_kvs_grp_s2c, TT placement RC) had reg->out -133 ps on o_ctl[32]: iuq landed i_up at the S face and drove
+    # the N-face pin across the 388.8-um tile in one cycle with the 0.2 T IO budget (o_dn: in->reg +15 ps the same way).
+    # Entry face flop + exit face flop = the 389-um traverse gets its own full cycle; +1 core edge on each (priced).
+    for port, w in (('o_ctl', 144), ('o_dn', 271)):
+        mm = re.search(r'^    assign ' + port + r' = (.*);$', body_txt, re.M)
+        if not mm:
+            if port == 'o_dn' and name.endswith('_h'):
+                continue
+            raise SystemExit(f'kv_grp_safe2: {name}: {port} assign')
+        q = 'ocq' if port == 'o_ctl' else 'odq'
+        body_txt = body_txt.replace(mm.group(0),
+            f'    wire [{w - 1}:0] {q}_d = {mm.group(1)};\n'
+            f'    (* keep *) reg [{w - 1}:0] {q};   // KV-GRP3 exit face flops beside the {port} pins\n'
+            f'    always @(posedge ck) {q} <= {q}_d;\n'
+            f'    assign {port} = (MUT == 8) ? {q}_d : {q};')
     body_txt = one(body_txt, '    assign y__est__0_1 = x__est;', '    assign y__est__0_1 = (MUT == 3) ? x__est : estq;', 'est')
     decl.append('    (* keep *) reg estq;             // EST face (boot-ready level to the four PCs)\n'
                 '    always @(posedge ck) estq <= x__est;')
@@ -348,6 +375,9 @@ DS_MODULE_SHA256 = {
     'qkd_kvs_grp_h': 'cef8f6ad6ad6d1b4ae94ee8dad1404a5fce9f6a00a2f272993b16b16b45249d4',
 }
 MASTERS = dict(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
+# QKC-GRP 10-21 OT_KV_GRP_S6C=1: the same private ABI / parent connections bind the CLOSED s6c successors (same ports)
+if os.environ.get('OT_KV_GRP_S6C', '0') == '1':
+    MASTERS = dict(grp='qkd_kvs_grp_s6c', grp_h='qkd_kvs_grp_h_s6c')
 
 
 def apply_tiles(tiles, emit):
@@ -400,7 +430,7 @@ def parent_connections(text):
         counts[master] += 1
         return f'  {master} {instance} (' + ', '.join(f'.{p}({e})' for p, e in conns.items()) + ');'
 
-    result = re.sub(r'^  (qkd_kvs_grp(?:_h)?_s2) (slg_\w+) \((.*)\);$', change, text, flags=re.M)
+    result = re.sub(r'^  (' + '|'.join(MASTERS.values()) + r') (slg_\w+) \((.*)\);$', change, text, flags=re.M)
     if counts != {MASTERS['grp']: 28, MASTERS['grp_h']: 4}:
         raise ValueError(f'kv_grp_safe2: parent replica counts changed: {counts}')
     return result
