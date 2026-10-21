@@ -21,6 +21,10 @@ module ot_hbm_hc_tail_child_static #(
     parameter integer CAP  = 289,
     parameter integer MUT_PRE = 0,
     parameter integer MUT = 0,
+    // HBM-HCROOT8 10-20: SKCE 1 (default) = the Sinkhorn on the core clock with the sclk flop as its step ENABLE (one clock
+    // root, no derived clock; kit SDC: declared multicycle SDIV between the Sinkhorn's own registers).  Calendar and
+    // result edges unchanged.  0 = the derived /SDIV step clock of 22ea15f97 (k1/k1b: CTS left sclk untreed).
+    parameter integer SKCE = 1,
     parameter integer L = 198 + SDIV + CAP + 2
 )(
     input  wire          clk, rst_n,
@@ -62,7 +66,7 @@ module ot_hbm_hc_tail_child_static #(
     reg active, sl, armed; reg [9:0] age, sage;
     wire tv, tf;
     reg capture_q;
-    ot_hgi_hc_tail_os_static #(.MUT_PRE(MUT_PRE), .MUT(MUT)) u_tail (.clk(clk), .sink_clk(sclk), .rst_n(rst_core),
+    ot_hgi_hc_tail_os_static #(.MUT_PRE(MUT_PRE), .MUT(MUT), .SKCE(SKCE)) u_tail (.clk(clk), .sink_clk(sclk), .rst_n(rst_core),
         .launch(launch_s), .mixes(i_mixes), .bases(i_bases), .scales(i_scales), .sink_launch(sl), .sink_capture(capture_q),
         .e_ready(), .result_v(tv), .result(result), .fault(tf));
     reg own_fault, captured;

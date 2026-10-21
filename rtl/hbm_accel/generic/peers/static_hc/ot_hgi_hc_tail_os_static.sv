@@ -24,7 +24,13 @@ module ot_hgi_hc_tail_os_static #(
     parameter integer ITERS=20,
     parameter [31:0] HC_EPS=32'h358637bd,
     parameter integer MUT_PRE=0,
-    parameter integer MUT=0
+    parameter integer MUT=0,
+    // HBM-HCROOT8 10-20: SKCE 1 = the Sinkhorn runs on clk with sink_clk as its step ENABLE (ot_hdc_sinkhorn_ce; sink_clk
+    // is then the caller's one-flop /SDIV pulse, high for the core cycle after each divider wrap).  Every Sinkhorn edge is
+    // the core edge one cycle after the matching derived-clock edge of SKCE 0 and samples the same values (the post-wrap
+    // values a zero-delay derived clock sees); the Sinkhorn result is ready 1 edge later, still >= 1 edge before the
+    // caller's capture (CAP 289 >= 41 x SDIV + 2).  0 = derived step clock (unchanged).
+    parameter integer SKCE=0
 )(
     input wire clk,sink_clk,rst_n,
     input wire launch,
@@ -131,13 +137,23 @@ module ot_hgi_hc_tail_os_static #(
     wire [511:0] se,sy;
     for(genvar j=0;j<16;j=j+1)assign se[j*32+:32]=t[j+8];
     wire sr,sv,sf,sbusy;
-    ot_hdc_sinkhorn #(.ITERS(ITERS),.EPS(HC_EPS)) sink(
-        .clk(sink_clk),.rst_n(rst_n),.in_valid(sink_launch),.in_ready(sr),
-        .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
     reg sink_fault;
-    always @(posedge sink_clk or negedge rst_n)begin
-        if(!rst_n)sink_fault<=0;
-        else if((sink_launch&&!sr)||sf)sink_fault<=1;
+    if (SKCE != 0) begin : g_skce
+        ot_hdc_sinkhorn_ce #(.ITERS(ITERS),.EPS(HC_EPS)) sink(
+            .clk(clk),.rst_n(rst_n),.ce(sink_clk),.in_valid(sink_launch),.in_ready(sr),
+            .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
+        always @(posedge clk or negedge rst_n)begin
+            if(!rst_n)sink_fault<=0;
+            else if(sink_clk&&((sink_launch&&!sr)||sf))sink_fault<=1;
+        end
+    end else begin : g_skclk
+        ot_hdc_sinkhorn #(.ITERS(ITERS),.EPS(HC_EPS)) sink(
+            .clk(sink_clk),.rst_n(rst_n),.in_valid(sink_launch),.in_ready(sr),
+            .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
+        always @(posedge sink_clk or negedge rst_n)begin
+            if(!rst_n)sink_fault<=0;
+            else if((sink_launch&&!sr)||sf)sink_fault<=1;
+        end
     end
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin active<=0;age<=0;fault<=0;result_v<=0;end

@@ -63,8 +63,12 @@ module tb_hbm_hc_tail_child_eq;
     end
     always @(posedge clk) begin
         cyc <= cyc + 1;
-        if (rv_r) begin t_r[done_r] = cyc; yr[done_r] = y_r; done_r = done_r + 1; end
-        if (rv_c) begin
+        // HBM-HCROOT8 10-20: results count only while rst_n is high.  The parent (ot_hbm_hc_root_static) holds its tail
+        // consumers (tready, tail_fault) in rst_tail = this rst_n, so child pins during reset are don't-care there; a 2-state
+        // gate-level model whose async-reset flops see no negedge at time 0 shows one power-up result_v at cycle 0 (the
+        // 10-20 native FAIL50 = 49 vs 48 results, every later result offset by one count).
+        if (rst_n && rv_r) begin t_r[done_r] = cyc; yr[done_r] = y_r; done_r = done_r + 1; end
+        if (rst_n && rv_c) begin
             if (done_c >= done_r) begin errs = errs + 1; $display("TAILC ERR child result %0d before the unit's", done_c); end
             else begin
                 if (cyc - t_r[done_c] != 2) begin errs = errs + 1; $display("TAILC ERR case %0d child result %0d edges after the unit's (want 2)", done_c, cyc - t_r[done_c]); end
