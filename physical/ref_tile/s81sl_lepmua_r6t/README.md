@@ -1,0 +1,5 @@
+# s81sl_lepmua_r6t (DRIVE-S81-LEPMU 10-20)
+
+DRIVE-S81-LEPMU r6t (n32 gates FAIL: clock_rule spread, a keep_modules, h GRT ovf 2): n32 floorplan unchanged (a gate: GRT overflow 0). Clock: NO km split, one TritonCTS tree (n32 gate km K8: a TT/FF spread 121.1/110.6, h 83.2/81.7; LEPNH 10-20: K8 unequal cluster depths 4..6 under a blind 8-sink top tree; pre-native one-tree lepnh 40.2/36.8). keep list: ot_s81sl_lep_status_region removed for _a (HOST_EN 0 instantiates none; n32 a keep_modules FAIL). Same RTL (6cb5f3eff NATIVE32=1 incl LOCAL_WA, RX_SRAM=1, IN_PIPE=1), ports, cycles, SDC.
+
+SAFE checklist: 1 pins source-registered (pin flops both faces), 2-stage reset landing PASS; 2 reach: gate measures (e/k remove the ~500 um RX SRAM -> ri hop); 3 fanout: exact native census max 32 incl reset (attempt5/wc A40822/H45237 roots) PASS; 4 depth 368/392 ps 12 levels PASS; 5 storage 20 SRAM PASS; 6 macros on 43.2 lattice, full rows, aspect <=1.1, faces <=4.6/um, fill pin-bound (guidance); 7 clock one tree or km16, spread <=80 TT+FF measured by gate, io_hold_margin 0.03; 8 schedule: 0 added cycles.
