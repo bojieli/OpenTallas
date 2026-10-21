@@ -13,10 +13,10 @@ keep=['ot_sram_showahead_hit5','ot_s81sl_lep_rx_control','ot_s81sl_lep_host_even
 top='ot_s81sl_lep_mu_ab_regional'
 script=['read_verilog -sv '+str(root/p) for p in srcs]
 script += ['hierarchy -check -top '+top]+['setattr -mod -set keep_hierarchy 1 '+m for m in keep]
-script += ['synth -top '+top+' -flatten','dfflibmap -liberty '+str(dff),'abc '+ ' '.join('-liberty '+str(p) for p in libs)+' -D 833.333','splitnets -ports','opt_clean -purge','write_verilog -noattr '+str(out/'mapped.v'),'tee -o '+str(out/'stat.txt')+' stat '+ ' '.join('-liberty '+str(p) for p in libs)]
+script += ['tcl '+str(root/'physical/common_flow/ot_keep_regs.tcl'),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(dff),'abc '+ ' '.join('-liberty '+str(p) for p in libs)+' -D 833.333','splitnets -ports','opt_clean -purge','write_verilog -noattr '+str(out/'mapped.v'),'tee -o '+str(out/'stat.txt')+' stat '+ ' '.join('-liberty '+str(p) for p in libs)]
 (out/'synth.ys').write_text('\n'.join(script)+'\n')
 h=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-(out/'inputs.json').write_text(json.dumps({'top':top,'sources':{str(p):h(root/p) for p in srcs},'libs':{str(p):h(p) for p in libs},'keep_modules':keep},indent=2)+'\n')
+(out/'inputs.json').write_text(json.dumps({'top':top,'sources':{str(p):h(root/p) for p in srcs},'libs':{str(p):h(p) for p in libs},'keep_modules':keep,'keep_regs_hook_sha256':h(root/'physical/common_flow/ot_keep_regs.tcl')},indent=2)+'\n')
 with (out/'synth.log').open('w') as f:
  subprocess.run([str(Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys'),'-s',str(out/'synth.ys')],stdout=f,stderr=subprocess.STDOUT,check=True)
 cmd=[sys.executable,'tools/ref_tile/native_census.py','--netlist',str(out/'mapped.v'),'--top',top,'--out',str(out/'native_census.json')]
