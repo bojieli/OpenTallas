@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits    -6 GB (avail 760, growth 764, headroom 0, waiters 3/68 GB) load 58/128 running 19 disk 1813 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519r1
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519r1
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519r1
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519r1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519r1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519r1
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-idxtx-1403 (1.4 GB) ot-epyc5 -> ot-epyc7 (no host with --dir admits 64 GB now)
+ot-run: SPILL: copied 0 changed entries in 8 s; running on ot-epyc7; written files go back to ot-epyc5 after the run
+ot-heavy: request 64G is charged 30G (class 'run_idx_tree.sh' measured peak 19.8G, n=13+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1146132-1792617706 after 1 s
+TREE_RD FAIL {"pass_": false, "mismatches": 2, "first": [{"die": 1, "kind": "tx-window", "got": [17964, 19406], "exp": [17963, 19562]}, {"die": 2, "kind": "tx-window", "got": [19565, 20988], "exp": [19564, 21163]}], "faults": [], "tx_span": {"1": [17964, 19406, 1431], "2": [19565, 20988, 1424]}}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1146132-1792617706): exit 1
