@@ -1,0 +1,75 @@
+{
+  "original_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415",
+  "original_archive_sha256": "9554f6e4c433184685c757126be75309b5d51df985097a301d498d70f97945c8",
+  "original_manifest_sha256": "24d09382cf12cdf1dd311701024e7799900ef2d255ec09b4ef225e11a458c451",
+  "original_archive_blob": "Gate intentionally removed.tgz after successful extraction; extractedsrc and originalscript preserved",
+  "original_artifacts_sha256": {
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/1_2_yosys.v": "e8971cd0b429d6c3acef8002bd31b614477d45495126d7a88afc36ea9951bbfd",
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/routes/gate/work/orfs/config.mk": "036a27ed52cdb2fc9227cdc30195fffae415acd1c713d7fbf17d32362d6de3d7",
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/cts.log": "579bd6adab39d84dd47c25197d28f0578a33bad6d580d6cdc4e1ca47149b408f",
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/ck.json": "c2c949c822dc4a864cf44c0008216e9761ff888bd7312afea3a81c09fd99a456",
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/4_cts.odb": "673c459c569eb701bdeda57492b0ad7bb1f3bcc3adfa5ebcce024e1e4a7bc6b6",
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/4_cts.sdc": "a1e40d0d67e60b7ac30d2526702ab7f80ae7e7854822e1d5727d86849200c5b8",
+    "/tmp/ref_gate_dsdv_sh_lk_s10gu_20261021-145415.sh": "92a0d4c7ea5c0dce6a4539438a8c7529bd71a8fd174780b1ea63b19fae75da44",
+    "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415.source_snapshot.json": "9ea04b4558ffe760ba80ff2958ae6dbc04ae8c9011271ceb35f92b87d8633efd"
+  },
+  "new_inputs_only": true,
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_ff.lib",
+      "sha256": "7445bfb2aacecf8f7efa13e92363cf4853cb92337a3ac8f3826bca24881b881f"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_tt.lib",
+      "sha256": "109a4e7059c57153f2781c1d00aa50b1c1afceb494195f6cdea4cf323fa293af"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_ff.lib",
+      "sha256": "ebd5d838369aefd07a21298d3e4f5c247ea07d4adf0f79befa12f5229ac5b9c1"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_tt.lib",
+      "sha256": "c4de1d24179096ecc835ad83117a5315782ace3022ab20aa822e3ab95df4892b"
+    }
+  ]
+}

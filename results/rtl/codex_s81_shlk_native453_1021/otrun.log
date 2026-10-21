@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-shlk-native453-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-shlk-native453-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-shlk-native453-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-shlk-native453-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-shlk-native453-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-shlk-native453-1021
+ot-run: ot-agidock128  admits   103 GB (avail 79, growth 3, headroom 0, waiters 0/0 GB) load 9/64 running 7 disk 212 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4125716-1792625999 after 0 s
+CORRECTED_NATIVE453 gu rc 0 PASS max 32 violations 0 roles 0
+CORRECTED_NATIVE453 hu rc 0 PASS max 32 violations 0 roles 0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4125716-1792625999): exit 0

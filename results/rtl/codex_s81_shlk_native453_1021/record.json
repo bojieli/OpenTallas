@@ -1,0 +1,38 @@
+{
+  "status": "BOTH_CORRECTED_NATIVE_PASS_NO_PHYSICAL_RERUN",
+  "tool_source_commit": "12c5402358e54db160f76a76b0d6324fb4fa87df",
+  "tool_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+  "textbook_lint_sha256": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
+  "unit": "oth-ubuntu-4125716-1792625999",
+  "host": "ot-agidock128 aka vm-xry57mhfyn",
+  "mem_GiB": 8,
+  "threads": 1,
+  "calls_per_original_gate": 1,
+  "views": {
+    "gu": {
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "violations": 0,
+      "roles": 0,
+      "original_netlist_sha256": "e8971cd0b429d6c3acef8002bd31b614477d45495126d7a88afc36ea9951bbfd",
+      "loaded_Libs": 14,
+      "original_archive_sha256": "9554f6e4c433184685c757126be75309b5d51df985097a301d498d70f97945c8",
+      "original_manifest_sha256": "24d09382cf12cdf1dd311701024e7799900ef2d255ec09b4ef225e11a458c451",
+      "original_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415"
+    },
+    "hu": {
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "violations": 0,
+      "roles": 0,
+      "original_netlist_sha256": "e8971cd0b429d6c3acef8002bd31b614477d45495126d7a88afc36ea9951bbfd",
+      "loaded_Libs": 14,
+      "original_archive_sha256": "cf5aef9ab07a9870c963747bc66b09a913e2f25adab2369c42121f7d7029c8a6",
+      "original_manifest_sha256": "8d82a0427262a3410bf089fbc9eb6da511d0348f7f83042502feb9d54435ccdc",
+      "original_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10hu-20261021-145415"
+    }
+  },
+  "no_remeasurement": true,
+  "no_binding_changes": true,
+  "original_artifacts_before_after_unchanged": true
+}
