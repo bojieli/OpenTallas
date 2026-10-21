@@ -1,0 +1,12 @@
+DV_LOWER_MAT qkv FAIL 1/769 mutant=0 arf=0 fixture=L14_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+    S0AG stn_busy still set at the end (1000000000)
+    qkv slice 0 row 0: got 0x0 exp 0xbd096dc2
+    qkv slice 0 row 1: got 0x0 exp 0xbf2bf652
+    qkv slice 0 row 2: got 0x0 exp 0x3e664f82
+    qkv slice 0 row 3: got 0x0 exp 0xbf31a6ab
+    qkv slice 0 row 4: got 0x0 exp 0x3e0ef914
+    qkv slice 0 row 5: got 0x0 exp 0x3f95e0d1
+    qkv slice 0 row 6: got 0x0 exp 0x3f98d583
+    qkv slice 0 row 7: got 0x0 exp 0x3d371bd7
+    qkv slice 0 row 8: got 0x0 exp 0xbf827f56
+rc=1

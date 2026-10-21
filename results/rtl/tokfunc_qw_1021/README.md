@@ -100,3 +100,13 @@ Final generation requires `selected_slice_source` and `selected_slice_timing_rec
 along with an explicit `--token-path` compiled for that source. The old monolith
 ARM12/nextfree36 schedule anchors the recovered mechanism and does not price the
 new regional paths. No final sole image has been generated from those old ages.
+
+Original STG terminal (527 cases, source c0f8097f3) is FAIL: rel145PASS/121FAIL,
+pos147PASS/112FAIL, mut0PASS/2FAIL. All14 required negatives are caught, leaving
+292 nominal PASS and221 nominal FAIL. Complete527case summaries and original
+result live under `stg/`; fixture/ISA1032336/1032336 does not override DUT failures.
+Repaired per-K qkv/GU/OD evidence under `stg_mat_repair_c80/` remains a separate
+cluster-output-cut proof. `compose_stg_terminal/report.json` excludes failedSTG,
+keeps KVmissing, and reports INCOMPLETE/FAIL; numerical rates remain intermediate
+old-model diagnostics. Same-binary LMtail diagnostic is pending, not a fullstage
+rerun. Original objects remain hardlinked in the fleet preserved-object directory.
