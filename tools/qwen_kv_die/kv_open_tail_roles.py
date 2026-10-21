@@ -82,7 +82,9 @@ SOURCES = {
 # KV-EMBWIN16 10-20: re-pinned (was aaf61290... on kv-emb4-z1; ee86a8b2... on the Codex takeover base 9d63284a1, whose own
 # pin d06d0424 was already stale).  Change: the merge of both (Codex HROOT/ROOT14 text + the KV-EMB4 _n32/_pj suffixes);
 # kv_static_die --check RTL current at route A (d22bu), HROOT_LAND (d22hl2), and both + N32/PJ.  GEN_ASSERT below re-checked.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '370bac9cec3e0c8ce57c57b9eaec44bf9f17b96e9f9656b881ea7f635a138886')
+# SQK-DIE 10-21: re-pin after 8c06b1180/dc3a6373f/8ed15aacb (default-off OT_KV_KRT_ES6_HOME placement block only;
+# no instance, port or chain-end text changed).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '8fb31acbf5e49cffa597fee3e8501e089d6f03942c054ed7bfa0d377d9ee68bd')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
