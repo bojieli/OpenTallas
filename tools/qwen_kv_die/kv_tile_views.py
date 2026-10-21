@@ -258,7 +258,12 @@ def select():
             def when(x):
                 o = git('show', '-s', '--format=%ct', x['source_commit'])
                 return int(o.strip()) if o else 0
-            best = max(ok, key=when)
+            # Owner-selected CLOSED baseline. Identity, parameters and edge
+            # charges above still decide eligibility; the RoPE master is distinct.
+            preferred = ('qkd_kvs_emb_z3a', 'qkd_kvs_emb_z3b') if mst == 'qkd_kvs_emb' else ()
+            best = next((x for kit in preferred for x in ok if x['kit'] == kit), None)
+            if best is None:
+                best = max(ok, key=when)
             tiles[mst] = dict(verdict='BIND', face_land=landed, bind=best, considered=rows)
         else:
             tiles[mst] = dict(verdict='ASSUMED', face_land=landed, why='no closed view passes identity + edges' if rows

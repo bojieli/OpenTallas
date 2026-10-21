@@ -24,7 +24,8 @@ import json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import svc_rs_embed as E
 
-HOP, G0, PVW = 5, 1, 40
+LINK_EXTRA = int(os.environ.get('OT_SVC_GROUP_LINK_LAT', '0'))
+HOP, G0, PVW = 5 + LINK_EXTRA, 1, 40
 FACES = ['N', 'E', 'S', 'W']
 ENTRY = {'W': (1, 2), 'E': (1, 5)}              # rsv_05, rsv_11
 CROOT = {'W': (1, 3), 'E': (1, 4)}              # chain roots rsv_07, rsv_09 (fold)
@@ -46,7 +47,7 @@ def tree():
 
 def main():
     root = os.path.join(os.path.dirname(__file__), '..', '..', '..')
-    base = E.roles(E.balanced(0, 15), E.NODE, 1, 5)
+    base = E.roles(E.balanced(0, 15), E.NODE, 1, 5, LINK_EXTRA)
     par, depth = tree()
     dmax = max(depth.values())
     offmax = max(base['roles'][s].get('off', 0) for s in range(16))
@@ -87,25 +88,17 @@ def main():
           'function automatic [7:0] rs_pvslot(input [1:0] st, input [3:0] sid);', '    case ({st, sid})']
     for (st, s), v in sorted(pvslot.items()):
         L.append(f"        6'd{16 * st + s}: rs_pvslot = 8'd{v};   // st {st} slice {s} tile {rows[s]['tile']}")
-    # TOK-S81-GAPS/SVCP (10-19): the on-die P path.  The fold root (rsv_09) packs the PV frame from the score
-    # exchange's root beats and sends it to its entry (rsv_11, return tree) AND across the centre to the other chain
-    # root (rsv_07, the abutted lane pr_09_07: root W face -> chain root E face), which forwards it to its entry
-    # (rsv_05) on its own return edge; both entries put it on their dn stream.  rs_pface = {pin 4, pout 4} (face masks,
-    # bit = face N / E / S / W): pout = the extra P out face of the fold root, pin = the extra P child face.
-    fr, fo = CROOT['E'], CROOT['W']
-    assert fr[0] == fo[0] and abs(fr[1] - fo[1]) == 1, 'the chain roots must abut'
-    f_out = 'W' if fo[1] < fr[1] else 'E'
-    pface = {E.sid(fr): (0, 1 << FACES.index(f_out)), E.sid(fo): (1 << FACES.index(E.OPP[f_out]), 0)}
     L += ["        default: rs_pvslot = 8'd255;", '    endcase', 'endfunction',
-          '// P path faces (TOK-S81-GAPS/SVCP): {pin 4, pout 4}, bit = face N / E / S / W',
-          'function automatic [7:0] rs_pface(input [3:0] sid);', '    case (sid)']
-    for s_, (pi_, po_) in sorted(pface.items()):
-        L.append(f"        4'd{s_}: rs_pface = 8'h{(pi_ << 4) | po_:02x};   // pin {pi_:04b} pout {po_:04b}")
-    L += ["        default: rs_pface = 8'h00;", '    endcase', 'endfunction',
           f'localparam integer RS_ENTRY_W = {es["W"]}, RS_ENTRY_E = {es["E"]}, RS_CROOT_W = {E.sid(CROOT["W"])}, '
           f'RS_CROOT_E = {E.sid(CROOT["E"])}, RS_FOLD = {base["root"]};',
           f'localparam integer RS_HOP = {HOP}, RS_DMAX = {dmax}, RS_G0 = {G0}, RS_PVW = {PVW}, RS_OFFMAX = {offmax};']
-    open(os.path.join(root, 'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles.svh'), 'w').write('\n'.join(L) + '\n')
+    # Preserve the current PPATH face contract in both regional role headers.
+    L += ['function automatic [7:0] rs_pface(input [3:0] sid);',
+          '    case (sid)', "        4'd7: rs_pface = 8'h20;",
+          "        4'd9: rs_pface = 8'h08;", "        default: rs_pface = 8'h00;",
+          '    endcase', 'endfunction']
+    suffix = '_group72' if LINK_EXTRA else ''
+    open(os.path.join(root, f'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles{suffix}.svh'), 'w').write('\n'.join(L) + '\n')
     json.dump(dict(generator='tools/s81_dv/svc_rs/svc_rs_tree.py', plan='S81-DV p4j', hop=HOP, g0=G0, dmax=dmax,
                    entries=es, chain_roots={h: E.sid(rc) for h, rc in CROOT.items()}, fold=base['root'], pv_words=PVW,
                    offmax=offmax, rsv_map='rsv_NN = sid NN = 2 column + row (row 1 upper), as dv_plan.py rsv_links',
@@ -116,7 +109,7 @@ def main():
                                    tp_entry_root='score exchange gather 05 -> 07, 11 -> 09; scatter 09 -> 11, 07 -> 05'),
                    slices={s: rows[s] for s in range(16)},
                    pvslot={f'st{st}_s{s}': v for (st, s), v in sorted(pvslot.items())}),
-              open(os.path.join(root, 'results/arch/s81_dv_1016/svc_rs/tree.json'), 'w'), indent=1)
+              open(os.path.join(root, f'results/arch/s81_dv_1016/svc_rs/tree{suffix}.json'), 'w'), indent=1)
     print(json.dumps({s: (rows[s]['tile'], rows[s]['half'], rows[s]['depth'], rows[s]['gd']) for s in range(16)}))
     print(json.dumps({f'{st}/{s}': v for (st, s), v in sorted(pvslot.items())}))
 

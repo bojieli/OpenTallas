@@ -77,7 +77,30 @@ def spec_ops(spec):
     if spec.get('dense_layer') is None:
         return ['ffn.experts_gu', 'ffn.down'], [], 'L0'
     xs, bf, fix, _ = layer_ops(spec['dense_layer'])
+    if spec.get('dense_split2') == 'A':      # DENSE2 upstream stage: its a_proj rows only (+ its resident experts)
+        return ['ffn.experts_gu', 'ffn.down'], [], fix
     return xs, bf, fix
+
+
+SPLIT_ENV = ('OT_XS_DENSE_SPLIT2', 'OT_XS_DENSE_SPLIT2_ROWS')
+
+
+def spec_env(spec, env):
+    """the run env + the spec's DENSE2 half (lower_xs.dense_split2); a spec without the key leaves env unchanged"""
+    e = dict(env)
+    if spec.get('dense_split2') is not None:
+        assert spec['dense_split2'] in ('A', 'B', 'X') and (spec['dense_split2'] == 'X') == (spec.get('dense_layer') is None), spec
+        e['OT_XS_DENSE_SPLIT2'] = spec['dense_split2']
+        if spec.get('dense_split2_rows') is not None:
+            e['OT_XS_DENSE_SPLIT2_ROWS'] = str(int(spec['dense_split2_rows']))
+    return e
+
+
+def _apply_env(e):
+    for k in SPLIT_ENV:
+        if k not in e:
+            os.environ.pop(k, None)
+    os.environ.update(e)
 
 
 # ------------------------------------------------------------------------------------------------ actual allocator
@@ -148,7 +171,7 @@ def frame_alloc(die, frame, fixd, spec):
     n = int(spec['experts'])
     orig = (XP.Fix, XP.op_groups, LX.placement)
     XP.Fix = _fixn(XP, fixd, n)
-    shared = spec.get('dense_layer') is not None
+    shared = spec.get('dense_layer') is not None and spec.get('dense_split2') != 'A'
 
     def og(fx, op):
         g = orig[1](fx, op)
@@ -215,7 +238,7 @@ def frame_signature(die, frame, fixd, spec):
     q, bfp = FB.frame_pairs(LX.base_master(master))
     p0 = [] if spec.get('dense_layer') is None else LX.placement(die, sl, LX.load_fixture(fixd))[1][j]['rows']
     rows = []
-    shared = spec.get('dense_layer') is not None
+    shared = spec.get('dense_layer') is not None and spec.get('dense_split2') != 'A'
     for op, gi, c, nseg, R in XP.phase_list(fx, [o for o in xs]):
         grp = XP.op_groups(fx, op)[gi]
         if not shared and grp.get('expert') == 'shared':
@@ -229,14 +252,14 @@ def frame_signature(die, frame, fixd, spec):
 
 def _sig(args):
     die_src, fixroot, spec, frame, env = args
-    os.environ.update(env)
+    _apply_env(spec_env(spec, env))
     _, _, fix = spec_ops(spec)
     return frame, frame_signature(_die(die_src), frame, str(Path(fixroot) / fix), spec)
 
 
 def _worker(args):
     die_src, fixroot, spec, frame, env = args
-    os.environ.update(env)
+    _apply_env(spec_env(spec, env))
     import dv_layer_compile as C
     die = _die(die_src)
     _, _, fix = spec_ops(spec)
@@ -274,6 +297,9 @@ def summarise(spec, rows):
              calendar_rows=cal, calendar_margin=CAL_ROWS - cal,
              expert_phases=max((r['expert_phases'] for r in rows if 'expert_phases' in r), default=0),
              layout_identical_all=all(r.get('layout_identical') in (True, None) for r in rows))
+    if spec.get('dense_split2') is not None:
+        s['dense_split2'] = spec['dense_split2']
+        s['dense_split2_rows'] = spec.get('dense_split2_rows')
     s['pass'] = (not faults and q and max(q) < DEPTH and (not bf or max(bf) < DEPTH) and max(nph) <= CFG7_PHASES
                  and cal <= CAL_ROWS and s['stream_dedup_words'] <= STREAM_WORDS)
     return s

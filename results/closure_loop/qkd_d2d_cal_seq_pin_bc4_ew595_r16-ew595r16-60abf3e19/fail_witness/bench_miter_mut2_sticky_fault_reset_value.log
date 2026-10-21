@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_cal_seq_pin_bc4_ew595_r16-ew595r16-60abf3e19 bench bench_miter_mut2_sticky_fault_reset_value host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4_ew595_r16-ew595r16-60abf3e19 log cl/bench_miter_mut2_sticky_fault_reset_value.a1b1.log captured 2026-10-21T01:03:54-07:00
+# fail_regex 'BC4_MITER mismatch'
+[91000] %Fatal: miter.sv:55: Assertion failed in tb_dcal_bc4: BC4_MITER mismatch edge 0 a=00000000000000 b=00000000000001
+%Error: /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4_ew595_r16-ew595r16-60abf3e19/x2/miter.sv:55: Verilog $stop
+Aborting...
