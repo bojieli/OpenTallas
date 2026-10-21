@@ -1,5 +1,5 @@
 {
- "name": "hbm_wbk_native_1340",
+ "name": "hbm_wbk_native_1340_pp",
  "top": "ot_hbm_svc_wb_kport_q",
  "kind": "tile",
  "sources": [
@@ -553,7 +553,7 @@
   },
   "macro_halo_x_um": 10.8
  },
- "structural_change": "Source-local three-fragment (<=5bit) sealed FIFO crossing, all-fragment common credit, own-empty payload capture, same-edge selector/base copies, authentic ready/credit AND distribution. Native-only diagnostic before any geometry gate.",
+ "structural_change": "Source-local three-fragment (<=5bit) sealed FIFO crossing, all-fragment common credit, own-empty payload capture, same-edge selector/base copies, authentic ready/credit AND distribution. Native-only diagnostic before any geometry gate. Per-PP independent common-min capacity and grantphase; no pooledA/Bcredit.",
  "slot_change_request": "d4g wbk_<q> x4: new slot 777.6 x 518.4 (pin-bound: N = 16 K ports 4,626 pins at 5.95/um toward the quadrant's 4 vmks leaves; S = DMA wd 2,312 + stream control at 3.2/um toward hb_dbk_<q>); 32 payload SRAMs as 4 abutted 8-high columns (one per stream_fifo_clk root) on the 43.2 lattice",
  "job": {
   "owner": "Claude:DRIVE-HBM/HBM-WBK8",

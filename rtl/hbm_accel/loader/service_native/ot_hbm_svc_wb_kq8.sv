@@ -55,7 +55,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
 );
  localparam integer NPP=(PP!=0)?2:1;
  localparam integer DEFF=NPP<<FAW;                   // crossing entries per PC slice
- localparam integer CW=FAW+2;                        // credit counter width (0..DEFF)
+ localparam integer PW=FAW+1, CW=FAW+2;                        // credit counter width (0..DEFF)
  localparam integer NDS=18, NSL=20;                  // 18 data slices (4 x 15 b + 14 x 14 b) + ordinal [14:0] + [28:15]
  // <= 15 b per ring slice (FIFO fragments <=5 b): a reviewed FIFO entry enable / ring enable / toggle mux then drives <= 31 loads
  function automatic integer sw_f(input integer g); sw_f=(g<4)?15:(g<NDS)?14:(g==NDS)?15:14; endfunction
@@ -64,7 +64,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  localparam integer NFP=NSL*NPP*NPART;                     // crossing FIFOs per PC
  localparam [32:0] SPACE_END=33'h020000000;
  // reset leaf maps
- localparam integer CS=29, NS=CS+16*NC;
+ localparam integer CS=29, NS=CS+16*NC*NPP+16;
  localparam integer XB=4*NFP, NR=XB+13;              // per root: 4 PCs x NFP FIFO write leaves, 4 x 3 slice leaves, ready
  localparam integer NRL=8, NF=16*NFP, HB=NF, HM=HB+16*NRL, NH=HM+7;
  // ------------------------------------------------------------------------------------------------ resets
@@ -238,7 +238,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  // ------------------------------------------------------------------------------------------------ lanes
  wire [15:0] hpc_w [0:31];wire [6:0] rp_w [0:31];wire [255:0] rdl [0:31];
  wire [31:0] g_w [0:15];
- genvar gl,gp,gf,gq,gb;
+ genvar gl,gp,gf,gq,gb,gr;
  generate for(gl=0;gl<32;gl=gl+1)begin:g_lane
   localparam integer C=(gl>>1)&3;           // SRAM column: l[2:1]
   localparam integer SL=gl&7;               // DMA slot
@@ -264,10 +264,10 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
  // ------------------------------------------------------------------------------------------------ arbiters, credit
- // Credit: entries granted minus the common accumulated release of ALL fragments.
+ // Credit: per-PP entries granted minus that PP's common ALL-fragment release.
  // Synchronizers may resolve on different edges; no single-slice capacity assumption.
- // okc is registered (cnt < DEFF), computed from the counter next value.
- wire [CW-1:0] wfreed [0:15];wire [16*NFP-1:0] ovf;
+ // okc is registered expected-next-PP capacity, computed from all counter next values.
+ wire [PW-1:0] wfreed_pp [0:15][0:NPP-1];wire [16*NFP-1:0] ovf;
  assign ovf_any=|ovf;
  (* keep="true",dont_touch="true" *) reg okc [0:47];
  generate for(gp=0;gp<16;gp=gp+1)begin:g_arb
@@ -277,12 +277,27 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   wire [15:0] glo=(okc[3*gp]||MUT==8)?low[15:0]:16'd0;
   wire [15:0] ghi=(okc[3*gp+1]||MUT==8)?low[31:16]:16'd0;
   assign g_w[gp]={ghi,glo};
-  reg [CW-1:0] cnt;
+  (* keep="true",dont_touch="true" *) reg [PW-1:0] cnt [0:NPP-1];
+  reg grant_phase;
   wire gany=(okc[3*gp+2]||MUT==8)&&(|req);
-  wire [CW-1:0] cnt_n=cnt+CW'(gany)-wfreed[gp];
-  always @(posedge stream_clk or negedge sl[2+gp/4])
-   if(!sl[2+gp/4])begin cnt<=0;okc[3*gp]<=1'b0;okc[3*gp+1]<=1'b0;okc[3*gp+2]<=1'b0;end
-   else begin cnt<=cnt_n;okc[3*gp]<=cnt_n<CW'(DEFF);okc[3*gp+1]<=cnt_n<CW'(DEFF);okc[3*gp+2]<=cnt_n<CW'(DEFF);end
+  wire phase_n=(NPP==2)?(grant_phase^gany):1'b0;
+  wire [PW-1:0] cnt_n [0:NPP-1];
+  for(gq=0;gq<NPP;gq=gq+1)begin:g_count
+   assign cnt_n[gq]=cnt[gq]+PW'(gany&&((NPP==1)||grant_phase==gq[0]))-wfreed_pp[gp][gq];
+  end
+  wire can_next;
+  if(NPP==2)begin:g_two assign can_next=phase_n?(cnt_n[1]<PW'(1<<FAW)):(cnt_n[0]<PW'(1<<FAW));end
+  else begin:g_one assign can_next=cnt_n[0]<PW'(1<<FAW);end
+  localparam integer CR=CS+16*NC*NPP+gp;
+  integer bp;
+  always @(posedge stream_clk or negedge sl[CR])
+   if(!sl[CR])begin
+    for(bp=0;bp<NPP;bp=bp+1)cnt[bp]<=0;
+    grant_phase<=1'b0;okc[3*gp]<=1'b0;okc[3*gp+1]<=1'b0;okc[3*gp+2]<=1'b0;
+   end else begin
+    for(bp=0;bp<NPP;bp=bp+1)cnt[bp]<=cnt_n[bp];
+    grant_phase<=phase_n;okc[3*gp]<=can_next;okc[3*gp+1]<=can_next;okc[3*gp+2]<=can_next;
+   end
  end endgenerate
  // ------------------------------------------------------------------------------------------------ select, crossbar, FIFOs
  (* keep="true",dont_touch="true" *) reg [31:0] sel_q [0:16*NDS-1]; // [pc*NDS+slice] one-hot lane select
@@ -308,32 +323,32 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    end
   end
   always @(posedge fclk)begin gqa[gp]<=g_w[gp];xr_a<=cp_basem[2*K+(gp%4)/2]+{17'd0,arp,aln};end
-  // Atomic-word credits: independently synchronized fragments can return freed
-  // entries on different edges. Release only their common accumulated minimum.
-  wire [CW-1:0] credit_tree [1:127];
-  wire [CW-1:0] released [0:5];
-  for(gq=0;gq<64;gq=gq+1)begin:g_credit
-   if(gq<NC)begin:g_live
-    (* keep="true",dont_touch="true" *) reg [CW-1:0] pending;
-    localparam integer F=(gq/NPART)*NPART*NPP+(gq%NPART)*NPP;
-    wire [CW-1:0] arrived;
-    if(NPP==2)begin:g_pp assign arrived=CW'(fifo_wf[gp*NFP+F])+CW'(fifo_wf[gp*NFP+F+1]);end
-    else begin:g_one assign arrived=CW'(fifo_wf[gp*NFP+F]);end
-    assign credit_tree[64+gq]=pending+arrived;
-    always @(posedge stream_clk or negedge sl[CS+gp*NC+gq])
-     if(!sl[CS+gp*NC+gq])pending<=0;
-     else pending<=credit_tree[64+gq]-released[gq/10];
-   end else begin:g_pad assign credit_tree[64+gq]={CW{1'b1}};end
-  end
-  for(gq=1;gq<64;gq=gq+1)begin:g_cmin
-   assign credit_tree[gq]=(credit_tree[2*gq]<credit_tree[2*gq+1])?credit_tree[2*gq]:credit_tree[2*gq+1];
-  end
-  for(gq=0;gq<6;gq=gq+1)begin:g_cdist
-   for(gb=0;gb<CW;gb=gb+1)begin:g_bit
-    ot_wbk8_native_and u_buf(.a(credit_tree[1][gb]),.b(1'b1),.y(released[gq][gb]));
+  // Each ping-pong FIFO has its OWN capacity ledger. Gray synchronizers
+  // may expose B's release before A's; pooled free capacity cannot admit an
+  // A write. Grant phase tracks accepted grants, ahead of the delayed wtog.
+  for(gr=0;gr<NPP;gr=gr+1)begin:g_pp_credit
+   wire [PW-1:0] credit_tree [1:127];
+   wire [PW-1:0] released [0:5];
+   for(gq=0;gq<64;gq=gq+1)begin:g_credit
+    if(gq<NC)begin:g_live
+     (* keep="true",dont_touch="true" *) reg [PW-1:0] pending;
+     localparam integer F=(gq/NPART)*NPART*NPP+(gq%NPART)*NPP+gr;
+     assign credit_tree[64+gq]=pending+PW'(fifo_wf[gp*NFP+F]);
+     always @(posedge stream_clk or negedge sl[CS+gp*NC*NPP+gr*NC+gq])
+      if(!sl[CS+gp*NC*NPP+gr*NC+gq])pending<=0;
+      else pending<=credit_tree[64+gq]-released[gq/10];
+    end else begin:g_pad assign credit_tree[64+gq]={PW{1'b1}};end
    end
+   for(gq=1;gq<64;gq=gq+1)begin:g_cmin
+    assign credit_tree[gq]=(credit_tree[2*gq]<credit_tree[2*gq+1])?credit_tree[2*gq]:credit_tree[2*gq+1];
+   end
+   for(gq=0;gq<6;gq=gq+1)begin:g_cdist
+    for(gb=0;gb<PW;gb=gb+1)begin:g_bit
+     ot_wbk8_native_and u_buf(.a(credit_tree[1][gb]),.b(1'b1),.y(released[gq][gb]));
+    end
+   end
+   assign wfreed_pp[gp][gr]=credit_tree[1];
   end
-  assign wfreed[gp]=credit_tree[1];
   for(gf=0;gf<NSL;gf=gf+1)begin:g_sl
    localparam integer SW=sw_f(gf), SO=so_f(gf);
    localparam integer IX=gp*NSL+gf;

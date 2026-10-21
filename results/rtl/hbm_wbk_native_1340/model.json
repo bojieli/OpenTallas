@@ -2,7 +2,7 @@
   "source_base": "6e20f4f89",
   "frozen_native": "q8c/q8d both737violations,max82,386599roots",
   "sealed_fifo_sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
-  "scope": "Source-local structural candidate only. No native/behavior/physical claim.",
+  "scope": "SOURCE-ONLY PER-PP SAFETY SUCCESSOR. e886 admitted diagnostic clients preserved and cannot qualify these changed bytes.",
   "partition": {
     "pcs": 16,
     "logical_slices_per_pc": 20,
@@ -16,12 +16,12 @@
     "fifo_payload_storage_bits": 36480,
     "ring_payload_storage_bits": 13680,
     "added_fifo_control_register_estimate": 55040,
-    "credit_pending_register_bits": 3840
+    "credit_pending_register_bits": 5760
   },
   "atomic_protocol": {
-    "write": "Same logical registered write/toggle drives all three fragments; actual whole-PC credit returns are minimum accumulated releases across all60 fragments (each sums pingpong A/B). Conservative capacity prevents any sibling local-full suppression; every ovf retained. No status-slice0 credit assumption.",
+    "write": "All3fragments see same logicalwrite/toggle; next expectedPP can grant ONLY if thatPP has a free reserved slot common to ALLfragments. Counts include in-flight grants. Independent pointer visibility cannot borrow B capacity for A.",
     "read": "Existing registered whole-PC pop permitted only when all logical slices and both fragments selected for next pop are nonempty. Availability cannot withdraw between decision and pop. Each ring fragment capture separately gated by its own selected !rempty; global all-valid only controls atomic pop.",
-    "credit": "pending_i_next=pending_i+wf_i-min_j(pending_j+wf_j), sixty fragments/PC, each sums pingpong returns. Common minimum distributed through authentic AND cells, no new register edge. 4-bit pending values bounded by depth8 whole-word occupancy; stream reset leaf private per4-bit counter.",
+    "credit": "PerPP independent common-min release across60fragments; each3bit pending_i_next=pending_i+thatPP.wfreed_i-min_j(pending_j+thatPP.wfreed_j). NoA/Bsum. PerPP3bit outstanding count includes accepted grants in fixed3edgewritepipeline. Grantphase toggles each acceptedPCgrant, initiallyA matching actual delayedwtog. Registered okc_next checks nextphase cnt_n<4. Private reset perpending and perPCcounter/phase control.",
     "cycle": "No payload pipeline/capture/pop edge added. Ready buffer wire-equivalent. Credit stalls may become more conservative under synchronizer skew; existing protocol proofs and measured completion cycles must price this, no unchanged-throughput claim."
   },
   "native_roots": {
@@ -38,7 +38,7 @@
       777.6,
       518.4
     ],
-    "area": "Payload/macro area unchanged; approximately59k additional controlFF incl3840 pendingcredit bits plus authenticbuffers. Realmapped area/fit before any geometry gate."
+    "area": "Payload/macro area unchanged; priorconservative59k controlFF estimate plus1920 pendingbits and~1k resetforestFF plusphase/counters \u224862k additionalcontrolFF. Mappedinventory/area/fit required; no physicalclaim."
   },
   "necessary_proofs": [
     "existing wbq_e/wbq_w/wbq_e_wopen",
@@ -52,5 +52,17 @@
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kq8.sv"
   ],
   "physical_alias": "Bothq8c/doldnativefail snapshots preserved. No existinggate_binding/oldkitclaim. Freshnativekit only; c/d geometrynotinvoked.",
-  "preheavy_review": "8bit draft5d8a2da was never built. Replaced with3xW5 due conservativeAW2 fanout bound; no repeated knownbad/native claim."
+  "preheavy_review": "e886 W5 pooledPP native/12witnesses remainadmitted immutable diagnostics. This perPP successor awaits their receipts and newsource qualification before any further heavylaunch.",
+  "legitimate_counterexample": {
+    "state": "Eightalternatinggrants fillA4/B4, nextgrantA. ReaderpopsAthenB; independentGray synchronizers may expose Bfree1 whileA remainsstale0. StandardCDCdeclares no crossPP visibility order.",
+    "old_pooled": "Sumreturns1 permits ninthgrantA althoughAreadpointerseenold/full. LocalFIFO drops+ovf failclosed; fixedphasebench does not qualify this legitimate visibility case.",
+    "new_perPP": "cntA stays4; nextphaseA remainsineligible untilALL A fragments reportfree. BreturncannotreleaseA slot. No relativeclockphase assumption."
+  },
+  "inductive_capacity_argument": [
+    "Atreset counters/phase zero; firstgrantA matches each actualwtoginitialA.",
+    "Eachacceptedgrant increments exactgrantphase before fixedwritepipeline. Existing xv2c/actualwtog propagateonewriteperacceptedgrant in sameorder.",
+    "A bank releases only common minimum observedread returns of everyfragment of thatsamebank. EachobservedGrayreadpointer is conservative; no crossbankorder assumption.",
+    "Grant eligibility checks thatbank outstanding<depth4, countinginflightwrites. Therefore no legitimateacceptedwrite can encounterlocalfull; no siblingdrop/worddivergence.",
+    "Perfragmentpending is its observedrelease count minus commonrelease; withbank outstanding<=4, itfits3bits. CanonicalCDC plus actualexistingwitness/native still mandatory, this argument is not testPASS."
+  ]
 }
