@@ -8,7 +8,7 @@ VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 V=rtl/hdc/v41x; H=rtl/hdc
 O=$(mkdir -p "$OUT" && cd "$OUT" && pwd)/$TAG; rm -rf "$O"; mkdir -p "$O"
 "$VL" --version
-SRC="tools/s81_dv/svc_rs/tb_svc8_hgrp.sv $V/ot_s81svc8_hgrp_s81.sv $V/ot_s81svc8_ring.sv \
+SRC="tools/s81_dv/svc_rs/tb_svc8_hgrp.sv $V/ot_s81svc8_hgrp_s81.sv $V/ot_s81svc8_ring.sv $V/ot_s81svc8_sram_wreg.v \
  physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v \
  physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v \
  $V/ot_hdc_v41x_attn_hgrp_s81.sv $V/ot_hdc_v41x_attn_tile_s.sv $V/ot_hdc_v41x_attn_tile_lat.sv \

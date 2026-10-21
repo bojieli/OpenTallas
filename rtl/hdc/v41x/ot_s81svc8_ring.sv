@@ -9,7 +9,12 @@
 module ot_s81svc8_ring #(
     parameter integer W = 21,
     parameter integer D = 5,
-    parameter integer M = 64            // macro word: 64 -> ot_sram_1r1w_32x64_m1, 128 -> ot_sram_1r1w_32x128_m1
+    parameter integer M = 64,           // macro word: 64 -> ot_sram_1r1w_32x64_m1, 128 -> ot_sram_1r1w_32x128_m1
+`ifdef SVC8_RING_WREG
+    parameter integer WREG = 1          // hgrp8r (10-21): registered write port (ot_s81svc8_sram_wreg), delay unchanged
+`else
+    parameter integer WREG = 0
+`endif
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -38,6 +43,10 @@ module ot_s81svc8_ring #(
         ot_sram_1r1w_32x128_m1 u_mem (
             .clk(clk), .r_ce_in(run_c), .r_addr_in(r_addr), .rd_out(rd),
             .w_ce_in(run_c), .w_addr_in(wc), .wd_in({{(M-W){1'b0}}, i}), .w_mask_in({M{1'b1}}));
+    end else if (WREG != 0) begin : g_m64w
+        ot_s81svc8_sram_wreg u_mem (
+            .clk(clk), .r_ce_in(run_c), .r_addr_in(r_addr), .rd_out(rd),
+            .w_ce_in(run_c), .w_addr_in(wc), .wd_in({{(M-W){1'b0}}, i}), .w_mask_in({M{1'b1}}));
     end else begin : g_m64
         ot_sram_1r1w_32x64_m1 u_mem (
             .clk(clk), .r_ce_in(run_c), .r_addr_in(r_addr), .rd_out(rd),
@@ -55,6 +64,7 @@ module ot_s81svc8_ring #(
         if (W < 1 || W > M - 1) $fatal(1, "SVC8_RING_W");
         if (D < 3 || D > 31) $fatal(1, "SVC8_RING_D");
         if (M != 64 && M != 128) $fatal(1, "SVC8_RING_M");
+        if (WREG != 0 && (M != 64 || D < 4)) $fatal(1, "SVC8_RING_WREG");
     end
 `endif
 endmodule
