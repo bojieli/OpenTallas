@@ -2089,6 +2089,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # macros whose pins sit on their W/E faces free of cells without widening the N/S gaps between stacked macros
         hx = float(s["route"].get("macro_halo_x_um", h))
         extra.append(f"--macro-place-halo {hx:g} {h:g}" if hx != h else f"--macro-place-halo {h} {h}")
+        # Fixed macro placement bypasses rtl_macro_placer: tapcell cuts rows using these separate variables.
+        # Honour declared pin-face halos; retain the platform's 2 um default when no halo was declared.
+        if "macro_halo_um" in s["route"] or "macro_halo_x_um" in s["route"]:
+            rows_y = float(s["route"].get("macro_halo_um", 2.0))
+            rows_x = float(s["route"].get("macro_halo_x_um", rows_y))
+            extra += [f"--orfs-var MACRO_ROWS_HALO_X={rows_x:g}",
+                      f"--orfs-var MACRO_ROWS_HALO_Y={rows_y:g}"]
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
@@ -2353,6 +2360,7 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
+    out += [p for p, _, _ in clock_entry_constraints.gray_fifo_cdc_constraints.tech_cell_libraries(s, ROOT)]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
@@ -2628,6 +2636,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
           "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}
+    # Canonical clock lint stores its keyed receipt while gen_sdc runs.
+    # Fresh write-mode kits need their directory before that lint executes.
+    if write:
+        (out_root / kd).mkdir(parents=True, exist_ok=True)
     files = {"kit.env": gen_env(s, kd, W, H, lc, blocks), "pdn.tcl": gen_pdn(s, lc),
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
