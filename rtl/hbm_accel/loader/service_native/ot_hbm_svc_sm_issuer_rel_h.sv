@@ -79,7 +79,12 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  wire[3:0]a_sel=a[176:173];
  wire a_ids=a_sel==0||(ids_ok_q&&ids_layer_q==layer_q);
  wire a_go=a_v&&!p_v&&a_ids;
- wire[IDW-1:0]a_id=(a_sel==0||MUT==2)?{IDW{1'b0}}:ids_q[(a_sel-4'd1)*IDW+:IDW];
+ reg[IDW-1:0]a_id;integer ai;
+ always @*begin
+  a_id={IDW{1'bx}};
+  if(a_sel==0||MUT==2)a_id=0;
+  else for(ai=0;ai<NID;ai=ai+1)if(a_sel==ai+1)a_id=ids_q[ai*IDW+:IDW];
+ end
  wire[25:0]s_blk={8'd0,p[46:32],p[9:7]}+{2'd0,p_lay}+{2'd0,p_id};
  wire s_go=p_v&&!st_v;
  assign rd_go=running&&n_rd!=0&&!a_v&&!rd_q;
@@ -198,6 +203,15 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  // ---------------- datapath (no reset)
  wire run_ok=run_v&&!(running||run_count==0||{1'b0,run_base}+run_count>(DD));
  wire ids_ok=ids_v&&!(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q));
+ localparam integer NIC=(IDW*NID+8+SS-1)/SS;
+ wire[NIC-1:0]ids_capture;
+ wire[5:0]run_capture;
+ for(genvar ic=0;ic<NIC;ic=ic+1)begin:g_ids_capture
+  ot_hbm_svc_local_and2 u_c(.a(ids_ok),.b(1'b1),.y(ids_capture[ic]));
+ end
+ for(genvar rcg=0;rcg<6;rcg=rcg+1)begin:g_run_capture
+  ot_hbm_svc_local_and2 u_c(.a(run_ok),.b(1'b1),.y(run_capture[rcg]));
+ end
  wire[23:0]p_lay_d=(MUT==1)?24'd0:24'(layer_q)*24'(a[157:143]);
  wire[23:0]p_id_d=24'(a_id)*24'(a[172:158]);
  wire[142:0]st_d={p[142:47],s_blk[17:3],p[31:10],s_blk[2:0],p[6:0]};
@@ -205,8 +219,14 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  integer ab;
  always @(posedge clk)begin
   // same statement order as ot_hbm_svc_sm_issuer_rel (last assignment wins)
-  if(run_ok)begin rp<=run_base;n_rd<=run_count;n_go<=run_count;rc<=0;layer_q<=run_layer;end
-  if(ids_ok)begin ids_layer_q<=ids_layer;ids_q<=ids;end
+  if(run_capture[0])rp<=run_base;
+  if(run_capture[1])n_rd<=run_count;
+  if(run_capture[2])n_go<=run_count;
+  if(run_capture[3])rc[11:0]<=0;
+  if(run_capture[4])rc[23:12]<=0;
+  if(run_capture[5])layer_q<=run_layer;
+  for(ab=0;ab<IDW*NID;ab=ab+1)if(ids_capture[ab/SS])ids_q[ab]<=ids[ab];
+  for(ab=0;ab<8;ab=ab+1)if(ids_capture[(IDW*NID+ab)/SS])ids_layer_q[ab]<=ids_layer[ab];
   rp_q<=rp;rsel_k<={NRS{rp[DAW-1]}};
   if(running&&!run_v)rc<=rc+24'd1;
   if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
