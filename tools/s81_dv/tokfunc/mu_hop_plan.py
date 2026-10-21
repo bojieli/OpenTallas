@@ -32,7 +32,7 @@ SAMPLE = {
     6: 'mid DENSE2 stage: R006 L1 A -> R007 L1 B (+ Engram L1 on R007)',
     12: 'L2-class idx stage: R012 L2 A -> R013 L2 B (copy-B duplicated, AR binding resource)',
     13: 'L2 B out: R013 (copy A/B) -> R014 experts (x L2 + partial L2)',
-    84: 'L14 Engram stage: R084 L14 A -> R085 L14 B (copy-B, Engram RA640 / II 576)',
+    84: 'L14 Engram stage: R084 L14 A -> R085 L14 B (copy-B, Engram RA640 / II 704)',
     85: 'L14 B out: R085 (copy A/B) -> R086',
     120: 'L20 stage: R120 L20 A -> R121 L20 B (copy-B, 52-user binding window)',
     121: 'L20 B out: R121 (copy A/B) -> R122',
@@ -111,7 +111,11 @@ def plans(cal, L, hops, mode, preserve_idle=False, boundary_only=False):
                     reason='Calendar occupancy collision; no local serialization permitted',
                     first=bad[0], collisions=len(bad))))
             delays = []
-            t, comp = 0.0, 0
+            # gen_golden adds WARM=12000 (phase zero). Preserve the graph's
+            # q4 phase as well as every idle gap; rebasing first T to zero can
+            # silently change the actual sender/landing phase by two edges.
+            rebase = (ms[0]['T'] // 4) * 4 if preserve_idle else ms[0]['T']
+            t, comp = float(ms[0]['T'] - rebase), 0
             for k, x in enumerate(ms):
                 if k:
                     g = x['T'] - ms[k - 1]['T']
@@ -130,7 +134,9 @@ def plans(cal, L, hops, mode, preserve_idle=False, boundary_only=False):
                                    (message['receive_complete'] - message['send_start']
                                     for pos in cal.get('position_graph', {}).get('positions', [])
                                     for message in pos['links'] if message['sender_index'] == i), default=L['HOP']),
-                               absolute_rebase=ms[0]['T'],
+                               absolute_rebase=rebase,
+                               phase_quantum=4, phase_preserved=preserve_idle,
+                               generator_warm_requirement='multiple of four edges',
                                same_user_serial_delays=dict(count=len(delays), max=max([d['delay'] for d in delays] or [0]),
                                                             first=delays[:3]), msgs=ms)
     return out
