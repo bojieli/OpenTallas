@@ -32,7 +32,7 @@ if {[llength $ot_c]} {
   define_pdn_grid -name {hard_m5} -voltage_domains {CORE} -macro -cells $ot_c -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
   add_pdn_connect -grid {hard_m5} -layers {M5 M6}
 }
-set ot_c [ot_ref_present {ot_s81sl_capc2}]
+set ot_c [ot_ref_present {ot_s81sl_capc5c}]
 if {[llength $ot_c]} {
   define_pdn_grid -name {hard_m7} -voltage_domains {CORE} -macro -cells $ot_c -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
   add_pdn_connect -grid {hard_m7} -layers {M7 M8}

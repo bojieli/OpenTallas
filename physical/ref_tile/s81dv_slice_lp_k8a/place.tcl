@@ -103,9 +103,9 @@ puts "REF_TILE place: [$i getName] dsfd_su_t_rxsb at 648.0 3196.8 R0"
 set i [ot_ref_pick $ot_ref_by ot_s81sl_xg {u_xg}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(3412.8 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_s81sl_xg at 43.2 3412.8 R0"
-set i [ot_ref_pick $ot_ref_by ot_s81sl_capc2 {u_cap}]
+set i [ot_ref_pick $ot_ref_by ot_s81sl_capc5c {u_cap}]
 $i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(3412.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_s81sl_capc2 at 734.4 3412.8 R0"
+puts "REF_TILE place: [$i getName] ot_s81sl_capc5c at 734.4 3412.8 R0"
 set i [ot_ref_pick $ot_ref_by ot_s81dv_xfin {u_xf}]
 $i setOrient R0; $i setLocation [expr {round(734.4 * $dbu)}] [expr {round(3888.0 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_s81dv_xfin at 734.4 3888.0 R0"

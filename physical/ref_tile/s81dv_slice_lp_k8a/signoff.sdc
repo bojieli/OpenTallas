@@ -8,11 +8,21 @@ create_clock -name ot_io_l0 -period 833.333000000
 create_clock -name ot_io_l1 -period 833.333000000
 create_clock -name ot_io_l3 -period 833.333000000
 create_clock -name ot_io_l4 -period 833.333000000
+create_clock -name ot_io_ck_cap_rt -period 833.333000000
+create_clock -name ot_io_ck_cap_cw -period 833.333000000
+create_clock -name ot_io_ck_cap_ce -period 833.333000000
+create_clock -name ot_io_ck_cap_rn -period 833.333000000
+create_clock -name ot_io_ck_cap_rs -period 833.333000000
 create_clock -name ot_entry_0 -period 833.333000000 [get_ports {ck_C}]
 create_clock -name ot_entry_1 -period 833.333000000 [get_ports {ck_L0}]
 create_clock -name ot_entry_2 -period 833.333000000 [get_ports {ck_L1}]
 create_clock -name ot_entry_3 -period 833.333000000 [get_ports {ck_L3}]
 create_clock -name ot_entry_4 -period 833.333000000 [get_ports {ck_L4}]
+create_clock -name ot_entry_5 -period 833.333000000 [get_ports {ck_CAP_RT}]
+create_clock -name ot_entry_6 -period 833.333000000 [get_ports {ck_CAP_CW}]
+create_clock -name ot_entry_7 -period 833.333000000 [get_ports {ck_CAP_CE}]
+create_clock -name ot_entry_8 -period 833.333000000 [get_ports {ck_CAP_RN}]
+create_clock -name ot_entry_9 -period 833.333000000 [get_ports {ck_CAP_RS}]
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
@@ -27,15 +37,15 @@ set ::ot_ce_require_wire 1
 set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
-set ::ot_ce_landed_child_pins 45
-set ::ot_ce_check_only [dict create {dsfd_su_t_rxsb/ck} 1 {dsfd_su_t_rxsf/ck} 1 {ot_s81dv_xfin/clk} 1 {ot_s81sl_capc2/clk} 1 {ot_s81sl_eg/clk} 1 {ot_s81sl_ve/clk} 1 {ot_s81sl_vn/clk} 1 {ot_s81sl_vp/clk} 1 {ot_s81sl_vq/clk} 1 {ot_s81sl_vs/clk} 1 {ot_s81sl_vsw/clk} 1 {ot_s81sl_xg/clk} 1 {ot_s81sl_xr1/clk} 1]
-set ::ot_ce_refs [dict create {ot_s81sl_vp/clk} {tt {1209.0 1219.0 1229.0} ff {984.0 994.0 1004.0} ss {1490.0 1500.0 1510.0}} {ot_s81sl_vn/clk} {tt {432.3 463.7 497.3} ff {352.3 381.9 415.6} ss {562.6 596.6 630.0}} {ot_s81sl_ve/clk} {tt {390.0 400.0 410.0} ff {320.0 330.0 340.0} ss {510.0 520.0 530.0}} {ot_s81sl_vsw/clk} {tt {285.5 298.4 315.6} ff {230.9 243.2 260.0} ss {377.6 391.1 408.4}} {ot_s81sl_vq/clk} {tt {219.2 225.8 236.2} ff {177.2 183.2 192.3} ss {289.6 297.8 310.1}} {ot_s81sl_vs/clk} {tt {231.4 247.0 262.2} ff {188.5 203.2 218.4} ss {301.4 318.8 335.1}} {dsfd_su_t_rxsf/ck} {tt {183.2 197.4 210.5} ff {150.0 164.1 176.8} ss {239.4 253.8 267.4}} {dsfd_su_t_rxsb/ck} {tt {189.7 207.1 222.9} ff {156.0 172.2 187.5} ss {245.5 265.1 282.9}} {ot_s81sl_xg/clk} {tt {440.0 450.0 460.0} ff {360.0 370.0 380.0} ss {570.0 580.0 590.0}} {ot_s81sl_capc2/clk} {tt {692.9 710.5 728.2} ff {537.7 550.9 563.3} ss {954.4 986.8 1014.6}} {ot_s81dv_xfin/clk} {tt {250.4 274.4 308.2} ff {205.2 228.4 261.4} ss {322.7 349.7 384.2}} {ot_s81sl_xr1/clk} {tt {382.3 413.8 442.4} ff {313.2 339.6 363.0} ss {495.5 535.9 577.1}} {ot_s81sl_eg/clk} {tt {344.9 351.3 355.0} ff {283.3 290.1 293.9} ss {445.6 451.4 455.2}}]
-set ::ot_ce_counts [dict create {ot_s81sl_vp} 5 {ot_s81sl_vn} 5 {ot_s81sl_ve} 5 {ot_s81sl_vsw} 5 {ot_s81sl_vq} 5 {ot_s81sl_vs} 5 {dsfd_su_t_rxsf} 5 {dsfd_su_t_rxsb} 5 {ot_s81sl_xg} 1 {ot_s81sl_capc2} 1 {ot_s81dv_xfin} 1 {ot_s81sl_xr1} 1 {ot_s81sl_eg} 1]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {sid} {ri_w} {ri_e} {vi} {bi} {rt}} outputs {{ro_e} {ro_w} {vo} {bo} {xc} {ck_line} {ck_v} {ck_xc} {ck_rt} {fault}}} {l0} {clock ot_io_l0 io_budget_ps 166.667 inputs {} outputs {}} {l1} {clock ot_io_l1 io_budget_ps 166.667 inputs {} outputs {}} {l3} {clock ot_io_l3 io_budget_ps 166.667 inputs {} outputs {}} {l4} {clock ot_io_l4 io_budget_ps 166.667 inputs {} outputs {}}]
-set ::ot_ce_source_domains [dict create {ck_C} {core} {ck_L0} {l0} {ck_L1} {l1} {ck_L3} {l3} {ck_L4} {l4}]
+set ::ot_ce_landed_child_pins 49
+set ::ot_ce_check_only [dict create {dsfd_su_t_rxsb/ck} 1 {dsfd_su_t_rxsf/ck} 1 {ot_s81dv_xfin/clk} 1 {ot_s81sl_capc5c/ck_ce} 1 {ot_s81sl_capc5c/ck_cw} 1 {ot_s81sl_capc5c/ck_rn} 1 {ot_s81sl_capc5c/ck_rt} 1 {ot_s81sl_eg/clk} 1 {ot_s81sl_ve/clk} 1 {ot_s81sl_vn/clk} 1 {ot_s81sl_vp/clk} 1 {ot_s81sl_vq/clk} 1 {ot_s81sl_vs/clk} 1 {ot_s81sl_vsw/clk} 1 {ot_s81sl_xg/clk} 1 {ot_s81sl_xr1/clk} 1]
+set ::ot_ce_refs [dict create {ot_s81sl_vp/clk} {tt {1209.0 1219.0 1229.0} ff {984.0 994.0 1004.0} ss {1490.0 1500.0 1510.0}} {ot_s81sl_vn/clk} {tt {432.3 463.7 497.3} ff {352.3 381.9 415.6} ss {562.6 596.6 630.0}} {ot_s81sl_ve/clk} {tt {390.0 400.0 410.0} ff {320.0 330.0 340.0} ss {510.0 520.0 530.0}} {ot_s81sl_vsw/clk} {tt {285.5 298.4 315.6} ff {230.9 243.2 260.0} ss {377.6 391.1 408.4}} {ot_s81sl_vq/clk} {tt {219.2 225.8 236.2} ff {177.2 183.2 192.3} ss {289.6 297.8 310.1}} {ot_s81sl_vs/clk} {tt {231.4 247.0 262.2} ff {188.5 203.2 218.4} ss {301.4 318.8 335.1}} {dsfd_su_t_rxsf/ck} {tt {183.2 197.4 210.5} ff {150.0 164.1 176.8} ss {239.4 253.8 267.4}} {dsfd_su_t_rxsb/ck} {tt {189.7 207.1 222.9} ff {156.0 172.2 187.5} ss {245.5 265.1 282.9}} {ot_s81sl_xg/clk} {tt {440.0 450.0 460.0} ff {360.0 370.0 380.0} ss {570.0 580.0 590.0}} {ot_s81sl_capc5c/ck_rt} {tt {412.1 412.1 412.1} ff {334.2 334.2 334.2} ss {542.5 542.5 542.5}} {ot_s81sl_capc5c/ck_cw} {tt {183.4 197.2 210.1} ff {147.7 161.0 172.0} ss {244.4 258.3 274.2}} {ot_s81sl_capc5c/ck_ce} {tt {161.9 174.2 183.8} ff {131.5 143.4 153.2} ss {211.9 224.9 235.2}} {ot_s81sl_capc5c/ck_rn} {tt {271.0 281.1 304.7} ff {218.5 227.5 245.5} ss {357.8 369.6 403.8}} {ot_s81sl_capc5c/ck_rs} {tt {124.2 135.0 147.1} ff {99.1 109.8 121.2} ss {167.5 178.1 191.1}} {ot_s81dv_xfin/clk} {tt {250.4 274.4 308.2} ff {205.2 228.4 261.4} ss {322.7 349.7 384.2}} {ot_s81sl_xr1/clk} {tt {382.3 413.8 442.4} ff {313.2 339.6 363.0} ss {495.5 535.9 577.1}} {ot_s81sl_eg/clk} {tt {344.9 351.3 355.0} ff {283.3 290.1 293.9} ss {445.6 451.4 455.2}}]
+set ::ot_ce_counts [dict create {ot_s81sl_vp} 5 {ot_s81sl_vn} 5 {ot_s81sl_ve} 5 {ot_s81sl_vsw} 5 {ot_s81sl_vq} 5 {ot_s81sl_vs} 5 {dsfd_su_t_rxsf} 5 {dsfd_su_t_rxsb} 5 {ot_s81sl_xg} 1 {ot_s81sl_capc5c} 1 {ot_s81dv_xfin} 1 {ot_s81sl_xr1} 1 {ot_s81sl_eg} 1]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {sid} {ri_w} {ri_e} {vi} {bi} {rt}} outputs {{ro_e} {ro_w} {vo} {bo} {xc} {ck_line} {ck_v} {ck_xc} {ck_rt} {fault}}} {l0} {clock ot_io_l0 io_budget_ps 166.667 inputs {} outputs {}} {l1} {clock ot_io_l1 io_budget_ps 166.667 inputs {} outputs {}} {l3} {clock ot_io_l3 io_budget_ps 166.667 inputs {} outputs {}} {l4} {clock ot_io_l4 io_budget_ps 166.667 inputs {} outputs {}} {ck_cap_rt} {clock ot_io_ck_cap_rt io_budget_ps 166.667 inputs {} outputs {}} {ck_cap_cw} {clock ot_io_ck_cap_cw io_budget_ps 166.667 inputs {} outputs {}} {ck_cap_ce} {clock ot_io_ck_cap_ce io_budget_ps 166.667 inputs {} outputs {}} {ck_cap_rn} {clock ot_io_ck_cap_rn io_budget_ps 166.667 inputs {} outputs {}} {ck_cap_rs} {clock ot_io_ck_cap_rs io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {ck_C} {core} {ck_L0} {l0} {ck_L1} {l1} {ck_L3} {l3} {ck_L4} {l4} {ck_CAP_RT} {ck_cap_rt} {ck_CAP_CW} {ck_cap_cw} {ck_CAP_CE} {ck_cap_ce} {ck_CAP_RN} {ck_cap_rn} {ck_CAP_RS} {ck_cap_rs}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck_C} {ck_L0} {ck_L1} {ck_L3} {ck_L4}}
-set ::ot_ce_ports {{ck_C} {ck_L0} {ck_L1} {ck_L3} {ck_L4}}
+set ::ot_ce_cts_roots {{ck_C} {ck_L0} {ck_L1} {ck_L3} {ck_L4} {ck_CAP_RT} {ck_CAP_CW} {ck_CAP_CE} {ck_CAP_RN} {ck_CAP_RS}}
+set ::ot_ce_ports {{ck_C} {ck_L0} {ck_L1} {ck_L3} {ck_L4} {ck_CAP_RT} {ck_CAP_CW} {ck_CAP_CE} {ck_CAP_RN} {ck_CAP_RS}}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in
@@ -848,8 +858,8 @@ proc ot_ce_apply {} {
   puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
 }
 ot_ce_apply
-# ---- PL-KIT landed cluster (results/rtl/drive_s81_slicep_1020/c1x_k8/ot_s81sl_slice_c1x_k8_lp_record.json): 8 landings, multicycle -setup 2 -hold 3
-set ot_lp_lands {0 1 2 3 4 5 6 7}
+# ---- PL-KIT landed cluster (results/rtl/drive_s81_slicep_1020/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp_record.json): 14 landings, multicycle -setup 2 -hold 3
+set ot_lp_lands {0 1 2 3 4 5 6 7 cap5_west_in cap5_east_in cap5_cfg_in cap5_north cap5_south cap5_fault}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
