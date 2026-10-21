@@ -1190,8 +1190,36 @@ module qkd_kvs_pc (
     // KV-PC 10-19 OT_KV_PC_RLAND: each reset lands at the face in 2 registered stages on its own domain
     wire w_rland__rst_n;
     wire w_rland__hrst_n;
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_ck (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(w_rland__rst_n));
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_hck (.clk(hck), .async_rst_n(hrst_n), .sync_rst_n(w_rland__hrst_n));
+    (* keep, async_reg = "true" *) reg rland_ck_s1;
+    (* keep, async_reg = "true" *) reg rland_ck_s1r;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [7:0] rland_ck_s2__qv;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin rland_ck_s1 <= 1'b0; rland_ck_s1r <= 1'b0; end
+        else begin rland_ck_s1 <= 1'b1; rland_ck_s1r <= 1'b1; end
+`ifdef OT_KVPC7_RST_MUT
+    always @(posedge ck or negedge rst_n)       // mutant 8: a one-stage landing (release one edge early)
+        if (!rst_n) rland_ck_s2__qv <= 8'd0; else rland_ck_s2__qv <= {8{1'b1}};
+`else
+    always @(posedge ck or negedge rland_ck_s1r)
+        if (!rland_ck_s1r) rland_ck_s2__qv <= 8'd0;
+        else rland_ck_s2__qv <= {8{rland_ck_s1}};
+`endif
+    assign w_rland__rst_n = rland_ck_s2__qv[0];   // KV-PC5: 8 kept copies of the landed reset (ot_rst_copies)
+    (* keep, async_reg = "true" *) reg rland_hck_s1;
+    (* keep, async_reg = "true" *) reg rland_hck_s1r;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [7:0] rland_hck_s2__qv;
+    always @(posedge hck or negedge hrst_n)
+        if (!hrst_n) begin rland_hck_s1 <= 1'b0; rland_hck_s1r <= 1'b0; end
+        else begin rland_hck_s1 <= 1'b1; rland_hck_s1r <= 1'b1; end
+`ifdef OT_KVPC7_RST_MUT
+    always @(posedge hck or negedge hrst_n)       // mutant 8: a one-stage landing (release one edge early)
+        if (!hrst_n) rland_hck_s2__qv <= 8'd0; else rland_hck_s2__qv <= {8{1'b1}};
+`else
+    always @(posedge hck or negedge rland_hck_s1r)
+        if (!rland_hck_s1r) rland_hck_s2__qv <= 8'd0;
+        else rland_hck_s2__qv <= {8{rland_hck_s1}};
+`endif
+    assign w_rland__hrst_n = rland_hck_s2__qv[0];   // KV-PC5: 8 kept copies of the landed reset (ot_rst_copies)
     wire [15:0] pc__expected_epoch = i_grp[15:0];
     wire [5:0] pc__expected_layer = i_grp[21:16];
     wire [0:0] pc__expected_put = i_grp[22:22];
@@ -1569,8 +1597,36 @@ module qkd_kvs_pc_h (
     // KV-PC 10-19 OT_KV_PC_RLAND: each reset lands at the face in 2 registered stages on its own domain
     wire w_rland__rst_n;
     wire w_rland__hrst_n;
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_ck (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(w_rland__rst_n));
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_hck (.clk(hck), .async_rst_n(hrst_n), .sync_rst_n(w_rland__hrst_n));
+    (* keep, async_reg = "true" *) reg rland_ck_s1;
+    (* keep, async_reg = "true" *) reg rland_ck_s1r;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [7:0] rland_ck_s2__qv;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin rland_ck_s1 <= 1'b0; rland_ck_s1r <= 1'b0; end
+        else begin rland_ck_s1 <= 1'b1; rland_ck_s1r <= 1'b1; end
+`ifdef OT_KVPC7_RST_MUT
+    always @(posedge ck or negedge rst_n)       // mutant 8: a one-stage landing (release one edge early)
+        if (!rst_n) rland_ck_s2__qv <= 8'd0; else rland_ck_s2__qv <= {8{1'b1}};
+`else
+    always @(posedge ck or negedge rland_ck_s1r)
+        if (!rland_ck_s1r) rland_ck_s2__qv <= 8'd0;
+        else rland_ck_s2__qv <= {8{rland_ck_s1}};
+`endif
+    assign w_rland__rst_n = rland_ck_s2__qv[0];   // KV-PC5: 8 kept copies of the landed reset (ot_rst_copies)
+    (* keep, async_reg = "true" *) reg rland_hck_s1;
+    (* keep, async_reg = "true" *) reg rland_hck_s1r;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [7:0] rland_hck_s2__qv;
+    always @(posedge hck or negedge hrst_n)
+        if (!hrst_n) begin rland_hck_s1 <= 1'b0; rland_hck_s1r <= 1'b0; end
+        else begin rland_hck_s1 <= 1'b1; rland_hck_s1r <= 1'b1; end
+`ifdef OT_KVPC7_RST_MUT
+    always @(posedge hck or negedge hrst_n)       // mutant 8: a one-stage landing (release one edge early)
+        if (!hrst_n) rland_hck_s2__qv <= 8'd0; else rland_hck_s2__qv <= {8{1'b1}};
+`else
+    always @(posedge hck or negedge rland_hck_s1r)
+        if (!rland_hck_s1r) rland_hck_s2__qv <= 8'd0;
+        else rland_hck_s2__qv <= {8{rland_hck_s1}};
+`endif
+    assign w_rland__hrst_n = rland_hck_s2__qv[0];   // KV-PC5: 8 kept copies of the landed reset (ot_rst_copies)
     wire [15:0] pc__expected_epoch = i_grp[15:0];
     wire [5:0] pc__expected_layer = i_grp[21:16];
     wire [0:0] pc__expected_put = i_grp[22:22];
@@ -1697,7 +1753,7 @@ module qkd_kvs_emb (
     wire [547:0] w_rowtx__emb_tx_payload;
     wire [0:0] w_rowtx__fault;
     wire [0:0] w_rowtx__row_ready;
-    qkd_embedding_static_join4_cal #(.MUT(0)) u_join (.ck(ck), .rst_n(rst_n), .up0(join__up0), .up1(join__up1), .up2(join__up2), .up3(join__up3), .rope_sweep(1'b0), .start(d2d__svc[24:24]), .cfg_we(join__cfg_we), .cfg_addr(join__cfg_addr), .cfg_data(join__cfg_data), .word_v(w_join__word_v), .word_data(w_join__word_data), .word_token(w_join__word_token), .word_index(w_join__word_index), .word_scale(w_join__word_scale), .word_epoch(w_join__word_epoch), .fault(w_join__fault));
+    qkd_embedding_static_join4_cal #(.MUT(0)) u_join (.ck(ck), .rst_n(rst_n), .up0(join__up0), .up1(join__up1), .up2(join__up2), .up3(join__up3), .start(d2d__svc[24:24]), .cfg_we(join__cfg_we), .cfg_addr(join__cfg_addr), .cfg_data(join__cfg_data), .word_v(w_join__word_v), .word_data(w_join__word_data), .word_token(w_join__word_token), .word_index(w_join__word_index), .word_scale(w_join__word_scale), .word_epoch(w_join__word_epoch), .fault(w_join__fault));
     qkd_embedding_row_tx u_rowtx (.ck(ck), .rst_n(rst_n), .fill_begin(d2d__svc[24:24]), .fill_token(d2d__svc[109:92]), .fill_epoch(d2d__svc[89:74]), .word_v(w_join__word_v[0:0]), .word_data(w_join__word_data[511:0]), .word_token(w_join__word_token[17:0]), .word_index(w_join__word_index[5:0]), .word_scale(w_join__word_scale[0:0]), .word_epoch(w_join__word_epoch[15:0]), .emb_tx_slot(d2d__emb_tx_slot[0:0]), .emb_tx_v(w_rowtx__emb_tx_v), .emb_tx_payload(w_rowtx__emb_tx_payload), .fault(w_rowtx__fault), .row_ready(w_rowtx__row_ready));
     assign rowtx__emb_tx_v = w_rowtx__emb_tx_v;
     assign rowtx__emb_tx_payload = w_rowtx__emb_tx_payload;

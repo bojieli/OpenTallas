@@ -1203,7 +1203,31 @@ def pc_sram_text(txt):
         txt = txt.replace(o, w)
     if n != 1:
         raise ValueError('kv_static_die PC_SRAM: PC kit module has no single u_embr return hop / head')
-    return pc_hfx_text(txt)
+    txt = pc_hfx_text(txt)
+    # sr10b's actual r8 source uses two first-stage captures and eight kept
+    # second-stage reset copies. Reproduce the hardened wrapper exactly;
+    # ordinary PC_RLAND without SRAM keeps its historical body unchanged.
+    for clk, reset, wire in (('ck','rst_n','w_rland__rst_n'),('hck','hrst_n','w_rland__hrst_n')):
+        old=f'    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_{clk} (.clk({clk}), .async_rst_n({reset}), .sync_rst_n({wire}));'
+        if txt.count(old)!=1:
+            raise ValueError('PC SRAM reset landing source changed: '+clk)
+        k=8
+        block=(f'    (* keep, async_reg = "true" *) reg rland_{clk}_s1;\n'
+            f'    (* keep, async_reg = "true" *) reg rland_{clk}_s1r;\n'
+            f'    (* keep, ot_rst_split, async_reg = "true" *) reg [{k-1}:0] rland_{clk}_s2__qv;\n'
+            f'    always @(posedge {clk} or negedge {reset})\n'
+            f"        if (!{reset}) begin rland_{clk}_s1 <= 1'b0; rland_{clk}_s1r <= 1'b0; end\n"
+            f"        else begin rland_{clk}_s1 <= 1'b1; rland_{clk}_s1r <= 1'b1; end\n"
+            f'`ifdef OT_KVPC7_RST_MUT\n'
+            f'    always @(posedge {clk} or negedge {reset})       // mutant 8: a one-stage landing (release one edge early)\n'
+            f"        if (!{reset}) rland_{clk}_s2__qv <= {k}'d0; else rland_{clk}_s2__qv <= {{{k}{{1'b1}}}};\n"
+            f'`else\n'
+            f'    always @(posedge {clk} or negedge rland_{clk}_s1r)\n'
+            f"        if (!rland_{clk}_s1r) rland_{clk}_s2__qv <= {k}'d0;\n"
+            f'        else rland_{clk}_s2__qv <= {{{k}{{rland_{clk}_s1}}}};\n`endif\n'
+            f'    assign {wire} = rland_{clk}_s2__qv[0];   // KV-PC5: {k} kept copies of the landed reset (ot_rst_copies)')
+        txt=txt.replace(old,block)
+    return txt
 
 
 PC_HFX_PORT = '    output wire [2:0] pc__hfx,'
