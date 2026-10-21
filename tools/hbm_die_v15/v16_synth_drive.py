@@ -11,7 +11,7 @@ PREFER below (the variant whose parameters the parent instantiates).  Every roun
 VIEWS_DIR/drive/<cell>.json; logs in VIEWS_DIR/drive/<cell>.r<k>.log.  Nothing is stubbed: a module that cannot be
 resolved fails the cell (it is then an excluded region of the die case, with its owner).
 """
-import argparse, json, re, shutil, subprocess, sys, threading, time
+import argparse, hashlib, json, re, shlex, shutil, subprocess, sys, threading, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -63,8 +63,11 @@ def run(cell, row, a, idx, lock, summary):
         # Keep exact-source synthesis objects when only their timing export needs
         # retrying. Older objects and failure logs remain available in history.
         legacy_ok = 'true' if a.legacy_source_commit == a.commit else 'false'
-        compatible = (f'if [ -f {out}/.source_commit ]; then [ "$(cat {out}/.source_commit)" = {a.commit} ]; '
-                      f'else {legacy_ok} && {{ sources=({a.remote_root}/src_*); [ ${{#sources[@]}} = 1 ] && [ "${{sources[0]}}" = {S} ]; }}; fi')
+        legacy = (f'{legacy_ok} && {{ sources=({a.remote_root}/src_*); '
+                  f'[ ${{#sources[@]}} = 1 ] && [ "${{sources[0]}}" = {S} ]; }}')
+        compatible = (f'if [ -f {out}/.source_commit ] && [ "$(cat {out}/.source_commit)" != {a.commit} ]; then false; '
+                      f'elif [ -f {out}/.wrapper_sha256 ]; then [ "$(cat {out}/.wrapper_sha256)" = {a.wrapper_sha256[cell]} ]; '
+                      f'else {legacy}; fi')
         cmd = (f'echo HOST $(hostname); die_retry_stamp=$(date +%s%N); '
                f'if [ -s {out}/{cell}.netlist.v ] && [ -s {out}/{cell}.stat ] && ( {compatible} ); then '
                f'echo REUSE_SYNTH_OBJECT {cell}; else '
@@ -73,6 +76,7 @@ def run(cell, row, a, idx, lock, summary):
                f'env MEMG={mem} HIER=1 EXTRA={",".join(extra)} WTOP={w} {env} '
                f'bash tools/hbm_die_v15/synth_master.sh . {out} {cell} {m} - {bb}{prefer}; fi && '
                f'echo {a.commit} > {out}/.source_commit && '
+               f'sha256sum {S}/v16w/{w}.sv | cut -d" " -f1 > {out}/.wrapper_sha256 && '
                f'mkdir -p {out}/export_history && {{ '
                f'for f in etm.log etm_tt.tcl etm_ff.tcl; do [ ! -e {out}/$f ] || cp {out}/$f {out}/export_history/$f.$die_retry_stamp; done; '
                f'MEMG={mem} bash tools/hbm_die_v15/synth_etm.sh . {out} {cell}; }}')
@@ -123,11 +127,11 @@ def run(cell, row, a, idx, lock, summary):
         print(cell, 'OK' if rec.get('ok') else 'FAIL', rec['rounds'][-1].get('errors', [])[:2], flush=True)
 
 
-def remote_state(host, remote_root, commit, legacy_commit=None):
+def remote_state(host, remote_root, commit, legacy_commit=None, wrappers=None):
     """Collect existing outputs and admitted commands before dispatching work."""
     script = r'''
 import json, pathlib, re, subprocess, sys
-root=pathlib.Path(sys.argv[1]); commit=sys.argv[2]; src=root/('src_'+commit)
+root=pathlib.Path(sys.argv[1]); commit=sys.argv[2]; src=root/('src_'+commit); wrappers=json.loads(sys.argv[4])
 if not src.is_dir():
  print(json.dumps(dict(ready=False, complete=[], running=[]))); raise SystemExit
 complete=[]
@@ -137,7 +141,9 @@ for d in (root/'syn').glob('*'):
   log=d/'etm.log'
   marker=d/'.source_commit'
   same_source=marker.read_text().strip()==commit if marker.is_file() else legacy_source
-  if same_source and log.is_file() and 'OT_ETM_DONE_ff' in log.read_text(errors='replace'):
+  wrapper=d/'.wrapper_sha256'
+  same_wrapper=wrapper.read_text().strip()==wrappers.get(d.name) if wrapper.is_file() else legacy_source
+  if same_source and same_wrapper and log.is_file() and 'OT_ETM_DONE_ff' in log.read_text(errors='replace'):
    complete.append(d.name)
 running=set()
 for line in subprocess.check_output(['ps','-eo','args='],text=True).splitlines():
@@ -146,7 +152,7 @@ for line in subprocess.check_output(['ps','-eo','args='],text=True).splitlines()
 print(json.dumps(dict(ready=True,complete=complete,running=sorted(running))))
 '''
     p = subprocess.run(['ssh', '-o', 'ConnectTimeout=8', host,
-                        'python3 - ' + remote_root + ' ' + commit + ' ' + (legacy_commit or '-')],
+                        'python3 - ' + remote_root + ' ' + commit + ' ' + (legacy_commit or '-') + ' ' + shlex.quote(json.dumps(wrappers or {}))],
                        input=script, capture_output=True, text=True)
     if p.returncode:
         raise RuntimeError(f'{host} existing-job collection failed: {p.stderr[-300:]}')
@@ -169,6 +175,7 @@ def main():
         ROOT = a.source_root.resolve()
     (Path(a.views) / 'drive').mkdir(exist_ok=True)
     rows = {r.split('\t')[0]: r.rstrip('\n').split('\t') for r in open(Path(a.views) / 'jobs.tsv')}
+    a.wrapper_sha256 = {c: hashlib.sha256((Path(a.views) / 'wrap' / (rows[c][2] + '.sv')).read_bytes()).hexdigest() for c in a.cells}
     idx = module_index(a.commit)
     lock, summary = threading.Lock(), {}
     pending = set(a.cells)
@@ -176,7 +183,7 @@ def main():
     while pending:
         states = {}
         with ThreadPoolExecutor(max_workers=a.workers) as pool:
-            futures = {pool.submit(remote_state, h, a.remote_root, a.commit, a.legacy_source_commit): h for h in hosts}
+            futures = {pool.submit(remote_state, h, a.remote_root, a.commit, a.legacy_source_commit, a.wrapper_sha256): h for h in hosts}
             for future in as_completed(futures):
                 states[futures[future]] = future.result()
         a.ready_hosts = {h for h, state in states.items() if state['ready']}
