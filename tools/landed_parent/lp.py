@@ -482,8 +482,8 @@ class Parent:
         if self.rports is not None:
             if not isinstance(self.rports, dict) or type(self.rports.get("stages")) is not int or self.rports["stages"] < 2:
                 raise SystemExit('regional_reset_ports: {"stages": N >= 2, "why": ...}')
-            if not self.rst or spec.get("landing_reset_forest") or spec.get("reset_net"):
-                raise SystemExit("regional_reset_ports needs reset_port and excludes landing_reset_forest / reset_net")
+            if not self.rst or spec.get("reset_net"):
+                raise SystemExit("regional_reset_ports needs reset_port and excludes reset_net")
         self.static = set(spec.get("static") or [])
         self.loose = set(spec.get("loose") or [])
         self.regions = [r["name"] for r in spec["regions"]]
@@ -834,7 +834,9 @@ class Parent:
         if not self.reset_forest:
             return None
         _, _, RB = self.reset_tree()
-        depth = RB - 1
+        # HBM-PSLICE9 10-20: with regional_reset_ports each region's forest is fed by its own reset PORT (no root
+        # stage), so the forest carries the whole regional run (depth RB = stages); else root stage + RB - 1.
+        depth = RB if self.rports is not None else RB - 1
         if depth < 2:
             raise SystemExit("landing_reset_forest needs at least two already-priced regional stages; no free reset edge")
         regions = {r: dict(leaves=1, terms=['1'], bindings=[]) for r in self.regions}
@@ -865,7 +867,7 @@ class Parent:
             row['scalar_child_pad_port_uses'] = scalar_uses
             if scalar_uses > 32:
                 raise SystemExit(f'landing_reset_forest {region} scalar child reset boundary has {scalar_uses} ports; partition still required')
-        root_loads = sum(v['branches'] if depth == 2 else 1 for v in regions.values())
+        root_loads = 0 if self.rports is not None else sum(v['branches'] if depth == 2 else 1 for v in regions.values())
         if root_loads > 32:
             raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
         return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
@@ -931,8 +933,14 @@ class Parent:
                 w(f'    localparam integer LPR_LEAVES_{r} = {expression};')
             root_load_expr = ('+'.join(f'((LPR_LEAVES_{r}+31)/32)' for r in self.regions)
                               if RB-1 == 2 else str(len(self.regions)))
+            fdepth = forest['regional_stages']
         for r in self.regions:
-            if forest:
+            if forest and self.rports is not None:
+                w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
+                w(f'    ot_pl_land_reset_forest #(.DEPTH({fdepth}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS(1)) u_lpr_{r} '
+                  f'(.ck(ck_{r}), .d({self.rst}_{r}), .q(lpr_{r}_leaves)); // regional reset port landed {fdepth} stages on ck_{r}, '
+                  f'one leaf per landing chunk')
+            elif forest:
                 w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
                 w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
                   f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
