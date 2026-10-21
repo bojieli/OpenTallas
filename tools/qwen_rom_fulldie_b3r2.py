@@ -5460,12 +5460,25 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         net, N, root, ht, new, c_ = t['net'], t['N'], t['root'], t['ht'], t['new'], t['c_']
         bid = net['bid']
         pads = [0, 0]
+        pad_moved = [0]
 
-        def chain(k, lv):
-            """pad chain of lv levels in front of node k; returns the node that takes k's place in its parent's net."""
+        def chain(k, lv, p=None):
+            """pad chain of lv levels in front of node k; returns the node that takes k's place in its parent's net.
+            QKO-QDIE 10-21 (dv2f21g5r9bfp assert ('rst_field', 'pad')): the fault-OR tree of a FAULT=1 GEN fills the
+            sites beside some children, so the nearest-site search from k comes back empty.  The pad chain belongs to
+            the EDGE p -> k: a cell that has no site beside k is placed beside the parent p or at a point of the
+            straight segment p..k (every hop of the chain then stays within the p -> k net span; the emitted pins are
+            re-checked at RST_OK_UM by _reset_reach_gate as before).  Same levels / cycles / equal depth."""
             head, prev = None, None
             for mst in [RST_PAD] * (lv // RST_PAD_LV) + [RST_REP] * (lv % RST_PAD_LV):
                 a = new(*c_(k))
+                if a is None and p is not None:
+                    (x0, y0), (x1, y1) = c_(k), c_(p)
+                    for t in (0.25, 0.5, 0.75, 1.0):
+                        a = new(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t)
+                        if a is not None:
+                            pad_moved[0] += 1
+                            break
                 assert a is not None, (bid, 'pad')
                 N[a]['master'] = mst
                 pads[mst == RST_PAD] += 1
@@ -5479,7 +5492,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             return head if head is not None else k
         first = chain(root, hdom[net['dom']] - ht[root])
         for p in [k for k in N if k in ht and not N[k]['sinks']]:
-            N[p]['outs'] = [[(kind, chain(o, ht[p] - 1 - ht[o])) if kind == 'node' else (kind, o) for kind, o in g_]
+            N[p]['outs'] = [[(kind, chain(o, ht[p] - 1 - ht[o], p)) if kind == 'node' else (kind, o) for kind, o in g_]
                             for g_ in N[p]['outs']]
         # 7. emit; depth of every sink in cycles (2 per repeater, 10 per pad cell)
         name = {k: f'rstt_{bid}_{k}' for k in N}
@@ -5505,7 +5518,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         for k in sorted(N):
             cells.append((name[k], N[k]['master'], N[k]['x'], N[k]['y'], bid, round(N[k]['mv'], 2)))
         per[bid] = dict(dom=net['dom'], sinks=len(net['sinks']), repeaters=len(N) - pads[0] - pads[1], pad_rep=pads[0],
-                        pad_p8=pads[1], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
+                        pad_p8=pads[1], pad_on_edge=pad_moved[0], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
                         depth_cycles=sorted(dep))
     return cells, wires, per, errors
 
