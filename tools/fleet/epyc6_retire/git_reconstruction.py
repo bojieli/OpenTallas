@@ -42,6 +42,12 @@ def sync_tree(root):
             os.fsync(fd)
         finally:
             os.close(fd)
+    # Persist the newly created output directory's own name, not only its contents.
+    fd = os.open(pathlib.Path(root).parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def refs_listing(common, env=None):
