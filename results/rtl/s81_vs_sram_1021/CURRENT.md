@@ -1,6 +1,6 @@
 # Current VS candidate status
 
-Latest RTL source11ed229e0, default-off OT_S81SL_VS_SRAM. Still NOT ADMISSIBLE.
+Latest measured RTL source2f0cb6f94, default-off OT_S81SL_VS_SRAM. Still NOT ADMISSIBLE.
 All run objects remain under ot-epyc5:/srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021.
 No VS layout gate or route has been launched by this owner.
 
@@ -19,3 +19,5 @@ command fields, input-valid and shared ot_hdc_f12_cut payload registers.
 Native JSON, mapped Verilog and mapped_attr JSON are retained remotely. Each
 committed summary contains its full violating-driver list and raw report hash.
 No constraint waiver, false path, multicycle or native-check change was used.
+
+Source2f0cb6f94 operand-nibble hierarchy: existing ENG159/73 PASS, VS allops PASS, MUT4 catches22MOE errors; native5 FAIL654/307 (231seq), rst1, roles0. All raw logs committed. Next candidate adds regional arrival counters for ENG halfword selects and byte captures for RA/K/W; no added edges and no layout gate.
