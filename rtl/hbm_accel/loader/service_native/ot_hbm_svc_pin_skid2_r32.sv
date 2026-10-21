@@ -20,7 +20,8 @@ module ot_hbm_svc_pin_skid2_r32 #(parameter integer WIDTH=1)(
   (* keep="true",dont_touch="true" *) reg wp,rp;
   (* keep="true",dont_touch="true" *) reg [1:0]count;
   reg [B-1:0]d0,d1;
-  wire push=in_v&&!full[s],pop=out_r&&!empty[s];
+  (* keep="true" *) wire push=in_v&&!full[s];
+  (* keep="true" *) wire pop=out_r&&!empty[s];
   assign full[s]=(count==2);assign empty[s]=(count==0);
   assign out_data[s*SW+:B]=rp?d1:d0;
   always @(posedge clk or negedge rn[s/4])begin
