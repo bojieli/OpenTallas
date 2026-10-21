@@ -57,17 +57,6 @@ case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 16 19";; esac
 # (slice dropped), 24 = output-FIFO write-pointer copy 5 stalls.  (22 = die-face ox payload enable copy 2 stuck 0 is not
 # exercised here -- the seqhost stream leaves o_d bits 58..86 constant; caught by host_native_pipe_bench.py s10dox10)
 case "${VL_EXTRA:-}" in *OT_S81_SH_S10D*) MUTS="$MUTS 23 24";; esac
-# S10E selects dsfd_host_native_n32 -> ot_rom_host_ingest_n32 -> ot_s81_ing_stream_n32.
-# Legacy RAC/SPRH/S10DFQ hooks do not exist in that selected engine. Their successor
-# mechanisms are covered by the mandatory N32 BYP/GOD/WIN/KIND/FQS/CQR job stages.
-# Keep every other applicable aggregate mutant and all non-S10E behavior unchanged.
-case "${VL_EXTRA:-}" in *OT_S81_SH_S10E*)
-  active_muts=""
-  for m in $MUTS; do
-    case "$m" in 8|11|24) ;; *) active_muts="$active_muts $m";; esac
-  done
-  MUTS=$active_muts
-;; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do
