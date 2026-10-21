@@ -84,6 +84,8 @@ def input_files(spec, root):
         if isinstance(item, dict) and isinstance(item.get('view'), str):
             view = root / item['view']
             files += sorted(str(p.relative_to(root)) for p in view.glob(f'{view.name}_*.lib'))
+    from gray_fifo_cdc_constraints import tech_cell_libraries
+    files += [p for p, _, _ in tech_cell_libraries(spec, root)]
     dual=(spec.get('reviewed_gray_fifo_extensions') or {}).get('dual_clock_srams', [])
     if dual:
         files.append('physical/common_flow/ot_keep_regs.tcl')

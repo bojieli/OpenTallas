@@ -109,6 +109,23 @@ REVIEWED = {
         sha256=('6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b',),
         chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
         valid='link', read_stage=None, min_ptr_bits=3),
+    # HBM-SVGREL8 2026-10-20 (the L2H-IDXSCORE/SVG e1c2c2ab1 profile, FIFO part only): the HBM service SPSC FIFO,
+    # ot_async_fifo structure -- binary/Gray wr_/rd_ pointers updated on their own edge, async_reg 2-flop syncs wr_gray ->
+    # wr_gray_r1 -> wr_gray_r2 (reader) and rd_gray -> rd_gray_w1 -> rd_gray_w2 (writer), online flags synchronised the
+    # same way; storage mem[wr_bin] written on wr_fire on the Gray update edge; rd_data = mem[rd_bin] (FWFT).
+    # read-valid = rd_reset && wr_online_r2 && !empty, empty = (rd_gray == wr_gray_r2) COMBINATIONAL:
+    # 'conditioned_neq' = the conditioned reset/online terms AND the 'link' Gray inequality.  The sha256 set is the
+    # async_gray_fifo_constraints.SOURCES entry of the same file.
+    'ot_hbm_svc_async_fifo': dict(
+        path='rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv',
+        sha256=('e83b7120ff9c6b00eb1a7892bdfd0d4a8e9717fdf055f975f96fa879bb6c91b8',
+                '3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1',
+                '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
+        chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
+                ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
+                ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
+                ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
+        valid='conditioned_neq', read_stage=None, rd_rst_wire='rd_reset', rd_rst_conditioner='u_rd_reset'),
 }
 # HOST-SRAM opt-in: exact reviewed source, unchanged Gray/publication/rendezvous semantics.
 REVIEWED['ot_host_async_fifo_sram'] = dict(REVIEWED['ot_qwen_async_fifo_w'], path='rtl/physical/ot_host_async_fifo_sram.sv',
@@ -212,6 +229,47 @@ EXTENSIONS = 'reviewed_gray_fifo_extensions'
 NAME = re.compile(r'[A-Za-z][A-Za-z0-9_]*')
 REF = re.compile(r'[A-Za-z_][A-Za-z0-9_.$\[\]]*')
 
+# Actual vendor library bytes, not a handwritten cell-function table. Broaden only with a reviewed physical model.
+TECH_LIBERTIES = {
+    'fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038': frozenset({'AND2x2_ASAP7_75t_R'}),
+}
+
+
+def tech_cell_libraries(spec, root=None):
+    """Explicit, source-bound functional inputs for physical cells used in the CDC RTL."""
+    ext = spec.get(EXTENSIONS) or {}
+    if not isinstance(ext, dict):
+        raise GrayFifoError('reviewed_gray_fifos extensions must be an object')
+    rows = ext.get('tech_cell_liberties')
+    if rows is None:
+        return ()
+    if not isinstance(rows, list) or not rows:
+        raise GrayFifoError('reviewed_gray_fifos tech_cell_liberties must be a nonempty list')
+    result, paths, masters = [], set(), set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {'path', 'sha256', 'cells'}:
+            raise GrayFifoError('reviewed_gray_fifos tech_cell_liberties entries are {path, sha256, cells}')
+        path, digest, cells = row['path'], row['sha256'], row['cells']
+        if (not isinstance(path, str) or not re.fullmatch(r'[A-Za-z0-9_./+-]+\.lib', path)
+                or Path(path).is_absolute() or '..' in Path(path).parts or path in paths):
+            raise GrayFifoError('reviewed_gray_fifos unsafe or duplicate tech-cell Liberty path')
+        if not isinstance(digest, str) or digest not in TECH_LIBERTIES:
+            raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty is not a reviewed actual library fingerprint')
+        if (not isinstance(cells, list) or not cells or any(not isinstance(c, str) for c in cells)
+                or len(set(cells)) != len(cells) or set(cells) - TECH_LIBERTIES[digest] or masters.intersection(cells)):
+            raise GrayFifoError('reviewed_gray_fifos tech-cell masters must be distinct reviewed physical cells')
+        if root is not None:
+            base = Path(root).resolve()
+            p = (base / path).resolve()
+            if not p.is_relative_to(base) or not re.fullmatch(r'[A-Za-z0-9_./+-]+', str(p)):
+                raise GrayFifoError('reviewed_gray_fifos unsafe tech-cell Liberty path')
+            if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != digest:
+                raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty bytes differ from their actual library fingerprint')
+        paths.add(path)
+        masters.update(cells)
+        result.append((path, digest, tuple(sorted(cells))))
+    return tuple(result)
+
 
 def extensions(spec):
     """Opt-in extension mode (ROOT-0330-CDC 2026-10-18), absent = the original policy unchanged:
@@ -228,9 +286,10 @@ def extensions(spec):
     ext = spec.get(EXTENSIONS)
     if ext is None:
         return None
-    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'why'}:
+    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'tech_cell_liberties', 'why'}:
         raise GrayFifoError(f'reviewed_gray_fifos {EXTENSIONS} must be an object with level_synchronizers / '
-                            'die_constant_inputs / why only (no false paths, groups or waivers)')
+                            'die_constant_inputs / dual_clock_srams / tech_cell_liberties / why only (no false paths, groups or waivers)')
+    tech_cell_libraries(spec)
     dual = ext.get('dual_clock_srams', [])
     if not isinstance(dual, list) or len(set(dual)) != len(dual) or any(n not in DUAL_SRAM for n in dual):
         raise GrayFifoError('reviewed_gray_fifos dual_clock_srams must name distinct fingerprinted supported masters')
@@ -397,7 +456,7 @@ def _elaborate_sources(spec, root):
 
 
 @lru_cache(maxsize=16)
-def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False):
+def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False, tech_libraries=()):
     # Byte hashes are part of the key; no caller-supplied graph or receipt can stand in for this elaboration.
     root = Path(root)
     if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', top):
@@ -408,6 +467,26 @@ def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=Fals
         if hashlib.sha256(p.read_bytes()).hexdigest() != digest:
             raise GrayFifoError('reviewed_gray_fifos source changed during elaboration')
         paths.append(str(p))
+    liberty_steps = ''
+    for path, digest, allowed in tech_libraries:
+        if digest not in TECH_LIBERTIES or not allowed or set(allowed) - TECH_LIBERTIES[digest]:
+            raise GrayFifoError('reviewed_gray_fifos unreviewed physical cell/library during elaboration')
+        p = (root / path).resolve()
+        if not p.is_relative_to(root.resolve()) or not re.fullmatch(r'[A-Za-z0-9_./+-]+', str(p)):
+            raise GrayFifoError('reviewed_gray_fifos unsafe tech-cell Liberty path')
+        content = p.read_bytes()
+        if hashlib.sha256(content).hexdigest() != digest:
+            raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty changed during elaboration')
+        declared = set(re.findall(rb'(?m)^\s*cell\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', content))
+        if not set(c.encode() for c in allowed) <= declared:
+            raise GrayFifoError('reviewed_gray_fifos physical cell missing from actual Liberty')
+        # read_liberty (without -lib) imports the real functions. Drop all other vendor masters before hierarchy
+        # checking so an undeclared/unknown cell remains an error. Its default redefinition error rejects RTL models
+        # shadowing vendor masters; neither -overwrite nor permissive missing-function options are used.
+        liberty_steps += f'read_liberty {p}; '
+        discard = sorted(c.decode() for c in declared if c.decode() not in allowed)
+        if discard:
+            liberty_steps += 'delete ' + ' '.join(discard) + '; '
     args = ''
     for name, value in params:
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name) or type(value) is not int:
@@ -418,7 +497,7 @@ def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=Fals
         # (d) mode reads -defer (as the census / KV-HOSTCL-CDC2 lint): modules elaborate only with their actual
         # parameters, so a default-parameter elaboration guard ($fatal in an initial) does not fire
         keep = f'tcl {root}/physical/common_flow/ot_keep_regs.tcl; ' if preserve_kept else ''
-        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; {liberty_steps}hierarchy -check -top {top}{args}; '
                f'proc; {keep}flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
@@ -809,6 +888,9 @@ def _valid_lit(net, aig, fifo, memo):
     kind, terms = fifo['valid']
     if kind == 'false':
         return 0
+    if kind == 'and_neq':   # AND(terms[0]) & OR_i(a_i ^ b_i)
+        neq = _valid_lit(net, aig, dict(valid=('neq', terms[1])), memo)
+        return aig.and_(_valid_lit(net, aig, dict(valid=('and', terms[0])), memo), neq)
     if kind == 'neq':
         valid = 0
         for a, b in terms:
@@ -867,9 +949,11 @@ def _lint(spec, root):
     relationship(spec)
     ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
+    tech_libraries = tech_cell_libraries(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
                          tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None,
-                         preserve_kept=bool((ext or {}).get('dual_clock_srams')))
+                         preserve_kept=bool((ext or {}).get('dual_clock_srams')),
+                         **({'tech_libraries': tech_libraries} if tech_libraries else {}))
     net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
@@ -1036,19 +1120,26 @@ def _lint(spec, root):
         elif r['valid'] == 'link':
             valid = ('neq', tuple(zip(stage['rptr'][4], stage['wptr'][5][-1])))
         else:
-            empty = bits_of(scope, 'rd_empty')
+            empty = bits_of(scope, 'rd_empty') if r['valid'] == 'conditioned' else [None]
             # rd_domain_rst_n: the reviewed source's own wire; if synthesis dropped the name, the reviewed
             # rd_reset_conditioner output (ot_async_fifo EXT_RST 0 places it in a generate block).
-            rst = [net.bit_of.get(prefix + 'rd_domain_rst_n')]
+            rst = [net.bit_of.get(prefix + r.get('rd_rst_wire', 'rd_domain_rst_n'))]
             if not isinstance(rst[0], int):
+                cname = re.escape(r.get('rd_rst_conditioner', 'rd_reset_conditioner'))
                 conditioner = [c for c, b in scopes if b == RESET_SYNC[0] and
-                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?rd_reset_conditioner', c)]
+                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?' + cname, c)]
                 rst = bits_of(conditioner[0], 'reset_pipe')[-1:] if len(conditioner) == 1 else [None]
             if len(empty) != 1 or not isinstance(rst[0], int) or len(stage['wonl'][5][-1]) != 1:
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
-            if net.domain(empty[0]) != reader:
-                raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
-            valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
+            if r['valid'] == 'conditioned_neq':
+                pairs = tuple(zip(stage['rptr'][4], stage['wptr'][5][-1]))
+                if not pairs or net.domain(rst[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
+                valid = ('and_neq', (((rst[0], 1), (stage['wonl'][5][-1][0], 1)), pairs))
+            else:
+                if net.domain(empty[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
+                valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
         head = {b for k, b in net.bit_of.items() if isinstance(b, int) and b not in net.flops and
                 re.fullmatch(re.escape(prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')) + r'(?:\[\d+\])?', k)}
         fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid, head=head,
@@ -1181,11 +1272,14 @@ def _lint(spec, root):
         kind, terms = fifo['valid']
         if kind == 'false':
             v = 0
-        elif kind == 'neq':
+        elif kind in ('neq', 'and_neq'):
             v = 0
-            for a, b in terms:
+            for a, b in (terms[1] if kind == 'and_neq' else terms):
                 x, y = _bdd_of(net, bdd, a, level, cache), _bdd_of(net, bdd, b, level, cache)
                 v = bdd.ite(v, 1, bdd.ite(x, bdd.neg(y), y))
+            for b, polarity in (terms[0] if kind == 'and_neq' else ()):
+                x = _bdd_of(net, bdd, b, level, cache)
+                v = bdd.ite(v, x if polarity else bdd.neg(x), 0)
         else:
             v = 1
             for b, polarity in terms:
@@ -1220,14 +1314,27 @@ def _lint(spec, root):
     # may keep either one (qkd_hr_cdc_host r2: ot_async_fifo rd_gray[MSB] folded into rd_bin[MSB], Gray MSB == binary
     # MSB).  Its names carry the launch role so the SDC binds whichever survives; a signature shared by two different
     # tagged roles aliases nothing.
+    # An enabled register reaches the lint netlist (dffunmap) as D = MUX(S, hold = its own Q, next); two such registers
+    # with the same enable and next value are the same register for ORFS (one $_DFFE_ each, opt_merge keeps one): the
+    # signature replaces its own-Q hold input by a marker (L2H-IDXSCORE/SVG a8b4a48f2, HBM-SVGREL8 10-20 port:
+    # ot_hbm_svc_async_fifo rd_gray[MSB] folded into rd_bin[MSB] under rd_fire).
+    def alias_sig(q):
+        f = net.flops[q]
+        drv = net.driver.get(f['d'])
+        if drv and drv[0] == 'comb' and drv[2] == '$_MUX_':
+            pins = drv[3]
+            if pins.get('A') == q and pins.get('B') != q:
+                return (f.get('t'), ('hold_a', pins.get('S'), pins.get('B')), f['c'], f['r'])
+            if pins.get('B') == q and pins.get('A') != q:
+                return (f.get('t'), ('hold_b', pins.get('S'), pins.get('A')), f['c'], f['r'])
+        return (f.get('t'), f['d'], f['c'], f['r'])
     sig = {}
-    for p, f in net.flops.items():
-        sig.setdefault((f.get('t'), f['d'], f['c'], f['r']), []).append(p)
+    for p in net.flops:
+        sig.setdefault(alias_sig(p), []).append(p)
     for q, r in sorted(role.items(), key=lambda x: str(x[0])):
         if r[0] not in ('src', 'esrc', 'lsrc'):
             continue
-        f = net.flops[q]
-        group = sig[(f.get('t'), f['d'], f['c'], f['r'])]
+        group = sig[alias_sig(q)]
         if len({role[x] for x in group if x in role}) != 1:
             continue
         for p in group:
@@ -1292,6 +1399,8 @@ def _lint(spec, root):
         if dual_macros:
             record['dual_clock_macros'] = dual_macros
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
+    if tech_libraries:
+        record['tech_cell_liberties'] = [dict(path=p, sha256=h, cells=list(c)) for p, h, c in tech_libraries]
     return record
 
 
