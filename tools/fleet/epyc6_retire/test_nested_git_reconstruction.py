@@ -109,6 +109,32 @@ class NestedGit(unittest.TestCase):
             P.verify(out, self.base/'bad-proof.json')
         self.assertFalse((self.base/'bad-proof.json').exists())
 
+    def test_new_unique_ref_invalidates_same_head_index_proof(self):
+        _, proofs = self.preservation()
+        tree = self.git('rev-parse', 'HEAD^{tree}').decode().strip()
+        extra = subprocess.check_output(['git', '-C', str(self.repo), 'commit-tree', tree], input=b'unique ref-only commit\n').decode().strip()
+        self.git('update-ref', 'refs/heads/unpublished-extra', extra)
+        self.assertEqual(W.pristine_files(str(self.repo), proofs, True), set())
+
+    def test_fsync_failure_cannot_publish_verified_proof(self):
+        out = self.base/'capture'; P.capture(self.root, out)
+        proof = self.base/'proof.json'
+        with patch.object(P, 'sync_tree', side_effect=OSError('forced fsync failure')):
+            with self.assertRaises(OSError):
+                P.verify(out, proof)
+        self.assertFalse(proof.exists())
+
+    def test_verification_sync_precedes_durable_proof(self):
+        out = self.base/'capture'; P.capture(self.root, out)
+        proof = self.base/'proof.json'; events = []; actual = P.durable_json
+        def save(path, data):
+            self.assertEqual(events, ['synced'])
+            events.append('proof')
+            actual(path, data)
+        with patch.object(P, 'sync_tree', side_effect=lambda path: events.append('synced')), patch.object(P, 'durable_json', side_effect=save):
+            P.verify(out, proof)
+        self.assertEqual(events, ['synced', 'proof'])
+
     def test_raw_source_index_and_refs_unchanged(self):
         before = P.sha(self.repo/'.git/index')
         refs = self.git('for-each-ref')
