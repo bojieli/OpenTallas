@@ -21,9 +21,9 @@ module tb_hgi_sfu_static_operand_store;
  reg [63:0] rd_re=0;
  reg [1535:0] rd_addr=0;
  wire [2047:0] rd_q;
- wire [8*8*4-1:0] stage_lo_replicas;
- for(genvar s=0;s<8;s=s+1)for(genvar cp=0;cp<8;cp=cp+1)
-  assign stage_lo_replicas[4*(s*8+cp)+:4]=stage_addr[LWB*s+:4];
+ wire [8*16*4-1:0] stage_lo_replicas;
+ for(genvar s=0;s<8;s=s+1)for(genvar cp=0;cp<16;cp=cp+1)
+  assign stage_lo_replicas[4*(s*16+cp)+:4]=stage_addr[LWB*s+:4];
  reg [15:0] vm_we=0;
  reg [383:0] vm_addr=0;
  reg [511:0] vm_data=0;

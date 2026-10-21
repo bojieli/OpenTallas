@@ -47,7 +47,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  output wire [7:0] stage_v,
  output wire [15:0] stage_group,
  output wire [8*LWB-1:0] stage_addr,
- output wire [8*8*4-1:0] stage_lo_replicas,
+ output wire [8*16*4-1:0] stage_lo_replicas,   // s10: 16 same-edge copies per sector (one per destination bank)
  output wire [2047:0] stage_data,
  output wire [63:0] stage_mask,
  output reg [3:0] scalar_load,
@@ -176,12 +176,12 @@ module ot_hgi_sfu_vm_static_bridge #(
    assign meta_q=meta[READ_RETURN];
    if(NATIVE32 && READ_RETURN>0)begin:g_lo_copies
     // Same final metadata edge, unreset data copies (valid remains reset).
-    // Eight source copies each feed32 WPIPE control FFs downstream.
-    (* keep=1,dont_touch=1 *) reg [2*8*4-1:0] low_q;
+    // s10: sixteen source copies per sector, one per operand-store bank (its rotate selects + its write decode).
+    (* keep=1,dont_touch=1 *) reg [2*16*4-1:0] low_q;
     for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
-     for(genvar cp=0;cp<8;cp=cp+1)begin:g_c
-      always @(posedge clk_lg[g])low_q[4*(sl*8+cp)+:4]<=meta[READ_RETURN-1][8+LWB*sl+:4];
-      assign stage_lo_replicas[4*((2*g+sl)*8+cp)+:4]=low_q[4*(sl*8+cp)+:4];
+     for(genvar cp=0;cp<16;cp=cp+1)begin:g_c
+      always @(posedge clk_lg[g])low_q[4*(sl*16+cp)+:4]<=meta[READ_RETURN-1][8+LWB*sl+:4];
+      assign stage_lo_replicas[4*((2*g+sl)*16+cp)+:4]=low_q[4*(sl*16+cp)+:4];
      end
     end
     // s8: eight same-edge copies of this pair's scalar-load metadata {expect_v[1:0],group[3:0],scalar[1:0]}
@@ -196,8 +196,8 @@ module ot_hgi_sfu_vm_static_bridge #(
   end
   if(!NATIVE32 || BRING!=0 || READ_RETURN==0)begin:g_lo_original
    for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
-    for(genvar cp=0;cp<8;cp=cp+1)begin:g_c
-     assign stage_lo_replicas[4*((2*g+sl)*8+cp)+:4]=meta_q[8+LWB*sl+:4];
+    for(genvar cp=0;cp<16;cp=cp+1)begin:g_c
+     assign stage_lo_replicas[4*((2*g+sl)*16+cp)+:4]=meta_q[8+LWB*sl+:4];
     end
    end
   end

@@ -1,0 +1,15 @@
+{
+  "recovery": "immutable ep9 codex-sfuc-native32-1021/src10; fresh branch f37cbc6c2 base, no git in paused WT",
+  "source10_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv": "bb589b46896f970631d3198385d65a875c94a163476fbdf71ea17440041fed3a",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "65f2c6f48ae7e10859dae797bc13b910d191678dca1f57a41b42a93b433ae5d5",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "77732b0b74c7d18abda86373de26ea24555d6bc9fccae5f76293d81730a73a67",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "e842829f74845fa1102785aea960d11a91ccd504a40ea8bc394aa4c057fd0939",
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "6119907a9e854a2426b0e69479084827862ca5c4cd8e01a0c693da27add4b663",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_operand_store.sv": "fb8957eba1c6496936bafeed9801914c026fb53945aedf3e576d136243c73d3e",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_static_bridge.sv": "2d9851005311ab51939a1ab6fce9ec651479698c173b954819cd98df0fb062e8"
+  },
+  "source11_delta": "only scalar byte re/en AND kept hierarchy child; no flop/cycle/interface addition",
+  "native10": "FAIL96 max81; ALL96 input_port, internal0; scalar_enable_leaves32 max81,rd_re64 max40",
+  "qualification": "source11 native/bench pending"
+}

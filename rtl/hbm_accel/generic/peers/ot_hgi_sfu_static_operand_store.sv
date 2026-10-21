@@ -52,7 +52,7 @@ module ot_hgi_sfu_static_operand_store #(
  input wire [7:0] stage_v,
  input wire [15:0] stage_group,
  input wire [8*LWB-1:0] stage_addr,
- input wire [8*8*4-1:0] stage_lo_replicas,
+ input wire [8*16*4-1:0] stage_lo_replicas,
  input wire [63:0] stage_mask,
  input wire [2047:0] stage_data,
  input wire [1:0] drain_v,
@@ -158,14 +158,14 @@ module ot_hgi_sfu_static_operand_store #(
  wire [8*16*32-1:0] swr_d; wire [8*16-1:0] swr_m, swr_w; wire [8*RBS-1:0] swr_r0, swr_r1;
  wire [8*16*16*4-1:0] rotate_lo;
  generate if(NATIVE32 && WPIPE && WROT)begin:g_rotate_copies
-  // Capture on the existing WPIPE edge. s8: eight select copies per bank, each serving one 4-bit rotate slice
-  // (two 2-bit halves); every upstream replica (8/sector, one per bank pair) feeds 16 of these FFs plus the two
-  // banks' presel hit decode below. No new stage or data storage is added.
+  // Capture on the existing WPIPE edge. s10: eight select copies per bank, each serving one 4-bit rotate slice
+  // (two 2-bit halves), all from that bank's own upstream replica (16/sector), which also feeds the bank's presel
+  // hit decode below. No new stage or data storage is added.
   (* keep=1,dont_touch=1 *) reg [8*16*8*4-1:0] lo_q;
   for(genvar s=0;s<8;s=s+1)begin:g_s
    for(genvar b=0;b<16;b=b+1)begin:g_b
     for(genvar c=0;c<8;c=c+1)begin:g_c
-     always @(posedge clk)lo_q[4*((s*16+b)*8+c)+:4]<=stage_lo_replicas[4*(s*8+b/2)+:4];
+     always @(posedge clk)lo_q[4*((s*16+b)*8+c)+:4]<=stage_lo_replicas[4*(s*16+b)+:4];
     end
     for(genvar h=0;h<16;h=h+1)begin:g_h
      assign rotate_lo[4*((s*16+b)*16+h)+:4]=lo_q[4*((s*16+b)*8+h/2)+:4];
@@ -219,18 +219,19 @@ module ot_hgi_sfu_static_operand_store #(
  // select has its own copy per destination slice (data[15:0], data[31:16], row), so no shared decoded select drives a
  // wide mux. Same write edge, same last-writer order and the same collision-fault edge as the WPIPE loop.
  localparam integer PS=(NATIVE32 && WPIPE && WROT)?1:0, PSO=(NATIVE32 && WPIPE)?1:0;
- wire [127:0] ps_hit,ps_wrap;   // [16*s+b]: sector s writes bank b / with row hi+1 (raw inputs, WPIPE D side)
+ (* keep=1 *) wire [127:0] ps_hit;   // [16*s+b]: slot b of sector s is a masked word (raw inputs, WPIPE D side)
+ wire [127:0] ps_wrap;              // ... landing in row hi+1
  if(PS)begin:g_presel_hits
   for(genvar s=0;s<8;s=s+1)begin:g_s
    for(genvar b=0;b<16;b=b+1)begin:g_b
     localparam [3:0] B4=b;
-    wire [3:0] lo=stage_lo_replicas[4*(s*8+b/2)+:4];
+    wire [3:0] lo=stage_lo_replicas[4*(s*16+b)+:4];
 `ifdef OT_SFU_STORE_MUT_WROT
     wire [3:0] d=B4-lo-4'd1;
 `else
     wire [3:0] d=B4-lo;
 `endif
-    assign ps_hit[16*s+b]=stage_v[s] && !d[3] && stage_mask[8*s+d[2:0]];
+    assign ps_hit[16*s+b]=!d[3] && stage_mask[8*s+d[2:0]];
     assign ps_wrap[16*s+b]=(B4<lo);
    end
   end
@@ -238,7 +239,7 @@ module ot_hgi_sfu_static_operand_store #(
   assign ps_hit=0;assign ps_wrap=0;
  end
  for(genvar g=0;g<4;g=g+1)begin:g_operand
-  wire [15:0] req;
+  (* keep=1 *) wire [15:0] req;   // s9: one kept node per lane (the read selects fan out from it, not from the ports)
   wire [383:0] addr;
   wire [511:0] data;
   wire [511:0] scalar_read;
@@ -278,18 +279,32 @@ module ot_hgi_sfu_static_operand_store #(
   wire [15:0] pw_we; wire pw_coll; wire [127:0] pw_sd0,pw_sd1,pw_sa0,pw_sa1;
   wire [16*8*32-1:0] pw_d; wire [16*8*RBS-1:0] pw_r0,pw_r1;
   if(PS)begin:g_presel
-   wire [7:0] gv;
+   (* keep=1 *) wire [7:0] gv;      // sector s is valid and targets this group
    for(genvar s=0;s<8;s=s+1)begin:g_gv
-    assign gv[s]=stage_group[2*s+:2]==g;
+    assign gv[s]=stage_v[s] && stage_group[2*s+:2]==g;
    end
-   reg [15:0] we_d; reg coll_d; reg [127:0] win_d,wr_d;    // [8*b+s]
+   // s10: kept per-(bank, sector) hit nodes and per-bank collision nodes keep every decode term bank-local.
+   (* keep=1 *) wire [127:0] hg;                     // [8*b+s]
+   (* keep=1 *) wire [15:0] coll_b;
+   reg [15:0] we_d; reg [127:0] win_d,wr_d;
+   for(genvar b=0;b<16;b=b+1)begin:g_hb
+    for(genvar s=0;s<8;s=s+1)begin:g_hs
+     assign hg[8*b+s]=gv[s] && ps_hit[16*s+b];
+    end
+    reg c_;
+    always @*begin
+     c_=0;
+     for(integer s=0;s<7;s=s+1)if(hg[8*b+s] && |(hg[8*b+:8]>>(s+1)))c_=1;   // a higher sector also writes it
+    end
+    assign coll_b[b]=c_;
+   end
+   wire coll_d=|coll_b;
    always @*begin
-    coll_d=0;we_d=0;win_d=0;wr_d=0;
+    we_d=0;win_d=0;wr_d=0;
     for(integer b=0;b<16;b=b+1)
      for(integer s=7;s>=0;s=s-1)
-      if(gv[s] && ps_hit[16*s+b])begin
-       if(we_d[b])coll_d=1;                           // a higher sector already writes this bank: fail closed
-       else begin win_d[8*b+s]=1;wr_d[8*b+s]=ps_wrap[16*s+b];end
+      if(hg[8*b+s])begin
+       if(!we_d[b])begin win_d[8*b+s]=1;wr_d[8*b+s]=ps_wrap[16*s+b];end
        we_d[b]=1;
       end
    end
@@ -349,11 +364,15 @@ module ot_hgi_sfu_static_operand_store #(
   (* keep=1,dont_touch=1 *) reg [31:0] sd0_q,sd1_q,sa0_q;
   always @(posedge clk)begin we_q<=we_d;coll_q<=coll_d;sd0_q<=sel_d;sd1_q<=sel_d;sa0_q<=sel_d;end
   assign po_we=we_q;assign po_coll=coll_q;assign po_sd0=sd0_q;assign po_sd1=sd1_q;assign po_sa0=sa0_q;
+  // s10: lane 0 writes any bank, so its row and word come from two kept WPIPE-edge copies (banks 0-7 / 8-15).
+  (* keep=1,dont_touch=1 *) reg [2*RBS-1:0] row0_q;
+  (* keep=1,dont_touch=1 *) reg [63:0] word0_q;
+  always @(posedge clk)begin row0_q<={2{vm_waddr[4+:RBS]}};word0_q<={2{vm_wdata[0+:32]}};end
   for(genvar b=0;b<16;b=b+1)begin:g_pb
-   assign po_d[32*(2*b)+:32]=w_vm_wdata[0+:32];
-   assign po_d[32*(2*b+1)+:32]=w_vm_wdata[32*b+:32];
-   assign po_r[RBS*(2*b)+:RBS]=w_vm_waddr[4+:RBS];
-   assign po_r[RBS*(2*b+1)+:RBS]=w_vm_waddr[24*b+4+:RBS];
+   assign po_d[32*(2*b)+:32]=word0_q[32*(b/8)+:32];
+   assign po_d[32*(2*b+1)+:32]=(b==0)?32'd0:w_vm_wdata[32*b+:32];
+   assign po_r[RBS*(2*b)+:RBS]=row0_q[RBS*(b/8)+:RBS];
+   assign po_r[RBS*(2*b+1)+:RBS]=(b==0)?{RBS{1'b0}}:w_vm_waddr[24*b+4+:RBS];
   end
  end else begin:g_presel_out_off
   assign po_we=0;assign po_coll=0;assign po_sd0=0;assign po_sd1=0;assign po_sa0=0;assign po_d=0;assign po_r=0;
@@ -370,6 +389,12 @@ module ot_hgi_sfu_static_operand_store #(
 endmodule
 // Isolate each enabled byte so ABC cannot share one 32-bit mux-enable driver (s8: the read/enable AND is inside).
 (* keep_hierarchy=1 *) module ot_hgi_sfu_scalar_byte(input wire clk,re,en,input wire[7:0]d,output reg[7:0]q);
- always @(posedge clk)if(re && en)q<=d;
+ wire e;
+ ot_hgi_sfu_scalar_byte_enable u_enable(.re(re),.en(en),.e(e));
+ always @(posedge clk)if(e)q<=d;
+endmodule
+// Kept combinational boundary prevents re/en folding into all eight byte muxes.
+(* keep_hierarchy=1 *) module ot_hgi_sfu_scalar_byte_enable(input wire re,en,output wire e);
+ assign e=re && en;
 endmodule
 `default_nettype wire

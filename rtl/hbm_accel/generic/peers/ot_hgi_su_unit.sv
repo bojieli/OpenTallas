@@ -701,6 +701,36 @@ module ot_hgi_su_lgroup2 #(
                 end
             end
         end
+    end else if(NATIVE32 && NLW==0)begin:g_native_lane_readsel
+    // s8: a lane can claim only its static candidate banks (lane 0: any), exactly the banks lok admits, so each raw
+    // lane enable reaches <=4 bank selects (lane 0: 16) instead of every bank. Same lowest-lane-wins order.
+    always @* begin : rsel
+        integer rj_, sl_, bb, ll, kk; reg [LWB-1:0] sa; reg [LN-1:0] bl; reg cand;
+        sa = {LWB{1'b0}}; bl = {LN{1'b0}}; cand = 1'b0;
+        for (bb = 0; bb < N; bb = bb + 1) begin b_re[bb] = 1'b0; b_ra[bb] = {RB{1'b0}}; end
+        for (ll = 0; ll < N; ll = ll + 1) begin
+            bl = ra[ll*AW +: LN]; lok[ll] = (ll == 0);
+            for (kk = 0; kk < NCAND; kk = kk + 1) if (cbank(ll, kk) == bl) lok[ll] = 1'b1;
+        end
+        src = 1'b0;
+        if (|sr_v) begin
+            for (sl_ = 0; sl_ < NS; sl_ = sl_ + 1) if (sr_v[sl_])
+                for (rj_ = 0; rj_ < 8; rj_ = rj_ + 1) begin
+                    sa = sr_addr[sl_*LWB +: LWB] + rj_;
+                    if (b_re[sa[LN-1:0]] && b_ra[sa[LN-1:0]] != sa[LWB-1:LN]) src = 1'b1;
+                    b_re[sa[LN-1:0]] = 1'b1; b_ra[sa[LN-1:0]] = sa[LWB-1:LN];
+                end
+        end else begin
+            for (bb = 0; bb < N; bb = bb + 1)
+                for (ll = N - 1; ll >= 0; ll = ll - 1) begin
+                    cand = (ll == 0);
+                    for (kk = 0; kk < NCAND; kk = kk + 1) if (cbank(ll, kk) == bb) cand = 1'b1;
+                    if (cand && rr[ll] && ra[ll*AW +: LN] == bb) begin
+                        b_re[bb] = 1'b1; b_ra[bb] = ra[ll*AW + LN +: RB];
+                    end
+                end
+        end
+    end
     end else begin:g_original_readsel
     always @* begin : rsel
         integer rj_, sl_; reg [LWB-1:0] sa; reg [LN-1:0] bl;

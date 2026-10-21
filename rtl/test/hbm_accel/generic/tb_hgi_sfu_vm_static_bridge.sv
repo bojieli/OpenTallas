@@ -27,7 +27,7 @@ module tb_hgi_sfu_vm_static_bridge;
  wire [7:0] done,bdone,fdone0;
  wire [7:0] sv;wire [15:0] sg;wire [119:0] sa;
  wire [2047:0] sd;wire [63:0] sm;
- wire [255:0] stage_lo_replicas;
+ wire [511:0] stage_lo_replicas;
  wire [3:0] sl;wire [95:0] sla;wire [127:0] sld;
  wire [31:0] sl_leaves;
  wire fault,sfault,t0f,t1f;
@@ -66,8 +66,8 @@ module tb_hgi_sfu_vm_static_bridge;
  task tick;begin @(negedge clk);if(fault||sfault||t0f||t1f||bs!=0)$fatal(1,"BRIDGE_FAULT bridge=%b store=%b taps=%b%b bank=%h",fault,sfault,t0f,t1f,bs);end endtask
  always @(negedge clk)if(rst_n && NATIVE32)begin
   for(integer sec=0;sec<8;sec=sec+1)if(sv[sec])
-   for(integer cp=0;cp<8;cp=cp+1)
-    if(stage_lo_replicas[4*(sec*8+cp)+:4]!==sa[15*sec+:4])$fatal(1,"BRIDGE_STAGE_COPY sector=%0d copy=%0d",sec,cp);
+   for(integer cp=0;cp<16;cp=cp+1)
+    if(stage_lo_replicas[4*(sec*16+cp)+:4]!==sa[15*sec+:4])$fatal(1,"BRIDGE_STAGE_COPY sector=%0d copy=%0d",sec,cp);
   for(integer g=0;g<4;g=g+1)for(integer cp=0;cp<8;cp=cp+1)
    if(sl_leaves[8*g+cp]!==sl[g])$fatal(1,"BRIDGE_SCALAR_LOAD_COPY group=%0d copy=%0d",g,cp);
  end

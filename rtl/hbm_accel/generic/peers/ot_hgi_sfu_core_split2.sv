@@ -208,7 +208,7 @@ module ot_hgi_sfu_core_split2 #(
  wire [7:0] stage_v;
  wire [15:0] stage_group;
  wire [8*LWB-1:0] stage_addr;
- wire [8*8*4-1:0] stage_lo_replicas;
+ wire [8*16*4-1:0] stage_lo_replicas;
  wire [63:0] stage_mask;
  wire [2047:0] stage_data;
  wire [3:0] scalar_load;
