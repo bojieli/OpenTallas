@@ -1,0 +1,9 @@
+# hcoll_link_e2c terminal failed gate, collected 2026-10-20
+
+Verdict FAIL, no submission. Exact content snapshot start c8312a8e4; archive SHA256 71a356eb6b1585ce0c913beefca8480e1db5c2a322c557831cb56651c3862be6. Full helper provenance remains in gate_result.json. All ten RTL sources plus spec were checked against that manifest and preserved under results/rtl/hbm_coll_link_1020/e2c_gate_1020/source.
+
+Checklist: pins registered in leaf RTL (no added synthesis pin stage); measured geometry2402pins PASS, zero inaccessible/outside. Reach textbook129.5um PASS. Census PASSmax31. Depth490.1ps PASS. Storage two SRAMs26647um2 PASS. Std3969um2/placeable38209=10.4%, total fill43.4%; observed floorplan two central SRAMs and perimeter signals. Clock FAIL within-region pin-flop spread TT131.3/FF120.7ps (6902sinks); reset landing unchanged. No added schedule cycles. Setup reg->reg -107.4ps, hold+48.6ps. TrialGRT FAIL overflow57;55markers along lower SRAM/S band spanning115.14,3.99 to218.88,60.99um.
+
+Structural next brief: preserve both live e2/e2b alternatives and compare actual final verdicts first. e2c disables CTS clustering on e2 geometry yet reproduces large regional clock spread and real GRT overflow. Inspect per-sink early/late groups and SRAM/output path endpoint placement; structurally align clock entry/register mass and the pin/codec-storage bands, reserving SRAM-face routing access at the S-band hotspot. Merely toggling CTS settings again is not a repair. Use measured e2/e2b result to select geometry, then revalidate the exact link miter and independent mutant witness if RTL or latency changes. No blind rerun; no timing/clock waiver.
+
+Images floorplan.png and congestion.png visually inspected during collection: rectangular two-SRAM stack, tiny congestion cells concentrated below lower SRAM; global layer utilization alone does not establish local routability. This is noncritical by current critical_tiles.txt; failure prevents submit_exact.
