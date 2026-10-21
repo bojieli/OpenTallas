@@ -170,7 +170,7 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
       mv $G/die_rep_call.tcl.new $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: fclk data-port contract"; exit 1; }
   fi
 fi
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0}
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0} OT_DIE_SIGNAL_TOP_LAYER=${OT_DIE_SIGNAL_TOP_LAYER:-M8}
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   say "$(python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json)" || true
   python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json > /dev/null || { say "DIE_REPAIR FAIL: no GRT result is a die result"; exit 1; }
