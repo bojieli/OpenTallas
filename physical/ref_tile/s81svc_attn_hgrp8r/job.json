@@ -1,5 +1,5 @@
 {
- "name": "s81svc_attn_hgrp8r-s81svc_attn_hgrp8r-COMMIT",
+ "name": "s81svc_attn_hgrp8r-s81svc_attn_hgrp8r-5cea8256b",
  "block": "ot_s81svc8_hgrp8r_s81_bounded",
  "ref_tile": true,
  "owner": "Claude:S81-COLLECT",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 160,
  "source": {
   "branch": "claude/s81-hgrp8r-1021",
-  "commit": "COMMIT",
+  "commit": "5cea8256b",
   "extra_paths": [
    "rtl/hdc/v41x",
    "tools/s81_dv/svc_rs",
@@ -120,7 +120,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81svc_attn_hgrp8r/s81svc_attn_hgrp8r-s81svc_attn_hgrp8r-COMMIT"
+   "to": "results/rtl/ref_tile/s81svc_attn_hgrp8r/s81svc_attn_hgrp8r-s81svc_attn_hgrp8r-5cea8256b"
   }
  ],
  "cycles_added": 0,
