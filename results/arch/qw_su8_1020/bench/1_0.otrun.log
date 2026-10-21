@@ -1,11 +1,11 @@
-ot-run: ot-epyc5       admits   486 GB (avail 453, growth 113, headroom 0, waiters 1/700 GB) load 103/128 running 47 disk 145 GB 
+ot-run: ot-epyc5       admits   604 GB (avail 536, growth 113, headroom 0, waiters 0/0 GB) load 97/128 running 49 disk 97 GB 
 ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
-ot-run: ot-epyc7       admits   944 GB (avail 762, growth 101, headroom 0, waiters 0/0 GB) load 73/96 running 35 disk 4995 GB 
+ot-run: ot-epyc7       admits   947 GB (avail 763, growth 101, headroom 0, waiters 0/0 GB) load 90/96 running 36 disk 4986 GB 
 ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
 ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1444974-1792562960 after 0 s
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1854523-1792563231 after 1 s
 Verilator 5.050 2026-07-01 rev v5.050
 SU8_DIFF cyc=101 diff=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001ec487000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 SU8_DIFF cyc=102 diff=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000213ff9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -16,7 +16,7 @@ SU8_STATS mut=1 xi=0 n=11787 ctl=11787 bad=11757
 SU8_EQ FAIL
 - rtl/test/qwen_dv/s5/su8/tb_su8.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 24us; walltime 0.090 s; speed 265.702 us/s
-- Verilator: cpu 0.090 s on 1 threads; allocated 7 MB
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1444974-1792562960): exit 1
+- Verilator: $finish at 24us; walltime 0.093 s; speed 258.800 us/s
+- Verilator: cpu 0.093 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1854523-1792563231): exit 1
 rc=1

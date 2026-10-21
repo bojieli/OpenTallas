@@ -7,5 +7,5 @@ SU8_STATS mut=1 xi=0 n=11787 ctl=11787 bad=11757
 SU8_EQ FAIL
 - rtl/test/qwen_dv/s5/su8/tb_su8.sv:100: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 24us; walltime 0.090 s; speed 265.702 us/s
-- Verilator: cpu 0.090 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 24us; walltime 0.093 s; speed 258.800 us/s
+- Verilator: cpu 0.093 s on 1 threads; allocated 7 MB
