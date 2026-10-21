@@ -35,6 +35,7 @@ TREE_DEG = int(os.environ.get('OT_SPLIT_FAULT_DEG', '8'))   # children per regio
 CLS = 'spine_local'
 ARRAY_MASTERS = ('qfd_c_b16', 'qfd_dv_slice2')
 ROW_DY = 400.0
+GROUP_UM = float(os.environ.get('OT_SPLIT_FAULT_GROUP_UM', '300'))   # QW-G5FROOT landing-group linkage / serve radius
 WIDE_BITS = int(os.environ.get('OT_SPLIT_FAULT_WIDE_BITS', '1024'))
 KEEP_UM = float(os.environ.get('OT_SPLIT_FAULT_KEEP_UM', '350'))
 HARD = 'io_collective:fault_code,transport_cdc_fault,transport_abort,transport_fault_cause;d2d_rom:transport_fault;' \
@@ -371,29 +372,26 @@ def pre(v, m, G):
             pts = r.get('pts') or []
             if not pts or o not in roots:
                 continue
-            grp = collections.defaultdict(list)
-            for px, py in pts:
-                z = zn.of_box((px - W / 2, py - H / 2, px + W / 2, py + H / 2))
-                if z is None:                       # inside a block: its nearest row gap (x in the owner's field)
-                    tx_, ty_ = zn.target(px, py, owner=by[o])
-                    z = zn.of_box((tx_ - W / 2, ty_ - H / 2, tx_ + W / 2, ty_ + H / 2)) or 'blk'
-                    px, py = tx_, ty_
-                if z in ('out', 'blk'):
-                    continue
-                grp[z].append((px, py))
-            for k, (z, ps) in enumerate(sorted(grp.items())):
-                if z == roots[o]['zone']:
-                    continue
+            # landing groups by proximity (single linkage GROUP_UM): Zones lumps the dv slice row (both of its faces,
+            # 2.6 mm apart) into one "gap", so a zone label does not tell reachability; distance does
+            grps = []
+            for pt in sorted(map(tuple, pts)):
+                hit = [g_ for g_ in grps if any(_man(pt, q_) <= GROUP_UM for q_ in g_)]
+                grps = [g_ for g_ in grps if g_ not in hit] + [[pt] + [q_ for g_ in hit for q_ in g_]]
+            for ps in sorted(grps):
                 gx = sorted(q_[0] for q_ in ps)[len(ps) // 2]
                 gy = sorted(q_[1] for q_ in ps)[len(ps) // 2]
-                if any(rr['cj'] == roots[o]['cj'] and rr['zone'] == z and _man(rr['xy'], (gx, gy)) <= REACH_UM
-                       for rr in roots.values()):
+                if any(rr['cj'] == roots[o]['cj'] and _man(rr['xy'], (gx, gy)) <= GROUP_UM for rr in roots.values()):
                     continue                        # a root of the same clock already serves this group
-                okz2 = lambda b, z=z: zn.of_box(b) == z
-                s = occ.site(v, gx, gy, ok=okz2) or occ.site(v, gx, gy, rmax=1200.0, step=8.64, ok=okz2)
+                okz2 = lambda b: zn.of_box(b) is not None
+                s = occ.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
                 if s is None:
-                    raise ValueError(f'fault emit: no free site in {z} for the zone root of {o} near ({gx:.0f}, {gy:.0f})')
-                key = f'{o}_z{z}'
+                    raise ValueError(f'fault emit: no free site within {GROUP_UM:.0f} um for the group root of {o} near ({gx:.0f}, {gy:.0f})')
+                z = zn.of_box((s[0], s[1], s[0] + W, s[1] + H))
+                k_ = 0
+                while f'{o}_g{k_}' in roots:
+                    k_ += 1
+                key = f'{o}_g{k_}'
                 nm = f'flt_root_{key}'
                 it = v.Inst(nm, q.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[o].region, domain='stream_1p2')
                 m['insts'].append(it)
@@ -555,7 +553,9 @@ def post(v, m, G):
     for inst, port, real, bit, cj, rj, xy in sorted(src, key=lambda t: (t[4], t[6][0], t[6][1])):
         if cj not in root_ck:
             raise ValueError(f'fault emit: {inst}.{port} clock {m["buses"][cj][0]} has no region root (plan stale)')
-        cand = [l for l in leaves[cj] if nodes[l]['n'] < FANIN and _man(_ctr(nodes[l]['it']), xy) <= LOCAL_UM]
+        # QW-G5FROOT: a region / group root of the same clock within LOCAL_UM captures the source itself (no leaf)
+        cand = [l for l in leaves[cj] + [r_.name for r_ in root_ck[cj]]
+                if nodes[l]['n'] < FANIN and _man(_ctr(nodes[l]['it']), xy) <= LOCAL_UM]
         if cand:
             lf = min(cand, key=lambda l: _man(_ctr(nodes[l]['it']), xy))
         else:
