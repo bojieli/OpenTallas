@@ -84,7 +84,7 @@
  "structural_change": "COLLQ3 10-19 NEW hard leaf: the q2/q3 COLL parents' soft ot_hgi_coll_reduce_static (21.2k soft flops on the sw root) split exactly into the soft control ot_hgi_coll_reduce_static_ctl + 16 of this lane (tb_hgi_coll_reduce_split_eq); state 512 b per lane (< 2 kb: flops); re-sized 47.52 x 47.52 from the gate std area 1,025 um2 (util 28 % -> ~45 %)",
  "job": {
   "owner": "Claude:HBM-ELEMOWN3/COLLQ3",
-  "branch": "claude/collq3-safe-1019",
+  "branch": "claude/collq6-1020",
   "tag": "safe",
   "purpose": "HBM COLL reduce lane (x16) for the SAFE q2/q3 COLL quadrant parents (lp_ars); gate first, route after checklist review",
   "extra_paths": [

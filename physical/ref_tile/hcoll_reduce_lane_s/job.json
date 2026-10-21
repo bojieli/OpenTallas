@@ -2,12 +2,12 @@
  "name": "hcoll_reduce_lane_s-safe-COMMIT",
  "block": "ot_hgi_coll_reduce_lane",
  "ref_tile": true,
- "owner": "Claude:HBM-ELEMOWN3/COLLQ3",
+ "owner": "Claude:HBM-COLLQ6",
  "purpose": "HBM COLL reduce lane (x16) for the SAFE q2/q3 COLL quadrant parents (lp_ars); gate first, route after checklist review",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/collq3-safe-1019",
+  "branch": "claude/collq6-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -42,6 +42,19 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "rlane_mut_ext",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/rsmut rsmut",
+    "expect": "fail",
+    "fail_regex": "RS_MUTANT rs_mext REJECTED",
+    "fail_witness": "results/rtl/landed_parent_1018/collq/bench_witness_5050_q3_ars/rsmut_q3.log",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_COLL_RLANE_MUT_EXT: the hardened lane's external operand rotated -> reduce split EQ must fail"
    }
   ],
   "calibrate": {

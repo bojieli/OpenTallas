@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+rs_mext RSPLIT_MISMATCH cyc=31 ref_v=1 spl_v=1 ref_c=9f spl_c=9f
+rs_mext RSPLIT_MISMATCH cyc=32 ref_v=0 spl_v=0 ref_c=9f spl_c=9f
+rs_mext RSPLIT_EQ FAIL mismatches=134211 publishes=33166 adds=49845
+RS_MUTANT rs_mext REJECTED
+COLL_LP_ARS_RSMUT_EXIT 1
+rc=1
