@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.s81.norm_producer_scope.v1",
  "qualification": "CONDITIONAL_EXACT_42_FILE_FIXTURE_ONLY",
- "source_continuity": "UNVERIFIED",
+ "source_continuity": "UNVERIFIED_FULL_SHIPPING_ASSEMBLY",
  "numeric_receipt_sha256": "ef4f2af9b27b98dc05bfb18a5f9be10edaa2b44e9e05203a2f3dfd3e6a398171",
  "numeric_receipt_unchanged": true,
  "explicit_compile_source_count": 42,
@@ -50,10 +50,13 @@
   "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
  },
  "memory_module_in_explicit_source_list": false,
- "pending": "Durable actual generated active-cone exclusion witness for disputed aggregate mem1r1w selection; no rebuild requested",
  "scope": "Existing numerical VP/VN/VQ80 plus XFIN16 fixture component only",
  "shipping_equivalence": false,
  "aggregate_qualified": false,
  "full_stage": false,
- "full_token": false
+ "full_token": false,
+ "pending_active_cone_witness": false,
+ "memory_selection_dispute": "EXCLUDED_FROM_BOTH_ACTUAL_42_FILE_COMPILES_AND_GENERATED_INSTANCE_STATE",
+ "memory_exclusion_witness_sha256": "1cd15383a8e590133bb64e67d0e077942db18460892d5ef56be137e512600477",
+ "memory_exclusion_witness_source_commit": "3566cb19892459554b0977a081b18d82eab081d2"
 }
