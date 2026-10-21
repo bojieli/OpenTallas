@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src4
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src4
+ot-run: ot-epyc9       admits   806 GB (avail 663, growth 99, headroom 0, waiters 0/0 GB) load 65/128 running 35 disk 2537 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src4
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src4
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021/src4
+ot-run: LOAD SPILL: ot-epyc9 would run at 1.32 x cores; moving to ot-epyc5
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-selector-c24-1021 (2.7 GB) ot-epyc9 -> ot-epyc5 (no host with --dir admits 96 GB now)
+ot-run: SPILL: copied 2388 changed entries in 48 s; running on ot-epyc5; written files go back to ot-epyc9 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2488970-1792604137 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+MUT 5: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2488970-1792604137): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-epyc9; RAN on ot-epyc5: exit 0
