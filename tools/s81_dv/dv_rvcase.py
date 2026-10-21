@@ -37,7 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
-from clock_roles import contract_clock_nets, whole_spare_frame_clock_outputs
+from clock_roles import contract_clock_nets, whole_spare_frame_clock_outputs, validate_spare_frame_source_guard
 from frame_bind import orientation, orient_point, orient_face
 from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
@@ -557,6 +557,9 @@ def main():
     unused_clock_outputs = set()
     spare_clock_context = None
     if strict_clock_bind.get('verdict') == 'PASS':
+        validate_spare_frame_source_guard(
+            T.get('selected72_spare_faces_g8', {}), {m: v.path for m, v in idx.items()},
+            insts, a.bind_dir / 'die.v', strict_clock_bind, git)
         spare_clock_context = (T.get('rtl_widths', {}), json.load(open(a.bind_dir / 'pads.json')),
                                T.get('selected72_spare_faces_g8', {}))
         unused_clock_outputs = whole_spare_frame_clock_outputs(
