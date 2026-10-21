@@ -11,6 +11,10 @@
 // two writes to one bank in one edge, a descriptor firing while the previous gather is in flight, a malformed
 // descriptor, a non-finite QBG element) raises the sticky fault and never changes timing.
 //
+// OT_COLL_GQ_SINGLE_SENDER (default off): plain Bs[7]=1 selects one sender in Bs[3:0].
+// Bs[6:4] must be zero, mask one-hot, self_land=1, stride=F. All stops run the
+// same timeline, only that source reads/injects; other stops forward its real flits.
+// Dense landing retains full-sector bank decode. No data edge or interface changes.
 // Programme: F20 host frames through the standard ot_static_program_target (TGT_PIN=1, target id = strap tgt). Rows
 // 0..15 are descriptors (payload cfg_data[223:0], the target checks the c7a1/address header):
 //   [0] qbg  [1] rings2  [2] self_land  [18:3] t_start  [28:19] F (flits per quadrant slice, incl. QBG exponent flits)
@@ -169,7 +173,15 @@ module ot_hgi_coll_gq_issue #(
     reg iss; reg [9:0] ik; reg [1:0] iph; localparam integer DRW = $clog2(ND); reg [DRW-1:0] drain;   // 6 b at VM_RT 0 (as built)
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
-    wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] ||
+`ifdef OT_COLL_GQ_SINGLE_SENDER
+    wire f_single = !rc[0] && rc[36];
+    wire [3:0] f_mask = rc[32:29];
+    wire f_single_bad = f_single && (|rc[35:33] || !(f_mask == 1 || f_mask == 2 || f_mask == 4 || f_mask == 8) ||
+        !rc[2] || rc[84:69] != {6'd0, rc[28:19]});
+`else
+    wire f_single = 1'b0, f_single_bad = 1'b0;
+`endif
+    wire f_bad = rc[28:19] == 10'd0 || (!f_single && |rc[71:69]) || f_single_bad ||
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
     wire ev_in_v = iss && iph != 2'd2;
     always @(posedge clk or negedge rn) begin
@@ -238,6 +250,13 @@ module ot_hgi_coll_gq_issue #(
     endfunction
     function automatic is_code(input [10:0] i); is_code = !g_qbg || i < {3'b0, g_bs}; endfunction
     function automatic [15:0] sec_add(input [15:0] s, input [12:0] a); sec_add = {s[15:13], s[12:0] + a}; endfunction
+    function automatic sender(input [1:0] q);
+`ifdef OT_COLL_GQ_SINGLE_SENDER
+        sender = g_qbg || !g_bs[7] || g_bs[q];
+`else
+        sender = 1'b1;
+`endif
+    endfunction
     // ------------------------------------------------------------------ VM reads (issue) + response check
     reg [7:0] rd_exp; reg [7:0] rd_exp_q;
     always @(posedge clk or negedge rn) begin
@@ -255,7 +274,7 @@ module ot_hgi_coll_gq_issue #(
                         end
                 end
             end
-            if (!g_qbg && ev_v[S_PR-1]) begin
+            if (!g_qbg && sender(q_id) && ev_v[S_PR-1]) begin
                 for (integer r = 0; r < 2; r = r + 1) begin : nb_2
                     reg [10:0] i; reg [15:0] s;
                     i = flit_i(ev_k[S_PR-1], r);
@@ -315,7 +334,7 @@ module ot_hgi_coll_gq_issue #(
     reg [1:0] p_v; reg [1:0] p_tag_k; reg [9:0] p_k; reg [255:0] p_d [0:1]; reg [10:0] p_i [0:1];
     always @(posedge clk or negedge rn)
         if (!rn) p_v <= 2'd0;
-        else for (integer r = 0; r < 2; r = r + 1) p_v[r] <= ev_v[S_P-1] && fv(kp, r);
+        else for (integer r = 0; r < 2; r = r + 1) p_v[r] <= ev_v[S_P-1] && fv(kp, r) && sender(q_id);
     always @(posedge clk) begin
         if (fire) ex <= '0; else ex <= ex_n;
         p_k <= kp;
@@ -337,14 +356,14 @@ module ot_hgi_coll_gq_issue #(
             lpw = 0; lpt = 0; lpd = 0; rd = 0; rdt = 0; inj = 0; fwd = 0; rx = 0; ttg = 0; ttl = 0; kind = 0; src = 0; rtag = 0;
             // lp write of the payload: computed with P (ev[23]); P itself is the data
             k = ev_k[S_BLP-1];
-            if (ev_v[S_BLP-1] && fv(k, r)) begin lpw = 1; lpt = k[2:0]; end
+            if (ev_v[S_BLP-1] && fv(k, r) && sender(q_id)) begin lpw = 1; lpt = k[2:0]; end
             k = ev_k[S_BRD-1];
-            if (ev_v[S_BRD-1] && fv(k, r)) begin rd = 1; rdt = k[2:0]; end
+            if (ev_v[S_BRD-1] && fv(k, r) && sender(q_id)) begin rd = 1; rdt = k[2:0]; end
             k = ev_k[S_BINJ-1];
-            if (ev_v[S_BINJ-1] && fv(k, r)) begin inj[k[0]] = 1; ttg = k[2:0]; ttl[k[0]*2 +: 2] = 2'd3; end
+            if (ev_v[S_BINJ-1] && fv(k, r) && sender(q_id)) begin inj[k[0]] = 1; ttg = k[2:0]; ttl[k[0]*2 +: 2] = 2'd3; end
             for (integer h = 1; h <= 3; h = h + 1) begin
                 k = ev_k[S_BRX + 2*h - 1];
-                if (ev_v[S_BRX + 2*h - 1] && fv(k, r)) begin
+                if (ev_v[S_BRX + 2*h - 1] && fv(k, r) && sender(srcq(q_id, k[0], h))) begin
                     rx[k[0]] = 1; kind[k[0]*2 +: 2] = 2'd3; src[k[0]*2 +: 2] = srcq(q_id, k[0], h); rtag[k[0]*3 +: 3] = k[2:0];
                     if (h < 3) fwd[k[0]] = 1;
                 end
@@ -464,6 +483,13 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
         reg [10:0] i; i = flit_i(k, r); fv = (r == 0 || g_r2) && i < {1'b0, g_f};
     endfunction
     function automatic [15:0] sec_add(input [15:0] s, input [12:0] a); sec_add = {s[15:13], s[12:0] + a}; endfunction
+    function automatic sender(input [1:0] q);
+`ifdef OT_COLL_GQ_SINGLE_SENDER
+        sender = g_qbg || !g_bs[7] || g_bs[q];
+`else
+        sender = 1'b1;
+`endif
+    endfunction
     // ------------------------------------------------------------------ publish capture (@30+2h) and VM landing (@31+2h)
     reg [1:0] pav_q, pbv_q; reg [3:0] pas_q, pbs_q; reg [5:0] pat_q, pbt_q; reg [511:0] pad_q, pbd_q;
     always @(posedge clk or negedge rn) if (!rn) begin pav_q <= 2'd0; pbv_q <= 2'd0; end else begin pav_q <= pa_v; pbv_q <= pb_v; end
@@ -487,14 +513,14 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
                 for (integer r = 0; r < 2; r = r + 1) begin
                     k = le_k[S_KQ + 2*h - 3]; i = flit_i(k, r); sq = srcq(q_id, k[0], h);
                     s = {base_q[sq][15:13], base_q[sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)};
-                    ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv(k, r);
+                    ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv(k, r) && sender(sq);
                     ln_bk[(h-1)*2 + r] <= 8'd1 << s[2:0]; ln_s[(h-1)*2 + r] <= s;
                     ln_sq[(h-1)*2 + r] <= sq; ln_d[(h-1)*2 + r] <= k[0];
                 end
             for (integer r = 0; r < 2; r = r + 1) begin
                 k = le_k[23]; i = flit_i(k, r);
                 s = {base_q[q_id][15:13], base_q[q_id][12:0] + 13'(i)};
-                ln_en[6 + r] <= g_self && MUT != 4 && le_v[23] && fv(k, r);
+                ln_en[6 + r] <= g_self && MUT != 4 && le_v[23] && fv(k, r) && sender(q_id);
                 ln_bk[6 + r] <= 8'd1 << s[2:0]; ln_s[6 + r] <= s;
             end
         end
