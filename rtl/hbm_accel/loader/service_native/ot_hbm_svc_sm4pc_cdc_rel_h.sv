@@ -76,10 +76,30 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire [DW-1:0] desc_data;
  assign reserve_ready=sc[0]&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
- ot_hbm_svc_async_fifo #(.WIDTH(DW),.DEPTH(4)) u_descriptor(
- .wr_clk(stream_clk),.wr_rst_n(s_rst[2]),.wr_valid(reserve_fire),.wr_ready(desc_wr_ready),
- .wr_data({reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch}),.wr_overflow(desc_ov),
- .rd_clk(hbm_clk),.rd_rst_n(h_rst[1]),.rd_valid(desc_rd_valid),.rd_ready(desc_rd_ready),.rd_data(desc_data),.rd_underflow(desc_un));
+ // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2): the descriptor FIFO is DSN BIT-SLICED instances of the
+ // reviewed ot_hbm_svc_async_fifo (byte-identical module, only WIDTH differs; each <= DSW = 14 bits so a slot-select
+ // decode drives <= ~2*14+2 loads; DW 97 = 6 x 14 + 13).  Own pointers / synchronisers / reset syncs per instance.
+ // LOCKSTEP as the landing banks: desc_wr_ready = &wr_ready (in reserve_ready, so reserve_fire offers to all only when
+ // all are ready), desc_rd_valid = &rd_valid (pop only when all are valid), so every instance fires on the same edges
+ // and all heads are the same descriptor while desc_rd_valid; per-instance push/pop enables carry KEPT qualifier flops.
+ localparam integer DSW=14,DSN=(DW+DSW-1)/DSW;
+ wire [DW-1:0] desc_wd={reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch};
+ wire [DSN-1:0] ds_wr_ready,ds_rd_valid,ds_ov,ds_un;
+ (* keep="true",dont_touch="true" *) reg [DSN-1:0] dwq_k;   // stream-side per-slice push qualifiers
+ (* keep="true",dont_touch="true" *) reg [DSN-1:0] drq_k;   // hbm-side per-slice pop qualifiers
+ always @(posedge stream_clk or negedge s_rst[2])if(!s_rst[2])dwq_k<=0;else dwq_k<={DSN{1'b1}};
+ always @(posedge hbm_clk or negedge h_rst[1])if(!h_rst[1])drq_k<=0;else drq_k<={DSN{1'b1}};
+ assign desc_wr_ready=&ds_wr_ready;assign desc_rd_valid=&ds_rd_valid;
+ assign desc_ov=|ds_ov;assign desc_un=|ds_un;
+ genvar ds;
+ generate for(ds=0;ds<DSN;ds=ds+1)begin:dsl
+  localparam integer W=(ds==DSN-1)?(DW-DSW*(DSN-1)):DSW;
+  ot_hbm_svc_async_fifo #(.WIDTH(W),.DEPTH(4)) u_descriptor(
+   .wr_clk(stream_clk),.wr_rst_n(s_rst[2]),.wr_valid(reserve_fire&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
+   .wr_data(desc_wd[ds*DSW+:W]),.wr_overflow(ds_ov[ds]),
+   .rd_clk(hbm_clk),.rd_rst_n(h_rst[1]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
+   .rd_data(desc_data[ds*DSW+:W]),.rd_underflow(ds_un[ds]));
+ end endgenerate
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);
  assign block_ready=ready_q;
  // ---------------- hbm side: block registers (load while no block is issuing), owners, skids, landing FIFO feed
