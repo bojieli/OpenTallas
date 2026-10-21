@@ -12,7 +12,7 @@ proc dispatch {name method args} {
     findMaster {return BM}
     findInst {if {[lindex $args 0] eq "u_hr"} {return HR}; return NULL}
     findITerm {
-      if {[dict get $d type] eq "block"} {return [dict get {u_hr/raw0 R0 u_hr/raw1 R1 u_hr/ref REF ff/CLK FF} [lindex $args 0]]}
+      if {[dict get $d type] eq "block"} {return [dict get {u_hr/raw0 R0 u_hr/raw1 R1 u_hr/ref REF ff/CLK FF hff/CLK HFF} [lindex $args 0]]}
       return [dict get $d terms [lindex $args 0]]
     }
     getInsts {return HR}
@@ -46,6 +46,7 @@ foreach {t p offset} {R0 raw0 -3 R1 raw1 4 REF ref 0} {
   make $t term [dict create inst HR mt M$t net H offset $offset]
 }
 make FF term {net C}
+make HFF term {net H}
 proc ot_sp_env {key default} {if {[info exists ::env($key)]} {return $::env($key)}; return $default}
 set ::ot_sp_sw 1; set ::ot_sp_cw 8; set ::ot_sp_in A; set ::ot_sp_out Y
 set ::ot_sp_used {base 1}; set ::ot_sp_nbuf 0; set ::ot_sp_insts {}; set ::alloc 0; set ::backouts 0
@@ -53,7 +54,8 @@ proc ot_sp_buf {name x y old bm} {
   incr ::alloc; set b B$::alloc; set n N$::alloc; set pos [expr {$::alloc*5}]
   make $n net [dict create delay [expr {[dict get $::obj($old) delay]+10}]]
   make T$b term [dict create net $n]
-  make $b inst [dict create terms [dict create Y T$b]]
+  make A$b term [dict create net $old]
+  make $b inst [dict create terms [dict create A A$b Y T$b]]
   for {set i -1} {$i<=2} {incr i} {dict set ::ot_sp_used "0,[expr {$pos+$i}]" 1}
   set ::ot_sp_cw 2; incr ::ot_sp_nbuf; lappend ::ot_sp_insts $b
   return [list $n $pos 0 $b]
@@ -85,7 +87,7 @@ foreach raw {raw0 raw1} {
   dict set ::ot_lrt_targets hard/$raw {ref ref tt 25 ff 25 ss 25}
 }
 set ::ot_sp_record_taps_v1 [dict create version 1 model hybrid_raw records $records]
-set contacts {{u_hr/raw0 H} {u_hr/raw1 H} {u_hr/ref H} {ff/CLK C}}
+set contacts {{u_hr/raw0 H} {u_hr/raw1 H} {u_hr/ref H} {ff/CLK C} {hff/CLK H}}
 if {$mode eq "wrong-owner"} {lset contacts 2 {u_hr/ref C}}
 if {$mode eq "unowned"} {lset contacts 2 {u_hr/ref FOREIGN}}
 if {$mode eq "wrong-master"} {dict set ::obj(MST) name other}
@@ -117,6 +119,9 @@ proc run {} {
   H setDoNotTouch 1
   ot_srt::protected ck_hr
   if {$::mode eq "endpoint-change"} {R0 connect FOREIGN}
+  if {$::mode eq "builder-input"} {[[lindex $::ot_sp_insts 0] findITerm A] connect FOREIGN}
+  if {$::mode eq "builder-output"} {[[lindex $::ot_sp_insts 0] findITerm Y] connect FOREIGN}
+  if {$::mode eq "non-target-leaf"} {HFF connect FOREIGN}
   if {$::mode eq "root-unprotect"} {H setDoNotTouch 0}
   if {$::mode eq "tap-unprotect"} {[lindex $::ot_sp_insts 0] setDoNotTouch 0}
   set before $::alloc

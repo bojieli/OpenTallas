@@ -64,10 +64,13 @@ class StagedLrt(unittest.TestCase):
         for mode in ('wrong-owner', 'unowned', 'wrong-master', 'target', 'hash',
                      'missing-source', 'unknown-field', 'extra-target', 'buffer',
                      'plan-change', 'legacy-target-change', 'knob-change', 'protected', 'foreign-net',
-                     'foreign-ref', 'root-unprotect', 'premature', 'unprotected', 'endpoint-change', 'tap-unprotect', 'readmit-after-build', 'duplicate'):
+                     'builder-input', 'builder-output', 'non-target-leaf', 'foreign-ref', 'root-unprotect', 'premature', 'unprotected', 'endpoint-change', 'tap-unprotect', 'readmit-after-build', 'duplicate'):
             for batch in (0, 1):
                 with self.subTest(mode=mode, batch=batch):
-                    self.assertIn('MUTANT_CAUGHT ' + mode, self.run_case(mode, batch))
+                    out = self.run_case(mode, batch)
+                    self.assertIn('MUTANT_CAUGHT ' + mode, out)
+                    if mode in ('builder-input', 'builder-output', 'non-target-leaf'):
+                        self.assertIn('changed final builder/leaf connection', out)
 
 if __name__ == '__main__':
     unittest.main()

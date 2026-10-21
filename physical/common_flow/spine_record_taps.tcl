@@ -188,11 +188,24 @@ proc ot_srt::protected {root} {
   if {![dict exists $::ot_srt::done $root]} {return}
   if {[dict get $::ot_srt::done $root phase] ne "applied"} {ot_srt::fail "duplicate finalization"}
   set topology [list [dict get $::ot_srt::rootnets $root]]
+  set connections {}
   foreach b $::ot_sp_insts {
     lappend topology $b [[$b findITerm $::ot_sp_out] getNet]
+    foreach pin [list $::ot_sp_in $::ot_sp_out] {
+      set terminal [$b findITerm $pin]
+      if {$terminal in {NULL {}} || [$terminal getNet] in {NULL {}}} {ot_srt::fail "missing final builder connection"}
+      dict set connections $terminal [$terminal getNet]
+    }
     if {![$b isDoNotTouch] || ![[[$b findITerm $::ot_sp_out] getNet] isDoNotTouch]} {ot_srt::fail "unprotected final builder topology"}
   }
   if {![[dict get $::ot_srt::rootnets $root] isDoNotTouch]} {ot_srt::fail "unprotected root"}
+  dict for {path owner} $::ot_srt::owners {
+    if {$owner ne $root} continue
+    set terminal [[ord::get_db_block] findITerm $path]
+    if {$terminal in {NULL {}} || [$terminal getNet] in {NULL {}}} {ot_srt::fail "missing final clock leaf $path"}
+    dict set connections $terminal [$terminal getNet]
+  }
+  dict set ::ot_srt::done $root connections $connections
   dict set ::ot_srt::done $root topology $topology
   dict set ::ot_srt::done $root phase protected
 }
@@ -210,6 +223,9 @@ proc ot_srt::verify {} {
           || ![dict exists $::ot_srt::done $owner endpoints $path]} {ot_srt::fail "missing protected completion $path"}
       foreach object [dict get $::ot_srt::done $owner topology] {
         if {![$object isDoNotTouch]} {ot_srt::fail "changed final builder protection"}
+      }
+      dict for {terminal net} [dict get $::ot_srt::done $owner connections] {
+        if {[$terminal getNet] ne $net} {ot_srt::fail "changed final builder/leaf connection"}
       }
       set receipt [dict get $::ot_srt::done $owner endpoints $path]
       set it [[ord::get_db_block] findITerm $path]
