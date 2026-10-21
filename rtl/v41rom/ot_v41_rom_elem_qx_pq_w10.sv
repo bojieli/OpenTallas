@@ -281,6 +281,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 );
     // ---------------- QPIPE boundary (see the header) --------------------------------------------------------
     wire         rst_n, cfg_v, go, go_bf, xs_v, xb_v;
+    wire         go2;                   // q4_d5 (NP): second kept copy of the go pin register b_go (33 loads)
     wire [4:0]   cfg_a;
     wire [47:0]  cfg_d;
     // PQ: the boundary's configuration (cfg_*_x, qy_cdec_x) reaches the element body (cfg_*, qy_cdec) directly
@@ -327,6 +328,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             else begin b_go <= go_pin; b_cfg_v <= cfg_v_pin; end
         always @(posedge clk) begin b_cfg_a <= cfg_a_pin; b_cfg_d <= cfg_d_pin; b_go_bf <= go_bf_pin; b_go_tag <= go_tag_pin; end
         assign go = b_go; assign cfg_v_x = b_cfg_v; assign cfg_a_x = b_cfg_a; assign cfg_d_x = b_cfg_d; assign go_bf = b_go_bf;
+        if (NP != 0) begin : g_bg2
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_g2 (.clk(clk), .arst_n(rst_n_pin), .d(go_pin), .q(go2));
+        end else begin : g_nbg2
+            assign go2 = b_go;
+        end
         assign go_tag = b_go_tag;
         if (QP_XS != 0) begin : g_bx
             reg b_xs_v, b_xb_v;
@@ -362,7 +368,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end else begin : g_nqb
         assign qy_cdec_x = '0;
         assign xs_pk = {(NSEG+1){xs_p_pin}};
-        assign rst_n = rst_n_pin; assign go = go_pin; assign cfg_v_x = cfg_v_pin; assign cfg_a_x = cfg_a_pin;
+        assign rst_n = rst_n_pin; assign go = go_pin; assign go2 = go_pin; assign cfg_v_x = cfg_v_pin; assign cfg_a_x = cfg_a_pin;
         assign cfg_d_x = cfg_d_pin; assign go_bf = go_bf_pin; assign go_tag = go_tag_pin;
         assign xs_v = xs_v_pin; assign xs_p = xs_p_pin; assign xs_b = xs_b_pin; assign xs_sv = xs_sv_pin;
         assign xs_q0 = xs_q0_pin; assign xs_e0 = xs_e0_pin; assign xs_q1 = xs_q1_pin; assign xs_e1 = xs_e1_pin;
@@ -449,9 +455,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         if (NP != 0 && QX >= 7) begin : g_goc
             for (genvar k = 0; k < 19; k = k + 1) begin : g_k
 `ifdef OT_NP_D_MUT_GO
-                ot_v41_kreg #(.W(1), .AR(1)) u_g (.clk(clk), .arst_n(rst_t0), .d(k == 6 ? 1'b0 : go), .q(go_c[k]));   // negative control
+                ot_v41_kreg #(.W(1), .AR(1)) u_g (.clk(clk), .arst_n(rst_t0), .d(k == 6 ? 1'b0 : k >= 10 ? go2 : go), .q(go_c[k]));   // negative control
 `else
-                ot_v41_kreg #(.W(1), .AR(1)) u_g (.clk(clk), .arst_n(rst_t0), .d(go), .q(go_c[k]));
+                ot_v41_kreg #(.W(1), .AR(1)) u_g (.clk(clk), .arst_n(rst_t0), .d(k >= 10 ? go2 : go), .q(go_c[k]));   // q4_d5: upper copies from go2
 `endif
             end
         end else begin : g_ngoc
@@ -873,18 +879,22 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // TILES-D q4_d1 (NP): kept copies of c_s0 for the segment flag / write-hit selects (c_s0 had 37 loads per bit)
     wire [SW-1:0] c_s0b [0:NSEG-1];
     wire [SW-1:0] c_s0c [0:NSEG-1];
+    wire [SW-1:0] c_s0d [0:NSEG-1];
+    wire [SW-1:0] c_s0e [0:NSEG-1];     // q4_d6: step segment-write compare copy (c_s0b 34)     // q4_d5: go / restart flag-candidate copy (c_s0b 33)
     wire          qx_swr_b, qx_swr_c;
     wire [SW-1:0] qx_sab, qx_sac;
     if (NP != 0) begin : g_s0k
         for (genvar c = 0; c < NSEG; c = c + 1) begin : g_c
             ot_v41_kreg #(.W(SW)) u_b (.clk(clk), .arst_n(1'b1), .d(cw_c[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0b[c]), .q(c_s0b[c]));
             ot_v41_kreg #(.W(SW)) u_c (.clk(clk), .arst_n(1'b1), .d(cw_c[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0c[c]), .q(c_s0c[c]));
+            ot_v41_kreg #(.W(SW)) u_d (.clk(clk), .arst_n(1'b1), .d(cw_b[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0d[c]), .q(c_s0d[c]));
+            ot_v41_kreg #(.W(SW)) u_e (.clk(clk), .arst_n(1'b1), .d(cw_a[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0e[c]), .q(c_s0e[c]));
         end
         assign {qx_swr_b, qx_sab} = cw_sa[(SW+1) +: SW+1];
         assign {qx_swr_c, qx_sac} = cw_sa[2*(SW+1) +: SW+1];
     end else begin : g_ns0k
         for (genvar c = 0; c < NSEG; c = c + 1) begin : g_c
-            assign c_s0b[c] = c_s0[c]; assign c_s0c[c] = c_s0[c];
+            assign c_s0b[c] = c_s0[c]; assign c_s0c[c] = c_s0[c]; assign c_s0d[c] = c_s0[c]; assign c_s0e[c] = c_s0[c];
         end
         assign qx_swr_b = qx_swr; assign qx_swr_c = qx_swr; assign qx_sab = qx_sa; assign qx_sac = qx_sa;
     end
@@ -955,7 +965,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // DRIVE-S81-QXPQ q4_d4 (NP): kept copies of c_first_r (63 / 40 loads) and a third c_live_r copy (c_live[2] 35):
     // c_first1 = segment selects (c_s0 / c_s1), c_first2 = case / last-unit candidates, c_first3 = the hit copies' d_c_s,
     // c_live3 = the restart segment selects
-    wire [SW-1:0] c_first1, c_first2, c_first3, c_live3;
+    wire [SW-1:0] c_first1, c_first2, c_first3, c_live3, c_first4, c_live4;   // q4_d5: + c_s1 select copies
     if (NP != 0 && QM >= 3) begin : g_cfk
         ot_v41_kreg #(.W(SW)) u_f1 (.clk(clk), .arst_n(1'b1), .d(c_first_c), .q(c_first1));
         ot_v41_kreg #(.W(SW)) u_f2 (.clk(clk), .arst_n(1'b1), .d(c_first_c), .q(c_first2));
@@ -965,8 +975,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         ot_v41_kreg #(.W(SW)) u_f3 (.clk(clk), .arst_n(1'b1), .d(c_first_c), .q(c_first3));
 `endif
         ot_v41_kreg #(.W(SW)) u_l3 (.clk(clk), .arst_n(1'b1), .d(c_live_c), .q(c_live3));
+        ot_v41_kreg #(.W(SW)) u_f4 (.clk(clk), .arst_n(1'b1), .d(c_first_c), .q(c_first4));
+        ot_v41_kreg #(.W(SW)) u_l4 (.clk(clk), .arst_n(1'b1), .d(c_live_c), .q(c_live4));
     end else begin : g_ncfk
         assign c_first1 = c_first; assign c_first2 = c_first; assign c_first3 = c_first; assign c_live3 = c_live;
+        assign c_first4 = c_first; assign c_live4 = c_live;
     end
 
     // units per sub-block: 8 (shift 3); BF16_PAIR BF16 family 2 (shift 1)
@@ -1064,12 +1077,20 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // cycle's nA / nB (X_s <= X), nQ2_d <= nQ2 and nL0_d / nL1_d <= the restart values.  So the read value is the
     // original nA_r / nB_r bit for bit (QP_CHECK asserts it), the loop ends at 4 decision flops.  Zero added cycles.
     localparam integer WRD = (WRT != 0 && QS >= 4) ? 1 : 0;
-    wire [1:0] wd_ea, wd_va, wd_eb, wd_vb;               // WRD: registered end / advance decisions (nA halves | nB halves)
+    wire [3:0] wd_ea, wd_va, wd_eb, wd_vb;               // WRD: registered end / advance decisions (nA halves | nB halves; NP: quarters, q4_d5)
     reg  [6*NSEG-1:0] nL0_d, nL1_d, nQ2_d;
-    wire [6*NSEG-1:0] wd_sea = {{(3*NSEG){wd_ea[1]}}, {(3*NSEG){wd_ea[0]}}};
-    wire [6*NSEG-1:0] wd_sva = {{(3*NSEG){wd_va[1]}}, {(3*NSEG){wd_va[0]}}};
-    wire [6*NSEG-1:0] wd_seb = {{(3*NSEG){wd_eb[1]}}, {(3*NSEG){wd_eb[0]}}};
-    wire [6*NSEG-1:0] wd_svb = {{(3*NSEG){wd_vb[1]}}, {(3*NSEG){wd_vb[0]}}};
+    wire [6*NSEG-1:0] wd_sea, wd_sva, wd_seb, wd_svb;
+    if (NP != 0) begin : g_wdq
+        for (genvar b = 0; b < 6 * NSEG; b = b + 1) begin : g_b
+            localparam integer QI = (4 * b) / (6 * NSEG);
+            assign wd_sea[b] = wd_ea[QI]; assign wd_sva[b] = wd_va[QI]; assign wd_seb[b] = wd_eb[QI]; assign wd_svb[b] = wd_vb[QI];
+        end
+    end else begin : g_wdh
+    assign wd_sea = {{(3*NSEG){wd_ea[1]}}, {(3*NSEG){wd_ea[0]}}};
+    assign wd_sva = {{(3*NSEG){wd_va[1]}}, {(3*NSEG){wd_va[0]}}};
+    assign wd_seb = {{(3*NSEG){wd_eb[1]}}, {(3*NSEG){wd_eb[0]}}};
+    assign wd_svb = {{(3*NSEG){wd_vb[1]}}, {(3*NSEG){wd_vb[0]}}};
+    end
 `ifdef WRD_MUTANT_NQ
     wire [6*NSEG-1:0] wd_q2 = nQ2;                       // negative control: the advance takes the CURRENT f(q + 2)
 `else
@@ -1475,6 +1496,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg [SW-1:0] w_c, w_s;
     wire [SW-1:0] w_sk;                // q4_d4 (NP): kept copies of w_s / w_j / w_b (g_wkc below; = the register at NP = 0)
     wire [2:0]  w_jk, w_bk;
+    wire [SW-1:0] w_sk2;               // q4_d5: second copies (w_s 35, w_jk 36, OR3(w_b) 37)
+    wire [2:0]  w_jk2, w_bk2;
+    wire [2:0]  w_jk3;                 // q4_d6: third w_j copy (per-class j + 2 compares; w_jk2 39)
     reg [HW-1:0] w_cnt;
     reg [12:0] w_ptr [0:NSEG-1];
     wire [6:0] w_uabs = ({4'd0, w_q} << sbs) + {4'd0, w_j};
@@ -1510,17 +1534,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg  [NSEG-1:0] w_coh, w_cgt;
     reg  [NSEG-1:0] qx_cmpA, qx_luA1, qx_l0A, qx_l0B, qx_h0, qx_s1n;
     reg  [SW-1:0]   qx_s0_nx, qx_c_nx;
-    wire [2:0]      qx_j1 = w_jk + 3'd1;
+    wire [2:0]      qx_j1 = w_jk2 + 3'd1;
+    wire [2:0]      qx_j1c = w_jk3 + 3'd1;
     wire [SW-1:0]   qx_snx = w_sk + 1'b1;                  // q4_d4: the per-class s + 1 compares read the w_s copy
     always @* for (int k = 0; k < NSEG; k++) begin
         qx_cmpA[k] = {1'b0, w_jk} + 4'd1 < wAx[NSEG + 4*k +: 4];                         // j + 1 < cur[k]
-        qx_luA1[k] = wAx[5*NSEG + k] && ({1'b0, qx_j1} + 4'd1 == wAx[NSEG + 4*k +: 4]);  // lu_f(wAx, k, j + 1)
+        qx_luA1[k] = wAx[5*NSEG + k] && ({1'b0, qx_j1c} + 4'd1 == wAx[NSEG + 4*k +: 4]);  // lu_f(wAx, k, j + 1); q4_d6: j + 1 from the third w_j copy
         qx_l0A[k]  = wAx[5*NSEG + k] && (4'd1 == wAx[NSEG + 4*k +: 4]);                   // lu_f(wAx, k, 0)
         qx_l0B[k]  = wBx[5*NSEG + k] && (4'd1 == wBx[NSEG + 4*k +: 4]);                   // lu_f(wBx, k, 0)
         qx_h0[k]   = !s_fp4[c_s0[k]] && !s_bf[c_s0[k]] && !s_lo[c_s0[k]];
         qx_s1n[k]  = qx_snx == c_s1[k];
     end
-    wire qx_b7   = w_b == 3'd7;
+    wire qx_b7   = w_bk2 == 3'd7;
     reg  w_ca_r;                                                  // QX = 2: qx_case_a held in a register
     wire qx_case_a = (QX >= 2) ? w_ca_r : |(w_coh & qx_cmpA);     // next unit of the same class
     wire w_ca_k;                                                  // q4_d4 (NP): kept copy of w_ca_r (34 loads)
@@ -1541,7 +1566,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         end
     end
     wire [2:0] qx_q_nx = qx_same ? w_q : qx_endq ? 3'd0 : qx_b7 ? w_q + 3'd1 : w_q;
-    wire [UW-1:0] qx_nx = {qx_same || !qx_endq, qx_q_nx, qx_same ? w_b : qx_endq ? 3'd0 : w_b + 3'd1, qx_c_nx,
+    wire [UW-1:0] qx_nx = {qx_same || !qx_endq, qx_q_nx, qx_same ? w_bk2 : qx_endq ? 3'd0 : w_bk2 + 3'd1, qx_c_nx,
                            qx_case_ax ? qx_j1 : 3'd0};
     wire qx_lu_nx = qx_case_a ? |(w_coh & qx_luA1) : qx_nf ? |(qx_onc & qx_l0A) : qx_endq ? qx_l0A[0] :
 `ifdef QX_MUTANT_LU
@@ -1570,6 +1595,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire w_round_end = (QX != 0) ? !qx_same : !w_nx[UW-1] || w_nx[UW-5 -: 3] != w_b;
     wire [SW-1:0] w_nx_c = w_nx[3 +: SW];
     wire [SW-1:0] s_next = w_s + 1'b1;
+    wire [SW-1:0] s_nk = w_sk2 + 1'b1;  // q4_d5: = s_next, from the second w_s copy (segment-flag lookups)
     wire [6:0] nx_uabs = ({4'd0, w_nx[UW-2 -: 3]} << sbs) + {4'd0, w_nx[2:0]};
 
     reg [LAT-1:0] hz_v;
@@ -1638,7 +1664,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire  h_go_c = !s_fp4[s0_first] && !s_bf[s0_first] && !s_lo[s0_first];
     reg   h_go_r; always @(posedge clk) h_go_r <= h_go_c;   // QM >= 3: candidate a cycle early
     wire  h_go = (QM >= 3) ? h_go_r : h_go_c;
-    wire h_next = !s_fp4[s_next] && !s_bf[s_next] && w_firstu && !s_lo[s_next];
+    wire h_next = !s_fp4[s_nk] && !s_bf[s_nk] && w_firstu && !s_lo[s_nk];
     wire nx_first = (FAST != 0) ? (w_nx[UW-2 -: 3] == 3'd0 && w_nx[2:0] == 3'd0) : nx_uabs == 7'd0;
     wire h_nx   = (QX != 0) ? qx_h_nx : !s_fp4[s0_nx] && !s_bf[s0_nx] && nx_first && !s_lo[s0_nx];
     wire [SW-1:0] s0_live_c = c_s0[c_live3];
@@ -1694,7 +1720,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         wire w_ld = rst_t13 && wen;
         wire w_lc = issue && w_seg_last && w_cl;
 `ifdef OT_NP_D_MUT_WS
-        wire [SW-1:0] ws_nx = !w_ld ? w_sk : go_c[16] ? s0_first : (issue && w_seg_last) ? (!w_cl ? w_s : w_restart ? s0_live : s0_nx) : w_s;   // negative control: no step
+        wire [SW-1:0] ws_nx = !w_ld ? w_s : go_c[16] ? s0_first ^ SW'(1) : (issue && w_seg_last) ? (!w_cl ? s_next : w_restart ? s0_live ^ SW'(1) : s0_nx) : w_s;   // negative control: wrong first segment
 `else
         wire [SW-1:0] ws_nx = !w_ld ? w_s : go_c[16] ? s0_first : (issue && w_seg_last) ? (!w_cl ? s_next : w_restart ? s0_live : s0_nx) : w_s;
 `endif
@@ -1704,15 +1730,20 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         ot_v41_kreg #(.W(SW)) u_ws (.clk(wclk), .arst_n(1'b1), .d(ws_nx), .q(w_sk));
         ot_v41_kreg #(.W(3)) u_wj (.clk(wclk), .arst_n(1'b1), .d(wj_nx), .q(w_jk));
         ot_v41_kreg #(.W(3)) u_wb (.clk(wclk), .arst_n(1'b1), .d(wb_nx), .q(w_bk));
+        ot_v41_kreg #(.W(SW)) u_ws2 (.clk(wclk), .arst_n(1'b1), .d(ws_nx), .q(w_sk2));
+        ot_v41_kreg #(.W(3)) u_wj2 (.clk(wclk), .arst_n(1'b1), .d(wj_nx), .q(w_jk2));
+        ot_v41_kreg #(.W(3)) u_wj3 (.clk(wclk), .arst_n(1'b1), .d(wj_nx), .q(w_jk3));
+        ot_v41_kreg #(.W(3)) u_wb2 (.clk(wclk), .arst_n(1'b1), .d(wb_nx), .q(w_bk2));
         ot_v41_kreg #(.W(1)) u_ca (.clk(wclk), .arst_n(1'b1), .d(ca_nx), .q(w_ca_k));
 `ifdef QP_CHECK
-        always @(negedge clk) if (rst_n && (w_sk !== w_s || w_jk !== w_j || w_bk !== w_b || w_ca_k !== w_ca_r)) begin
+        always @(negedge clk) if (rst_n && (w_sk !== w_s || w_jk !== w_j || w_bk !== w_b || w_ca_k !== w_ca_r || w_sk2 !== w_s || w_jk2 !== w_j || w_bk2 !== w_b || w_jk3 !== w_j)) begin
             $display("NP_CHECK FAIL walker copies s %0d/%0d j %0d/%0d b %0d/%0d ca %b/%b %t", w_sk, w_s, w_jk, w_j, w_bk, w_b, w_ca_k, w_ca_r, $time);
             $fatal(1);
         end
 `endif
     end else begin : g_nwkc
         assign w_sk = w_s; assign w_jk = w_j; assign w_bk = w_b; assign w_ca_k = w_ca_r;
+        assign w_sk2 = w_s; assign w_jk2 = w_j; assign w_bk2 = w_b; assign w_jk3 = w_j;
     end
     always @(posedge wclk) if (wen)
         if (go_c[4]) w_lu_r <= lu_go;
@@ -1820,26 +1851,12 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `endif
                 w_pos <= 3'd0;
                 fam <= go_bf_e; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
-                w_s <= s0_first; w_h <= h_go; w_cnt <= 0;
             end else begin
-                if (issue) begin
-                    if (!w_seg_last) begin
-                        w_h <= 1'b1;
-                        w_cnt <= w_cnt + 1'b1;
-                    end else if (!w_cl) begin
-                        w_s <= s_next;
-                        w_h <= h_next;
-                        w_cnt <= w_cnt + 1'b1;
-                    end else if (w_restart) begin
+                if (issue && w_seg_last && w_cl) begin
+                    if (w_restart) begin
                         w_q <= 3'd0; w_b <= 3'd0; w_c <= c_live; w_j <= 3'd0;
-                        w_s <= s0_live; w_h <= h_live; w_cnt <= {HW{1'b0}};
                         w_pos <= w_pos + 3'd1;
-                    end else begin
-                        {w_run, w_q, w_b, w_c, w_j} <= w_nx;
-                        w_s <= s0_nx;
-                        w_h <= h_nx;
-                        w_cnt <= w_round_end ? {HW{1'b0}} : w_cnt + 1'b1;
-                    end
+                    end else {w_run, w_q, w_b, w_c, w_j} <= w_nx;
                 end
             end
         end
@@ -1857,6 +1874,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end
             else if (WRT != 0) {n_run_s, n_q_s, n_b_s, n_c_s, n_j_s, n_pos_s} <= {n_run, n_q, n_b, n_c, n_j, n_pos};
             else if (hit) {n_run_s, n_q_s, n_b_s, n_c_s, n_j_s, n_pos_s} <= nN_c;
+        end
+    end
+    always @(posedge wclk or negedge rst_t15) begin    // q4_d6: w_s / w_h / w_cnt (unreset, hold in reset) on rst_t15
+        if (!rst_t15) begin end
+        else if (wen) begin
+            if (go_em) begin w_s <= s0_first; w_h <= h_go; w_cnt <= 0; end
+            else if (issue) begin
+                if (!w_seg_last) begin w_h <= 1'b1; w_cnt <= w_cnt + 1'b1; end
+                else if (!w_cl) begin w_s <= s_next; w_h <= h_next; w_cnt <= w_cnt + 1'b1; end
+                else if (w_restart) begin w_s <= s0_live; w_h <= h_live; w_cnt <= {HW{1'b0}}; end
+                else begin w_s <= s0_nx; w_h <= h_nx; w_cnt <= w_round_end ? {HW{1'b0}} : w_cnt + 1'b1; end
+            end
         end
     end
     always @(posedge wclk or negedge rst_t16) begin    // q4_d4: bn_* on its own leaf / go copy
@@ -1948,10 +1977,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg [NSEG-1:0] qy_ceq;              // per class: c_s0[c] == c_s1[c] (a step lands on its class's first segment)
     always @* for (int c = 0; c < NSEG; c++) qy_ceq[c] = c_s0[c] == c_s1[c];
     always @(posedge wclk) if (wen)
-        if (go_c[5]) w_cl_r <= s0_first == c_s1[c_first1];
+        if (go_c[5]) w_cl_r <= s0_first == c_s1[c_first4];
         else if (issue && w_seg_last) begin
             if (!w_cl) w_cl_r <= (QX != 0) ? |(w_coh & qx_s1n) : s_next == c_s1[w_c];
-            else if (w_restart) w_cl_r <= s0_live == c_s1[c_live3];
+            else if (w_restart) w_cl_r <= s0_live == c_s1[c_live4];
 `ifdef QY_MUTANT_CL
             else w_cl_r <= !qy_ceq[w_nx_c];            // negative control: the step decision inverted
 `else
@@ -1994,11 +2023,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         qx_sf_nx = 4'd0; qx_sw_nx = 1'b0; qx_sf_f = 4'd0; qx_sw_f = 1'b0; qx_sf_l = 4'd0; qx_sw_l = 1'b0;
         for (int k = 0; k < NSEG; k++) begin
             qx_sf_nx = qx_sf_nx | ({4{qx_nxoh[k]}} & qx_sfl(c_s0b[k]));
-            qx_sw_nx = qx_sw_nx | (qx_nxoh[k] && qx_sab == c_s0b[k]);
-            qx_sf_f  = qx_sf_f  | ({4{qx_sf_ohf[k]}} & qx_sfl(c_s0b[k]));
-            qx_sw_f  = qx_sw_f  | (qx_sf_ohf[k] && qx_sab == c_s0b[k]);
-            qx_sf_l  = qx_sf_l  | ({4{qx_sf_ohl[k]}} & qx_sfl(c_s0b[k]));
-            qx_sw_l  = qx_sw_l  | (qx_sf_ohl[k] && qx_sab == c_s0b[k]);
+            qx_sw_nx = qx_sw_nx | (qx_nxoh[k] && qx_sab == c_s0e[k]);
+            qx_sf_f  = qx_sf_f  | ({4{qx_sf_ohf[k]}} & qx_sfl(c_s0d[k]));
+            qx_sw_f  = qx_sw_f  | (qx_sf_ohf[k] && qx_sab == c_s0d[k]);
+            qx_sf_l  = qx_sf_l  | ({4{qx_sf_ohl[k]}} & qx_sfl(c_s0d[k]));
+            qx_sw_l  = qx_sw_l  | (qx_sf_ohl[k] && qx_sab == c_s0d[k]);
         end
     end
     // QX = 10: the go / restart candidates from free-clock registers formed a cycle earlier (route Z15b: c_v ->
@@ -2052,14 +2081,14 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     end
 `endif
     wire qx_sld = go_c[6] || issue && w_seg_last;                              // the walker loads w_s
-    wire [3:0] qx_sf_ld = go_c[6] ? ((QX >= 10) ? qx_sf_fr : qx_sf_f) : !w_cl ? qx_sfl(s_next) :
+    wire [3:0] qx_sf_ld = go_c[6] ? ((QX >= 10) ? qx_sf_fr : qx_sf_f) : !w_cl ? qx_sfl(s_nk) :
                           w_restart ? ((QX >= 10) ? qx_sf_lr : qx_sf_l) :
 `ifdef QX_MUTANT_SF
-                          qx_sfl(s_next);                                   // negative control: next class as s + 1
+                          qx_sfl(s_nk);                                   // negative control: next class as s + 1
 `else
                           qx_sf_nxs;
 `endif
-    wire qx_sw_ld = go_c[6] ? qx_sw_f : !w_cl ? qx_sa == s_next : w_restart ? qx_sw_l : qx_sw_nxs;
+    wire qx_sw_ld = go_c[6] ? qx_sw_f : !w_cl ? qx_sa == s_nk : w_restart ? qx_sw_l : qx_sw_nxs;
     wire qx_sw_hit = qx_swr && (qx_sld ? qx_sw_ld : qx_sa == w_s);
     // in reset w_s holds (the walker does not load) but the configuration may still be written
     always @(posedge wclk) if (wen)
@@ -2148,6 +2177,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         for (genvar k = 0; k < 2; k = k + 1) begin : g_k
             ot_v41_kreg #(.W(2), .AR(1)) u_a (.clk(wclk), .arst_n(rst_t9), .d(wen ? ({wd_e_c, wd_v_c}) : ({wd_ea[k], wd_va[k]})), .q({wd_ea[k], wd_va[k]}));
             ot_v41_kreg #(.W(2), .AR(1)) u_b (.clk(wclk), .arst_n(rst_t9), .d(wen ? ({wd_e_c, wd_v_c}) : ({wd_eb[k], wd_vb[k]})), .q({wd_eb[k], wd_vb[k]}));
+        end
+        if (NP != 0) begin : g_wdk
+            for (genvar k = 2; k < 4; k = k + 1) begin : g_k
+                ot_v41_kreg #(.W(2), .AR(1)) u_a (.clk(wclk), .arst_n(rst_t9), .d(wen ? ({wd_e_c, wd_v_c}) : ({wd_ea[k], wd_va[k]})), .q({wd_ea[k], wd_va[k]}));
+`ifdef OT_NP_D_MUT_WD
+                ot_v41_kreg #(.W(2), .AR(1)) u_b (.clk(wclk), .arst_n(rst_t9), .d(wen ? ({wd_e_c, 1'b0}) : ({wd_eb[k], wd_vb[k]})), .q({wd_eb[k], wd_vb[k]}));   // negative control
+`else
+                ot_v41_kreg #(.W(2), .AR(1)) u_b (.clk(wclk), .arst_n(rst_t9), .d(wen ? ({wd_e_c, wd_v_c}) : ({wd_eb[k], wd_vb[k]})), .q({wd_eb[k], wd_vb[k]}));
+`endif
+            end
+        end else begin : g_nwdk
+            assign wd_ea[3:2] = '0; assign wd_va[3:2] = '0; assign wd_eb[3:2] = '0; assign wd_vb[3:2] = '0;
         end
         always @(posedge wclk) if (wen) begin
             nL0_d <= sbf(4'd0, 2'd3, nu_p, base_live); nL1_d <= sbf(4'd1, 2'd3, nu_p, base_live); nQ2_d <= nQ2;
