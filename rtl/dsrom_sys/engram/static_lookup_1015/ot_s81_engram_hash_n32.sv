@@ -17639,6 +17639,9 @@ module ot_s81_engram_hash_n32 (
     wire [27:0] e3_45  = {1'b0, m1_45} - 28'd48002631;
     wire [27:0] e2_45  = {1'b0, m1_45} - 28'd32001754;
     wire [27:0] e1_45  = {1'b0, m1_45} - 28'd16000877;
+    wire [11:0] red45_lo, red45_hi;
+    ot_s81engf_red45_lo u_red45_lo (.a(m1_45), .y(red45_lo));
+    ot_s81engf_red45_hi u_red45_hi (.a(m1_45), .y(red45_hi));
     always @(posedge clk_columns[5]) begin
         s1_45_0 <= {1'b0, r_45_0} + {1'b0, r_45_1};
         s1_45_1 <= {1'b0, r_45_2} + {1'b0, r_45_3};
@@ -17656,7 +17659,7 @@ module ot_s81_engram_hash_n32 (
         s3_45_1 <= {1'b0, s2_45_2} + {1'b0, s2_45_3};
         s4_45 <= {1'b0, s3_45_0} + {1'b0, s3_45_1};
         m1_45 <= !d12_45[28] ? d12_45[26:0] : !d8_45[28] ? d8_45[26:0] : !d4_45[28] ? d4_45[26:0] : s4_45[26:0];
-        m2_45 <= !e3_45[27] ? e3_45[23:0] : !e2_45[27] ? e2_45[23:0] : !e1_45[27] ? e1_45[23:0] : m1_45[23:0];
+        m2_45 <= {red45_hi, red45_lo};
     end
     always @(negedge clk_columns[5]) res_n_45 <= m2_45;
     assign out_res[1103:1080] = res_n_45;
@@ -18364,6 +18367,20 @@ module ot_s81_engram_hash_n32 (
     assign out_res[1151:1128] = res_n_47;
 endmodule
 
+(* keep_hierarchy = 1 *) module ot_s81engf_red45_lo (input wire [26:0] a, output wire [11:0] y);
+    wire [27:0] e3 = {1'b0,a} - 28'd48002631;
+    wire [27:0] e2 = {1'b0,a} - 28'd32001754;
+    wire [27:0] e1 = {1'b0,a} - 28'd16000877;
+    wire [23:0] full_y = !e3[27] ? e3[23:0] : !e2[27] ? e2[23:0] : !e1[27] ? e1[23:0] : a[23:0];
+    assign y = full_y[11:0];
+endmodule
+(* keep_hierarchy = 1 *) module ot_s81engf_red45_hi (input wire [26:0] a, output wire [11:0] y);
+    wire [27:0] e3 = {1'b0,a} - 28'd48002631;
+    wire [27:0] e2 = {1'b0,a} - 28'd32001754;
+    wire [27:0] e1 = {1'b0,a} - 28'd16000877;
+    wire [23:0] full_y = !e3[27] ? e3[23:0] : !e2[27] ? e2[23:0] : !e1[27] ? e1[23:0] : a[23:0];
+    assign y = full_y[23:12];
+endmodule
 // fixed-width kept copies (keep_hierarchy, non-parameterised: no $paramod rename)
 (* keep_hierarchy = "yes" *) module ot_s81engf_kq17 (input wire clk, input wire [16:0] d, output reg [16:0] q);
     always @(posedge clk) q <= d;

@@ -161,6 +161,10 @@ for c in range(NC):
     e("    wire [%d:0] e3_%d  = {1'b0, m1_%d} - %d'd%d;" % (RW + 3, c, c, RW + 4, 3 * Q))
     e("    wire [%d:0] e2_%d  = {1'b0, m1_%d} - %d'd%d;" % (RW + 3, c, c, RW + 4, 2 * Q))
     e("    wire [%d:0] e1_%d  = {1'b0, m1_%d} - %d'd%d;" % (RW + 3, c, c, RW + 4, Q))
+    if c == 45:
+        e('    wire [11:0] red45_lo, red45_hi;')
+        for half in range(2):
+            e('    ot_s81engf_red45_%s u_red45_%s (.a(m1_45), .y(red45_%s));' % ((('lo' if half==0 else 'hi'),)*3))
     e('    always @(posedge clk_columns[%d]) begin' % ck)
     for i in range(8):
         e("        s1_%d_%d <= {1'b0, r_%d_%d} + {1'b0, r_%d_%d};" % (c, i, c, 2 * i, c, 2 * i + 1))
@@ -171,13 +175,26 @@ for c in range(NC):
     e("        s4_%d <= {1'b0, s3_%d_0} + {1'b0, s3_%d_1};" % (c, c, c))
     e('        m1_%d <= !d12_%d[%d] ? d12_%d[%d:0] : !d8_%d[%d] ? d8_%d[%d:0] : !d4_%d[%d] ? d4_%d[%d:0] : s4_%d[%d:0];'
       % (c, c, RW + 4, c, RW + 2, c, RW + 4, c, RW + 2, c, RW + 4, c, RW + 2, c, RW + 2))
-    e('        m2_%d <= !e3_%d[%d] ? e3_%d[%d:0] : !e2_%d[%d] ? e2_%d[%d:0] : !e1_%d[%d] ? e1_%d[%d:0] : m1_%d[%d:0];'
-      % (c, c, RW + 3, c, RW - 1, c, RW + 3, c, RW - 1, c, RW + 3, c, RW - 1, c, RW - 1))
+    if c == 45:
+        e('        m2_45 <= {red45_hi, red45_lo};')
+    else:
+        e('        m2_%d <= !e3_%d[%d] ? e3_%d[%d:0] : !e2_%d[%d] ? e2_%d[%d:0] : !e1_%d[%d] ? e1_%d[%d:0] : m1_%d[%d:0];'
+          % (c, c, RW + 3, c, RW - 1, c, RW + 3, c, RW - 1, c, RW + 3, c, RW - 1, c, RW - 1))
     e('    end')
     e('    always @(negedge clk_columns[%d]) res_n_%d <= m2_%d;' % (ck, c, c))
     e('    assign out_res[%d:%d] = res_n_%d;' % (RW * c + RW - 1, RW * c, c))
 e('endmodule')
 e('')
+# Native actual40110 column45 final-subtract select was33 loads. Keep the two genuine
+# 12-bit output consumers separate, including their comparison/subtract cones; no edge change.
+q45=field(PRIME,RW*45,RW)
+for half,name in enumerate(('lo','hi')):
+    e('(* keep_hierarchy = 1 *) module ot_s81engf_red45_%s (input wire [26:0] a, output wire [11:0] y);' % name)
+    for multiple in (3,2,1):
+        e("    wire [27:0] e%d = {1'b0,a} - 28'd%d;" % (multiple,multiple*q45))
+    e('    wire [23:0] full_y = !e3[27] ? e3[23:0] : !e2[27] ? e2[23:0] : !e1[27] ? e1[23:0] : a[23:0];')
+    e('    assign y = full_y[%d:%d];' % (12*half+11,12*half))
+    e('endmodule')
 e('// fixed-width kept copies (keep_hierarchy, non-parameterised: no $paramod rename)')
 e('(* keep_hierarchy = "yes" *) module ot_s81engf_kq17 (input wire clk, input wire [16:0] d, output reg [16:0] q);')
 e('    always @(posedge clk) q <= d;')
