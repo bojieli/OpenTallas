@@ -747,7 +747,19 @@ def downstream_reference(fx, i, word):
     return None, None
 
 
-def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
+def vector_sectors(desc):
+    """logical VM sectors of a record's vector operands / output (broadcast B and R excluded)"""
+    out = set()
+    for role, md in desc.items():
+        if role == "R" or (role == "B" and md.ibcast) or md.space != "VM" or md.indexed:
+            continue
+        for i in range(max(1, md.m)):
+            lo = md.base + i * (md.stride or 0)
+            out.update(range(lo // 8, (lo + max(1, md.n) * (md.istride or 1) - 1) // 8 + 1))
+    return out
+
+
+def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
     """TOK-FUNC2-HBM-SU dispatch: the first production lowering whose profile matches the record; every attempt that
     does not emit restores the layer placement (a refused record never marks its O sectors as written)."""
     import su_program_inventory as I
@@ -774,10 +786,11 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
         tried.append(dict(lowering=name, status=res.get("status"), reasons=res.get("reasons", [])[:4]))
         return res
 
+    in_layout = bool(sfu_layout and vector_sectors(desc) & sfu_layout)
     core = {"str_C", "sucore_SW", "stl_SW"}
     tree_ok = core <= set(bnd["instances"])
     res = None
-    if unit == 2 and SL.reduce_profile(sut, desc):
+    if unit == 2 and SL.reduce_profile(sut, desc) and not (in_layout and SL.sfu_profile(sut, desc, layout=True)):
         if not tree_ok:
             res = dict(status="unsupported_lowering", reasons=["reduction requires the real stree cut (no RF injection)"],
                        lowering=dict(supported=False), sut=sut)
@@ -796,9 +809,14 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
         res = attempt("scalar_rsqrt", lambda: SL.lower_rsqrt(raw, a.quarter, data=vm_data, place=place, tag=tag,
                                                              timing=timing, side_profile=(4, 3),
                                                              side_source_path=a.side_source))
-    elif unit == 2 and SL.sfu_profile(sut, desc) and (tree_ok or not (desc.get("B") and desc["B"].ibcast)):
+    elif unit == 2 and (SL.sfu_profile(sut, desc) or (in_layout and SL.sfu_profile(sut, desc, layout=True))) and (
+            tree_ok or not ((desc.get("B") and desc["B"].ibcast) or sut["red"])):
+        ref = None
+        if sut["red"] and fx:
+            ref, _ = downstream_reference(fx, r["i"], desc["R"].base)
         res = attempt("sfu_lanes", lambda: SL.lower_sfu_lanes(raw, a.quarter, data=vm_data, place=place, tag=tag,
-                                                              timing=timing, rf_local=a.rf_local))
+                                                              timing=timing, rf_local=a.rf_local, layout=in_layout,
+                                                              expected_reduction_word=ref))
     else:
         # every live lane reads all four operand ports (absent roles = A's own-bank address) and the drain samples
         # one edge after the lane write (OLD-read SRAM), as the safe-calendar profile
@@ -894,6 +912,23 @@ def main():
         aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
         pk_of = {r["i"]: r["i"] for r in recs if aligned and r["i"] < len(prog)}
     want = set(int(x) for x in a.records.split(",")) if a.records else None
+    sfu_layout = set()
+    if a.su_lower2:
+        # tensors touched by a record that needs the KIND-1 lanes live in the 32-lane SFU layout (sector 4s+j on VM
+        # port j); every SU record touching them is lowered in that layout (layer-global compiler placement)
+        import su_bench as SB
+        import su_program_inventory as I
+        from hbm_layer_vehicle import su_layer_lower_1021 as SL
+        for r in recs:
+            pk = pk_of.get(r["i"])
+            if r["unit"] != "SU" or pk is None or prog[pk][1] is None:
+                continue
+            try:
+                _, u_, sut_, desc_ = I.decode(SB.pack_rec(prog[pk][1]))
+            except AssertionError:
+                continue
+            if u_ == 2 and SL.sfu_profile(sut_, desc_):
+                sfu_layout |= vector_sectors(desc_)
     a.out.mkdir(parents=True, exist_ok=True)
     events, manifest, t_su_free = [], [], 0
     rng = np.random.default_rng(1018)
@@ -922,7 +957,7 @@ def main():
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
                 if a.su_lower2:
-                    su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr)
+                    su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr, sfu_layout=sfu_layout)
                 elif a.connected_lowering and lay == 0 and r['i'] in (4, 8):
                     from hbm_layer_vehicle import su_layer_lower_1021 as SL
                     required = {'str_C', 'sucore_SW', 'sucore_SE', 'sucore_NW', 'sucore_NE'}

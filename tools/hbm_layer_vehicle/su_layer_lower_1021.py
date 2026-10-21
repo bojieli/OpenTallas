@@ -833,31 +833,103 @@ def sfu_lane_golden(sut, ops):
     return bits
 
 
-def sfu_profile(sut, desc):
-    """True for an elementwise single-row SU.VOP needing the divider and/or exp/sigmoid/SiLU (no reducer)"""
-    if sut["red"] or sut["qm"] or sut["b_half"] or sut["c_pair"] or sut["a_ind"] or sut["dst"] != 1:
+def sfu_profile(sut, desc, layout=False):
+    """True for a single-row SU.VOP the 32-lane SFU layout lowers: it needs the divider and/or exp/sigmoid/SiLU
+    (or, with layout=True, any elementwise / whole-reduction op on a tensor that lives in the SFU layout)"""
+    if sut["qm"] or sut["b_half"] or sut["c_pair"] or sut["a_ind"] or sut["ad"] == 1 or sut["red_sq"]:
         return False
-    if sut["sfu"] not in SFU_EXTRA or (sut["m1"] not in (4, 5) and not sut["sfu"]) or sut["ad"] == 1:
+    if sut["sfu"] not in SFU_EXTRA:
         return False
-    return "O" in desc and "A" in desc and set(desc) <= set("ABCDO")
+    if not layout and sut["m1"] not in (4, 5) and not sut["sfu"]:
+        return False
+    if sut["red"]:
+        if sut["red"] not in (1, 2) or "R" not in desc or desc["R"].n != 1 or desc["R"].m != 1:
+            return False
+        if sut["dst"] not in (0, 1) or (sut["dst"] == 1) != ("O" in desc):
+            return False
+    elif sut["dst"] != 1 or "O" not in desc:
+        return False
+    return "A" in desc and set(desc) <= set("ABCDOR")
 
 
-def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=None, **unused):
+def pretree_lower_blocks(sched, kind, blocks, tag, t0):
+    """su_pretree_lower.Schedule.lower over explicit (words, count) blocks (32-lane sub-issues: a block's words >= its
+    count are the pretree's padding); same pair-group emission, reducer graph and export"""
+    import su_pretree_lower as PT
+    nb = len(blocks)
+    mx = 1 if kind == "max" else 0
+    ext = PT.OP_MAX_EXT if mx else PT.OP_ADD_EXT
+    tre = PT.OP_MAX_TREE if mx else PT.OP_ADD_TREE
+    level, t = [], t0
+    npairs = -(-nb // 2)
+    for g0 in range(0, npairs, PT.DEP):
+        P = min(PT.DEP, npairs - g0)
+        for i in range(P):
+            pi = g0 + i
+            be, bo = 2 * pi, 2 * pi + 1
+            ee, eo = t + i, t + i + PT.DEP
+            blk, cnt = blocks[be]
+            sched.tree[ee] = (mx, cnt, blk)
+            v = PT.block_subtree(kind, blk, cnt)
+            d = sched._new_addr()
+            sched._red(ee + PT.PT_RED, op=PT.OP_LOAD, a=0, b=0, d=d, tag=0, osel=1, lane=0x20)
+            ready = ee + PT.PT_RED + PT.DEP
+            if bo < nb:
+                blk, cnt = blocks[bo]
+                sched.tree[eo] = (mx, cnt, blk)
+                vo = PT.block_subtree(kind, blk, cnt)
+                sched._red(eo + PT.PT_RED, op=ext, a=d, b=0, d=d, tag=0, osel=1, lane=0x20)
+                v = PT.fmax(v, vo) if mx else PT.fadd(v, vo)
+                ready = eo + PT.PT_RED + PT.DEP
+            level.append((d, ready, v))
+        t += PT.DEP + P
+    last = 0
+    while len(level) > 1:
+        nl = []
+        for i in range(0, len(level) - 1, 2):
+            (xa, ra, va), (xb, rb, vb) = level[i], level[i + 1]
+            e = sched._free_slot(max(ra, rb, last + 1))
+            last = e
+            d = sched._new_addr()
+            sched._red(e, op=tre, a=xa, b=xb, d=d, tag=0, osel=0, lane=0)
+            nl.append((d, e + PT.DEP, PT.fmax(va, vb) if mx else PT.fadd(va, vb)))
+        if len(level) % 2:
+            nl.append(level[-1])
+        level = nl
+    root, rr, val = level[0]
+    e = sched._free_slot(max(rr, last + 1))
+    sched._red(e, op=PT.OP_EXPORT, a=root, b=0, d=0, tag=tag, osel=0, lane=0)
+    sched.exps.append((e, tag, val))
+    return val
+
+
+def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=None, layout=False,
+                    expected_reduction_word=None, **unused):
+    """SU.VOP on the quarter's 32 KIND>=1 lanes: 32-element sub-issues, sector 4s+j <-> store group j / VM port j.
+
+    Elementwise records: quarter q's share (as the 128-lane mapping), or -- layout=True / reductions -- the WHOLE
+    record serialized on quarter q.  Reductions: every sub-issue's lane outputs enter the slice pretrees (count = the
+    sub-issue's live lanes) -> reducer -> EXPORT -> stree -> RF -> class-5 RF-sector drain to R (as lower_reduce)."""
     from hbm_layer_vehicle import layer_images as LI
     from hbm_layer_vehicle.native_profile import NativeTiming
     from su_program_inventory import decode
     from su_arith_compile import pack, physical_word
-    from su_arith_generate import FIELDS
+    import su_pretree_lower as PT
     _, unit, sut, desc = decode(raw)
     refusal = lambda why, st="unsupported_lowering": dict(status=st, reasons=[why], sut=sut,
                                                           lowering=dict(supported=False, owner="TOK-FUNC2-HBM-SU"))
-    if unit != 2 or not sfu_profile(sut, desc):
-        return refusal("sfu_lane_elementwise_profile_only")
+    if unit != 2 or not sfu_profile(sut, desc, layout=layout):
+        return refusal("sfu_lane_profile_only")
     if q != 0 or not isinstance(timing, NativeTiming) or timing != NativeTiming(18, 15) or rf_local not in (0, 1):
         return refusal("selected_quarter0_native_timing_and_RF_LOCAL_required")
-    n = desc["O"].n
+    red = sut["red"]
+    n = desc["A"].n
     bcast = "B" in desc and desc["B"].ibcast
     for role, md in desc.items():
+        if role == "R":
+            if md.space != "VM" or md.fmt != "FP32" or md.indexed or md.ibcast:
+                return refusal("single_VM_R_destination_required")
+            continue
         if role == "B" and bcast:
             if md.m != 1 or md.indexed or md.base % 8 or md.space != "VM":
                 return refusal("broadcast_B_must_be_one_sector_position0_VM_scalar")
@@ -869,10 +941,13 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
     if data is None:
         return refusal("real_pre_operation_VM_words_required")
     place = place if place is not None else LI.Placement(q)
-    owned = [e for e in range(n) if (e // 128) % 4 == q]
-    subs = sorted({(e // 128) * 128 + 32 * ((e % 128) // 32) for e in owned})
+    whole = bool(red or layout)
+    owned = list(range(n)) if whole else [e for e in range(n) if (e // 128) % 4 == q]
+    subs = (list(range(0, n, SFU_LANES)) if whole else
+            sorted({(e // 128) * 128 + 32 * ((e % 128) // 32) for e in owned}))
     roles = [r for r in "ABCD" if r in desc and not (r == "B" and bcast)]
-    for role in roles + ["O"]:
+    vec_roles = roles + (["O"] if "O" in desc else [])
+    for role in vec_roles:
         for st in subs:
             for j in range(4):
                 if st + 8 * j >= n:
@@ -882,13 +957,13 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
                     return refusal(f"operand_{role}_sector_placed_on_port_{place.map[ls_] % 8}_not_SFU_group_{j}",
                                    "v1_unsupported")
     ql = TreeLines()
-    edge0, scalar_ready, pro_core, rf_addr = 0, None, None, None
+    edge0, scalar_ready, pro_core, rf_b = 0, None, None, None
     if bcast:
         b = desc["B"]
         if b.base not in data:
             return refusal("broadcast_scalar_VM_word_unknown")
-        rf_addr = b.base & 255
-        pro_core = reduce_to_rf(ql, a_base=b.base, nwords=1, kind="sum", lane_m1=0, imm1=0, rf_addr=rf_addr, q=q,
+        rf_b = b.base & 255
+        pro_core = reduce_to_rf(ql, a_base=b.base, nwords=1, kind="sum", lane_m1=0, imm1=0, rf_addr=rf_b, q=q,
                                 data=data, place=place, tag=tag + ":Bxfer", timing=timing)
         if "refusal" in pro_core:
             return refusal("broadcast_transfer: " + pro_core["refusal"])
@@ -898,7 +973,6 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
             ql.f["control"].setdefault(e, pro_core["hold"])
         scalar_ready = pro_core["rf_event"]["rf_write_pins_serial"]
         edge0 = 1
-    # fills: (role, sub) -> store row; sectors 4s+j -> group j on port j
     for role in roles:
         for st in subs:
             for j in range(4):
@@ -924,16 +998,17 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
                 last_fill = max(last_fill, e)
                 if ls_ not in place.written:
                     preload[ps] = list(range(first, first + 8))
+    if row_next + len(subs) > 512:
+        return refusal("store_rows_exceeded")
     orow = {u: row_next + u for u in range(len(subs))}
-    # control
     terms = 0
     for s_, role in enumerate("ABCDO"):
-        # every physical reader (absent roles too) carries the lane identity: pgslice.sv:303 checks all four
-        if role == "O" and role not in desc or (role == "B" and bcast):
+        if (role == "O" and "O" not in desc) or (role == "B" and bcast):
             continue
         for k in range(7):
             terms |= (1 << k) << (24 * (s_ * 10 + k))
-    ctl = dict(no=1, ni=n, ls=5, lvw=5, srcs=(1 << 2) if bcast else 0, dst=1, co_dst=1, aind=0, cpair=0,
+    dst = 1 if "O" in desc else 0
+    ctl = dict(no=1, ni=n, ls=5, lvw=5, srcs=(1 << 2) if bcast else 0, dst=dst, co_dst=dst, aind=0, cpair=0,
                cx_arnd=sut["a_rnd"], cx_arelu=sut["a_relu"], cx_amin=sut["a_min"], cx_cclip=sut["c_clip"],
                cx_imm3=sut["imm3"], cp_m1=sut["m1"], cp_imm1=sut["imm1"], cm_m1=sut["m1"], cm_m2=sut["m2"], cm_qm=0,
                cm_imm1=sut["imm1"], ca_ad=sut["ad"], ca_imm2=sut["imm2"], ci_sfu=sut["sfu"], cs_sfu=sut["sfu"],
@@ -944,9 +1019,9 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
         v = 0
         for s_, role in enumerate("ABCDO"):
             if role == "O":
-                v |= physical_word(q, orow[u]) << (24 * s_)
+                v |= (physical_word(q, orow[u]) if "O" in desc else 0) << (24 * s_)
             elif role == "B" and bcast:
-                v |= rf_addr << (24 * s_)
+                v |= rf_b << (24 * s_)
             elif role in desc:
                 v |= physical_word(q, rows[(role, u)]) << (24 * s_)
             else:
@@ -955,16 +1030,9 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
     setup = last_fill + timing.fill_commit + 1
     if bcast:
         setup = max(setup, scalar_ready + 4 + rf_local, max(ql.f["tree"]) + 1)
-    issues = [setup + LI.SETUP_TO_EMIT + u for u in range(len(subs))]
-    ql.f["control"][setup] = pack(dict(ctl, ld=1, vb=vb_of(0)))
-    for u, st in enumerate(subs):
-        ql.f["control"][issues[u]] = pack(dict(ctl, emit=1, i_v=st, vb=vb_of(u)))
     extra = (15 if sut["m1"] in (4, 5) else 0) + SFU_EXTRA[sut["sfu"]]
     lat = LI.FIRST_OUT - LI.SETUP_TO_EMIT + extra
-    if bcast:
-        for e in range(setup - 1 - rf_local, issues[-1] + LI.FIRST_OUT + 1):
-            ql.put("rf", e, 9, 9, 256 | rf_addr)
-    # golden (quarter q's elements only) and drains
+    # golden lane outputs (every element; the reducer takes out = rnd?(U))
     ops = {}
     for role in "ABCD":
         if role in desc:
@@ -975,26 +1043,93 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
                 ops[role] = np.array([data[md.base + e] for e in range(n)], np.float32)
     with np.errstate(all="ignore"):
         outbits = sfu_lane_golden(sut, ops)
-    o = desc["O"]
-    drain_e, expect, drains, commits = [0] * 8, [], [], []
+    sched, want, rf_r = None, None, None
+    if red:
+        kind = "sum" if red == 1 else "max"
+        if not np.isfinite(outbits[:n].view(np.float32)).all():
+            return refusal("finite_lane_value_profile_required")
+        blocks = []
+        for st in subs:
+            cnt = min(SFU_LANES, n - st)
+            blocks.append(([int(x) for x in outbits[st:st + cnt]] + [0] * (PT.BLOCK - cnt), cnt))
+        sched = PT.Schedule()
+        rf_r = desc["R"].base & 255
+        tree_first = setup + LI.SETUP_TO_EMIT + lat + 1
+        val = pretree_lower_blocks(sched, kind, blocks, 0x100 | rf_r, tree_first)
+        want = PT.golden(kind, outbits[:n])
+        if val != want:
+            raise ValueError("32-lane pretree graph differs from the independent reduction")
+        if expected_reduction_word is not None and int(expected_reduction_word) != want:
+            return refusal(f"golden_mismatch: independent reduction {want:08x} != downstream fixture R "
+                           f"{int(expected_reduction_word):08x}", "golden_mismatch")
+        tree_of = pretree_blocks(len(subs), tree_first)
+        issues = [None] * len(subs)
+        for te, u in tree_of.items():
+            issues[u] = te - (lat + 1)
+            ql.f["tree"][te] = PT.tree_cmd_word(int(kind == "max"), blocks[u][1])
+        rdy = {}
+        for e_, c_ in sorted(sched.red.items()):
+            op = c_["op"]
+            rd = ([c_["a"], c_["b"]] if op in (2, 5) else [c_["a"]] if op in (1, 3, 4) else [])
+            if any(rdy.get(x, math.inf) > e_ for x in rd):
+                raise ValueError("reducer SRAM RAW reservation violated")
+            if e_ in ql.f["red"]:
+                raise ValueError("reducer command slot busy")
+            ql.f["red"][e_] = PT.red_cmd_word(c_)
+            if op != 4:
+                rdy[c_["d"]] = e_ + PT.DEP
+    else:
+        issues = [setup + LI.SETUP_TO_EMIT + u for u in range(len(subs))]
+    ql.f["control"][setup] = pack(dict(ctl, ld=1, vb=vb_of(0)))
     for u, st in enumerate(subs):
-        ready = issues[u] + lat + 1
-        for j in range(4):
-            lo = st + 8 * j
-            if lo >= n:
-                continue
-            m = [lo + t < n for t in range(8)]
-            de = max(ready, drain_e[j])
-            drain_e[j] = de + 1
-            ls_ = (o.base + lo) // 8
-            ps = place.get(ls_, j, f"{tag}:O")
-            mask = sum(1 << t for t in range(8) if m[t])
-            ql.vmw(de, j, 0, j, orow[u], ps, mask)
-            c = de + timing.drain_done
-            commits.append(c)
-            drains.append((ls_, c))
-            expect.append(dict(sector=ps, mask=mask, edge=c, words=list(range(o.base + lo, o.base + lo + 8)),
-                               value=[int(outbits[lo + t]) if m[t] else None for t in range(8)]))
+        ql.f["control"][issues[u]] = pack(dict(ctl, emit=1, i_v=st, vb=vb_of(u)))
+    if bcast:
+        for e in range(setup - 1 - rf_local, max(issues) + LI.FIRST_OUT + extra + 1):
+            ql.put("rf", e, 9, 9, 256 | rf_b)
+    drain_e, expect, drains, commits = [0] * 8, [], [], []
+    if "O" in desc:
+        o = desc["O"]
+        for u, st in enumerate(subs):
+            ready = issues[u] + lat + 1
+            for j in range(4):
+                lo = st + 8 * j
+                if lo >= n:
+                    continue
+                m = [lo + t < n for t in range(8)]
+                de = max(ready, drain_e[j])
+                drain_e[j] = de + 1
+                ls_ = (o.base + lo) // 8
+                ps = place.get(ls_, j, f"{tag}:O")
+                mask = sum(1 << t for t in range(8) if m[t])
+                ql.vmw(de, j, 0, j, orow[u], ps, mask)
+                c = de + timing.drain_done
+                commits.append(c)
+                drains.append((ls_, c))
+                expect.append(dict(sector=ps, mask=mask, edge=c, words=list(range(o.base + lo, o.base + lo + 8)),
+                                   value=[int(outbits[lo + t]) if m[t] else None for t in range(8)]))
+    rf_events = [pro_core["rf_event"]] if pro_core else []
+    if red:
+        export_edge = sched.exps[-1][0]
+        rf_commit = export_edge + 12 + 32 + 1
+        rf_read = rf_commit + 2
+        de = max(rf_read + 2, drain_e[0])
+        rf_read = de - 2                       # RF_LOCAL: class-5 read exactly two edges ahead of the RF drain
+        ql.put("rf", rf_read, 5 * 9, 9, 0x100 | (rf_r & ~7))
+        r = desc["R"]
+        lr = r.base // 8
+        if lr in place.map and place.map[lr] % 8:
+            return refusal("RF_sector_drain_requires_VM_port0_placement")
+        pr = place.get(lr, 0, tag + ":R")
+        ql.vmw(de, 0, 1, 0, 0, pr, 1 << (rf_r & 7))
+        c = de + timing.drain_done
+        commits.append(c)
+        drains.append((lr, c))
+        r0 = r.base - (r.base & 7)
+        rv = [None] * 8
+        rv[rf_r & 7] = want
+        expect.append(dict(sector=pr, mask=1 << (rf_r & 7), edge=c, words=list(range(r0, r0 + 8)), value=rv))
+        rf_events += [dict(kind="export", command_serial=export_edge, rf_commit_serial=rf_commit, rf_address=rf_r),
+                      dict(kind="class5_read", edge=rf_read), dict(kind="RF_to_VM_drain", edge=de, vm_commit=c)]
     commit = max(commits)
     hold = pack(dict(ctl, vb=vb_of(0)))
     for e in range(0, commit + 1):
@@ -1009,20 +1144,25 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
     for ls_, _ in drains:
         place.written.add(ls_)
     post = {}
-    for e in owned:
-        post[str(o.base + e)] = f"{int(outbits[e]):08x}"
-        data[o.base + e] = np.uint32(outbits[e]).view(np.float32)
+    if "O" in desc:
+        for e in owned:
+            post[str(desc["O"].base + e)] = f"{int(outbits[e]):08x}"
+            data[desc["O"].base + e] = np.uint32(outbits[e]).view(np.float32)
+    if red:
+        post[str(desc["R"].base)] = f"{want:08x}"
     return dict(status="emitted", reasons=[], ql=ql, lines=lines,
         fills=(pro_core["fills"] if pro_core else []) + fills, drains=drains, preload=preload, data=pre_words,
         inputs_placeholder=False, expect=expect, setup_edge=setup, issue_edges=issues, last_commit=commit,
         fill_sectors=len(preload), drain_sectors=len(expect), sut=sut, native_timing=timing.as_dict(),
         lowering=dict(supported=True, owner="TOK-FUNC2-HBM-SU", execution_qualified=False,
-                      mode="KIND1 lanes 0..31 sub-issues" + (" + RF class-1 broadcast B" if bcast else ""),
-                      sub_issues=len(subs), extra_depth=extra, quarter_elements=len(owned)),
-        rf_events=[pro_core["rf_event"]] if pro_core else [],
+                      mode="KIND1 lanes 0..31 sub-issues" + (" + RF class-1 broadcast B" if bcast else "")
+                           + (" + 32-lane pretree reduction" if red else "") + (" (SFU layout)" if layout else ""),
+                      sub_issues=len(subs), extra_depth=extra, quarter_elements=len(owned), whole_record=whole),
+        rf_events=rf_events,
         control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
         expected_post_state=post, expected_post_state_only=True,
-        expected_reference=dict(role="comparison_only", source="hdc_golden(+v41 div) KIND-1 lane model"),
+        expected_reference=dict(role="comparison_only", source="hdc_golden(+v41 div) KIND-1 lane model"
+                                + (" + csum8/ordered max" if red else "")),
         source_contract=dict(lanes="quarter-local 0..31 (KIND 1/2)", divider_depth=19, exp_depth=56,
                              sigmoid_silu_depth=78, MLAT=4, ALAT=3, RF_LOCAL=rf_local, B_srcs_code=1 if bcast else 0),
         timing_obligations=dict(issue_to_output=lat, serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
