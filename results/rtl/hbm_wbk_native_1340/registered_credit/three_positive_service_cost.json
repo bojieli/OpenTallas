@@ -1,0 +1,267 @@
+{
+  "scope": "Actual existing positive stress witnesses. Fences overlap and cannot be summed as production time; hardware changes alter RNG/ready calendar. Registered feedback adds one stream edge, unchanged payload edges. No rate qualification.",
+  "cases": {
+    "wbq_e": {
+      "e886_diagnostic": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 701
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 1772
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 1825
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4354
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 5703
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 4812
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 4844
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 2322
+        }
+      ],
+      "e0_final": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 701
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 2060
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 1896
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4068
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 5810
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 5718
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 6697
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 3189
+        }
+      ]
+    },
+    "wbq_w": {
+      "e886_diagnostic": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 632
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 1967
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 1987
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4310
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 7316
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 6642
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 5212
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 2182
+        }
+      ],
+      "e0_final": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 631
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 2045
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 1971
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 3879
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 5995
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 5658
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 6115
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 3064
+        }
+      ]
+    },
+    "wbq_e_wopen": {
+      "e886_diagnostic": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 920
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 3004
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 2840
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4922
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 6655
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 4844
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 3045
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 621
+        }
+      ],
+      "e0_final": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 920
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 3361
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 4676
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4920
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 4941
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 4553
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 3028
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 1294
+        }
+      ]
+    }
+  },
+  "final_source_commit": "e0bfd10e5",
+  "final_wbk_source_sha256": "8c416020aaaca60604ac97e0fa42b831cf6716729ed26b166da2fa69611ffb2d",
+  "old_source_commit": "e886cd0b889340939e5d67989d577ca9de8bfb3e",
+  "proof_packet": "f156f82a8"
+}
