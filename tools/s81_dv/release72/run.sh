@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 D=$(cd "$(dirname "$0")" && pwd)
-MAIN=${1:?main}; SRC=${2:?plan_source}; FRAME=f04198934d9a1fdacc81b9501a9ccb5c632ba2ea; LPREF=21b97190e
+MAIN=${1:?main}; SRC=${2:?plan_source}; FRAME=f04198934d9a1fdacc81b9501a9ccb5c632ba2ea; LPREF=21b97190eba0b3b306026f23a2408867cd099726
 CREF=12c132d60a8f0300056abb216d48ff9588e7f620
 G=/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git
 export OT_GIT_DIR=$G OT_DIE_REPAIR_CORRIDOR=1
@@ -15,7 +15,7 @@ mapfile -t PF < "$W/phys.lst"; git --git-dir="$G" archive "$MAIN" -- "${PF[@]}" 
 git --git-dir="$G" archive "$SRC" results/arch/s81_die72_1021 tools/s81_dv/release72 | tar -xf - -C "$W/src"
 git --git-dir="$G" show "$FRAME:tools/s81_dv/frame_bind.py" > "$W/src/tools/s81_dv/frame_bind.py"
 cd "$W/src"
-patch -p1 < tools/s81_dv/release72/frame_bind.patch
+if ! grep -q 'from frame_bind import' tools/s81_dv/dv_bind.py; then patch --batch -p1 < tools/s81_dv/release72/frame_bind.patch; fi
 python3 - <<'INNER'
 from pathlib import Path
 p=Path('tools/s81_dv/dv_diecase.py');s=p.read_text();old='sdir[(nm, k)] = station_dir(hops, px + ox, py + oy)';assert old in s;s=s.replace(old,"sdir[(nm, k)] = l['station_dirs'][k] if 'station_dirs' in l else station_dir(hops, px + ox, py + oy)");p.write_text(s)
