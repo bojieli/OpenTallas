@@ -1,0 +1,59 @@
+{
+ "status": "GEOMETRY_MODEL_ONLY",
+ "base": "7ceb7215f/planeM",
+ "outline_um": [
+  25988.8,
+  32983.12
+ ],
+ "reason": "Measured dM worst capacity2.581 NW PG/SU convergence; balance actual left/right corridor",
+ "placement_checks": [
+  {
+   "name": "pgp_NW",
+   "before": {
+    "m": "ot_hbm_su_programme_pslice_c5",
+    "x": 3740.4,
+    "y": 17344.8,
+    "o": "R0",
+    "w": 939.6,
+    "h": 760.32,
+    "rule": "grant slot pgp_NW"
+   },
+   "after": {
+    "m": "ot_hbm_su_programme_pslice_c5",
+    "x": 4243.536,
+    "y": 17344.8,
+    "o": "R0",
+    "w": 939.6,
+    "h": 760.32,
+    "rule": "grant slot pgp_NW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "pgp_SE",
+   "before": {
+    "m": "ot_hbm_su_programme_pslice_c5",
+    "x": 20908.8,
+    "y": 14860.8,
+    "o": "R0",
+    "w": 939.6,
+    "h": 760.32,
+    "rule": "grant slot pgp_SE"
+   },
+   "after": {
+    "m": "ot_hbm_su_programme_pslice_c5",
+    "x": 21379.464,
+    "y": 14860.8,
+    "o": "R0",
+    "w": 939.6,
+    "h": 760.32,
+    "rule": "grant slot pgp_SE"
+   },
+   "overlaps": []
+  }
+ ],
+ "all_other_blocks": "unchanged",
+ "rtl_source": "unchanged",
+ "cycle_credit": 0,
+ "remaining": "Actual GEN/pins/S4 required; no failed capacity route"
+}
