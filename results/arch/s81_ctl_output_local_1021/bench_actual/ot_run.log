@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-epyc7       admits   295 GB (avail 499, growth 293, headroom 0, waiters 0/0 GB) load 27/96 running 11 disk 4428 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2402877-1792626689 after 0 s
+CTL_OUTPUT_CAPTURE_PASS checks=17975 lanes=13 frame_bits=7189 reset_reassert=1 data_delta=0 valid_delta=0 reset_delta=0
+PASS hd_ctl streams 2 tokens 2 slices/stream 8248
+FAIL hd_ctl output_same_edge mismatch cycle=39
+CTL_OUTPUT_BYPASS_NEGATIVE_CAUGHT
+CTL_OUTPUT_EXISTING_MECHANISM_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2402877-1792626689): exit 0

@@ -1,0 +1,17 @@
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/lib/ot_rst_relay_tree3.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/dsrom_sys/s81_head/ot_s81hd_util.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer_r2o.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv
+read_verilog -sv /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v
+hierarchy -check -top ot_s81hd_ctl_glue_r2o
+tcl /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/src/physical/common_flow/ot_keep_regs.tcl
+synth -top ot_s81hd_ctl_glue_r2o -flatten
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -D 833.333
+splitnets -ports
+opt_clean -purge
+write_verilog -noattr /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/native_actual/mapped.v
+tee -o /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/native_actual/stat.txt stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib

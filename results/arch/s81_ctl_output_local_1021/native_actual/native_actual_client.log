@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-epyc7       admits   307 GB (avail 499, growth 285, headroom 0, waiters 0/0 GB) load 29/96 running 11 disk 4428 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2411183-1792626811 after 0 s
+PRE_GATE_NATIVE_CENSUS PASS report=/srv/opentallas-scratch/claude/codex-s81-ctl-output-r2o-1021/native_actual/native_census.json
+CTL_OUTPUT_NATIVE_CENSUS_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2411183-1792626811): exit 0

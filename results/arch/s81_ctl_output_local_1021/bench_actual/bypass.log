@@ -1,0 +1,4 @@
+FAIL hd_ctl output_same_edge mismatch cycle=39
+[39000] %Fatal: tb_s81hd_ctl_output_local.sv:48: Assertion failed in tb_s81hd_ctl_output_local: output capture age/content mismatch
+%Error: rtl/dsrom_sys/s81_head/test/tb_s81hd_ctl_output_local.sv:48: Verilog $stop
+Aborting...

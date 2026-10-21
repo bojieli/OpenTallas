@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "max_dynamic_loads": 32,
+  "violations": 0,
+  "role_errors": 0,
+  "native_tool_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+  "mapped_sha256": "e6c433cf9a933e9b97542a8e6fc3891e269c378bca399c3ccade7291524ef5d5",
+  "independent_frame_drivers": 7189,
+  "frame_banks": {
+    "g_draft_output_local[0].u_frame": 553,
+    "g_draft_output_local[1].u_frame": 553,
+    "g_draft_output_local[2].u_frame": 553,
+    "g_draft_output_local[3].u_frame": 553,
+    "g_draft_output_local[4].u_frame": 553,
+    "g_mesh_output_local[0].u_frame": 553,
+    "g_mesh_output_local[1].u_frame": 553,
+    "g_mesh_output_local[2].u_frame": 553,
+    "g_mesh_output_local[3].u_frame": 553,
+    "g_mesh_output_local[4].u_frame": 553,
+    "g_mesh_output_local[5].u_frame": 553,
+    "u_host_0_local": 553,
+    "u_host_1_local": 553
+  },
+  "load_histogram": {
+    "1": 7189
+  },
+  "reach_scope": "All13 banks survive mapping as distinct553-bit kept-hierarchy output owners, eachQ root has1 dynamicload. This removes the actual opposite-face shared-output-driver requirement. No placed-netlist reach/405um or clock closure is claimed; upstream shared-held-data reach remains owed before any physical successor.",
+  "mapped_area_um2": 9259.13106,
+  "macro_area_included": false,
+  "age_delta": 0
+}
