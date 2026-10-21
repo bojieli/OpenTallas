@@ -48,6 +48,42 @@ class LinkedECOTests(unittest.TestCase):
         self.parent['route_overlay_plan']['files'][0]['sha256']=self.manifest['file_hashes']['cl/helper.py']
         self.manifest['parent']['state_sha256']=ie.canonical_sha(self.parent)
         (self.runtime/'cl/SRC_DIR').write_text(str(self.runtime/'src')+'\n')
+        proof=dict(schema='opentallas.canonical-source-readset.v1',source_commit=self.parent['commit_full'],
+            frozen_overlay_plan_sha256=ie.canonical_sha(self.parent['route_overlay_plan']),
+            gate_files={p[4:]:h for p,h in self.manifest['file_hashes'].items() if p.startswith('src/')},
+            frozen_files={},transformed_templates={})
+        self.manifest['canonical_source_readset']=proof
+        self.proof_patch=patch.dict(ie.APPROVED_SOURCE_PROOFS,{self.parent['commit_full']:ie.canonical_sha(proof)})
+        self.proof_patch.start();self.addCleanup(self.proof_patch.stop)
+
+
+
+    def test_actual_pinned_readset_omission_changed_rtl_and_wrong_proof_rejected(self):
+        proof=json.loads((Path(ie.__file__).parent/'evidence/ve_f51_source_readset.json').read_text())
+        p=copy.deepcopy(self.parent);p['commit_full']=proof['source_commit']
+        p['route_overlay_plan']=proof['frozen_overlay_plan']
+        m=copy.deepcopy(self.manifest);m['parent'].update(source_commit=p['commit_full'],state_sha256=ie.canonical_sha(p))
+        m['canonical_source_readset']=proof
+        m['file_hashes']={k:v for k,v in m['file_hashes'].items() if not k.startswith(('src/','cl/'))}
+        m['file_hashes'].update(ie.expected_source_hashes(p,m))
+        m['file_hashes'].update({'cl/'+Path(x['path']).name:x['sha256'] for x in p['route_overlay_plan']['files']})
+        m['post_sdc_files']=['src/physical/ref_tile/s81sl_ve_r5/signoff.sdc']
+        ie.build(p,m,'new-linked')
+        rtl=next(x for x in m['file_hashes'] if x.startswith('src/rtl/'))
+        omitted=copy.deepcopy(m);del omitted['file_hashes'][rtl]
+        changed=copy.deepcopy(m);changed['file_hashes'][rtl]='0'*64
+        wrong=copy.deepcopy(m);wrong['canonical_source_readset']['gate_files'][rtl[4:]]='0'*64
+        transform=copy.deepcopy(m);key=next(iter(transform['canonical_source_readset']['transformed_templates']))
+        transform['canonical_source_readset']['transformed_templates'][key]['utf8']+='malicious change'
+        for candidate in (omitted,changed,wrong,transform):
+            with self.subTest(),self.assertRaisesRegex(ValueError,'canonical'):
+                ie.build(p,candidate,'new-linked')
+        other=copy.deepcopy(m);other['runtime']['run']+='_different'
+        expected=ie.expected_source_hashes(p,other)
+        for path in m['file_hashes']:
+            if path.startswith('src/rtl/'):
+                self.assertEqual(m['file_hashes'][path],expected[path])
+        self.assertNotEqual(m['file_hashes']['src/tools/run_abi3_physical.py'],expected['src/tools/run_abi3_physical.py'])
 
     def test_new_record_has_only_postroute_stages_and_parent_unchanged(self):
         before=copy.deepcopy(self.parent);j=ie.build(self.parent,self.manifest,'new-linked')

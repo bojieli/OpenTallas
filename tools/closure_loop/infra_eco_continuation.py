@@ -31,6 +31,48 @@ def relative(path):
     return p
 
 
+
+# Narrow, reviewed proof: original committed gate readset + frozen route plan +
+# exact old hold/TT/hold transformation. Other sources require their own review.
+APPROVED_SOURCE_PROOFS = {
+    'f51f4ec42ca6f555ae0bb93558d1c485cee732c2':
+        'b204321c20d80c0243ca72b9e13bba31c94b310d3eb9083952c67e1860ad9282',
+}
+
+
+def expected_source_hashes(parent, manifest):
+    proof = manifest.get('canonical_source_readset')
+    if (not isinstance(proof, dict) or proof.get('schema') != 'opentallas.canonical-source-readset.v1'
+            or proof.get('source_commit') != parent.get('commit_full')
+            or canonical_sha(proof) != APPROVED_SOURCE_PROOFS.get(parent.get('commit_full'))):
+        raise ValueError('canonical expected source-readset proof missing or not approved for original source')
+    if canonical_sha(parent.get('route_overlay_plan')) != proof['frozen_overlay_plan_sha256']:
+        raise ValueError('canonical source frozen overlay plan differs')
+    expected = dict(proof['gate_files'])
+    expected.update(proof['frozen_files'])
+    for path, transform in proof['transformed_templates'].items():
+        relative(path)
+        if expected.get(path) != transform['before_sha256']:
+            raise ValueError('canonical transformation input differs: '+path)
+        # Only the literal source-root parameter in the pinned deterministic output
+        # may vary; neither arbitrary file exceptions nor caller transforms qualify.
+        data = transform['utf8'].replace('@@EXACT_SOURCE_ROOT@@', str(Path(manifest['runtime']['run'])/'src'))
+        expected[path] = hashlib.sha256(data.encode()).hexdigest()
+    return {'src/'+path: sha for path, sha in expected.items()}
+
+
+def validate_source_readset(parent, manifest):
+    expected = expected_source_hashes(parent, manifest)
+    actual = {p:h for p,h in manifest.get('file_hashes', {}).items() if p.startswith('src/')}
+    if actual != expected:
+        missing = sorted(expected.keys()-actual.keys())
+        changed = sorted(p for p in expected.keys() & actual.keys() if expected[p]!=actual[p])
+        extra = sorted(actual.keys()-expected.keys())
+        raise ValueError('canonical source readset differs: missing=%s changed=%s extra=%s' %
+                         (missing[:3], changed[:3], extra[:3]))
+    return expected
+
+
 def build(parent, manifest, new_name):
     """Pure preparation: no daemon/state/remote writes and no EDA launches."""
     m = copy.deepcopy(manifest)
@@ -81,6 +123,7 @@ def build(parent, manifest, new_name):
             raise ValueError('frozen helper SHA missing or changed: '+entry['path'])
     if not parent.get('freeze_helper_overlay') or not parent.get('route_overlay_plan', {}).get('files'):
         raise ValueError('source-bound frozen helper plan required')
+    validate_source_readset(parent, m)
     cp = m['checkpoint']; base = relative(cp['route_base'])
     if cp['config'] != str(base.parents[3]/'config.mk'):
         raise ValueError('original route configuration location differs')
@@ -175,6 +218,7 @@ def verify_runtime(manifest):
 def prepare_runtime(manifest, parent):
     if Path(manifest['runtime']['run']).resolve() == Path(parent['run']).resolve():
         raise ValueError('runtime aliases immutable parent root')
+    validate_source_readset(parent, manifest)
     result = verify_runtime(manifest)
     root = Path(manifest['runtime']['run']); dest = root/'cl/linked_infra_eco'; dest.mkdir()
     (dest/'parent_state.json').write_text(json.dumps(parent,indent=1)+'\n')
