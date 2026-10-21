@@ -54,7 +54,7 @@
    "live"
   ],
   "host": "live",
-  "run": "/tmp/tmpj1zzw94d/new-linked",
+  "run": "/tmp/tmpkp326dv5/new-linked",
   "commit_full": "ffffffffffffffffffffffffffffffffffffffff",
   "source_synced": true,
   "freeze_helper_overlay": true,
@@ -75,13 +75,13 @@
   "events": [],
   "errors": [],
   "eco_overlay_recovery": {
-   "guard": "/tmp/tmpj1zzw94d/new-linked/cl/linked_infra_eco/inputs.json",
-   "out": "/tmp/tmpj1zzw94d/new-linked/cl/linked_infra_eco/candidate"
+   "guard": "/tmp/tmpkp326dv5/new-linked/cl/linked_infra_eco/inputs.json",
+   "out": "/tmp/tmpkp326dv5/new-linked/cl/linked_infra_eco/candidate"
   },
   "linked_infra_eco": {
    "parent": {
     "name": "old-parent",
-    "state_sha256": "e1911e2223142691464f21ef9c965c4ae51db023f2f64ec5022c974b54e74900",
+    "state_sha256": "f41895f9afc6b3739ce0f581f1e9aa3415fbc9f7cc5f7b9abe69ff2d575eb641",
     "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
    },
    "manifest": {
@@ -90,7 +90,7 @@
     "infrastructure_cause": "scheduled_retirement",
     "parent": {
      "name": "old-parent",
-     "state_sha256": "e1911e2223142691464f21ef9c965c4ae51db023f2f64ec5022c974b54e74900",
+     "state_sha256": "f41895f9afc6b3739ce0f581f1e9aa3415fbc9f7cc5f7b9abe69ff2d575eb641",
      "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
     },
     "physical_disposition": {
@@ -106,7 +106,7 @@
     },
     "runtime": {
      "host": "live",
-     "run": "/tmp/tmpj1zzw94d/new-linked",
+     "run": "/tmp/tmpkp326dv5/new-linked",
      "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
      "ram_gb": 64,
      "library_hashes": {
@@ -129,7 +129,7 @@
      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
      "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1",
-     "routes/old_parent/corner_sta.json": "0bb00c3d8adae01a79073231eaa03f0a6432c5b54a7a5e3b33a30ef09a37dfa9",
+     "routes/old_parent/corner_sta.json": "d396ccad39230be0ed21e4e1500895fa628237b018b4a154630ecdcb70c157ab",
      "src/physical/signoff.sdc": "794b26946f13307e1d486099a9c121b64de70ba25609e2f06600d2b055eb0539",
      "src/rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48",
      "cl/helper.py": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
@@ -143,10 +143,16 @@
       "rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48"
      },
      "frozen_files": {},
-     "transformed_templates": {}
+     "transformed_templates": {},
+     "approved_runtime": {
+      "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "library_hashes": {
+       "/OpenROAD-flow-scripts/lib.lib": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+     }
     }
    },
-   "manifest_sha256": "188b82d3322b207d2ec3130e0585dd15fe51772542dee80441aa6bbfbbd39971",
+   "manifest_sha256": "167b7298046687b54fa6f5b574fdea5474932c2e33dde29de43dc10265bd9c2d",
    "inherited_benches": {
     "bench:positive": {
      "ok": true,
@@ -158,11 +164,11 @@
   "stage_idx": 2
  }
 }
-2026-10-21T16:04:29-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
+2026-10-21T16:05:56-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
 ..new-linked
-2026-10-21T16:04:29-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
+2026-10-21T16:05:56-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
 ......
 ----------------------------------------------------------------------
-Ran 10 tests in 0.360s
+Ran 10 tests in 0.505s
 
 OK

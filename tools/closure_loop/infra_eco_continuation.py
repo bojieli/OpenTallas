@@ -36,7 +36,7 @@ def relative(path):
 # exact old hold/TT/hold transformation. Other sources require their own review.
 APPROVED_SOURCE_PROOFS = {
     'f51f4ec42ca6f555ae0bb93558d1c485cee732c2':
-        'b204321c20d80c0243ca72b9e13bba31c94b310d3eb9083952c67e1860ad9282',
+        '7fa3bdc6243a05b87c6f39c7fd1938dd24f547d1ca33806daec2adfb0c8031c2',
 }
 
 
@@ -46,6 +46,8 @@ def expected_source_hashes(parent, manifest):
             or proof.get('source_commit') != parent.get('commit_full')
             or canonical_sha(proof) != APPROVED_SOURCE_PROOFS.get(parent.get('commit_full'))):
         raise ValueError('canonical expected source-readset proof missing or not approved for original source')
+    if any(manifest.get('runtime', {}).get(k) != v for k,v in proof['approved_runtime'].items()):
+        raise ValueError('canonical runtime image or complete loaded-library inventory differs')
     if canonical_sha(parent.get('route_overlay_plan')) != proof['frozen_overlay_plan_sha256']:
         raise ValueError('canonical source frozen overlay plan differs')
     expected = dict(proof['gate_files'])

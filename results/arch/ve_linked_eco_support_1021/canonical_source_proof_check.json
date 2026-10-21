@@ -4,7 +4,7 @@
  "frozen_helpers": 50,
  "final_source_files": 13972,
  "all_final_sha_match": true,
- "proof_canonical_sha256": "b204321c20d80c0243ca72b9e13bba31c94b310d3eb9083952c67e1860ad9282",
+ "proof_canonical_sha256": "7fa3bdc6243a05b87c6f39c7fd1938dd24f547d1ca33806daec2adfb0c8031c2",
  "script_sequence": [
   {
    "exit": 0,
@@ -22,5 +22,7 @@
    "script_sha256": "3899d47b1e2b8101685dd627d63384385feb0b7574dc108bb9ed65a20686cfe9"
   }
  ],
- "no_runtime_staged": true
+ "no_runtime_staged": true,
+ "selected_runtime_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "required_runtime_library_count": 25
 }

@@ -51,7 +51,8 @@ class LinkedECOTests(unittest.TestCase):
         proof=dict(schema='opentallas.canonical-source-readset.v1',source_commit=self.parent['commit_full'],
             frozen_overlay_plan_sha256=ie.canonical_sha(self.parent['route_overlay_plan']),
             gate_files={p[4:]:h for p,h in self.manifest['file_hashes'].items() if p.startswith('src/')},
-            frozen_files={},transformed_templates={})
+            frozen_files={},transformed_templates={},
+            approved_runtime={k:self.manifest['runtime'][k] for k in ('image','library_hashes')})
         self.manifest['canonical_source_readset']=proof
         self.proof_patch=patch.dict(ie.APPROVED_SOURCE_PROOFS,{self.parent['commit_full']:ie.canonical_sha(proof)})
         self.proof_patch.start();self.addCleanup(self.proof_patch.stop)
@@ -64,6 +65,7 @@ class LinkedECOTests(unittest.TestCase):
         p['route_overlay_plan']=proof['frozen_overlay_plan']
         m=copy.deepcopy(self.manifest);m['parent'].update(source_commit=p['commit_full'],state_sha256=ie.canonical_sha(p))
         m['canonical_source_readset']=proof
+        m['runtime'].update(proof['approved_runtime'])
         m['file_hashes']={k:v for k,v in m['file_hashes'].items() if not k.startswith(('src/','cl/'))}
         m['file_hashes'].update(ie.expected_source_hashes(p,m))
         m['file_hashes'].update({'cl/'+Path(x['path']).name:x['sha256'] for x in p['route_overlay_plan']['files']})
@@ -75,7 +77,10 @@ class LinkedECOTests(unittest.TestCase):
         wrong=copy.deepcopy(m);wrong['canonical_source_readset']['gate_files'][rtl[4:]]='0'*64
         transform=copy.deepcopy(m);key=next(iter(transform['canonical_source_readset']['transformed_templates']))
         transform['canonical_source_readset']['transformed_templates'][key]['utf8']+='malicious change'
-        for candidate in (omitted,changed,wrong,transform):
+        omitted_lib=copy.deepcopy(m);omitted_lib['runtime']['library_hashes'].pop(next(iter(omitted_lib['runtime']['library_hashes'])))
+        changed_lib=copy.deepcopy(m);changed_lib['runtime']['library_hashes'][next(iter(changed_lib['runtime']['library_hashes']))]='0'*64
+        image=copy.deepcopy(m);image['runtime']['image']='sha256:'+'b'*64
+        for candidate in (omitted,changed,wrong,transform,omitted_lib,changed_lib,image):
             with self.subTest(),self.assertRaisesRegex(ValueError,'canonical'):
                 ie.build(p,candidate,'new-linked')
         other=copy.deepcopy(m);other['runtime']['run']+='_different'
