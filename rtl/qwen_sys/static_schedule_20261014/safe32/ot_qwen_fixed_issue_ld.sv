@@ -129,14 +129,22 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  wire[DEPTH-1:0] c3;
  genvar gj;
  for(gj=0;gj<DEPTH;gj=gj+1)begin:g_c3 assign c3[gj]=rows[gj][45:44]==3; end
+ wire[DEPTH-1:0] c3_next;
+ for(gj=0;gj<DEPTH;gj=gj+1)begin:g_c3next
+  assign c3_next[gj]=(pw_v&&!active&&own_oh_r[gj])?(pw_data[45:44]==3):c3[gj];
+ end
  wire[4*(DEPTH+1)-1:0] pth;                   // pth[4*j+m-1] = popcount(c3[j-1:0]) >= m, m = 1..4
  for(gj=0;gj<=DEPTH;gj=gj+1)begin:g_pth
-  wire[DEPTH-1:0] mk=c3&~({DEPTH{1'b1}}<<gj);
+  wire[DEPTH-1:0] mk=((H16X>=3)?c3_next:c3)&~({DEPTH{1'b1}}<<gj);
   wire[7:0] m8=8'(mk);                        // popcount tree (DEPTH <= 8): 4 x 2-bit, 2 x 3-bit, 1 x 4-bit
   wire[1:0] s2a=m8[0]+m8[1], s2b=m8[2]+m8[3], s2c=m8[4]+m8[5], s2d=m8[6]+m8[7];
   wire[2:0] s3a=s2a+s2b, s3b=s2c+s2d;
   wire[3:0] pc=s3a+s3b;
-  assign pth[4*gj+:4]={pc>=4,pc>=3,pc>=2,pc>=1};
+  if(H16X>=3)begin:g_hold
+   reg[3:0] q;
+   always @(posedge clk)q<={pc>=4,pc>=3,pc>=2,pc>=1};
+   assign pth[4*gj+:4]=q;
+  end else begin:g_comb assign pth[4*gj+:4]={pc>=4,pc>=3,pc>=2,pc>=1}; end
  end
  wire[DEPTH:0] csel;                          // one-hot min(count,DEPTH)
  for(gj=0;gj<=DEPTH;gj=gj+1)begin:g_csel assign csel[gj]=(gj==DEPTH)?(count>=DEPTH):(count==gj); end
