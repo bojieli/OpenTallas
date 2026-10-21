@@ -1395,6 +1395,27 @@ def main():
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
+    # An external recovered root is an actual die port, never a PLL alias.
+    # Include its literal boundary entry in the same native clock dump. Delivery,
+    # phase and startup qualification stay explicit parent obligations.
+    external_records = []
+    for ec in C.get('external_clock_entries', []):
+        en, ep, domain = ec['instance'], ec['port'], ec['domain']
+        assert en in pl and domain not in entry_maps, ('external clock entry collision', ec)
+        assert ec['source_kind'] == 'external_forwarded_clock' and not ec.get('pll_alias'), ec
+        assert not any(r['instance'] == en and r['port'] == ep and r['kind'] == 'clock'
+                       for r in C['clock_resets']), ('external clock tied into PLL tree', ec)
+        dp = [d for d in C['die_pins'] if d['instance'] == en and d['port'] == ep]
+        assert len(dp) == 1 and dp[0]['name'] == ec['die_pin'] and dp[0]['direction'] == 'input' and dp[0]['bits'] == 1, ec
+        entries, aliases, ext_pairs = clock_entries({en: [ep]}, pl, cell_of, vxy, [])
+        entry_maps[domain] = aliases
+        port_net = 'p_' + re.sub(r'\W', '_', ec['die_pin'])
+        external_records.append(dict(ec, port_net=port_net, boundary_entries=entries,
+                                     entry_map=aliases, clock_tree='external port net; physical route measured at S11',
+                                     delivery_qualification='OPEN; package phase/reset/startup and routed arrival required'))
+        checks[domain] = dict(mode='external_forwarded_port', source_port=port_net, entry_map=aliases,
+                              qualification='OPEN; actual external source is retained, not replaced by PLL')
+    manifest['external_clock_entries'] = external_records
     manifest['clock_entry_map'] = entry_maps
     manifest['reset_reach_gate'] = reset_gate_rec
     manifest['clock_regions'] = clock_regions
@@ -1488,6 +1509,13 @@ def main():
     # H-DIE-CKGEN open issue 1: the hfd_ckgen ETM has no meaningful pll arcs -> the die clocks are defined AT its pll pins
     clocks = '\n'.join(f'create_clock -name {d} -period {PERIOD[d]} [get_pins {CKGEN}/pll_{d}]' for d in sorted(trees))
     groups = 'set_clock_groups -asynchronous ' + ' '.join(f'-group {d}' for d in sorted(trees))
+    for ec in external_records:
+        clocks += f"\ncreate_clock -name {ec['domain']} -period {ec['nominal_period_ps']} [get_ports {ec['port_net']}]"
+    # No new asynchronous grouping, false path or multicycle exception is added.
+    clock_root_names = [f'{CKGEN}/pll_{d}' for d in sorted(trees)] + [ec['port_net'] for ec in external_records]
+    external_clock_net_tcl = '\n'.join(
+        f'if {{[[ord::get_db_block] findNet {ec["port_net"]}] != "NULL"}} {{ [[ord::get_db_block] findNet {ec["port_net"]}] setSigType CLOCK }}'
+        for ec in external_records)
     cells = sorted(kinds)
     # OWNER 10-20 21:27 (HBM-DIE12): M8 OPEN for die SIGNAL routing, M9 stays PG/clock, regular PG straps kept on M8 ->
     # owner1020 = signal M4-M8, clock M7-M9, M8 capacity reduced by the strap share (--grt-m8-pg-share of the tracks).
@@ -1529,6 +1557,7 @@ write_db /work/out/place.odb
 source {plat}/setRC.tcl
 set blk [ord::get_db_block]
 foreach n [$blk getNets] {{ if {{[string match dk?_* [$n getName]] || [string match n_dk?_* [$n getName]] || [string match ckg_pll_* [$n getName]]}} {{ $n setSigType CLOCK }} }}
+{external_clock_net_tcl}
 set_wire_rc -clock -layer M8
 set_wire_rc -signal -layer {die_m8.model(a.signal_top_layer)['sta_wire_rc_layer']}
 {grt_layers}
@@ -1573,7 +1602,7 @@ set_clock_uncertainty -hold 25 [all_clocks]
 set_false_path -from [get_pins {CKGEN}/por_*]
 # die clock check (ROOT d59a62a37): dump the die clock network + STA arrivals; report with tools/die_clock_check.py
 set ::env(OT_DCC_OUT) /work/out/die_clock_dump.tsv
-set ::env(OT_DCC_ROOTS) "{' '.join(f'{CKGEN}/pll_{d}' for d in sorted(trees))}"
+set ::env(OT_DCC_ROOTS) "{' '.join(clock_root_names)}"
 set ::env(OT_DCC_MAX_FANOUT) {a.pair_max_tiles}
 if {{[catch {{source /work/die_clock_check.tcl}} e]}} {{ puts "OT_DCC_FAIL $e" }}
 proc dump {{corner kind fn}} {{
@@ -1717,6 +1746,12 @@ echo $? > $D/out/run.exit
                         (int(x // 1000), int(y // 1000)) for t in trees.values() for _, _, x, y in t['buffers']).items()},
                     reset='hb_ckgen/por_<domain> straight to every reset pin (false path; distribution not modelled)',
                     clock_source='REAL hfd_ckgen (hbm_ckgen_cl); create_clock at hb_ckgen/pll_<domain> (ETM has no pll arcs)')
+    for ec in external_records:
+        manifest['clock_domains'][ec['domain']] = dict(period_ps=ec['nominal_period_ps'], sink_insts=1, sink_pins=1,
+            source_kind='external_forwarded_clock', source_port=ec['port_net'], qualification='PARENT_PHASE_RESET_DELIVERY_OPEN')
+    if external_records:
+        manifest['clock_source'] += '; external recovered roots at their real die ports (no PLL alias); parent delivery/startup remains OPEN'
+        manifest['label'] += ' EXTERNAL_CLOCK_DELIVERY_STARTUP_OPEN'
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=1, default=str))
     print(json.dumps(dict(insts=len(inst), nets=len(nets), excluded=len(excluded), homes=len(homes), problems=len(bad),
                           clock={d: len(t['buffers']) for d, t in trees.items()})))
