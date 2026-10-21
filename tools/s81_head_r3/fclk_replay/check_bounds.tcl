@@ -4,7 +4,11 @@ foreach l {SEQ_RVT_TT_nldm_220123.lib INVBUF_RVT_TT_nldm_220122.lib.gz SIMPLE_RV
     read_liberty $P/lib/NLDM/asap7sc7p5t_$l
 }
 foreach f [glob /baseline/views/*.lib] {read_liberty $f}
-read_db /repair/repaired.odb
+if {[info exists ::env(CHECK_FAILED_BASELINE)] && $::env(CHECK_FAILED_BASELINE) eq "1"} {
+    read_db /baseline/die_repeaters.fclk.fail.odb
+} else {
+    read_db /repair/repaired.odb
+}
 source /baseline/cluster_bounds.tcl
 source /baseline/die_repeaters.tcl
 source /candidate/fclk_audit.tcl
