@@ -1,0 +1,56 @@
+{
+  "status": "SOURCE_ONLY_UNCLOSED_PARENT_NOT_SELECTED",
+  "scope": "same pending coherent Q73 successor; no competing vehicle",
+  "source_projection": [
+    {
+      "recovered_source": "rtl/test/qwen_dv/qfd_dv_su_lane_safe2_fixture.sv",
+      "recovered_commit": "b0af28298",
+      "recovered_sha256": "089792625c3bd930686b1b273c6c0a9d4ade39bf9555b6f56c1a21c4dd62e310",
+      "production_source": "rtl/qwen_dv/qfd_dv_su_lane_safe2.sv",
+      "production_sha256": "4052332e2bb4c7028cd64db02b715c47d92d5636e7774a862f102a9f1b89af46",
+      "exact_replacements": {
+        "module qfd_dv_su_lane_landed (": "module qfd_dv_su_lane_safe2 ("
+      }
+    },
+    {
+      "recovered_source": "rtl/qwen_dv/qfd_dv_su8_landed.sv",
+      "recovered_commit": "b0af28298",
+      "recovered_sha256": "e7780f891c2e18a0b9dfb7e7d15ae9a591a7666fbcae815bbe98ad4dad9b3ec1",
+      "production_source": "rtl/qwen_dv/qfd_dv_su8_safe2.sv",
+      "production_sha256": "7414c7765f542a0b07f8bc5707dfccb633f759cae946372fdeb1e5798e03d6cb",
+      "exact_replacements": {
+        "module qfd_dv_su8_landed #(": "module qfd_dv_su8_safe2 #(",
+        "qfd_dv_su_lane_landed u_tile (": "qfd_dv_su_lane_safe2 u_tile ("
+      }
+    }
+  ],
+  "head": {
+    "master": "qfd_dv_lane_h_safe2",
+    "source": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "canonical_closure": "09c3abe6d",
+    "canonical_source": "e95c9709b",
+    "ML": 5,
+    "RD": 2,
+    "old_selected_head_ML": 1,
+    "head_internal_ML_delta_edges": 4,
+    "reset_release_delta_edges": 3,
+    "reset_delta_scope": "safe2 head own reset relative to CONTROL_SAFE reference at the same head input; not an inferred whole-die reset age",
+    "added_steady_state_edges_vs_recovered_safe2_fixture": 0
+  },
+  "binding": {
+    "new_parent_masters": [
+      "qfd_dv_su_lane_safe2",
+      "qfd_dv_su8_safe2"
+    ],
+    "old_master_alias_allowed": false,
+    "production_selected": false,
+    "remaining": "Bind actual selected s7 suvm/SU8 interface, source-bound parent frames, complete parent reset/steady timing composition; combine RP consumer and TT source before full GEN"
+  },
+  "evidence": {
+    "reused": "immutable safe2 golden W10 and three causal mutants; numerical/source production receipt",
+    "selected_new_parent_bench": "NOTRUN",
+    "full_GEN": "NOTRUN",
+    "transport_ages": "UNKNOWN",
+    "SS_signoff": false
+  }
+}
