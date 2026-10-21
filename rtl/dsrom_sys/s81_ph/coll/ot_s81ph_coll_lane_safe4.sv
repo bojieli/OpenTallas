@@ -27,6 +27,9 @@ module ot_s81ph_coll_lane_safe4 #(
     //   core landing lo_v / lo_d 1 stage at the core face before the credit-rx landing flops                    +1 core->link
     // Every hop is a plain register (no flow control); the credit / ACK protocol absorbs the extra edges (ACK timeout
     // derives from RTT incl. RX_STAGES, margin 2*KEEPALIVE+32 >> 2; core credits 8 >> landing RTT).
+    // REACH = 2 (S81-COLL8 10-20): REACH 1 + the endpoint RX FIFO write landing (ot_s81ph_link_ep_safe4 WRL = 2: c_acc ->
+    // 3 kept copies -> 18 per-group kept copies beside the FIFO banks, data 2 reset-free stages; its own reset leaf, EP_RN
+    // + 1).  s7 GRT reach audit: 4.8k of 5,379 pairs > 405 um were this one-cycle cone.  +2 receive edges.
     parameter integer REACH = 0
 ) (
     input  wire          clk,
@@ -54,9 +57,9 @@ module ot_s81ph_coll_lane_safe4 #(
     localparam integer HEAD_RL = (HEAD_NS + 7) / 8;          // leaves for them (8 slices x 2 flags each)
     localparam integer MEM_NS = (W + 1 + 7) / 8, MEM_NA = (MEM_NS + 3) / 4, MEM_RST = 2 * (MEM_NS + MEM_NA);
     `ifdef OT_COLL_NATIVE32
-    localparam integer EP_RN = 16, GB_RN = 22;
+    localparam integer EP_RN = (REACH >= 2) ? 17 : 16, GB_RN = 22;
 `else
-    localparam integer EP_RN = 12, GB_RN = 22;
+    localparam integer EP_RN = (REACH >= 2) ? 13 : 12, GB_RN = 22;
 `endif   // = ot_s81ph_link_gbx_safe3 RN (checked there)
     localparam integer R_LOC = 0, R_CRX = 1, R_CTX = 2, R_HEAD = 3, R_EP = R_HEAD + HEAD_RL, R_MEM = R_EP + EP_RN,
                        R_GB = R_MEM + MEM_RST, NREG = R_GB + GB_RN;
@@ -126,7 +129,7 @@ module ot_s81ph_coll_lane_safe4 #(
     end endgenerate
     ot_s81ph_link_ep_safe4 #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(REACH != 0 ? 5 : 3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(1), .PIPE(2), .RXPIPE(1), .TOREG(1), .MWR(1),
-        .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH)) u_ep (
+        .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH != 0 ? 1 : 0), .WRL(REACH >= 2 ? 2 : 0)) u_ep (
         .clk(clk), .rst_v(rr[R_EP +: EP_RN]), .mem_rst_n(rr[R_MEM +: MEM_RST]), .ch_b(ch_b),
         .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
@@ -218,6 +221,40 @@ module dsfd_coll_lane_e_safe7 #(parameter integer CH_BOARD = 700) (
         .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 `else
     ot_s81ph_coll_lane_safe4 #(.CH_BOARD(CH_BOARD), .TF_CLEANUP(0), .REACH(1)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+        .tf(tf[0]), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+`endif
+endmodule
+
+// S81-COLL8 10-20: REACH = 2 tile tops (COLL s8 kits dscoll_lane_{w,e}_s8*), ports identical to the safe4 tops (tf present unless OT_S81PH_COLL_TF_CLEANUP)
+module dsfd_coll_lane_w_safe8 #(parameter integer CH_BOARD = 700) (
+    input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
+`ifndef OT_S81PH_COLL_TF_CLEANUP
+    output wire [0:0] tf,
+`endif
+    input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
+    output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
+`ifdef OT_S81PH_COLL_TF_CLEANUP
+    wire tf_unused;
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(CH_BOARD), .TF_CLEANUP(1), .REACH(2)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+        .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+`else
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(CH_BOARD), .TF_CLEANUP(0), .REACH(2)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+        .tf(tf[0]), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+`endif
+endmodule
+module dsfd_coll_lane_e_safe8 #(parameter integer CH_BOARD = 700) (
+    input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
+`ifndef OT_S81PH_COLL_TF_CLEANUP
+    output wire [0:0] tf,
+`endif
+    input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
+    output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
+`ifdef OT_S81PH_COLL_TF_CLEANUP
+    wire tf_unused;
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(CH_BOARD), .TF_CLEANUP(1), .REACH(2)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+        .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+`else
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(CH_BOARD), .TF_CLEANUP(0), .REACH(2)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
         .tf(tf[0]), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 `endif
 endmodule

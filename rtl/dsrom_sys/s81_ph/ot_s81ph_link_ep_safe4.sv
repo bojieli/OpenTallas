@@ -85,7 +85,16 @@ module ot_s81ph_link_ep_safe4 #(
     // FCOPY (S81-TILES-E 10-20, opt-in, default 0 = unchanged netlist): the freed-count snapshot enable (fr_seen <= rr_fr)
     // takes its own kept copy of ok_f (ok_f3, same d / edge), so ok_f keeps <= 32 loads when the lane REACH=1 netlist
     // shifts ABC's mapping (s7 pre-gate census: ok_f 39).  0 cycles.
-    parameter integer FCOPY = 0
+    parameter integer FCOPY = 0,
+    // WRL (S81-COLL8 10-20, opt-in, default 0 = unchanged netlist): RX FIFO write LANDING, 2 registered edges between the
+    // receive decision (c_acc: c_diff / c_crc_ok / xp_v at the receive control) and the 18 FIFO address groups beside
+    // their banks (s7 GRT native reach: 4.8k of 5,379 pairs > 405 um = c_diff/c_crc_ok/xp_v -> count_r/wp_r/u_m valid_r,
+    // max 765 um, one cycle).  Edge 1: 3 kept copies of c_acc (one per 6 groups); edge 2: one kept copy per group (its own
+    // group reset leaf), so no single-cycle wire spans the tile.  Data {c_last, c_data} follows in 2 reset-free stages.
+    // The logical occupancy fill (c_full / overflow) still counts c_acc at once; the physical occupancy fillw / tail /
+    // drain count the landed write (acc_p = c_acc 2 edges later), so a read never precedes its landed write (OLD-read
+    // forwarding unchanged).  Credits return 2 edges later (freed counts drains).  +2 receive edges, priced in the kit.
+    parameter integer WRL = 0
 ) (
     input  wire                     clk,
     input  wire [RN-1:0]            rst_v,
@@ -561,6 +570,8 @@ module ot_s81ph_link_ep_safe4 #(
     reg             nak_sent, nak_req, dup_req;
     reg  [CW-1:0]   freed;
     reg  [CW-1:0]   fill;
+    wire            acc_p;                       // physical (landed) FIFO write: c_acc (WRL 0) or c_acc 2 edges later
+    wire [CW-1:0]   fill_p;                      // physical occupancy (drain side)
     reg  [PW-1:0]   head, tail;
     reg             out_valid_r;
     wire [W:0]      fifo_q;
@@ -596,7 +607,48 @@ module ot_s81ph_link_ep_safe4 #(
     wire            c_behind = c_good && (c_diff >= HALF);
     wire            c_unexpl = (c_ahead && (c_diff >= RPS)) || (c_behind && (c_back > RPS));
     wire            c_nak    = (c_crcerr || c_ahead) && !nak_sent;
-    wire            drain    = (fill != 0) && (!out_valid_r || out_ready);
+    wire            drain    = (fill_p != 0) && (!out_valid_r || out_ready);
+    wire [MEM_NA-1:0] wl_g;                      // WRL: landed per-group write enables
+    wire [W:0]      wl_d;                        // WRL: landed write data {last, data}
+    generate if (WRL != 0) begin : g_wl
+        localparam integer NL1 = 3;
+        wire [NL1-1:0] wl1;
+        wire acd1, acd2;
+        for (gi = 0; gi < NL1; gi = gi + 1) begin : g_l1
+            ot_s81ph_kff4_1 u_k_wl1 (.clk(clk), .rst_n(rst_v[RN-1]), .d(c_acc), .q(wl1[gi]));
+        end
+        for (gi = 0; gi < MEM_NA; gi = gi + 1) begin : g_l2
+`ifdef OT_COLL_REACH_MUT_WL
+            // mutant: group 0's landed write copy never fires
+            ot_s81ph_kff4_1 u_k_wl2 (.clk(clk), .rst_n(mem_rst_n[MEM_NS+MEM_NA+MEM_NS+gi]), .d((gi == 0) ? 1'b0 : wl1[(gi*NL1)/MEM_NA]), .q(wl_g[gi]));
+`else
+            ot_s81ph_kff4_1 u_k_wl2 (.clk(clk), .rst_n(mem_rst_n[MEM_NS+MEM_NA+MEM_NS+gi]), .d(wl1[(gi*NL1)/MEM_NA]), .q(wl_g[gi]));
+`endif
+        end
+        ot_s81ph_kff4_1 u_k_acd1 (.clk(clk), .rst_n(rst_v[RN-1]), .d(c_acc), .q(acd1));
+        ot_s81ph_kff4_1 u_k_acd2 (.clk(clk), .rst_n(rst_v[RN-1]), .d(acd1), .q(acd2));
+        reg [W:0] wd1, wd2;
+        always @(posedge clk) begin wd1 <= {c_last, c_data}; wd2 <= wd1; end
+        reg [CW-1:0] fillw;
+        always @(posedge clk or negedge rst_v[RN-1])
+            if (!rst_v[RN-1]) fillw <= 0;
+            else fillw <= fillw + {{(CW-1){1'b0}}, acd2} - {{(CW-1){1'b0}}, drain};
+        assign acc_p = acd2; assign fill_p = fillw; assign wl_d = wd2;
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_n && rst_v[RN-1] && (fill < fillw || fill - fillw > 2))
+            $fatal(1, "COLL WRL logical/physical occupancy out of range fill=%0d fillw=%0d", fill, fillw);
+`ifdef OT_COLL_REACH_MUT_WL
+        localparam integer Q0 = 1;                   // the mutant's dropped copy is left to the FIFO group check
+`else
+        localparam integer Q0 = 0;
+`endif
+        always @(posedge clk) if (rst_n && rst_v[RN-1]) for (int q = Q0; q < MEM_NA; q++)
+            if (wl_g[q] !== acd2) $fatal(1, "COLL WRL landed write copy %0d differs", q);
+        initial if (RN < 13) $fatal(1, "ot_s81ph_link_ep_safe4: WRL needs its own reset leaf rst_v[RN-1] (RN >= 13)");
+`endif
+    end else begin : g_nowl
+        assign acc_p = c_acc; assign fill_p = fill; assign wl_g = {MEM_NA{1'b0}}; assign wl_d = {c_last, c_data};
+    end endgenerate
 
     generate if(OLDREAD!=0) begin:g_fifo_safe
         localparam integer RB=MEM_NS+MEM_NA;
@@ -615,10 +667,10 @@ module ot_s81ph_link_ep_safe4 #(
             wire ordy=out_ready_v[1+(mg*(ORN-1))/MEM_NA];   // out_ready copy for this group
             wire rd=(count_r!=0)&&(!valid_r||ordy);
 `ifdef OT_COLL_NATIVE32_OFF
-            assign fwr_raw[mg]=c_inord&&(count_r!=CW'(CREDITS));
-            wire wr=fwr_kp[mg];
+            assign fwr_raw[mg]=(WRL!=0)?1'b0:(c_inord&&(count_r!=CW'(CREDITS)));
+            wire wr=(WRL!=0)?wl_g[mg]:fwr_kp[mg];
 `else
-            wire wr=c_inord&&(count_r!=CW'(CREDITS));
+            wire wr=(WRL!=0)?wl_g[mg]:(c_inord&&(count_r!=CW'(CREDITS)));
 `endif
             assign wr_group[mg]=wr; assign rd_group[mg]=rd;
             assign wa_copy[PW*mg+:PW]=wp_r;assign ra_copy[PW*mg+:PW]=rp_r;
@@ -632,7 +684,7 @@ module ot_s81ph_link_ep_safe4 #(
               end
 `ifndef SYNTHESIS
             always @(posedge clk) if(rst_n && mem_rst_n[RB+MEM_NS+mg])
-              if({wp_r,rp_r,count_r,valid_r,wr,rd} !== {tail,head,fill,out_valid_r,c_acc,drain})
+              if({wp_r,rp_r,count_r,valid_r,wr,rd} !== {tail,head,fill_p,out_valid_r,acc_p,drain})
                 $fatal(1,"COLL FIFO group state differs group%0d",mg);
 `endif
         end
@@ -644,8 +696,8 @@ module ot_s81ph_link_ep_safe4 #(
 `else
           .MUT(0)
 `endif
-        ) u_m(.clk(clk),.rst_n(mem_rst_n[RB+:MEM_NS]),.we(c_acc),.we_group(wr_group),
-          .wa(wa_copy),.wd({c_last,c_data}),.re(drain),.re_group(rd_group),.ra(ra_copy),.q(fifo_q));
+        ) u_m(.clk(clk),.rst_n(mem_rst_n[RB+:MEM_NS]),.we(acc_p),.we_group(wr_group),
+          .wa(wa_copy),.wd(wl_d),.re(drain),.re_group(rd_group),.ra(ra_copy),.q(fifo_q));
     end else begin:g_fifo_legacy
     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM), .WREG(MWR)) u_fifo (.clk(clk), .rst_n(rst_n),
         .we(c_acc), .wa(tail), .wd({c_last, c_data}), .re(drain), .ra(head), .q(fifo_q));
@@ -852,7 +904,7 @@ module ot_s81ph_link_ep_safe4 #(
     always @(posedge clk or negedge rst_v[10])
         if (!rst_v[10]) begin fill <= 0; head <= 0; tail <= 0; out_valid_r <= 1'b0; end
         else begin
-            if (c_acc) tail <= (tail == PLAST) ? {PW{1'b0}} : tail + 1'b1;
+            if (acc_p) tail <= (tail == PLAST) ? {PW{1'b0}} : tail + 1'b1;
             if (drain) begin head <= (head == PLAST) ? {PW{1'b0}} : head + 1'b1; out_valid_r <= 1'b1; end
             else if (out_valid_r && out_ready) out_valid_r <= 1'b0;
             fill <= fill + {{(CW-1){1'b0}}, c_acc} - {{(CW-1){1'b0}}, drain};

@@ -1,7 +1,8 @@
 #!/bin/bash
 # S81-TILES-E 10-20 COLL s7: safe4 pair (reference) + safe7 (REACH=1 relay hops) pair transactional scoreboard
 # (tb_coll_reach7), Verilator 5.050.  $1 = output dir, $2 = mutant (0 positive; 5 second rx landing hop never loads
-# its beat; 6 core landing data never loads; 7 reverse-frame relay drops every frame).
+# its beat; 6 core landing data never loads; 7 reverse-frame relay drops every frame; 8 (REACH8 only) group 0's landed
+# FIFO write copy never fires).  OT_COLL_REACH8=1: the DUT pair is safe8 (REACH = 2).
 # Mutants 1-4 of the shared safe4 submodules stay on tb_coll_safe4_boundary (coll_safe4_boundary.sh).
 set -eu
 O=$(realpath -m "$1"); M=${2:-0}; mkdir -p "$O"
@@ -14,6 +15,8 @@ D=()
 if [ "$M" = 5 ]; then D+=(-DOT_COLL_REACH_MUT_LR); fi
 if [ "$M" = 6 ]; then D+=(-DOT_COLL_REACH_MUT_LO); fi
 if [ "$M" = 7 ]; then D+=(-DOT_COLL_REACH_MUT_RT); fi
+if [ "$M" = 8 ]; then D+=(-DOT_COLL_REACH_MUT_WL); fi
+[ "${OT_COLL_REACH8:-0}" != 1 ] || D+=(-DOT_COLL_REACH8)   # S81-COLL8: DUT = safe8 (REACH 2, endpoint RX FIFO write landing)
 verilator --binary --timing -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
  -DOT_S81PH_COLL_TF_CLEANUP "${D[@]}" --top-module tb_coll_reach7 --Mdir "$O/obj" \
  $SRCS rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_b64.sv rtl/lib/ot_sram_showahead_b64.sv \

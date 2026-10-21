@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-coll8/src1
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-coll8/src1
+ot-run: ot-epyc7       admits   926 GB (avail 698, growth 45, headroom 0, waiters 0/0 GB) load 44/96 running 11 disk 5096 GB 
+ot-run: ot-epyc9       admits  1183 GB (avail 928, growth 100, headroom 0, waiters 0/0 GB) load 31/128 running 25 disk 179 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-coll8/src1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-coll8/src1
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2149217-1792556871 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+[63000] %Fatal: ot_s81ph_link_ep_safe4.sv:688: Assertion failed in tb_coll_reach7.variant[1].dut7.e.u.u_ep.g_fifo_safe.g_address[0]: COLL FIFO group state differs group0
+%Error: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:688: Verilog $stop
+Aborting...
+sim exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2149217-1792556871): exit 1

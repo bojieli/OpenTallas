@@ -6,7 +6,7 @@
 // reset).  The relays change latency, so the check is transactional per pair: every word delivered on li of side j is
 // exactly the next word sent on lo of side 1-j in the current reset epoch (in order, exactly once, bit-exact), each core
 // credit model stays inside 0..8, both pairs end with the same fault flags, and the safe7 pair delivers >= 97% of the
-// reference words.  Prints the mean lo->li latency of both pairs (the added cycles, for the schedule ledger).
+// reference words.  With +define+OT_COLL_REACH8 the DUT pair is safe8 (REACH = 2: + endpoint RX FIFO write landing).  Prints the mean lo->li latency of both pairs (the added cycles, for the schedule ledger).
 module tb_coll_reach7;
  parameter integer NCYC=40000;
  reg clk=0,rst_n=0;always #0.5 clk=~clk;
@@ -28,10 +28,18 @@ module tb_coll_reach7;
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][0]^imp[0],rxv[0]}),.tx(tx[v][1]),
     .lo_v(lv[v][1]),.lo_r(cr[v][1]),.lo_d(ld[v][1]),.li_v(ov[v][1]),.li_r(ret[v][1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end else begin:dut7
+`ifdef OT_COLL_REACH8
+   dsfd_coll_lane_w_safe8 w(
+`else
    dsfd_coll_lane_w_safe7 w(
+`endif
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][1]^imp[1],rxv[1]}),.tx(tx[v][0]),
     .lo_v(lv[v][0]),.lo_r(cr[v][0]),.lo_d(ld[v][0]),.li_v(ov[v][0]),.li_r(ret[v][0]),.li_d(od[v][0]),.flt(flt[v][0]));
+`ifdef OT_COLL_REACH8
+   dsfd_coll_lane_e_safe8 e(
+`else
    dsfd_coll_lane_e_safe7 e(
+`endif
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][0]^imp[0],rxv[0]}),.tx(tx[v][1]),
     .lo_v(lv[v][1]),.lo_r(cr[v][1]),.lo_d(ld[v][1]),.li_v(ov[v][1]),.li_r(ret[v][1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end
