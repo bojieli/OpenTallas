@@ -11,5 +11,5 @@
   },
   "source11_delta": "only scalar byte re/en AND kept hierarchy child; no flop/cycle/interface addition",
   "native10": "FAIL96 max81; ALL96 input_port, internal0; scalar_enable_leaves32 max81,rd_re64 max40",
-  "qualification": "source11 native/bench pending"
+  "qualification": "source11 terminal FAIL9/max37 after fixing all96 scalar inputroots;168193roots, fivecomb33/fourseq37 bankpreselector cones, no port/resetfailures. Default/native143360PASS+3negative. Mapped11/rawnative11 preserved ep9, digest in summary; actualmemorypeak23.83GiB."
 }
