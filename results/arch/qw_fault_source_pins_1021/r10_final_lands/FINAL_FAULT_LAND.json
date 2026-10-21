@@ -1,0 +1,259 @@
+{
+  "scope": "read-only actual final r10bfp case LEF pin identity + emitted net connectedness + four-hop reach + landing occupied-frame proof only; strict bind/root sink/clock/reset timing remain owed",
+  "case": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp/out/case",
+  "actual_frames": 30471,
+  "chains": [
+    {
+      "child": "flt_root_d2d_rom_g3",
+      "parent": "flt_root_native59_g1",
+      "landing": "rly_flt_t_d2d_rom_g3_0",
+      "frame": [
+        600.048,
+        22947.84,
+        64.776,
+        30.216
+      ],
+      "master": "qfd_landh0_1_ES_65x30",
+      "hops": [
+        {
+          "source": [
+            "flt_root_d2d_rom_g3",
+            "o"
+          ],
+          "target": [
+            "rly_flt_t_d2d_rom_g3_0",
+            "a"
+          ],
+          "net": "n_flt_t_d2d_rom_g3",
+          "source_xy": [
+            787.872,
+            23029.932
+          ],
+          "target_xy": [
+            664.728,
+            22962.924
+          ],
+          "um": 190.152
+        },
+        {
+          "source": [
+            "rly_flt_t_d2d_rom_g3_0",
+            "b"
+          ],
+          "target": [
+            "flt_root_native59_g1",
+            "f0"
+          ],
+          "net": "n_flt_t_d2d_rom_g3__r1",
+          "source_xy": [
+            632.412,
+            22947.936
+          ],
+          "target_xy": [
+            647.664,
+            22760.988
+          ],
+          "um": 202.2
+        }
+      ],
+      "max_um": 202.2,
+      "source_clock": "n_clk_d2d",
+      "destination_clock": "n_clk_r54",
+      "reset_ports": {
+        "rs": "n_rst_seq__t86",
+        "en": "n_rst_seq_ctlm__t153"
+      },
+      "overlaps": []
+    },
+    {
+      "child": "flt_root_native59_g1",
+      "parent": "flt_root_sys_face_g0",
+      "landing": "rly_flt_t_native59_g1_0",
+      "frame": [
+        871.344,
+        22718.88,
+        64.776,
+        30.216
+      ],
+      "master": "qfd_landh0_1_WE_65x30",
+      "hops": [
+        {
+          "source": [
+            "flt_root_native59_g1",
+            "o"
+          ],
+          "target": [
+            "rly_flt_t_native59_g1_0",
+            "a"
+          ],
+          "net": "n_flt_t_native59_g1",
+          "source_xy": [
+            669.072,
+            22770.732
+          ],
+          "target_xy": [
+            871.44,
+            22733.964
+          ],
+          "um": 239.136
+        },
+        {
+          "source": [
+            "rly_flt_t_native59_g1_0",
+            "b"
+          ],
+          "target": [
+            "flt_root_sys_face_g0",
+            "f0"
+          ],
+          "net": "n_flt_t_native59_g1__r1",
+          "source_xy": [
+            936.024,
+            22733.964
+          ],
+          "target_xy": [
+            1084.848,
+            22646.508
+          ],
+          "um": 236.28
+        }
+      ],
+      "max_um": 239.136,
+      "source_clock": "n_clk_r54",
+      "destination_clock": "n_clk_d2d",
+      "reset_ports": {
+        "en": "n_rst_seq__t81",
+        "rs": "n_rst_seq_ctlm__t144"
+      },
+      "overlaps": []
+    }
+  ],
+  "pin_refs": {
+    "flt_root_d2d_rom_g3.o": {
+      "master": "qfd_fault_or_n10",
+      "rects": [
+        [
+          21.408,
+          10.8,
+          21.6,
+          10.824
+        ]
+      ],
+      "xy": [
+        787.872,
+        23029.932
+      ]
+    },
+    "rly_flt_t_d2d_rom_g3_0.a": {
+      "master": "qfd_landh0_1_ES_65x30",
+      "rects": [
+        [
+          64.584,
+          15.072,
+          64.776,
+          15.096
+        ]
+      ],
+      "xy": [
+        664.728,
+        22962.924
+      ]
+    },
+    "rly_flt_t_d2d_rom_g3_0.b": {
+      "master": "qfd_landh0_1_ES_65x30",
+      "rects": [
+        [
+          32.352,
+          0.0,
+          32.376,
+          0.192
+        ]
+      ],
+      "xy": [
+        632.412,
+        22947.936
+      ]
+    },
+    "flt_root_native59_g1.f0": {
+      "master": "qfd_fault_or_n7",
+      "rects": [
+        [
+          0.0,
+          1.056,
+          0.192,
+          1.08
+        ]
+      ],
+      "xy": [
+        647.664,
+        22760.988
+      ]
+    },
+    "flt_root_native59_g1.o": {
+      "master": "qfd_fault_or_n7",
+      "rects": [
+        [
+          21.408,
+          10.8,
+          21.6,
+          10.824
+        ]
+      ],
+      "xy": [
+        669.072,
+        22770.732
+      ]
+    },
+    "rly_flt_t_native59_g1_0.a": {
+      "master": "qfd_landh0_1_WE_65x30",
+      "rects": [
+        [
+          0.0,
+          15.072,
+          0.192,
+          15.096
+        ]
+      ],
+      "xy": [
+        871.44,
+        22733.964
+      ]
+    },
+    "rly_flt_t_native59_g1_0.b": {
+      "master": "qfd_landh0_1_WE_65x30",
+      "rects": [
+        [
+          64.584,
+          15.072,
+          64.776,
+          15.096
+        ]
+      ],
+      "xy": [
+        936.024,
+        22733.964
+      ]
+    },
+    "flt_root_sys_face_g0.f0": {
+      "master": "qfd_fault_or_n5",
+      "rects": [
+        [
+          0.0,
+          1.056,
+          0.192,
+          1.08
+        ]
+      ],
+      "xy": [
+        1084.848,
+        22646.508
+      ]
+    }
+  },
+  "case_sha256": {
+    "elements.lef": "3a6b6f3b3fa5ee7e7f4f36ae17fef8ed67a8404c27dc32c9ac148df0ec49869a",
+    "die.v": "2d50bf92e09ff532d85b461b1ccac994b2e44dacb97a35aee7e4dd931c05cee0",
+    "place.tcl": "ef484d2cc0e8f177dc452db7b7be0fe188f0f9fa516b6c989afecf4f998b9089",
+    "manifest.json": "866d3bd956649b4b3570a6e8cf55815ac8a364e2676d5dcc5ced807746c15d63"
+  }
+}
