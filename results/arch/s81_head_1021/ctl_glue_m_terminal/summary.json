@@ -1,0 +1,43 @@
+{
+ "source_binding": {
+  "start_commit": "5c1b2379b64644c92c93be7aff09a3d58024ca7c",
+  "archive_sha256": "12b31b18fbea77ce60612c985fb8b3a61a154280886f8a503b2600a2fa1a7f18",
+  "manifest_sha256": "fc37cdf30dbba55b4e80f4a8c4bd36f2c60fb9adf312471156d44f5fc2b936d0"
+ },
+ "terminal": "DUT_FAIL",
+ "native": "max32 PASS",
+ "failures": [
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "519 stage(s) beyond 500 um reach: insert relay flops",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "register u_ot_pr_core.htd0_q[4]$_DFF_P_: its fixed terminals pin htx_d[4] and pin dtx_d[2216] put it >= 856 um from one of them (> 500 um per stage)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "register u_ot_pr_core.htd0_q[5]$_DFF_P_: its fixed terminals pin htx_d[5] and pin dtx_d[2217] put it >= 856 um from one of them (> 500 um per stage)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "register u_ot_pr_core.htd0_q[6]$_DFF_P_: its fixed terminals pin htx_d[6] and pin dtx_d[2218] put it >= 856 um from one of them (> 500 um per stage)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  }
+ ],
+ "fallback": "Still live GRT hold; prior measured strictclock89.5TT/98.5FF+SRAMslew218.2psFAIL preserved",
+ "no_submit_or_rerun": true
+}
