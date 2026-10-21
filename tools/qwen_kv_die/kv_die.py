@@ -2021,10 +2021,12 @@ def build(*args, **kwargs):
             _ho = KSD.ahub_ofs_bound()
             if not _ho:
                 raise ValueError('kv_die: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view hardened offsets)')
-            for _f in (kv_bundle_eq.ahub_ap_bundle, kv_bundle_eq.ahub_fr_bundle):
-                _ab = _f(m, {i.name: i for i in m['insts']}, _ho)
-                if _ab:
-                    m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
+            # KV-AHUB10 10-20: only the ap bundle here; the fr bundle runs AFTER PVFIN_ALIGN (it pads ks_pvfst: i13b
+            # solved fr on pvfst 41, PVFIN_ALIGN then made it 42 -> FR_OFS -6 vs the hub's -7).  kv_fwd_lanes re-solves
+            # both on the post-station lane ages (AHUB_PAD_POST) and fails closed on any residue.
+            _ab = kv_bundle_eq.ahub_ap_bundle(m, {i.name: i for i in m['insts']}, _ho)
+            if _ab:
+                m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
         print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
                                                for n_, r_ in m['bundle_eq']['bundles'].items())
               + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
@@ -2047,6 +2049,16 @@ def build(*args, **kwargs):
         r_ = m.get('pvfin_align') or {}
         print(f"kv die PVFIN_ALIGN: align {r_.get('before')} -> {r_.get('after')}, pads {r_.get('pads')}",
               file=sys.stderr)
+    if KSD.ON and kv_bundle_eq.on() and kv_bundle_eq.ahub_pad_on() and kwargs.get('split', len(args) > 7 and args[7]):
+        # KV-AHUB10 10-20: the hub fr bundle on the FINAL generator ks_pvfst (after PVFIN_ALIGN; see the AHUB pass above)
+        _ab = kv_bundle_eq.ahub_fr_bundle(m, {i.name: i for i in m['insts']}, KSD.ahub_ofs_bound())
+        if _ab:
+            m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
+            _fr = m['bundle_eq']['bundles'].get('A.hub_fr') or {}
+            print(f"kv die AHUB_FR: {_fr}", file=sys.stderr)
+            if ((_fr.get('members') or {}).get('kvs_attn.pvfst->pvfin') or {}).get('pads'):
+                raise ValueError(f'kv die AHUB_FR FAIL: the hub FR_OFS needs a ks_pvfst pad ({_fr}), which tears '
+                                 'PVFIN_ALIGN: re-plan ks_ahs / ks_ahfr shorter or re-harden the hub FR_OFS')
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
