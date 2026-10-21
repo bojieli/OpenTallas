@@ -192,6 +192,8 @@
  "recipe": 4,
  "inhold": false,
  "outhold": false,
+ "layer_cap": "M6",
+ "layer_cap_grant": "DRIVE-HBM (HBM die lead; delegated to HBM-UCIE8 10-20): UCIe column with 2,055 pins and M5-PG PMA hard abstracts (macro PG = M5 stripes, s81_pma_gen v1.1 LEF): the tile needs an M6 strap over them (ucie1 gate 22:07 PDN-0233: macro_m5 grid M5-M6 had no M6 in an M5-cap tile); same strap need as the S81 SerDes column (PG M7). Die signals keep M7+ over the column.",
  "pin_regs": {
   "enable": false,
   "reason": "two-clock CDC leaf: the recipe pin register is single-clock and cannot serve both domains; the RTL already registers every pin in its own domain: tx -> u_txf face reg (ck_core), rx/st <- 2-stage out regs u_lpo_rx/u_lpo_st (ck_core), rst_core/rst_rck landed 2 stages on their region clock, pma_tx/pma_tck launched and pma_rx captured by the registered boundary of the PMA hard abstracts (ck_core / ck_rck)"

@@ -20,6 +20,8 @@ audit PASS; lockstep flat vs landed MUT 0 PASS, MUT 4 FAIL; two-die link (die B 
 ot_pdie_ucie, reference->column all PASS (6000/6000 beats exact, 555 IDLE deleted, st 10); link mutants 1 (SRAM read address
 stuck 0), 2 (write valid stuck 0), 3 (status flag stuck 0) FAIL.  Witness logs: rtl/dsrom_sys/s81_link/ucie/witness/.
 
+Layer cap M6 (layer_cap_grant, DRIVE-HBM die lead): PMA abstracts expose PG as M5 stripes and need an M6 strap inside the tile; ucie1 gate 22:07 FAILED PDN-0233 in the default M5-cap tile (macro_m5 grid had no M6). Census at that gate: mapped dynamic load limit32 PASS, max 32.
+
 ## SAFE-DESIGN checklist
 1. Pins: PASS. tx -> u_txf face reg; rx/st <- 2-stage out regs; pma_* registered inside the PMA abstracts; resets landed 2 stages per region.
 2. Reach: PASS by construction: all core logic in the 345.6-tall digital band (longest net SRAM rd_out W face -> out regs -> E/N face < ~300 um); pads 43 um. Re-measured by the gate.
