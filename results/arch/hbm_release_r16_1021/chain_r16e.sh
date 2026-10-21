@@ -57,33 +57,33 @@
 #  -> S6 synth b -> S7 GEN case_b (lane-reach fail, density outlines, chain look-ahead, repair 3) -> S8 forest/l12/S8c/bind
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
-VAR=${1:?plan eM}; PL=B; PLAN_UM=300; HOST=ot-epyc5
-[ "$VAR" = eM ] || { echo R16E_ONLY_MODELLED_PLAN_eM; exit 9; }
+VAR=${1:?plan eM|gM|hM}; PL=B; PLAN_UM=300; HOST=ot-epyc5
+case "$VAR" in eM|gM|hM) FAMILY=${VAR%M};; *) echo UNMODELLED_GEOMETRY; exit 9;; esac
 # A quick run is an admission prerequisite, never a substitute for this run's
 # own source-bound GEN/S4, strict bind, clock/reset, STA or mandatory IR.
-python3 - /home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_s4q_1021/planeM <<'PY_GEOMETRY'
+python3 - /home/ubuntu/artifacts/hdie-d4/codex_hbm_r16${FAMILY}_s4q_1021/plan$VAR /home/ubuntu/wt/codex-hbm-die-resume-1340-1021/results/arch/hbm_release_r16_1021/plan$VAR <<'PY_GEOMETRY'
 import hashlib,json,sys
 from pathlib import Path
 p=Path(sys.argv[1]);r=json.load(open(p/'lanes_report.json'));c=r.get('capacity') or {};w=c.get('windows') or {}
 bad=[r.get('hop_violations'),c.get('forced'),w.get('over_1')]
-assert all(v is not None and v==0 for v in bad), ('actual E geometry remains blocking',bad)
+assert all(v is not None and v==0 for v in bad), ('actual geometry remains blocking',bad)
 manifest=json.load(open(p/'case_a_manifest.json'))
-plan=Path('/home/ubuntu/wt/codex-hbm-die-resume-1340-1021/results/arch/hbm_release_r16_1021/planeM')
+plan=Path(sys.argv[2])
 for key,name in (('grants','grants_d4g.json'),('plan','compact.P.json'),('lanes','lanes.json')):
  assert manifest['input_sha256'][key]==hashlib.sha256((plan/name).read_bytes()).hexdigest(), ('quick/current plan differs',key)
-assert not manifest.get('placement_problems'), 'actual E placement failed'
-print('ACTUAL_E_GEOMETRY_ADMISSION_PASS; fresh full-source S4 still required')
+assert not manifest.get('placement_problems'), 'actual placement failed'
+print('ACTUAL_GEOMETRY_ADMISSION_PASS; fresh full-source S4 still required')
 PY_GEOMETRY
 [ $? = 0 ] || exit 24
-W=/home/ubuntu/wt/codex-hbm-die-resume-1340-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_full_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
+W=/home/ubuntu/wt/codex-hbm-die-resume-1340-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16${FAMILY}_full_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
 AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4; AE3=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e3; AE2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
-B=/srv/opentallas-scratch/claude/codex-hbm-r16e-full-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r16_1021/plan$VAR; BR=${R16_BR:-claude/hbm-r16-1021}
+B=/srv/opentallas-scratch/claude/codex-hbm-r16${FAMILY}-full-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r16_1021/plan$VAR; BR=${R16_BR:-codex/hbm-die-resume-1340-1021}
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
 # Local transport override only in this successor process: ep6 public route loses packets.
@@ -259,6 +259,13 @@ python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/pre_relay_
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/pre_relay_r14.json --report $A/net/functional_bind_pre_relay_r14.json --lat warn > $A/net/functional_bind_pre_relay_r14.log 2>&1; tail -1 $A/net/functional_bind_pre_relay_r14.log
 echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"
 step S2a synth_a_r14_masters
+# Own collected actual M/F receipts are immutable; seed only our new namespace.
+# This cache carries the exact16 scoped SU outputs and original75 wrapper/env.
+CACHE=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_full_1021/planeM/vplan_changed
+if [ ! -f "$A/vplan_changed/views.json" ]; then
+  [ -f "$CACHE/views.json" ] || { echo INITIAL_REUSE_CACHE_MISSING; exit 12; }
+  cp -a "$CACHE" "$A/vplan_changed" || exit 12
+fi
 # ROWS256 changes the source and parameters; old r14 S2 receipts cannot be reused wholesale.
 [ -z "${R14_REUSE_PRIMARY:-}" ] || { echo R15_REFUSES_R14_PRIMARY_REUSE; exit 12; }
 if [ -z "${R15_REUSE_COMPLETED_S2:-}" ]; then
