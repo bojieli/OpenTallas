@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_ring516",
+ "enable": false,
+ "reason": "rsi_w / rsi_r are the region-calendar ring resets; each half re-registers them (rq + one kept copy per 30-bit super-group, 1 + NGS = 19 loads) on its own clock -- the parent delivers them from each region's own equal-depth reset tree"
+}
