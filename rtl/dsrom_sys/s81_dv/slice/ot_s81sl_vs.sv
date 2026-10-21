@@ -593,9 +593,11 @@ module ot_s81sl_vs #(
     wire [19:0] hpend_data;
     (* keep="true" *) reg [31:0] k_capture;
     (* keep="true" *) reg [15:0] w_capture;
-    always @(posedge clk) begin
-      k_capture <= {32{rs_c && x_qv && hbusy_n && hop_n == OP_ENG && !hph_n && hka_n >= 8'd16 && !hka_n[0]}};
-      w_capture <= {16{rs_c && x_qv && hbusy_n && hop_n == OP_ENG && !hph_n && hka_n >= 8'd16 && hka_n[0]}};
+    for(genvar kc=0;kc<6;kc=kc+1) begin:g_capture_group
+      wire [7:0] capture;
+      ot_s81sl_vs_kcapture8 #(.ODD(kc>=4)) u_capture(.clk(clk),.rs(rsv[133+kc/3]),.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.ka(region_ka_c[18+kc/3][8*(kc%3)+:8]),.arr(region_arr[18+kc/3]),.accept(cmd_accept[117]),.q(capture));
+      if(kc<4) assign k_capture[8*kc+:8]=capture;
+      else assign w_capture[8*(kc-4)+:8]=capture;
     end
     always @(posedge clk) hfl_parity <= {16{hfl_n[0]}};
     wire [63:0] hbank [0:7];
@@ -1029,6 +1031,12 @@ module ot_s81sl_vs_bankctl8 #(parameter integer PARITY=0,COPY=0)(input wire clk,
   end
   assign fill=f;assign add=a;
 endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_kcapture8 #(parameter integer ODD=0)(input wire clk,rs,qv,busy_next,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka,input wire arr,accept,output reg[7:0]q);
+ wire[7:0] kn=(!rs || accept)?8'd0:ka+{7'd0,arr};
+ always @(posedge clk) q<={8{rs && qv && busy_next && op_next==4'd14 && !ph_next && kn>=8'd16 && kn[0]==ODD}};
+endmodule
+
 `endif
 
 (* keep_hierarchy="yes" *)
