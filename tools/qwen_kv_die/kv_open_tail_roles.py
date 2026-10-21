@@ -79,7 +79,10 @@ SOURCES = {
 # KV-EMB4 10-20: re-pinned (was d06d0424...).  Change: default-off OT_KV_EMB_N32 (tile-file suffix '_n32'; kv_static
 # emb_join NATIVE32=1 in the kvs_emb u_join instance only) + OT_KV_EMB_PJ (suffix '_pj': PIPE_JOIN=1); default design point
 # byte-identical (kv_static_die --check).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'aaf61290080dd332d4292ba2a77ae987e0e75ae597405939c8b25795d721e471')
+# KV-EMBWIN16 10-20: re-pinned (was aaf61290... on kv-emb4-z1; ee86a8b2... on the Codex takeover base 9d63284a1, whose own
+# pin d06d0424 was already stale).  Change: the merge of both (Codex HROOT/ROOT14 text + the KV-EMB4 _n32/_pj suffixes);
+# kv_static_die --check RTL current at route A (d22bu), HROOT_LAND (d22hl2), and both + N32/PJ.  GEN_ASSERT below re-checked.
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '370bac9cec3e0c8ce57c57b9eaec44bf9f17b96e9f9656b881ea7f635a138886')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -230,16 +233,35 @@ if __import__('os').environ.get('OT_KV_HROOT_S32', '0') == '1' and __import__('o
     SOURCES.pop(_T0)
     for _k, _items in ASSERT.items():
         ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
+# KV-EMBWIN16 10-20: the HROOT_LAND die point (OT_KV_HROOT_LAND=1 without S32, kv_static_die tile suffix '_hl'): the die's
+# tile file is qkd_kvs_tiles_hroot_ff_k_hl_mu_ba.sv (KV-HSTK11; differs from _k_mu_ba only inside qkd_kvs_hroot / its landed
+# stack roots).  Same roles, same chain ends: the ASSERT strings are checked on this file (before: on _k_mu_ba).
+if __import__('os').environ.get('OT_KV_HROOT_LAND', '0') == '1' and __import__('os').environ.get('OT_KV_HROOT_S32', '0') != '1' \
+        and __import__('os').environ.get('OT_KV_PC_SRAM', '0') != '1':
+    _T0 = TILES
+    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba.sv'
+    SOURCES[TILES] = '05179c988fa04bbb7e5341fd86ae4ca723d077abf7ffe8089529e242b3c278bb'
+    SOURCES.pop(_T0)
+    for _k, _items in ASSERT.items():
+        ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
 # KV-EMB4 10-20: OT_KV_EMB_N32=1 (route A base point only): the die tile file is qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv,
 # identical to _k_mu_ba except the kvs_emb u_join #(.NATIVE32(1)) (native32 join/cal: kept per-segment controls, six-edge
 # regional reset release, 0 active cycles).  Same roles, same chain ends.
 if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1':
-    if TILES != 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv' or __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
-        raise ValueError('kv_open_tail_roles: OT_KV_EMB_N32=1 is pinned for the route A _k_mu_ba point only')
+    # KV-EMBWIN16 10-20: also on the HROOT_LAND point (_k_hl_mu_ba -> _k_hl_mu_ba_n32[_pj], kv_static_die --rtl at d22hl2
+    # flags + N32 [+ PJ]; differs from _k_hl_mu_ba only in the kvs_emb u_join NATIVE32 / PIPE_JOIN parameters)
+    _N32 = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv': (
+                '_k_mu_ba', '4047711625373efe03586417dc76de58e2c560cd43a8afe18dd1bc643e33ec11',
+                '803a35892afe2dc55f9dc5bc7c0b612c89ebab0513a2664fb227970335ad7e7e'),
+            'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba.sv': (
+                '_k_hl_mu_ba', 'a89756a768daffbfb40cb4cc24482c235606c58cac803dec23185afa0ed33dbc',
+                'ecaa7c524950763b82432ccc0a5412995accb413332dd5bb94fd40f22b24d047')}
+    if TILES not in _N32 or __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
+        raise ValueError('kv_open_tail_roles: OT_KV_EMB_N32=1 is pinned for the route A _k_mu_ba / _k_hl_mu_ba points only')
     _T0 = TILES
     _PJ = __import__('os').environ.get('OT_KV_EMB_PJ', '0') == '1'   # + u_join PIPE_JOIN=1 (+1 word-stream edge)
-    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32' + ('_pj' if _PJ else '') + '.sv'
-    SOURCES[TILES] = '803a35892afe2dc55f9dc5bc7c0b612c89ebab0513a2664fb227970335ad7e7e' if _PJ else '4047711625373efe03586417dc76de58e2c560cd43a8afe18dd1bc643e33ec11'
+    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff' + _N32[_T0][0] + '_n32' + ('_pj' if _PJ else '') + '.sv'
+    SOURCES[TILES] = _N32[_T0][2] if _PJ else _N32[_T0][1]
     SOURCES.pop(_T0)
     for _k, _items in ASSERT.items():
         ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]

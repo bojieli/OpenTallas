@@ -70,6 +70,13 @@ def rtl_text(path, commit, src_prefixes, local_dirs):
     if t.returncode and Path(p).is_absolute() and Path(p).is_file():
         # QXF-SEAMK 10-18: a die chain's source tree without git history (rsync'd src/): the run's own file (recorded)
         return Path(p).read_text(errors='replace'), f'disk:{p}'
+    if t.returncode and not Path(p).is_absolute():
+        # QW-G5RELAUNCH 10-20: a relative port_bind path in a git-less run src/ (rsync'd die-chain tree, dv2f20g5r2b
+        # phase2 'not a git repository'): the run's own tree (ROOT = this tool's src/, the GEN source) or a --src-prefix
+        for base in [ROOT, *src_prefixes]:
+            q = Path(base) / rel
+            if q.is_file():
+                return q.read_text(errors='replace'), f'disk:{q}'
     if t.returncode:
         raise SystemExit(f'netlist_relay_stages: git show {commit}:{rel} failed: {t.stderr.strip()[:200]}')
     return t.stdout, f'git:{commit}:{rel}'

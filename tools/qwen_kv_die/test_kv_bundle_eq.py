@@ -300,5 +300,23 @@ class AttnAtD2D(unittest.TestCase):
         self.assertGreaterEqual(min(st.values()), 5)
 
 
+class SeamPin(unittest.TestCase):
+    """KV-D2D3 10-20 OT_KV_SEAM_PIN: K seam bundles padded up to the bound pair image's die stages; over -> recorded"""
+    def test_pads_up_to_image(self):
+        f, over = BEQ.seam_pin_plan({'K.rx_record': 11, 'K.tx_slot': 9, 'K.tx_record': 9})
+        self.assertEqual(f('K.tx_record', {'v': 7, 'p': 5}, None), {'v': 2, 'p': 4})
+        self.assertEqual(f('K.emb_record', {'v': 1, 'p': 3}, None), {'v': 2, 'p': 0})    # other bundles: own max
+        self.assertEqual(over, [])
+
+    def test_over_image_fails_closed(self):
+        f, over = BEQ.seam_pin_plan({'K.rx_record': 11})
+        f('K.rx_record', {'s': 13, 'r': 13}, None)                                        # d22bu route A as built
+        self.assertEqual(over, ['K.rx_record natural 13 > image 11'])
+
+    def test_image_targets(self):
+        os.environ.setdefault('OT_KV_MU', '1')
+        self.assertEqual(BEQ.seam_targets(), {'K.rx_record': 11, 'K.tx_slot': 9, 'K.tx_record': 9})
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-epyc6       admits   288 GB (avail 315, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 39 disk 2134 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-15477-1792560095 after 1 s
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+{"apron": 216, "channel": 347.7839999999999, "rows": 3, "sites": 62, "endpoints": {"rx_payload": 4, "rec_rx": 6, "rec_tx": 3, "att_tx_payload": 3, "emb_tx_payload": 2}, "portrait": [6565.536, 25961.04]}
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+{"apron": 302, "channel": 434.18400000000133, "rows": 4, "sites": 83, "endpoints": {"rx_payload": 4, "rec_rx": 6, "rec_tx": 3, "att_tx_payload": 3, "emb_tx_payload": 2}, "portrait": [6565.536, 25961.04]}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-15477-1792560095): exit 0

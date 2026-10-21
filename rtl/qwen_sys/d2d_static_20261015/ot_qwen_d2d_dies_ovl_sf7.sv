@@ -3,7 +3,7 @@
 // D2D master qfd_d2d_static_ovl_sf7 = qfd_d2d_static_ovl ports + KEPT pin-flop copies + qfd_d2d_static_core_s7.
 // Source list: ot_qwen_d2d_dies.sv, ot_qwen_d2d_safe5.sv, ot_qwen_d2d_safe7.sv, this file.
 module qfd_d2d_static_ovl_sf7 #(parameter integer MUT = 0, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0,
-    parameter integer SFMUT = 0) (
+    parameter integer SFMUT = 0, parameter integer HEAD_CONTEXT = 0) (
     input  wire ck,
     input  wire por_n,
     input  wire rst_n,
@@ -32,6 +32,7 @@ module qfd_d2d_static_ovl_sf7 #(parameter integer MUT = 0, parameter integer PR 
     output wire [3:0] native_rx_slot_kind,
     output wire [4:0] native_rx_slot_beat,
     output wire prog_witness_slot,
+    output wire prog_head_context_slot,
     output wire prog_auth_slot,
     output wire prog_context_slot,
     input  wire prog_tx_observed_v,
@@ -189,6 +190,10 @@ module qfd_d2d_static_ovl_sf7 #(parameter integer MUT = 0, parameter integer PR 
     reg [4:0] q_native_rx_slot_beat;
     always @(posedge ck) q_native_rx_slot_beat <= c_native_rx_slot_beat;
     assign native_rx_slot_beat = PR ? q_native_rx_slot_beat : c_native_rx_slot_beat;
+    wire c_prog_head_context_slot;
+    reg q_prog_head_context_slot;
+    always @(posedge ck) q_prog_head_context_slot <= c_prog_head_context_slot;
+    assign prog_head_context_slot = PR ? q_prog_head_context_slot : c_prog_head_context_slot;
     wire c_prog_witness_slot;
     reg q_prog_witness_slot;
     always @(posedge ck) q_prog_witness_slot <= c_prog_witness_slot;
@@ -337,5 +342,5 @@ module qfd_d2d_static_ovl_sf7 #(parameter integer MUT = 0, parameter integer PR 
     reg q_fault;
     always @(posedge ck) q_fault <= c_fault;
     assign fault = PR ? q_fault : c_fault;
-    qfd_d2d_static_core_s7 #(.TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1}), .SFMUT(SFMUT)) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data_t(k_cfg_data_t), .cfg_data_r(k_cfg_data_r), .cfg_seg_t(k_cfg_seg_t), .cfg_seg_r(k_cfg_seg_r), .cal_start_k(k_cal_start_k), .cal_seg_k(k_cal_seg_k), .cal_start_rx_k(k_cal_start_rx_k), .cal_seg_rx_k(k_cal_seg_rx_k), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .native_tx_slot(c_native_tx_slot), .native_tx_slot_kind(c_native_tx_slot_kind), .native_tx_slot_beat(c_native_tx_slot_beat), .native_tx_v(c_native_tx_v), .native_tx_payload(c_native_tx_payload), .rx_payload(c_rx_payload), .native_rx_v(c_native_rx_v), .native_rx_slot(c_native_rx_slot), .native_rx_slot_kind(c_native_rx_slot_kind), .native_rx_slot_beat(c_native_rx_slot_beat), .prog_witness_slot(c_prog_witness_slot), .prog_auth_slot(c_prog_auth_slot), .prog_context_slot(c_prog_context_slot), .prog_tx_observed_v(c_prog_tx_observed_v), .prog_tx_record(c_prog_tx_record), .prog_rx_v(c_prog_rx_v), .emb_rx_v(c_emb_rx_v), .emb_rx_slot(c_emb_rx_slot), .kv_x3_slot(c_kv_x3_slot), .x3(c_x3), .x3_identity(c_x3_identity), .x3_generation(c_x3_generation), .status_epoch16(c_status_epoch16), .vm_drained(c_vm_drained), .collective_drained(c_collective_drained), .collective_busy(c_collective_busy), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .admit_ready(c_admit_ready), .result_v_k(k_result_v_k), .result_done(c_result_done), .result_fault(c_result_fault), .result_cause(c_result_cause), .result_tag(c_result_tag), .result_gen(c_result_gen), .result_token(c_result_token), .result_value(c_result_value), .result_cycles(c_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .transport_fault(c_transport_fault), .fault(c_fault));
+    qfd_d2d_static_core_s7 #(.TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1}), .SFMUT(SFMUT), .HEAD_CONTEXT(HEAD_CONTEXT)) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data_t(k_cfg_data_t), .cfg_data_r(k_cfg_data_r), .cfg_seg_t(k_cfg_seg_t), .cfg_seg_r(k_cfg_seg_r), .cal_start_k(k_cal_start_k), .cal_seg_k(k_cal_seg_k), .cal_start_rx_k(k_cal_start_rx_k), .cal_seg_rx_k(k_cal_seg_rx_k), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .native_tx_slot(c_native_tx_slot), .native_tx_slot_kind(c_native_tx_slot_kind), .native_tx_slot_beat(c_native_tx_slot_beat), .native_tx_v(c_native_tx_v), .native_tx_payload(c_native_tx_payload), .rx_payload(c_rx_payload), .native_rx_v(c_native_rx_v), .native_rx_slot(c_native_rx_slot), .native_rx_slot_kind(c_native_rx_slot_kind), .native_rx_slot_beat(c_native_rx_slot_beat), .prog_witness_slot(c_prog_witness_slot), .prog_head_context_slot(c_prog_head_context_slot), .prog_auth_slot(c_prog_auth_slot), .prog_context_slot(c_prog_context_slot), .prog_tx_observed_v(c_prog_tx_observed_v), .prog_tx_record(c_prog_tx_record), .prog_rx_v(c_prog_rx_v), .emb_rx_v(c_emb_rx_v), .emb_rx_slot(c_emb_rx_slot), .kv_x3_slot(c_kv_x3_slot), .x3(c_x3), .x3_identity(c_x3_identity), .x3_generation(c_x3_generation), .status_epoch16(c_status_epoch16), .vm_drained(c_vm_drained), .collective_drained(c_collective_drained), .collective_busy(c_collective_busy), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .admit_ready(c_admit_ready), .result_v_k(k_result_v_k), .result_done(c_result_done), .result_fault(c_result_fault), .result_cause(c_result_cause), .result_tag(c_result_tag), .result_gen(c_result_gen), .result_token(c_result_token), .result_value(c_result_value), .result_cycles(c_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .transport_fault(c_transport_fault), .fault(c_fault));
 endmodule

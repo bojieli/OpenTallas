@@ -1,0 +1,59 @@
+{
+ "aig": null,
+ "aig_sha256": "bc44d03616e73e075e93c93443b38065741fdc5c7d84718673a1c38e71694908",
+ "engine": {
+  "abc_cmd": "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800",
+  "abc_log_sha256": "3a0a7b7ed18599028bd03df600f0f0707fd132b00074cc8c787493f2c43722b7",
+  "abc_tail": " = 16943. Nodes = 254190. Time =   355.05 sec\nFraiging:             Latches = 16943. Nodes = 234139. Time =   108.03 sec\nMin-reg retiming:     Latches = 15024. Nodes = 234139. Time =     0.32 sec\nK-step (K= 1,I= 11):  Latches =  7158. Nodes = 130925. Time =   328.39 sec\nMin-reg retiming:     Latches =  7092. Nodes = 130922. Time =     0.27 sec\nRewriting:            Latches =  7092. Nodes =  92694. Time =     3.48 sec\nSeq simulation  :     Latches =  7092. Nodes =  92694. Time =     0.31 sec\nK-step (K= 2,I= 10):  Latches =  7044. Nodes =  90078. Time =   117.97 sec\nMin-reg retiming:     Latches =  6934. Nodes =  90046. Time =     0.10 sec\nRewriting:            Latches =  6934. Nodes =  87809. Time =     2.47 sec\nSeq simulation  :     Latches =  6934. Nodes =  87809. Time =     0.57 sec\nK-step (K= 4,I= 10):  Latches =  6934. Nodes =  87668. Time =   179.30 sec\nMin-reg retiming:     Latches =  6918. Nodes =  87668. Time =     0.11 sec\nRewriting:            Latches =  6918. Nodes =  87042. Time =     2.42 sec\nSeq simulation  :     Latches =  6918. Nodes =  87042. Time =     1.38 sec\nProperty proved using interpolation.  Time =   237.87 sec\nNetworks are equivalent.  Time =  1339.00 sec\n",
+  "rc": 0,
+  "seconds": [
+   5.4,
+   100.7,
+   1339.9
+  ],
+  "tool": "yosys 0.68 miter -equiv + ABC dprove"
+ },
+ "expect": "pass",
+ "gate": "/srv/opentallas-scratch/claude/root-p216-final-1245-1020/p216/6_final.v",
+ "gate_sha256": "250a194d2e735d47beffa49f3af5531b48ec1c929238289515edd69dc3ac5676",
+ "gate_stats": {
+  "flops": 19074,
+  "instances": 1147020,
+  "macros": {}
+ },
+ "gate_top": "ot_qwen_tp8_pv_join_s32_t",
+ "gold_opt": false,
+ "gold_ys_sha256": "dfa9175805806e6d393780750b20346c6416094bf9ef168e6f15af94da9deef1",
+ "lec_ys_sha256": "844b1e4f15718da767c2c4a23bab1ac9b68d74d0a77a753a41e2a171aac14a78",
+ "macro_models": {},
+ "module": "ot_qwen_tp8_pv_join_s32_t",
+ "ok": true,
+ "parameters": {
+  "J_LAT": 7,
+  "MUT": 0,
+  "RESET_PIN": 1
+ },
+ "reset": {
+  "active": 0,
+  "cycles": 16,
+  "once": false,
+  "port": "rst_n"
+ },
+ "schema": "opentallas.kv_leaf_lec.v1",
+ "sources": {
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv": "c721d94f7ce02b1cb0947959573b6190fac14ae68cca6ba621619e5b3cc1cbf7",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+  "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv": "28b2f290ae281f91a107bb54737822ddb887a6ad6dcf4b3a579f241026d90a15",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/lib/ot_rst_relay_bounded32.sv": "d3ba9c38d47d5868efdec0e81dbba096732613299aba3a2b4f2e4d4498204785"
+ },
+ "verdict": "EQUIVALENT",
+ "wrapper": {
+  "core": "ot_qwen_tp8_pv_join_s32_t__ot_pr_core",
+  "path": "/srv/opentallas-scratch/claude/root-p216-final-1245-1020/p216/ot_rst_land_wrapper.v",
+  "sha256": "a53a911b9758f22006b596a9ff3156be4c58c1e6d387affb19296d1633bcad87"
+ }
+}

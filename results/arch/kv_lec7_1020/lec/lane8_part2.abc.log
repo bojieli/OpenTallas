@@ -1,0 +1,37 @@
+======== ABC command line "read_aiger lec.aig; print_stats; strash; &get; &scorr -F 4 -C 1000 -p -S 2000 -v; &put; dc2; scorr -F 2; dc2; print_stats; dprove -v -T 3600"
+[1;37mlec                           :[0m i/o =  237/    1  lat =28666  and = 259065  lev = 41
+Simple partitioning. 15 partitions are saved:
+part000.aig : Reg = 2000. PI = 2289. (True =    0. Regs = 2289.) And = 11896.
+part001.aig : Reg = 2000. PI = 3205. (True =   40. Regs = 3165.) And = 23208.
+part002.aig : Reg = 2000. PI = 2487. (True =   45. Regs = 2442.) And = 24629.
+part003.aig : Reg = 2000. PI = 3759. (True =   43. Regs = 3716.) And = 29833.
+part004.aig : Reg = 2000. PI = 3067. (True =   17. Regs = 3050.) And = 30862.
+part005.aig : Reg = 2000. PI = 3287. (True =   13. Regs = 3274.) And = 27305.
+part006.aig : Reg = 2000. PI = 2741. (True =   30. Regs = 2711.) And = 21476.
+part007.aig : Reg = 2000. PI = 2159. (True =  236. Regs = 1923.) And = 20367.
+part008.aig : Reg = 2000. PI = 1100. (True =    0. Regs = 1100.) And =  8055.
+part009.aig : Reg = 2000. PI =  939. (True =    0. Regs =  939.) And = 20570.
+part010.aig : Reg = 2000. PI =  929. (True =    0. Regs =  929.) And = 18289.
+part011.aig : Reg = 2000. PI = 1016. (True =    0. Regs = 1016.) And = 23998.
+part012.aig : Reg = 2000. PI = 1209. (True =    0. Regs = 1209.) And = 17897.
+part013.aig : Reg = 2000. PI = 1038. (True =    0. Regs = 1038.) And = 11212.
+part014.aig : Reg =  666. PI =  470. (True =    0. Regs =  470.) And =  3690.
+  0 : Reg = 2000. PI = 2289. (True =    0. Regs =    0.) And = 11896. It =   0. Cl =  2098.
+  1 : Reg = 2000. PI = 3205. (True =    0. Regs =    0.) And = 23208. It =   0. Cl =   993.
+  2 : Reg = 2000. PI = 2487. (True =    0. Regs =    0.) And = 24629. It =   0. Cl =   413.
+  3 : Reg = 2000. PI = 3759. (True =    0. Regs =    0.) And = 29833. It =   0. Cl =   341.
+  4 : Reg = 2000. PI = 3067. (True =    0. Regs =    0.) And = 30862. It =   0. Cl =   556.
+  5 : Reg = 2000. PI = 3287. (True =    0. Regs =    0.) And = 27305. It =   0. Cl =   413.
+  6 : Reg = 2000. PI = 2741. (True =    0. Regs =    0.) And = 21476. It =   0. Cl =   200.
+  7 : Reg = 2000. PI = 2159. (True =    0. Regs =    0.) And = 20367. It =   0. Cl =   465.
+  8 : Reg = 2000. PI = 1100. (True =    0. Regs =    0.) And =  8055. It =   0. Cl =   317.
+  9 : Reg = 2000. PI =  939. (True =    0. Regs =    0.) And = 20570. It =   0. Cl =   836.
+ 10 : Reg = 2000. PI =  929. (True =    0. Regs =    0.) And = 18289. It =   0. Cl =   946.
+ 11 : Reg = 2000. PI = 1016. (True =    0. Regs =    0.) And = 23998. It =   0. Cl =  1000.
+ 12 : Reg = 2000. PI = 1209. (True =    0. Regs =    0.) And = 17897. It =   0. Cl =   981.
+ 13 : Reg = 2000. PI = 1038. (True =    0. Regs =    0.) And = 11212. It =   0. Cl =   713.
+ 14 : Reg =  666. PI =  470. (True =    0. Regs =    0.) And =  3690. It =   0. Cl =   302.
+Total time =     3.39 sec
+[1;37mlec                           :[0m i/o =  237/    1  lat =    0  and =      0  lev =  0
+The network has no latches. Running CEC.
+UNSATISFIABLE  Time =     0.01 sec

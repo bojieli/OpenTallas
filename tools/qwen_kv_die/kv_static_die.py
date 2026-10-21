@@ -2352,6 +2352,13 @@ def place(m, K, geo, F):
     sq = by['seq']
     anchors = dict(kvs_ctl=(host.x + host.w / 2, (sq.y + sq.h + host.y) / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
                    kvs_attn=((pv.x - 500.0) if pv else d2d.x, (pv.y + pv.h - 200.0) if pv else d2d.y - 400.0))   # W of the N pair's top: the pair-top gap stays a crossing
+    if ATTN_DXY:
+        # KV-D2D3 10-20 (OT_KV_ATTN_DXY='dx,dy' um, default off): move the kvs_attn anchor toward the D2D end so the K seam
+        # bundles (K.rx_record / K.tx_slot / K.tx_record) fit the pair image's recorded die stages (OT_KV_SEAM_PIN pads them
+        # up to it; route A d22bu with D2D_PINS lands 13 / 9 / 11 > the K22 image's 11 / 9 / 9)
+        ax_, ay_ = anchors['kvs_attn']
+        anchors['kvs_attn'] = (ax_ + ATTN_DXY[0], ay_ + ATTN_DXY[1])
+        m.setdefault('geo', {})['attn_dxy'] = dict(dxy=list(ATTN_DXY), anchor=list(anchors['kvs_attn']))
     hro = []
     if HROOT:
         # KV-PLAN decision 1: the S half root at the stack seam (where the S stacks' PC 31 chain ends sit), W of the PV
@@ -2369,6 +2376,19 @@ def place(m, K, geo, F):
             anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, pc.y + pc.h + 400.0)
         hro = [(f'kvs_hroot_{st}', 'hroot') for st in ('WS', 'ES', 'WN', 'EN')]
     order = [('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')]
+    if os.environ.get('OT_KV_ATTN_WEST_HOST', '0') == '1':
+        if ATTN_DXY or ATTN_AT_D2D:
+            raise ValueError('ATTN_WEST_HOST is an explicit corridor plan; do not combine with ATTN_DXY/ATTN_AT_D2D')
+        # Keep the K22 record source beside its real D2D endpoint and leave a
+        # full 129.6-um cell-row approach between attention and HOST. The
+        # south-going start/control words approach from the west of CTL,
+        # rather than squeezing between HOST and the D2D payload pins.
+        aw, ah = FRAME['attn']
+        anchors['kvs_attn'] = (host.x - 129.6 - aw / 2, d2d.y - 43.2 - ah / 2)
+        order = [('kvs_ctl', 'ctl'), ('kvs_attn', 'attn'), ('kvs_emb', 'emb')]
+        m.setdefault('geo', {})['attn_west_host'] = dict(
+            anchor=list(anchors['kvs_attn']), host_approach_um=129.6,
+            d2d_approach_um=43.2, geometry_only=True, qualified=False)
     if ATTN_AT_D2D:
         # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6 placement): kvs_attn against the D2D end's W face, kvs_emb W of it
         anchors.update(d2d_side_anchors(d2d, FRAME['attn'], FRAME['emb']))
@@ -2429,6 +2449,7 @@ ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
 EMB_WEST_MODE = os.environ.get('OT_KV_EMB_WEST', '0')
 EMB_WEST = EMB_WEST_MODE in ('1', '2')      # KV-BIND12 10-20: kvs_emb W of the HOST root (see the anchors)
 ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
+ATTN_DXY = tuple(float(v) for v in os.environ['OT_KV_ATTN_DXY'].split(',')) if os.environ.get('OT_KV_ATTN_DXY') else None
 
 
 def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):

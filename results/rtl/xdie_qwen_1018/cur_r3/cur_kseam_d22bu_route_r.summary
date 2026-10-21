@@ -1,0 +1,5 @@
+cur_kseam_d22bu_route_r expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=34 C2K_q31_issue_to_land=35 C2K_q_first_issue_to_last_land=67 K2C_r31_issue_to_land=33 K2C_r0_issue_to_land=33 K2C_r_first_issue_to_last_land=64 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1846 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=29
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=10 period=7058 stages C 2,2,2,3,2,2 K 13,13,9,9,9,11,11 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
