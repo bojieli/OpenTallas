@@ -234,10 +234,10 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
         while hs in (2,ctx_k+txl+phy+12) or hs+3 in (3,ctx_k+txl+phy+15):hs+=1
         if hs>=l0_start:
             raise ValueError('actual head descriptor is not available before L0; grow embedding/image from source law')
-        m1.append(dict(seg=1,src='C',cyc=hs,tx_port=1,rx_port=1,kind=12,beat=0,role='recurring_filler_O61'))
+        m1.append(dict(seg=1,src='C',cyc=hs,tx_port=1,rx_port=1,kind=12,beat=0,role='recurring_head_O61'))
         head_descriptor=dict(source='actual CTLM c_emb token/position/user plus HEAD_PREP native epoch/gen and held per-user descriptor',
                              earliest_safe_slot=head_prepare_edges,send=hs,kind=12,port=1,
-                             user0='unobserved: retains actual HOST authority',qualification='SOURCE_BOUND_SLOT; consumer bus/clock/phase deadline still required')
+                             user0='actual HOST O61 matched against actual prepare token/position before held record emission',qualification='SOURCE_BOUND_SLOT; consumer bus/clock/phase deadline still required')
     prec_w = ctx_k + txl + phy + 12
     m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
     # ADMISSION run (segment 2; once per epoch, before the first token; Q-NETLIST 2026-10-16): S->C kind 13 beat 1
@@ -423,7 +423,7 @@ def main():
     ap.add_argument("--emb-window", type=int, default=None,
                     help="KV-EMBWIN16 10-20: token-run embedding window in edges (>= the priced embed node); L0, every later "
                          "layer and the token period move by the growth; default = the priced window (images unchanged)")
-    ap.add_argument("--head-prepare-edges",type=int,help="actual composed earliest safe C->K head O61 slot; includes source prepare/hold+measured local transport, never infer zero hops")
+    ap.add_argument("--head-prepare-edges",type=int,help="actual composed earliest safe all-user C->K head O61 slot; includes source prepare/hold+measured local transport and user0 HOST-context match; never infer zero hops")
     ap.add_argument("--layer-period-min",type=int,default=0,help="RoPE shared2003-edge kernel frame; grow every layer to at least this many edges")
     ap.add_argument("--rope", action="store_true", help="actual RoPE HBM second sweep and73 row records; requires EW>=1627")
     ap.add_argument("--attn-tx-shift", type=int, default=0, help="KV-BIND4: edges the KV attention tile adds before RESULT (r16 TX_SHIFT); K RESULT/STATUS and attn_kv +N per layer")
