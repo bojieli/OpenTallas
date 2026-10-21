@@ -352,7 +352,11 @@ module dsdv_idx_rg3 #(
     end
 
     // ================================================================== slot table (per parity q, shared by A and B)
-    reg [1:0][LG-1:0]      sb, scl, srdy;          // busy, closed, ready (closed + both regions' beats landed)
+    // Each region owns an independent resettable word. Packed outer arrays
+    // with dynamic bit writes make Yosys preserve the other region through an
+    // asynchronous data-load, which ASAP7 cannot implement.
+    reg [LG-1:0]          sb [0:1], scl [0:1];   // busy / closed, local reset
+    reg [1:0][LG-1:0]     srdy;                 // both regions' beats landed
     reg [1:0][LG-1:0][4:0] sni, snc;               // items a region allocated / consumed (B items counted)
     reg [1:0][LG-1:0][5:0] sne;                    // beats expected a region
     reg [1:0][LG-1:0][5:0] snr0, snr1;             // beats received, region A / B
