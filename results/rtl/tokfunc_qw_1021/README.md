@@ -92,3 +92,11 @@ selected parameters require the owning lane's matching-source timing receipt; th
 187/248 result does not measure them. r14 flatCTLM also lacksSEGCAL; the selected
 hardleaf's separate exact-head wrapper proof owns that difference. Coherent RoPE
 still requires actual RPconsumer source integration before a final73image claim.
+
+Actual selected RP successor is82e883827 (`rtl/qwen_dv/s5/s8`, new s8flat/LP,
+real32leafREAD1/FILL1 under OT_S8_SIM+OT_S5_HARD). Focused RP/CRH/SRAM bank
+exactness is owned by cb16_slice; LP four landings plus pad3/D4 remain unmeasured.
+Final generation requires `selected_slice_source` and `selected_slice_timing_receipt`
+along with an explicit `--token-path` compiled for that source. The old monolith
+ARM12/nextfree36 schedule anchors the recovered mechanism and does not price the
+new regional paths. No final sole image has been generated from those old ages.
