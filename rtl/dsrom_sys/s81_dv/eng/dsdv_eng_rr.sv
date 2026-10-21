@@ -426,7 +426,11 @@ module dsdv_eng_tap_c #(
 `endif
     generate if (EH != 6) begin : bad_eh dsdv_eng_tap_c_EH_must_be_6 trap(); end endgenerate
     wire [NR-1:0] rl;
+`ifdef OT_S81ENG_TAP_N32R2
+    ot_s81eng_reset3n32 #(.LEAVES(NR)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl),.early_n());
+`else
     ot_rst_relay_bounded32 #(.REGIONS(NR)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+`endif
     // request chain forward
     always @(posedge ck or negedge rl[0]) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
     always @(posedge ck) rco[42:1] <= rci[42:1];

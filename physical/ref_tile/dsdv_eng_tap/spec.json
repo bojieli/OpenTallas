@@ -4,7 +4,8 @@
  "kind": "tile",
  "sources": [
   "rtl/lib/ot_rst_relay_bounded32.sv",
-  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv"
+  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv"
  ],
  "params": {},
  "clock_port": "ck",
@@ -43,7 +44,7 @@
  },
  "reset_landing": {
   "enable": false,
-  "reason": "the RTL lands rst_n: ot_rst_relay_bounded32 (2 root flops = the port's only sinks, then 30 kept leaves <= 25 sinks, 3-edge release as before)"
+  "reason": "RTL pin landing:2 shared literal1 root flops,2 middle(data/reset)groups,62finalcontrolleaves, eachreleaseedge1/2/3 unchanged. Directrst_n sinkcount2; groupD/RESETpinloads<=32."
  },
  "clock": "cts",
  "layer_cap": "M5",
