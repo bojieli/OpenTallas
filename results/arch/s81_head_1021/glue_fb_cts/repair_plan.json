@@ -1,0 +1,11 @@
+{
+  "status": "ACTUAL_CTS_COMPONENT_FAIL__FULL_GATE_GRT_STILL_LIVE",
+  "measured": {
+    "TT_boundary_spread_ps": 89.5,
+    "FF_boundary_spread_ps": 98.5,
+    "SRAM_clock_slew_max_ps": 218.2
+  },
+  "source_plan": "Replace wide CKKM24 subtrees by existing symmetric measured-balanced clock_spine, one explicit isolated leaf per SRAM, <=16 flop loads/leaf, <=30um bins, <=150um spine segment. Same ck port, RTL/registered boundaries/geometry and constraints; no data cycles. Buffers physically priced from actual tree. Actual proof mandatory, main CKKM16 and FB GRT preserved.",
+  "existing_qualified_example": "SPR m4/f4 symmetric spine+macro-leaf option CLOSED sourcebb8dd356c; does not qualify this glue",
+  "no_waiver": "clock80ps/macro_slew120ps limits unchanged; parent/ROOT critical review required before physical submission"
+}
