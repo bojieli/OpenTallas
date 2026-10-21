@@ -22,10 +22,13 @@ G=/srv/opentallas-scratch/claude/codex-qw-classgeom$GEOM
 [ -e $S ] && { echo "$S exists"; exit 3; }
 mkdir -p $S
 echo "$(date '+%F %T %Z') QW-C3-DIE setup start ($T geom=$GEOM sgap=$SG fault=$FAULT base=$BASE)" >> $S/PILOT.log
-cp -a $C/src $S/src
+# CSRC (QW2-NEXTGEN 10-21, ep6 retired): where the classgeom0030 copy lives on this host (gold1: codex-qw-classgeom0030g = git eb527c909
+# + verified ep6 delta); $C stays the path string inside gen.sh/run.sh for the sed below
+CS=${CSRC:-$C}
+cp -a $CS/src $S/src
 tar -xf $K/overlay.tar -C $S/src
 cp $K/SOURCE_COMMIT $S/src/SOURCE_COMMIT
-for f in gen.sh run.sh run_candidate.sh land_plan_bi_chain.json reset_release_prior_g4try3.json; do cp $C/$f $S/; done
+for f in gen.sh run.sh run_candidate.sh land_plan_bi_chain.json reset_release_prior_g4try3.json; do cp $CS/$f $S/; done
 cp $G/receiver_plan.json $S/receiver_plan.json
 python3 $S/src/tools/qwen_split/dv_slice_slot_plan.py $G/receiver_plan.json $S/receiver_plan.json --slot-w ${SLOT_W:-2462.4} --slot-h ${SLOT_H:-4276.8} --sgap $SG --record $S/slice_slot.json >> $S/PILOT.log 2>&1 || { echo "slice slot plan refused (PILOT.log)"; exit 4; }
 sed -i "s#$C#$S#g" $S/gen.sh $S/run.sh $S/run_candidate.sh
