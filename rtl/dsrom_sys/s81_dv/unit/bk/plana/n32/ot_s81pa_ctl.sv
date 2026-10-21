@@ -381,7 +381,7 @@ module ot_s81pa_ctl #(
     // [ELEM-BKG] the ts cones read kept same-edge copies of qs/cq (D=qs_d/cq_d, same reset value and leaf), one set per two cones
     wire[31:0]qs_k;wire[7:0]cq_k;
     generate for(genvar j=0;j<4;j=j+1)begin:g_qsk
-      ot_s81pa_rcopy #(.W(8),.INIT(8'b11100100),.ID(16416+j))u_qs(.clk(ck[0]),.rst_n(rst_local[292]),.d(qs_d),.q(qs_k[8*j+:8]));
+      ot_s81pa_rcopy #(.W(8),.INIT(8'b11100100),.ID(16416+j))u_qs(.clk(ck[0]),.rst_n(rst_local[(j<2)?292:296]),.d(qs_d),.q(qs_k[8*j+:8]));
       ot_s81pa_rcopy #(.W(2),.INIT(2'd0),.ID(16424+j))u_cq(.clk(ck[0]),.rst_n(rst_local[296]),.d(cq_d),.q(cq_k[2*j+:2]));
     end endgenerate
     generate for(genvar c=0;c<22;c=c+1)begin:g_packet
