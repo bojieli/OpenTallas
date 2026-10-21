@@ -1,0 +1,202 @@
+{
+  "count": 35,
+  "classes": [
+    {
+      "start": "u_ot_pr_core.age_product[]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[]$_DFF_P_/D",
+      "count": 21
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[]$_DFF_P_/D",
+      "count": 11
+    },
+    {
+      "start": "u_ot_pr_core.age_sum[]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.g_sram[].u_mem/w_ce_in",
+      "count": 2
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.g_sram[].u_mem/r_ce_in",
+      "count": 1
+    }
+  ],
+  "paths": [
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[29]$_DFF_P_/D",
+      "slack_ps": -45.355721
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[23]$_DFF_P_/D",
+      "slack_ps": -44.809044
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[26]$_DFF_P_/D",
+      "slack_ps": -43.655746
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[25]$_DFF_P_/D",
+      "slack_ps": -43.516636
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[24]$_DFF_P_/D",
+      "slack_ps": -42.555958
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[27]$_DFF_P_/D",
+      "slack_ps": -37.898239
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[28]$_DFF_P_/D",
+      "slack_ps": -37.308823
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[31]$_DFF_P_/D",
+      "slack_ps": -37.227554
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[22]$_DFF_P_/D",
+      "slack_ps": -37.115868
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[30]$_DFF_P_/D",
+      "slack_ps": -36.988968
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[12]$_DFF_P_/D",
+      "slack_ps": -31.505133
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[14]$_DFF_P_/D",
+      "slack_ps": -31.494585
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[11]$_DFF_P_/D",
+      "slack_ps": -31.448622
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[16]$_DFF_P_/D",
+      "slack_ps": -31.343594
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[15]$_DFF_P_/D",
+      "slack_ps": -30.992874
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[17]$_DFF_P_/D",
+      "slack_ps": -27.01206
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[19]$_DFF_P_/D",
+      "slack_ps": -25.848101
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[20]$_DFF_P_/D",
+      "slack_ps": -25.476732
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[18]$_DFF_P_/D",
+      "slack_ps": -25.076164
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[25]$_DFF_P_/D",
+      "slack_ps": -24.858006
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[21]$_DFF_P_/D",
+      "slack_ps": -21.43541
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[21]$_DFF_P_/D",
+      "slack_ps": -20.764612
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[22]$_DFF_P_/D",
+      "slack_ps": -20.725533
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[23]$_DFF_P_/D",
+      "slack_ps": -20.595858
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[16]$_DFF_P_/D",
+      "slack_ps": -17.760794
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[20]$_DFF_P_/D",
+      "slack_ps": -17.122526
+    },
+    {
+      "start": "u_ot_pr_core.age_sum[3]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.g_sram[0].u_mem/w_ce_in",
+      "slack_ps": -17.027601
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[17]$_DFF_P_/D",
+      "slack_ps": -16.057156
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[18]$_DFF_P_/D",
+      "slack_ps": -16.052715
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[19]$_DFF_P_/D",
+      "slack_ps": -15.101365
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[24]$_DFF_P_/D",
+      "slack_ps": -14.824475
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[1]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.direct_hit[27]$_DFF_P_/D",
+      "slack_ps": -13.941848
+    },
+    {
+      "start": "u_ot_pr_core.mul_operand[0]$_DFFE_PN1P_/QN",
+      "end": "u_ot_pr_core.g_sram[2].u_mem/r_ce_in",
+      "slack_ps": -4.373835
+    },
+    {
+      "start": "u_ot_pr_core.age_sum[3]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.g_sram[2].u_mem/w_ce_in",
+      "slack_ps": -3.622325
+    },
+    {
+      "start": "u_ot_pr_core.age_product[1]$_DFFE_PN0P_/QN",
+      "end": "u_ot_pr_core.product_land[10]$_DFF_P_/D",
+      "slack_ps": -0.621947
+    }
+  ]
+}
