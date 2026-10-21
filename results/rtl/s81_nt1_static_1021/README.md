@@ -1,0 +1,13 @@
+# NT1 source-bound static fixtures, 2026-10-21
+
+Scope: engine RTL with the actual production H16/D32/NL4 parameters, NTP0 reference vs G4 NTP1, Verilator5.050. This is not a hardened view, current-ABI service wrapper, compiler/calendar or full-token qualification. All engine source hashes in sources.sha256 match the existing binaries and candidate4b027d3be's engine (b1f0d0def70e01764895016c92556ec03ebc7254d4b469fe532971d947020dc5).
+
+Original source21b79b7e5 / rebuilt identical hashes: 42 jobs over seed1/12jobs/bubbles20, seed2/12jobs/bubbles0, seed3/18jobs/bubbles50 all PASS (original/run_1..3.log). Both engines consume every input; output totals486/532/795 score beats and96/96/144PV beats. Preserve as engine evidence only.
+
+Static fixture script tools/s81_dv/svc_rs/attn1_static_reuse.py verifies each exact binary SHA and records command/exit/expected outcome. Current static cases use fixed POref300 / POdut800 and DUTpace4, no ready-dependent schedule. T1/33/46 and T640(seed2) all PASS with complete inputs, every expected score beat,8PV beats, zero refused steps,zero arithmetic mismatch. Original T640seed1 independently passed under identical fixed offsets.
+
+NMUT1/2 T46 are CAUGHT with complete counts and respectively20/19 data mismatches. NMUT3 T640 ESCAPES (m3/summary.json expected_outcome=false; runnerexit1). Its only change removes the additional VX=4 bank write-after-read guard; late single-job static offsets do not exercise early bank reuse. Original random12jobseed1/bubbles20 also escaped. This is an OPEN negative-control coverage gap, not permission to remove the guard. A followup no-bubble12jobseed2 uses the preserved exactNMUT3binary and the original matchingNMUT0seed2 control.
+
+Measured schedule deltas depend on T: lastscore DUT-reference T1=5,T33=29,T46=38,T640=482. RawlastPV differences include the deliberatelydifferent PO500; do not publish them as intrinsic engine latency. For T640 raw+1003 = POoffset500 + relativePOlastPV503. Fixed PVO must be derived for the actual wrapper's landing/drain contract; old55/62 offsets do not automatically apply to G4.
+
+Current-ABI actual SRAM wrapper bench source is separately committed3e543f417 on candidate4b027d3be. The fresh remote build and subsequent T1/33/46 runs live at ep5 /srv/opentallas-scratch/claude/codex-s81-current-att-1021/out. No passing result is claimed until its own logs are terminal. It uses the real dsdv_svc_att API, production params, SRAM_MACRO1, full remote selected-row frames, preloaded P and fixed GO offsets; checks40drainwords, score count/data, nofault,done,PIO123 and dynamic CFGST override. It does not exercise local-HBM fetch or on-die P producer integration.

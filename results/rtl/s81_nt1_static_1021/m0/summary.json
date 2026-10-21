@@ -1,0 +1,86 @@
+[
+  {
+    "name": "tail1",
+    "command": [
+      "/srv/opentallas-scratch/claude/codex-s81-nt1-static-1021/sim_m0",
+      "+static=1",
+      "+t=1",
+      "+p0r=300",
+      "+p0d=800",
+      "+pace=4",
+      "+maxcyc=5000",
+      "+seed=1"
+    ],
+    "exit": 0,
+    "summary": [
+      "ATTN1_COMPLETE expected_sc=1 expected_pv=8 incomplete=0 inputs0=1/16/1/1 inputs1=1/16/1/1",
+      "ATTN1PROBE T=1 p0r=300 p0d=800 pace=4 ref: refused=0 prog_bad=0 last_sc=67 first_pv=376 last_pv=383 | dut: refused=0 prog_bad=0 last_sc=72 first_pv=881 last_pv=909 | d_sc=5 d_pv=526",
+      "ATTN1LOCK cycles=3910 sc=1/1 pv=8/8 mismatches=0 sc_mis=0 pv_mis=0 PASS"
+    ],
+    "expected_outcome": true,
+    "binary_sha256": "e1544d9453f71bb0f8892ac6800f6d83945aeb13f1f7846a78a7431bd0555fbd"
+  },
+  {
+    "name": "tail33",
+    "command": [
+      "/srv/opentallas-scratch/claude/codex-s81-nt1-static-1021/sim_m0",
+      "+static=1",
+      "+t=33",
+      "+p0r=300",
+      "+p0d=800",
+      "+pace=4",
+      "+maxcyc=5000",
+      "+seed=1"
+    ],
+    "exit": 0,
+    "summary": [
+      "ATTN1_COMPLETE expected_sc=9 expected_pv=8 incomplete=0 inputs0=1/16/9/9 inputs1=1/16/9/9",
+      "ATTN1PROBE T=33 p0r=300 p0d=800 pace=4 ref: refused=0 prog_bad=0 last_sc=75 first_pv=391 last_pv=398 | dut: refused=0 prog_bad=0 last_sc=104 first_pv=941 last_pv=969 | d_sc=29 d_pv=571",
+      "ATTN1LOCK cycles=3970 sc=9/9 pv=8/8 mismatches=0 sc_mis=0 pv_mis=0 PASS"
+    ],
+    "expected_outcome": true,
+    "binary_sha256": "e1544d9453f71bb0f8892ac6800f6d83945aeb13f1f7846a78a7431bd0555fbd"
+  },
+  {
+    "name": "tail46",
+    "command": [
+      "/srv/opentallas-scratch/claude/codex-s81-nt1-static-1021/sim_m0",
+      "+static=1",
+      "+t=46",
+      "+p0r=300",
+      "+p0d=800",
+      "+pace=4",
+      "+maxcyc=5000",
+      "+seed=1"
+    ],
+    "exit": 0,
+    "summary": [
+      "ATTN1_COMPLETE expected_sc=12 expected_pv=8 incomplete=0 inputs0=1/16/12/12 inputs1=1/16/12/12",
+      "ATTN1PROBE T=46 p0r=300 p0d=800 pace=4 ref: refused=0 prog_bad=0 last_sc=78 first_pv=391 last_pv=398 | dut: refused=0 prog_bad=0 last_sc=116 first_pv=941 last_pv=969 | d_sc=38 d_pv=571",
+      "ATTN1LOCK cycles=3970 sc=12/12 pv=8/8 mismatches=0 sc_mis=0 pv_mis=0 PASS"
+    ],
+    "expected_outcome": true,
+    "binary_sha256": "e1544d9453f71bb0f8892ac6800f6d83945aeb13f1f7846a78a7431bd0555fbd"
+  },
+  {
+    "name": "full640_seed2",
+    "command": [
+      "/srv/opentallas-scratch/claude/codex-s81-nt1-static-1021/sim_m0",
+      "+static=1",
+      "+t=640",
+      "+p0r=300",
+      "+p0d=800",
+      "+pace=4",
+      "+maxcyc=5000",
+      "+seed=2"
+    ],
+    "exit": 0,
+    "summary": [
+      "ATTN1_COMPLETE expected_sc=160 expected_pv=8 incomplete=0 inputs0=1/16/160/160 inputs1=1/16/160/160",
+      "ATTN1PROBE T=640 p0r=300 p0d=800 pace=4 ref: refused=0 prog_bad=0 last_sc=226 first_pv=535 last_pv=542 | dut: refused=0 prog_bad=0 last_sc=708 first_pv=1517 last_pv=1545 | d_sc=482 d_pv=1003",
+      "ATTN1LOCK cycles=4546 sc=160/160 pv=8/8 mismatches=0 sc_mis=0 pv_mis=0 PASS"
+    ],
+    "expected_outcome": true,
+    "binary_sha256": "e1544d9453f71bb0f8892ac6800f6d83945aeb13f1f7846a78a7431bd0555fbd"
+  }
+]
