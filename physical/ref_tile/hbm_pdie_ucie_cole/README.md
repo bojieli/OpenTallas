@@ -1,0 +1,88 @@
+# hbm_pdie_ucie_cole: HBM host UCIe column ot_pdie_ucie_col, ucie4 FALLBACK (HBM-COLLECT10/UCF 10-21)
+
+## ucie4: structural successor of the ucie3b route NEEDS_RTL
+Daemon hbm_pdie_ucie_colb-ucie3b-ed1ac9e76 (ep5): TT -93.98 / FF +10.37 / DRC 0; reg->reg +14.77, in->reg +305.8, benches all PASS.
+Classified (w18_sta_tt.log, 6_final.def): EVERY failing endpoint (11 at CTS, 7 at GRT, worst -93.98 after DRT) is
+u_ptx (PMA TX abstract, ck_tx, ck->pma_tx 127 ps) -> pma_tx[*] output port (set_load 80 fF). Not depth, not clock, not CDC.
+The 513 port drivers (BUFx6f/x12f, repair) were legalised median 56 / p90 132 / max 200 um from their S-face ports (final
+net 108 fF, 413 ps wire): the 43.2-um S channel (35 um of rows) at 4.93 pins/um also held the 513 pma_rx port buffers and
+~950 of the 1,533 CTS hold buffers. The pma_rx side (input buffers) sat median 8 um from their ports.
+Fix (enlarge, not squeeze; no RTL change): S channel 129.6 um (PMA macros at y 129.6), outline 259.2 x 1728.0 (+86.4 um
+tall; digital band 345.6 tall unchanged, SRAM moved up with it), pma_rx 3-129 / pma_tx 130.6-256 / pma_tck 256.4-256.9 (4.07 pins/um, was 4.93).
+RTL = ucie3 @ed1ac9e76 unchanged: benches (V5.050) + witnesses rtl/dsrom_sys/s81_link/ucie/witness/ stand (daemon re-ran them PASS/FAIL-as-expected 06:35-06:45).
+Die impact: host_N slot height 1653.48 -> 1728.0 (outline grows; NOTICE to HBM-DIE15 on CLOSED); ports/latency identical to ucie3.
+
+SAFE-DESIGN checklist (ucie4):
+1 Pins: PASS (tx -> u_txf on ck_tx; rx/st 2-stage out regs on ck_rx; pma_* at the registered PMA boundary; resets landed 2 stages/region); S face 4.07 pins/um (FIXED, was 4.93).
+2 Reach: PASS (core logic in the digital band; PMA pads -> ports 129.6 um; port drivers now have 129.6 um of rows beside their pins).
+3 Fanout: PASS (ucie3 census: mapped max 32; textbook_lint route.a1 PASS); unchanged netlist.
+4 Depth: PASS (textbook depth 270 ps; worst reg->reg u_rm.rp_g2 -> u_rmm/w_ce_in 8 levels +14.77 TT inside the shared S81 rate matcher, unchanged).
+5 Storage: PASS (rate matcher in the dual-clock SRAM).
+6 Floorplan: FIXED channel (S channel 129.6 um for port drivers + hold buffers); PMA rxm off-lattice x 10.8 and aspect WAIVED (column slot); util falls with the larger outline.
+7 Clock: PASS (3 regional roots ck_tx/ck_rx/ck_rck, ucie3 TT/FF spread 45.2/20.8/33.3 within 80; no reg->reg ck_tx<->ck_rx; rck->rx only via CDC children); io_hold_margin 0.03.
+8 Schedule: static; 0 added cycles in ucie4 (ucie3 +1 RX pma_rck edge stands).
+
+## ucie3 (HBM-UCIE9 10-21): structural successor of the ucie2 gate FAIL
+
+ucie2 (ref_gate hbm_pdie_ucie_colb-20261020-223234, committed 9ac3362e1): main stopped at trial GRT on ONE ck_core root spanning the tx AND
+rx pin groups (boundary pin-flop spread 88.8 ps TT, 1028 of 1584 sinks pin regs); fallback stopped at CTS (FF spread 107.2);
+cross_clock -306.7 ps u_prx/q -> u_rm comb -> u_rmm/w_ce_in (PMA RX output reached the rate matcher and the SRAM write port
+unregistered: a macro->macro single-cycle path).  ucie3 is a structural redesign, not a retry:
+1. PMA RX output register u_prr (ot_pl_pad 513 b, ck_rck) beside the rxm q face; every rate-matcher / SRAM-write / status
+   cone now starts at a flop.  Price: +1 pma_rck edge on RX ahead of the elastic rate matcher (off-die boundary; the RX
+   fixed latency grows 0.83 ns, not on any compiler-scheduled on-die path).
+2. ck_core split into two regional roots: ck_tx (tx face reg u_txf 512 + live flag + PMA TX u_ptx) and ck_rx (rate-matcher
+   read side, SRAM read port, status, 1,028 rx/st out regs), each with its own reset port landed 2 stages (rst_tx, rst_rx).
+   The two regions share NO net (TX and RX core sides are independent), so no landing ring is needed: 0 added edges.
+   (The lead's suggested IO/PMA split would have kept both pin groups on one root and needed a 512-b x 4-slot ring = 2,048
+   flops for tx_f -> u_ptx; the tx/rx split removes the pin-group span itself at zero cost.)
+3. ck_rck unchanged (PMA RX + u_prr + rate-matcher write side + SRAM write port).
+FALLBACK 259.2 x 1641.6 (fits the current host_N slot; all core pins N: rx W half 12-117 with ck_rx/rst_rx beside it at 120/121.5, tx E half 140-247 with ck_tx/rst_tx at 130/132, ck_rck 123.5).
+Benches (Verilator 5.050, ot-epyc9, run_ucie_col_all.sh at the ucie3 RTL): UCIE_COL_ALL_EXIT 0 -- audit PASS (3 regions, 0
+landings), lockstep MUT 0 PASS (8904 compared) / MUT 4 FAIL, link MODE 0/1/2 PASS, link mutants 1/2/3 FAIL; witnesses
+rtl/dsrom_sys/s81_link/ucie/witness/ regenerated.
+
+SAFE-DESIGN checklist (ucie3; supersedes the ucie2 list below where they differ):
+1 Pins: PASS (tx -> u_txf on ck_tx; rx/st <- 2-stage out regs on ck_rx; pma_rx captured in the rxm and re-registered by u_prr; resets landed 2 stages per region).
+2 Reach: PASS (all logic in the digital band; u_prr sits at the rxm q face).
+3 Fanout: PASS by construction (u_prr bit -> u_rm/u_rmm data pins <= 3 loads; r_d[512] valid -> push/sts; kept mask/select copies <= 32); mapped census at the gate.
+4 Depth: FIXED (macro->macro comb path removed; reg -> 4-bit pointer logic -> SRAM pin).
+5 Storage: PASS (rate matcher storage in the dual-clock SRAM).
+6 Floorplan: unchanged (PMA off-lattice and aspect WAIVED (fits the existing slot)).
+7 Clock: FIXED (3 regional roots ck_tx / ck_rx / ck_rck; tx and rx pin groups no longer share a root; no reg->reg path between ck_tx and ck_rx; rck -> rx only through the CDC children); io_hold_margin 0.03.
+8 Schedule: static; +1 pma_rck edge RX (priced above), 0 on TX; no landing.
+Pre-gate census: by construction (no driver > 32, storage in SRAM, every pin registered, no tied port); mapped numbers by the gate.
+
+Top `ot_pdie_ucie_col`, generated by `tools/landed_parent/lp.py gen tools/landed_parent/specs/ot_pdie_ucie_col.json` from the
+wires-only flat parent `rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv`; kit spec `tools/ref_tile/specs/hbm_pdie_ucie_colb.json`.
+Replaces the grant-slot outline `ot_pdie_ucie` at HBM GEN2e4 r11 `host_N` (the S81 MU die has 0 instances; DRIVE-HBM owns it).
+Method of the S81 SerDes column lp6 (claude/s81-serdes6-1020 41cccbc13). Same data ports as `ot_pdie_ucie` (tx/rx 512, st 2,
+pma_tx/pma_rx 513 = {valid, beat}, pma_tck); clk/pma_rck/rst become regional ports ck_core/rst_core (core PLL) and
+ck_rck/rst_rck (the far die's forwarded pma_rck).
+
+FALLBACK 259.2 x 1641.6 = the existing host_N slot (260.928 x 1653.48, no re-grant): rxm at (10.8, 43.2), txm at (140.4, 43.2), SRAM at (43.2, 1512.0); all core pins (rx, st, clocks/resets, tx) on the N face, pads on the S face, W/E pinless.
+
+Structure: core region (ck_core): tx face reg u_txf (512) + live flag -> PMA TX abstract u_ptx (ot_ucie_pma_txm, registered
+boundary, pads S); rate-matcher read side, status, 2-stage rx/st out regs.  rck region (ck_rck): PMA RX abstract u_prx
+(ot_ucie_pma_rxm; its clock pin on the digital N face) -> rate-matcher write side u_rm (ot_s81_rate_match_sr) + SRAM write port.
+CDC: only u_rm (2-stage gray pointer syncs, storage in dual-clock SRAM ot_sram_1r1w2c_16x546_m1) and u_sts (2-flop sync).
+PMA abstracts: tools/mem_compiler/ucie_pma_gen.py (assumed footprint/timing; behavioural model ucie/ot_ucie_pma_models.sv, LAT 2).
+
+Benches (fleet, Verilator 5.050, rtl/dsrom_sys/s81_link/ucie/run_ucie_col_all.sh, ep5 10-20 22:05 UCIE_COL_ALL_EXIT 0):
+audit PASS; lockstep flat vs landed MUT 0 PASS, MUT 4 FAIL; two-die link (die B 300 ppm slow) column<->column, column->reference
+ot_pdie_ucie, reference->column all PASS (6000/6000 beats exact, 555 IDLE deleted, st 10); link mutants 1 (SRAM read address
+stuck 0), 2 (write valid stuck 0), 3 (status flag stuck 0) FAIL.  Witness logs: rtl/dsrom_sys/s81_link/ucie/witness/.
+
+Layer cap M6 (layer_cap_grant, DRIVE-HBM die lead): PMA abstracts expose PG as M5 stripes and need an M6 strap inside the tile; ucie1 gate 22:07 FAILED PDN-0233 in the default M5-cap tile (macro_m5 grid had no M6). Census at that gate: mapped dynamic load limit32 PASS, max 32.
+
+## SAFE-DESIGN checklist
+1. Pins: PASS. tx -> u_txf face reg; rx/st <- 2-stage out regs; pma_* registered inside the PMA abstracts; resets landed 2 stages per region.
+2. Reach: PASS by construction: all core logic in the 345.6-tall digital band (longest net SRAM rd_out W face -> out regs -> E/N face < ~300 um); pads 43 um. Re-measured by the gate.
+3. Fanout: PASS by construction: rate matcher kept mask (26) / select (16) / reset-mid copies (<= 32); reset leaves <= ~30; mapped census by the gate's native_census.
+4. Depth: PASS (registers + rate matcher 4-bit pointer logic + 1 AND per rx bit).
+5. Storage: PASS (rate matcher 8 x 512 in the dual-clock SRAM; no flop array).
+6. Floorplan: WAIVED lattice (PMA origins 10.8 / 140.4 are off the 43.2 lattice: two 108-um halves + 20-um channel do not fit 259.2 on it; rule freeze 09:35: guidance); full-width std-cell band y 1296-1641.6; aspect 6.3:1 WAIVED (slot).
+7. Clock: 2 regional roots (ck_core, ck_rck), all sinks in the digital band (both PMA clock pins on their N face at y 1296): the ref_tile clock_span WARN (outline > 600 um) is the outline, not the tree; per-region TT/FF spread <= 80 judged by the gate; io_hold_margin 0.03.
+8. Schedule: static; the column adds +1 edge (tx face reg) on TX and +2 (out regs) on RX vs ot_pdie_ucie; RX sits behind the elastic rate matcher (off-die boundary, flow control allowed there), no compiler-visible change beyond fixed latency.
+
+Pre-gate native census: by construction above (no driver > 32 in the RTL; storage in SRAM; every pin registered; no tied functional port: SRAM spare data columns carry w_d[33:0]); mapped numbers from the gate's native_census (recorded in lanes/HBM-UCIE8.md).
