@@ -1,0 +1,116 @@
+{
+ "schema": "opentallas.token_pass.mu_curve.v1",
+ "asof": "2026-10-21",
+ "lane": "TOK-RATE-1021/MUCURVE",
+ "label": "MODEL points (calendar / composition on measured per-layer benches) vs MEASURED A100 80GB",
+ "points": [
+  {
+   "design": "s81_ds",
+   "mode": "AR",
+   "users": 1,
+   "per_user_tok_s": 1317.4,
+   "aggregate_tok_s": 1317.4,
+   "grade": "MODEL (calendar on the S81-BALANCE stage model; stage spans from per-layer measured benches; not an RTL token run)",
+   "src": "claude/s81-link5-cal-1021 @c028c373c results/arch/mu_s81_1018/calendar_ar.json",
+   "period_cycles": 910864,
+   "per_user_vs_baseline_x": 39.9
+  },
+  {
+   "design": "s81_ds",
+   "mode": "AR",
+   "users": 44,
+   "per_user_tok_s": 1317.4,
+   "aggregate_tok_s": 57967,
+   "grade": "MODEL (calendar on the S81-BALANCE stage model; stage spans from per-layer measured benches; not an RTL token run)",
+   "src": "claude/s81-link5-cal-1021 @c028c373c results/arch/mu_s81_1018/calendar_ar.json",
+   "period_cycles": 910864,
+   "collisions": 0,
+   "per_user_vs_baseline_x": 39.9
+  },
+  {
+   "design": "s81_ds",
+   "mode": "MTP",
+   "users": 1,
+   "per_user_tok_s": 4060.6,
+   "aggregate_tok_s": 4060.6,
+   "grade": "MODEL (calendar on the S81-BALANCE stage model; stage spans from per-layer measured benches; not an RTL token run)",
+   "src": "claude/s81-link5-cal-1021 @c028c373c results/arch/mu_s81_1018/calendar_mtp.json",
+   "period_cycles": 1229092,
+   "per_user_vs_baseline_x": 123.0
+  },
+  {
+   "design": "s81_ds",
+   "mode": "MTP",
+   "users": 9,
+   "per_user_tok_s": 4060.6,
+   "aggregate_tok_s": 40450,
+   "grade": "MODEL (calendar on the S81-BALANCE stage model; stage spans from per-layer measured benches; not an RTL token run)",
+   "src": "claude/s81-link5-cal-1021 @c028c373c results/arch/mu_s81_1018/calendar_mtp.json",
+   "period_cycles": 1229092,
+   "collisions": 0,
+   "fillers": 4,
+   "filler_tok_s": 976.3,
+   "per_user_vs_baseline_x": 123.0
+  },
+  {
+   "design": "qwen_rom",
+   "mode": "AR",
+   "users": 1,
+   "per_user_tok_s": 4403.2,
+   "aggregate_tok_s": 4403.2,
+   "grade": "MODEL (toksim_compose: 60.0% REL + 2.8% NEWEST measured RTL stages, rest DIAG/PRICED; KV attention DIAG)",
+   "src": "claude/qw-toksched2-1020 @94cd97b7a results/token_pass/measured_qwen_1019/cycles.json",
+   "cycles_per_token": 272641,
+   "per_user_vs_baseline_x": 38.4
+  },
+  {
+   "design": "qwen_rom",
+   "mode": "AR",
+   "users": 4,
+   "per_user_tok_s": 1788.1,
+   "per_user_tok_s_all": [
+    4087.2,
+    3831.7,
+    2043.6,
+    1788.1
+   ],
+   "aggregate_tok_s": 11750.6,
+   "grade": "MODEL (OVL 4-user link-schedule frame, NEWEST, scaled by the schedule ledger; no paired serial-MU RTL bench)",
+   "src": "claude/qw-toksched2-1020 @94cd97b7a results/token_pass/measured_qwen_1019/cycles.json result.4u_scheduled",
+   "note": "x = slowest user",
+   "per_user_vs_baseline_x": 15.6
+  }
+ ],
+ "a100_qwen3_8b": [
+  {
+   "users": 1,
+   "per_user_tok_s": 114.8,
+   "aggregate_tok_s": 114.8,
+   "grade": "MEASURED (A100 80GB, Vast, Qwen3-8B)"
+  },
+  {
+   "users": 102,
+   "per_user_tok_s": 16.5,
+   "aggregate_tok_s": 1681.0,
+   "grade": "MEASURED (A100 80GB, Vast, Qwen3-8B)"
+  }
+ ],
+ "deepseek_reference": [
+  {
+   "users": 1,
+   "per_user_tok_s": 33.0,
+   "aggregate_tok_s": 33.0,
+   "grade": "PUBLISHED 8x H100 single-user (no A100 DeepSeek measurement; side note)"
+  }
+ ],
+ "headline": {
+  "qwen_rom_4u_vs_a100_102u_aggregate_x": 7.0,
+  "qwen_rom_1u_vs_a100_1u_x": 38.4
+ },
+ "notes": [
+  "x = per-user decode rate (latency), y = aggregate tok/s per deployment (S81 = 520 dies + 520 HBM stacks, direct-cabled; Qwen ROM = one compute+KV package; A100 = one 80 GB GPU). No iso-area normalisation here.",
+  "S81 MTP aggregate includes 4 filler users at 976.3 tok/s.",
+  "S81 rate is the 81-stage L5B-CAL calendar; the 72-frame 241-stage release map has no MU calendar yet.",
+  "Superseded: mu_curve_1020_* (S81 46 x 836 / 10 x 2,653.9 compose; Qwen 4u 12,601.2 DIAG)."
+ ]
+}
