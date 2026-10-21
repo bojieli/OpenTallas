@@ -27,7 +27,9 @@
    }
   },
   "delivery_timing_qualified": false,
-  "scope": "Per-K cluster-output CUT; true running recurrence and actual STN/VM; upstream MAC not simulated, no VM-write probes"
+  "scope": "Per-K cluster-output CUT; true running recurrence and actual STN/VM; upstream MAC not simulated, no VM-write probes",
+  "grade": "DIAG (historical reused binary; build-source/overlay identity unverified)",
+  "source_identity_qualified": false
  },
  "stg3": {
   "verdict": "PENDING",

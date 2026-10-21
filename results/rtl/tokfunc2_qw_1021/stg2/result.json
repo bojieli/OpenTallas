@@ -148,7 +148,7 @@
  ],
  "delivery_timing_scope": "actual VM-write edges required; legacy schedule anchors are not delivery measurements",
  "stage": "stg2",
- "grade": "RTL-functional (source assembly)",
+ "grade": "DIAG (historical reused c0 binary; exact build-source/overlay identity unverified)",
  "src_commit": "c0f8097f3",
  "verdict": "FAIL",
  "golden": "per layer L0..L35 (TP4 36-layer ISA golden at P8191 re-executed per layer, reproduction-checked, cut to TP8 compute die 0): bench hdc_golden expectation bit-exact on the RTL outputs AND == ISA gold words; ISA-gold words matched 1032336/1032336 (resid 4097, qk 768, silu 1536, qkv 768, gu 3072 per layer per cfg; od = bench golden only, TP8 partials have no TP4 value); lm / emb bench golden",
@@ -6796,5 +6796,7 @@
     }
    }
   }
- }
+ },
+ "source_identity_qualified": false,
+ "source_identity_note": "Admitted preserved Vtb hashes and numeric verdicts are retained; no prospective binary/build-source/overlay identity manifest was recorded. Do not infer exact source assembly binding from the copied tree or source labels."
 }
