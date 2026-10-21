@@ -1264,12 +1264,20 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
    assign owner_bits[oi*2+:2]=owner_read[oi];
  end
  wire[63:0] rd[0:NB-1];
+ wire[NB-1:0] read_ren,read_sa,read_sb,read_ha,read_hb;
+ wire[NB*5-1:0] read_ra;
+ // One bounded descriptor per three actual banks, rather than a full
+ // descriptor copy per bank. Its real outputs remain below32 consumers.
+ for(genvar rg=0;rg<(NB+2)/3;rg=rg+1)begin:g_read_group
+   localparam integer CNT=(NB-rg*3>=3)?3:NB-rg*3;
+   ot_s81dv_finish_readgroup #(.NV(NV),.K(K),.P(P),.TREES(TREES),.FIRST(rg*3),.CNT(CNT)) u_read(
+     .fire(read_fire[rg]),.tag(read_tags[rg*9+:9]),.owner(owner_bits[(rg/3)*TREES*NV*2+:TREES*NV*2]),
+     .ren(read_ren[rg*3+:CNT]),.ra(read_ra[rg*15+:CNT*5]),.sa(read_sa[rg*3+:CNT]),.sb(read_sb[rg*3+:CNT]),.ha(read_ha[rg*3+:CNT]),.hb(read_hb[rg*3+:CNT]));
+ end
  for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank
-  wire ren,sa,sb,ha,hb;wire[4:0] ra;
-  ot_s81dv_finish_readbank #(.NV(NV),.K(K),.P(P),.TREES(TREES),.BANK(bank)) u_read(
-    .fire(read_fire[bank/3]),.tag(read_tags[(bank/3)*9+:9]),.owner(owner_bits[(bank/7)*TREES*NV*2+:TREES*NV*2]),.ren(ren),.ra(ra),.sa(sa),.sb(sb),.ha(ha),.hb(hb));
+  wire ren=read_ren[bank];wire[4:0] ra=read_ra[bank*5+:5];
   always @(posedge clk)begin
-    asel[bank]<=sa;bsel[bank]<=sb;ahc[bank]<=ha;bhc[bank]<=hb;
+    asel[bank]<=read_sa[bank];bsel[bank]<=read_sb[bank];ahc[bank]<=read_ha[bank];bhc[bank]<=read_hb[bank];
   end
   wire[38:0] wp;
   if(bank<P*K)begin:g_leaf
@@ -1375,7 +1383,7 @@ module ot_s81dv_finish_reset2 #(parameter integer LEAVES=64)(input wire clk,rst_
  end
 endmodule
 
-(* keep_hierarchy=1 *) module ot_s81dv_finish_readbank #(parameter integer NV=80,K=5,P=3,TREES=1,BANK=0)(input wire fire,input wire[8:0] tag,input wire[TREES*NV*2-1:0] owner,output wire ren,output wire[4:0] ra,output wire sa,sb,ha,hb);
+(* keep_hierarchy=1 *) module ot_s81dv_finish_readgroup #(parameter integer NV=80,K=5,P=3,TREES=1,FIRST=0,CNT=3)(input wire fire,input wire[8:0] tag,input wire[TREES*NV*2-1:0] owner,output wire[CNT-1:0] ren,output wire[CNT*5-1:0] ra,output wire[CNT-1:0] sa,sb,ha,hb);
  localparam integer RM=(TREES==3)?2:1;
  localparam integer MUT_ASSOC=`ifdef OT_S81DV_MUT_EASSOC (TREES==3) `else 0 `endif;
     function automatic [7:0] ca_node(input [7:0] n);
@@ -2075,9 +2083,11 @@ endmodule
  endfunction
  wire[10:0] da=descriptor(ca_node({1'b0,tag[6:0]}),tag[8:7]);
  wire[10:0] db=descriptor(cb_node({1'b0,tag[6:0]}),tag[8:7]);
- assign sa=fire && da[10:6]==BANK;
- assign sb=fire && db[10:6]==BANK;
- assign ren=sa||sb;
- assign ra=(da[10:6]==BANK)?da[5:1]:db[5:1];
- assign ha=da[0];assign hb=db[0];
+ for(genvar b=0;b<CNT;b=b+1)begin:g_out
+   assign sa[b]=fire && da[10:6]==FIRST+b;
+   assign sb[b]=fire && db[10:6]==FIRST+b;
+   assign ren[b]=sa[b]||sb[b];
+   assign ra[b*5+:5]=(da[10:6]==FIRST+b)?da[5:1]:db[5:1];
+   assign ha[b]=da[0];assign hb[b]=db[0];
+ end
 endmodule
