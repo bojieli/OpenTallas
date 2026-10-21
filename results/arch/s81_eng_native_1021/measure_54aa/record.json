@@ -1,0 +1,17 @@
+{
+  "state": "LIVE_SYNTH_NATIVE_ONLY",
+  "source_ref": "54aa19348e6d1efb0897fd7ada0aee5e95329eed",
+  "host": "ot-gold1",
+  "unit": "oth-ubuntu-1988488-1792606618",
+  "run": "/srv/opentallas-scratch/claude/codex-s81-eng-native-1021",
+  "source_changes": "exact hash_n32 and lookup_ra640 only;8895 other source files byteidentical",
+  "config": "original ep9 ra640a byteidentical, all constraints/hooks preserved; native-only target before layout",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "baseline_preservation": [
+    "original ep9 directory unchanged",
+    "full original native report/netlist copied to baseline/ on each stage host",
+    "local55MB baseline.tar retained in /home/ubuntu/scratch/eng-native-54aa"
+  ],
+  "native_scope": "same original12Libertyhashes checked before unchanged native tool; no outline/route/timing/physical adoption",
+  "functional_suite": "parent owns existing eng_rr exact+6causal suite on same source, not duplicated"
+}

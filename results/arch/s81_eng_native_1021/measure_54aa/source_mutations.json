@@ -1,0 +1,17 @@
+{
+  "source_ref": "54aa19348e6d1efb0897fd7ada0aee5e95329eed",
+  "baseline": "ep9:s81engm_lkp_ra640a-20261021-072408",
+  "unchanged_files": 8895,
+  "changed_files": {
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv": {
+      "original": "a5fd684d9cbd2b312b6fd71184f28b52f3be8a698070b7a8048a196f2cb416ca",
+      "candidate": "eb1ff5b88f0a2fbbbe245f88b1c5c563f8cd08315aaa89df8cb8153abfdcd9cf"
+    },
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv": {
+      "original": "41606c18e27367e0d018db77a95ff86825c0c2d79095ee88823a31bd10f3aa7a",
+      "candidate": "d5f15c72f696546fdef99d9b55e824de2a7f32851610103519918da9bd9c5cdd"
+    }
+  },
+  "config_byte_identical": true,
+  "scope": "native-only original config, no layout; all source inputs except exactly2file replacements unchanged"
+}
