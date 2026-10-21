@@ -2,12 +2,12 @@
  "name": "hcoll_issuer_r256v8_gridb-gridb-COMMIT",
  "block": "ot_hgi_coll_issuer_m256v8",
  "ref_tile": true,
- "owner": "Codex CODEX-HBM-IDX-1021",
+ "owner": "CODEX ROOT coordinated issuer publication",
  "purpose": "Actual selected ROWS256 source physical correction: two data columns/three bank rows, metadata footer, existing W output face on taller edge, continuous clock bands.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "codex/hbm-issuer-grid-collect-1403",
+  "branch": "codex/root-issuer-typed-submit-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -28,7 +28,8 @@
    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_issuer_v8r256_miter.sv",
    "rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r256_miter.sh",
    "results/rtl/ref_tile/hcoll_issuer_r256v8/bench",
-   "results/rtl/ref_tile/hcoll_issuer_r256v8"
+   "results/rtl/ref_tile/hcoll_issuer_r256v8",
+   "results/rtl/hbm_collect11_issuer256/grid_gate_1403"
   ]
  },
  "stages": {
