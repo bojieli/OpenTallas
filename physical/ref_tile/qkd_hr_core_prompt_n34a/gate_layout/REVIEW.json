@@ -1,0 +1,35 @@
+{
+  "reviewer": "codex ROOT coordinator",
+  "time": "2026-10-21T13:55:29.039613-07:00",
+  "gate_commit": "2026-10-21T13:46:45-0700",
+  "verdict": "APPROVED",
+  "geometry_sha256": "f471143f510b97985c356675a8b35a47c89e132fc1deb422193f7d6fff68f1b7",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "f471143f510b97985c356675a8b35a47c89e132fc1deb422193f7d6fff68f1b7",
+    "components": {
+      "outline": "e253fbac782d9f4a2ba814053430db8afbe9c22e67962cbcf65f810feb0b2c38",
+      "macros": "7269420a3b713eeac2af80d1dc97a69b2c30d8c79741cd7402ffa67e298d1492",
+      "pins": "59865085f72b12910170d38154bf6f182681f1e0975170fe0a20d22645d3c0a0",
+      "clock_entry": "e8658d2969cf95d85f85c60199644d3ac04ee95166472949ad06b46c41d552b9"
+    }
+  },
+  "source_content_manifest_sha256": "06e7b063a2bfde5831f9f7ac535b47674f32b7e2ecdb4fbe094e1f1ea4c2cf93",
+  "source_identity": "exact_content_snapshot; commit=None retained",
+  "approval_provenance": "ROOT personally viewed both original PNGs, verified identical packet hashes, READY and actual gate items, and explicitly approved exact geometry during13:40 takeover.",
+  "checklist": {
+    "lattice": "Seven macros at frozen placement. Abutted upper-right small stack and five narrow/abutted channel guidance warnings retained; exact geometry approved.",
+    "std_cell_band": "Open central channel and outer bands; no red hotspot in actual ROOT-viewed density.",
+    "pin_spread": "Actual5335/5335 pin geometry passes; existing registered-pin opt-out source4379dbb8 proof retained, no new waiver.",
+    "clock_entry": "Native max32; GRT0/M2usage23.25%; boundary58.1psTT/55.3psFF. Insertion726.7/603.6ps guidance warnings retained.",
+    "shape": "Frozen original outline/seven-macro shape reviewed; open central and outer bands. No outline/pin/macro change."
+  },
+  "risks": [
+    "Placement macro-to-reg setup-397.2ps/reg-to-reg-267.0ps are not a timing PASS; final route qualifies.",
+    "Approval does not authorize child-view or parent-source aliases."
+  ],
+  "image_sha256": {
+    "floorplan.png": "afb92ee84bc8e6cfcb93a2aac5dea452cd17c057ccae112a9eadce9f2d2bad5e",
+    "density.png": "bd89f626712d73d70f09c13a6c57f0d101cb7f3aa0d23292991944de6d64cb07"
+  }
+}
