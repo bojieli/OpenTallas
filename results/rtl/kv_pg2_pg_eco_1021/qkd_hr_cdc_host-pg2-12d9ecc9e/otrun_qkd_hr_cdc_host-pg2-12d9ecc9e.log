@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/gskq-pgrr/stage
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/gskq-pgrr/stage
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/gskq-pgrr/stage
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/gskq-pgrr/stage
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/gskq-pgrr/stage
+ot-run: ot-pve1        admits   250 GB (avail 198, growth 23, headroom 0, waiters 0/0 GB) load 15/28 running 9 disk 1115 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/gskq-pgrr/stage
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1031910-1792599338 after 0 s
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_PG_ECO bound_terminals=2352 instances=1176 dont_touch_instances=1176
+OT_PG_ECO_POST_PASS checked=1048602
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_GRID_VDD PASS 1
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_GRID_VSS PASS 1
+SIGNAL_IDENTICAL
+9ae09b143086a8132e36651c6d7038758cae74ebfc8e541529234cd00dd4c702  6_final_pgbound.odb
+4a554df98976f73e97fe1d0178b1f4035adf00a8fbf8e842bdd6f64fdbeaef46  pre_signal.txt
+4a554df98976f73e97fe1d0178b1f4035adf00a8fbf8e842bdd6f64fdbeaef46  post_signal.txt
+RC=0
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1031910-1792599338): exit 0
