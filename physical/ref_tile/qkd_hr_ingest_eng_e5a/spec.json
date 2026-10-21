@@ -1,0 +1,674 @@
+{
+ "name": "qkd_hr_ingest_eng_e5a",
+ "top": "qkd_hr_ingest_eng",
+ "kind": "tile",
+ "recipe": 4,
+ "clock_port": "ck_ingest",
+ "reset_ports": [
+  "eng_rst_n"
+ ],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "period_ps": 1540,
+  "signoff_period_ps": 1666.667
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_ingest",
+  "ck_rl"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ingest"
+   ],
+   "inputs": [
+    "eng_rst_n",
+    "eng_dv",
+    "eng_ddata",
+    "eng_inv_a",
+    "eng_inv_b",
+    "eng_indata",
+    "eng_wrdy"
+   ],
+   "outputs": [
+    "eng_drdy",
+    "eng_inrdy",
+    "eng_wv",
+    "eng_wv_c",
+    "eng_waddr",
+    "eng_wdata",
+    "eng_rv",
+    "eng_raddr",
+    "eng_done",
+    "eng_done_a",
+    "eng_done_b",
+    "eng_done_c",
+    "eng_tag",
+    "eng_busy",
+    "eng_nsec"
+   ]
+  },
+  "rl": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rl"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_32x128_m1"
+ ],
+ "soft_root_macro_bindings": {
+  "u_eng.u94181_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94182_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94183_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94184_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94185_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94186_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94187_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94188_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94189_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94190_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94191_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94192_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94193_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94194_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94195_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94196_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94197_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94198_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94199_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94200_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94201_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94202_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94203_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94204_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94205_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94206_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94207_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94208_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94209_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94210_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94211_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  },
+  "u_eng.u94212_c0/u_cell": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_ingest"
+  }
+ },
+ "sources": [
+  "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v",
+  "rtl/qwen_sys/host_native_engine_n32_1021/qkd_host_native_engine_n32.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
+ ],
+ "params": {},
+ "defines": [],
+ "children": [],
+ "inter": [],
+ "outline": {
+  "w": 345.6,
+  "h": 518.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94181_c0/u_cell",
+   "at": [
+    108.0,
+    32.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94182_c0/u_cell",
+   "at": [
+    183.6,
+    32.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94183_c0/u_cell",
+   "at": [
+    259.2,
+    32.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94184_c0/u_cell",
+   "at": [
+    108.0,
+    75.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94185_c0/u_cell",
+   "at": [
+    183.6,
+    75.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94186_c0/u_cell",
+   "at": [
+    259.2,
+    75.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94187_c0/u_cell",
+   "at": [
+    108.0,
+    118.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94188_c0/u_cell",
+   "at": [
+    183.6,
+    118.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94189_c0/u_cell",
+   "at": [
+    259.2,
+    118.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94190_c0/u_cell",
+   "at": [
+    108.0,
+    162.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94191_c0/u_cell",
+   "at": [
+    183.6,
+    162.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94192_c0/u_cell",
+   "at": [
+    259.2,
+    162.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94193_c0/u_cell",
+   "at": [
+    108.0,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94194_c0/u_cell",
+   "at": [
+    183.6,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94195_c0/u_cell",
+   "at": [
+    259.2,
+    205.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94196_c0/u_cell",
+   "at": [
+    108.0,
+    248.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94197_c0/u_cell",
+   "at": [
+    183.6,
+    248.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94198_c0/u_cell",
+   "at": [
+    259.2,
+    248.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94199_c0/u_cell",
+   "at": [
+    108.0,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94200_c0/u_cell",
+   "at": [
+    183.6,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94201_c0/u_cell",
+   "at": [
+    259.2,
+    291.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94202_c0/u_cell",
+   "at": [
+    108.0,
+    334.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94203_c0/u_cell",
+   "at": [
+    183.6,
+    334.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94204_c0/u_cell",
+   "at": [
+    259.2,
+    334.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94205_c0/u_cell",
+   "at": [
+    108.0,
+    378.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94206_c0/u_cell",
+   "at": [
+    183.6,
+    378.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94207_c0/u_cell",
+   "at": [
+    259.2,
+    378.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94208_c0/u_cell",
+   "at": [
+    108.0,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94209_c0/u_cell",
+   "at": [
+    183.6,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94210_c0/u_cell",
+   "at": [
+    259.2,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94211_c0/u_cell",
+   "at": [
+    108.0,
+    464.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_eng.u94212_c0/u_cell",
+   "at": [
+    183.6,
+    464.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "fill_reason": {
+  "pin_bound": "1,245-pin engine face (W, abutting the shell E face) needs >= ~420 um at <= 3 pins/um, and 32 bank SRAMs (51.4x20.8) need >= 20 um channels / >= 20 um edge gaps; std cells only 11.2k um2, so the outline is set by the pin face + macro channel lattice, not by area"
+ },
+ "pins": {
+  "N": [],
+  "S": [],
+  "E": [],
+  "W": [
+   "ck_ingest",
+   "ck_rl",
+   "eng_rst_n",
+   "eng_dv",
+   "eng_ddata",
+   "eng_inv_a",
+   "eng_inv_b",
+   "eng_indata",
+   "eng_wrdy",
+   "eng_drdy",
+   "eng_inrdy",
+   "eng_wv",
+   "eng_wv_c",
+   "eng_waddr",
+   "eng_wdata",
+   "eng_rv",
+   "eng_raddr",
+   "eng_done",
+   "eng_done_a",
+   "eng_done_b",
+   "eng_done_c",
+   "eng_tag",
+   "eng_busy",
+   "eng_nsec"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "QKO-HROOT2: engine face to the touching CDC shell tile (one ck_ingest region, 1.667 ns): direct wires, no pin registers, so the split is cycle-exact; the native32 engine source registers its state internally"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Explicit selected source lands2 eng_rst_n pins in2 same-edge ck_rl stages: one first FF per pin,18/17 distinct last leaves,35 native reset inputs; raw pins each1load, all actual mapped drivers<=32. SamePLL1:1 phase0 with ck_ingest; no source reset alias or shell reset contract change."
+ },
+ "structural_change": "HROOT address successor: exact unsigned32 combinational prefix-add/carry-save replaces10 stream-address expressions, no state/mux/enables/cycles/ports changes. Actual original production vs native35 bounded cold3seeds +wrong-clock negative, source-bound compositional arithmetic proof and fresh whole-wrapper native max32 retained in results/arch/hroot_address_factor_1021/ready_539e8df61. New native SHA14e2316d5a1f3d8e3d208ed7d87bf8c5bfc1350e1544500ffb98ea41a3a82f0f,35 resetcopies (previous34 is not adopted). MAIN geometry345.6x518.4 preserved from e4a;32 identical SRAM view placements rebound explicitly to actual new macro instance IDs and ck_ingest clock pins. Previous e4a actual TT-overlay reg-to-OUT -810.5ps and e4b clock FAIL retained; this new source is not timing closed. Root accepted source review; only ONE normal gate via parent, all existing guards, no SS claim or threshold waiver.",
+ "slot_change_request": "UNGRANTED345.6x518.4 engine beside shell, same physical slot as e4a; updated source does not imply parent/die placement approval.",
+ "safe_design_checklist": {
+  "1_pins": "all ports on the W face touching the shell E face; ~1200 pins / 518.4 um",
+  "2_reach": "engine face direct to the touching shell; internal hops < 405 um",
+  "3_fanout": "native32 source max 32; wrapper copies (reset leaves, w_v BUFs) <= 20 loads; raw census max 32",
+  "4_depth": "native engine at 1.667 ns (ingest clock)",
+  "5_storage": "32 bank SRAMs ot_sram_1r1w_32x128_m1 on a 75.6 x 43.2 lattice (channels 24.2 / 22.4 um >= 20), >= 20 um from every core edge, W std band",
+  "6_floorplan": "Same345.6x518.4geometry as e4a;32exact actual successor SRAM instances on preserved sites, density measured by normalgate; no fallback variant in this packet.",
+  "7_clock": "Two CTS roots, samePLL1:1 phase0: ck_ingest every engine FF and all32 explicit SRAM clock pins; ck_rl37 reset landing FFs (2first+35last). Measured gate spread still required.",
+  "8_reset": "Selected actual35 native reset inputs,2existing face pins->2first->18/17last; async assertion and2edge release unchanged; whole-wrapper native PASS max32 including rawpins each1."
+ },
+ "job": {
+  "owner": "Codex:HROOT address successor",
+  "branch": "codex/hroot-address-factor-1021",
+  "tag": "e5a",
+  "purpose": "ONE source-specific normal engine gate for zero-edge address successor; parent coordinates, ROOTintegration publishes",
+  "extra_paths": [
+   "rtl/qwen_sys/host_native_engine_n32_1021/qkd_host_native_engine_n32.json"
+  ],
+  "benches": [
+   {
+    "name": "qm_split_equiv",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/qwen_host/qm_split_1021/run.sh {RUN}/bench/qm_split",
+    "pass_regex": "QM_SPLIT_EQUIV_SUITE PASS 8/8"
+   }
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

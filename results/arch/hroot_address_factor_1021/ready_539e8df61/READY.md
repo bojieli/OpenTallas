@@ -1,3 +1,5 @@
+ROOT HOLD 2026-10-21 15:51 PT: e5a is UNLAUNCHED. Prior conditional one-gate disposition is superseded because completed-map address estimate improved only1.5%. Preserve this qualified source/native/cold/kit packet. Trace exact new worst path/equations and propose one materially better zero-edge structural model before any physical retry. No new proof campaign or speculative variant.
+
 # Address successor bounded qualification READY for ROOT review
 
 Exact source commit539e8df61 on codex/hroot-address-factor-1021. Production arithmetic sourceSHA b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63. New generated nativeSHA14e2316d5a1f3d8e3d208ed7d87bf8c5bfc1350e1544500ffb98ea41a3a82f0f; source-mappedSHA4c4b1fa2eca4e65190a0203eea33fb2ff871928c9b5e26cbbef3e4952694fbb6. Selected wrapper35 inputs explicitly bound to35 same-edge leaves,2 unchanged external resetpins,18/17 ownership, same ck_rl two-edge sequence. Actual wrapper/native/mapped sourceSHA are in wrapper/command.json. This packet is independent of NEWASR shell reset work.

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_hr_ingest_eng",
+ "enable": false,
+ "reason": "Explicit selected source lands2 eng_rst_n pins in2 same-edge ck_rl stages: one first FF per pin,18/17 distinct last leaves,35 native reset inputs; raw pins each1load, all actual mapped drivers<=32. SamePLL1:1 phase0 with ck_ingest; no source reset alias or shell reset contract change."
+}

@@ -1,3 +1,5 @@
+ROOT HOLD 2026-10-21 15:51 PT: e5a is UNLAUNCHED. Prior conditional one-gate disposition is superseded because completed-map address estimate improved only1.5%. Preserve this qualified source/native/cold/kit packet. Trace exact new worst path/equations and propose one materially better zero-edge structural model before any physical retry. No new proof campaign or speculative variant.
+
 # One normal engine gate packet
 
 Selected physical/ref_tile/qkd_hr_ingest_eng_e5a is a REAL generated kit, not just a proposed spec. Exactly one main345.6x518.4geometry,32actual new native macro instance bindings and all32clk pins rooted on ck_ingest. Data/native clocks ck_ingest;37reset FFs ck_rl; declared samePLL1:1 phase0, signoff1666.667ps/route1540ps. Selected source uses no behavioural params/defines; production origin AW32 HDMAX128 KVHMAX2 QKV1 APIPE0 QPIPE2 NATIVE_ROWS1 QMUT0. External ports unchanged. Internal reset ABI35ports is explicitly supplied by2first+35last18/17 leaves, and the actual whole-wrapper census includes these cells and raw2input contacts. Macro rebinding provenance is actual_macro_rebinding.json; no old34-native source/view alias.
