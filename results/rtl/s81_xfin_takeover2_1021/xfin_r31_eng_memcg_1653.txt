@@ -1,0 +1,212 @@
+Oct 21 16:49:30 ot-epyc7 kernel: verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+Oct 21 16:49:30 ot-epyc7 kernel: CPU: 40 UID: 1000 PID: 2366589 Comm: verilator_bin Not tainted 7.0.0-34-generic #34-Ubuntu PREEMPT(lazy) 
+Oct 21 16:49:30 ot-epyc7 kernel: Hardware name: Supermicro AS -2124BT-HTR/H12DST-B, BIOS 3.7 05/12/2026
+Oct 21 16:49:30 ot-epyc7 kernel: Call Trace:
+Oct 21 16:49:30 ot-epyc7 kernel:  <TASK>
+Oct 21 16:49:30 ot-epyc7 kernel:  show_stack+0x49/0x60
+Oct 21 16:49:30 ot-epyc7 kernel:  dump_stack_lvl+0x5f/0x90
+Oct 21 16:49:30 ot-epyc7 kernel:  dump_stack+0x10/0x18
+Oct 21 16:49:30 ot-epyc7 kernel:  dump_header+0x48/0x1c7
+Oct 21 16:49:30 ot-epyc7 kernel:  oom_kill_process.cold+0x8/0xac
+Oct 21 16:49:30 ot-epyc7 kernel:  out_of_memory+0xff/0x2b0
+Oct 21 16:49:30 ot-epyc7 kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 21 16:49:30 ot-epyc7 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+Oct 21 16:49:30 ot-epyc7 kernel:  try_charge_memcg+0x3c3/0x620
+Oct 21 16:49:30 ot-epyc7 kernel:  charge_memcg+0x34/0x80
+Oct 21 16:49:30 ot-epyc7 kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 21 16:49:30 ot-epyc7 kernel:  alloc_anon_folio+0x20c/0x4b0
+Oct 21 16:49:30 ot-epyc7 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+Oct 21 16:49:30 ot-epyc7 kernel:  do_anonymous_page+0x14a/0x4d0
+Oct 21 16:49:30 ot-epyc7 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+Oct 21 16:49:30 ot-epyc7 kernel:  ? __pte_offset_map+0x1c/0x130
+Oct 21 16:49:30 ot-epyc7 kernel:  handle_pte_fault+0x1cb/0x1f0
+Oct 21 16:49:30 ot-epyc7 kernel:  __handle_mm_fault+0x493/0x720
+Oct 21 16:49:30 ot-epyc7 kernel:  handle_mm_fault+0xee/0x2e0
+Oct 21 16:49:30 ot-epyc7 kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 21 16:49:30 ot-epyc7 kernel:  exc_page_fault+0x83/0x1e0
+Oct 21 16:49:30 ot-epyc7 kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+Oct 21 16:49:30 ot-epyc7 kernel:  asm_exc_page_fault+0x27/0x30
+Oct 21 16:49:30 ot-epyc7 kernel: RIP: 0033:0x640169b21ffc
+Oct 21 16:49:30 ot-epyc7 kernel: Code: 31 db 4d 63 8c 86 7c 0a 00 00 48 c1 e1 0d 49 01 c8 4a 8d 04 09 49 39 c0 72 1e 0f 1f 40 00 48 89 ca 48 89 c1 4c 01 c8 83 c6 01 <48> 89 17 48 89 d7 49 39 c0 73 e9 48 63 de 31 c0 48 c7 02 00 00 00
+Oct 21 16:49:30 ot-epyc7 kernel: RSP: 002b:00007ffe3f4213e0 EFLAGS: 00010202
+Oct 21 16:49:30 ot-epyc7 kernel: RAX: 0000641199e90060 RBX: 0000000000000000 RCX: 0000641199e90040
+Oct 21 16:49:30 ot-epyc7 kernel: RDX: 0000641199e90020 RSI: 0000000000000002 RDI: 0000641199e90000
+Oct 21 16:49:30 ot-epyc7 kernel: RBP: 000064016a065b60 R08: 0000641199e92000 R09: 0000000000000020
+Oct 21 16:49:30 ot-epyc7 kernel: R10: 0000000000000020 R11: 0000641199e85fd8 R12: 00006411805144a0
+Oct 21 16:49:30 ot-epyc7 kernel: R13: 0000640169ee1bc0 R14: 000064016a08ad20 R15: 00007ffe3f4214b8
+Oct 21 16:49:30 ot-epyc7 kernel:  </TASK>
+Oct 21 16:49:30 ot-epyc7 kernel: memory: usage 67108864kB, limit 67108864kB, failcnt 21
+Oct 21 16:49:30 ot-epyc7 kernel: swap: usage 0kB, limit 0kB, failcnt 0
+Oct 21 16:49:30 ot-epyc7 kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2366518-1792626144.scope:
+Oct 21 16:49:30 ot-epyc7 kernel: anon 68584710144
+Oct 21 16:49:30 ot-epyc7 kernel: file 0
+Oct 21 16:49:30 ot-epyc7 kernel: kernel 134766592
+Oct 21 16:49:30 ot-epyc7 kernel: kernel_stack 49152
+Oct 21 16:49:30 ot-epyc7 kernel: pagetables 134574080
+Oct 21 16:49:30 ot-epyc7 kernel: sec_pagetables 0
+Oct 21 16:49:30 ot-epyc7 kernel: percpu 6272
+Oct 21 16:49:30 ot-epyc7 kernel: sock 0
+Oct 21 16:49:30 ot-epyc7 kernel: vmalloc 0
+Oct 21 16:49:30 ot-epyc7 kernel: shmem 0
+Oct 21 16:49:30 ot-epyc7 kernel: zswap 0
+Oct 21 16:49:30 ot-epyc7 kernel: zswapped 0
+Oct 21 16:49:30 ot-epyc7 kernel: file_mapped 0
+Oct 21 16:49:30 ot-epyc7 kernel: file_dirty 0
+Oct 21 16:49:30 ot-epyc7 kernel: file_writeback 0
+Oct 21 16:49:30 ot-epyc7 kernel: swapcached 0
+Oct 21 16:49:30 ot-epyc7 kernel: anon_thp 0
+Oct 21 16:49:30 ot-epyc7 kernel: file_thp 0
+Oct 21 16:49:30 ot-epyc7 kernel: shmem_thp 0
+Oct 21 16:49:30 ot-epyc7 kernel: inactive_anon 492662784
+Oct 21 16:49:30 ot-epyc7 kernel: active_anon 68092030976
+Oct 21 16:49:30 ot-epyc7 kernel: inactive_file 0
+Oct 21 16:49:30 ot-epyc7 kernel: active_file 0
+Oct 21 16:49:30 ot-epyc7 kernel: unevictable 0
+Oct 21 16:49:30 ot-epyc7 kernel: slab_reclaimable 14568
+Oct 21 16:49:30 ot-epyc7 kernel: slab_unreclaimable 121504
+Oct 21 16:49:30 ot-epyc7 kernel: slab 136072
+Oct 21 16:49:30 ot-epyc7 kernel: hugetlb 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_refault_anon 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_refault_file 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_activate_anon 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_activate_file 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_restore_anon 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_restore_file 0
+Oct 21 16:49:30 ot-epyc7 kernel: workingset_nodereclaim 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgdemote_kswapd 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgdemote_direct 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgdemote_khugepaged 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgdemote_proactive 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgpromote_success 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgscan 7
+Oct 21 16:49:30 ot-epyc7 kernel: pgsteal 5
+Oct 21 16:49:30 ot-epyc7 kernel: pswpin 0
+Oct 21 16:49:30 ot-epyc7 kernel: pswpout 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgscan_kswapd 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgscan_direct 7
+Oct 21 16:49:30 ot-epyc7 kernel: pgscan_khugepaged 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgscan_proactive 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgsteal_kswapd 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgsteal_direct 5
+Oct 21 16:49:30 ot-epyc7 kernel: pgsteal_khugepaged 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgsteal_proactive 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgfault 21633436
+Oct 21 16:49:30 ot-epyc7 kernel: pgmajfault 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgrefill 0
+Oct 21 16:49:30 ot-epyc7 kernel: pgactivate 1
+Oct 21 16:49:30 ot-epyc7 kernel: pgdeactivate 0
+Oct 21 16:49:30 ot-epyc7 kernel: pglazyfree 0
+Oct 21 16:49:30 ot-epyc7 kernel: pglazyfreed 0
+Oct 21 16:49:30 ot-epyc7 kernel: swpin_zero 0
+Oct 21 16:49:30 ot-epyc7 kernel: swpout_zero 0
+Oct 21 16:49:30 ot-epyc7 kernel: zswpin 0
+Oct 21 16:49:30 ot-epyc7 kernel: zswpout 0
+Oct 21 16:49:30 ot-epyc7 kernel: zswpwb 0
+Oct 21 16:49:30 ot-epyc7 kernel: thp_fault_alloc 0
+Oct 21 16:49:30 ot-epyc7 kernel: thp_collapse_alloc 0
+Oct 21 16:49:30 ot-epyc7 kernel: thp_swpout 0
+Oct 21 16:49:30 ot-epyc7 kernel: thp_swpout_fallback 0
+Oct 21 16:49:30 ot-epyc7 kernel: numa_pages_migrated 2268230
+Oct 21 16:49:30 ot-epyc7 kernel: numa_pte_updates 2724280
+Oct 21 16:49:30 ot-epyc7 kernel: numa_hint_faults 2607590
+Oct 21 16:49:30 ot-epyc7 kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 21 16:49:30 ot-epyc7 kernel: Tasks state (memory values in pages):
+Oct 21 16:49:30 ot-epyc7 kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 21 16:49:30 ot-epyc7 kernel: [2366518]  1000 2366518     1986      957       74      883         0    57344        0             0 bash
+Oct 21 16:49:30 ot-epyc7 kernel: [2366553]  1000 2366553     5536     3330     1523     1807         0    81920        0             0 python3
+Oct 21 16:49:30 ot-epyc7 kernel: [2366554]  1000 2366554     4670     3392     1797     1595         0    77824        0             0 perl
+Oct 21 16:49:30 ot-epyc7 kernel: [2366589]  1000 2366589 16754541 16744725 16740920     3805         0 134340608        0             0 verilator_bin
+Oct 21 16:49:30 ot-epyc7 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0-1,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2366518-1792626144.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2366518-1792626144.scope,task=verilator_bin,pid=2366589,uid=1000
+Oct 21 16:49:30 ot-epyc7 kernel: Memory cgroup out of memory: Killed process 2366589 (verilator_bin) total-vm:67018164kB, anon-rss:66963680kB, file-rss:15220kB, shmem-rss:0kB, UID:1000 pgtables:131192kB oom_score_adj:0
+Oct 21 16:49:36 ot-epyc7 kernel: oom_reaper: reaped process 2366589 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+Oct 21 16:50:16 ot-epyc7 kernel: kauditd_printk_skb: 2 callbacks suppressed
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:59994): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:59995): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:59996): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:59997): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:59998): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:59999): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:60000): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:60001): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:60002): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:16 ot-epyc7 kernel: audit: type=1400 audit(1792626616.064:60003): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2397093 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:50:50 ot-epyc7 kernel: docker0: port 7(vethb59b274) entered disabled state
+Oct 21 16:50:50 ot-epyc7 kernel: vethc9abb28: renamed from eth0
+Oct 21 16:50:50 ot-epyc7 kernel: docker0: port 7(vethb59b274) entered disabled state
+Oct 21 16:50:50 ot-epyc7 kernel: vethb59b274 (unregistering): left allmulticast mode
+Oct 21 16:50:50 ot-epyc7 kernel: vethb59b274 (unregistering): left promiscuous mode
+Oct 21 16:50:50 ot-epyc7 kernel: docker0: port 7(vethb59b274) entered disabled state
+Oct 21 16:50:52 ot-epyc7 kernel: docker0: port 7(veth9133950) entered blocking state
+Oct 21 16:50:52 ot-epyc7 kernel: docker0: port 7(veth9133950) entered disabled state
+Oct 21 16:50:52 ot-epyc7 kernel: veth9133950: entered allmulticast mode
+Oct 21 16:50:52 ot-epyc7 kernel: veth9133950: entered promiscuous mode
+Oct 21 16:50:52 ot-epyc7 kernel: eth0: renamed from veth0a4062e
+Oct 21 16:50:52 ot-epyc7 kernel: docker0: port 7(veth9133950) entered blocking state
+Oct 21 16:50:52 ot-epyc7 kernel: docker0: port 7(veth9133950) entered forwarding state
+Oct 21 16:50:52 ot-epyc7 kernel: docker0: port 7(veth9133950) entered disabled state
+Oct 21 16:50:52 ot-epyc7 kernel: veth0a4062e: renamed from eth0
+Oct 21 16:50:53 ot-epyc7 kernel: docker0: port 7(veth9133950) entered disabled state
+Oct 21 16:50:53 ot-epyc7 kernel: veth9133950 (unregistering): left allmulticast mode
+Oct 21 16:50:53 ot-epyc7 kernel: veth9133950 (unregistering): left promiscuous mode
+Oct 21 16:50:53 ot-epyc7 kernel: docker0: port 7(veth9133950) entered disabled state
+Oct 21 16:50:53 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered blocking state
+Oct 21 16:50:53 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered disabled state
+Oct 21 16:50:53 ot-epyc7 kernel: vethc7861c3: entered allmulticast mode
+Oct 21 16:50:53 ot-epyc7 kernel: vethc7861c3: entered promiscuous mode
+Oct 21 16:50:53 ot-epyc7 kernel: eth0: renamed from veth346a621
+Oct 21 16:50:53 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered blocking state
+Oct 21 16:50:53 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered forwarding state
+Oct 21 16:50:54 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered disabled state
+Oct 21 16:50:54 ot-epyc7 kernel: veth346a621: renamed from eth0
+Oct 21 16:50:54 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered disabled state
+Oct 21 16:50:54 ot-epyc7 kernel: vethc7861c3 (unregistering): left allmulticast mode
+Oct 21 16:50:54 ot-epyc7 kernel: vethc7861c3 (unregistering): left promiscuous mode
+Oct 21 16:50:54 ot-epyc7 kernel: docker0: port 7(vethc7861c3) entered disabled state
+Oct 21 16:50:55 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered blocking state
+Oct 21 16:50:55 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered disabled state
+Oct 21 16:50:55 ot-epyc7 kernel: vetha6a49c0: entered allmulticast mode
+Oct 21 16:50:55 ot-epyc7 kernel: vetha6a49c0: entered promiscuous mode
+Oct 21 16:50:55 ot-epyc7 kernel: eth0: renamed from vetha2f7286
+Oct 21 16:50:55 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered blocking state
+Oct 21 16:50:55 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered forwarding state
+Oct 21 16:51:19 ot-epyc7 kernel: kauditd_printk_skb: 4 callbacks suppressed
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.331:60008): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.331:60009): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.331:60010): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.331:60011): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.331:60012): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.331:60013): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.332:60014): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.332:60015): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.332:60016): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:19 ot-epyc7 kernel: audit: type=1400 audit(1792626679.332:60017): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2401813 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:51:51 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered disabled state
+Oct 21 16:51:51 ot-epyc7 kernel: vetha2f7286: renamed from eth0
+Oct 21 16:51:51 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered disabled state
+Oct 21 16:51:51 ot-epyc7 kernel: vetha6a49c0 (unregistering): left allmulticast mode
+Oct 21 16:51:51 ot-epyc7 kernel: vetha6a49c0 (unregistering): left promiscuous mode
+Oct 21 16:51:51 ot-epyc7 kernel: docker0: port 7(vetha6a49c0) entered disabled state
+Oct 21 16:51:54 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered blocking state
+Oct 21 16:51:54 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered disabled state
+Oct 21 16:51:54 ot-epyc7 kernel: vethc21b011: entered allmulticast mode
+Oct 21 16:51:54 ot-epyc7 kernel: vethc21b011: entered promiscuous mode
+Oct 21 16:51:54 ot-epyc7 kernel: eth0: renamed from veth1b4286e
+Oct 21 16:51:54 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered blocking state
+Oct 21 16:51:54 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered forwarding state
+Oct 21 16:52:49 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered disabled state
+Oct 21 16:52:49 ot-epyc7 kernel: veth1b4286e: renamed from eth0
+Oct 21 16:52:49 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered disabled state
+Oct 21 16:52:49 ot-epyc7 kernel: vethc21b011 (unregistering): left allmulticast mode
+Oct 21 16:52:49 ot-epyc7 kernel: vethc21b011 (unregistering): left promiscuous mode
+Oct 21 16:52:49 ot-epyc7 kernel: docker0: port 7(vethc21b011) entered disabled state
+Oct 21 16:52:50 ot-epyc7 kernel: kauditd_printk_skb: 4 callbacks suppressed
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60022): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60023): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60024): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60025): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60026): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60027): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60028): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.531:60029): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.532:60030): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/nsswitch.conf" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
+Oct 21 16:52:50 ot-epyc7 kernel: audit: type=1400 audit(1792626770.532:60031): apparmor="DENIED" operation="open" class="file" profile="who" name="/etc/passwd" pid=2407864 comm="who" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
