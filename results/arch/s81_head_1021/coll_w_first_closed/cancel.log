@@ -1,0 +1,18 @@
+2026-10-21T14:33:00-07:00 [dscoll_lane_w_s8nh-s8nh-4c61deea3] cancel requested: Existing ELEM-COLL first-CLOSED-per-side policy: dscoll_lane_w_s8ng-s8ng-8151c3923 CLOSED record89182bf29. Existing watcher skipped ECO status; preserve all fallback reports/objects, cancel only this redundant CRED8 W fallback. CRED12 routes unaffected.
+2026-10-21T14:33:11-07:00 [dscoll_lane_w_s8nh-s8nh-4c61deea3] CANCELLED: cancelled by a human (Existing ELEM-COLL first-CLOSED-per-side policy: dscoll_lane_w_s8ng-s8ng-8151c3923 CLOSED record89182bf29. Existing watcher skipped ECO status; preserve all fallback reports/objects, cancel only this redundant CRED8 W fallback. CRED12 routes unaffected.)
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 6805, in <module>
+    main()
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 6787, in main
+    cmd_cancel(a)
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 472, in command
+    return fn(a)
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 6552, in cmd_cancel
+    finish(j, "CANCELLED", j["reason"], "CANCELLED by a human" + (f": {why}" if why else ""))
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 2792, in finish
+    ledger(j, ledger_text)
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 2727, in ledger
+    where = f"{host_cfg(j['host'])['label']}:{j['run']}" if j.get("host") else "-"
+  File "/home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py", line 248, in host_cfg
+    return next(h for h in hosts_table() if h["name"] == name)
+StopIteration
