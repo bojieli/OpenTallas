@@ -205,7 +205,7 @@ module ot_hgi_coll_gq_issue #(
 `endif
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
 `ifdef OT_GQ_FAN32
-    wire [12:0] p_bank_we; wire [103:0] p_bank_addr; wire [12:0] p_start_bank;
+    wire [12:0] p_bank_we; wire [103:0] p_bank_addr; wire [13:0] p_start_bank;
     ot_hgi_coll_gq_target16 #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
         .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank)
 `ifdef OT_GQ_N32
@@ -322,13 +322,13 @@ module ot_hgi_coll_gq_issue #(
     // a wrap). Removes the 8 replicated wrap subtract/compare cones (R7 per/tl roots 33..61) and R6's wrap roots.
     wire[11:0]tl_last_c,lps_gt1_c;
     wire[15:0]per_rd;
-    wire tl_last_d=p_start_bank[4]?(per_rd==16'd1):
+    wire tl_last_d=p_start_bank[13]?(per_rd==16'd1):
 `ifdef OT_GQ_MUT_TLLAST
                    run_copy[8]?(tl_last_c[11]?1'b0:(tl+16'd2==per)):tl_last_c[11];
 `else
                    run_copy[8]?(tl_last_c[11]?(lps_gt1_c[11]?(per==16'd1):1'b1):(tl+16'd2==per)):tl_last_c[11];
 `endif
-    wire lps_gt1_d=p_start_bank[5]?(p_lp>16'd1):
+    wire lps_gt1_d=p_start_bank[13]?(p_lp>16'd1):
                    (run_copy[9]&&tl_last_c[11]&&lps_gt1_c[11])?(lps>16'd2):lps_gt1_c[11];
     generate for(genvar g=0;g<12;g=g+1)begin:g_wrap_flag
         ot_hgi_coll_gq_control_ff u_last(.clk(clk),.rst_n(rn),.d(tl_last_d),.q(tl_last_c[g]));

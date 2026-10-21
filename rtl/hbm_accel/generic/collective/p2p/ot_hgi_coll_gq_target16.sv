@@ -39,7 +39,7 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     output reg configured,fault,
     output wire [12:0] cfg_bank_we,
     output wire [103:0] cfg_bank_addr,
-    output wire [12:0] start_bank_v
+    output wire [13:0] start_bank_v   // R9: [13] = the period-end flag next-state launch copy
 `ifdef OT_GQ_N32
     ,output wire [15:0] start_base_bank
     // R9 (HBM-GQ8 10-20): five kept registered ONE-HOT base copies (1 << base) for the period lo/hi, fault, b0 and cur
@@ -74,7 +74,11 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
 `endif
     reg [PCW-1:0] stored_base;
 `ifdef OT_GQ_N32
-    reg [15:0] stored_oh;   // == 1 << stored_base[3:0] at every edge (written with stored_base)
+    // R9: free-running one-hot of stored_base (own enable-free register, so the descriptor-accept enable keeps its
+    // 33 loads). One edge behind stored_base; exact at every launch: a new range always scans (>= 2 edges before any
+    // launch), a same-range re-arm leaves stored_base unchanged. OT_GQ_CHECK_INV asserts it at every launch.
+    reg [15:0] stored_oh;
+    always @(posedge clk) stored_oh <= 16'd1 << stored_base[3:0];
 `endif
     reg [255:0] data_q;
     reg [12:0] limit;
@@ -150,7 +154,13 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
 `else
     wire launch_emit=lv&&armed&&launch_ready&&!cv&&!dv;
 `endif
-    generate for(genvar g=0;g<13;g=g+1)begin:g_launch_copy
+`ifdef OT_GQ_N32
+`ifdef OT_GQ_CHECK_INV
+    always @(posedge clk) if (reset_live && launch_emit && stored_oh !== (16'd1 << stored_base[3:0]))
+        $fatal(1, "GQ_R9_INV_FAIL stored_oh %h base %0d at launch", stored_oh, stored_base[3:0]);
+`endif
+`endif
+    generate for(genvar g=0;g<14;g=g+1)begin:g_launch_copy
         ot_gq_t16_bitff u_v(.clk(clk),.rst_n(reset_launch),.d(
 `ifdef OT_GQ_T16_MUT_START
             ((g==12)?1'b0:launch_emit)
@@ -197,7 +207,6 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
                 else begin
                     stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
 `ifdef OT_GQ_N32
-                    stored_oh<=16'd1<<base[3:0];
 `endif
                     armed<=1;missing<=0;
                     if(validated && base==stored_base && limit==stored_limit)begin
