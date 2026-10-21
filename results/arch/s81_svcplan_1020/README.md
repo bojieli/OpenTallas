@@ -34,7 +34,7 @@ Base: Codex codex/s81-service-plan-1020 @39419dd43 (G4_split112 geometry). MODEL
 - The compiler (xs_place.py NSLICE 16; heads/dims dealt per slice) and the dim-sliced RTL need 16 slices: a 7/6-column die
   (14/12 slices) fails the allocator outright (IndexError in xs_topo.nfr). So "7 col" = keep 8 slice columns (16 slices) with
   14 frame columns: 840 + 14 x 1445.5 + 8 x 1302.8 = 31.5 mm with compact ends (fits); "6 col" = 12 frame columns, MU end
-  slices 2512.4: 31.2 mm (fits). Service band then as today's width -> co-located G4 16 services, all row-0 frames dropped.
+  slices 2512.4: 31.0 mm (fits). Service band then as today's width -> co-located G4 16 services, all row-0 frames dropped.
 - Frames: 7-equiv 98 (112 positions - 14 row-0); 6-equiv 84 (96 - 12). Actual allocator (capacity_cols.py, probes_lt112.txt):
   FAIL at 98 / 84 and even at 108 frames: 'a_proj one-phase capacity wq_a 320 rows' vs 70 / 60 / 77 -> one-phase dense needs 112.
 - Dense split over 2 consecutive stage die-groups (dense_split_model.py, scaled from the actual 112 probes, validated: F112 = 139):
