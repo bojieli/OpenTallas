@@ -11,7 +11,26 @@
 # Images: results/rtl/s81_head_tile_1021/img (tools/s81_head/hd_tile_images.py --sk 7, released head.weight + golden x of
 # the 1M token, golden logits <P>lg.hex).  Every logit a running bundle forms is checked bit-exact against the golden.  Last line BENCH_PASS / BENCH_FAIL; exit 0 only on BENCH_PASS.
 set -u
-O=$(realpath -m "${1:?outdir}"); SC=${2:?scen}; M=${3:-none}; mkdir -p "$O"
+# CLOSED SPR bb8dd356c replay uses these exact arithmetic declarations.
+# Current main may evolve them. An explicit frozen checkout can supply the
+# source root; never silently replay a different arithmetic source as bb8.
+S81HD_RUN_OUT=$(realpath -m "${1:?outdir}")
+if [ -n "${S81HD_SELECTED_SOURCE_ROOT:-}" ]; then
+  cd "$S81HD_SELECTED_SOURCE_ROOT" || exit 3
+fi
+python3 - <<'S81HD_SOURCE_GUARD'
+import hashlib
+from pathlib import Path
+expected = {'ot_hdc_fastfp.sv': 'ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643', 'ot_hdc_fp32_add_lat.sv': 'f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30', 'ot_hdc_fp32_mul_lat.sv': 'ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3'}
+for name, sha in expected.items():
+    p=Path('rtl/hdc')/name
+    if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest()!=sha:
+        raise SystemExit('REFUSED S81HD bb8dd356c source mismatch: '+str(p)+
+                         '; set S81HD_SELECTED_SOURCE_ROOT to the exact frozen closure checkout')
+print('S81HD_SOURCE_GUARD_PASS closure=bb8dd356c')
+S81HD_SOURCE_GUARD
+if [ $? -ne 0 ]; then exit 3; fi
+O=$S81HD_RUN_OUT; SC=${2:?scen}; M=${3:-none}; mkdir -p "$O"
 IMG=$(realpath results/rtl/s81_head_tile_1021/img)
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 $V --version
