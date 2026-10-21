@@ -1,0 +1,108 @@
+{
+  "scope": "EDGE_MODEL_ONLY_NOT_RTL_WITNESS",
+  "engine_sha256": "b1f0d0def70e01764895016c92556ec03ebc7254d4b469fe532971d947020dc5",
+  "tile_sha256": "1c6df348f0027a9cd72185fad65c2b767372384a670ab246ec2b4d5f46bef4ce",
+  "rows": [
+    {
+      "NMUT": 0,
+      "VX": 4,
+      "GUARD_Q": 26,
+      "timer": 32,
+      "earliest_q_load": 33,
+      "hazards": []
+    },
+    {
+      "NMUT": 3,
+      "VX": 0,
+      "GUARD_Q": 26,
+      "timer": 28,
+      "earliest_q_load": 29,
+      "hazards": [
+        {
+          "head": 0,
+          "virtual": 2,
+          "col": 7,
+          "read_edge": 32,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 2,
+          "col": 15,
+          "read_edge": 32,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 2,
+          "col": 23,
+          "read_edge": 32,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 2,
+          "col": 31,
+          "read_edge": 32,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 3,
+          "col": 7,
+          "read_edge": 33,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 3,
+          "col": 15,
+          "read_edge": 33,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 3,
+          "col": 23,
+          "read_edge": 33,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 0,
+          "virtual": 3,
+          "col": 31,
+          "read_edge": 33,
+          "overwrite_edge": 31
+        },
+        {
+          "head": 1,
+          "virtual": 3,
+          "col": 7,
+          "read_edge": 33,
+          "overwrite_edge": 32
+        },
+        {
+          "head": 1,
+          "virtual": 3,
+          "col": 15,
+          "read_edge": 33,
+          "overwrite_edge": 32
+        },
+        {
+          "head": 1,
+          "virtual": 3,
+          "col": 23,
+          "read_edge": 33,
+          "overwrite_edge": 32
+        },
+        {
+          "head": 1,
+          "virtual": 3,
+          "col": 31,
+          "read_edge": 33,
+          "overwrite_edge": 32
+        }
+      ]
+    }
+  ]
+}
