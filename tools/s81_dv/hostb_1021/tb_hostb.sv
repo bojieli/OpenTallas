@@ -30,7 +30,14 @@ module tb_hostb;
  reg sample=0,send=0;reg [76:0] th=0;reg [53:0] tk=0;
  wire [1103:0] ret,toctl;wire [3:0] rf,hf;wire htv;wire [552:0] htd;
  reg returnslot=0;
- dsdv_hostb_return r(.ck(ck),.rst_n(rst_n),.configured(1'b1),.sample_slot(sample),.send_slot(send),.require_kit(1'b1),.context_valid(1'b1),
+ reg [76:0] sampled_th;reg [53:0] sampled_tk;
+`ifdef HBE_REAL_CONSUMER
+ localparam REQUIRE_KIT=0; // Real status return; no job/KIT is fabricated.
+`else
+ localparam REQUIRE_KIT=1;
+`endif
+ always @(posedge ck)if(sample)begin sampled_th<=th;sampled_tk<=tk;end
+ dsdv_hostb_return r(.ck(ck),.rst_n(rst_n),.configured(1'b1),.sample_slot(sample),.send_slot(send),.require_kit(REQUIRE_KIT),.context_valid(1'b1),
  .stage_id(8'd1),.rank_id(2'd0),.tid(16'd37),.user_id(10'd0),.position(21'd1048575),.token(21'd16754),.epoch_id(32'h1021),
  .arrival_deadline(48'd9999),.programme_id(64'hf1c617d9224a57bf),.t_host(th),.t_kd(tk),.return_ring(ret),.fault(rf));
  dsdv_hostb_head h(.ck(ck),.rst_n(rst_n),.configured(1'b1),.return_slot(returnslot),.expected_stage(8'd1),.expected_rank(2'd0),.local_group(2'd2),
@@ -54,7 +61,11 @@ module tb_hostb;
   te0=transit[cyc];hs0=book[cyc][0];hs1=book[cyc][1];fw0=book[cyc][2];fw1=book[cyc][3];
   // Real source bits at fixtureboundary only, no stagecompletion fabricated.
   sample=cyc==stopat-10;send=cyc==stopat-8&&mode!=18;returnslot=cyc==stopat-7;
+`ifdef HBE_REAL_CONSUMER
+  th=actual_th;tk=actual_tk;
+`else
   th=77'h123456789abcdef;tk={1'b1,(mode==20?21'd16755:21'd16754),32'h0};
+`endif
  end
  integer retgot=0;
  always @(posedge ck)begin
@@ -68,7 +79,7 @@ module tb_hostb;
    if(mode!=13 && ordinary[cyc][0] && next0!==ordinary[cyc])begin bad++;$display("BAD ordinary bypass cycle%0d",cyc);end
    if(htv)begin
      retgot++;
-     if(htd[3:0]!=10||htd[7:6]!=2||htd[366:290]!==th||htd[420:367]!==tk||toctl[0])begin bad++;$display("BAD RETURN HSF0");end
+     if(htd[3:0]!=10||htd[7:6]!=2||htd[366:290]!==sampled_th||htd[420:367]!==sampled_tk||toctl[0])begin bad++;$display("BAD RETURN HSF0");end
    end
    if(cyc==stopat)begin
      if((mode==0||mode==5||mode==6) && (fault0||fault1||rf||hf||retgot!=1))begin bad++;$display("BAD faults %h %h %h %h ret%0d",fault0,fault1,rf,hf,retgot);end

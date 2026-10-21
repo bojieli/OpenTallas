@@ -1,0 +1,6 @@
+PASS actual8afL0 consumer PW314/LEN1/TEMPLATE102 byte/cycleexact; KSstarter/wholeprogrammeOPEN
+PASS HBE1 mode0 host0/417 KS1 return1 faults000/000
+- tools/s81_dv/hostb_1021/tb_hostb.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 1.649 s; speed 4.246 us/s
+- Verilator: cpu 1.649 s on 1 threads; allocated 12 MB
