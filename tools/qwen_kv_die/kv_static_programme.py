@@ -107,12 +107,13 @@ LINK_IMAGE = LINK_IMAGE_MU if LINK_MU else LINK_IMAGE_SU
 # slot on the die relays.  The pair image is the committed d2d_cal_image[_mu]_ew<N>.svh (d2d_cal_image_production.sh with
 # D2D_EMB_WINDOW=<N>); both link ends bind it (KV: target 11 + the dcal tile's START / period constants, compute: its
 # sequencer).  Default unset = the priced window (272), images unchanged.
+LINK_ROPE = os.environ.get('OT_KV_ROPE','0')=='1'
 LINK_EMB_WIN = os.environ.get('OT_KV_EMB_WIN', '')
 if LINK_EMB_WIN:
     if not LINK_EMB_WIN.isdigit():
         raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN!r}: an integer edge count expected')
     LINK_IMAGE = LINK_IMAGE.replace('.svh', f'_ew{int(LINK_EMB_WIN)}.svh')
-    if not (ROOT / LINK_IMAGE).is_file():
+    if not LINK_ROPE and not (ROOT / LINK_IMAGE).is_file():
         raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN}: no committed pair image {LINK_IMAGE} '
                          f'(D2D_MU={int(LINK_MU)} D2D_EMB_WINDOW={LINK_EMB_WIN} tools/qwen_split/d2d_cal_image_production.sh)')
 # KV-PROG17 10-20: the r16 attention tile (OT_KV_ATTN_R16=1, kv_static_die.ATTN_R16) moves the K RESULT burst +1 (TX_SHIFT)
@@ -121,10 +122,17 @@ if LINK_EMB_WIN:
 LINK_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
 if LINK_R16:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_r16.svh')
-    if not (ROOT / LINK_IMAGE).is_file():
+    if not LINK_ROPE and not (ROOT / LINK_IMAGE).is_file():
         raise SystemExit(f'OT_KV_ATTN_R16=1: no committed r16 pair image {LINK_IMAGE} (D2D_MU={int(LINK_MU)} '
                          f'D2D_EMB_WINDOW={LINK_EMB_WIN or ""} D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 '
                          'tools/qwen_split/d2d_cal_image_production.sh)')
+
+if LINK_ROPE:
+    if not LINK_MU or not LINK_R16 or int(LINK_EMB_WIN or 0)<1627:
+        raise SystemExit('OT_KV_ROPE requires MU1/ATTN_R16 and EW>=1627 for actual second HBM traversal')
+    LINK_IMAGE=LINK_IMAGE.replace('.svh','_rope.svh')
+    if not (ROOT/LINK_IMAGE).is_file():
+        raise SystemExit(f'RoPE coherent pair image missing: {LINK_IMAGE}')
 
 
 def image_die_stages(img=None, root=None):
@@ -156,7 +164,7 @@ LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--rope'] if LINK_ROPE else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
 #            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
@@ -357,16 +365,28 @@ CAL_DELTAS_ZERO = dict(hroot=dict(chain=0, fan=0, gather=0, embedding=0), emb_jo
                        ahub=dict(compiler_edges=0, pad=False), seam=dict(compiler_edges=0, pin=False))
 
 
+def final_reset_calendar():
+    path = os.environ.get('OT_KV_FINAL_RESET_CALENDAR')
+    if not path: return None
+    data = json.loads(Path(path).read_text())
+    if data.get('schema') != 'opentallas.kv_final_reset_stations.v1':
+        raise ValueError('unknown final reset station calendar')
+    return dict(data, ledger_path=path)
+
+
 def cal_deltas(ksd=None):
     env = os.environ.get
     ctl = env('OT_KV_CTL_C32', '0')
     if ctl not in ('0', '1', '2'):
         raise ValueError(f'OT_KV_CTL_C32={ctl!r}: no calendar law')
     hl = hroot_landing(ksd)
-    return dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
+    deltas = dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
                 ctl_own_leave=CTL_OWN_GUARD_LEAD if ctl != '0' else 0, ctl_boot_setup_ready=2 if ctl != '0' else 0,
                 ahub=dict(compiler_edges=0, pad=env('OT_KV_AHUB_PAD', '0') == '1', proof='kv_static_params AHUB_OFS_BOUND'),
                 seam=dict(compiler_edges=0, pin=env('OT_KV_SEAM_PIN', '0') == '1', proof='link_image_check (TXDP_K 22)'))
+    reset = final_reset_calendar()
+    if reset is not None: deltas['final_reset_stations'] = reset
+    return deltas
 
 
 # ---- KV-CAL15: embedding row fill deadline (RESULT -> the row_tx header slot) -----------------------------------------
@@ -396,6 +416,19 @@ def die_emb_relays(relay_stages):
             raise ValueError(f'kv_static_programme emb_fill: no die bus {".".join(k[:2])} -> {".".join(k[2:])}')
         return B[k]
     import kvjc3_pc_chain as C3
+    if LINK_ROPE:
+        host=[(k,v) for k,v in B.items() if k[1]=='rec_tx' and k[2:] == ('kvs_emb','i_host_record')]
+        if len(host)!=1:
+            raise ValueError(f'RoPE requires actual unique HOST.rec_tx->emb.i_host_record stage ledger, got {host}')
+        px=g(('kvs_emb','o_rope_px','kvs_ctl','i_rope_px'))
+        ctx_edges=2+int(os.environ.get('OT_KV_EMB_N32','0')=='1')
+        return dict(down=[sum(g(k, st) for k in EMB_FILL_BUSES['down']) for st in C3.STACKS],
+                    ret=[sum(g(k, st) for k in EMB_FILL_BUSES['ret']) for st in C3.STACKS],
+                    svc_root=host[0][1]+ctx_edges+px,svc_join=host[0][1]+ctx_edges,
+                    slot=g(EMB_FILL_BUSES['slot']),source=str(relay_stages),
+                    context_unpriced=True,context_buses={'.'.join(k[:2])+'->'+'.'.join(k[2:]):v for k,v in host},
+                    context_decode_edges=ctx_edges,context_to_fan_edges=px,
+                    reason='actual bus ages known; accepted O61 HOST producer source clock/phase relative CONTEXT slot is unpriced')
     return dict(down=[sum(g(k, s) for k in EMB_FILL_BUSES['down']) for s in C3.STACKS],
                 ret=[sum(g(k, s) for k in EMB_FILL_BUSES['ret']) for s in C3.STACKS],
                 svc_root=g(EMB_FILL_BUSES['svc_root']), svc_join=g(EMB_FILL_BUSES['svc_join']), slot=g(EMB_FILL_BUSES['slot']),
@@ -438,6 +471,8 @@ def emb_fill(layout, deltas, die=None, ctrl_lat=ES_CFG_CTRL_LAT):
     """the fill deadline on the link calendar layout (+ die relays when given; None = the zero-relay model)"""
     import kvjc3_pc_chain as C3
     d = die or dict(down=[0] * 4, ret=[0] * 4, svc_root=0, svc_join=0, slot=0, source='zero-relay model')
+    if LINK_ROPE:
+        raise ValueError('RoPE context_unpriced: actual O61 HOST producer clock/phase and CONTEXT source-edge relation required; old RESULT law cannot price this source. '+str(d))
     hl = deltas['hroot']
     skew = d['svc_root'] - d['svc_join']
     if skew < 0:
@@ -447,7 +482,9 @@ def emb_fill(layout, deltas, die=None, ctrl_lat=ES_CFG_CTRL_LAT):
     cal = C3.emb_calendar(ctrl_lat, down, return_relay=ret)
     eb = layout['hbm_embedding_budget']
     r = eb['result_at_kv_host'] + d['svc_root']
-    last = r + cal['last_word'] + deltas['emb_join']
+    if LINK_ROPE and cal['last_word']+deltas['emb_join']+8>=1024:
+        raise ValueError('actual first HBM traversal exceeds fixed RoPE restart1024; grow source restart+pairedimage together')
+    last = r + cal['last_word'] + deltas['emb_join'] + (1024 if LINK_ROPE else 0)
     hdr = layout['emb_header_send']
     deadline = hdr + d['slot']
     margin = deadline - (last + 1)
@@ -898,6 +935,16 @@ def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period)
                 token_period=token_period)
     c = RC.build(succ, rst, prog, 6 + 5, default_depth=None if depth is None else int(depth))   # link = --txl 6 --phy 5
     need = c['reset']['required_sink_release_depth']
+    reset = final_reset_calendar()
+    if reset is not None:
+        # Keep missing per-source reset/first-use qualification explicit. Until
+        # supplied, budget the generated station delay against the existing
+        # whole-plane HOLD requirement instead of silently retaining HOLD273.
+        need = max(need+int(reset['max_added_reset_edges']),int(reset['conservative_required_hold']))
+        c['reset'].update(required_sink_release_depth=need,
+                          hold_counter_bits=max(8,math.ceil(math.log2(need))),
+                          final_reset_stations=reset)
+        for source in c['sources']: source['sink_release_age'] = need
     c['reset'].update(bound_hold=RETIRE_HOLD_BOUND, fits_bound_hold=need <= RETIRE_HOLD_BOUND,
                       default_depth=None if depth is None else int(depth))
     return c

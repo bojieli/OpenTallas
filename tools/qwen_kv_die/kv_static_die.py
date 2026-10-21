@@ -1677,10 +1677,57 @@ def kit_clocks(tiles):
     return tiles
 
 
+def rope_context_tiles(tiles):
+    """Start from each actual compute-native per-head CONTEXT descriptor.
+
+    hrec_rx packs {record_rx[547:0], record_rx_v, witness_slot,
+    record_send_kind[1:0]}. The compiled C->K kind12 carries the actual
+    native stage1 descriptor, with stage normalized to zero by its producer.
+    The original RESULT service retains its terminal-owner meaning.
+    """
+    if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
+        raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
+    emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
+    emb['ports']['i_head_record'] = dict(dir='input', width=552, cls='special', src=None)
+    emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
+                     '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
+    native = int(os.environ.get('OT_KV_EMB_N32', '0'))
+    pipe = int(os.environ.get('OT_KV_EMB_PJ', '0'))
+    delay = int(os.environ.get('OT_KV_ROPE_DELAY', '1024'))
+    if delay != 1024:
+        raise ValueError('KV RoPE EW1627 image requires the actual 1024-edge second HBM sweep separation')
+    emb['body'] = [
+        f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay})) u_context ('
+        '.ck(ck), .rst_n(rst_n), '
+        '.i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), '
+        '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
+        + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
+        + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
+        '.px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));'
+    ]
+    for pn, expr in [('px_tok', 'w_rope_token'), ('px_tep', 'w_rope_epoch')]:
+        if pn not in emb['ports']:
+            raise ValueError(f'KV RoPE: missing existing PC owner face {pn}')
+        emb['ports'][pn]['expr'] = expr
+    # The CTL hardened module keeps its original service-word interface.
+    # Route the actual context fields through the embedding tile while every
+    # other D2D service field remains a real wire from that same service word.
+    emb['ports']['o_ctx_svc'] = dict(dir='output', width=174, cls='bundle', peer='kvs_ctl',
+        peer_port='d2d__svc', consumers=[],
+        expr='{d2d__svc[173:110],w_rope_token,d2d__svc[91:90],w_rope_epoch,d2d__svc[73:25],w_rope_start,d2d__svc[23:0]}')
+    emb['ports']['emb_fault'] = dict(dir='output', width=1, cls='export', consumers=[], die=True, expr='w_rope_fault')
+    if ctl['ports']['d2d__svc']['width'] != 174:
+        raise ValueError('KV RoPE: unexpected actual CTL service-word width')
+    ctl['ports']['d2d__svc'].update(cls='bundle', peer='kvs_emb')
+    return tiles
+
+
 def all_tiles():
     if 'tiles' not in _G:
         t_ = add_fans(pack({d: tile(d) for d in members()}))
         t_ = kit_clocks(t_) if KITS else t_
+        if ROPE:
+            t_ = rope_context_tiles(t_)
         if GRP_PRIVATE0:
             import kv_grp_private0
             kv_grp_private0.apply_tiles(t_, module_text)
@@ -1721,6 +1768,10 @@ def sources():
     if BOOT:
         s.update(BOOT_PC_DEPS)
     s.update(K.EMB_SOURCES)
+    if ROPE:
+        s.update(_E + f for f in ('qkd_kvs_emb_ctx.sv', 'qkd_embedding_ctx_start.sv',
+                                  'qkd_embedding_row_tx_ctx.sv', 'qkd_embedding_row_tx_ctx_native32.sv',
+                                  'qkd_embedding_row_tx_rope.sv'))
     if K.MU:
         s.update(K.MU_DEPS)
     if DOMSPLIT:
@@ -1957,6 +2008,10 @@ def inject(m, K):
             add((f'krq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{ectl_frame(g)}', 'rq'), (gd, 'kreq')]))
     seen_buses = {b_[0] for b_ in B}
     fk = m.setdefault('forks', {})
+    if ROPE:
+        fk.setdefault('hrec_rx', []).append(('kvs_emb', 'i_head_record'))
+        rec['rope_context'] = dict(source='compute native stage1 descriptor C->K kind12', width=552,
+            owner='record[60:0]', position='owner[18:6]', start='kvs_emb.o_ctx_svc -> kvs_ctl.d2d__svc', bundle=174)
     for (dinst, dport), loads in nets.items():
         if dport == 'rsp':
             for (cd, cp) in loads:

@@ -1319,6 +1319,10 @@ if _EMB_WIN:
 # token period), qkd_d2d_cal_seq_bc4[_ew<N>]_r16.sv, kit qkd_d2d_cal_seq_pin_bc4[_ew<N>]_r16 (same module / ports / edges)
 if __import__('os').environ.get('OT_KV_ATTN_R16', '0') == '1':
     DCAL_BC4_FILE = DCAL_BC4_FILE.replace('.sv', '_r16.sv')
+if __import__('os').environ.get('OT_KV_ROPE','0')=='1':
+    if not DCAL_BC4 or _EMB_WIN!='1627' or __import__('os').environ.get('OT_KV_ATTN_R16','0')!='1':
+        raise ValueError('RoPE needs actualBC4/EW1627/R16 source')
+    DCAL_BC4_FILE=DCAL_BC4_FILE.replace('.sv','_rope.sv')
 if DCAL_BC4:
     DCAL_FILE = DCAL_BC4_FILE
     DCAL_WH = (21.6, 34.56) if __import__('os').environ.get('OT_KV_DCAL_BC4_KIT', '') == 'qkd_d2d_cal_seq_pin_bc4w' \
