@@ -157,8 +157,51 @@ def reserve_component(replay, boundary):
     return result
 
 
+def compact_holds(replay, capacity):
+    """Fit a component replay by omitting only repeated same-value input holds.
+
+    Inputs retain their last value between D events (gen_slice_tb contract).
+    Checks, preload words, first drives, transition edges and record events
+    remain byte-identical. Capacity includes the terminal event slot.
+    """
+    if replay.get('scope') != 'component_probe':
+        raise ValueError('hold compaction requires component_probe scope')
+    events = replay['events']
+    need = max(0, sum(e['k'] != 'M' for e in events) + 1 - capacity)
+    removed = set()
+    state = {}
+    for i, event in sorted(enumerate(events), key=lambda pair:(pair[1].get('dom',''), pair[1].get('cyc',0), pair[0])):
+        if event['k'] != 'D':
+            continue
+        key = (event['dom'], event['port'])
+        value = int(event['val'], 16)
+        if len(removed) < need and key in state and state[key] == value and 'rec' not in event:
+            removed.add(i)
+        state[key] = value
+    if len(removed) != need:
+        raise ValueError('insufficient redundant holds; refusing to remove checks/transitions')
+    result = dict(replay)
+    result['events'] = [event for i, event in enumerate(events) if i not in removed]
+    result['hold_compaction'] = dict(capacity=capacity, removed_drives=need,
+        original_events=len(events), compact_events=len(result['events']),
+        original_sha256=hashlib.sha256(json.dumps(replay,sort_keys=True).encode()).hexdigest(),
+        removed=[events[i] for i in sorted(removed)],
+        policy='remove only redundant same-value D holds; all checks/preloads/transition edges preserved')
+    return result
+
+
 def main():
     import sys
+    if len(sys.argv)>1 and sys.argv[1]=='compact-holds':
+        p=argparse.ArgumentParser(description=compact_holds.__doc__)
+        p.add_argument('mode'); p.add_argument('replay',type=Path)
+        p.add_argument('output',type=Path); p.add_argument('--capacity',type=int,required=True)
+        a=p.parse_args()
+        result=compact_holds(json.loads(a.replay.read_text()),a.capacity)
+        a.output.parent.mkdir(parents=True,exist_ok=True)
+        a.output.write_text(json.dumps(result)+'\n')
+        print(json.dumps(result['hold_compaction']))
+        return
     if len(sys.argv)>1 and sys.argv[1]=='reserve-component':
         p=argparse.ArgumentParser(description=reserve_component.__doc__)
         p.add_argument('mode');p.add_argument('replay',type=Path)
