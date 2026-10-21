@@ -21,7 +21,7 @@ Every number carries one of four grades:
 
 | | **OPTION D**: direct (board traces + cables) | **OPTION S**: static circuits through a one-tier switch |
 |---|---|---|
-| S81 cables off the board | **930** (900 passive DAC + 30 AEC) [der] | **8,856** AEC [der] |
+| S81 cables off the board | **948** (918 passive DAC + 30 AEC; 24 of them are the head-tray host links) [der] | **8,874** AEC [der] |
 | S81 switch chips | **0** | **153** Tomahawk-Ultra class in 5 switch racks [der/MODEL] |
 | S81 latency per crossing | **209-221 ns** (251-265 cycles) [der] | **380 ns** (456 cycles). The budget is 377.6 ns, and 367 ns is reached only with passive DAC legs [der] |
 | S81 wall power | **189 kW** [der] | **520 kW** (+230 kW switch trays, +89 kW AEC) [der/MODEL] |
@@ -46,16 +46,18 @@ Every number carries one of four grades:
 | copy-B dies | 8 groups x 24 = **192**: the chain-plan rule `round(layer_dies / 40)` rounded up to whole TP4 groups. The positions are scaled from the 81-stage map | MODEL |
 | head dies | **12**, 4 HBM stacks each (10-06 rack record). No 72-frame head die exists yet | MODEL |
 | total | **1,168 dies, 1,204 HBM3E stacks** | der |
-| links on a rank die | **10 SerDes = 5 lane pairs**: TP4 mesh 3 (WS d-1, ES d+1, WN d+2) + next stage (EN) + previous stage (5th pair, OWNER 10-21) | spec |
-| copy-A/B dies | the 4 rank dies of each pre-group and post-group stage carry a 6th pair. That is **64 dies** with 12 SerDes | spec |
+| links on a rank die | **10 SerDes = 5 lane pairs**, the 5-circuit lane plan (`lanes/S81-LINK5.md`): s_0S pair A (WS0/1) <-> rank r-1 s_7S; s_7S pair A (ES0/1) <-> rank r+1 s_0S; TP d+2 = s_7N pair A (EN0/1) <-> rank r+2 s_7N pair A, one bidirectional circuit; stage NEXT = s_0N pair A (WN0/1) -> next stage, same rank, s_0N pair B (WN2/3); stage PREV = s_0N pair B (WN2/3) <- previous stage s_0N pair A (5th pair, OWNER 10-21). E column B (EN2/3) is the copy-A/B reserve and is unwired on ordinary rank dies | spec |
+| copy-A/B dies | the 4 rank dies of each pre-group and post-group stage carry a 6th pair (the copy-A/B reserve: EN2/3 on pre-group dies, WS2/3 on post-group dies). That is **64 dies** with 12 SerDes | spec |
+| host (S81.HOST) | direct cabling: the host attaches **only to the 12 head dies**, one extra SerDes pair (`lk_HOST0+1`) each on the head-die trays. Host traffic to stage dies (config, KV ingest, token in/out) rides in-band on the existing pipeline/stage circuits in calendar slots (20-30x bandwidth headroom). Stage dies have no host link: their s_7N host-plane port maps to the in-band route. Every tray has a low-rate management sideband (boot/config, I2C/SMBus + 1GbE BMC class) to the rack management switch; it is a `mgmt` row, not a SerDes | spec (coordinator decision) / MODEL lengths |
 | one circuit | 2 SerDes macros, 2 x 512 b/cycle = **1,229 Gb/s raw, 939 Gb/s usable per direction**. That is 12 x 112G lanes; 6 lanes per macro is MODEL | spec / MODEL |
 | traffic | TP circuit: about 4.2k beats a user-token, about 10% occupancy at 46 users. Stage hop: 652 cycles a user-position (h message 40,976 B a rank die), 3.1% at 46 users | der / spec |
 
-**Circuits: 2,952 in total.**
-- 1,752 TP mesh;
-- 960 stage hops;
+**Circuits: 2,964 in total**, plus 73 per-tray `mgmt` sideband rows.
+- 1,752 TP mesh (584 of them the d+2 EN<->EN circuits);
+- 960 stage hops (s_0N A -> next s_0N B);
 - 12 head hops and 4 token-return hops;
-- 32 copy-B in, 160 copy-B internal and 32 copy-B out.
+- 32 copy-B in, 160 copy-B internal and 32 copy-B out;
+- 12 host links, head dies only.
 
 Each row of `connections_s81.csv` gives:
 - both endpoints: die id, TP unit, rank and SerDes macros;
@@ -105,7 +107,7 @@ Each 1 OU ORv3 tray (533 x 800 mm) carries **4 quads of 2 x 2 single-die package
 | 16 HBM3E x 2.8 W | 45 W | spec |
 | SerDes: 160 macros x 6 lanes x 112 Gb/s x 6.5 pJ/b | 699 W | der on pub. This may double-count if the die figure already includes the PHY |
 | misc | 60 W | MODEL |
-| **IT / DC input (VR 0.87)** | **2.28 / 2.62 kW** | der. A 1 OU liquid tray carries 5.5 kW today (NVL72 [pub]) |
+| **IT / DC input (VR 0.87)** | **2.28 / 2.62 kW** | der. A 1 OU liquid tray carries 5.5 kW today (NVL72 [pub]). The head trays add the host SerDes: up to 176 macros, 2.35 / 2.70 kW, the worst tray |
 
 Per rack:
 - **54 kW IT, 62 kW DC, 65 kW at the wall** [der].
@@ -132,7 +134,7 @@ Array total:
 
 | | D | S |
 |---|---|---|
-| cables | 930 | 8,856 (every die lane to a switch port; legs average 2.6 m, so AEC) |
+| cables | 948 | 8,874 (every die lane to a switch port; legs average 2.6 m, so AEC) |
 | switch chips | 0 | 153: 139 by bandwidth (die lanes / 512) plus a 10% chip-domain boundary allowance. One crossing requires both circuit ends on one chip |
 | racks | 3 | 3 + 5 switch racks |
 | latency per crossing | 209 ns full KP4 hop (includes 0.3 m of flight [spec]) + flight + 3 ns AEC | 100 PHY/FEC + 250 switch [pub] + 2 legs of flight + 2 x 3 ns AEC = 380 ns |
@@ -195,7 +197,7 @@ All of these replace the 453-454 cycles the xdie co-sims model today [der].
 | accelerators | 1,168 ROM dies (single model replica) | 72 B200 + 36 Grace | 384 Ascend 910C + 192 Kunpeng |
 | racks | 3 | 1 | 16 (12 compute + 4 communication) |
 | power | 189 kW wall | about 120-132 kW | about 559 kW |
-| scale-up cables | 930 copper (900 passive) | over 5,000 active copper (NVLink cartridges) | optical, 2-tier UB switch |
+| scale-up cables | 948 copper (918 passive) | over 5,000 active copper (NVLink cartridges) | optical, 2-tier UB switch |
 | switch chips | 0 | 18 NVLink switch chips (9 trays) | 7 planes x 16 L2 switch chips |
 | fabric | static point-to-point circuits, TP4 mesh on board | NVLink 5 all-to-all, 0.9 TB/s/GPU/dir | Unified Bus all-to-all, 392 GB/s/NPU/dir |
 
