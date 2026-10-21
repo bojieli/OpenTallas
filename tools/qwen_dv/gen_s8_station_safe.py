@@ -102,7 +102,9 @@ def math_g():
 # census b @a575cb86e: 6 combinational drivers left (50-64 loads), all in the mul netlist: OR-reduction outputs n_617 /
 # n_650 (62 uses, ABC pushed onto n_4684 / AND3) and mux n_180 (31 uses).  Depth-1 kept duplicates: the driving gate is
 # emitted as COPIES distinct keep_hierarchy cells (ID differs -> ABC cannot re-merge them); users split <= PER each.
-DUP={'qfd_dv_s8s_station_mul_data_g':['n_617','n_650','n_180']}
+# census @081f3e217: 2 left (36/51) downstream of n_782 / n_7387 -> every mul comb net with >= 24 uses duplicated too.
+DUP={'qfd_dv_s8s_station_mul_data_g':['n_617','n_650','n_180','n_191','n_782','n_7147','n_4766','n_4771','n_7205','n_7208',
+                                      'n_4989','n_7388','n_7387','n_7346','n_7345','n_7202']}
 def dup_gates(res):
     mods=[]
     for mod,nets in DUP.items():
@@ -110,7 +112,7 @@ def dup_gates(res):
         body=res[a:b]
         for h in nets:
             m=re.search(rf'\nassign {h} = (.*);',body);assert m,h
-            expr=m[1];ins=list(dict.fromkeys(re.findall(r'\bn_\d+\b',expr)))
+            expr=m[1];ins=list(dict.fromkeys(re.findall(r'\bn_\d+(?:_[gs]\d+)*\b',expr)))
             uses=[]
             lines=body.split('\n')
             cnt=0
