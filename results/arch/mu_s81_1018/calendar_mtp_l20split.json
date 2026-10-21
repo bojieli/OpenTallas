@@ -56,8 +56,26 @@
     }
    }
   },
+  "mtp_tx_hold": {
+   "per_receiver": {
+    "S005": 440,
+    "S007": 440,
+    "S008": 440,
+    "S010": 440,
+    "S014": 440,
+    "S015": 440,
+    "S017": 440,
+    "S018": 440,
+    "S023": 440,
+    "S024": 440,
+    "S026": 440,
+    "S027": 440
+   },
+   "total": 5280,
+   "decision": "lead 10-21: hold the h TX on the sender (NS stays 1, closed land view)"
+  },
   "T_switched": 1302940.1,
-  "T_now": 1223318.1
+  "T_now": 1228598.1
  },
  "config": {
   "dup_groups": [
@@ -87,13 +105,13 @@
   "model_agg_ar": 57521,
   "model_agg_mtp": 38304
  },
- "period": 1223320,
+ "period": 1228600,
  "slot": 124524,
  "users": 9,
  "fillers": 1,
- "per_user_tok_s": 4079.7,
- "filler_tok_s": 980.9,
- "aggregate_tok_s": 37698,
+ "per_user_tok_s": 4062.2,
+ "filler_tok_s": 976.7,
+ "aggregate_tok_s": 37536,
  "search": null,
  "slots": [
   {
@@ -792,7 +810,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 79770,
+     "start": 80210,
      "wb": 0,
      "sb": 0
     },
@@ -801,7 +819,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 204294,
+     "start": 204734,
      "wb": 68,
      "sb": 18432
     },
@@ -810,7 +828,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 328818,
+     "start": 329258,
      "wb": 136,
      "sb": 36864
     },
@@ -819,7 +837,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 453342,
+     "start": 453782,
      "wb": 204,
      "sb": 55296
     },
@@ -828,7 +846,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 577866,
+     "start": 578306,
      "wb": 272,
      "sb": 73728
     },
@@ -837,7 +855,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 702390,
+     "start": 702830,
      "wb": 340,
      "sb": 92160
     },
@@ -846,7 +864,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 826914,
+     "start": 827354,
      "wb": 408,
      "sb": 110592
     },
@@ -855,7 +873,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 951438,
+     "start": 951878,
      "wb": 476,
      "sb": 129024
     },
@@ -864,7 +882,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1075962,
+     "start": 1076402,
      "wb": 544,
      "sb": 147456
     },
@@ -873,7 +891,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1200486,
+     "start": 1200926,
      "wb": 612,
      "sb": 165888
     }
@@ -892,7 +910,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 100559,
+     "start": 100999,
      "wb": 0,
      "sb": 0
     },
@@ -901,7 +919,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 225083,
+     "start": 225523,
      "wb": 68,
      "sb": 18432
     },
@@ -910,7 +928,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 349607,
+     "start": 350047,
      "wb": 136,
      "sb": 36864
     },
@@ -919,7 +937,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 474131,
+     "start": 474571,
      "wb": 204,
      "sb": 55296
     },
@@ -928,7 +946,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 598655,
+     "start": 599095,
      "wb": 272,
      "sb": 73728
     },
@@ -937,7 +955,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 723179,
+     "start": 723619,
      "wb": 340,
      "sb": 92160
     },
@@ -946,7 +964,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 847703,
+     "start": 848143,
      "wb": 408,
      "sb": 110592
     },
@@ -955,7 +973,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 972227,
+     "start": 972667,
      "wb": 476,
      "sb": 129024
     },
@@ -964,7 +982,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1096751,
+     "start": 1097191,
      "wb": 544,
      "sb": 147456
     },
@@ -973,7 +991,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1221275,
+     "start": 1221715,
      "wb": 612,
      "sb": 165888
     }
@@ -992,7 +1010,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 102441,
+     "start": 103321,
      "wb": 0,
      "sb": 0
     },
@@ -1001,7 +1019,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 226965,
+     "start": 227845,
      "wb": 68,
      "sb": 18432
     },
@@ -1010,7 +1028,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 351489,
+     "start": 352369,
      "wb": 136,
      "sb": 36864
     },
@@ -1019,7 +1037,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 476013,
+     "start": 476893,
      "wb": 204,
      "sb": 55296
     },
@@ -1028,7 +1046,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 600537,
+     "start": 601417,
      "wb": 272,
      "sb": 73728
     },
@@ -1037,7 +1055,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 725061,
+     "start": 725941,
      "wb": 340,
      "sb": 92160
     },
@@ -1046,7 +1064,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 849585,
+     "start": 850465,
      "wb": 408,
      "sb": 110592
     },
@@ -1055,7 +1073,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 974109,
+     "start": 974989,
      "wb": 476,
      "sb": 129024
     },
@@ -1064,7 +1082,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1098633,
+     "start": 1099513,
      "wb": 544,
      "sb": 147456
     },
@@ -1073,7 +1091,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1223157,
+     "start": 1224037,
      "wb": 612,
      "sb": 165888
     }
@@ -1092,7 +1110,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 123230,
+     "start": 124550,
      "wb": 0,
      "sb": 0
     },
@@ -1101,7 +1119,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 247754,
+     "start": 249074,
      "wb": 68,
      "sb": 18432
     },
@@ -1110,7 +1128,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 372278,
+     "start": 373598,
      "wb": 136,
      "sb": 36864
     },
@@ -1119,7 +1137,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 496802,
+     "start": 498122,
      "wb": 204,
      "sb": 55296
     },
@@ -1128,7 +1146,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 621326,
+     "start": 622646,
      "wb": 272,
      "sb": 73728
     },
@@ -1137,7 +1155,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 745850,
+     "start": 747170,
      "wb": 340,
      "sb": 92160
     },
@@ -1146,7 +1164,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 870374,
+     "start": 871694,
      "wb": 408,
      "sb": 110592
     },
@@ -1155,7 +1173,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 994898,
+     "start": 996218,
      "wb": 476,
      "sb": 129024
     },
@@ -1164,7 +1182,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1119422,
+     "start": 1120742,
      "wb": 544,
      "sb": 147456
     },
@@ -1173,7 +1191,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1243946,
+     "start": 1245266,
      "wb": 612,
      "sb": 165888
     }
@@ -1192,7 +1210,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 144019,
+     "start": 145339,
      "wb": 0,
      "sb": 0
     },
@@ -1201,7 +1219,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 268543,
+     "start": 269863,
      "wb": 68,
      "sb": 18432
     },
@@ -1210,7 +1228,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 393067,
+     "start": 394387,
      "wb": 136,
      "sb": 36864
     },
@@ -1219,7 +1237,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 517591,
+     "start": 518911,
      "wb": 204,
      "sb": 55296
     },
@@ -1228,7 +1246,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 642115,
+     "start": 643435,
      "wb": 272,
      "sb": 73728
     },
@@ -1237,7 +1255,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 766639,
+     "start": 767959,
      "wb": 340,
      "sb": 92160
     },
@@ -1246,7 +1264,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 891163,
+     "start": 892483,
      "wb": 408,
      "sb": 110592
     },
@@ -1255,7 +1273,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1015687,
+     "start": 1017007,
      "wb": 476,
      "sb": 129024
     },
@@ -1264,7 +1282,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1140211,
+     "start": 1141531,
      "wb": 544,
      "sb": 147456
     },
@@ -1273,7 +1291,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1264735,
+     "start": 1266055,
      "wb": 612,
      "sb": 165888
     }
@@ -1292,7 +1310,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 145901,
+     "start": 147661,
      "wb": 0,
      "sb": 0
     },
@@ -1301,7 +1319,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 270425,
+     "start": 272185,
      "wb": 68,
      "sb": 18432
     },
@@ -1310,7 +1328,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 394949,
+     "start": 396709,
      "wb": 136,
      "sb": 36864
     },
@@ -1319,7 +1337,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 519473,
+     "start": 521233,
      "wb": 204,
      "sb": 55296
     },
@@ -1328,7 +1346,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 643997,
+     "start": 645757,
      "wb": 272,
      "sb": 73728
     },
@@ -1337,7 +1355,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 768521,
+     "start": 770281,
      "wb": 340,
      "sb": 92160
     },
@@ -1346,7 +1364,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 893045,
+     "start": 894805,
      "wb": 408,
      "sb": 110592
     },
@@ -1355,7 +1373,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1017569,
+     "start": 1019329,
      "wb": 476,
      "sb": 129024
     },
@@ -1364,7 +1382,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1142093,
+     "start": 1143853,
      "wb": 544,
      "sb": 147456
     },
@@ -1373,7 +1391,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1266617,
+     "start": 1268377,
      "wb": 612,
      "sb": 165888
     }
@@ -1392,7 +1410,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 166690,
+     "start": 168450,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -1402,7 +1420,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 291214,
+     "start": 292974,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -1412,7 +1430,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 415738,
+     "start": 417498,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -1422,7 +1440,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 540262,
+     "start": 542022,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -1432,7 +1450,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 664786,
+     "start": 666546,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -1442,7 +1460,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 789310,
+     "start": 791070,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -1452,7 +1470,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 913834,
+     "start": 915594,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -1462,7 +1480,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1038358,
+     "start": 1040118,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -1472,7 +1490,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1162882,
+     "start": 1164642,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -1482,7 +1500,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1287406,
+     "start": 1289166,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -1502,7 +1520,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 200921,
+     "start": 202681,
      "wb": 0,
      "sb": 0
     },
@@ -1511,7 +1529,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 325445,
+     "start": 327205,
      "wb": 68,
      "sb": 18432
     },
@@ -1520,7 +1538,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 449969,
+     "start": 451729,
      "wb": 136,
      "sb": 36864
     },
@@ -1529,7 +1547,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 574493,
+     "start": 576253,
      "wb": 204,
      "sb": 55296
     },
@@ -1538,7 +1556,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 699017,
+     "start": 700777,
      "wb": 272,
      "sb": 73728
     },
@@ -1547,7 +1565,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 823541,
+     "start": 825301,
      "wb": 340,
      "sb": 92160
     },
@@ -1556,7 +1574,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 948065,
+     "start": 949825,
      "wb": 408,
      "sb": 110592
     },
@@ -1565,7 +1583,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1072589,
+     "start": 1074349,
      "wb": 476,
      "sb": 129024
     },
@@ -1574,7 +1592,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1197113,
+     "start": 1198873,
      "wb": 544,
      "sb": 147456
     },
@@ -1583,7 +1601,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1321637,
+     "start": 1323397,
      "wb": 612,
      "sb": 165888
     }
@@ -1602,7 +1620,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 202803,
+     "start": 204563,
      "wb": 0,
      "sb": 0
     },
@@ -1611,7 +1629,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 327327,
+     "start": 329087,
      "wb": 68,
      "sb": 18432
     },
@@ -1620,7 +1638,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 451851,
+     "start": 453611,
      "wb": 136,
      "sb": 36864
     },
@@ -1629,7 +1647,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 576375,
+     "start": 578135,
      "wb": 204,
      "sb": 55296
     },
@@ -1638,7 +1656,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 700899,
+     "start": 702659,
      "wb": 272,
      "sb": 73728
     },
@@ -1647,7 +1665,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 825423,
+     "start": 827183,
      "wb": 340,
      "sb": 92160
     },
@@ -1656,7 +1674,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 949947,
+     "start": 951707,
      "wb": 408,
      "sb": 110592
     },
@@ -1665,7 +1683,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1074471,
+     "start": 1076231,
      "wb": 476,
      "sb": 129024
     },
@@ -1674,7 +1692,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1198995,
+     "start": 1200755,
      "wb": 544,
      "sb": 147456
     },
@@ -1683,7 +1701,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1323519,
+     "start": 1325279,
      "wb": 612,
      "sb": 165888
     }
@@ -1702,7 +1720,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 220533,
+     "start": 222733,
      "wb": 0,
      "sb": 0
     },
@@ -1711,7 +1729,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 345057,
+     "start": 347257,
      "wb": 68,
      "sb": 18432
     },
@@ -1720,7 +1738,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 469581,
+     "start": 471781,
      "wb": 136,
      "sb": 36864
     },
@@ -1729,7 +1747,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 594105,
+     "start": 596305,
      "wb": 204,
      "sb": 55296
     },
@@ -1738,7 +1756,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 718629,
+     "start": 720829,
      "wb": 272,
      "sb": 73728
     },
@@ -1747,7 +1765,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 843153,
+     "start": 845353,
      "wb": 340,
      "sb": 92160
     },
@@ -1756,7 +1774,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 967677,
+     "start": 969877,
      "wb": 408,
      "sb": 110592
     },
@@ -1765,7 +1783,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1092201,
+     "start": 1094401,
      "wb": 476,
      "sb": 129024
     },
@@ -1774,7 +1792,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1216725,
+     "start": 1218925,
      "wb": 544,
      "sb": 147456
     },
@@ -1783,7 +1801,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1341249,
+     "start": 1343449,
      "wb": 612,
      "sb": 165888
     }
@@ -1802,7 +1820,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 241322,
+     "start": 243962,
      "wb": 0,
      "sb": 0
     },
@@ -1811,7 +1829,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 365846,
+     "start": 368486,
      "wb": 68,
      "sb": 18432
     },
@@ -1820,7 +1838,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 490370,
+     "start": 493010,
      "wb": 136,
      "sb": 36864
     },
@@ -1829,7 +1847,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 614894,
+     "start": 617534,
      "wb": 204,
      "sb": 55296
     },
@@ -1838,7 +1856,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 739418,
+     "start": 742058,
      "wb": 272,
      "sb": 73728
     },
@@ -1847,7 +1865,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 863942,
+     "start": 866582,
      "wb": 340,
      "sb": 92160
     },
@@ -1856,7 +1874,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 988466,
+     "start": 991106,
      "wb": 408,
      "sb": 110592
     },
@@ -1865,7 +1883,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1112990,
+     "start": 1115630,
      "wb": 476,
      "sb": 129024
     },
@@ -1874,7 +1892,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1237514,
+     "start": 1240154,
      "wb": 544,
      "sb": 147456
     },
@@ -1883,7 +1901,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1362038,
+     "start": 1364678,
      "wb": 612,
      "sb": 165888
     }
@@ -1902,7 +1920,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 262111,
+     "start": 264751,
      "wb": 0,
      "sb": 0
     },
@@ -1911,7 +1929,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 386635,
+     "start": 389275,
      "wb": 68,
      "sb": 18432
     },
@@ -1920,7 +1938,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 511159,
+     "start": 513799,
      "wb": 136,
      "sb": 36864
     },
@@ -1929,7 +1947,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 635683,
+     "start": 638323,
      "wb": 204,
      "sb": 55296
     },
@@ -1938,7 +1956,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 760207,
+     "start": 762847,
      "wb": 272,
      "sb": 73728
     },
@@ -1947,7 +1965,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 884731,
+     "start": 887371,
      "wb": 340,
      "sb": 92160
     },
@@ -1956,7 +1974,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1009255,
+     "start": 1011895,
      "wb": 408,
      "sb": 110592
     },
@@ -1965,7 +1983,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1133779,
+     "start": 1136419,
      "wb": 476,
      "sb": 129024
     },
@@ -1974,7 +1992,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1258303,
+     "start": 1260943,
      "wb": 544,
      "sb": 147456
     },
@@ -1983,7 +2001,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1382827,
+     "start": 1385467,
      "wb": 612,
      "sb": 165888
     }
@@ -2002,7 +2020,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 263993,
+     "start": 267073,
      "wb": 0,
      "sb": 0
     },
@@ -2011,7 +2029,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 388517,
+     "start": 391597,
      "wb": 68,
      "sb": 18432
     },
@@ -2020,7 +2038,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 513041,
+     "start": 516121,
      "wb": 136,
      "sb": 36864
     },
@@ -2029,7 +2047,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 637565,
+     "start": 640645,
      "wb": 204,
      "sb": 55296
     },
@@ -2038,7 +2056,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 762089,
+     "start": 765169,
      "wb": 272,
      "sb": 73728
     },
@@ -2047,7 +2065,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 886613,
+     "start": 889693,
      "wb": 340,
      "sb": 92160
     },
@@ -2056,7 +2074,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1011137,
+     "start": 1014217,
      "wb": 408,
      "sb": 110592
     },
@@ -2065,7 +2083,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1135661,
+     "start": 1138741,
      "wb": 476,
      "sb": 129024
     },
@@ -2074,7 +2092,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1260185,
+     "start": 1263265,
      "wb": 544,
      "sb": 147456
     },
@@ -2083,7 +2101,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1384709,
+     "start": 1387789,
      "wb": 612,
      "sb": 165888
     }
@@ -2102,7 +2120,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 284782,
+     "start": 288302,
      "wb": 0,
      "sb": 0
     },
@@ -2111,7 +2129,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 409306,
+     "start": 412826,
      "wb": 68,
      "sb": 18432
     },
@@ -2120,7 +2138,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 533830,
+     "start": 537350,
      "wb": 136,
      "sb": 36864
     },
@@ -2129,7 +2147,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 658354,
+     "start": 661874,
      "wb": 204,
      "sb": 55296
     },
@@ -2138,7 +2156,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 782878,
+     "start": 786398,
      "wb": 272,
      "sb": 73728
     },
@@ -2147,7 +2165,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 907402,
+     "start": 910922,
      "wb": 340,
      "sb": 92160
     },
@@ -2156,7 +2174,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1031926,
+     "start": 1035446,
      "wb": 408,
      "sb": 110592
     },
@@ -2165,7 +2183,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1156450,
+     "start": 1159970,
      "wb": 476,
      "sb": 129024
     },
@@ -2174,7 +2192,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1280974,
+     "start": 1284494,
      "wb": 544,
      "sb": 147456
     },
@@ -2183,7 +2201,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1405498,
+     "start": 1409018,
      "wb": 612,
      "sb": 165888
     }
@@ -2202,7 +2220,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 305571,
+     "start": 309091,
      "wb": 0,
      "sb": 0
     },
@@ -2211,7 +2229,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 430095,
+     "start": 433615,
      "wb": 68,
      "sb": 18432
     },
@@ -2220,7 +2238,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 554619,
+     "start": 558139,
      "wb": 136,
      "sb": 36864
     },
@@ -2229,7 +2247,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 679143,
+     "start": 682663,
      "wb": 204,
      "sb": 55296
     },
@@ -2238,7 +2256,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 803667,
+     "start": 807187,
      "wb": 272,
      "sb": 73728
     },
@@ -2247,7 +2265,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 928191,
+     "start": 931711,
      "wb": 340,
      "sb": 92160
     },
@@ -2256,7 +2274,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1052715,
+     "start": 1056235,
      "wb": 408,
      "sb": 110592
     },
@@ -2265,7 +2283,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1177239,
+     "start": 1180759,
      "wb": 476,
      "sb": 129024
     },
@@ -2274,7 +2292,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1301763,
+     "start": 1305283,
      "wb": 544,
      "sb": 147456
     },
@@ -2283,7 +2301,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1426287,
+     "start": 1429807,
      "wb": 612,
      "sb": 165888
     }
@@ -2302,7 +2320,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 307453,
+     "start": 310973,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -2312,7 +2330,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 431977,
+     "start": 435497,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -2322,7 +2340,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 556501,
+     "start": 560021,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -2332,7 +2350,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 681025,
+     "start": 684545,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -2342,7 +2360,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 805549,
+     "start": 809069,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -2352,7 +2370,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 930073,
+     "start": 933593,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -2362,7 +2380,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1054597,
+     "start": 1058117,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -2372,7 +2390,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1179121,
+     "start": 1182641,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -2382,7 +2400,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1303645,
+     "start": 1307165,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -2392,7 +2410,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1428169,
+     "start": 1431689,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -2412,7 +2430,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 342598,
+     "start": 346118,
      "wb": 0,
      "sb": 0
     },
@@ -2421,7 +2439,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 467122,
+     "start": 470642,
      "wb": 68,
      "sb": 18432
     },
@@ -2430,7 +2448,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 591646,
+     "start": 595166,
      "wb": 136,
      "sb": 36864
     },
@@ -2439,7 +2457,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 716170,
+     "start": 719690,
      "wb": 204,
      "sb": 55296
     },
@@ -2448,7 +2466,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 840694,
+     "start": 844214,
      "wb": 272,
      "sb": 73728
     },
@@ -2457,7 +2475,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 965218,
+     "start": 968738,
      "wb": 340,
      "sb": 92160
     },
@@ -2466,7 +2484,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1089742,
+     "start": 1093262,
      "wb": 408,
      "sb": 110592
     },
@@ -2475,7 +2493,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1214266,
+     "start": 1217786,
      "wb": 476,
      "sb": 129024
     },
@@ -2484,7 +2502,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1338790,
+     "start": 1342310,
      "wb": 544,
      "sb": 147456
     },
@@ -2493,7 +2511,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1463314,
+     "start": 1466834,
      "wb": 612,
      "sb": 165888
     }
@@ -2512,7 +2530,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 360328,
+     "start": 363848,
      "wb": 0,
      "sb": 0
     },
@@ -2521,7 +2539,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 484852,
+     "start": 488372,
      "wb": 68,
      "sb": 18432
     },
@@ -2530,7 +2548,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 609376,
+     "start": 612896,
      "wb": 136,
      "sb": 36864
     },
@@ -2539,7 +2557,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 733900,
+     "start": 737420,
      "wb": 204,
      "sb": 55296
     },
@@ -2548,7 +2566,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 858424,
+     "start": 861944,
      "wb": 272,
      "sb": 73728
     },
@@ -2557,7 +2575,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 982948,
+     "start": 986468,
      "wb": 340,
      "sb": 92160
     },
@@ -2566,7 +2584,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1107472,
+     "start": 1110992,
      "wb": 408,
      "sb": 110592
     },
@@ -2575,7 +2593,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1231996,
+     "start": 1235516,
      "wb": 476,
      "sb": 129024
     },
@@ -2584,7 +2602,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1356520,
+     "start": 1360040,
      "wb": 544,
      "sb": 147456
     },
@@ -2593,7 +2611,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1481044,
+     "start": 1484564,
      "wb": 612,
      "sb": 165888
     }
@@ -2612,7 +2630,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 362210,
+     "start": 366170,
      "wb": 0,
      "sb": 0
     },
@@ -2621,7 +2639,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 486734,
+     "start": 490694,
      "wb": 68,
      "sb": 18432
     },
@@ -2630,7 +2648,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 611258,
+     "start": 615218,
      "wb": 136,
      "sb": 36864
     },
@@ -2639,7 +2657,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 735782,
+     "start": 739742,
      "wb": 204,
      "sb": 55296
     },
@@ -2648,7 +2666,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 860306,
+     "start": 864266,
      "wb": 272,
      "sb": 73728
     },
@@ -2657,7 +2675,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 984830,
+     "start": 988790,
      "wb": 340,
      "sb": 92160
     },
@@ -2666,7 +2684,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1109354,
+     "start": 1113314,
      "wb": 408,
      "sb": 110592
     },
@@ -2675,7 +2693,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1233878,
+     "start": 1237838,
      "wb": 476,
      "sb": 129024
     },
@@ -2684,7 +2702,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1358402,
+     "start": 1362362,
      "wb": 544,
      "sb": 147456
     },
@@ -2693,7 +2711,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1482926,
+     "start": 1486886,
      "wb": 612,
      "sb": 165888
     }
@@ -2712,7 +2730,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 382999,
+     "start": 387399,
      "wb": 0,
      "sb": 0
     },
@@ -2721,7 +2739,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 507523,
+     "start": 511923,
      "wb": 68,
      "sb": 18432
     },
@@ -2730,7 +2748,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 632047,
+     "start": 636447,
      "wb": 136,
      "sb": 36864
     },
@@ -2739,7 +2757,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 756571,
+     "start": 760971,
      "wb": 204,
      "sb": 55296
     },
@@ -2748,7 +2766,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 881095,
+     "start": 885495,
      "wb": 272,
      "sb": 73728
     },
@@ -2757,7 +2775,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1005619,
+     "start": 1010019,
      "wb": 340,
      "sb": 92160
     },
@@ -2766,7 +2784,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1130143,
+     "start": 1134543,
      "wb": 408,
      "sb": 110592
     },
@@ -2775,7 +2793,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1254667,
+     "start": 1259067,
      "wb": 476,
      "sb": 129024
     },
@@ -2784,7 +2802,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1379191,
+     "start": 1383591,
      "wb": 544,
      "sb": 147456
     },
@@ -2793,7 +2811,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1503715,
+     "start": 1508115,
      "wb": 612,
      "sb": 165888
     }
@@ -2812,7 +2830,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 403788,
+     "start": 408188,
      "wb": 0,
      "sb": 0
     },
@@ -2821,7 +2839,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 528312,
+     "start": 532712,
      "wb": 68,
      "sb": 18432
     },
@@ -2830,7 +2848,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 652836,
+     "start": 657236,
      "wb": 136,
      "sb": 36864
     },
@@ -2839,7 +2857,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 777360,
+     "start": 781760,
      "wb": 204,
      "sb": 55296
     },
@@ -2848,7 +2866,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 901884,
+     "start": 906284,
      "wb": 272,
      "sb": 73728
     },
@@ -2857,7 +2875,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1026408,
+     "start": 1030808,
      "wb": 340,
      "sb": 92160
     },
@@ -2866,7 +2884,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1150932,
+     "start": 1155332,
      "wb": 408,
      "sb": 110592
     },
@@ -2875,7 +2893,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1275456,
+     "start": 1279856,
      "wb": 476,
      "sb": 129024
     },
@@ -2884,7 +2902,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1399980,
+     "start": 1404380,
      "wb": 544,
      "sb": 147456
     },
@@ -2893,7 +2911,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1524504,
+     "start": 1528904,
      "wb": 612,
      "sb": 165888
     }
@@ -2912,7 +2930,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 405670,
+     "start": 410510,
      "wb": 0,
      "sb": 0
     },
@@ -2921,7 +2939,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 530194,
+     "start": 535034,
      "wb": 68,
      "sb": 18432
     },
@@ -2930,7 +2948,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 654718,
+     "start": 659558,
      "wb": 136,
      "sb": 36864
     },
@@ -2939,7 +2957,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 779242,
+     "start": 784082,
      "wb": 204,
      "sb": 55296
     },
@@ -2948,7 +2966,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 903766,
+     "start": 908606,
      "wb": 272,
      "sb": 73728
     },
@@ -2957,7 +2975,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1028290,
+     "start": 1033130,
      "wb": 340,
      "sb": 92160
     },
@@ -2966,7 +2984,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1152814,
+     "start": 1157654,
      "wb": 408,
      "sb": 110592
     },
@@ -2975,7 +2993,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1277338,
+     "start": 1282178,
      "wb": 476,
      "sb": 129024
     },
@@ -2984,7 +3002,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1401862,
+     "start": 1406702,
      "wb": 544,
      "sb": 147456
     },
@@ -2993,7 +3011,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1526386,
+     "start": 1531226,
      "wb": 612,
      "sb": 165888
     }
@@ -3012,7 +3030,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 426459,
+     "start": 431739,
      "wb": 0,
      "sb": 0
     },
@@ -3021,7 +3039,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 550983,
+     "start": 556263,
      "wb": 68,
      "sb": 18432
     },
@@ -3030,7 +3048,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 675507,
+     "start": 680787,
      "wb": 136,
      "sb": 36864
     },
@@ -3039,7 +3057,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 800031,
+     "start": 805311,
      "wb": 204,
      "sb": 55296
     },
@@ -3048,7 +3066,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 924555,
+     "start": 929835,
      "wb": 272,
      "sb": 73728
     },
@@ -3057,7 +3075,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1049079,
+     "start": 1054359,
      "wb": 340,
      "sb": 92160
     },
@@ -3066,7 +3084,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1173603,
+     "start": 1178883,
      "wb": 408,
      "sb": 110592
     },
@@ -3075,7 +3093,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1298127,
+     "start": 1303407,
      "wb": 476,
      "sb": 129024
     },
@@ -3084,7 +3102,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1422651,
+     "start": 1427931,
      "wb": 544,
      "sb": 147456
     },
@@ -3093,7 +3111,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1547175,
+     "start": 1552455,
      "wb": 612,
      "sb": 165888
     }
@@ -3112,7 +3130,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 447248,
+     "start": 452528,
      "wb": 0,
      "sb": 0
     },
@@ -3121,7 +3139,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 571772,
+     "start": 577052,
      "wb": 68,
      "sb": 18432
     },
@@ -3130,7 +3148,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 696296,
+     "start": 701576,
      "wb": 136,
      "sb": 36864
     },
@@ -3139,7 +3157,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 820820,
+     "start": 826100,
      "wb": 204,
      "sb": 55296
     },
@@ -3148,7 +3166,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 945344,
+     "start": 950624,
      "wb": 272,
      "sb": 73728
     },
@@ -3157,7 +3175,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1069868,
+     "start": 1075148,
      "wb": 340,
      "sb": 92160
     },
@@ -3166,7 +3184,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1194392,
+     "start": 1199672,
      "wb": 408,
      "sb": 110592
     },
@@ -3175,7 +3193,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1318916,
+     "start": 1324196,
      "wb": 476,
      "sb": 129024
     },
@@ -3184,7 +3202,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1443440,
+     "start": 1448720,
      "wb": 544,
      "sb": 147456
     },
@@ -3193,7 +3211,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1567964,
+     "start": 1573244,
      "wb": 612,
      "sb": 165888
     }
@@ -3212,7 +3230,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 449130,
+     "start": 454410,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -3222,7 +3240,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 573654,
+     "start": 578934,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -3232,7 +3250,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 698178,
+     "start": 703458,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -3242,7 +3260,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 822702,
+     "start": 827982,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -3252,7 +3270,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 947226,
+     "start": 952506,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -3262,7 +3280,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1071750,
+     "start": 1077030,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -3272,7 +3290,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1196274,
+     "start": 1201554,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -3282,7 +3300,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1320798,
+     "start": 1326078,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -3292,7 +3310,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1445322,
+     "start": 1450602,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -3302,7 +3320,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1569846,
+     "start": 1575126,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -3322,7 +3340,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 488030,
+     "start": 493310,
      "wb": 0,
      "sb": 0
     },
@@ -3331,7 +3349,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 612554,
+     "start": 617834,
      "wb": 68,
      "sb": 18432
     },
@@ -3340,7 +3358,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 737078,
+     "start": 742358,
      "wb": 136,
      "sb": 36864
     },
@@ -3349,7 +3367,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 861602,
+     "start": 866882,
      "wb": 204,
      "sb": 55296
     },
@@ -3358,7 +3376,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 986126,
+     "start": 991406,
      "wb": 272,
      "sb": 73728
     },
@@ -3367,7 +3385,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1110650,
+     "start": 1115930,
      "wb": 340,
      "sb": 92160
     },
@@ -3376,7 +3394,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1235174,
+     "start": 1240454,
      "wb": 408,
      "sb": 110592
     },
@@ -3385,7 +3403,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1359698,
+     "start": 1364978,
      "wb": 476,
      "sb": 129024
     },
@@ -3394,7 +3412,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1484222,
+     "start": 1489502,
      "wb": 544,
      "sb": 147456
     },
@@ -3403,7 +3421,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1608746,
+     "start": 1614026,
      "wb": 612,
      "sb": 165888
     }
@@ -3422,7 +3440,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 505241,
+     "start": 510521,
      "wb": 0,
      "sb": 0
     },
@@ -3431,7 +3449,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 629765,
+     "start": 635045,
      "wb": 68,
      "sb": 18432
     },
@@ -3440,7 +3458,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 754289,
+     "start": 759569,
      "wb": 136,
      "sb": 36864
     },
@@ -3449,7 +3467,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 878813,
+     "start": 884093,
      "wb": 204,
      "sb": 55296
     },
@@ -3458,7 +3476,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1003337,
+     "start": 1008617,
      "wb": 272,
      "sb": 73728
     },
@@ -3467,7 +3485,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1127861,
+     "start": 1133141,
      "wb": 340,
      "sb": 92160
     },
@@ -3476,7 +3494,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1252385,
+     "start": 1257665,
      "wb": 408,
      "sb": 110592
     },
@@ -3485,7 +3503,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1376909,
+     "start": 1382189,
      "wb": 476,
      "sb": 129024
     },
@@ -3494,7 +3512,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1501433,
+     "start": 1506713,
      "wb": 544,
      "sb": 147456
     },
@@ -3503,7 +3521,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1625957,
+     "start": 1631237,
      "wb": 612,
      "sb": 165888
     }
@@ -3522,7 +3540,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 521777,
+     "start": 527057,
      "wb": 0,
      "sb": 0
     },
@@ -3531,7 +3549,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 646301,
+     "start": 651581,
      "wb": 68,
      "sb": 18432
     },
@@ -3540,7 +3558,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 770825,
+     "start": 776105,
      "wb": 136,
      "sb": 36864
     },
@@ -3549,7 +3567,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 895349,
+     "start": 900629,
      "wb": 204,
      "sb": 55296
     },
@@ -3558,7 +3576,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1019873,
+     "start": 1025153,
      "wb": 272,
      "sb": 73728
     },
@@ -3567,7 +3585,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1144397,
+     "start": 1149677,
      "wb": 340,
      "sb": 92160
     },
@@ -3576,7 +3594,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1268921,
+     "start": 1274201,
      "wb": 408,
      "sb": 110592
     },
@@ -3585,7 +3603,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1393445,
+     "start": 1398725,
      "wb": 476,
      "sb": 129024
     },
@@ -3594,7 +3612,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1517969,
+     "start": 1523249,
      "wb": 544,
      "sb": 147456
     },
@@ -3603,7 +3621,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1642493,
+     "start": 1647773,
      "wb": 612,
      "sb": 165888
     }
@@ -3622,7 +3640,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 523659,
+     "start": 528939,
      "wb": 0,
      "sb": 0
     },
@@ -3631,7 +3649,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 648183,
+     "start": 653463,
      "wb": 68,
      "sb": 18432
     },
@@ -3640,7 +3658,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 772707,
+     "start": 777987,
      "wb": 136,
      "sb": 36864
     },
@@ -3649,7 +3667,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 897231,
+     "start": 902511,
      "wb": 204,
      "sb": 55296
     },
@@ -3658,7 +3676,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1021755,
+     "start": 1027035,
      "wb": 272,
      "sb": 73728
     },
@@ -3667,7 +3685,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1146279,
+     "start": 1151559,
      "wb": 340,
      "sb": 92160
     },
@@ -3676,7 +3694,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1270803,
+     "start": 1276083,
      "wb": 408,
      "sb": 110592
     },
@@ -3685,7 +3703,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1395327,
+     "start": 1400607,
      "wb": 476,
      "sb": 129024
     },
@@ -3694,7 +3712,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1519851,
+     "start": 1525131,
      "wb": 544,
      "sb": 147456
     },
@@ -3703,7 +3721,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1644375,
+     "start": 1649655,
      "wb": 612,
      "sb": 165888
     }
@@ -3722,7 +3740,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 540195,
+     "start": 545475,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -3732,7 +3750,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 664719,
+     "start": 669999,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -3742,7 +3760,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 789243,
+     "start": 794523,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -3752,7 +3770,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 913767,
+     "start": 919047,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -3762,7 +3780,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1038291,
+     "start": 1043571,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -3772,7 +3790,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1162815,
+     "start": 1168095,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -3782,7 +3800,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1287339,
+     "start": 1292619,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -3792,7 +3810,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1411863,
+     "start": 1417143,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -3802,7 +3820,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1536387,
+     "start": 1541667,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -3812,7 +3830,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1660911,
+     "start": 1666191,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -3832,7 +3850,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 563540,
+     "start": 568820,
      "wb": 0,
      "sb": 0
     },
@@ -3841,7 +3859,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 688064,
+     "start": 693344,
      "wb": 68,
      "sb": 18432
     },
@@ -3850,7 +3868,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 812588,
+     "start": 817868,
      "wb": 136,
      "sb": 36864
     },
@@ -3859,7 +3877,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 937112,
+     "start": 942392,
      "wb": 204,
      "sb": 55296
     },
@@ -3868,7 +3886,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1061636,
+     "start": 1066916,
      "wb": 272,
      "sb": 73728
     },
@@ -3877,7 +3895,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1186160,
+     "start": 1191440,
      "wb": 340,
      "sb": 92160
     },
@@ -3886,7 +3904,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1310684,
+     "start": 1315964,
      "wb": 408,
      "sb": 110592
     },
@@ -3895,7 +3913,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1435208,
+     "start": 1440488,
      "wb": 476,
      "sb": 129024
     },
@@ -3904,7 +3922,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1559732,
+     "start": 1565012,
      "wb": 544,
      "sb": 147456
     },
@@ -3913,7 +3931,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1684256,
+     "start": 1689536,
      "wb": 612,
      "sb": 165888
     }
@@ -3932,7 +3950,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 565422,
+     "start": 570702,
      "wb": 0,
      "sb": 0
     },
@@ -3941,7 +3959,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 689946,
+     "start": 695226,
      "wb": 68,
      "sb": 18432
     },
@@ -3950,7 +3968,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 814470,
+     "start": 819750,
      "wb": 136,
      "sb": 36864
     },
@@ -3959,7 +3977,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 938994,
+     "start": 944274,
      "wb": 204,
      "sb": 55296
     },
@@ -3968,7 +3986,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1063518,
+     "start": 1068798,
      "wb": 272,
      "sb": 73728
     },
@@ -3977,7 +3995,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1188042,
+     "start": 1193322,
      "wb": 340,
      "sb": 92160
     },
@@ -3986,7 +4004,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1312566,
+     "start": 1317846,
      "wb": 408,
      "sb": 110592
     },
@@ -3995,7 +4013,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1437090,
+     "start": 1442370,
      "wb": 476,
      "sb": 129024
     },
@@ -4004,7 +4022,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1561614,
+     "start": 1566894,
      "wb": 544,
      "sb": 147456
     },
@@ -4013,7 +4031,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1686138,
+     "start": 1691418,
      "wb": 612,
      "sb": 165888
     }
@@ -4032,7 +4050,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 583825,
+     "start": 589105,
      "wb": 0,
      "sb": 0
     },
@@ -4041,7 +4059,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 708349,
+     "start": 713629,
      "wb": 68,
      "sb": 18432
     },
@@ -4050,7 +4068,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 832873,
+     "start": 838153,
      "wb": 136,
      "sb": 36864
     },
@@ -4059,7 +4077,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 957397,
+     "start": 962677,
      "wb": 204,
      "sb": 55296
     },
@@ -4068,7 +4086,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1081921,
+     "start": 1087201,
      "wb": 272,
      "sb": 73728
     },
@@ -4077,7 +4095,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1206445,
+     "start": 1211725,
      "wb": 340,
      "sb": 92160
     },
@@ -4086,7 +4104,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1330969,
+     "start": 1336249,
      "wb": 408,
      "sb": 110592
     },
@@ -4095,7 +4113,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1455493,
+     "start": 1460773,
      "wb": 476,
      "sb": 129024
     },
@@ -4104,7 +4122,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1580017,
+     "start": 1585297,
      "wb": 544,
      "sb": 147456
     },
@@ -4113,7 +4131,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1704541,
+     "start": 1709821,
      "wb": 612,
      "sb": 165888
     }
@@ -4132,7 +4150,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 600361,
+     "start": 605641,
      "wb": 0,
      "sb": 0
     },
@@ -4141,7 +4159,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 724885,
+     "start": 730165,
      "wb": 68,
      "sb": 18432
     },
@@ -4150,7 +4168,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 849409,
+     "start": 854689,
      "wb": 136,
      "sb": 36864
     },
@@ -4159,7 +4177,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 973933,
+     "start": 979213,
      "wb": 204,
      "sb": 55296
     },
@@ -4168,7 +4186,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1098457,
+     "start": 1103737,
      "wb": 272,
      "sb": 73728
     },
@@ -4177,7 +4195,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1222981,
+     "start": 1228261,
      "wb": 340,
      "sb": 92160
     },
@@ -4186,7 +4204,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1347505,
+     "start": 1352785,
      "wb": 408,
      "sb": 110592
     },
@@ -4195,7 +4213,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1472029,
+     "start": 1477309,
      "wb": 476,
      "sb": 129024
     },
@@ -4204,7 +4222,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1596553,
+     "start": 1601833,
      "wb": 544,
      "sb": 147456
     },
@@ -4213,7 +4231,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1721077,
+     "start": 1726357,
      "wb": 612,
      "sb": 165888
     }
@@ -4232,7 +4250,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 602243,
+     "start": 607523,
      "wb": 0,
      "sb": 0
     },
@@ -4241,7 +4259,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 726767,
+     "start": 732047,
      "wb": 68,
      "sb": 18432
     },
@@ -4250,7 +4268,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 851291,
+     "start": 856571,
      "wb": 136,
      "sb": 36864
     },
@@ -4259,7 +4277,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 975815,
+     "start": 981095,
      "wb": 204,
      "sb": 55296
     },
@@ -4268,7 +4286,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1100339,
+     "start": 1105619,
      "wb": 272,
      "sb": 73728
     },
@@ -4277,7 +4295,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1224863,
+     "start": 1230143,
      "wb": 340,
      "sb": 92160
     },
@@ -4286,7 +4304,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1349387,
+     "start": 1354667,
      "wb": 408,
      "sb": 110592
     },
@@ -4295,7 +4313,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1473911,
+     "start": 1479191,
      "wb": 476,
      "sb": 129024
     },
@@ -4304,7 +4322,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1598435,
+     "start": 1603715,
      "wb": 544,
      "sb": 147456
     },
@@ -4313,7 +4331,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1722959,
+     "start": 1728239,
      "wb": 612,
      "sb": 165888
     }
@@ -4332,7 +4350,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 618779,
+     "start": 624059,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -4342,7 +4360,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 743303,
+     "start": 748583,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -4352,7 +4370,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 867827,
+     "start": 873107,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -4362,7 +4380,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 992351,
+     "start": 997631,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -4372,7 +4390,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1116875,
+     "start": 1122155,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -4382,7 +4400,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1241399,
+     "start": 1246679,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -4392,7 +4410,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1365923,
+     "start": 1371203,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -4402,7 +4420,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1490447,
+     "start": 1495727,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -4412,7 +4430,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1614971,
+     "start": 1620251,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -4422,7 +4440,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1739495,
+     "start": 1744775,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -4442,7 +4460,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 642144,
+     "start": 647424,
      "wb": 0,
      "sb": 0
     },
@@ -4451,7 +4469,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 766668,
+     "start": 771948,
      "wb": 68,
      "sb": 18432
     },
@@ -4460,7 +4478,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 891192,
+     "start": 896472,
      "wb": 136,
      "sb": 36864
     },
@@ -4469,7 +4487,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1015716,
+     "start": 1020996,
      "wb": 204,
      "sb": 55296
     },
@@ -4478,7 +4496,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1140240,
+     "start": 1145520,
      "wb": 272,
      "sb": 73728
     },
@@ -4487,7 +4505,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1264764,
+     "start": 1270044,
      "wb": 340,
      "sb": 92160
     },
@@ -4496,7 +4514,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1389288,
+     "start": 1394568,
      "wb": 408,
      "sb": 110592
     },
@@ -4505,7 +4523,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1513812,
+     "start": 1519092,
      "wb": 476,
      "sb": 129024
     },
@@ -4514,7 +4532,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1638336,
+     "start": 1643616,
      "wb": 544,
      "sb": 147456
     },
@@ -4523,7 +4541,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1762860,
+     "start": 1768140,
      "wb": 612,
      "sb": 165888
     }
@@ -4542,7 +4560,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 644026,
+     "start": 649306,
      "wb": 0,
      "sb": 0
     },
@@ -4551,7 +4569,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 768550,
+     "start": 773830,
      "wb": 68,
      "sb": 18432
     },
@@ -4560,7 +4578,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 893074,
+     "start": 898354,
      "wb": 136,
      "sb": 36864
     },
@@ -4569,7 +4587,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1017598,
+     "start": 1022878,
      "wb": 204,
      "sb": 55296
     },
@@ -4578,7 +4596,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1142122,
+     "start": 1147402,
      "wb": 272,
      "sb": 73728
     },
@@ -4587,7 +4605,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1266646,
+     "start": 1271926,
      "wb": 340,
      "sb": 92160
     },
@@ -4596,7 +4614,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1391170,
+     "start": 1396450,
      "wb": 408,
      "sb": 110592
     },
@@ -4605,7 +4623,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1515694,
+     "start": 1520974,
      "wb": 476,
      "sb": 129024
     },
@@ -4614,7 +4632,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1640218,
+     "start": 1645498,
      "wb": 544,
      "sb": 147456
     },
@@ -4623,7 +4641,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1764742,
+     "start": 1770022,
      "wb": 612,
      "sb": 165888
     }
@@ -4642,7 +4660,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 662429,
+     "start": 667709,
      "wb": 0,
      "sb": 0
     },
@@ -4651,7 +4669,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 786953,
+     "start": 792233,
      "wb": 68,
      "sb": 18432
     },
@@ -4660,7 +4678,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 911477,
+     "start": 916757,
      "wb": 136,
      "sb": 36864
     },
@@ -4669,7 +4687,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1036001,
+     "start": 1041281,
      "wb": 204,
      "sb": 55296
     },
@@ -4678,7 +4696,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1160525,
+     "start": 1165805,
      "wb": 272,
      "sb": 73728
     },
@@ -4687,7 +4705,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1285049,
+     "start": 1290329,
      "wb": 340,
      "sb": 92160
     },
@@ -4696,7 +4714,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1409573,
+     "start": 1414853,
      "wb": 408,
      "sb": 110592
     },
@@ -4705,7 +4723,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1534097,
+     "start": 1539377,
      "wb": 476,
      "sb": 129024
     },
@@ -4714,7 +4732,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1658621,
+     "start": 1663901,
      "wb": 544,
      "sb": 147456
     },
@@ -4723,7 +4741,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1783145,
+     "start": 1788425,
      "wb": 612,
      "sb": 165888
     }
@@ -4742,7 +4760,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 678965,
+     "start": 684245,
      "wb": 0,
      "sb": 0
     },
@@ -4751,7 +4769,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 803489,
+     "start": 808769,
      "wb": 68,
      "sb": 18432
     },
@@ -4760,7 +4778,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 928013,
+     "start": 933293,
      "wb": 136,
      "sb": 36864
     },
@@ -4769,7 +4787,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1052537,
+     "start": 1057817,
      "wb": 204,
      "sb": 55296
     },
@@ -4778,7 +4796,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1177061,
+     "start": 1182341,
      "wb": 272,
      "sb": 73728
     },
@@ -4787,7 +4805,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1301585,
+     "start": 1306865,
      "wb": 340,
      "sb": 92160
     },
@@ -4796,7 +4814,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1426109,
+     "start": 1431389,
      "wb": 408,
      "sb": 110592
     },
@@ -4805,7 +4823,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1550633,
+     "start": 1555913,
      "wb": 476,
      "sb": 129024
     },
@@ -4814,7 +4832,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1675157,
+     "start": 1680437,
      "wb": 544,
      "sb": 147456
     },
@@ -4823,7 +4841,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1799681,
+     "start": 1804961,
      "wb": 612,
      "sb": 165888
     }
@@ -4842,7 +4860,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 695501,
+     "start": 700781,
      "wb": 0,
      "sb": 0
     },
@@ -4851,7 +4869,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 820025,
+     "start": 825305,
      "wb": 68,
      "sb": 18432
     },
@@ -4860,7 +4878,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 944549,
+     "start": 949829,
      "wb": 136,
      "sb": 36864
     },
@@ -4869,7 +4887,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1069073,
+     "start": 1074353,
      "wb": 204,
      "sb": 55296
     },
@@ -4878,7 +4896,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1193597,
+     "start": 1198877,
      "wb": 272,
      "sb": 73728
     },
@@ -4887,7 +4905,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1318121,
+     "start": 1323401,
      "wb": 340,
      "sb": 92160
     },
@@ -4896,7 +4914,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1442645,
+     "start": 1447925,
      "wb": 408,
      "sb": 110592
     },
@@ -4905,7 +4923,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1567169,
+     "start": 1572449,
      "wb": 476,
      "sb": 129024
     },
@@ -4914,7 +4932,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1691693,
+     "start": 1696973,
      "wb": 544,
      "sb": 147456
     },
@@ -4923,7 +4941,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1816217,
+     "start": 1821497,
      "wb": 612,
      "sb": 165888
     }
@@ -4942,7 +4960,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 697383,
+     "start": 702663,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -4952,7 +4970,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 821907,
+     "start": 827187,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -4962,7 +4980,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 946431,
+     "start": 951711,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -4972,7 +4990,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 1070955,
+     "start": 1076235,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -4982,7 +5000,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1195479,
+     "start": 1200759,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -4992,7 +5010,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1320003,
+     "start": 1325283,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5002,7 +5020,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1444527,
+     "start": 1449807,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5012,7 +5030,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1569051,
+     "start": 1574331,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5022,7 +5040,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1693575,
+     "start": 1698855,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5032,7 +5050,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1818099,
+     "start": 1823379,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5052,7 +5070,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 720748,
+     "start": 726028,
      "wb": 0,
      "sb": 0
     },
@@ -5061,7 +5079,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 845272,
+     "start": 850552,
      "wb": 68,
      "sb": 18432
     },
@@ -5070,7 +5088,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 969796,
+     "start": 975076,
      "wb": 136,
      "sb": 36864
     },
@@ -5079,7 +5097,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1094320,
+     "start": 1099600,
      "wb": 204,
      "sb": 55296
     },
@@ -5088,7 +5106,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1218844,
+     "start": 1224124,
      "wb": 272,
      "sb": 73728
     },
@@ -5097,7 +5115,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1343368,
+     "start": 1348648,
      "wb": 340,
      "sb": 92160
     },
@@ -5106,7 +5124,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1467892,
+     "start": 1473172,
      "wb": 408,
      "sb": 110592
     },
@@ -5115,7 +5133,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1592416,
+     "start": 1597696,
      "wb": 476,
      "sb": 129024
     },
@@ -5124,7 +5142,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1716940,
+     "start": 1722220,
      "wb": 544,
      "sb": 147456
     },
@@ -5133,7 +5151,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1841464,
+     "start": 1846744,
      "wb": 612,
      "sb": 165888
     }
@@ -5152,7 +5170,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 739151,
+     "start": 744431,
      "wb": 0,
      "sb": 0
     },
@@ -5161,7 +5179,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 863675,
+     "start": 868955,
      "wb": 68,
      "sb": 18432
     },
@@ -5170,7 +5188,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 988199,
+     "start": 993479,
      "wb": 136,
      "sb": 36864
     },
@@ -5179,7 +5197,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1112723,
+     "start": 1118003,
      "wb": 204,
      "sb": 55296
     },
@@ -5188,7 +5206,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1237247,
+     "start": 1242527,
      "wb": 272,
      "sb": 73728
     },
@@ -5197,7 +5215,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1361771,
+     "start": 1367051,
      "wb": 340,
      "sb": 92160
     },
@@ -5206,7 +5224,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1486295,
+     "start": 1491575,
      "wb": 408,
      "sb": 110592
     },
@@ -5215,7 +5233,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1610819,
+     "start": 1616099,
      "wb": 476,
      "sb": 129024
     },
@@ -5224,7 +5242,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1735343,
+     "start": 1740623,
      "wb": 544,
      "sb": 147456
     },
@@ -5233,7 +5251,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1859867,
+     "start": 1865147,
      "wb": 612,
      "sb": 165888
     }
@@ -5252,7 +5270,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 741033,
+     "start": 746313,
      "wb": 0,
      "sb": 0
     },
@@ -5261,7 +5279,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 865557,
+     "start": 870837,
      "wb": 68,
      "sb": 18432
     },
@@ -5270,7 +5288,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 990081,
+     "start": 995361,
      "wb": 136,
      "sb": 36864
     },
@@ -5279,7 +5297,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1114605,
+     "start": 1119885,
      "wb": 204,
      "sb": 55296
     },
@@ -5288,7 +5306,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1239129,
+     "start": 1244409,
      "wb": 272,
      "sb": 73728
     },
@@ -5297,7 +5315,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1363653,
+     "start": 1368933,
      "wb": 340,
      "sb": 92160
     },
@@ -5306,7 +5324,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1488177,
+     "start": 1493457,
      "wb": 408,
      "sb": 110592
     },
@@ -5315,7 +5333,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1612701,
+     "start": 1617981,
      "wb": 476,
      "sb": 129024
     },
@@ -5324,7 +5342,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1737225,
+     "start": 1742505,
      "wb": 544,
      "sb": 147456
     },
@@ -5333,7 +5351,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1861749,
+     "start": 1867029,
      "wb": 612,
      "sb": 165888
     }
@@ -5352,7 +5370,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 757569,
+     "start": 762849,
      "wb": 0,
      "sb": 0
     },
@@ -5361,7 +5379,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 882093,
+     "start": 887373,
      "wb": 68,
      "sb": 18432
     },
@@ -5370,7 +5388,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1006617,
+     "start": 1011897,
      "wb": 136,
      "sb": 36864
     },
@@ -5379,7 +5397,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1131141,
+     "start": 1136421,
      "wb": 204,
      "sb": 55296
     },
@@ -5388,7 +5406,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1255665,
+     "start": 1260945,
      "wb": 272,
      "sb": 73728
     },
@@ -5397,7 +5415,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1380189,
+     "start": 1385469,
      "wb": 340,
      "sb": 92160
     },
@@ -5406,7 +5424,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1504713,
+     "start": 1509993,
      "wb": 408,
      "sb": 110592
     },
@@ -5415,7 +5433,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1629237,
+     "start": 1634517,
      "wb": 476,
      "sb": 129024
     },
@@ -5424,7 +5442,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1753761,
+     "start": 1759041,
      "wb": 544,
      "sb": 147456
     },
@@ -5433,7 +5451,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1878285,
+     "start": 1883565,
      "wb": 612,
      "sb": 165888
     }
@@ -5452,7 +5470,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 774105,
+     "start": 779385,
      "wb": 0,
      "sb": 0
     },
@@ -5461,7 +5479,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 898629,
+     "start": 903909,
      "wb": 68,
      "sb": 18432
     },
@@ -5470,7 +5488,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1023153,
+     "start": 1028433,
      "wb": 136,
      "sb": 36864
     },
@@ -5479,7 +5497,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1147677,
+     "start": 1152957,
      "wb": 204,
      "sb": 55296
     },
@@ -5488,7 +5506,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1272201,
+     "start": 1277481,
      "wb": 272,
      "sb": 73728
     },
@@ -5497,7 +5515,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1396725,
+     "start": 1402005,
      "wb": 340,
      "sb": 92160
     },
@@ -5506,7 +5524,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1521249,
+     "start": 1526529,
      "wb": 408,
      "sb": 110592
     },
@@ -5515,7 +5533,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1645773,
+     "start": 1651053,
      "wb": 476,
      "sb": 129024
     },
@@ -5524,7 +5542,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1770297,
+     "start": 1775577,
      "wb": 544,
      "sb": 147456
     },
@@ -5533,7 +5551,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1894821,
+     "start": 1900101,
      "wb": 612,
      "sb": 165888
     }
@@ -5552,7 +5570,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 775987,
+     "start": 781267,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -5562,7 +5580,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 900511,
+     "start": 905791,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -5572,7 +5590,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 1025035,
+     "start": 1030315,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -5582,7 +5600,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 1149559,
+     "start": 1154839,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -5592,7 +5610,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1274083,
+     "start": 1279363,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5602,7 +5620,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1398607,
+     "start": 1403887,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5612,7 +5630,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1523131,
+     "start": 1528411,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5622,7 +5640,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1647655,
+     "start": 1652935,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5632,7 +5650,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1772179,
+     "start": 1777459,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5642,7 +5660,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1896703,
+     "start": 1901983,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5662,7 +5680,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 799352,
+     "start": 804632,
      "wb": 0,
      "sb": 0
     },
@@ -5671,7 +5689,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 923876,
+     "start": 929156,
      "wb": 68,
      "sb": 18432
     },
@@ -5680,7 +5698,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1048400,
+     "start": 1053680,
      "wb": 136,
      "sb": 36864
     },
@@ -5689,7 +5707,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1172924,
+     "start": 1178204,
      "wb": 204,
      "sb": 55296
     },
@@ -5698,7 +5716,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1297448,
+     "start": 1302728,
      "wb": 272,
      "sb": 73728
     },
@@ -5707,7 +5725,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1421972,
+     "start": 1427252,
      "wb": 340,
      "sb": 92160
     },
@@ -5716,7 +5734,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1546496,
+     "start": 1551776,
      "wb": 408,
      "sb": 110592
     },
@@ -5725,7 +5743,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1671020,
+     "start": 1676300,
      "wb": 476,
      "sb": 129024
     },
@@ -5734,7 +5752,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1795544,
+     "start": 1800824,
      "wb": 544,
      "sb": 147456
     },
@@ -5743,7 +5761,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1920068,
+     "start": 1925348,
      "wb": 612,
      "sb": 165888
     }
@@ -5762,7 +5780,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 817755,
+     "start": 823035,
      "wb": 0,
      "sb": 0
     },
@@ -5771,7 +5789,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 942279,
+     "start": 947559,
      "wb": 68,
      "sb": 18432
     },
@@ -5780,7 +5798,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1066803,
+     "start": 1072083,
      "wb": 136,
      "sb": 36864
     },
@@ -5789,7 +5807,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1191327,
+     "start": 1196607,
      "wb": 204,
      "sb": 55296
     },
@@ -5798,7 +5816,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1315851,
+     "start": 1321131,
      "wb": 272,
      "sb": 73728
     },
@@ -5807,7 +5825,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1440375,
+     "start": 1445655,
      "wb": 340,
      "sb": 92160
     },
@@ -5816,7 +5834,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1564899,
+     "start": 1570179,
      "wb": 408,
      "sb": 110592
     },
@@ -5825,7 +5843,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1689423,
+     "start": 1694703,
      "wb": 476,
      "sb": 129024
     },
@@ -5834,7 +5852,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1813947,
+     "start": 1819227,
      "wb": 544,
      "sb": 147456
     },
@@ -5843,7 +5861,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1938471,
+     "start": 1943751,
      "wb": 612,
      "sb": 165888
     }
@@ -5862,7 +5880,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 819637,
+     "start": 824917,
      "wb": 0,
      "sb": 0
     },
@@ -5871,7 +5889,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 944161,
+     "start": 949441,
      "wb": 68,
      "sb": 18432
     },
@@ -5880,7 +5898,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1068685,
+     "start": 1073965,
      "wb": 136,
      "sb": 36864
     },
@@ -5889,7 +5907,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1193209,
+     "start": 1198489,
      "wb": 204,
      "sb": 55296
     },
@@ -5898,7 +5916,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1317733,
+     "start": 1323013,
      "wb": 272,
      "sb": 73728
     },
@@ -5907,7 +5925,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1442257,
+     "start": 1447537,
      "wb": 340,
      "sb": 92160
     },
@@ -5916,7 +5934,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1566781,
+     "start": 1572061,
      "wb": 408,
      "sb": 110592
     },
@@ -5925,7 +5943,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1691305,
+     "start": 1696585,
      "wb": 476,
      "sb": 129024
     },
@@ -5934,7 +5952,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1815829,
+     "start": 1821109,
      "wb": 544,
      "sb": 147456
     },
@@ -5943,7 +5961,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1940353,
+     "start": 1945633,
      "wb": 612,
      "sb": 165888
     }
@@ -5962,7 +5980,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 836173,
+     "start": 841453,
      "wb": 0,
      "sb": 0
     },
@@ -5971,7 +5989,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 960697,
+     "start": 965977,
      "wb": 68,
      "sb": 18432
     },
@@ -5980,7 +5998,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1085221,
+     "start": 1090501,
      "wb": 136,
      "sb": 36864
     },
@@ -5989,7 +6007,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1209745,
+     "start": 1215025,
      "wb": 204,
      "sb": 55296
     },
@@ -5998,7 +6016,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1334269,
+     "start": 1339549,
      "wb": 272,
      "sb": 73728
     },
@@ -6007,7 +6025,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1458793,
+     "start": 1464073,
      "wb": 340,
      "sb": 92160
     },
@@ -6016,7 +6034,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1583317,
+     "start": 1588597,
      "wb": 408,
      "sb": 110592
     },
@@ -6025,7 +6043,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1707841,
+     "start": 1713121,
      "wb": 476,
      "sb": 129024
     },
@@ -6034,7 +6052,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1832365,
+     "start": 1837645,
      "wb": 544,
      "sb": 147456
     },
@@ -6043,7 +6061,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1956889,
+     "start": 1962169,
      "wb": 612,
      "sb": 165888
     }
@@ -6062,7 +6080,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 852709,
+     "start": 857989,
      "wb": 0,
      "sb": 0
     },
@@ -6071,7 +6089,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 977233,
+     "start": 982513,
      "wb": 68,
      "sb": 18432
     },
@@ -6080,7 +6098,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1101757,
+     "start": 1107037,
      "wb": 136,
      "sb": 36864
     },
@@ -6089,7 +6107,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1226281,
+     "start": 1231561,
      "wb": 204,
      "sb": 55296
     },
@@ -6098,7 +6116,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1350805,
+     "start": 1356085,
      "wb": 272,
      "sb": 73728
     },
@@ -6107,7 +6125,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1475329,
+     "start": 1480609,
      "wb": 340,
      "sb": 92160
     },
@@ -6116,7 +6134,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1599853,
+     "start": 1605133,
      "wb": 408,
      "sb": 110592
     },
@@ -6125,7 +6143,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1724377,
+     "start": 1729657,
      "wb": 476,
      "sb": 129024
     },
@@ -6134,7 +6152,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1848901,
+     "start": 1854181,
      "wb": 544,
      "sb": 147456
     },
@@ -6143,7 +6161,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1973425,
+     "start": 1978705,
      "wb": 612,
      "sb": 165888
     }
@@ -6162,7 +6180,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 860900,
+     "start": 866180,
      "wb": 0,
      "sb": 0
     },
@@ -6171,7 +6189,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 985424,
+     "start": 990704,
      "wb": 68,
      "sb": 18432
     },
@@ -6180,7 +6198,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1109948,
+     "start": 1115228,
      "wb": 136,
      "sb": 36864
     },
@@ -6189,7 +6207,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1234472,
+     "start": 1239752,
      "wb": 204,
      "sb": 55296
     },
@@ -6198,7 +6216,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1358996,
+     "start": 1364276,
      "wb": 272,
      "sb": 73728
     },
@@ -6207,7 +6225,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1483520,
+     "start": 1488800,
      "wb": 340,
      "sb": 92160
     },
@@ -6216,7 +6234,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1608044,
+     "start": 1613324,
      "wb": 408,
      "sb": 110592
     },
@@ -6225,7 +6243,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1732568,
+     "start": 1737848,
      "wb": 476,
      "sb": 129024
     },
@@ -6234,7 +6252,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1857092,
+     "start": 1862372,
      "wb": 544,
      "sb": 147456
     },
@@ -6243,7 +6261,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1981616,
+     "start": 1986896,
      "wb": 612,
      "sb": 165888
     }
@@ -6343,42 +6361,12 @@
    "mu_c_per_hop": 4,
    "window_spacing_beats": 80,
    "ab": 0,
-   "land": "per group",
-   "cut_through_margin_min": -440,
+   "land": 0,
+   "cut_through_margin_min": 0,
    "at": "S005",
-   "groups_needing_land": [
-    "S005",
-    "S007",
-    "S008",
-    "S010",
-    "S014",
-    "S015",
-    "S017",
-    "S018",
-    "S023",
-    "S024",
-    "S026",
-    "S027"
-   ],
-   "tx_delay_fix": {
-    "per_group": {
-     "S005": 440,
-     "S007": 440,
-     "S008": 440,
-     "S010": 440,
-     "S014": 440,
-     "S015": 440,
-     "S017": 440,
-     "S018": 440,
-     "S023": 440,
-     "S024": 440,
-     "S026": 440,
-     "S027": 440
-    },
-    "total": 5280,
-    "note": "alternative to land 1: hold the h TX on the sender until n is free (each of these groups' stage start moves by its deficit; upper bound on the added period); or a landing leaf with NS >= 4 (one whole 320-beat h)"
-   },
-   "result": "FAULT (land 1 with NS 1 cannot hold 4 back-to-back windows)",
+   "groups_needing_land": [],
+   "tx_delay_fix": null,
+   "result": "PASS (every hop window cuts through, land 0; NS 1 landing slot unused by stage hops)",
    "rule": "land 0 iff spacing(n) - occ(n) >= hop - crossing; the 4 windows of one h are one user's, back to back on s_0N pair A (non-h beat inside a window / overlapping windows = lep sticky fault)"
   },
   "tp_ports": "s_0S / s_7S / s_7N carry TP only (no h window): their lep ports are held by the stage-group window (brute force on <g>.<cp>)"
@@ -6435,12 +6423,13 @@
     "occ": 17510,
     "step": 105057,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S005",
     "label": "Stage 5: L3, L4.ffn",
-    "t": 79770,
+    "t": 80210,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6450,27 +6439,29 @@
    {
     "id": "S006",
     "label": "Stage 6",
-    "t": 100559,
+    "t": 100999,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S007",
     "label": "Stage 7: L4, L5.ffn",
-    "t": 102441,
+    "t": 103321,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S008",
     "label": "Stage 8: L5, L6.ffn",
-    "t": 123230,
+    "t": 124550,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6480,17 +6471,18 @@
    {
     "id": "S009",
     "label": "Stage 9",
-    "t": 144019,
+    "t": 145339,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S010",
     "label": "Stage 10: L6, L7.ffn",
-    "t": 145901,
+    "t": 147661,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6500,7 +6492,7 @@
    {
     "id": "S011",
     "label": "Stage 11: L7, L8.ffn",
-    "t": 166690,
+    "t": 168450,
     "span": 33413,
     "occ": 34394,
     "step": 185275,
@@ -6510,7 +6502,7 @@
    {
     "id": "S012",
     "label": "Stage 12",
-    "t": 200921,
+    "t": 202681,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6520,27 +6512,29 @@
    {
     "id": "S013",
     "label": "Stage 13: L8, L9.ffn",
-    "t": 202803,
+    "t": 204563,
     "span": 16912,
     "occ": 17510,
     "step": 105057,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S014",
     "label": "Stage 14: L9, L10.ffn",
-    "t": 220533,
+    "t": 222733,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S015",
     "label": "Stage 15: L10, L11.ffn",
-    "t": 241322,
+    "t": 243962,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6550,27 +6544,29 @@
    {
     "id": "S016",
     "label": "Stage 16",
-    "t": 262111,
+    "t": 264751,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S017",
     "label": "Stage 17: L11, L12.ffn",
-    "t": 263993,
+    "t": 267073,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S018",
     "label": "Stage 18: L12, L13.ffn",
-    "t": 284782,
+    "t": 288302,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6580,7 +6576,7 @@
    {
     "id": "S019",
     "label": "Stage 19",
-    "t": 305571,
+    "t": 309091,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6590,7 +6586,7 @@
    {
     "id": "S020",
     "label": "Stage 20: L13, L14.ffn",
-    "t": 307453,
+    "t": 310973,
     "span": 34327,
     "occ": 35325,
     "step": 190861,
@@ -6600,7 +6596,7 @@
    {
     "id": "S021",
     "label": "Stage 21: L14, L15.ffn",
-    "t": 342598,
+    "t": 346118,
     "span": 16912,
     "occ": 17510,
     "step": 105057,
@@ -6610,27 +6606,29 @@
    {
     "id": "S022",
     "label": "Stage 22",
-    "t": 360328,
+    "t": 363848,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S023",
     "label": "Stage 23: L15, L16.ffn",
-    "t": 362210,
+    "t": 366170,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S024",
     "label": "Stage 24: L16, L17.ffn",
-    "t": 382999,
+    "t": 387399,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6640,27 +6638,29 @@
    {
     "id": "S025",
     "label": "Stage 25",
-    "t": 403788,
+    "t": 408188,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S026",
     "label": "Stage 26: L17, L18.ffn",
-    "t": 405670,
+    "t": 410510,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
     "copies": 1,
-    "idx": false
+    "idx": false,
+    "hold_tx": 440
    },
    {
     "id": "S027",
     "label": "Stage 27: L18, L19.ffn",
-    "t": 426459,
+    "t": 431739,
     "span": 19971,
     "occ": 20754,
     "step": 124521,
@@ -6670,7 +6670,7 @@
    {
     "id": "S028",
     "label": "Stage 28",
-    "t": 447248,
+    "t": 452528,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6680,7 +6680,7 @@
    {
     "id": "S029",
     "label": "Stage 29: L19, L20.ffn",
-    "t": 449130,
+    "t": 454410,
     "span": 38082,
     "occ": 38984,
     "step": 182189,
@@ -6690,7 +6690,7 @@
    {
     "id": "S030",
     "label": "Stage 30: L20, L21.ffn",
-    "t": 488030,
+    "t": 493310,
     "span": 16393,
     "occ": 16958,
     "step": 101748,
@@ -6700,7 +6700,7 @@
    {
     "id": "S031",
     "label": "Stage 31: L21, L22.ffn",
-    "t": 505241,
+    "t": 510521,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6710,7 +6710,7 @@
    {
     "id": "S032",
     "label": "Stage 32",
-    "t": 521777,
+    "t": 527057,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6720,7 +6720,7 @@
    {
     "id": "S033",
     "label": "Stage 33: L22, L23.ffn",
-    "t": 523659,
+    "t": 528939,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6730,7 +6730,7 @@
    {
     "id": "S034",
     "label": "Stage 34: L23, L24.ffn",
-    "t": 540195,
+    "t": 545475,
     "span": 22527,
     "occ": 23170,
     "step": 139018,
@@ -6740,7 +6740,7 @@
    {
     "id": "S035",
     "label": "Stage 35",
-    "t": 563540,
+    "t": 568820,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6750,7 +6750,7 @@
    {
     "id": "S036",
     "label": "Stage 36: L24, L25.ffn",
-    "t": 565422,
+    "t": 570702,
     "span": 17585,
     "occ": 18224,
     "step": 109339,
@@ -6760,7 +6760,7 @@
    {
     "id": "S037",
     "label": "Stage 37: L25, L26.ffn",
-    "t": 583825,
+    "t": 589105,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6770,7 +6770,7 @@
    {
     "id": "S038",
     "label": "Stage 38",
-    "t": 600361,
+    "t": 605641,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6780,7 +6780,7 @@
    {
     "id": "S039",
     "label": "Stage 39: L26, L27.ffn",
-    "t": 602243,
+    "t": 607523,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6790,7 +6790,7 @@
    {
     "id": "S040",
     "label": "Stage 40: L27, L28.ffn",
-    "t": 618779,
+    "t": 624059,
     "span": 22547,
     "occ": 23190,
     "step": 139140,
@@ -6800,7 +6800,7 @@
    {
     "id": "S041",
     "label": "Stage 41",
-    "t": 642144,
+    "t": 647424,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6810,7 +6810,7 @@
    {
     "id": "S042",
     "label": "Stage 42: L28, L29.ffn",
-    "t": 644026,
+    "t": 649306,
     "span": 17585,
     "occ": 18224,
     "step": 109339,
@@ -6820,7 +6820,7 @@
    {
     "id": "S043",
     "label": "Stage 43: L29, L30.ffn",
-    "t": 662429,
+    "t": 667709,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6830,7 +6830,7 @@
    {
     "id": "S044",
     "label": "Stage 44: L30, L31.ffn",
-    "t": 678965,
+    "t": 684245,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6840,7 +6840,7 @@
    {
     "id": "S045",
     "label": "Stage 45",
-    "t": 695501,
+    "t": 700781,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6850,7 +6850,7 @@
    {
     "id": "S046",
     "label": "Stage 46: L31, L32.ffn",
-    "t": 697383,
+    "t": 702663,
     "span": 22547,
     "occ": 23190,
     "step": 139140,
@@ -6860,7 +6860,7 @@
    {
     "id": "S047",
     "label": "Stage 47: L32, L33.ffn",
-    "t": 720748,
+    "t": 726028,
     "span": 17585,
     "occ": 18224,
     "step": 109339,
@@ -6870,7 +6870,7 @@
    {
     "id": "S048",
     "label": "Stage 48",
-    "t": 739151,
+    "t": 744431,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6880,7 +6880,7 @@
    {
     "id": "S049",
     "label": "Stage 49: L33, L34.ffn",
-    "t": 741033,
+    "t": 746313,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6890,7 +6890,7 @@
    {
     "id": "S050",
     "label": "Stage 50: L34, L35.ffn",
-    "t": 757569,
+    "t": 762849,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6900,7 +6900,7 @@
    {
     "id": "S051",
     "label": "Stage 51",
-    "t": 774105,
+    "t": 779385,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6910,7 +6910,7 @@
    {
     "id": "S052",
     "label": "Stage 52: L35, L36.ffn",
-    "t": 775987,
+    "t": 781267,
     "span": 22547,
     "occ": 23190,
     "step": 139140,
@@ -6920,7 +6920,7 @@
    {
     "id": "S053",
     "label": "Stage 53: L36, L37.ffn",
-    "t": 799352,
+    "t": 804632,
     "span": 17585,
     "occ": 18224,
     "step": 109339,
@@ -6930,7 +6930,7 @@
    {
     "id": "S054",
     "label": "Stage 54",
-    "t": 817755,
+    "t": 823035,
     "span": 1064,
     "occ": 1064,
     "step": 6384,
@@ -6940,7 +6940,7 @@
    {
     "id": "S055",
     "label": "Stage 55: L37, L38.ffn",
-    "t": 819637,
+    "t": 824917,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6950,7 +6950,7 @@
    {
     "id": "S056",
     "label": "Stage 56: L38, L39.ffn",
-    "t": 836173,
+    "t": 841453,
     "span": 15718,
     "occ": 16242,
     "step": 97452,
@@ -6960,7 +6960,7 @@
    {
     "id": "S057",
     "label": "Stage 57: L39.ffn",
-    "t": 852709,
+    "t": 857989,
     "span": 7373,
     "occ": 7612,
     "step": 45671,
@@ -6970,7 +6970,7 @@
    {
     "id": "S058",
     "label": "Stage 58: head die (LM head, argmax)",
-    "t": 860900,
+    "t": 866180,
     "span": 11987,
     "occ": 11987,
     "step": 71918,
@@ -7003,9 +7003,9 @@
    "helper_window": 43414,
    "helper_own_window": 1731,
    "helper_stage_window": 101748,
-   "period": 1223320,
+   "period": 1228600,
    "users": 10,
-   "helper_busy_pct": 36.9,
+   "helper_busy_pct": 36.7,
    "windows": {
     "keys_die": 52429,
     "scan": 10342,
@@ -7018,8 +7018,8 @@
     "q_at": 818,
     "helper_occ": 16958,
     "helper_step": 101748,
-    "t_group": 449130,
-    "t_helper": 488030,
+    "t_group": 454410,
+    "t_helper": 493310,
     "link_q": 64,
     "link_topk": 72
    },

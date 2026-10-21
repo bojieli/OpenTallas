@@ -284,17 +284,24 @@ def hop_cycles(m):
     return math.ceil(m.HOP) - (SWITCHED_LEG - leg('stage_hop'))
 
 
-def stage_windows(m):
+def stage_windows(m, hold=None):
     """per stage group: span (single-user, cycles), occ (one position held, 1 job context), step (one MTP step,
-    6 verify positions with the shared index read), start offset t in the reference pass, copies"""
+    6 verify positions with the shared index read), start offset t in the reference pass, copies.
+    hold {receiver id: cycles} (lead 10-21, MTP NS 1): the predecessor's h TX is held that long, so the receiver and
+    every later stage start that much later (hold_tx on the sender)."""
+    hold = hold or {}
     out, t = [], 0
-    for g in m.groups:
+    gs = list(m.groups)
+    for i, g in enumerate(gs):
         o = m.group_occ(g, shard=m.sh_all.get(g['id'], 4), mtp_share=True, expert_imb=m.IMB_BAL)
         # integer cycles (a calendar is integer): windows rounded UP, offsets accumulate rounded-up spans + hop
         span, occ, step = (math.ceil(o[k]) for k in ('span', 'occ', 'step'))
+        ht = hold.get(gs[i + 1]['id'], 0) if i + 1 < len(gs) else 0
         out.append(dict(id=g['id'], label=g['label'], t=t, span=span, occ=occ, step=step,
                         copies=2 if g['id'] in DUP else 1, idx=g['idx_score_cycles'] > 0))
-        t += span + hop_cycles(m)
+        if ht:
+            out[-1]['hold_tx'] = ht
+        t += span + hop_cycles(m) + ht
     return out
 
 
@@ -404,7 +411,7 @@ def windows(st, user, shift, kind, col):
         cp = col.get(g['id'], {}).get(user, 'A') if g['copies'] > 1 else 'A'
         s = shift + g['t']
         ws.append((f"{g['id']}.{cp}", s, s + L))
-        h0 = s + g['span']
+        h0 = s + g['span'] + g.get('hold_tx', 0)
         if HOP_PORT == 'es':          # pre-LINK5: TP endpoints busy over the stage window, h folded onto ES (s_7S)
             for ep in TP_EPS:
                 ws.append((f"ep.{g['id']}.{cp}.{ep}", s, s + L))
@@ -565,7 +572,7 @@ def hop_land_plan(st, cal, mode):
     for i, g in enumerate(st[1:], 1):
         L = g['occ'] if mode == 'ar' else g['step']
         sp = cal['S'] * (2 if g['copies'] > 1 else 1)
-        margin = sp - L - lead
+        margin = sp - L - lead + st[i - 1].get('hold_tx', 0)
         rows.append((margin, g['id']))
         if margin < 0:
             bad.append(g['id'])
@@ -640,6 +647,23 @@ def record(mode, m, st, d, cal, svc=None):
     return rec
 
 
+HOLD_TX = True
+
+
+def mtp_hold(st):
+    """per receiving group: cycles the predecessor holds its h TX so the first beat reaches the receiver no earlier
+    than the previous user's MTP step there ends (land 0 cut-through; NS 1 never holds a stage hop)"""
+    S = qup(max(g['step'] for g in st if g['copies'] == 1))
+    lead = HOP_NOW - x_flat('stage_hop')
+    out = {}
+    for g in st[1:]:
+        sp = S * (2 if g['copies'] > 1 else 1)
+        deficit = g['step'] + lead - sp
+        if deficit > 0:
+            out[g['id']] = int(math.ceil(deficit))
+    return out
+
+
 def build(mode, users=None, fillers=None, split=False):
     """split: False | True (SPLIT_L20) | a SPLIT_L20-shaped dict (e.g. with compiled helper windows)"""
     sp = (split if isinstance(split, dict) else SPLIT_L20) if split else None
@@ -650,6 +674,12 @@ def build(mode, users=None, fillers=None, split=False):
     global HOP_NOW
     HOP_NOW = hop_cycles(m)
     d = design(m)
+    hold = mtp_hold(st) if mode == 'mtp' and OFFCHIP == 'direct' and HOLD_TX else {}
+    if hold:                      # lead 10-21: MTP NS 1 fault -> TX hold; the period grows by the total hold
+        st = stage_windows(m, hold)
+        d = dict(d, T_mtp_before_hold=d['T_mtp'], T_mtp=d['T_mtp'] + sum(hold.values()))
+        d['offchip'] = dict(d['offchip'], mtp_tx_hold=dict(per_receiver=hold, total=sum(hold.values()),
+                            decision='lead 10-21: hold the h TX on the sender (NS stays 1, closed land view)'))
     svc = None
     p = OUT / 'svc_bases.json'
     if p.exists():

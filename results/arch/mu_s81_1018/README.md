@@ -2,7 +2,7 @@
 >
 > (Superseded) Codex recovery 10-18: the owner target remained 47 AR users on 520 dies; the 46-user calendar was called diagnostic. Current main's S81-SCAND pricing corrections remain authoritative.
 
-> **Direct cabling (OWNER 10-21, supersedes the switched leg below): AR -74,484 cycles a token, MTP -79,624 cycles a step.**
+> **Direct cabling (OWNER 10-21, supersedes the switched leg below): AR -74,484 cycles a token, MTP -74,344 cycles a step (net of the 5,280 TX hold).**
 > The S81 release has no switch. The TP4 mesh is board trace inside one tray. Stage hops use passive DAC inside a rack and AEC between racks, in serpentine order.
 > Each crossing's off-chip leg is now its circuit class's `D_cycles_max` from `results/arch/release_rack_1021/hop_latency.json` (claude/rack-1021 @5a1c6dcea), replacing the 453-cycle switched leg:
 > - tp_mesh 251, stage_hop 265 (includes the longest turnaround AEC circuits), head_hop 257, token_return 251;
@@ -15,22 +15,25 @@
 > | AR period (cycles a token) | 980,428 | 905,944 | **-74,484** (tp_mesh 257 crossings -51,914; stage_hop 119 -22,372; head_hop 1 -196) |
 > | AR per user | 1,224.0 | 1,324.6 tok/s | +8.2% |
 > | AR users / aggregate | 46 / 56,302 | **42** / 55,633 | -1.2% |
-> | MTP step period | 1,303,400 | 1,223,776 | **-79,624** |
-> | MTP users / aggregate | 10 + 1 filler / 39,211 | 9 + 3 fillers / 39,645 | +1.1% |
+> | MTP step period | 1,303,400 | 1,229,056 (1,223,776 + 5,280 TX hold) | **-74,344** |
+> | MTP per user | 3,829.1 | 4,060.7 tok/s | +6.0% |
+> | MTP users / aggregate | 10 + 1 filler / 39,211 | 9 + 3 fillers / 39,475 | +0.7% |
 >
 > **Why AR drops to 42 users** (the calendar's own search):
 > - 44 users gives a slot of 20,590, which is below the largest non-replicated window of 20,754. It is short by 164 cycles.
 > - 43 is odd, and S002 cannot be 2-coloured.
 > - So 44 users would come back if the largest non-replicated window shrinks by 164 cycles or more.
+> - **Next optimisation (lead 10-21, not now):** shrink that window by at least 164 cycles to fit 44 users. The AR record stays at the 42 users the calendar admits.
 >
 > **L20 split:** the MTP L20-split record keeps 1 filler. With 3 fillers the S030 helper collides, so the build drops fillers until the helper check passes.
 >
 > **Stage hop on the wire:** NB stays 80 (lead 10-21: the existing lep and land masters; the closed land view 263e13fc3 has NS = 1).
 > - The 320-beat h goes out as 4 back-to-back 80-beat tag windows: 4 mu_c commands a hop, all ab 0.
 > - **AR:** every hop window cuts through with land = 0 (`circuits.hop_windows`). The tightest margin is 373 cycles at S005, so the NS = 1 landing slot is never used by stage hops.
-> - **MTP: FAULT, open.** At 12 groups (S005, S007, S008, S010, S014, S015, S017, S018, S023, S024, S026, S027) the MTP step fills the slot exactly. The h reaches the receiving stage 440 cycles before the previous user frees it.
-> - A landing leaf with NS = 1 cannot hold 4 back-to-back windows.
-> - Fix options: hold the h TX on the sender until the receiving stage is free (at most 12 x 440 = 5,280 cycles a step, 0.4%), or give the landing leaf NS >= 4.
+> - **MTP: fixed with a TX hold (lead pick 10-21).** At 12 groups (S005, S007, S008, S010, S014, S015, S017, S018, S023, S024, S026, S027) the MTP step fills the slot exactly. Without the hold, the h would reach the receiving stage 440 cycles before the previous user frees it, and a landing leaf with NS = 1 cannot hold 4 windows.
+> - The sender now holds the h TX 440 cycles (`stage_windows(hold)`, `hold_tx`). Those stages and every later one start later, and the step period grows by 5,280 (0.4%).
+> - Every MTP hop window now cuts through (land 0, margin 0). NS stays 1 and the hardware and the CLOSED land view are unchanged.
+> - L20-split MTP: 1,228,600 cycles a step, 9 users + 1 filler, 37,536 tok/s.
 >
 > **Rack wiring mismatch.** `connections_s81.csv` @5a1c6dcea does not wire the LINK5 lane plan:
 > - It puts TP d+2 on WN<->WN (lk_WN0/1 at both ends) and the stage hop on EN0/1 -> WN2/3.
