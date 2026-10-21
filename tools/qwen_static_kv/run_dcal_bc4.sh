@@ -7,7 +7,9 @@ D=rtl/qwen_sys/d2d_static_20261015
 # qkd_d2d_cal_seq_bc4_ew<N>.sv.  MUT 7 (EW only): the reference stays on the base window image -> must FAIL.
 INC=(); CAND=qkd_d2d_cal_seq_bc4.sv
 if [ -n "${EW:-}" ]; then CAND=qkd_d2d_cal_seq_bc4_ew$EW.sv; mkdir -p "$O/inc"
-  [ "$MUT" = 7 ] || cp $D/d2d_cal_image_mu_ew$EW.svh "$O/inc/d2d_cal_image_mu.svh"; INC=(-I"$O/inc"); fi
+  [ "$MUT" = 7 ] || cp $D/d2d_cal_image_mu_ew$EW.svh "$O/inc/d2d_cal_image_mu.svh"; INC=(-I"$O/inc")
+  # KV-PROG17 10-20 (EW=<N>_r16): MUT 8 = the reference on the same window without the r16 shift -> must FAIL
+  [ "$MUT" = 8 ] && cp $D/d2d_cal_image_mu_ew${EW%_r16}.svh "$O/inc/d2d_cal_image_mu.svh"; fi
 export CAND
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 python3 - "$O" "$MUT" <<'PY'
