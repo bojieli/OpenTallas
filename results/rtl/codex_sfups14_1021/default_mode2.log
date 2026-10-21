@@ -1,0 +1,6 @@
+SFU_STORE_R11_LOCKSTEP mode=2 seed=12345 pshift=11 ishift=6 edges=4058 mismatching=0 active_ctl=5 active_io=568 fault_edges=2209 fault_edge_r7c=1850 fault_edge_r11=1861
+SFU_STORE_R11_LOCKSTEP PASS mode=2
+- rtl/test/hbm_accel/generic/tb_sfu_store_r11_lockstep.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.029 s; speed 138.558 us/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 9 MB
