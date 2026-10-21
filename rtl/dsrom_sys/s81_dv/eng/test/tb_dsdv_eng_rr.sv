@@ -17,7 +17,7 @@
 module tb_dsdv_eng_rr;
     parameter integer XQ_MUT = 0;
     parameter integer TAP_MUT = 0;
-    parameter integer RETURN_AGE = 512;
+    parameter integer RETURN_AGE = 640;      // S81-FIX2/ENG 10-21: ra640 (was 512)
     parameter integer CS = 2;                  // relay stages a chain hop (die stations between controller slots)
     parameter integer RD = 5;                  // controller of the bench reader
     parameter [1:0] RANK = 2'd2;
