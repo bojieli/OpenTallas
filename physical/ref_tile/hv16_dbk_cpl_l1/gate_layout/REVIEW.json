@@ -32,7 +32,8 @@
       "density.png": "8f21531cff59a0fe0431aca448c063f82edca98bbf6d13b04b20b0c748e69f6b"
     },
     "scope": "Geometry approval for route submission only; _cpl die binding requires 8clk_land+3clk_rly and RR_RT-1=79 pad. l1c gate FAIL trial_route remains separate, not approved.",
-    "gate_result_auto_commit": "submit_exact committed exact new regate and source_binding_history in25dae6096 before submitting"
+    "gate_result_auto_commit": "submit_exact committed exact new regate and source_binding_history in25dae6096 before submitting",
+    "route_config_successor": "ROOT approved scoped fp_lint.set.bank_dist_um=200 for measured centroidmax172.9um+27.1margin; original FLOORPLAN_MARGIN25dae6096 retained lint-only. No physical redesign claim; geometry/source gate unchanged."
   },
   "gate_generated": "2026-10-20T21:49:27-0700"
 }
