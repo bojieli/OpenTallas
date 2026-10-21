@@ -309,8 +309,15 @@ def stage_items(st, dsplit=False):
     return tail + ([('D', d, None)] if d is not None else []) + head
 
 
-def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
+def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False, causal_integer=False):
     """forward-x single-user schedule: per stage [start, end] hold window, item log, chain end; + legacy-equivalent"""
+    edge = math.ceil if causal_integer else (lambda value: value)
+    # Quantise durations before propagation: rounding final timestamps can move an
+    # arrival ahead of its producer or lose a cycle at each fractional segment.
+    if causal_integer:
+        seg = {layer: {kind: math.ceil(cycles) for kind, cycles in parts.items()}
+               for layer, parts in seg.items()}
+        add, embed_end = math.ceil(add), math.ceil(embed_end)
     last_stage = {}
     for i, st in enumerate(stages):
         for l, a, b in st['experts']:
@@ -346,14 +353,14 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
                 # DENSE2 A half: a_proj rows [0,224) (half the a_proj after the norm prefix); x + partial go to B
                 ready = comb.get(l - 1, embed_end) if l > 0 else embed_end
                 s0 = max(cur or 0.0, ready)
-                e0 = s0 + APROJ[l]['prefix'] + 0.5 * APROJ[l]['cycles']
+                e0 = edge(s0 + edge(APROJ[l]['prefix']) + edge(0.5 * APROJ[l]['cycles']))
                 d2_out[l] = e0
                 log.append(dict(stage=st['stage'], item=f'dense L{l} A half (a_proj rows [0,224))', start=s0, end=e0,
                                 busy=[(s0, e0, 'field')]))
             elif kind == 'D' and st.get('dense_split2') == 'B':
                 # DENSE2 B half: the rest of the dense layer once x + the A partial landed (+ 8 cycles ser)
                 s0 = max(cur or 0.0, d2_arr[l])
-                xl = s0 + seg[l]['A'] + seg[l]['D'] - 0.5 * APROJ[l]['cycles'] + DENSE2_SER
+                xl = edge(s0 + edge(seg[l]['A'] + seg[l]['D'] - 0.5 * APROJ[l]['cycles']) + DENSE2_SER)
                 x_arr[l] = xl
                 e0 = xl
                 busy = [(s0 + a, s0 + b, k) for a, b, k in IVS.get((l, 'A'), [])] + \
@@ -370,11 +377,11 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
                         [(s0 + seg[l]['A'] + a, s0 + seg[l]['A'] + b, k) for a, b, k in IVS.get((l, 'D'), [])])
                 log.append(dict(stage=st['stage'], item=f'dense L{l}', start=s0, end=e0, busy=busy))
             else:
-                R = seg[l]['E'] * min(6, N) / 6.0
+                R = edge(seg[l]['E'] * min(6, N) / 6.0)
                 pin = p_arr.get(l)
                 s0 = max(cur or 0.0, x_arr[l])
                 if alap and pin is not None:          # just-in-time slots: end as the upstream partial lands (same out)
-                    s0 = max(s0, pin - R)
+                    s0 = edge(max(s0, pin - R))
                 e = s0 + R
                 po = (max(e, pin) + add) if pin is not None else e
                 part_out[l] = po
@@ -410,7 +417,7 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
                 msgs.append((d2_out[l], 3, f'x + a_proj partial L{l} (DENSE2 A->B)', H_MSG + DENSE2_SER, d2_arr, l))
             free = -1e18
             for t, _, what, ln, dst, l in (sorted(msgs, key=lambda m: (m[0], m[1])) if REL['links_serial'] else msgs):
-                s0 = max(t, free) if REL['links_serial'] else t     # LINK5: one stage-hop circuit, send order
+                s0 = edge(max(t, free) if REL['links_serial'] else t)     # LINK5: one stage-hop circuit, send order
                 free = s0 + ln
                 links.append((i, s0, what, ln))
                 dst[l] = s0 + HOP
@@ -456,6 +463,7 @@ def position_barrier_graph(model):
                 host_tail_end=6 * span + draft + HOST_TOK,
                 step_cycles=qup(6 * span + draft + HOST_TOK),
                 qualification='MODEL only; compiler must emit position completion barriers and draft tail',
+                integer_causality='ceil segment durations before stage/compute/send/arrival propagation',
                 scan_reuse=False, pipeline_overlap=False)
 
 
@@ -859,7 +867,8 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
     eadd = [cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'eng.add']
     add = max(eadd) if eadd else 120.0
     embed = sum(cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'embed')
-    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap, dsplit)
+    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap, dsplit,
+                                              causal_integer=mtp_position_barriers)
     # token: composer T + cal2 structural + 20 added hops + the forward-x / reservation change of the chain
     s_ar = sum(cal2_delta(n, F2) for n in dag['nodes'] if n.get('critical'))
     dagm, cycm = dags['mtp']
@@ -979,7 +988,8 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                          resources=len(cal['nres']), windows=sum(cal['nres'].values()),
                          negative_n_plus_1=dict(users=n + 1, result='FAULT' if neg and (neg['bad']) else 'PASS?!',
                                                 collisions=len(neg['bad']) if neg else None),
-                         negative_injected_shift=dict(collisions=inj, result='FAULT' if inj else 'MISSED')),
+                         negative_injected_shift=dict(collisions=inj, result=('NOT_APPLICABLE: fewer than two admitted users'
+                                                    if n < 2 else 'FAULT' if inj else 'MISSED'))),
             search=cal['tried'][:12],
             slots=[dict(slot=i, user=u['user'], shift=u['shift'],
                         copy={g: c.get(u['user'], 'A') for g, c in cal['col'].items()})
