@@ -1,0 +1,35 @@
+{
+  "schema": "codex.selected_scoped_SIDE_parameter_repair.v1",
+  "source_path": "/home/ubuntu/scratch/tok-func-hbm/r15phaseall/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+  "before_sha256": "e68c9bdd90cf237b0e96929af9837b7094e61dda365513f9fbd644b6caa945cd",
+  "after_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
+  "changed_patterns": [
+    {
+      "before": "module ot_hbm_su_static_side__d4g_pgslice #(parameter integer MUT=0) (",
+      "after": "module ot_hbm_su_static_side__d4g_pgslice #(parameter integer MUT=0, MLAT=3, ALAT=3) (",
+      "count": 1
+    },
+    {
+      "before": "    localparam integer MLAT=3, ALAT=3;\n",
+      "after": "",
+      "count": 1
+    },
+    {
+      "before": "ot_hbm_su_static_side__d4g_pgslice u_side(",
+      "after": "ot_hbm_su_static_side__d4g_pgslice #(.MLAT(MLAT), .ALAT(ALAT)) u_side(",
+      "count": 1
+    }
+  ],
+  "qualification": "controlled exact-pattern source repair only; connected selected RTL run pending",
+  "selected_lane_profile": {
+    "MLAT": 4,
+    "ALAT": 3,
+    "rsqrt_depth": 46
+  },
+  "default_profile": {
+    "MLAT": 3,
+    "ALAT": 3,
+    "rsqrt_depth": 37
+  },
+  "trailing_blank_lines_removed": true
+}

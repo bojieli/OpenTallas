@@ -1,0 +1,27 @@
+{
+ "status": "QUEUED_SUCCESSOR_SOURCE_NOT_CURRENT160",
+ "source_delivery": "7f5a5d10f72b85131c6132565f92a8f8fb54bb14",
+ "old_sha256": "e68c9bdd90cf237b0e96929af9837b7094e61dda365513f9fbd644b6caa945cd",
+ "new_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
+ "invalidate_s2_cells": [
+  "ot_hbm_su_static_pgslice_lg__pv0",
+  "ot_hbm_su_static_pgslice_lg__pv1",
+  "ot_hbm_su_static_pgslice_lg__pv10",
+  "ot_hbm_su_static_pgslice_lg__pv11",
+  "ot_hbm_su_static_pgslice_lg__pv12",
+  "ot_hbm_su_static_pgslice_lg__pv13",
+  "ot_hbm_su_static_pgslice_lg__pv14",
+  "ot_hbm_su_static_pgslice_lg__pv15",
+  "ot_hbm_su_static_pgslice_lg__pv2",
+  "ot_hbm_su_static_pgslice_lg__pv3",
+  "ot_hbm_su_static_pgslice_lg__pv4",
+  "ot_hbm_su_static_pgslice_lg__pv5",
+  "ot_hbm_su_static_pgslice_lg__pv6",
+  "ot_hbm_su_static_pgslice_lg__pv7",
+  "ot_hbm_su_static_pgslice_lg__pv8",
+  "ot_hbm_su_static_pgslice_lg__pv9"
+ ],
+ "other_current_s2_count": 59,
+ "production_compiler_candidate": "9f2ae79aa",
+ "qualification": "SOURCE_ONLY; actual selected scalar pipeline/common compiler qualification and new16S2 receipts remain. Current160 physical snapshots and legacySMH62 proof preserved; CPLW helper unbound/uninvoked."
+}

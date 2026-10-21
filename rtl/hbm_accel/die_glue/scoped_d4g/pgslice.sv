@@ -971,7 +971,7 @@ endmodule
 // All roots related1:1 phase0. No added input/output register or function edge.
 // MLAT3/ALAT3 arithmetic is PHYSICALLY UNQUALIFIED at production833ps.
 // MUT1 changes actual result mux function;MUT2 changes actual Engram sign.
-module ot_hbm_su_static_side__d4g_pgslice #(parameter integer MUT=0) (
+module ot_hbm_su_static_side__d4g_pgslice #(parameter integer MUT=0, MLAT=3, ALAT=3) (
     input wire [5:0] clk,
     input  wire        rst_n,
     input  wire        v,
@@ -981,7 +981,6 @@ module ot_hbm_su_static_side__d4g_pgslice #(parameter integer MUT=0) (
     output wire [31:0] y,
     output wire        fault
 );
-    localparam integer MLAT=3, ALAT=3;
     wire [2:0] output_fn=fn_out ^ (MUT==1 ? 3'd1:3'd0);
     localparam [2:0] SFU_RSQRT = 2, SFU_SQRT = 3, SFU_SPSQRT = 6, SFU_EGATE = 7;
     localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4;    // ot_hdc_v41x_exp__d4g_pgslice DEPTH: 49 at 3 / 3
@@ -1605,7 +1604,7 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
   end
  end
  if(QID==0&&G==0)begin:g_side_pipe
-  ot_hbm_su_static_side__d4g_pgslice u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
+  ot_hbm_su_static_side__d4g_pgslice #(.MLAT(MLAT), .ALAT(ALAT)) u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
    .y(side_y),.fault(side_fault));
  end else begin:g_no_side
   // no FULL lane in this slice: the side result input of its SFU/LIGHT lanes is not used by the lane
@@ -4749,4 +4748,3 @@ module ot_hdc_fsqrt_c12__d4g_pgslice (
         else begin y <= {1'b0, biased, rounded[22:0]}; fault <= 1'b0; end
     end
 endmodule
-
