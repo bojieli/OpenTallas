@@ -15,7 +15,10 @@
    "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
    "rtl/qwen_sys/vm_nox_20261014",
    "rtl/qwen_sys/static_embedding_20261014",
-   "results/rtl/mu_qwen_1018/n59_split4v2"
+   "results/rtl/mu_qwen_1018/n59_split4v2",
+   "results/arch/qw_n59_gate_collect_0720",
+   "results/arch/qw_n59v6_service_1020",
+   "results/arch/qw_n59_service_r3_1020/r3k/receipts"
   ]
  },
  "stages": {
@@ -31,73 +34,157 @@
     ]
    },
    {
-    "name": "split_dv_positive",
-    "cmd": "SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/dv_positive",
+    "name": "local_dv",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py local_dv {RUN}/bench/local_dv",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^dv_positive OK \\(pass\\)"
+    "pass_regex": "^N59SVC_PASS local_dv$"
    },
    {
-    "name": "split_mu_ovl_positive",
-    "cmd": "SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/mu_ovl_positive",
+    "name": "local_mu",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py local_mu {RUN}/bench/local_mu",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^mu_ovl_positive OK \\(pass\\)"
+    "pass_regex": "^N59SVC_PASS local_mu$"
    },
    {
-    "name": "split_rnd_s1",
-    "cmd": "SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_s1",
+    "name": "local_reset8",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py local_reset8 {RUN}/bench/local_reset8",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^rnd_s1 OK \\(pass\\)"
+    "pass_regex": "^N59SVC_PASS local_reset8$"
    },
    {
-    "name": "split_m2_kv_addr",
-    "cmd": "SPLIT_ONLY=m2_kv_addr bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m2_kv_addr",
+    "name": "bpub0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py bpub0_zero {RUN}/bench/bpub0_zero",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^N59SPLIT_FAIL",
-    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/m2_kv_addr.log"
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/bpub0_zero/wrapper.log"
    },
    {
-    "name": "split_m3_emb_word",
-    "cmd": "SPLIT_ONLY=m3_emb_word bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m3_emb_word",
+    "name": "qo0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py qo0_zero {RUN}/bench/qo0_zero",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^N59SPLIT_FAIL",
-    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/m3_emb_word.log"
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/qo0_zero/wrapper.log"
    },
    {
-    "name": "split_m5_mu_tag",
-    "cmd": "SPLIT_ONLY=m5_mu_tag bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m5_mu_tag",
+    "name": "cq0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py cq0_zero {RUN}/bench/cq0_zero",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^N59SPLIT_FAIL",
-    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/m5_mu_tag.log"
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/cq0_zero/wrapper.log"
+   },
+   {
+    "name": "ht0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py ht0_zero {RUN}/bench/ht0_zero",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/ht0_zero/wrapper.log"
+   },
+   {
+    "name": "eba_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py eba_zero {RUN}/bench/eba_zero",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/eba_zero/wrapper.log"
+   },
+   {
+    "name": "ddc0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py ddc0_zero {RUN}/bench/ddc0_zero",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/ddc0_zero/wrapper.log"
+   },
+   {
+    "name": "wac0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py wac0_zero {RUN}/bench/wac0_zero",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/wac0_zero/wrapper.log"
+   },
+   {
+    "name": "emc0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py emc0_zero {RUN}/bench/emc0_zero",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/emc0_zero/wrapper.log"
+   },
+   {
+    "name": "optag0_zero",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py optag0_zero {RUN}/bench/optag0_zero",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/optag0_zero/wrapper.log"
+   },
+   {
+    "name": "txvd_zero_local_mu",
+    "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py txvd_zero_local_mu {RUN}/bench/txvd_zero_local_mu",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+    "fail_witness": "results/arch/qw_n59_gate_collect_0720/receipts/txvd_zero_local_mu/wrapper.log"
    }
   ],
   "calibrate": {
@@ -156,5 +243,12 @@
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null
+ "merge_target": null,
+ "clock_rule_waiver": {
+  "pair": "",
+  "tt_ps": 84.6,
+  "limit_ps": 80,
+  "scope": "qfd_native59_svc",
+  "by": "COORD 10-20 17:33 (HANDOFF: svc4 TT/FF spread 84.6/77.5 ACCEPTED under rule freeze; route timing decides; cap textbook_lint SCOPED_CLOCK_WAIVER_CAPS claude/qw-n59svc-waiver-1020 a71f9cfe0)"
+ }
 }
