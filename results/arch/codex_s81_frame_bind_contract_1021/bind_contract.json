@@ -1,0 +1,198 @@
+{
+  "status": "SOURCE_CONTRACT_ONLY_VIEW_PENDING",
+  "source_commit": "21b97190e",
+  "source_branch": "codex/s81-frrst2-gates-1021",
+  "inventory_total": 72,
+  "master_entries": [
+    {
+      "logical_master": "col_h9_l4",
+      "release_instances": 36,
+      "physical_master": "col_h9_l4_lp",
+      "required_final_orientation": "R0",
+      "orientation_note": "Apply the class mirror once; retain an existing plan MX instead of applying it twice.",
+      "kit": "physical/ref_tile/s81frame_col_h9_rf3rlfs1",
+      "view_pending": "physical/ref_tile/s81frame_col_h9_rf3rlfs1/views/col_h9_l4_lp",
+      "top_source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3r.sv",
+      "bench_twin": "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+      "compiler_record": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_l4_lp_record.json",
+      "outline_um": [
+        1436.832,
+        3369.6
+      ],
+      "bind_ready": false,
+      "ports": {
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "x": {
+          "direction": "input",
+          "bits": 1104
+        },
+        "xk": {
+          "direction": "input",
+          "bits": 4
+        },
+        "lk": {
+          "direction": "input",
+          "bits": 12
+        },
+        "xo": {
+          "direction": "output",
+          "bits": 1104
+        },
+        "xok": {
+          "direction": "output",
+          "bits": 4
+        },
+        "ret": {
+          "direction": "output",
+          "bits": 70
+        },
+        "ck_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "regional_clock_net_mapping": null
+    },
+    {
+      "logical_master": "col_h9_MX_l4",
+      "release_instances": 24,
+      "physical_master": "col_h9_l4_lp",
+      "required_final_orientation": "MX",
+      "orientation_note": "Apply the class mirror once; retain an existing plan MX instead of applying it twice.",
+      "kit": "physical/ref_tile/s81frame_col_h9_rf3rlfs1",
+      "view_pending": "physical/ref_tile/s81frame_col_h9_rf3rlfs1/views/col_h9_l4_lp",
+      "top_source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3r.sv",
+      "bench_twin": "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+      "compiler_record": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_l4_lp_record.json",
+      "outline_um": [
+        1436.832,
+        3369.6
+      ],
+      "bind_ready": false,
+      "ports": {
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "x": {
+          "direction": "input",
+          "bits": 1104
+        },
+        "xk": {
+          "direction": "input",
+          "bits": 4
+        },
+        "lk": {
+          "direction": "input",
+          "bits": 12
+        },
+        "xo": {
+          "direction": "output",
+          "bits": 1104
+        },
+        "xok": {
+          "direction": "output",
+          "bits": 4
+        },
+        "ret": {
+          "direction": "output",
+          "bits": 70
+        },
+        "ck_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "regional_clock_net_mapping": null
+    },
+    {
+      "logical_master": "col_h10_l4",
+      "release_instances": 12,
+      "physical_master": "col_h10_l4_lp",
+      "required_final_orientation": "R0",
+      "orientation_note": "Apply the class mirror once; retain an existing plan MX instead of applying it twice.",
+      "kit": "physical/ref_tile/s81frame_col_h10_rf3rlfs1",
+      "view_pending": "physical/ref_tile/s81frame_col_h10_rf3rlfs1/views/col_h10_l4_lp",
+      "top_source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit_rf3r.sv",
+      "bench_twin": "rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+      "compiler_record": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h10_l4_lp_record.json",
+      "outline_um": [
+        1436.832,
+        3672.0
+      ],
+      "bind_ready": false,
+      "ports": {
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "x": {
+          "direction": "input",
+          "bits": 1104
+        },
+        "xk": {
+          "direction": "input",
+          "bits": 4
+        },
+        "lk": {
+          "direction": "input",
+          "bits": 12
+        },
+        "xo": {
+          "direction": "output",
+          "bits": 1104
+        },
+        "xok": {
+          "direction": "output",
+          "bits": 4
+        },
+        "ret": {
+          "direction": "output",
+          "bits": 70
+        },
+        "ck_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "regional_clock_net_mapping": null
+    }
+  ],
+  "regional_clock_contract": "Three actual die source/region entries for ck_r0/1/2. Do not alias or tie old clk/cr/cr_s. Reflection transforms coordinates, not region labels.",
+  "forwarded_clock_contract": "Each xk[k] remains its actual incoming forwarded clock, outside regional CTS; exported child timing must retain the per-bit clock role.",
+  "image_identity": "Retain actual per-frame INSTANCE/image identity, including col_h9_MX. Physical orientation does not rename payloads or reorder bits.",
+  "old_mx_source": {
+    "generator": "tools/s81_dv/frame_wrap.py:emit_mirror",
+    "l4_generator": "tools/s81_dv/frame_l4.py",
+    "wrapper": "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_MX_l4.sv",
+    "fact": "Exactly one col_h9_l4 child, every port passed directly through, INSTANCE unchanged; no separate logic, permutation or latency."
+  },
+  "qualification_limit": "Source inspection only; no new equivalence or simulation campaign. Existing normal LP receipts cover its body; actual physical gates remain pending. Old MX wrapper has a different ABI and cannot silently bind the new LP view."
+}
