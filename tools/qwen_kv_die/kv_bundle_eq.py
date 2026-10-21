@@ -424,6 +424,34 @@ def equalize(K, m, bundles=None, plan_fn=None, record_key='bundle_eq', rule=None
             path = _walk(m, by, (si, port), with_path=True)[(dinst, dport)][3]   # fresh: a member may have split a net
             # the pads wait at the sink end when there is room, else on the nearest earlier hop that only this member's
             # record uses (padding a hop shared with another load would delay that load too)
+            def _commit(bi, li, pads, k):
+                bid, cl, bits, eps = m['buses'][bi]
+                base = bid
+                while re.search(r'__(r\d+|pinfix\d+|beq\d+)$', base):     # the chain's origin bus (kv_die relay_stages key)
+                    base = re.sub(r'__(r\d+|pinfix\d+|beq\d+)$', '', base)
+                tag = re.sub(r'[^A-Za-z0-9_]', '_', f'{bid}')
+                for q, it in enumerate(pads):
+                    it.name, it.master = f'{PAD_PREFIX}{tag}_{q}', f'qkd_rly_{bits}'
+                staged.extend(pads)
+                by.update({it.name: it for it in pads})
+                # the sink leaves its old net (a fork net keeps its other loads) and takes the pad chain
+                loads = [e for j, e in enumerate(eps[1:], 1) if j != li]
+                # A physical output pin drives ONE net. When its original bus
+                # retains other loads, attach the first pad to that same net;
+                # a second bus from eps[0] would overwrite the pin connection in
+                # the die renderer and leave the original branch undriven.
+                m['buses'][bi] = (bid, cl, bits, [eps[0]] + loads + [(pads[0].name, 'a')]) if loads else None
+                hops, src_ep = [], eps[0]
+                for q, it in enumerate(pads):
+                    if not (loads and q == 0):
+                        hops.append((f'{bid}__beq{q}', cl, bits, [src_ep, (it.name, 'a')]))
+                    src_ep = (it.name, 'b')
+                hops.append((f'{bid}__beq{len(pads)}', cl, bits, [src_ep, eps[li]]))
+                m['buses'].extend(hops)
+                m.setdefault('relay_stages', {})[base] = m.get('relay_stages', {}).get(base, 0) + k
+                for it in pads:
+                    added.append(dict(bundle=name, bus=bid, relay=it.name, clock_source=si, x=it.x, y=it.y,
+                                      launch=(si, port), sink=(dinst, dport)))
             pads, why = None, []
             for bi, li in reversed(path):
                 bid, cl, bits, eps = m['buses'][bi]
@@ -440,34 +468,48 @@ def equalize(K, m, bundles=None, plan_fn=None, record_key='bundle_eq', rule=None
                     break
                 except ValueError as e_:
                     why.append(f'{bid}: {e_}')
-            if pads is None:
+            hop_pads = []
+            if pads is None and os.environ.get('OT_KV_EQ_SPREAD', '0') == '1':
+                # KV-D2D3 10-20 (OT_KV_EQ_SPREAD=1, default off): no single hop has room for all k pads (d23p1 / d24pb:
+                # PV.start 39 pads at the pvw_1 sink) -> spread them over this member's EXCLUSIVE hops (each hop that only
+                # this record uses), sink end first, as many per hop as fit; every wire still within reach, same masters
+                # and clock trunk, the member's total = stages + k exactly (fail closed when the chain has no room)
+                excl = []
+                for bi, li in reversed(path):
+                    bid, cl, bits, eps = m['buses'][bi]
+                    nxt = _norm(eps[li])
+                    if nxt != (dinst, dport) and {kk for kk in _walk(m, by, (nxt[0], 'b'))} != {(dinst, dport)}:
+                        continue
+                    excl.append((bi, li))
+                left, tmp = k, []
+                quota = max(1, -(-k // max(1, len(excl))))
+                for bi, li in excl:
+                    if not left:
+                        break
+                    bid, cl, bits, eps = m['buses'][bi]
+                    nxt = _norm(eps[li])
+                    w, h = _frame(K, bid, bits)
+                    cap = _reach(K, bits)
+                    q = min(left, max(quota, 1))
+                    while q:
+                        try:
+                            got = _place_pads(K, m, staged + tmp, pin(*_norm(eps[0])), pin(*nxt), q, w, h, cap)
+                            break
+                        except ValueError:
+                            q //= 2
+                    if q:
+                        tmp += got
+                        hop_pads.append((bi, li, got, q))
+                        left -= q
+                if left:
+                    raise ValueError(f'kv_bundle_eq: {name}: {k} pads for {si}.{port} -> {di}: spread over {len(excl)} '
+                                     f'exclusive hops left {left} unplaced: ' + ' | '.join(why[-4:]))
+            elif pads is None:
                 raise ValueError(f'kv_bundle_eq: {name}: {k} pads for {si}.{port} -> {di}: no hop has room: ' + ' | '.join(why[-4:]))
-            base = bid
-            while re.search(r'__(r\d+|pinfix\d+|beq\d+)$', base):     # the chain's origin bus (kv_die relay_stages key)
-                base = re.sub(r'__(r\d+|pinfix\d+|beq\d+)$', '', base)
-            tag = re.sub(r'[^A-Za-z0-9_]', '_', f'{bid}')
-            for q, it in enumerate(pads):
-                it.name, it.master = f'{PAD_PREFIX}{tag}_{q}', f'qkd_rly_{bits}'
-            staged += pads
-            by.update({it.name: it for it in pads})
-            # the sink leaves its old net (a fork net keeps its other loads) and takes the pad chain
-            loads = [e for j, e in enumerate(eps[1:], 1) if j != li]
-            # A physical output pin drives ONE net. When its original bus
-            # retains other loads, attach the first pad to that same net;
-            # a second bus from eps[0] would overwrite the pin connection in
-            # the die renderer and leave the original branch undriven.
-            m['buses'][bi] = (bid, cl, bits, [eps[0]] + loads + [(pads[0].name, 'a')]) if loads else None
-            hops, src_ep = [], eps[0]
-            for q, it in enumerate(pads):
-                if not (loads and q == 0):
-                    hops.append((f'{bid}__beq{q}', cl, bits, [src_ep, (it.name, 'a')]))
-                src_ep = (it.name, 'b')
-            hops.append((f'{bid}__beq{len(pads)}', cl, bits, [src_ep, eps[li]]))
-            m['buses'].extend(hops)
-            m.setdefault('relay_stages', {})[base] = m.get('relay_stages', {}).get(base, 0) + k
-            for it in pads:
-                added.append(dict(bundle=name, bus=bid, relay=it.name, clock_source=si, x=it.x, y=it.y,
-                                  launch=(si, port), sink=(dinst, dport)))
+            else:
+                hop_pads.append((bi, li, pads, k))
+            for bi, li, pads_, k_ in hop_pads:
+                _commit(bi, li, pads_, k_)
         rec[name] = dict(members=rows, stages=max(r['stages'] + r['pads'] + r.get('offset', 0) for r in rows.values()))
     m['buses'] = [b for b in m['buses'] if b is not None]
     m['insts'].extend(staged)
