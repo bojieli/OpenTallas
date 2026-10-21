@@ -22,7 +22,9 @@ for l in plan['links']:
  if bn in frames and pb=='x':
   lane=int(re.search(r'_l([0-3])$',l['i']).group(1))
   assert (bn,lane) not in incoming, (bn,lane)
-  assert (an.startswith('s_') and pa=='xc') or (an in frames and pa=='xo'), l['i']
+  am=t['masters'][plan['blocks'][a]['master']]
+  mapped=am['ports'].get(pa+'.o',{}).get('port')
+  assert (an.startswith('s_') and mapped=='xc') or (an in frames and mapped=='xo'), l['i']
   incoming[bn,lane]=an
 for frame in frames:
  for lane in range(4):
