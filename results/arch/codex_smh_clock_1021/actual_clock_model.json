@@ -535,5 +535,7 @@
     "qualified_boundary_requirement": "Actual ALL root sinks including hard-child boundary references <=80ps TT and FF; no selected-subtree report",
     "strict_all_internal_requirement": "Impossible with unchanged hardchildren: max intrinsic PVM/XS spans exceed80. Need explicit contract resolution or actual child/region rewrite before claiming pass.",
     "model_limits": "Default45ps buffer and0.43ps/um estimates are topology estimates; cannot predict corner closure or replace actual placement-extracted timing. Child boundary75.4TT leaves4.6ps headroom, so bounded diagnostic only."
-  }
+  },
+  "acceptance_scope_clarified": "ROOT via hbm_lead: ALL measured childBOUNDARY references across actual clusters under existing export/pin-flop rule, not all internal flops. No subset selection or region relabel. Existing child internal STA qualification retained; parent/die STA mandatory.",
+  "generated_geometry_first_primary": "r4sp north floorplan identical to original r3a except name/referenced source manifest; includes same XS y734.424 adjustment instead of requested734.4. Static genWARN macro_grid retained, no new waiver. Actual gate PNG/checklist/root review required."
 }
