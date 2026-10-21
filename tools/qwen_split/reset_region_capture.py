@@ -214,9 +214,12 @@ def land_forwarded_reset(v, model, occ, pin_pos, width, height, reach, source_ro
     sync = model.setdefault('reset_sync', dict(endpoints=[]))
     # This is an observed, physically instantiated two-stage d input. Its
     # existence does not qualify the boot/calendar relationship or feed timing.
-    sync.setdefault('endpoints', []).append(dict(pin=name+'/d', inst=name, master='qfd_rst_rep',
-        net=bus[0], driver=last, clock=clock, cls='forwarded_reset_synchroniser',
-        why='actual closed qfd_rst_rep d->s[0]->r0; two receiving-root edges, calendar HOLD',
-        calendar=rec['calendar']))
+    if (sync.get('rep_check') or [False])[0]:
+        sync.setdefault('endpoints', []).append(dict(pin=name+'/d', inst=name, master='qfd_rst_rep',
+            net=bus[0], driver=last, clock=clock, cls='forwarded_reset_synchroniser',
+            why='actual closed qfd_rst_rep d->s[0]->r0; two receiving-root edges, calendar HOLD',
+            calendar=rec['calendar']))
+    else:
+        rec['source_proof'] = 'HOLD: existing reset source proof unavailable; no synchronizer endpoint declared'
     model.setdefault('tp8_reset_tree', {})['forwarded_reset_capture'] = rec
     return rec
