@@ -1,0 +1,14 @@
+{
+  "source_commit": "0460a864c",
+  "original_census": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_hub_c4r-20261021-101249/routes/gate/work/orfs/native_census.json",
+  "original_sha256": "38e7a93a03b9654494f4dcfe302341c012815c06ee25b017bc928839134e25cd",
+  "status": "FAIL",
+  "max_dynamic_loads": 33,
+  "roots_examined": 45576,
+  "violations": [
+    {
+      "driver": "_38128_/Y",
+      "loads": 33
+    }
+  ]
+}
