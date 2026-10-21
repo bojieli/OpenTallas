@@ -867,6 +867,65 @@
    "external_margin_required_um": 0.0,
    "seal_ring": "approximately0.1mm INSIDEoutline; no further guesseddimension subtraction",
    "evidence": "/home/ubuntu/.claude/projects/-home-ubuntu-OpenTallas/memory/owner-full-reticle-1021.md"
+  },
+  "r16g_local_pg_centering": {
+   "status": "GEOMETRY_MODEL_ONLY",
+   "base": "7ceb7215f/planeM",
+   "outline_um": [
+    25988.8,
+    32983.12
+   ],
+   "reason": "Measured dM worst capacity2.581 NW PG/SU convergence; balance actual left/right corridor",
+   "placement_checks": [
+    {
+     "name": "pgp_NW",
+     "before": {
+      "m": "ot_hbm_su_programme_pslice_c5",
+      "x": 3740.4,
+      "y": 17344.8,
+      "o": "R0",
+      "w": 939.6,
+      "h": 760.32,
+      "rule": "grant slot pgp_NW"
+     },
+     "after": {
+      "m": "ot_hbm_su_programme_pslice_c5",
+      "x": 4243.536,
+      "y": 17344.8,
+      "o": "R0",
+      "w": 939.6,
+      "h": 760.32,
+      "rule": "grant slot pgp_NW"
+     },
+     "overlaps": []
+    },
+    {
+     "name": "pgp_SE",
+     "before": {
+      "m": "ot_hbm_su_programme_pslice_c5",
+      "x": 20908.8,
+      "y": 14860.8,
+      "o": "R0",
+      "w": 939.6,
+      "h": 760.32,
+      "rule": "grant slot pgp_SE"
+     },
+     "after": {
+      "m": "ot_hbm_su_programme_pslice_c5",
+      "x": 21379.464,
+      "y": 14860.8,
+      "o": "R0",
+      "w": 939.6,
+      "h": 760.32,
+      "rule": "grant slot pgp_SE"
+     },
+     "overlaps": []
+    }
+   ],
+   "all_other_blocks": "unchanged",
+   "rtl_source": "unchanged",
+   "cycle_credit": 0,
+   "remaining": "Actual GEN/pins/S4 required; no failed capacity route"
   }
  },
  "source_contract": {
@@ -27842,7 +27901,7 @@
     "h": 760.32
    },
    "origin": {
-    "x": 20908.8,
+    "x": 21379.464,
     "y": 14860.8,
     "orient": "R0"
    },
@@ -27850,7 +27909,7 @@
    "pin_status": "FACES_ONLY",
    "grant": "hdie_r8_su_part_1017",
    "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_q4.sv",
-   "notes": "H-DIE-R8: SU programme producer quarter SE; kit outline hbm_su_pslice_r4_1017 939.6x760.32 (command S, cfg/status N; NW MX so command faces its band); minimax of its S-face centre to su_SE0..3 + sucore_SE centres, free area outside every r7b slot/plan block (10.8 halo)",
+   "notes": "H-DIE-R8: SU programme producer quarter SE; kit outline hbm_su_pslice_r4_1017 939.6x760.32 (command S, cfg/status N; NW MX so command faces its band); minimax of its S-face centre to su_SE0..3 + sucore_SE centres, free area outside every r7b slot/plan block (10.8 halo); R16G horizontal centering in existing SU corridor, Y and shape unchanged",
    "reserved_channels": [
     {
      "kind": "feedthrough_relay_column",
@@ -27964,7 +28023,7 @@
     "h": 760.32
    },
    "origin": {
-    "x": 3740.4,
+    "x": 4243.536,
     "y": 17344.8,
     "orient": "R0"
    },
@@ -27972,7 +28031,7 @@
    "pin_status": "FACES_ONLY",
    "grant": "hdie_r8_su_part_1017",
    "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_q4.sv",
-   "notes": "H-DIE-R8: SU programme producer quarter NW; kit outline hbm_su_pslice_r4_1017 939.6x760.32 (command S, cfg/status N; NW MX so command faces its band); minimax of its S-face centre to su_NW0..3 + sucore_NW centres, free area outside every r7b slot/plan block (10.8 halo)",
+   "notes": "H-DIE-R8: SU programme producer quarter NW; kit outline hbm_su_pslice_r4_1017 939.6x760.32 (command S, cfg/status N; NW MX so command faces its band); minimax of its S-face centre to su_NW0..3 + sucore_NW centres, free area outside every r7b slot/plan block (10.8 halo); R16G horizontal centering in existing SU corridor, Y and shape unchanged",
    "reserved_channels": [
     {
      "kind": "feedthrough_relay_column",

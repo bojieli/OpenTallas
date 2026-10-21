@@ -24,7 +24,7 @@ for name,x in moves.items():
  slot=next(s for s in g['slots'] if s['name']==name)
  assert abs(slot['origin']['y']-actual[name]['y'])<0.001
  slot['origin']['x']=x;slot['notes']+='; R16G horizontal centering in existing SU corridor, Y and shape unchanged'
- p[name]['x']=x
+ if name in p:p[name]['x']=x
 model=dict(status='GEOMETRY_MODEL_ONLY',base='7ceb7215f/planeM',outline_um=g['floorplan']['die_um'],
  reason='Measured dM worst capacity2.581 NW PG/SU convergence; balance actual left/right corridor',
  placement_checks=checks,all_other_blocks='unchanged',rtl_source='unchanged',cycle_credit=0,
