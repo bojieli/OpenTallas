@@ -1,0 +1,6 @@
+CHAIN_AUDIT_PASS group16 -> controller -> LP -> attw1 -> currentABI thinwrapper -> SRAMcore -> original launchguard identity
+8e524b6c4f19e8660c96377d7939c337cf674010c12e7b8384bc706428e3e451 rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv
+00ca2b345ee451e9d33a87f94f8ee77addad503174e523e20747965d146aac17 rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv
+dc68ab81c52b41c4c61042ae7a7be5587f9b0d0f9419b5456a12f8bea95e5e3d rtl/dsrom_sys/s81_dv/svc_rs/attw/lp/dsdv_svc_attw_n1_f_lp.sv
+39c1035edc2e53954840975fa1ad4ea5148a1610c0cdfb28443fc13a733242e2 rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv
+b9ebe0cd8f77ab70fd407506f36784607c60e043e59c3880dce3c1bda85dcecb rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv

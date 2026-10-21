@@ -6,7 +6,8 @@ module dsdv_svc_rs_c_group72 #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter bit SMT = 1, parameter bit PMEM = 1
+    parameter bit SMT = 1, parameter bit PMEM = 1,
+    parameter integer PV_IDENTITY = 0
 ) (
     input wire ck, ck_sm, ck_att,
     input  wire              rst,
@@ -145,7 +146,7 @@ module dsdv_svc_rs_c_group72 #(
     wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
-    dsdv_svc_attw_n1_f_lp #(.AMUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .ROOT(ENTRY), .TLX(6), .ROLE_EXT(1)) u_att (
+    dsdv_svc_attw_n1_f_lp #(.AMUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .ROOT(ENTRY), .TLX(6), .ROLE_EXT(1), .PV_IDENTITY(PV_IDENTITY)) u_att (
         .ck_c(ck), .ck_t0(ck_att), .rst(rst), .sid(sid), .role_i(role), .pvs_i(pvs),
         .cs(cs),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
