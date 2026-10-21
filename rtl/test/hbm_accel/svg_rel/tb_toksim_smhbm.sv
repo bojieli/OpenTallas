@@ -43,6 +43,21 @@ module tb_toksim_smhbm;
  wire[31:0]kv,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[1098:0]packet;wire[82:0]command;
  reg[15:0]ids_cohort=0;always @(posedge stream)if(run_v)ids_cohort<=ids_cohort+16'd1;
+ // HBM-SVGREL8 (10-20): SVG_H = the hard-view master ot_hbm_svc_sm_group_rel_h (same die parameters; read-only K ports,
+ // one clock per family, open observation outputs removed) in place of ot_hbm_svc_sm_group_rel_id.
+`ifdef SVG_H
+ ot_hbm_svc_sm_group_rel_h #(.LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.ID_COHORT(1),.IMUT(`ifdef IMUT `IMUT `else 0 `endif)) svg(
+  .id_stack(2'd0),.id_sm(3'd0),
+  .stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),
+  .program_cfg_we(a_we),.program_cfg_addr(a_addr),.program_cfg_data(a_data),
+  .desc_we(b_we),.desc_addr(b_addr),.desc_data(b_data),.run_v(run_v),.run_base(run_base),.run_count(run_count),.run_layer(run_arg),
+  .ids_v(ids_v),.ids_layer(ids_layer),.ids(ids),.ids_cohort(ids_cohort),
+  .running(running),.run_done(run_done),.program_active(active),.fault(svg_fault),
+  .sm_packet(packet),.sm_command(command),
+  .k_v(kv[3:0]),.k_rdy(krdy[3:0]),.k_addr(ka[119:0]),.k_len(kl[15:0]),.k_tag(kt[67:0]),
+  .kr_v(rv_[3:0]),.kr_rdy(rrdy[3:0]),.kr_tag(rt[67:0]),.kr_beat(rb[15:0]),.kr_data(rd[1023:0]));
+ assign kwe[3:0]=0;assign kw[1023:0]=0;assign ks[127:0]=0;   // read-only service: vmks g write inputs held 0 (die tie)
+`else
  ot_hbm_svc_sm_group_rel_id #(.LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.ID_COHORT(1),.IMUT(`ifdef IMUT `IMUT `else 0 `endif),
   // HBM-SMXL: XSLOT = the descriptor's x-store slot base relocates every command's xaddr (die op_xb)
   .XSLOT(`ifdef XSLOT 1 `else 0 `endif),.OPEN_IL(`ifdef OPEN_IL 1 `else 0 `endif)) svg(
@@ -56,6 +71,7 @@ module tb_toksim_smhbm;
   .k_v(kv[3:0]),.k_rdy(krdy[3:0]),.k_addr(ka[119:0]),.k_len(kl[15:0]),.k_tag(kt[67:0]),.k_we(kwe[3:0]),
   .k_wdata(kw[1023:0]),.k_wstrb(ks[127:0]),.k_wr_done(kdone[3:0]),
   .kr_v(rv_[3:0]),.kr_rdy(rrdy[3:0]),.kr_tag(rt[67:0]),.kr_beat(rb[15:0]),.kr_data(rd[1023:0]));
+`endif
  assign kv[31:4]=0;assign ka[959:120]=0;assign kl[127:16]=0;assign kt[543:68]=0;assign kwe[31:4]=0;assign kw[8191:1024]=0;
  assign ks[1023:128]=0;assign rrdy[31:4]={28{1'b1}};
  // ---------------- xc (extension calendar, own collar)
@@ -159,6 +175,14 @@ module tb_toksim_smhbm;
   else if(i8v_n!=0)begin i8v_n=i8v_n+1;if(i8v_n==5)begin $display("FAULT i8view cycle %0d",cyc);$fatal(1,"i8 view");end end
   if(cp_fault)begin $display("FAULT cp_svg cycle %0d",cyc);$fatal(1,"cp fault");end
  end
+ // HBM-SVGREL8: running hash of every edge's SM-port stream (packet valid/tag/data when valid, command) for the
+ // rel_id vs rel_h comparison; printed as PKHASH before DONE.
+ reg[63:0]pkh=0;integer pkn=0,pki;reg[63:0]pkf;
+ always @(posedge stream)if(srst&&hrst)begin
+  pkf=64'(cyc)^{21'd0,command[82:40]}^{24'd0,command[39:0]};
+  if(packet[1098])begin pkf=pkf^{53'd1,packet[1097:1088],1'b1};for(pki=0;pki<17;pki=pki+1)pkf=pkf^(packet[pki*64+:64]<<(pki%7));end
+  if(packet[1098]||command!=0)begin pkh<={pkh[62:0],pkh[63]^pkh[62]}^pkf;pkn=pkn+1;end
+ end
  // event player: inputs change after the edge, sampled at the next one
  always @(posedge stream)if(srst&&hrst)begin
   cyc<=cyc+1;
@@ -182,6 +206,7 @@ module tb_toksim_smhbm;
   $fclose(f);$display("MEM sectors=%0d",nm);
   repeat(4)@(negedge stream);srst=1;repeat(3)@(negedge hbm);hrst=1;
   wait(cyc>=nend);
+  $display("PKHASH %h edges=%0d",pkh,pkn);
   $display("DONE cycles=%0d results=%0d gos=%0d runs=%0d ing=%0d/%0d xw=%0d/%0d ids=%0d/%0d dram_reads=%0d",cyc,nres,ngo,nrun,pi,ni,px,nx,pd,nd,dram.reads);
   $finish;
  end

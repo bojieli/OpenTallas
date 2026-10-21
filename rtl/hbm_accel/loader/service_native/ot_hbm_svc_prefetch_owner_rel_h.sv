@@ -1,0 +1,111 @@
+`timescale 1ns/1ps
+`default_nettype none
+// HBM-SVGREL8 2026-10-20: HARDENED copy of ot_hbm_svc_prefetch_overlap_owner_rel_id (that module stays byte-identical):
+// the same address map (sub-row slot base[9:7], row_low permutation, PC hash), tag table, response checks and faults.
+// Changes:
+//   * the block is issued from the REGISTERED block fields only (the producer loads them at descriptor_fire; this owner
+//     starts at blk_start = the next hbm edge, t = 0): no descriptor-vs-block 2:1 mux on ~95 bits per owner, driven by
+//     the descriptor_fire strobe (+1 hbm edge descriptor -> first command; HBM side, elastic);
+//   * reset only on control (ticket, valid, sticky, issuing) from rst_n[2:0] leaves; the 32-entry tag table is datapath:
+//     a FREE entry captures the current issue fields every edge (enable = !valid, KEPT copies per <= 32 flops), so at the
+//     allocating edge it holds exactly what the original wrote; an entry is only read while valid;
+//   * the per-entry seen mask clears with the same free-entry capture.
+module ot_hbm_svc_prefetch_owner_rel_h #(
+ parameter integer OWNER_AW=5,parameter integer LB=1
+)(
+ input wire [4:0] pc_id,
+ input wire clk,input wire[2:0]rst_n,
+ input wire blk_start,
+ input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
+ input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
+ input wire [15:0] block_epoch,input wire stop,k_ready,kr_v,input wire [16:0] kr_tag,
+ input wire [3:0] kr_beat,input wire response_take,
+ output wire k_v,output wire [29:0] k_addr,output wire [3:0] k_len,output wire [16:0] k_tag,
+ output wire response_ok,output wire [10:0] response_ordinal,
+ output wire [15:0] response_epoch,output wire [LB-1:0] response_bank,output wire fault,
+ output wire issue_done
+);
+ localparam integer ENTRIES=1<<OWNER_AW,GW=17-OWNER_AW;
+ initial if(ENTRIES!=32)$fatal(1,"owner_rel_h: OWNER_AW 5 (reset leaves sized for 32 entries)");
+ reg [4:0] pc_q;always @(posedge clk)pc_q<=pc_id; // strap identity (static), this owner's physical PC
+ reg [16:0] ticket;reg [9:0] cursor;reg sticky;reg issuing_q;
+ reg [ENTRIES-1:0] valid_q;
+ (* keep="true",dont_touch="true" *) reg [ENTRIES-1:0] vfree_a,vfree_b;   // KEPT copies of !valid_q (table capture enables)
+ reg [GW-1:0] generation_q[0:ENTRIES-1];reg [15:0] epoch_q[0:ENTRIES-1];
+ reg [LB-1:0] bank_q[0:ENTRIES-1];reg permuted_q[0:ENTRIES-1];reg [1:0] row_low_q[0:ENTRIES-1];
+ reg [10:0] ordinal_q[0:ENTRIES-1];reg [2:0] length_q[0:ENTRIES-1];reg [3:0] seen_q[0:ENTRIES-1];
+ wire [19:0] pcs=block_pcs;
+ wire [14:0] row_base=block_row_base;
+ wire [11:0] total=block_total;
+ wire [15:0] epoch=block_epoch;
+ wire [LB-1:0] bank=block_bank;
+ reg selected;reg [1:0] lane;integer j;
+ always @*begin
+  selected=0;lane=0;
+  for(j=0;j<4;j=j+1)if(pcs[j*5+:5]==pc_q)begin selected=1;lane=j;end
+ end
+ wire [9:0] t=blk_start?10'd0:cursor;
+ wire [10:0] words=total>lane?(total+3-lane)/4:0;
+ wire full_group=words>={1'b0,t}+4;
+ wire [2:0] length=full_group?3'd4:3'd1;
+ wire [14:0] row=row_base;
+ wire [2:0] slot=block_base[9:7];
+ wire [9:0] t_s={t[9:7]|slot,t[6:0]};
+ wire [9:0] mapped_t=full_group?{t_s[9:2],row[1:0]}:t_s;
+ wire [4:0] dram_bank={mapped_t[9:7],mapped_t[1:0]};
+ wire [4:0] col=mapped_t[6:2];
+ wire [2:0] bhi=dram_bank[4:2]^row[4:2];
+ wire [1:0] blo=dram_bank[1:0]^row[1:0];
+ wire [4:0] hi5={row[1:0],bhi};
+ assign k_addr={row,bhi,col,pc_q^col^hi5,blo};
+ assign k_len={1'b0,length};assign k_tag=ticket;
+ wire [OWNER_AW-1:0] alloc=ticket[OWNER_AW-1:0],ret=kr_tag[OWNER_AW-1:0];
+ assign k_v=block_active&&selected&&t<words&&!valid_q[alloc]&&!sticky&&!stop;
+ assign response_ok=kr_v&&valid_q[ret]&&generation_q[ret]==kr_tag[16:OWNER_AW]&&kr_beat<length_q[ret]&&!seen_q[ret][kr_beat]&&!sticky&&!stop;
+ wire [1:0] word_offset=permuted_q[ret]?(kr_beat[1:0]^row_low_q[ret]):2'd0;
+ assign response_ordinal=ordinal_q[ret]+{7'd0,word_offset,2'b0};
+ assign response_epoch=epoch_q[ret];assign response_bank=bank_q[ret];assign fault=sticky;
+ wire issuing=block_active&&selected&&t<words;
+ assign issue_done=!issuing;
+ function automatic [3:0] mask_for(input [2:0] n);
+  case(n)1:mask_for=1;4:mask_for=15;default:mask_for=0;endcase
+ endfunction
+ wire fire=k_v&&k_ready;
+ wire [3:0] seen_ret=seen_q[ret]|(4'b1<<kr_beat);
+ wire ret_done=response_take&&seen_ret==mask_for(length_q[ret]);
+ // next valid (allocate at fire, free at the last beat)
+ reg [ENTRIES-1:0] valid_n;integer e;
+ always @*begin
+  valid_n=valid_q;
+  if(fire)valid_n[alloc]=1;
+  if(ret_done)valid_n[ret]=0;
+ end
+ // rst_n[0]: ticket / sticky / issuing (19); rst_n[1]: valid (32); rst_n[2]: !valid copy a (32)
+ always @(posedge clk or negedge rst_n[0])begin
+  if(!rst_n[0])begin ticket<=0;sticky<=0;issuing_q<=0;end
+  else begin
+   issuing_q<=issuing;
+   if(blk_start&&issuing_q)sticky<=1;
+   if(fire)ticket<=ticket+1'b1;
+   if(kr_v&&!response_ok)sticky<=1;
+  end
+ end
+ always @(posedge clk or negedge rst_n[1])if(!rst_n[1])valid_q<=0;else valid_q<=valid_n;
+ always @(posedge clk or negedge rst_n[2])if(!rst_n[2])vfree_a<={ENTRIES{1'b1}};else vfree_a<=~valid_n;
+ // vfree_b: no reset -- a pure function of the reset valid_q (all free one edge into reset)
+ always @(posedge clk)vfree_b<=~valid_n;
+ // datapath: cursor + tag table (no reset)
+ always @(posedge clk)begin
+  if(blk_start)cursor<=0;
+  if(fire)cursor<=t+length;
+  for(e=0;e<ENTRIES;e=e+1)begin
+   if(vfree_a[e])begin generation_q[e]<=ticket[16:OWNER_AW];epoch_q[e]<=epoch;end            // 28 flops
+   if(vfree_b[e])begin                                                                          // 23 flops
+    bank_q[e]<=bank;ordinal_q[e]<={t[8:0],2'b0}+lane;length_q[e]<=length;
+    seen_q[e]<=0;permuted_q[e]<=full_group;row_low_q[e]<=row[1:0];
+   end
+   else if(response_take&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
+  end
+ end
+endmodule
+`default_nettype wire
