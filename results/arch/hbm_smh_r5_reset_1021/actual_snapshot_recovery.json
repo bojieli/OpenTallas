@@ -1,0 +1,607 @@
+{
+  "captured_at": "2026-10-21T14:09:00-07:00",
+  "stale_committed_baseline": "cbbe8b3d0",
+  "reason": "Committed seven-landing inputs differed from actual eight-landing gate snapshots. Recover actual LP/source/SDC/records before qualification; preserve X domain, no clock relabel or policy waiver. Existing reset-only source repair retained.",
+  "files": [
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/clock.sdc",
+      "sha256": "e13dd76ca7962dda1ebdb4bf0646ecb62bf7160f94eea90fc438ec02335efc2f",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/clock_entry.sdc",
+      "sha256": "1f94060fac759c701cd2c117b6e8db50ef6d5d2c5b12e79ef0edd0fc1c778272",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/floorplan.json",
+      "sha256": "807d96076f3dc7f2050c78dd5b3a456c77b5b515c47f6187bfbc30bf6d5f6862",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/job.json",
+      "sha256": "1797c433b9ac32721e394ef8131cd2339cf0e41709b9805a0527648c59ff5e5d",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/kit.env",
+      "sha256": "069c087bfafc9c39eb172d5599cbf82821785e94a9fbce742cbb146cf0eeea5b",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/pdn.tcl",
+      "sha256": "6dc77f6d49a7c9bd24347cdf3851efe54c75bce1359d41d669781d2ef8e901b3",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/pin_regs.json",
+      "sha256": "1fc9377f684155345f9c41d4365338c67e147bf612fadeb763be1697264173dd",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/place.tcl",
+      "sha256": "c845ea1c5a43c03119e23c179d7fda5a318f8d648cde6bb460c54471879864a3",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/post_cts.tcl",
+      "sha256": "cc02d2d96a96f7955421bf5730cbf4be0fb8eeeee3c8861bd7aac8804e6f5e0c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/post_drt.tcl",
+      "sha256": "3856629d1876d01fc3f8ace0c0a179ff1128c5da679fce6c91c26aa65982c909",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/post_fill.tcl",
+      "sha256": "cc02d2d96a96f7955421bf5730cbf4be0fb8eeeee3c8861bd7aac8804e6f5e0c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/post_grt.tcl",
+      "sha256": "cc02d2d96a96f7955421bf5730cbf4be0fb8eeeee3c8861bd7aac8804e6f5e0c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/pre_cts.tcl",
+      "sha256": "4f4a6d8f100d83ad794b0b1c480dbc592bcd9ee1a8308bdeedd550d86a1a4103",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/pre_drt.tcl",
+      "sha256": "c491f9f0bc4d9f0b62bf38023bbf184233eab27341d3712e2302eaf34d7c48ed",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/pre_fill.tcl",
+      "sha256": "c491f9f0bc4d9f0b62bf38023bbf184233eab27341d3712e2302eaf34d7c48ed",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/pre_grt.tcl",
+      "sha256": "7fb9ccc3a5523d3698a8cdbf2183c720a2c681bef20f4bd06fd85e18c9c204d3",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/reset_landing.json",
+      "sha256": "49d236ffc27dda683adb73e387f41ac8b4b186e76b6aad983eb8d9a1a323aaec",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/signoff.sdc",
+      "sha256": "70f22d40ea6cf0883d72b6965e9d06285f40bcee848722f16daf8aa795ee296a",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_m/spec.json",
+      "sha256": "a9395ec4f37364f36068e021876fb293dfd18d4f97655c7d62235020385290a9",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_m/ot_hbm_smh_rp5s_m.sdc",
+      "sha256": "7c58dcf305abd06551f3ecef6ba3e053d3d3b74c98cf56ed0e678ec94c59b82a",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_m/ot_hbm_smh_rp5s_m.sv",
+      "sha256": "ae05bb73ad814cb37e541d1d37d2eb45be211c4c1aeb4c6d61d6b5ddacd71313",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_m/ot_hbm_smh_rp5s_m_bench.sh",
+      "sha256": "8ef41c4f7ca7b84d5be4fd621a82436d807d6b674ce3a77f80a851ccf87191f4",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "run_*.sh has only reset-source substitution after recovery"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_m/tb_ot_hbm_smh_rp5s_m.sv",
+      "sha256": "e15afbbc0578538eb5fd4f88efb47eaa54b0abc5ccb91330a17e086fb9318554",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/lp_spec_s_m.json",
+      "sha256": "3bf4d69959c9199044a5cd37562ad44dc4569a124841eaad65a532ca97e032ac",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5s_m_record.json",
+      "sha256": "81fae70ea7f157240c6eb6bedc57be98ef44f5f4fd52921c7988e1c5042eb4eb",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_m-20261021-132224/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/clock.sdc",
+      "sha256": "c37597d9049eaf228f9e882bdbd25ad3e4c5db6c1652b52faddfcdeaf0a15498",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/clock_entry.sdc",
+      "sha256": "03a01e845f8adf6b94cf34765b6486fc6aa70b9b0466a760914ffc830d8c6c9a",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/floorplan.json",
+      "sha256": "8b559a35bbe07fe19d2265b8eb022163a0eb2b2f26823dc1d091a902605d70b8",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/job.json",
+      "sha256": "5b207f5df97666ac61a574cb527293fc3a4e98df9a69e5d6ce3905299a26e53e",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/kit.env",
+      "sha256": "2882498e6a136e588b8368a33a5c77060d7b4173e53771de95b71d9440caf2f8",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/pdn.tcl",
+      "sha256": "131516729d58df6c0c2a92bb94df65537d119af51b36d5243d29b6a0c7a9e850",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/pin_regs.json",
+      "sha256": "c7395fa0fdfc57b67fbe73ac94501cf857d5f21536eae5c69b30df1010ab7f82",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/place.tcl",
+      "sha256": "97b8dee13904454e7a00cb22cc112c77ecbe775cb51503e43855d72fb15af83e",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/post_cts.tcl",
+      "sha256": "c6b04806c7fde24ce469e8b5dfe693e4c050b5006328e81fbb137e44adb88a6b",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/post_drt.tcl",
+      "sha256": "360b05d3cbb0ba9749b3679709149a72d8ce608133fab777e0c46aa2fec44972",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/post_fill.tcl",
+      "sha256": "c6b04806c7fde24ce469e8b5dfe693e4c050b5006328e81fbb137e44adb88a6b",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/post_grt.tcl",
+      "sha256": "c6b04806c7fde24ce469e8b5dfe693e4c050b5006328e81fbb137e44adb88a6b",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/pre_cts.tcl",
+      "sha256": "ed0de8d35c208767615f9574d585cd20cc6bccab1b80f29c0ab74c09ee0805b5",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/pre_drt.tcl",
+      "sha256": "2b2da7256cc8b437dbf4c04097d76467851846539495693bc828824645cad129",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/pre_fill.tcl",
+      "sha256": "2b2da7256cc8b437dbf4c04097d76467851846539495693bc828824645cad129",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/pre_grt.tcl",
+      "sha256": "6a8cc3dc427bfca6f0594791b06853410e510101935686c47ac559c433a53632",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/reset_landing.json",
+      "sha256": "237669e2329222bd2d3047b69b4a1c7fe2aba3e3ac7d8f5481940eac4b11c304",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/signoff.sdc",
+      "sha256": "d7388bd09b5c173b6b8f437c81fe49e5f199b5839c03dc33574ec53088864d48",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5s_f/spec.json",
+      "sha256": "3980037d656356acc7f90192b7776d4c7ebafa4a15f9edc295aae5ee2b656db5",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_f/ot_hbm_smh_rp5s_f.sdc",
+      "sha256": "7d103f936cc51e55001adf8177b7c732a1c010e9b958a35230e568a8e7fe8ae5",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_f/ot_hbm_smh_rp5s_f.sv",
+      "sha256": "0118fab1eb9131904a33b91fcf8e4b12b92c3b8276bba137e57685f550598683",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_f/ot_hbm_smh_rp5s_f_bench.sh",
+      "sha256": "bfa456ec8ee3bdfa4ac3c9aa78c82e386825371883819eca5506f8e233fa8e29",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "run_*.sh has only reset-source substitution after recovery"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_s_f/tb_ot_hbm_smh_rp5s_f.sv",
+      "sha256": "99306d6bc13dbe93e3f98d33ac50106a931fd9a9f6864d61922efe8999c6af17",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/lp_spec_s_f.json",
+      "sha256": "39394335e2f5d25453b51a2fc376c7c049006914c44743a1d52371636bc2736f",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5s_f_record.json",
+      "sha256": "27e1106fd1c66c7a965e9242b4155cd084278cacf14dd85c47c6936eba703103",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5s_f-20261021-132225/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/clock.sdc",
+      "sha256": "002a4f944c80b9be72370dce7a20e06fedfdbc92370bfa63b8e05448c3d93947",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/clock_entry.sdc",
+      "sha256": "fd4107e9afe5b61ed3e84499e7dae13dbb56e8b0b73c1f93e4eab81c65639da9",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/floorplan.json",
+      "sha256": "63efe0a6d7170b010813b37a0f395ad049e6509414fe15a97f894e04d237bbc5",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/job.json",
+      "sha256": "2ea443fd5b5646831a6478136486adcc02d39aac68685d15476516e9f5fd936a",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/kit.env",
+      "sha256": "86aed3cad9bdcd716e0dd47d4f498c7187d03c651f43e43bdb0192017f189869",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/pdn.tcl",
+      "sha256": "9984314739488351a8e0b6c3153941c86722d5e61125ecf105be991d67370fb0",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/pin_regs.json",
+      "sha256": "24529445db40dd70124fcef61060fe37f95eb9c02918b3ad8f15ed001f4dacb8",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/place.tcl",
+      "sha256": "c2083020d5a9d47d4e32453a05727e7982aae2f97b9c54f2f3cc90cead62731e",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/post_cts.tcl",
+      "sha256": "3313e9026881be9d5ae6317edb33cb75ec2654b916df915262186ae9ae220884",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/post_drt.tcl",
+      "sha256": "0498e8c2734fc497535cbbb953bf2ae86860c9322a67361a939143dc9acc1ea8",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/post_fill.tcl",
+      "sha256": "3313e9026881be9d5ae6317edb33cb75ec2654b916df915262186ae9ae220884",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/post_grt.tcl",
+      "sha256": "3313e9026881be9d5ae6317edb33cb75ec2654b916df915262186ae9ae220884",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/pre_cts.tcl",
+      "sha256": "3c3bd935906f33977735f9e8a6b5eb2025e902dfbde916af5601fa4016d1be4d",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/pre_drt.tcl",
+      "sha256": "9a3ed0dfd42d8e799904b46d57af8df13b0e3eb0d87746c4468dd896a739efbb",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/pre_fill.tcl",
+      "sha256": "9a3ed0dfd42d8e799904b46d57af8df13b0e3eb0d87746c4468dd896a739efbb",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/pre_grt.tcl",
+      "sha256": "9816f4d3c6b9352ca34ef4eec551c8d0e2a2313ee96cf32be9c8a30f91c2123e",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/reset_landing.json",
+      "sha256": "b254b94484c75ff3ee1b0ae33ff02c41d25dd18a83b7a86463c4f569d7a43f05",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/signoff.sdc",
+      "sha256": "89996eb3786205dddf6293ee6ac4370f05cf357594de878e7f38342e1f89f2de",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_m/spec.json",
+      "sha256": "0585e7bf3e92c2434fbb8ef8ed68af83bb44ac49ba6cec332482495e8314e514",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_m/ot_hbm_smh_rp5n_m.sdc",
+      "sha256": "caac4b17948348a69609cca1e28b5a16e8df2dde5943311ebcd572aea36c6617",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_m/ot_hbm_smh_rp5n_m.sv",
+      "sha256": "b3fbb8c99c9bf326d38cf5895bea60b728182a9567b6d0839bca0a2cfaf147f0",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_m/ot_hbm_smh_rp5n_m_bench.sh",
+      "sha256": "b08c770a6c937930df6875bba6f65ac4016dc91031c8d01f4cec929b285c9ed2",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "run_*.sh has only reset-source substitution after recovery"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_m/tb_ot_hbm_smh_rp5n_m.sv",
+      "sha256": "06de31fc6e9c52d56c814a65abb83d1fa2f1e28630b5da4a93a9e0b136dd509d",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/lp_spec_n_m.json",
+      "sha256": "df86238c653554fd24c25319931caf73e2dbed3d4159e3fdbe7e28360c5a001c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5n_m_record.json",
+      "sha256": "f27dc8e4b6ca898997174f261fc9ea9a51a015e51b9ec8889253d5f24793c504",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_m-20261021-132207/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/clock.sdc",
+      "sha256": "2925f1680184858518c39bab1ac3e71bf1bad1ae13de4adfa0c8dd6aacb3b50f",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/clock_entry.sdc",
+      "sha256": "ab281978140a7c8d5eab24e290d3688af7792f542a2596e00772ffee03dc09f1",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/floorplan.json",
+      "sha256": "0d95c7475c611b81865ca722aa010da7d4ff545cad547ced332d879b6ca828bc",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/job.json",
+      "sha256": "80d0511ea5b066e234c1334fbd1ff87eaabc956daad734bccdc9addfe9adc460",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/kit.env",
+      "sha256": "eddfe8ee6f875f5b107d63317be08a715e85a017d5a43bbc41784aa3d203cb20",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/pdn.tcl",
+      "sha256": "3905cfc6c8d6d384b2b5bb79f4a555c158d1e46d2c7fcce7c558686a720f0a4b",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/pin_regs.json",
+      "sha256": "827b543b7671285420f2fbf278f3e83ed300dfe685a2abfc8ff40d8b576b05a2",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/place.tcl",
+      "sha256": "9f5750bc4b8a4fe720db6ffe3ef6dfc110275ab411703eb6ceebf7c7ff3f7dcc",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/post_cts.tcl",
+      "sha256": "7bec17b5faf9c49da1936fef581d4279b6b9a625caeb599da9bd61521e124244",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/post_drt.tcl",
+      "sha256": "a4f82340dcf0a8c7457c000223e4e03c07029d8c8a7fa6cdb0c09d4928d3519c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/post_fill.tcl",
+      "sha256": "7bec17b5faf9c49da1936fef581d4279b6b9a625caeb599da9bd61521e124244",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/post_grt.tcl",
+      "sha256": "7bec17b5faf9c49da1936fef581d4279b6b9a625caeb599da9bd61521e124244",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/pre_cts.tcl",
+      "sha256": "5bd08505b96e35d140eba355b4ba07d3470025c32f7cb9a385724a968ac03b7d",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/pre_drt.tcl",
+      "sha256": "3ee7b6489919f27154fe9dd512e598e3b362088160ca0487e5d74267f042271c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/pre_fill.tcl",
+      "sha256": "3ee7b6489919f27154fe9dd512e598e3b362088160ca0487e5d74267f042271c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/pre_grt.tcl",
+      "sha256": "27ab49f5e50a79518b66b5f18a3465252bb60f989827c6b8aaea5c83db92d431",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/reset_landing.json",
+      "sha256": "8b0a16909c6cdb6985c3cb832428be503f50000af4df772fbc4b97d22fd5c526",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/signoff.sdc",
+      "sha256": "ef07e7dd4d724c80ee64fdaa1463dc10063304a224ac175fe4738da1b9abc1e1",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "physical/ref_tile/smh_rp5n_f/spec.json",
+      "sha256": "840f5895ebe695479eab0f0ffb7babd0e68829e988401d37a25dbf8d8eee7096",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f.sdc",
+      "sha256": "62dec9f8bb91d298aac0f47558d5219efedecfcfff230a7fd94d641ad761b350",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f.sv",
+      "sha256": "704a66fee3d82597277d2a41347d57eb736e1e700e857e12bf3ab4bd8cd57c05",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f_bench.sh",
+      "sha256": "c933d4ccb8480ac475db64b9558c40c6d3498231fb649e7066fcdd291d97c83c",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "run_*.sh has only reset-source substitution after recovery"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/repack/h2a5/lp_n_f/tb_ot_hbm_smh_rp5n_f.sv",
+      "sha256": "fa2660be12e921439cb3cfb4adbc0d56b94d8b55fe55daea88ee3113e58d0743",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/lp_spec_n_f.json",
+      "sha256": "f5bed1704be391d319a1ca90a6180f451e3ace3994e147c7bf09acf72c5eac69",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    },
+    {
+      "path": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5n_f_record.json",
+      "sha256": "f30f563627cf8a68e8cb88e97295b79a8085b3e022761cf8c3057f4d81eacfed",
+      "immutable_gate_src": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/smh_rp5n_f-20261021-132221/src",
+      "note": "recovered exact immutable gate source"
+    }
+  ]
+}
