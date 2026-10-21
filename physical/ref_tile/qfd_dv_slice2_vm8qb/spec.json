@@ -1,0 +1,378 @@
+{
+ "name": "qfd_dv_slice2_vm8qb",
+ "top": "qfd_dv_s5_vm8q",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "defines": [],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1468.8,
+  "h": 1080.0,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "pins": {
+  "S": [
+   "a_re",
+   "a_addr",
+   "a_q",
+   "f_va",
+   "cr_re",
+   "cr_addr",
+   "cr_q",
+   "f_crl",
+   "f_crh",
+   "b_re",
+   "b_addr",
+   "b_q",
+   "f_vb",
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "w16_we",
+   "w16_addr",
+   "w16_data",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "ck",
+   "c_re",
+   "c_addr",
+   "c_q",
+   "f_vc",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data",
+   "bs_re",
+   "bs_addr",
+   "bs_q",
+   "f_bt",
+   "p_re",
+   "p_idx",
+   "p_q",
+   "rst_n"
+  ],
+  "N": [],
+  "E": [],
+  "W": []
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_va",
+   "at": [
+    86.4,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_vb",
+   "at": [
+    432.0,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_vc",
+   "at": [
+    777.6,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog",
+   "count": 1,
+   "inst": "u_pg",
+   "at": [
+    1123.2,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "count": 1,
+   "inst": "u_cl",
+   "at": [
+    86.4,
+    648.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "count": 1,
+   "inst": "u_ch",
+   "at": [
+    432.0,
+    648.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab",
+   "count": 1,
+   "inst": "u_bt",
+   "at": [
+    777.6,
+    648.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "threads": 32,
+  "peak_ram_gb": 128,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "synth_keep_modules": [
+   "qfd_dv_s5_vm8q_rst",
+   "qfd_dv_s5_vm8q_vrd",
+   "qfd_dv_s5_vm8q_vwr",
+   "qfd_dv_s5_vm8q_twb",
+   "qfd_dv_s5_vm8q_twp",
+   "qfd_dv_s5_vm8q_twc"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "P3 one clock region (owner 10-20 09:05: pin registers only at region crossings and on wires > 405 um): every input lands on its leaf's own kept parent relay copy (qfd_dv_s5_vm8q_* / _rly, d_in >= 1), every output is the S-face capture register qfd_dv_s5_vm8out (flop-last); rst_n lands in 2 stages (reset_landing)"
+ },
+ "structural_change": "QW-SLICE2W 10-21 P3 successor of P2 vm8p / vm8pb (gates FAIL 10-21: clock_rule pin-flop spread TT/FF 202/246 and 384/455 ps from pins landing on hard-child pin registers; wire_reach 966/1050 stages > 500 um from the single-cycle VM broadcast writes (pin -> u_vc 819 um) and ONE shared table-write trunk per tier; rst_n 4 sinks unlanded; GRT-0183 boxed-in net in repair; S face 10.5 pins/um cluster). P3: every leaf input lands on its OWN kept parent relay copy (VM d_in 1), per-leaf broadcast copies, 2-stage reset landing, two-row floorplan (row 1 VM x3 + PROG, row 2 CROM lo/hi + BTAB), per-column disjoint S pin ranges <= 4.4 pins/um. Lockstep == vm8fh with VM answers +1, BTAB/PROG +2, CROM +4. PARALLEL FALLBACK: 2 rows, 86.4 channels everywhere, S band 172.8, 198.7 um inter-row relay channel",
+ "job": {
+  "owner": "Claude:QW-SLICE2W",
+  "branch": "claude/qw-slice2w3-1021",
+  "tag": "vm8qb",
+  "submit": false,
+  "purpose": "slice2 VM8 leaf group P3 (one region, per-leaf kept relay copies): critical, gate only -> COORD-REVIEW-QUEUE",
+  "hold_merge": "QW-SLICE2W proof vehicle; the full slice2 parent absorbs it",
+  "extra_paths": [
+   "rtl/test/qwen_dv/s5",
+   "rtl/qwen_dv/s5/p3"
+  ],
+  "benches": [
+   {
+    "name": "p3_vm8q",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q_bench.sh {RUN}/bench/p3_vm8q",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BENCH_EXIT 0"
+   }
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "a_re": [
+   5.4,
+   9.641
+  ],
+  "a_addr": [
+   9.641,
+   71.682
+  ],
+  "a_q": [
+   71.682,
+   153.828
+  ],
+  "f_va": [
+   153.828,
+   155.87
+  ],
+  "cr_re": [
+   155.87,
+   160.111
+  ],
+  "cr_addr": [
+   160.111,
+   222.152
+  ],
+  "cr_q": [
+   222.152,
+   384.716
+  ],
+  "f_crl": [
+   384.716,
+   386.758
+  ],
+  "f_crh": [
+   386.758,
+   388.8
+  ],
+  "b_re": [
+   388.8,
+   392.243
+  ],
+  "b_addr": [
+   392.243,
+   435.141
+  ],
+  "b_q": [
+   435.141,
+   491.761
+  ],
+  "f_vb": [
+   491.761,
+   493.703
+  ],
+  "vm_we": [
+   493.703,
+   497.147
+  ],
+  "vm_waddr": [
+   497.147,
+   540.044
+  ],
+  "vm_wdata": [
+   540.044,
+   596.665
+  ],
+  "w16_we": [
+   596.665,
+   598.607
+  ],
+  "w16_addr": [
+   598.607,
+   605.481
+  ],
+  "w16_data": [
+   605.481,
+   716.994
+  ],
+  "w1_we": [
+   716.994,
+   718.936
+  ],
+  "w1_addr": [
+   718.936,
+   725.81
+  ],
+  "w1_data": [
+   725.81,
+   734.4
+  ],
+  "ck": [
+   734.4,
+   736.347
+  ],
+  "c_re": [
+   736.347,
+   739.824
+  ],
+  "c_addr": [
+   739.824,
+   783.547
+  ],
+  "c_q": [
+   783.547,
+   841.267
+  ],
+  "f_vc": [
+   841.267,
+   843.214
+  ],
+  "tw_we": [
+   843.214,
+   845.16
+  ],
+  "tw_kind": [
+   845.16,
+   847.326
+  ],
+  "tw_addr": [
+   847.326,
+   854.303
+  ],
+  "tw_data": [
+   854.303,
+   1080.0
+  ],
+  "bs_re": [
+   1080.0,
+   1082.221
+  ],
+  "bs_addr": [
+   1082.221,
+   1095.775
+  ],
+  "bs_q": [
+   1095.775,
+   1223.652
+  ],
+  "f_bt": [
+   1223.652,
+   1225.873
+  ],
+  "p_re": [
+   1225.873,
+   1228.093
+  ],
+  "p_idx": [
+   1228.093,
+   1234.256
+  ],
+  "p_q": [
+   1234.256,
+   1461.179
+  ],
+  "rst_n": [
+   1461.179,
+   1463.4
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

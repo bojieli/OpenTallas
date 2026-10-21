@@ -133,6 +133,15 @@ N32_RTL = "rtl/common/landed_parent/ot_pl_land_n32.sv"
 # each, same reset age, no added edge).  Absent = byte-identical output.
 LIB_PORTS['ot_pl_land_rst_copy'] = dict(LIB_PORTS['ot_pl_pad'])
 RST_COPY_RTL = "rtl/common/landed_parent/ot_pl_land_rst_copy.sv"
+# QW-S5-LP 10-21: with regional_reset_copies, a chunked landing wider than 32 chunks (> 768 b at 24-b chunks) has more
+# than 32 rq reset loads behind ONE rsi -- it used to be refused ("alone has N reset loads > 32").  Such a landing is now
+# emitted on ot_pl_land_split_w/_r: the SAME chunk logic (ot_pl_land_local_w/_r) with rsi as a vector, chunk c reset by
+# rsi[c / 32]; each 32-chunk group is a separate item of the regional copy bin-packing.  Specs that worked before are
+# byte-identical (no landing of theirs has > 32 chunks under regional_reset_copies).
+LIB_PORTS['ot_pl_land_split_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+LIB_PORTS['ot_pl_land_split_r'] = dict(LIB_PORTS['ot_pl_land_r'])
+SPLIT_RTL = "rtl/common/landed_parent/ot_pl_land_split.sv"
+SPLIT_GROUP = 32
 
 
 
@@ -847,6 +856,11 @@ class Parent:
         RB = 1 + max(max(hops.values()), 1)
         return rr, hops, RB
 
+    def split_used(self, P):
+        """QW-S5-LP 10-21: some landing is emitted on ot_pl_land_split (regional_reset_copies + > 32 chunks)"""
+        return bool(self.rcopies and self.chunk_bits and P and
+                    any(math.ceil(L['width'] / self.chunk_bits) > SPLIT_GROUP for L in P['lands']))
+
     def reset_copy_plan(self, P):
         """regional_reset_copies: per region, bin-pack the registered loads of lpr_<r> (one per landing chunk rq flop,
         one per child reset pad) into kept copies of <= 32 loads; one copy = the plain run (unchanged text)."""
@@ -856,9 +870,12 @@ class Parent:
         for land in P['lands']:
             n = land['name']
             chunks = math.ceil(land['width'] / self.chunk_bits) if self.chunk_bits else 1
-            if land.get('ring_of', n) == n:
-                items[land['src_region']].append((('w', n), chunks))
-            items[land['dst_region']].append((('r', n), chunks))
+            groups = [(None, chunks)] if chunks <= SPLIT_GROUP else \
+                [(g, min(SPLIT_GROUP, chunks - g * SPLIT_GROUP)) for g in range(math.ceil(chunks / SPLIT_GROUP))]
+            for g, c in groups:
+                if land.get('ring_of', n) == n:
+                    items[land['src_region']].append((('w', n) if g is None else ('w', n, g), c))
+                items[land['dst_region']].append((('r', n) if g is None else ('r', n, g), c))
         for ins in self.insts:
             if any(self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst
                    for pin, ex in ins["conns"].items()):
@@ -935,7 +952,12 @@ class Parent:
         forest = self.reset_forest_plan(P)
         copies = self.reset_copy_plan(P)
         def rsel(key, region):   # regional reset net feeding one landing role / child pad
+            if copies and key not in copies[region]['names'] and (key + (0,)) in copies[region]['names']:
+                ng = sum(1 for k in copies[region]['names'] if len(k) == 3 and k[:2] == key)
+                return "{" + ", ".join(copies[region]['names'][key + (g,)] for g in reversed(range(ng))) + "}"
             return copies[region]['names'][key] if copies else f"lpr_{region}"
+        def split_land(Ld):      # QW-S5-LP 10-21: > SPLIT_GROUP chunks under regional_reset_copies
+            return bool(copies) and bool(self.chunk_bits) and math.ceil(Ld['width'] / self.chunk_bits) > SPLIT_GROUP
         L = []
         w = L.append
         # header
@@ -1029,6 +1051,8 @@ class Parent:
             rng = self.rng(net)
             wt = width_text(rng)
             primitive = "ot_pl_land_vector_reset" if forest else ("ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land")
+            if split_land(Ld):
+                primitive = "ot_pl_land_split"
             def reset_input(role, region):
                 if not forest:
                     return f'lpr_{region}_lw' if self.reset_lead else rsel((role, n), region)
@@ -1044,7 +1068,7 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                wprim = "ot_pl_land_n32_chunk" if self.writer == "n32" else primitive
+                wprim = "ot_pl_land_n32_chunk" if self.writer == "n32" and primitive != "ot_pl_land_split" else primitive
                 w(f"    {wprim}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
@@ -1491,6 +1515,7 @@ class Parent:
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
                         (RESET_FOREST_RTL if self.reset_forest else []) + ([N32_RTL] if self.writer == "n32" else []) +
                         ([RST_COPY_RTL] if self.rcopies else []) +
+                        ([SPLIT_RTL] if self.split_used(P) else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
@@ -1595,7 +1620,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w", "ot_pl_land_split_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r", "ot_pl_land_split_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):
