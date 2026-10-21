@@ -1,0 +1,152 @@
+{
+  "hardware_commit": "0f1f5dff8",
+  "status": "PASS_EXISTING4LP_POSITIVE_AND_M1_M2_M4",
+  "original_M4_missed_negative": "All4 originalM4PASS preserved bycollector a6f14af49. Currentdocumentedmut4_stages64 makesintendedresetdifferenceobservable beyondwarm30; defaultMUT0bodyunchanged.",
+  "runtime": "ep7 units1098896/1099317, samefreshimmutable scalarSRC; nooldbinaryreuse",
+  "cases": [
+    {
+      "form": "n_m",
+      "mut": 0,
+      "expected": "PASS",
+      "actual": "PASS",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_m/mut0.log",
+      "sha256": "dc25cbf24faf45517d365607dc12203e96897d33a226a7131f2439ce935fc473",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
+    },
+    {
+      "form": "n_m",
+      "mut": 1,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_m/mut1.log",
+      "sha256": "cc093e8298bd9cf963ee7f9d328037e8e9ff41fcd95c7fa2c410b25b6c4db585",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
+    },
+    {
+      "form": "n_m",
+      "mut": 2,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_m/mut2.log",
+      "sha256": "084f97658302a869d59b941a4c30b93228d44b46794f3c6e48d7f47b0b4dd430",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
+    },
+    {
+      "form": "n_m",
+      "mut": 4,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_m/mut4.log",
+      "sha256": "cb3dba2529dfba4944d5bd4e3cb2827a1bff85607d70401533e83a97f318a748",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
+    },
+    {
+      "form": "n_f",
+      "mut": 0,
+      "expected": "PASS",
+      "actual": "PASS",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_f/mut0.log",
+      "sha256": "dfdb3000ab55388d799226b3f36ce257cb6fc0a31ca1600237cdd06e611ff1c8",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_f_wrapper.log"
+    },
+    {
+      "form": "n_f",
+      "mut": 1,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_f/mut1.log",
+      "sha256": "a7eff20d85ff67039355c4187afb5eed3784cb7fcad4eddd0ecee2c8ae9f3fa9",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_f_wrapper.log"
+    },
+    {
+      "form": "n_f",
+      "mut": 2,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_f/mut2.log",
+      "sha256": "9d13416aecaaccc44e9e6f1499d50b3c9234b70f1bae68b7cece0e80066d5e5f",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_f_wrapper.log"
+    },
+    {
+      "form": "n_f",
+      "mut": 4,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_n_f/mut4.log",
+      "sha256": "5b906ec895275fe456d73d5676cffcc296ab44ef52e169644fa74cf17201d537",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_f_wrapper.log"
+    },
+    {
+      "form": "s_m",
+      "mut": 0,
+      "expected": "PASS",
+      "actual": "PASS",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_m/mut0.log",
+      "sha256": "ca598a211f2e315c4e22d3a90a72dbacbf72b0e23897e22eddee0d3a705703bd",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_m_wrapper.log"
+    },
+    {
+      "form": "s_m",
+      "mut": 1,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_m/mut1.log",
+      "sha256": "db8f646953a2dd6a2131610eb477c57a5cb8ce51ff043b33f2f61d79087bcbc5",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_m_wrapper.log"
+    },
+    {
+      "form": "s_m",
+      "mut": 2,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_m/mut2.log",
+      "sha256": "5afdf42da071f91728c24b8eed26f636744a2b82a399cea490dd7e7c3e90e4c5",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_m_wrapper.log"
+    },
+    {
+      "form": "s_m",
+      "mut": 4,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_m/mut4.log",
+      "sha256": "7661c9c504608585855e9729ad9fc37230ff36b093e35bb20235fbae0a53265e",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_m_wrapper.log"
+    },
+    {
+      "form": "s_f",
+      "mut": 0,
+      "expected": "PASS",
+      "actual": "PASS",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_f/mut0.log",
+      "sha256": "6082b1121bdc11f51fce73d9b4657a2bb65070b68f89b9b98443471328280da9",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_f_wrapper.log"
+    },
+    {
+      "form": "s_f",
+      "mut": 1,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_f/mut1.log",
+      "sha256": "e640edc46b97aa9bda7e974a73ce49f273cf270064c55fe5168882de38f3b61a",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_f_wrapper.log"
+    },
+    {
+      "form": "s_f",
+      "mut": 2,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_f/mut2.log",
+      "sha256": "b51f38a6482f796db66fcc87dc28487592cc365a02ae973f83ef6e78efa6415e",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_f_wrapper.log"
+    },
+    {
+      "form": "s_f",
+      "mut": 4,
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "raw_file": "results/arch/hbm_smh_r5_reset_1021/proof/proof_s_f/mut4.log",
+      "sha256": "dfba26b5d792396ed1bf2c098cbfc07c5c9f35b670447a9c1e5eebd280304a77",
+      "wrapper_file": "results/arch/hbm_smh_r5_reset_1021/proof/lp_s_f_wrapper.log"
+    }
+  ]
+}
