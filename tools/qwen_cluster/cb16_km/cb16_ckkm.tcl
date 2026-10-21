@@ -17,7 +17,7 @@
 proc ot_cbk_env {n d} { if {[info exists ::env($n)] && $::env($n) ne ""} { return $::env($n) }; return $d }
 # recorded TT child insertion (views/*/insertion.json tt.all.mean; A0 stand-in per pin) -- added to a hard-child pin arrival
 set ::ot_cbk_ins [dict create qfd_c_stn514 96.6 qfd_c_stn516 95.7 qfd_c_xstn_safe 141.9 qfd_c_xstnw_safe 137.8 \
-  qfd_tile_nk_rp2_romleaf_rr 174.5 qfd_tile_nl_rp2_romleaf_rr 174.5]
+  qfd_tile_nk_rp2_romleaf_rr 174.5 qfd_tile_nl_rp2_romleaf_rr 174.5 qfd_c_ring516 137.3 qfd_c_ring514 136.7]
 set ::ot_cbk_ins_pin [dict create ck_node 243.1 ck 190.5 ck_tx3 202.0 ck_tx4 219.4 ck_tx5 214.1 \
   ck_lsl0 165.3 ck_lsl1 165.3 ck_lsl2 165.3 ck_lsl3 165.3 ck_lsl4 165.3 ck_lsl5 165.3 ck_lsl6 165.3 ck_lsl7 165.3 \
   ck_rp0 201.5 ck_rp1 201.5 ck_rp2 201.5 ck_rp3 201.5 ck_rp4 201.5 ck_rp5 201.5 ck_rp6 201.5 ck_rp7 201.5 ck_rp8 201.5 ck_rp9 201.5]
