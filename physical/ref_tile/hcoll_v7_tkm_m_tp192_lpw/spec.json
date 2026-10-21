@@ -608,6 +608,11 @@
   "peak_ram_gb": 256,
   "pin_v": "M5",
   "pin_h": "M4 M6",
+  "pin_balance": {
+   "h": "M4 M6",
+   "v": "M5",
+   "group_max": 1
+  },
   "macro_halo_um": 5.4,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03

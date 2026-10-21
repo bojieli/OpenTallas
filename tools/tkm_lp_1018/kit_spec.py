@@ -76,7 +76,7 @@ def main():
         outline=dict(w=W_, h=W_, exact=True), child_lattice_um=43.2, children=kids,
         macros=[dict(view=sram, count=1, at=[round(O + 2 * P_ + 43.2, 3), 108.0]), dict(view=sram, count=1, at=[round(O + 2 * P_ + 43.2, 3), 216.0])],
         pins=pins, pin_ranges=rng,
-        route=dict(pd=0.5, threads=32, peak_ram_gb=256, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4, hold_margin_ns=0.03,
+        route=dict(pd=0.5, threads=32, peak_ram_gb=256, pin_v="M5", pin_h="M4 M6", pin_balance=dict(h="M4 M6", v="M5", group_max=1), macro_halo_um=5.4, hold_margin_ns=0.03,
                    io_hold_margin_ns=0.03),
         recipe=4, inhold=False, outhold=False,
         pin_regs=dict(enable=False, reason="HBM-TP192 10-20: every data/control port has a face flop inside the ctl leaf "
