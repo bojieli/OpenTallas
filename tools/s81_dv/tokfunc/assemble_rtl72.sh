@@ -17,8 +17,8 @@ for r in "$REF" "$FRAME" "$LPREF"; do git --git-dir="$G" cat-file -e "$r^{commit
 REF=$(git --git-dir="$G" rev-parse "$REF^{commit}")
 BASE=results/arch/s81_dv_1016
 printf 'REF %s\nFRAME %s\nLP %s\n' "$REF" "$FRAME" "$LPREF" > "$W/snapshot.refs"
-git --git-dir="$G" archive "$REF" tools rtl "$BASE" physical/rom_host_ingest results/arch/die_reach_1016.json results/arch/accepted_cost_ledger_1013.json results/arch/mu_s81_1018 results/arch/s81_die72_1021 physical/ref_tile/s81_mu72_assembly | tar -xf - -C "$W/src"
-git --git-dir="$G" ls-tree -r --name-only "$REF" physical | grep -E '(\.v|\.sv|\.vh|/spec\.json)$' | grep -v '^physical/rom_host_ingest' > "$W/phys.lst"
+git --git-dir="$G" archive "$REF" tools rtl compiler/models/deepseek-v4.1-flash results/arch/token_path_20261009 results/arch/s81_map72_1021 results/token_pass "$BASE" physical/rom_host_ingest results/arch/die_reach_1016.json results/arch/accepted_cost_ledger_1013.json results/arch/mu_s81_1018 results/arch/s81_die72_1021 physical/ref_tile/s81_mu72_assembly | tar -xf - -C "$W/src"
+git --git-dir="$G" ls-tree -r --name-only "$REF" physical | grep -E '(\.v|\.sv|\.vh|\.f|\.py|\.sh|/spec\.json)$' | grep -v '^physical/rom_host_ingest' > "$W/phys.lst"
 mapfile -t PF < "$W/phys.lst"; git --git-dir="$G" archive "$REF" -- "${PF[@]}" | tar -xf - -C "$W/src"
 git --git-dir="$G" show "$FRAME:tools/s81_dv/frame_bind.py" > "$W/src/tools/s81_dv/frame_bind.py"
 cd "$W/src"
