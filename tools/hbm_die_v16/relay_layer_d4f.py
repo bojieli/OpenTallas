@@ -67,6 +67,8 @@ def main():
     for k in ('--stations', '--contract', '--manifest', '--root-sites', '--out', '--report'):
         ap.add_argument(k, required=True)
     ap.add_argument('--region-map')
+    ap.add_argument('--row-site-export', help='export source-bound actual landing/pad stage identities for the cell-row planner')
+    ap.add_argument('--row-sites', help='consume exact source-bound per-stage coordinates; clocks, order, ring settings and edges unchanged')
     ap.add_argument('--fork-lane-width', type=int, default=48,
                     help='H-RELAY 10-17 lane model: lane width of a FORKING inter-region bus (48 = the r8b form; 136 = '
                          'wide fork lanes, ceil(bits/136) lanes each with its own forwarded clock, hbfd_rly_136_*_fc[_f<N>])')
@@ -555,6 +557,10 @@ def main():
                                  '(<landing>__fault), not yet ORed into the regional fault tree (hbm_fault_1017.py fr_<Q>)',
                                  owner='HBM-LANDING / HBM-FAULT') if a.land_fault == 'pins' else
                          dict(id='G-D4G-LAND-FAULT', what='landing fault outputs left OPEN (diagnostic --land-fault open)'))
+    from row_sites import transport
+    row_site_receipt = transport(spec, dict(stations=a.stations, contract=a.contract, manifest=a.manifest,
+                                           root_sites=a.root_sites, region_map=a.region_map, land_plan=a.land_plan),
+                                 export=a.row_site_export, plan=a.row_sites)
     with gzip.open(a.out, 'wt') as f:
         json.dump(spec, f)
     import re as _re
@@ -571,7 +577,7 @@ def main():
                tiles=dict(sorted(tiles.items())), kinds=dict(collections.Counter(x['kind'] for x in consts)),
                fork_buses=sum(1 for x in consts if x['fork']), inter_region_buses=sum(1 for x in consts if x['inter_region']),
                equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, notes=notes, compiler=consts,
-               port_age_pads=port_age_pads)
+               port_age_pads=port_age_pads, row_site_transport=row_site_receipt)
     if a.land:
         rep['landing'] = dict(links=len(land_rows), landing_tiles=sum(x['lanes'] for x in land_rows),
                               by_master=dict(collections.Counter(x['master'] for x in land_rows for _ in range(x['lanes']))),
