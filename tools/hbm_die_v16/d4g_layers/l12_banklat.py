@@ -462,6 +462,8 @@ def run(c, rep, max_iter=8, check=L.check, bm=None, bi=None, segs=None):
         if planned == 0 or rep['over_budget']:
             break
     rows, summ = check(c)
+    from l26_closed_views import apply as select_closed_views
+    rep['closed_view_selections'] = select_closed_views(c)
     rep['final_lat'] = summ
     rep['final_fail'] = [dict(client=r['client'], port=r['port'], kind=r['kind'], bad=r['bad'][:3]) for r in rows
                          if r['status'] == 'FAIL']
