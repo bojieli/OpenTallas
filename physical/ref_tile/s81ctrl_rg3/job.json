@@ -1,0 +1,162 @@
+{
+ "name": "s81ctrl_rg3-rg3-COMMIT",
+ "block": "dsfd_ctrl_rg3",
+ "ref_tile": true,
+ "owner": "Claude:DRIVE-S81-IDX4-KITS",
+ "purpose": "S81 CTRL rg3 (MU.BAL.SX.3): n32s controller + non-inline index reader client face (rrq/rrd), main",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-idx4kits-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/s81_ctrl_rg2",
+   "physical/s81_ctrl_rg3",
+   "results/rtl/s81_ctrl_rg2_s3_1019",
+   "results/rtl/s81_ctrl_safe_1019",
+   "results/rtl/s81_idx3r_1020",
+   "results/rtl/s81_idx4kits_1020",
+   "rtl/chip",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc/kv",
+   "rtl/hdc/v41x",
+   "rtl/lib"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_ctrl_rg3 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DS81CTRL_SRAM_FIFO -DS81CTRL_SRAM_P192 -DS81CTRL_NATIVE32 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctrl3_ctrls",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} ctrls 0 \"pass_s1|+SEED=1\" \"pass_s2|+SEED=2\" \"pass_lat60|+SEED=4 +LAT=60\" \"pass_slothit|+SEED=1 +SLOTHIT=1\"",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^CTRL3_CAMPAIGN PASS",
+    "pass_witness": "results/rtl/s81_idx4kits_1020/witness/ctrls.log"
+   },
+   {
+    "name": "ctrl3_cms1",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms1 1 \"fail_s1|+SEED=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms1.log"
+   },
+   {
+    "name": "ctrl3_cms2",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms2 2 \"fail_s1|+SEED=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms2.log"
+   },
+   {
+    "name": "ctrl3_cms3",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms3 3 \"fail_s1|+SEED=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms3.log"
+   },
+   {
+    "name": "ctrl3_cms4",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms4 4 \"fail_slothit|+SEED=1 +SLOTHIT=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81ctrl_rg3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81ctrl_rg3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81ctrl_rg3 --out {RUN}/record/views/dsfd_ctrl_rg3 --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81ctrl_rg3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81ctrl_rg3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81ctrl_rg3/s81ctrl_rg3-rg3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "DRIVE-S81-IDX4-KITS 10-20 (MU.BAL.SX.3, mu7i4 die): dsfd_ctrl_rg3 = dsfd_ctrl_rg2 (same 2 x ot_s81ph_ctrl_pcr, n32s defines SRAM p192 FIFOs + native32, same 388.8 x 324 outline, same 2x2 SRAM macro origins) PLUS the static-slot client face of the non-inline index reader dsdv_idx_rg3: rrq 92 b in / rrd 544 b out (landing FIFO 24 x 44 b a PC in flops, return demux by reader tag, registered slot select). +3.6k FF (6583 vs 2956), census 0 drivers > 32 (reset landing by the flow). Pin plan: N face re-pinned per PC half (rq rd rrq rrd | clk ck_o | rq rd rrq rrd), 4.85 pins/um alternating M3/M5."
+}
