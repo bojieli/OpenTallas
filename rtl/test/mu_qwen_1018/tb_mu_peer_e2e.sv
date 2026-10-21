@@ -17,6 +17,9 @@ module tb_mu_peer_e2e;
  reg por_n=0,rst_n=0;
  integer cyc=0;always @(posedge ck)cyc<=cyc+1;
  localparam integer ROUNDS=3,POST_LIM=400,DELAY3=3000;
+ // KV-MU6 10-20: UIDSLOT 1 = the KV die HOST root configuration (qkd_host_root_admission_mu: coordinator POST_UID_SLOT 1;
+ // the real observer ot_host_if_pb2_observed exports RAW positions (< 8192) + the scheduler slot on the step/CQ faces).
+ parameter integer UIDSLOT=0;
  integer fails=0;reg trace=0;initial trace=$test$plusargs("TRACE");
  task fail(input[1023:0]m);begin fails=fails+1;if(fails<12)$display("ERR cyc %0d %0s",cyc,m);end endtask
  // ---------------- die drains (KV model) ----------------
@@ -62,7 +65,7 @@ module tb_mu_peer_e2e;
  // ---------------- coordinator (MU 1) ----------------
  wire dispatch_valid,dispatched,co_fault,post_pending,consensus;wire[58:0]cohort_tag;wire[1:0]cohort_gen;wire[7:0]acc_ranks;
  reg er_v=0;reg[58:0]er_tag=0;reg[1:0]er_gen=0;reg[17:0]er_tok=0;reg[31:0]er_val=0;wire er_cr;
- qkd_host_tp8_coordinator_mu #(.MU(1)) co(.ck_codec(ck),.ck_lifecycle(ck),.ck_post(ck),.por_n(por_n),
+ qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(UIDSLOT)) co(.ck_codec(ck),.ck_lifecycle(ck),.ck_post(ck),.por_n(por_n),
   .peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),
   .token_request_valid(t_req_v),.token_request_token(t_req_tok),.token_request_position(t_req_pos),.token_request_gen(t_req_gen),.token_request_ready(t_req_r),
   .token_grant_valid(t_gv),.token_grant_ready(t_gr),.token_grant_epoch(t_gep),.token_grant_token(t_gtok),.token_grant_position(t_gpos),.token_grant_gen(t_ggen),.token_grant_tag(t_gtag),
@@ -204,10 +207,25 @@ module tb_mu_peer_e2e;
    end
   end
  end
+ // KV-MU6 10-20 release identity: each rank's endpoint release (cancel_release_v names a TAG, cancel_released answers it)
+ // is credited to the user whose CURRENT epoch the TAG names; a POST needs all 8 rank releases of its own terminal
+ // (POST release_seen is one global vector: releases of overlapping users must never be mixed or reused).
+ reg[58:0]rlast[0:7];reg[7:0]rlast_v=0;reg[7:0]relmask[0:3];integer nrel=0,relchk=0;
+ initial for(i=0;i<4;i=i+1)relmask[i]=0;
+ always @(posedge ck)if(rst_n)begin:rel_mon
+  integer d,ru;
+  for(d=0;d<8;d=d+1)begin
+   if(crel[d]&&rlast_v[d])begin ru=rlast[d][44:43];rlast_v[d]=0;nrel=nrel+1;
+    if(rlast[d][58:43]===ep_of[ru])relmask[ru][d]=1'b1;else if(!abort_mode)fail("rank release names no current user epoch");end
+   if(rel_v[d])begin rlast[d]=rel_tag[d*59+:59];rlast_v[d]=1'b1;end
+  end
+ end
  // POSTs (coordinator POST collector _mu): in order per user, within POST_LIM of the user's KV done
  always @(posedge ck)if(co.g_mu.u_lifecycle.post_retired)begin:post_mon
   integer u,lat;u=co.g_mu.u_lifecycle.post_tag[44:43];
   if(co.g_mu.u_lifecycle.post_tag!=={ep_of[u],6'd37,tok_of[u],pos_of[u][12:0],6'd0})fail("POST identity");
+  if(!abort_mode)begin relchk=relchk+1;if(relmask[u]!==8'hff)begin fail("POST before all 8 rank releases of its own terminal");$display("  u%0d relmask %b",u,relmask[u]);end end
+  relmask[u]=0;
   lat=cyc-done_cyc[u];if(lat>maxlat)maxlat=lat;
   if(lat>POST_LIM&&!abort_mode)begin fail("POST late (waited for a global die drain while other users in flight)");$display("  u%0d lat %0d",u,lat);end
   if(others_busy(u))overlap_post=overlap_post+1;
@@ -232,7 +250,7 @@ module tb_mu_peer_e2e;
  task automatic step_frame(input integer kind,input integer u,input bit rcq);begin
   while(step_busy||g_rk[0].rc.step_pending||g_rk[0].rc.retire_pending||g_rk[0].rc.cq_pending)@(negedge ck);
   step_busy=1;
-  @(negedge ck);st_client=16'h7261+16'(u);st_slot=8'(u);st_pos=pos_of[u];st_tok=18'h100+18'(u);st_rcq=rcq;
+  @(negedge ck);st_client=16'h7261+16'(u);st_slot=8'(u);st_pos=(UIDSLOT!=0)?{5'd0,pos_of[u][12:0]}:pos_of[u];st_tok=18'h100+18'(u);st_rcq=rcq;
   if(kind==5)st_issue=1;if(kind==6)st_retire=1;if(kind==7)st_cq=1;
   @(negedge ck);st_issue=0;st_retire=0;st_cq=0;repeat(2)@(negedge ck);step_busy=0;
  end endtask
@@ -353,8 +371,8 @@ module tb_mu_peer_e2e;
   end
   if(abort_mode);
   else if(fails==0)
-   $display("PASS MU_PEER_E2E users=4 rounds=%0d steps=%0d posts=%0d rank_requests=%0d peer_starts=%0d writer_stages=%0d overlap_dispatch=%0d overlap_post=%0d epochs_out_of_global_order=%0d max_post_after_kv_done=%0d cycles=%0d",
-     ROUNDS,4*ROUNDS,npost,nreq,peer_starts,nws,overlap_disp,overlap_post,epoch_out_of_order,maxlat,cyc);
+   $display("PASS MU_PEER_E2E uidslot=%0d release_checked_posts=%0d rank_releases=%0d users=4 rounds=%0d steps=%0d posts=%0d rank_requests=%0d peer_starts=%0d writer_stages=%0d overlap_dispatch=%0d overlap_post=%0d epochs_out_of_global_order=%0d max_post_after_kv_done=%0d cycles=%0d",
+     UIDSLOT,relchk,nrel,ROUNDS,4*ROUNDS,npost,nreq,peer_starts,nws,overlap_disp,overlap_post,epoch_out_of_order,maxlat,cyc);
   else $display("FAIL MU_PEER_E2E fails=%0d posts=%0d requests=%0d writer_stages=%0d",fails,npost,nreq,nws);
   $finish;
  end
