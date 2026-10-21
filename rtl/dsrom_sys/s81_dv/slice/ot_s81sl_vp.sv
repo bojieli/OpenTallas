@@ -34,6 +34,14 @@
 //          macro, output register, vp output flop) and row-pair writes (x_wv / x_wa / x_wm / x_wd).  vs never
 //          overlaps a vp op on a bank port (compiler slots); an overlap is a sticky fault here.
 // Every input lands in a flop; every output leaves a flop.
+// r8 (ELEM-VP8 10-21, after the r7 pre-route STA: every violator was a single-cycle wire across the 0.73 x 0.86 mm tile):
+// registered relay hops on every cross-tile seam, compiler-visible latencies (all fixed, all static):
+//   E seam outputs (hw_*, hr_*, n_go / n_pre, m_*, wl_*)  +ER edges   (ER = 2 MAIN / 3 FALLBACK)
+//   h round trip (hr out relays + hq in relays)           +ER+IR      (IR = 1 MAIN / 2 FALLBACK; internal alignment)
+//   lane feed / lane outputs (both kits)                  +1 / +1     (was the FALLBACK-only OT_S81SL_VP_RELAY stage)
+//   x extension port (x_rv/x_ra and x_wv/x_wa/x_wm/x_wd)  +XR edges at the bank (XR = 1 MAIN / 2 FALLBACK): x_qv / x_qd
+//                                                          4 + XR edges after x_rv (vs is arrival-driven on x_qv)
+//   POST coefficient capture                              +1 (internal; POST -> POST issue spacing +ER+IR+2)
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_vp #(
     parameter integer ML = 7,
@@ -68,14 +76,20 @@ module ot_s81sl_vp #(
     input  wire [7:0]    x_wm,
     input  wire [255:0]  x_wd,
     // vn seam
-    output reg           hw_v, output reg [2:0] hw_j, output reg hw_hf, output reg [255:0] hw_d,
-    output reg           hr_v, output reg [2:0] hr_j, output reg hr_hf,
+    output wire          hw_v, output wire [2:0] hw_j, output wire hw_hf, output wire [255:0] hw_d,
+    output wire          hr_v, output wire [2:0] hr_j, output wire hr_hf,
     input  wire          hq_v, input wire [255:0] hq_d,
-    output reg           n_go, output reg [127:0] n_pre,
-    output reg           m_v, output reg m_q, output reg m_b, output reg [7:0] m_i,
-    output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
+    output wire          n_go, output wire [127:0] n_pre,
+    output wire          m_v, output wire m_q, output wire m_b, output wire [7:0] m_i,
+    output wire          wl_v, output wire [2:0] wl_i, output wire [255:0] wl_d,
     output reg           fault
 );
+`ifdef OT_S81SL_VP_RELAY
+    localparam integer ER = 3, IR = 2, XR = 2;       // r8 FALLBACK: one more relay hop on every long seam
+`else
+    localparam integer ER = 2, IR = 1, XR = 1;       // r8 MAIN
+`endif
+    localparam integer HRT = ER + IR;                // extra edges on the h round trip (hr -> vn -> hq)
     localparam [3:0] OP_GAIN = 4'd1, OP_POST = 4'd2, OP_HLOAD = 4'd3, OP_HSTORE = 4'd4, OP_NORM = 4'd5, OP_RDOUT = 4'd6, OP_NORMR = 4'd7;
     // SAFE 10-21: 10 reset regions (was 4 with ~100 loads each): every relay leaf resets <= ~33 control / valid flops;
     // coefficient enables, relays and the fault reduce pipe carry no reset (they flush while reset is held).
@@ -86,14 +100,14 @@ module ot_s81sl_vp #(
     integer i, k;
 
     // ---------------------------------------------------------------- input pin flops
-    reg cv_c, hqv_c, xrv_c; reg [9:0] xra_c, xwa_c; reg [7:0] xwm_c; reg [255:0] xwd_c;
+    reg cv_c, hqv_c, xrv_p; reg [9:0] xra_p; reg [9:0] xwa_c; reg [255:0] xwd_c;
     reg [159:0] cd_c; reg [9:0] swa_c; reg [7:0] swm_c; reg [255:0] swd_c; reg [23:0] cwa_c; reg [63:0] cwd_c;
     reg [255:0] hqd_c;
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin cv_c <= 1'b0; hqv_c <= 1'b0; xrv_c <= 1'b0; end
-        else begin cv_c <= c_v; hqv_c <= hq_v; xrv_c <= x_rv; end
+        if (!rs_c) begin cv_c <= 1'b0; hqv_c <= 1'b0; xrv_p <= 1'b0; end
+        else begin cv_c <= c_v; hqv_c <= hq_v; xrv_p <= x_rv; end
     always @(posedge clk) begin
-        xra_c <= x_ra; xwa_c <= x_wa; xwm_c <= x_wm; xwd_c <= x_wd;
+        xra_p <= x_ra;
         cd_c <= c_d; swa_c <= sw_a; swm_c <= sw_m; swd_c <= sw_d; cwa_c <= cw_a; cwd_c <= cw_d; hqd_c <= hq_d;
     end
     wire [3:0] op = cd_c[3:0]; wire [9:0] a0 = cd_c[13:4], a1 = cd_c[23:14]; wire [7:0] cn = cd_c[31:24];
@@ -110,12 +124,43 @@ module ot_s81sl_vp #(
     (* keep *) reg [8:0]      k_cv;                  // n_pre 16-bit groups 0..7 + the m_* group 8
     (* keep *) reg [35:0]     k_op;
     always @(posedge clk or negedge rsv[11]) if(!rsv[11]) k_swv <= 0; else k_swv <= {NG{sw_v}};
-    always @(posedge clk or negedge rsv[12]) if(!rsv[12]) k_xwv <= 0; else k_xwv <= {NG{x_wv}};
+    // r8: x extension port relays (W pins -> banks ~0.96 mm).  Read request: pin flop + XR relays (xrv_c / xra_c = the
+    // bank-side stage).  Write: pin flop + XR - 1 relays + the kept per-group copies (the last relay, beside the banks).
+    reg xwv_p; reg [9:0] xwa_p; reg [7:0] xwm_p; reg [255:0] xwd_p;
+    always @(posedge clk or negedge rsv[15]) if(!rsv[15]) xwv_p <= 1'b0; else xwv_p <= x_wv;   // relay valids on leaf 15
+    always @(posedge clk) begin xwa_p <= x_wa; xwm_p <= x_wm; xwd_p <= x_wd; end
+    wire xrv_c, xwv_q; wire [9:0] xra_c, xwa_q; wire [7:0] xwm_q; wire [255:0] xwd_q;
+    // stage gx takes stage gx - 1 (stage 0 the pin flop); separate generate branches, no self-reference
+    genvar gx;
+    generate for (gx = 0; gx < XR; gx = gx + 1) begin : g_xr
+        (* keep *) reg rv; (* keep *) reg [9:0] ra; wire rv_d; wire [9:0] ra_d;
+        if (gx == 0) begin : g_s assign rv_d = xrv_p; assign ra_d = xra_p; end
+        else begin : g_s assign rv_d = g_xr[gx - 1].rv; assign ra_d = g_xr[gx - 1].ra; end
+        always @(posedge clk or negedge rsv[15]) if (!rsv[15]) rv <= 1'b0; else rv <= rv_d;
+        always @(posedge clk) ra <= ra_d;
+    end
+    for (gx = 0; gx < XR - 1; gx = gx + 1) begin : g_xw
+        (* keep *) reg wv; (* keep *) reg [9:0] wa; (* keep *) reg [7:0] wm; (* keep *) reg [255:0] wd;
+        wire wv_d; wire [9:0] wa_d; wire [7:0] wm_d; wire [255:0] wd_d;
+        if (gx == 0) begin : g_s assign wv_d = xwv_p; assign wa_d = xwa_p; assign wm_d = xwm_p; assign wd_d = xwd_p; end
+        else begin : g_s assign wv_d = g_xw[gx - 1].wv; assign wa_d = g_xw[gx - 1].wa; assign wm_d = g_xw[gx - 1].wm; assign wd_d = g_xw[gx - 1].wd; end
+        always @(posedge clk or negedge rsv[15]) if (!rsv[15]) wv <= 1'b0; else wv <= wv_d;
+        always @(posedge clk) begin wa <= wa_d; wm <= wm_d; wd <= wd_d; end
+    end
+    if (XR > 1) begin : g_xwo
+        assign xwv_q = g_xw[XR - 2].wv; assign xwa_q = g_xw[XR - 2].wa; assign xwm_q = g_xw[XR - 2].wm; assign xwd_q = g_xw[XR - 2].wd;
+    end else begin : g_xwo
+        assign xwv_q = xwv_p; assign xwa_q = xwa_p; assign xwm_q = xwm_p; assign xwd_q = xwd_p;
+    end
+    endgenerate
+    assign xrv_c = g_xr[XR - 1].rv; assign xra_c = g_xr[XR - 1].ra;
+    always @(posedge clk or negedge rsv[12]) if(!rsv[12]) k_xwv <= 0; else k_xwv <= {NG{xwv_q}};
     always @(posedge clk or negedge rsv[13]) if(!rsv[13]) k_cwv[NG-1:0] <= 0; else k_cwv[NG-1:0] <= {NG/2{cw_v}};
     always @(posedge clk or negedge rsv[14]) if(!rsv[14]) k_cwv[2*NG-1:NG] <= 0; else k_cwv[2*NG-1:NG] <= {NG/2{cw_v}};
     always @(posedge clk or negedge rs_c2) if(!rs_c2) k_cv <= 0; else k_cv <= {9{c_v}};
     always @(posedge clk) begin
-        k_swa0 <= {NG{sw_a[0]}}; k_xwa0 <= {NG{x_wa[0]}}; k_swm <= {NG{sw_m}}; k_xwm <= {NG{x_wm}};
+        k_swa0 <= {NG{sw_a[0]}}; k_xwa0 <= {NG{xwa_q[0]}}; k_swm <= {NG{sw_m}}; k_xwm <= {NG{xwm_q}};
+        xwa_c <= xwa_q; xwd_c <= xwd_q;
         k_cws <= {NG{cw_a[14:12], cw_a[2:0]}}; k_op <= {9{c_d[3:0]}};
     end
 
@@ -271,42 +316,71 @@ module ot_s81sl_vp #(
     // ---------------------------------------------------------------- hc_post: coefficients, operands, lanes
     // coefficient capture: POST steps 0..4 one-hot, decoded one edge early from the read-step pipe and kept per
     // (step, word) so each enable drives 32 flops (was dv / dop / dsi decode -> 640 enables).
+    // r8: one relay hop band -> lane grid (the cf flops sit beside the lanes they feed): the enables (k_cfe -> k_cfe2)
+    // and the row (q1r -> cfq) are re-registered, capture +1 edge (step 4's row lands 3 + 1 edges after its read, long
+    // before the first lane issue at step 5 + 5 + HRT + 1).
     reg [31:0] cf [0:19];
-    (* keep *) reg [39:0] k_cfe;                              // [4 s + i]: POST step s, word i
-    always @(posedge clk)   // no reset: dv1 is reset, so k_cfe is 0 one edge into reset
+    (* keep *) reg [39:0] k_cfe, k_cfe2;                      // [8 s + i]: POST step s, word i
+    (* keep *) reg [127:0] cfq;
+    always @(posedge clk)   // no reset: dv1 is reset, so k_cfe / k_cfe2 are 0 two edges into reset
         for (k = 0; k < 5; k = k + 1) k_cfe[8 * k +: 8] <= {8{dv1 && dop1 == OP_POST && dsi1 == k[7:0]}};
+    always @(posedge clk) begin k_cfe2 <= k_cfe; cfq <= q1r; end
     always @(posedge clk)
         for (k = 0; k < 5; k = k + 1)
             for (i = 0; i < 8; i = i + 1)
-                if (k_cfe[8 * k + i]) begin
+                if (k_cfe2[8 * k + i]) begin
 `ifndef OT_S81SL_VP_MUT_POSTLAST
                     // step 0 = post row -> cf[16 + i]; steps 1..4 = comb row j = step - 1 -> cf[4 j + i]
-                    if (k == 0) cf[16 + i/2][16*(i%2)+:16] <= q1r[16*i+:16]; else cf[4 * (k - 1) + i/2][16*(i%2)+:16] <= q1r[16*i+:16];
+                    if (k == 0) cf[16 + i/2][16*(i%2)+:16] <= cfq[16*i+:16]; else cf[4 * (k - 1) + i/2][16*(i%2)+:16] <= cfq[16*i+:16];
 `else
-                    cf[4 * k + i/2][16*(i%2)+:16] <= q1r[16*i+:16];   // bench mutant: the old order (comb rows a0..a0+3, post a0+4)
+                    cf[4 * k + i/2][16*(i%2)+:16] <= cfq[16*i+:16];   // bench mutant: the old order (comb rows a0..a0+3, post a0+4)
 `endif
                 end
     // POST step s >= 5 (cycle T): the y row read and the h half-row request (hr) leave together; the y row is at q in
-    // T + 2 (macro + output register) and at yrow_d[2] in T + 5, the h half row at hqd_c in T + 5 (hr out flop, vn pin
-    // flop, vn h macro edge, vn output flop, this leaf's pin flop): the lanes issue in T + 5.
-    reg [127:0] yrow_d [0:2]; reg [3:0] ydv;
-    always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= 4'd0;
-        else ydv <= {ydv[2:0], dv && dop == OP_POST && dsi >= 8'd5};
-    always @(posedge clk) begin yrow_d[0] <= q1r; yrow_d[1] <= yrow_d[0]; yrow_d[2] <= yrow_d[1]; end
+    // T + 2 (macro + output register); the h half row is at hqd_c in T + 5 + ER (hr core flop + ER relays, vn pin flop,
+    // vn h macro edge, vn output flop, this leaf's pin flop) and at the IR-relayed copies in T + 5 + HRT.  The y row and
+    // its valid ride a YD = 3 + HRT deep pipe (yrow_d[YD - 1] / ydv[YD - 1] in T + 5 + HRT).
+    localparam integer YD = 3 + HRT;
+    reg [127:0] yrow_d [0:YD-1]; reg [YD:0] ydv;
+    always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= {(YD+1){1'b0}};
+        else ydv <= {ydv[YD-1:0], dv && dop == OP_POST && dsi >= 8'd5};
+    always @(posedge clk) begin
+        yrow_d[0] <= q1r;
+        for (k = 1; k < YD; k = k + 1) yrow_d[k] <= yrow_d[k - 1];
+    end
+    // h input relays (IR stages after the pin flop hqd_c / hqv_c).  Two kept chains: the HSTORE / fault copy (toward
+    // the banks) and the lane copy, split per lane COLUMN i (64 bits: copies k = 0..3 of element i feed the 4 lanes of
+    // column i), so each chain runs from the E pins straight to its column.
+    wire hqv_h; wire [255:0] hqd_h; wire [63:0] hqd_l [0:3];
+    genvar gh, gc;
+    generate for (gh = 0; gh < IR; gh = gh + 1) begin : g_hq
+        (* keep *) reg v; (* keep *) reg [255:0] d; (* keep *) reg [63:0] c0, c1, c2, c3;
+        wire v_d; wire [255:0] d_d; wire [63:0] c0_d, c1_d, c2_d, c3_d;
+        if (gh == 0) begin : g_s
+            assign v_d = hqv_c; assign d_d = hqd_c;
+            for (gc = 0; gc < 4; gc = gc + 1) begin : g_c
+                // column gc: {copy 3, copy 2, copy 1, copy 0} of element gc
+                wire [63:0] col = {hqd_c[(12 + gc) * 16 +: 16], hqd_c[(8 + gc) * 16 +: 16], hqd_c[(4 + gc) * 16 +: 16], hqd_c[gc * 16 +: 16]};
+            end
+            assign c0_d = g_c[0].col; assign c1_d = g_c[1].col; assign c2_d = g_c[2].col; assign c3_d = g_c[3].col;
+        end else begin : g_s
+            assign v_d = g_hq[gh - 1].v; assign d_d = g_hq[gh - 1].d;
+            assign c0_d = g_hq[gh - 1].c0; assign c1_d = g_hq[gh - 1].c1; assign c2_d = g_hq[gh - 1].c2; assign c3_d = g_hq[gh - 1].c3;
+        end
+        always @(posedge clk or negedge rs_c) if (!rs_c) v <= 1'b0; else v <= v_d;
+        always @(posedge clk) begin d <= d_d; c0 <= c0_d; c1 <= c1_d; c2 <= c2_d; c3 <= c3_d; end
+    end endgenerate
+    assign hqv_h = g_hq[IR - 1].v; assign hqd_h = g_hq[IR - 1].d;
+    assign hqd_l[0] = g_hq[IR - 1].c0; assign hqd_l[1] = g_hq[IR - 1].c1; assign hqd_l[2] = g_hq[IR - 1].c2; assign hqd_l[3] = g_hq[IR - 1].c3;
     // lanes: r0..r3 = h copies (BF16 -> FP32 pattern), y = y[e], c_j = comb[j][k] (word 4j + k), p = post[k]
     // SAFE 10-21: lr / ly are KEPT per lane (Yosys merged the 4 identical column copies with hs_d into one flop that
     // drove 4 lanes ~520 um apart + the bank write mux); lane_v is a kept copy per lane row (4) + one for the
     // write-back valid ring.
-    // FALLBACK (define OT_S81SL_VP_RELAY, kit s81sl_vp_fb): one registered relay stage on the lane feed (lr / ly / v)
-    // and one on the lane outputs (o / vo / fault), so no single-cycle wire spans the band -> lane grid (~700 um);
-    // priced: POST write-back (hw_v / hw_d) +2 edges, nothing else moves.
-`ifdef OT_S81SL_VP_RELAY
+    // r8 (both kits; was FALLBACK-only): one registered relay stage on the lane feed (lrA / lyA / k_lanevA) and one on
+    // the lane outputs (o / vo / fault), so no single-cycle wire spans the band / E pins -> lane grid.
     localparam integer LRELAY = 1;
-`else
-    localparam integer LRELAY = 0;
-`endif
     wire [15:0] lv, lf; wire [31:0] lo [0:15];
-    wire [15:0] lv_s, lf_s; wire [31:0] lo_s [0:15];     // lane outputs as seen by the band (relayed in the fallback)
+    wire [15:0] lv_s, lf_s; wire [31:0] lo_s [0:15];     // lane outputs as seen by the band (relayed)
     (* keep *) reg [4:0] k_lanev;
     (* keep *) reg [31:0] lr [0:15][0:3]; (* keep *) reg [31:0] ly [0:15];
     genvar gl;
@@ -322,45 +396,29 @@ module ot_s81sl_vp #(
             .c0(cf[KK]), .c1(cf[4 + KK]), .c2(cf[8 + KK]), .c3(cf[12 + KK]), .p(cf[16 + KK]),
             .vo(lv[gl]), .o(lo[gl]), .fault(lf[gl]));
     end endgenerate
-    // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
-`ifdef OT_S81SL_VP_RELAY
+    // the h half row of POST step s (requested with the y read: the relayed hq arrives aligned with ydv[YD - 1])
     (* keep *) reg [31:0] lrA [0:15][0:3]; (* keep *) reg [31:0] lyA [0:15]; (* keep *) reg [4:0] k_lanevA;
     always @(posedge clk or negedge rs_p) if (!rs_p) begin k_lanevA <= 5'd0; k_lanev <= 5'd0; end
-        else begin k_lanevA <= {5{ydv[2]}}; k_lanev <= k_lanevA; end
+        else begin k_lanevA <= {5{ydv[YD-1]}}; k_lanev <= k_lanevA; end
     always @(posedge clk)
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
-                lrA[4 * k + i][0] <= {hqd_c[(4 * 0 + i) * 16 +: 16], 16'd0};
-                lrA[4 * k + i][1] <= {hqd_c[(4 * 1 + i) * 16 +: 16], 16'd0};
-                lrA[4 * k + i][2] <= {hqd_c[(4 * 2 + i) * 16 +: 16], 16'd0};
-                lrA[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
-                lyA[4 * k + i] <= yrow_d[2][32 * i +: 32];
+                lrA[4 * k + i][0] <= {hqd_l[i][16 * 0 +: 16], 16'd0};
+                lrA[4 * k + i][1] <= {hqd_l[i][16 * 1 +: 16], 16'd0};
+                lrA[4 * k + i][2] <= {hqd_l[i][16 * 2 +: 16], 16'd0};
+                lrA[4 * k + i][3] <= {hqd_l[i][16 * 3 +: 16], 16'd0};
+                lyA[4 * k + i] <= yrow_d[YD-1][32 * i +: 32];
                 lr[4 * k + i][0] <= lrA[4 * k + i][0]; lr[4 * k + i][1] <= lrA[4 * k + i][1];
                 lr[4 * k + i][2] <= lrA[4 * k + i][2]; lr[4 * k + i][3] <= lrA[4 * k + i][3];
                 ly[4 * k + i] <= lyA[4 * k + i];
             end
-`else
-    always @(posedge clk or negedge rs_p) if (!rs_p) k_lanev <= 5'd0; else k_lanev <= {5{ydv[2]}};
-    always @(posedge clk)
-        for (k = 0; k < 4; k = k + 1)
-            for (i = 0; i < 4; i = i + 1) begin
-                lr[4 * k + i][0] <= {hqd_c[(4 * 0 + i) * 16 +: 16], 16'd0};
-                lr[4 * k + i][1] <= {hqd_c[(4 * 1 + i) * 16 +: 16], 16'd0};
-                lr[4 * k + i][2] <= {hqd_c[(4 * 2 + i) * 16 +: 16], 16'd0};
-                lr[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
-                ly[4 * k + i] <= yrow_d[2][32 * i +: 32];
-            end
-`endif
     genvar go;
-    generate if (LRELAY != 0) begin : g_orl
+    generate begin : g_orl
         (* keep *) reg [15:0] lv_r, lf_r; (* keep *) reg [31:0] lo_r [0:15];
         always @(posedge clk) begin lv_r <= lv; lf_r <= lf; end   // no reset: the lanes hold vo / fault low in reset
         always @(posedge clk) for (k = 0; k < 16; k = k + 1) lo_r[k] <= lo[k];
         assign lv_s = lv_r; assign lf_s = lf_r;
         for (go = 0; go < 16; go = go + 1) begin : g_o assign lo_s[go] = lo_r[go]; end
-    end else begin : g_onr
-        assign lv_s = lv; assign lf_s = lf;
-        for (go = 0; go < 16; go = go + 1) begin : g_o assign lo_s[go] = lo[go]; end
     end endgenerate
     // write-back valid: lane_v delayed by the lane latency HPL, as a RING (HPL - 1 entries, rotating pointer) + an
     // output register with kept copies (SAFE 10-21: was a 33-deep flop->flop shift line; same latency).  The write-back
@@ -380,11 +438,7 @@ module ot_s81sl_vp #(
     end endgenerate
     always @(posedge clk or negedge rsv[22])
       if(!rsv[22]) ring_v <= 0;
-`ifdef OT_S81SL_VP_RELAY
       else ring_v <= {NWG{k_lanevA[4]}};
-`else
-      else ring_v <= {NWG{ydv[2]}};
-`endif
     localparam integer RH = RD / 2;                         // ring reset split over two relay leaves
     // Constant bit ownership keeps each async reset local. A variable vector
     // lvalue in two processes made the untouched half an async-load value.
@@ -421,24 +475,28 @@ module ot_s81sl_vp #(
         else begin wvl <= |ring_read; k_wvl <= {17{|ring_read}}; widx <= wvl ? widx + 4'd1 : 4'd0; end
 
     // ---------------------------------------------------------------- vn seam (registered outputs)
+    reg hw_v_i, hw_hf_i, hr_v_i, hr_hf_i, n_go_i, m_v_i, m_q_i, m_b_i, wl_v_i; reg [2:0] hw_j_i, hr_j_i, wl_i_i;
+    reg [255:0] hw_d_i, wl_d_i; reg [127:0] n_pre_i; reg [7:0] m_i_i;
     reg hrq_v; reg [3:0] hrq_i;                  // h read request this cycle (POST / HSTORE)
     always @(*) begin
         hrq_v = 1'b0; hrq_i = 4'd0;
         if (srun && sop == OP_POST && si >= 8'd5) begin hrq_v = 1'b1; hrq_i = si[3:0] - 4'd5; end
         if (srun && sop == OP_HSTORE) begin hrq_v = 1'b1; hrq_i = si[3:0]; end
     end
-    // HSTORE: the half row returns from vn three edges after hr, plus this leaf's input flop.  The half-row index is
-    // the position inside the contiguous 16-step HSTORE burst (counter over hsv_q[4]; was a 5-deep tag line).
-    reg [4:0] hsv_q; reg [3:0] hs_cnt;
-    always @(posedge clk or negedge rs_o) if (!rs_o) begin hsv_q <= 5'd0; hs_cnt <= 4'd0; end
-        else begin hsv_q <= {hsv_q[3:0], srun && sop == OP_HSTORE}; hs_cnt <= hsv_q[4] ? hs_cnt + 4'd1 : 4'd0; end
+    // HSTORE: the half row returns from vn three edges after hr, plus this leaf's input flop, plus (r8) the ER hr relays
+    // and the IR hq relays.  The half-row index is the position inside the contiguous 16-step HSTORE burst (counter
+    // over hsv_q[HD - 1]; was a 5-deep tag line).
+    localparam integer HD = 5 + HRT;
+    reg [HD-1:0] hsv_q; reg [3:0] hs_cnt;
+    always @(posedge clk or negedge rs_o) if (!rs_o) begin hsv_q <= {HD{1'b0}}; hs_cnt <= 4'd0; end
+        else begin hsv_q <= {hsv_q[HD-2:0], srun && sop == OP_HSTORE}; hs_cnt <= hsv_q[HD-1] ? hs_cnt + 4'd1 : 4'd0; end
     reg [9:0] hs_base;
     always @(posedge clk) if (cv_c && op == OP_HSTORE) hs_base <= a0;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[4] && hqv_c;
+        if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[HD-1] && hqv_h;
     always @(posedge clk or negedge rsv[10])
-        if(!rsv[10]) k_hsv <= 0; else k_hsv <= {NG{hsv_q[4] && hqv_c}};
-    always @(posedge clk) begin hs_a <= hs_base + {hs_cnt, 1'b0}; k_hsa0 <= {(NG-1){hs_base[0]}}; hs_d <= hqd_c; end
+        if(!rsv[10]) k_hsv <= 0; else k_hsv <= {NG{hsv_q[HD-1] && hqv_h}};
+    always @(posedge clk) begin hs_a <= hs_base + {hs_cnt, 1'b0}; k_hsa0 <= {(NG-1){hs_base[0]}}; hs_d <= hqd_h; end
 
     // NORM / NORMR load of n_pre / m_*: decoded per 32-bit word from kept command copies (k_cv / k_op, landed at the
     // pin) and a registered NORMR-done flag with kept copies (was cv_c && op == NORM / dv && dop == NORMR -> 140 loads).
@@ -452,13 +510,13 @@ module ot_s81sl_vp #(
         assign k_norm[gn] = k_cv[gn] && k_op[4 * gn +: 4] == OP_NORM;
     end endgenerate
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; s_v <= 1'b0; x_qv <= 1'b0; end
+        if (!rs_o) begin hw_v_i <= 1'b0; hr_v_i <= 1'b0; n_go_i <= 1'b0; m_v_i <= 1'b0; wl_v_i <= 1'b0; lo_v <= 1'b0; s_v <= 1'b0; x_qv <= 1'b0; end
         else begin
-            hw_v <= wvl || (dv && dop == OP_HLOAD);
-            hr_v <= hrq_v;
-            n_go <= (cv_c && op == OP_NORM) || nr_done;
-            m_v <= (cv_c && op == OP_NORM) || nr_done;
-            wl_v <= dv && dop == OP_GAIN;
+            hw_v_i <= wvl || (dv && dop == OP_HLOAD);
+            hr_v_i <= hrq_v;
+            n_go_i <= (cv_c && op == OP_NORM) || nr_done;
+            m_v_i <= (cv_c && op == OP_NORM) || nr_done;
+            wl_v_i <= dv && dop == OP_GAIN;
             lo_v <= dv && dop == OP_RDOUT;
             s_v <= cv_c && op[3];
             x_qv <= xr2;
@@ -467,23 +525,23 @@ module ot_s81sl_vp #(
         // hw_d lane field k on its own kept wvl copy (16 bits + the flow's pin-side copy): lane write-back, else the
         // HLOAD row pair
         for (k = 0; k < 16; k = k + 1)
-            if (k_wvl[k]) hw_d[16 * k +: 16] <= lo_s[k][31:16];
-            else hw_d[16 * k +: 16] <= qoe[16 * k +: 16];
-        if (k_wvl[16]) begin hw_j <= widx[3:1]; hw_hf <= widx[0]; end
-        else begin hw_j <= dsi[3:1]; hw_hf <= dsi[0]; end
-        hr_j <= hrq_i[3:1]; hr_hf <= hrq_i[0];
+            if (k_wvl[k]) hw_d_i[16 * k +: 16] <= lo_s[k][31:16];
+            else hw_d_i[16 * k +: 16] <= qoe[16 * k +: 16];
+        if (k_wvl[16]) begin hw_j_i <= widx[3:1]; hw_hf_i <= widx[0]; end
+        else begin hw_j_i <= dsi[3:1]; hw_hf_i <= dsi[0]; end
+        hr_j_i <= hrq_i[3:1]; hr_hf_i <= hrq_i[0];
         // 16-bit groups: the flow keeps a pin-side copy of every output flop, so a group select sees 2 x 16 loads
         for (k = 0; k < 8; k = k + 1)
-            if (k_norm[k]) n_pre[16 * k +: 16] <= cd_c[32 + 16 * k +: 16];
+            if (k_norm[k]) n_pre_i[16 * k +: 16] <= cd_c[32 + 16 * k +: 16];
             else if (k_nrd[k])
 `ifndef OT_S81SL_VP_MUT_NORMIMM
-                n_pre[16 * k +: 16] <= q1r[16 * k +: 16];
+                n_pre_i[16 * k +: 16] <= q1r[16 * k +: 16];
 `else
-                n_pre[16 * k +: 16] <= 16'd0;          // bench mutant: NORMR ignores the row (the old imm-only NORM)
+                n_pre_i[16 * k +: 16] <= 16'd0;          // bench mutant: NORMR ignores the row (the old imm-only NORM)
 `endif
-        if (k_norm[8]) begin m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
-        else if (k_nrd[8]) begin m_q <= dmq[8]; m_b <= dmq[9]; m_i <= dmq[7:0]; end
-        wl_i <= dsi[2:0]; wl_d <= {qo, qe};
+        if (k_norm[8]) begin m_q_i <= cn[0]; m_b_i <= cn[1]; m_i_i <= a1[7:0]; end
+        else if (k_nrd[8]) begin m_q_i <= dmq[8]; m_b_i <= dmq[9]; m_i_i <= dmq[7:0]; end
+        wl_i_i <= dsi[2:0]; wl_d_i <= {qo, qe};
         lo_d <= {qo, qe};
         s_d <= cd_c;
         for (k = 0; k < 8; k = k + 1) begin
@@ -491,6 +549,21 @@ module ot_s81sl_vp #(
             x_qd[128 + 16 * k +: 16] <= k_xsw2[8 + k] ? q0[16 * k +: 16] : q1[16 * k +: 16];
         end
     end
+
+    // r8: E seam output relays.  The core flops above (*_i) stay beside their sources (sequencer / banks / lanes /
+    // command pins); ER kept relay stages carry the whole E bundle to the E pins (the last stage is the output flop):
+    // every hop <= ~430 um across the 0.73 x 0.86 mm tile (r7: dop -> hw_v 1.27 mm, k_op -> n_pre 1.03 mm in ONE cycle).
+    // No reset on the relays: the core valids are reset, so the relays flush while reset is held (>= ER edges).
+    localparam integer EW = 1 + 3 + 1 + 256 + 1 + 3 + 1 + 1 + 128 + 1 + 1 + 1 + 8 + 1 + 3 + 256;
+    wire [EW-1:0] e_i = {hw_v_i, hw_j_i, hw_hf_i, hw_d_i, hr_v_i, hr_j_i, hr_hf_i, n_go_i, n_pre_i, m_v_i, m_q_i, m_b_i, m_i_i,
+                         wl_v_i, wl_i_i, wl_d_i};
+    genvar ge;
+    generate for (ge = 0; ge < ER; ge = ge + 1) begin : g_er
+        (* keep *) reg [EW-1:0] r; wire [EW-1:0] r_d;
+        if (ge == 0) begin : g_s assign r_d = e_i; end else begin : g_s assign r_d = g_er[ge - 1].r; end
+        always @(posedge clk) r <= r_d;
+    end endgenerate
+    assign {hw_v, hw_j, hw_hf, hw_d, hr_v, hr_j, hr_hf, n_go, n_pre, m_v, m_q, m_b, m_i, wl_v, wl_i, wl_d} = g_er[ER - 1].r;
 
     // ---------------------------------------------------------------- faults
     // SAFE 10-21 (c318a2024 worst path: lane fault pin -> 16-way OR + 9 sources -> fault, 989 ps): the sources are
@@ -513,7 +586,7 @@ module ot_s81sl_vp #(
             lv0_d <= lv_q[0]; wvl_dd <= wvl_d;
             lfa <= |lfr;
             lvbad <= (lv0_d != wvl_dd) || (|lvor != &lvand);
-            src1 <= wcol | busy_hit | xrcol | (wvl && dv && dop == OP_HLOAD) | (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c) |
+            src1 <= wcol | busy_hit | xrcol | (wvl && dv && dop == OP_HLOAD) | (hsv_q[HD-1] && !hqv_h) | (ydv[YD-1] && !hqv_h) |
                     (cv_c && op == OP_NORM && nr_done);
             src2 <= src1;
         end
