@@ -63,6 +63,14 @@ if [ $COLLECT = 0 ]; then
 fi
 
 # 3. collect RUNROOT/<stage>/ (result.json + logs named in it) from the host with the NEWEST result.json
+install_collection() {
+  local incoming=$1 stage=$2 prior
+  if [ -e "$OUT/results/$stage" ]; then
+    prior=$(mktemp -d "$OUT/results/.prior_${stage}.XXXXXX") || return 1
+    rmdir "$prior" && mv "$OUT/results/$stage" "$prior" || return 1
+  fi
+  mv "$incoming" "$OUT/results/$stage"
+}
 for s in ${STAGES//,/ }; do
   best=""; bt=0; sd=${SDIR[$s]:-$s}
   for h in $HOSTS; do
@@ -70,13 +78,28 @@ for s in ${STAGES//,/ }; do
     [ -n "$t" ] && [ "$t" -gt "$bt" ] && { bt=$t; best=$h; }
   done
   if [ -n "$best" ]; then
-    mkdir -p "$OUT/results/$s"
+    incoming=$(mktemp -d "$OUT/results/.collect_${s}.XXXXXX")
     files="$OUT/logs/$s.files"
     if ssh "$best" "python3 - '$RUNROOT/$sd'" < "$HERE/collect_files.py" > "$files" &&
-      ssh "$best" "cd '$RUNROOT/$sd' && tar --null -c -T -" < "$files" | tar -x -C "$OUT/results/$s"; then
+      ssh "$best" "cd '$RUNROOT/$sd' && tar -h --null -c -T -" < "$files" | tar -x -C "$incoming"; then
+      # Never fill missing evidence from an earlier collection. Preserve the
+      # previous folder and install this fetch as one fresh local snapshot.
+      install_collection "$incoming" "$s" || exit 4
       echo "$s collected from $best:$RUNROOT/$sd"
-    else echo "$s: collection failed"; exit 4; fi
-  else echo "$s: NO result.json yet"; fi
+      if [ "$s" = stg ]; then
+        python3 "$HERE/normalize_collected_stg.py" "$OUT/results/$s" || exit 4
+      fi
+    else
+      python3 "$HERE/normalize_collected_stg.py" --unavailable "$incoming" "$s" 'required remote evidence could not be collected' || exit 4
+      install_collection "$incoming" "$s" || exit 4
+      echo "$s: collection INCOMPLETE"
+    fi
+  else
+    incoming=$(mktemp -d "$OUT/results/.collect_${s}.XXXXXX")
+    python3 "$HERE/normalize_collected_stg.py" --unavailable "$incoming" "$s" 'no remote result.json available' || exit 4
+    install_collection "$incoming" "$s" || exit 4
+    echo "$s: no remote result; INCOMPLETE"
+  fi
 done
 # 4. compose the token (1u) and the 4-user frame; report vs the MODEL 4,403.2 / 11,750.6 tok/s
 python3 -I "$HERE/compose_tokfunc.py" --results "$OUT/results" --out "$OUT/compose" --asm "$ASM" --grade "$GRADE" --repo "$REPO"
