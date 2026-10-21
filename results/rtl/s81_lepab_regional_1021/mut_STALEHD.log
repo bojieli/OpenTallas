@@ -1,0 +1,16 @@
+MISMATCH RI n80 cyc507 got010101b301010195 rt80200065 exp0000000000000000 rt00000000
+MISMATCH LAND n0 cyc509
+MISMATCH LAND n1 cyc511
+MISMATCH LAND n2 cyc512
+MISMATCH LAND n3 cyc514
+MISMATCH LAND n4 cyc516
+MISMATCH LAND n5 cyc517
+LANE 0 tx240 echo240 rxcredit240
+LANE 1 tx240 echo240 rxcredit240
+LANE 2 tx240 echo240 rxcredit240
+LANE 3 tx240 echo240 rxcredit240
+FAIL lepab_regional: received401/400 landed159/160 bad401 fault0
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lepab_regional.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.595 s; speed 3.694 us/s
+- Verilator: cpu 0.595 s on 1 threads; allocated 11 MB

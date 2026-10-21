@@ -5,6 +5,8 @@
 #                                            dsdv_mu_land), RP -> RA single-user reference (ot_s81sl_lep_nh).
 #                                            MUT none | TAGDROP | WRONGCOPY | LANDCUT (ot_s81sl_lep_core) | LANDOVR (dsdv_mu_land)
 #                                            (dies A / B = ot_s81sl_lep_mu_a, kit s81sl_lepmua)
+#   mu_kit_bench.sh OUTDIR lepmu  MUT SEED n32   same, die P = lep_mu_ab #(.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1)) (kits
+#                                            s81sl_lepmu_t5c / _t5d; S81-LINK5 L5B-LEPBENCH 10-21); reference RP sees the same +1 face stage
 #   mu_kit_bench.sh OUTDIR hslot  MUT NS [COLLIDE]   tb_dsdv_mu_hslot (kit dsdv_mu_hslot): NS users / slots, MUT 0|1|2,
 #                                            COLLIDE 1 = a start into an occupied slot (must fault)
 # Prints the testbench verdict lines and a last line BENCH_PASS / BENCH_FAIL <what>; exit 0 only on BENCH_PASS.
@@ -27,12 +29,15 @@ lepmu)
    $SL/ot_s81sl_slice_lep.sv $SL/dsdv_mu_land.sv $SL/test/tb_s81sl_lep_mu.sv"
   D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
   case $M in none) ;; LANDOVR) D="$D +define+OT_DSDV_MU_LAND_MUT_OVR" ;; *) D="$D +define+OT_S81SL_LEP_MUT_$M" ;; esac
-  R=lepmu_${M}_$S
-  $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D -GSEED=$S \
+  R=lepmu_${M}_$S; G=""
+  [ "${5:-}" = n32 ] && { G="-GP_RX_SRAM=1 -GP_IN_PIPE=1 -GP_NATIVE32=1"; R=lepmu_n32_${M}_$S
+    SRCS="rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv
+     physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $SRCS"; }
+  $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D -GSEED=$S $G \
     --top-module tb_s81sl_lep_mu -Mdir $O/obj_$R $SRCS --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
     > $O/build_$R.log 2>&1 || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
   $O/obj_$R/Vtb_s81sl_lep_mu > $O/run_$R.log 2>&1
-  grep -E "^(LEP_MU_STATS|PASS|FAIL|ERR)" $O/run_$R.log | head -12
+  grep -E "^(LEP_MU_STATS|IDENT_MISMATCH|PASS|FAIL|ERR)" $O/run_$R.log | head -12
   grep -q "^PASS lep_mu:" $O/run_$R.log && { echo "BENCH_PASS lepmu MUT=$M seed $S"; exit 0; }
   echo "BENCH_FAIL lepmu MUT=$M seed $S"; exit 1 ;;
 hslot)

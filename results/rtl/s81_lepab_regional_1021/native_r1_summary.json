@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 221142,
+  "max_dynamic_loads": 1866,
+  "netlist": {
+    "path": "/srv/opentallas-scratch/claude/codex-s81-lepab-regional-1021/native-60d2c9475/mapped.v",
+    "sha256": "57b17e578c0f9b4ea55d5aa63e7603662bb0a14b63939bdbee31445845b620da"
+  },
+  "role_errors": 0,
+  "violations": 270,
+  "note": "DIAGNOSTIC RUNNER DEFECT: omitted standard physical/common_flow/ot_keep_regs.tcl; duplicated reset/header/select flops merged. Not equivalent to the standard gate synthesis policy. Original mapped/census immutable on fleet. Native2 corrected runner, no layout gate/adoption.",
+  "original_report_sha256": "d69b42fc8539dcd9e7f9b3e1e67272268408ca1033935081336ad41977012990",
+  "original_report": "ot-gold2:/srv/opentallas-scratch/claude/codex-s81-lepab-regional-1021/native-60d2c9475/native_census.json"
+}

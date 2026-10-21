@@ -1,0 +1,121 @@
+{
+  "scope": "S81 lep_mu_ab regional structural successor; MODEL ONLY until exact benches/native/layout qualify",
+  "baseline": {
+    "source": "e033c77e0",
+    "kit": "s81sl_lepmu_t5c/t5d",
+    "failure": "one 28,567-sink root, 1.6mm one-cycle wires, setup approx -0.9ns"
+  },
+  "regions": [
+    "centre C",
+    "pair A",
+    "pair B"
+  ],
+  "clock_ports": [
+    "clk",
+    "clk_a",
+    "clk_b"
+  ],
+  "compute": {
+    "MAC_per_cycle": 0,
+    "operation": "bit-preserving routing/stamping/strip, no arithmetic"
+  },
+  "traffic": {
+    "ro_bits_per_cycle": 1104,
+    "mu_c_bits_per_cycle": 34,
+    "lane_bits_per_flit": 553,
+    "lanes": 4,
+    "required_beats_per_cycle": 0.6,
+    "pair_capacity_beats_per_cycle": 1,
+    "TX_bytes_per_lane_cycle": 69.125,
+    "RX_bytes_per_lane_cycle": 69.125
+  },
+  "storage": {
+    "TX_macros_512x128": 20,
+    "RX_macros_32x128": 20,
+    "RX_logical_depth": 12,
+    "lane_core_landing_depth": 12,
+    "link_sender_credits": 12,
+    "landing_ring_depth": 4,
+    "landing_offset": 2,
+    "TX_ring_bits": 9104,
+    "RX_ring_bits": 17936
+  },
+  "crossings": [
+    {
+      "from": "C",
+      "to": "A",
+      "bits_per_cycle": 1138,
+      "latency_edges": 3
+    },
+    {
+      "from": "C",
+      "to": "B",
+      "bits_per_cycle": 1138,
+      "latency_edges": 3
+    },
+    {
+      "from": "A",
+      "to": "C",
+      "bits_per_cycle": 2242,
+      "latency_edges": 3
+    },
+    {
+      "from": "B",
+      "to": "C",
+      "bits_per_cycle": 2242,
+      "latency_edges": 3
+    }
+  ],
+  "latency_delta_edges": {
+    "ro_mu_to_pair_core": 4,
+    "pair_core_to_central_outputs": 5,
+    "lane_lo_data_valid": 2,
+    "lane_lo_reverse_credit": 2,
+    "lane_li_data_valid": 2,
+    "lane_li_reverse_credit": 2,
+    "offdie_credit_RTT_added": 4
+  },
+  "latency_note": "Compared with native32 pair-local core with IN_PIPE=1. C dispatch adds1, landing adds3. RX crossing adds3 plus registered one-hot mux2. Each lane data or credit gets2 same-root relay edges; peak credit RTT grows4 so CRED8->12. Compile endpoints/crossing hops, never a flat output-cycle offset: queue occupancy changes flit ages.",
+  "floorplan": {
+    "status": "PLANNED, area requires native synthesis before kits",
+    "parent_slot_um": [
+      475.2,
+      1900.8
+    ],
+    "source_pairs": "compact native32 A-core structure, duplicated once",
+    "max_relay_segment_um": 405,
+    "relay_rows_reserved": true,
+    "aspect_exception": "existing lane-pitch slot, actual die fit decides",
+    "routing_tracks": "1138 forward +2242 return per seam; layer capacity/spacing must be checked after child placement; no fit claim"
+  },
+  "compatibility": {
+    "legacy_defaults_unchanged": true,
+    "new_top": "ot_s81sl_lep_mu_ab_regional",
+    "new_lane_opt_in": "CORE_CRED=12; existing safe8_ntf default8",
+    "parent_changes": [
+      "three regional clock ports",
+      "strict new-master/parameter bind",
+      "lane CORE_CRED12",
+      "priced fixed-cycle crossings",
+      "parent lane relay placement <=405um"
+    ]
+  },
+  "adoption_gates": [
+    "exact production NB80 protocol + causal mutant logs",
+    "mapped census all drivers <=32 incl reset",
+    "regional floorplan + landed SDC",
+    "MAIN/FALLBACK CTS gate",
+    "critical owner review if needed",
+    "route SS/FF/DRC + exact bind"
+  ],
+  "safe_checklist": {
+    "1_pins": "FIXED: rings at regional seams, data/valid/credit forwarded together, reset local control only",
+    "2_reach": "PLANNED: two registered hops per outer lane, place every stage <=405um; must check actual placement",
+    "3_fanout": "PLANNED: native32 pair cores; n32 12-bit landing chunks; kept grouped one-hot merge; native mapped census mandatory",
+    "4_depth": "FIXED: per-region pair cores + two-stage one-hot merge, no cross-pair 1104-bit single-cycle select",
+    "5_storage": "FIXED: all TX/RX queues SRAM, DR12; four-slot landing rings approved infrastructure; lane relays2 only",
+    "6_floorplan": "PENDING synth area/lattice/pin density/slot model; no gate until resolved",
+    "7_clock": "FIXED structure: A/B/C roots; every crossing rings D4/K2; regional TT/FF spread gate pending; io_hold .03",
+    "8_schedule": "FIXED model above; offdie credits explicitly allowed by cluster decision, static regional schedule no backpressure"
+  }
+}
