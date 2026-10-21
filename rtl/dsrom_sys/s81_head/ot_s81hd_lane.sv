@@ -129,10 +129,18 @@ endmodule
         else begin
             tv_q <= tv; cr_q <= cr;
             if (push) wp <= {wp[1:0], wp[2]};
+`ifdef OT_S81HD_LANE_MUT_RP
+            if (send && !rp[2]) rp <= {rp[1:0], rp[2]};   // MUTANT: read pointer sticks on slot 2
+`else
             if (send) rp <= {rp[1:0], rp[2]};
+`endif
             n <= n + {1'b0, push} - {1'b0, send};
             c <= c + {3'd0, cr_q} - {3'd0, send};
             lv <= send;
+`ifdef OT_S81HD_LANE_MUT_OVF
+            ovf <= 1'b0;                                    // MUTANT: static-schedule overflow never flagged
+`else
             ovf <= ovf | (tv_q && full);
+`endif
         end
 endmodule

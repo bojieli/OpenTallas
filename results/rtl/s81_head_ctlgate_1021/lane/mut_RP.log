@@ -1,0 +1,13 @@
+HD_LANE_DATA_ERR cycle=76 side=0 flit=3
+HD_LANE_DATA_ERR cycle=79 side=0 flit=4
+HD_LANE_DATA_ERR cycle=79 side=1 flit=3
+HD_LANE_DATA_ERR cycle=81 side=1 flit=4
+HD_LANE_DATA_ERR cycle=84 side=0 flit=6
+HD_LANE_DATA_ERR cycle=87 side=0 flit=7
+HD_LANE_DATA_ERR cycle=88 side=1 flit=6
+HD_LANE_STATS sent=7504/6493 received=6504/6493 mean_latency=29 errors=8661 phase1_fault=0 flt=1000/0000
+FAIL hd_lane data: errors 8661 received 6504/6493
+- rtl/dsrom_sys/s81_head/test/tb_s81hd_lane.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.493 s; speed 42.603 us/s
+- Verilator: cpu 0.489 s on 1 threads; allocated 8 MB

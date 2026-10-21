@@ -2,7 +2,7 @@
 # HD-CTL 10-21: ot_s81hd_ctl smoke bench on Verilator 5.050 (closure daemon version).  cwd = repo root / synced src.
 #   base  tb_s81hd_ctl (PASS expected)
 #   mut   OT_S81HD_CTL_MUT_SLICE (xa word select wrong) / OT_S81HD_CMP_MUT_TIE (highest id on ties): each must FAIL
-# Usage: run_hd_ctl_bench.sh OUTDIR [base|mut|all]
+# Usage: run_hd_ctl_bench.sh OUTDIR [base|mut|all]   |   run_hd_ctl_bench.sh OUTDIR sim [base|SLICE|TIE]
 set -u; O=${1:?outdir}; WHAT=${2:-all}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 T=rtl/dsrom_sys/s81_head
@@ -20,6 +20,11 @@ run() { n=$1; exp=$2
   $O/$n/Vtb_s81hd_ctl > $O/$n.log 2>&1; v=$(grep -m1 -E "^(PASS|FAIL) hd_ctl" $O/$n.log); echo "$n: $v"
   case $exp in PASS) echo "$v" | grep -q '^PASS hd_ctl' || bad=1 ;; FAIL) echo "$v" | grep -q '^FAIL hd_ctl' || { echo "  $n NOT detected"; bad=1; } ;; esac
 }
+# single-run mode for the kit job (HD-CTLGATE): sim [SLICE|TIE] -> print the sim log, exit 0 iff it says PASS hd_ctl
+if [ "$WHAT" = sim ]; then n=sim_${3:-base}; d=""
+  case ${3:-base} in SLICE) d=+define+OT_S81HD_CTL_MUT_SLICE ;; TIE) d=+define+OT_S81HD_CMP_MUT_TIE ;; esac
+  build $n $d || exit 2; $O/$n/Vtb_s81hd_ctl > $O/$n.log 2>&1; cat $O/$n.log; grep -q '^PASS hd_ctl' $O/$n.log; exit $?
+fi
 if [ "$WHAT" = base ] || [ "$WHAT" = all ]; then build base || bad=1; run base PASS; fi
 if [ "$WHAT" = mut ] || [ "$WHAT" = all ]; then
   for m in OT_S81HD_CTL_MUT_SLICE OT_S81HD_CMP_MUT_TIE; do n=mut_${m##*MUT_}; build $n +define+$m || bad=1; run $n FAIL; done
