@@ -44,6 +44,18 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  wire [11:0] total=block_total;
  wire [15:0] epoch=block_epoch;
  wire [LB-1:0] bank=block_bank;
+ // Four eight-entry table regions own field copies. Sampling a stable block
+ // field every edge replaces a shared input driving all 32 entries per owner.
+ // First issue is held during blk_start, allowing these copies to land: +1
+ // hbm edge descriptor-to-first-request, before elastic block-ready; go unchanged.
+ localparam integer RG=4;
+ (* keep="true",dont_touch="true" *) reg [15:0] epoch_local[0:RG-1];
+ (* keep="true",dont_touch="true" *) reg [LB-1:0] bank_local[0:RG-1];
+ (* keep="true",dont_touch="true" *) reg [1:0] row_local[0:RG-1];
+ integer rg;
+ always @(posedge clk)for(rg=0;rg<RG;rg=rg+1)begin
+  epoch_local[rg]<=block_epoch;bank_local[rg]<=block_bank;row_local[rg]<=block_row_base[1:0];
+ end
  reg selected;reg [1:0] lane;integer j;
  always @*begin
   selected=0;lane=0;
@@ -65,7 +77,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  assign k_addr={row,bhi,col,pc_q^col^hi5,blo};
  assign k_len={1'b0,length};assign k_tag=ticket;
  wire [OWNER_AW-1:0] alloc=ticket[OWNER_AW-1:0],ret=kr_tag[OWNER_AW-1:0];
- assign k_v=block_active&&selected&&t<words&&!valid_q[alloc]&&!sticky&&!stop;
+ assign k_v=block_active&&!blk_start&&selected&&t<words&&!valid_q[alloc]&&!sticky&&!stop;
  assign response_ok=kr_v&&valid_q[ret]&&generation_q[ret]==kr_tag[16:OWNER_AW]&&kr_beat<length_q[ret]&&!seen_q[ret][kr_beat]&&!sticky&&!stop;
  wire [1:0] word_offset=permuted_q[ret]?(kr_beat[1:0]^row_low_q[ret]):2'd0;
  assign response_ordinal=ordinal_q[ret]+{7'd0,word_offset,2'b0};
@@ -111,11 +123,11 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
    // Kept free copies bound actual mux pins, not just the number of flops:
    // each hold mux consumes two enable pins. Epoch16 =>32; generation12 =>24.
    if(vfree_a[e])generation_q[e]<=ticket[16:OWNER_AW];
-   if(vfree_c[e])epoch_q[e]<=epoch;
-   if(vfree_d[e])begin bank_q[e]<=bank;ordinal_q[e]<={t[8:0],2'b0}+lane;end
+   if(vfree_c[e])epoch_q[e]<=epoch_local[e/8];
+   if(vfree_d[e])begin bank_q[e]<=bank_local[e/8];ordinal_q[e]<={t[8:0],2'b0}+lane;end
    if(vfree_b[e])begin                                                                          // 23 flops
     length_q[e]<=length;
-    seen_q[e]<=0;permuted_q[e]<=full_group;row_low_q[e]<=row[1:0];
+    seen_q[e]<=0;permuted_q[e]<=full_group;row_low_q[e]<=row_local[e/8];
    end
    else if(response_take&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
   end
