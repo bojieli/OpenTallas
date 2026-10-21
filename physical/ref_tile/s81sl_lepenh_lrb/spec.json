@@ -75,8 +75,7 @@
     "ch_b",
     "rx0",
     "rx1",
-    "mu_c",
-    "mu_rc"
+    "mu_c"
    ],
    "outputs": [
     "tx0",
@@ -94,7 +93,8 @@
     "ck_ML"
    ],
    "inputs": [
-    "rst_n_ML"
+    "rst_n_ML",
+    "mu_rc"
    ],
    "outputs": []
   }
@@ -182,11 +182,11 @@
    "ck_K",
    "ch_b",
    "mu_c",
-   "mu_rc",
    "rx1",
    "tx1",
    "rst_n_ML",
-   "ck_ML"
+   "ck_ML",
+   "mu_rc"
   ],
   "S": [
    "bi",
@@ -290,10 +290,6 @@
   ],
   "mu_c": [
    2868.9999999999995,
-   2923.5999999999995
-  ],
-  "mu_rc": [
-   2925.5999999999995,
    2933.5999999999995
   ],
   "rx1": [
@@ -311,6 +307,10 @@
   "ck_ML": [
    3552.8,
    3558.8
+  ],
+  "mu_rc": [
+   3560.8,
+   3568.8
   ]
  },
  "route": {
@@ -328,8 +328,8 @@
  },
  "structural_change": "S81-COLLECT2/LEPENH 10-21 s81sl_lepenh_lrb: LANDED-REGIONS rebuild of dsdv_slice_lepe_nh MU (DIAGNOSTIC stand-ins, never bindable). d1a/d1b/d3a/d3b FAILED: one ck_S/ck_K tree each over 10k soft ring flops (spread 275-1143 ps) + one reset root u_lpr_root across the 2.8x5.8 mm slot (in->reg -19.6/-48.6 ns, undeclared S->K reset crossing). Now: 3 regions S/K/ML with own roots, regional reset ports (no root, no cross-region reset), fixed-depth forest with fenced registered prefix hops, ring halves fenced beside the faces they serve (released before CTS), lanes abutting the endpoint split by a K street for the K control ports; slot 3024.0 x 6825.6, channel 259.2, street 151.2, PD 0.4.",
  "job": {
-  "owner": "Claude:S81-COLLECT2/LEPENH",
-  "branch": "claude/s81-lepenh-lr-1021",
+  "owner": "Claude:S81-ELEM/ENDP",
+  "branch": "claude/s81-endp-lr-1021",
   "tag": "lrb",
   "purpose": "early parent integration with stand-ins (owner EFFICIENCY 10-18): gate / GRT / clock pairs; no submit until real child views exist",
   "submit": false,

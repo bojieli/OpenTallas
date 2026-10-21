@@ -48,7 +48,7 @@ SPEC (JSON; paths relative to the repo root):
                  per-cycle stimulus expression (default uniform $urandom; may use the tb cycle counter cyc), e.g. to keep a
                  sticky fault from saturating or to make writes legal}, mut_waivers: {mutant number: reason} (that mutant is
                  not run; the record keeps the reason)}
-                 child_lockstep (schedule "reference" only; default none): also compare every non-clock pin of the
+                 child_lockstep (schedule "reference" or reschedule; default none): also compare every non-clock pin of the
                  matching children, landed vs flat, at the child (hierarchical u_lp.<inst>.<pin> vs u_flat.<inst>.<pin>):
                  reset pins from reset_cycles on, the rest after warm-up.  Use it when the parent's own outputs do not
                  expose a landed bundle under random stimulus (a centre that ignores ill-formed commands): the
@@ -81,6 +81,7 @@ SPEC (JSON; paths relative to the repo root):
                  than the reader's own time (one common lag per reader).  The lockstep reference becomes <top>_lagref (the
                  flat parent with those pins delayed lag(reader) stages, generated beside the landed top), and the record's
                  compiler block lists the lag: the status those pins carry reaches the reader's outputs lag edges late.
+  mut_landing    net whose strict landing is landing 0 (MUT 1 / 2 target; default: first in net order)
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
   regional_reset_ports  {"stages": N >= 2, "why": ..}  (L2H-PSLICE 10-19, opt-in; absent = byte-identical): NO reset root
@@ -732,7 +733,10 @@ class Parent:
                 pads[(n, b)] = max(pads.get((n, b), 0), k)
         edges = edges_all
         # strict landings first (MUT 1 / 2 act on landing 0: it must be schedule-bearing), loose ones last; renumber
-        lst = sorted(lands.values(), key=lambda L: (bool(L.get("loose")), int(L["name"])))
+        # mut_landing (opt-in, ENDP 10-21): the strict landing of this net becomes landing 0, so MUT 1 / 2 act on a bundle the
+        # random lockstep actually exercises (absent = byte-identical order)
+        ml0 = self.S.get("mut_landing")
+        lst = sorted(lands.values(), key=lambda L: (bool(L.get("loose")), not (ml0 and L["net"] == ml0), int(L["name"])))
         for j, L in enumerate(lst):
             L["name"] = str(j)
         if self.S.get("share_rings"):
@@ -1436,8 +1440,8 @@ class Parent:
         L.append("            end")
         cls = B.get("child_lockstep") or []
         if cls:
-            if not self.reference:
-                raise SystemExit("bench.child_lockstep needs schedule 'reference' (children are not time-shifted there)")
+            if not (self.reference or P.get("resched")):
+                raise SystemExit("bench.child_lockstep needs schedule 'reference' or reschedule (children are not time-shifted there)")
             ckp = set(S.get("clock_pins") or [])
             rsp = set(S.get("reset_pins") or [])
             hit = [i for i in self.insts if any(fnmatch.fnmatchcase(i["inst"], q) for q in cls)]

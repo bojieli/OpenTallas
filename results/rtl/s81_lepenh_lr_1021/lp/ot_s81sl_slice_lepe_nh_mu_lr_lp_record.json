@@ -34,23 +34,6 @@
  "landings": [
   {
    "name": "0",
-   "net": "lri",
-   "src_region": "K",
-   "dst_region": "S",
-   "src_nodes": [
-    "u_lep"
-   ],
-   "width": 1104,
-   "readers": [
-    "u_sl.ri_e"
-   ],
-   "ring": "u_lpl_0_w (ck_K)",
-   "read": "u_lpl_0_r (ck_S)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
-  },
-  {
-   "name": "1",
    "net": "lro",
    "src_region": "S",
    "dst_region": "K",
@@ -61,8 +44,25 @@
    "readers": [
     "u_lep.ro"
    ],
-   "ring": "u_lpl_1_w (ck_S)",
-   "read": "u_lpl_1_r (ck_K)",
+   "ring": "u_lpl_0_w (ck_S)",
+   "read": "u_lpl_0_r (ck_K)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "lri",
+   "src_region": "K",
+   "dst_region": "S",
+   "src_nodes": [
+    "u_lep"
+   ],
+   "width": 1104,
+   "readers": [
+    "u_sl.ri_e"
+   ],
+   "ring": "u_lpl_1_w (ck_K)",
+   "read": "u_lpl_1_r (ck_S)",
    "added_edges": 3,
    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
   },
@@ -207,7 +207,7 @@
      "bindings": [
       {
        "landing": "0",
-       "role": "r",
+       "role": "w",
        "first_leaf": 1,
        "chunks": 138,
        "first_expr": "1",
@@ -215,7 +215,7 @@
       },
       {
        "landing": "1",
-       "role": "w",
+       "role": "r",
        "first_leaf": 139,
        "chunks": 138,
        "first_expr": "1+(((((1103) - (0) + 1))+8-1)/8)",
@@ -250,7 +250,7 @@
      "bindings": [
       {
        "landing": "0",
-       "role": "w",
+       "role": "r",
        "first_leaf": 1,
        "chunks": 138,
        "first_expr": "1",
@@ -258,7 +258,7 @@
       },
       {
        "landing": "1",
-       "role": "r",
+       "role": "w",
        "first_leaf": 139,
        "chunks": 138,
        "first_expr": "1+(((((1103) - (0) + 1))+8-1)/8)",
@@ -443,21 +443,21 @@
   "ref_params": null,
   "rescheduled_nets": [
    {
-    "net": "lri",
-    "src_region": "K",
-    "dst_region": "S",
-    "readers": [
-     "u_sl.ri_e"
-    ],
-    "width": 1104,
-    "added_edges": 3
-   },
-   {
     "net": "lro",
     "src_region": "S",
     "dst_region": "K",
     "readers": [
      "u_lep.ro"
+    ],
+    "width": 1104,
+    "added_edges": 3
+   },
+   {
+    "net": "lri",
+    "src_region": "K",
+    "dst_region": "S",
+    "readers": [
+     "u_sl.ri_e"
     ],
     "width": 1104,
     "added_edges": 3

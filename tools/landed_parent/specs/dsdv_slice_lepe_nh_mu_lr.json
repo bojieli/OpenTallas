@@ -164,7 +164,10 @@
  "bench": {
   "cycles": 14000,
   "reset_cycles": 16,
-  "sim": "verilator"
+  "sim": "verilator",
+  "child_lockstep": [
+   "u_*"
+  ]
  },
  "port_regions": {
   "rx0": "K",
@@ -182,10 +185,11 @@
   "fault": 2
  },
  "_note": "S81-COLLECT2/LEPENH 10-21: landed-regions rebuild of dsdv_slice_lepe_nh MU (MU72 E-end s_7S) = DRIVE-S81-LEPENHMU flat parent with 3 local regions S (slice) / K (lep_mu_a + 2 lanes, abutting) / ML (dsdv_mu_land, die master ck_ML), regional reset ports (no root, no cross-region reset hop), landing reset forests, every crossing landed (D4/E2 chunk 8 kept-enable).",
- "_note_bench": "lockstep tb_stimulus not built yet (lepe_nh loopback vh is port-specific); bind + gate first (DRIVE-S81-SLICEP).",
+ "_note_bench": "ENDP 10-21: bench 1 (b8b9de033, V5.050 ep5) MUT1/2/4 all PASSED lockstep (= not caught): landing 0 was lri (lep ri, valid only on well-formed lane frames, static under random rx) and the 1-stage u_sl reset slip is hidden at the parent outputs. Now child_lockstep u_* (every child pin, landed vs rsref; resets from reset_cycles) + mut_landing lro (slice ro_e, the line the random ri_w drives) as landing 0.",
  "regional_reset_ports": {
   "stages": 7,
   "why": "S81-COLLECT2/LEPENH 10-21 landed regions: d1a/d3a reset root u_lpr_root in->reg -19.6/-48.6 ns across the 2.8x5.8 mm slot and the undeclared u_lpr_root(S)->u_lpr_K crossing (d3b -3873 ps); one reset port per region landed beside its own pin, die releases all three on one edge; 7 stages = 5 registered prefix hops fenced <= ~405 um along each region's street from its E-face pin (registered reset distribution), branch, leaf"
  },
- "landing_reset_forest": true
+ "landing_reset_forest": true,
+ "mut_landing": "lro"
 }

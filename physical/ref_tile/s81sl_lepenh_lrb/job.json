@@ -2,12 +2,12 @@
  "name": "s81sl_lepenh_lrb-lrb-COMMIT",
  "block": "ot_s81sl_slice_lepe_nh_mu_lr_lp",
  "ref_tile": true,
- "owner": "Claude:S81-COLLECT2/LEPENH",
+ "owner": "Claude:S81-ELEM/ENDP",
  "purpose": "early parent integration with stand-ins (owner EFFICIENCY 10-18): gate / GRT / clock pairs; no submit until real child views exist",
  "threads": 16,
  "peak_ram_gb": 128,
  "source": {
-  "branch": "claude/s81-lepenh-lr-1021",
+  "branch": "claude/s81-endp-lr-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "results/rtl/s81_lepenh_lr_1021/lp"

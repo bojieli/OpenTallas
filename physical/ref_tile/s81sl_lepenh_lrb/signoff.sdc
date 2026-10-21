@@ -27,7 +27,7 @@ set ::ot_ce_landed_child_pins 5
 set ::ot_ce_check_only [dict create {dsdv_mu_land/clk} 1 {dsfd_coll_lane_e_safe8_ntf/ck} 1 {ot_s81sl_lep_mu_a/clk} 1 {ot_s81sl_slice/clk} 1]
 set ::ot_ce_refs [dict create {ot_s81sl_slice/clk} {tt {240.0 250.0 260.0} ff {190.0 200.0 210.0} ss {320.0 330.0 340.0}} {ot_s81sl_lep_mu_a/clk} {tt {210.0 220.0 230.0} ff {160.0 170.0 180.0} ss {280.0 290.0 300.0}} {dsdv_mu_land/clk} {tt {371.8 386.7 404.4} ff {302.2 315.5 329.4} ss {485.6 503.1 527.8}} {dsfd_coll_lane_e_safe8_ntf/ck} {tt {409.0 419.0 429.0} ff {337.0 347.0 357.0} ss {527.0 537.0 547.0}}]
 set ::ot_ce_counts [dict create {ot_s81sl_slice} 1 {ot_s81sl_lep_mu_a} 1 {dsdv_mu_land} 1 {dsfd_coll_lane_e_safe8_ntf} 2]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n_S} {sid} {ri_w} {vi} {bi} {rt}} outputs {{ro_w} {vo} {bo} {xc} {ck_line} {ck_v} {ck_xc} {ck_rt}}} {lk} {clock ot_io_lk io_budget_ps 166.667 inputs {{rst_n_K} {ch_b} {rx0} {rx1} {mu_c} {mu_rc}} outputs {{tx0} {tx1} {fault} {mu_rt}}} {ml} {clock ot_io_ml io_budget_ps 166.667 inputs {{rst_n_ML}} outputs {}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n_S} {sid} {ri_w} {vi} {bi} {rt}} outputs {{ro_w} {vo} {bo} {xc} {ck_line} {ck_v} {ck_xc} {ck_rt}}} {lk} {clock ot_io_lk io_budget_ps 166.667 inputs {{rst_n_K} {ch_b} {rx0} {rx1} {mu_c}} outputs {{tx0} {tx1} {fault} {mu_rt}}} {ml} {clock ot_io_ml io_budget_ps 166.667 inputs {{rst_n_ML} {mu_rc}} outputs {}}]
 set ::ot_ce_source_domains [dict create {ck_S} {core} {ck_K} {lk} {ck_ML} {ml}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_S} {ck_K} {ck_ML}}

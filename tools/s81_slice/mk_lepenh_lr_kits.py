@@ -14,7 +14,7 @@ branch, leaf per landing chunk; reset only on control/valid, ring data unreset).
 Floorplan (findings FAM-S81-LEPENH 1-3):
   * u_lep in the E-end orientation at the slice ro_e/ri_e height (y 2592), line pins bit-aligned across the channel;
   * lanes E of the endpoint with their W faces abutting it (43.2 um), split about the endpoint centre line by a K STREET that
-    carries every small K port (rst_n_K, ck_K, ch_b, mu_c, mu_rc, mu_rt, fault) straight from the E face to the endpoint's
+    carries every small K port (rst_n_K, ck_K, ch_b, mu_c, mu_rt, fault; mu_rc is ML: beside rst_n_ML / ck_ML) straight from the E face to the endpoint's
     E-face control window -- no detour round a lane;
   * u_land (ML) N of the endpoint with a 129.6 gap holding the K->ML / ML->K rings;
   * ONE fence box per landing group beside the face it serves (S box at the slice E face, K box at the endpoint W face, K-N box
@@ -229,17 +229,19 @@ def build(name, v):
     lk = {"rst_n_S": [sy - 6, sy - 2], "ck_S": [sy + 2, sy + 8],
           "rx0": off(LANE_PR["rx"], g["ln0_y"]), "tx0": off(LANE_PR["tx"], g["ln0_y"]),
           "fault": [m - st / 2 + 4, m - st / 2 + 7], "mu_rt": [m - st / 2 + 9, m - 8], "rst_n_K": [m - 6, m - 3],
-          "ck_K": [m - 1.5, m + 1.5], "ch_b": [m + 3, m + 5], "mu_c": [m + 7, m + st / 2 - 14], "mu_rc": [m + st / 2 - 12, m + st / 2 - 4],
+          "ck_K": [m - 1.5, m + 1.5], "ch_b": [m + 3, m + 5], "mu_c": [m + 7, m + st / 2 - 4],
           "rx1": off(LANE_PR["rx"], g["ln1_y"]), "tx1": off(LANE_PR["tx"], g["ln1_y"]),
-          "rst_n_ML": [my - 6, my - 2], "ck_ML": [my + 2, my + 8]}
-    order = ["rst_n_S", "ck_S", "rx0", "tx0", "fault", "mu_rt", "rst_n_K", "ck_K", "ch_b", "mu_c", "mu_rc", "rx1", "tx1", "rst_n_ML", "ck_ML"]
+          "rst_n_ML": [my - 6, my - 2], "ck_ML": [my + 2, my + 8], "mu_rc": [my + 10, my + 18]}
+    order = ["rst_n_S", "ck_S", "rx0", "tx0", "fault", "mu_rt", "rst_n_K", "ck_K", "ch_b", "mu_c", "rx1", "tx1", "rst_n_ML", "ck_ML", "mu_rc"]
     s["pins"] = {"W": ["ri_w", "ro_w"], "N": ["sid", "vi", "vo"], "E": order, "S": s["pins"]["S"]}
     s["pin_ranges"] = {**ns, **lk}
     ced = s["clock_entry_domains"]
     ced["core"] = dict(ced["core"], ports=["ck_S"], inputs=["rst_n_S", "sid", "ri_w", "vi", "bi", "rt"])
-    ced["lk"] = dict(ced["lk"], ports=["ck_K"], inputs=["rst_n_K", "ch_b", "rx0", "rx1", "mu_c", "mu_rc"],
+    ced["lk"] = dict(ced["lk"], ports=["ck_K"], inputs=["rst_n_K", "ch_b", "rx0", "rx1", "mu_c"],
                      outputs=["tx0", "tx1", "fault", "mu_rt"])
-    ced["ml"] = {"ratio": [1, 1], "ports": ["ck_ML"], "inputs": ["rst_n_ML"], "outputs": []}
+    # ENDP 10-21: mu_rc (11 b) is read ONLY by u_land (lp port_regions mu_rc = ML): it belongs to the ML domain and enters beside
+    # rst_n_ML / ck_ML (b8b9de033 put it in lk + the K street -> OT_MULTI_ROOT "input mu_rc[0] has wrong domain for u_land")
+    ced["ml"] = {"ratio": [1, 1], "ports": ["ck_ML"], "inputs": ["rst_n_ML", "mu_rc"], "outputs": []}
     s["route"] = dict(s["route"], pd=0.45 if v == "a" else 0.40)
     fz = f"physical/ref_tile/{name}/lr_fences.tcl"
     F, hops = fences(g)
@@ -267,7 +269,7 @@ def build(name, v):
         "7_clock": "3 local roots ck_S / ck_K / ck_ML, each tree = its children's clock pins + its fenced ring halves; every crossing landed (no S/K/ML phase alignment needed)",
         "8_reset": f"regional rst_n_S/K/ML, forest DEPTH {STAGES} on its own clock, release on one die edge (+{STAGES} edges, compiler record); reset on control/valid only"}
     j = s["job"]
-    j.update(owner="Claude:S81-COLLECT2/LEPENH", branch="claude/s81-lepenh-lr-1021", tag=name.split("_")[-1],
+    j.update(owner="Claude:S81-ELEM/ENDP", branch="claude/s81-endp-lr-1021", tag=name.split("_")[-1],
              views_to=f"physical/ref_tile/{name}/views", record_to=f"results/rtl/ref_tile/{name}",
              extra_paths=["results/rtl/s81_lepenh_lr_1021/lp"])
     sp = kd / "spec.json"
