@@ -13,7 +13,7 @@
 //   landing  load-only rows 1..23 (row 0 leaves on the response edge itself); the streamed row is picked by a ONE-HOT row
 //            register (2 kept copies per row, 16 AND loads each) instead of a 24:1 next_row mux; streaming has kept copies.
 // MUT (bench): 1 = response prediction one edge late (ld from pred one edge after LD; must FAIL).
-module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=23, parameter integer GL=15,
+module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=23, parameter integer GL=16,
                                                    parameter integer MUT=0)(
     input wire clk,rst_n,launch,
     input wire [GL-1:0] launch_c,
@@ -31,7 +31,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
 );
     localparam integer RP=RESP_PHASE, RSC=24;
     initial if(RP<2||RP>23)$fatal(1,"f32 reader: RESP_PHASE 2..23 (two-edge response prediction)");
-    initial if(GL!=15)$fatal(1,"f32 reader: GL 15 launch copies");
+    initial if(GL!=16)$fatal(1,"f32 reader: GL 16 launch copies");
     reg active,streaming;
     reg [15:0] return_sector,stride;
     // HBM-HC7-QHUB 10-20 (native32 census: issue_sector[k] 39, request_slot 35 loads): two KEPT issue-sector copies (own
@@ -188,10 +188,14 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
         if(!rst_n)is_c0<=0;
         else if(la[0])is_c0<=base_sector;
         else if(rq[0])is_c0<=is_c0+stride;
-    always @(posedge clk or negedge rst_n)        // copy 1: the same next state (la[10] = the request-prediction group)
-        if(!rst_n)is_c1<=0;
-        else if(la[14])is_c1<=base_sector;
-        else if(rq[3])is_c1<=is_c1+stride;
+    wire [15:0] is_c1_next=is_c1+stride;
+    // Eight-bit load groups keep both mux polarities below native32.
+    for(genvar h=0;h<2;h=h+1)begin:g_is1
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)is_c1[h*8+:8]<=0;
+            else if(la[14+h])is_c1[h*8+:8]<=base_sector[h*8+:8];
+            else if(rq[3])is_c1[h*8+:8]<=is_c1_next[h*8+:8];
+    end
     always @(posedge clk or negedge rst_n)
         if(!rst_n)return_sector<=0;
         else if(la[1])return_sector<=base_sector;
