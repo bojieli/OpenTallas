@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+eq LINK_ACTIVITY epochs=85 writes=33323 reads=30288 tx_frames=16873 rx_frames=16637 aborted_epochs=54 injected=52
+eq LINK_EQ PASS compared=59994 cycles=60000
+LINK_E2_EQ PASS
+LINK_E2_EXIT 0

@@ -41,6 +41,14 @@ if [ "$WHICH" = ptmut ]; then
   if grep -q '^LPF_EQ FAIL' "$OUT/m_latespc.log" 2>/dev/null; then echo "EQ_MUTANT m_latespc REJECTED"; rc=1; else echo "EQ_MUTANT m_latespc SURVIVED"; rc=0; fi
   echo "COLL_LP_ARS_PTMUT_EXIT $rc"; exit $rc
 fi
+if [ "$WHICH" = linkmut ]; then
+  # HBM-COLLQ6-LINK 10-20: mutant of the SAFE link rail body (ot_hgi_coll_link_e2, ot_hgi_coll_safe_leaves.sv):
+  # OT_COLL_LINK2_MUT_DATA = retry bank 1 stores bit 140 of its slice inverted -> every replayed TX frame differs from
+  # v8x's original link_e.  Exit 1 when REJECTED (the job expects fail + fail_regex), 0 when the mutant SURVIVED.
+  eq m_link2data +define+OT_COLL_LINK2_MUT_DATA
+  if grep -q '^LPF_EQ FAIL' "$OUT/m_link2data.log" 2>/dev/null; then echo "EQ_MUTANT m_link2data REJECTED"; rc=1; else echo "EQ_MUTANT m_link2data SURVIVED"; rc=0; fi
+  echo "COLL_LP_ARS_LINKMUT_EXIT $rc"; exit $rc
+fi
 if [ "$WHICH" = fjmut ]; then
   # HBM-COLLFJ2 10-19: mutant of the SAFE fj body (ot_hgi_coll_static_program_target_s128, ot_hgi_coll_safe_leaves.sv):
   # OT_PT_MUT_LA_STALE = SRAM flow read / loaded lookahead never advance.  Exit 1 when REJECTED (job: expect fail).
