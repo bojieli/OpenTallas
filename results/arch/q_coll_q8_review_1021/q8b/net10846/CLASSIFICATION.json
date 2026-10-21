@@ -1,0 +1,378 @@
+{
+  "scope": "One admitted read-only saved-ODB query and exact original mapped-source classification; no design mutation/router/STA/proof campaign",
+  "unit": "oth-ubuntu-2277928-1792625540",
+  "host": "ot-epyc7",
+  "exit_code": 0,
+  "memory_gb": 8,
+  "threads": 1,
+  "tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "net": "net10846",
+  "present_after_cleanup": true,
+  "checkpoint_sha256": "563b0e3772fd3f175f3edc0b0786ccc54000530b650909f3e39d003edd5b371f",
+  "original_inputs_before_after_sha_equal": true,
+  "staged_inputs_and_TCL_before_after_sha_equal": true,
+  "exact_existing_recipe": {
+    "dump_tcl_sha256": "9d7eb5baeb52af3fb54c503e7255290b2d791666cfae32d36414c35ef77ff8e6",
+    "wrapper_sha256": "565bc331c76d24b5971b07c5d1febdf8711401206f381156c3e71f0e4b02ce82"
+  },
+  "endpoints": [
+    {
+      "iterm": "g_sxo\\[0\\].u_face/place10847/A",
+      "direction": "INPUT",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "orient": "MX",
+      "pin_bbox_um": [
+        94.41,
+        58.624,
+        94.476,
+        58.826
+      ],
+      "instance_bbox_um": [
+        94.392,
+        58.59,
+        94.932,
+        58.86
+      ],
+      "gcell": [
+        165,
+        103
+      ],
+      "stored_capacity_usage": {
+        "M2": [
+          14.0,
+          7.0
+        ],
+        "M3": [
+          16.0,
+          10.0
+        ],
+        "M4": [
+          12.0,
+          4.0
+        ],
+        "M5": [
+          11.0,
+          8.0
+        ],
+        "M6": [
+          8.0,
+          8.0
+        ]
+      }
+    },
+    {
+      "iterm": "u_sd.g_d\\[0\\].g_c\\[1\\].u_m/wd_in[59]",
+      "direction": "INPUT",
+      "master": "ot_sram_1r1w2c_256x64_m1",
+      "orient": "MY",
+      "pin_bbox_um": [
+        47.52,
+        69.456,
+        47.544,
+        69.48
+      ],
+      "instance_bbox_um": [
+        47.52,
+        65.136,
+        82.104,
+        106.488
+      ],
+      "gcell": [
+        83,
+        121
+      ],
+      "stored_capacity_usage": {
+        "M2": [
+          14.0,
+          14.0
+        ],
+        "M3": [
+          16.0,
+          16.0
+        ],
+        "M4": [
+          12.0,
+          12.0
+        ],
+        "M5": [
+          12.0,
+          12.0
+        ],
+        "M6": [
+          9.0,
+          9.0
+        ]
+      }
+    },
+    {
+      "iterm": "place10848/Y",
+      "direction": "OUTPUT",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "orient": "MX",
+      "pin_bbox_um": [
+        50.8,
+        118.017,
+        51.12,
+        118.233
+      ],
+      "instance_bbox_um": [
+        50.598,
+        117.99,
+        51.138,
+        118.26
+      ],
+      "gcell": [
+        89,
+        207
+      ],
+      "stored_capacity_usage": {
+        "M2": [
+          14.0,
+          8.0
+        ],
+        "M3": [
+          16.0,
+          8.0
+        ],
+        "M4": [
+          12.0,
+          12.0
+        ],
+        "M5": [
+          12.0,
+          9.0
+        ],
+        "M6": [
+          9.0,
+          9.0
+        ]
+      }
+    }
+  ],
+  "macro_and_obstruction_rows": [
+    [
+      "MACRO",
+      "u_sd.g_d\\[0\\].g_c\\[0\\].u_m",
+      "ot_sram_1r1w2c_256x64_m1",
+      "MY",
+      "47520 23760 82104 65112"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[0\\].u_m",
+      "M1",
+      "47520 23760 82104 65112"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[0\\].u_m",
+      "M2",
+      "47520 23760 82104 65112"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[0\\].u_m",
+      "M3",
+      "47520 23760 82104 65112"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[0\\].u_m",
+      "M4",
+      "47592 23760 82032 65112"
+    ],
+    [
+      "MACRO",
+      "u_sd.g_d\\[0\\].g_c\\[1\\].u_m",
+      "ot_sram_1r1w2c_256x64_m1",
+      "MY",
+      "47520 65136 82104 106488"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[1\\].u_m",
+      "M1",
+      "47520 65136 82104 106488"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[1\\].u_m",
+      "M2",
+      "47520 65136 82104 106488"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[1\\].u_m",
+      "M3",
+      "47520 65136 82104 106488"
+    ],
+    [
+      "MACRO_OBS",
+      "u_sd.g_d\\[0\\].g_c\\[1\\].u_m",
+      "M4",
+      "47592 65136 82032 106488"
+    ]
+  ],
+  "pin_shape_rows": [
+    [
+      "PINSHAPE",
+      "g_sxo\\[0\\].u_face/place10847/A",
+      "M1",
+      "94410 58716 94476 58734",
+      "LOCAL",
+      "18 126 84 144"
+    ],
+    [
+      "PINSHAPE",
+      "g_sxo\\[0\\].u_face/place10847/A",
+      "M1",
+      "94410 58624 94428 58826",
+      "LOCAL",
+      "18 34 36 236"
+    ],
+    [
+      "PINSHAPE",
+      "u_sd.g_d\\[0\\].g_c\\[1\\].u_m/wd_in[59]",
+      "M4",
+      "47520 69456 47544 69480",
+      "LOCAL",
+      "34560 4320 34584 4344"
+    ],
+    [
+      "PINSHAPE",
+      "place10848/Y",
+      "M1",
+      "50800 118017 51120 118035",
+      "LOCAL",
+      "202 225 522 243"
+    ],
+    [
+      "PINSHAPE",
+      "place10848/Y",
+      "M1",
+      "51102 118017 51120 118233",
+      "LOCAL",
+      "504 27 522 243"
+    ],
+    [
+      "PINSHAPE",
+      "place10848/Y",
+      "M1",
+      "50800 118215 51120 118233",
+      "LOCAL",
+      "202 27 522 45"
+    ]
+  ],
+  "stored_grid_summary": {
+    "M2": {
+      "cells": 16402,
+      "zero_capacity": 0,
+      "saturated": 6233,
+      "overflow": 0
+    },
+    "M3": {
+      "cells": 16402,
+      "zero_capacity": 0,
+      "saturated": 6238,
+      "overflow": 0
+    },
+    "M4": {
+      "cells": 16402,
+      "zero_capacity": 0,
+      "saturated": 6441,
+      "overflow": 0
+    },
+    "M5": {
+      "cells": 16402,
+      "zero_capacity": 0,
+      "saturated": 796,
+      "overflow": 0
+    },
+    "M6": {
+      "cells": 16402,
+      "zero_capacity": 0,
+      "saturated": 16402,
+      "overflow": 0
+    }
+  },
+  "original_source": {
+    "mapped_sha256": "68b2d033b4603e1ce949fe697ea27bbd34b341981884c40f623839033814b1f5",
+    "original_sram_iterm": "\\u_sd.g_d[0].g_c[1].u_m/wd_in[59]",
+    "original_signal": "\\u_sd.wd[123]",
+    "original_mapped_driver": {
+      "type": "AO21x1_ASAP7_75t_R",
+      "name": "_07852_",
+      "ports": {
+        "A1": "_03937_",
+        "A2": "_03924_",
+        "B": "_03939_",
+        "Y": "\\u_sd.wd[123] "
+      },
+      "source": "  AO21x1_ASAP7_75t_R _07852_ (\n    .A1(_03937_),\n    .A2(_03924_),\n    .B(_03939_),\n    .Y(\\u_sd.wd[123] )\n  );"
+    },
+    "original_mapped_instance_port_consumers": [
+      {
+        "instance": "\\g_sxo[0].u_face",
+        "master": "\\$paramod$5ddeadb5c5dafc479f23aa04d611839becdda47f\\ot_coll_split_sxd_native32",
+        "port": "data",
+        "bit": 123
+      },
+      {
+        "instance": "\\g_sxo[1].u_face",
+        "master": "\\$paramod$1998e806aa9071a50353e2342f4d3c1cf9138f2f\\ot_coll_split_sxd_native32",
+        "port": "data",
+        "bit": 123
+      },
+      {
+        "instance": "\\g_sxo[2].u_face",
+        "master": "\\$paramod$94af8aca39f8155e542d28141e57b00f372ce36a\\ot_coll_split_sxd_native32",
+        "port": "data",
+        "bit": 123
+      },
+      {
+        "instance": "\\u_sd.g_d[0].g_c[1].u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "port": "wd_in",
+        "bit": 59
+      },
+      {
+        "instance": "\\u_sd.g_d[1].g_c[1].u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "port": "wd_in",
+        "bit": 59
+      }
+    ],
+    "consumer_count": 5,
+    "consumer_scope": "Five mapped instance/port connections, not a flattened leaf-load census",
+    "actual_RTL_source": "rtl/rom/ot_coll_tp8_split_native32.sv",
+    "actual_RTL_sha256": "7253e9114443c81d0cb411eb0ceab7c2fe3a670021d069d9ad36a3f47593acdd",
+    "source_lines_298_319": [
+      "    wire [127:0] w_d;",
+      "    generate for (k = 0; k < 4; k = k + 1) begin : g_wd",
+      "        if(FAN32!=0)begin:g_half",
+      "            for(genvar h=0;h<2;h=h+1)begin:g_h",
+      "                wire tv=h?tok_half[29+k]:tcv_r[k];",
+      "                wire gd=h?tok_half[25+k]:gd_r[k];",
+      "                assign w_d[k*32+h*16+:16]=tv?pf_q[k*32+h*16+:16]:(gd?hi_q[k*32+h*16+:16]:lo_q[k*32+h*16+:16]);",
+      "            end",
+      "        end else begin:g_legacy",
+      "        assign w_d[k*32 +: 32] = tcv_r[k] ? pf_q[k*32 +: 32] : (gd_r[k] ? hi_q[k*32 +: 32] : lo_q[k*32 +: 32]);",
+      "        end",
+      "    end endgenerate",
+      "    wire [127:0] sx_q [0:2];",
+      "    assign sx0_data = sx_q[0]; assign sx1_data = sx_q[1]; assign sx2_data = sx_q[2];",
+      "    generate for (j = 0; j < 3; j = j + 1) begin : g_sxo",
+      "        (* keep_hierarchy = 1 *) ot_coll_split_sxd_native32 #(.W(128), .FACE(j), .QI(QI)) u_face (.clk(clk), .data(w_d),",
+      "            .qdata(sx_q[j]));",
+      "    end endgenerate",
+      "    reg [8:0] cc;",
+      "    always @(posedge clk or negedge rs_g) if (!rs_g) cc <= 9'd0; else cc <= cc + 9'd1;",
+      "    wire [127:0] td_d;",
+      "    ot_coll_sring512_native32 #(.W(128), .ID(QI*4 + 2)) u_sd (.clk(clk), .wa(cc), .ra(cc - 9'(LS + 1)), .wd(w_d), .rd(td_d));"
+    ],
+    "role": "w_d[123] data-selection result feeding SRAM write-data and three outgoing SerDes face data captures; not a write-control net"
+  },
+  "geometry_interpretation": "Driver buffer above upper SRAM bank, west-face SRAM sink and outgoing-face buffer east/below that bank require explicit macro-avoiding branches. Upper/lower SRAM pair has24nm internal seam. SRAM sink GCell M2/M3/M4/M5 all fully used; driver only M4 full, face buffer has spare lower-layer capacity. No local M2..M5 zero-capacity cells/overflow, so original q7 zero-capacity-wall account is insufficient. Stored M6 all full and route maxM5.",
+  "structural_requirement": "Model actual SRAM-pin access and each branch with reserve/priced paths before new hold placement; do not infer a generic channel widening or high-fanout control-copy fix. Preserve independent clock REFUSE (all115.8/114.3ps), which this query does not address.",
+  "limits": "30 transient hook shapes removed before save, failed maze heap not retained. Stored grid is snapshot data; saturation is an observed constraint, not proof of sole cause, impossibility, legal path, repaired geometry or clockPASS. No further probe/retry authorized by this receipt."
+}

@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-q8b-net10846-1021
+ot-run: ot-epyc7       admits   418 GB (avail 497, growth 204, headroom 0, waiters 0/0 GB) load 35/96 running 10 disk 4434 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-q8b-net10846-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-q8b-net10846-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-q8b-net10846-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-q8b-net10846-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-q8b-net10846-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2277928-1792625540 after 0 s
+READONLY_NET_DUMP COMPLETE net10846 (no design mutation/STA/route)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2277928-1792625540): exit 0
