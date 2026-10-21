@@ -25,6 +25,11 @@ def apply(plan, table, source_ref):
     row = copy.deepcopy(original)
     assert not original.get('params'), 'KV512 fixed wrapper requires actual default HB0/DL4/DR6/DX6/VQ2/VS_MUT0'
     row['module'] = 'ot_s81sl_slice_kv512'
+    # HB is fixed inside this parameter-free wrapper, not a public override.
+    row.pop('hb_param', None)
+    fault_masters = table.setdefault('status_fault_masters', [])
+    assert block['master'] in fault_masters, 'base slice fault must already reach die status'
+    fault_masters.append(key)
     # Literal18-port passthrough: preserve the exact declared widths used by
     # strict bind for existing input pads/output-copy declarations.
     widths = table.setdefault('rtl_widths', {})

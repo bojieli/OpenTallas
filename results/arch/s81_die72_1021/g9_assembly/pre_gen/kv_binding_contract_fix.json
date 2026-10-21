@@ -1,0 +1,22 @@
+{
+  "failed_unit": "3311561-1792624541",
+  "failed_bind": "16:19:25 EXIT1; exactKVoutputfaultopen+illegalHBpublicoverride; allotherstrictcounterszero",
+  "old_table_sha256": "0dc455e3e7ad658001d6b71a56541ff5ca06d32074631e78e3259608cde765c5",
+  "corrected_table_sha256": "0feb9b8c74476fbfaf0ce7a99dac3b71290a24c9635e6047d1501e6478a677d7",
+  "exact_changes": [
+    {
+      "path": "masters.dsdv_slice_kv512.hb_param",
+      "old": "HB",
+      "new": "ABSENT; fixedHB0insideparameterfreewrapper"
+    },
+    {
+      "path": "status_fault_masters",
+      "append": "dsdv_slice_kv512",
+      "purpose": "Actualfaultoutputnowdrivesexistingdieblock_faultvector; no unread waiver"
+    }
+  ],
+  "reverse_two_changes_recovers_exact_original_object": true,
+  "unchanged": "AllRTL/source refs+params/clocks/reset/placement/routes/defines/vieworder/cycles; original0N/KVsyntaxproof scopes retained",
+  "ABI": "Existingdieblock_faultstatusvector gainsactualKVsliceentry; data/controlinterfacesunchanged",
+  "owner_scope": "One immutablebind-onlysuccessor reusesexact819routes+sourceinputs; GEN/GRT/STA onlyifstrictPASS; oldfailedcasepreserved"
+}
