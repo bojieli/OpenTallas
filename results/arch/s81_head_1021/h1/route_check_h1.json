@@ -1,118 +1,118 @@
 {
  "routing": "CONSTRUCTED_PENDING_REAL_PIN_PROJECTION_AND_SOURCE_GEN",
  "failures": 0,
- "links": 371,
- "stations": 930,
- "bit_mm": 212004.8,
- "longest_station_hop_um": 396.5,
+ "links": 437,
+ "stations": 2403,
+ "bit_mm": 284028.5,
+ "longest_station_hop_um": 394.6,
  "over_reach": [],
  "bus565_with_station": [],
  "longest_hops": [
   {
-   "link": "c_ln_draft2_r",
-   "hop_um": 396.5,
-   "b": 562,
-   "stations": 28,
-   "L": 10070.352
-  },
-  {
-   "link": "c_ln_draft4_t",
-   "hop_um": 393.0,
-   "b": 512,
-   "stations": 33,
-   "L": 11715.408
-  },
-  {
-   "link": "c_ln_host0_t",
-   "hop_um": 388.9,
-   "b": 512,
+   "link": "c_ln_host0_r_l2",
+   "hop_um": 394.6,
+   "b": 276,
    "stations": 34,
-   "L": 11960.352
+   "L": 12129.925
   },
   {
-   "link": "c_ln_mesh1_t",
-   "hop_um": 385.2,
-   "b": 512,
-   "stations": 20,
-   "L": 7157.808
+   "link": "c_ln_host0_r_l1",
+   "hop_um": 393.8,
+   "b": 276,
+   "stations": 34,
+   "L": 12088.961
   },
   {
-   "link": "c_ln_mesh3_t",
-   "hop_um": 384.8,
-   "b": 512,
-   "stations": 25,
-   "L": 8756.208
-  },
-  {
-   "link": "c_ln_host1_r",
-   "hop_um": 384.3,
-   "b": 562,
-   "stations": 29,
-   "L": 10473.408
-  },
-  {
-   "link": "c_ln_mesh0_t",
-   "hop_um": 383.1,
-   "b": 512,
+   "link": "c_ln_mesh0_t_l1",
+   "hop_um": 393.2,
+   "b": 276,
    "stations": 32,
    "L": 11542.608
   },
   {
-   "link": "c_ln_draft1_r",
-   "hop_um": 381.9,
-   "b": 562,
+   "link": "c_ln_draft2_r_l1",
+   "hop_um": 392.0,
+   "b": 276,
+   "stations": 28,
+   "L": 10091.952
+  },
+  {
+   "link": "c_ln_draft4_t_l2",
+   "hop_um": 391.6,
+   "b": 276,
+   "stations": 33,
+   "L": 11721.456
+  },
+  {
+   "link": "c_ln_draft1_r_l0",
+   "hop_um": 390.4,
+   "b": 276,
    "stations": 19,
-   "L": 6715.008
+   "L": 6816.985
+  },
+  {
+   "link": "c_ln_draft4_r_l2",
+   "hop_um": 388.6,
+   "b": 276,
+   "stations": 33,
+   "L": 11653.2
+  },
+  {
+   "link": "c_ln_mesh0_r_l2",
+   "hop_um": 387.7,
+   "b": 276,
+   "stations": 33,
+   "L": 11826.0
   }
  ],
  "longest_links": [
   {
-   "link": "c_ln_mesh4_t",
+   "link": "c_ln_mesh4_t_l0",
+   "L": 12897.36,
+   "stations": 36,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_t_l1",
    "L": 12881.808,
    "stations": 36,
-   "b": 512
+   "b": 276
   },
   {
-   "link": "c_ln_mesh4_r",
+   "link": "c_ln_mesh4_t_l2",
+   "L": 12866.256,
+   "stations": 36,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_r_l0",
+   "L": 12850.704,
+   "stations": 36,
+   "b": 276
+  },
+  {
+   "link": "c_ln_mesh4_r_l1",
    "L": 12835.152,
    "stations": 36,
-   "b": 562
+   "b": 276
   },
   {
-   "link": "c_ln_host0_r",
-   "L": 12071.808,
+   "link": "c_ln_mesh4_r_l2",
+   "L": 12819.6,
+   "stations": 36,
+   "b": 276
+  },
+  {
+   "link": "c_ln_host0_r_l2",
+   "L": 12129.925,
    "stations": 34,
-   "b": 562
+   "b": 276
   },
   {
-   "link": "c_ln_host0_t",
-   "L": 11960.352,
+   "link": "c_ln_host0_r_l1",
+   "L": 12088.961,
    "stations": 34,
-   "b": 512
-  },
-  {
-   "link": "c_ln_mesh0_r",
-   "L": 11755.152,
-   "stations": 33,
-   "b": 562
-  },
-  {
-   "link": "c_ln_draft4_t",
-   "L": 11715.408,
-   "stations": 33,
-   "b": 512
-  },
-  {
-   "link": "c_ln_draft4_r",
-   "L": 11668.752,
-   "stations": 33,
-   "b": 562
-  },
-  {
-   "link": "c_ln_mesh0_t",
-   "L": 11542.608,
-   "stations": 32,
-   "b": 512
+   "b": 276
   }
  ],
  "by_class": {
@@ -122,9 +122,9 @@
    "bit_mm": 43635.7
   },
   "coll": {
-   "links": 34,
-   "stations": 63,
-   "bit_mm": 13646.1
+   "links": 42,
+   "stations": 126,
+   "bit_mm": 14036.3
   },
   "spine": {
    "links": 28,
@@ -132,14 +132,13 @@
    "bit_mm": 16174.9
   },
   "unit": {
-   "links": 30,
-   "stations": 721,
-   "bit_mm": 138548.2
+   "links": 88,
+   "stations": 2131,
+   "bit_mm": 210181.7
   }
  },
  "station_widths": {
   "682": 146,
-  "512": 391,
-  "562": 393
+  "276": 2257
  }
 }

@@ -17,20 +17,63 @@
   },
   "widths": {
    "chain": 565,
-   "ctl_to_lane": 512,
-   "lane_to_ctl": 562,
-   "ctl_to_lep": 512,
-   "lep_to_ctl": 562,
+   "ctl_to_lane": 276,
+   "lane_to_ctl": 276,
+   "ctl_to_lep": 276,
+   "lep_to_ctl": 276,
    "serdes_tx": 512,
-   "serdes_rx": 562
+   "serdes_rx": 562,
+   "serdes_tx_long": 276,
+   "serdes_rx_long": 276
   },
-  "placeholder_widths": [
-   "ctl_to_lane",
-   "lane_to_ctl",
-   "ctl_to_lep",
-   "lep_to_ctl"
-  ],
-  "placeholder_note": "ctl/lep/lane core widths are PLACEHOLDERS until HD-CTL ports.json (edit the table at the top of hd_plan.py, regenerate)",
+  "lanes": {
+   "chain": {
+    "lane": 565,
+    "lanes": 1,
+    "payload": 565
+   },
+   "ctl_to_lane": {
+    "lane": 276,
+    "lanes": 3,
+    "payload": 554
+   },
+   "lane_to_ctl": {
+    "lane": 276,
+    "lanes": 3,
+    "payload": 558
+   },
+   "ctl_to_lep": {
+    "lane": 276,
+    "lanes": 5,
+    "payload": 1150
+   },
+   "lep_to_ctl": {
+    "lane": 276,
+    "lanes": 5,
+    "payload": 1148
+   },
+   "serdes_tx": {
+    "lane": 512,
+    "lanes": 1,
+    "payload": 512
+   },
+   "serdes_rx": {
+    "lane": 562,
+    "lanes": 1,
+    "payload": 514
+   },
+   "serdes_tx_long": {
+    "lane": 276,
+    "lanes": 2,
+    "payload": 512
+   },
+   "serdes_rx_long": {
+    "lane": 276,
+    "lanes": 2,
+    "payload": 514
+   }
+  },
+  "widths_source": "results/arch/s81_head_1021/ports.json (HD-CTL b4f571642): real widths, no placeholders (HD-CHAIN 10-21)",
   "instance_orientations": {
    "t_N00Wo0": "MY",
    "t_N00Wo1": "MY",
@@ -7581,7 +7624,7 @@
   },
   {
    "name": "lk_WN2",
-   "master": "ot_pdie_serdes",
+   "master": "ot_pdie_serdes_l276",
    "kind": "link",
    "group": "edge",
    "x": 86.4,
@@ -7593,7 +7636,7 @@
   },
   {
    "name": "lk_WN3",
-   "master": "ot_pdie_serdes",
+   "master": "ot_pdie_serdes_l276",
    "kind": "link",
    "group": "edge",
    "x": 86.4,
@@ -7605,7 +7648,7 @@
   },
   {
    "name": "lk_WN0",
-   "master": "ot_pdie_serdes",
+   "master": "ot_pdie_serdes_l276",
    "kind": "link",
    "group": "edge",
    "x": 86.4,
@@ -7617,7 +7660,7 @@
   },
   {
    "name": "lk_WN1",
-   "master": "ot_pdie_serdes",
+   "master": "ot_pdie_serdes_l276",
    "kind": "link",
    "group": "edge",
    "x": 86.4,
@@ -16338,7 +16381,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_HOST0",
@@ -16365,7 +16409,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_HOST1",
@@ -16392,7 +16437,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_HOST1",
@@ -16419,7 +16465,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_DW0",
@@ -16446,7 +16493,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_DW0",
@@ -16473,7 +16521,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_DW1",
@@ -16500,7 +16549,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_DW1",
@@ -16527,7 +16577,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_M0",
@@ -16554,7 +16605,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_M0",
@@ -16581,7 +16633,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_M1",
@@ -16608,7 +16661,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_M1",
@@ -16635,7 +16689,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_M2",
@@ -16662,7 +16717,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_M2",
@@ -16689,7 +16745,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_M3",
@@ -16716,7 +16773,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_M3",
@@ -16743,7 +16801,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_M4",
@@ -16770,7 +16829,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_M4",
@@ -16797,7 +16857,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_DE0",
@@ -16824,7 +16885,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_DE0",
@@ -16851,7 +16913,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_M5",
@@ -16878,7 +16941,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_M5",
@@ -16905,7 +16969,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_DE1",
@@ -16932,7 +16997,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_DE1",
@@ -16959,7 +17025,8 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
    "i": "lt_lk_DE2",
@@ -16986,7 +17053,8 @@
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 512
   },
   {
    "i": "lr_lk_DE2",
@@ -17013,12 +17081,13 @@
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 514
   },
   {
-   "i": "lt_lk_WN0",
+   "i": "lt_lk_WN0_l0",
    "c": "coll",
-   "b": 512,
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17036,16 +17105,17 @@
      "box"
     ]
    ],
-   "n": "lep lane 0 tx -> lk_WN0 (pair A)",
+   "n": "lep lane 0 tx -> lk_WN0 (pair A), 276-b lane 0",
    "endpoint_faces": [
     "N",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
-   "i": "lr_lk_WN0",
+   "i": "lr_lk_WN0_l0",
    "c": "coll",
-   "b": 562,
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17063,16 +17133,73 @@
      "box"
     ]
    ],
-   "n": "lk_WN0 rx -> lep lane 0 (pair A)",
+   "n": "lk_WN0 rx -> lep lane 0 (pair A), 276-b lane 0",
    "endpoint_faces": [
     "E",
     "N"
-   ]
+   ],
+   "payload_b": 514
   },
   {
-   "i": "lt_lk_WN1",
+   "i": "lt_lk_WN0_l1",
    "c": "coll",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "tx0",
+     911.52,
+     11858.4,
+     "box"
+    ],
+    [
+     283,
+     "tx",
+     604.8,
+     14141.4336,
+     "box"
+    ]
+   ],
+   "n": "lep lane 0 tx -> lk_WN0 (pair A), 276-b lane 1",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 512
+  },
+  {
+   "i": "lr_lk_WN0_l1",
+   "c": "coll",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     283,
+     "rx",
+     604.8,
+     14179.8816,
+     "box"
+    ],
+    [
+     310,
+     "rx0",
+     1041.12,
+     11858.4,
+     "box"
+    ]
+   ],
+   "n": "lk_WN0 rx -> lep lane 0 (pair A), 276-b lane 1",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 514
+  },
+  {
+   "i": "lt_lk_WN1_l0",
+   "c": "coll",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17090,16 +17217,17 @@
      "box"
     ]
    ],
-   "n": "lep lane 1 tx -> lk_WN1 (pair A)",
+   "n": "lep lane 1 tx -> lk_WN1 (pair A), 276-b lane 0",
    "endpoint_faces": [
     "N",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
-   "i": "lr_lk_WN1",
+   "i": "lr_lk_WN1_l0",
    "c": "coll",
-   "b": 562,
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17117,16 +17245,73 @@
      "box"
     ]
    ],
-   "n": "lk_WN1 rx -> lep lane 1 (pair A)",
+   "n": "lk_WN1 rx -> lep lane 1 (pair A), 276-b lane 0",
    "endpoint_faces": [
     "E",
     "N"
-   ]
+   ],
+   "payload_b": 514
   },
   {
-   "i": "lt_lk_WN2",
+   "i": "lt_lk_WN1_l1",
    "c": "coll",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "tx1",
+     1300.32,
+     11858.4,
+     "box"
+    ],
+    [
+     284,
+     "tx",
+     604.8,
+     18785.4336,
+     "box"
+    ]
+   ],
+   "n": "lep lane 1 tx -> lk_WN1 (pair A), 276-b lane 1",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 512
+  },
+  {
+   "i": "lr_lk_WN1_l1",
+   "c": "coll",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     284,
+     "rx",
+     604.8,
+     18823.8816,
+     "box"
+    ],
+    [
+     310,
+     "rx1",
+     1429.92,
+     11858.4,
+     "box"
+    ]
+   ],
+   "n": "lk_WN1 rx -> lep lane 1 (pair A), 276-b lane 1",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 514
+  },
+  {
+   "i": "lt_lk_WN2_l0",
+   "c": "coll",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17144,16 +17329,17 @@
      "box"
     ]
    ],
-   "n": "lep lane 2 tx -> lk_WN2 (pair B)",
+   "n": "lep lane 2 tx -> lk_WN2 (pair B), 276-b lane 0",
    "endpoint_faces": [
     "S",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
-   "i": "lr_lk_WN2",
+   "i": "lr_lk_WN2_l0",
    "c": "coll",
-   "b": 562,
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17171,16 +17357,73 @@
      "box"
     ]
    ],
-   "n": "lk_WN2 rx -> lep lane 2 (pair B)",
+   "n": "lk_WN2 rx -> lep lane 2 (pair B), 276-b lane 0",
    "endpoint_faces": [
     "E",
     "S"
-   ]
+   ],
+   "payload_b": 514
   },
   {
-   "i": "lt_lk_WN3",
+   "i": "lt_lk_WN2_l1",
    "c": "coll",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "tx2",
+     911.52,
+     9266.4,
+     "box"
+    ],
+    [
+     281,
+     "tx",
+     604.8,
+     8452.1664,
+     "box"
+    ]
+   ],
+   "n": "lep lane 2 tx -> lk_WN2 (pair B), 276-b lane 1",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 512
+  },
+  {
+   "i": "lr_lk_WN2_l1",
+   "c": "coll",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     281,
+     "rx",
+     604.8,
+     8413.7184,
+     "box"
+    ],
+    [
+     310,
+     "rx2",
+     1041.12,
+     9266.4,
+     "box"
+    ]
+   ],
+   "n": "lk_WN2 rx -> lep lane 2 (pair B), 276-b lane 1",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 514
+  },
+  {
+   "i": "lt_lk_WN3_l0",
+   "c": "coll",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17198,16 +17441,17 @@
      "box"
     ]
    ],
-   "n": "lep lane 3 tx -> lk_WN3 (pair B)",
+   "n": "lep lane 3 tx -> lk_WN3 (pair B), 276-b lane 0",
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 512
   },
   {
-   "i": "lr_lk_WN3",
+   "i": "lr_lk_WN3_l0",
    "c": "coll",
-   "b": 562,
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17225,23 +17469,108 @@
      "box"
     ]
    ],
-   "n": "lk_WN3 rx -> lep lane 3 (pair B)",
+   "n": "lk_WN3 rx -> lep lane 3 (pair B), 276-b lane 0",
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 514
   },
   {
-   "i": "c_ln_host0_t",
+   "i": "lt_lk_WN3_l1",
+   "c": "coll",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "tx3",
+     691.2,
+     10484.64,
+     "box"
+    ],
+    [
+     282,
+     "tx",
+     604.8,
+     10484.64,
+     "box"
+    ]
+   ],
+   "n": "lep lane 3 tx -> lk_WN3 (pair B), 276-b lane 1",
+   "endpoint_faces": [
+    "W",
+    "E"
+   ],
+   "payload_b": 512
+  },
+  {
+   "i": "lr_lk_WN3_l1",
+   "c": "coll",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     282,
+     "rx",
+     604.8,
+     10743.84,
+     "box"
+    ],
+    [
+     310,
+     "rx3",
+     691.2,
+     10743.84,
+     "box"
+    ]
+   ],
+   "n": "lk_WN3 rx -> lep lane 3 (pair B), 276-b lane 1",
+   "endpoint_faces": [
+    "E",
+    "W"
+   ],
+   "payload_b": 514
+  },
+  {
+   "i": "c_ln_host0_t_l0",
    "c": "unit",
-   "b": 512,
+   "b": 276,
    "d": 1,
    "e": [
     [
      279,
      "ln_host0_t",
      7462.8,
-     9493.2,
+     9430.3059,
+     "box"
+    ],
+    [
+     297,
+     "core_i",
+     1036.8,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_host0 (host) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_host0_t_l1",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_host0_t",
+     7462.8,
+     9498.9176,
      "box"
     ],
     [
@@ -17252,16 +17581,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_host0 (host) core, region crossing (landing)",
+   "n": "ctl -> ln_host0 (host) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_host0_r",
+   "i": "c_ln_host0_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_host0_t",
+     7462.8,
+     9567.5294,
+     "box"
+    ],
+    [
+     297,
+     "core_i",
+     1092.096,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_host0 (host) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_host0_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     297,
+     "core_o",
+     1119.744,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_host0_r",
+     7462.8,
+     9636.1412,
+     "box"
+    ]
+   ],
+   "n": "ln_host0 (host) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_host0_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17275,47 +17661,162 @@
      279,
      "ln_host0_r",
      7462.8,
-     9687.6,
+     9704.7529,
      "box"
     ]
    ],
-   "n": "ln_host0 (host) core -> ctl, region crossing (landing)",
+   "n": "ln_host0 (host) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "W"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_host1_t",
+   "i": "c_ln_host0_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     297,
+     "core_o",
+     1175.04,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_host0_r",
+     7462.8,
+     9773.3647,
+     "box"
+    ]
+   ],
+   "n": "ln_host0 (host) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_host1_t_l0",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
      279,
      "ln_host1_t",
      7462.8,
-     9882.0,
+     9841.9765,
      "box"
     ],
     [
      298,
      "core_i",
-     3051.648,
+     3024.0,
      3931.2,
      "box"
     ]
    ],
-   "n": "ctl -> ln_host1 (host) core, region crossing (landing)",
+   "n": "ctl -> ln_host1 (host) core lane 0/3, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_host1_r",
+   "i": "c_ln_host1_t_l1",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_host1_t",
+     7462.8,
+     9910.5882,
+     "box"
+    ],
+    [
+     298,
+     "core_i",
+     3073.248,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_host1 (host) core lane 1/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "N"
+   ],
+   "payload_b": 554,
+   "nudge_um": 21.6
+  },
+  {
+   "i": "c_ln_host1_t_l2",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_host1_t",
+     7462.8,
+     9979.2,
+     "box"
+    ],
+    [
+     298,
+     "core_i",
+     3079.296,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_host1 (host) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_host1_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     298,
+     "core_o",
+     3106.944,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_host1_r",
+     7462.8,
+     10047.8118,
+     "box"
+    ]
+   ],
+   "n": "ln_host1 (host) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_host1_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17329,27 +17830,84 @@
      279,
      "ln_host1_r",
      7462.8,
-     10076.4,
+     10116.4235,
      "box"
     ]
    ],
-   "n": "ln_host1 (host) core -> ctl, region crossing (landing)",
+   "n": "ln_host1 (host) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "W"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_draft0_t",
+   "i": "c_ln_host1_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     298,
+     "core_o",
+     3162.24,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_host1_r",
+     7462.8,
+     10185.0353,
+     "box"
+    ]
+   ],
+   "n": "ln_host1 (host) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft0_t_l0",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
      279,
      "ln_draft0_t",
      7462.8,
-     10270.8,
+     10253.6471,
+     "box"
+    ],
+    [
+     299,
+     "core_i",
+     3024.0,
+     8575.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft0 (draft) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft0_t_l1",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft0_t",
+     7462.8,
+     10322.2588,
      "box"
     ],
     [
@@ -17360,16 +17918,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_draft0 (draft) core, region crossing (landing)",
+   "n": "ctl -> ln_draft0 (draft) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_draft0_r",
+   "i": "c_ln_draft0_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft0_t",
+     7462.8,
+     10390.8706,
+     "box"
+    ],
+    [
+     299,
+     "core_i",
+     3079.296,
+     8575.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft0 (draft) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft0_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     299,
+     "core_o",
+     3106.944,
+     8575.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft0_r",
+     7462.8,
+     10459.4824,
+     "box"
+    ]
+   ],
+   "n": "ln_draft0 (draft) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft0_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17383,135 +17998,364 @@
      279,
      "ln_draft0_r",
      7462.8,
-     10465.2,
+     10528.0941,
      "box"
     ]
    ],
-   "n": "ln_draft0 (draft) core -> ctl, region crossing (landing)",
+   "n": "ln_draft0 (draft) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "W"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_lep_t0",
+   "i": "c_ln_draft0_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     299,
+     "core_o",
+     3162.24,
+     8575.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft0_r",
+     7462.8,
+     10596.7059,
+     "box"
+    ]
+   ],
+   "n": "ln_draft0 (draft) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_lep_t_l0",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
      279,
-     "lep_t0",
+     "lep_t",
      7462.8,
-     10659.6,
+     10665.3176,
      "box"
     ],
     [
      310,
-     "core_i0",
+     "core_i",
      1987.2,
-     10044.0,
+     10007.712,
      "box"
     ]
    ],
-   "n": "ctl -> lep (lep) core, region crossing (landing)",
+   "n": "ctl -> lep (lep) core lane 0/5, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 1150
   },
   {
-   "i": "c_lep_t1",
+   "i": "c_lep_t_l1",
    "c": "unit",
-   "b": 512,
+   "b": 276,
    "d": 1,
    "e": [
     [
      279,
-     "lep_t1",
+     "lep_t",
      7462.8,
-     10854.0,
+     10733.9294,
      "box"
     ],
     [
      310,
-     "core_i1",
+     "core_i",
      1987.2,
-     10562.4,
+     10090.656,
      "box"
     ]
    ],
-   "n": "ctl -> lep (lep) core, region crossing (landing)",
+   "n": "ctl -> lep (lep) core lane 1/5, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 1150
   },
   {
-   "i": "c_lep_r0",
+   "i": "c_lep_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "lep_t",
+     7462.8,
+     10802.5412,
+     "box"
+    ],
+    [
+     310,
+     "core_i",
+     1987.2,
+     10173.6,
+     "box"
+    ]
+   ],
+   "n": "ctl -> lep (lep) core lane 2/5, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "E"
+   ],
+   "payload_b": 1150
+  },
+  {
+   "i": "c_lep_t_l3",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "lep_t",
+     7462.8,
+     10871.1529,
+     "box"
+    ],
+    [
+     310,
+     "core_i",
+     1987.2,
+     10256.544,
+     "box"
+    ]
+   ],
+   "n": "ctl -> lep (lep) core lane 3/5, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "E"
+   ],
+   "payload_b": 1150
+  },
+  {
+   "i": "c_lep_t_l4",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "lep_t",
+     7462.8,
+     10939.7647,
+     "box"
+    ],
+    [
+     310,
+     "core_i",
+     1987.2,
+     10339.488,
+     "box"
+    ]
+   ],
+   "n": "ctl -> lep (lep) core lane 4/5, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "E"
+   ],
+   "payload_b": 1150
+  },
+  {
+   "i": "c_lep_r_l0",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
      310,
-     "core_o0",
+     "core_o",
      1987.2,
-     10303.2,
+     10785.312,
      "box"
     ],
     [
      279,
-     "lep_r0",
+     "lep_r",
      7462.8,
-     11048.4,
+     11008.3765,
      "box"
     ]
    ],
-   "n": "lep (lep) core -> ctl, region crossing (landing)",
+   "n": "lep (lep) core -> ctl lane 0/5, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 1148
   },
   {
-   "i": "c_lep_r1",
+   "i": "c_lep_r_l1",
    "c": "unit",
-   "b": 562,
+   "b": 276,
    "d": 1,
    "e": [
     [
      310,
-     "core_o1",
+     "core_o",
      1987.2,
-     10821.6,
+     10868.256,
      "box"
     ],
     [
      279,
-     "lep_r1",
+     "lep_r",
      7462.8,
-     11242.8,
+     11076.9882,
      "box"
     ]
    ],
-   "n": "lep (lep) core -> ctl, region crossing (landing)",
+   "n": "lep (lep) core -> ctl lane 1/5, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 1148
   },
   {
-   "i": "c_ln_draft1_t",
+   "i": "c_lep_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "core_o",
+     1987.2,
+     10951.2,
+     "box"
+    ],
+    [
+     279,
+     "lep_r",
+     7462.8,
+     11145.6,
+     "box"
+    ]
+   ],
+   "n": "lep (lep) core -> ctl lane 2/5, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "W"
+   ],
+   "payload_b": 1148
+  },
+  {
+   "i": "c_lep_r_l3",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "core_o",
+     1987.2,
+     11034.144,
+     "box"
+    ],
+    [
+     279,
+     "lep_r",
+     7462.8,
+     11214.2118,
+     "box"
+    ]
+   ],
+   "n": "lep (lep) core -> ctl lane 3/5, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "W"
+   ],
+   "payload_b": 1148
+  },
+  {
+   "i": "c_lep_r_l4",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     310,
+     "core_o",
+     1987.2,
+     11117.088,
+     "box"
+    ],
+    [
+     279,
+     "lep_r",
+     7462.8,
+     11282.8235,
+     "box"
+    ]
+   ],
+   "n": "lep (lep) core -> ctl lane 4/5, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "W"
+   ],
+   "payload_b": 1148
+  },
+  {
+   "i": "c_ln_draft1_t_l0",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
      279,
      "ln_draft1_t",
      7462.8,
-     11437.2,
+     11351.4353,
+     "box"
+    ],
+    [
+     300,
+     "core_i",
+     3024.0,
+     14018.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft1 (draft) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft1_t_l1",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft1_t",
+     7462.8,
+     11420.0471,
      "box"
     ],
     [
@@ -17522,16 +18366,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_draft1 (draft) core, region crossing (landing)",
+   "n": "ctl -> ln_draft1 (draft) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "S"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_draft1_r",
+   "i": "c_ln_draft1_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft1_t",
+     7462.8,
+     11488.6588,
+     "box"
+    ],
+    [
+     300,
+     "core_i",
+     3079.296,
+     14018.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft1 (draft) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft1_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     300,
+     "core_o",
+     3106.944,
+     14018.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft1_r",
+     7462.8,
+     11557.2706,
+     "box"
+    ]
+   ],
+   "n": "ln_draft1 (draft) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft1_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17545,20 +18446,77 @@
      279,
      "ln_draft1_r",
      7462.8,
-     11631.6,
+     11625.8824,
      "box"
     ]
    ],
-   "n": "ln_draft1 (draft) core -> ctl, region crossing (landing)",
+   "n": "ln_draft1 (draft) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "S",
     "W"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_draft2_t",
+   "i": "c_ln_draft1_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     300,
+     "core_o",
+     3162.24,
+     14018.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft1_r",
+     7462.8,
+     11694.4941,
+     "box"
+    ]
+   ],
+   "n": "ln_draft1 (draft) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "W"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft2_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft2_t",
+     8974.8,
+     9417.6,
+     "box"
+    ],
+    [
+     306,
+     "core_i",
+     13275.36,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft2 (draft) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft2_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17576,22 +18534,79 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_draft2 (draft) core, region crossing (landing)",
+   "n": "ctl -> ln_draft2 (draft) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_draft2_r",
+   "i": "c_ln_draft2_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft2_t",
+     8974.8,
+     9504.0,
+     "box"
+    ],
+    [
+     306,
+     "core_i",
+     13330.656,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft2 (draft) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft2_r_l0",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
      306,
      "core_o",
-     13385.952,
+     13358.304,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft2_r",
+     8974.8,
+     9547.2,
+     "box"
+    ]
+   ],
+   "n": "ln_draft2 (draft) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft2_r_l1",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     306,
+     "core_o",
+     13407.552,
      3931.2,
      "box"
     ],
@@ -17603,16 +18618,74 @@
      "box"
     ]
    ],
-   "n": "ln_draft2 (draft) core -> ctl, region crossing (landing)",
+   "n": "ln_draft2 (draft) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "E"
-   ]
+   ],
+   "payload_b": 558,
+   "nudge_um": 21.6
   },
   {
-   "i": "c_ln_mesh0_t",
+   "i": "c_ln_draft2_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     306,
+     "core_o",
+     13413.6,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft2_r",
+     8974.8,
+     9633.6,
+     "box"
+    ]
+   ],
+   "n": "ln_draft2 (draft) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh0_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh0_t",
+     8974.8,
+     9676.8,
+     "box"
+    ],
+    [
+     301,
+     "core_i",
+     14700.96,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh0 (mesh) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh0_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17630,16 +18703,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_mesh0 (mesh) core, region crossing (landing)",
+   "n": "ctl -> ln_mesh0 (mesh) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_mesh0_r",
+   "i": "c_ln_mesh0_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh0_t",
+     8974.8,
+     9763.2,
+     "box"
+    ],
+    [
+     301,
+     "core_i",
+     14756.256,
+     3931.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh0 (mesh) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh0_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     301,
+     "core_o",
+     14783.904,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh0_r",
+     8974.8,
+     9806.4,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh0 (mesh) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh0_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17657,16 +18787,73 @@
      "box"
     ]
    ],
-   "n": "ln_mesh0 (mesh) core -> ctl, region crossing (landing)",
+   "n": "ln_mesh0 (mesh) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_mesh1_t",
+   "i": "c_ln_mesh0_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     301,
+     "core_o",
+     14839.2,
+     3931.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh0_r",
+     8974.8,
+     9892.8,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh0 (mesh) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh1_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh1_t",
+     8974.8,
+     9936.0,
+     "box"
+    ],
+    [
+     302,
+     "core_i",
+     14700.96,
+     8575.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh1 (mesh) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh1_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17684,16 +18871,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_mesh1 (mesh) core, region crossing (landing)",
+   "n": "ctl -> ln_mesh1 (mesh) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_mesh1_r",
+   "i": "c_ln_mesh1_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh1_t",
+     8974.8,
+     10022.4,
+     "box"
+    ],
+    [
+     302,
+     "core_i",
+     14756.256,
+     8575.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh1 (mesh) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh1_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     302,
+     "core_o",
+     14783.904,
+     8575.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh1_r",
+     8974.8,
+     10065.6,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh1 (mesh) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh1_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17711,16 +18955,73 @@
      "box"
     ]
    ],
-   "n": "ln_mesh1 (mesh) core -> ctl, region crossing (landing)",
+   "n": "ln_mesh1 (mesh) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_mesh5_t",
+   "i": "c_ln_mesh1_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     302,
+     "core_o",
+     14839.2,
+     8575.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh1_r",
+     8974.8,
+     10152.0,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh1 (mesh) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh5_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh5_t",
+     8974.8,
+     10195.2,
+     "box"
+    ],
+    [
+     307,
+     "core_i",
+     13275.36,
+     8575.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh5 (mesh) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh5_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17738,16 +19039,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_mesh5 (mesh) core, region crossing (landing)",
+   "n": "ctl -> ln_mesh5 (mesh) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "N"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_mesh5_r",
+   "i": "c_ln_mesh5_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh5_t",
+     8974.8,
+     10281.6,
+     "box"
+    ],
+    [
+     307,
+     "core_i",
+     13330.656,
+     8575.2,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh5 (mesh) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "N"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh5_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     307,
+     "core_o",
+     13358.304,
+     8575.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh5_r",
+     8974.8,
+     10324.8,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh5 (mesh) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh5_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17765,16 +19123,73 @@
      "box"
     ]
    ],
-   "n": "ln_mesh5 (mesh) core -> ctl, region crossing (landing)",
+   "n": "ln_mesh5 (mesh) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "N",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_mesh2_t",
+   "i": "c_ln_mesh5_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     307,
+     "core_o",
+     13413.6,
+     8575.2,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh5_r",
+     8974.8,
+     10411.2,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh5 (mesh) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "N",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh2_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh2_t",
+     8974.8,
+     10454.4,
+     "box"
+    ],
+    [
+     303,
+     "core_i",
+     14666.4,
+     10412.64,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh2 (mesh) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "W"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh2_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17792,16 +19207,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_mesh2 (mesh) core, region crossing (landing)",
+   "n": "ctl -> ln_mesh2 (mesh) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "W"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_mesh2_r",
+   "i": "c_ln_mesh2_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh2_t",
+     8974.8,
+     10540.8,
+     "box"
+    ],
+    [
+     303,
+     "core_i",
+     14666.4,
+     10532.448,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh2 (mesh) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "W"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh2_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     303,
+     "core_o",
+     14666.4,
+     10592.352,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh2_r",
+     8974.8,
+     10584.0,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh2 (mesh) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh2_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17819,16 +19291,73 @@
      "box"
     ]
    ],
-   "n": "ln_mesh2 (mesh) core -> ctl, region crossing (landing)",
+   "n": "ln_mesh2 (mesh) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "W",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_draft3_t",
+   "i": "c_ln_mesh2_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     303,
+     "core_o",
+     14666.4,
+     10712.16,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh2_r",
+     8974.8,
+     10670.4,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh2 (mesh) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "W",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft3_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft3_t",
+     8974.8,
+     10713.6,
+     "box"
+    ],
+    [
+     308,
+     "core_i",
+     13275.36,
+     14018.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft3 (draft) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft3_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17846,16 +19375,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_draft3 (draft) core, region crossing (landing)",
+   "n": "ctl -> ln_draft3 (draft) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "S"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_draft3_r",
+   "i": "c_ln_draft3_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft3_t",
+     8974.8,
+     10800.0,
+     "box"
+    ],
+    [
+     308,
+     "core_i",
+     13330.656,
+     14018.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft3 (draft) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft3_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     308,
+     "core_o",
+     13358.304,
+     14018.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft3_r",
+     8974.8,
+     10843.2,
+     "box"
+    ]
+   ],
+   "n": "ln_draft3 (draft) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft3_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17873,16 +19459,73 @@
      "box"
     ]
    ],
-   "n": "ln_draft3 (draft) core -> ctl, region crossing (landing)",
+   "n": "ln_draft3 (draft) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "S",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_mesh3_t",
+   "i": "c_ln_draft3_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     308,
+     "core_o",
+     13413.6,
+     14018.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft3_r",
+     8974.8,
+     10929.6,
+     "box"
+    ]
+   ],
+   "n": "ln_draft3 (draft) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh3_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh3_t",
+     8974.8,
+     10972.8,
+     "box"
+    ],
+    [
+     304,
+     "core_i",
+     14700.96,
+     14018.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh3 (mesh) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh3_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17900,16 +19543,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_mesh3 (mesh) core, region crossing (landing)",
+   "n": "ctl -> ln_mesh3 (mesh) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "S"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_mesh3_r",
+   "i": "c_ln_mesh3_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh3_t",
+     8974.8,
+     11059.2,
+     "box"
+    ],
+    [
+     304,
+     "core_i",
+     14756.256,
+     14018.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh3 (mesh) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh3_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     304,
+     "core_o",
+     14783.904,
+     14018.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh3_r",
+     8974.8,
+     11102.4,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh3 (mesh) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh3_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17927,16 +19627,73 @@
      "box"
     ]
    ],
-   "n": "ln_mesh3 (mesh) core -> ctl, region crossing (landing)",
+   "n": "ln_mesh3 (mesh) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "S",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_draft4_t",
+   "i": "c_ln_mesh3_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     304,
+     "core_o",
+     14839.2,
+     14018.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh3_r",
+     8974.8,
+     11188.8,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh3 (mesh) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft4_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft4_t",
+     8974.8,
+     11232.0,
+     "box"
+    ],
+    [
+     309,
+     "core_i",
+     13275.36,
+     18662.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft4 (draft) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_draft4_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17954,16 +19711,74 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_draft4 (draft) core, region crossing (landing)",
+   "n": "ctl -> ln_draft4 (draft) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "S"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_draft4_r",
+   "i": "c_ln_draft4_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_draft4_t",
+     8974.8,
+     11318.4,
+     "box"
+    ],
+    [
+     309,
+     "core_i",
+     13352.256,
+     18662.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_draft4 (draft) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554,
+   "nudge_um": 21.6
+  },
+  {
+   "i": "c_ln_draft4_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     309,
+     "core_o",
+     13358.304,
+     18662.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft4_r",
+     8974.8,
+     11361.6,
+     "box"
+    ]
+   ],
+   "n": "ln_draft4 (draft) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_draft4_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -17981,16 +19796,73 @@
      "box"
     ]
    ],
-   "n": "ln_draft4 (draft) core -> ctl, region crossing (landing)",
+   "n": "ln_draft4 (draft) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "S",
     "E"
-   ]
+   ],
+   "payload_b": 558
   },
   {
-   "i": "c_ln_mesh4_t",
+   "i": "c_ln_draft4_r_l2",
    "c": "unit",
-   "b": 512,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     309,
+     "core_o",
+     13413.6,
+     18662.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_draft4_r",
+     8974.8,
+     11448.0,
+     "box"
+    ]
+   ],
+   "n": "ln_draft4 (draft) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh4_t_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh4_t",
+     8974.8,
+     11491.2,
+     "box"
+    ],
+    [
+     305,
+     "core_i",
+     14700.96,
+     18662.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh4 (mesh) core lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh4_t_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -18008,16 +19880,73 @@
      "box"
     ]
    ],
-   "n": "ctl -> ln_mesh4 (mesh) core, region crossing (landing)",
+   "n": "ctl -> ln_mesh4 (mesh) core lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "E",
     "S"
-   ]
+   ],
+   "payload_b": 554
   },
   {
-   "i": "c_ln_mesh4_r",
+   "i": "c_ln_mesh4_t_l2",
    "c": "unit",
-   "b": 562,
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     279,
+     "ln_mesh4_t",
+     8974.8,
+     11577.6,
+     "box"
+    ],
+    [
+     305,
+     "core_i",
+     14756.256,
+     18662.4,
+     "box"
+    ]
+   ],
+   "n": "ctl -> ln_mesh4 (mesh) core lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "E",
+    "S"
+   ],
+   "payload_b": 554
+  },
+  {
+   "i": "c_ln_mesh4_r_l0",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     305,
+     "core_o",
+     14783.904,
+     18662.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh4_r",
+     8974.8,
+     11620.8,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh4 (mesh) core -> ctl lane 0/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh4_r_l1",
+   "c": "unit",
+   "b": 276,
    "d": 1,
    "e": [
     [
@@ -18035,11 +19964,40 @@
      "box"
     ]
    ],
-   "n": "ln_mesh4 (mesh) core -> ctl, region crossing (landing)",
+   "n": "ln_mesh4 (mesh) core -> ctl lane 1/3, region crossing (landing)",
    "endpoint_faces": [
     "S",
     "E"
-   ]
+   ],
+   "payload_b": 558
+  },
+  {
+   "i": "c_ln_mesh4_r_l2",
+   "c": "unit",
+   "b": 276,
+   "d": 1,
+   "e": [
+    [
+     305,
+     "core_o",
+     14839.2,
+     18662.4,
+     "box"
+    ],
+    [
+     279,
+     "ln_mesh4_r",
+     8974.8,
+     11707.2,
+     "box"
+    ]
+   ],
+   "n": "ln_mesh4 (mesh) core -> ctl lane 2/3, region crossing (landing)",
+   "endpoint_faces": [
+    "S",
+    "E"
+   ],
+   "payload_b": 558
   }
  ],
  "blockages": [

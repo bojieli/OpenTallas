@@ -25,21 +25,29 @@ import math
 from pathlib import Path
 
 # ------------------------------------------------------------------------------------------------ PORT / WIDTH TABLE
-# HD-CTL's port contract (results/arch/s81_head_1021/ports.json on claude/s81-head-ctl-1021) did not exist at build time
-# (10-21).  Every width below marked PLACEHOLDER comes from the spec / G7 widths; when ports.json lands, edit ONLY this table
-# (and port names if they differ) and regenerate.
+# Real widths from HD-CTL's port contract results/arch/s81_head_1021/ports.json (claude/s81-head-ctl-1021@b4f571642, 4 masters,
+# 128 connections; HD-CHAIN 10-21 replaced the HD-FP placeholders).  Per lane key: (lane width, lanes, payload bits).  Lane width
+# = a closed relay / landing master width (70/276/512/562/682); payload = the RTL bits the bundle carries (the rest are dv_bind
+# lane-quantisation spare top bits).  The RTL port slices per lane are in tools/s81_dv/head72/hd_bind.py.
+# LONG LANES ride 276-b lanes: the ctl <-> lane / lep core links are 4.6..12.9 mm (16..36 stations, model landing E 9..18) and
+# only the 276 landing has a long (D 8, 6-bit K) closed tile (dsfd_dvland_276l); 562/682/512 landings are D 4 / K <= 7.
 BUS_B = 565                     # spec s2: {x512, go, xv, rv, row17, bits32, flt}
 LANE_B_RELAY = 682              # closed relay/landing width carrying bus B where a station or a landing is needed
-WIDTHS = {
-    'chain': BUS_B,             # tile.i/o, spo.i/o/ow/oe, spr.i/iw/ie/o, ctl.sn_*/ss_*   (spec s2, fixed)
-    'ctl_to_lane': 512,         # PLACEHOLDER ctl.<lane>_t -> lane.core_i  (lane TX payload, = G7 coll tx width)
-    'lane_to_ctl': 562,         # PLACEHOLDER lane.core_o -> ctl.<lane>_r  (lane RX payload, = G7 coll rx width)
-    'ctl_to_lep': 512,          # PLACEHOLDER ctl.lep_t<k> -> lep.core_i<k>, k = 0, 1 (pair A token / forward out)
-    'lep_to_ctl': 562,          # PLACEHOLDER lep.core_o<k> -> ctl.lep_r<k>, k = 0, 1 (pair B XB beats in)
-    'serdes_tx': 512,           # G7 lt_lk_*: lane/lep tx -> ot_pdie_serdes.tx
-    'serdes_rx': 562,           # G7 lr_lk_*: ot_pdie_serdes.rx -> lane/lep rx
+LANES = {
+    'chain':          (BUS_B, 1, BUS_B),   # tile.i/o, spo, spr, ctl sn_*/ss_* (565, fixed; 682 lane where a station/landing)
+    'ctl_to_lane':    (276, 3, 554),       # ctl {m,h,d}tx_v[k] + {m,h,d}tx_d[553k +: 553] -> lane tx_v / tx_d
+    'lane_to_ctl':    (276, 3, 558),       # lane rx_v / rx_d / flt -> ctl {m,h,d}rx_v[k], rx_d[553k +: 553], flt[4k +: 4]
+    'ctl_to_lep':     (276, 5, 1150),      # ctl ro 1104 + mu_c 34 + mu_rc 11 + ctl_f 1 -> lep ro / mu_c / mu_rc / sl_f
+    'lep_to_ctl':     (276, 5, 1148),      # lep ri 1104 + mu_rt 32 + lw 11 + fault 1 -> ctl ri / mu_rt / lw / lep_f
+    'serdes_tx':      (512, 1, 512),       # lane tx -> ot_pdie_serdes.tx (lane beside its SerDes)
+    'serdes_rx':      (562, 1, 514),       # ot_pdie_serdes {st, rx} -> lane rx[513:0]
+    'serdes_tx_long': (276, 2, 512),       # lep tx<k> -> lk_WN<k> (lep at band height: up to 7.6 mm)
+    'serdes_rx_long': (276, 2, 514),       # lk_WN<k> {st, rx} -> lep rx<k>
 }
-PLACEHOLDER = ('ctl_to_lane', 'lane_to_ctl', 'ctl_to_lep', 'lep_to_ctl')
+WIDTHS = {k: v[0] for k, v in LANES.items()}
+# Peer-endpoint nudges (um along the face) for links whose dv_route72 station spacing (corner-avoid shift) exceeds the 405-um
+# reach (station hop <= 400 um): found by a 21.6-um step search (HD-CHAIN 10-21; deterministic, the run script re-routes this plan).
+NUDGE = {"c_ln_host1_t_l1": 21.6, "c_ln_draft2_r_l1": 21.6, "c_ln_draft4_t_l2": 21.6}
 LEP_SERDES = {'lk_WN0': 0, 'lk_WN1': 1, 'lk_WN2': 2, 'lk_WN3': 3}     # lep lane k <-> SerDes (pair A = 0/1 TX, pair B = 2/3 RX)
 RANKS = (253, 253, 252, 252)    # bundles per TP4 rank (spec s1); row base = 128 x bundles of the lower ranks
 STUB = 43.2
@@ -58,6 +66,9 @@ def build(pk):
     for b in pk['best']['blocks']:
         ix[b['name']] = len(B)
         B.append({k: b[k] for k in ('name', 'master', 'kind', 'group', 'x', 'y', 'w', 'h', 'reg', 'orient')})
+    for b in B:
+        if b['name'] in LEP_SERDES:
+            b['master'] = 'ot_pdie_serdes_l276'      # same module (ot_pdie_serdes_col); bind row with 2 x 276-b lanes (hd_bind.py)
     by = {b['name']: b for b in B}
     links = []
     names = set()
@@ -66,7 +77,7 @@ def build(pk):
         x, y = seed(by[name], face, t)
         return [ix[name], port, round(x, 4), round(y, 4), 'box']
 
-    def link(i, c, payload, src, dst, n, relay_ok=True):
+    def link(i, c, payload, src, dst, n, relay_ok=True, payload_b=None):
         assert i not in names, i
         names.add(i)
         (s, fs), (d, fd) = src, dst
@@ -78,7 +89,18 @@ def build(pk):
         l = dict(i=i, c=c, b=b, d=1, e=[s, d], n=n, endpoint_faces=[fs, fd])
         if b != payload:
             l['payload_b'] = payload
+        if payload_b is not None:
+            l['payload_b'] = payload_b
+        if i in NUDGE:
+            k = 0 if B[s[0]]['name'] != 'ctl' and B[d[0]]['name'] == 'ctl' else 1
+            e, f, bb = l['e'][k], l['endpoint_faces'][k], B[l['e'][k][0]]
+            if f in 'WE':
+                e[3] = round(min(bb['y'] + bb['h'] - 5, max(bb['y'] + 5, e[3] + NUDGE[i])), 4)
+            else:
+                e[2] = round(min(bb['x'] + bb['w'] - 5, max(bb['x'] + 5, e[2] + NUDGE[i])), 4)
+            l['nudge_um'] = NUDGE[i]
         links.append(l)
+        return l
 
     def E(name, port, face, t=0.5):
         return ep(name, port, face, t), face
@@ -142,12 +164,11 @@ def build(pk):
             py = b['y'] + lt * b['h']
             st = (py - s['y']) / s['h']
             if key == 'serdes_tx':
-                link(f'lt_{sdn}', 'coll', WIDTHS[key], E(nm, 'tx', outer, lt), E(sdn, 'tx', inner, st), f'{ln["role"]} lane tx -> {sdn}')
+                link(f'lt_{sdn}', 'coll', WIDTHS[key], E(nm, 'tx', outer, lt), E(sdn, 'tx', inner, st), f'{ln["role"]} lane tx -> {sdn}', payload_b=512)
             else:
-                link(f'lr_{sdn}', 'coll', WIDTHS[key], E(sdn, 'rx', inner, st), E(nm, 'rx', outer, lt), f'{sdn} rx -> {ln["role"]} lane')
+                link(f'lr_{sdn}', 'coll', WIDTHS[key], E(sdn, 'rx', inner, st), E(nm, 'rx', outer, lt), f'{sdn} rx -> {ln["role"]} lane', payload_b=514)
     lep = by['lep']
-    peers['W'].append((lep['y'] + lep['h'] / 2, 'lep', [(f'lep_t{k}', 'ctl_to_lep', f'core_i{k}', 'E', 0.3 + 0.2 * k) for k in (0, 1)] +
-                       [(f'lep_r{k}', 'lep_to_ctl', f'core_o{k}', 'E', 0.4 + 0.2 * k) for k in (0, 1)]))
+    peers['W'].append((lep['y'] + lep['h'] / 2, 'lep', [('lep_t', 'ctl_to_lep', 'core_i', 'E', 0.35), ('lep_r', 'lep_to_ctl', 'core_o', 'E', 0.65)]))
     for sdn, k in LEP_SERDES.items():
         s = by[sdn]
         if s['y'] + s['h'] <= lep['y']:
@@ -163,20 +184,25 @@ def build(pk):
                 py = lep['y'] + (lt0 + dt) * lep['h']
                 return E(sdn, port, 'E', (py - s['y']) / s['h'])
             return E(sdn, port, 'E', sf_t + (dt if sf_t < 0.5 else -dt) * 0.1)
-        link(f'lt_{sdn}', 'coll', WIDTHS['serdes_tx'], lep_ep(f'tx{k}', 0.0), sd_ep('tx', 0.0), f'lep lane {k} tx -> {sdn} (pair {"A" if k < 2 else "B"})')
-        link(f'lr_{sdn}', 'coll', WIDTHS['serdes_rx'], sd_ep('rx', 0.1), lep_ep(f'rx{k}', 0.1), f'{sdn} rx -> lep lane {k} (pair {"A" if k < 2 else "B"})')
+        for j in range(LANES['serdes_tx_long'][1]):
+            link(f'lt_{sdn}_l{j}', 'coll', WIDTHS['serdes_tx_long'], lep_ep(f'tx{k}', 0.02 * j), sd_ep('tx', 0.02 * j),
+                 f'lep lane {k} tx -> {sdn} (pair {"A" if k < 2 else "B"}), 276-b lane {j}', payload_b=LANES['serdes_tx_long'][2])
+            link(f'lr_{sdn}_l{j}', 'coll', WIDTHS['serdes_rx_long'], sd_ep('rx', 0.1 + 0.02 * j), lep_ep(f'rx{k}', 0.1 + 0.02 * j),
+                 f'{sdn} rx -> lep lane {k} (pair {"A" if k < 2 else "B"}), 276-b lane {j}', payload_b=LANES['serdes_rx_long'][2])
     for side in 'WE':
-        ports = [p + (nm,) for _, nm, ps in sorted(peers[side]) for p in ps]
+        ports = [p + (nm, j) for _, nm, ps in sorted(peers[side]) for p in ps for j in range(LANES[p[1]][1])]
         n = len(ports)
-        for j, (cport, key, pport, pface, pt, nm) in enumerate(ports):
-            t = 0.05 + 0.9 * (j + 0.5) / n
+        for jj, (cport, key, pport, pface, pt, nm, j) in enumerate(ports):
+            t = 0.05 + 0.9 * (jj + 0.5) / n
+            nl = LANES[key][1]
             cep = E('ctl', cport, side, t)
-            pep = E(nm, pport, pface, pt)
+            pep = E(nm, pport, pface, pt + 0.16 * (j - (nl - 1) / 2) / nl)
             role = pk['lanes'][nm]['role'] if nm in pk['lanes'] else 'lep'
+            lid = f'c_{cport}_l{j}' if nl > 1 else f'c_{cport}'
             if key.startswith('ctl_to'):
-                link(f'c_{cport}', 'unit', WIDTHS[key], cep, pep, f'ctl -> {nm} ({role}) core, region crossing (landing)')
+                link(lid, 'unit', WIDTHS[key], cep, pep, f'ctl -> {nm} ({role}) core lane {j}/{nl}, region crossing (landing)', payload_b=LANES[key][2])
             else:
-                link(f'c_{cport}', 'unit', WIDTHS[key], pep, cep, f'{nm} ({role}) core -> ctl, region crossing (landing)')
+                link(lid, 'unit', WIDTHS[key], pep, cep, f'{nm} ({role}) core -> ctl lane {j}/{nl}, region crossing (landing)', payload_b=LANES[key][2])
     # ------------------------------------------------------------------ facts
     W, H = pk['die']
     bases, acc = [], 0
@@ -194,8 +220,8 @@ def build(pk):
         die_um=[W, H], die_mm2=round(W * H / 1e6, 3), reticle_um=pk['reticle'],
         cluster_pitch_um=W,                     # non-'cl' groups (SerDes 'edge') -> one region edge0
         bus_b=dict(payload=BUS_B, relay_lane=LANE_B_RELAY, fields='[511:0] x, [512] go, [513] xv, [514] rv, [531:515] row, [563:532] bits, [564] flt'),
-        widths=WIDTHS, placeholder_widths=list(PLACEHOLDER),
-        placeholder_note='ctl/lep/lane core widths are PLACEHOLDERS until HD-CTL ports.json (edit the table at the top of hd_plan.py, regenerate)',
+        widths=WIDTHS, lanes={k: dict(lane=v[0], lanes=v[1], payload=v[2]) for k, v in LANES.items()},
+        widths_source='results/arch/s81_head_1021/ports.json (HD-CTL b4f571642): real widths, no placeholders (HD-CHAIN 10-21)',
         instance_orientations=orient,
         orientation_note='bind table instance_orientations (frame_bind ORIENT_BITS): tiles R0 = i W / o E (flow east), MY = flow west; '
                          'S-half spine nodes MX (i on N, o on S); plan endpoint faces are PHYSICAL (rvcase reprojects view pins)',
