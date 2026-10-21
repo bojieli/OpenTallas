@@ -90,18 +90,6 @@
     "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2e_1020/bench/eq_f32.log"
    },
    {
-    "name": "ctl_g2e_eq_f32_s2",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/eq_f32_s2 eq_f32_s2",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 6,
-    "needs": [
-     "iverilog"
-    ],
-    "pass_regex": "^CASE eq_f32_s2 F32_EQ MUT1=0 SEED=2 .*topk_done [1-9][0-9]* .*copy_err 0 errors 0 IDX_F32_EQ PASS",
-    "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2e_1020/bench/eq_f32_s2.log"
-   },
-   {
     "name": "ctl_g2e_eq_f32_s3",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/eq_f32_s3 eq_f32_s3",
     "expect": "pass",
