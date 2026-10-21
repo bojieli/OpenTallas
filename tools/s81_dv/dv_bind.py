@@ -75,6 +75,39 @@ def regional_clock(table, blocks, regions, name):
     return f'ck_{regions[name]}'
 
 
+def endpoint_clock_override(table, blocks, regions, link, source):
+    """Optional declared clock of one packed plan-port; never guess A/B from names."""
+    end = link['e'][0 if source else 1]
+    block = blocks[end[0]]
+    master = table['masters'][block['master']]
+    port = f"{end[1]}.{'o' if source else 'i'}"
+    rule = master.get('ports', {}).get(port, {})
+    cp = rule.get('clock_port')
+    if cp is None:
+        if port in master.get('port_clock_required', []):
+            raise ValueError(f"{block['name']}.{port}: explicit clock_port required")
+        return None
+    if rule.get('ck'):
+        raise ValueError(f"{block['name']}.{port}: clock_port with a forwarded-clock output is unsupported")
+    declared = master.get('clock_ports') or [master['clk']] + list(master.get('clk_extra', []))
+    if not isinstance(cp, str) or cp not in declared:
+        raise ValueError(f"{block['name']}.{port}: unsupported clock_port {cp!r}")
+    width = table.get('rtl_widths', {}).get(master['module'], {}).get(cp)
+    if type(width) is not int or width != 1:
+        raise ValueError(f"{block['name']}.{port}: clock_port {cp} must be a declared scalar input")
+    if block['name'] not in table.get('instance_clock_ports', {}):
+        raise ValueError(f"{block['name']}.{port}: explicit distinct instance clock mapping required")
+    clocks = dict(instance_clocks(table, block, regions[block['name']]))
+    if cp not in clocks:
+        raise ValueError(f"{block['name']}.{port}: clock_port {cp} has no exact instance mapping")
+    return clocks[cp]
+
+
+def endpoint_clock(table, blocks, regions, link, source):
+    clock = endpoint_clock_override(table, blocks, regions, link, source)
+    block = blocks[link['e'][0 if source else 1][0]]
+    return clock if clock is not None else regional_clock(table, {block['name']: block}, regions, block['name'])
+
 def region_of(bl, pitch):
     g = bl['group']
     if g.startswith('cl'):
@@ -564,7 +597,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 else:
                     src_ = [l for l in plan['links'] if l['i'].replace('-', '_') == lk][0]
                     sn = blocks[src_['e'][0][0]]['name']
-                    source_clock = regional_clock(T, bname, reg, sn)
+                    source_clock = endpoint_clock(T, blocks, reg, src_, True)
                     v.append(f'  wire ckf_{lk}; {FWD} fwdi_{lk} (.A({source_clock}), .Y(ckf_{lk}));')
                     bits_.append(f'ckf_{lk}')
             cs.append(f'.{cport}({{{", ".join(reversed(bits_))}}})')
@@ -702,13 +735,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
     rmst = T.get('reset_master') or RST_RLY['EW']
 
-    def cal_tap(leaf, ckr, nd, xy, why):
-        ch = gcal.setdefault((leaf, ckr), [])
+    def cal_tap(leaf, ckr, nd, xy, why, clock_net=None):
+        clock_key = ckr if clock_net is None else clock_net
+        ch = gcal.setdefault((leaf, clock_key), [])
         while len(ch) < nd:
             up = ch[-1] if ch else leaf
-            wn = f'rsg_{leaf}_{ckr}_{len(ch)}'
+            wn = f'rsg_{leaf}_{clock_key}_{len(ch)}'
             v.append(f'  wire {wn};')
-            v.append(f'  {rmst} st_{wn} (.ck(ck_{ckr}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
+            v.append(f'  {rmst} st_{wn} (.ck({clock_net if clock_net is not None else f"ck_{ckr}"}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
             cal_place.append(dict(inst=f'st_{wn}', master=rmst, orient='R0', xy=[round(xy[0], 3), round(xy[1], 3)], kind='gate_calendar'))
             ch.append(wn)
         return ch[nd - 1]
@@ -724,11 +758,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         ds_, dr_ = rdep[sleaf], rdep[rleaf] + rl_
         h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
         if dr_ - ds_ > h_:
-            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
+            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs', endpoint_clock_override(T, blocks, reg, l_, True))
             land_rs[nm] = rleaf
         elif dr_ - ds_ < h_:
             gate_en[nm] = sleaf
-            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate')
+            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate', endpoint_clock_override(T, blocks, reg, l_, False))
         else:
             gate_en[nm], land_rs[nm] = sleaf, rleaf
         st = len(chains_pts[nm])
@@ -750,7 +784,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
-        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck({regional_clock(T, bname, reg, n)}), .rs({land_rs[nm]}), '
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck({endpoint_clock(T, blocks, reg, l_, False)}), .rs({land_rs[nm]}), '
                  f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
@@ -853,14 +887,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         gen = gate_en.get(nm)
         if gen:
             # S81-LBGAP/G1: landed lane -> hop-0 clock gate opened by the released reset on the calendar edge G = R0 - (N mod 2)
-            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or regional_clock(T, bname, reg, a)}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
+            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or endpoint_clock(T, blocks, reg, lsrc[nm], True)}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
                      f'// hop 0: clock gate (LANDING-CONTRACT L3) on {"the source master forwarded clock" if ck else "the source region root"}')
             gate_cells += 1
             ck = None
         elif ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')
         else:
-            v.append(f'  {FWD} fwd_{nm} (.A({regional_clock(T, bname, reg, a)}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
+            v.append(f'  {FWD} fwd_{nm} (.A({endpoint_clock(T, blocks, reg, lsrc[nm], True)}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
             fwd_cells += 1
         prev = src
         for k in range(st):
