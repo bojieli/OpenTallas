@@ -226,6 +226,16 @@ CACHED=/home/ubuntu/artifacts/hdie-d4/codex_ucie_colh_bind_1021
 CACHE16=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_full_1021/planeM/vplan_changed/synth
 J=/srv/opentallas-scratch/claude/codex-hbm-r16j-s4q-1021/chainjM
 step S3_STAGE exact_source_colh
+python3 - "$CACHED/reuse.json" "$CACHED/pre_relay_colm.json" <<'PYREADY'
+import json,sys
+r=json.load(open(sys.argv[1]));assert not r['synth'] and len(r['reuse'])==74, 'Exact initial S2 reuse required; no duplicate build'
+c=json.load(open(sys.argv[2]));h=c['instances']['host_N']
+assert h['master']=='ot_pdie_ucie_col' and h['params']=={'MUT':0}
+assert h['physical_view']=='physical/ref_tile/hbm_pdie_ucie_colh/views/ot_pdie_ucie_col'
+assert c['external_clock_entries'][0]['port']=='ck_rck' and not c['external_clock_entries'][0]['pll_alias']
+print('SOURCE_READY_COLH exact74reuse + realexternalroot; parentarrival/startup OPEN')
+PYREADY
+[ $? = 0 ] || exit 12
 # The copied input tree is immutable. Break every overlaid file hardlink before extracting.
 python3 - "$CACHED/pre_relay_colm.json" "$CACHED/views/views.json" > "$A/source_paths.txt" <<'PYPATHS'
 import json,sys
