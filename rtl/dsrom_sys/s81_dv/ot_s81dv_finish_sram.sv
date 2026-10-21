@@ -1288,8 +1288,31 @@ endmodule
 module ot_s81dv_finish_leafw #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0)(
  input wire[P-1:0] iv,input wire[P*2-1:0] it,input wire[P*8-1:0] ib,input wire[P*K*32-1:0] id,output reg[38:0] wp);
  wire[7:0] bp=ib[PB*8+:8];
+ reg[8:0] ix;reg[5:0] slot;reg en;wire[31:0] data;reg[2:0] kk;
+ always @*begin
+  if(TREES==1)begin
+   kk=3'((R+K-(bp%K))%K);
+   ix={1'b0,bp}+{6'd0,kk};
+   en=iv[PB] && ix<NV;
+   slot=6'(ix/5);
+
+  end else begin
+   kk=3'(R);
+   ix={1'b0,bp}+R;
+   en=iv[PB] && it[PB*2+:2]<TREES && (bp%K)==0 && ix<NV;
+   slot=6'(it[PB*2+:2]*16+bp/5);
+  end
+  wp={en,en?5'(slot>>1):5'd0,en?slot[0]:1'b0,data};
+ end
+ for(genvar g=0;g<2;g=g+1)begin:g_payload
+   ot_s81dv_finish_leafdata16 #(.NV(NV),.K(K),.P(P),.TREES(TREES),.PB(PB),.R(R),.LO(g*16)) u_d(.iv(iv),.it(it),.ib(ib),.id(id),.y(data[g*16+:16]));
+ end
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_finish_leafdata16 #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0,LO=0)(
+ input wire[P-1:0] iv,input wire[P*2-1:0] it,input wire[P*8-1:0] ib,input wire[P*K*32-1:0] id,output wire[15:0] y);
+ wire[7:0] bp=ib[PB*8+:8];
  integer q,k2;
- reg[8:0] ix;reg[9:0] d;reg[5:0] slot;reg en;reg[31:0] data;reg[2:0] kk;
+ reg[8:0] ix;reg[9:0] d;reg[5:0] slot;reg en;reg[15:0] data;reg[2:0] kk;
  always @*begin
   data=0;
   if(TREES==1)begin
@@ -1299,18 +1322,18 @@ module ot_s81dv_finish_leafw #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0)
    slot=6'(ix/5);
    for(q=0;q<P;q=q+1)begin
     d={1'b0,ix}-{2'b0,ib[q*8+:8]};
-    for(k2=0;k2<K;k2=k2+1)if(iv[q] && d==k2)data=data|id[(q*K+k2)*32+:32];
+    for(k2=0;k2<K;k2=k2+1)if(iv[q] && d==k2)data=data|id[(q*K+k2)*32+LO+:16];
    end
   end else begin
    kk=3'(R);
    ix={1'b0,bp}+R;
    en=iv[PB] && it[PB*2+:2]<TREES && (bp%K)==0 && ix<NV;
    slot=6'(it[PB*2+:2]*16+bp/5);
-   for(q=0;q<P;q=q+1)if(iv[q] && it[q*2+:2]==it[PB*2+:2] && ib[q*8+:8]==bp)data=data|id[(q*K+R)*32+:32];
+   for(q=0;q<P;q=q+1)if(iv[q] && it[q*2+:2]==it[PB*2+:2] && ib[q*8+:8]==bp)data=data|id[(q*K+R)*32+LO+:16];
    d=0;
   end
-  wp=en?{1'b1,5'(slot>>1),slot[0],data}:39'd0;
  end
+ assign y=en?data:16'd0;
 endmodule
 // Leaf-match predecode: oh[x] = v && b == x from 16 + 16 nibble one-hots (each net <= 16 loads).
 (* keep_hierarchy=1 *) module ot_s81dv_fin_dec #(parameter integer N=80)(input wire v,input wire[7:0] b,output wire[N-1:0] oh);
