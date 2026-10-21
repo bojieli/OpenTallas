@@ -754,7 +754,7 @@ module qfd_dv_s8_flat (
         .nb_d_p(nb_r7[63:0]), .nb_c_p(nb_r7[65:64]), .nb_od(l9d7), .nb_oc(oc7),
         .bt_re(bre7), .bt_word(bw7), .bt_q_p(bt_q7), .r_v(rv7), .r_idx(ri7), .r_last(rl7),
         .r_d(r_d7), .flt_bank_i(flt_b5), .flt_vld_i(flt_v5), .flt_bank_o(flt_b7), .flt_vld_o(flt_v7), .fault(fl7));
-    qfd_dv_s6_tap u_tap (.ck(ck), .rst_n(rst_n), .sid(sid), .hr_q(hr_q), .xt_v(xt_v), .xt_a(xt_a), .xt_d(xt_d),
+    qfd_dv_s8_tap_bounded u_tap (.ck(ck), .rst_n(rst_n), .sid(sid), .hr_q(hr_q), .xt_vcopies({6{xt_v}}), .xt_a(xt_a), .xt_d(xt_d),
         .xt_bad(xt_bad), .lq_bad({lqb3, lqb2, lqb1, lqb0}), .hw(hw), .cid(cid), .tap_fault(tap_fault));
     // ---- column 0: xhead + 8 x leaves (two write chains of 4)
     wire [1:0] lw_v0, lw_ep0, lc_v0, lc_ep0; wire [11:0] lw_off0; wire [127:0] lw_m0; wire [2047:0] lw_d0;

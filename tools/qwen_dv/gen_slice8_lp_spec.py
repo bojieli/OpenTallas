@@ -12,7 +12,7 @@ ROOT=g7.ROOT
 OUT_DIR='rtl/qwen_dv/s5/s8/lp'
 REC_DIR='results/arch/codex_slice2_native_1021/s8'
 CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv','rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv']]+[
-    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv']
+    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1','qfd_dv_s8_tap_bounded','qfd_dv_s8_tap_bounded_helpers']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv']
 
 def make_flat():
     import gen_slice8_rp_source
@@ -28,6 +28,9 @@ def make_flat():
     assert text.count(old)==32
     text=text.replace(old,new)
     text=text.replace('qfd_dv_s6_fdn u_fdn','qfd_dv_s8_fdn_arf1 u_fdn').replace('qfd_dv_s5_suvm_su8p3 u_suvm','qfd_dv_s8_suvm_rp1 u_suvm')
+    text=text.replace('qfd_dv_s6_tap u_tap','qfd_dv_s8_tap_bounded u_tap')
+    ta=text.index('qfd_dv_s8_tap_bounded u_tap');tb=text.index(');',ta)+2
+    text=text[:ta]+text[ta:tb].replace('.xt_v(xt_v)', '.xt_vcopies({6{xt_v}})')+text[tb:]
     ctl='qfd_dv_s5_ctl_repair4_leaf u_ctl (.ck(ck), .rst_n(rst_n), .cmd_q(cmd_q), .chd_q(chd_q),'
     assert ctl in text
     adapter="""wire[115:0]rp_ctl_cmd;wire[1037:0]rp_ctl_chd;wire rp_fault,rp_tw_we;
@@ -83,6 +86,26 @@ def kept_fdn_selectors(path,D,E):
     replacement=code+'    qfd_dv_s8_fdn_arf1 #(.USE_SEL_COPIES(1)) u_fdn (.chu_ar_sel((MUT==1)?{46{chu_q[1094]}}:fdn_ar_copies), .chu_dd_sel((MUT==1)?{46{chu_q[547]}}:fdn_dd_copies), '
     assert key in text;text=text.replace(key,replacement,1);path.write_text(text)
 
+def kept_tap_copies(path):
+    """QKO-SLICE2 10-21: six kept xt_v landing readers (census w9: landing xt_v o 66 loads + TAP qd0/svc/arm decode).
+    Each copy = ot_pl_land_local_r W=1 logic on the SAME landing bank/vld/epo, same rsi (lpr_r_tap_c4), same D/K:
+    identical capture edge; bounded TAP caps each copy at <=32 loads."""
+    import re
+    text=path.read_text()
+    m=re.search(r'ot_pl_land_chunk_r #\(\.W\(1\), \.D\((\d+)\), \.K\(([^)]*\)?)\), \.CHUNK_BITS\(24\)\) u_lpl_(\d+)_r \(\.ck\(ck_r_tap\), \.rsi\((\w+)\), \.bank\(lpl_\3_bank\), \.epo\(lpl_\3_epo\), \.vld\(lpl_\3_vld\), \.o\(lpl_\3_o\)\);\n    assign xt_v__l_r_tap = lpl_\3_o;',text)
+    assert m,'xt_v landing not found'
+    D,K,n,rsi=m[1],m[2],m[3],m[4]
+    old='.xt_vcopies({6{xt_v__l_r_tap}})'
+    assert text.count(old)==1
+    code=(f'    // Six kept xt_v readers on landing {n}: same bank/vld/epo, rsi, D/K -> same capture edge as u_lpl_{n}_r.\n'
+          f'    wire [5:0] tap_xtv_copies;\n'
+          f'    ot_pl_land_field_copies #(.COPIES(6),.D({D}),.K({K})) u_tap_xtv_copies (.ck(ck_r_tap),.rsi({rsi}),'
+          f'.bank(lpl_{n}_bank),.vld(lpl_{n}_vld),.epo(lpl_{n}_epo),.o(tap_xtv_copies));\n')
+    key='    qfd_dv_s8_tap_bounded u_tap ('
+    assert text.count(key)==1
+    text=text.replace(key,code+key,1).replace(old,'.xt_vcopies(tap_xtv_copies)')
+    path.write_text(text)
+
 def main():
     make_flat()
     for name,D,E in [('qfd_dv_s8b',8,4),('qfd_dv_s8',4,2)]:
@@ -92,6 +115,7 @@ def main():
             g7.lp.gen(g7.lp.load(str(path)))
             d=ROOT/OUT_DIR
             kept_fdn_selectors(d/f'{name}_lp.sv',D,E)
+            kept_tap_copies(d/f'{name}_lp.sv')
             # Generated shell intentionally receives exact-source simulation flag.
             f=d/f'{name}_lp_bench.sh';f.write_text(f.read_text().replace('-DOT_S5_HARD','-DOT_S5_HARD -DOT_S8_SIM'))
             if name!='qfd_dv_s8':

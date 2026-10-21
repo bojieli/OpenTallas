@@ -3382,7 +3382,7 @@
    ],
    "width": 1,
    "readers": [
-    "u_tap.xt_v"
+    "u_tap.xt_vcopies"
    ],
    "ring_of": "167",
    "ring": "u_lpl_167_w (ck_r_stm)",
@@ -4823,7 +4823,7 @@
      "xt_a",
      "xt_bad",
      "xt_d",
-     "xt_v"
+     "xt_vcopies"
     ],
     "note": "these status-return inputs reach the reader lag edges after its own time (flat == <top>_lagref: the reader's outputs carry that status lag edges later than in the flat parent)"
    },
