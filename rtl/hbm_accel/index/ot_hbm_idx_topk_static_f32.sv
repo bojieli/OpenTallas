@@ -179,7 +179,7 @@ module ot_hbm_idx_topk_static_f32 #(
     end
     // ------------------------------------------------------------ kept registered copies of the wide decodes
     localparam integer NWR = (337 + 13) / 14;            // cq payload enable groups of <= 14 bits
-    wire [11:0] chk_c, upd_c; wire [2:0] row_c; wire [3:0] rdn_c; wire [7:0] lclr_c; wire [NWR-1:0] wr_c;
+    wire [11:0] chk_c, upd_c; wire [3:0] row_c; wire [3:0] rdn_c; wire [7:0] lclr_c; wire [NWR-1:0] wr_c;
     generate
         for (c = 0; c < NGO; c = c + 1) begin : g_busy
             ot_hbm_idx_kreg #(.W(1)) u (.clk(clk), .rst_n(rst_n), .d(busy_nx), .q(busy_c[c]));
@@ -188,7 +188,7 @@ module ot_hbm_idx_topk_static_f32 #(
             ot_hbm_idx_kreg #(.W(2)) u (.clk(clk), .rst_n(rst_n),
                 .d({st_nx == E_NEXT && !last_row, st_nx == E_CHK}), .q({upd_c[c], chk_c[c]}));
         end
-        for (c = 0; c < 3; c = c + 1) begin : g_row
+        for (c = 0; c < 4; c = c + 1) begin : g_row      // [2]/[3]: i_left halves (census v5: one copy 35)
             ot_hbm_idx_kreg #(.W(1)) u (.clk(clk), .rst_n(rst_n), .d(st_nx == E_ROW), .q(row_c[c]));
         end
         for (c = 0; c < 4; c = c + 1) begin : g_rdn
@@ -219,10 +219,12 @@ module ot_hbm_idx_topk_static_f32 #(
         if (row_c[0]) begin i_sec[7:0] <= c_rb[10:3]; i_first <= 1'b1; end
         else if (rdn_c[0]) begin i_sec[7:0] <= i_sec[7:0] + 8'd1; i_first <= 1'b0; end
         if (row_c[1]) i_sec[14:8] <= c_rb[17:11]; else if (rdn_c[1]) i_sec[14:8] <= i_sec[14:8] + {6'd0, &i_sec[7:0]};
-        if (row_c[2]) i_left <= c_le[17:3] - c_rb[17:3]; else if (rdn_c[2]) i_left <= i_left - 15'd1;
+        if (row_c[2]) i_left[7:0] <= i_lt0[7:0]; else if (rdn_c[2]) i_left[7:0] <= i_ldec[7:0];
+        if (row_c[3]) i_left[14:8] <= i_lt0[14:8]; else if (rdn_c[2]) i_left[14:8] <= i_ldec[14:8];
     end
     wire [17:0] c_rb_n = c_rb + a_str_q, c_le_n = c_le + a_str_q, o_rb_n = o_rb + o_str_q, r_rb_n = r_rb + r_str_q;
     wire [17:0] le0 = a_base_q + n_q[17:0] - 18'd1;
+    wire [14:0] i_lt0 = c_le[17:3] - c_rb[17:3], i_ldec = i_left - 15'd1;
     // ------------------------------------------------------------ fixed read pipeline (as ot_hbm_idx_topk_static)
     localparam integer TAP = ((MUT == 4) ? 6 : 7) + XRT;
     reg [11:0] dp [0:8+XRT];
@@ -249,13 +251,15 @@ module ot_hbm_idx_topk_static_f32 #(
     // capture: one-hot bank select per 32-bit word (copy w gates word w of all 8 banks), loaded from dp[TAP-1]
     wire [7:0] csel [0:7];
     wire [7:0] cs_d = 8'd1 << dp[TAP-1][10:8];
-    wire [3:0] cv_c, cf_c;
+    wire [3:0] cv_c; wire [6:0] cf_c;   // cf_c: 7-bit col_now / col_nowb select slices (census v5: 36 / 48)
     generate
         for (c = 0; c < 8; c = c + 1) begin : g_cs
             ot_hbm_idx_kreg #(.W(8)) u (.clk(clk), .rst_n(rst_n), .d(cs_d), .q(csel[c]));
         end
         for (c = 0; c < 4; c = c + 1) begin : g_cv
             ot_hbm_idx_kreg #(.W(1)) uv (.clk(clk), .rst_n(rst_n), .d(di[11]), .q(cv_c[c]));
+        end
+        for (c = 0; c < 7; c = c + 1) begin : g_cf
             ot_hbm_idx_kreg #(.W(1)) uf (.clk(clk), .rst_n(rst_n), .d(di[7]), .q(cf_c[c]));
         end
         for (g = 0; g < 8; g = g + 1) begin : g_cap
@@ -277,8 +281,10 @@ module ot_hbm_idx_topk_static_f32 #(
     // ------------------------------------------------------------ S1 feed (XOR-form key: one invert net a word)
     reg [IDW:0] col0;
     wire [IDW:0] cneg = {(IDW+1){1'b0}} - {{(IDW-2){1'b0}}, cap_off};
-    wire [IDW:0] col_now = {cf_c[1] ? cneg[IDW:11] : col0[IDW:11], cf_c[0] ? cneg[10:0] : col0[10:0]};
-    wire [IDW:0] col_nowb = cf_c[3] ? cneg : col0;    // second copy: the id adders of lanes 4..7
+    wire [IDW:0] col_now = {cf_c[1] ? cneg[IDW:14] : col0[IDW:14], cf_c[4] ? cneg[13:7] : col0[13:7],
+                            cf_c[0] ? cneg[6:0] : col0[6:0]};
+    wire [IDW:0] col_nowb = {cf_c[5] ? cneg[IDW:14] : col0[IDW:14], cf_c[6] ? cneg[13:7] : col0[13:7],
+                             cf_c[3] ? cneg[6:0] : col0[6:0]};    // second copy: the id adders of lanes 4..7
     reg [7:0] s1_v; reg [31:0] s1_key [0:7]; reg [7:0] s1_nz; reg [IDW-1:0] s1_id [0:7]; reg s1_nan;
     reg [7:0] f_v; reg [31:0] f_w [0:7]; reg [7:0] f_isnan; reg [IDW:0] f_idx [0:7];
     reg [7:0] f_sg, f_z;
@@ -568,14 +574,14 @@ module ot_hbm_idx_topk_static_f32 #(
     always @(negedge clk) if (rst_n && rst_q) begin : chk
         reg bad; bad = 1'b0;
         if (chk_c != {12{st == E_CHK}} || upd_c != {12{st == E_NEXT && !last_row}}) bad = 1'b1;
-        if (row_c != {3{st == E_ROW}} || rdn_c != {4{st == E_RD && !i_tgl}} || wr_c != {NWR{st == E_WR}}) bad = 1'b1;
+        if (row_c != {4{st == E_ROW}} || rdn_c != {4{st == E_RD && !i_tgl}} || wr_c != {NWR{st == E_WR}}) bad = 1'b1;
         if (lclr_c != {8{st == E_RK1 || st == E_CHK}} || busy_c != {NGO{busy}} || go_c != {NGO{go}}) bad = 1'b1;
         if (k_d !== k_q || k_m !== k_q || order_d1 !== order_q || order_d2 !== order_q) bad = 1'b1;
         if (busy && (ol3 !== o_rb[2:0] || rl3 !== r_rb[2:0])) bad = 1'b1;
         for (l = 0; l < 33; l = l + 1) if (shk[l] != l_sh_ref) bad = 1'b1;
         for (l = 0; l < 6; l = l + 1) if (cpe[l] != ({8{st == E_SEL && s_ph == 2'd3}} & (8'd1 << s_cnt[2:0]))) bad = 1'b1;
         for (l = 0; l < 8; l = l + 1) if (csel[l] != (8'd1 << di[10:8])) bad = 1'b1;
-        if (cv_c != {4{cap_v}} || cf_c !== {4{cap_first}}) bad = 1'b1;
+        if (cv_c != {4{cap_v}} || cf_c !== {7{cap_first}}) bad = 1'b1;
         if (st == E_WR && (woh != (4'd1 << wi[1:0]) || wsel_c != {16{wl_isr[wi[1:0]]}})) bad = 1'b1;
         if (bad) begin f32_copy_err = f32_copy_err + 1; if (f32_copy_err < 5) $display("F32_COPY_MISMATCH t=%0t st=%0d", $time, st); end
     end
