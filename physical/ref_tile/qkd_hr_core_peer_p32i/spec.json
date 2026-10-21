@@ -794,6 +794,7 @@
  },
  "clock": "spine",
  "orfs_vars": {
-  "OT_SPINE_RC_CAL": "0"
+  "OT_SPINE_RC_CAL": "0",
+  "OT_PIN_REGS_RESET": "^(por_n|host_rst_n)"
  }
 }
