@@ -118,8 +118,14 @@ module ot_hbm_svc_sm8_landing_bank_h #(
    ot_hbm_svc_local_and2 u_clr(.a(ren_k[bs*4+1+sg/2]),.b(1'b1),.y(seen_clear[bs*4+sg]));
   end
  end
+ wire[5:0] row_local[0:7];
+ for(genvar rg=0;rg<8;rg=rg+1)begin:g_row_distribution
+  for(genvar rb=0;rb<6;rb=rb+1)begin:g_bit
+   ot_hbm_svc_local_and2 u_buf(.a(row[rb]),.b(1'b1),.y(row_local[rg][rb]));
+  end
+ end
  for(genvar rr=0;rr<64;rr=rr+1)begin:g_row_select
-  assign row_sel[rr]=(row==rr);
+  assign row_sel[rr]=(row_local[rr/8]==rr);
  end
  reg [15:0]b_epoch;reg [6:0]b_count,b_rcv;reg b_valid,b_seen;
  integer br,cr;
