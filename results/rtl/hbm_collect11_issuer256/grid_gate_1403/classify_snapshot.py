@@ -4,6 +4,7 @@ from pathlib import Path
 sha=lambda x:hashlib.sha256(x).hexdigest()
 repo=Path(sys.argv[1]).resolve(); dest=Path(sys.argv[2]).resolve(); dest.mkdir(parents=True,exist_ok=True)
 rel=Path('results/rtl/hbm_collect11_issuer256/grid_gate_1403')
+published=subprocess.check_output(['git','-C',str(repo),'rev-parse','1a872af33'],text=True).strip()
 if len(sys.argv)>3 and sys.argv[3]=='execute':
  sys.path.insert(0,str(repo/'tools/ref_tile'))
  import pre_route_gate as P
@@ -23,6 +24,7 @@ if len(sys.argv)>3 and sys.argv[3]=='execute':
  result['original_gate_result_sha256']=sha((inputs/'original_gate_result.json').read_bytes())
  result['original_execution_log_sha256']=sha((inputs/'original.execution.log').read_bytes())
  result['executed_project_modules']=sorted(str(Path(m.__file__).resolve().relative_to(repo)) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and Path(m.__file__).resolve().is_relative_to(repo))
+ result['executed_modules_sha256']={p:sha((repo/p).read_bytes()) for p in result['executed_project_modules'] if p.startswith('tools/')}
  result.pop('source_binding',None)
  (dest/(k+'.replay.json')).write_text(json.dumps(result,indent=1)+'\n')
  g.print(); sys.exit(0 if g.verdict!='FAIL' else 1)
@@ -58,6 +60,15 @@ for k in ('grid','gridb'):
  (dest/(k+'.classification.stdout.log')).write_text(proc.stdout)
  assert proc.returncode==0,proc.stdout[-4000:]
  replay=json.loads((dest/(k+'.replay.json')).read_text()); replay['source_binding']=binding
+ modules=replay['executed_modules_sha256']; assert set(modules)==SB.METADATA_CLASSIFIER_MODULES,(set(modules)^SB.METADATA_CLASSIFIER_MODULES)
+ for p,h in modules.items(): assert h==sha(subprocess.check_output(['git','-C',str(repo),'show',published+':'+p])),p
+ outrel=rel/'typed_classification'/k; (repo/outrel).mkdir(parents=True,exist_ok=True)
+ import shutil
+ shutil.copyfile(archive,repo/outrel/'classification_inputs.tar.gz')
+ proof={'execution_kind':'metadata-classification','classification_source_commit':commit,'classification_manifest_sha256':binding['manifest_sha256'],'classification_archive_sha256':binding['archive_sha256'],'executed_modules':modules,'published_commit':published}
+ proofpath=outrel/'execution.json'; (repo/proofpath).write_text(json.dumps(proof,indent=1)+'\n')
+ parentpaths={'binding':rel/'classification_inputs'/k/'original_binding.json','gate':rel/'classification_inputs'/k/'original_gate_result.json','log':rel/'classification_inputs'/k/'original.execution.log','spec':rel/(k+'.original_spec.json')}
+ binding['metadata_classification']={'schema':SB.METADATA_CLASSIFICATION_SCHEMA,'parent':{n:{'path':str(p),'sha256':sha((repo/p).read_bytes())} for n,p in parentpaths.items()},'archive':{'path':str(outrel/'classification_inputs.tar.gz'),'sha256':sha(data)},'classifier':{'published_commit':published,'executed_modules':modules,'proof':{'path':str(proofpath),'sha256':sha((repo/proofpath).read_bytes())}}}
  replay['classification_archive']={'path':str(archive),'sha256':sha(data),'bytes':len(data)}
  replay['physical_input_comparison']={'original_consumed_physical_count':len(original_physical),'changed_paths':changed,'all_other_physical_bytes_unchanged':True}
  replay['review_state']='PENDING_ROOT_INTEGRATION_VALIDATION_NO_SUBMIT'
