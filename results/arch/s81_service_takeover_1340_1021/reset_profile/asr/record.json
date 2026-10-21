@@ -14,8 +14,8 @@
   "withdrawn": "Prior plain13 reference passes were an incorrect actual-u_rl assumption; preserved as diagnostics, never actual integration qualification. Initial missing SRAM helper shipping and invalid -j4 CLI failures preserved.",
   "source_scope": "Four actual G4 D32/TD32/NL4 transpose controllers only;4224 reset contacts.512 leaves/730 plainFF+1024 ASR FF; unused leaves may optimize. No data/state edge or selected external ATT ABI change. Other reset/tag/math remain unqualified.",
   "live": {
-    "actual_LP_lint": "1624852-1792621580 ep7 mem96",
-    "actual_ATT_golden": "source staged src_profile_att; terminal pending"
+    "actual_LP_lint": "PASS terminal0 ep7unit1624852-1792621580; source7a272679d actual2-clock LP/controller/ATT/tile hierarchy;142s elab9.25GB",
+    "actual_ATT_golden": "LIVE ep5unit3097102-1792621724 mem96/4threads; actualcanonicalATT T1/33/46 samegolden; no terminal yet"
   },
   "hashes": {
     "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv": "547fb97a5061e590a9749f3a7d8f57b5aa4861291fc01e1dad85aa4797cd1cdd",
