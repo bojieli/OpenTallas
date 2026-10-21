@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_hr_cluster_p10a",
  "verdict": "FAIL",
- "generated": "2026-10-20T23:49:18-0700",
- "host": "ot-epyc5",
+ "generated": "2026-10-21T11:50:20-0700",
+ "host": "ot-epyc9",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "2d758c5070ddab9de38d6ab94cfc2a0965940c53",
+  "start_commit": "51fc3aeaa53e73f4e4492214fd43026c5cfda80d",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "6cb8c9ab11193116394d91e60e9f1b3de3c656f5731c549493266fbc5e548af9",
-  "manifest_sha256": "61c223d524ef9dce2bb56a46a5d1563148047c53340ac99fe190630858f0c228",
+  "archive_sha256": "1d5034ce7acf062433ad1ee406d00592972696806faef8e54ac3a18cbc8ed215",
+  "manifest_sha256": "b7644fb26bbfb27f1b20c0a2f2f7728a41ad7c06c5aa26cd996edf795d4e1403",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -18055,8 +18055,8 @@
    {
     "path": "physical/ref_tile/qkd_hr_cluster_p10a/kit.env",
     "kind": "file",
-    "sha256": "d42e867a4571c1babba45b51f6d8268c2cc1bbafe4ff7614fd2b66fd62d3e7af",
-    "git_blob": "6f3858bff6ac8d51aada6ff90621f9bcb0de44ba",
+    "sha256": "bcd9a6bff632aab206c468d84efc64f8623b517ef4206a2ccbd39a64a4bb226a",
+    "git_blob": "8be9d8434b8842a2aea02d176a6f2cee22be27e2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18175,8 +18175,8 @@
    {
     "path": "physical/ref_tile/qkd_hr_cluster_p10a/spec.json",
     "kind": "file",
-    "sha256": "e9ce28a5fe1924da46eb1c856b2ef73bba5600c56d71a50ceffc624959eec873",
-    "git_blob": "26260d361a9ce3bc553e5e937bb7b0bffa91bff3",
+    "sha256": "1dc0ab5afe579684e6fce7b156b1a27f383b134892cbe8eb196ead903b0b0fec",
+    "git_blob": "868f7101e1ae11b675bc50b695fde7349467c98d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -59829,6 +59829,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/qwen_kv_die/host_cluster/repack_1020/pin_legalize.py",
+    "kind": "file",
+    "sha256": "b79bd29b85697c39f369d03117f70085e47b2cdd6324615cf6ed3b7bcc748bbb",
+    "git_blob": "4957bd926f634305e7f75dc4a23534820037033f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/qwen_kv_die/host_cluster/repack_1020/qkd_hr_cluster_p10a.var.json",
     "kind": "file",
     "sha256": "dfef1ab8a32e6dd8318f249ff00677a8ca24822610eac2a0975fd6f2af1b340b",
@@ -79583,16 +79591,16 @@
    {
     "path": "tools/ref_tile/specs_qhost_cluster/qkd_hr_cluster_p10a.json",
     "kind": "file",
-    "sha256": "ccd31d85e8554a4adcc40f0b54770f1e47f27c3cb8513dae8ff4397294f8f967",
-    "git_blob": "c0bfc3cdc1518e9e292b3dfd4bcf93ba60311c99",
+    "sha256": "5d6a725dbc01a461a974454905a3454d45c13bc53d9fab5b92927ec1a3e99c36",
+    "git_blob": "fbd61ae055b9e488d1b815f3538e57313ee684fb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_qhost_cluster/qkd_hr_cluster_p10b.json",
     "kind": "file",
-    "sha256": "b1dcd75c62e610ede0a6dcb57eb0b2d3f25186f0d7de1cc321d4282bb3e9dd0d",
-    "git_blob": "b22f742f018a5d7c0c7cefbf56a1cc11ca8f2809",
+    "sha256": "0e0650231a5e7a0e1ac0d6a7df2ae66df7fa67fb9b76e44c11ddca6d8d1fb5fa",
+    "git_blob": "60114b123010c07a9b28b885200c3dc126ad958e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -115223,14 +115231,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 134495783,
-   "unpacked_bytes": 789975040,
+   "archive_bytes": 134496768,
+   "unpacked_bytes": 789983232,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "5914f15b723894525ed4147ef4ecabace08694c9",
+   "origin_main": "a2557c7e4e6f82f0407eab865947a855ea12c794",
    "content_sha256": "01377d22bb4c1fab998bf16096f48d5d00e258d9f2bc500a637265378f7e8765",
    "files": [
     {
@@ -116004,7 +116012,7 @@
     "physical/ref_tile/qkd_hr_cluster_p10a/clock.sdc": "1fb1bbd61359513d4a91261728a75e93f6fec16010199c8f03dc0969ab2ffb8a",
     "physical/ref_tile/qkd_hr_cluster_p10a/clock_entry.sdc": "a9912677d08e4ae53c13569f6a85406319b0504b9953c0a6b7924555887b96e3",
     "physical/ref_tile/qkd_hr_cluster_p10a/floorplan.json": "541898baba32fd163f85713b800ea767cd30c568c0d403ff6a450b003a7695a0",
-    "physical/ref_tile/qkd_hr_cluster_p10a/kit.env": "d42e867a4571c1babba45b51f6d8268c2cc1bbafe4ff7614fd2b66fd62d3e7af",
+    "physical/ref_tile/qkd_hr_cluster_p10a/kit.env": "bcd9a6bff632aab206c468d84efc64f8623b517ef4206a2ccbd39a64a4bb226a",
     "physical/ref_tile/qkd_hr_cluster_p10a/pdn.tcl": "57f341def642c7fc513e704d3701e2c4449718ac4d2ce0047fe1b8007831811c",
     "physical/ref_tile/qkd_hr_cluster_p10a/pin_regs.json": "f9a043f54764d4152b6136ea79f788b6099d40ea1c10e81ed0e18bba33155f89",
     "physical/ref_tile/qkd_hr_cluster_p10a/place.tcl": "999f70531aba488c4cba8ef9edee163079b93836f2cdf1f8b8f253643145e8cb",
@@ -116019,7 +116027,7 @@
     "physical/ref_tile/qkd_hr_cluster_p10a/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/qkd_hr_cluster_p10a/pre_grt.tcl": "b8cd92d5869f2abc4458152ffa21b737368294c04ff9d972faecd4258720443f",
     "physical/ref_tile/qkd_hr_cluster_p10a/signoff.sdc": "f9eae6923b175c04f5c9f9c993c94adf12a8e744644a8a91e71dd37b10ba8900",
-    "physical/ref_tile/qkd_hr_cluster_p10a/spec.json": "e9ce28a5fe1924da46eb1c856b2ef73bba5600c56d71a50ceffc624959eec873",
+    "physical/ref_tile/qkd_hr_cluster_p10a/spec.json": "1dc0ab5afe579684e6fce7b156b1a27f383b134892cbe8eb196ead903b0b0fec",
     "physical/ref_tile/qkd_hr_cluster_p10a/standin/qkd_hr_core_peer/PROVISIONAL_NOT_A_VIEW": "65019116c933294c351a8cd3c4546a26af2f93212bf717e5667033dfdb16936d",
     "physical/ref_tile/qkd_hr_cluster_p10a/standin/qkd_hr_core_peer/STANDIN_NOT_A_VIEW": "2f35da0900c3b0e50f9bdd12af83c106b32751710c374ce7610a0d14d0cc545a",
     "physical/ref_tile/qkd_hr_cluster_p10a/standin/qkd_hr_core_peer/insertion.json": "ba820f3b937e33bea3a3325960f47d4d19619a678a6502156f039d4abf42916d",
@@ -116143,16 +116151,16 @@
    },
    "digest": "0d0f884916eab838f0d4d20f0d9c9f32429159c0af53a62df0e254aa1d902ed1"
   },
-  "captured": "2026-10-20T23:46:12-0700",
+  "captured": "2026-10-21T05:39:00-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_hr_cluster_p10a/signoff.sdc"
   },
-  "remote_script_sha256": "4bcb935775356df6e192838fda557795191b1dd35f0e362d470f5ddfa28aaf33",
+  "remote_script_sha256": "c9266c431a8fbb9ceb3f9f55943ce66fb6babf7769bacbd6609420b2c19ccfd9",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cluster_p10a-20261020-234541",
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cluster_p10a-20261021-053831",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -116160,8 +116168,8 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 1,
+  "root": "port:ck_core__cdc_host",
   "cts": true,
   "tt_insertion_ps": null,
   "tt_spread_ps": null,
@@ -116175,8 +116183,8 @@
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "verdict": "PASS",
+  "text": "1 sinks on the largest root; no measured clock tree (no --cts gate evidence)"
  },
  "items": [
   {
@@ -116355,45 +116363,155 @@
   },
   {
    "severity": "FAIL",
-   "check": "textbook_execution",
-   "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
-   "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
+   "check": "textbook.wire_reach",
+   "message": "405 stage(s) beyond 500 um reach: insert relay flops",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "FAIL",
-   "check": "io_place",
-   "message": "IO placement failed: [ERROR PPL-0111] 1 constraint(s) does not have available slots for the pins.",
-   "fix": "fix the pin plan / pin layers"
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin die_id[2] -> u_rank__u_control__u_packet__u_rx/die_id[2]: up to 1404 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "FAIL",
-   "check": "floorplan.pin_geometry",
-   "message": "missing successful actual gate_dump / unique pin-geometry report",
-   "fix": "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry"
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin die_id[1] -> u_rank__u_control__u_packet__u_rx/die_id[1]: up to 1402 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin die_id[0] -> u_rank__u_control__u_packet__u_rx/die_id[0]: up to 1401 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
   },
   {
    "severity": "WARN",
    "check": "cts_calibration",
-   "message": "CTS rc=None ck_insertion rc=None",
+   "message": "CTS rc=0 ck_insertion rc=1",
    "fix": ""
   },
   {
-   "severity": "WARN",
+   "severity": "FAIL",
    "check": "cross_clock",
-   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
-   "fix": "fix the signoff SDC read and re-gate with --cts"
+   "message": "71 undeclared ot_entry_1->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -296.9 ps u_cdc_host/u_rank__done_d[62] -> u_core_guard/u_rank__done_d[62]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
   },
   {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "32 undeclared ot_entry_1->ot_entry_8 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -145.6 ps u_cdc_host/u_rank__done_d[62] -> u_core_tx/u_rank__done_d[62]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
   },
   {
-   "severity": "WARN",
-   "check": "layout_images",
-   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
-   "fix": ""
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "4 undeclared ot_entry_2->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -680.1 ps u_cdc_pc/service_faults_core[0] -> u_core_guard/service_faults[3]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_2->ot_entry_16 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -69.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_1___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "6 undeclared ot_entry_2->ot_entry_19 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -6.8 ps u_cdc_pc/u_rank__d_cd[513] -> u_rank__u_adapter__g_slice_4___u_slice/c_d[1]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_2->ot_entry_20 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -151.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_5___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
   }
- ]
+ ],
+ "trial_route": {
+  "schema": "opentallas.ref_tile.trial_route.v1",
+  "overflow": 0,
+  "kind": "parent",
+  "skip_incremental_repair": false,
+  "rc": "0",
+  "grt_s": 16931,
+  "layers": [
+   {
+    "layer": "M1",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   },
+   {
+    "layer": "M2",
+    "capacity": 31641522,
+    "usage": 2102637,
+    "pct": 6.65,
+    "overflow": 0
+   },
+   {
+    "layer": "M3",
+    "capacity": 38556656,
+    "usage": 1842443,
+    "pct": 4.78,
+    "overflow": 0
+   },
+   {
+    "layer": "M4",
+    "capacity": 30614984,
+    "usage": 1332501,
+    "pct": 4.35,
+    "overflow": 0
+   },
+   {
+    "layer": "M5",
+    "capacity": 30897997,
+    "usage": 758559,
+    "pct": 2.46,
+    "overflow": 0
+   },
+   {
+    "layer": "M6",
+    "capacity": 25701298,
+    "usage": 1238765,
+    "pct": 4.82,
+    "overflow": 0
+   },
+   {
+    "layer": "M7",
+    "capacity": 33247764,
+    "usage": 1017071,
+    "pct": 3.06,
+    "overflow": 0
+   },
+   {
+    "layer": "M8",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   }
+  ],
+  "worst_layer_usage": [
+   "M2",
+   6.65
+  ],
+  "hotspot": null,
+  "congestion_png": null
+ },
+ "reset_landing": {
+  "max_sinks": 2,
+  "ports": [
+   {
+    "port": "por_n",
+    "sinks": 2,
+    "flops": 0,
+    "macros": 2
+   }
+  ],
+  "over": [],
+  "waived": false,
+  "ok": true
+ }
 }
