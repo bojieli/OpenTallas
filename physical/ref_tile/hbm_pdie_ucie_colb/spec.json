@@ -1,0 +1,345 @@
+{
+ "name": "hbm_pdie_ucie_colb",
+ "top": "ot_pdie_ucie_col",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv",
+  "rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_bb.v",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_core",
+ "clock_ports": [
+  "ck_core",
+  "ck_rck"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core"
+   ],
+   "inputs": [
+    "rst_core",
+    "tx"
+   ],
+   "outputs": [
+    "rx",
+    "st",
+    "pma_tx",
+    "pma_tck"
+   ]
+  },
+  "rck": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rck"
+   ],
+   "inputs": [
+    "rst_rck",
+    "pma_rx"
+   ],
+   "outputs": []
+  }
+ },
+ "landed_record": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json",
+ "landed_note": "HBM-UCIE8 10-20: lp.py landed column from the wires-only flat parent ot_pdie_ucie_col_flat (spec tools/landed_parent/specs/ot_pdie_ucie_col.json). Clock families: core PLL clk -> ck_core; the far die's forwarded pma_rck (NOT the core PLL) -> ck_rck. The only rck->clk crossings are the CDC children u_rm (gray-FIFO rate matcher ot_s81_rate_match_sr, elastic IDLE deletion) + its dual-clock SRAM u_rmm, and u_sts (2-flop status sync); no landing. related_same_frequency is the landed-cluster STA convention (as the closed s81lk_rate_match tile and s81lk_serdes_col_lp6); the CDC is structural, proven by tb_pdie_ucie_col with die B 300 ppm slow (column<->column and vs the reference ot_pdie_ucie).",
+ "reset_ports": [
+  "rst_core",
+  "rst_rck"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "regional_reset_ports: each region's reset port rst_<r> is landed 2 registered stages on that region's own clock beside its pin by lp.py; no plain fanout from a port, no cross-region reset path"
+ },
+ "outline": {
+  "w": 259.2,
+  "h": 1641.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_ucie_pma_rxm",
+   "count": 1,
+   "inst": "u_prx",
+   "at": [
+    10.8,
+    43.2
+   ],
+   "pg_layer": "M5"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_ucie_pma_txm",
+   "count": 1,
+   "inst": "u_ptx",
+   "at": [
+    140.4,
+    43.2
+   ],
+   "pg_layer": "M5"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "count": 1,
+   "inst": "u_rmm",
+   "at": [
+    43.2,
+    1512.0
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "rx",
+   "st",
+   "ck_rck",
+   "rst_rck",
+   "ck_core",
+   "rst_core",
+   "tx"
+  ],
+  "S": [
+   "pma_rx",
+   "pma_tx",
+   "pma_tck"
+  ]
+ },
+ "pin_ranges": {
+  "rx": [
+   12.0,
+   117.0
+  ],
+  "st": [
+   118.0,
+   119.0
+  ],
+  "ck_rck": [
+   121.0,
+   121.5
+  ],
+  "rst_rck": [
+   123.0,
+   123.5
+  ],
+  "ck_core": [
+   126.0,
+   126.5
+  ],
+  "rst_core": [
+   128.0,
+   128.5
+  ],
+  "tx": [
+   140.0,
+   247.0
+  ],
+  "pma_rx": [
+   12.8,
+   116.8
+  ],
+  "pma_tx": [
+   141.4,
+   245.4
+  ],
+  "pma_tck": [
+   245.9,
+   246.9
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "two-clock CDC leaf: the recipe pin register is single-clock and cannot serve both domains; the RTL already registers every pin in its own domain: tx -> u_txf face reg (ck_core), rx/st <- 2-stage out regs u_lpo_rx/u_lpo_st (ck_core), rst_core/rst_rck landed 2 stages on their region clock, pma_tx/pma_tck launched and pma_rx captured by the registered boundary of the PMA hard abstracts (ck_core / ck_rck)"
+ },
+ "hold_budget_reason": "two-clock CDC leaf (as the closed s81lk_rate_match tile): core pins registered in the RTL (tx face reg u_txf, 2-stage rx/st out regs u_lpo_*, reset ports landed 2 stages), PMA pads registered inside the hard abstracts; boundary hold budget stays the tile's",
+ "structural_change": "HBM-UCIE8 10-20 (DRIVE-HBM: HBM owns ot_pdie_ucie; the S81 MU die has 0 instances): first kit of the HBM host UCIe column replacing the grant-slot outline ot_pdie_ucie at HBM GEN2e4 r11 host_N (slot 260.928 x 1653.48). Method of s81lk_serdes_col_lp6 (claude/s81-serdes6-1020 41cccbc13): PMA tx/rx hard abstracts ot_ucie_pma_{txm,rxm} (513 b, 108.0 x 1252.8, tools/mem_compiler/ucie_pma_gen.py; rxm clock pin on its digital face so the rck tree stays in the digital band), rate matcher ot_s81_rate_match_sr + dual-clock SRAM ot_sram_1r1w2c_16x546_m1, regional clock/reset ports ck_core/rst_core, ck_rck/rst_rck (reset landed 2 stages per region). FALLBACK (parallel): 259.2 x 1641.6 = fits the existing host_N slot (260.928 x 1653.48) without a re-grant; PMA rxm at x 10.8, txm at 140.4 (off the 43.2 lattice, WAIVED: guidance under the 09:35 rule freeze), 21.6 channel; all core pins on the N face (W/E pinless)",
+ "job": {
+  "owner": "Claude:HBM-UCIE8",
+  "branch": "claude/hbm-ucie8-1020",
+  "tag": "ucie1b",
+  "purpose": "HBM host UCIe column hbm_pdie_ucie_colb: ot_pdie_ucie_col (PMA abstracts + SRAM rate matcher + regional clocks/resets) for HBM die host_N, gate --cts",
+  "benches": [
+   {
+    "name": "link_m0",
+    "cmd": "mkdir -p {RUN}/lk0 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_pdie_ucie_col -GMODE=0 -GMUT=0 rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv -Mdir {RUN}/lk0/obj > {RUN}/lk0/build.log 2>&1 && {RUN}/lk0/obj/Vtb_pdie_ucie_col > {RUN}/lk0/run.log 2>&1; tail -20 {RUN}/lk0/run.log; grep -q 'TB_PDIE_UCIE_COL PASS' {RUN}/lk0/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "link_m1",
+    "cmd": "mkdir -p {RUN}/lk1 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_pdie_ucie_col -GMODE=1 -GMUT=0 rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv -Mdir {RUN}/lk1/obj > {RUN}/lk1/build.log 2>&1 && {RUN}/lk1/obj/Vtb_pdie_ucie_col > {RUN}/lk1/run.log 2>&1; tail -20 {RUN}/lk1/run.log; grep -q 'TB_PDIE_UCIE_COL PASS' {RUN}/lk1/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "link_m2",
+    "cmd": "mkdir -p {RUN}/lk2 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_pdie_ucie_col -GMODE=2 -GMUT=0 rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv -Mdir {RUN}/lk2/obj > {RUN}/lk2/build.log 2>&1 && {RUN}/lk2/obj/Vtb_pdie_ucie_col > {RUN}/lk2/run.log 2>&1; tail -20 {RUN}/lk2/run.log; grep -q 'TB_PDIE_UCIE_COL PASS' {RUN}/lk2/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_m0",
+    "cmd": "mkdir -p {RUN}/lp0 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_ucie_col -GMUT=0 rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv -Mdir {RUN}/lp0/obj > {RUN}/lp0/build.log 2>&1 && {RUN}/lp0/obj/Vtb_ot_pdie_ucie_col > {RUN}/lp0/run.log 2>&1; tail -20 {RUN}/lp0/run.log; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp0/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mut4",
+    "cmd": "mkdir -p {RUN}/lp4 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_ucie_col -GMUT=4 rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv -Mdir {RUN}/lp4/obj > {RUN}/lp4/build.log 2>&1 && {RUN}/lp4/obj/Vtb_ot_pdie_ucie_col > {RUN}/lp4/run.log 2>&1; tail -20 {RUN}/lp4/run.log; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp4/run.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "rtl/dsrom_sys/s81_link/ucie/witness/lp_m4.log"
+   },
+   {
+    "name": "link_mut1",
+    "cmd": "mkdir -p {RUN}/lm1 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_pdie_ucie_col -GMODE=0 -GMUT=1 rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv -Mdir {RUN}/lm1/obj > {RUN}/lm1/build.log 2>&1 && {RUN}/lm1/obj/Vtb_pdie_ucie_col > {RUN}/lm1/run.log 2>&1; tail -20 {RUN}/lm1/run.log; grep -q 'TB_PDIE_UCIE_COL PASS' {RUN}/lm1/run.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TB_PDIE_UCIE_COL FAIL",
+    "fail_witness": "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_1.log"
+   },
+   {
+    "name": "link_mut2",
+    "cmd": "mkdir -p {RUN}/lm2 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_pdie_ucie_col -GMODE=0 -GMUT=2 rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv -Mdir {RUN}/lm2/obj > {RUN}/lm2/build.log 2>&1 && {RUN}/lm2/obj/Vtb_pdie_ucie_col > {RUN}/lm2/run.log 2>&1; tail -20 {RUN}/lm2/run.log; grep -q 'TB_PDIE_UCIE_COL PASS' {RUN}/lm2/run.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TB_PDIE_UCIE_COL FAIL",
+    "fail_witness": "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_2.log"
+   },
+   {
+    "name": "link_mut3",
+    "cmd": "mkdir -p {RUN}/lm3 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_pdie_ucie_col -GMODE=0 -GMUT=3 rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv -Mdir {RUN}/lm3/obj > {RUN}/lm3/build.log 2>&1 && {RUN}/lm3/obj/Vtb_pdie_ucie_col > {RUN}/lm3/run.log 2>&1; tail -20 {RUN}/lm3/run.log; grep -q 'TB_PDIE_UCIE_COL PASS' {RUN}/lm3/run.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TB_PDIE_UCIE_COL FAIL",
+    "fail_witness": "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json",
+   "rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv",
+   "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv",
+   "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv",
+   "rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv",
+   "rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv",
+   "rtl/dsrom_sys/s81_link/ucie/run_ucie_col_all.sh",
+   "rtl/dsrom_sys/s81_link/ucie/witness",
+   "tools/landed_parent/lp.py",
+   "tools/landed_parent/specs/ot_pdie_ucie_col.json",
+   "tools/mem_compiler/ucie_pma_gen.py"
+  ]
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "cdc_note": "rate matcher = control u_rm (ot_s81_rate_match_sr, soft CDC child: write side ck_rck, read side ck_core, 2-stage gray syncs) + storage u_rmm = dual-clock SRAM ot_sram_1r1w2c_16x546_m1 (raw macro sink of BOTH roots: wclk ck_rck, rclk ck_core; raw_macro_clocks dual form). Status sync u_sts soft CDC child (ck_r ck_rck, ck_t ck_core). Same structure as s81lk_serdes_col_lp6.",
+ "soft_root_macro_masters": [
+  "ot_ucie_pma_rxm",
+  "ot_ucie_pma_txm",
+  "ot_sram_1r1w2c_16x546_m1"
+ ],
+ "soft_root_macro_interface_masters": [
+  "ot_ucie_pma_rxm",
+  "ot_ucie_pma_txm"
+ ],
+ "soft_root_macro_bindings": {
+  "u_ptx": {
+   "master": "ot_ucie_pma_txm",
+   "clock_pin": "ck",
+   "root": "ck_core"
+  },
+  "u_prx": {
+   "master": "ot_ucie_pma_rxm",
+   "clock_pin": "pma_rck",
+   "root": "ck_rck"
+  },
+  "u_rmm": {
+   "master": "ot_sram_1r1w2c_16x546_m1",
+   "clock_pins": {
+    "rclk": "ck_core",
+    "wclk": "ck_rck"
+   }
+  }
+ },
+ "children": [],
+ "hold_budget": "die"
+}

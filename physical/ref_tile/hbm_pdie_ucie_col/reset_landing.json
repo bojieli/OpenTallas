@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_pdie_ucie_col",
+ "enable": false,
+ "reason": "regional_reset_ports: each region's reset port rst_<r> is landed 2 registered stages on that region's own clock beside its pin by lp.py; no plain fanout from a port, no cross-region reset path"
+}

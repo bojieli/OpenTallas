@@ -1,0 +1,9 @@
+ERR beat 1
+ERR beat 2
+ERR beat 3
+TB_PDIE_UCIE_COL MODE=0 MUT=1 sent=6000 got=6032 bad=6018 idles_seen=523 stA=10 stB=10
+TB_PDIE_UCIE_COL FAIL
+- rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.013 s; speed 406.479 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

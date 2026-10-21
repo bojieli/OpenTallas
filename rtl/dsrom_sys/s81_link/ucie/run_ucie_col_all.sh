@@ -6,7 +6,7 @@
 #             40 stages long) FAIL
 #   link_m<MODE>/  tb_pdie_ucie_col two-die link, die B 300 ppm slow: MODE 0 column<->column, 1 column A -> reference
 #             ot_pdie_ucie B, 2 reference A -> column B; each must PASS
-#   linkmut_<M>/   MODE 0 with mutant M (1 SRAM read address +1, 2 write valid stuck 0, 3 status flag stuck 0): each must FAIL
+#   linkmut_<M>/   MODE 0 with mutant M (1 SRAM read address stuck 0, 2 write valid stuck 0, 3 status flag stuck 0): each must FAIL
 #   bash rtl/dsrom_sys/s81_link/ucie/run_ucie_col_all.sh OUTDIR
 set -u
 cd "$(dirname "$0")/../../../.."

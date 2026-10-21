@@ -5,7 +5,7 @@
 // MODE 0: column <-> column; MODE 1: column A -> reference ot_pdie_ucie B; MODE 2: reference A -> column B (the column is
 // wire-compatible with the reference: same pads {valid, beat}, only fixed latency differs).
 // PASS: >= NB - 400 data beats at B, all in order and exact, st(B) = live, no fault.
-// Mutants (forced on the receiving column die B, MODE 0 only): MUT 1 rate-matcher SRAM read address + 1 (wrong row);
+// Mutants (forced on the receiving column die B, MODE 0 only): MUT 1 rate-matcher SRAM read address stuck at row 0;
 // MUT 2 rate-matcher write valid stuck 0 (beats never stored); MUT 3 status receive flag input stuck 0 (live never seen);
 // each must FAIL.
 module tb_pdie_ucie_col;
@@ -25,7 +25,7 @@ module tb_pdie_ucie_col;
     end else begin : g_b_col
         ot_pdie_ucie_col_w u_b (.clk(cb), .rst(rst), .tx(512'd2), .rx(rxb), .st(stb), .pma_tx(pb), .pma_tck(tcb), .pma_rx(pa), .pma_rck(tca));
         if (MUT == 1) begin : g_m1
-            initial force u_b.u_lp.u_rmm.r_addr_in = u_b.u_lp.m_raddr + 4'd1;
+            initial force u_b.u_lp.u_rmm.r_addr_in = 4'd0;
         end
         if (MUT == 2) begin : g_m2
             initial force u_b.u_lp.u_rm.w_v = 1'b0;

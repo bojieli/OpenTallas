@@ -3,10 +3,10 @@
   "claim_boundary": "placement/connection abstract of analog IP; footprint and timing assumed",
   "faces": {
     "N": [
+      "pma_rck",
       "q"
     ],
     "S": [
-      "pma_rck",
       "pma_rx"
     ]
   },
@@ -18,13 +18,13 @@
   "name": "ot_ucie_pma_rxm",
   "pins": {
     "N": {
-      "pins": 513,
-      "pins_per_um": 4.933,
+      "pins": 514,
+      "pins_per_um": 4.942,
       "pitch_um": 0.192
     },
     "S": {
-      "pins": 514,
-      "pins_per_um": 4.942,
+      "pins": 513,
+      "pins_per_um": 4.933,
       "pitch_um": 0.192
     },
     "pg": {
@@ -99,7 +99,7 @@
     }
   },
   "views": {
-    "ot_ucie_pma_rxm.lef": "a0f6136cbc2afadd84e8f68a45f47a7a083e06b63b1fd49eb2264332b8b4f859",
+    "ot_ucie_pma_rxm.lef": "189fcd00bee0040811c1ca6d4638bf4199ecc66e78131280d8baab1f949f67f7",
     "ot_ucie_pma_rxm_bb.v": "0df7ee8ae50b86295330b6b4bf49f3341de390086cea84dd484d6d4ec55c0afd",
     "ot_ucie_pma_rxm_ff.lib": "118b4c73e230a93c96be4855438718e9a69d0863712cb22e81ae4d851786826e",
     "ot_ucie_pma_rxm_ss.lib": "c1da1dad4d2f6edd52540ca5dab032284fd9ef8b8518c6b7b4568960b6a0f25a",

@@ -6,8 +6,11 @@ hard PHY analog may be behavioural), so this writes only what the column parent 
 
 * ot_ucie_pma_txm: digital face N (core side): ck, d[512:0] = {valid, beat} (registered on ck);
                    pad face S (bump side): pma_tx[512:0], pma_tck (launched on ck).
-* ot_ucie_pma_rxm: pad face S: pma_rck (forwarded / recovered clock), pma_rx[512:0] (captured on pma_rck);
-                   digital face N: q[512:0] (launched on pma_rck).
+* ot_ucie_pma_rxm: pad face S: pma_rx[512:0] (captured on pma_rck);
+                   digital face N: pma_rck (the forwarded clock, delivered by the die to the column's rck region beside the
+                   digital face: the pad-side distribution is inside the analog IP), q[512:0] (launched on pma_rck).
+                   (S81 rxm has pma_rck on the pad face; here the clock pin sits with the register mass it clocks, so the
+                   column's rck tree stays inside the digital band instead of spanning the 1.25 mm macro.)
 Each macro: one clock, registered boundary (ASAP7 flop clk->q / setup + 3 FO4).  Footprint basis: the HBM die grant slot
 host_N 260.9 x 1653.5 um = the placeholder physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie (UCIe-A shoreline 1.043 x
 6.61 mm at 1/4); the two PMA halves take the lower 1252.8 um of a 259.2-wide column (108.0 x 1252.8 each, origins on the
@@ -43,7 +46,7 @@ def macros():
     rx = [Pin("pma_rck", 1, "input", "clock", "pma_rck"), Pin("pma_rx", 513, "input", "data_in", "pma_rck"),
           Pin("q", 513, "output", "data_out", "pma_rck")]
     face = {"ot_ucie_pma_txm": {"N": ["ck", "d"], "S": ["pma_tx", "pma_tck"]},
-            "ot_ucie_pma_rxm": {"S": ["pma_rck", "pma_rx"], "N": ["q"]}}
+            "ot_ucie_pma_rxm": {"S": ["pma_rx"], "N": ["pma_rck", "q"]}}
     return {"ot_ucie_pma_txm": tx, "ot_ucie_pma_rxm": rx}, face
 
 
