@@ -398,7 +398,14 @@ PYGEOM
 [ $? = 0 ] || exit 20
 step S11 grt_sta_clk
 $OTRUN --mem 160 --threads 16 --disk 60 --priority die --dir $B/case -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/case/run.sh > $A/grt.otrun 2>&1; echo "GRT ot-run rc=$? $(date -Is)"
+# Existing mandatory IR step, sourced from the actual GRT database; missing ODB is NOT_RUN/FAIL.
+step S11i required_ir_drop
+$OTRUN --mem 32 --threads 8 --disk 4 --priority die --dir $B/case -- env OT_IR_DESIGN=hbm CPUS=8 MEMG=32 bash $B/src/tools/die_safety/ir_step.sh $B/case/out/grt.odb $B/case/out/ir_drop $B/case/out/run.log > $A/ir_drop.otrun 2>&1
+IR_RC=$?
+grep -E 'DIE_IR_DROP|OWNER_REPORT' $A/ir_drop.otrun || true
+[ $IR_RC = 0 ] || echo "OWNER_REPORT HBM die IR-drop failed or NOT_RUN; see $A/ir_drop.otrun"
 ssh $HOST "cat $B/case/out/run.exit; grep -E 'OT_PG_|OT_DIE_REP|overflow|Total wire|tns|wns' $B/case/out/run.log | tail -15; cat $B/case/out/neighbour_skew_gate.log; tail -5 $B/case/out/hold_budget.log" > $A/grt_summary.txt 2>&1
 rsync -a $HOST:$B/case/out/ $A/case_out/ --include='*.json' --include='*.log' --include='*.rpt' --include='*.png' --exclude='*.odb' --exclude='*.def' 2>/dev/null
 cat $A/grt_summary.txt
+[ "$IR_RC" = 0 ] || exit 21
 echo CHAIN_HBM_R15_NEXT_DONE VAR=$VAR PLAN=$PL HEAD=$H
