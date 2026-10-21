@@ -10,6 +10,7 @@ G=/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git
 W=$D/die72-g9-selected
 [ ! -e "$W" ] || { echo 'REFUSE: immutable G9 output directory already exists'; exit 2; }
 mkdir -p "$W/src"
+trap 'rc=$?; printf "EXIT_RC %s %s\n" "$rc" "$(date -Is)" > "$W/run.exit"' EXIT
 export OT_GIT_DIR=$G OT_DIE_REPAIR_CORRIDOR=1 GIT_DIR=$G
 for r in "$PREP" "$RTL_BASE" "$TOOLS" "$CREF"; do
  git --git-dir="$G" cat-file -e "$r^{commit}" 2>/dev/null || git --git-dir="$G" fetch -q origin "$r"
@@ -23,7 +24,7 @@ mapfile -t PF < "$W/phys.lst"
 git --git-dir="$G" archive "$RTL_BASE" -- "${PF[@]}" | tar -xf - -C "$W/src"
 # Published helpers are independently pinned; never copy candidate-era shared helpers.
 git --git-dir="$G" archive "$TOOLS" tools | tar -xf - -C "$W/src"
-git --git-dir="$G" archive "$PREP" results/arch/s81_die72_1021/g9_assembly/pre_gen | tar -xf - -C "$W/src"
+git --git-dir="$G" archive "$PREP" results/arch/s81_die72_1021/g9_assembly/pre_gen results/arch/s81_die72_1021/relay_bodies.json | tar -xf - -C "$W/src"
 cd "$W/src"
 cp results/arch/s81_die72_1021/g9_assembly/pre_gen/plan_unrouted_g9.json "$W/plan_unrouted_g9.json"
 cp results/arch/s81_die72_1021/g9_assembly/pre_gen/bind_table_g9.json "$W/bind_table_g9.json"
