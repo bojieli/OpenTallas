@@ -1,0 +1,37 @@
+{
+  "reviewer": "codex coordinator takeover 2026-10-20",
+  "time": "2026-10-20T22:12:50.337897-07:00",
+  "gate_commit": "3bf5ab5aed0567126f1beaf45a706c50aee8f911",
+  "verdict": "APPROVED",
+  "geometry_sha256": "d789c51d69b87bbefb67fc756a6e0bf14f50005dba887239b0d36d8370ec7931",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "d789c51d69b87bbefb67fc756a6e0bf14f50005dba887239b0d36d8370ec7931",
+    "components": {
+      "outline": "8f4684f2cd674484322fd88809047547e008eda6c477a1634b224f6601743687",
+      "macros": "5081ebb27e67be4de8b8a01c17622abd027f6bbe1c805e1edc7fea238872eb73",
+      "pins": "34e1c86912260d4bcb3a24ccf4c881107b444357f979cb89b0da95d081861928",
+      "clock_entry": "e3e865299a1e2c7e55ce70b1f475436dac9262fcd5f7ae50ef7125c7d4829f08"
+    }
+  },
+  "checklist": {
+    "lattice": "PASS: ten hard children; eight bank children around central controller with E collar; on declared lattice.",
+    "std_cell_band": "PASS: actually viewed original floorplan and density; sparse relay/controller logic in continuous connected channels, 38% hard+std fill.",
+    "pin_spread": "PASS with integration obligation: full-face spans S/N99%,W95%,E98%; ANY clk_bank/clk_land/clk_rly/rr groups must match die contract.",
+    "clock_entry": "PASS:22regional roots, worst TT74.3/FF72.8ps, io margin0.03; landed entries8 and relay clocks3 need die clock binding.",
+    "shape": "PASS:606.96x542.16um, aspect1.12."
+  },
+  "evidence": {
+    "source_start_commit": "3bf5ab5aed0567126f1beaf45a706c50aee8f911",
+    "source_manifest_sha256": "b1d7bc525e838dfb381c88f0cc9eb76f87b7534a49949dd6b6cee93fa7c4634e",
+    "grt_overflow": 0,
+    "native_max_loads": 13,
+    "reach_prior_cts_max_um": 383.616,
+    "images_viewed": {
+      "floorplan.png": "6bafa0fe6da06fb1121f4fc56f5244a7d1d12a9fe1d46cfbf8244335a1f5de69",
+      "density.png": "8f21531cff59a0fe0431aca448c063f82edca98bbf6d13b04b20b0c748e69f6b"
+    },
+    "scope": "Geometry approval for route submission only; _cpl die binding requires 8clk_land+3clk_rly and RR_RT-1=79 pad. l1c gate FAIL trial_route remains separate, not approved."
+  },
+  "gate_generated": "2026-10-20T21:49:27-0700"
+}
