@@ -23,6 +23,8 @@ L00_KV=${L00_KV:-ot-epyc5:/srv/opentallas-scratch/claude/layerbench-hbm/dsfix/at
 WT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 SHA=$(git -C "$WT" rev-parse "$REV"); SRC=$(git -C "$WT" rev-parse "$SRC_REV")
 DSF=results/rtl/hbm_ds_layer_tput_1018
+ONLY=${ONLY:-all}
+if [ "${REUSE_STAGE:-0}" != 1 ]; then
 ssh "$H" "mkdir -p $OUT/src $OUT/r14src $OUT/bundle $OUT/kv $OUT/out $OUT/.fleet-ready && rm -rf $OUT/src/* $OUT/r14src/*" || exit 2
 git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hbm_sm_attention tools/hgi_sim tools/hdc_golden_v41.py tools/hdc_golden.py \
   tools/hbm_svc_packed136_image.py tools/hbm_static rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv rtl/test/toksim_idxdma \
@@ -36,31 +38,46 @@ echo "$SHA" | ssh "$H" "cat > $OUT/src/REV"; echo "$SRC" | ssh "$H" "cat > $OUT/
 rsync -a --delete "$BUN/rtl" "$BUN/physical" "$BUN/master_files.json" "$BUN/views.json" "$H:$OUT/bundle/" || exit 2
 ssh "$H" "cp -a $OUT/src/$DSF/veh_att_1019/kv/L02 $OUT/src/$DSF/veh_att_1019/kv/L14 $OUT/kv/ && mkdir -p $OUT/kv/L00" || exit 2
 ssh "${L00_KV%%:*}" "tar -c -C ${L00_KV#*:} ." | ssh "$H" "tar -x -C $OUT/kv/L00" || exit 2
+fi
 QKV=$OUT/src/results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/kv
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 A="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/att_images.py unit --kv $OUT/kv --bundle $OUT/bundle"
 Q="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/qwen_att_unit.py run --kv $QKV --bundle $OUT/bundle"
 RUN="/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir $OUT/.fleet-ready --"
+stage_job() { printf '%s\n' "$2" | ssh "$H" "cat > $OUT/$1.sh"; }
+P1=; P2=; P3=; P4=
 # one build dir (obj_d0_p0 / obj_d0_p1) per job; the first op of each job builds it
 J_FULL=""; for L in 0 2 14; do
   J_FULL="$J_FULL $A --layer $L --work $OUT/w_full --out $OUT/out/ds_L${L}_full.json > $OUT/out/ds_L${L}_full.log 2>&1; r=\$?; echo DS_L${L}_FULL_RC \$r; test \$r = 0 || exit \$r;"; done
-$RUN bash -c "$J_FULL" > "$LOGD/ds_full.otrun.log" 2>&1 &
+if [ "$ONLY" = all ]; then
+stage_job job_ds_full "$J_FULL"
+$RUN bash "$OUT/job_ds_full.sh" > "$LOGD/ds_full.otrun.log" 2>&1 &
 P1=$!
+fi
 J_S32=""; for L in 2 14; do
   J_S32="$J_S32 $A --layer $L --subrun 32 --work $OUT/w_s32 --out $OUT/out/ds_L${L}_s32.json > $OUT/out/ds_L${L}_s32.log 2>&1; r=\$?; echo DS_L${L}_S32_RC \$r; test \$r = 0 || exit \$r;"; done
-$RUN bash -c "$J_S32" > "$LOGD/ds_s32.otrun.log" 2>&1 &
+if [ "$ONLY" = all ]; then
+stage_job job_ds_s32 "$J_S32"
+$RUN bash "$OUT/job_ds_s32.sh" > "$LOGD/ds_s32.otrun.log" 2>&1 &
 P2=$!
+fi
 J_Q="$Q --stage L0 --L 0 --work $OUT/w_q --out $OUT/out/qw_L0_L0.json > $OUT/out/qw_L0_L0.log 2>&1; r=\$?; echo QW_L0_RC \$r; test \$r = 0 || exit \$r; \
 $Q --stage chain --L 1 --work $OUT/w_q --out $OUT/out/qw_chain_L1.json > $OUT/out/qw_chain_L1.log 2>&1; r=\$?; echo QW_CHAIN_RC \$r; test \$r = 0 || exit \$r"
-$RUN bash -c "$J_Q" > "$LOGD/qwen.otrun.log" 2>&1 &
+if [ "$ONLY" = all ]; then
+stage_job job_qwen "$J_Q"
+$RUN bash "$OUT/job_qwen.sh" > "$LOGD/qwen.otrun.log" 2>&1 &
 P3=$!
+fi
 FIX="$OUT/src/$DSF/fixtures/L00,$OUT/src/$DSF/fixtures/L02,$OUT/src/$DSF/fixtures/L14"
 J_I="cd $OUT/r14src && export $VL && export FIXDIRS=$FIX && \
 for c in topk_r14_fix topk_r14; do bash rtl/test/toksim_idxdma/run_toksim_idxdma.sh $OUT/out/idx \$c > $OUT/out/idx_\$c.log 2>&1; r=\$?; echo IDX_\${c}_RC \$r; test \$r = 0 || exit \$r; done; \
 for c in topk n12_ctl n12_dir; do bash rtl/test/hbm_idx_static/run_banklat_idx.sh $OUT/out/banklat \$c > $OUT/out/banklat_\$c.log 2>&1; r=\$?; echo BANKLAT_\${c}_RC \$r; test \$r = 0 || exit \$r; done"
-/home/ubuntu/bin/ot-run --mem 32 --threads 8 --dir "$OUT/.fleet-ready" -- bash -c "$J_I" > "$LOGD/idx.otrun.log" 2>&1 &
+if [ "$ONLY" = all ] || [ "$ONLY" = idx ]; then
+stage_job job_idx "$J_I"
+/home/ubuntu/bin/ot-run --mem 32 --threads 8 --dir "$OUT/.fleet-ready" -- bash "$OUT/job_idx.sh" > "$LOGD/idx.otrun.log" 2>&1 &
 P4=$!
-wait $P2 || STATUS=1
+fi
+[ -z "$P2" ] || wait "$P2" || STATUS=1
 # SU merge (run_att_gap.sh part B, base run) on the L2 s32 RTL nodes, r14 SU arithmetic sources
 NODES=$OUT/out/ds_L2_s32.nodes.npz
 M="cd $OUT/src && export $VL && set -e; mkdir -p $OUT/merge; \
@@ -78,10 +95,11 @@ cd $OUT/r14src; d=rtl/hbm_accel/generic/adapters/static_su; \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $OUT/merge/build.log 2>&1; \
 set +e; $OUT/merge/obj/Vtb_su_static_arithmetic +DIR=$OUT/merge/vec_pos > $OUT/merge/pos.log 2>&1; r=\$?; echo MERGE_POS_RC \$r; test \$r = 0 || exit \$r; \
 grep -h 'SU_ARITH' $OUT/merge/pos.log | cut -c1-300"
-if grep -q "DS_L2_S32_RC 0" "$LOGD/ds_s32.otrun.log"; then
-  /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$OUT/.fleet-ready" -- bash -c "$M" > "$LOGD/merge.otrun.log" 2>&1 || STATUS=1
+if { [ "$ONLY" = all ] || [ "$ONLY" = merge ]; } && grep -q "DS_L2_S32_RC 0" "$LOGD/ds_s32.otrun.log"; then
+  stage_job job_merge "$M"
+  /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$OUT/.fleet-ready" -- bash "$OUT/job_merge.sh" > "$LOGD/merge.otrun.log" 2>&1 || STATUS=1
 else echo "MERGE SKIPPED (DS L2 s32 not PASS)" > "$LOGD/merge.otrun.log"; fi
-for pid in "$P1" "$P3" "$P4"; do wait "$pid" || STATUS=1; done
+for pid in "$P1" "$P3" "$P4"; do [ -z "$pid" ] || wait "$pid" || STATUS=1; done
 grep -h "_RC \|RAN on\|NOT RUN\|SKIPPED" "$LOGD"/*.otrun.log
 echo "ATT14_DONE rc=$STATUS"
 exit "$STATUS"
