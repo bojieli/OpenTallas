@@ -26,6 +26,10 @@ module tb_hbm_su_pgslice_rg;
  // (slice_x, inj_q, tree_o) compare at +RT+IR, fault at +RT+IR+1; the VM write stays at +SWQ (u_sout WQ_PAD 2 -> 1);
  // red_sel / tree_cmd / rf_dsec keep their RT re-timing (relative to the other inputs).
  localparam integer IR=1, RS=RT+IR;
+ // HBM-OWN/SU-PGLG 10-21 (d4h pair tile, HREG 1): the pair stages the bank write port (flat reference WSTG=1: every
+ // bank write commits one edge later in BOTH) and face-registers the RF broadcast words, so the compiler issues
+ // rf_bword RFE serial edges earlier to the region-form DUT (the reference gets it RFE edges later).
+ localparam integer WSTG=(HREG!=0)?1:0, RFE=(HREG!=0)?1:0;
  localparam integer TS=1200, TP=900, T0=600;
  reg sclk=0, pclk=0;
  initial begin #(T0); forever begin sclk=1; #(TS/2); sclk=0; #(TS/2); end end
@@ -59,6 +63,10 @@ module tb_hbm_su_pgslice_rg;
   dl_rsel[0]=rsel; dl_tcmd[0]=tcmd; dl_rfd[0]=rfd;
  end
  wire [11:0] rsel_d=dl_rsel[RT-1], tcmd_d=dl_tcmd[RT-1]; wire [255:0] rfd_d=dl_rfd[RT-1];
+ // RFE re-timing: the reference sees rf_bword RFE serial edges after the DUT
+ reg [127:0] dl_rfw=0;
+ always @(posedge sclk) begin #2; dl_rfw=rfw; end
+ wire [127:0] rfw_r=(RFE!=0)?dl_rfw:rfw;
  // compiler re-timing of the tap write half: lg_write / far_wq / lg_w_done SWQ stream edges later
  reg [1:0] dl_lgw [0:SWQ-1]; reg [561:0] dl_fwq [0:SWQ-1]; reg [1:0] dl_lgwd [0:SWQ-1]; integer dj;
  initial for(dj=0;dj<SWQ;dj=dj+1) begin dl_lgw[dj]=0; dl_fwq[dj]=0; dl_lgwd[dj]=0; end
@@ -71,10 +79,10 @@ module tb_hbm_su_pgslice_rg;
  wire [31:0] NAME``_sx; wire [66:0] NAME``_to; wire [1023:0] NAME``_iq; wire NAME``_f, NAME``_lf; wire [33:0] NAME``_rq; \
  wire [561:0] NAME``_wq; wire [513:0] NAME``_frr; wire [1:0] NAME``_fwd; \
  ot_hbm_su_static_pgslice_lg #(.QID(1),.G(2),.MLAT(4),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2),.MULTIRATE(1),.COLLPORT(1), \
-  .RF_LOCAL(1),.PIN_REG(1),.RSYNC(1),.STRAP(1),.PRETREE(PT),.MUT(0)) NAME( \
+  .RF_LOCAL(1),.PIN_REG(1),.RSYNC(1),.STRAP(1),.PRETREE(PT),.MUT(0),.WSTG(WSTG)) NAME( \
   .pg_clk(pclk),.clk_lane({256{sclk}}),.clk_insert({128{sclk}}),.rst_lane_n({32{por}}),.clk_bcast({4{sclk}}), \
   .rst_bcast_n({4{por}}),.clk_bank({32{sclk}}),.clk_bank_macro({192{sclk}}),.clk_ctl(sclk),.clk_side({6{sclk}}), \
-  .rst_n(por),.pos(PS),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw),.rf_bcmd(rfc), \
+  .rst_n(por),.pos(PS),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw_r),.rf_bcmd(rfc), \
   .rf_dsec(rfd),.red_sel(rsel),.slice_x(NAME``_sx),.tree_cmd(tcmd),.tree_o(NAME``_to),.inj_rd(injrd),.inj_addr(inja), \
   .inj_q(NAME``_iq),.dw_v(dwv),.dw_row(dwr),.dw_d(dwd),.fault(NAME``_f),.lg_rq(NAME``_rq),.lg_wq(NAME``_wq),.lg_rr(lgrr), \
   .lg_w_done(lgwd),.lg_read(lgr),.lg_write(lgw),.far_rq(farrq),.far_wq(farwq),.far_rr(NAME``_frr),.far_w_done(NAME``_fwd), \

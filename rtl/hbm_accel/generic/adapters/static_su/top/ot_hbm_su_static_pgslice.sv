@@ -83,7 +83,12 @@ module ot_hbm_su_static_pgslice #(
  //   cntB5,cntA5} at edge E takes ALL 32 lanes' ro_x of the issue block (quarter words 16G..16G+15 = half A, 64+16G..+15 =
  //   half B; lanes >= the half's count are padding) into ot_hbm_su_red_pretree_s (clk_ctl): two golden csum8 16-word subtrees on tree_o, registered at E+50
  //   (LAT 6). The quarter core joins the four slices (qcore_r5 PRETREE). One block per edge; no stall.
- parameter integer PRETREE=0
+ parameter integer PRETREE=0,
+ // WSTG (HBM-OWN/SU-PGLG 10-21, default 0 = unchanged): bank write-port staging edges. 1 = one register between the
+ //   store / fill / drain write mux and the bank's write pins (valid reset-gated, payload unreset): every bank write
+ //   commits one edge later (n+2). The hardened d4h pair tile (ot_hbm_su_pgrg_pair) is this form; the compiler keeps
+ //   bank RAW distances one edge longer.
+ parameter integer WSTG=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -421,6 +426,16 @@ module ot_hbm_su_static_pgslice #(
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=st_lid||rd_addr[(n*4+p2)*24+14+:2]!=q_id))idf=1;
   end
   assign st_id_fault[n]=idf;
+  wire bk_wv_c=lw|fw|dwn; wire [8:0] bk_wa_c=fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]};
+  wire [31:0] bk_wd_c=fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat;
+  wire bk_wv; wire [8:0] bk_wa; wire [31:0] bk_wd;
+  if(WSTG!=0)begin:g_wstg
+   reg wv_s; reg [8:0] wa_s; reg [31:0] wd_s;
+   always @(posedge clk_bank[n])begin wv_s<=bk_wv_c&rst_b[n/4]; wa_s<=bk_wa_c; wd_s<=bk_wd_c; end
+   assign bk_wv=wv_s; assign bk_wa=wa_s; assign bk_wd=wd_s;
+  end else begin:g_wdir
+   assign bk_wv=bk_wv_c; assign bk_wa=bk_wa_c; assign bk_wd=bk_wd_c;
+  end
   // OT_SU_SYNC_RST: the bank is the CLOSED physical wrapper's configuration (bank6_clock7 r12: RD_ROOT 1, WS_ROOT 2,
   // PIN_RST 1 = rst_n a registered W-face data input) fed from its row region's relay copy
 `ifdef OT_HARD_CHILDREN
@@ -429,12 +444,12 @@ module ot_hbm_su_static_pgslice #(
   ot_hbm_su_static_bank6_clock_physical u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),
    .clk_macro0(clk_bank_macro[n*6+0]),.clk_macro1(clk_bank_macro[n*6+1]),.clk_macro2(clk_bank_macro[n*6+2]),
    .clk_macro3(clk_bank_macro[n*6+3]),.clk_macro4(clk_bank_macro[n*6+4]),.clk_macro5(clk_bank_macro[n*6+5]),.rst_n(rst_b[n/4]),
-   .read_v(rv),.read_addr(ra),.read_data(q),.read_return(),.write_v(lw|fw|dwn),
-   .write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),.write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
+   .read_v(rv),.read_addr(ra),.read_data(q),.read_return(),.write_v(bk_wv),
+   .write_addr(bk_wa),.write_data(bk_wd));
 `else
   ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9),.RD_ROOT(SYNC_RST),.WS_ROOT(2*SYNC_RST),.PIN_RST(SYNC_RST)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_b[n/4]),.read_v(rv),.read_addr(ra),
-   .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
-   .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
+   .read_data(q),.read_return(),.write_v(bk_wv),.write_addr(bk_wa),
+   .write_data(bk_wd));
 `endif
  end
  // ------------------------------------------------------------------ RF broadcast into lane operands
