@@ -24,7 +24,7 @@ set ::ot_ce_landed_child_pins 8
 set ::ot_ce_check_only [dict create {ot_hbm_accel_smh_bdc/clk} 1 {ot_hbm_accel_smh_tcl_gu/clk} 1 {ot_hbm_accel_smh_tct/clk} 1 {ot_hbm_accel_smh_xs/clk} 1 {ot_hbm_sm_pv_merge_s3/clk} 1 {ot_smh_tr_group_row_e/clk} 1 {ot_smh_tr_group_row_w/clk} 1]
 set ::ot_ce_refs [dict create {ot_hbm_sm_pv_merge_s3/clk} {tt {263.2 294.1 313.2} ff {215.4 244.5 262.4} ss {342.3 375.4 397.0}} {ot_hbm_accel_smh_tct/clk} {tt {170.4 175.8 183.5} ff {137.8 143.1 151.1} ss {225.1 231.1 238.8}} {ot_hbm_accel_smh_bdc/clk} {tt {172.0 180.9 188.1} ff {139.7 148.0 154.9} ss {227.0 236.9 244.2}} {ot_hbm_accel_smh_tcl_gu/clk} {tt {168.8 175.5 181.1} ff {136.7 143.0 148.7} ss {223.3 230.5 236.2}} {ot_hbm_accel_smh_xs/clk} {tt {453.5 485.5 528.9} ff {366.8 393.9 425.7} ss {597.3 637.0 700.9}} {ot_smh_tr_group_row_w/clk} {tt {132.8 150.8 171.7} ff {107.1 123.9 143.5} ss {177.3 198.2 220.8}} {ot_smh_tr_group_row_e/clk} {tt {104.3 112.9 118.7} ff {85.2 94.0 100.0} ss {137.4 145.9 151.8}}]
 set ::ot_ce_counts [dict create {ot_hbm_sm_pv_merge_s3} 1 {ot_hbm_accel_smh_tct} 1 {ot_hbm_accel_smh_bdc} 1 {ot_hbm_accel_smh_tcl_gu} 2 {ot_hbm_accel_smh_xs} 1 {ot_smh_tr_group_row_w} 1 {ot_smh_tr_group_row_e} 1]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{xss_a1} {xss_g1} {xss_a2} {xss_g2} {rin_s} {rst_n} {attn}} outputs {{rout_s} {gout}}} {x} {clock ot_io_x io_budget_ps 166.667 inputs {{xi_b} {xi_g0} {xi_gp}} outputs {}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{xss_a1} {xss_g1} {xss_a2} {xss_g2} {attn} {rin_s} {rst_n}} outputs {{rout_s} {gout}}} {x} {clock ot_io_x io_budget_ps 166.667 inputs {{xi_b} {xi_g0} {xi_gp}} outputs {}}]
 set ::ot_ce_source_domains [dict create {ck_c} {core} {ck_x} {x}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_c} {ck_x}}
@@ -841,8 +841,8 @@ proc ot_ce_apply {} {
   puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
 }
 ot_ce_apply
-# ---- PL-KIT landed cluster (results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5s_f_record.json): 8 landings, multicycle -setup 2 -hold 3
-set ot_lp_lands {0 1 2 3 4 5 6 7}
+# ---- PL-KIT landed cluster (results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5s_f_record.json): 9 landings, multicycle -setup 2 -hold 3
+set ot_lp_lands {0 1 2 3 4 5 6 7 8}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
