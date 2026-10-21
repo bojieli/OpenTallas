@@ -1,0 +1,54 @@
+{
+  "role": "K UCIe clk is an input-clock boundary sink, not a generated output reference",
+  "physical_internal_tree": "UNPROVEN; licensed abstract has no mapped/physical internal children exposed",
+  "qdiag_actual_instance": "ucie_kv.clk=n_clk_d2d; source clk_rx.pll_d2d, shared with real d2d_rom.ck, mu_ctxrx.ck and other declared consumers",
+  "legacy_K_actual_instance": "ucie_rom.clk=n_clk_core_c, distinct parent source; no common-phase inference",
+  "qdiag_source_contact_inventory": "638 declared sink contacts plus1 source output; syntax/source clock contract only, not a placed clock census",
+  "arcs": {
+    "ot_qkvd_ucie_x64_phy_ff.lib": {
+      "sha256": "a93f474f35cc1b3a72a0e99c6473196d5c30a65c8448230a820861be4585e262",
+      "clock_true_pins": [
+        "clk"
+      ],
+      "related_pin_names": [
+        "\"clk\""
+      ],
+      "timing_group_types": {
+        "setup_rising": 3,
+        "hold_rising": 3,
+        "rising_edge": 3
+      }
+    },
+    "ot_qkvd_ucie_x64_phy_ss.lib": {
+      "sha256": "3a2cff90556b744aa79d7564e47fe1560c8fd5ad1a921a5f99b2a798eafac954",
+      "clock_true_pins": [
+        "clk"
+      ],
+      "related_pin_names": [
+        "\"clk\""
+      ],
+      "timing_group_types": {
+        "setup_rising": 3,
+        "hold_rising": 3,
+        "rising_edge": 3
+      }
+    },
+    "ot_qkvd_ucie_x64_phy_tt.lib": {
+      "sha256": "4537813c653458ff6a9c35be6f3fb4671dc98c124e49be2de00910341c6347dc",
+      "clock_true_pins": [
+        "clk"
+      ],
+      "related_pin_names": [
+        "\"clk\""
+      ],
+      "timing_group_types": {
+        "setup_rising": 3,
+        "hold_rising": 3,
+        "rising_edge": 3
+      }
+    }
+  },
+  "sim_model": "Explicit not-synthesized model: LAT5 far-flit pipe and UP16 tx_up update on input clk; no generated clock output",
+  "refusal": "Exact schema allowlist admits qwen-missing.link-phy-abstract into hard_macro boundaryETM path. Distinct qwen-kv-die.link-phy-abstract schema instead requires measured_clock_refs insertion.json. No source exemption changed here.",
+  "qualification": "NOT_A_DIE_RESULT; ROOT authorized separate default-off strict diagnostic boundary-model handling only; no insertion zero or PLL phase invented"
+}
