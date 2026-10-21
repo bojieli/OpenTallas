@@ -326,6 +326,72 @@ def dense_scope(lines):
     return {n for n in ('d2d_kv', 'host', 'ucie_rom', 'serdes_host') if n in have}
 
 
+# KV-AHUB10 10-20 (OT_KV_AHUB_PAD=1): the fixed-offset hub (closed a7, AP_OFS / FR_OFS = OT_KV_AHUB_OFS) is closed on the
+# POST-STATION lane ages, not the generator's stage counts.  Sink pin of every age the hub formulas read
+# (kv_static_die.ahub_ages): (instance, port) of the GEN replica netlist.
+AHUB_SINKS = dict(ks_ahs=('ahub', 'hs'), ks_ahfr=('pvfin', 'fr'), ks_pvfst=('pvfin', 'fs'),
+                  **{f'ap_{s}': ('ahub', f'ap_{s}') for s in ('WS', 'WN', 'ES', 'EN')})
+
+
+def ahub_post_on():
+    return os.environ.get('OT_KV_AHUB_PAD', '0') == '1'
+
+
+def ahub_post_ages(pre, F, dirs, sinks=None):
+    """core-edge age of every AHUB_SINKS bus on the replica netlist pre with the lanes F (the netlist exporter's rule:
+    each forwarded lane on the path = LG.lane_cycles(row) = E + 1, each plain relay flop = 1).  Walks every live bit of
+    the sink pin back through qkd_rlys_<S> relays to its source tile.  -> (ages, ends, problems): ends[bid] = the relays
+    that drive the sink pin (the AFTER anchor of a pad; [] for a direct 0-stage bus); a torn bus (bits at different ages)
+    or an undriven / missing sink is a problem (fail closed by the caller)."""
+    import kv_lane_stations as KS
+    net = KS.Net(pre, dirs, expr_bits)
+    lane_of = {c: L for L in F['rep']['lanes'] for c in L['stations']}
+    ages, ends, probs = {}, {}, []
+    for bid, (inst, port) in (sinks or AHUB_SINKS).items():
+        if inst not in net.insts or port not in net.insts[inst][1]:
+            probs.append(f'{bid}: no sink pin {inst}.{port}')
+            continue
+        vals, last = set(), set()
+        for b in net.bits(inst, port):
+            if b in ('0', '1'):
+                continue
+            d, age, seen, hops = net.drv.get(b), 0, set(), 0
+            if d is None:
+                probs.append(f'{bid}: {inst}.{port} bit {b} undriven')
+                break
+            if STD_RE.match(net.insts[d[0]][0]):
+                last.add(d[0])
+            while d is not None and STD_RE.match(net.insts[d[0]][0]):
+                nm, i = d[0], d[2]
+                L = lane_of.get(nm)
+                if L is None:
+                    age += 1
+                elif id(L) not in seen:
+                    seen.add(id(L))
+                    age += LG.lane_cycles(L)
+                a_bits = net.bits(nm, 'a')
+                hops += 1
+                if i >= len(a_bits) or hops > 4096:
+                    probs.append(f'{bid}: walk broke at {nm} bit {i}')
+                    d = None
+                    break
+                d = net.drv.get(a_bits[i]) if a_bits[i] not in ('0', '1') else None
+            vals.add(age)
+        if len(vals) != 1:
+            probs.append(f'{bid}: {inst}.{port} torn: bit ages {sorted(vals)}')
+            continue
+        ages[bid], ends[bid] = vals.pop(), sorted(last)
+    return ages, ends, probs
+
+
+def ahub_post_target():
+    import kv_static_die as KSD
+    t = KSD.ahub_ofs_bound()
+    if not t:
+        raise SystemExit('kv_fwd_lanes: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view hardened offsets)')
+    return t
+
+
 def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT_KV_STATIONS_ITER', '6'))):
     """HKV-STATIONS 10-19: form lanes -> adapt -> actual pin reach audit; every overreach becomes a REAL relay stage
     (kv_lane_stations: BEFORE / AFTER, every slice of the bus) and every unslotted wide landing a legal free frame; the
@@ -356,7 +422,10 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
     F = incident = None
     stale = True                                  # pre / place changed since F was formed
     dense = dense_scope(lines)
-    for it in range(1, max_iter + 1):
+    ahub = ahub_post_on()
+    ahub_tgt = ahub_post_target() if ahub else None
+    ahub_rec = []
+    for it in range(1, max_iter + 1 + (4 if ahub else 0)):
         F = form(pre, dirs, slots)
         stale = False
         lane_lines = render(pre, F)
@@ -410,16 +479,46 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
                             extra=set(inserted) | set(moved) | dense)
         history.append(dict(iteration=it, status=incident['status'], **incident['summary']))
         print(f"kv_lane_stations: iteration {it}: {incident['status']} {json.dumps(incident['summary'])}", flush=True)
+        mind = None
         if incident['status'] == 'PASS':
-            break
-        pairs = {(g['src'][0], g['dst'][0]) for g in incident['groups'] if g['transport'] and g['after_overreach_bits']}
-        history[-1]['violating'] = sorted(pairs)[:40]
-        history[-1]['unmeasured'] = [dict(net=u.get('net'), reason=u.get('reason'), src=u.get('src'), dst=u.get('dst'),
-                                          endpoint=u.get('endpoint')) for u in incident['unmeasured'][:20]]
+            if not ahub:
+                break
+            # KV-AHUB10 AHUB_PAD_POST: reach is clean -> close the hub's fixed offsets on the ACTUAL lane ages with plain
+            # receiving-side relays (one edge each) after each short bus's last relay, then re-form + re-audit
+            import kv_bundle_eq as KBE
+            ages, ends, probs = ahub_post_ages(pre, F, dirs)
+            if probs:
+                raise SystemExit(f'kv_fwd_lanes: AHUB_PAD_POST FAIL: {probs[:6]}')
+            try:
+                pads = KBE.ahub_post_solve(ages, ahub_tgt)
+            except ValueError as e_:
+                raise SystemExit(f'kv_fwd_lanes: {e_} (ages {ages})')
+            ahub_rec.append(dict(iteration=it, ages=ages, pads=pads))
+            print(f'kv_lane_stations: iteration {it}: AHUB_PAD_POST ages {ages} pads {pads}', flush=True)
+            if not any(pads.values()):
+                break
+            pairs, mind = set(), {}
+            for bid, k in pads.items():
+                if k <= 0:
+                    continue
+                if not ends.get(bid):
+                    raise SystemExit(f'kv_fwd_lanes: AHUB_PAD_POST FAIL: {bid} needs {k} pad edges but has no relay to '
+                                     f'anchor them ({AHUB_SINKS[bid][0]}.{AHUB_SINKS[bid][1]} driven by its tile); pad it in '
+                                     'the generator (kv_bundle_eq A.hub_*)')
+                for e_ in ends[bid]:
+                    pairs.add((e_, AHUB_SINKS[bid][0]))
+                    mind[e_] = k
+        else:
+            pairs = {(g['src'][0], g['dst'][0]) for g in incident['groups'] if g['transport'] and g['after_overreach_bits']}
+            history[-1]['violating'] = sorted(pairs)[:40]
+            history[-1]['unmeasured'] = [dict(net=u.get('net'), reason=u.get('reason'), src=u.get('src'), dst=u.get('dst'),
+                                              endpoint=u.get('endpoint')) for u in incident['unmeasured'][:20]]
         geo = KS.Geo(macros, KS.parse_place(placed), die, dirs)
         geo.build_bins(masters)
         edits, recs, ref = KS.plan_repairs(pairs, pre, lane_lines, F['new'], F['rep']['lanes'], geo, dirs, expr_bits,
-                                           classes, it, None)
+                                           classes, it, None, min_depth=mind)
+        if mind is not None and (ref or not edits):
+            raise SystemExit(f'kv_fwd_lanes: AHUB_PAD_POST FAIL: hub pads not placeable {ref[:4]} (pairs {sorted(pairs)[:6]})')
         refused += [dict(r, iteration=it) for r in ref]
         (run / 'lane_stations.partial.json').write_text(json.dumps(dict(history=history, stations=records + recs,
                                                                          refused=refused), indent=1, default=str) + '\n')
@@ -436,6 +535,16 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
         # final netlist; the final audit in main() measures it (the in-loop status is not final).
         F = form(pre, dirs, slots)
         incident = None
+    if ahub:
+        # KV-AHUB10: fail closed unless the FINAL netlist gives the hub's exact offsets (AHUB_OFS_BOUND re-checks the table)
+        import kv_bundle_eq as KBE
+        ages, _e, probs = ahub_post_ages(pre, F, dirs)
+        miss = probs or KBE.ahub_check(ages, ahub_tgt)
+        ahub_rec.append(dict(final=True, ages=ages, miss=miss))
+        print(f'kv_lane_stations: AHUB_PAD_POST final ages {ages}: {"PASS" if not miss else "FAIL " + str(miss)}', flush=True)
+        if miss:
+            raise SystemExit(f'kv_fwd_lanes: AHUB_PAD_POST FAIL on the final netlist: {miss} (ages {ages}, target '
+                             f'{ahub_tgt["AP_OFS"]}/{ahub_tgt["FR_OFS"]})')
     # lane records: inserted stages and the receiving-side stage after a landing are fixed latency on the bus
     ins, post = set(inserted), defaultdict(int)
     # KVR-PLACE 10-19: an AFTER progress stage chains (P -> N1 -> N2 -> load): its depth counts on P's lane / bus
@@ -482,7 +591,8 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
     record = dict(schema='opentallas.kv_lane_stations.v1', tool='tools/qwen_kv_die/kv_lane_stations.py',
                   rule='every overreaching transport hop of a forwarded lane gets a REAL relay stage in every slice of '
                        'its bus (closed qkd_rlys_<S> replica re-formed into its lane role) or a legal moved landing frame',
-                  summary=summary, history=history, stations=records, refused=refused)
+                  summary=summary, history=history, stations=records, refused=refused,
+                  **({'ahub_pad_post': ahub_rec} if ahub else {}))
     return F, pre, dict(inserted=inserted, moved=moved, extra=set(inserted) | set(moved) | dense, place_pre=place,
                         summary=summary, record=record)
 
