@@ -944,6 +944,26 @@ def post(v, m, G):
         print(f'FAULT_EMIT ORPHANS {len(orphans)} leaves / {sum(len(o_["sources"]) for o_ in orphans)} source bits left OPEN '
               f'(no free route to their clock root nodes): {[(o_["leaf"], o_["xy"], o_["clock"], o_["nearest_um"]) for o_ in orphans[:12]]}', flush=True)
     rec['orphans'] = orphans
+    # rfs try 8/9 ('flt_root_dvs_W1 has no input'): a root none of whose sources chose it (all nearer another node of the
+    # same clock) also observes its nearest same-clock source within CAP_POST_UM: that source wire gets a second sink
+    # (redundant observation, never an open or tied input)
+    if ROOT_MODE == 'cover':
+        sb = {b[3][0][0] + '.' + b[3][0][1]: b for b in new_buses if b[0].startswith('flt_s_')}
+        for nm, d in nodes.items():
+            if d['n'] >= 1 or not d['root']:
+                continue
+            c_ = _ctr(d['it'])
+            best = None
+            for inst, port, real, bit, cj, rj, xy in src:
+                if cj == d['ck'] and _man(c_, xy) <= CAP_POST_UM and (best is None or _man(c_, xy) < best[0]):
+                    best = (_man(c_, xy), f'{inst}.{port}')
+            if best is not None and best[1] in sb:
+                b = sb[best[1]]
+                j_ = new_buses.index(b)
+                nb = (b[0], b[1], b[2], list(b[3]) + [(nm, take(nm))])
+                new_buses[j_] = nb
+                sb[best[1]] = nb
+                rec.setdefault('second_sink', []).append([nm, best[1], round(best[0], 1)])
     # 3. masters at the final input count (same footprint, pins f0.. unchanged)
     counts = collections.Counter()
     for nm, d in nodes.items():
@@ -961,10 +981,11 @@ def post(v, m, G):
     alias = {(s[0], s[1]): (s[0], s[2]) for s in src}
     worst, over = 0.0, []
     for bid, cl, bits, eps in new_buses:
-        L = _man(pos2(*alias.get(tuple(eps[0]), eps[0])), pos2(*eps[1]))
-        worst = max(worst, L)
-        if L > 405.0:
-            over.append((bid, round(L, 1)))
+        for e1 in eps[1:]:
+            L = _man(pos2(*alias.get(tuple(eps[0]), eps[0])), pos2(*e1))
+            worst = max(worst, L)
+            if L > 405.0:
+                over.append((bid, round(L, 1)))
     if over:
         raise ValueError(f'fault emit: {len(over)} new fault wires over 405 um: {over[:8]}')
     kinds = collections.Counter(nm.split('_')[1].rstrip('0123456789') for nm in nodes)

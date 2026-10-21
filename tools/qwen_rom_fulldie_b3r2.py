@@ -4198,10 +4198,34 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if _flt_defer:
             _fault_land()
             _late_bad = []
-            for idx in _flt_late:
+            # rfs try 9: a fault edge whose end sites are held by other fault frames rips up FAULT victims only (data
+            # frames are never lifted), the main loop's rip / settle rules, <= 60 rounds
+            _lq, _lripped, _lr = list(_flt_late), set(), 0
+            while _lq:
+                idx = _lq.pop(0)
                 pl = plans[idx]
-                if needs_repair(pl) and not (repair(idx, pl) or repair(idx, pl, True)):
-                    _late_bad.append(pl['bid'])
+                if not needs_repair(pl) or repair(idx, pl) or repair(idx, pl, True):
+                    continue
+                if idx in _lripped or _lr >= 60:
+                    continue
+                _lripped.add(idx)
+                _lr += 1
+                bp = _bad_pts(pl)
+                vict = [j for j in sorted(rep_at) if j != idx and plans[j]['frames'] and str(plans[j]['bid']).startswith('flt_')
+                        and any(abs(f[0] + f[2] / 2 - q[0]) + abs(f[1] + f[3] / 2 - q[1]) <= RIP_UM
+                                for f in plans[j]['frames'] for q in bp)]
+                if not vict:
+                    continue
+                lifted = {j: _lift(j) for j in vict}
+                ok_ = repair(idx, pl) or repair(idx, pl, True)
+                redo = [j for j in vict if not _settle(j, lifted[j])]
+                rip_log.append((pl['bid'], [plans[j]['bid'] for j in vict], bool(ok_), [plans[j]['bid'] for j in redo]))
+                for j in redo:
+                    _lripped.discard(j)
+                _lq = redo + _lq + ([] if ok_ else [idx])
+            for idx in _flt_late:
+                if needs_repair(plans[idx]):
+                    _late_bad.append(plans[idx]['bid'])
             m.setdefault('fault_emit', {})['late_unrepaired'] = _late_bad
             print(f'FAULT_EMIT late: {len(_flt_late)} fault-tree edges searched after the data landings, {len(_late_bad)} open: {_late_bad[:8]}', flush=True)
             unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
