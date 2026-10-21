@@ -31,6 +31,14 @@ if {$expected(mismatch_over_1) <= 0 || $expected(hops_judged) <= 0 || $expected(
 }
 set before [ot_die_rep_fclk_audit /work/before {n*_fck*} {BUFx8_ASAP7_75t_R}]
 if {$before != $expected(mismatch_over_1)} {error "checkpoint does not reproduce original residuals: expected=$expected(mismatch_over_1) actual=$before"}
+set f [open /work/before.json]
+set reproduced_audit [read $f]
+close $f
+foreach key {hops_judged pairing_errors vacuous} {
+    if {![regexp [format {"%s"\s*:\s*([0-9]+)} $key] $reproduced_audit -> value] || $value != $expected($key)} {
+        error "checkpoint differs from original complete audit at $key"
+    }
+}
 set n0 [llength [[ord::get_db_block] getInsts]]
 set unresolved [ot_die_rep_fclk_equalize /work/repaired {n*_fck*} {BUFx8_ASAP7_75t_R}]
 set after [ot_die_rep_fclk_audit /work/after {n*_fck*} {BUFx8_ASAP7_75t_R}]
