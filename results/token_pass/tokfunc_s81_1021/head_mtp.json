@@ -1,0 +1,1016 @@
+{
+ "schema": "opentallas.tokfunc_s81.head_mtp.v1",
+ "lane": "TOK-FUNC-S81/HEADMTP",
+ "grade": "RTL-functional (source assembly)",
+ "tree_lines": [
+  "TOK.DS.LAYER.5 LM head",
+  "TOK.DS.LAYER.6 MTP draft layer"
+ ],
+ "token": {
+  "context": 1048576,
+  "position": 1048575,
+  "next_token_golden": 21946,
+  "fixture_head": "HEAD (results/rtl/s81_layer_tput_1018/fixtures/HEAD.sha256.json)",
+  "fixture_mtp": "MTP (results/rtl/s81_layer_tput_1018/fixtures/MTP.sha256.json; the regenerated 10-18 fixture of claude/lb2-s81-mtp-1018, generator fix in main: embed rows by Checkpoint.rows)"
+ },
+ "verdict": {
+  "lm_head": "FAIL",
+  "mtp_draft_head_and_seq": "FAIL",
+  "mtp_draft_body": "NOT_RUN_HERE (stage-die per-layer runs, parent lane)"
+ },
+ "lm_head": {
+  "terms": [
+   {
+    "term": "head.hc_pre+norm: 80 beat partials in",
+    "kind": "MEASURED",
+    "cycles": 80
+   },
+   {
+    "term": "head.norm: last partial -> rstd (16-slice xfin ring)",
+    "kind": "MEASURED",
+    "cycles": null
+   },
+   {
+    "term": "head.norm.scale: rstd -> XB beat (vp/vn/vq, max of 80)",
+    "kind": "MEASURED",
+    "cycles": null
+   },
+   {
+    "term": "XB egress: ring -> s_0N ro_w (max of 80)",
+    "kind": "MEASURED",
+    "cycles": 23
+   },
+   {
+    "term": "XB serialisation on the stage NEXT circuit: 160 x 512 b link beats (S81-HEAD SPEC 3)",
+    "kind": "MODELLED",
+    "cycles": 160
+   },
+   {
+    "term": "head_hop: stage die -> head die, direct cabling (hop_latency.json D_cycles_max)",
+    "kind": "MODELLED",
+    "cycles": 257
+   },
+   {
+    "term": "head.lm_head: bundle go -> argmax return (128-row group, real ROM)",
+    "kind": "MEASURED",
+    "cycles": 8416
+   },
+   {
+    "term": "head.argmax chain over 253 bundle results + TP4 rank merge + broadcast",
+    "kind": "MEASURED",
+    "cycles": 269
+   },
+   {
+    "term": "head.argmax_merge: TP4 mesh crossing (hop_latency.json tp_mesh D)",
+    "kind": "MODELLED",
+    "cycles": 251
+   },
+   {
+    "term": "token.return: head die -> S000 (hop_latency.json token_return D)",
+    "kind": "MODELLED",
+    "cycles": 251
+   }
+  ],
+  "serial_sum_cycles": null,
+  "note": "serial composition of measured legs at their boundaries (no overlap credited); the head die top (S81-HEAD) does not exist, so x distribution to 253 tiles and the return spine are represented by the bundle's measured go->return and the measured 253-result chain"
+ },
+ "mtp": {
+  "terms": [
+   {
+    "term": "draft body mtp.0..2 (3 transformer layers on the 72-frame stage die)",
+    "kind": "NOT_RUN_HERE",
+    "cycles": null
+   },
+   {
+    "term": "draft head: bundle go -> return (real ROM, per draft row)",
+    "kind": "MEASURED",
+    "cycles": 8416
+   },
+   {
+    "term": "draft argmax chain 253 results + TP4 merge (fused with Markov row)",
+    "kind": "MEASURED",
+    "cycles": 275
+   },
+   {
+    "term": "Markov fuse added cycles",
+    "kind": "MEASURED",
+    "cycles": 6
+   },
+   {
+    "term": "dsfd_mtp_seq draft chain (wave charge mtp_seq.draft_chain)",
+    "kind": "MEASURED",
+    "cycles": null
+   },
+   {
+    "term": "dsfd_mtp_seq seed release (wave charge mtp_seq.seed_release)",
+    "kind": "MEASURED",
+    "cycles": null
+   }
+  ]
+ },
+ "legs": {
+  "xfin": {
+   "ok": false,
+   "kind": "MEASURED",
+   "what": "head hc_pre + RMSNorm exchange: ot_hbm_norm_grp G64 (80 beat partials) + 16 x ot_s81dv_xfin (collector, snake ring LS 9 / LE 29, replicated finish) -> rstd at all 16 slices; all 80 y vectors vs HEAD head.norm.scale",
+   "cycles": {
+    "stream_in_beats": 80,
+    "last_partial_to_first_rstd": null,
+    "rstd_spread": null
+   },
+   "runs": {
+    "base": {
+     "verdict": "NO_RESULT",
+     "line": null,
+     "kv": {}
+    },
+    "mutleaf": {
+     "verdict": "NO_RESULT",
+     "line": null,
+     "kv": {}
+    }
+   },
+   "rtl": [
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+    "physical/hbm_norm_split_20261008/sources.f"
+   ],
+   "bench": "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv"
+  },
+  "beat": {
+   "ok": false,
+   "kind": "MEASURED",
+   "what": "per-beat slice leaves vp (NORMR on the G-unit row) + vn + vq: beat partial, normed y and the 80 BF16 XB beats, every beat bit-exact vs HEAD head.norm.scale (block a); block f / hc_post run the same norm with identity comb (not graded)",
+   "beats_pass": 0,
+   "beats_fail": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "mutant_normimm_b37": "NO_RESULT",
+   "cycles": {
+    "go_to_partial_max": null,
+    "rstd_to_xb_max": null
+   },
+   "per_beat": [
+    {
+     "beat": 0,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 1,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 2,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 3,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 4,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 5,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 6,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 7,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 8,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 9,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 10,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 11,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 12,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 13,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 14,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 15,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 16,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 17,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 18,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 19,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 20,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 21,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 22,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 23,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 24,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 25,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 26,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 27,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 28,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 29,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 30,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 31,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 32,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 33,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 34,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 35,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 36,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 37,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 38,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 39,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 40,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 41,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 42,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 43,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 44,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 45,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 46,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 47,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 48,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 49,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 50,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 51,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 52,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 53,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 54,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 55,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 56,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 57,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 58,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 59,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 60,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 61,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 62,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 63,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 64,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 65,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 66,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 67,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 68,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 69,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 70,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 71,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 72,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 73,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 74,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 75,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 76,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 77,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 78,
+     "verdict": "NO_RESULT"
+    },
+    {
+     "beat": 79,
+     "verdict": "NO_RESULT"
+    }
+   ],
+   "rtl": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv"
+   ],
+   "bench": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv (-GVQ_XMEM=2, kit setting)"
+  },
+  "egress": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "head XB egress on the 16-stop die ring with the current end-slice master ot_s81sl_rstopt_xo (in ot_s81sl_xgt_xo): 80 flagged beats leave s_0N ro_w exactly once, bit-exact (bench beat bodies are synthetic ring words; the head values are carried bit-exactly by construction, 0 added edges)",
+   "bench_none": [
+    "PASS rstop_sid 16 stops 144 checks",
+    "RSTOP_XO R1 egress 80 (bad 0) gather min 80 other_out 0",
+    "RSTOP_XO R2 egress 0 gather min 80 other_out 0",
+    "PASS rstop_xo 138 checks",
+    "BENCH_PASS rstopt_xo (sid + xo)"
+   ],
+   "mutant_xooff": [
+    "FAIL rstop_xo 5 of 138 checks",
+    "NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xooff"
+   ],
+   "cycles": {
+    "ring_inject_to_s0N_egress_min": 7,
+    "ring_inject_to_s0N_egress_max": 23,
+    "per_slice_max": [
+     9,
+     7,
+     11,
+     9,
+     13,
+     11,
+     15,
+     13,
+     17,
+     15,
+     19,
+     17,
+     21,
+     19,
+     23,
+     21
+    ],
+    "egress_added_edges": 0
+   },
+   "rtl": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv"
+   ],
+   "bench": "tools/s81_slice/rstopt_xo_bench.sh + tools/s81_dv/tokfunc/rstop_lat_tb.py (latency copy)"
+  },
+  "bundle": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "LM-head bundle: ot_dsrom_head_bundle (5 elems, IOREG 1 SAFE 1) over ten ot_rom_4096x274_m8 holding the real rank-0 head.weight rows 21888..22015 (the 128-row group of the winner), ot_rom_argmax_rows, ot_s81_bundle_token_return; input = head.norm.scale; every returned logit vs HEAD head.lm_head, token 21946 / 4173a558; mutants (stream corrupt, owner, 1 edge late) FAIL",
+   "returns": [
+    {
+     "row": 21946,
+     "bits": "4173a558",
+     "age": 8416
+    },
+    {
+     "row": 21946,
+     "bits": "4173a558",
+     "age": 8416
+    },
+    {
+     "row": 21946,
+     "bits": "4173a558",
+     "age": 8416
+    }
+   ],
+   "cycles": {
+    "go_to_return": 8416
+   },
+   "cases": [
+    {
+     "mode": 0,
+     "mutant": 0,
+     "expected": "PASS",
+     "ages": [
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 0,
+     "expected": "PASS",
+     "ages": [
+      8416,
+      8416,
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 1,
+     "expected": "FAIL",
+     "ages": [
+      8416,
+      8416,
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 2,
+     "expected": "FAIL",
+     "ages": [
+      8416,
+      8416,
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 3,
+     "expected": "FAIL",
+     "ages": [
+      8417,
+      8417,
+      8417
+     ]
+    }
+   ],
+   "weights_slice_sha256": "ee9236fc730960b859864765e3356db4b0fa3460081944fd574e7c5dfe817d8a",
+   "source_hashes": {
+    "rtl/rom/collectives/ot_rom_coll_pkg.sv": "bd509f84d43a0459f957c72a88bf266ecc21e7f024fef4ca0ad44e6382181dfb",
+    "rtl/rom/collectives/ot_rom_coll_skid.sv": "27ce17a0e2d6a4715941e691e8346a5676ab5743d649a763b12363055fcb16e9",
+    "rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv": "e0092764f48f88e075ad637822effc77eca39b2414085fbb9938c7f2996b9065",
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": "83a8947a8c45c538c49962432ef4fc6d5fbfd095eb8bb01730b5be613a9b9dff",
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "f8b1999d969fe5ee6534c9cbf16878e9d9f86bb51d4c9d7fea3d7fc2eede69e6",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+    "rtl/dsrom_sys/s81_native_head_connect/ot_s81_bundle_token_return.sv": "65bcfb7a1b7ef840c239cba115f29332fd4c444ab9f375cdf461e7f6e13fa71e",
+    "rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_bundle_token_return.sv": "8bb6d8a72f2a5a3236adc816b14dba07c9a93e04ef23e7a4774c0683f50d4e47"
+   },
+   "bench": "tools/s81_ftok/live_head_return.py (codex/s81-token-integrate-1019@98a2f06da)"
+  },
+  "tp4": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "4-rank fused head argmax (4 x ot_dsrom_s81_head_amax_fh, TP4 x 32,320 rows, 128 lanes, ot_rom_argmax_rows, rank chain + final broadcast) over the 129,280 HEAD logits (head) and the 5 MTP draft heads + Markov rows (fused add then argmax)",
+   "head": {
+    "token": 21946,
+    "bits": 1098098008,
+    "beats": 253,
+    "first_beat_to_final": 269,
+    "last_beat_to_final": 16
+   },
+   "drafts": {
+    "draft0": {
+     "token": 108193,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft1": {
+     "token": 8674,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft2": {
+     "token": 71,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft3": {
+     "token": 95391,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft4": {
+     "token": 12184,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    }
+   },
+   "mutants_pass_field": {
+    "mut_lg": false,
+    "fh0_draft0": false
+   },
+   "measured_cycles": {
+    "head_argmax_tail": {
+     "last_beat_to_final": 16,
+     "last_beat_to_rank0_result": 10,
+     "first_beat_to_final": 269,
+     "beats": 253,
+     "note": "argmax over the 128-lane return stream + 4-rank chain merge + final broadcast; the stream itself is the bench's 1 beat/cycle feed, not the ROM field"
+    },
+    "draft_fused_added": {
+     "last_beat_to_rank0_result": 6,
+     "last_beat_to_final": 6
+    }
+   },
+   "bench": "tools/s81_dv/head_tp4_interim.py",
+   "source_sha256": {
+    "rtl/rom/collectives/ot_rom_coll_pkg.sv": "bd509f84d43a0459f957c72a88bf266ecc21e7f024fef4ca0ad44e6382181dfb",
+    "rtl/rom/collectives/ot_rom_coll_skid.sv": "27ce17a0e2d6a4715941e691e8346a5676ab5743d649a763b12363055fcb16e9",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv": "e0092764f48f88e075ad637822effc77eca39b2414085fbb9938c7f2996b9065",
+    "rtl/dsrom_sys/integration/ot_dsrom_s81_head_amax_fh.sv": "6f7af25feda6a33e0fa81d92923fc1248dd6a0495301b9b02d3e134a8486800c",
+    "rtl/dsrom_sys/integration/tb_dsrom_s81_fused_head_tp4.sv": "c2081396b1246eb44e397d15bcaa1a289671ae8227816d6b72a36a3340fc0695",
+    "rtl/dsrom_sys/integration/tb_dsrom_s81_fused_head_tp4_harness.cpp": "655ce880b7f88e815f92a248f583ba0b6784e807ae09524464bdde36631d7257",
+    "tools/s81_dv/head_tp4_interim.py": "3212d647ea448ec400b0f473391f1ba1dc861f3d9fbfd2bcc89b296b37ee14af"
+   }
+  },
+  "dhead": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "MTP draft heads on the same LM-head bundle build: the 5 golden draft.head{i}.norm.scale inputs, every returned logit of rows 21888..22015 vs draft.head{i} + first-max token; mutant (head_d forced 0) FAIL",
+   "cycles": {
+    "go_to_return": [
+     8416
+    ]
+   },
+   "cases": [
+    {
+     "draft": 0,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 0,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 1,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 1,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 2,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 2,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 3,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 3,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 4,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 4,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    }
+   ],
+   "bench": "tools/s81_dv/layer_prog/qf_producer/toksim_mtpd_draft_head.py"
+  },
+  "wave": {
+   "ok": false,
+   "kind": "MEASURED",
+   "error": "no wave summary",
+   "log_tail": ""
+  }
+ },
+ "gold": {
+  "schema": "opentallas.tokfunc_s81.head_gold.v1",
+  "fixture": "/home/ubuntu/scratch/layerbench-s81/fixtures/HEAD",
+  "fixture_files_json_sha256": "177a8ad402a53cfd13e7833b30f8841bfb6cb4eee8159eb398e8745401bf95d6",
+  "eps": 9.999999682655225e-21,
+  "pre": [
+   0.020116964355111122,
+   0.11013756692409515,
+   0.1007605791091919,
+   0.988477885723114
+  ],
+  "rstd_bits": "3c2fa28c",
+  "checks": {
+   "hc_pre_equals_fixture": true,
+   "sumsq_equals_fixture": true,
+   "rstd_equals_fixture": true,
+   "y_equals_fixture": true,
+   "rstd_path_equals_g_norm": true,
+   "h_is_bf16": true
+  },
+  "xfin_sha256": {
+   "x": "b293d9a21c015b6767acc39748e38423727bcb6aab982c8cdee6937f075a219b",
+   "w": "1686880d6010e8958ba21f414e8ffac1ada7a7589acaf25032897cedc4e61409",
+   "cfg": "6d0f46a90a0bbdb5133d32fef7961dc2cf6e34dffeef0b3e15af954fde499b41",
+   "ey": "c3d789fb7af3d7d437dc3592f5b07423062860c198fbd8a2f9d66e17b3191416"
+  },
+  "sources": {
+   "tools/s81_dv/tokfunc/head_mtp_gold.py": "28c5a5ca08a372b64f43c0396dd6879026cc0ca84480c853aa546e764d4bb1db",
+   "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+   "tools/s81_suhc/hc_gate.py": "fb75ae871652986052f0d3576ca17bc7ad4cd8995d6970437713514df8cbaea1"
+  }
+ },
+ "modelled": [
+  "XB link serialisation 160 beats (S81-HEAD SPEC)",
+  "head_hop / tp_mesh / token_return off-die legs (results/arch/release_rack_1021/hop_latency.json, direct cabling D)",
+  "lep / SerDes PHY",
+  "wave bench stubs: stage / S0 core busy, head lm-head T_LM, draft block T_BLK, seed_ctl T_SC"
+ ],
+ "open_gaps": [
+  "S81 head die top (lane S81-HEAD) not built: legs composed, not one netlist",
+  "MTP draft body mtp.0..2 not run in this sub-lane (same 72-frame stage-die type; per-layer runner of the parent lane on the MTP fixture)",
+  "head producer on the die: 16-slice NX/XB composition timing (GAP_NORM16) and the s_0N one-beat-per-cycle rule are plan values; this run measures the xfin exchange (HBM norm group as the partial source) and the slice leaves per beat separately",
+  "bundle runs the 128-row group that holds the winner; the other 252 groups are the same RTL on other ROM rows (their logits enter the argmax chain from the fixture)",
+  "wave bench greedy truth is synthetic; draft-head numerics are covered by dhead + tp4"
+ ],
+ "sources": {
+  "tools/s81_dv/tokfunc/run_head_mtp.sh": "4954106ad6e301426298535888b86995ff56d3ad8b52d240dcbcfcf3ddd7565f",
+  "tools/s81_dv/tokfunc/head_mtp_fleet.sh": "8fab8d56d6a2024f8747837fa8081aa847a6e3dfd49d67770668dbfd33b65d96",
+  "tools/s81_dv/tokfunc/head_mtp_gold.py": "28c5a5ca08a372b64f43c0396dd6879026cc0ca84480c853aa546e764d4bb1db",
+  "tools/s81_dv/tokfunc/head_mtp_report.py": "b8a02198c6f38f664caf1841a8d1ce536393c399d9955a17a3fc132107c44cbd",
+  "tools/s81_dv/tokfunc/rstop_lat_tb.py": "00f47d857eddfc14e7957ddb3cec8e0c8a38ba1360c585c6f62ed604ae9005ca",
+  "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv": "360f6f9acb52294a7c6c39f14848b682b23f6b46241b24e3527f5b8482124b7b",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv": "9095cfd2553c96355713c205750fa0c285ec88dc3eafde06005c81b24d3d81cd",
+  "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv": "fccc6986a1bc5ff884ea03860692a7e8d315001e70fa200d962343dc4374e0c8",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv": "4e03de168ba3d31d0472f06ce597104c9a21eda3289fecec6c509fb47f79b1d9",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv": "53832356d7401d9c7af6fbcb7da5349548537c5c7771467d4cb740e053f74214",
+  "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_xo.sv": "d8b5138df350ab9df7d0f91d7362501b2862f03ba20e5c2851f2843de6a8eba3",
+  "tools/s81_slice/rstopt_xo_bench.sh": "a0b1f850d0052bd13ad26e0c2959fa5d13aaed5ee296ccb0d70429608f40c33b",
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": "83a8947a8c45c538c49962432ef4fc6d5fbfd095eb8bb01730b5be613a9b9dff",
+  "rtl/v41rom/ot_dsrom_head_elem.sv": "f8b1999d969fe5ee6534c9cbf16878e9d9f86bb51d4c9d7fea3d7fc2eede69e6",
+  "rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv": "e0092764f48f88e075ad637822effc77eca39b2414085fbb9938c7f2996b9065",
+  "rtl/dsrom_sys/s81_native_head_connect/ot_s81_bundle_token_return.sv": "65bcfb7a1b7ef840c239cba115f29332fd4c444ab9f375cdf461e7f6e13fa71e",
+  "rtl/dsrom_sys/integration/ot_dsrom_s81_head_amax_fh.sv": "6f7af25feda6a33e0fa81d92923fc1248dd6a0495301b9b02d3e134a8486800c",
+  "rtl/dsrom_sys/mtp/dsfd_mtp_seq_rtt.sv": "96660ffd238d31b3ba817327e961846882d6a22f3462f3c06738b1dc506ae616",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+  "tools/mtp_wave_bench.py": "06f4e9387b5911235b73863d09b81b0f9496a1db1ec90f0a375e1e60036938e1",
+  "tools/s81_dv/head_tp4_interim.py": "3212d647ea448ec400b0f473391f1ba1dc861f3d9fbfd2bcc89b296b37ee14af",
+  "tools/s81_ftok/live_head_return.py": "5978c7add044b3d43e260fa577273fec483203acbc33349c7f81c33885cb9403",
+  "results/arch/release_rack_1021/hop_latency.json": "dc4fc8e4af05257408190cdcbfdfc22a33ae936f883a4dce6ccde441fcc0334a"
+ },
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "meta": {
+  "status": "PARTIAL_xfin_beat_wave_pending"
+ }
+}
