@@ -126,3 +126,11 @@ and checks the explicit total against both actual GEN transport ages. The TT
 term includes its source-bound LP output landing; no LP3 or transport0 default
 is accepted. Actual selected LP receipt/KV ages remain unknown, so no final sole
 image or playback has been generated.
+
+The consolidated actual-age input must also preserve the GEN exporter's `tt_source`
+qualification object, including exact master, real producer `u_gi`, receipt/RTL/LP
+SHA256 hashes, and producer-relative offsets. The helper cross-checks
+`ct_lm_sample = calendar_sample_edges + output_offset_edges - producer_offset_edges`.
+Exporter `head_prepare_age.py` at a93b9efab refuses a TT source receipt unless its
+status is QUALIFIED_SOURCE_LOCAL_EDGES; the current SOURCE_ONLY_NOT_SELECTED
+candidate is rejected. Candidate arithmetic does not qualify a final age.

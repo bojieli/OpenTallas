@@ -46,6 +46,22 @@ def main():
     names = ('ct_lm_sample', 'native_prepare_descriptor', 'face_held_bank')
     if not isinstance(intrinsic, dict) or any(type(intrinsic.get(k)) is not int or intrinsic[k] < 1 for k in names):
         raise SystemExit('unknown source-bound TT/native/held-bank intrinsic edge ledger')
+    tt = receipt.get('tt_source')
+    if not isinstance(tt, dict) or tt.get('producer_instance') != 'u_gi':
+        raise SystemExit('actual selected TT source/GI qualification receipt required')
+    for key in ('master', 'receipt_sha256', 'rtl_sha256', 'lp_record_sha256'):
+        value = tt.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise SystemExit(f'unknown actual selected TT source identity: {key}')
+        if key.endswith('sha256') and (len(value) != 64 or any(c not in '0123456789abcdef' for c in value)):
+            raise SystemExit(f'invalid TT source qualification hash: {key}')
+    for key in ('calendar_sample_edges', 'output_offset_edges', 'producer_offset_edges', 'source_to_output_edges'):
+        if type(tt.get(key)) is not int or tt[key] < 0:
+            raise SystemExit(f'unknown actual TT source-local age: {key}')
+    if (tt['calendar_sample_edges'] != 1
+            or tt['output_offset_edges'] - tt['producer_offset_edges'] != tt['source_to_output_edges']
+            or tt['calendar_sample_edges'] + tt['source_to_output_edges'] != intrinsic['ct_lm_sample']):
+        raise SystemExit('TT intrinsic age disagrees with qualified producer-relative LP source ledger')
     expected_head = sum(intrinsic[k] for k in names) + receipt['tt_to_native_edges'] + receipt['native_to_sysface_edges']
     if receipt['head_prepare_edges'] != expected_head:
         raise SystemExit('head_prepare_edges disagrees with actual source-intrinsic/GEN transport ledger')
