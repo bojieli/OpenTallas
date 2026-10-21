@@ -1,0 +1,12 @@
+{"schema": "opentallas.hbm_ir8.summary.v1", "lane": "HBM-IR8", "date": "2026-10-20",
+ "question": "HBM d4g GEN2e4 die IR drop under the owner 10-20 21:27 M8 GRT layer plan (die_case_v16 --grt-layer-plan owner1020, b7945bbb4: signals M4-M8, M9 PG/clock only, 20% of M8 reserved for PG straps)",
+ "geometry": "r11 case_b placement in GEN diag mode (x12_q, ep6 hbm-die11-1020/plan{A,B}/x12_q run.tcl place_inst + views LEF SIZE); r12 reuses this geometry (only station rows change)",
+ "power": "assumed peak density, tools/hbm_die_ir_window.py DENS (sm 1.20, svc 3.924, hub/spine/attn 1.05, relay/landing 0.6 W/mm2, PHY/SerDes/link 0, default 1.2); die peak 489 W",
+ "grid": "M8 + M9 straps 0.48 um at 4.896 um pitch per net = 9.8% per net (19.6% of M8 for VDD+VSS <= the 20% reserve), 45 um micro-bump array (1 in 2 per net, 63.6 um per-net pitch)",
+ "budget": "35 mV rail-to-rail (VDD drop + VSS bounce) = 5% of 0.7 V TT VDD; source docs/ARCH_V41_DIE_ASSEMBLY.md 4.5 and tools/die_safety/ir_drop.py default (ROOT14)",
+ "results_mv": {"A_1296um_windows": 26.48, "B_1296um_windows": 26.69, "A_432um_hotspots": 26.87, "B_432um_hotspots": 27.24},
+ "worst_mv": 27.24, "margin_mv": 7.76, "verdict": "PASS",
+ "m8_capacity": "straps 0.196 + GRT signal cap 0.654 (adjustment 0.346) = 0.850 <= 1.0 by construction; measured r12 GRT M8 usage owed",
+ "headroom": "linear in load: passes up to ~1.28x the assumed densities (svc ~5.0 W/mm2)",
+ "limitations": ["Peak density assumed, not SAIF.", "Child-internal IR / leaf M5-M6 to die M8 stack access not modelled.", "M8 signal demand enters as a capacity check, not via blockage.", "Package/bump impedance not modelled.", "The HBM die case has no PDN (hbm_die_post_grt.sh stage 5 = SKIPPED_NO_PDN): this is an independent die-grid window solve, not in-chain."],
+ "final_signoff_eligible": false}

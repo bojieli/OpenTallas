@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.die_ir_drop.v1",
+ "design": "hbm_d4g_r12_owner1020_planA",
+ "die_um": [
+  0.0,
+  0.0,
+  22576.0,
+  32464.72
+ ],
+ "instances": 72042,
+ "die_peak_w": 489.344,
+ "density_table": {
+  "*phy*": 0,
+  "*serdes*": 0,
+  "*_link*": 0,
+  "*host_slab*": 0,
+  "*svc*": 3.924,
+  "ot_hbm_accel_smh_attn*": 1.2,
+  "*_sm_*": 1.2,
+  "*hub*": 1.05,
+  "*spine*": 1.05,
+  "*attn*": 1.05,
+  "hbfd_rly_*": 0.6,
+  "hbfd_land*": 0.6,
+  "default": 1.2
+ },
+ "limit_mv": 35.0,
+ "voltage_v": 0.7,
+ "coverage": 0.0878,
+ "windows": [
+  {
+   "inner_um": [
+    12960.0,
+    1296.0,
+    14256.000000000002,
+    2592.0
+   ],
+   "solved_um": [
+    12791.561671664644,
+    1145.512985522207,
+    14383.27922061358,
+    2719.2792206135787
+   ],
+   "loads": 1083,
+   "peak_w": 3.997598733668922,
+   "strap_pitch_um": 4.896,
+   "coverage_per_net": 0.09803921568627451,
+   "name": "w0",
+   "window_power_w": 2.8883
+  },
+  {
+   "inner_um": [
+    8424.0,
+    1296.0,
+    9720.0,
+    2592.0
+   ],
+   "solved_um": [
+    8273.149339882606,
+    1145.512985522207,
+    9847.279220613578,
+    2719.2792206135787
+   ],
+   "loads": 1129,
+   "peak_w": 3.988561797186728,
+   "strap_pitch_um": 4.896,
+   "coverage_per_net": 0.09803921568627451,
+   "name": "w1",
+   "window_power_w": 2.6795
+  },
+  {
+   "inner_um": [
+    12960.0,
+    29808.000000000004,
+    14256.000000000002,
+    31104.000000000004
+   ],
+   "solved_um": [
+    12791.561671664644,
+    29656.0584029638,
+    14383.27922061358,
+    31231.279220613582
+   ],
+   "loads": 1054,
+   "peak_w": 3.9948640279829064,
+   "strap_pitch_um": 4.896,
+   "coverage_per_net": 0.09803921568627451,
+   "name": "w2",
+   "window_power_w": 2.6783
+  },
+  {
+   "inner_um": [
+    7128.000000000001,
+    1296.0,
+    8424.0,
+    2592.0
+   ],
+   "solved_um": [
+    7000.35713374682,
+    1145.512985522207,
+    8551.279220613578,
+    2719.2792206135787
+   ],
+   "loads": 1116,
+   "peak_w": 3.9530265664296524,
+   "strap_pitch_um": 4.896,
+   "coverage_per_net": 0.09803921568627451,
+   "name": "w3",
+   "window_power_w": 2.6702
+  },
+  {
+   "inner_um": [
+    11664.0,
+    1296.0,
+    12960.0,
+    2592.0
+   ],
+   "solved_um": [
+    11518.769465528858,
+    1145.512985522207,
+    13087.279220613578,
+    2719.2792206135787
+   ],
+   "loads": 1197,
+   "peak_w": 3.764780116047396,
+   "strap_pitch_um": 4.896,
+   "coverage_per_net": 0.09803921568627451,
+   "name": "w4",
+   "window_power_w": 2.5411
+  }
+ ],
+ "m8": {
+  "signal_usage": null,
+  "strap_coverage_both_nets": 0.1961,
+  "total": null,
+  "verdict": "UNKNOWN (no GRT M8 usage given)"
+ },
+ "limitations": [
+  "Peak power density is assumed, not SAIF measured.",
+  "Die-grid loads tie in through M7; child-internal IR / leaf PG access not modelled.",
+  "M8 signal demand enters as a capacity check (GRT usage + strap coverage <= 1), not as via blockage.",
+  "Package / bump impedance not modelled."
+ ],
+ "final_signoff_eligible": false
+}

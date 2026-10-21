@@ -1,0 +1,115 @@
+{
+ "schema": "opentallas.die_ir_drop.result.v1",
+ "design": "hbm_d4g_r12_owner1020_planB",
+ "verdict": "PASS",
+ "worst_mv": 26.69,
+ "limit_mv": 35.0,
+ "m8": {
+  "signal_usage": null,
+  "strap_coverage_both_nets": 0.1961,
+  "total": null,
+  "verdict": "UNKNOWN (no GRT M8 usage given)"
+ },
+ "windows": [
+  {
+   "name": "w0",
+   "inner_um": [
+    7776.000000000001,
+    1296.0,
+    9072.0,
+    2592.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 13.36,
+   "VDD_nodes": 729,
+   "VSS_worst_mv": 12.58,
+   "VSS_nodes": 729,
+   "rail_to_rail_mv": 25.94
+  },
+  {
+   "name": "w1",
+   "inner_um": [
+    7776.000000000001,
+    29808.000000000004,
+    9072.0,
+    31104.000000000004
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 13.17,
+   "VDD_nodes": 719,
+   "VSS_worst_mv": 12.83,
+   "VSS_nodes": 719,
+   "rail_to_rail_mv": 26.0
+  },
+  {
+   "name": "w2",
+   "inner_um": [
+    14256.000000000002,
+    1296.0,
+    15552.000000000002,
+    2592.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 13.48,
+   "VDD_nodes": 641,
+   "VSS_worst_mv": 13.21,
+   "VSS_nodes": 641,
+   "rail_to_rail_mv": 26.69
+  },
+  {
+   "name": "w3",
+   "inner_um": [
+    9720.0,
+    1296.0,
+    11016.0,
+    2592.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 13.34,
+   "VDD_nodes": 782,
+   "VSS_worst_mv": 12.65,
+   "VSS_nodes": 782,
+   "rail_to_rail_mv": 25.99
+  },
+  {
+   "name": "w4",
+   "inner_um": [
+    12312.0,
+    1296.0,
+    13608.0,
+    2592.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 13.23,
+   "VDD_nodes": 776,
+   "VSS_worst_mv": 12.58,
+   "VSS_nodes": 776,
+   "rail_to_rail_mv": 25.81
+  }
+ ],
+ "problems": [],
+ "incomplete": false,
+ "owner_report": false,
+ "final_signoff_eligible": false,
+ "limitations": [
+  "Peak power density is assumed, not SAIF measured.",
+  "Die-grid loads tie in through M7; child-internal IR / leaf PG access not modelled.",
+  "M8 signal demand enters as a capacity check (GRT usage + strap coverage <= 1), not as via blockage.",
+  "Package / bump impedance not modelled."
+ ]
+}
