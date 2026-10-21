@@ -193,60 +193,60 @@ module ot_s81sl_slice_c1x_k8_cap5_lp #(
     wire [4*280-1:0] cap5_west_in_bank;
     wire [11:0] cap5_west_in_epo;
     wire [4*((280+23)/24)-1:0] cap5_west_in_vld;
-    ot_pl_land_n32_chunk_w #(.W(280), .D(4), .CHUNK_BITS(24)) u_cap5_west_in_w
+    ot_pl_land_n32_chunk_w #(.W(280), .D(4), .CHUNK_BITS(24)) u_lpl_cap5_west_in_w
         (.ck(ck_C), .rsi(cap5_rst_C), .i(rt_q[279:0]), .bank(cap5_west_in_bank),
          .epo(cap5_west_in_epo), .vld(cap5_west_in_vld));
-    ot_pl_land_chunk_r #(.W(280), .D(4), .K(2), .CHUNK_BITS(24)) u_cap5_west_in_r
+    ot_pl_land_chunk_r #(.W(280), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_cap5_west_in_r
         (.ck(ck_CAP_CW), .rsi(cap5_rst_CW), .bank(cap5_west_in_bank),
          .epo(cap5_west_in_epo), .vld(cap5_west_in_vld), .o(cap5_w_in));
 
     wire [4*280-1:0] cap5_east_in_bank;
     wire [11:0] cap5_east_in_epo;
     wire [4*((280+23)/24)-1:0] cap5_east_in_vld;
-    ot_pl_land_n32_chunk_w #(.W(280), .D(4), .CHUNK_BITS(24)) u_cap5_east_in_w
+    ot_pl_land_n32_chunk_w #(.W(280), .D(4), .CHUNK_BITS(24)) u_lpl_cap5_east_in_w
         (.ck(ck_C), .rsi(cap5_rst_C), .i(rt_q[559:280]), .bank(cap5_east_in_bank),
          .epo(cap5_east_in_epo), .vld(cap5_east_in_vld));
-    ot_pl_land_chunk_r #(.W(280), .D(4), .K(2), .CHUNK_BITS(24)) u_cap5_east_in_r
+    ot_pl_land_chunk_r #(.W(280), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_cap5_east_in_r
         (.ck(ck_CAP_CE), .rsi(cap5_rst_CE), .bank(cap5_east_in_bank),
          .epo(cap5_east_in_epo), .vld(cap5_east_in_vld), .o(cap5_e_in));
 
     wire [4*161-1:0] cap5_cfg_in_bank;
     wire [11:0] cap5_cfg_in_epo;
     wire [4*((161+23)/24)-1:0] cap5_cfg_in_vld;
-    ot_pl_land_n32_chunk_w #(.W(161), .D(4), .CHUNK_BITS(24)) u_cap5_cfg_in_w
+    ot_pl_land_n32_chunk_w #(.W(161), .D(4), .CHUNK_BITS(24)) u_lpl_cap5_cfg_in_w
         (.ck(ck_C), .rsi(cap5_rst_C), .i({cfg_v,cfg_d}), .bank(cap5_cfg_in_bank),
          .epo(cap5_cfg_in_epo), .vld(cap5_cfg_in_vld));
-    ot_pl_land_chunk_r #(.W(161), .D(4), .K(2), .CHUNK_BITS(24)) u_cap5_cfg_in_r
+    ot_pl_land_chunk_r #(.W(161), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_cap5_cfg_in_r
         (.ck(ck_CAP_RN), .rsi(cap5_rst_RN), .bank(cap5_cfg_in_bank),
          .epo(cap5_cfg_in_epo), .vld(cap5_cfg_in_vld), .o(cap5_cfg_in));
 
     wire [4*180-1:0] cap5_north_bank;
     wire [11:0] cap5_north_epo;
     wire [4*((180+23)/24)-1:0] cap5_north_vld;
-    ot_pl_land_n32_chunk_w #(.W(180), .D(4), .CHUNK_BITS(24)) u_cap5_north_w
+    ot_pl_land_n32_chunk_w #(.W(180), .D(4), .CHUNK_BITS(24)) u_lpl_cap5_north_w
         (.ck(ck_CAP_RN), .rsi(cap5_rst_RN), .i({cap5_n_v,cap5_n_a,cap5_n_d}), .bank(cap5_north_bank),
          .epo(cap5_north_epo), .vld(cap5_north_vld));
-    ot_pl_land_chunk_r #(.W(180), .D(4), .K(2), .CHUNK_BITS(24)) u_cap5_north_r
+    ot_pl_land_chunk_r #(.W(180), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_cap5_north_r
         (.ck(ck_C), .rsi(cap5_rst_C), .bank(cap5_north_bank),
          .epo(cap5_north_epo), .vld(cap5_north_vld), .o({cw_v_x[9:6],cw_a_x[119:72],cw_d_x[319:192]}));
 
     wire [4*270-1:0] cap5_south_bank;
     wire [11:0] cap5_south_epo;
     wire [4*((270+23)/24)-1:0] cap5_south_vld;
-    ot_pl_land_n32_chunk_w #(.W(270), .D(4), .CHUNK_BITS(24)) u_cap5_south_w
+    ot_pl_land_n32_chunk_w #(.W(270), .D(4), .CHUNK_BITS(24)) u_lpl_cap5_south_w
         (.ck(ck_CAP_RS), .rsi(cap5_rst_RS), .i({cap5_s_v,cap5_s_a,cap5_s_d}), .bank(cap5_south_bank),
          .epo(cap5_south_epo), .vld(cap5_south_vld));
-    ot_pl_land_chunk_r #(.W(270), .D(4), .K(2), .CHUNK_BITS(24)) u_cap5_south_r
+    ot_pl_land_chunk_r #(.W(270), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_cap5_south_r
         (.ck(ck_C), .rsi(cap5_rst_C), .bank(cap5_south_bank),
          .epo(cap5_south_epo), .vld(cap5_south_vld), .o({cw_v_x[5:0],cw_a_x[71:0],cw_d_x[191:0]}));
 
     wire [4*1-1:0] cap5_fault_bank;
     wire [11:0] cap5_fault_epo;
     wire [4*((1+23)/24)-1:0] cap5_fault_vld;
-    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_cap5_fault_w
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_cap5_fault_w
         (.ck(ck_CAP_RS), .rsi(cap5_rst_RS), .i(cap5_fault), .bank(cap5_fault_bank),
          .epo(cap5_fault_epo), .vld(cap5_fault_vld));
-    ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_cap5_fault_r
+    ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_cap5_fault_r
         (.ck(ck_C), .rsi(cap5_rst_C), .bank(cap5_fault_bank),
          .epo(cap5_fault_epo), .vld(cap5_fault_vld), .o(f_cap));
 
