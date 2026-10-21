@@ -48,7 +48,7 @@ for name, v in VAR.items():
     s = json.loads((dst / "spec.json").read_text())
     assert s["outline"]["h"] == v["h"]
     s["sources"] = [p.replace("rtl/qwen_dv/lp8_np/", "rtl/qwen_dv/lp9d_npl/") for p in s["sources"]]
-    s["sources"].append("physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v")
+    s["sources"].append("results/rtl/qw_ttc9_1021/ot_rom_4096x266_m8_bb_inst.v")
     s["macros"] += [{"view": "physical/asap7_memory_macros/ot_rom_4096x266_m8", "count": 1, "inst": "u_gi.u_cal.g_calrom.u_rom.m0",
                      "at": [475.2, 388.8], "orient": "R0", "at_exact": True},
                     {"view": "physical/asap7_memory_macros/ot_rom_4096x266_m8", "count": 1, "inst": "u_gi.u_cal.g_calrom.u_rom.m1",
