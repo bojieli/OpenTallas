@@ -1,0 +1,44 @@
+{
+  "source": "e316c4132",
+  "gate_source": "122e622ea",
+  "hardware_changed": false,
+  "geometry_approvals_retained": true,
+  "failure": "default legacy aggregator invoked non-instantiated MUT11/24 in S10E native32 source; full original failedjob and runlogs preserved",
+  "correction": "existing base mode then same pair/collision/region-drop positive cases, retaining13applicable unit mutant and6native32 causal mutant stages unchanged",
+  "actual_corrected_positive_unit": "ot-gold2 oth-ubuntu-2270880-1792602297",
+  "positive_cases": {
+    "seeds": [
+      1,
+      2
+    ],
+    "pair_seeds": [
+      1,
+      2
+    ],
+    "collision_seed": 7,
+    "region_drop_seed": 3,
+    "rc": 0
+  },
+  "negative_stages": [
+    "seqhost_mutctx",
+    "seqhost_mutsvctag",
+    "seqhost_mutrunghop",
+    "seqhost_mutdonelate",
+    "seqhost_mutwhalf",
+    "seqhost_mutroute",
+    "seqhost_muthregv",
+    "seqhost_mutrland",
+    "seqhost_mut10",
+    "seqhost_muthqstale",
+    "seqhost_muthrc",
+    "seqhost_mutcxrc",
+    "seqhost_muts10dhw",
+    "n32_lockstep_mutbyp",
+    "n32_lockstep_mutgod",
+    "n32_lockstep_mutwin",
+    "n32_lockstep_mutkind",
+    "n32_lockstep_mutfqs",
+    "n32_lockstep_mutcqr"
+  ],
+  "note": "No timing, gate, source behavior waiver. No-op negativecases excluded by actual instantiatedarchitecture; realN32FQS mutation retained. Original gate retained; only job recipe corrected."
+}
