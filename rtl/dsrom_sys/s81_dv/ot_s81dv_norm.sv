@@ -721,7 +721,7 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rstn) if (!rstn) rb_v <= 1'b0; else rb_v <= fr_v;
     always @(posedge clk) rb_d <= fr;
     // ---------------------------------------------------------------- ENG finish: one per copy
-    wire [2:0] tbad; wire [3:0] cr_v, cf; wire [31:0] chh [0:3], ckk [0:3], cdd [0:3];
+    wire [2:0] tbad; wire [3:0] cr_v, cf; wire [4*10-1:0] crk; wire [31:0] chh [0:3], ckk [0:3], cdd [0:3];
     genvar pp, cc;
     generate
         for (pp = 0; pp < 3; pp = pp + 1) begin : g_dec
@@ -743,14 +743,49 @@ module ot_s81dv_xfin #(
 `endif
       , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_f[cc]),
                 .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
+`ifdef OT_S81DV_XFIN_SRAM
+                .r_vk(crk[cc * 10 +: 10]),
+`endif
                 .fault(cf[cc]));
         end
     endgenerate
     // per-copy results: pending until emitted, lowest copy first, one a cycle
     reg [3:0] epd; reg [31:0] ehh [0:3], ekk [0:3], edd [0:3];
+    integer d2;
+`ifdef OT_S81DV_XFIN_SRAM
+    // N32: the pending set is kept 4x (control + one per result field), each with its own r_v copy, so every
+    // select (capture enable, source select, lowest-pending one-hot) drives <= 32 loads; same values as below
+    (* keep *) reg [3:0] epf [0:3];
+    wire [3:0] eallf [0:3], eohf [0:3];
+    genvar ef;
+    for (ef = 0; ef < 4; ef = ef + 1) begin : g_ef
+        assign eallf[ef] = epf[ef] | {crk[30 + 6 + ef], crk[20 + 6 + ef], crk[10 + 6 + ef], crk[0 + 6 + ef]};
+        assign eohf[ef] = eallf[ef] & ~(eallf[ef] - 4'd1);
+    end
+    wire [3:0] eall = eallf[0], eoh = eohf[0];
+    always @(posedge clk or negedge rstn)
+        if (!rstn) begin epd <= 4'd0; e_v <= 1'b0; for (d2 = 0; d2 < 4; d2 = d2 + 1) epf[d2] <= 4'd0; end
+        else if (gcc[2]) begin epd <= 4'd0; e_v <= 1'b0; for (d2 = 0; d2 < 4; d2 = d2 + 1) epf[d2] <= 4'd0; end
+        else begin
+            epd <= eall & ~eoh; e_v <= |eall;
+            for (d2 = 0; d2 < 4; d2 = d2 + 1) epf[d2] <= eallf[d2] & ~eohf[d2];
+        end
+    always @(posedge clk) begin
+        for (d2 = 0; d2 < 4; d2 = d2 + 1) begin
+            if (crk[d2 * 10 + 0]) ehh[d2] <= chh[d2];
+            if (crk[d2 * 10 + 1]) ekk[d2] <= ckk[d2];
+            if (crk[d2 * 10 + 2]) edd[d2] <= cdd[d2];
+        end
+        for (d2 = 0; d2 < 4; d2 = d2 + 1) begin
+            if (eohf[0][d2]) e_c <= d2;
+            if (eohf[1][d2]) e_hh <= crk[d2 * 10 + 3] ? chh[d2] : ehh[d2];
+            if (eohf[2][d2]) e_kk <= crk[d2 * 10 + 4] ? ckk[d2] : ekk[d2];
+            if (eohf[3][d2]) e_dd <= crk[d2 * 10 + 5] ? cdd[d2] : edd[d2];
+        end
+    end
+`else
     wire [3:0] eall = epd | cr_v;
     wire [3:0] eoh = eall & ~(eall - 4'd1);
-    integer d2;
     always @(posedge clk or negedge rstn)
         if (!rstn) begin epd <= 4'd0; e_v <= 1'b0; end
         else if (gcc[2]) begin epd <= 4'd0; e_v <= 1'b0; end
@@ -762,6 +797,7 @@ module ot_s81dv_xfin #(
             e_dd <= cr_v[d2] ? cdd[d2] : edd[d2];
         end
     end
+`endif
     reg flt;
     always @(posedge clk or negedge rstn)
         if (!rstn) flt <= 1'b0; else if (gcc[3]) flt <= 1'b0; else if (xf || rf || eflt || (|tbad) || (|cf)) flt <= 1'b1;
