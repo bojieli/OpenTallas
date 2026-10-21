@@ -215,10 +215,18 @@ def land_forwarded_reset(v, model, occ, pin_pos, width, height, reach, source_ro
     # This is an observed, physically instantiated two-stage d input. Its
     # existence does not qualify the boot/calendar relationship or feed timing.
     if (sync.get('rep_check') or [False])[0]:
-        sync.setdefault('endpoints', []).append(dict(pin=name+'/d', inst=name, master='qfd_rst_rep',
+        entry = dict(pin=name+'/d', inst=name, master='qfd_rst_rep',
             net=bus[0], driver=last, clock=clock, cls='forwarded_reset_synchroniser',
             why='actual closed qfd_rst_rep d->s[0]->r0; two receiving-root edges, calendar HOLD',
-            calendar=rec['calendar']))
+            calendar=rec['calendar'])
+        model.setdefault('observed_reset_captures', []).append(entry)
+        source_clocks = {b[0] for b in model['buses'] if b[1] == 'clock_trunk'
+                         for i, p in b[3][1:] if i == last and p in ('ck', 'clk')}
+        if source_clocks == {clock}:
+            entry['timing'] = 'same-region registered input remains timed; no new SDC exception'
+        else:
+            entry['timing'] = 'foreign input into observed source-proven two-stage synchronizer'
+            sync.setdefault('endpoints', []).append(entry)
     else:
         rec['source_proof'] = 'HOLD: existing reset source proof unavailable; no synchronizer endpoint declared'
     model.setdefault('tp8_reset_tree', {})['forwarded_reset_capture'] = rec
