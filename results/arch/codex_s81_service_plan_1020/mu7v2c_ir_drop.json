@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.die_ir_drop.result.v1",
+ "design": null,
+ "verdict": "PASS",
+ "worst_mv": 8.85,
+ "limit_mv": 35.0,
+ "m8": {
+  "signal_usage": 0.0004,
+  "strap_coverage_both_nets": 0.1961,
+  "total": 0.1965,
+  "verdict": "PASS"
+ },
+ "windows": [
+  {
+   "name": "w0",
+   "inner_um": [
+    3888.0000000000005,
+    23328.0,
+    5184.0,
+    24624.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 4.24,
+   "VDD_nodes": 930,
+   "VSS_worst_mv": 4.59,
+   "VSS_nodes": 930,
+   "rail_to_rail_mv": 8.83
+  },
+  {
+   "name": "w1",
+   "inner_um": [
+    3888.0000000000005,
+    20088.0,
+    5184.0,
+    21384.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 4.25,
+   "VDD_nodes": 930,
+   "VSS_worst_mv": 4.59,
+   "VSS_nodes": 930,
+   "rail_to_rail_mv": 8.85
+  },
+  {
+   "name": "w2",
+   "inner_um": [
+    3240.0,
+    22032.0,
+    4536.0,
+    23328.0
+   ],
+   "exit": "0",
+   "done": true,
+   "pdn": true,
+   "grid_connected": true,
+   "VDD_worst_mv": 4.16,
+   "VDD_nodes": 961,
+   "VSS_worst_mv": 3.77,
+   "VSS_nodes": 961,
+   "rail_to_rail_mv": 7.93
+  }
+ ],
+ "problems": [],
+ "incomplete": false,
+ "owner_report": false,
+ "final_signoff_eligible": false,
+ "limitations": [
+  "Peak power density is assumed, not SAIF measured.",
+  "Die-grid loads tie in through M7; child-internal IR / leaf PG access not modelled.",
+  "M8 signal demand enters as a capacity check (GRT usage + strap coverage <= 1), not as via blockage.",
+  "Package / bump impedance not modelled."
+ ]
+}

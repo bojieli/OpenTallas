@@ -1,0 +1,188 @@
+{
+  "scope": "GEOMETRY_ONLY_NOT_A_DIE_RESULT",
+  "variant": "G4_split112",
+  "frames_after": 112,
+  "rom_slots_after": 1040,
+  "frames_removed": [
+    "f_0L00",
+    "f_0R00",
+    "f_1L00",
+    "f_1R00",
+    "f_2L00",
+    "f_5R00",
+    "f_6L00",
+    "f_6R00",
+    "f_7L00",
+    "f_7R00"
+  ],
+  "die_um": [
+    31968.5,
+    25000.0
+  ],
+  "die_area_change_mm2": 0,
+  "rest_slot_um": [
+    1728,
+    1555.2
+  ],
+  "attention_slot_um": [
+    950.4,
+    2160
+  ],
+  "rest_gap_um": 213.15333333333328,
+  "total_service_mm2": 75.84399359999999,
+  "attention_allocations": [
+    {
+      "index": 0,
+      "column": 0,
+      "xy": [
+        1770.5320000000002,
+        10065.6
+      ]
+    },
+    {
+      "index": 1,
+      "column": 0,
+      "xy": [
+        1770.5320000000002,
+        12312.0
+      ]
+    },
+    {
+      "index": 2,
+      "column": 0,
+      "xy": [
+        1770.5320000000002,
+        14558.400000000001
+      ]
+    },
+    {
+      "index": 3,
+      "column": 1,
+      "xy": [
+        5661.5960000000005,
+        10886.400000000001
+      ]
+    },
+    {
+      "index": 4,
+      "column": 1,
+      "xy": [
+        5661.5960000000005,
+        13132.800000000001
+      ]
+    },
+    {
+      "index": 5,
+      "column": 2,
+      "xy": [
+        9552.66,
+        10065.6
+      ]
+    },
+    {
+      "index": 6,
+      "column": 2,
+      "xy": [
+        9552.66,
+        12312.0
+      ]
+    },
+    {
+      "index": 7,
+      "column": 3,
+      "xy": [
+        13443.724000000002,
+        11664.0
+      ]
+    },
+    {
+      "index": 8,
+      "column": 3,
+      "xy": [
+        13443.724000000002,
+        13910.400000000001
+      ]
+    },
+    {
+      "index": 9,
+      "column": 4,
+      "xy": [
+        17574.788,
+        14299.2
+      ]
+    },
+    {
+      "index": 10,
+      "column": 5,
+      "xy": [
+        21465.852,
+        10065.6
+      ]
+    },
+    {
+      "index": 11,
+      "column": 5,
+      "xy": [
+        21465.852,
+        12312.0
+      ]
+    },
+    {
+      "index": 12,
+      "column": 6,
+      "xy": [
+        25356.916,
+        10065.6
+      ]
+    },
+    {
+      "index": 13,
+      "column": 6,
+      "xy": [
+        25356.916,
+        12312.0
+      ]
+    },
+    {
+      "index": 14,
+      "column": 7,
+      "xy": [
+        29247.980000000003,
+        10065.6
+      ]
+    },
+    {
+      "index": 15,
+      "column": 7,
+      "xy": [
+        29247.980000000003,
+        12312.0
+      ]
+    }
+  ],
+  "block_overlap_pairs": [],
+  "outside_die": [],
+  "attention_macro_counts": {
+    "big_sram": 32,
+    "small_sram": 38,
+    "hgrp432": 4
+  },
+  "attention_std_band": {
+    "x": 604.8,
+    "y": 0,
+    "w": 345.6,
+    "h": 1036.8,
+    "assumed_synth_area_um2": 190000
+  },
+  "attention_std_util": 0.5302551297439414,
+  "trial_grt_ready": false,
+  "stage_calendar_qualified": false,
+  "obligations": [
+    "Fresh NT1 production-shape RTL and mapped synthesis/native census;190k core area is unverified inherited model default.",
+    "Split service exposes physical attention cut; static data/clock/reset/landing links must be real and every added edge priced.",
+    "Exact112-frame inventory allocator and calendars must qualify tensor distribution, not only global448row minimum.",
+    "Native head-group view and SRAM pin faces/halos, ring phases and hold pads required; macro anchors on43.2 lattice.",
+    "Detailed <=405um die-wire relay cell-row graph with no over-body hop; new child rows do not by themselves establish full die rule.",
+    "Joint index-reader corner strips reservation and new strict bind/GEN before trial GRT."
+  ]
+}

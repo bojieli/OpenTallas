@@ -11,3 +11,15 @@ Both retain96 frames/880 ROM slots vs122/1130; remove actual colliding frames, m
 Files intentionally omit links rather than claim stale endpoints are routed. Deleted frame links, moved endpoints, corner-reader placement, actual service clocks and <=405um relay channels all need regeneration before trial GRT. Composite boxes do not establish internal relay cell rows. Stage/calendars require exact allocator qualification. No strict-bind/GRT/STA/IR closure claim for these candidates.
 
 Baseline SHA256: 0e1a4250943e5adf78c39e576908dfb9870cdd116d2bbe868e7964ec26f45641
+
+## Split112 successor
+
+The96-frame monolithic candidates FAIL actual allocator dense one-phase capacity:448a_proj rows at4rows/frame require>=112frames; increasing stages cannot fix. Preserve them as failed geometry evidence.
+
+`service_split_candidate.py` generates G4_split112:16 REST-only1728x1555.2 slots across the south band;16 separate attention models950.4x2160 in inter-tier voids. Exact112frames1040slots remain, zero bodyoverlaps/outside, no S-slice movement, unchanged outline. Total service75.844mm². Detailed attention macro model contains32big+38smallSRAMs,4hgrp432; both macro stacks have inserted43.2um cell-row gaps after each8rows. One stdband345.6x1036.8 holds190k assumed cellarea at53.0%. The190k is inherited `mk_attw_lp.py` default input, NOT fresh mapped synthesis. Fresh production NT1 RTL/native/area qualification, static service<->attention links/landing rings/cycle pricing, actual112tensor allocator, index-reader reservation and complete405um relay graph are mandatory before trial GRT. Attention model master is explicitly NOT_RTL.
+
+## Baseline collection
+
+mu7v2c finished22:24:37, GRT0 but STA FAIL. TTsetup-9246.6ps (framexk modeled asdata), FFhold-1617.3ps (ld_hrq_01/rs). Reset stations/fwdENA remaining TT-3725.4/-5642.7ps are real reset reach/startup mechanisms. bk_col geometry fixes improve prior-2.3ns family toTTsetup slicevi-351.9/xtier-222.4ps; residual hold budgets still need planned repair. Native forwarded-clock audit FAIL14/3777 judgedhops postGRT, pairingerrors0. `mu7v2c_classes.txt` preserves complete classes.
+
+`mu7v2c_ir_drop.json`: ROOT14 tool window-model PASS8.85mV rail-to-rail vs35mV on3hotwindows; assumed density1.2W/mm² and735.238Wdiepeak. M8signal0.04% +bothPGstraps19.61%=19.65%. Not final signoff; child-internalPG/package/via-blockage absent. Original immutable route explicitly M2-M8signals/M5-M9clock and M8RC; actual signalguide inspection still needed.
