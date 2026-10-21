@@ -549,7 +549,27 @@ LK_PAD = ('    // FRH10 10-20 fallback: lk (static strap, crs4 only) relayed by 
           '    ot_pl_pad #(.W(12), .N({n})) u_frp_lk (.ck(ck_r0), .d(lk), .q(lk__frp));\n')
 
 
-def variant_rtl(master, base_kit, out, lk_stages=0):
+XK_LAND = ('    // FRRST 10-20 (COORD 21:29 (c), reset crossings land in the receiving region own clock): each u_xo relay runs on\n'
+           '    // its forwarded lane clock xk[k] (die-phase foreign to ck_r0), so rst_n__frl (ck_r0) is synchronised onto xk[k] by an\n'
+           '    // async-assert / sync-deassert 2-flop ot_reset_sync (assertion needs no xk edge: the lane clock is gated until the\n'
+           '    // source release).  Release depth +2 xk[k] edges on the xo relays only (datapath pass-through, boot constant);\n'
+           '    // the u_xrl*/reset_pipe CLR pins are the declared reset-synchroniser endpoints (die reset_sync.sdc).\n'
+           '    wire [{n1}:0] rst_n__xk;\n')
+XK_SYNC = '    ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl{k} (.clk(xk[{k}]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[{k}]));\n'
+XO_RS = re.compile(r'(u_xo(\d+) \(\.ck\(xk\[(\d+)\]\), \.rs\()rst_n__frl\)')
+
+
+def xk_land_rtl(t2):
+    """FRRST: every u_xo<k> (.ck(xk[k]), .rs(rst_n__frl)) -> .rs(rst_n__xk[k]) behind an xk[k] ot_reset_sync."""
+    hits = XO_RS.findall(t2)
+    if not hits or any(a != b for _, a, b in hits) or sorted(int(a) for _, a, _ in hits) != list(range(len(hits))):
+        raise SystemExit(f'xk_land: expected u_xo<k> on xk[k] with rs(rst_n__frl), found {hits}')
+    t2 = XO_RS.sub(lambda m: f'{m[1]}rst_n__xk[{m[3]}])', t2)
+    add = XK_LAND.format(n1=len(hits) - 1) + ''.join(XK_SYNC.format(k=k) for k in range(len(hits)))
+    return t2, add, len(hits)
+
+
+def variant_rtl(master, base_kit, out, lk_stages=0, xk_land=False):
     """kit RTL of a variant: the base kit RTL + the 2-stage rst_n landing (+ optional lk relay).  Exactly the listed
     port-pin rewrites; everything else byte-identical (asserted)."""
     t = (ROOT / base_kit).read_text()
@@ -558,6 +578,9 @@ def variant_rtl(master, base_kit, out, lk_stages=0):
         raise SystemExit(f'{base_kit}: expected 5 rst_n child pins (crs4 rst + 4 u_xo rs), found {n_rs}')
     t2 = re.sub(r'\.(rs|rst)\(rst_n\)', r'.\1(rst_n__frl)', t)
     add = RST_LAND
+    if xk_land:
+        t2, xadd, _ = xk_land_rtl(t2)
+        add += xadd
     if lk_stages:
         if t2.count('.lk(lk)') != 1:
             raise SystemExit(f'{base_kit}: expected one .lk(lk)')
@@ -569,12 +592,42 @@ def variant_rtl(master, base_kit, out, lk_stages=0):
         raise SystemExit(f'{base_kit}: top module header not found')
     t2 = t2[:m.end()] + add + t2[m.end():]
     hdr = (f'// FRH10 VARIANT of {base_kit} (sha256 {hashlib.sha256(t.encode()).hexdigest()}) by tools/s81_dv/frame_kit.py '
-           f'variant: rst_n 2-stage landing{f", lk {lk_stages}-stage relay" if lk_stages else ""}\n')
+           f'variant: rst_n 2-stage landing{f", lk {lk_stages}-stage relay" if lk_stages else ""}'
+           f'{", xo relay reset synchronised onto xk (FRRST)" if xk_land else ""}\n')
     (ROOT / out).write_text(hdr + t2)
     return hashlib.sha256(t.encode()).hexdigest()
 
 
-def variant(base, name, lk_stages=0, pins_near_cf=False):
+def frame_benches(master, name, base_kit, out):
+    """FRRST 10-20: the exact frame bench (tools/s81_dv/frame_bench.sh FRAME_LP=1, Verilator 5.050) on the bench twin of
+    this variant (the same variant transform applied to the parameterised LP RTL), its landed mutants, and the reset
+    crossing audit (tools/s81_dv/frame_reset_audit.py) on the kit RTL; the audit mutant is the rf3 kit RTL (u_xo reset
+    straight from ck_r0 into the xk relays), which must FAIL."""
+    sfx = name.split('_')[-1]
+    twin = f'rtl/dsrom_sys/s81_dv/frame_lp/{master}_l4_lp_{sfx}.sv'
+    # LDLY 0 (measured 10-20 ep7: h9 rf3r plan PASS at LDLY 0, FAIL at LDLY 2 -- the bench sees the reset epoch)
+    env = f'VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV={twin} LDLY=0'
+    b = []
+    for st, kk in (('plan', 2048), ('each', 1024)):
+        b.append(dict(name=f'frame_{master[4:]}_{st}_exact', expect='pass', threads=8, peak_ram_gb=64, needs=['verilator'],
+                      cmd=f'{env} SET={st} KK={kk} J=8 bash tools/s81_dv/frame_bench.sh {{RUN}}/build_{st} {master} 0'))
+    for m in ('unland', 'landread', 'reset'):
+        line = f'NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT={m} {master}'
+        b.append(dict(name=f'frame_{master[4:]}_{m}_mutant', expect='fail', threads=8, peak_ram_gb=64, needs=['verilator'],
+                      fail_regex='^' + re.escape(line) + '$',
+                      cmd=(f'mkdir -p {{RUN}}; {env} SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {{RUN}}/build_{m} '
+                           f'{master} {m} > {{RUN}}/mutant.log 2>&1; frame_rc=$?; cat {{RUN}}/mutant.log; if [ "$frame_rc" -eq 0 ] '
+                           f'&& grep -qx "{line}" {{RUN}}/mutant.log; then exit 1; fi; exit 0')))
+    pre = base_kit.replace('_l4_lp_kit.sv', '_l4_lp_kit_rf3.sv')
+    b.append(dict(name='reset_crossing_audit', expect='pass', threads=1, peak_ram_gb=2,
+                  cmd=f'python3 tools/s81_dv/frame_reset_audit.py {out}'))
+    b.append(dict(name='reset_crossing_audit_mutant_rf3', expect='fail', threads=1, peak_ram_gb=2,
+                  fail_regex=r'^RESET_AUDIT FAIL .* foreign=[1-9]',
+                  cmd=f'python3 tools/s81_dv/frame_reset_audit.py {pre}'))
+    return b
+
+
+def variant(base, name, lk_stages=0, pins_near_cf=False, xk_land=False):
     """FRH10 10-20: a gate variant of an existing frame kit spec (tools/ref_tile/specs_s81frame/<base>.json):
       * raw ot_rom_4096x72_m8 macros clocked by their region root (main clock_entries.tcl ot_ce_raw_memory_sink: CTS root
         ck_r0 'must reach only standard-cell clock pins' failed rf2n h9 CTS): soft_root_macro_masters + exact bindings,
@@ -587,8 +640,13 @@ def variant(base, name, lk_stages=0, pins_near_cf=False):
     master = s['top'].removesuffix('_l4_lp')
     base_kit = next(f for f in s['sources'] if f.endswith('_l4_lp_kit.sv'))
     out = base_kit.replace('_l4_lp_kit.sv', f'_l4_lp_kit_{name.split("_")[-1]}.sv')
-    variant_rtl(master, base_kit, out, lk_stages)
+    variant_rtl(master, base_kit, out, lk_stages, xk_land)
     s['sources'] = [out if f == base_kit else f for f in s['sources']]
+    if xk_land:
+        s['sources'].insert(0, 'rtl/lib/ot_reset_sync.sv')
+        # the bench twin: the same transform on the parameterised LP RTL the frame bench (FRAME_LP=1) drives
+        lp = f'rtl/dsrom_sys/s81_dv/frame_lp/{master}_l4_lp.sv'
+        variant_rtl(master, lp, lp.replace('_l4_lp.sv', f'_l4_lp_{name.split("_")[-1]}.sv'), lk_stages, xk_land)
     s['name'] = name
     kt = (ROOT / out).read_text()
     roms = dict(re.findall(rf'\b{ROM}\s+(u_c\w+)\s*\(.*?\.clk\((ck_r\d)\)', kt))
@@ -599,7 +657,9 @@ def variant(base, name, lk_stages=0, pins_near_cf=False):
     s['soft_root_macro_bindings'] = {i: dict(master=ROM, clock_pin='clk', root=roms[i]) for i in sorted(insts)}
     s['reset_landing'] = {'enable': False, 'reason': 'the RTL lands it: kit u_frl_rst = 2 plain ot_pl_pad stages on ck_r0 '
                           '(rst_n -> 1 flop) before crs4 rst (its own 2-stage rsync_q on cr, then crs4 rs gates the lp '
-                          'regional reset runs) and the 4 u_xo forwarded-clock relays (rs); +2 edges reset epoch'}
+                          'regional reset runs) and the 4 u_xo forwarded-clock relays (rs); +2 edges reset epoch' + (
+                          '; FRRST: the u_xo relay reset is re-synchronised onto each xk[k] (ot_reset_sync 2 flops, '
+                          'async assert / sync release, +2 xk edges)' if xk_land else '')}
     rng = s['pin_ranges']
     if pins_near_cf:
         cf = next(c for c in s['children'] if c['inst'] == 'u_cf')
@@ -614,9 +674,13 @@ def variant(base, name, lk_stages=0, pins_near_cf=False):
     s['pin_ranges'] = dict(sorted(rng.items(), key=lambda kv: kv[1][0]))
     s['structural_change'] = (s.get('structural_change', '') + f' | {name} (DRIVE-S81-FRH10 10-20): raw ROM CTS-root '
                               f'bindings ({len(insts)}), rst_n 2-stage kit-RTL landing, ' +
-                              ('lk/rst_n E pins beside crs4' if pins_near_cf else f'lk {lk_stages}-stage relay'))
-    s['job']['owner'] = 'Claude:DRIVE-S81-FRH10'
-    s['job']['branch'] = 'claude/s81-frame-rf2p-1020'
+                              ('lk/rst_n E pins beside crs4' if pins_near_cf else f'lk {lk_stages}-stage relay') +
+                              (', u_xo reset landed on xk (DRIVE-S81-FRRST)' if xk_land else ''))
+    s['job']['owner'] = 'Claude:DRIVE-S81-FRRST' if xk_land else 'Claude:DRIVE-S81-FRH10'
+    s['job']['branch'] = 'claude/s81-frame-rf3r-1020' if xk_land else 'claude/s81-frame-rf2p-1020'
+    if xk_land:
+        s['job'].pop('no_bench_reason', None)
+        s['job']['benches'] = frame_benches(master, name, base_kit, out)
     s['job']['views_to'] = f'physical/ref_tile/{name}/views'
     s['job']['record_to'] = f'results/rtl/ref_tile/{name}'
     o = ROOT / 'tools/ref_tile/specs_s81frame' / f'{name}.json'
@@ -629,7 +693,8 @@ if __name__ == '__main__':
         va = argparse.ArgumentParser()
         va.add_argument('cmd'); va.add_argument('--base', required=True); va.add_argument('--name', required=True)
         va.add_argument('--lk-stages', type=int, default=0); va.add_argument('--pins-near-cf', action='store_true')
+        va.add_argument('--xk-land', action='store_true')
         x = va.parse_args()
-        variant(x.base, x.name, x.lk_stages, x.pins_near_cf)
+        variant(x.base, x.name, x.lk_stages, x.pins_near_cf, x.xk_land)
     else:
         main()
