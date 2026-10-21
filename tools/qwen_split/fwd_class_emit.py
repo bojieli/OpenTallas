@@ -105,9 +105,9 @@ def install(v, m):
                 ni.w, ni.h = row['class_frame']
                 # narrow split: as many columns as the reserved frame holds (1 in a 64.8-um landing column)
                 cols = 1 if mw >= 600 else max(1, min(len(parts), int((reserve_w + C.SHAVE + 1e-6) // (ni.w + C.SHAVE))))
-                rows = math.ceil(len(parts) / cols)
+                nrows = math.ceil(len(parts) / cols)   # QW2-DIEFIX: was 'rows', shadowing the lane list (TypeError below)
                 slot_w=(reserve_w+C.SHAVE)/cols-C.SHAVE
-                slot_h=(reserve_h+C.SHAVE)/rows-C.SHAVE
+                slot_h=(reserve_h+C.SHAVE)/nrows-C.SHAVE
                 ni.x = round(it.x + (part % cols)*(slot_w+C.SHAVE) + math.floor((slot_w-ni.w)/2/C.GX+1e-9)*C.GX,3)
                 ni.y = round(it.y + (part // cols)*(slot_h+C.SHAVE) + math.floor((slot_h-ni.h)/2/C.GY+1e-9)*C.GY,3)
                 classes[ni.master] = row
