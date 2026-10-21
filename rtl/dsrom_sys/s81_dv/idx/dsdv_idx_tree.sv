@@ -438,6 +438,7 @@ module dsdv_idx_qf #(
     output wire [512:0]  qc1,        // -> child link 1
     output reg  [3:0]    st          // {no-entry seen, bad frame, collision, fault}
 );
+    localparam integer NOUT=32;
     localparam integer NJ = 22;      // <=24-bit payload slices
     localparam integer NSPEC = 9, NC = NSPEC + 1; // <=13-bit spec slices + framing
     genvar j, c, e;
@@ -445,38 +446,42 @@ module dsdv_idx_qf #(
     // rs0 low clears rnk at once (assert stays asynchronous), release 2 edges after rst as before ----
     reg rs0;
     always @(posedge ck or negedge rst) if (!rst) rs0 <= 1'b0; else rs0 <= 1'b1;
-    (* keep = "true" *) reg [3:0] rnk;
-    always @(posedge ck or negedge rs0) if (!rs0) rnk <= 4'd0; else rnk <= 4'hF;
+    (* keep = "true" *) reg [4:0] rnk;
+    always @(posedge ck or negedge rs0) if (!rs0) rnk <= 5'd0; else rnk <= 5'h1F;
     // ---- stage 1 (pin flops) and stage 2 (merged source), valid copies ----
     reg          qs_v0, ql_v0, s1_v0, qc0_v, qc1_v;
     reg  [511:0] qs_d, ql_d, s1_d, qc0_d, qc1_d;
     wire [NJ-1:0] qs_vk, ql_vk;   // independent kept copies; each masks <=24 payload bits
-    wire [NJ+1:0] s1_vk;          // [NJ-1:0] qr rewrite select; [NJ] framing; [NJ+1] counters
+    wire [NOUT+3:0] s1_vk;          // [NJ-1:0] qr rewrite select; [NJ] framing; [NJ+1] counters
     always @(posedge ck or negedge rnk[0])
         if (!rnk[0]) begin qs_v0 <= 1'b0; ql_v0 <= 1'b0; s1_v0 <= 1'b0; qc0_v <= 1'b0; qc1_v <= 1'b0; end
         else begin
             qs_v0 <= qs[0]; ql_v0 <= ql[0]; s1_v0 <= qs_v0 | ql_v0; qc0_v <= s1_v0; qc1_v <= s1_v0;
 
         end
+    wire qs_vctrl,ql_vctrl;
+    dsdv_qf_copy #(.W(1),.ID(90))u_vqs(.ck(ck),.rn(rnk[0]),.d(qs[0]),.q(qs_vctrl));
+    dsdv_qf_copy #(.W(1),.ID(91))u_vql(.ck(ck),.rn(rnk[1]),.d(ql[0]),.q(ql_vctrl));
+    wire[511:0]s1_next;
     generate for(genvar k=0;k<NJ;k=k+1)begin:g_vcopy
         dsdv_qf_copy #(.W(1),.ID(k))u_qs(.ck(ck),.rn(rnk[0]),.d(qs[0]),.q(qs_vk[k]));
         dsdv_qf_copy #(.W(1),.ID(100+k))u_ql(.ck(ck),.rn(rnk[1]),.d(ql[0]),.q(ql_vk[k]));
     end
-    for(genvar k=0;k<NJ+2;k=k+1)begin:g_scopy
-        dsdv_qf_copy #(.W(1),.ID(200+k))u(.ck(ck),.rn(rnk[2]),.d(qs_v0|ql_v0),.q(s1_vk[k]));
+    for(genvar k=0;k<NOUT+4;k=k+1)begin:g_scopy
+        dsdv_qf_copy #(.W(1),.ID(200+k))u(.ck(ck),.rn((k<18)?rnk[2]:rnk[4]),.d((k<18)?(qs_v0|ql_v0):(qs_vctrl|ql_vctrl)),.q(s1_vk[k]));
     end endgenerate
     always @(posedge ck) begin qs_d <= qs[512:1]; ql_d <= ql[512:1]; qc0_d <= s1_d; qc1_d <= s1_d; end
     generate for (j = 0; j < NJ; j = j + 1) begin : g_m
         localparam integer LO=24*j,N=(512-LO<24)?512-LO:24;
         wire qsm = qs_vk[j] && !(MUT == 2 && j == NJ - 1);
-        always @(posedge ck)
-            s1_d[LO+:N] <= (qsm ? qs_d[LO+:N] : {N{1'b0}}) | (ql_vk[j] ? ql_d[LO+:N] : {N{1'b0}});
+        assign s1_next[LO+:N]=(qsm?qs_d[LO+:N]:{N{1'b0}})|(ql_vk[j]?ql_d[LO+:N]:{N{1'b0}});
+        always @(posedge ck)s1_d[LO+:N]<=s1_next[LO+:N];
     end endgenerate
     assign qc0 = {qc0_d, qc0_v};
     assign qc1 = {qc1_d, qc1_v};
     wire [511:0] d = s1_d;
-    wire         v  = s1_vk[NJ];       // framing copy
-    wire         vc = s1_vk[NJ + 1];   // counter copy
+    wire         v  = s1_vk[NOUT];       // framing copy
+    wire         vc = s1_vk[NOUT + 1];   // counter copy
     // ---- this die's entry: compare replicated per kept uid copy ----
     wire [8 * NC - 1:0] mek;      // die configuration, no reset (used only with a valid word)
     generate for(genvar k=0;k<NC;k=k+1)begin:g_uidcopy
@@ -486,7 +491,10 @@ module dsdv_idx_qf #(
     generate for (c = 0; c < NC; c = c + 1) begin : g_h
         wire [7:0] want = (MUT == 1) ? mek[8 * c +: 8] + 8'd1 : mek[8 * c +: 8];
         for (e = 0; e < 4; e = e + 1) begin : g_e
-            assign hit[4 * c + e] = d[128 * e + 127] && d[128 * e + 119 +: 8] == want;
+            wire valid;
+            // Capture the original merge NEXT bit at the existing s1_d edge.
+            dsdv_qf_copy #(.W(1),.RESET(0),.ID(500+4*c+e))u_v(.ck(ck),.rn(rnk[0]),.d(s1_next[128*e+127]),.q(valid));
+            assign hit[4*c+e]=valid && d[128*e+119+:8]==want;
         end
     end endgenerate
     wire w_hit_f = |hit[4*(NC-1)+:4];
@@ -529,7 +537,10 @@ module dsdv_idx_qf #(
         end
     // forwarded header fields (tag, user) of the current tree frame
     reg [7:0] h_tag; reg [9:0] h_user;
-    always @(posedge ck) if (v && !infr && is_tree) begin h_tag <= d[502:495]; h_user <= d[458:449]; end
+    always @(posedge ck)begin
+        if(s1_vk[NOUT+2]&&!infr&&is_tree)h_tag<=d[502:495];
+        if(s1_vk[NOUT+3]&&!infr&&is_tree)h_user<=d[458:449];
+    end
     // ---- spec: nine <=13-bit slices, independent kept compare copies ----
     wire        specw = v && infr && tree && nsl != 4'd0;
     reg  [106:0] spec;
@@ -554,8 +565,8 @@ module dsdv_idx_qf #(
     assign rw[106:0]   = my_spec;
     wire ctl1 = infr && tree && nsl == 4'd1;
     reg [511:0] qr_d;
-    generate for (j = 0; j < NJ; j = j + 1) begin : g_r
-        localparam integer LO=24*j,N=(512-LO<24)?512-LO:24;
+    generate for (j = 0; j < NOUT; j = j + 1) begin : g_r
+        localparam integer LO=16*j,N=(512-LO<16)?512-LO:16;
         wire sel = s1_vk[j] && ctl1;
         always @(posedge ck) qr_d[LO+:N] <= sel ? rw[LO+:N] : d[LO+:N];
     end endgenerate
