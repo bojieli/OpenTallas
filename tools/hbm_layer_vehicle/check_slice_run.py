@@ -15,7 +15,64 @@ from pathlib import Path
 import re
 
 
-def check_run(replay, run_log, scope="component_probe"):
+FAULT_OUTPUT_PORTS = {
+    'fault', 'pc_fault', 'owner_fault_split', 'lg_fault', 's_fault',
+    'schedule_fault', 'tgt_fault', 'share_fault', 'fault_cause', 'program_fault',
+}
+
+
+def fault_activity(replay, log, boundary=None, tb_source=None):
+    """Reject activity only on actual declared fault outputs with zero observers.
+
+    The generated observer is initialized to zero and samples after stream
+    reset. A reported change therefore proves nonzero fault activity occurred;
+    the lack of a report does not qualify a native programme or its arithmetic.
+    """
+    if boundary is None and tb_source is None:
+        candidates = [replay, replay.parent, replay.parent.parent, Path.cwd()/'slice']
+        for parent in candidates:
+            if (parent/'boundary.json').is_file() and (parent/'tb_slice.sv').is_file():
+                boundary, tb_source = parent/'boundary.json', parent/'tb_slice.sv'
+                break
+    errors = []
+    if boundary is None or tb_source is None:
+        return dict(source_bound=False, errors=['missing source-bound fault observer boundary/TB']), errors
+    boundary, tb_source = Path(boundary), Path(tb_source)
+    b = json.loads(boundary.read_text())
+    source = tb_source.read_text()
+    block = re.search(r'always @\(posedge ck0\) if \(rs0\) begin(.*?)if \(cnt\[0\] >= cycles\) begin',
+                      source, re.S)
+    outputs = []
+    for k, port in enumerate(b['outputs']):
+        driver_port = port['driver'].rsplit('.', 1)[-1]
+        if driver_port not in FAULT_OUTPUT_PORTS:
+            if 'fault' in driver_port.split('_'):
+                errors.append('unclassified declared output fault semantics: '+port['name'])
+            continue
+        name = port['name']
+        initial = f"reg [{port['width']-1}:0] po{k} = '0; integer f{k} = -1, l{k} = -1, n{k} = 0;"
+        tracking = (f"if ({name} != po{k}) begin if (f{k} < 0) f{k} = cnt[0]; "
+                    f"l{k} = cnt[0]; n{k} = n{k} + 1; po{k} = {name}; end")
+        reporting = f'if (n{k} > 0) $display("SLICE_OUT {name} first=%0d last=%0d changes=%0d", f{k}, l{k}, n{k});'
+        if initial not in source or block is None or tracking not in block[1] or reporting not in source:
+            errors.append('unverified zero/reset-scoped fault observer: '+name)
+        outputs.append(name)
+    if not outputs:
+        errors.append('boundary has no classified observable fault outputs')
+    changes = []
+    for name, first, last, count in re.findall(r'^SLICE_OUT (\S+) first=(\d+) last=(\d+) changes=(\d+)$', log, re.M):
+        if name in outputs and int(count)>0:
+            changes.append(dict(port=name, first=int(first), last=int(last), changes=int(count)))
+            errors.append(f'declared fault output changed from zero: {name} ({count} changes)')
+    return dict(source_bound=bool(outputs) and block is not None and
+                not any(e.startswith(('unverified', 'unclassified')) for e in errors),
+                boundary_sha256=hashlib.sha256(boundary.read_bytes()).hexdigest(),
+                tb_source_sha256=hashlib.sha256(tb_source.read_bytes()).hexdigest(),
+                declared_fault_outputs=outputs, observed_activity=changes,
+                absence_claim='no stronger native/arithmetic proof from missing activity alone'), errors
+
+
+def check_run(replay, run_log, scope="component_probe", boundary=None, tb_source=None):
     replay, run_log = Path(replay), Path(run_log)
     headers = [int(line.strip(), 16) for line in (replay / "hdr.mem").read_text().splitlines() if line.strip()]
     events = [h for h in headers if h >> 62 in (1, 2)]
@@ -29,6 +86,8 @@ def check_run(replay, run_log, scope="component_probe"):
     summary = {k: int(v) for k, v in re.findall(r"(\w+)=(-?\d+)", summaries[-1])} if summaries else {}
     actual_commits = Counter((int(r), int(c)) for r, c in re.findall(r"^SLICE_REC rec=(\d+) cyc=(\d+) COMMIT_OK$", log, re.M))
     errors = []
+    fault_observation, fault_errors = fault_activity(replay, log, boundary, tb_source)
+    errors.extend(fault_errors)
     if scope != "component_probe":
         errors.append("native layer/chain qualification refused: replay completeness only proves a component probe")
     if len(summaries) != 1:
@@ -70,7 +129,8 @@ def check_run(replay, run_log, scope="component_probe"):
             "last_scheduled_cycles": last, "summary": summary,
             "expected_record_checks": sum(commits.values()),
             "replay_hdr_sha256": hashlib.sha256((replay / "hdr.mem").read_bytes()).hexdigest(),
-            "run_log_sha256": hashlib.sha256(run_log.read_bytes()).hexdigest()}
+            "run_log_sha256": hashlib.sha256(run_log.read_bytes()).hexdigest(),
+            "fault_observation": fault_observation}
 
 
 def main():
@@ -78,9 +138,11 @@ def main():
     ap.add_argument("--replay", type=Path, required=True)
     ap.add_argument("--run-log", type=Path, required=True)
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--boundary", type=Path, help="exact compiled boundary manifest (auto-discovered beside slice)")
+    ap.add_argument("--tb-source", type=Path, help="exact compiled generated TB with zero/reset-scoped observers")
     ap.add_argument("--scope", choices=["component_probe", "native_layer", "native_chain"], default="component_probe")
     a = ap.parse_args()
-    result = check_run(a.replay, a.run_log, scope=a.scope)
+    result = check_run(a.replay, a.run_log, scope=a.scope, boundary=a.boundary, tb_source=a.tb_source)
     payload = json.dumps(result, indent=2) + "\n"
     if a.out:
         a.out.write_text(payload)
