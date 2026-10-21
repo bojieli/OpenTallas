@@ -76,6 +76,20 @@ class Composition(unittest.TestCase):
                     self.assertIn('.q({n_payload__s1[543:0]',text)
                     self.assertIn('n_payload__s0[543:0]',text)
 
+    def test_actual_outline_pack_and_bit_reach(self):
+        v,m=self.vehicle(548)
+        m['die']={'w':1000,'h':500}
+        for i in m['insts'][:2]: i.w=i.h=80
+        src=V.Master('source',80,80,3,'fixture source')
+        dst=V.Master('sink',80,80,3,'fixture sink')
+        src.face('q',548,'E','M4',40,1)
+        dst.face('q',548,'W','M4',40,1)
+        v.masters=lambda *a:{'source':src,'sink':dst}
+        v.pin_rects=V.pin_rects
+        with patch.dict('os.environ',{'OT_SPLIT_FWD_CLASS_PACK':'1'}): F.install(v,m)
+        self.assertTrue(m['fwd_lanes']['class_emission']['packing']['moves'])
+        self.assertTrue(all(r['worst_data_um']<=405 for r in m['fwd_lanes']['class_emission']['packing']['moves']))
+
     def test_missing_reservation_refused(self):
         v,m=self.vehicle();m['insts'][2].h=30
         with self.assertRaisesRegex(ValueError,'reservation missing'): F.install(v,m)

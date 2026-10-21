@@ -4,6 +4,7 @@ Reservations precede placement; the existing reach and native-calendar gates rem
 mandatory. This adapter adds no edge, changes no K, and uses no data-path exception.
 """
 import copy
+import os
 import math
 import re
 from pathlib import Path
@@ -16,10 +17,10 @@ def slices(bits):
     return [(lo, min(bits, lo + width)) for lo in range(0, bits, width)]
 
 
-def reservation(bits):
+def reservation(bits, group=None):
     parts = slices(bits)
     wc = C.wclass(max(hi - lo for lo, hi in parts))
-    frames = [C.frame(wc, g) for g in C.REP]
+    frames = [C.frame(wc, group)] if group else [C.frame(wc, g) for g in C.REP]
     w, h = max(f[0] for f in frames), max(f[1] for f in frames)
     return w, round((h + C.SHAVE) * len(parts) - C.SHAVE, 3)
 
@@ -49,8 +50,9 @@ def install(v, m):
                 raise ValueError(f'{name}: source width {bits} != calendar width {lane["bits"]}')
             parts = slices(bits)
             made = []
-            reserve_w, reserve_h = reservation(bits)
-            if it.w + 1e-3 < reserve_w or it.h + 1e-3 < reserve_h:
+            compact = os.environ.get('OT_SPLIT_FWD_CLASS_PACK') == '1'
+            reserve_w, reserve_h = (it.w,it.h) if compact else reservation(bits)
+            if not compact and (it.w + 1e-3 < reserve_w or it.h + 1e-3 < reserve_h):
                 raise ValueError(f'{name}: class reservation missing: {it.w}x{it.h} < {reserve_w}x{reserve_h}')
             for part, (lo, hi) in enumerate(parts):
                 row = C.classify(f'qfd_{fam}_{hi-lo}_{faces}_1x1')
@@ -202,6 +204,8 @@ def install(v, m):
         text=text.replace('endmodule','\n'.join(declarations)+'\nendmodule')
         Path(path).write_text(text)
     v.masters,v.port_widths,v.write_netlist=masters,widths,write
+    if os.environ.get('OT_SPLIT_FWD_CLASS_PACK') == '1':
+        pack_classes(v,m,{r['instance'] for r in receipts})
 
 
 def merge_fanout(m, legs):
@@ -229,3 +233,86 @@ def merge_fanout(m, legs):
             buses.append((original if len(parts)==1 else f'{original}__s{part}',cl,hi-lo,[(src[0],port)]+loads))
     m['buses']=buses
     m['r21_relays']['fanout_legs']={o:ns for o,(_,_,_,ns) in legs.items()}
+
+
+def pack_classes(v,m,names):
+    """Place actual closed outlines after directional planning, without a new edge.
+
+    Only local legal sites are considered. Every move checks actual matching bit
+    geometry on all incident data nets against 405um; no centroid substitution.
+    The normal final GEN gates still check all untouched data/reset/clock nets.
+    """
+    from qwen_rom_fulldie_b3r2 import _pin_pos
+    pos=_pin_pos(v,m,strict=True)
+    by={i.name:i for i in m['insts']}
+    bucket=216.0; cells={}; members={}
+    def rect(i): return (i.x,i.y,i.x+i.w+C.SHAVE,i.y+i.h+C.SHAVE)
+    def keys(r):
+        return [(x,y) for x in range(math.floor(r[0]/bucket),math.floor((r[2]-1e-6)/bucket)+1)
+                for y in range(math.floor(r[1]/bucket),math.floor((r[3]-1e-6)/bucket)+1)]
+    def add(i):
+        ks=keys(rect(i));members[i.name]=ks
+        for k in ks: cells.setdefault(k,set()).add(i.name)
+    def remove(i):
+        for k in members.pop(i.name): cells[k].remove(i.name)
+    for i in m['insts']:add(i)
+    def collision(i):
+        r=rect(i); nearby=set().union(*(cells.get(k,set()) for k in keys(r)))
+        for other in nearby-{i.name}:
+            q=rect(by[other])
+            if r[0]<q[2]-1e-6 and q[0]<r[2]-1e-6 and r[1]<q[3]-1e-6 and q[1]<r[3]-1e-6:return other
+        return None
+    incident={n:[] for n in names}
+    local={}
+    for bid,cl,width,eps in m['buses']:
+        if cl in ('clock_trunk','reset','constant') or len(eps)<2:continue
+        if not any(n in names for n,p in eps):continue
+        for n,p in eps:
+            key=(n,p,width)
+            if key not in local:
+                pts=pos.bits(n,p,width)
+                if pts is None:raise ValueError(f'class packing: missing actual bit geometry {n}.{p} width{width}')
+                it=by[n];local[key]=[(x-it.x,y-it.y) for x,y in pts]
+        for load in eps[1:]:
+            pair=(bid,width,eps[0],load)
+            for n in {eps[0][0],load[0]} & names:incident[n].append(pair)
+    def pin_reach(i):
+        worst=0.0
+        for bid,width,a,b in incident[i.name]:
+            ia,ib=by[a[0]],by[b[0]]
+            for qa,qb in zip(local[(a[0],a[1],width)],local[(b[0],b[1],width)]):
+                d=abs(ia.x+qa[0]-ib.x-qb[0])+abs(ia.y+qa[1]-ib.y-qb[1])
+                worst=max(worst,d)
+                if d>405.0001:return False,worst,bid
+        return True,worst,None
+    die=m['die']; moves=[]
+    # Largest closed outlines first. Search is bounded by the data reach itself,
+    # not a timing exception or a larger acceptable route length.
+    order=sorted(names,key=lambda n:(-by[n].w*by[n].h,n))
+    offsets=[(0,0)]
+    for ring in range(1,95):
+        offsets.extend((x*4.32,y*4.32) for x,y in
+                       [(x,sy*ring) for x in range(-ring,ring+1) for sy in (-1,1)] +
+                       [(sx*ring,y) for y in range(-ring+1,ring) for sx in (-1,1)])
+    for name in order:
+        i=by[name];origin=(i.x,i.y);remove(i);chosen=None;reason=None
+        for dx,dy in offsets:
+            i.x=round(origin[0]+dx,3);i.y=round(origin[1]+dy,3)
+            if i.x<0 or i.y<0 or i.x+i.w>die['w'] or i.y+i.h>die['h']:continue
+            reason=collision(i)
+            if reason:continue
+            ok,worst,why=pin_reach(i)
+            if ok:chosen=(i.x,i.y,worst);break
+            reason=f'{why} matching-bit reach {worst:.3f}'
+        if chosen is None:
+            i.x,i.y=origin;add(i)
+            raise ValueError(f'class packing: no legal <=405um site for {name} ({i.master}), last {reason}')
+        add(i)
+        if chosen[:2]!=origin:moves.append(dict(instance=name,old_xy=origin,xy=chosen[:2],worst_data_um=chosen[2]))
+    # A later move checks its earlier neighbour, so every final pair is checked.
+    for name in names:
+        i=by[name]
+        if collision(i):raise ValueError(f'class packing final overlap {name}')
+        ok,worst,why=pin_reach(i)
+        if not ok:raise ValueError(f'class packing final reach {name} {why} {worst}')
+    m['fwd_lanes']['class_emission']['packing']=dict(rule='actual closed outlines and matching-bit <=405um',moves=moves)
