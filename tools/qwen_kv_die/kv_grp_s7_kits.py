@@ -13,7 +13,11 @@ write word passes ring A in A's high corridor.  The E strip right of the rings i
 Branch map (netlist traced): results/rtl/qwen_kv_die/kvs_grp_s7_1020/branch_map.json.
 Base pin coordinates: the s6a gates' 3_2_place_iop.tcl (legal tracks); E coordinates are re-used in sorted order,
 W/E y scaled (and N moved) for a taller outline, snapped to the M4 track phase 0.012 + 0.048k.
-usage: kv_grp_s7_kits.py <kit> <grp|grp_h> <height_um>
+usage: kv_grp_s7_kits.py <kit> <grp|grp_h> <height_um> [wf]
+wf (KV-GRP8 10-20, kits s7c/s7d): same floorplan, ring macro LEF with port-class faces (build_grp_rsp_delay_1020.py
+--write-face: read port W / write port E in the master, so under MY rd_out faces the E exits and wd_in faces the
+incoming word).  s7a/s7b (half/half pin split: wd_in[12:0] on the read face) failed trial GRT with GRT-0183 on ring-B
+wd_in[3] boxed at the stack end, in all four gates and again after a fresh-process resume.
 """
 import json, re, sys, copy
 from pathlib import Path
@@ -103,6 +107,7 @@ def macros(tile, H, view_row, view_ring):
 
 def main():
     kit, tile, H = sys.argv[1], sys.argv[2], float(sys.argv[3])
+    wf = len(sys.argv) > 4 and sys.argv[4] == "wf"
     src = json.loads((ROOT / f"physical/ref_tile/qkd_kvs_{tile}_s6a/spec.json").read_text())
     s = copy.deepcopy(src)
     vr = [m["view"] for m in src["macros"] if "128x256" in m["view"]][0]
@@ -119,16 +124,25 @@ def main():
     if "kits_b" in s:
         s["kits_b"]["frame"] = [388.8, H]
         s["kits_b"]["kit_outline"] = [388.8, H]
-    s["job"]["owner"] = "Claude:KV-GRP7"
-    s["job"]["branch"] = "claude/kv-grp7-1020"
+    s["job"]["owner"] = "Claude:KV-GRP8" if wf else "Claude:KV-GRP7"
+    s["job"]["branch"] = "claude/kv-grp8-1020" if wf else "claude/kv-grp7-1020"
     s["job"]["tag"] = kit.replace("qkd_kvs_", "")
     why = (f"KV-GRP7 s7 branch slices ({388.8} x {H}): four W->E PC-branch slices (row macro MY rd_out E -> two staggered "
            f"4-macro ring stacks A/B MY -> exit flops at E pins), E pins regrouped per branch by exact io_tcl; "
            f"no ring column in front of the E face, no ring word crosses another ring column; row gap {g:.1f} um.")
+    if wf:
+        why += (" KV-GRP8 s7c/s7d: ring macro LEF faces by port class (master W = clk/r_*/rd_out/w_mask[15:0], E = w_ce/"
+                "w_addr/wd_in/w_mask[31:16]; MY -> read port E toward the exits, write port W toward the incoming word); "
+                "s7a/s7b failed trial GRT with GRT-0183 on ring-B wd_in[3] (write word split over both faces wrapped "
+                "round the abutted stack ends), also after a fresh-process resume.")
     s["purpose"] = f"KV-GRP7 10-20: {why} Same RTL/netlist as s6 ({src['top']}), +0 cycles."
     s["structural_change"] = why + " s6 (all four gates) failed trial GRT at the NE ring stack in front of the 99%-pinned E face."
     s["reroute_reason"] = {"kind": "floorplan_change", "reason": "s6 gates FAIL trial GRT 323/280/128/111 (NE ring stack 31 um "
                            "from the 99%-pinned E face; W ring words crossing it). " + why}
+    if wf:
+        s["reroute_reason"] = {"kind": "floorplan_change", "reason": "s7a/s7b gates FAIL trial GRT: GRT-0183 boxed ring-B "
+                               "wd_in[3] (write word split over both macro faces, wrapped round abutted stack ends), "
+                               "repeated after the fresh-process GRT183 resume. " + why}
     s["fill_reason"] = {"pin_bound": f"4.6k signal pins on 388.8 x {H}; E face pins regrouped per branch; outline = die slot"
                         + (" grown to 388.8 x 432 (ROOT model)" if H > 400 else " (unchanged)")}
     kd = ROOT / f"physical/ref_tile/{kit}"

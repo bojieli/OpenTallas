@@ -191,6 +191,7 @@
     "logical_capacity": "32 banks x 4words x32bits =4096bits; all payload in actual SRAM",
     "operation": "single sameclock 1R1W, registered read, read-before-write on same address",
     "pin_access": "0.192um contacts; mirror-safe vertical outline; calibrated actual longest pin lead RC included via existing compiler helper",
+    "pin_faces": "KV-GRP8 --write-face: master W = clk,r_ce_in,r_addr_in,rd_out[31:0],w_mask_in[15:0]; master E = w_ce_in,w_addr_in,wd_in[31:0],w_mask_in[31:16]; outline/pitch/Liberty/behaviour unchanged",
     "qualification": "views only, no route/phase/behavior PASS claimed; timed/functional/SAT coupon required",
     "source_pinning": {
       "asap7.py": "5d655e0acdaaf386a1c8602b9ca01dfed64250f094355547703e95a40509afe6",
@@ -198,7 +199,7 @@
       "behav.py": "56db6bf14906a4152ea975a038dbce585e84ecbbf76fff778e99dbffac9685c5",
       "bitcell_density.json": "8bde87086a7f97e23df4c826f28bf4e8510a3180360116ebe92655abdce13484",
       "build_coll_safe_pins_1019.py": "4ce3ca2baa09be28687dd6586fa70381d183f7a9e07f3262fe58f419816d9379",
-      "build_grp_rsp_delay_1020.py": "86d125fef69f8179c893906a8a9979118ad2c6cd5c736a233954f5c18f5811f1",
+      "build_grp_rsp_delay_1020.py": "28fdb818c711044a8dfd7f06e09f8bc6da6d4a77e34880fea2c93803e407a272",
       "sram_gen.py": "b876be0fa55dad638d999cfee084c2176014e60720236e32025f53cef63faccf",
       "technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
       "views.py": "903794eb3e93fc6bee510ad90d84f16a30bcfba5a97b3b6dc1babec235be8dfa"
@@ -342,7 +343,7 @@
     }
   },
   "views": {
-    "ot_sram_1r1w_4x32_m1_p192_grp_rsp.lef": "22a537379a87d1006233bf997fffef49440fb8aef936ae17b5f293510725474f",
+    "ot_sram_1r1w_4x32_m1_p192_grp_rsp.lef": "9fc2714c51a4e2efe91408dc067d2fb5d3fed3791a8064cbee0e141b09185b57",
     "ot_sram_1r1w_4x32_m1_p192_grp_rsp.v": "94c0b7a1c85e2975132b94ede7de84afb26dfe985f97f69766b9f715664729e0",
     "ot_sram_1r1w_4x32_m1_p192_grp_rsp_bb.v": "c0e01e14ef2874f14038f60ae0746836d359e3aaa1a6f376e1e3fbe087b2c6a5",
     "ot_sram_1r1w_4x32_m1_p192_grp_rsp_ff.lib": "12d35027207971d7aaf3b3d109e18933a2237543925dd4e71905a1ee807ddcd7",

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_grp_s6c",
+ "enable": false,
+ "reason": "Mapped source preserves original two-stage own-domain reset landing and relay topology; port has one sink each. Independent-copy cold proof converges under actual reset, no equal initial state assumption."
+}
