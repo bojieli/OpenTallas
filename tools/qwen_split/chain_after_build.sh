@@ -11,6 +11,7 @@ cd $S/src
   export OT_BIND_VIEW_SELECT=results/arch/qwen_split_compute_1014/bind_view_select.json
 python3 tools/qwen_tp8/bind_real.py --case ../out/case --repo . --out ../bind.json > $R/bind.log 2>&1 || { echo bind failed; exit 8; }
 python3 tools/qwen_tp8/die_sta_libs.py --case ../out/case --repo . --bind ../bind.json --out $R/libs > $R/libs.log 2>&1 || { echo libs failed; exit 9; }
+python3 tools/qwen_split/prepare_chain_case.py $R/case_r22k || exit 11
 rsync -a ../out/case/ $R/case_r22k/
 cp ../bind.json ../out/relay_run.json $R/
 cat SOURCE_COMMIT > $R/case_r22k/SOURCE_COMMIT
