@@ -305,12 +305,19 @@ module ot_s81sl_vs #(
         end
 `endif
     wire [8:0] rs_e = rs - 9'd16;                    // ENG REDUCE K / W read r: copy r[6:4], pair r[3:1], W when r[0]
+`ifdef OT_S81SL_VS_SRAM
+    // second latched copy of the read base (same accept edge) for the MOE / RA / SW / QR address adders
+    (* keep="true" *) reg [9:0] a0_b;
+    always @(posedge clk) if(cmd_accept[118]) a0_b <= c_a0;
+`else
+    wire [9:0] a0_b = a0;
+`endif
     always @(posedge clk)
         case (op)
-            OP_MOE: x_ra <= a0 + {3'd0, rs[5:3], 4'd0} + {6'd0, rs[2:0], 1'b0};
-            OP_RA:  x_ra <= a0 + {2'd0, rs[8:3], 1'b0};
-            OP_SW:  x_ra <= (wr && rs == 9'd0) ? a1 : a0 + {1'b0, rs[8:2] - {6'd0, wr}, 1'b0};
-            OP_QR:  x_ra <= a0 + {rs[8:1], 1'b0};
+            OP_MOE: x_ra <= a0_b + {3'd0, rs[5:3], 4'd0} + {6'd0, rs[2:0], 1'b0};
+            OP_RA:  x_ra <= a0_b + {2'd0, rs[8:3], 1'b0};
+            OP_SW:  x_ra <= (wr && rs == 9'd0) ? a1 : a0_b + {1'b0, rs[8:2] - {6'd0, wr}, 1'b0};
+            OP_QR:  x_ra <= a0_b + {rs[8:1], 1'b0};
             OP_ENG: x_ra <= ph ? a0 + 10'd128 + {6'd0, rs[2:0], 1'b0} :
                            (rs < 9'd16) ? a0 + {rs[8:0], 1'b0} :
                            a1 + {3'd0, rs_e[0], 6'd0} + {3'd0, rs_e[6:4], 4'd0} + {6'd0, rs_e[3:1], 1'b0};
@@ -977,16 +984,21 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_vs_output8 #(parameter integer RWORD=0)(input wire clk,input wire[3:0]op,input wire[1:0]rk,input wire[7:0]sw,usw,qb,rar,ra,rb,eng,moe,output reg[7:0]wd,u);
   // opcode decoded once in a kept leaf (one-hot), so the op copy bits drive the decoder, not every result-bit mux
-  wire d8,d9,d10,d11,d14;
+  // two decoders: one for the wd byte, one for the u byte (each flag <= ~16 mux loads)
+  wire d8,d9,d10,d11,d14,e8,e9,e10,e11,e14;
   ot_s81sl_vs_odec8 u_dec(.op(op),.d8(d8),.d9(d9),.d10(d10),.d11(d11),.d14(d14));
+  ot_s81sl_vs_odec8 u_decu(.op(op),.d8(e8),.d9(e9),.d10(e10),.d11(e11),.d14(e14));
   wire [7:0] rsel=RWORD<3?(rk==RWORD?rar:ra):RWORD==3?rar:8'd0;
-  always @(posedge clk)
-    if(d8) begin wd<=sw;u<=usw;end
-    else if(d9) u<=qb;
+  always @(posedge clk) begin
+    if(d8) wd<=sw;
+    else if(d9) wd<=wd;
     else if(d10) wd<=rsel;
     else if(d11) wd<=rb;
     else if(d14) wd<=eng;
     else wd<=moe;
+    if(e8) u<=usw;
+    else if(e9) u<=qb;
+  end
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_vs_odec8(input wire[3:0]op,output wire d8,d9,d10,d11,d14);
