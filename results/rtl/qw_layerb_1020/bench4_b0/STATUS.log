@@ -1,0 +1,21 @@
+2026-10-18 12:08:22 [A] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L3
+2026-10-18 12:08:22 [C] start src 8a01e4a5aa968d509dbdf0b2a86e7df6fd0438e1 host ot-epyc5 mode L0
+2026-10-18 12:47:09 [A] build rc=0 wall_s=2327
+2026-10-18 12:49:23 [C] build rc=0 wall_s=2461
+2026-10-18 13:32:27 [C] runL0 rc=1 wall_s=2584 {"mode": "L0", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 16384, "kv_mismatches": 0}
+2026-10-18 17:59:34 [A] runL3 rc=1 wall_s=18745 {"mode": "L3", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 49152, "kv_mismatches": 6144}
+2026-10-18 18:00:54 [B2] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 unroll=0
+2026-10-18 18:00:54 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 unroll=0
+2026-10-18 18:07:42 [B2] build rc=1 wall_s=408
+2026-10-18 18:07:57 [B1] build rc=1 wall_s=423
+2026-10-18 19:05:28 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) unroll=0
+2026-10-18 19:15:02 [B1] build rc=1 wall_s=574
+2026-10-18 22:45:08 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) (/usr/bin/verilator) unroll=0
+2026-10-18 22:45:08 [B0] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 (/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real) unroll=0
+2026-10-18 22:45:09 [B1] build rc=1 wall_s=1 hier_verilator=
+2026-10-18 22:47:08 [B1u] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) (/usr/bin/verilator) unroll=8192
+2026-10-18 22:47:10 [B1u] build rc=1 wall_s=2 hier_verilator=VM_HIER_VERILATOR := /usr/bin/verilator
+2026-10-18 22:59:56 [B0] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 (/srv/opentallas-scratch/claude/lb2qc-ref-1018/v5050raw/bin/verilator) unroll=0
+2026-10-18 23:14:49 [B0] build rc=0 wall_s=893 hier_verilator=VM_HIER_VERILATOR := /srv/opentallas-scratch/claude/lb2qc-ref-1018/v5050raw/bin/verilator
+2026-10-18 23:15:44 [B0] nba_guard_scan rc=1 INPLACE_NBA_LOOPS=0 INPLACE_NBA_LOOPS=4 INPLACE_NBA_LOOPS=0 
+2026-10-19 00:26:32 [B0] runL0 rc=1 wall_s=4248 {"mode": "L0", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 16384, "kv_mismatches": 0}
