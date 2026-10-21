@@ -12,3 +12,4 @@ Causes (route hbm_pdie_ucie_colf-ucie5f-b5f0313fd): PMA_TX484 output buffer GPL-
 7 clock PASS: same 3 regional roots ck_tx/ck_rx/ck_rck, no new phase; CDC = 2-stage gray syncs (1st stages feed only 2nd stages).
 8 schedule PRICED: +1 cycle RX elastic latency (pointer visibility 3 stages) at the off-die UCIe boundary (elastic, flow control
   kept at off-die boundaries); no on-die scheduled edge, no port/width change. Pin-driver repair: placement only, no netlist edit.
+PDN: inherited validated macro_m5 grid for the M5-PG PMA abstracts (as colf; the generator still treats every macro as an M4-PG SRAM -> PDN-0233 in the 12:20 gate).
