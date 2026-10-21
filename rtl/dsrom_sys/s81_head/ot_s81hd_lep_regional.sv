@@ -30,10 +30,11 @@ module ot_s81hd_lep_regional (
     input  wire           sl_f,
     output wire           fault
 );
-    wire [1:0] rr_c, rr_a, rr_b;
+    wire [1:0] rr_c;
+    wire [2:0] rr_a, rr_b;
     ot_rst_relay_tree3 #(.REGIONS(2)) u_rr_c (.clk(ck), .rst_n_in(rst_n), .rst_n(rr_c));
-    ot_rst_relay_tree3 #(.REGIONS(2)) u_rr_a (.clk(ck_A), .rst_n_in(rst_n), .rst_n(rr_a));
-    ot_rst_relay_tree3 #(.REGIONS(2)) u_rr_b (.clk(ck_B), .rst_n_in(rst_n), .rst_n(rr_b));
+    ot_rst_relay_tree3 #(.REGIONS(3)) u_rr_a (.clk(ck_A), .rst_n_in(rst_n), .rst_n(rr_a));
+    ot_rst_relay_tree3 #(.REGIONS(3)) u_rr_b (.clk(ck_B), .rst_n_in(rst_n), .rst_n(rr_b));
     wire l0v, l0r, l1v, l1r, i0v, i0r, i1v, i1r; wire [552:0] l0d, l1d, i0d, i1d; wire [2:0] f0, f1; wire [1:0] rxv;
     wire l2v, l2r, l3v, l3r, i2v, i2r, i3v, i3r; wire [552:0] l2d, l3d, i2d, i3d; wire [2:0] f2, f3; wire [1:0] rxvb;
     wire [514:0] lrx0 = {rx0[512], rx0[513], rx0[511:0], rxv[0]};
@@ -46,7 +47,7 @@ module ot_s81hd_lep_regional (
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln1 (.ck(ck_A), .rs(rr_a[1]), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln2 (.ck(ck_B), .rs(rr_b[0]), .chb(ch_b), .rx(lrx2), .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln3 (.ck(ck_B), .rs(rr_b[1]), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
-    ot_s81sl_lep_mu_ab_regional #(.DR(12), .CRED(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck), .clk_a(ck_A), .clk_b(ck_B), .rst_n(rr_c[0]), .ro(ro), .ri(ri),
+    ot_s81sl_lep_mu_ab_regional_r3r #(.DR(12), .CRED(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck), .clk_a(ck_A), .clk_b(ck_B), .rst_n(rr_c[0]), .rst_n_a(rr_a[2]), .rst_n_b(rr_b[2]), .ro(ro), .ri(ri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
         .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(slf_q),
         .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),

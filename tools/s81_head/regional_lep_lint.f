@@ -9,6 +9,7 @@ rtl/common/landed_parent/ot_pl_land_field_copies.sv
 rtl/common/landed_parent/ot_pl_land_reset_forest.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv
 rtl/link/ot_link_crc32.sv
 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
 rtl/lib/ot_sram_oldread_b64.sv
