@@ -160,12 +160,12 @@ module ot_s81_engram_lookup_ra640 #(
     localparam [2:0] S_IDLE = 3'd0, S_FEED = 3'd1, S_HASH = 3'd2, S_ADDR = 3'd3, S_ISSUE = 3'd4, S_EMIT = 3'd5;
     reg [2:0] st;
     reg [1:0] fcnt;
-    reg [4*ENG_ID_W-1:0] ids;
+    wire [4*ENG_ID_W-1:0] ids;
     reg [SLW-1:0] slot;
     reg active;
     reg [15:0] age;
     reg protocol_bad;
-    reg [8:0] seen [0:CPR-1];
+    wire [8:0] seen [0:CPR-1];
     wire win_acc = win_valid && !active;
     wire response_ok = hr_valid && active && age < RETURN_AGE &&
         hr_slot == slot && hr_tag < CPR && hr_idx < 9 && !seen[hr_tag][hr_idx];
@@ -173,12 +173,10 @@ module ot_s81_engram_lookup_ra640 #(
     always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) begin
             active<=0; age<=0; protocol_bad<=0;
-            for(sr=0;sr<CPR;sr=sr+1) seen[sr]<=0;
         end else begin
             if(active) age<=age+1'b1;
             if(win_valid && active) protocol_bad<=1;
             if(hr_valid && !response_ok) protocol_bad<=1;
-            if(response_ok) seen[hr_tag_w][hr_idx]<=1'b1;
             if(active && age == RETURN_AGE) begin
                 if(st != S_EMIT) protocol_bad<=1;
                 for(sr=0;sr<CPR;sr=sr+1) if(seen[sr]!=9'h1ff) protocol_bad<=1;
@@ -187,11 +185,23 @@ module ot_s81_engram_lookup_ra640 #(
             if(active && age==RETURN_AGE+63) active<=0;
             if(win_acc) begin
                 active<=1;age<=0;
-                for(sr=0;sr<CPR;sr=sr+1) seen[sr]<=0;
             end
         end
     end
-    always @(posedge clk) if (win_acc) ids <= win_ids;
+    // Local acceptance gates are real logic inside kept consumer regions.
+    // Each gate drives at most16 captured payload bits, instead of sharing
+    // the original win_acc cone across189 native load pins. Same capture edge.
+    genvar acb;
+    generate for (acb=0; acb<(4*ENG_ID_W+15)/16; acb=acb+1) begin : g_accept_ids
+        localparam integer B=((4*ENG_ID_W-16*acb)<16)?(4*ENG_ID_W-16*acb):16;
+        ot_s81eng_accept_ids #(.W(B)) u_ids (.clk(clk), .win_valid(win_valid), .active(active),
+            .d(win_ids[16*acb +: B]), .q(ids[16*acb +: B]));
+    end
+    for (acb=0; acb<CPR; acb=acb+1) begin : g_accept_seen
+        ot_s81eng_accept_seen #(.BANK(acb)) u_seen (.clk(clk_ctl), .rst_n(rst_n),
+            .win_valid(win_valid), .active(active), .response_ok(response_ok),
+            .hr_tag_w(hr_tag_w), .hr_idx(hr_idx), .q(seen[acb]));
+    end endgenerate
 
     // ---- hash -------------------------------------------------------------------------
     // The 4th feed (fcnt 3) of a window hashes ids[0] newest .. ids[3] oldest with no pad (sequence start at feed 0),
@@ -698,4 +708,22 @@ module ot_s81_engram_lookup_ra640 #(
             end
         end
     end
+endmodule
+
+// Accepted-window payload and row-seen bookkeeping retain the exact original
+// edges and priority. Hierarchy keeps independent physical acceptance cones;
+// neither a buffer tree nor an extra registered control stage is introduced.
+(* keep_hierarchy = "yes" *) module ot_s81eng_accept_ids #(parameter integer W=16) (
+    input wire clk, win_valid, active, input wire [W-1:0] d, output reg [W-1:0] q
+);
+    always @(posedge clk) if (win_valid && !active) q <= d;
+endmodule
+(* keep_hierarchy = "yes" *) module ot_s81eng_accept_seen #(parameter integer BANK=0) (
+    input wire clk, rst_n, win_valid, active, response_ok,
+    input wire [2:0] hr_tag_w, input wire [3:0] hr_idx, output reg [8:0] q
+);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 9'd0;
+        else if (win_valid && !active) q <= 9'd0;
+        else if (response_ok && hr_tag_w == BANK) q[hr_idx] <= 1'b1;
 endmodule
