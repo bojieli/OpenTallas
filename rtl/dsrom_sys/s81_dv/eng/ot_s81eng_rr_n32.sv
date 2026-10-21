@@ -25,7 +25,7 @@ module ot_s81eng_xq_n32 #(
     wire[134:0] ex,ed;
     for(genvar eg=0;eg<15;eg=eg+1)begin:g_et
         ot_s81eng_rr_scale9 #(.DELTA(eg-136)) u_x(.scale(id[263:256]),.q(ex[9*eg+:9]));
-        ot_s81eng_rr_scale9 #(.DELTA(eg-136)) u_d(.et(ed),.q(ed[9*eg+:9]));
+        ot_s81eng_rr_scale9 #(.DELTA(eg-136)) u_d(.scale(wl[263:256]),.q(ed[9*eg+:9]));
     end
     genvar g;
     generate for (g = 0; g < 32; g = g + 1) begin : g_dec
