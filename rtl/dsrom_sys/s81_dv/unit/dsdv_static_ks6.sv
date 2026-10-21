@@ -58,7 +58,8 @@ module dsdv_static_ks6 #(
         // on a select root. Preserve hierarchy so identical decode cones stay
         // local to their actual narrow storage bank, with no added edge.
         (* keep_hierarchy = "yes" *) dsdv_static_ks6_bank13 u_data (
-            .ck(ck), .we(descriptor_write), .emit(descriptor_emit), .wr(wr), .rd(rd),
+            .ck(ck), .we(descriptor_write), .active(running),
+            .wait_one(wait_edges==1), .rd_ok(rd<6), .valid_rd(valid[rd]), .wr(wr), .rd(rd),
             .d(f_ks[13*bank+:13]), .q(timed_ks[13*bank+:13]));
     end endgenerate
     reg [5:0] valid;
@@ -86,28 +87,32 @@ module dsdv_static_ks6 #(
     wire wait_reload=descriptor_emit && rd!=5;
     wire [23:0] initial_wait=delta[23:0]-1'b1;
     wire [47:0] sync_value=hd[87:40]+1'b1;
-    wire sync_load=sync_epoch && !(selected && armed) && hd[39:8]==GRAPH_TAG;
-    wire first_load=pw && pa==0 && pd[27:26]==1;
     // Wide data is unreset and valid only after its explicit producer writes:
     // SYNC for epoch, ARM for owner/countdown, row0 for first issue, seal for
     // settle, and timed_valid for the opaque output. Reset only control state.
     genvar rg;
     generate for(rg=0;rg<4;rg=rg+1) begin:g_epoch
         (* keep_hierarchy="yes" *) dsdv_static_ks6_epoch12 u_epoch(
-            .ck(ck),.load(sync_load),.inc(epoch_valid),
+            .ck(ck),.sync(sync_epoch),.selected_armed(selected && armed),
+            .tag_ok(hd[39:8]==GRAPH_TAG),.inc(epoch_valid),
             .carry(&(global_edge | (48'hffffffffffff << (12*rg)))),
             .d(sync_value[12*rg+:12]),.q(global_edge[12*rg+:12]));
     end
     for(rg=0;rg<2;rg=rg+1) begin:g_wide
         (* keep_hierarchy="yes" *) dsdv_static_ks6_load12 u_first(
-            .ck(ck),.load(first_load),.d(pd[2+12*rg+:12]),.q(first_issue[12*rg+:12]));
+            .ck(ck),.pw(pw),.pa_zero(pa==0),.kind_one(pd[27:26]==1),.d(pd[2+12*rg+:12]),.q(first_issue[12*rg+:12]));
         (* keep_hierarchy="yes" *) dsdv_static_ks6_wait12 #(.RELOAD((SPAN>>(12*rg)) & 4095)) u_wait(
-            .ck(ck),.load(arm_good),.reload(wait_reload),.dec(wait_dec),
+            .ck(ck),.arm(arm),.bad_arm(bad_arm),.fault_clear(fault==0),
+            .upstream_fault(upstream_fault),.reload(wait_reload),.dec(wait_dec),
             .borrow(rg==0 ? 1'b1 : wait_edges[11:0]==0),
             .d(initial_wait[12*rg+:12]),.q(wait_edges[12*rg+:12]));
     end endgenerate
     always @(posedge ck) begin
-        if (arm_good) owner <= hd[193:184];
+        if (arm_good) begin owner <= hd[193:184]; wr<=0; rd<=0; end
+        else if (running) begin
+            if(f_ks[52]) wr<=wr+1'b1;
+            if(descriptor_emit && rd!=5) rd<=rd+1'b1;
+        end
         if (settle != 0) settle <= settle - 1'b1;
         if (pw && pd[27:26]==3 && !pd[25]) settle <= 0;
         if (pw && pd[27:26]==3 && pd[25]) settle <= NOPS+16;
@@ -119,7 +124,7 @@ module dsdv_static_ks6 #(
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
             timed_valid <= 0; selected <= 0; armed <= 0; done <= 0; fault <= 0;
-            valid <= 0; wr <= 0; rd <= 0;
+            valid <= 0;
             first_seen <= 0; sealed <= 0; prog_len <= 0;
             seal_phase <= 0;
             epoch_valid <= 0;
@@ -155,14 +160,14 @@ module dsdv_static_ks6 #(
                 if (bad_arm || fault != 0 || upstream_fault) begin
                     fault[1] <= 1; armed <= 0;
                 end else begin
-                    valid <= 0; wr <= 0; rd <= 0;
+                    valid <= 0;
                     armed <= 1; done <= 0;
                 end
             end else if (fault != 0 || immediate_bad) begin
                 armed <= 0;
             end else if (selected && armed) begin
                 if (f_ks[52]) begin
-                    valid[wr] <= 1; wr <= wr + 1'b1;
+                    valid[wr] <= 1;
                 end
                 if (wait_edges == 1) begin
                     // Registered output is sampled by the original seqhost
@@ -173,7 +178,6 @@ module dsdv_static_ks6 #(
                         timed_valid <= 1;
                         valid[rd] <= 0;
                         if (rd == 5) begin armed <= 0; done <= 1; end
-                        else begin rd <= rd + 1'b1; end
                     end
                 end
             end
@@ -188,11 +192,12 @@ endmodule
 // explicit onehot read selection replace variable wide part-select barrels.
 (* keep_hierarchy = "yes" *)
 module dsdv_static_ks6_bank13 (
-    input wire ck,we,emit,
+    input wire ck,we,active,wait_one,rd_ok,valid_rd,
     input wire [2:0] wr,rd,
     input wire [12:0] d,
     output reg [12:0] q
 );
+    wire emit=active && wait_one && rd_ok && valid_rd;
     reg [12:0] word0,word1,word2,word3,word4,word5;
     always @(posedge ck) begin
         if (we && wr==0) word0<=d;
@@ -208,16 +213,19 @@ module dsdv_static_ks6_bank13 (
     always @(posedge ck) q <= emit ? chosen : 13'd0;
 endmodule
 (* keep_hierarchy="yes" *)
-module dsdv_static_ks6_epoch12(input wire ck,load,inc,carry,input wire[11:0] d,output reg[11:0] q);
+module dsdv_static_ks6_epoch12(input wire ck,sync,selected_armed,tag_ok,inc,carry,input wire[11:0] d,output reg[11:0] q);
+    wire load=sync && !selected_armed && tag_ok;
     always @(posedge ck) if(load) q<=d; else if(inc) q<=q+carry;
 endmodule
 (* keep_hierarchy="yes" *)
-module dsdv_static_ks6_load12(input wire ck,load,input wire[11:0] d,output reg[11:0] q);
+module dsdv_static_ks6_load12(input wire ck,pw,pa_zero,kind_one,input wire[11:0] d,output reg[11:0] q);
+    wire load=pw && pa_zero && kind_one;
     always @(posedge ck) if(load) q<=d;
 endmodule
 (* keep_hierarchy="yes" *)
 module dsdv_static_ks6_wait12 #(parameter[11:0] RELOAD=0)
-(input wire ck,load,reload,dec,borrow,input wire[11:0] d,output reg[11:0] q);
+(input wire ck,arm,bad_arm,fault_clear,upstream_fault,reload,dec,borrow,input wire[11:0] d,output reg[11:0] q);
+    wire load=arm && !bad_arm && fault_clear && !upstream_fault;
     always @(posedge ck) if(load) q<=d; else if(reload) q<=RELOAD; else if(dec) q<=q-borrow;
 endmodule
 `default_nettype wire
