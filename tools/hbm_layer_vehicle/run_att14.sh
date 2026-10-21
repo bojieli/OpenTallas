@@ -39,7 +39,7 @@ QKV=$OUT/src/results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/kv
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 A="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/att_images.py unit --kv $OUT/kv --bundle $OUT/bundle"
 Q="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/qwen_att_unit.py run --kv $QKV --bundle $OUT/bundle"
-RUN="/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir $OUT --"
+RUN="/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir $OUT/src/tools --"
 # one build dir (obj_d0_p0 / obj_d0_p1) per job; the first op of each job builds it
 J_FULL=""; for L in 0 2 14; do
   J_FULL="$J_FULL $A --layer $L --work $OUT/w_full --out $OUT/out/ds_L${L}_full.json > $OUT/out/ds_L${L}_full.log 2>&1; echo DS_L${L}_FULL_RC \$?;"; done
@@ -57,7 +57,7 @@ FIX="$OUT/src/$DSF/fixtures/L00,$OUT/src/$DSF/fixtures/L02,$OUT/src/$DSF/fixture
 J_I="cd $OUT/r14src && export $VL && export FIXDIRS=$FIX && \
 for c in topk_r14_fix topk_r14; do bash rtl/test/toksim_idxdma/run_toksim_idxdma.sh $OUT/out/idx \$c > $OUT/out/idx_\$c.log 2>&1; echo IDX_\${c}_RC \$?; done; \
 for c in topk n12_ctl n12_dir; do bash rtl/test/hbm_idx_static/run_banklat_idx.sh $OUT/out/banklat \$c > $OUT/out/banklat_\$c.log 2>&1; echo BANKLAT_\${c}_RC \$?; done"
-/home/ubuntu/bin/ot-run --mem 32 --threads 8 --dir "$OUT" -- bash -c "$J_I" > "$LOGD/idx.otrun.log" 2>&1 &
+/home/ubuntu/bin/ot-run --mem 32 --threads 8 --dir "$OUT/src/tools" -- bash -c "$J_I" > "$LOGD/idx.otrun.log" 2>&1 &
 P4=$!
 wait $P2
 # SU merge (run_att_gap.sh part B, base run) on the L2 s32 RTL nodes, r14 SU arithmetic sources
@@ -78,7 +78,7 @@ cd $OUT/r14src; d=rtl/hbm_accel/generic/adapters/static_su; \
 set +e; $OUT/merge/obj/Vtb_su_static_arithmetic +DIR=$OUT/merge/vec_pos > $OUT/merge/pos.log 2>&1; echo MERGE_POS_RC \$?; \
 grep -h 'SU_ARITH' $OUT/merge/pos.log | cut -c1-300"
 if grep -q "DS_L2_S32_RC 0" "$LOGD/ds_s32.otrun.log"; then
-  /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$OUT" -- bash -c "$M" > "$LOGD/merge.otrun.log" 2>&1
+  /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$OUT/src/tools" -- bash -c "$M" > "$LOGD/merge.otrun.log" 2>&1
 else echo "MERGE SKIPPED (DS L2 s32 not PASS)" > "$LOGD/merge.otrun.log"; fi
 wait $P1 $P3 $P4
 grep -h "_RC \|RAN on\|NOT RUN\|SKIPPED" "$LOGD"/*.otrun.log
