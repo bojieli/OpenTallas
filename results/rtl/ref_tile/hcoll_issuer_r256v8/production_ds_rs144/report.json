@@ -57,10 +57,101 @@
     "include": 8
    },
    "host": "ot-gold2",
-   "cases": {},
-   "composites": {},
+   "cases": {
+    "ds_ag48": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 600 d1 594 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      600,
+      594
+     ],
+     "E": 600,
+     "log": "main_rows256/run/ds_ag48_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 600,
+     "src": "record.composed.AG.ds.48",
+     "delta_vs_ref": 0
+    },
+    "ds_ag144": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      760,
+      754
+     ],
+     "E": 760,
+     "log": "main_rows256/run/ds_ag144_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 760.0,
+     "composed": 739.4,
+     "src": "record.ag144_measured_vs_composed",
+     "delta_vs_ref": 0.0
+    },
+    "ds_rs144": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      862,
+      872
+     ],
+     "E": 872,
+     "log": "main_rows256/run/ds_rs144_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 872.0,
+     "composed": 918.0,
+     "src": "record.rs144_measured_vs_composed",
+     "delta_vs_ref": 0.0
+    }
+   },
+   "composites": {
+    "hbm_ds_ar_ogroup_rs144_ag144": {
+     "parts": [
+      "ds_rs144",
+      "ds_ag144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 1632,
+     "ref": 1632.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 1657.4
+    },
+    "hbm_ds_moe_ag144": {
+     "parts": [
+      "ds_ag144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 760,
+     "ref": 760.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 739.4
+    },
+    "hbm_ds_ag144": {
+     "parts": [
+      "ds_ag144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 760,
+     "ref": 760.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 739.4
+    },
+    "hbm_ds_rs144": {
+     "parts": [
+      "ds_rs144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 872,
+     "ref": 872.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 918.0
+    }
+   },
    "successor_files": [],
-   "status": "RUNNING"
+   "status": "DONE rc=0"
   }
  }
 }
