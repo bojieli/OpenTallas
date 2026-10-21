@@ -7301,6 +7301,11 @@ def _gen16_clock_refile(m, regs, by, per):
                 per[nk] = mv
                 r2.append(dict(region=r0['name'], kept=hs[0], moved=h, new_root=f'pll_r{nk}', pins=len(mv)))
 
+    # Ownership is checked against FINAL roots, after both column and hard splits.
+    if os.environ.get('OT_SPLIT_RST_REGION_LAND', '0') == '1':
+        from qwen_split.reset_region_capture import finalize as _final_reset_capture
+        _final_reset_capture(m, per, ROOT)
+
 
 def _gen16_fwd_ck_names(m):
     """fwd_lanes.json src_ck / dst_ck = the region nets the lane's hop-0 / landing clock pins are ACTUALLY on (Q-CLK: the
