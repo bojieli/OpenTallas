@@ -18,7 +18,7 @@ import dv_layer_compile as D
 from entry_inputs import compile_inputs
 
 
-def compile_jobs(die, entry, mechanism, out):
+def compile_jobs(die, entry, mechanism, out, prog_jobs=()):
     if 'retire_not_before' not in D.finish.__code__.co_names:
         raise ValueError('entry jobs require current native compiler static-END fence support')
     if mechanism.get('status') != 'PASS':
@@ -92,6 +92,8 @@ def compile_jobs(die, entry, mechanism, out):
         prog.retire_not_before = int(math.ceil(max(hload+gain)+1))
         rows, host, end = D.finish(prog)
         prefix='job'+str(len(jobs))
+        if len(jobs) in prog_jobs:
+            write_replay_prog(die, prog, rows, host, out/('replay_'+prefix), entry)
         (out/(prefix+'.host_boot.memh')).write_text(D.memh(host,515))
         jobs.append(dict(job=len(jobs), native_commands=len(prog.rows), nops=len(rows),
                          end_age=end, retire_not_before=prog.retire_not_before,
@@ -112,14 +114,39 @@ def compile_jobs(die, entry, mechanism, out):
     return manifest
 
 
+def write_replay_prog(die, prog, rows, host, pd, entry):
+    """TOK-FUNC2-S81: one job as a dv_cut_replay programme dir (schedule.json events = the CTL arrivals that
+    row_ctl_events derives from the real calendar rows; prog/host_boot.memh = the same host words as the job file)."""
+    D.row_ctl_events(die, prog)
+    (pd/'prog').mkdir(parents=True)
+    (pd/'prog/host_boot.memh').write_text(D.memh(host, 515))
+    (pd/'prog/ctl_templates.json').write_text(json.dumps(dict(
+        schema='opentallas.s81_dv.ctl_templates.v1', n=len(prog.templates),
+        templates=[dict(i=i, name=n, payload186=f'{p:047x}', beat=f'{D.ctl_line_beat(p):053x}')
+                   for i, (n, p) in enumerate(zip(prog.tnames, prog.templates))]), indent=1)+'\n')
+    links = {k: v for k, v in die.links.items()
+             if k.startswith(('tvS_seqhost', 'tvN_seqhost', 'tvS_bk_sel'))
+             or any(s_[0] in ('u_seqhost', 'u_bk_sel') for s_ in v['src']+v['dst'])}
+    (pd/'schedule.json').write_text(json.dumps(dict(
+        schema='opentallas.s81_dv.layer_schedule.v1', layer='L0.entry', slice=None,
+        timing_contract=die.timing_contract, events=sorted(prog.events, key=lambda e: e['cycle']),
+        port_valid=prog.port_valid, links=links,
+        calendar=[dict(i=i, issue=r['issue'], engine=r['eng'], arg=r['arg'], what=r.get('what')) for i, r in enumerate(rows)],
+        input_sources=entry['input_sources']), indent=1)+'\n')
+    (pd/'manifest.json').write_text(json.dumps(dict(schema='opentallas.s81.entry_replay_prog.v1',
+        die_v_sha256=die.die_sha), indent=1)+'\n')
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--tree',type=Path,required=True)
     ap.add_argument('--fixtures',type=Path,required=True)
     ap.add_argument('--mechanism-receipt',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--replay-job',type=int,action='append',default=[],help='also write job K as a dv_cut_replay prog dir')
     a=ap.parse_args();die=D.Die(a.tree)
-    data=compile_jobs(die,compile_inputs(die,a.fixtures),json.loads(a.mechanism_receipt.read_text()),a.out)
+    data=compile_jobs(die,compile_inputs(die,a.fixtures),json.loads(a.mechanism_receipt.read_text()),a.out,
+                      prog_jobs=set(a.replay_job))
     print('ENTRY_NATIVE_JOBS',len(data['jobs']),'PARTIAL: real host/global route adoption held')
 
 
