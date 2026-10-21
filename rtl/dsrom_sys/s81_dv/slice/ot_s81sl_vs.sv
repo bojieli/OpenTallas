@@ -311,8 +311,9 @@ module ot_s81sl_vs #(
     always @(posedge clk) if(cmd_accept[118]) a0_b <= c_a0;
     // and of the read step (same reset / accept edge / increment as rs)
     (* keep="true" *) reg [8:0] rs_b;
-    always @(posedge clk or negedge rs_r)
-      if(!rs_r) rs_b<=0;else if(cmd_accept[124]) rs_b<=0;else if(rrun) rs_b<=rs_b+1'b1;
+    // own reset leaf rsv[38] (otherwise unused; same tree depth / release edge as rs_r)
+    always @(posedge clk or negedge rsv[38])
+      if(!rsv[38]) rs_b<=0;else if(cmd_accept[124]) rs_b<=0;else if(rrun) rs_b<=rs_b+1'b1;
 `else
     wire [9:0] a0_b = a0;
     wire [8:0] rs_b = rs;
