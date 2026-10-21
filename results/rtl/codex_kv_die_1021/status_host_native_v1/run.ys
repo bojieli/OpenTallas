@@ -1,0 +1,15 @@
+read_liberty -lib /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -lib /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -lib /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+read_verilog -sv -DSYNTHESIS ot_qwen_status_observers_v1.sv qkd_host_status_obs.sv
+hierarchy -check -top qkd_host_status_obs
+tcl physical/common_flow/ot_keep_regs.tcl
+synth -top qkd_host_status_obs -flatten
+dfflibmap -liberty /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+opt_clean -purge
+autoname
+write_verilog -noattr native/mapped.v
+stat
