@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-mkdir -p cxbits_area
-cd cxbits_area
+mkdir -p cxbits_area_atomic
+cd cxbits_area_atomic
 cp ../ot_link_afifo.sv .
-cp ../cxbits_bench/qkc_afifo_bits_1021.sv .
+cp ../cxbits_atomic_r2/qkc_afifo_bits_1021.sv .
 ln -sfn ../libs libs
 cat > tops.sv <<'SV'
 module area_gold(input wclk,rclk,wrst_n,rrst_n,wr,rd,input[63:0]wdata,output wfull,ovf,rempty,output[4:0]wfreed,rcount,output[63:0]rdata);

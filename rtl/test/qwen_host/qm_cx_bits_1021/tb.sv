@@ -25,8 +25,10 @@ module tb;
         if(!ge&&gd!==dd)begin
           errors=errors+1;if(errors<4)$display("head mismatch t=%0t gold=%h got=%h",$time,gd,dd);
         end
-        // Control state must match across all independent pinned slices.
-        if(dut.full_b!=={64{df}}||dut.empty_b!=={64{de}}||dut.ovf_b!=={64{dover}})errors=errors+1;
+        // All pointer readiness matches in the equal-SYNC test. Coordinated
+        // admission suppresses blocked writes before local ovf; the wrapper
+        // preserves the original blocked-write fault on its public ovf.
+        if(dut.full_b!=={64{df}}||dut.empty_b!=={64{de}}||(|dut.ovf_b)!==1'b0)errors=errors+1;
       end
     endtask
     always @(negedge wc)begin

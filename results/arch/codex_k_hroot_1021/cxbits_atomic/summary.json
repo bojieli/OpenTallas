@@ -1,0 +1,32 @@
+{
+  "qualified": false,
+  "reason": "Standalone digital proof only; canonical source CDC and physical preservation not yet qualified. Prior slice0-only R0 is superseded and unsafe for unequal synchronizer visibility.",
+  "source_sha256": {
+    "rtl/qwen_sys/host_cluster_cdc_20261018/qkc_afifo_bits_1021.sv": "b6863ffabdcf9308ef270327e8ae897931c6ce3d3d53948abc999dd9df8d8758",
+    "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "rtl/test/qwen_host/qm_cx_bits_1021/tb.sv": "97502334c52a75f66f1a93c6953eefed83597642034e41e540e0a3ded256f608",
+    "rtl/test/qwen_host/qm_cx_bits_1021/tb_atomic.sv": "f5f4090f0cb065d0874c258971c1ccd05bdb4a80d870b59f7cece2e8d3ee27a8"
+  },
+  "native_primitive": "unchanged pinned ot_link_afifo, 64 parallel W1",
+  "protocol": "AND all ready/valid coordinated admission, OR faults, own valid payload capture. Minimum occupancy and cumulative credit tracking.",
+  "same_edge_delta_cycles": 0,
+  "skew_visibility": "SYNC 2/3 alternating; atomic test and causal uncoordinated mutant",
+  "area_um2": {
+    "original": 558.03492,
+    "atomic": 3393.75744,
+    "delta": 2835.72252
+  },
+  "cells": {
+    "original": 4419,
+    "atomic": 27698
+  },
+  "flops": {
+    "original": 1073,
+    "atomic": 4545
+  },
+  "remaining": [
+    "unchanged canonical Gray checker source proof",
+    "exact integrated native32 census",
+    "source-bound coldboot/equivalence on selected host shell"
+  ]
+}

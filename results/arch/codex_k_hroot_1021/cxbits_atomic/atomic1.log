@@ -1,0 +1,4 @@
+CX_BITS_ATOMIC FAIL MUT=1 errors=65516 checks=1708
+[28112000] %Fatal: tb_atomic.sv:36: Assertion failed in tb_atomic: non-atomic FIFO word
+%Error: tb_atomic.sv:36: Verilog $stop
+Aborting...
