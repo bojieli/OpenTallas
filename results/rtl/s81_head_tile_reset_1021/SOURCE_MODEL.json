@@ -32,5 +32,15 @@
     "steady_state_traffic_cycles_delta": 0,
     "bench_source": "20087f28a",
     "bench_scope": "actual new source tile inside existing golden mini: all startup/reset-reassert edges compared against depth3, old depth2 model records exactly three one-edge differences; physical mapped/native qualification pending"
+  },
+  "source_state_model": {
+    "old_kit_reset_flops": 336,
+    "selected_source_reset_flops": 1602,
+    "reset_flop_delta": 1266,
+    "active_JOIN_elements": 4,
+    "valid_flop_delta_per_JOIN": 4,
+    "active_JOIN_valid_flop_delta": 16,
+    "total_source_flop_delta": 1282,
+    "scope": "Source/parameter-elaboration state count only. Final mapped census, area, layout, clock and timing remain pending."
   }
 }
