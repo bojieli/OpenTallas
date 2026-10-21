@@ -860,6 +860,17 @@ def apply_dv(v, m):
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
         if wrtl:
             _wcol_rebind(v, m, M, keep, out, wrtl)
+        if HEAD_PREP:
+            expected = {'head_descriptor_v','head_descriptor_tag','head_descriptor_generation'}
+            debt = set(m.get('sys_face_bind', {}).get('deferred_inputs', []))
+            if debt != expected:
+                raise ValueError(f'actual DV head descriptor debt mismatch {debt} vs {expected}')
+            for p_ in expected:
+                actual = [es for _,_,_,es in out if ('sys_face',p_) in es]
+                if len(actual)!=1 or actual[0] != [('native59',p_),('sys_face',p_)]:
+                    raise ValueError(f'head descriptor lacks one exact actual producer: {p_} {actual}')
+            m['sys_face_bind']['deferred_inputs'] = []
+            m['sys_face_bind']['head_descriptor_bound'] = sorted(expected)
         # chain-end idle inputs (rule c): W5 sc up-travelling input from the W column side (no scalar producer west of
         # W5: the scalar chain is slice-to-slice, its ROOT is on W5), E5 up-face inputs, the l9_wi of an unpaired slice --
         # only where no bus lands.  QLB-C4b 10-18: W5 st_wi is NOT a chain-end idle input any more (tt_ctlm.tl drives

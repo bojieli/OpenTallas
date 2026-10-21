@@ -181,11 +181,15 @@ def apply(model):
     conn = {p for b, c, n, es in model['buses'] for i, p in es if i == INST}
     conn = {alias.get(p, (p, None))[0] for p in conn}
     open_in = sorted(p for p, (n, d) in sf.items() if d == 'input' and p not in conn)
-    if open_in:
-        raise ValueError(f'sys face bind: qfd_sys_face inputs left open {open_in}')
+    late_inputs = {'head_descriptor_v','head_descriptor_tag','head_descriptor_generation'} if HEAD_PREP else set()
+    if HEAD_PREP and not os.environ.get('OT_SPLIT_DV'):
+        raise ValueError('head descriptor requires the actual DV rebind stage')
+    if set(open_in) != late_inputs:
+        raise ValueError(f'sys face bind: unexpected unconnected inputs {open_in}; actual DV descriptor debt {sorted(late_inputs)}')
     rec = dict(master=MASTER, source=SOURCE, source_sha256=hashlib.sha256((ROOT / SOURCE).read_bytes()).hexdigest(),
                provider=dict(master=PROV_MASTER, source=PROV_SOURCE), straps=[s[0] for s in STRAPS],
                added_buses=added, appended_buses=sorted(set(appended)), new_instances=NEW_INSTS, frames=None,
+               deferred_inputs=sorted(late_inputs),
                qualified=False, note='NEW unclosed parent; site from place() unless the homes file names it')
     model['sys_face_bind'] = rec
     return rec
