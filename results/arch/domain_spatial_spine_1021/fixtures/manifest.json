@@ -1894,13 +1894,27 @@
     ],
     "expected_physical_liberty_contacts": {
       "ck_core": 11940,
-      "ck_hr": 5187
+      "ck_hr": 5188
     },
     "frozen_recorded_tool_version": "26Q3-1510-g6cb3f2b704",
     "original_gate_image_digest": "NOT_RECORDED",
     "current_preparation_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
     "scope": "Actual immutable PRECTS savedODB+frozen scene; not original gate timing replay or current FRAME signoff proof.",
-    "expected_count_basis": "Mapped-source/native physical Liberty contact census; actual OpenROAD collector NOTRUN",
-    "original_STA_sinkcounts": "Not used as physical count acceptance"
+    "expected_count_basis": "Actual current production collector 11940/5188, preserving all17127 source-native contacts plus exactly one existing physical HR pin-flop clone; no exemption",
+    "original_STA_sinkcounts": "Not used as physical count acceptance",
+    "expected_source_native_contacts": {
+      "ck_core": 11940,
+      "ck_hr": 5187
+    },
+    "physical_contact_delta": {
+      "terminal": "ot_prs_00000_ff/CLK",
+      "root": "ck_hr",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "CLK",
+      "cause": "Frozen pin_reg_split.tcl same-master clone, inputs/clock/reset nets retained",
+      "evidence": "../ctlm_contact_delta/receipt.json",
+      "comparison": "../ctlm_contact_delta/compare.py",
+      "receipt_sha256": "746b59aa198d03c1b0e23b2cafe24b0ac788eafe95550362147962f46c1ce490"
+    }
   }
 }
