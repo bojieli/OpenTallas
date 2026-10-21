@@ -908,6 +908,9 @@ def main():
     ap.add_argument('--rope-candidate', action='store_true', help='explicit unqualified candidate source: local C bank exchange and runtime coefficient staging')
     ap.add_argument('--rope-source', type=Path, help='actual candidate scoped pgslice source')
     ap.add_argument('--rope-die', type=Path, help='actual candidate die with all four SW PAIR_C_READS=1 bindings')
+    ap.add_argument('--pv-probability-candidate', action='store_true', help='emit source-bound partial PV input plans; keeps ATT.PV consumer/calendar open')
+    ap.add_argument('--pv-probability-source', type=Path, help='actual source root containing qualified probability producer candidate files')
+    ap.add_argument('--pv-probability-contract', type=Path, help='actual selected xload parameter contract')
     ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
     ap.add_argument("--defer-records", default="", help="(--su-lower2, internal) records left unlowered because their "
                     "VM-linked programme group exceeds the TB event depth")
@@ -931,6 +934,9 @@ def main():
     a = ap.parse_args()
     if a.rope_candidate and (not a.su_lower2 or a.rope_source is None or a.rope_die is None):
         ap.error('--rope-candidate requires --su-lower2 and actual --rope-source/--rope-die bindings')
+    if a.pv_probability_candidate and (not a.su_lower2 or a.fixtures is None or
+            a.pv_probability_source is None or a.pv_probability_contract is None):
+        ap.error('--pv-probability-candidate requires actual source/contract and fixture-backed --su-lower2 producer')
     if a.sm_lowering and (a.smw is None or a.fixtures is None):
         ap.error("--sm-lowering needs --fixtures and --smw")
     if (a.native_read_return is None) != (a.native_write_return is None):
@@ -1090,6 +1096,10 @@ def main():
                            prior_record_price_qualified=False,
                            record_price_delta_stream_edges=su['timing_obligations']['stream_edges']-(r['end']-r['start']),
                            price_scope='actual emitted bounded programme, no inherited layer/token throughput claim')
+                ent['effective_record_price'] = dict(serial_edges=len(su.get('lines', [])),
+                    stream_edges=su['timing_obligations']['stream_edges'],
+                    source='actual emitted programme occupancy; configuration cost recorded separately per programme',
+                    inherited_price_qualified=False, execution_qualified=False)
             if fx:
                 ent["fixture"] = dict(su.get("fixture", dict(matched=False)), pad_words_zero=su.get("pad_words_zero", 0))
                 if su.get('fixture_reduction_reference'):
@@ -1253,6 +1263,13 @@ def main():
                 written_at[ls_] = l0 + e
             ent.update(programme=k, line0_serial=l0, compiled_commit_serial=l0 + (su["last_commit"] or 0),
                        priced_end_serial=t0 + serial(r["end"]))
+            if ent.get('effective_record_price'):
+                # Actual consumers (commit slack, following programme occupancy)
+                # use the emitted kernel length. Keep the superseded nominal
+                # estimate separately so it cannot masquerade as a valid budget.
+                ent['inherited_priced_end_serial'] = ent['priced_end_serial']
+                ent['inherited_commit_slack_edges'] = ent['priced_end_serial']-ent['compiled_commit_serial']
+                ent['priced_end_serial'] = l0+len(su['lines'])
             ent["commit_slack_edges"] = ent["priced_end_serial"] - ent["compiled_commit_serial"]
             if note:
                 ent.setdefault("reasons", []).append(note)
@@ -1483,6 +1500,38 @@ def main():
                                                      skipped_components=cx.skipped,
                                                      component_runs_top_sector=place.top))),
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
+    effective_prices = [dict(i=r['i'], tag=r['tag'], programme=r.get('programme'),
+                             **r['effective_record_price'])
+                        for r in manifest if r.get('effective_record_price') and 'programme' in r]
+    if effective_prices:
+        man['emitted_record_prices'] = dict(scope='actual bounded emitted kernels; no complete layer/token rate',
+                                           records=effective_prices, inherited_prices_qualified=False,
+                                           configuration_cost='su_programmes[].config_writes at one serial edge each')
+    if a.pv_probability_candidate:
+        from hbm_layer_vehicle import pv_probability_rows_1340 as PV
+        producer = next((r for r in manifest if r['tag']=='attend.bf16_p' and 'programme' in r), None)
+        partial = []
+        for r in manifest:
+            if r['op'] != 'ATT.PV':
+                continue
+            if producer is None:
+                r['reasons'].append('PV input producer join OPEN: no emitted attend.bf16_p programme')
+                continue
+            metadata = json.loads((a.fixtures/'records.json').read_text())['records'][str(a.rank)]
+            node = next(x for x in metadata if x['op']=='ATT.PV')
+            record = json.loads((a.out/'images'/f"r{producer['i']:03d}_su"/'record.json').read_text())
+            plan = PV.plan(logical_words=desc_addrs(node['desc']['A']), producer_entry=producer,
+                producer_record=record, contract=json.loads(a.pv_probability_contract.read_text()),
+                source_root=a.pv_probability_source)
+            directory = a.out/'pv_probability_input'; directory.mkdir(parents=True, exist_ok=True)
+            (directory/f"r{r['i']:03d}.json").write_text(json.dumps(plan,indent=1)+'\n')
+            r['partial_probability_input'] = dict(status=plan['status'], pages_required=plan['pages_required'],
+                rows=plan['probability_rows'], fixed_input_kernel_stream_edges=plan['fixed_input_kernel_stream_edges'],
+                full_ATT_PV_lowered=False, producer_join_qualified=False, input_M_events=0,
+                refusal=plan['refusal'])
+            r['reasons'].append(plan['refusal'])
+            partial.append(dict(i=r['i'], **r['partial_probability_input']))
+        man['partial_probability_inputs'] = partial
     (a.out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     print(json.dumps(dict(records=len(manifest), events=len(events), counts=man["counts"], t0_serial=t0)))
 

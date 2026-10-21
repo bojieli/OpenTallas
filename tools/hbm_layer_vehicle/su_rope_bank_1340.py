@@ -10,6 +10,33 @@ import re
 import numpy as np
 
 
+def _selected_pair_bindings(text):
+    """Balanced parameter-list prefilter. Actual Verilator proof is still required."""
+    result = {}
+    for match in re.finditer(r"ot_hbm_su_static_pgslice_lg\s*#\s*\(", text):
+        start = match.end(); depth = 1; stop = start
+        while stop < len(text) and depth:
+            depth += (text[stop] == "(") - (text[stop] == ")")
+            stop += 1
+        if depth:
+            continue
+        instance = re.match(r"\s*(su_SW[0-3])\s*\(", text[stop:])
+        if instance is None:
+            continue
+        params = text[start:stop-1]
+        # Each named argument is consumed completely; nested/malformed lists fail closed.
+        fields = {}; cursor = 0
+        while cursor < len(params):
+            item = re.match(r"\s*\.(\w+)\s*\(\s*([^()]*)\s*\)\s*(,|$)", params[cursor:])
+            if item is None:
+                fields = {}; break
+            if item[1] in fields:
+                fields = {}; break
+            fields[item[1]] = item[2].strip(); cursor += item.end()
+        result[instance[1]] = fields.get("PAIR_C_READS")
+    return result
+
+
 def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=None,
           pair_c_reads=0, pair_source_path=None, pair_die_path=None, **unused):
     from hbm_layer_vehicle import layer_images as LI
@@ -41,9 +68,9 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
         selected_die = Path(pair_die_path).read_text()
     except OSError:
         return refuse("actual_selected_die_source_unreadable")
+    bindings = _selected_pair_bindings(selected_die)
     for group in range(4):
-        match = re.search(r"ot_hbm_su_static_pgslice_lg #\(([^\n]*)\)\) su_SW" + str(group) + r" \(", selected_die)
-        if match is None or ".PAIR_C_READS(1)" not in match[1]:
+        if bindings.get("su_SW" + str(group)) != "1":
             return refuse("actual_selected_SW_instance_PAIR_C_READS1_missing:" + str(group))
     if type(scratch_base) is not int or scratch_base < 0 or scratch_base % 128:
         return refuse("allocated128word_aligned_physical_VM_WORD_scratch_base_required")

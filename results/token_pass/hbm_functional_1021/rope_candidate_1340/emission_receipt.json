@@ -1,5 +1,5 @@
 {
-  "status": "PASS_CANDIDATE_EMISSION_ONLY",
+  "status": "DIAGNOSTIC_INVALID_OLD_DIE_BINDING",
   "hardware_executed": false,
   "qualifies_native_layer": false,
   "qualifies_native_chain": false,
@@ -37,5 +37,6 @@
     "reserved.json": "a015493aa399274944faff9adc62ee8c153efeb0586fb16788dd34e17221ab60",
     "manifest.json": "198a7f56c29678adf5bb87d4c39542ee9b979656d94266c04212400122238342"
   },
-  "scope": "one original selected L0 kv_rope.tail record; actual minimal source-qualified RTL proof owned by collect_su and pending"
+  "scope": "one original selected L0 kv_rope.tail record; actual minimal source-qualified RTL proof owned by collect_su and pending",
+  "invalid_reason": "initial candidate die had malformed PRETREE/PAIR_C_READS parameter syntax; parser rejected before build"
 }
