@@ -1495,7 +1495,7 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
  //   ordered canonical max, tree_cmd[10]) on tree_o, registered at E+58 (LAT 6, OPR 1). The quarter core joins the four
  //   slices (qcore PRETREE). One block per edge; no stall. On the die the leaf is its own tile su_pt_<q><g> beside the
  //   slice; tree_o / pt_ro_* are the same nets.
- parameter integer PRETREE=0
+ parameter integer PRETREE=0, PAIR_C_READS=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -1694,6 +1694,14 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
  end
  // ------------------------------------------------------------------ store banks
  wire [32*192-1:0] bank_q;
+ // Opt-in adjacent C-bank exchange. Address low bits name the physical
+ // source bank; rows stay exactly as emitted. Every pair remains local.
+ wire [31:0] c_pair_req;
+ for(genvar pn=0;pn<32;pn=pn+1)begin:g_pair_request
+  assign c_pair_req[pn]=(PAIR_C_READS!=0) && rd_re[pn*4+2] &&
+    rd_src[pn*8+4+:2]==0 && rd_addr[(pn*4+2)*24+:7]==7'(lid(pn)^1);
+ end
+
  wire [31:0] st_inj_drain;
  wire [31:0] st_conflict,st_id_fault;
  // drain store-group reads: port h reads group (h, grp_hi) = slice lanes 8h + 16*grp_hi .. +7
@@ -1706,8 +1714,11 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
   localparam integer L=lid(n),H=(n/8)%2,HI=n/16,K=n%8;
   wire [53:0] ra; wire [5:0] rv; wire [191:0] q;
   for(genvar p=0;p<4;p=p+1)begin:g_read
-   wire [23:0] a=rd_addr[(n*4+p)*24+:24];
-   assign ra[p*9+:9]={a[17:16],a[13:7]}; assign rv[p]=rd_re[n*4+p]&&rd_src[n*8+2*p+:2]==2'd0;
+   wire use_neighbour=(p==2) && c_pair_req[n^1];
+   wire [23:0] a=use_neighbour?rd_addr[((n^1)*4+p)*24+:24]:rd_addr[(n*4+p)*24+:24];
+   wire own=rd_re[n*4+p]&&rd_src[n*8+2*p+:2]==2'd0 && !((p==2)&&c_pair_req[n]);
+   assign ra[p*9+:9]={a[17:16],a[13:7]};
+   assign rv[p]=use_neighbour || own;
   end
   assign ra[4*9+:9]={vi_addr[n*24+16+:2],vi_addr[n*24+7+:7]}; assign rv[4]=vi_re[n]; assign vi_q[n*32+:32]=q[4*32+:32];
   wire drn=dr_v[H]&&dr_hi[H]==1'(HI);
@@ -1727,7 +1738,14 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
   reg idf; integer p2;
   always @*begin
    idf=lw&&(la[6:0]!=7'(L)||la[15:14]!=2'(QID));
-   for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
+   for(p2=0;p2<4;p2=p2+1)
+    if(rd_re[n*4+p2]&&rd_src[n*8+2*p2+:2]==0 &&
+      ((rd_addr[(n*4+p2)*24+:7]!=7'(L) && !((p2==2)&&c_pair_req[n])) ||
+       rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
+   // One physical C reader cannot serve different rows of two live requests.
+   if(c_pair_req[n^1] && !c_pair_req[n] && rd_re[n*4+2] && rd_src[n*8+4+:2]==0 &&
+     {rd_addr[(n*4+2)*24+16+:2],rd_addr[(n*4+2)*24+7+:7]} !=
+     {rd_addr[((n^1)*4+2)*24+16+:2],rd_addr[((n^1)*4+2)*24+7+:7]})idf=1;
   end
   assign st_id_fault[n]=idf;
   ot_hbm_su_static_pinned_bank__d4g_pgslice #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
@@ -1754,10 +1772,14 @@ module ot_hbm_su_static_pgslice__d4g_pgslice #(
  reg [31:0] rf_src_bad;
  for(genvar n=0;n<32;n=n+1)begin:g_opmux
   wire [3:0] is_rf;
+  reg [2:0] pair_c_age;
+  always @(posedge clk_lane[n*8])pair_c_age<={pair_c_age[1:0],c_pair_req[n]};
   reg [3:0] src1_a,src1_b,src1_c;      // the stream's source code 1 rides the read: request n -> select held n+2..n+3
   for(genvar p=0;p<4;p=p+1)begin:g_p
    assign is_rf[p]=rd_re[n*4+p]&&rd_src[n*8+2*p+:2]==2'd1;
-   assign rd_q[(n*4+p)*32+:32]=((MUT==4)?src1_b[p]:src1_c[p])?rf_bword_u[p*32+:32]:bank_q[n*192+p*32+:32];
+   wire [31:0] bank_word=((PAIR_C_READS!=0)&&(p==2)&&pair_c_age[2])?
+      bank_q[((MUT==16)?n:(n^1))*192+p*32+:32]:bank_q[n*192+p*32+:32];
+   assign rd_q[(n*4+p)*32+:32]=((MUT==4)?src1_b[p]:src1_c[p])?rf_bword_u[p*32+:32]:bank_word;
   end
   always @(posedge clk_lane[n*8])begin src1_a<=is_rf;src1_b<=src1_a;src1_c<=src1_b;end
   integer p2;
@@ -1842,7 +1864,7 @@ module ot_hbm_su_static_pgslice_lg #(
  parameter integer RF_LOCAL=0,
  parameter integer RSYNC=1,
  parameter integer RSYNC_MUT=0,
- parameter integer PRETREE=0
+ parameter integer PRETREE=0, PAIR_C_READS=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane,
@@ -1885,7 +1907,7 @@ module ot_hbm_su_static_pgslice_lg #(
  output wire [66:0] tree_o
 );
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
- ot_hbm_su_static_pgslice__d4g_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.PRETREE(PRETREE)) u_slice(
+ ot_hbm_su_static_pgslice__d4g_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.PRETREE(PRETREE),.PAIR_C_READS(PAIR_C_READS)) u_slice(
   .pg_clk(pg_clk),
   .clk_lane(clk_lane),
   .clk_insert(clk_insert),

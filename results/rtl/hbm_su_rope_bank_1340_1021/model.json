@@ -1,0 +1,35 @@
+{
+  "scope": "DS n64 RoPE and m32 reused coefficient rows; source candidate",
+  "actual_lane_map": "lid(n)=16*G+n if n<16 else64+16*G+n-16",
+  "c_exchange": {
+    "slices": 4,
+    "lanes_per_slice": 32,
+    "bank_readers_added": 0,
+    "SRAMs_added": 0,
+    "request_mux_bits_per_slice": 288,
+    "response_mux_bits_per_slice": 1024,
+    "extra_serial_edges": 0,
+    "fanout_per_data_bit": 2,
+    "max_pair_hop": "adjacent lane bank; physical qualification pending"
+  },
+  "bd_runtime_staging": {
+    "input_coeff_words": 64,
+    "duplicated_words": 128,
+    "scratch_sectors": 16,
+    "VM_write_bytes": 512,
+    "VM_reload_bytes": 512,
+    "RF_scalar_exports": 128,
+    "RF_broadcast_bytes": 2048,
+    "prepass_serial_estimate": 2300,
+    "estimate_only": true,
+    "actual_schedule_required": true
+  },
+  "arithmetic": {
+    "active_quarter": 0,
+    "active_lanes": 64,
+    "outer_rows_serialized": true,
+    "store_rows_for_m32": 66,
+    "FP_rounding_unchanged": true
+  },
+  "model_status": "bounded source model; no physical/RTL qualification yet"
+}
