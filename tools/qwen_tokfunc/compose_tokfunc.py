@@ -204,8 +204,12 @@ def main():
         full = json.loads((a.out / 'cycles_tokfunc.json').read_text())['result']
         verdicts = {s: res[s].get('verdict') for s in res}
         missing = [s for s in STAGES if s not in res]
-        token_pass = (not problems and not missing and all(str(v).upper() == 'PASS' for v in verdicts.values()))
-        report.update(stages=verdicts, missing_stages=missing, applied=applied, problems=problems,
+        diagnostic = [s for s, stage in res.items()
+                      if not str(stage.get('grade', '')).startswith(a.grade)]
+        token_pass = (not diagnostic and not problems and not missing and all(str(v).upper() == 'PASS' for v in verdicts.values()))
+        report.update(stages=verdicts, missing_stages=missing, diagnostic_stages=diagnostic,
+                      stage_sources={s: dict(src_commit=v.get('src_commit'), grade=v.get('grade'),
+                                            source_note=v.get('source_note')) for s, v in res.items()}, applied=applied, problems=problems,
                       token=r, gaps=full['1u'].get('gaps'),
                       u1=dict(cycles=r['cycles'], tok_s=r['tok_s'], vs_model_pct=round(100 * (r['tok_s'] / 4403.2 - 1), 2)),
                       u4=dict(tok_s=r['u4'], vs_model_pct=round(100 * (r['u4'] / 11750.6 - 1), 2)),

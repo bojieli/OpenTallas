@@ -49,6 +49,31 @@
   "tp8",
   "kv"
  ],
+ "diagnostic_stages": [
+  "ovl4u"
+ ],
+ "stage_sources": {
+  "xdie": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "ovl4u": {
+   "src_commit": "c0f8097f3",
+   "grade": "DIAG (OVL end overlay; rest source assembly)",
+   "source_note": null
+  },
+  "ctx4u": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "head": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  }
+ },
  "applied": [
   "attention c2k 32 kv_service 1779 roundtrip 1842 -> plan 1827 <- xdie",
   "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
