@@ -8,8 +8,6 @@
  "child_sources": [
   "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
   "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
-  "rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv",
-  "rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv",
   "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
   "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
   "rtl/qwen_dv/s5/qfd_dv_s5_su8.sv",
@@ -32,7 +30,12 @@
   "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
   "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
   "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
-  "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv"
+  "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv",
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv",
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv",
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv"
  ],
  "defines": [
   "OT_S5_HARD"
@@ -182,7 +185,8 @@
   {
    "name": "r_ctl",
    "insts": [
-    "u_ctl"
+    "u_ctl",
+    "u_rp"
    ],
    "centre": [
     1447.2,
@@ -302,8 +306,6 @@
   {
    "inst": "u_ctl",
    "pins": [
-    "chd_q",
-    "cmd_q",
     "hd_fault",
     "kv_waddr",
     "kv_wdata",
@@ -556,6 +558,18 @@
     "rs_s_c_p",
     "rs_s_hi_p",
     "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_rp",
+   "pins": [
+    "chd_q",
+    "cmd_q",
+    "tw_addr",
+    "tw_data",
+    "tw_kind",
+    "tw_we"
    ],
    "why": "cross-region reader (slice loops: +E+1 re-schedule)"
   },

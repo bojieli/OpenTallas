@@ -96,7 +96,7 @@ module qfd_dv_s8_flat (
     wire [3:0] flt_b7, flt_v7; wire [1:0] oc7; wire bre7, rv7, rl7, fl7; wire [8:0] bw7; wire [7:0] ri7;
     wire [63:0] l9d7, r_d7; wire [31:0] bt_q7; assign bt_q7 = bt_q[255:224];
     wire [7:0] lqb0, lqb1, lqb2, lqb3; wire [515:0] cs0, cs1, cs2, cs3;
-    qfd_dv_s6_fdn u_fdn (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .hr_i(hr_i), .st_up_i(st_up_i), .sc_up_i(sc_up_i),
+    qfd_dv_s8_fdn_arf1 u_fdn (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .hr_i(hr_i), .st_up_i(st_up_i), .sc_up_i(sc_up_i),
         .ch_dn_i(ch_dn_i), .treq_i(treq_i), .cmd_q(cmd_q), .hr_q(hr_q), .sw_q(sw_q), .scu_q(scu_q), .chd_q(chd_q),
         .treq_q(treq_q), .chu_q(chu_q), .own_ch(own_ch), .ch_dn_o(ch_dn_o), .pc_bad(pc_bad), .agu_q(agu_q),
         .ag_own(ag_own), .ag_dn_o(ag_dn_o), .st_dn_c(so_w), .st_dn_o(st_dn_o), .sc_dn_c(sc_dn_c), .sc_dn_o(sc_dn_o),
@@ -110,7 +110,13 @@ module qfd_dv_s8_flat (
     qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), .rs_s_r0(rss_r0), .rs_s_r1(rss_r1), .rs_s_r2(rss_r2), .rs_s_r3(rss_r3), .rs_s_r4(rss_r4), .rs_s_r5(rss_r5), .rs_s_r6(rss_r6), .rs_s_r7(rss_r7));
     assign rss_r = {rss_r7, rss_r6, rss_r5, rss_r4, rss_r3, rss_r2, rss_r1, rss_r0}; assign rsn_r = {rsn_r7, rsn_r6, rsn_r5, rsn_r4, rsn_r3, rsn_r2, rsn_r1, rsn_r0}; assign nb_r = {nb_r7, nb_r6, nb_r5, nb_r4, nb_r3, nb_r2, nb_r1, nb_r0};
     qfd_dv_s5_fs u_fs (.ck(ck), .cs0(cs0), .cs1(cs1), .cs2(cs2), .cs3(cs3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
-    qfd_dv_s5_ctl_repair4_leaf u_ctl (.ck(ck), .rst_n(rst_n), .cmd_q(cmd_q), .chd_q(chd_q),
+    wire[115:0]rp_ctl_cmd;wire[1037:0]rp_ctl_chd;wire rp_fault,rp_tw_we;
+    wire[1:0]rp_tw_kind;wire[23:0]rp_tw_addr;wire[1023:0]rp_tw_data;
+    qfd_dv_s8_rp1 u_rp(.ck(ck),.rst_n(rst_n),.cmd_q(cmd_q),.chd_q(chd_q),
+      .tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data),
+      .ctl_cmd(rp_ctl_cmd),.ctl_chd(rp_ctl_chd),.vtw_we(rp_tw_we),.vtw_kind(rp_tw_kind),
+      .vtw_addr(rp_tw_addr),.vtw_data(rp_tw_data),.fault(rp_fault));
+    qfd_dv_s5_ctl_repair4_leaf u_ctl (.ck(ck), .rst_n(rst_n), .cmd_q(rp_ctl_cmd), .chd_q(rp_ctl_chd),
         .r_v(rv0), .r_idx(ri0), .r_last(rl0), .r_d({r_d7, r_d6, r_d5, r_d4, r_d3, r_d2, r_d1, r_d0}), .l9o_v(oc0[0]),
         .stn_fault(fl0),
         .vm_we(L_vm_we), .vm_waddr(L_vm_waddr), .vm_wdata(L_vm_wdata), .kv_we(L_kv_we), .kv_waddr(L_kv_waddr),
@@ -118,19 +124,19 @@ module qfd_dv_s8_flat (
         .vm_fault(vm_fault), .red_we(red_we), .red_addr(red_addr), .red_data(red_data),
         .sc_w1_we(sc_w1_we), .sc_w1_addr(sc_w1_addr), .sc_w1_data(sc_w1_data), .tok_v(tok_v), .tok_idx(tok_idx),
         .tok_own(tok_own), .tok_val(tok_val), .tok_user(tok_user), .sc_busy(sc_busy), .sc_fault(sc_fault),
-        .stm_fault(stm_fault), .tld_fault(tld_fault), .hd_fault(fch0), .pc_bad(pc_bad),
+        .stm_fault(stm_fault), .tld_fault(tld_fault), .hd_fault(fch0), .pc_bad(pc_bad | rp_fault),
         .sid(sid), .stn_cfg(stn_cfg), .sc_cfg(sc_cfg), .stm_cfg(stm_cfg), .su_cmd(su_cmd),
         .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u),
         .w16_we(w16_we), .w16_addr(w16_addr), .w16_data(w16_data), .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data),
         .own_ch(own_ch), .ag_own(ag_own), .st(st_c), .cc_o(cc_c));
-    qfd_dv_s5_suvm_su8p3 u_suvm (.ck(ck), .rst_n(rst_n), .su_cmd(su_cmd), .gb(gb), .gv(gv), .lv1(lv1), .pd1(pd1),
+    qfd_dv_s8_suvm_rp1 u_suvm (.ck(ck), .rst_n(rst_n), .su_cmd(su_cmd), .gb(gb), .gv(gv), .lv1(lv1), .pd1(pd1),
         .va_re(L_va_re), .vb_re(L_vb_re), .vc_re(L_vc_re), .cr_re(L_crom_re), .vm_we(L_vm_we), .kv_we(L_kv_we),
         .l_retire(L_retire), .l_last(L_l_last), .l_fault(L_l_fault), .l_wrom_re(L_wrom_re),
         .va_addr(L_va_addr), .vb_addr(L_vb_addr), .vc_addr(L_vc_addr), .cr_addr(L_crom_addr), .vm_waddr(L_vm_waddr),
         .l_wrom_addr(L_wrom_addr), .vm_wdata(L_vm_wdata), .va_q(va_q), .vb_q(vb_q), .vc_q(vc_q), .cr_q(cr_q),
         .rd_v(rd_v), .red_busy(red_busy), .red_fault(red_fault),
         .w16_we(w16_we), .w16_addr(w16_addr), .w16_data(w16_data), .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data),
-        .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data),
+        .tw_we(rp_tw_we), .tw_kind(rp_tw_kind), .tw_addr(rp_tw_addr), .tw_data(rp_tw_data),
         .su_nr(su_nr), .su_idle(su_idle), .su_fault(su_fault), .su_prog(su_prog), .su_rows(su_rows), .vm_fault(vm_fault));
     qfd_dv_s5_red2_leaf u_red (.ck(ck), .rst_n(rst_n), .l_ov(L_l_ov), .l_out(L_l_out), .l_red0(L_l_red[1:0]),
         .l_redsq0(L_l_redsq[0]), .l_last0(L_l_last[0]), .l_raddr0(L_l_raddr[23:0]), .red_we(red_we), .red_addr(red_addr),
