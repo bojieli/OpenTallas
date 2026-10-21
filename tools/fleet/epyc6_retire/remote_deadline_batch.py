@@ -78,13 +78,15 @@ def execute(snapshot, dry_run=False):
         except (OSError, ValueError, IndexError):
             return None
 
+    commands = []
+
     def send(sig, xs):
         units = [x['id']+'.scope' for x in xs if x['kind'] == 'unit']
         containers = [x['id'] for x in xs if x['kind'] == 'docker']
         if units:
-            subprocess.run(['systemctl', '--user', 'kill', '--signal='+sig, *units], capture_output=True, timeout=15)
+            commands.append(subprocess.Popen(['systemctl', '--user', 'kill', '--signal='+sig, *units], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
         if containers:
-            subprocess.run(['docker', 'kill', '--signal='+sig, *containers], capture_output=True, timeout=15)
+            commands.append(subprocess.Popen(['docker', 'kill', '--signal='+sig, *containers], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
         for x in xs:
             if x['kind'] == 'pid' and identity(x) == x['expected']:
                 try:
@@ -98,5 +100,15 @@ def execute(snapshot, dry_run=False):
         cache = docker_state()
 
     receipt = run_plan(records, identity, send, grace, dry_run)
+    # Signal clients run concurrently; only our own client processes are bounded here.
+    end = time.monotonic()+2
+    while any(p.poll() is None for p in commands) and time.monotonic() < end:
+        time.sleep(.02)
+    receipt['signal_clients'] = []
+    for p in commands:
+        rc = p.poll()
+        if rc is None:
+            p.terminate()
+        receipt['signal_clients'].append(dict(pid=p.pid, rc=rc, bounded_client=rc is None))
     receipt.update(at=datetime.datetime.now().astimezone().isoformat(), dry_run=dry_run, hostname=os.uname().nodename)
     return receipt
