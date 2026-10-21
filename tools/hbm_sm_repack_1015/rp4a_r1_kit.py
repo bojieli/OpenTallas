@@ -17,6 +17,13 @@ Structural changes (one failed gate = re-plan, not a squeeze):
   * rows R0 (row_w 'first' faces N toward the x store; MX pointed it away), row_e R0.
   * GRT memory 192 GB.
   * two clock variants gated in parallel: r1a = one TritonCTS root (no k-means split), r1b = k-means K=8 regional roots.
+r2 (FAM-HBM-C/C-SMH 10-21, s half only; `rp4a_r1_kit.py r2`): the r1 s gates @ebacd091f reached GRT with 1,866 (r1a) /
+14 (r1b) overflow, ALL horizontal in the top gcell rows y 1205-1210, x 250-420.  Cause: the n->s crossing xi_b (2,069 b) enters
+the N face at x 4.3-410.4 (crossing range shared with the n half's S face) but the x store bk1 pins sit at x 216.1-613.2 (bay
+MX at x 172.8), and io_flop_at_pins stacked the 2,069 u_lands flops against the N edge, so the ~206-um jog of ~1,050 bits per
+cut ran in the top rows.  Fix (structural, no squeeze): s frame +43.2 tall (top channel 86.4 -> 129.6) and u_lands FIRM in
+a band directly above bk1 (centre x 414.7, y 1150 +-14), so the jog uses the whole channel above it (pin -> flop wire
+<= ~300 um < 405, flop -> bk1 short vertical).  No RTL / cycle change.
 x-store / block-dot MX as before (track-legal per the L2H-SM9 / L2H-SMATT orientation notes; tct R0 only).
     python3 tools/hbm_sm_repack_1015/rp4a_r1_kit.py
 """
@@ -38,6 +45,9 @@ LR, XB, GN, GS, OS = 2, 2, 2, 1, 1
 V = dict(A.V)
 V["xs"] = "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs"
 VARIANTS = {"r1a": 0, "r1b": 8}      # k-means clock regions (0 = single TritonCTS root)
+R2 = {"r2a": 0, "r2b": 8}            # s half only (see header): HS 1252.8 + FIRM u_lands band above bk1
+HS_R2 = HS + 43.2
+LANDS = "st_box lands {u_lands.} 414.7 1150 196 14 2069\n"
 WIT = "results/arch/hbm_smatt10_1020/bench"
 CORE = "g_lr.u_c"
 
@@ -116,6 +126,8 @@ def stations(name, half, h):
               f"st_group xpr1 {{u_xpr.g_s[1]. u_xpr.g_s\\[1\\].}} {490 + DX} 367.2 100\n"
               f"st_group xgr1 {{u_xgr.g_s[1]. u_xgr.g_s\\[1\\].}} {530 + DX} 367.2 50\n")
     else:
+        if h > HS:
+            g += LANDS
         g += (f"st_group xg2_mid {{u_xg2.}} {530 + DX} 748.8 50\n"
               f"st_group xp2_mid {{u_xp2.}} {530 + DX} 800.0 100\n"
               f"st_group xg3 {{u_xg3.g_s[0]. u_xg3.g_s\\[0\\].}} {500 + DX} 367.2 50\n"
@@ -144,8 +156,8 @@ def benches():
     return out
 
 
-def spec(name, half, K, base):
-    h = HN if half == "n" else HS
+def spec(name, half, K, base, h=None):
+    h = h or (HN if half == "n" else HS)
     k = dict(half=half, w=W, h=h, dx=DX, kids=kids(half))
     s = A.spec(name, k, base)
     s.pop("diagnostic", None)
@@ -229,10 +241,15 @@ def write_readme(name, half, K, s):
 
 def main():
     base = json.loads(H.BASE.read_text())
-    for var, K in VARIANTS.items():
-        for half in ("n", "s"):
+    r2 = sys.argv[1:] == ["r2"]
+    for var, K in (R2 if r2 else VARIANTS).items():
+        for half in (("s",) if r2 else ("n", "s")):
             name = f"smh_rp4ah{half}_{var}"
-            s = spec(name, half, K, base)
+            s = spec(name, half, K, base, HS_R2 if r2 else None)
+            if r2:
+                s["job"]["owner"] = "Claude FAM-HBM-C/C-SMH"
+                s["job"]["structural_change"] += (" r2: s frame +43.2 (top channel 129.6) and u_lands FIRM above the x-store bk1 "
+                                                  "pins (r1 GRT overflow 1866/14 in the top rows from the 206-um xi_b->bk1 jog).")
             kd = ROOT / "physical/ref_tile" / name
             kd.mkdir(parents=True, exist_ok=True)
             (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
