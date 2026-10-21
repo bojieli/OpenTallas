@@ -24,10 +24,13 @@ set stop [string first {  set ::ot_die_rep_pre $pre} $body]
 if {$start < 0 || $stop <= $start} {error "original post-GRT state contract changed"}
 eval [string range $body $start [expr {$stop-1}]]
 set ::ot_die_rep_pre [ot_die_rep_inst_map [ord::get_db_block]]
+set f [open /baseline/die_repeaters.json];set original_report [read $f];close $f
+if {![regexp {"instances_pre"\s*:\s*([0-9]+)} $original_report -> expected_pre] || [dict size $::ot_die_rep_pre] != $expected_pre} {error "original preexisting instance count mismatch"}
 set f [open /baseline/die_repeaters.skip_nets.txt]
 set ::ot_die_rep_skip [dict create]
 foreach n [split [string trim [read $f]] "\n"] {if {$n ne ""} {dict set ::ot_die_rep_skip $n original_persisted}}
 close $f
+if {![regexp {"skip_nets"\s*:\s*([0-9]+)} $original_report -> expected_skip] || [dict size $::ot_die_rep_skip] != $expected_skip} {error "original persisted skip count mismatch"}
 # These are the SAME original obstacles used by the first spread, before new repeaters existed.
 set blk [ord::get_db_block]
 set obs {}; array set ob {}; set cb 200000

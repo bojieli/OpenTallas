@@ -10,7 +10,7 @@ source /work/resume_state.tcl
 set ::ot_die_rep_occ [dict create]
 array unset ::ot_die_rep_fclk_old
 dict for {n m} $::ot_die_rep_pre {set ::ot_die_rep_fclk_old($n) 1}
-set new 0
+set new 0;set occupied_cells 0
 foreach i [[ord::get_db_block] getInsts] {
     if {[dict exists $::ot_die_rep_pre [$i getName]]} continue
     if {![$i isPlaced]} {error "unplaced inserted repeater [$i getName]"}
@@ -19,6 +19,9 @@ foreach i [[ord::get_db_block] getInsts] {
     for {set sx $x} {$sx<$x1} {incr sx $::ot_die_rep_slw} {dict set ::ot_die_rep_occ "$sx,$y" 1}
     incr new
 }
+set expected_new [expr {[llength [[ord::get_db_block] getInsts]]-[dict size $::ot_die_rep_pre]}]
+if {$new != $expected_new || [dict size $::ot_die_rep_occ] < $new} {error "inserted repeater occupancy reconstruction mismatch"}
+puts "HEAD_RESUME_RESTORED pre=[dict size $::ot_die_rep_pre] skip=[dict size $::ot_die_rep_skip] obstacles=[llength $::ot_die_rep_obs] buckets=[array size ::ot_die_rep_ob] new_repeaters=$new occupancy_slots=[dict size $::ot_die_rep_occ]"
 set f [open /baseline/run.tcl];set original [read $f];close $f
 set found 0
 foreach line [split $original "\n"] {
