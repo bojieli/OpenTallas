@@ -58,8 +58,8 @@
   "reason": "the RTL registers every input at its pin (stage P) and drives every output from a flop; flow pin registers would add unpriced cycles"
  },
  "reset_landing": {
-  "enable": false,
-  "reason": "the RTL lands rst_n in ot_rst_relay (2 sync stages + 12 kept regional relay copies)"
+  "enable": true,
+  "stages": 2
  },
  "keep_pin_regs": true,
  "inhold": false,
