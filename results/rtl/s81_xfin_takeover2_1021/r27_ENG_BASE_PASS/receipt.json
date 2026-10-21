@@ -1,0 +1,32 @@
+{
+  "source": "6881b49a7",
+  "control_source": "b00440f56",
+  "FP_source": "731be030b",
+  "unit": "oth-ubuntu-1786476-1792622966",
+  "actual_verdict": "PASS",
+  "slices": 16,
+  "results": 128,
+  "errors": 0,
+  "fault_cycles": 0,
+  "rb": 0,
+  "ORD": 0,
+  "GAP": 0,
+  "golden_seed": 1,
+  "go_to_last_e": [
+    526,
+    526
+  ],
+  "last_partial_to_last_e": [
+    464,
+    464
+  ],
+  "all18_sources_match_git": true,
+  "scope": "currentcontrol real-onlygroups/leaf-go +DIV731 exactsource; later7ebe+8f11 porttyping has separate exhaustive/parser proof295a; NORM/currentcausals/fullnative remain required",
+  "files_sha256": {
+    "gold.log": "37db39a11372cd2c5450a10599021cecbd360e8b6660a0d8f7791e3fba94cc08",
+    "source_manifest.json": "7f734f11bfc17f6f303baf383ff5cb550a5cf620d0589d2c3cb6b8f33f1b2ac2",
+    "existing_runner.sh": "bcfedaf19cb6bd99e583107028299458dc6c38eb42db039fc7d0550cda300766",
+    "build.log": "9424b649f357817e7f7d614231c9f3d0d97f4b30d31519fa096d52ff6f57dbaa",
+    "run.log": "1c9e630b639dc725532ab2c426a7f1258dae26a2da37b18774cc7a8667e64073"
+  }
+}

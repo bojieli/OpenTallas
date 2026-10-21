@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T15:56:08.244823-07:00",
+  "updated": "2026-10-21T16:20:16.501284-07:00",
   "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
   "qualified_FP": {
     "source": "560abe5d2",
@@ -18,10 +18,11 @@
   },
   "current_whole_source": {
     "finish_control": "b00440f56",
-    "FP": "731be030b",
-    "qualification": "fulltop lint r25 PASS; ADD28/MUL32/DIV26 leaf native PASS, current whole native/mechanisms pending",
+    "FP": "8f11a8749",
+    "qualification": "ENGpositive exactpreport source6881PASS, laterporthelper exhaustive/mathparser PASS; NORM/currentcausals/native pending",
     "changes": "real-only 12 scheduler groups/ceil(NB/3) consumer copies; separate16 leaf-go plus12 command-go loads28; same-edge control, no protocol edge change",
-    "no_adoption": true
+    "no_adoption": true,
+    "FP_interface_proof": "7ebe+8f11 minimalunsignedport/net +explicit signedcasts, helperexhaustive24576bad0/mappedOpenROADPASS295a0d626"
   },
   "active_XFIN": {
     "native": {
@@ -79,7 +80,7 @@
     "unit": "oth-ubuntu-1786476-1792622966",
     "client": 4030024,
     "mem_gib": 32,
-    "state": "LIVE compile",
+    "state": "TERMINAL PASS16slices128results err0/fault0/rb0 GO526 partial464",
     "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r27-1021",
     "all18_sha_match_git": true,
     "NORM": {
