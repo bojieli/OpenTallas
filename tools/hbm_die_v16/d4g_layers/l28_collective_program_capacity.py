@@ -26,6 +26,7 @@ def apply(contract):
             item.pop(key, None)
         item['rtl_deps'] = sorted(set(item.get('rtl_deps', [])) | {s['path'] for s in sources if s['kind'] == 'die' and Path(s['path']).suffix in ('.sv', '.v') and s['path'] != item['source']})
         item['rtl_deps'] = sorted(set(item['rtl_deps']) | {'rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv'})
+        item['synthesis_roots'] = ['ot_hgi_coll_issuer_m256v8']
         item['compile_defines'] = sorted(set(item.get('compile_defines', [])) | {'OT_COLL_ISSUER256_NATIVE32'})
         selected.append(name)
     return dict(selected=selected, params=dict(AR_ITER=1, ROWS=256),
