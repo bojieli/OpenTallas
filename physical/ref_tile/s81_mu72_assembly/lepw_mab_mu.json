@@ -549,10 +549,7 @@
       ],
       "count": 1,
       "orient": "R0",
-      "params": {
-        "NB": 320
-      },
-      "binding_state": "UNBOUND: non-default instance params; a module-keyed (default-param) view is not identical"
+      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
     },
     {
       "inst": "u_land",
@@ -567,10 +564,7 @@
       ],
       "count": 1,
       "orient": "R0",
-      "params": {
-        "NB": 320
-      },
-      "binding_state": "UNBOUND: non-default instance params; a module-keyed (default-param) view is not identical"
+      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
     }
   ],
   "clock_ports": [

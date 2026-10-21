@@ -44,8 +44,6 @@ ROLES_WAB = {
     "u_lep": ([820.8,1728.0], [561.6,1987.2], "R0"),
     "u_land": ([820.8,3888.0], [475.2,216.0], "R0"),
 }
-# L5-CAL 10-21: s_0N carries the whole stage h message on one endpoint -> NB 320 on the lep and the MU land (instance params).
-PARAMS_WAB = {"u_lep": {"NB": 320}, "u_land": {"NB": 320}}
 OUTLINE = {"lepw_mu": 2505.6, "lepe_mu": 2851.2, "lepe_nh_mu": 2851.2, "lepw_mab_mu": 2851.2}
 SL_AT = {"lepw_mab_mu": [1555.2, 43.2]}
 G3_SOURCES = ["rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
@@ -73,13 +71,10 @@ def assemble(normal, flavor, bindings):
     for inst,(at,envelope,orient) in roles.items():
         c = dict(inst=inst, master=modules[inst], at=at, reserved_envelope_um=envelope,
                  count=1, orient=orient)
-        if mab and inst in PARAMS_WAB:
-            c["params"] = dict(PARAMS_WAB[inst])
-        if modules[inst] in bindings and "params" not in c:   # a module-keyed view is default-param only
+        if modules[inst] in bindings:
             c.update(copy.deepcopy(bindings[modules[inst]]))
         else:
-            c["binding_state"] = ("UNBOUND: non-default instance params; a module-keyed (default-param) view is not identical"
-                                  if "params" in c else "UNBOUND: preserve exact actual child view; never old-parent alias")
+            c["binding_state"] = "UNBOUND: preserve exact actual child view; never old-parent alias"
         children.append(c)
     return dict(schema="opentallas.s81_mu72.assembly.v1", top=top,
         source=f"rtl/dsrom_sys/s81_dv/slice/mu72/{top}.sv",
