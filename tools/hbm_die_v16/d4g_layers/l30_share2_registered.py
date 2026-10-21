@@ -29,6 +29,10 @@ def apply(c,grants):
         i['master']='ot_hbm_idx_vm_share2_static_r';i.pop('physical_view',None);i.pop('closed_record',None)
         i['force_synth']=True;i['params'].pop('REG',None)
         i['note']+=' | H15.8 REG1 soft; +2 actual consumer edges priced by L12 SHARE_EXTRA, no BANK_RT6 hard alias'
+        bound=[s for s in grants['slots'] if s['name']==i.get('slot') or s.get('instance')==name]
+        assert len(bound)==1, (name, 'ambiguous registered-share grant', len(bound))
+        assert bound[0]['cell']=='ot_hbm_idx_vm_share2_static'
+        bound[0]['cell']=i['master']
         report['registered_soft'].append(name)
     source='rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv'
     text=(ROOT/source).read_text();old=subprocess.check_output(['git','-C',str(ROOT),'show','7ff7a9f0d:'+source]).decode()
