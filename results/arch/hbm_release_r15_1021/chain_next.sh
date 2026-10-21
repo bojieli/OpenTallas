@@ -252,11 +252,8 @@ assert not missing, ('S2 incomplete',missing)
 print('R15_REUSE_COMPLETED_S2 exact source/params; original a4843ffdd receipts retained')
 PYS2
 fi
-# The old r11 directory is not present on every eligible staging host. Use the exact
-# recovered, completed r14 P seed on EP5; this is a view seed, never a closure claim.
-P_SEED=/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/p/views
-P_SEED_CONTRACT_SHA=45c49be9583eac6d5548916d3ffe79a7deb71875021934bd818d0e62604e31f8
-ssh $HOST "test \"\$(sha256sum $P_SEED/contract.json | cut -d' ' -f1)\" = $P_SEED_CONTRACT_SHA && test -f $P_SEED/synth/ot_hbm_su_programme_pslice_c5/meta.json && mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q && cp -al $P_SEED $B/p/views" || { echo R15_P_SEED_STAGE_FAIL; exit 9; }
+# Fresh current-source cases; old P/Q interfaces are baseline records only.
+ssh $HOST "mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q" || exit 9
 views_to $B/a/views $A/vplan_a $A/net/pre_relay_r14.json || { echo R14_INIT_AVIEWS_FAIL; exit 9; }
 (cat $A/src_paths_a.txt; echo tools/hbm_die_v16/d4g_layers/l26_closed_views.py; echo physical/ref_tile/hdie_col_idx256r_b; echo physical/ref_tile/hdie_pc_ctrl_cfg_h9c) | sort -u > $A/src_paths_init.txt
 git -C $W archive HEAD $(cat $A/src_paths_init.txt) results/arch/hbm_unread_gen2e3_1019 | ssh $HOST "rm -rf $B/src_$H && mkdir -p $B/src_$H && tar -x -C $B/src_$H && ln -sfn $B/src_$H $B/src \
@@ -264,21 +261,20 @@ git -C $W archive HEAD $(cat $A/src_paths_init.txt) results/arch/hbm_unread_gen2
 # r11 S3 GENs ran on the r7 source tree (src_0ae60e322 + changed tools): overlay it NO-CLOBBER (hardlinks) for the
 # physical/ref_tile relay/landing views GEN reads that the git archive path list does not carry
 git -C $W archive HEAD $(cat results/arch/hbm_release_r15_1021/relay_view_dirs.txt) | ssh $HOST "tar -x --skip-old-files -C $B/src_$H" || { echo R15_RELAY_VIEW_STAGE_FAIL; exit 9; }
-views_to $B/q/views $R11A/vplan_b $R11A/net/contract_pre.json || { echo R14_INIT_QVIEWS_FAIL; exit 9; }
-# Q uses the completed P parameterisation; global S2 overlays include a different SB2470 A view.
-ssh $HOST "python3 - '$B' <<'PY_QVIEW'
-import json,shutil,sys
+# P/Q carry current selected interfaces, never old2422 programme bindings.
+# Their role is current pin/placement snapshots, not prior postlanding proof.
+ssh $HOST "cp -al $B/a/views $B/p/views && cp -al $B/a/views $B/q/views" || exit 9
+ssh $HOST "python3 - '$B' <<'PY_PQ'
+import hashlib,json,sys
 from pathlib import Path
-b=Path(sys.argv[1]);cell='ot_hbm_su_programme_pslice_c5'
-p=json.load(open(b/'p/views/contract.json'));q=json.load(open(b/'q/views/contract.json'))
-def signature(c):
- return sorted((n,i['ports'],i.get('params',{})) for n,i in c['instances'].items() if i['master']==cell)
-assert signature(p)==signature(q), 'P/Q pslice contract differs; refuse view copy'
-src=b/'p/views/synth'/cell;dst=b/'q/views/synth'/cell
-assert (src/'meta.json').is_file(), 'exact P pslice source receipt missing'
-if dst.exists():shutil.rmtree(dst)
-shutil.copytree(src,dst);print('Q_PSLICE_EXACT_P_VIEW',cell)
-PY_QVIEW" || { echo Q_PARAMETER_VIEW_REPAIR_FAIL; exit 9; }
+b=Path(sys.argv[1]); expected=hashlib.sha256((b/'a/views/contract.json').read_bytes()).hexdigest()
+for case in ('a','p','q'):
+ p=b/case/'views/contract.json';assert hashlib.sha256(p.read_bytes()).hexdigest()==expected
+ c=json.loads(p.read_text())
+ for q in ('SW','SE','NW','NE'):
+  i=c['instances']['pgp_'+q];assert i['params']['SB']==2470 and i['ports']['command']['bits']==2470
+ print('CURRENT_PQ_SIGNATURE',case,expected,'SB2470')
+PY_PQ" || { echo CURRENT_PQ_BIND_FAIL; exit 9; }
 
 mkdir -p $A; rm -rf $A/banklat; cp -a $R11A/banklat $A/banklat
 echo "R14_INIT_OK src_$H plan $PD plan_um=$PLAN_UM"

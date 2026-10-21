@@ -1,0 +1,173 @@
+{
+ "status": "UNBOUND_SOURCE_CANDIDATE",
+ "selected": [
+  "hb_dbk_SW",
+  "hb_dbk_SE",
+  "hb_dbk_NW",
+  "hb_dbk_NE"
+ ],
+ "physical_view_activation": false,
+ "source_identity": [
+  {
+   "path": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cplw.sv",
+   "sha256": "5f274936b2e486e27c4e059ea3518b48442f5562bf394cb23f73c15198c1b751"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv",
+   "sha256": "54ffc8c1fc8cd14ce59cddae0d3a0529f2541f4625f12454aa9b95356b7fc81a"
+  },
+  {
+   "path": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "sha256": "07024e8149e6d65678d194182b22be39abb26e2deedb64c351ef688976212b42"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "sha256": "1e47ee8115671a990f2b814d5e81b974fb3cf23d3c2bfa4225082d34d7042f8e"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+   "sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b"
+  },
+  {
+   "path": "rtl/lib/ot_rst_relay.sv",
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  {
+   "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+   "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+  }
+ ],
+ "physical_parameter_resolution": {
+  "physical_top_spec_params": {},
+  "physical_defines": [
+   "OT_DBK_HARD"
+  ],
+  "wrapper_defaults": {
+   "STACK_BYTES": 22500000000,
+   "RR_RT": 7,
+   "MUT": 0,
+   "CP_MUT": 0,
+   "RST_MUT": 0,
+   "RL_MUT": 0
+  },
+  "actual_hard_controller": {
+   "view": "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller",
+   "RR_RT": 80
+  },
+  "explanation": "OT_DBK_HARD binds the fixed RR_RT80 hard controller and suppresses wrapper forwarding of RR_RT/STACK_BYTES/MUT. Thus physical top params{} is honest; do not claim it was kitted RR_RT80. Soft RTL calendar model must set RR_RT80. Strict bind must resolve ignored-wrapper-param signature honestly against the qualified source/view; no false alias or parameter waiver inferred."
+ },
+ "mapper": {
+  "RR_RT": 80,
+  "old_raw_target": 79,
+  "new_raw_target": 77,
+  "physical_port_interval": 78,
+  "rule_reference_parameter": 7,
+  "rule_reference_roundtrip": 4,
+  "require_exact_equality": true
+ },
+ "cumulative_edge_ledger": [
+  {
+   "ports": [
+    "rq[135:0]"
+   ],
+   "direction": "output",
+   "additional_register_edges": 1,
+   "clock": "clk_land[3]",
+   "reason": "parent W-face output landing"
+  },
+  {
+   "ports": [
+    "rr[2055:0]"
+   ],
+   "direction": "input",
+   "additional_register_edges_to_bank_and_controller": 1,
+   "clock": "data+write-valid clk_land[b], separate controller-valid copy clk_rly[G]",
+   "external_schedule": "Same controller response frame: enforce controllerRR_RT80 with rq_output1+rr_input1, so external rq-port->rr-port interval78 (DIE_PRE2). Do not confuse interval reduction2 with absolute rr arrival2 earlier: relative same internal controller issue edge, rq port is+1 and rr port is-1 vs CP."
+  },
+  {
+   "ports": [
+    "wd[2311:0]"
+   ],
+   "direction": "output",
+   "additional_register_edges": 2,
+   "clock": "read-side relay clk_rly[G] then face clk_out[O]",
+   "reason": "one read-side relay and one output face register"
+  },
+  {
+   "ports": [
+    "wb_fill_start",
+    "wb_fill_bank",
+    "wb_fill_epoch[15:0]"
+   ],
+   "direction": "output",
+   "additional_register_edges": 2,
+   "clock": "clk_rst relay then clk_out[3] face",
+   "reason": "exactly aligned with wd+2"
+  },
+  {
+   "ports": [
+    "wb_reserve_v",
+    "wb_reserve_bank",
+    "wb_reserve_epoch[15:0]",
+    "wb_reserve_sectors[11:0]",
+    "wb_reserve_base[31:0]"
+   ],
+   "direction": "output",
+   "additional_register_edges": 1,
+   "clock": "clk_out[3]",
+   "reason": "N-face output landing"
+  },
+  {
+   "ports": [
+    "mv_src",
+    "mv_done",
+    "mv_fault",
+    "quiet",
+    "busy",
+    "cp_configured",
+    "cp_fault",
+    "cp_active"
+   ],
+   "direction": "output",
+   "additional_register_edges": 1,
+   "clock": "clk_rst",
+   "reason": "E-face output landing; collar internal busy/mv_fault feedback remains unregistered so issuer frame is unchanged"
+  },
+  {
+   "ports": [
+    "wa[11:0]",
+    "wb_ready"
+   ],
+   "direction": "input",
+   "additional_register_edges_to_controller": 1,
+   "clock": "clk_out[3]",
+   "reason": "new N-face input landing; controller existing pin captures unchanged",
+   "external_schedule": "Hold/present wb_ready at least1 edge earlier for the same internal first-drain check. wa must follow actual writeback acknowledgements: wd/fill now+2, then ack is observed through one added input landing. Do not preserve old absolute wa timestamps or invent a single fixed quiet delta for workload-dependent pending drain."
+  },
+  {
+   "ports": [
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v",
+    "tgt",
+    "stk"
+   ],
+   "direction": "input",
+   "additional_register_edges": 0,
+   "reason": "unchanged collar pin captures/identity straps"
+  }
+ ],
+ "obligations": [
+  "production compiler consumes cumulative request/read/write/fill/ready events",
+  "replace CP L12 budget with CPLW RR_RT80 and exact mapper reference7/roundtrip4",
+  "explicit ignored-wrapper-param resolution to fixed physical child80",
+  "individual real physical clock entries and hard child insertion refs",
+  "actual GEN geometry/S4 hop and capacity/strict bind/TT-FF STA/required IR"
+ ]
+}
