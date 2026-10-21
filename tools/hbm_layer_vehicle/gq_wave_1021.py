@@ -58,7 +58,7 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
             raise ValueError('source and dense destination must not overlap')
     if read_request_delays is not None:
         if (len(read_request_delays) != 4 or any(len(x) != 8 for x in read_request_delays)
-                or any(not isinstance(x, int) or x < 0 for row in read_request_delays for x in row)):
+                or any(type(x) is not int or x < 0 for row in read_request_delays for x in row)):
             raise ValueError('explicit nonnegative 4x8 GQ-request-to-bank delays required')
     V = vm_rt[0]
     # Last event fully drains ND=40+V before next fire. No timing inferred from
