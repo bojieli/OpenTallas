@@ -261,16 +261,16 @@
     "pass_witness": "results/arch/kv_ctl10_1020/bench1/first_a.stdout"
    },
    {
-    "name": "c32_tile_m_tl",
-    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 m_tl",
+    "name": "c32_kb_m_tl",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 kb_m_tl",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "FAIL KV_CTL_C32_TILE mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl10_1020/bench1/m_tl.stdout"
+    "fail_regex": "FAIL MU_KV_BOOT",
+    "fail_witness": "results/arch/kv_ctl10_1020/bench1/kb_m_tl.stdout"
    },
    {
     "name": "c32_kb",

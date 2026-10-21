@@ -11,7 +11,9 @@
 #   kb_first    kb_a from a random power-up state
 # FAIL cases (mutants; fail regex '^FAIL')
 #   m_dc6 dcfg with c32 MUT 6 (age words one off)   m_dc7 dcfg with c32 MUT 7 (ages not seal-gated)
-#   m_tl  tile_a with the layer programme row-landing slice 7 taking the slice-8 bits
+#   m_tl  tile_a with the layer programme row-landing slice 7 taking the slice-8 bits (random inputs never load a valid
+#         programme: NOT caught by tile_a -> use kb_m_tl)
+#   kb_m_tl kb_a with the same layer programme mutant (fail regex '^C32 kb_m_tl rc=.*FAIL MU_KV_BOOT')
 set -u
 ROOT=$(cd "${1:?root}" && pwd); OUT=${2:?out}; CASE=${3:?case}
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -42,6 +44,7 @@ case "$CASE" in
  kb_a) KIND=kb;;
  kb_b) KIND=kb; C32=$D/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32b.sv;;
  kb_first) KIND=kb; XI="--x-initial unique"; RR="+verilator+rand+reset+2";;
+ kb_m_tl) KIND=kb; MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  *) echo "C32 $CASE: unknown case"; exit 2;;
 esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"
