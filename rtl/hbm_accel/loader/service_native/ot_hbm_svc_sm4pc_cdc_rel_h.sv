@@ -291,17 +291,27 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
    else if(|complete_event[cm])completed_q[cm]<=completed_q[cm]|complete_event[cm];
   end
  end endgenerate
- // sc[0]: control (32 flops)
+ // Allocation state uses a real separate reset branch, with identical release edge.
+ wire allocated_reset_n;
+ ot_hbm_svc_local_and2 u_alloc_reset(.a(sc[0]),.b(1'b1),.y(allocated_reset_n));
+ always @(posedge stream_clk or negedge allocated_reset_n)begin
+  if(!allocated_reset_n)allocated<=0;
+  else begin
+   if(reserve_fire)allocated[reserve_bank]<=1;
+   if(draining&&!fault&&drain_ordinal+drain_count>=drain_total)allocated[drain_bank]<=0;
+  end
+ end
+ // sc[0]: remaining stream controls
  always @(posedge stream_clk or negedge sc[0])begin
   if(!sc[0])begin
-   allocated<=0;ready_q<=0;stream_fault<=0;
+   ready_q<=0;stream_fault<=0;
    draining<=0;drain_bank<=0;drain_ordinal<=0;drain_phase<=0;
    out_v<=0;out_mask<=0;out_last<=0;
   end else begin
    out_v<=0;out_last<=0;out_mask<=0;
    if(reserve_v)begin
     if(!reserve_ready||!descriptor_ok)stream_fault<=1;
-    else begin allocated[reserve_bank]<=1;ready_q[reserve_bank]<=0;end
+    else begin ready_q[reserve_bank]<=0;end
    end
    for(sb=0;sb<LBANKS;sb=sb+1)if(|complete_event[sb])begin
     if(&(completed_q[sb]|complete_event[sb]))ready_q[sb]<=1;
@@ -314,7 +324,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
     out_v<=1;drain_phase<=drain_phase==4?0:drain_phase+1'b1;
     for(si=0;si<4;si=si+1)if(si<drain_count&&drain_ordinal+si<drain_total)out_mask[si]<=1;
     if(drain_ordinal+drain_count>=drain_total)begin
-     out_last<=1;draining<=0;allocated[drain_bank]<=0;
+     out_last<=1;draining<=0;
     end else drain_ordinal<=drain_ordinal+drain_count;
    end
   end
