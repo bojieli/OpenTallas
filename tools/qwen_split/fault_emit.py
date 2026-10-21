@@ -378,6 +378,7 @@ def pre(v, m, G):
             occ_g.add(tuple(r_))
             occ_0.add(tuple(r_))
         unplaced = []
+        tiers = collections.Counter()
         for bid, cl, bits, eps in m['buses']:
             if bits >= WIDE_BITS and cl not in ('clock_trunk', 'reset', 'constant'):
                 for e in eps:
@@ -399,7 +400,15 @@ def pre(v, m, G):
                 if any(rr['cj'] == roots[o]['cj'] and _man(rr['xy'], (gx, gy)) <= GROUP_UM for rr in roots.values()):
                     continue                        # a root of the same clock already serves this group
                 okz2 = lambda b: zn.of_box(b) is not None
-                s = occ_g.site(v, gx, gy, rmax=GROUP_UM, ok=okz2) or occ_0.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
+                # tiers: full 350 um wide-end keep-clear (as the primary roots) -> GROUP_KEEP_UM -> none
+                s = occ.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
+                tier = 0
+                if s is None:
+                    s, tier = occ_g.site(v, gx, gy, rmax=GROUP_UM, ok=okz2), 1
+                if s is None:
+                    s, tier = occ_0.site(v, gx, gy, rmax=GROUP_UM, ok=okz2), 2
+                if s is None:
+                    s, tier = occ_0.site(v, gx, gy, rmax=GROUP_UM), 3    # any free box (zone None = inside the field rows)
                 if s is None:
                     # recorded; post fails closed (ORPHAN default fail) if this group's leaves then have no route
                     unplaced.append((o, round(gx), round(gy), len(ps)))
@@ -419,10 +428,13 @@ def pre(v, m, G):
                 _join(m, cj, (nm, 'ck'))
                 _join(m, rj, (nm, 'rs'))
                 follow[(nm, 'ck')] = o
-                roots[key] = dict(roots[o], inst=nm, xy=_ctr(it), children=[], zone=z, landings_in_zone=len(ps))
+                roots[key] = dict(roots[o], inst=nm, xy=_ctr(it), children=[], zone=z if z is not None else 'out',
+                                  landings_in_group=len(ps), site_tier=tier)
+                tiers[tier] += 1
                 nz += 1
         rec['group_roots_unplaced'] = unplaced
-        print(f'FAULT_EMIT groups: {nz} group roots placed, {len(unplaced)} groups without a free site within '
+        rec['group_root_site_tiers'] = dict(tiers)
+        print(f'FAULT_EMIT groups: {nz} group roots placed (site tiers keep350/keep{gk:.0f}/nokeep/anybox {dict(tiers)}), {len(unplaced)} groups without a free site within '
               f'{GROUP_UM:.0f} um: {unplaced[:20]}', flush=True)
     # degree-capped Prim MST from the sys_face root
     done, parent = {ROOT_OWNER}, {}
