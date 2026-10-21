@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v9: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v13: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -76,6 +76,15 @@ tasks as soon as possible"):
   every such unit and are also charged to die jobs (DIE "current memory" = MemAvailable - pending), since MemAvailable
   cannot show memory promised a moment ago.  Older settled units keep the v8 GROWTH_FACTOR rule.  --gate takes the
   admission lock itself when its caller (ot-heavy holds fd 8) does not, so concurrent admissions cannot race.
+  v13 GROWTH RATE (SCHED-TUNE 2026-10-21 12:29: v12 charged ot-epyc5 817 GB of growth at load 25 with 929 GB available,
+  admitting 160 GB: every old job with a compiler process -- a 34 h yosys at 7 GB, a 13 h die job at 88 GB of 700 --
+  counted as GROWING and was charged its whole --mem, and s["samples"] is wiped on each building/GRT pass, so no RSS delta
+  was ever recorded).  reconcile now keeps rss_hist (the last 3 cron samples, never reset) and rate_gbs.  Charge:
+    admitted < GROW_WINDOW_S (600 s) ago, or no reconcile sample yet (still building):  ceiling - now (as v12)
+    RSS rose > max(5 %, 0.5 GiB) between the last two cron samples:  min(ceiling - now, RATE_MULT (2) x rate x
+      RATE_HORIZON_S (600 s))
+    stable or old:  0, plus one host floor min(sum of their (ceiling - now), SETTLED_FLOOR_FRAC (0.02) x RAM)
+  The v6/v8 age/class/GROWTH_FACTOR rules above no longer set the charge (GROWTH_FACTOR is read but unused).
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
 
@@ -432,9 +441,15 @@ def main():
         span = NOW - s["samples"][0][0]
         vals = [x[1] for x in s["samples"]]
         flat = max(vals) - min(vals) <= max(0.05 * max(vals), GB // 2)
-        # v12 GROWING: a compiler/Verilator/yosys process, or RSS rose > max(5 %, 0.5 GiB) over the recent samples
-        recent = [x[1] for x in s["samples"] if NOW - x[0] <= conf("GROW_WINDOW_S")]
-        s["growing"] = bool(building) or (len(recent) >= 2 and recent[-1] - min(recent) > max(0.05 * recent[-1], GB // 2))
+        # v13 GROWTH RATE (SCHED-TUNE 10-21): s["samples"] is wiped on every pass that sees a compiler / GRT / a new
+        # process key, so it never held an RSS delta for a building job.  rss_hist keeps the last 3 cron samples of
+        # scope + container RSS, never reset; rate_gbs = GB/s between the last two when RSS rose > max(5 %, 0.5 GiB).
+        h = [x for x in s.get("rss_hist", []) if NOW - x[0] <= 3 * FLAT_S][-2:] + [[NOW, rss]]
+        s["rss_hist"] = h
+        (t0, r0), (t1, r1) = h[-2] if len(h) >= 2 else h[-1], h[-1]
+        rose = len(h) >= 2 and t1 > t0 and r1 - r0 > max(0.05 * r0, GB // 2)
+        s["rate_gbs"] = round((r1 - r0) / GB / (t1 - t0), 6) if rose else 0.0
+        s["growing"] = rose
         kind, peak, why = None, max(hwm, max(vals)), f"procs {comms}"
         fast = bool(FAST.match(s["cls"] or ""))
         if fast:                                           # v4: gate families, lowered whatever runs inside
@@ -610,13 +625,15 @@ def read_units():
         rows.append(dict(unit=unit, res=m, active=True, file=f, req=req, now=cur, age=max(0.0, age),
                          obs=max(cur, num(cg + "/memory.peak") / GB),
                          cls=s.get("cls") or (meta[1] if len(meta) > 1 else None),
-                         growing=bool(s.get("growing")) and not s.get("past_peak")))
+                         sampled=bool(s.get("rss_hist") or s.get("samples") or s.get("first")),
+                         rate=float(s.get("rate_gbs") or 0.0)))
     return rows
 
 
 YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
 DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
-                GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120)    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
+                GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
+                RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02)  # v13 GROWTH RATE (SCHED-TUNE 10-21)
 
 
 def conf(key):
@@ -655,7 +672,7 @@ def books(rows, total, avail, table, gf=None):
             young += r["exp"]
     plenty = avail - young >= PLENTY * total
     win, gfull = conf("GROW_WINDOW_S"), conf("GROWING_FACTOR")
-    pending = 0.0
+    pending, settled = 0.0, 0.0
     for r in rows:
         r["pending"] = False
         if not r["active"]:
@@ -664,22 +681,23 @@ def books(rows, total, avail, table, gf=None):
             pending += r["grow"]
             continue
         now = r["now"]
-        if r["age"] < win or r.get("growing"):
-            # v12 GROWING RESERVATION: admitted in the last GROW_WINDOW_S or still growing -> charged its whole remaining
-            # reservation until its measured memory reaches it (ceil = the request, or reconcile's measured lowering)
-            r["grow"], r["pending"] = max(0.0, gfull * (r["ceil"] - now)), True
-            pending += r["grow"]
-            continue
-        if r["age"] >= MID_S:
-            tgt = now + max(now / 4, 2)
-        elif r["age"] >= YOUNG_S:
-            tgt = now + max(now / 2, 4)
+        margin = max(0.0, r["ceil"] - now)
+        if r["age"] < win or not r.get("sampled", True):
+            # v12/v13: admitted in the last GROW_WINDOW_S, or reconcile has no RSS sample of it yet (still building):
+            # its whole remaining reservation
+            r["grow"], r["pending"] = gfull * margin, True
+        elif r.get("rate", 0.0) > 0:
+            # v13: RSS rose > 5 % between the last two cron samples: RATE_MULT x the measured rate over RATE_HORIZON_S
+            r["grow"], r["pending"] = min(margin, conf("RATE_MULT") * r["rate"] * conf("RATE_HORIZON_S")), True
         else:
-            tgt = now + 8 if plenty else now + r["exp"]
-        if r["cp"] and now <= r["cp"] and r["age"] >= YOUNG_S:
-            tgt = min(tgt, max(1.1 * r["cp"] + 2, now + 2))
-        r["grow"] = max(0.0, min(min(tgt, r["ceil"]) - now, gf * (r["ceil"] - now)))   # v8: never above gf x margin
-    return dict(grow=sum(r["grow"] for r in rows), young=young, plenty=plenty, pending=pending,
+            # v13: stable or old: nothing beyond what it holds (earlyoom + per-job MemoryMax + the settled floor below)
+            r["grow"] = 0.0
+            settled += margin
+        if r["pending"]:
+            pending += r["grow"]
+    # v13: a small host floor for the settled units' combined slack, never above that slack
+    sfloor = min(settled, conf("SETTLED_FLOOR_FRAC") * total)
+    return dict(grow=sum(r["grow"] for r in rows) + sfloor, young=young, plenty=plenty, pending=pending, settled_floor=sfloor,
                 used=sum(r["now"] for r in rows), reserved=sum(r["res"] for r in rows if r["active"]),
                 running=sum(1 for r in rows if r["active"]), fresh=sum(1 for r in rows if r["active"] and r["age"] < 90))
 
@@ -745,7 +763,8 @@ def gate_locked(mem, argv):
     can = admissible(total, avail, b, floor, need)
     # v9: a die job is admitted on current memory alone; v12: memory promised to units admitted in the last
     # GROW_WINDOW_S / still growing (b["pending"]) is not current memory, so it is charged to die jobs too
-    can_die = max(can, min(avail - b.get("pending", 0.0), avail - floor) / need)
+    # v13: and the settled floor (die jobs still never pay the settled units' growth itself)
+    can_die = max(can, min(avail - b.get("pending", 0.0) - b.get("settled_floor", 0.0), avail - floor) / need)
     me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
     if me_die and can < res <= can_die:
         note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, {b.get('pending', 0.0):.0f} GB pending charged, settled growth not charged)"
@@ -754,7 +773,7 @@ def gate_locked(mem, argv):
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
-          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (x{conf('GROWTH_FACTOR'):g}, uncapped sum; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
+          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (v13 rate rule, uncapped sum, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
           f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
 
 
@@ -883,44 +902,37 @@ def selftest():
         if abs(got - want) > 0.01:
             bad.append(f"{name}: got {got:.2f}, want {want:.2f}")
     one = lambda avail, **k: books([u(**k)], T, avail, tab, 0.5)["grow"]
-    # v12 GROWING RESERVATION: admitted < GROW_WINDOW_S ago or still growing -> the whole remaining reservation
-    saved = {k: os.environ.get(k) for k in ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S")}
-    os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120")
-    chk("v12 young (60 s), plenty: whole remaining reservation", one(800), 90)
+    # v12/v13: admitted < GROW_WINDOW_S ago or not sampled yet -> whole remaining; rising -> 2 x rate x 10 min; else 0
+    keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC")
+    saved = {k: os.environ.get(k) for k in keys}
+    os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120", RATE_HORIZON_S="600",
+                      RATE_MULT="2", SETTLED_FLOOR_FRAC="0")
+    chk("v12 young (60 s): whole remaining reservation", one(800), 90)
     chk("v12 young, lowered reservation bounds it", one(300, res=40, cls="x"), 30)
-    chk("v12 old (4000 s) but still growing (building / RSS rising): whole remaining", one(300, age=4000, now=60.0, obs=60.0, growing=True), 40)
-    chk("v12 old, not growing: v8 rule", one(300, age=4000, now=60.0, obs=60.0, cls="x"), 15)
+    chk("v13 old, no reconcile sample yet (building): whole remaining", one(300, age=4000, now=60.0, obs=60.0, sampled=False), 40)
+    chk("v13 old, stable: nothing", one(300, age=4000, now=60.0, obs=60.0, rate=0.0), 0)
+    chk("v13 ep5 13 h die job 88/700, peak 561, stable: nothing", one(300, age=47897, req=700.0, res=700, now=88.0, obs=561.0), 0)
+    chk("v13 old, rising 0.01 GB/s: 2 x rate x 600 s", one(300, age=4000, now=60.0, obs=60.0, rate=0.01), 12)
+    chk("v13 old, rising fast: bounded by the margin", one(300, age=4000, now=60.0, obs=60.0, rate=1.0), 40)
     chk("v12 admitted, not started: its whole reservation", one(800, active=False, res=64, file_age=3), 64)
     chk("v12 not started 60 s, launcher alive: still held", one(800, active=False, res=64, file_age=60, launcher_alive=True), 64)
     chk("v12 not started 60 s, launcher gone: nothing", one(800, active=False, res=64, file_age=60, launcher_alive=False), 0)
-    chk("v12 paused 490/512 build (old, building): its 22 GB stay charged", one(300, age=5000, req=512.0, res=512, now=490.0, obs=490.0, growing=True), 22)
-    five = [u(unit="tp", age=5000, req=512.0, res=512, now=490.25, obs=490.25, growing=True)]
-    b = books(five + [u(unit=f"r{i}", req=64.0, res=64, now=0.0, obs=0.0, age=5) for i in range(2)], 1008, 178, tab, 0.5)
-    chk("v12 EP7 11:53:03: two young 64 GB replays + paused TP192 pending", b["pending"], 21.75 + 128)
-    os.environ.update(GROW_WINDOW_S="0")              # the v6/v8 rules below are for settled units
-    chk("young, plenty: obs + 8", one(800), 8)
-    chk("young, not plenty, class measured: 1.1 x class peak", one(300), 34)
-    chk("young, not plenty, class unknown: half the request", one(300, cls="x"), 40)
-    chk("5-30 min: now/2, at least 4", one(300, age=600, now=30.0, obs=30.0), 15)
-    chk("5-30 min small: 4 GB", one(300, age=600, now=2.0, obs=2.0), 4)
-    chk(">= 30 min: now/4", one(300, age=4000, now=60.0, obs=60.0, cls="x"), 15)
-    chk("class bound below the age rule", one(300, age=600, now=38.0, obs=38.0), 8)
-    chk("past its peak: charged from what it holds now", one(300, age=4000, now=10.0, obs=50.0, cls="x"), 2.5)
-    chk("never above half the margin to the request (v8)", one(300, age=600, now=95.0, obs=95.0, cls="x"), 2.5)
-    chk("a lowered reservation bounds the charge (v8: half its margin)", one(300, age=600, now=30.0, obs=30.0, res=40, cls="x"), 5)
-    chk("... not once RSS passed 80 % of it", one(300, age=600, now=30.0, obs=30.0, res=32, cls="x"), 15)
-    chk("admitted, not started: its whole charge (v12; v8 charged half)", one(800, active=False, res=64, file_age=3), 64)
-    chk("young unmeasured 300 GB request at 10 GB, not plenty: half the request, already below half the margin", one(300, req=300.0, res=300, cls="x"), 140)
     chk("gone for 30 s: nothing", one(800, active=False, res=64, file_age=30), 0)
-    # the two hosts as measured 2026-10-13 17:47 (GB)
-    e4 = [u(req=200.0, res=200, now=70.0, obs=70.0, age=196, cls="x"), u(req=200.0, res=200, now=70.0, obs=70.0, age=194, cls="x"),
-          u(req=320.0, res=320, now=70.0, obs=70.0, age=192, cls="x")]
-    b = books(e4, 1133, 806, tab, 0.5)
-    chk("EPYC4 17:47: three young 70 GB builds, growth", b["grow"], 24)
-    chk("EPYC4 17:47: the 5 % floor binds: (806 - 56.65) / 0.7", admissible(1133, 806, b, 56.65, 0.7), 1070.5)
-    e1 = [u(req=110.0, res=110, now=42.0, obs=57.0, age=963, cls="x") for _ in range(6)]
-    b = books(e1, 1133, 592, tab, 0.5)
-    chk("EPYC1 17:47: six 110 GB requests at 42 GB (peak 57), growth", b["grow"], 6 * 21)
+    os.environ.update(SETTLED_FLOOR_FRAC="0.02")
+    chk("v13 settled floor: 2 % of RAM", one(300, age=4000, req=512.0, res=512, now=490.0, obs=490.0), 20)
+    chk("v13 settled floor never above the settled slack", one(300, age=4000, now=95.0, obs=95.0), 5)
+    chk("v13 empty host: no floor", books([], T, 300, tab)["grow"], 0)
+    tp = [u(unit="tp", age=5000, req=512.0, res=512, now=490.25, obs=490.25)]
+    b = books(tp + [u(unit=f"r{i}", req=64.0, res=64, now=0.0, obs=0.0, age=5) for i in range(2)], 1008, 178, tab)
+    chk("v13 EP7 11:53:03: two young 64 GB replays pending", b["pending"], 128)
+    chk("v13 EP7 11:53:03: growth = 128 pending + 20.16 settled floor", b["grow"], 128 + 20.16)
+    # ep5 2026-10-21 12:31 (GB): 928 available; three 48 GB launches not started; 13 stable units
+    e5 = [u(unit="j4", age=47897, req=700.0, res=700, now=88.0, obs=561.0), u(unit="rg", age=10787, req=128.0, res=85, now=4.0),
+          u(unit="sy", age=122430, req=64.0, res=64, now=7.0)] + \
+         [u(unit=f"s{i}", active=False, res=48, file_age=5, launcher_alive=True) for i in range(3)]
+    b = books(e5, 1133, 928, tab)
+    chk("v13 ep5 12:31: growth = 144 pending + 22.66 floor (v12: 960)", b["grow"], 144 + 22.66)
+    chk("v13 ep5 12:31: admits (928 - 166.66) / 0.7 (v12: -46)", admissible(1133, 928, b, 56.65, 0.7), 1087.63)
     # v8 admission: NEED_FACTOR x request <= MemAvailable - growth charged, above the floor
     chk("growth charged decides", admissible(T, 400, dict(grow=60.0, young=0.0), 50, 0.7), 485.71)
     chk("full summed growth 260 GB is charged", admissible(T, 400, dict(grow=260.0, young=0.0), 50, 0.7), 200.0)

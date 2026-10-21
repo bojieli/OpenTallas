@@ -15,13 +15,13 @@ loader.exec_module(R)
 
 def row(unit, now, req, age):
     return dict(unit=unit, active=True, now=now, obs=now, req=float(req), res=req,
-                age=age, cls='unmeasured', file='', file_age=0)
+                age=age, cls='unmeasured', file='', file_age=0, sampled=True, rate=0.0)
 
 
 def initial_rows():
-    # The stopped compiler's scope remains active and its reservation remains charged (a SIGSTOPped Verilator is still
-    # a build process, so reconcile keeps it GROWING and the rest of its reservation stays charged).
-    paused = dict(row('paused-tp192', 490.25, 512, 5000), growing=True)
+    # The stopped compiler's scope remains active.  v13: its RSS is flat, so it is charged nothing itself; the settled
+    # floor (2 % of RAM) covers the settled units' combined slack.
+    paused = row('paused-tp192', 490.25, 512, 5000)
     return [paused] + [row(f'route{i}', 100, 128, 5000) for i in range(4)]
 
 
@@ -113,7 +113,7 @@ class GrowingReservation(unittest.TestCase):
              patch.object(R, 'die_hold', return_value=0), patch.object(R, 'holds_admit_lock', return_value=True), \
              contextlib.redirect_stdout(out):
             R.gate(64, ['bash', 'die_sta.sh'])
-        # pending = 21.75 (paused) + 128 (two young replays): (178 - 149.75) / 0.7 = 40 < 64
+        # v13: pending 128 (two young replays) + settled floor 20.16: (178 - 148.16) / 0.7 = 42.6 < 64
         self.assertTrue(out.getvalue().startswith('NO '), out.getvalue())
 
     def test_gate_takes_the_lock_when_caller_does_not(self):
