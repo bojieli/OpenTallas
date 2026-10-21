@@ -133,6 +133,7 @@ SHARE_PAIRS = {'ot_hbm_idx_vm_share2_static': 4, 'ot_hbm_idx_vm_share2_static_r'
 # keeps its RL = fixed VM read latency at its pins, 7 = rq register n -> share face n+8 capture at RL 7, HBM-BANKLAT-COLL)
 DOWN_PARAM = {'ot_hbm_idx_vm_query_static_n12': ('VM_RT_EXTRA', 4, 4, 2),
               'ot_hgi_qdq_host_split': ('RL', 7, 7, 0), 'ot_hgi_qdq_host_split_r2': ('RL', 7, 7, 0),
+              'ot_hgi_qdq_host_split_r3': ('RL', 7, 7, 0),
               'ot_hgi_qdq_host_static': ('RL', 7, 7, 0)}
 INFO_MASTERS = re.compile(r'^(hfd_hgi_vms|hfd_hgi_vm_calendar|hfd_vms_wq2_merge|ot_hbm_svc_vmdel|ot_hgi_coll_kq_share2|'
                           r'ot_hbm_sm_vm_wr_q)')

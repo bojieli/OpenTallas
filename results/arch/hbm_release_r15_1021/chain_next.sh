@@ -56,7 +56,7 @@
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
 VAR=${1:?plan A|B}; PL=${VAR:0:1}; PLAN_UM=300; HOST=ot-epyc6
-W=/home/ubuntu/wt/hbm-die15-nextgen-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_release_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
+W=/home/ubuntu/wt/codex-hbm-r15-binding-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_release_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
@@ -64,7 +64,7 @@ AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
 B=/srv/opentallas-scratch/claude/hbm-die15-r15-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=claude/hbm-die15-nextgen-1021
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r15-binding-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
 step() { echo "STEP $* $(date -Is)"; }
@@ -210,7 +210,7 @@ step R14_INIT layers_synth_a_views_src
 mkdir -p $A/net
 [ "$(sha256sum $AE4/net/pre_relay.json | cut -c1-8)" = 9d1a3f20 ] || { echo R14_PRE_RELAY_BASIS_MISMATCH; exit 9; }
 python3 tools/hbm_die_v16/d4g_layers/compose_release_r14.py $AE4/net/pre_relay.json $A/net/release_source_closed_$H || { echo R14_RELEASE_COMPOSE_FAIL; exit 9; }
-cp $A/net/release_source_closed_$H/pre_relay_release.json $A/net/pre_relay_r14.json
+python3 tools/hbm_die_v16/d4g_layers/l28_collective_program_capacity.py $A/net/release_source_closed_$H/pre_relay_release.json $A/net/pre_relay_r14.json --report $A/net/l28_collective_params.json || { echo R15_COLLECTIVE_PARAMS_FAIL; exit 9; }
 python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/pre_relay_r14.json --rev HEAD --json $A/net/cmc_pre_relay_r14.json > $A/net/cmc_pre_relay_r14.log 2>&1; tail -1 $A/net/cmc_pre_relay_r14.log
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/pre_relay_r14.json --report $A/net/functional_bind_pre_relay_r14.json --lat warn > $A/net/functional_bind_pre_relay_r14.log 2>&1; tail -1 $A/net/functional_bind_pre_relay_r14.log
 echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"

@@ -28,9 +28,12 @@
 // metadata's spare bits carry the pc MSBs (next[6]=m[51], target[6]=m[52], lid[6]=m[53]; m[63:54] must be 0), cfg row
 // select bit 6 = cfg[8] (mode 0) and meta-hi bits [53:51] = cfg[21:19] (mode 3); program banks = 2 x 64-row macros.
 // Same edges, same ISA otherwise (a 64-row programme behaves identically at ROWS 128).
+// HBM-ARGMAX (10-19, coordinator 0kj): ROWS=256: 8-bit pc; next[7]=m[54], target[7]=m[55], lid[7]=m[56] (m[63:57]
+// must be 0), cfg row bits [7:6] = cfg[9:8] (mode 0), meta-hi bits [56:51] = cfg[24:19] (mode 3); program banks =
+// 4 x 64-row macros (u_sram, g128.u_sram_hi, g256.u_sram_h2/_h3). ROWS 64/128 unchanged.
 module ot_hgi_coll_static_issuer_v6 #(
     parameter integer MUT_DATA=0, MUT_BRANCH=0, MUT_RELOAD=0, parameter integer ROWS=64,
-    parameter integer PW=(ROWS>64)?7:6      // derived; never override
+    parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6      // derived; never override
 )(
     input wire clk_control,
     input wire [2:0] clk_mem,
@@ -50,11 +53,11 @@ module ot_hgi_coll_static_issuer_v6 #(
     reg [ROWS-1:0] meta_lo_valid,meta_hi_valid;
     reg [PW-1:0] cfg_row,pc;
     // metadata fields (ROWS 64: the original bit positions exactly)
-    function automatic [PW-1:0] f_next(input [63:0] x); f_next=(PW==7)?{x[51],x[5:0]}:x[5:0]; endfunction
-    function automatic [PW-1:0] f_tgt(input [63:0] x); f_tgt=(PW==7)?{x[52],x[11:6]}:x[11:6]; endfunction
-    function automatic [PW-1:0] f_lid(input [63:0] x); f_lid=(PW==7)?{x[53],x[50:45]}:x[50:45]; endfunction
-    localparam integer MHB=(PW==7)?22:19;
-    wire [12:0] spare_mask=(PW==7)?13'h1ff8:13'h1fff;   // m[63:51] bits that must be zero
+    function automatic [PW-1:0] f_next(input [63:0] x); f_next=(PW==8)?{x[54],x[51],x[5:0]}:(PW==7)?{x[51],x[5:0]}:x[5:0]; endfunction
+    function automatic [PW-1:0] f_tgt(input [63:0] x); f_tgt=(PW==8)?{x[55],x[52],x[11:6]}:(PW==7)?{x[52],x[11:6]}:x[11:6]; endfunction
+    function automatic [PW-1:0] f_lid(input [63:0] x); f_lid=(PW==8)?{x[56],x[53],x[50:45]}:(PW==7)?{x[53],x[50:45]}:x[50:45]; endfunction
+    localparam integer MHB=(PW==8)?25:(PW==7)?22:19;
+    wire [12:0] spare_mask=(PW==8)?13'h1fc0:(PW==7)?13'h1ff8:13'h1fff;   // m[63:51] bits that must be zero
     reg [1:0] cfg_bank;
     reg cfg_selected;
     reg [3:0] fragment;
@@ -131,14 +134,18 @@ module ot_hgi_coll_static_issuer_v6 #(
                 fetch_v<=1;fetch_pc<=pc;it0<=cur_loops;h0<=cur_halt;
                 if((m[63:51]&spare_mask)!=0)fault<=1;
                 if(cur_halt)fetching<=0;
+`ifdef OT_COLL_ISS_MUT_PCWRAP
+                else pc<=(take ? cur_target : cur_next) & {1'b0,{(PW-1){1'b1}}};   // mutant: pc MSB dropped (wraps at ROWS/2)
+`else
                 else pc<=take ? cur_target : cur_next;
+`endif
             end
             if(cfg[36])begin
                 if(busy || start)fault<=1;
                 else case(cfg[35:32])
                     4'd0:begin
                         if(fragment!=0 || cfg[31:PW+2]!=0 || cfg[7:6]==3)fault<=1;
-                        cfg_row<=(PW==7)?{cfg[PW+1],cfg[5:0]}:cfg[5:0];cfg_bank<=cfg[7:6];cfg_selected<=cfg[7:6]!=3;
+                        cfg_row<=(PW==8)?{cfg[9:8],cfg[5:0]}:(PW==7)?{cfg[8],cfg[5:0]}:cfg[5:0];cfg_bank<=cfg[7:6];cfg_selected<=cfg[7:6]!=3;
                         fragment<=0;
                     end
                     4'd1:begin

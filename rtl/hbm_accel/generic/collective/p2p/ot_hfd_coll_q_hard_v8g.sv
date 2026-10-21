@@ -18,7 +18,7 @@
 //    leaf sees the step bits as 0 (its reserved-field fault is unchanged).
 //  ROWS=128: static_issuer_v6 / programme target with 128 rows (7-bit pc; see ot_hgi_coll_static_issuer_v6).
 module ot_hfd_coll_q_hard_v8g_body #(
- parameter integer NPT=3,SOLO=1,TP=96,AR_ITER=0,ROWS=64,PW=(ROWS>64)?7:6,
+ parameter integer NPT=3,SOLO=1,TP=96,AR_ITER=0,ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6,
  parameter integer NS=(SOLO!=0)?NPT+8:NPT+7,ND=NPT+13,NSL=18,NCK=NS+NSL,
  // HBM-BANKLAT-COLL 10-19: VM_RT = VM read edges beyond the fixed n+8 capture (d4g VM faces bank pin + die lanes + COLL
  // read share hcollrs_<q>, padded by the die to this scalar budget). 0 = the v8 parent, identical hierarchy and edges
@@ -79,10 +79,19 @@ module ot_hfd_coll_q_hard_v8g_body #(
  wire [36:0] program_cfg;wire hgi_start;wire [PW-1:0] hgi_start_pc;
  wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [PW-1:0] uop_pc;wire busy_d2,start_d3;
  wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;
+ // HBM-COLL256-KITS (10-19): ROWS 256 binds the safe 256-row issuer leaf ot_hgi_coll_issuer_m256 (v7 core: SRAM metadata
+ // lookahead, 2 x 256x256 per bank); ROWS 64/128 keep ot_hgi_coll_issuer_m (v6). Same ports and edges.
+ generate if(ROWS>128)begin:g_iss256
+ ot_hgi_coll_issuer_m256 u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
+  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
+  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
+  .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
+ end else begin:g_iss
  ot_hgi_coll_issuer_m #(.ROWS(ROWS)) u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
   .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
   .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
+ end endgenerate
  // V7 compact slices (Codex a08f80c6e/b1c5ffa0e; grant coll_slice_geometry_grant_1552): 16 x 96-bit hard leaves, same
  // d1 -> d2 -> d3 edges as ot_hgi_coll_uop_pipe (monolithic V6b leaf native FAIL L303.8/C372.4).
  ot_hgi_coll_upipe_sliced_v7 u_upipe(.clk(clk_upipe),.d1(inst_d1),.d2(inst_d2),.d3(inst));
@@ -451,7 +460,7 @@ endmodule
 
 // d4f (H-DIE 10-17): the q3 parent with TKM hoisted to a die-level sub-cluster (tkm_SW, ot_hgi_coll_tkm_m_tp192): same
 // body, the TKM interface on pins (zero-latency wires in the lockstep bench; die hop granted <= 450 um, no relay).
-module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=96,AR_ITER=0,ROWS=64,parameter integer VM_RT=0)(
+module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=96,parameter integer VM_RT=0,AR_ITER=0,ROWS=64)(
  input wire rst_n,input wire [1:0] qid,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+8+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,
@@ -489,10 +498,10 @@ module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=
  input wire tkx_busy,tkx_done,tkx_fault,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(1),.AR_ITER(AR_ITER),.ROWS(ROWS),.VM_RT(VM_RT)) u_body(.*);
+ ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(1),.VM_RT(VM_RT),.AR_ITER(AR_ITER),.ROWS(ROWS)) u_body(.*);
 endmodule
 
-module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=96,AR_ITER=0,ROWS=64,parameter integer VM_RT=0)(
+module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=96,parameter integer VM_RT=0,AR_ITER=0,ROWS=64)(
  input wire rst_n,input wire [1:0] qid,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+7+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
@@ -524,7 +533,7 @@ module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(0),.AR_ITER(AR_ITER),.ROWS(ROWS),.VM_RT(VM_RT)) u_body(.*,.clk_arg(1'b0),
+ ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(0),.VM_RT(VM_RT),.AR_ITER(AR_ITER),.ROWS(ROWS)) u_body(.*,.clk_arg(1'b0),
   .tkx_start(),.tkx_arg_mode(),.tkx_cfg_n(),.tkx_cfg_k(),.tkx_cfg_nout(),.tkx_cfg_g(),.tkx_cfg_gbase(),.tkx_cfg_pf(),
   .tkx_cfg_obase(),.tkx_cfg_rbase(),.tkx_cfg_has_r(),.tkx_del_slot(),.tkx_del_valid(),.tkx_del_flit(),
   .tkx_w_v(1'b0),.tkx_w_addr(40'd0),.tkx_w_mask(16'd0),.tkx_w_data(512'd0),.tkx_busy(1'b0),.tkx_done(1'b0),.tkx_fault(1'b0));

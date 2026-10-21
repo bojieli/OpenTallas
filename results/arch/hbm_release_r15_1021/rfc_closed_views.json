@@ -2,6 +2,16 @@
  "source": "rtl/hbm_accel/die_glue/hbfd_rly_rfc_masters.sv",
  "views": [
   {
+   "job": "hbfd_rly_1136_ew_rfc-rfc-01675cbaa",
+   "master": "hbfd_rly_1136_EW_rfc",
+   "view": "physical/ref_tile/hbfd_rly_1136_ew_rfc/views/hbfd_rly_1136_EW_rfc",
+   "record_branch": "codex/closure-record-hbfd_rly_1136_ew_rfc-rfc-01675cbaa",
+   "record_commit": "160f381ebda27d9bca08304e8a97f57a6f16e025",
+   "source_commit": "01675cbaa1e703a65d197dcad150d097aed8959b",
+   "verdict": "TT +227.89 / FF +26.43 ps DRC 0; SS sensitivity +89.40 ps",
+   "station": "f32"
+  },
+  {
    "job": "hbfd_rly_1136_ew_rrfc-rfc-85deffa8b",
    "master": "hbfd_rly_1136_EW_rrfc",
    "view": "physical/ref_tile/hbfd_rly_1136_ew_rrfc/views/hbfd_rly_1136_EW_rrfc",
@@ -10,6 +20,16 @@
    "source_commit": "85deffa8b5328f8bc87cda877a4dedf56f284c5e",
    "verdict": "TT +231.47 / FF +26.53 ps DRC 0; SS sensitivity +91.12 ps",
    "station": "base"
+  },
+  {
+   "job": "hbfd_rly_1136_we_rfc-rfc-01675cbaa",
+   "master": "hbfd_rly_1136_WE_rfc",
+   "view": "physical/ref_tile/hbfd_rly_1136_we_rfc/views/hbfd_rly_1136_WE_rfc",
+   "record_branch": "codex/closure-record-hbfd_rly_1136_we_rfc-rfc-01675cbaa",
+   "record_commit": "d169c692dbefa17e6e71fcc6efe7b736b8a061b3",
+   "source_commit": "01675cbaa1e703a65d197dcad150d097aed8959b",
+   "verdict": "TT +207.94 / FF +29.17 ps DRC 0; SS sensitivity +98.22 ps",
+   "station": "f32"
   },
   {
    "job": "hbfd_rly_1136_we_rrfc-rfc-6b62a7666",
