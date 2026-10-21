@@ -8,6 +8,7 @@ assert 'native_soft' in mods and 'qkd_hr_ingest_qm' in mods
 protected=[n for n in mods if 'ot_link_afifo' in n or 'ot_host_reset_bank' in n or 'ot_reset_sync' in n]
 assert len(protected)>=4,('reviewed FIFO/reset hierarchy was flattened',protected)
 soft=mods['native_soft'];assert not re.search(r'^\s+\\?\S*(?:ot_link_afifo|ot_host_reset_bank|ot_reset_sync|ot_sram)\S*\s+\\?\S+\s*\(',soft,re.M)
+assert 'qkd_host_native_engine_n32_cell_57' not in soft, 'SRAM wrapper must remain in parent'
 names=['native_soft']+sorted(n for n in mods if n.startswith('qkd_host_native_engine_n32_cell_') or n=='qkc_ingest_take_copy')
 a.dest.write_text('\n\n'.join(mods[n] for n in names)+'\n')
 print(json.dumps(dict(source_sha256=hashlib.sha256(a.source.read_bytes()).hexdigest(),extracted_sha256=hashlib.sha256(a.dest.read_bytes()).hexdigest(),protected=protected,modules=names),indent=1))
