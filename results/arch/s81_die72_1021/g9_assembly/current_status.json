@@ -1,5 +1,5 @@
 {
-  "sampled_at_local": "2026-10-21T16:26:01",
+  "sampled_at_local": "2026-10-21T16:40:25.518332-07:00",
   "branch": "codex/s81-g9-assembly-1021",
   "G9_failed_route_bind_unit": "3311561-1792624541",
   "failed_scope": "819nominalroutesPASS/19813stations, strictFAIL16:19:25 onlyKV HBpublicparameter+faultOUTPUT_OPEN; noGEN",
@@ -11,7 +11,7 @@
   "successor_unit": "3336872-1792625005",
   "successor_host": "ot-epyc5",
   "successor_root": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix",
-  "successor_stage": "STRICT_BIND_ACTIVE; GEN/GRT/STA notrunyet",
+  "successor_stage": "STRICT_BIND_PASS16:26:52; GEN_FAIL16:28:20 missing CTRL native forwarded_clock.json; GRT/STA NOTRUN",
   "successor_runner": "b87d24f86ee8e548a5decfce49da87c2bbf36711",
   "reused_inputs": "ExactsourcechecksumPASS, route/landhashesmatch,819links/no reroute; oldfailure/objectsretained",
   "source_proofs": {
@@ -21,5 +21,18 @@
     "source_ack": "7fb376c69 uniqueparameterfreeKVtop/fixedparams/transparentclocks"
   },
   "other_live": "OriginalG8gold2unit2876832/PID2897687 andCTRLMAIN29fEP5GRTpreserved",
-  "scope": "DiagnosticavailableCLOSEDviews only; no runtime/coherence/calendar/wholeparent/diephysicalclaim"
+  "scope": "DiagnosticavailableCLOSEDviews only; no runtime/coherence/calendar/wholeparent/diephysicalclaim",
+  "strict_summary": {
+    "masters": 48,
+    "instances": 30090,
+    "errors": 0,
+    "die_sha256": "00715e1a11cc9681bf5f1d6a70cf5d4a2c9c3a8094730cf26291f9d3e3a4c8ea"
+  },
+  "gen_blocker": {
+    "master": "dsfd_ctrl_rg3",
+    "selected_closed_record": "bbc9c9b13",
+    "source": "22595e8993ac83c9293f59ffb5fe6b4d7914589c",
+    "reason": "Legacy ck_o self-clock sequential ETM lacks actual native forwarding export; source clk\u2192two inverter\u2192ck_o; no bypass",
+    "action": "Prepare exact original pass1/installed routed native export inputs for owner review; preserve failed GEN, no further chain"
+  }
 }
