@@ -1,0 +1,127 @@
+{
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4,
+  "pd": 0.6
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "job": {
+  "owner": "Claude DRIVE-HBM/HBM-IDXSQ8 1020",
+  "purpose": "IDX-SCORE key column hard child (4 per leaf, 32 per quarter)",
+  "branch": "claude/hbm-idxsq8-1020",
+  "benches": [
+   {
+    "name": "chunk_rt_c_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_c_equiv.sh {RUN}/c7_pos pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_static/score_col7_1020/pos.log"
+   },
+   {
+    "name": "chunk_rt_c_seam",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_c_equiv.sh {RUN}/c7_seam seam",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_static/score_col7_1020/seam.log"
+   },
+   {
+    "name": "chunk_rt_c_swap",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_c_equiv.sh {RUN}/c7_swap swap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_static/score_col7_1020/swap.log"
+   },
+   {
+    "name": "chunk_rt_c_qlate1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_c_equiv.sh {RUN}/c7_qlate1 qlate1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_static/score_col7_1020/qlate1.log"
+   }
+  ]
+ },
+ "name": "hidx_score_col7_a",
+ "top": "ot_hidx_score_col",
+ "sources": [
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/lib/ot_rst_relay_l.sv"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "structural_change": "HBM-IDXSQ8 2026-10-20: leaf core split per the top-down hierarchy contract (codex c7 source a1791bb1d, ot_hbm_idx_chunk_rt_c): the IDX-SCORE leaf (leaf_c1: CTS rc137, 189,723 flops on one root; native32 FAIL 13,574 drivers) becomes glue + 4 x this KEY COLUMN hard child (8 heads, 4 head-pair regions, ~47k flops, own CTS root), replicated 4x per leaf and hardened once. main: N-face pins, util 0.52",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of each region's ot_rst_relay_l (copies clear from the last stage)"
+ },
+ "clock_port": "clk",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pins": {
+  "N": [
+   "qv_b",
+   "q_b",
+   "key",
+   "hid",
+   "cs_out",
+   "cf_out",
+   "prdy",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every pin: inputs land in each head-pair region's kept pin registers (qv_p/q_p/key_p/hid_pa/hid_pb), outputs launch from cs_o (head 7) and the region online flops"
+ },
+ "outline": {
+  "w": 302.4,
+  "h": 302.4
+ },
+ "util": 0.52
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_score_col",
+ "enable": false,
+ "reason": "the RTL registers every pin: inputs land in each head-pair region's kept pin registers (qv_p/q_p/key_p/hid_pa/hid_pb), outputs launch from cs_o (head 7) and the region online flops"
+}

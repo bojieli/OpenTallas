@@ -1,0 +1,157 @@
+{
+ "top": "ot_hbm_idx_score_quarter_f7",
+ "why": "HBM-IDXSQ8 10-20 (owner clock rule 10-20 08:50; landed-regions-standard-1018): the IDX quarter scorer (1.3 x 2.7 mm, 8 x 47k-flop-column leaves) as a LANDED parent. One region per child: W glue, 8 leaves (each the die's chunk clock), E glue. Every W->leaf, leaf->leaf and leaf->E crossing lands in a 2-slot ring (E = K = 1, +2 edges = the old W-pin + E-pin hop cost); the dataflow is a W->E DAG, so the offsets schedule keeps the flat calendar (score +10 edges). Geometry plan (centres, um): leaves 648 sq on a 691.2 pitch, 43.2 landing channels, W/E glue columns 86.4; native32 landings (16-bit kept chunk selectors, reset forest); reset root l01 (centre), hops <= 405 um.",
+ "sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_f7.sv"
+ ],
+ "child_sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_qw_r4s_tp192.sv",
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_qwe_r4s.sv",
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_wo2.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c7.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv",
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_delay_auto.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/lib/ot_rst_relay_l.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "out_dir": "rtl/hbm_accel/index/quad_1017/lp",
+ "record_dir": "results/arch/landed_parent_1020/ot_hbm_idx_score_quarter_f7",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "w",
+   "insts": [
+    "u_w"
+   ],
+   "centre": [
+    43.2,
+    669.6
+   ]
+  },
+  {
+   "name": "l00",
+   "insts": [
+    "u_l00"
+   ],
+   "centre": [
+    453.6,
+    324.0
+   ]
+  },
+  {
+   "name": "l01",
+   "insts": [
+    "u_l01"
+   ],
+   "centre": [
+    1144.8,
+    324.0
+   ]
+  },
+  {
+   "name": "l02",
+   "insts": [
+    "u_l02"
+   ],
+   "centre": [
+    1836.0,
+    324.0
+   ]
+  },
+  {
+   "name": "l03",
+   "insts": [
+    "u_l03"
+   ],
+   "centre": [
+    2527.2,
+    324.0
+   ]
+  },
+  {
+   "name": "l10",
+   "insts": [
+    "u_l10"
+   ],
+   "centre": [
+    453.6,
+    1015.2
+   ]
+  },
+  {
+   "name": "l11",
+   "insts": [
+    "u_l11"
+   ],
+   "centre": [
+    1144.8,
+    1015.2
+   ]
+  },
+  {
+   "name": "l12",
+   "insts": [
+    "u_l12"
+   ],
+   "centre": [
+    1836.0,
+    1015.2
+   ]
+  },
+  {
+   "name": "l13",
+   "insts": [
+    "u_l13"
+   ],
+   "centre": [
+    2527.2,
+    1015.2
+   ]
+  },
+  {
+   "name": "e",
+   "insts": [
+    "u_e"
+   ],
+   "centre": [
+    2937.6,
+    669.6
+   ]
+  }
+ ],
+ "static": [
+  "half"
+ ],
+ "D": 2,
+ "E": 1,
+ "bench": {
+  "cycles": 1500,
+  "reset_cycles": 8,
+  "sim": "verilator"
+ },
+ "reset_region": "l01",
+ "landing_chunk_bits": 16,
+ "landing_reset_forest": true
+}

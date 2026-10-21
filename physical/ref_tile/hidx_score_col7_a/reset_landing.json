@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hidx_score_col",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of each region's ot_rst_relay_l (copies clear from the last stage)"
+}

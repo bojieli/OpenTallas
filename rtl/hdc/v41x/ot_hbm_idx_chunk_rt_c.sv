@@ -139,16 +139,18 @@ module ot_hdc_v41x_q4dot_n #(
     input  wire         clk,
     input  wire [127:0] a,
     input  wire [127:0] b,
+    input  wire [127:0] a2,         // HBM-IDXSQ8 native32: kept copies of a / b (same edge); the shift fields s = max(m[2:1]-1,0)
+    input  wire [127:0] b2,         // read these, the mantissa fields / signs read a / b (a code bit fed ~35 loads per head)
     input  wire [7:0]   ua,
     input  wire [7:0]   ub,
     output reg  [31:0]  y,
     output reg          ovf
 );
-    function automatic [8:0] sprod_n(input sg, input [2:0] x, input [2:0] z);
+    function automatic [8:0] sprod_n(input sg, input [2:0] x, input [2:0] z, input [2:1] x2, input [2:1] z2);
         reg [1:0] mx, mz; reg [1:0] sx, sz; reg [3:0] mm; reg [7:0] pm;
         begin
             mx = {x[2:1] != 2'd0, x[0]}; mz = {z[2:1] != 2'd0, z[0]};
-            sx = (x[2:1] == 2'd0) ? 2'd0 : x[2:1] - 2'd1; sz = (z[2:1] == 2'd0) ? 2'd0 : z[2:1] - 2'd1;
+            sx = (x2 == 2'd0) ? 2'd0 : x2 - 2'd1; sz = (z2 == 2'd0) ? 2'd0 : z2 - 2'd1;
             mm = mx * mz;
             pm = {4'd0, mm} << ({1'b0, sx} + {1'b0, sz});
             sprod_n = (sg ? (9'd0 - {1'b0, pm}) : {1'b0, pm}) ^ 9'h100;
@@ -158,7 +160,7 @@ module ot_hdc_v41x_q4dot_n #(
     integer i;
     always @* begin
         for (i = 0; i < 32; i = i + 1)
-            opa[14*i +: 14] = {5'd0, sprod_n(a[4*i + 3] ^ b[4*i + 3], a[4*i +: 3], b[4*i +: 3])};
+            opa[14*i +: 14] = {5'd0, sprod_n(a[4*i + 3] ^ b[4*i + 3], a[4*i +: 3], b[4*i +: 3], a2[4*i + 1 +: 2], b2[4*i + 1 +: 2])};
     end
     wire [7*14-1:0]  qa;
     ot_hdc_v41x_csa #(.N(32), .M(7), .W(14)) u_ca (.d(opa), .q(qa));
@@ -290,7 +292,7 @@ module ot_hdc_v41x_bmul_n (
         {lz, p2, e2, s2s, s2z, s2kneg, s2kl, s2kr} <= {lz0, rp, re, rs, rz, rkneg, rkl, rkr};
     end
     wire [15:0]        pn;
-    ot_hidx_ksh #(.W(16), .SHW(5), .OW(16), .PAD(1), .LEFT(1), .NS(2), .NH(4)) u_pn (.clk(clk), .d(rp), .sh(lz0), .q(pn));
+    ot_hidx_ksh #(.W(16), .SHW(5), .OW(16), .PAD(1), .LEFT(1), .NS(2), .NH(8)) u_pn (.clk(clk), .d(rp), .sh(lz0), .q(pn));
     wire signed [11:0] be = e2 + 12'sd142 - $signed({7'd0, lz});
     wire [32:0]        xr;
     ot_hidx_ksh #(.W(16), .SHW(5), .OW(33), .PAD(17), .LEFT(0), .NS(5), .NH(4)) u_xr (.clk(clk), .d(rp), .sh(rkr), .q(xr));
@@ -371,8 +373,10 @@ module ot_hidx_score_col (
         always @(posedge clk or negedge rs) if (!rs) onl <= 1'b0; else onl <= rs && rn_p;
         assign prdy[r] = onl;
         // region pin registers, kept per region (equal D across the 4 regions: opt_merge would fold them into one)
-        (* keep *) reg qv_p; (* keep *) reg [QW-1:0] q_p; (* keep *) reg [KW-1:0] key_p;
-        always @(posedge clk) begin qv_p <= qv_b && rn_p; q_p <= q_b; key_p <= key; end
+        // HBM-IDXSQ8 native32 (col7 census: key_p 1,408 drivers <= 74 loads): the key pin registers are per HEAD (key_h) plus
+        // a per-head copy of the code bits (key_h2) for the dot's shift fields; same edge, each key pin drives 16 flops.
+        (* keep *) reg qv_p; (* keep *) reg [QW-1:0] q_p;
+        always @(posedge clk) begin qv_p <= qv_b && rn_p; q_p <= q_b; end
         wire [7:0] qh_p = q_p[QW-1 -: 8];
         for (hh = 0; hh < 2; hh = hh + 1) begin : g_h
             localparam integer H = 2 * r + hh;
@@ -382,12 +386,18 @@ module ot_hidx_score_col (
             // ---- (a) query store: own head written one edge after the compare; 40 kept enable copies
             wire q_eqa = qv_p && rn_p && (qh_p == hid_pa);
             wire q_eqb = qv_p && rn_p && (qh_p == hid_pb);
-            reg [SW-1:0] q2; reg [SW-1:0] qst;
+            (* keep *) reg [KW-1:0] key_h; (* keep *) reg [NB*128-1:0] key_h2;
+            always @(posedge clk) begin key_h <= key; key_h2 <= key[NB*128-1:0]; end
+            reg [SW-1:0] q2; reg [SW-1:0] qst; reg [NB*128-1:0] qst2;   // qst2: the code bits again (dot shift fields)
             always @(posedge clk) q2 <= q_p[QW-9:0];
             for (k = 0; k < NQG; k = k + 1) begin : g_we
                 (* keep *) reg we;
                 always @(posedge clk) we <= (k < NQG / 2) ? q_eqa : q_eqb;
                 always @(posedge clk) if (we) qst[k*QG +: QG] <= q2[k*QG +: QG];
+                if (k*QG + QG > 48) begin : g_c2                  // groups holding code bits (qst[559:48])
+                    localparam integer L2 = (k*QG < 48) ? 48 : k*QG;
+                    always @(posedge clk) if (we) qst2[k*QG + QG - 1 - 48 : L2 - 48] <= q2[k*QG + QG - 1 : L2];
+                end
             end
             wire [NB*128-1:0] qc = qst[SW-1 -: NB*128];
             wire [NB*8-1:0]   qs = qst[47:16];
@@ -397,8 +407,9 @@ module ot_hidx_score_col (
             for (bb = 0; bb < NB; bb = bb + 1) begin : g_blk
                 localparam integer DS = (bb == 0) ? 0 : FPL * (bb - 1);
                 wire [31:0] bv0; wire bo0; wire [31:0] bv; wire bo;
-                (* keep_hierarchy *) ot_hdc_v41x_q4dot_n #(.QL(QL)) u_d (.clk(clk), .a(qc[bb*128 +: 128]), .b(key_p[128*bb +: 128]),
-                    .ua(qs[bb*8 +: 8]), .ub(key_p[NB*128 + 8*bb +: 8]), .y(bv0), .ovf(bo0));
+                (* keep_hierarchy *) ot_hdc_v41x_q4dot_n #(.QL(QL)) u_d (.clk(clk), .a(qc[bb*128 +: 128]), .b(key_h[128*bb +: 128]),
+                    .a2(qst2[bb*128 +: 128]), .b2(key_h2[128*bb +: 128]),
+                    .ua(qs[bb*8 +: 8]), .ub(key_h[NB*128 + 8*bb +: 8]), .y(bv0), .ovf(bo0));
                 ot_hdc_delay_rf32 #(.W(33), .D(DS)) u_bd (.clk(clk), .d({bo0, bv0}), .q({bo, bv}));
                 if (bb == 0) begin : g_first
                     assign acc[31:0] = bv; assign afault[0] = bo;
