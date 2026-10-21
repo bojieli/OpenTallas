@@ -1,0 +1,46 @@
+{
+ "scope": "selectedcase static compiler invariants only; NOT RTL execution qualification",
+ "selected_record": 30,
+ "fixture_record": 31,
+ "expected_O_does_not_change_any_D_or_M_event": true,
+ "expected_O_changes_checks": true,
+ "zero_root_result_drives": true,
+ "old_boundary_refusal": "HC connected cut refused: missing=['hc_eng', 'hleaf_SE'], result_inputs=['hc_eng__result', 'hc_eng__result_position', 'hc_eng__result_v']",
+ "overlapping_allocation_refused": true,
+ "checkpoint_input_provenance": {
+  "checkpoint": "/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors",
+  "checkpoint_sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d",
+  "tensors": {
+   "base": {
+    "tensor": "layers.0.hc_attn_base",
+    "dtype": "F32",
+    "shape": [
+     24
+    ],
+    "data_offsets": [
+     304,
+     400
+    ],
+    "sha256": "9ea515c1fc9e9ffb040bb5eb32b2f23d3c003991accadd12368bdcaa556a2d06"
+   },
+   "scale": {
+    "tensor": "layers.0.hc_attn_scale",
+    "dtype": "F32",
+    "shape": [
+     3
+    ],
+    "data_offsets": [
+     61840,
+     61852
+    ],
+    "sha256": "d7540d8fdcc9127e6e0b6b6d2b6c1228582b87469f4872186df25b63b46e9fa7"
+   }
+  }
+ },
+ "producer_event_sha256": "1d29505a08dd29199e3f7451629b03c4f5e2176c0a7c1f88e3d161dd0a23e82a",
+ "root_rows": 6,
+ "table_rows": 4,
+ "root_finish": 4574,
+ "qualifies_native_layer": false,
+ "execution_qualified": false
+}
