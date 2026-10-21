@@ -76,7 +76,12 @@ proc ot_ce_check_forwarded_output {port source} {
   if {$bt eq "NULL" || [$bt getIoType] ne "OUTPUT" || [dict get $row input] ne $source} {
     error "OT_FORWARDED_OUTPUT: wrong direction or source $name"
   }
-  set net [get_nets -quiet -of_objects $port]; set through 0; set inversions 0
+  # OpenSTA get_nets -of_objects accepts pins, not Port objects. Resolve the
+  # already validated actual OpenDB BTerm net, then use the exact STA object
+  # (no name/glob alias, including bus-bit outputs).
+  set dn [$bt getNet]
+  if {$dn eq "NULL"} {error "OT_FORWARDED_OUTPUT: missing output net $name"}
+  set net [list [sta::db_net_to_sta $dn]]; set through 0; set inversions 0
   for {set step 0} {$step < 256 && [llength $net] == 1} {incr step} {
     set inputs {}
     foreach p [get_ports -quiet -of_objects $net] {
