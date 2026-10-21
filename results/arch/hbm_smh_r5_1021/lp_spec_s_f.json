@@ -1,0 +1,162 @@
+{
+ "top": "ot_hbm_smh_rp5s_f_flat",
+ "top_lp": "ot_hbm_smh_rp5s_f",
+ "why": "HBM-OWN/SMH2 10-21 r5 s half FB: per-register-mass regional roots, every region crossing a 4-slot landing (reschedule: the latency shifts are priced in rp5_gen.py)",
+ "sources": [
+  "rtl/hbm_accel/sm/repack/h2a5/ot_hbm_smh_rp5s_f_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+  "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv",
+  "rtl/hbm_accel/sm/repack/h2a5/ot_hbm_smh_rp5_soft.sv"
+ ],
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "out_dir": "rtl/hbm_accel/sm/repack/h2a5/lp_s_f",
+ "record_dir": "results/arch/hbm_smh_r5_1021",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n",
+  "rst_a"
+ ],
+ "regions": [
+  {
+   "name": "c",
+   "insts": [
+    "u_as_c",
+    "u_bdc1",
+    "u_cap1",
+    "u_fp1",
+    "u_g1p",
+    "u_go1",
+    "u_gs",
+    "u_h01",
+    "u_h11",
+    "u_mg1",
+    "u_pr_s",
+    "u_prl",
+    "u_pst",
+    "u_pub1",
+    "u_qk1",
+    "u_row1",
+    "u_rowe1",
+    "u_rst_c13",
+    "u_rst_c14",
+    "u_rst_c15",
+    "u_sr_s"
+   ],
+   "centre": [
+    440.0,
+    560.0
+   ]
+  },
+  {
+   "name": "x",
+   "insts": [
+    "u_as_x",
+    "u_bk1",
+    "u_lands",
+    "u_oh1",
+    "u_rl1",
+    "u_rst_x12",
+    "u_rst_x9",
+    "u_st1",
+    "u_xg2",
+    "u_xgi",
+    "u_xp2",
+    "u_xpi",
+    "u_xq1",
+    "u_xs1"
+   ],
+   "centre": [
+    410.0,
+    1000.0
+   ]
+  }
+ ],
+ "reset_region": "c",
+ "static": [
+  "attn"
+ ],
+ "D": 4,
+ "E": 2,
+ "reschedule": true,
+ "landing_chunk_bits": 24,
+ "landing_reset_forest": true,
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "tb_static": {
+  "attn": "5'd13"
+ },
+ "mut_child": "u_rst_c14"
+}

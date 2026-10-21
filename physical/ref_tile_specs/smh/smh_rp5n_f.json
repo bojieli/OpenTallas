@@ -1,0 +1,481 @@
+{
+ "name": "smh_rp5n_f",
+ "top": "ot_hbm_smh_rp5n_f",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+  "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv",
+  "rtl/hbm_accel/sm/repack/h2a5/ot_hbm_smh_rp5_soft.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST",
+  "OT_RP4A_HARD"
+ ],
+ "clock_port": "ck_c",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 691.2,
+  "h": 1512.0
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_mg0.u_merge"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    345.6,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_qk0"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    172.8,
+    518.4
+   ],
+   "orient": "MX",
+   "inst": "u_bdc0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+   "count": 1,
+   "at": [
+    345.6,
+    518.4
+   ],
+   "orient": "R0",
+   "inst": "u_h00"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+   "count": 1,
+   "at": [
+    475.20000000000005,
+    518.4
+   ],
+   "orient": "R0",
+   "inst": "u_h10"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    172.8,
+    734.4
+   ],
+   "orient": "MX",
+   "inst": "u_xs0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    216.0,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_row0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    604.8,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_rowe0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin_n",
+   "bin",
+   "ck_c",
+   "ck_x"
+  ],
+  "E": [
+   "rout_n",
+   "bout"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "attn"
+  ],
+  "S": [
+   "xo_b",
+   "rst_n",
+   "xo_g0",
+   "xo_gp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every data pin is registered in RTL: inputs rin (ot_rp4l_pinrow), bin (pinbeat), xs straps (5-stage strap), gin (u_gn u_v/u_d), xi_* (u_lands / u_xgi / u_xpi); outputs rout / bout launched by the hard row_e / beat_e flops, xo_* by u_xbo / u_xgo / u_xpo, gout by the u_gs output registers.  Recipe-3 pin registers would add cycles to the priced lp schedule.  rp4a: the static attn strap lands in 2 kept stages (u_as_n / u_as_s)."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 192,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5 M7"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:HBM-OWN/SMH2",
+  "branch": "claude/hbm-own-smh2-r5-1021",
+  "tag": "smh_rp5n_f",
+  "purpose": "H.STA.BLK.14.6 smh_attn n half r5 FALLBACK 2 regions x/c: regional CTS roots per register mass + landed seams",
+  "structural_change": "r5: one CTS root per region (x store / columns), every region crossing a 4-slot fixed-latency landing (lp reschedule), replaces the single-root spine (r4sp) and K64 (r3) forms that fail the child-boundary clock rule.",
+  "extra_paths": [
+   "tools/hbm_sm_repack_1015",
+   "tools/landed_parent",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/sm/repack/h2a5",
+   "rtl/hbm_accel/sm/repack/h2",
+   "rtl/hbm_accel/sm/repack/h2a",
+   "results/arch/hbm_smh_r5_1021",
+   "physical/ref_tile/smh_xs_p192d_bay/views"
+  ],
+  "benches": [
+   {
+    "name": "r5_lockstep",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5 1 0",
+    "expect": "pass",
+    "pass_regex": "^R5_LOCKSTEP PASS VAR=1 HMUT=0 compared=",
+    "pass_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v1_m0.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "r5_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m1 1 1",
+    "expect": "fail",
+    "fail_regex": "^R5_LOCKSTEP FAIL VAR=1 HMUT=1 mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v1_m1.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "r5_mut2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m2 1 2",
+    "expect": "fail",
+    "fail_regex": "^R5_LOCKSTEP FAIL VAR=1 HMUT=2 mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v1_m2.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "r5_mut3",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m3 1 3",
+    "expect": "fail",
+    "fail_regex": "^R5_LOCKSTEP FAIL VAR=1 HMUT=3 mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v1_m3.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "r5_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m5 1 5",
+    "expect": "fail",
+    "fail_regex": "^R5_LOCKSTEP FAIL VAR=1 HMUT=5 mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v1_m5.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "r5_mut6",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m6 1 6",
+    "expect": "fail",
+    "fail_regex": "^R5_LOCKSTEP FAIL VAR=1 HMUT=6 mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v1_m6.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "lp_nf_mut0",
+    "cmd": "MUTS=0 SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f_bench.sh {RUN}/lp0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "pass_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nf_m0.log"
+   },
+   {
+    "name": "lp_nf_mut1",
+    "cmd": "MUTS=1 SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f_bench.sh {RUN}/lp1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nf_m1.log"
+   },
+   {
+    "name": "lp_nf_mut2",
+    "cmd": "MUTS=2 SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f_bench.sh {RUN}/lp2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nf_m2.log"
+   },
+   {
+    "name": "lp_nf_mut4",
+    "cmd": "MUTS=4 SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f_bench.sh {RUN}/lp4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "fail_regex": "MUT 4: LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nf_m4.log"
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "child_clock_ref": "boundary",
+ "pin_ranges": {
+  "rin_n": [
+   302.4,
+   475.2
+  ],
+  "bin": [
+   1127.52,
+   1506.96
+  ],
+  "rout_n": [
+   302.4,
+   475.2
+  ],
+  "bout": [
+   1127.52,
+   1506.96
+  ],
+  "gin": [
+   216.0,
+   248.4
+  ],
+  "xs_a1": [
+   250.56,
+   254.88
+  ],
+  "xs_g1": [
+   257.04,
+   259.2
+  ],
+  "xs_a2": [
+   261.36,
+   264.6
+  ],
+  "xs_g2": [
+   266.76,
+   268.92
+  ],
+  "attn": [
+   271.08,
+   273.24
+  ],
+  "xo_b": [
+   4.32,
+   410.4
+  ],
+  "rst_n": [
+   412.56,
+   413.64
+  ],
+  "xo_g0": [
+   604.8,
+   617.76
+  ],
+  "xo_gp": [
+   619.92,
+   650.16
+  ],
+  "ck_c": [
+   559.46,
+   560.54
+  ],
+  "ck_x": [
+   1079.46,
+   1080.54
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp RTL lands rst_n (root region c + same-depth reset forest, depth 3) and ot_rp5_rst kept copies per consumer; priced in the landed record"
+ },
+ "hard_define": "OT_RP4A_HARD",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_c",
+  "ck_x"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c"
+   ],
+   "inputs": [
+    "rin_n",
+    "rst_n",
+    "attn"
+   ],
+   "outputs": [
+    "rout_n",
+    "xo_b",
+    "xo_g0",
+    "xo_gp"
+   ]
+  },
+  "x": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_x"
+   ],
+   "inputs": [
+    "xs_a1",
+    "xs_g1",
+    "xs_a2",
+    "xs_g2",
+    "bin",
+    "gin"
+   ],
+   "outputs": [
+    "bout"
+   ]
+  }
+ },
+ "landed_record": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5n_f_record.json",
+ "safe_design_checklist": {
+  "1_pins": "PASS: every data pin registered in RTL (r3 pin stages unchanged: pinrow / pinbeat / straps / u_lands / u_xgi / u_xpi / gin u_gi1 in; row_e / beat / u_xbo / u_xgo / u_xpo / u_gs out); each pin belongs to ONE region (clock_entry_domains), region clock pins on the W face beside each region; r4sp pin ranges kept.",
+  "2_reach": "rl1 / bk1 / straps / gather / xb crossing hops as r3 within a region; every region seam is a landing (E=2 multicycle ring -> read, <= ~750 um over 2 cycles); actual route timing decides (no FIRM stations in r5 v1: r3 station patterns name the old hierarchy).",
+  "3_fanout": "r3 kept copies (xq NIPV 24 / k_oh 16, go k_b/k_p, pub rpp 16) unchanged; landings chunked 24 b (kept per-chunk counters / selectors), reset forest leaves <= 32 loads; pre-gate native census decides.",
+  "4_depth": "PASS: cut only at existing register stages (xq stage-2 bundles, column / merge outputs); landing read is a registered slot mux; no new combinational path.",
+  "5_storage": "PASS: unchanged hard SRAM children (x store, PV merge, columns); landing rings D=4 slots of flops.",
+  "6_floorplan": "r4sp outline 691.2 x 1512.0 and child placement unchanged (8 children on the 43.2 lattice); +27243 landing flops (~8.2k um2) in the existing W / E / centre channels.",
+  "7_clock": "2 regional CTS roots (ck_c, ck_x): x store region (child refs 453-529 TT) apart from the columns (104-188) (PV merge 263-313 shares the column root); every region crossing landed (lp audit PASS, 7 landings), 1-bit reset runs only; judged per region.",
+  "8_schedule": "static; reschedule +3 edges per landed net, absorbed in r3 pads where possible; vs r3 halves: gout +5 (all 4 lanes), xo_b +1 (n), xo_g0/gp +4 (n), rout/bout 0; reset depths shifted with their data. PRICED: rp4a gout G 10 -> 15 per tile hop (parent BE_DELAY / GPAD re-solve)."
+ },
+ "landed": {
+  "record": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5n_f_record.json",
+  "landings": 7,
+  "landing_flops": 27243,
+  "reset_depth": 3,
+  "lp_spec": "results/arch/hbm_smh_r5_1021/lp_spec_n_f.json"
+ }
+}

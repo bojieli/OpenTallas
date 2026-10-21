@@ -1,0 +1,1314 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "ot_hbm_smh_rp5s_m_flat",
+ "top": "ot_hbm_smh_rp5s_m",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "c": {
+   "clock_port": "ck_c",
+   "children": [
+    "u_as_c",
+    "u_bdc1",
+    "u_cap1",
+    "u_h01",
+    "u_h11",
+    "u_pr_s",
+    "u_prl",
+    "u_pst",
+    "u_pub1",
+    "u_qk1",
+    "u_row1",
+    "u_rowe1",
+    "u_rst_c14",
+    "u_rst_c15"
+   ]
+  },
+  "x": {
+   "clock_port": "ck_x",
+   "children": [
+    "u_as_x",
+    "u_bk1",
+    "u_lands",
+    "u_oh1",
+    "u_rl1",
+    "u_rst_x12",
+    "u_rst_x9",
+    "u_st1",
+    "u_xg2",
+    "u_xgi",
+    "u_xp2",
+    "u_xpi",
+    "u_xq1",
+    "u_xs1"
+   ]
+  },
+  "m": {
+   "clock_port": "ck_m",
+   "children": [
+    "u_as_m",
+    "u_fp1",
+    "u_g1p",
+    "u_go1",
+    "u_gs",
+    "u_mg1",
+    "u_rst_m16",
+    "u_rst_m18",
+    "u_sr_s"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "st_s",
+   "src_region": "m",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_sr_s"
+   ],
+   "width": 26,
+   "readers": [
+    "u_pst.d"
+   ],
+   "ring": "u_lpl_0_w (ck_m)",
+   "read": "u_lpl_0_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "rl1_p",
+   "src_region": "c",
+   "dst_region": "x",
+   "src_nodes": [
+    "u_prl"
+   ],
+   "width": 818,
+   "readers": [
+    "u_rl1.d"
+   ],
+   "ring": "u_lpl_1_w (ck_c)",
+   "read": "u_lpl_1_r (ck_x)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "st_p",
+   "src_region": "c",
+   "dst_region": "x",
+   "src_nodes": [
+    "u_pst"
+   ],
+   "width": 26,
+   "readers": [
+    "u_st1.d"
+   ],
+   "ring": "u_lpl_2_w (ck_c)",
+   "read": "u_lpl_2_r (ck_x)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "bb1",
+   "src_region": "x",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 1084,
+   "readers": [
+    "u_bdc1.i_v",
+    "u_bdc1.i_first",
+    "u_bdc1.i_last",
+    "u_bdc1.i_fp4",
+    "u_bdc1.i_tag",
+    "u_bdc1.i_w",
+    "u_bdc1.i_x"
+   ],
+   "ring": "u_lpl_3_w (ck_x)",
+   "read": "u_lpl_3_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "fb1",
+   "src_region": "x",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 534,
+   "readers": [
+    "u_h01.i_v",
+    "u_h01.i_first",
+    "u_h01.i_w",
+    "u_h01.i_x",
+    "u_h11.i_v",
+    "u_h11.i_first",
+    "u_h11.i_w",
+    "u_h11.i_x",
+    "u_qk1.i_v",
+    "u_qk1.i_last",
+    "u_qk1.i_tag",
+    "u_cap1.i_v",
+    "u_cap1.i_last",
+    "u_cap1.i_run_first",
+    "u_cap1.i_run_last",
+    "u_cap1.i_tag"
+   ],
+   "ring": "u_lpl_4_w (ck_x)",
+   "read": "u_lpl_4_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "pp1",
+   "src_region": "x",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 5,
+   "readers": [
+    "u_pub1.pp"
+   ],
+   "ring": "u_lpl_5_w (ck_x)",
+   "read": "u_lpl_5_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "pf1",
+   "src_region": "x",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 7,
+   "readers": [
+    "u_fp1.d"
+   ],
+   "ring": "u_lpl_6_w (ck_x)",
+   "read": "u_lpl_6_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+  },
+  {
+   "name": "7",
+   "net": "ev1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_cap1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_mg1.ev"
+   ],
+   "ring": "u_lpl_7_w (ck_c)",
+   "read": "u_lpl_7_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+  },
+  {
+   "name": "8",
+   "net": "es1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_cap1"
+   ],
+   "width": 512,
+   "readers": [
+    "u_mg1.sum"
+   ],
+   "ring": "u_lpl_8_w (ck_c)",
+   "read": "u_lpl_8_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+  },
+  {
+   "name": "9",
+   "net": "et1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_cap1"
+   ],
+   "width": 16,
+   "readers": [
+    "u_mg1.tag_d"
+   ],
+   "ring": "u_lpl_9_w (ck_c)",
+   "read": "u_lpl_9_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+  },
+  {
+   "name": "10",
+   "net": "pst1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_pub1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_mg1.pub_start"
+   ],
+   "ring": "u_lpl_10_w (ck_c)",
+   "read": "u_lpl_10_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+  },
+  {
+   "name": "11",
+   "net": "psl1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_pub1"
+   ],
+   "width": 3,
+   "readers": [
+    "u_mg1.pub_slot"
+   ],
+   "ring": "u_lpl_11_w (ck_c)",
+   "read": "u_lpl_11_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+  },
+  {
+   "name": "12",
+   "net": "bov1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_bdc1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_go1.bov"
+   ],
+   "ring": "u_lpl_12_w (ck_c)",
+   "read": "u_lpl_12_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+  },
+  {
+   "name": "13",
+   "net": "by1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_bdc1"
+   ],
+   "width": 32,
+   "readers": [
+    "u_go1.by"
+   ],
+   "ring": "u_lpl_13_w (ck_c)",
+   "read": "u_lpl_13_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+  },
+  {
+   "name": "14",
+   "net": "bt1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_bdc1"
+   ],
+   "width": 16,
+   "readers": [
+    "u_go1.bt"
+   ],
+   "ring": "u_lpl_14_w (ck_c)",
+   "read": "u_lpl_14_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+  },
+  {
+   "name": "15",
+   "net": "bf1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_bdc1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_go1.bfault"
+   ],
+   "ring": "u_lpl_15_w (ck_c)",
+   "read": "u_lpl_15_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+  },
+  {
+   "name": "16",
+   "net": "fov1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_qk1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_go1.fov"
+   ],
+   "ring": "u_lpl_16_w (ck_c)",
+   "read": "u_lpl_16_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+  },
+  {
+   "name": "17",
+   "net": "fy1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_qk1"
+   ],
+   "width": 32,
+   "readers": [
+    "u_go1.fy"
+   ],
+   "ring": "u_lpl_17_w (ck_c)",
+   "read": "u_lpl_17_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+  },
+  {
+   "name": "18",
+   "net": "ft1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_qk1"
+   ],
+   "width": 16,
+   "readers": [
+    "u_go1.ft"
+   ],
+   "ring": "u_lpl_18_w (ck_c)",
+   "read": "u_lpl_18_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+  },
+  {
+   "name": "19",
+   "net": "qf1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_qk1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_go1.qf"
+   ],
+   "ring": "u_lpl_19_w (ck_c)",
+   "read": "u_lpl_19_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+  },
+  {
+   "name": "20",
+   "net": "ph1",
+   "src_region": "c",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_pub1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_go1.published_h128"
+   ],
+   "ring": "u_lpl_20_w (ck_c)",
+   "read": "u_lpl_20_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+  },
+  {
+   "name": "21",
+   "net": "xg2o",
+   "src_region": "x",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_xg2"
+   ],
+   "width": 50,
+   "readers": [
+    "u_gs.g0m"
+   ],
+   "ring": "u_lpl_21_w (ck_x)",
+   "read": "u_lpl_21_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
+  },
+  {
+   "name": "22",
+   "net": "xp2",
+   "src_region": "x",
+   "dst_region": "m",
+   "src_nodes": [
+    "u_xp2"
+   ],
+   "width": 100,
+   "readers": [
+    "u_gs.gpm"
+   ],
+   "ring": "u_lpl_22_w (ck_x)",
+   "read": "u_lpl_22_r (ck_m)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "root_region": "c",
+  "depth": 3,
+  "hops": {
+   "c": 0,
+   "x": 2,
+   "m": 1
+  },
+  "same_depth_forest": {
+   "regional_stages": 2,
+   "root_D_loads": 11,
+   "regions": {
+    "c": {
+     "leaves": 147,
+     "terms": [
+      "1",
+      "(((((25) - (0) + 1))+24-1)/24)",
+      "(((((817) - (0) + 1))+24-1)/24)",
+      "(((((25) - (0) + 1))+24-1)/24)",
+      "(((((1083) - (0) + 1))+24-1)/24)",
+      "(((((533) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((511) - (0) + 1))+24-1)/24)",
+      "(((((15) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((2) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((31) - (0) + 1))+24-1)/24)",
+      "(((((15) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((31) - (0) + 1))+24-1)/24)",
+      "(((((15) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((1)+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 2,
+       "first_expr": "1",
+       "chunks_expr": "(((((25) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "w",
+       "first_leaf": 3,
+       "chunks": 35,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((817) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "w",
+       "first_leaf": 38,
+       "chunks": 2,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((25) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "3",
+       "role": "r",
+       "first_leaf": 40,
+       "chunks": 46,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((1083) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "4",
+       "role": "r",
+       "first_leaf": 86,
+       "chunks": 23,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((533) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "5",
+       "role": "r",
+       "first_leaf": 109,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "7",
+       "role": "w",
+       "first_leaf": 110,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "8",
+       "role": "w",
+       "first_leaf": 111,
+       "chunks": 22,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "9",
+       "role": "w",
+       "first_leaf": 133,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "10",
+       "role": "w",
+       "first_leaf": 134,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "11",
+       "role": "w",
+       "first_leaf": 135,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "12",
+       "role": "w",
+       "first_leaf": 136,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "13",
+       "role": "w",
+       "first_leaf": 137,
+       "chunks": 2,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "14",
+       "role": "w",
+       "first_leaf": 139,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "15",
+       "role": "w",
+       "first_leaf": 140,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "16",
+       "role": "w",
+       "first_leaf": 141,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "17",
+       "role": "w",
+       "first_leaf": 142,
+       "chunks": 2,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "18",
+       "role": "w",
+       "first_leaf": 144,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "19",
+       "role": "w",
+       "first_leaf": 145,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "20",
+       "role": "w",
+       "first_leaf": 146,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      }
+     ],
+     "branches": 5,
+     "FFs": 152,
+     "scalar_child_pad_port_uses": 5
+    },
+    "x": {
+     "leaves": 117,
+     "terms": [
+      "1",
+      "(((((817) - (0) + 1))+24-1)/24)",
+      "(((((25) - (0) + 1))+24-1)/24)",
+      "(((((1083) - (0) + 1))+24-1)/24)",
+      "(((((533) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
+      "(((((6) - (0) + 1))+24-1)/24)",
+      "(((((49) - (0) + 1))+24-1)/24)",
+      "(((((99) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "1",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 35,
+       "first_expr": "1",
+       "chunks_expr": "(((((817) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "r",
+       "first_leaf": 36,
+       "chunks": 2,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((25) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "3",
+       "role": "w",
+       "first_leaf": 38,
+       "chunks": 46,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((1083) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "4",
+       "role": "w",
+       "first_leaf": 84,
+       "chunks": 23,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((533) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "5",
+       "role": "w",
+       "first_leaf": 107,
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "6",
+       "role": "w",
+       "first_leaf": 108,
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "21",
+       "role": "w",
+       "first_leaf": 109,
+       "chunks": 3,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((49) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "22",
+       "role": "w",
+       "first_leaf": 112,
+       "chunks": 5,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((49) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 4,
+     "FFs": 121,
+     "scalar_child_pad_port_uses": 6
+    },
+    "m": {
+     "leaves": 49,
+     "terms": [
+      "1",
+      "(((((25) - (0) + 1))+24-1)/24)",
+      "(((((6) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((511) - (0) + 1))+24-1)/24)",
+      "(((((15) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((2) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((31) - (0) + 1))+24-1)/24)",
+      "(((((15) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((31) - (0) + 1))+24-1)/24)",
+      "(((((15) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((1)+24-1)/24)",
+      "(((((49) - (0) + 1))+24-1)/24)",
+      "(((((99) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 2,
+       "first_expr": "1",
+       "chunks_expr": "(((((25) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "6",
+       "role": "r",
+       "first_leaf": 3,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "7",
+       "role": "r",
+       "first_leaf": 4,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "8",
+       "role": "r",
+       "first_leaf": 5,
+       "chunks": 22,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "9",
+       "role": "r",
+       "first_leaf": 27,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "10",
+       "role": "r",
+       "first_leaf": 28,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "11",
+       "role": "r",
+       "first_leaf": 29,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "12",
+       "role": "r",
+       "first_leaf": 30,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "13",
+       "role": "r",
+       "first_leaf": 31,
+       "chunks": 2,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "14",
+       "role": "r",
+       "first_leaf": 33,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "15",
+       "role": "r",
+       "first_leaf": 34,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "16",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "17",
+       "role": "r",
+       "first_leaf": 36,
+       "chunks": 2,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "18",
+       "role": "r",
+       "first_leaf": 38,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "19",
+       "role": "r",
+       "first_leaf": 39,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "20",
+       "role": "r",
+       "first_leaf": 40,
+       "chunks": 1,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      },
+      {
+       "landing": "21",
+       "role": "r",
+       "first_leaf": 41,
+       "chunks": 3,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+       "chunks_expr": "(((((49) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "22",
+       "role": "r",
+       "first_leaf": 44,
+       "chunks": 5,
+       "first_expr": "1+(((((25) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((49) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 2,
+     "FFs": 51,
+     "scalar_child_pad_port_uses": 2
+    }
+   },
+   "incremental_FFs": 318,
+   "required_rtl_sources": [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+   ],
+   "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 19675,
+  "pads": 0,
+  "reset": 325
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "c-m",
+   "c-x",
+   "m-x"
+  ],
+  "reset_hops": [
+   "c-m",
+   "c-x"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_rst_c14": 0,
+   "u_rst_c15": 0,
+   "u_rst_m16": 0,
+   "u_rst_m18": 0,
+   "u_rst_x9": 0,
+   "u_rst_x12": 0,
+   "u_lands": 0,
+   "u_xgi": 0,
+   "u_xg2": 0,
+   "u_xpi": 0,
+   "u_xp2": 0,
+   "u_sr_s": 0,
+   "u_as_x": 0,
+   "u_as_c": 0,
+   "u_as_m": 0,
+   "u_pr_s": 0,
+   "u_row1": 0,
+   "u_rowe1": 0,
+   "u_prl": 0,
+   "u_pst": 0,
+   "u_rl1": 0,
+   "u_st1": 0,
+   "u_bk1": 0,
+   "u_oh1": 0,
+   "u_xs1": 0,
+   "u_xq1": 0,
+   "u_bdc1": 0,
+   "u_h01": 0,
+   "u_h11": 0,
+   "u_qk1": 0,
+   "u_cap1": 0,
+   "u_pub1": 0,
+   "u_fp1": 0,
+   "u_mg1": 0,
+   "u_go1": 0,
+   "u_g1p": 0,
+   "u_gs": 0
+  },
+  "input_port_offset_edges": {
+   "xss_a1": 0,
+   "xss_g1": 0,
+   "xss_a2": 0,
+   "xss_g2": 0,
+   "rin_s": 0,
+   "xi_b": 0,
+   "xi_g0": 0,
+   "xi_gp": 0
+  },
+  "output_port_offset_edges": {
+   "rout_s": 0,
+   "gout": 0
+  },
+  "reset_release_added_edges": 3,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "rescheduled_nets": [
+   {
+    "net": "st_s",
+    "src_region": "m",
+    "dst_region": "c",
+    "readers": [
+     "u_pst.d"
+    ],
+    "width": 26,
+    "added_edges": 3
+   },
+   {
+    "net": "rl1_p",
+    "src_region": "c",
+    "dst_region": "x",
+    "readers": [
+     "u_rl1.d"
+    ],
+    "width": 818,
+    "added_edges": 3
+   },
+   {
+    "net": "st_p",
+    "src_region": "c",
+    "dst_region": "x",
+    "readers": [
+     "u_st1.d"
+    ],
+    "width": 26,
+    "added_edges": 3
+   },
+   {
+    "net": "bb1",
+    "src_region": "x",
+    "dst_region": "c",
+    "readers": [
+     "u_bdc1.i_v",
+     "u_bdc1.i_first",
+     "u_bdc1.i_last",
+     "u_bdc1.i_fp4",
+     "u_bdc1.i_tag",
+     "u_bdc1.i_w",
+     "u_bdc1.i_x"
+    ],
+    "width": 1084,
+    "added_edges": 3
+   },
+   {
+    "net": "fb1",
+    "src_region": "x",
+    "dst_region": "c",
+    "readers": [
+     "u_h01.i_v",
+     "u_h01.i_first",
+     "u_h01.i_w",
+     "u_h01.i_x",
+     "u_h11.i_v",
+     "u_h11.i_first",
+     "u_h11.i_w",
+     "u_h11.i_x",
+     "u_qk1.i_v",
+     "u_qk1.i_last",
+     "u_qk1.i_tag",
+     "u_cap1.i_v",
+     "u_cap1.i_last",
+     "u_cap1.i_run_first",
+     "u_cap1.i_run_last",
+     "u_cap1.i_tag"
+    ],
+    "width": 534,
+    "added_edges": 3
+   },
+   {
+    "net": "pp1",
+    "src_region": "x",
+    "dst_region": "c",
+    "readers": [
+     "u_pub1.pp"
+    ],
+    "width": 5,
+    "added_edges": 3
+   },
+   {
+    "net": "pf1",
+    "src_region": "x",
+    "dst_region": "m",
+    "readers": [
+     "u_fp1.d"
+    ],
+    "width": 7,
+    "added_edges": 3
+   },
+   {
+    "net": "ev1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_mg1.ev"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "es1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_mg1.sum"
+    ],
+    "width": 512,
+    "added_edges": 3
+   },
+   {
+    "net": "et1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_mg1.tag_d"
+    ],
+    "width": 16,
+    "added_edges": 3
+   },
+   {
+    "net": "pst1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_mg1.pub_start"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "psl1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_mg1.pub_slot"
+    ],
+    "width": 3,
+    "added_edges": 3
+   },
+   {
+    "net": "bov1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.bov"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "by1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.by"
+    ],
+    "width": 32,
+    "added_edges": 3
+   },
+   {
+    "net": "bt1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.bt"
+    ],
+    "width": 16,
+    "added_edges": 3
+   },
+   {
+    "net": "bf1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.bfault"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "fov1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.fov"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "fy1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.fy"
+    ],
+    "width": 32,
+    "added_edges": 3
+   },
+   {
+    "net": "ft1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.ft"
+    ],
+    "width": 16,
+    "added_edges": 3
+   },
+   {
+    "net": "qf1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.qf"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "ph1",
+    "src_region": "c",
+    "dst_region": "m",
+    "readers": [
+     "u_go1.published_h128"
+    ],
+    "width": 1,
+    "added_edges": 3
+   },
+   {
+    "net": "xg2o",
+    "src_region": "x",
+    "dst_region": "m",
+    "readers": [
+     "u_gs.g0m"
+    ],
+    "width": 50,
+    "added_edges": 3
+   },
+   {
+    "net": "xp2",
+    "src_region": "x",
+    "dst_region": "m",
+    "readers": [
+     "u_gs.gpm"
+    ],
+    "width": 100,
+    "added_edges": 3
+   }
+  ],
+  "reschedule_note": "RESCHEDULE mode: cross-region loops; every child keeps its flat calendar (t = 0) and each landed net above arrives +3 edges later than in the flat parent: the compiler / the children's static calendars must absorb these",
+  "max_added_edges": 0
+ },
+ "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['c-m', 'c-x']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 23,
+  "reset_hops": 2,
+  "fails": []
+ }
+}
