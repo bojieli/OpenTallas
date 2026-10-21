@@ -409,10 +409,13 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    end
    wire [SW-1:0] din=(NPP==2&&rtd[IX])?r1[SW-1:0]:r0[SW-1:0];
    wire push=popc[IX];
+   // ring load gated by the read FIFO's own !rempty (WBK10: reviewed_gray_fifos extension-mode storage miter refused the
+   // popc-only enable; popc implies the read FIFO is non-empty, so the gate is functionally a no-op -- no cycle change)
+   wire rv=(NPP==2&&rtd[IX])?!e1:!e0;
    wire fire=vqc[IX]&&w_k_rdy[gp];
    reg [SW-1:0] ent [0:2];
    integer e;
-   always @(posedge hbm_clk)for(e=0;e<3;e=e+1)if(push&&wpo[IX][e])ent[e]<=din;
+   always @(posedge hbm_clk)for(e=0;e<3;e=e+1)if(push&&rv&&wpo[IX][e])ent[e]<=din;
    always @(posedge hbm_clk or negedge hl[RL])
     if(!hl[RL])begin popc[IX]<=1'b0;rtc[IX]<=1'b0;rtd[IX]<=1'b0;vqc[IX]<=1'b0;wpo[IX]<=3'b001;rpo[IX]<=3'b001;end
     else begin
