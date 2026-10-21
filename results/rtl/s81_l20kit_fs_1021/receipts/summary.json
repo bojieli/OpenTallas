@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.s81.l20kit.collect.v1",
+  "source_commit": "7bd692ad25771a414a60c3878c811ee62dc7ef51",
+  "rtl_commit": "506dbb82b",
+  "host": "ot-epyc7",
+  "verilator": "5.050",
+  "base": "PASS 9 cases (6 expected PASS, 3 expected fail-closed)",
+  "required_mutants": {
+    "m1": "CAUGHT; IDXRD_CAMPAIGN PASS",
+    "m2": "CAUGHT; IDXRD_CAMPAIGN PASS",
+    "m3": "CAUGHT; IDXRD_CAMPAIGN PASS",
+    "m4": "CAUGHT; IDXRD_CAMPAIGN PASS",
+    "m5": "CAUGHT; IDXRD_CAMPAIGN PASS",
+    "m6": "CAUGHT; IDXRD_CAMPAIGN PASS"
+  },
+  "supplemental_m7": "campaign FAIL: record-rule MUT7 closed_g2048p3 still fails nerr921/nopen1 rather than falsely certifying; P4 PASS. Not a required kit mutant. Preserve as inconclusive mechanism sensitivity diagnostic.",
+  "gate_note": "09:10/09:11 pin_order FAIL stale; reruns 514252/514255 at 09:15 on this source still active. No terminal physical result yet."
+}

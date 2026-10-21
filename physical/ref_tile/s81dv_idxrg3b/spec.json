@@ -465,7 +465,8 @@
    "rtl/lib",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5",
-   "results/rtl/s81_idx3r_1020"
+   "results/rtl/s81_idx3r_1020",
+   "results/rtl/s81_l20kit_fs_1021"
   ],
   "benches": [
    {
@@ -473,7 +474,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} b3 '-GMUT=0 -GSRAM_MACRO=1' 8 'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4' 'pass_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6' 'pass_l20|+N=87382 +B=13 +T0=400 +P=3' 'closed_g2048p3|+GATHER=1 +N=2048 +T0=1500 +P=3' 'closed_late|+N=4096 +B=13 +T0=60 +P=3' 'fail_slothit|+N=4096 +B=13 +T0=400 +P=3 +SLOTHIT=1'",
     "expect": "pass",
     "pass_regex": "^IDXRD_CAMPAIGN PASS",
-    "pass_witness": "results/rtl/s81_idx3r_1020/receipts/bench_b3.log",
+    "pass_witness": "results/rtl/s81_l20kit_fs_1021/receipts/base.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -485,7 +486,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m1 '-GMUT=1 -GSRAM_MACRO=1' 1 'fail_small|+N=4096 +B=13 +T0=400 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m1/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m1.log",
+    "fail_witness": "results/rtl/s81_l20kit_fs_1021/receipts/m1.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -497,7 +498,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m2 '-GMUT=2 -GSRAM_MACRO=1' 1 'fail_g|+GATHER=1 +N=256 +T0=1500 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m2/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m2.log",
+    "fail_witness": "results/rtl/s81_l20kit_fs_1021/receipts/m2.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -509,7 +510,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m3 '-GMUT=3 -GSRAM_MACRO=1' 1 'fail_small|+N=4096 +B=13 +T0=400 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m3/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m3.log",
+    "fail_witness": "results/rtl/s81_l20kit_fs_1021/receipts/m3.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -521,7 +522,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m4 '-GMUT=4 -GSRAM_MACRO=1' 1 'fail_small|+N=4096 +B=13 +T0=400 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m4/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m4.log",
+    "fail_witness": "results/rtl/s81_l20kit_fs_1021/receipts/m4.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -533,7 +534,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m5 '-GMUT=5 -GSRAM_MACRO=1' 1 'fail_g|+GATHER=1 +N=256 +T0=1500 +P=3'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m5/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m5.log",
+    "fail_witness": "results/rtl/s81_l20kit_fs_1021/receipts/m5.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [
@@ -545,7 +546,7 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh {RUN} m6 '-GMUT=6 -GSRAM_MACRO=1' 1 'fail_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6'",
     "expect": "fail",
     "fail_regex": "^IDXRD_CASE OK m6/fail_\\S+: TB_IDXRD FAIL",
-    "fail_witness": "results/rtl/s81_idx3r_1020/receipts/bench_m6.log",
+    "fail_witness": "results/rtl/s81_l20kit_fs_1021/receipts/m6.log",
     "threads": 24,
     "peak_ram_gb": 48,
     "needs": [

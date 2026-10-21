@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   617 GB (avail 545, growth 113, headroom 0, waiters 0/0 GB) load 84/128 running 29 disk 2408 GB 
+ot-run: ot-epyc7       admits   306 GB (avail 315, growth 101, headroom 0, waiters 0/0 GB) load 61/96 running 19 disk 4657 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-l20kit-fs-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/s81-l20kit-fs-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/s81-l20kit-fs-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20kit-fs-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20kit-fs-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3447648-1792598460 after 1 s
+IDXRD_CASE BAD m7/closed_g2048p3: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 7 sram 1 ckh 900 hdr_to_last 4827 end_to_last 4634 nerr 921 nopen 1 qerr 0 slice_err 0 | maxrss_kb=215244 wall=3:08.90
+IDXRD_CASE OK m7/pass_g2048: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 7 sram 1 ckh 900 hdr_to_last 5850 end_to_last 5657 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214460 wall=2:46.57
+IDXRD_CAMPAIGN FAIL
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3447648-1792598460): exit 1
