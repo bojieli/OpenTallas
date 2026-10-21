@@ -129,12 +129,19 @@ module ot_s81sl_vp #(
             si <= si + 8'd1;
             if (si == sn - 8'd1) srun <= 1'b0;
         end
-    // Unreset command payload only matters after a valid command. Keeping it
-    // out of the async control process removes reset from its enable cone.
-    always @(posedge clk) if (cv_c && op != OP_NORM && !op[3]) begin
-      sa0 <= a0; sa1 <= a1; sqb <= cn[1:0];
-      sn <= (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 : (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 :
-            (op == OP_NORMR) ? 8'd1 : cn;
+    // Same-edge command decode copies, one per payload byte. The predicate
+    // lands beside cv_c; payload still captures on the original next edge.
+    (* keep *) reg [3:0] payload_v;
+    always @(posedge clk or negedge rsv[23])
+      if(!rsv[23]) payload_v<=0;
+      else payload_v <= {4{c_v && c_d[3:0] != OP_NORM && !c_d[3]}};
+    wire [7:0] sn_cmd = (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 :
+                          (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 : (op == OP_NORMR) ? 8'd1 : cn;
+    always @(posedge clk) begin
+      if(payload_v[0]) sa0[7:0] <= a0[7:0];
+      if(payload_v[1]) begin sa0[9:8] <= a0[9:8]; sa1[5:0] <= a1[5:0]; end
+      if(payload_v[2]) begin sa1[9:6] <= a1[9:6]; sn[3:0] <= sn_cmd[3:0]; end
+      if(payload_v[3]) begin sn[7:4] <= sn_cmd[7:4]; sqb <= cn[1:0]; end
     end
     wire busy_hit = cv_c && op != OP_NORM && !op[3] && srun;     // an op issued over a running op: schedule violation
 
