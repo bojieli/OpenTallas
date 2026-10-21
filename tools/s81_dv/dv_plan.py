@@ -1604,6 +1604,8 @@ def main():
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
+    ap.add_argument('--stage-map', default=None, help='DRIVE-S81-IDX4: bind a committed stage map (xs_stage_map v1) to the plan: '
+                    'facts.stage_map = path/sha/stages/dies; asserts the map verdict all_pass and the 122-frame / 1130-slot inventory for f122 maps')
     ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3, 4), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped; 4 = S81-IDX3M: 8 NON-INLINE readers dsdv_idx_rg3 in the PHY corner strips as static-slot clients of dsfd_ctrl_rg3 (122 frames kept, svc_rs <-> ctrl links unchanged) (0 default, byte-identical)')
     ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='MODEL ONLY: actual controller body centered in each unchanged 531.25-um PHY pitch; rederive reader/service rows and all links')
     ap.add_argument('--rsv-vcol', type=int, default=0, help='S81-DIE11 mu7 (p4l MU): add K x 43.2-um lattice columns to every svc_rs column gap (V die channels)')
@@ -1707,6 +1709,15 @@ def main():
                  relay_bit_stages=m['relay_bit_stages'], bit_mm=round(m['sum_bit_um_hops'] / 1000),
                  cut_windows_over_limit=m['cut_windows_over_limit'],
                  slice_area_mm2=SLICE_W * SLICE_H / 1e6, n_frames=sum(b['kind'] == 'frame' for b in P.blocks))
+    if a.stage_map:   # DRIVE-S81-IDX4: the stage map this die plan realises (ROM content per stage = the frames placed here)
+        import hashlib
+        raw = Path(a.stage_map).read_bytes(); sm = json.loads(raw)
+        assert sm.get('verdict', {}).get('all_pass'), ('stage map capacity verdict not all_pass', a.stage_map)
+        if '122-frame' in sm.get('plan', ''):
+            assert facts['n_frames'] == 122 and facts.get('rom_slots') == 1130, ('f122 stage map needs the 122-frame / 1130-slot die', facts['n_frames'], facts.get('rom_slots'))
+        facts['stage_map'] = dict(path=str(a.stage_map), sha256=hashlib.sha256(raw).hexdigest(), stages=sm['stages_count'],
+                                  rank_dies_per_stage=sm['rank_dies_per_stage'], layer_dies=sm['layer_dies'], plan=sm.get('plan'),
+                                  verdict=sm['verdict'])
     if LK_SLOTS:   # MU-S81-2/DIE: p4l_lkcol rev2 slot geometry, post-hoc (facts unchanged, as p4l -> p4l_lkcol)
         ref = {b['name']: b for b in json.load(open(LK_SLOTS))['blocks'] if b['name'].startswith('lk_')}
         for b in P.blocks:

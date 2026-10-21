@@ -56,7 +56,10 @@ LAYER_CAL_ROWS = {'L0': 1868, 'L2': 2006}          # measured (CAL_SEGMENT, ROM1
 KV_SRC, IDX_SRC, ENGRAM = (2, 8, 14, 20), (2, 8, 14, 20, 24, 28, 32, 36), (1, 14)
 RELEASE_ENV = dict(OT_XS_QPAIRS='12', OT_XS_GU_MERGE='1', OT_XS_TOPO='1', OT_XS_PROP='1', OT_XS_CAL_SEGMENT='1',
                    OT_XS_APROJ_TOPO='1')
-MAP_DEFAULT = ROOT / 'results/arch/s81_romopt_1020/b/stage_map.json'
+# DRIVE-S81-IDX4 (10-20, LEAD10-S81 stage pick): the release map is the 140-stage pinned map on the 122-frame die
+# (dv_plan --idxrd 4 keeps 122 frames / 1130 ROM slots; mu7i4b strict bind PASS); qualified with OT_XS_PAIR_ROTATE=0.
+# The 97-stage map stays at stage_map.json (pass OT_XS_STAGE_MAP to use it).
+MAP_DEFAULT = ROOT / 'results/arch/s81_romopt_1020/b/stage_map_f122_140.json'
 
 
 class CompileFault(RuntimeError):
