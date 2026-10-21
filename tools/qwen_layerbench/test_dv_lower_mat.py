@@ -32,9 +32,28 @@ def test_regions_and_btab():
     assert lay['lm_head'][0][-1]['sbase'] == 72 + 8 * 24 and sorted(lay['qkv']) == [0, 2, 4, 6, 8, 10]
     sc = (np.arange(4096, dtype=np.float32) + 1).astype(np.float32)
     sc = (sc.view(np.uint32) & 0xFFFF0000).view(np.float32)
-    tab = M.btab_stream(lay, {'o': sc})
-    w0, pay = tab[1][0]                                 # slice 1, block 1 first words at BTAB 8..11
+    tab = M.btab_stream(lay, {'qkv': sc[:768]})
+    w0, pay = tab[2][0]                                 # slice 2, qkv block 1 first words at BTAB 0..3
+    assert w0 == 0 and (pay & 0xFFFF) == int(sc[128].view(np.uint32)) >> 16
+    raw = M.btab_stream(lay, {'o': sc}, mutant='rawscale')
+    w0, pay = raw[1][0]                                 # slice 1, block 1 first words at BTAB 8..11
     assert w0 == 8 and (pay & 0xFFFF) == int(sc[128].view(np.uint32)) >> 16
+
+
+def test_ar_matrices_station_scale_is_one():
+    """QW-ODSCALE: o / down BTAB rows = BF16 1.0 (0x3F80) whatever the matrix scales (post-TP scale in the residual)"""
+    own = D.ownership()
+    lay = M.btab_layout(own)
+    sc = np.full(4096, 0.0078125, dtype=np.float32)
+    for name in ('o', 'down'):
+        tab = M.btab_stream(lay, {name: sc})
+        for s, words in tab.items():
+            for w0, pay in words:
+                for i in range(64):
+                    h = (pay >> (16 * i)) & 0xFFFF
+                    assert h in (0x3F80, 0), (name, s, w0, i, hex(h))
+        assert np.all(M.station_row_scales(name, sc) == 1.0)
+    assert np.array_equal(M.station_row_scales('qkv', sc), sc) and np.array_equal(M.station_row_scales('gu', sc), sc)
 
 
 def test_stn_fields_match_slice2_decode():
