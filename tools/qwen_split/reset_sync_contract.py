@@ -48,9 +48,34 @@ SYNC_PINS = {
 REP_SYNC = {'qfd_rst_rep': 'rtl/qwen_sys/reset_tree_20261013/ot_qwen_rst_rep.sv'}
 
 
-def ck_domain(net):
-    """clock domain of a clock bus / net name (the die STA's grouping, tools/qwen_tp8/die_sta_libs.py domain())."""
+FWD_BUMP = 'qfd_ckbump'
+FEED_RX = 'qfd_clkrx'
+
+
+def fwd_clocks(model):
+    """QW-G5NOROOT 10-20: FORWARDED package clocks = clock trunks driven by a package clock bump (qfd_ckbump, e.g. ckb_rom
+    pll_ck -> n_pll_fwd, the ROM/KV-die link clock forwarded with its bumps) that do NOT feed the die clock receiver
+    (qfd_clkrx: ckb_core -> clk_rx is the core feed, every die root derives from it).  Such a clock arrives from another
+    die with an unknown phase against every clk_rx root: a die-root reset level captured on it is a foreign-clock
+    release (it is NOT the mesochronous 'stream' default of ck_domain), so the reset tree's last hop into it is re-clocked
+    onto it (2-flop synchroniser) like any other foreign sink."""
+    master = {i.name: i.master for i in model['insts']}
+    out = set()
+    for bid, cl, bits, eps in model['buses']:
+        if cl != 'clock_trunk' or not eps:
+            continue
+        if str(master.get(eps[0][0], '')).startswith(FWD_BUMP) and \
+                not any(str(master.get(i, '')).startswith(FEED_RX) for i, _ in eps[1:]):
+            out.add(bid)
+    return frozenset(out)
+
+
+def ck_domain(net, fwd=()):
+    """clock domain of a clock bus / net name (the die STA's grouping, tools/qwen_tp8/die_sta_libs.py domain());
+    a forwarded package clock (fwd_clocks) is its own domain 'fwd:<net>'."""
     n = net[2:] if net.startswith('n_') else net
+    if n in fwd:
+        return 'fwd:' + n
     if n == 'clk_coll_blk':
         return 'coll_blk'
     m = re.match(r'clk_hbm_(\w+?)(?:__.*)?$', n)
@@ -178,7 +203,7 @@ def _sink_clock(ckof, inst, port):
     return c[0][0] if c else None
 
 
-def plan(cells, wires, ck_of_bus, ckof, master_of, sync_ok=None, meso=None):
+def plan(cells, wires, ck_of_bus, ckof, master_of, sync_ok=None, meso=None, fwd=()):
     """Reset-tree synchroniser plan.  cells: (name, master, x, y, bus, mv) tree repeaters; wires: (net, bus, eps) with
     eps[0] the driver; ck_of_bus: tree bus -> clock bus; ckof: inst -> [(clock bus, clock pin)]; master_of: inst ->
     master.  Returns dict(reclock={rep: clock bus}, endpoints=[dict(pin, why, ...)], errors=[...]).
@@ -214,7 +239,7 @@ def plan(cells, wires, ck_of_bus, ckof, master_of, sync_ok=None, meso=None):
                 continue
             ck = _sink_clock(ckof, i, p)
             single = len({c for c, _ in ckof.get(i, [])}) == 1
-            if ck and tree_ck and single and foreign(ck_domain(tree_ck), ck_domain(ck), meso):
+            if ck and tree_ck and single and foreign(ck_domain(tree_ck, fwd), ck_domain(ck, fwd), meso):
                 fcks.add(ck)
             else:
                 other.append((i, p, ck))
@@ -229,7 +254,7 @@ def plan(cells, wires, ck_of_bus, ckof, master_of, sync_ok=None, meso=None):
         reclock[rep] = ck
         endpoints.append(dict(pin=f'{rep}/d', inst=rep, master='qfd_rst_rep', net=None, driver=None,
                               cls='foreign_clock_reset_synchroniser', clock=ck,
-                              why=f'last reset hop re-clocked onto {ck} ({ck_domain(ck)}): qfd_rst_rep d -> s[0] -> r0 is a '
+                              why=f'last reset hop re-clocked onto {ck} ({ck_domain(ck, fwd)}): qfd_rst_rep d -> s[0] -> r0 is a '
                                   f'2-flop synchroniser of the level in the receiving domain; fixed 2 edges, +-1 resolution; '
                                   f'q -> sink rst_n timed single-domain'))
     return dict(reclock=reclock, endpoints=endpoints, errors=errors)
@@ -238,6 +263,15 @@ def plan(cells, wires, ck_of_bus, ckof, master_of, sync_ok=None, meso=None):
 INST = re.compile(r'^\s*(\w+)\s+(\w+)\s*\((.*)\);\s*$')
 CONN = re.compile(r'\.(\w+)\(\s*([\w$]+)(?:\[\d+(?::\d+)?\])?\s*\)')
 CLOCK_PINS = ('clk', 'ck')
+
+
+def netlist_fwd_clocks(insts):
+    """fwd_clocks() on a parsed netlist {inst: (master, [(port, net)])}: nets on a qfd_ckbump pll_ck that reach no
+    qfd_clkrx (names without the n_ prefix)."""
+    strip = lambda n: n[2:] if n.startswith('n_') else n
+    drv = {v for nm, (mst, cs) in insts.items() if mst.startswith(FWD_BUMP) for p, v in cs if p == 'pll_ck'}
+    feed = {v for nm, (mst, cs) in insts.items() if mst.startswith(FEED_RX) for p, v in cs}
+    return frozenset(strip(v) for v in drv - feed)
 
 
 def model_from_netlist(text):
@@ -249,7 +283,9 @@ def model_from_netlist(text):
         if m and m.group(1) not in ('module', 'wire', 'input', 'output', 'inout'):
             insts[m.group(2)] = (m.group(1), CONN.findall(m.group(3)))
     strip = lambda n: n[2:] if n.startswith('n_') else n
-    ckof = {nm: [(strip(v), p) for p, v in cs if p in CLOCK_PINS and strip(v).startswith('clk')] for nm, (_, cs) in insts.items()}
+    fwd = netlist_fwd_clocks(insts)
+    ckof = {nm: [(strip(v), p) for p, v in cs if p in CLOCK_PINS and (strip(v).startswith('clk') or strip(v) in fwd)]
+            for nm, (_, cs) in insts.items()}
     master_of = {nm: mst for nm, (mst, _) in insts.items()}
     cells, ck_of_bus, loads = [], {}, {}
     for nm, (mst, cs) in insts.items():
@@ -268,7 +304,7 @@ def model_from_netlist(text):
     return cells, wires, ck_of_bus, ckof, master_of
 
 
-def audit(wires, rep_clock, ckof, master_of, endpoints, meso=None):
+def audit(wires, rep_clock, ckof, master_of, endpoints, meso=None, fwd=()):
     """untreated reset release hops: a tree-repeater output reaching (1) a sink on another clock domain than the
     repeater's clock, or (2) a declared tile synchroniser pin (deep internal clock: the die STA times it as a release)
     -- neither declared as a synchroniser endpoint.  0 = every release is single-domain timed or synchronised."""
@@ -282,14 +318,14 @@ def audit(wires, rep_clock, ckof, master_of, endpoints, meso=None):
         for i, p in eps[1:]:
             pin = f'{i}/{p.lstrip("*")}'
             if i in rep_clock:
-                if foreign(ck_domain(rep_clock[rep]), ck_domain(rep_clock[i]), meso) and f'{i}/d' not in declared:
+                if foreign(ck_domain(rep_clock[rep], fwd), ck_domain(rep_clock[i], fwd), meso) and f'{i}/d' not in declared:
                     bad.append(dict(hop=f'{rep} -> {pin}', cls='cross-domain repeater hop'))
                 continue
             ck = _sink_clock(ckof, i, p)
             if master_of.get(i) in SYNC_PINS and p.lstrip('*') in SYNC_PINS[master_of[i]] and pin not in declared:
                 bad.append(dict(hop=f'{rep} -> {pin}', cls='tile synchroniser input timed as a release'))
-            elif ck and foreign(ck_domain(rep_clock[rep]), ck_domain(ck), meso) and len(ckof.get(i, [])) == 1:
-                bad.append(dict(hop=f'{rep} -> {pin}', cls=f'{ck_domain(rep_clock[rep])} -> {ck_domain(ck)} reset release'))
+            elif ck and foreign(ck_domain(rep_clock[rep], fwd), ck_domain(ck, fwd), meso) and len(ckof.get(i, [])) == 1:
+                bad.append(dict(hop=f'{rep} -> {pin}', cls=f'{ck_domain(rep_clock[rep], fwd)} -> {ck_domain(ck, fwd)} reset release'))
     return bad
 
 
@@ -306,6 +342,15 @@ def sdc(endpoints):
     return '\n'.join(L) + '\n'
 
 
+def fwd_of_netlist(text):
+    insts = {}
+    for ln in text.split('\n'):
+        m = INST.match(ln)
+        if m and m.group(1) not in ('module', 'wire', 'input', 'output', 'inout'):
+            insts[m.group(2)] = (m.group(1), CONN.findall(m.group(3)))
+    return netlist_fwd_clocks(insts)
+
+
 def main():
     """audit a GEN netlist: reset_sync_contract.py --die-v CASE/die.v [--sync CASE/reset_sync.json] [--repo .]
     prints RESET_SYNC_AUDIT PASS|FAIL untreated=<n>; exit 1 on FAIL (run on every GEN case after Q-RSTGEN7)."""
@@ -317,7 +362,7 @@ def main():
     a = ap.parse_args()
     cells, wires, ckb, ckof, mof = model_from_netlist(Path(a.die_v).read_text())
     eps = json.loads(Path(a.sync).read_text())['endpoints'] if a.sync and Path(a.sync).exists() else []
-    bad = audit(wires, dict(ckb), ckof, mof, eps)
+    bad = audit(wires, dict(ckb), ckof, mof, eps, fwd=fwd_of_netlist(Path(a.die_v).read_text()))
     print(f"RESET_SYNC_AUDIT {'PASS' if not bad else 'FAIL'} repeaters={len(cells)} endpoints={len(eps)} "
           f"untreated={len(bad)} {[b['hop'] for b in bad[:8]]}")
     return 1 if bad else 0
