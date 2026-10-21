@@ -34,7 +34,7 @@ module tb_hostb;
  .stage_id(8'd1),.rank_id(2'd0),.tid(16'd37),.user_id(10'd0),.position(21'd1048575),.token(21'd16754),.epoch_id(32'h1021),
  .arrival_deadline(48'd9999),.programme_id(64'hf1c617d9224a57bf),.t_host(th),.t_kd(tk),.return_ring(ret),.fault(rf));
  dsdv_hostb_head h(.ck(ck),.rst_n(rst_n),.configured(1'b1),.return_slot(returnslot),.expected_stage(8'd1),.expected_rank(2'd0),.local_group(2'd2),
- .expected_tid(16'd37),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),.epoch_id(32'h1021),
+ .expected_tid(mode==19?16'd38:16'd37),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),.epoch_id(32'h1021),
  .programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.ring_i(ret),.to_ctl(toctl),.htv(htv),.htd(htd),.fault(hf));
  initial begin
   if(!$value$plusargs("VECTORS=%s",vectors))$fatal(1,"VECTORS required");
@@ -50,8 +50,8 @@ module tb_hostb;
   ri=events[cyc];local0=ordinary[cyc];local1=0;
   te0=transit[cyc];hs0=book[cyc][0];hs1=book[cyc][1];fw0=book[cyc][2];fw1=book[cyc][3];
   // Real source bits at fixtureboundary only, no stagecompletion fabricated.
-  sample=cyc==stopat-10;send=cyc==stopat-8;returnslot=cyc==stopat-7;
-  th=77'h123456789abcdef;tk={1'b1,21'd16754,32'h0};
+  sample=cyc==stopat-10;send=cyc==stopat-8&&mode!=18;returnslot=cyc==stopat-7;
+  th=77'h123456789abcdef;tk={1'b1,(mode==20?21'd16755:21'd16754),32'h0};
  end
  integer retgot=0;
  always @(posedge ck)begin
@@ -69,7 +69,7 @@ module tb_hostb;
    end
    if(cyc==stopat)begin
      if((mode==0||mode==5||mode==6) && (fault0||fault1||rf||hf||retgot!=1))begin bad++;$display("BAD faults %h %h %h %h ret%0d",fault0,fault1,rf,hf,retgot);end
-     if(mode!=0&&mode!=5&&mode!=6 && !(fault0||fault1))begin bad++;$display("BAD causal nofault");end
+     if(mode!=0&&mode!=5&&mode!=6 && !(fault0||fault1||rf||hf))begin bad++;$display("BAD causal nofault");end
      if(bad)$fatal(1,"FAIL HBE1 mode%0d bad%0d host%0d/%0d KS%0d",mode,bad,got0,got1,ksgot);
      $display("PASS HBE1 mode%0d host%0d/%0d KS%0d return%0d faults%h/%h",mode,got0,got1,ksgot,retgot,fault0,fault1);$finish;
    end

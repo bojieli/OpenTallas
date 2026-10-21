@@ -1,0 +1,5 @@
+PASS HBE1 mode4 host0/0 KS0 return1 faults000/084
+- tools/s81_dv/hostb_1021/tb_hostb.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 202ns; walltime 0.047 s; speed 4.289 us/s
+- Verilator: cpu 0.047 s on 1 threads; allocated 11 MB

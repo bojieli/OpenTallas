@@ -40,10 +40,13 @@ for z in pairs:
  if a.mode==8:header^=1<<50
  if a.mode==9:header^=1<<66
  if a.mode==10:header^=1<<40
- if a.mode==13:v['ordinary'][h+2]=((1<<1103)|(2<<1)|1)
+ if a.mode==15:header^=1<<210
+ if a.mode==16:header^=1<<78
+ if a.mode==17:header^=1<<109
+ if a.mode==13:v['ordinary'][h+3]=((1<<1103)|(2<<1)|1)
  v['events'][h]=ring(header);v['transit'][h]=b;v['book'][h]|=1;v['book'][dh]|=2;v['book'][h+1]|=4
  if a.mode!=3:v['events'][b]=ring(raw);v['book'][b+1]|=4
- if a.mode in (0,5,6):v['expected1'][db+2]=int(z['legacy515'],16)
+ if a.mode in (0,5,6,18,19,20):v['expected1'][db+2]=int(z['legacy515'],16)
 if a.mode==0:
  k=x['ks_slots'];h=k['head_edge'];d=k['receiver_edge']
  # The sealed last record is the independently checked KS descriptor header.

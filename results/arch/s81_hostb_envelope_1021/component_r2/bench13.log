@@ -1,0 +1,5 @@
+BAD HOST1 cycle109
+BAD causal nofault
+[202000] %Fatal: tb_hostb.sv:73: Assertion failed in tb_hostb: FAIL HBE1 mode13 bad2 host0/1 KS0
+%Error: tools/s81_dv/hostb_1021/tb_hostb.sv:73: Verilog $stop
+Aborting...
