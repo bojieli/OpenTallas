@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       admits   369 GB (avail 706, growth 448, headroom 0, waiters 0/0 GB) load 63/128 running 30 disk 1995 GB 
+ot-run: ot-epyc7       admits   451 GB (avail 366, growth 28, headroom 0, waiters 0/0 GB) load 121/96 running 22 disk 4685 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src
+ot-run: ot-gold2       admits   238 GB (avail 328, growth 161, headroom 0, waiters 0/0 GB) load 70/112 running 27 disk 2910 GB 
+ot-run: ot-gold1       admits   303 GB (avail 625, growth 412, headroom 0, waiters 0/0 GB) load 78/112 running 32 disk 2323 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3317213-1792611707 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3317213-1792611707): exit 0

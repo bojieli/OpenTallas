@@ -1,0 +1,49 @@
+{
+  "source": "f4a5652f9",
+  "scope": "existing parent lockstep mechanisms/actual compiler; diagnostic physical kits never submit",
+  "completed": 5,
+  "expected_total": 12,
+  "remaining": "preserve existing7builds, collect when terminal",
+  "rows": [
+    {
+      "log": "bench_lepe_mu_lr_m0.log",
+      "outcome": [
+        "MUT 0: LP_LOCKSTEP PASS",
+        "BENCH_EXIT 0"
+      ],
+      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+    },
+    {
+      "log": "bench_lepe_nh_mu_lr_m0.log",
+      "outcome": [
+        "MUT 0: LP_LOCKSTEP PASS",
+        "BENCH_EXIT 0"
+      ],
+      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+    },
+    {
+      "log": "bench_lepe_nh_mu_lr_m1.log",
+      "outcome": [
+        "MUT 1: LP_LOCKSTEP FAIL",
+        "BENCH_EXIT 0"
+      ],
+      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+    },
+    {
+      "log": "bench_lepe_nh_mu_lr_m2.log",
+      "outcome": [
+        "MUT 2: LP_LOCKSTEP FAIL",
+        "BENCH_EXIT 0"
+      ],
+      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+    },
+    {
+      "log": "bench_lepw_mu_lr_m2.log",
+      "outcome": [
+        "MUT 2: LP_LOCKSTEP FAIL",
+        "BENCH_EXIT 0"
+      ],
+      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+    }
+  ]
+}
