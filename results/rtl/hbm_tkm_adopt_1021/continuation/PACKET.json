@@ -71,7 +71,10 @@
   "SS_sensitivity_ps": -440.25,
   "DRC": 0,
   "qualified": false,
-  "interpretation": "physical route is COMPLETE and raw measured TT setupFAIL; CANCELLED scheduledINFRA status does not erase this measurement. Canonical routed-ioref judgment pending, no clock waiver."
+  "interpretation": "physical route is COMPLETE and raw measured TT setupFAIL; CANCELLED scheduledINFRA status does not erase this measurement. Canonical routed-ioref judgment pending, no clock waiver.",
+  "archived_synth_netlist_sha256": "06a9b10a47799bdca45dfd3ccbe9e4e1821b85f78b9fc18c2c4347e4c971f38f",
+  "original_gate_synth_netlist_sha256": "436119a6a6a845e1508a68f189716aa40d21b2ea3f09654c2c1ab602ff686abc",
+  "netlist_identity_note": "Distinct raw netlist hashes; never substitute original gate netlist for archived routed body."
  },
  "existing_benches": {
   "bench_lint": {
@@ -143,8 +146,21 @@
     "ep7_surviving_gate_full_readback.json",
     "ep7_surviving_gate_readback.json"
    ],
-   "C3_transfer": "disk owns and copying; independentarchive verification pending",
+   "C3_transfer": {
+    "durable": true,
+    "time_PT": "15:25:10",
+    "archive_root": "/archive/epyc6-retire-1021/recovered_exact_sources/hcoll_v7_tkm_tile_e86v4b-20261020-223049",
+    "receipt": "/home/ubuntu/claude-takeover-20261007/lanes/epyc6-retire/state/e86_durable_gate_source_1525.json",
+    "identity": "all snapshot files verified filesystem copy; original compressed tarSHA reference only"
+   },
    "scope": "exact original component gate source only; final route source post-transform remains separate"
+  },
+  "actual_archived_route_helpers": {
+   "count": 50,
+   "sha_mismatches": 0,
+   "missing": 0,
+   "receipt": "archived_frozen_helper_availability.json",
+   "scope": "all50 archivedCL basenamepayloads exact frozenplanSHA; no inference finalSRCpath identity"
   }
  },
  "normal_continuation_API_review": {
@@ -164,5 +180,16 @@
   "old_incomplete_TP192_peak_kb": 305417196,
   "note": "old benchmark observed ~291.3GiB RSS, above160 request; no unmeasured restart or duplicatecompile. Existing objects must first be recovered/verified."
  },
- "parent_scope": "Current K5e0/L5f1 old32clock/SETTLE104 engine untouched; no source/param/calendar/clock160 or hardview adoption from leaf continuation."
+ "parent_scope": "Current K5e0/L5f1 old32clock/SETTLE104 engine untouched; no source/param/calendar/clock160 or hardview adoption from leaf continuation.",
+ "existing_report_classification": {
+  "source": "/home/ubuntu/scratch/codex-e86-original-6_finish.rpt",
+  "startpoint": "u.SX[14][11]$_DFF_P_",
+  "endpoint": "u.g_fan32_state.g_d[15].g_w[0].g_k[1].g_live.gc[3]$_DFF_P_",
+  "launch_clock": "ot_entry_1",
+  "capture_clock": "ot_entry_1",
+  "report_period_ps": 770,
+  "report_slack_ps": -93.66,
+  "classification": "same-root internal compare->GN->gc",
+  "canonical_corner_correlation": "833.333-770=63.333ps; -93.66+63.333=-30.327ps aligns actual cornerTT-30.32; endpoint association is inference from existing report, no freshSTA"
+ }
 }
