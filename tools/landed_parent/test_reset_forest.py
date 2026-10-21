@@ -47,6 +47,22 @@ forest_child #(.W(W)) u1(.clk(clk),.rst_n(rst_n),.i(hop),.o(o));endmodule\n''')
                 x=lp.Parent(q);x.emit(x.plan(),'bad_lp')
             except SystemExit:pass
             else:raise AssertionError('forest accepted '+mutate)
+        # HBM-PSLICE9 10-20: forest fed by regional reset PORTS (no root): depth = stages, root loads 0, same RTL else
+        rp=copy.deepcopy(s);rp['regional_reset_ports']={'stages':3,'why':'test'}
+        x=lp.Parent(rp);xp=x.plan();xr,xt=x.emit(xp,'forest_top_lp');xrec=x.record(xp,'forest_top_lp',xt)
+        assert lp.audit(rp,xr)['ok'],lp.audit(rp,xr)
+        xf=xrec['reset']['same_depth_forest']
+        assert xf['regional_stages']==3 and xf['root_D_loads']==0, xf
+        assert 'u_lpr_root' not in xr and '.d(rst_n_core)' in xr and '.d(rst_n_far)' in xr and '.DEPTH(3)' in xr
+        rnf=copy.deepcopy(rp);rnf.pop('landing_reset_forest');y=lp.Parent(rnf);yp=y.plan();yr,yt=y.emit(yp,'forest_top_lp')
+        assert xrec['compiler']==y.record(yp,'forest_top_lp',yt)['compiler']
+        assert xrec['flops']['reset']==y.record(yp,'forest_top_lp',yt)['flops']['reset']+xf['incremental_FFs']
+        q=copy.deepcopy(rp);q['regional_reset_ports']={'stages':1}
+        try:
+            z=lp.Parent(q);z.emit(z.plan(),'bad_lp')
+        except SystemExit:pass
+        else:raise AssertionError('regional forest accepted stages 1')
+        print('RESET_FOREST_REGIONAL_PORTS PASS')
         if a.baseline_module:
             loader=importlib.util.spec_from_file_location('before',a.baseline_module);b=importlib.util.module_from_spec(loader);loader.loader.exec_module(b);b.ROOT=lp.ROOT
             bp=b.Parent(no);bplan=bp.plan();br,brt=bp.emit(bplan,'forest_top_lp')
@@ -55,6 +71,13 @@ forest_child #(.W(W)) u1(.clk(clk),.rst_n(rst_n),.i(hop),.o(o));endmodule\n''')
             assert old.tb(op,'forest_top_lp',ort)==bp.tb(bplan,'forest_top_lp',brt)
             assert old.record(op,'forest_top_lp',ort)==bp.record(bplan,'forest_top_lp',brt)
             assert old.bench_sh('forest_top_lp',str(rel),op)==bp.bench_sh('forest_top_lp',str(rel),bplan)
+            rb=b.Parent(rnf);rbp=rb.plan();rbr,rbt=rb.emit(rbp,'forest_top_lp')
+            assert yr==rbr
+            assert y.sdc(yp,'forest_top_lp')==rb.sdc(rbp,'forest_top_lp')
+            assert y.tb(yp,'forest_top_lp',yt)==rb.tb(rbp,'forest_top_lp',rbt)
+            assert y.record(yp,'forest_top_lp',yt)==rb.record(rbp,'forest_top_lp',rbt)
+            assert y.bench_sh('forest_top_lp',str(rel),yp)==rb.bench_sh('forest_top_lp',str(rel),rbp)
+            print('RESET_FOREST_REGIONAL_PORTS_ONLY_BYTES PASS')
         if a.emit_dir:
             s['_spec_path']=str(rel/'spec.json');(d/'spec.json').write_text(json.dumps(s,indent=2)+'\n');lp.gen(s)
         print('RESET_FOREST_EXACT_LEAVES_FLOPS_AGE_AND_FAILCLOSED_NEGATIVES PASS')

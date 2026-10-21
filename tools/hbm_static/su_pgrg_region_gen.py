@@ -1,62 +1,106 @@
 #!/usr/bin/env python3
-"""HBM-PGLG8 10-20: HARDENED REGION form of the LIGHT SU port-group slice (H.STA.BLK.15.3).
+"""HBM-PGLG8 hardened LIGHT SU port-group slice regions (H.STA.BLK.15.3), r2 = PAIR tiles (FAM-HBM-C/C-PGRG 10-21).
 
-lg4 (gate FAIL, 10-19) showed the one-kit landed parent cannot clock its regions: every region root (ck_r0..3) reached
-1.2-1.5 ns insertion with 300-380 ps pin spread and 16 raw SRAM clock pins missed their co-timed clk_rd by 55-81 ps,
-because each region's soft flops (landing halves, relays, replicas) were placed across the 1235 x 3045 um parent.
-Fix: each region (u_rg<r> + 8 KIND0 lanes + 8 bank6_clock banks, all on ck_r<r> with the same reset run t) becomes ONE
-hardened tile ot_hbm_su_pgrg_region (hardened once, used 4x per slice, lane ids strapped by rpos), with its own
-centre-fed clock tree; the parent keeps only the S band, the landings and relays.
+History.  lg4 (10-19): one landed parent, region roots over 1235 x 3045 um -> 1.2-1.5 ns insertion.  r1 (10-20): each
+region (glue + 8 KIND0 + 8 banks) hardened as ONE 1235 x 885 tile ot_hbm_su_pgrg_region -> gate FAIL (10-21): one root
+over 1235 x 885 um, TT insertion 1.07-1.39 ns, pin-flop spread 318 ps, SRAM<->pin paths -1066 / -1039 ps, reset_landing
+REFUSE (rst_n -> 17 hard-child pins), wire_reach 752 um (rflt between rposc[7] and ret[520]).  Same class as lg4.
 
-Reads the generated landed parent (rgf_lp) and writes
-  rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_region.sv   (region tile + census-safe region glue)
-  rtl/hbm_accel/generic/adapters/static_su/top/lp/ot_hbm_su_static_pgslice_rgf_lph.sv  (parent with 4 region tiles)
-Behaviour is identical to rgf_lp (same reset timing t per region, same data edges); verified by the lockstep bench
-tb_hbm_su_pgslice_rg with HREG=1.
+r2 (this generator): the clock region is ONE KIND0 lane + its bank6_clock bank (~457 x 454 um), hardened as the tile
+ot_hbm_su_pgrg_pair with its own centre-fed root; the bank sits under the lane (lane mirrored MY), so both halves of
+the lane<->bank loop are short (KIND0 out W -> bank in W, bank out E -> KIND0 rd_q E; every pin-to-pin <= ~430 um).
+  * pair tile = per-lane glue (the r1 region glue ot_hbm_su_pgrg_rgx restricted to lane j: control replica register,
+    store / read muxes, id / RF checks, kept RF-select copies, kept byte-select AND3s) + 1 KIND0 + 1 bank.
+  * reset: lands at the tile face in 2 registered stages (rst_l0 -> rst_l1 -> KIND0, bank, lane fault flop).  The
+    parent issues the pair reset 2 edges EARLIER (lp reset pad t(u_rg) - 2), so release / assertion at every sink is
+    unchanged: 0 cycles.
+  * fault: one sticky lane fault flop per pair (ret_f); the region fault = OR of the 8 sticky lane bits (identical to the
+    r1 region's sticky OR flop: same reset, same capture edge).
+  * data latency: unchanged (control replica = the pin register, as r1; lane<->bank one cycle as r1).
+  * ot_hbm_su_pgrg_region (same ports as r1) is now a SOFT wrapper of 8 pair tiles (j strap = lane index); the slice
+    parent rgf_lph is the r1 parent with the reset pads moved 2 edges earlier.  Parent (slice) step: every pair is its
+    own clock region; each s/relay -> pair crossing gets its own landing READER (the writer bank is shared), so the
+    crossing count and the landing latency stay as rgf_lp's (0 added cycles, one reader per pair instead of per region).
+Behaviour identical to rgf_lp: lockstep tb_hbm_su_pgslice_rg HREG=1 (su_pgslice_rg_vl_run.sh OUT MUT EDGES 1).
+
+Reads lp/ot_hbm_su_static_pgslice_rgf_lp.sv; writes
+  top/ot_hbm_su_pgrg_pair.sv                  (pair tile: kit top of hbm_su_pgrg_pair_d4g / _fb)
+  top/ot_hbm_su_pgrg_region.sv                (soft region = 8 pair tiles)
+  top/lp/ot_hbm_su_static_pgslice_rgf_lph.sv  (slice parent with 4 soft regions)
 """
-import re, sys, pathlib
+import re, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 TOP = ROOT / 'rtl/hbm_accel/generic/adapters/static_su/top'
 src = (TOP / 'lp/ot_hbm_su_static_pgslice_rgf_lp.sv').read_text()
 lines = src.splitlines()
 
-# ---------------------------------------------------------------- region tile children (from region r0 lines)
-child = [l for l in lines if re.match(r'\s*ot_hbm_su_static_(kind0_lat4_leaf1|bank6_clock)_physical u_(ln|bk)_r0_\d ', l)]
-assert len(child) == 16, len(child)
+# ---------------------------------------------------------------- lane r0_0 children -> pair children
+ln = [l for l in lines if re.match(r'\s*ot_hbm_su_static_kind0_lat4_leaf1_physical u_ln_r0_0 ', l)]
+bk = [l for l in lines if re.match(r'\s*ot_hbm_su_static_bank6_clock_physical u_bk_r0_0 ', l)]
+assert len(ln) == 1 and len(bk) == 1
 UNUSED_CK = ('clk_insert_0', 'clk_insert_1', 'clk_insert_2', 'clk_insert_3', 'clk_stage_4')
-body = []
-for l in child:
-    l = l.split('//')[0].rstrip()
+
+
+def norm(l):
+    l = l.split('//')[0].strip()
     l = re.sub(r'\bck_r0\b', 'ck', l)
-    l = re.sub(r'\blpr_c_u_(ln|bk)_r0_\d\b', 'rst_n', l)
-    l = re.sub(r'\bctl_r0_(\d)\b', r'ctl\1', l)
+    l = re.sub(r'\blpr_c_u_(ln|bk)_r0_0\b', 'rst_l', l)
+    l = re.sub(r'\bctl_r0_0\b', 'ctl0', l)
     for w in ('lid', 'rdq', 'lo', 'brv', 'bra', 'bwv', 'bwa', 'bwd', 'bq'):
         l = re.sub(r'\b%s_r0\b' % w, w, l)
-    l = re.sub(r'\bu_(ln|bk)_r0_(\d)\b', r'u_\1_\2', l)
-    if 'kind0' in l:
-        # census: the 5 KIND0 clock pins proven UNLOADED in the closed leaf (unloaded_pins.json of the r2 route, 64 of 1606
-        # inputs) are left open in the synthesized tile (40 non-clock loads on ck otherwise); the behavioural leaf model
-        # keeps them clocked in simulation.
-        for p in UNUSED_CK:
-            l = l.replace('.%s(ck), ' % p, '`OT_PGRG_UCK(%s) ' % p)
-    body.append('    ' + l.strip())
+    l = re.sub(r'\bu_(ln|bk)_r0_0\b', r'u_\1', l)
+    return l
 
-region = r'''`timescale 1ns/1ps
+
+k0 = norm(ln[0])
+for p in UNUSED_CK:   # KIND0 clock pins proven UNLOADED in the closed leaf (unloaded_pins.json of its r2 route)
+    assert '.%s(ck), ' % p in k0, p
+    k0 = k0.replace('.%s(ck), ' % p, '`OT_PGRG_UCK(%s) ' % p)
+b0 = norm(bk[0])
+
+# control bits the lane uses (the rest are not KIND0 inputs): pack them into the pair's ctl_u port
+used = set()
+for a, b in re.findall(r'ctl0\[(\d+)(?::(\d+))?\]', k0):
+    hi, lo = int(a), int(b) if b else int(a)
+    used.update(range(lo, hi + 1))
+segs = []   # contiguous used ranges, high -> low
+for i in sorted(used, reverse=True):
+    if segs and segs[-1][1] == i + 1:
+        segs[-1][1] = i
+    else:
+        segs.append([i, i])
+NU = len(used)
+# ctl0 (1742) rebuilt inside the pair from the registered used bits; unused bits are constant 0 (never read)
+parts, k = [], NU
+cur = 1741
+for hi, lo in segs:
+    if cur > hi:
+        parts.append("%d'd0" % (cur - hi))
+    w = hi - lo + 1
+    parts.append('ctlr[%d:%d]' % (k - 1, k - w))
+    k -= w
+    cur = lo - 1
+if cur >= 0:
+    parts.append("%d'd0" % (cur + 1))
+assert k == 0
+ctl0_expr = '{' + ','.join(parts) + '}'
+ctlu_expr = '{' + ','.join('control[%d:%d]' % (h, l) for h, l in segs) + '}'
+
+pair = r'''`timescale 1ns/1ps
 `default_nettype none
-// GENERATED by tools/hbm_static/su_pgrg_region_gen.py (HBM-PGLG8 10-20) -- do not edit.
-// HARDENED REGION TILE of the LIGHT SU port-group slice (one region: glue + 8 KIND0 lanes + 8 bank6_clock banks, one clock
-// ck, one reset run). Hardened once and used 4x per slice: the region index is strapped (rpos = r), the slice position by
-// pos, exactly as ot_hbm_su_pgrg_rg with STRAP=1 and R=r. Census-safe glue (ot_hbm_su_pgrg_rgx): replicated strap / store
-// select / RF select copies (no driver above 32 loads); per-lane store-select copies arrive on their own pins (fwc/dwnc,
-// 5 per lane) so no input pin fans out to the 8 lanes' 41-bit write muxes.
+// GENERATED by tools/hbm_static/su_pgrg_region_gen.py (HBM-PGLG8 r2, FAM-HBM-C/C-PGRG 10-21) -- do not edit.
+// PAIR TILE of the LIGHT SU port-group slice: ONE clock region = 1 KIND0 lane + its bank6_clock bank + the lane's glue,
+// own centre-fed root (~457 x 454 um).  Hardened once, used 32x per slice (lane strap jpos, region strap rpos, slice pos).
+// Reset lands at the face in 2 registered stages (the parent issues it 2 edges early: release unchanged).
+// Control lands in the lane's replica register (the pin register; NU = %(NU)d of the 1742 control bits are KIND0 inputs).
 `ifdef SYNTHESIS
  `define OT_PGRG_UCK(p) .p(),
 `else
  `define OT_PGRG_UCK(p) .p(ck),
 `endif
 
-// one kept register bit / one kept AND3 (keep_hierarchy: never merged with its siblings)
+// one kept register / one kept AND3 (keep_hierarchy: never merged with its siblings)
 (* keep_hierarchy = "yes" *)
 module ot_hbm_su_pgrg_kff #(parameter integer W=1, ID=0)(input wire ck, input wire [W-1:0] d, output wire [W-1:0] q);
  (* keep = 1 *) reg [W-1:0] r;
@@ -68,109 +112,120 @@ module ot_hbm_su_pgrg_kand #(parameter integer ID=0)(input wire a, b, c, output 
  assign y=a&b&c;
 endmodule
 
-module ot_hbm_su_pgrg_rgx #(
+module ot_hbm_su_pgrg_pair #(
  parameter integer QID=1,G=2,MUT=0
 )(
  input wire ck, input wire rst_n,
- input wire [4*4-1:0] posc,                 // pos copy per lane pair
- input wire [4*2-1:0] rposc,                // region index copy per lane pair
- input wire [1741:0] control,
+ input wire [3:0] pos,                      // slice position strap {q_id, g_id}
+ input wire [1:0] rpos,                     // region index strap
+ input wire [2:0] jpos,                     // lane index in the region strap
+ input wire [%(NUM1)d:0] ctl_u,                 // the lane's control bits (packed used bits of control[1741:0])
  input wire [163:0] rf_u,
- input wire [541:0] di,                     // {fw, row9, data256, rv5, row9, dwn, row9, words256}; fw / dwn bits unused
- input wire [39:0] fwc, dwnc,               // fw / dwn copies, 5 per lane
- output wire [1741:0] ctl0, ctl1, ctl2, ctl3, ctl4, ctl5, ctl6, ctl7,
- output wire [8*11-1:0] lid,
- output wire [8*128-1:0] rd_q,
- input wire [8*282-1:0] lo,
- output wire [8*6-1:0] b_rv,
- output wire [8*54-1:0] b_ra,
- output wire [7:0] b_wv,
- output wire [8*9-1:0] b_wa,
- output wire [8*32-1:0] b_wd,
- input wire [8*192-1:0] bq,
- output wire [520:0] ret
+ input wire [91:0] dl,                      // {frow9, fdat32 (lane), rv5, ra5_9, dwr9, dwd32 (lane)}
+ input wire [4:0] fwc, dwnc,                // fw / dwn copies (c0 address / valid / conflict, c1..c4 write byte g)
+ output wire [32:0] ret_x,                  // {ro_v, ro_x}
+ output wire [31:0] ret_q,                  // read port 5 word (q5)
+ output wire ret_f                          // sticky lane fault
 );
+ // ---- reset landing: 2 registered stages at the face
+ (* keep = 1 *) reg rst_l0, rst_l1;
+ always @(posedge ck) begin rst_l0<=rst_n; rst_l1<=rst_l0; end
+ wire rst_l=rst_l1;
+ // ---- control replica (pin register of the lane's control)
+ reg [%(NUM1)d:0] ctlr;
+ always @(posedge ck) ctlr<=ctl_u;
+ wire [1741:0] ctl0=%(CTL0)s;
  wire [127:0] rfw=rf_u[163:36]; wire [35:0] rfc=rf_u[35:0];
- wire fw_x; wire [8:0] frow_l; wire [255:0] fdat_l; wire rv5_l; wire [8:0] ra5_l; wire dwn_x; wire [8:0] dwr_l; wire [255:0] dwd_l;
- assign {fw_x,frow_l,fdat_l,rv5_l,ra5_l,dwn_x,dwr_l,dwd_l}=di;
- reg [1741:0] ctl [0:7];
- for(genvar k=0;k<8;k=k+1)begin:g_replica always @(posedge ck) ctl[k]<=control; end
- assign ctl0=ctl[0]; assign ctl1=ctl[1]; assign ctl2=ctl[2]; assign ctl3=ctl[3];
- assign ctl4=ctl[4]; assign ctl5=ctl[5]; assign ctl6=ctl[6]; assign ctl7=ctl[7];
- wire [7:0] ro_v, l_fault, l_coll, st_conflict, st_id_fault, rf_src_bad;
- wire [255:0] ro_x, q5;
- for(genvar j=0;j<8;j=j+1)begin:g_ln
-  wire [3:0] pos=posc[(j/2)*4+:4]; wire [1:0] rpos=rposc[(j/2)*2+:2];
-  wire [1:0] q_id=pos[3:2];
-  wire [1:0] g_id=(MUT!=11)?pos[1:0]:2'(G);
-  // n = 8*r + j: n>=16 = r[1], n%16 = {r[0], j}
-  assign lid[j*11+:11]={4'd0,rpos[1],g_id,rpos[0],3'(j)};
-  wire [6:0] st_lid={rpos[1],g_id,rpos[0],3'(j)};
-  // fw / dwn copies of lane j (5 each): c0 -> write address / valid / conflict, c1..c4 -> write data byte g
-  wire [4:0] fwj=fwc[5*j+:5], dwj=dwnc[5*j+:5];
-  wire vi_re,vm_we,kv_we; wire [23:0] vi_addr,vm_waddr,kv_waddr; wire [95:0] rd_addr; wire [3:0] rd_re; wire [7:0] rd_src;
-  wire [31:0] vm_wdata,kv_wdata;
-  assign {vi_re,vm_we,kv_we,ro_v[j],l_fault[j],l_coll[j],vi_addr,vm_waddr,kv_waddr,rd_addr,rd_re,rd_src,vm_wdata,kv_wdata,ro_x[j*32+:32]}=lo[j*282+:282];
-  wire [191:0] q=bq[j*192+:192];
-  wire [53:0] ra; wire [5:0] rv;
-  for(genvar p=0;p<4;p=p+1)begin:g_read
-   wire [23:0] a=rd_addr[p*24+:24];
-   assign ra[p*9+:9]={a[17:16],a[13:7]}; assign rv[p]=rd_re[p]&&rd_src[2*p+:2]==2'd0;
-  end
-  assign ra[4*9+:9]={vi_addr[16+:2],vi_addr[7+:7]}; assign rv[4]=vi_re;
-  assign ra[5*9+:9]=ra5_l; assign rv[5]=rv5_l;
-  assign q5[j*32+:32]=q[5*32+:32];
-  assign b_rv[j*6+:6]=rv; assign b_ra[j*54+:54]=ra;
-  wire lw=vm_we|kv_we;
-  // lane store word: vm_we picks the VM word over the KV word. Per write-data byte g the select is formed once in a
-  // kept gate (vm_we & !fw & !dwn of that byte's copy), so the lane's vm_we pin feeds 4 gates + the 9-bit address mux.
-  wire [3:0] s_vm;
-  for(genvar g=0;g<4;g=g+1)begin:g_sel
-   ot_hbm_su_pgrg_kand #(.ID(4*j+g)) u_svm (.a(vm_we), .b(~fwj[1+g]), .c(~dwj[1+g]), .y(s_vm[g]));
-   assign b_wd[j*32+8*g+:8]=fwj[1+g]?fdat_l[j*32+8*g+:8]:dwj[1+g]?dwd_l[j*32+8*g+:8]:
-                             s_vm[g]?vm_wdata[8*g+:8]:kv_wdata[8*g+:8];
-  end
-  wire [8:0] la9=vm_we?{vm_waddr[17:16],vm_waddr[13:7]}:{kv_waddr[17:16],kv_waddr[13:7]};
-  assign st_conflict[j]=(fwj[0]&&lw)||(fwj[0]&&dwj[0])||(dwj[0]&&lw);
-  assign b_wv[j]=lw|fwj[0]|dwj[0];
-  assign b_wa[j*9+:9]=fwj[0]?frow_l:dwj[0]?dwr_l:la9;
-  reg idf; integer p2;
-  always @*begin
-   idf=(vm_we&&(vm_waddr[6:0]!=st_lid||vm_waddr[15:14]!=q_id))||(kv_we&&!vm_we&&(kv_waddr[6:0]!=st_lid||kv_waddr[15:14]!=q_id));
-   for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[p2*24+:7]!=st_lid||rd_addr[p2*24+14+:2]!=q_id))idf=1;
-  end
-  assign st_id_fault[j]=idf;
-  // RF broadcast into the lane operands (stream source code 1 rides the read: select held n+2..n+3); the select is
-  // kept in 2 copies per read port (16 operand bits each)
-  wire [3:0] is_rf; reg [3:0] src1_a,src1_b; wire [15:0] src1_c;
-  always @(posedge ck)begin src1_a<=is_rf;src1_b<=src1_a;end
-  for(genvar c=0;c<4;c=c+1)begin:g_s1c
-   ot_hbm_su_pgrg_kff #(.W(4),.ID(4*j+c)) u_s1c (.ck(ck), .d(src1_b), .q(src1_c[4*c+:4]));
-  end
-  for(genvar p=0;p<4;p=p+1)begin:g_p
-   assign is_rf[p]=rd_re[p]&&rd_src[2*p+:2]==2'd1;
-   for(genvar c=0;c<4;c=c+1)begin:g_c
-    wire s=(MUT==4)?src1_b[p]:src1_c[4*c+p];
-    assign rd_q[(j*4+p)*32+8*c+:8]=s?rfw[p*32+8*c+:8]:q[p*32+8*c+:8];
-   end
-  end
-  reg rsb; integer p3;
-  always @*begin
-   rsb=0;
-   for(p3=0;p3<4;p3=p3+1)begin
-    if(rd_re[p3]&&rd_src[2*p3+1])rsb=1;
-    if(is_rf[p3]&&(!rfc[p3*9+8]||rd_addr[p3*24+:24]!={16'd0,rfc[p3*9+:8]}))rsb=1;
-   end
-  end
-  assign rf_src_bad[j]=rsb;
+ wire [8:0] frow_l, ra5_l, dwr_l; wire [31:0] fdat_l, dwd_l; wire rv5_l;
+ assign {frow_l,fdat_l,rv5_l,ra5_l,dwr_l,dwd_l}=dl;
+ wire [10:0] lid; wire [127:0] rdq; wire [281:0] lo; wire [5:0] brv; wire [53:0] bra; wire [0:0] bwv; wire [8:0] bwa;
+ wire [31:0] bwd; wire [191:0] bq;
+ wire [1:0] q_id=pos[3:2];
+ wire [1:0] g_id=(MUT!=11)?pos[1:0]:2'(G);
+ assign lid={4'd0,rpos[1],g_id,rpos[0],jpos};
+ wire [6:0] st_lid={rpos[1],g_id,rpos[0],jpos};
+ wire vi_re,vm_we,kv_we,ro_v,l_fault,l_coll; wire [23:0] vi_addr,vm_waddr,kv_waddr; wire [95:0] rd_addr; wire [3:0] rd_re;
+ wire [7:0] rd_src; wire [31:0] vm_wdata,kv_wdata,ro_x;
+ assign {vi_re,vm_we,kv_we,ro_v,l_fault,l_coll,vi_addr,vm_waddr,kv_waddr,rd_addr,rd_re,rd_src,vm_wdata,kv_wdata,ro_x}=lo;
+ wire [191:0] q=bq;
+ wire [53:0] ra; wire [5:0] rv;
+ for(genvar p=0;p<4;p=p+1)begin:g_read
+  wire [23:0] a=rd_addr[p*24+:24];
+  assign ra[p*9+:9]={a[17:16],a[13:7]}; assign rv[p]=rd_re[p]&&rd_src[2*p+:2]==2'd0;
  end
- reg rflt;
+ assign ra[4*9+:9]={vi_addr[16+:2],vi_addr[7+:7]}; assign rv[4]=vi_re;
+ assign ra[5*9+:9]=ra5_l; assign rv[5]=rv5_l;
+ assign brv=rv; assign bra=ra;
+ wire lw=vm_we|kv_we;
+ // lane store word: per write-data byte g the VM select is formed once in a kept gate (vm_we & !fw & !dwn of that
+ // byte's copy), so the lane's vm_we pin feeds 4 gates + the 9-bit address mux
+ wire [3:0] s_vm;
+ for(genvar g=0;g<4;g=g+1)begin:g_sel
+  ot_hbm_su_pgrg_kand #(.ID(g)) u_svm (.a(vm_we), .b(~fwc[1+g]), .c(~dwnc[1+g]), .y(s_vm[g]));
+  assign bwd[8*g+:8]=fwc[1+g]?fdat_l[8*g+:8]:dwnc[1+g]?dwd_l[8*g+:8]:s_vm[g]?vm_wdata[8*g+:8]:kv_wdata[8*g+:8];
+ end
+ wire [8:0] la9=vm_we?{vm_waddr[17:16],vm_waddr[13:7]}:{kv_waddr[17:16],kv_waddr[13:7]};
+ wire st_conflict=(fwc[0]&&lw)||(fwc[0]&&dwnc[0])||(dwnc[0]&&lw);
+ assign bwv[0]=lw|fwc[0]|dwnc[0];
+ assign bwa=fwc[0]?frow_l:dwnc[0]?dwr_l:la9;
+ reg idf; integer p2;
+ always @*begin
+  idf=(vm_we&&(vm_waddr[6:0]!=st_lid||vm_waddr[15:14]!=q_id))||(kv_we&&!vm_we&&(kv_waddr[6:0]!=st_lid||kv_waddr[15:14]!=q_id));
+  for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[p2*24+:7]!=st_lid||rd_addr[p2*24+14+:2]!=q_id))idf=1;
+ end
+ // RF broadcast into the lane operands (stream source code 1 rides the read: select held n+2..n+3); the select is
+ // kept in 4 copies (one per operand byte c, 4 read ports each)
+ wire [3:0] is_rf; reg [3:0] src1_a,src1_b; wire [15:0] src1_c;
+ always @(posedge ck)begin src1_a<=is_rf;src1_b<=src1_a;end
+ for(genvar c=0;c<4;c=c+1)begin:g_s1c
+  ot_hbm_su_pgrg_kff #(.W(4),.ID(c)) u_s1c (.ck(ck), .d(src1_b), .q(src1_c[4*c+:4]));
+ end
+ for(genvar p=0;p<4;p=p+1)begin:g_p
+  assign is_rf[p]=rd_re[p]&&rd_src[2*p+:2]==2'd1;
+  for(genvar c=0;c<4;c=c+1)begin:g_c
+   wire s=(MUT==4)?src1_b[p]:src1_c[4*c+p];
+   assign rdq[p*32+8*c+:8]=s?rfw[p*32+8*c+:8]:q[p*32+8*c+:8];
+  end
+ end
+ reg rsb; integer p3;
+ always @*begin
+  rsb=0;
+  for(p3=0;p3<4;p3=p3+1)begin
+   if(rd_re[p3]&&rd_src[2*p3+1])rsb=1;
+   if(is_rf[p3]&&(!rfc[p3*9+8]||rd_addr[p3*24+:24]!={16'd0,rfc[p3*9+:8]}))rsb=1;
+  end
+ end
+ reg lflt;
  always @(posedge ck)
-  if(!rst_n)rflt<=1'b0;
-  else if((|l_fault)||(|l_coll)||(|st_conflict)||(|st_id_fault)||(|rf_src_bad))rflt<=1'b1;
- assign ret={rflt,ro_v,ro_x,q5};
+  if(!rst_l)lflt<=1'b0;
+  else if(l_fault||l_coll||st_conflict||idf||rsb)lflt<=1'b1;
+ assign ret_x={ro_v,ro_x}; assign ret_q=q[5*32+:32]; assign ret_f=lflt;
+ // ---- hard children
+ %(K0)s
+ %(B0)s
 endmodule
+`undef OT_PGRG_UCK
+`default_nettype wire
+''' % {'NU': NU, 'NUM1': NU - 1, 'CTL0': ctl0_expr, 'K0': k0, 'B0': b0}
+(TOP / 'ot_hbm_su_pgrg_pair.sv').write_text(pair)
 
+# ---------------------------------------------------------------- soft region = 8 pair tiles (r1 port list)
+pl = []
+for j in range(8):
+    pl.append(' ot_hbm_su_pgrg_pair #(.QID(QID),.G(G),.MUT(MUT)) u_pr_%d (.ck(ck), .rst_n(rst_n), .pos(posc[%d+:4]), '
+              ".rposc_unused(), .rpos(rposc[%d+:2]), .jpos(3'd%d), .ctl_u(%s), .rf_u(rf_u), "
+              '.dl({di[540:532],di[%d:%d],di[275],di[274:266],di[264:256],di[%d:%d]}), .fwc(fwc[%d+:5]), '
+              '.dwnc(dwnc[%d+:5]), .ret_x({ro_v[%d],ro_x[%d+:32]}), .ret_q(q5[%d+:32]), .ret_f(lf[%d]));'
+              % (j, (j // 2) * 4, (j // 2) * 2, j, ctlu_expr, 276 + 32 * j + 31, 276 + 32 * j, 32 * j + 31, 32 * j,
+                 5 * j, 5 * j, j, 32 * j, 32 * j, j))
+pl = [l.replace('.rposc_unused(), ', '') for l in pl]
+region = r'''`timescale 1ns/1ps
+`default_nettype none
+// GENERATED by tools/hbm_static/su_pgrg_region_gen.py (HBM-PGLG8 r2, FAM-HBM-C/C-PGRG 10-21) -- do not edit.
+// SOFT REGION of the LIGHT SU port-group slice = 8 hardened PAIR tiles ot_hbm_su_pgrg_pair (lane j strap), r1 port list.
+// rst_n reaches every pair 2 edges early (the parent's reset pad is t - 2): the pair lands it in 2 stages.
+// di = {fw, row9, data256, rv5, row9, dwn, row9, words256}; ret = {sticky fault (OR of the 8 lane faults), ro_v8,
+// ro_x256, q5 256}.
 module ot_hbm_su_pgrg_region #(
  parameter integer QID=1,G=2,MUT=0
 )(
@@ -183,26 +238,26 @@ module ot_hbm_su_pgrg_region #(
  input wire [39:0] fwc, dwnc,
  output wire [520:0] ret
 );
- wire [1741:0] ctl0, ctl1, ctl2, ctl3, ctl4, ctl5, ctl6, ctl7;
- wire [87:0] lid; wire [1023:0] rdq; wire [2255:0] lo; wire [47:0] brv; wire [431:0] bra; wire [7:0] bwv; wire [71:0] bwa;
- wire [255:0] bwd; wire [1535:0] bq;
- ot_hbm_su_pgrg_rgx #(.QID(QID),.G(G),.MUT(MUT)) u_rg (.ck(ck), .rst_n(rst_n), .posc(posc), .rposc(rposc),
-  .control(control), .rf_u(rf_u), .di(di), .fwc(fwc), .dwnc(dwnc), .ctl0(ctl0), .ctl1(ctl1), .ctl2(ctl2), .ctl3(ctl3),
-  .ctl4(ctl4), .ctl5(ctl5), .ctl6(ctl6), .ctl7(ctl7), .lid(lid), .rd_q(rdq), .lo(lo), .b_rv(brv), .b_ra(bra), .b_wv(bwv),
-  .b_wa(bwa), .b_wd(bwd), .bq(bq), .ret(ret));
-''' + '\n'.join(body) + '''
+ wire [7:0] ro_v, lf; wire [255:0] ro_x, q5;
+''' + '\n'.join(pl) + '''
+ assign ret={|lf,ro_v,ro_x,q5};
 endmodule
-`undef OT_PGRG_UCK
 `default_nettype wire
 '''
 (TOP / 'ot_hbm_su_pgrg_region.sv').write_text(region)
 
-# ---------------------------------------------------------------- parent with 4 region tiles
+# ---------------------------------------------------------------- slice parent with 4 soft regions
 out = []
 for l in lines:
     if re.match(r'\s*ot_hbm_su_static_(kind0_lat4_leaf1|bank6_clock)_physical u_(ln|bk)_r\d_\d ', l):
         continue
     if re.match(r'\s*wire lpr_c_u_(ln|bk)_r\d_\d;', l):
+        continue
+    m = re.match(r'(\s*wire lpr_c_u_rg\d;\s*ot_pl_pad #\(\.W\(1\), \.N\()(\d+)(\)\) u_lprc_u_rg\d .*?// t\(u_rg\d\) = )(\d+)(.*)$', l)
+    if m:
+        n = int(m.group(2))
+        assert n >= 2 and n == int(m.group(4)), l
+        out.append('%s%d%s%d (pair tiles land it in 2 stages: t - 2)%s' % (m.group(1), n - 2, m.group(3), n - 2, m.group(5)))
         continue
     m = re.match(r'(\s*)ot_hbm_su_pgrg_rg #\((.*?)\) u_rg(\d) \((.*)\);(.*)$', l)
     if m:
@@ -210,9 +265,8 @@ for l in lines:
         pm = dict(re.findall(r'\.(\w+)\(([^()]*)\)', params))
         cm = dict(re.findall(r'\.(\w+)\(((?:[^()]|\([^()]*\))*)\)', conns))
         assert pm['R'] == r and pm['STRAP'] in ('1', 'STRAP'), pm
-        fw = '%s[541]' % cm['di'] if '[' not in cm['di'] else None
         di = cm['di']
-        # fw = di[541], dwn = di[265] of the 542-bit store bundle {fw,row9,data256,rv5,row9,dwn,row9,words256}
+
         def bit(expr, b):
             mm = re.match(r'(\w+)\[(\d+):(\d+)\]$', expr)
             if mm:
@@ -228,10 +282,11 @@ for l in lines:
 par = '\n'.join(out) + '\n'
 par = par.replace('module ot_hbm_su_static_pgslice_rgf_lp #(', 'module ot_hbm_su_static_pgslice_rgf_lph #(', 1)
 par = par.replace('// GENERATED by tools/landed_parent/lp.py',
-                  '// GENERATED by tools/hbm_static/su_pgrg_region_gen.py (HBM-PGLG8 10-20: regions = hardened tiles '
-                  'ot_hbm_su_pgrg_region) from the lp.py output; originally GENERATED by tools/landed_parent/lp.py', 1)
+                  '// GENERATED by tools/hbm_static/su_pgrg_region_gen.py (HBM-PGLG8 r2 10-21: regions = 8 hardened pair '
+                  'tiles ot_hbm_su_pgrg_pair each, reset pads t - 2) from the lp.py output; originally GENERATED by '
+                  'tools/landed_parent/lp.py', 1)
 par = par.replace('    // ---- children (clock pins', '`ifndef SYNTHESIS\n    initial if (STRAP == 0) $fatal(1, "rgf_lph: hardened regions are strapped (STRAP=1) only");\n`endif\n    // ---- children (clock pins', 1)
-assert par.count('ot_hbm_su_pgrg_region #') == 4
+assert par.count('ot_hbm_su_pgrg_region #') == 4 and par.count('pair tiles land it in 2 stages') == 4
 assert 'u_ln_r' not in par and 'u_bk_r' not in par
 (TOP / 'lp/ot_hbm_su_static_pgslice_rgf_lph.sv').write_text(par)
-print('wrote region tile + rgf_lph')
+print('wrote pair tile (NU=%d control bits) + soft region + rgf_lph' % NU)

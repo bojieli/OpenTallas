@@ -18,7 +18,7 @@ verilator --binary --timing -j "${OT_THREADS:-8}" -Wno-fatal -Wno-lint -Wno-styl
  $S/data_store/ot_hbm_su_static_bank6_clock_physical.sv \
  $S/ot_hbm_su_static_vm_ports.sv $S/ot_hbm_su_static_vm_bank_leaf_s.sv $S/reduction/ot_hbm_su_red_pretree.sv \
  $S/programme/multirate_bridge.sv $S/top/ot_hbm_su_static_pgslice.sv $S/top/ot_hbm_su_static_pg_lg_tap.sv \
- $S/top/ot_hbm_su_static_pgslice_lg.sv $S/top/ot_hbm_su_static_pg_stream.sv $S/top/ot_hbm_su_pgrg_parts.sv $S/top/lp/ot_hbm_su_static_pgslice_rgf_lp.sv $S/top/ot_hbm_su_pgrg_region.sv $S/top/lp/ot_hbm_su_static_pgslice_rgf_lph.sv $S/top/ot_hbm_su_static_pgslice_rg.sv \
+ $S/top/ot_hbm_su_static_pgslice_lg.sv $S/top/ot_hbm_su_static_pg_stream.sv $S/top/ot_hbm_su_pgrg_parts.sv $S/top/lp/ot_hbm_su_static_pgslice_rgf_lp.sv $S/top/ot_hbm_su_pgrg_pair.sv $S/top/ot_hbm_su_pgrg_region.sv $S/top/lp/ot_hbm_su_static_pgslice_rgf_lph.sv $S/top/ot_hbm_su_static_pgslice_rg.sv \
  rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv \
  rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
  rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv \
