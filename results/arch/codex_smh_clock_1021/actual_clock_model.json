@@ -69,7 +69,23 @@
           "boundary_spread_ps": 47.0,
           "all_spread_ps": 109.9
         }
-      }
+      },
+      "size_um": [
+        345.6,
+        302.4
+      ],
+      "lef_sha256": "ebf33f71514d7d3d07593a4e0ee817a5b90836ddc57b6d1fff1b0d4475558ed4",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            578.268,
+            345.558
+          ],
+          "direct_manhattan_root_s_um": 859.11,
+          "min_150um_wire_segments_s": 6
+        }
+      ]
     },
     {
       "instance_s": "u_lf1.g_lr.u_c.u_qk",
@@ -113,7 +129,23 @@
           "boundary_spread_ps": 13.3,
           "all_spread_ps": 21.6
         }
-      }
+      },
+      "size_um": [
+        194.4,
+        71.28
+      ],
+      "lef_sha256": "0242d1bcaa88899b3252ca6b07563ff0e79982a0db7494726770b682579b3a4f",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            493.212,
+            388.842
+          ],
+          "direct_manhattan_root_s_um": 730.77,
+          "min_150um_wire_segments_s": 5
+        }
+      ]
     },
     {
       "instance_s": "u_lf1.g_lr.u_c.u_bdc",
@@ -157,7 +189,23 @@
           "boundary_spread_ps": 15.2,
           "all_spread_ps": 21.2
         }
-      }
+      },
+      "size_um": [
+        112.32,
+        142.56
+      ],
+      "lef_sha256": "7973c9cd767a352f893c6215fd221b7f762de5f4b6f6a4b7e4dc24fa893fd749",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            202.38,
+            518.496
+          ],
+          "direct_manhattan_root_s_um": 310.284,
+          "min_150um_wire_segments_s": 3
+        }
+      ]
     },
     {
       "instance_s": "u_lf1.g_lr.u_c.u_h0",
@@ -201,7 +249,23 @@
           "boundary_spread_ps": 12.0,
           "all_spread_ps": 23.1
         }
-      }
+      },
+      "size_um": [
+        86.4,
+        120.96
+      ],
+      "lef_sha256": "b29811adf69a359d7df8e7e30e80524bf99a9c402b442e2f2402d577ce9daa28",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            355.596,
+            639.264
+          ],
+          "direct_manhattan_root_s_um": 368.46,
+          "min_150um_wire_segments_s": 3
+        }
+      ]
     },
     {
       "instance_s": "u_lf1.g_lr.u_c.u_h1",
@@ -245,7 +309,23 @@
           "boundary_spread_ps": 12.0,
           "all_spread_ps": 23.1
         }
-      }
+      },
+      "size_um": [
+        86.4,
+        120.96
+      ],
+      "lef_sha256": "b29811adf69a359d7df8e7e30e80524bf99a9c402b442e2f2402d577ce9daa28",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            485.196,
+            639.264
+          ],
+          "direct_manhattan_root_s_um": 498.06,
+          "min_150um_wire_segments_s": 4
+        }
+      ]
     },
     {
       "instance_s": "u_lf1.g_lr.u_c.u_xs",
@@ -289,7 +369,23 @@
           "boundary_spread_ps": 58.9,
           "all_spread_ps": 89.0
         }
-      }
+      },
+      "size_um": [
+        475.2,
+        388.8
+      ],
+      "lef_sha256": "afba5a655632af4a0f2d6439c85d6161bac39548a5d8a656cf787cd2f3360c37",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            410.412,
+            734.442
+          ],
+          "direct_manhattan_root_s_um": 518.454,
+          "min_150um_wire_segments_s": 4
+        }
+      ]
     },
     {
       "instance_s": "u_row1",
@@ -333,7 +429,23 @@
           "boundary_spread_ps": 36.4,
           "all_spread_ps": 36.4
         }
-      }
+      },
+      "size_um": [
+        86.4,
+        90.72
+      ],
+      "lef_sha256": "fea3a450ff27f4b8a09034770db4153bc87dc2a470741443dec2b3fea7c48036",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            217.02,
+            479.424
+          ],
+          "direct_manhattan_root_s_um": 363.996,
+          "min_150um_wire_segments_s": 3
+        }
+      ]
     },
     {
       "instance_s": "u_rowe1",
@@ -377,7 +489,23 @@
           "boundary_spread_ps": 14.8,
           "all_spread_ps": 14.8
         }
-      }
+      },
+      "size_um": [
+        43.2,
+        90.72
+      ],
+      "lef_sha256": "341a1c58148db6889592c54725ebeebb5edfab1d0125e04f2a497ec3d4a62046",
+      "clock_pin_shapes": [
+        {
+          "pin": "clk",
+          "first_shape_center_um": [
+            605.82,
+            479.424
+          ],
+          "direct_manhattan_root_s_um": 752.796,
+          "min_150um_wire_segments_s": 6
+        }
+      ]
     }
   ],
   "intrinsic_lower_bounds_ps": {
