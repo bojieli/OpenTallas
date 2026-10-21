@@ -585,7 +585,24 @@ module qfd_d2d_static_ovl_sf7_obs1 #(parameter integer MUT = 0, parameter intege
     assign fault = PR ? q_fault : c_fault;
     qfd_d2d_static_core_s7_obs1 #(.TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1}), .SFMUT(SFMUT), .HEAD_CONTEXT(HEAD_CONTEXT)) u_core (.obs_ctx(c_obs_ctx),.obs_res(c_obs_res),.obs_native(c_obs_native),.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data_t(k_cfg_data_t), .cfg_data_r(k_cfg_data_r), .cfg_seg_t(k_cfg_seg_t), .cfg_seg_r(k_cfg_seg_r), .cal_start_k(k_cal_start_k), .cal_seg_k(k_cal_seg_k), .cal_start_rx_k(k_cal_start_rx_k), .cal_seg_rx_k(k_cal_seg_rx_k), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .native_tx_slot(c_native_tx_slot), .native_tx_slot_kind(c_native_tx_slot_kind), .native_tx_slot_beat(c_native_tx_slot_beat), .native_tx_v(c_native_tx_v), .native_tx_payload(c_native_tx_payload), .rx_payload(c_rx_payload), .native_rx_v(c_native_rx_v), .native_rx_slot(c_native_rx_slot), .native_rx_slot_kind(c_native_rx_slot_kind), .native_rx_slot_beat(c_native_rx_slot_beat), .prog_witness_slot(c_prog_witness_slot), .prog_head_context_slot(c_prog_head_context_slot), .prog_auth_slot(c_prog_auth_slot), .prog_context_slot(c_prog_context_slot), .prog_tx_observed_v(c_prog_tx_observed_v), .prog_tx_record(c_prog_tx_record), .prog_rx_v(c_prog_rx_v), .emb_rx_v(c_emb_rx_v), .emb_rx_slot(c_emb_rx_slot), .kv_x3_slot(c_kv_x3_slot), .x3(c_x3), .x3_identity(c_x3_identity), .x3_generation(c_x3_generation), .status_epoch16(c_status_epoch16), .vm_drained(c_vm_drained), .collective_drained(c_collective_drained), .collective_busy(c_collective_busy), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .admit_ready(c_admit_ready), .result_v_k(k_result_v_k), .result_done(c_result_done), .result_fault(c_result_fault), .result_cause(c_result_cause), .result_tag(c_result_tag), .result_gen(c_result_gen), .result_token(c_result_token), .result_value(c_result_value), .result_cycles(c_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .transport_fault(c_transport_fault), .fault(c_fault));
 endmodule
+// Each kept leaf owns its grammar decision and <=16 payload capture bits.
+// Caller supplies same-phase regional reset copies; no data/event edge is added.
+(* keep_hierarchy = "yes" *)
+module ot_qwen_status_obs_rx_chunk #(parameter integer W=16)(
+ input wire ck,rst_n,ev,rs,hk,fc,
+ input wire [15:0] he,epoch16,
+ input wire [511:0] d,
+ input wire [W-1:0] capture_d,
+ output reg [W-1:0] q
+);
+ wire good;
+ ot_qwen_status_obs_v1_valid u_check(.x(d[511:304]),.good(good));
+ wire en=ev && rs && hk && he==epoch16 && good && !(|d[303:156]) && !fc;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n) q<=0; else if(en) q<=capture_d;
+endmodule
 module ot_qwen_d2d_status_rx_sfm3_obs1 #(parameter integer NG = 24) (
+    input wire [NG+1:0] rst_k, // 0..NG-1 payload chunks, NG fault copies, NG+1 metadata
     input  wire         ck, rst_n,
     input  wire [15:0]  epoch16,
     input  wire         rx_event, rx_slot,
@@ -622,11 +639,11 @@ module ot_qwen_d2d_status_rx_sfm3_obs1 #(parameter integer NG = 24) (
     // sticky fault: master + NG copies on one D net
     (* keep = "true", dont_touch = "true" *) reg [NG:0] fc;      // fc[0] = master
     wire fault_d = (rx_event != rx_slot || (rx_event && bad_hdr)) ? 1'b1 : fc[0];
-    (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
-        if (!rst_n) fc <= {(NG+1){1'b0}}; else fc <= {(NG+1){fault_d}};
-    assign fault = fc[0];
+    (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_k[NG])
+        if (!rst_k[NG]) fc <= {(NG+1){1'b0}}; else fc <= {(NG+1){fault_d}};
+    assign fault = rst_n && fc[0];
     // captured image: cap[5:0] = d[5:0] (status levels), cap[155:7] = d[155:7] (result fields); bit 6 unused (result_v)
-    reg [363:0] cap;
+    wire [363:0] cap;
     wire [363:0] capture_d={d[511:304],d[155:0]};
     assign status_obs_payload=cap[363:156];
     localparam integer GB = (364 + NG - 1) / NG;
@@ -634,14 +651,14 @@ module ot_qwen_d2d_status_rx_sfm3_obs1 #(parameter integer NG = 24) (
     for (g = 0; g < NG; g = g + 1) begin : g_cap
         localparam integer LO = (364 * g) / NG;
         localparam integer WG = (364 * (g + 1)) / NG - LO;
-        wire en = ev_c[g] && rs_c[g] && !bad_g[g] && !fc[g+1];
-        always @(posedge ck or negedge rst_n)
-            if (!rst_n) cap[LO +: WG] <= {WG{1'b0}};
-            else if (en) cap[LO +: WG] <= capture_d[LO +: WG];
+        ot_qwen_status_obs_rx_chunk #(.W(WG)) u_cap(
+            .ck(ck),.rst_n(rst_k[g]),.ev(ev_c[g]),.rs(rs_c[g]),.hk(hk_c[g]),
+            .fc(fc[g+1]),.he(he_c[16*g+:16]),.epoch16(epoch16),.d(d),
+            .capture_d(capture_d[LO+:WG]),.q(cap[LO+:WG]));
     end
     wire en0 = ev_c[0] && rs_c[0] && !bad_hdr && !fc[1];
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin status_fresh <= 1'b0; result_v <= 1'b0;status_obs_v<=0;status_obs_epoch16<=0; end
+    always @(posedge ck or negedge rst_k[NG+1])
+        if (!rst_k[NG+1]) begin status_fresh <= 1'b0; result_v <= 1'b0;status_obs_v<=0;status_obs_epoch16<=0; end
         else begin
             result_v <= en0 && d[6];
             status_obs_v<=en0;
