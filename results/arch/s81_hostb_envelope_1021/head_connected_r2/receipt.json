@@ -1,0 +1,51 @@
+{
+  "source": "a6e18718e receiver normalization +50aaa3ee2 input dependency correction",
+  "unit": "oth-ubuntu-1967362-1792624906",
+  "host": "ot-epyc7",
+  "exit": 0,
+  "head_source": "8916a1cb6284d60fdfdef138d1913643427edaba",
+  "selected_consumer": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce",
+  "measured": {
+    "head_pin_to_ro_postedge": 5,
+    "next_RX_capture": 1,
+    "HOST417": true,
+    "PW314_LEN1_TEMPLATE102": true,
+    "correct_KS_transport": true,
+    "actual_L0_status_return": true
+  },
+  "native": {
+    "stage": {
+      "status": "PASS",
+      "max_dynamic_loads": 25,
+      "violations": [],
+      "role_errors": []
+    },
+    "return": {
+      "status": "PASS",
+      "max_dynamic_loads": 30,
+      "violations": [],
+      "role_errors": []
+    },
+    "head": {
+      "status": "PASS",
+      "max_dynamic_loads": 6,
+      "violations": [],
+      "role_errors": []
+    }
+  },
+  "scope": "COMMON_CLOCK_TEST_COMPONENT; no current-main mux, whole programme, shipping G9, physical stage endpoint, production date or global epoch qualification",
+  "artifacts_sha256": {
+    "execution.log": "b1ea6be93a6167d49f8a5245086e8b01115e96c69899df1a352c7b5839156ef8",
+    "consumer/bench.log": "1afcd3f0d98fe09045a95da2183c27ed2a182e948bf23e05da8b0a1d09ea2ff3",
+    "consumer/selected_manifest.json": "7c766d8abd15d2df88f6bfb78a920560e831ec345fd37cbb89e88d35fa76b153",
+    "consumer/head.f": "204c18e4153b7b86cbca900562c7fda6ebe1689446bb7f3a3d0a89a6fcb57671",
+    "native/lib_sha256.txt": "c19f3ac1d5dbd2bbafde065dc7526256ea1799cb5a03a15d16bffb5f6822ed0e",
+    "native/image_id.txt": "cb7905146116b9a382bf4be3842e9bdafa8b4d90029ae75ae7c906e6b381d999",
+    "native/dsdv_hostb_stage/stat.txt": "f55223d5746ece1fa12060f0f4eb6b16ed725f8bdeeebe46bde8abde2eef4c94",
+    "native/dsdv_hostb_stage/census.json.gz": "7c497177ad0427dbe07467d2d651659cce449025811327b6b89c932efaf31e1b",
+    "native/dsdv_hostb_return/stat.txt": "545bf509dfd9452db7c25028f26ec038e7f9b330fc263caacf9dbecdacc5bec6",
+    "native/dsdv_hostb_return/census.json.gz": "22b8c3320b5fddc808d96244e41d0196e759df51f4429417715c1478c9a79435",
+    "native/dsdv_hostb_head/stat.txt": "5759b461072a660c25921f978693b200fddb358a5dffb102b26e67ad6aff3b4c",
+    "native/dsdv_hostb_head/census.json.gz": "c7e98a5e8cb0155bb7578258221c232d510d584095f9f486447060053cec3bf2"
+  }
+}

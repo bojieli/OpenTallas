@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-r2-1021
+ot-run: ot-epyc7       admits   315 GB (avail 456, growth 235, headroom 0, waiters 0/0 GB) load 55/96 running 11 disk 4426 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-r2-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-r2-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-r2-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-r2-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-r2-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1967362-1792624906 after 0 s
+PASS actual8afL0 consumer PW314/LEN1/TEMPLATE102 byte/cycleexact; KSstarter/wholeprogrammeOPEN
+PASS HBE1 mode0 host0/417 KS1 return1 faults000/000
+- tools/s81_dv/hostb_1021/tb_hostb.sv:94: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 1.774 s; speed 3.946 us/s
+- Verilator: cpu 1.774 s on 1 threads; allocated 12 MB
+HBE_NATIVE dsdv_hostb_stage PASS 25 0 0
+HBE_NATIVE dsdv_hostb_return PASS 30 0 0
+HBE_NATIVE dsdv_hostb_head PASS 6 0 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1967362-1792624906): exit 0
