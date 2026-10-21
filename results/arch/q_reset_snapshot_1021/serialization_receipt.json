@@ -1,0 +1,14 @@
+{
+  "status": "CANDIDATE_ONLY_STOP_CLAUDE_BACK",
+  "unit": "oth-ubuntu-2183461-1792609345",
+  "rc": 0,
+  "mem_gb": 4,
+  "threads": 1,
+  "full_reconstruction_launched": false,
+  "test": "SERIALIZATION_PASS disabled_noop actual_empty_builder blocked_actual_site capture_chain_context tuple_keys numpy_arrays hashes no_overwrite source_unchanged",
+  "sha256": {
+    "tools/qwen_split/actual_geometry_snapshot.py": "eac30c9497b5ec071ffe1126ecf4b3f44287f5f25cd31a01dd4392f27f9993c9",
+    "results/arch/q_reset_snapshot_1021/snapshot_driver.py": "796b698a2f5b8c393321989142221c579cb06f398b7a4626c18bf0ca33438957",
+    "results/arch/q_reset_snapshot_1021/check_serialization.py": "06d5071d776399aa9eab4034e58086f82dce8408b4db6037b17615dc5a8f97fe"
+  }
+}
