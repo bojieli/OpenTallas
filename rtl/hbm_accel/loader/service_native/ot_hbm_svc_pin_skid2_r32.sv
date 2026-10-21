@@ -14,7 +14,7 @@ module ot_hbm_svc_pin_skid2_r32 #(parameter integer WIDTH=1)(
  wire [N-1:0]full,empty;
  wire [NR-1:0]rn;
  ot_rst_fanout #(.N(NR)) u_reset(.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
- assign in_r=!full[0];assign out_v=!empty[0];
+ assign in_r=rn[0]&&!full[0];assign out_v=rn[0]&&!empty[0];
  for(genvar s=0;s<N;s=s+1)begin:g_slice
   localparam integer B=(WIDTH-s*SW<SW)?WIDTH-s*SW:SW;
   (* keep="true",dont_touch="true" *) reg wp,rp;
