@@ -1,0 +1,207 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -lib results/arch/hroot_reset_domain_1021/component/vendor_and2.v; read_verilog -sv rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv rtl/lib/ot_reset_sync.sv rtl/physical/ot_host_die_cdc_sram.sv rtl/link/ot_link_afifo.sv physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v; hierarchy -check -top qkd_hr_ingest_shell; tcl physical/common_flow/ot_pin_regs.tcl' --
+
+1. Executing Verilog-2005 frontend: results/arch/hroot_reset_domain_1021/component/vendor_and2.v
+Parsing Verilog input from `results/arch/hroot_reset_domain_1021/component/vendor_and2.v' to AST representation.
+Generating RTLIL representation for module `\AND2x2_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v
+Parsing SystemVerilog input from `rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v' to AST representation.
+Generating RTLIL representation for module `\qkd_hr_ingest_shell'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_hr_ingest_cdc_shell'.
+Generating RTLIL representation for module `\qkd_hr_keep_and3'.
+Generating RTLIL representation for module `\qkd_hr_keep_and5'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/physical/ot_host_die_cdc_sram.sv
+Parsing SystemVerilog input from `rtl/physical/ot_host_die_cdc_sram.sv' to AST representation.
+Generating RTLIL representation for module `\ot_host_die_cdc_sram'.
+Warning: Replacing memory \g_ib_mem.iw_bypass with list of registers. See rtl/physical/ot_host_die_cdc_sram.sv:103
+Generating RTLIL representation for module `\ot_host_reset_bank'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/link/ot_link_afifo.sv
+Parsing SystemVerilog input from `rtl/link/ot_link_afifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_link_afifo'.
+Warning: Replacing memory \wgray_s with list of registers. See rtl/link/ot_link_afifo.sv:138
+Warning: Replacing memory \rgray_s with list of registers. See rtl/link/ot_link_afifo.sv:84
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w2c_32x546_m1_p192_mir'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \qkd_hr_ingest_shell
+Used module:     \qkd_hr_ingest_cdc_shell
+Used module:         \qkd_hr_keep_and3
+Used module:         \qkd_hr_keep_and5
+Used module:         \ot_link_afifo
+Used module:         \ot_host_reset_bank
+Parameter \AW = 32
+Parameter \HDMAX = 128
+Parameter \KVHMAX = 2
+Parameter \RMW_EN = 0
+Parameter \MUT = 0
+Parameter \NATIVE_ROWS = 1
+Parameter \QPIPE = 2
+Parameter \KW = 20
+
+8.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_hr_ingest_cdc_shell'.
+Parameter \AW = 32
+Parameter \HDMAX = 128
+Parameter \KVHMAX = 2
+Parameter \RMW_EN = 0
+Parameter \MUT = 0
+Parameter \NATIVE_ROWS = 1
+Parameter \QPIPE = 2
+Parameter \KW = 20
+Generating RTLIL representation for module `$paramod$fe30166abbc1e8da6bb243a027a393bb339614c4\qkd_hr_ingest_cdc_shell'.
+Parameter \W = 1
+Parameter \AW = 4
+
+8.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_link_afifo'.
+Parameter \W = 1
+Parameter \AW = 4
+Generating RTLIL representation for module `$paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo'.
+Warning: Replacing memory \wgray_s with list of registers. See rtl/link/ot_link_afifo.sv:138
+Warning: Replacing memory \rgray_s with list of registers. See rtl/link/ot_link_afifo.sv:84
+Parameter \W = 1
+Parameter \AW = 4
+Found cached RTLIL representation for module `$paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo'.
+Parameter \W = 1
+Parameter \AW = 4
+Found cached RTLIL representation for module `$paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo'.
+Parameter \N = 4
+
+8.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_host_reset_bank'.
+Parameter \N = 4
+Generating RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100'.
+Parameter \N = 20
+
+8.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_host_reset_bank'.
+Parameter \N = 20
+Generating RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000010100'.
+Parameter \N = 4
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100'.
+Parameter \N = 1
+
+8.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_host_reset_bank'.
+Parameter \N = 1
+Generating RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001'.
+Parameter \N = 1
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001'.
+Parameter \N = 1
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001'.
+
+8.7. Analyzing design hierarchy..
+Top module:  \qkd_hr_ingest_shell
+Used module:     $paramod$fe30166abbc1e8da6bb243a027a393bb339614c4\qkd_hr_ingest_cdc_shell
+Used module:         \qkd_hr_keep_and3
+Used module:         \qkd_hr_keep_and5
+Used module:         \ot_link_afifo
+Used module:         \ot_host_reset_bank
+Parameter \W = 1
+Parameter \AW = 4
+Found cached RTLIL representation for module `$paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo'.
+Parameter \W = 1
+Parameter \AW = 4
+Found cached RTLIL representation for module `$paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo'.
+Parameter \W = 1
+Parameter \AW = 4
+Found cached RTLIL representation for module `$paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo'.
+Parameter \N = 4
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100'.
+Parameter \N = 20
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000010100'.
+Parameter \N = 4
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100'.
+Parameter \N = 1
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001'.
+Parameter \N = 1
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001'.
+Parameter \N = 1
+Found cached RTLIL representation for module `$paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001'.
+
+8.8. Analyzing design hierarchy..
+Top module:  \qkd_hr_ingest_shell
+Used module:     $paramod$fe30166abbc1e8da6bb243a027a393bb339614c4\qkd_hr_ingest_cdc_shell
+Used module:         \qkd_hr_keep_and3
+Used module:         \qkd_hr_keep_and5
+Used module:         $paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo
+Used module:         $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000010100
+Used module:         $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001
+
+8.9. Analyzing design hierarchy..
+Top module:  \qkd_hr_ingest_shell
+Used module:     $paramod$fe30166abbc1e8da6bb243a027a393bb339614c4\qkd_hr_ingest_cdc_shell
+Used module:         \qkd_hr_keep_and3
+Used module:         \qkd_hr_keep_and5
+Used module:         $paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo
+Used module:         $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000010100
+Used module:         $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001
+Removing unused module `\ot_link_afifo'.
+Removing unused module `\ot_host_reset_bank'.
+Removing unused module `\ot_host_die_cdc_sram'.
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\qkd_hr_ingest_cdc_shell'.
+Removed 5 unused modules.
+Renaming module \qkd_hr_ingest_shell to \qkd_hr_ingest_shell__ot_pr_core.
+
+9. Executing Verilog-2005 frontend: /work/results/arch/hroot_reset_domain_1021/component/ot_pin_regs_wrapper.v
+Parsing SystemVerilog input from `/work/results/arch/hroot_reset_domain_1021/component/ot_pin_regs_wrapper.v' to AST representation.
+Generating RTLIL representation for module `\qkd_hr_ingest_shell'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1. Analyzing design hierarchy..
+Top module:  \qkd_hr_ingest_shell
+Used module:     \qkd_hr_ingest_shell__ot_pr_core
+Used module:         $paramod$fe30166abbc1e8da6bb243a027a393bb339614c4\qkd_hr_ingest_cdc_shell
+Used module:             \qkd_hr_keep_and3
+Used module:             \qkd_hr_keep_and5
+Used module:             $paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo
+Used module:             $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100
+Used module:             $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000010100
+Used module:             $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001
+
+10.2. Analyzing design hierarchy..
+Top module:  \qkd_hr_ingest_shell
+Used module:     \qkd_hr_ingest_shell__ot_pr_core
+Used module:         $paramod$fe30166abbc1e8da6bb243a027a393bb339614c4\qkd_hr_ingest_cdc_shell
+Used module:             \qkd_hr_keep_and3
+Used module:             \qkd_hr_keep_and5
+Used module:             $paramod$ecaf9933bb09547bef8d757e79f67cd2c8e3299c\ot_link_afifo
+Used module:             $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000100
+Used module:             $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000010100
+Used module:             $paramod\ot_host_reset_bank\N=s32'00000000000000000000000000000001
+Removed 0 unused modules.
+OT_PIN_REGS qkd_hr_ingest_shell: 7 of 42 ports registered at the pin (clock ck_core); table /work/results/arch/hroot_reset_domain_1021/component/ot_pin_regs.tsv
+
+Warnings: 3 unique messages, 5 total
+End of script. Logfile hash: 7e7052ea79, time: 0.14s, user: 0.14s, system: 0.01s, MEM: 37.48 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 55% 11x read_verilog (0 sec), 42% 2x hierarchy (0 sec), ...

@@ -1,0 +1,43 @@
+port	dir	width	cycles	why
+ck_core	input	1	0	clock
+ck_host	input	1	0	clock
+ck_ingest	input	1	0	clock
+host_rst_n	input	1	0	reset
+service_faults	output	1	1	pin register
+u_rank__qm_d	input	512	0	excluded
+u_rank__qm_cls	input	2	0	excluded
+u_rank__qm_v	input	1	0	excluded
+u_rank__qm_crn	output	5	0	excluded
+u_rank__ov	output	1	1	pin register
+u_rank__owe	output	1	1	pin register
+u_rank__oa	output	32	1	pin register
+u_rank__od	output	256	1	pin register
+u_rank__ocr	input	1	1	pin register
+u_rank__qm_t_cr	input	1	0	excluded
+u_rank__qm_t_d	output	64	0	excluded
+u_rank__qm_t_v	output	1	0	excluded
+host_upstream_quiet_core	output	1	1	pin register
+host_upstream_quiet_host	output	1	0	excluded
+host_upstream_quiet_ingest	output	1	0	excluded
+eng_rst_n	output	2	0	excluded
+eng_dv	output	1	0	excluded
+eng_ddata	output	256	0	excluded
+eng_inv_a	output	1	0	excluded
+eng_inv_b	output	1	0	excluded
+eng_indata	output	512	0	excluded
+eng_wrdy	output	1	0	excluded
+eng_drdy	input	1	0	excluded
+eng_inrdy	input	1	0	excluded
+eng_wv	input	1	0	excluded
+eng_wv_c	input	20	0	excluded
+eng_waddr	input	32	0	excluded
+eng_wdata	input	256	0	excluded
+eng_rv	input	1	0	excluded
+eng_raddr	input	32	0	excluded
+eng_done	input	1	0	excluded
+eng_done_a	input	1	0	excluded
+eng_done_b	input	1	0	excluded
+eng_done_c	input	1	0	excluded
+eng_tag	input	8	0	excluded
+eng_busy	input	1	0	excluded
+eng_nsec	input	32	0	excluded
