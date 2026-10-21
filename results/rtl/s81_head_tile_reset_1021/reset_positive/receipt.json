@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.head.tile-reset-mini.v1",
+ "source": "20087f28a",
+ "tile_source": "5bd07167a",
+ "scenarios": [
+  {
+   "scenario": "A",
+   "checked_edges": 18226,
+   "reassertions": 1,
+   "mismatches": 0,
+   "one_edge_delta_windows": 3
+  },
+  {
+   "scenario": "B",
+   "checked_edges": 9226,
+   "reassertions": 1,
+   "mismatches": 0,
+   "one_edge_delta_windows": 3
+  },
+  {
+   "scenario": "C",
+   "checked_edges": 9226,
+   "reassertions": 1,
+   "mismatches": 0,
+   "one_edge_delta_windows": 3
+  },
+  {
+   "scenario": "D",
+   "checked_edges": 9226,
+   "reassertions": 1,
+   "mismatches": 0,
+   "one_edge_delta_windows": 3
+  }
+ ],
+ "traffic_result_age": 8366,
+ "golden_check": "existing actual mini ALL4/4 strict checks retained",
+ "parent_reset_startup_delta_edges": 1,
+ "physical_qualification": "PENDING actual mapped native and CTS"
+}

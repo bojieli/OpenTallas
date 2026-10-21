@@ -1,0 +1,16 @@
+LOGIT_MISMATCH t0 row 0 40490935 != 40476e2f
+LOGIT_MISMATCH t0 row 32 3f0d7fbc != 3f03f89c
+LOGIT_MISMATCH t0 row 64 bf08adee != bf06fbc0
+LOGIT_MISMATCH t1 row 0 bff2b09b != bff3471f
+LOGIT_MISMATCH t1 row 32 3ffb946b != 3ff84eef
+LOGIT_MISMATCH t1 row 64 bf1d0ba8 != bf1d7458
+LOGIT_MISMATCH t0 row 96 403355a5 != 403376ef
+LOGIT_MISMATCH t1 row 96 bdb3e4e0 != bda93870
+POS 0 RES 21946 4173a558 1 8366
+LOGITS t0 124/128 t1 124/128
+RESET_AGE checked_edges=9226 old_stages=2 selected_stages=3 reassertions=1 mismatches=0 delta_windows=3 traffic_delta=0
+TB_PASS positions 1
+- tools/s81_head_r3/tb_s81hd_mini.sv:137: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 22.259 s; speed 414.491 ns/s
+- Verilator: cpu 22.254 s on 1 threads; allocated 74 MB

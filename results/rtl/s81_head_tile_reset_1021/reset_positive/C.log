@@ -1,0 +1,8 @@
+POS 0 RES 21818 4173a558 0 8366
+LOGITS t0 128/128 t1 128/128
+RESET_AGE checked_edges=9226 old_stages=2 selected_stages=3 reassertions=1 mismatches=0 delta_windows=3 traffic_delta=0
+TB_PASS positions 1
+- tools/s81_head_r3/tb_s81hd_mini.sv:137: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 20.344 s; speed 453.491 ns/s
+- Verilator: cpu 20.343 s on 1 threads; allocated 74 MB
