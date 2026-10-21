@@ -1,0 +1,839 @@
+{
+  "report_path": "/srv/opentallas-scratch/claude/ref_gate/s81sl_vp_fb-20261021-094732/routes/gate/work/orfs/native_census.json",
+  "report_sha256": "70412d411db45c5177d888e10c3b00e6eabe524940735ca1ad60e4d9bb295703",
+  "summary": {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "kit": "s81sl_vp_fb",
+    "liberty": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+        "sha256": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063"
+      },
+      {
+        "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+        "sha256": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1"
+      },
+      {
+        "path": "/src/physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr_ff.lib",
+        "sha256": "b5d7479cd65036cad6369d9742a477749223f31a01fa460f98628ca8ae005815"
+      },
+      {
+        "path": "/src/physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr_tt.lib",
+        "sha256": "bb0232740592594bdc3d16cc21e87343f65a25dd36f6e19f01c967ead843e9ec"
+      }
+    ],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_s81sl_vp_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "71c5fdc1f3dbbfd6e3427b11fe3f2873aa90632024dd717d367d89d9a4831945"
+    },
+    "top": "ot_s81sl_vp",
+    "status": "FAIL",
+    "limit": 32,
+    "roots_examined": 16331,
+    "max_dynamic_loads": 65,
+    "constant_output_bits": [],
+    "functional_pin_contract": "NOT_EVALUATED",
+    "pin_registration_contract": "NOT_EVALUATED",
+    "storage_contract": "NOT_EVALUATED",
+    "independent_source_contract_audit_required": true,
+    "role_errors": []
+  },
+  "violations": [
+    {
+      "driver": "_18520_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10494_",
+      "loads": 33
+    },
+    {
+      "driver": "_18523_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10497_",
+      "loads": 33
+    },
+    {
+      "driver": "_18525_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10499_",
+      "loads": 33
+    },
+    {
+      "driver": "_18529_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10503_",
+      "loads": 33
+    },
+    {
+      "driver": "_18542_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10514_",
+      "loads": 34
+    },
+    {
+      "driver": "_18543_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10515_",
+      "loads": 33
+    },
+    {
+      "driver": "_18834_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10773_",
+      "loads": 33
+    },
+    {
+      "driver": "_18837_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10776_",
+      "loads": 33
+    },
+    {
+      "driver": "_18839_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10778_",
+      "loads": 33
+    },
+    {
+      "driver": "_18843_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10782_",
+      "loads": 33
+    },
+    {
+      "driver": "_18856_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10793_",
+      "loads": 34
+    },
+    {
+      "driver": "_18857_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_10794_",
+      "loads": 33
+    },
+    {
+      "driver": "_19148_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11052_",
+      "loads": 33
+    },
+    {
+      "driver": "_19151_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11055_",
+      "loads": 33
+    },
+    {
+      "driver": "_19153_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11057_",
+      "loads": 33
+    },
+    {
+      "driver": "_19157_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11061_",
+      "loads": 33
+    },
+    {
+      "driver": "_19170_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11072_",
+      "loads": 34
+    },
+    {
+      "driver": "_19171_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11073_",
+      "loads": 33
+    },
+    {
+      "driver": "_19462_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11331_",
+      "loads": 33
+    },
+    {
+      "driver": "_19465_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11334_",
+      "loads": 33
+    },
+    {
+      "driver": "_19467_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11336_",
+      "loads": 33
+    },
+    {
+      "driver": "_19471_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11340_",
+      "loads": 33
+    },
+    {
+      "driver": "_19484_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11351_",
+      "loads": 34
+    },
+    {
+      "driver": "_19486_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11353_",
+      "loads": 33
+    },
+    {
+      "driver": "_19919_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11740_",
+      "loads": 33
+    },
+    {
+      "driver": "_19922_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11743_",
+      "loads": 33
+    },
+    {
+      "driver": "_19924_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11745_",
+      "loads": 33
+    },
+    {
+      "driver": "_19927_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11747_",
+      "loads": 33
+    },
+    {
+      "driver": "_19941_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11758_",
+      "loads": 33
+    },
+    {
+      "driver": "_19942_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_11759_",
+      "loads": 33
+    },
+    {
+      "driver": "_20233_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12017_",
+      "loads": 33
+    },
+    {
+      "driver": "_20236_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12020_",
+      "loads": 33
+    },
+    {
+      "driver": "_20238_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12022_",
+      "loads": 33
+    },
+    {
+      "driver": "_20241_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12024_",
+      "loads": 33
+    },
+    {
+      "driver": "_20255_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12035_",
+      "loads": 33
+    },
+    {
+      "driver": "_20256_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12036_",
+      "loads": 33
+    },
+    {
+      "driver": "_20547_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12294_",
+      "loads": 33
+    },
+    {
+      "driver": "_20550_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12297_",
+      "loads": 33
+    },
+    {
+      "driver": "_20552_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12299_",
+      "loads": 33
+    },
+    {
+      "driver": "_20555_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12301_",
+      "loads": 33
+    },
+    {
+      "driver": "_20569_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12312_",
+      "loads": 33
+    },
+    {
+      "driver": "_20570_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12313_",
+      "loads": 33
+    },
+    {
+      "driver": "_20861_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12571_",
+      "loads": 33
+    },
+    {
+      "driver": "_20864_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12574_",
+      "loads": 33
+    },
+    {
+      "driver": "_20866_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12576_",
+      "loads": 33
+    },
+    {
+      "driver": "_20869_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12578_",
+      "loads": 33
+    },
+    {
+      "driver": "_20883_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12589_",
+      "loads": 33
+    },
+    {
+      "driver": "_20884_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_12590_",
+      "loads": 33
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[0]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05755_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[10]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05765_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[11]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05766_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[12]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05767_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[13]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05768_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[14]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05769_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[15]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05770_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[16]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05771_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[17]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05772_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[18]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05773_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[19]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05774_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[1]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05756_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[2]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05757_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[3]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05758_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[4]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05759_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[5]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05760_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[6]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05761_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[7]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05762_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[8]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05763_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cfe[9]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05764_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[11]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05994_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[17]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06000_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[23]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06006_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[29]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06012_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[35]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06018_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[41]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06024_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[47]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06030_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cws[5]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05988_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[11]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06090_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[13]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06092_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[15]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06094_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[1]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06080_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[3]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06082_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[5]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06084_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[7]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06086_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_cwv[9]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06088_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_dodd[0]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05799_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dodd[1]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05800_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dodd[2]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05801_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dodd[3]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05802_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[0]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05775_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[1]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05776_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[2]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05777_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[3]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05778_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[4]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05779_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[5]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05780_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[6]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05781_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_dswp[7]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_05782_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[0]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06713_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[1]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06714_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[2]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06715_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[3]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06716_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[4]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06717_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[5]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06718_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[6]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06719_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsa0[7]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_06720_",
+      "loads": 64
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[0]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06723_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[1]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06724_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[2]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06725_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[3]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06726_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[4]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06727_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[5]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06728_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[6]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06729_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_hsv[7]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06730_",
+      "loads": 65
+    },
+    {
+      "driver": "u_ot_pr_core.k_lanev[4]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_05749_",
+      "loads": 33
+    },
+    {
+      "driver": "u_ot_pr_core.k_nrd[0]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06704_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_wvl[0]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06733_",
+      "loads": 39
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[0]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06118_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[1]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06119_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[2]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06120_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[3]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06121_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[4]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06122_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[5]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06123_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[6]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06124_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.k_xwv[7]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_06125_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.u_rr.rst_n[2]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_07681_",
+      "loads": 33
+    },
+    {
+      "driver": "u_ot_pr_core.u_rr.rst_n[9]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_07688_",
+      "loads": 35
+    },
+    {
+      "driver": "u_ot_pr_core.wv_p[1]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_01591_",
+      "loads": 47
+    }
+  ]
+}
