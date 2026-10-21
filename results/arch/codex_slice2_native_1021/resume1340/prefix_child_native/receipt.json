@@ -1,0 +1,27 @@
+{
+  "observed_at": "2026-10-21T14:51:17.458578-07:00",
+  "source": "3b1e16f40 plus exact canonical QDM helper dependency restoration (sameHEAD/mainblob)",
+  "math_sha256": "cb43b22f2a48a1af0eb175981266441df8b2d236b9127774a2a94a34e3cb557a",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-1258073-1792619283",
+  "ot_run_rc": 0,
+  "params": {
+    "PIN_IN": 1,
+    "BT_LAT": 1,
+    "MUT": 0
+  },
+  "verdict": "PASS",
+  "max_dynamic_loads": 32,
+  "violations": 0,
+  "role_errors": 0,
+  "scope": "standalone selectedprefix station native census only; stop BEFORE initialize_floorplan; no physical/parentqualification",
+  "canonical_io_sdc_blob": "d25fae139c3099cbd2686a08c27af3482985bf9a",
+  "canonical_io_flop_hook_blob": "09e4879787fd8da142087be659db57a51336ea3e",
+  "prior_failure": "missing canonical I/O SDC during kit gen, archived separate",
+  "sha256": {
+    "pass/native_census.json": "9963b0094eb7e4c39e7ce92aeda848085685eb86771bbbde474b250c36107999",
+    "pass/terminal.json": "60dcd2100974c67aceadff2e632dee0fe1476140e40a9fa5a535b15591edcd15",
+    "missing_io_sdc/terminal.json": "f080006e4c2da55ecea5dc2b0359a43d5a992e8179a2158db0a3a75233a7d7fa",
+    "missing_io_sdc/gen_kit.log": "80bde1fc70fe4889d5efcc49d99c0572151297fb460937bb3ba28ee7bd6b586b"
+  }
+}
