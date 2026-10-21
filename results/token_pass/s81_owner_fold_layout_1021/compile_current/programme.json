@@ -1,0 +1,423 @@
+{
+ "schema": "opentallas.s81.aproj_native_programme.v1",
+ "op": "L0.attn.a_proj",
+ "slice": "u_s_2N",
+ "status": "PARTIAL",
+ "sealed_programme_held": true,
+ "lifetime_qualified": false,
+ "source": "actual frame MAT/phase/stream + xs_calendar.compile_phase; real XRT CTL targets2/3",
+ "native_rows": 6,
+ "field_phase": 0,
+ "frame_operation_tag": 1,
+ "xs_tag": 0,
+ "actual_gather_data_emitted": false,
+ "synthetic_frame_returns_emitted": false,
+ "HOST_KS_assumed": false,
+ "route": {
+  "slice": "u_s_2N",
+  "sid": 5,
+  "entry_port": "ri_e",
+  "edges": 50,
+  "path": [
+   {
+    "at": "u_seqhost.vo",
+    "edge": 7
+   },
+   {
+    "at": "tvN_seqhost landed",
+    "link": "tvN_seqhost",
+    "edge": 39,
+    "stations": 59,
+    "E": 1
+   },
+   {
+    "at": "u_s_4N line inject",
+    "edge": 46
+   },
+   {
+    "at": "u_s_3N line",
+    "link": "xrW_3N_l0",
+    "lanes": [
+     "xrW_3N_l0",
+     "xrW_3N_l1",
+     "xrW_3N_l2",
+     "xrW_3N_l3"
+    ],
+    "edge": 48
+   },
+   {
+    "at": "u_s_2N line",
+    "link": "xrW_2N_l0",
+    "lanes": [
+     "xrW_2N_l0",
+     "xrW_2N_l1",
+     "xrW_2N_l2",
+     "xrW_2N_l3"
+    ],
+    "edge": 50
+   }
+  ],
+  "model": "contract (dsdv_seq_host header + ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)"
+ },
+ "selected_slice_source": {
+  "schema": "opentallas.s81.selected_slice_source.v1",
+  "slice": "u_s_2N",
+  "die_master": "ot_s81sl_slice",
+  "wrapper_chain": [
+   "ot_s81sl_slice"
+  ],
+  "xg": "ot_s81sl_xgt",
+  "ring": "ot_s81sl_rstopt",
+  "streamer": "ot_s81sl_xs",
+  "capture": "ot_s81sl_capc2",
+  "streamer_added_capture_edges": 0,
+  "source_sha256": {
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "4187b6a2d0e317f2b7d059c173fb43f8f09ade4638566d89946ba1f913a7ec7a",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv": "39a6c4f2fdfd2f0a4a023352c970891124a3e9c5836eae05e5018e255ef82b08",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv": "994ab4d3867c22206655f73e1a13d758f8d39bbb8fe7243efb9023b980a6a116"
+  },
+  "source_root": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src",
+  "physical_binding_qualified": false,
+  "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+ },
+ "CTL_pin_to_XR_command_pin_edges": 5,
+ "programme_origin": 53,
+ "origin_definition": "op native issue anchor + ctl_path event age - RSTOP_HOP + source XRT5",
+ "command_descriptors": [
+  {
+   "target": 2,
+   "relative_pin_edge": 24,
+   "native_issue_edge": 24,
+   "slice_CTL_pin_edge": 72,
+   "XR_output_pin_edge": 77,
+   "body160": "0000000258000000000000000000000000000000",
+   "payload186": "00000000960000000000000000000000000000000020020",
+   "ack_edge": 29
+  },
+  {
+   "target": 3,
+   "relative_pin_edge": 149,
+   "native_issue_edge": 149,
+   "slice_CTL_pin_edge": 197,
+   "XR_output_pin_edge": 202,
+   "body160": "0000000000000000000000000003082710000000",
+   "payload186": "0000000000000000000000000000c209c40000000030020",
+   "ack_edge": 154
+  },
+  {
+   "target": 2,
+   "relative_pin_edge": 150,
+   "native_issue_edge": 150,
+   "slice_CTL_pin_edge": 198,
+   "XR_output_pin_edge": 203,
+   "body160": "0000000001000000000000000000000000000000",
+   "payload186": "00000000004000000000000000000000000000000020020",
+   "ack_edge": 155
+  },
+  {
+   "target": 2,
+   "relative_pin_edge": 280,
+   "native_issue_edge": 280,
+   "slice_CTL_pin_edge": 328,
+   "XR_output_pin_edge": 333,
+   "body160": "000000000002d000200000000000000000000000",
+   "payload186": "000000000000b4000800000000000000000000000020020",
+   "ack_edge": 285
+  },
+  {
+   "target": 2,
+   "relative_pin_edge": 300,
+   "native_issue_edge": 300,
+   "slice_CTL_pin_edge": 348,
+   "XR_output_pin_edge": 353,
+   "body160": "000000000002d000400000000000000000000000",
+   "payload186": "000000000000b4001000000000000000000000000020020",
+   "ack_edge": 305
+  },
+  {
+   "target": 2,
+   "relative_pin_edge": 323,
+   "native_issue_edge": 323,
+   "slice_CTL_pin_edge": 371,
+   "XR_output_pin_edge": 376,
+   "body160": "0000000000000000000000000000000000000001",
+   "payload186": "00000000000000000000000000000000000000004020020",
+   "ack_edge": 328
+  }
+ ],
+ "capture": {
+  "scope": "PROSPECTIVE_CAPTURE_ADDRESS_CONTRACT_ONLY",
+  "admitted": false,
+  "slice": "u_s_2N",
+  "slice_index": 5,
+  "die_sha": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+  "cfg": {
+   "obase": 0,
+   "ops": 0,
+   "np": 0,
+   "fmt": 2,
+   "rbase": 16696,
+   "rcnt": 24,
+   "rsplit": 0,
+   "lo32": 0,
+   "hi32": 0
+  },
+  "cfg_d": "0000000000000000000000000003082710000000",
+  "flags": 1,
+  "frames": [
+   {
+    "frame": "u_f_2L10",
+    "master": "col_h9_l4_lp",
+    "lk": 2925,
+    "rows": [
+     312,
+     313,
+     314,
+     315
+    ]
+   },
+   {
+    "frame": "u_f_2L12",
+    "master": "col_h9_l4_lp",
+    "lk": 585,
+    "rows": [
+     316,
+     317,
+     318,
+     319
+    ]
+   },
+   {
+    "frame": "u_f_2L13",
+    "master": "col_h9_l4_lp",
+    "lk": 1170,
+    "rows": [
+     320,
+     321,
+     322,
+     323
+    ]
+   },
+   {
+    "frame": "u_f_2R10",
+    "master": "col_h9_l4_lp",
+    "lk": 2340,
+    "rows": [
+     324,
+     325,
+     326,
+     327
+    ]
+   },
+   {
+    "frame": "u_f_2R12",
+    "master": "col_h9_l4_lp",
+    "lk": 585,
+    "rows": [
+     328,
+     329,
+     330,
+     331
+    ]
+   },
+   {
+    "frame": "u_f_2R13",
+    "master": "col_h9_l4_lp",
+    "lk": 1170,
+    "rows": [
+     332,
+     333,
+     334,
+     335
+    ]
+   }
+  ],
+  "rows": [
+   {
+    "rank_row": 312,
+    "tensor": "wq_a",
+    "tensor_row": 312,
+    "golden_output_index": 312
+   },
+   {
+    "rank_row": 313,
+    "tensor": "wq_a",
+    "tensor_row": 313,
+    "golden_output_index": 313
+   },
+   {
+    "rank_row": 314,
+    "tensor": "wq_a",
+    "tensor_row": 314,
+    "golden_output_index": 314
+   },
+   {
+    "rank_row": 315,
+    "tensor": "wq_a",
+    "tensor_row": 315,
+    "golden_output_index": 315
+   },
+   {
+    "rank_row": 316,
+    "tensor": "wq_a",
+    "tensor_row": 316,
+    "golden_output_index": 316
+   },
+   {
+    "rank_row": 317,
+    "tensor": "wq_a",
+    "tensor_row": 317,
+    "golden_output_index": 317
+   },
+   {
+    "rank_row": 318,
+    "tensor": "wq_a",
+    "tensor_row": 318,
+    "golden_output_index": 318
+   },
+   {
+    "rank_row": 319,
+    "tensor": "wq_a",
+    "tensor_row": 319,
+    "golden_output_index": 319
+   },
+   {
+    "rank_row": 320,
+    "tensor": "wkv",
+    "tensor_row": 0,
+    "golden_output_index": 1280
+   },
+   {
+    "rank_row": 321,
+    "tensor": "wkv",
+    "tensor_row": 1,
+    "golden_output_index": 1281
+   },
+   {
+    "rank_row": 322,
+    "tensor": "wkv",
+    "tensor_row": 2,
+    "golden_output_index": 1282
+   },
+   {
+    "rank_row": 323,
+    "tensor": "wkv",
+    "tensor_row": 3,
+    "golden_output_index": 1283
+   },
+   {
+    "rank_row": 324,
+    "tensor": "wkv",
+    "tensor_row": 4,
+    "golden_output_index": 1284
+   },
+   {
+    "rank_row": 325,
+    "tensor": "wkv",
+    "tensor_row": 5,
+    "golden_output_index": 1285
+   },
+   {
+    "rank_row": 326,
+    "tensor": "wkv",
+    "tensor_row": 6,
+    "golden_output_index": 1286
+   },
+   {
+    "rank_row": 327,
+    "tensor": "wkv",
+    "tensor_row": 7,
+    "golden_output_index": 1287
+   },
+   {
+    "rank_row": 328,
+    "tensor": "wkv",
+    "tensor_row": 8,
+    "golden_output_index": 1288
+   },
+   {
+    "rank_row": 329,
+    "tensor": "wkv",
+    "tensor_row": 9,
+    "golden_output_index": 1289
+   },
+   {
+    "rank_row": 330,
+    "tensor": "wkv",
+    "tensor_row": 10,
+    "golden_output_index": 1290
+   },
+   {
+    "rank_row": 331,
+    "tensor": "wkv",
+    "tensor_row": 11,
+    "golden_output_index": 1291
+   },
+   {
+    "rank_row": 332,
+    "tensor": "wkv",
+    "tensor_row": 12,
+    "golden_output_index": 1292
+   },
+   {
+    "rank_row": 333,
+    "tensor": "wkv",
+    "tensor_row": 13,
+    "golden_output_index": 1293
+   },
+   {
+    "rank_row": 334,
+    "tensor": "wkv",
+    "tensor_row": 14,
+    "golden_output_index": 1294
+   },
+   {
+    "rank_row": 335,
+    "tensor": "wkv",
+    "tensor_row": 15,
+    "golden_output_index": 1295
+   }
+  ],
+  "producer_added_phases": 0,
+  "producer_added_edges": 0,
+  "source_to_cap_ages": null,
+  "requires": [
+   "actual frame-to-CAP arrival calendar and FIN lifetime",
+   "registered cfg path for current source CAP candidate",
+   "actual capture-to-consumer gather addresses and ages"
+  ]
+ },
+ "calendar": {
+  "rows": 90,
+  "stream_words": 80,
+  "fixed_retire_row": 233,
+  "source_end_iter": 620,
+  "common_shift_model": 321,
+  "compiler_sha256": "5201899a649f081b53d46e82ba9454b1e0b21d89c0ada371df1b5d7d1bba8c40"
+ },
+ "retire_not_before": 808,
+ "source_frame_minimum": 808,
+ "source_last_return_pin_minimum": 807,
+ "inherited_op_end": {
+  "edge": 535,
+  "qualification": "INHERITED_MODEL_ONLY"
+ },
+ "open": [
+  "actual selected VQ/rstopt_xo/ring gather producer programme and ownership",
+  "all-frame aggregate FIN/cap5r fixed completion and clock phases",
+  "all-frame MAT/config image source assembly and instance binding",
+  "whole A/B static schedule and native job/host adoption"
+ ],
+ "gather_source_path": "ot_s81sl_slice -> ot_s81sl_xgt -> ot_s81sl_rstopt gather -> ot_s81sl_xs",
+ "images": {
+  "pq_phase0.viamap.hex": "7f5e41982750a36a5858a180d1aa441ff9fefaa7b34b5e4245b61aee34c3bb15",
+  "pq_calendar_action.viamap.hex": "e76ed1e034ed14c4ed33b3b709813ecde074b041a5e3198bdbb73475814e965f",
+  "pq_calendar_time.viamap.hex": "2e03c5161ba48534baed199b2c1521eb162f7d4ad919099e3dbc0605e30a2ee1",
+  "pq_stream0.viamap.hex": "16e3d38183c6940d7369236b406222030819b02fe1e0458792e649dea8bc6f7a",
+  "pq_stream1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_stream2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_stream3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+ }
+}

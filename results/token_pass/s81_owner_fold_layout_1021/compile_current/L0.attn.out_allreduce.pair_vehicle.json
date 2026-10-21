@@ -1,0 +1,424 @@
+{
+  "schema": "opentallas.s81.owner_fold.pair_vehicle.v1",
+  "admitted": false,
+  "layer": "L0",
+  "row_lease": {
+    "slice_sid": 5,
+    "leaf": 0,
+    "rows": [
+      896,
+      917
+    ],
+    "qualified": false,
+    "requires": "check actual producer CAP and all L0 writer live ranges before scheduling"
+  },
+  "staged_pairs": [
+    {
+      "rank": 0,
+      "rows": [
+        896,
+        897
+      ],
+      "producer": "actual rank-local wo_b partial; unbound"
+    },
+    {
+      "rank": 1,
+      "rows": [
+        898,
+        899
+      ],
+      "producer": "actual rank-local wo_b partial; unbound"
+    },
+    {
+      "rank": 2,
+      "rows": [
+        900,
+        901
+      ],
+      "producer": "actual rank-local wo_b partial; unbound"
+    },
+    {
+      "rank": 3,
+      "rows": [
+        902,
+        903
+      ],
+      "producer": "actual rank-local wo_b partial; unbound"
+    }
+  ],
+  "reserved_rows": [
+    896,
+    897,
+    898,
+    899,
+    900,
+    901,
+    902,
+    903,
+    904,
+    905,
+    906,
+    907,
+    908,
+    909,
+    910,
+    911,
+    912,
+    913,
+    914,
+    915,
+    916,
+    917
+  ],
+  "operand_pairs": [
+    904,
+    908
+  ],
+  "discarded_spill_rows": [
+    906,
+    910
+  ],
+  "intermediate_pair": 912,
+  "output_rows": [
+    916,
+    917
+  ],
+  "arithmetic": "FP32 ((p0+p1)+(p2+p3)), independently for both128b halves",
+  "commands": [
+    {
+      "id": "h0.copy0",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 896,
+      "destination_rows": [
+        904,
+        905
+      ],
+      "kept_row": 904,
+      "depends": [
+        "rank0.stage_pair_sram_commit",
+        "rank1.stage_pair_sram_commit",
+        "rank2.stage_pair_sram_commit",
+        "rank3.stage_pair_sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471000080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e018200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h0.copy1",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 898,
+      "destination_rows": [
+        905,
+        906
+      ],
+      "kept_row": 905,
+      "depends": [
+        "h0.copy0.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471200080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e098200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h0.copy2",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 900,
+      "destination_rows": [
+        908,
+        909
+      ],
+      "kept_row": 908,
+      "depends": [
+        "h0.copy1.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471800080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e118200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h0.copy3",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 902,
+      "destination_rows": [
+        909,
+        910
+      ],
+      "kept_row": 909,
+      "depends": [
+        "h0.copy2.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471a00080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e198200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h0.rb0",
+      "kind": "VS_RB",
+      "source_pair": 904,
+      "output_row": 912,
+      "depends": [
+        "h0.copy3.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 0,
+          "word": "000000000000000000000000000000e400400e22c200020"
+        }
+      ],
+      "requires": [
+        "previous VS command retired and source SRAM writes committed"
+      ]
+    },
+    {
+      "id": "h0.rb1",
+      "kind": "VS_RB",
+      "source_pair": 908,
+      "output_row": 913,
+      "depends": [
+        "h0.rb0.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 0,
+          "word": "000000000000000000000000000000e440400e32c200020"
+        }
+      ],
+      "requires": [
+        "previous VS command retired and source SRAM writes committed"
+      ]
+    },
+    {
+      "id": "h0.rb2",
+      "kind": "VS_RB",
+      "source_pair": 912,
+      "output_row": 916,
+      "depends": [
+        "h0.rb1.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 0,
+          "word": "000000000000000000000000000000e500400e42c200020"
+        }
+      ],
+      "requires": [
+        "previous VS command retired and source SRAM writes committed"
+      ]
+    },
+    {
+      "id": "h1.copy0",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 897,
+      "destination_rows": [
+        904,
+        905
+      ],
+      "kept_row": 904,
+      "depends": [
+        "h0.rb2.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471000080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e058200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h1.copy1",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 899,
+      "destination_rows": [
+        905,
+        906
+      ],
+      "kept_row": 905,
+      "depends": [
+        "h1.copy0.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471200080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e0d8200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h1.copy2",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 901,
+      "destination_rows": [
+        908,
+        909
+      ],
+      "kept_row": 908,
+      "depends": [
+        "h1.copy1.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471800080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e158200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h1.copy3",
+      "kind": "LOCAL_RD_PAIR",
+      "source_row": 903,
+      "destination_rows": [
+        909,
+        910
+      ],
+      "kept_row": 909,
+      "depends": [
+        "h1.copy2.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 4,
+          "word": "00000000000000000000000000000471a00080100040020"
+        },
+        {
+          "target": 0,
+          "word": "0000000000000000000000000000000000400e1d8200020"
+        }
+      ],
+      "requires": [
+        "config captured before lo; config and lo must not coincide",
+        "RDOUT input read and whole-pair destination SRAM commit completed"
+      ]
+    },
+    {
+      "id": "h1.rb0",
+      "kind": "VS_RB",
+      "source_pair": 904,
+      "output_row": 912,
+      "depends": [
+        "h1.copy3.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 0,
+          "word": "000000000000000000000000000000e400400e22c200020"
+        }
+      ],
+      "requires": [
+        "previous VS command retired and source SRAM writes committed"
+      ]
+    },
+    {
+      "id": "h1.rb1",
+      "kind": "VS_RB",
+      "source_pair": 908,
+      "output_row": 913,
+      "depends": [
+        "h1.rb0.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 0,
+          "word": "000000000000000000000000000000e440400e32c200020"
+        }
+      ],
+      "requires": [
+        "previous VS command retired and source SRAM writes committed"
+      ]
+    },
+    {
+      "id": "h1.rb2",
+      "kind": "VS_RB",
+      "source_pair": 912,
+      "output_row": 917,
+      "depends": [
+        "h1.rb1.sram_commit"
+      ],
+      "templates": [
+        {
+          "target": 0,
+          "word": "000000000000000000000000000000e540400e42c200020"
+        }
+      ],
+      "requires": [
+        "previous VS command retired and source SRAM writes committed"
+      ]
+    }
+  ],
+  "lifetime_qualified": false,
+  "requires": [
+    "real wo_b capture to stage pairs, including rank identity and output indices",
+    "current full-width RD routes to this owner; no odd-row typed V",
+    "source-pinned fixed CTL/lo/commit/VS calendar and nonalias lifetimes",
+    "repeat per actual owned eight-element tile; consumer/result allgather binding"
+  ],
+  "qualification": "ENCODED_UNSCHEDULED: no payload, issue dates, ACK extension or completion credit"
+}

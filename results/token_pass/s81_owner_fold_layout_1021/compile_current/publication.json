@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.s81.l0b.fold_compile.v1",
+  "status": "PARTIAL",
+  "unit": "oth-ubuntu-2869080-1792616023",
+  "host": "ot-gold1",
+  "exit_code": 0,
+  "source_root": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src",
+  "out": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/out",
+  "source_candidate": "068e60d49 +fold7f127176b +canonical6893686b3 +resolver05ec01597",
+  "source_sha256": {
+    "tools/s81_dv/dv_layer_compile.py": "784eaf8fb6b37bc84aa0fa8e6005c47032535d1bb65ff8f0894909a6ac2eac1b",
+    "tools/s81_dv/layer_prog/lower_xs.py": "89091fb1b1c791b94759e09b599c08736ca24099e0165fd10188917368024015",
+    "tools/s81_dv/layer_prog/lower_vpx.py": "88ecb8004323aa33abaf0349964221da0cecddc055ae5d32c2611f714e5c5d5b",
+    "tools/s81_dv/layer_prog/owner_fold.py": "2429e4092c9cdb3be56a44bc2fbad2960224f73e186a3fabd2c733d491ee03d8",
+    "tools/s81_dv/layer_prog/aproj_native.py": "ae5d74ce99ce8d75ea2ff2f5689d84fc345951ec5851ee2dc2306307061a114a",
+    "tools/s81_dv/layer_prog/slice_source.py": "d4327e03fb3f3ce4c2423c12087969d150f9d8364453cfb0c028fb062f846524",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "4187b6a2d0e317f2b7d059c173fb43f8f09ade4638566d89946ba1f913a7ec7a"
+  },
+  "source_hash_comparison": "these seven source hashes matched the immutable fleet snapshot exactly",
+  "argv": [
+    "python3",
+    "tools/s81_dv/dv_layer_compile.py",
+    "--die-src",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/tree",
+    "--fixtures",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/fixtures/L0",
+    "--layer",
+    "L0",
+    "--slice",
+    "s_2N",
+    "--dense-stage",
+    "B",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/out"
+  ],
+  "environment": {
+    "OT_XS_FRAME_SCHEDULE_DIR": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/frame_schedule_all_current",
+    "OT_XS_DENSE_SPLIT2": "B",
+    "OT_XS_APROJ_TOPO": "1",
+    "OT_XS_APROJ_ALIGN4": "1",
+    "OT_XS_APROJ_RANK_TAGS": "1",
+    "OT_XS_APROJ_CAP_PLAN": "1"
+  },
+  "die_v_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+  "status_counts": {
+    "PARTIAL": 50,
+    "GAP": 5
+  },
+  "ops": 55,
+  "rows": 170,
+  "templates": 169,
+  "jobs": [
+    {
+      "job": 0,
+      "nops": 128,
+      "end_age": 6838,
+      "retire_not_before": 784,
+      "sealed_programme_held": true
+    },
+    {
+      "job": 1,
+      "nops": 46,
+      "end_age": 3913,
+      "retire_not_before": 0,
+      "sealed_programme_held": false
+    }
+  ],
+  "native_a_proj": {
+    "rows": 6,
+    "lifetime_qualified": false,
+    "selected_source": {
+      "schema": "opentallas.s81.selected_slice_source.v1",
+      "slice": "u_s_2N",
+      "die_master": "ot_s81sl_slice",
+      "wrapper_chain": [
+        "ot_s81sl_slice"
+      ],
+      "xg": "ot_s81sl_xgt",
+      "ring": "ot_s81sl_rstopt",
+      "streamer": "ot_s81sl_xs",
+      "capture": "ot_s81sl_capc2",
+      "streamer_added_capture_edges": 0,
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "4187b6a2d0e317f2b7d059c173fb43f8f09ade4638566d89946ba1f913a7ec7a",
+        "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv": "39a6c4f2fdfd2f0a4a023352c970891124a3e9c5836eae05e5018e255ef82b08",
+        "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+        "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8",
+        "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv": "994ab4d3867c22206655f73e1a13d758f8d39bbb8fe7243efb9023b980a6a116"
+      },
+      "source_root": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src",
+      "physical_binding_qualified": false,
+      "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required"
+    }
+  },
+  "fold": {
+    "status": "PARTIAL",
+    "scheduled_rows": 0,
+    "admitted": false,
+    "recipe": "L0.attn.out_allreduce.pair_vehicle.json",
+    "qualified_component": "../component/publication.json",
+    "open": "real wo_b captures/output indices, four-rank routes, fixed SRAM commit epochs and leased-row/consumer lifetime calendar"
+  },
+  "remaining_gaps": [
+    "attn.kv_norm.sumsq",
+    "attn.kv_norm.rsqrt",
+    "attn.kv_norm.scale",
+    "attn.kv_rope_qdq",
+    "attn.normalize"
+  ],
+  "full_layer": false,
+  "full_token": false,
+  "shipping_g8_equivalent": false
+}
