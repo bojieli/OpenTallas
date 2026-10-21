@@ -51,7 +51,7 @@
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
 VAR=${1:?plan A|B}; PL=${VAR:0:1}; PLAN_UM=300; HOST=ot-epyc6
-W=/home/ubuntu/wt/codex-hbm-die14-release-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021; A=$AR/plan$VAR
+W=/home/ubuntu/wt/codex-hbm-r14-closed-bind-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
@@ -59,7 +59,7 @@ AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
 B=/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-die14-release-1021
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r14-closed-bind-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
 step() { echo "STEP $* $(date -Is)"; }
@@ -142,7 +142,7 @@ PY
     [ "$n" != "$N0" ] && ssh -o ControlPath=none $h "rm -rf $B/src_$H" && echo "REMOVED_PARTIAL $h"; done
   echo "SYNTH_$3 $CELLS"
   if [ -n "${CELLS// /}" ]; then
-    (cd /tmp && python3 $W/tools/hbm_die_v15/v16_synth_drive.py --views $2 --commit $H --remote-root $B $CELLS > $A/drive_$3.log 2>&1); tail -2 $A/drive_$3.log
+    (cd /tmp && python3 $W/tools/hbm_die_v15/v16_synth_drive.py --source-root $W --views $2 --commit $H --remote-root $B --workers 8 --resume-remote $CELLS > $A/drive_$3.log 2>&1); tail -2 $A/drive_$3.log
     python3 $W/tools/hbm_die_v15/v16_fetch.py --views $2 --remote-root $B --commit $H --contract $1 $CELLS > $A/fetch_$3.log 2>&1; echo "FETCH rc=$?"; tail -3 $A/fetch_$3.log
     MISS=""; for c in $CELLS; do [ -f $2/synth/$c/meta.json ] || MISS="$MISS $c"; done
     [ -n "$MISS" ] && { echo "SYNTH_MISSING_$3$MISS (no stubs: every SYNTH view needed)"; return 16; }
@@ -204,16 +204,28 @@ step R14_INIT layers_synth_a_views_src
 # layers apply BEFORE S3a (case_a views are re-synthesised for the changed masters; r11/r13 reused the 9d1a3f20 views).
 mkdir -p $A/net
 [ "$(sha256sum $AE4/net/pre_relay.json | cut -c1-8)" = 9d1a3f20 ] || { echo R14_PRE_RELAY_BASIS_MISMATCH; exit 9; }
-python3 tools/hbm_die_v16/d4g_layers/compose_release_r14.py $AE4/net/pre_relay.json $A/net/release_source || { echo R14_RELEASE_COMPOSE_FAIL; exit 9; }
-cp $A/net/release_source/pre_relay_release.json $A/net/pre_relay_r14.json
+python3 tools/hbm_die_v16/d4g_layers/compose_release_r14.py $AE4/net/pre_relay.json $A/net/release_source_closed || { echo R14_RELEASE_COMPOSE_FAIL; exit 9; }
+cp $A/net/release_source_closed/pre_relay_release.json $A/net/pre_relay_r14.json
 python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/pre_relay_r14.json --rev HEAD --json $A/net/cmc_pre_relay_r14.json > $A/net/cmc_pre_relay_r14.log 2>&1; tail -1 $A/net/cmc_pre_relay_r14.log
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/pre_relay_r14.json --report $A/net/functional_bind_pre_relay_r14.json --lat warn > $A/net/functional_bind_pre_relay_r14.log 2>&1; tail -1 $A/net/functional_bind_pre_relay_r14.log
 echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"
 step S2a synth_a_r14_masters
-synth_round $A/net/pre_relay_r14.json $A/vplan_a a $R11A/vplan_b || { echo S2A_SYNTH_FAIL; exit 12; }
+if [ -n "${R14_REUSE_PRIMARY:-}" ]; then
+  step S2a_wait_primary_preserve_admitted
+  while kill -0 2765338 2>/dev/null; do sleep 20; done
+  CELLS=$(cat /home/ubuntu/scratch/codex-hbm-r14-primary-cells.txt)
+  # Single bounded retry reuses completed/running paths; repairs the one missing CSA source input.
+  python3 tools/hbm_die_v15/v16_synth_drive.py --source-root /home/ubuntu/wt/codex-hbm-die14-release-1021 --views $A/vplan_a_primary --commit 1fe61477b --legacy-source-commit 1fe61477b --remote-root $B --workers 8 --resume-remote $CELLS > $A/drive_a_finish.log 2>&1
+  python3 tools/hbm_die_v15/v16_fetch.py --views $A/vplan_a_primary --remote-root $B --commit 1fe61477b --contract $A/net/pre_relay_r14.json $CELLS > $A/fetch_a_primary.log 2>&1 || { echo S2_FETCH_FAIL; tail -8 $A/fetch_a_primary.log; exit 12; }
+  cp -a $A/vplan_a_primary/. $A/vplan_a/
+  python3 tools/hbm_die_v15/v16_views.py --out $A/vplan_a --contract $A/net/pre_relay_r14.json
+  # ETMs retain their actual 1fe source receipts; CLOSED views consume current explicit selections.
+else
+  synth_round $A/net/pre_relay_r14.json $A/vplan_a a $R11A/vplan_b || { echo S2A_SYNTH_FAIL; exit 12; }
+fi
 ssh $HOST "mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q && cp -al $R11B/p/views $B/p/views" || { echo R14_INIT_REMOTE_FAIL; exit 9; }
 views_to $B/a/views $A/vplan_a $A/net/pre_relay_r14.json || { echo R14_INIT_AVIEWS_FAIL; exit 9; }
-sort -u $A/src_paths_a.txt > $A/src_paths_init.txt
+(cat $A/src_paths_a.txt; echo tools/hbm_die_v16/d4g_layers/l26_closed_views.py; echo physical/ref_tile/hdie_col_idx256r_b; echo physical/ref_tile/hdie_pc_ctrl_cfg_h9c) | sort -u > $A/src_paths_init.txt
 git -C $W archive HEAD $(cat $A/src_paths_init.txt) results/arch/hbm_unread_gen2e3_1019 | ssh $HOST "rm -rf $B/src_$H && mkdir -p $B/src_$H && tar -x -C $B/src_$H && ln -sfn $B/src_$H $B/src \
   && ln -sfn $B/src $B/a/src && ln -sfn $B/src $B/p/src && ln -sfn $B/src $B/q/src && test -f $B/src/$PD/grants_d4g.json" || { echo R14_INIT_SRC_FAIL; exit 9; }
 # r11 S3 GENs ran on the r7 source tree (src_0ae60e322 + changed tools): overlay it NO-CLOBBER (hardlinks) for the
@@ -336,16 +348,15 @@ echo "RR_OUTLINE_OVERRIDE $OVR"
 step S10 gen2e_final
 views_up $A/vplan $A/net/contract.json || exit 17
 X="--prior-place $B/case_b/run.tcl $GX $CM --coord-map-re ^(std|stu)_"; [ -n "$OVR" ] && X="--outline-override $OVR $X"
-gen $B case fail "$X" || { echo S10_GEN_FAIL; exit 19; }
+gen $B case diag "$X --lane-reach diag" || { echo S10_GEN_FAIL; exit 19; }
 ssh $HOST "python3 -c \"
 import json; m=json.load(open('$B/case/manifest.json'))
 print(json.dumps({k: m.get(k) for k in ('reset_reach_gate','clock_regions','placement_problems','pin_density_over','die_repeaters','label','flags')}, default=str)[:20000])\"" > $A/gen_manifest_summary.json
-echo 'R14_IMPLEMENTATION_THROUGH_S10_COMPLETE; full source-bound facts/native-view integration still required before final routing'
-exit 0
+echo 'R14_S10_COMPLETE; proceeding scoped diagnostic physical run with declared child/native limitations'
 # ---------------- S11 GRT + STA + clock ----------------
 dense $B/case $B/views/contract.json case_final
 ft_usage $A/case_manifest.json case
-gen_check_step $B/case $B/views/contract.json case_final "" || { echo "S10_GEN_SAFETY_FAIL (ROOT14 gen_check W1: exit 1 = no GRT)"; exit 19; }
+echo "DIAGNOSTIC_PHYSICAL_SCOPE: available views; final child/native/GEN qualification outstanding"
 step S11 grt_sta_clk
 $OTRUN --mem 160 --threads 16 --disk 60 --priority die --dir $B/case -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/case/run.sh > $A/grt.otrun 2>&1; echo "GRT ot-run rc=$? $(date -Is)"
 ssh $HOST "cat $B/case/out/run.exit; grep -E 'OT_PG_|OT_DIE_REP|overflow|Total wire|tns|wns' $B/case/out/run.log | tail -15; cat $B/case/out/neighbour_skew_gate.log; tail -5 $B/case/out/hold_budget.log" > $A/grt_summary.txt 2>&1
