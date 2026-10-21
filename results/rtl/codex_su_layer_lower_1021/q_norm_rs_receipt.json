@@ -1,0 +1,146 @@
+{
+  "status": "emitted",
+  "reasons": [],
+  "fills": [
+    [
+      6240,
+      0
+    ]
+  ],
+  "drains": [
+    [
+      6248,
+      140
+    ]
+  ],
+  "inputs_placeholder": false,
+  "expect": [
+    {
+      "sector": 8,
+      "mask": 1,
+      "edge": 140,
+      "words": [
+        49984,
+        49985,
+        49986,
+        49987,
+        49988,
+        49989,
+        49990,
+        49991
+      ],
+      "value": [
+        1098771309,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "setup_edge": 22,
+  "issue_edges": [
+    30
+  ],
+  "last_commit": 140,
+  "fill_sectors": 1,
+  "drain_sectors": 1,
+  "sut": {
+    "a_src": 0,
+    "a_ind": 0,
+    "b_src": 0,
+    "b_half": 0,
+    "c_src": 0,
+    "c_pair": 0,
+    "d_src": 0,
+    "a_rnd": 0,
+    "a_relu": 0,
+    "a_min": 0,
+    "c_clip": 0,
+    "m1": 5,
+    "m2": 0,
+    "qm": 0,
+    "ad": 4,
+    "sfu": 2,
+    "e1": 0,
+    "e2": 0,
+    "rnd": 0,
+    "dst": 1,
+    "red": 0,
+    "red_sq": 0,
+    "red_whole": 0,
+    "red_rnd": 0,
+    "su_vec": 0,
+    "red_tree": 0,
+    "imm1": 1151336448,
+    "imm2": 507307272,
+    "imm3": 0
+  },
+  "native_timing": {
+    "read_return": 18,
+    "write_return": 15,
+    "fill_commit": 21,
+    "drain_done": 20,
+    "multirate": true,
+    "topology_qualified": false,
+    "source": "ot_hbm_su_static_pgslice + ot_hbm_su_multirate_bridge"
+  },
+  "lowering": {
+    "supported": true,
+    "owner": "SU-LAYER-1021",
+    "execution_qualified": false,
+    "mode": "actual_quarter0_FULL_lane0_divider_add_rsqrt"
+  },
+  "read_footprint": [
+    {
+      "logical_word": 49920,
+      "logical_sector": 6240,
+      "physical_sector": 0,
+      "edge": 0,
+      "local_row": 0
+    }
+  ],
+  "write_footprint": [
+    {
+      "logical_word": 49984,
+      "logical_sector": 6248,
+      "physical_sector": 8,
+      "edge": 140,
+      "mask": 1,
+      "local_row": 1
+    }
+  ],
+  "expected_post_state": {
+    "49984": "417deb6d"
+  },
+  "expected_post_state_only": true,
+  "expected_reference": {
+    "role": "comparison_only",
+    "source": "NumPy IEEE DIV + hdc_golden add/rsqrt"
+  },
+  "control_reservation": {
+    "first": 0,
+    "last": 140,
+    "policy": "exclusive_record"
+  },
+  "source_contract": {
+    "lane": "su_SW0.g_lane[0] FULL",
+    "side_MLAT": 4,
+    "side_ALAT": 3,
+    "side_repair_required": true,
+    "scalar_external_drive": false
+  },
+  "timing_obligations": {
+    "issue_to_output": 89,
+    "divider": 19,
+    "rsqrt": 46,
+    "serial_edges": 141,
+    "stream_edges": 188,
+    "old_price_preserved": false,
+    "connected_selected_case_RTL_required": true
+  },
+  "qualification": "compiler fixture reference only; actual repaired selected scoped SIDE integration/RTL pending"
+}

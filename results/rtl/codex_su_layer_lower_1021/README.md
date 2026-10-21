@@ -1,3 +1,5 @@
 Bounded selected q_norm.ss source lowering
 
 Real pre-operation A inputs only; complete 1280-word record serialized on quarter0. Expected 40a2a1ed is comparison-only from independent FP32 square/csum8 and downstream k10.A. No RF or golden data injection. Selected SB2470 is low2422 plus four12-bit tree fields. Selected RF route is32 stages, not the older generic36-stage route. Actual scheduled cost 281 serial / 375 stream edges; old182.18 price is invalid. Source/fixture checks only; actual connected RTL qualification pending.
+
+Scalar q_norm.rs uses only actual quarter0 FULL lane0, M128 divider19, add3 and side rsqrt46 at MLAT4/ALAT3; one scalar real A49920 to O49984. Independent expected417deb6d matches authentic fixture. The actual selected scoped master was fixed3/3 side37 against lane4/3 side46; this branch parameterizes source side and passes lane parameters from pgslice, defaults3/3 unchanged. Integrator must regenerate the actual selected scoped source and qualify existing selected i8 case. Helper refuses unspecified side_profile. Actual connected RTL validation is pending; source/fixture checks do not prove this repair.

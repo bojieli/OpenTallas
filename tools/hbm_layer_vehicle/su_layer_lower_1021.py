@@ -221,3 +221,97 @@ def lower(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
             RF_LOCAL=1, serial_edges=commit + 1,
             stream_edges=math.ceil(4 * (commit + 1) / 3),
             old_price_preserved=False, connected_selected_case_RTL_required=True))
+
+
+def lower_norm_rs(raw, q=0, data=None, place=None, tag="", timing=None,
+                  side_profile=None, **unused):
+    """One scalar FULL-lane operation; require the repaired selected side ABI.
+
+    side_profile is source provenance supplied by the integrator, never a DUT
+    input. The old selected fixed3/3 SIDE is explicitly unsupported at lane4/3.
+    """
+    from hbm_layer_vehicle import layer_images as LI
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    from su_program_inventory import decode
+    from su_arith_compile import pack, physical_word
+    from hdc_golden import add, rsqrt, z
+    _, unit, sut, desc = decode(raw)
+    refusal = lambda why: dict(status="unsupported_lowering", reasons=[why], sut=sut,
+                              lowering=dict(supported=False, owner="SU-LAYER-1021"))
+    profile = dict.fromkeys(sut, 0)
+    profile.update(m1=5, ad=4, sfu=2, dst=1, imm1=1151336448, imm2=507307272)
+    if unit != 2 or sut != profile or set(desc) != {"A", "O"}:
+        return refusal("bounded_scalar_divimm_addimm_rsqrt_profile_only")
+    if q != 0:
+        return refusal("rsqrt_requires_selected_quarter0_FULL_lane0")
+    if side_profile != (4, 3):
+        return refusal("actual_selected_SIDE_MLAT4_ALAT3_source_required_old_fixed3_3_mismatches9edges")
+    if timing != NativeTiming(18, 15):
+        return refusal("selected_native_READ_RETURN18_WRITE_RETURN15_required")
+    for md in desc.values():
+        if (md.space != "VM" or md.fmt != "FP32" or md.n != 1 or md.m != 1
+                or md.base % 8 or any(getattr(md, k) for k in
+                ("stride", "istride", "lstride", "dyn_sel", "dyn_mul", "n_sel",
+                 "l1stride", "ibcast", "indexed"))):
+            return refusal("bounded_aligned_single_scalar_VM_descriptor_required")
+    a, o = desc["A"], desc["O"]
+    if data is None or a.base not in data:
+        return refusal("actual_pre_operation_scalar_A_word_required")
+    x = np.float32(data[a.base])
+    if not np.isfinite(x):
+        return refusal("finite_scalar_operand_required")
+    imm1 = np.uint32(sut["imm1"]).view(np.float32)
+    imm2 = np.uint32(sut["imm2"]).view(np.float32)
+    with np.errstate(all="ignore"):
+        argument = add(z(np.float32(x / imm1)), imm2)
+        expected = np.float32(rsqrt(argument))
+    if not np.isfinite(expected):
+        return refusal("finite_rsqrt_reference_required")
+    place = place if place is not None else LI.Placement(q)
+    src_sector = place.get(a.base // 8, 0, tag + ":A")
+    dst_sector = place.get(o.base // 8, 0, tag + ":O")
+    if src_sector % 8 or dst_sector % 8:
+        return refusal("scalar_FULL_lane0_requires_VM_port0_placement")
+    ql = LI.QLine()
+    ql.vmr(0, 0, src_sector, 0, 0)
+    setup = timing.fill_commit + 1
+    issue = setup + LI.SETUP_TO_EMIT
+    vb = sum(physical_word(q, 0) << (24*k) for k in range(4))
+    vb |= physical_word(q, 1) << 96
+    ctl = dict(no=1, ni=1, ls=0, lvw=0, vb=vb, srcs=0, dst=1, co_dst=1,
+        cp_m1=5, cm_m1=5, cp_imm1=sut["imm1"], cm_imm1=sut["imm1"],
+        ca_ad=4, ca_imm2=sut["imm2"], ci_sfu=2, cs_sfu=2)
+    # Existing light issue-to-pin28, divider19 replaces multiply4 (+15),
+    # scalar rsqrt side depth1+9*4+3*3=46. One extra edge guards OLD SRAM.
+    latency = LI.FIRST_OUT - LI.SETUP_TO_EMIT + (19 - 4) + (1 + 9*4 + 3*3)
+    drain = issue + latency + 1
+    commit = drain + timing.drain_done
+    for e in range(commit + 1):
+        ql.f["control"][e] = pack(dict(ctl, ld=int(e == setup), emit=int(e == issue)))
+    ql.vmw(drain, 0, 0, 0, 1, dst_sector, 1)
+    words = list(range(a.base, a.base + 8))
+    pre = {} if a.base // 8 in place.written else {src_sector: words}
+    input_data = {str(w): f"{int(np.float32(data.get(w, 0)).view(np.uint32)):08x}" for w in words}
+    place.written.add(o.base // 8)
+    want = int(expected.view(np.uint32))
+    return dict(status="emitted", reasons=[], ql=ql, lines=ql.lines(),
+        fills=[(a.base // 8, 0)], drains=[(o.base // 8, commit)], preload=pre,
+        data=input_data, inputs_placeholder=False,
+        expect=[dict(sector=dst_sector, mask=1, edge=commit,
+            words=list(range(o.base, o.base + 8)), value=[want] + [None]*7)],
+        setup_edge=setup, issue_edges=[issue], last_commit=commit,
+        fill_sectors=len(pre), drain_sectors=1, sut=sut, native_timing=timing.as_dict(),
+        lowering=dict(supported=True, owner="SU-LAYER-1021", execution_qualified=False,
+            mode="actual_quarter0_FULL_lane0_divider_add_rsqrt"),
+        read_footprint=[dict(logical_word=a.base, logical_sector=a.base // 8,
+            physical_sector=src_sector, edge=0, local_row=0)],
+        write_footprint=[dict(logical_word=o.base, logical_sector=o.base // 8,
+            physical_sector=dst_sector, edge=commit, mask=1, local_row=1)],
+        expected_post_state={str(o.base): f"{want:08x}"}, expected_post_state_only=True,
+        expected_reference=dict(role="comparison_only", source="NumPy IEEE DIV + hdc_golden add/rsqrt"),
+        control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
+        source_contract=dict(lane="su_SW0.g_lane[0] FULL", side_MLAT=4, side_ALAT=3,
+            side_repair_required=True, scalar_external_drive=False),
+        timing_obligations=dict(issue_to_output=latency, divider=19, rsqrt=46,
+            serial_edges=commit+1, stream_edges=math.ceil(4*(commit+1)/3),
+            old_price_preserved=False, connected_selected_case_RTL_required=True))
