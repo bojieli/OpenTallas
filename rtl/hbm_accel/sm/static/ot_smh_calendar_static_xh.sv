@@ -102,7 +102,13 @@ module ot_smh_calendar_static_xh #(
     wire pc_step;
     wire at_end=({1'b0,pc}+1'b1==limit);
     wire wrap_next=running&&at_end&&loops_left!=1;
-    wire [31:0]issued_next=issued+1'b1;
+    wire [31:0]issued_next;
+    for(genvar ic=0;ic<4;ic=ic+1)begin:g_issued_carry
+        wire carry;
+        if(ic==0)assign carry=1'b1;
+        else ot_hbm_svc_local_and2 u_carry(.a(&issued[ic*8-1:0]),.b(1'b1),.y(carry));
+        assign issued_next[ic*8+:8]=issued[ic*8+:8]+carry;
+    end
     wire [15:0]loops_next=loops_left-1'b1,iter_next=iter_r+1'b1;
     for(genvar stg=0;stg<10+NXS;stg=stg+1)begin:g_start_tree
         ot_hbm_svc_local_and2 u_c(.a(start_ok),.b(1'b1),.y(start_capture[stg]));
