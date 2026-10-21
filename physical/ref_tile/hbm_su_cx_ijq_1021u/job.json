@@ -14,7 +14,8 @@
    "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
    "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_cxijq_safe.sv",
-   "tools/hbm_static/cxijq_safe_one.sh"
+   "tools/hbm_static/cxijq_safe_one.sh",
+   "tools/hbm_static/su_cxport_split_vl_run_noobr.sh"
   ]
  },
  "stages": {
@@ -31,7 +32,7 @@
    },
    {
     "name": "cxport_split_lockstep",
-    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_lockstep.sh && bash tools/hbm_static/.vl_cxport_split_lockstep.sh {RUN}/bench/pos 2 0 0 0",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run_noobr.sh {RUN}/bench/pos 2 0 0 0",
     "expect": "pass",
     "pass_regex": "CXPORT_SPLIT PASS",
     "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q2_pos.log",
@@ -44,7 +45,7 @@
    },
    {
     "name": "cxport_split_lockstep_q0",
-    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_lockstep_q0.sh && bash tools/hbm_static/.vl_cxport_split_lockstep_q0.sh {RUN}/bench/q0 0 1 0 0",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run_noobr.sh {RUN}/bench/q0 0 1 0 0",
     "expect": "pass",
     "pass_regex": "CXPORT_SPLIT PASS",
     "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q0_pos.log",
@@ -57,7 +58,7 @@
    },
    {
     "name": "cxport_split_mut1",
-    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_mut1.sh && bash tools/hbm_static/.vl_cxport_split_mut1.sh {RUN}/bench/mut1 2 0 1 1",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run_noobr.sh {RUN}/bench/mut1 2 0 1 1",
     "expect": "fail",
     "fail_regex": "CXPORT_SPLIT FAIL",
     "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut1.log",
@@ -69,7 +70,7 @@
    },
    {
     "name": "cxport_split_mut4",
-    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_mut4.sh && bash tools/hbm_static/.vl_cxport_split_mut4.sh {RUN}/bench/mut4 2 0 4 1",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run_noobr.sh {RUN}/bench/mut4 2 0 4 1",
     "expect": "fail",
     "fail_regex": "CXPORT_SPLIT FAIL",
     "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut4.log",
