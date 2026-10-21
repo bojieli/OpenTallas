@@ -58,12 +58,22 @@ module dsdv_tx_copy #(parameter integer W=1,RESET=0,ID=0)(
  assign q=r;
 endmodule
 
-// Existing state partitioned at same-edge consumer boundaries.
+// Existing predicate producers and register consumers have separate ABC boundaries.
+(* keep_hierarchy="yes" *)
+module dsdv_tx_score_enable #(parameter integer ID=0)(
+ input wire accept,onehot,output wire en);
+ assign en=accept&&onehot;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_tx_open_enable #(parameter integer BANK=0,ID=0)(
+ input wire pop,inwin,target,output wire en);
+ assign en=pop&&!inwin&&((BANK==0)?!target:target);
+endmodule
 (* keep_hierarchy="yes" *)
 module dsdv_tx_score_field #(parameter integer ID=0)(
- input wire ck,accept,onehot,input wire[15:0]d,output wire[15:0]q);
+ input wire ck,en,input wire[15:0]d,output wire[15:0]q);
  (* keep *)reg[15:0]value;
- always @(posedge ck)if(accept&&onehot)value<=d;
+ always @(posedge ck)if(en)value<=d;
  assign q=value;
 endmodule
 (* keep_hierarchy="yes" *)
@@ -471,15 +481,20 @@ module dsdv_idx_tx_n32 #(
     generate for(genvar b=0;b<2;b=b+1)begin:g_window_score
         wire accept=(b==0)?(t_acc0||t_open0):(t_acc1||t_open1);
         for(genvar f=0;f<16;f=f+1)begin:g_field
-            dsdv_tx_score_field #(.ID(16*b+f))u_field(.ck(ck),.accept(accept),.onehot(r_oh[f]),.d(rh[15:0]),.q(wscb[b][16*f+:16]));
+            wire en;
+            dsdv_tx_score_enable #(.ID(16*b+f))u_enable(.accept(accept),.onehot(r_oh[f]),.en(en));
+            dsdv_tx_score_field #(.ID(16*b+f))u_field(.ck(ck),.en(en),.d(rh[15:0]),.q(wscb[b][16*f+:16]));
         end
-        wire open=(b==0)?t_open0:t_open1;
         wire acc=(b==0)?t_acc0:t_acc1;
         for(genvar f=0;f<4;f=f+1)begin:g_valid
+            wire open;
+            dsdv_tx_open_enable #(.BANK(b),.ID(4*b+f))u_enable(.pop(rf_pop),.inwin(r_in),.target(nb_t),.en(open));
             dsdv_tx_window_valid #(.ID(4*b+f))u(.ck(ck),.open(open),.acc(acc),.mask(r_oh[4*f+:4]),.q(wlvb[b][4*f+:4]));
         end
         wire[19:0]base={r_i[19:4],4'd0};
         for(genvar f=0;f<2;f=f+1)begin:g_addr
+            wire open;
+            dsdv_tx_open_enable #(.BANK(b),.ID(100+2*b+f))u_enable(.pop(rf_pop),.inwin(r_in),.target(nb_t),.en(open));
             dsdv_tx_window_addr #(.ID(2*b+f))u(.ck(ck),.open(open),.d(base[10*f+:10]),.q(w0b[b][10*f+:10]));
         end
     end endgenerate
