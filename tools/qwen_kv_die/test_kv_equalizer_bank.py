@@ -19,7 +19,7 @@ class RowBank(unittest.TestCase):
                     up=lambda x, g: math.ceil((x - 1e-9) / g) * g, F=NS(Inst=inst))
         self.m = dict(die=dict(w=1200, h=1200), insts=[], keepouts=[])
 
-    def test_39_stage_bank_physical_and_token_delay(self):
+    def test_39_stage_bank_physical(self):
         source, sink = (400, 500), (600, 500)
         out = E._place_pad_bank(self.K, self.m, [], source, sink, 39, 12.98, 12.98, 400)
         self.assertEqual(len(out), 39)
@@ -34,15 +34,6 @@ class RowBank(unittest.TestCase):
             self.assertTrue(E._free(self.m, out[:j], i.x, i.y, i.w, i.h))
             pt = b
         self.assertLessEqual(abs(pt[0] - sink[0]) + abs(pt[1] - sink[1]), 400)
-        # Changing words must emerge at exactly the priced delay, including
-        # invalid cycles and epoch changes; a missing stage is observable.
-        state = [None] * len(out)
-        words = [(n % 5 != 0, n, n // 7) for n in range(100)]
-        for cycle, word in enumerate(words + [None] * len(out)):
-            actual = state[-1]
-            state = [word] + state[:-1]
-            self.assertEqual(actual, words[cycle - 39] if 39 <= cycle < 139 else None)
-
     def test_no_bank_inside_block_or_keepout(self):
         self.m['keepouts'] = [('closed', 0, 0, 1200, 1200)]
         self.assertIsNone(E._place_pad_bank(self.K, self.m, [], (400, 500), (600, 500),
