@@ -18,10 +18,22 @@ inc=sorted({str(p.parent) for p in files})
 PY
 V=verilator
 [ ! -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] || V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
+HEAD_ARGS=()
+if [ "${HBE_REAL_HEAD:-0}" = 1 ];then
+ python3 - "$O/head.f" <<'PYHEAD'
+import json,sys,hashlib
+from pathlib import Path
+x=json.load(open("results/arch/s81_hostb_envelope_1021/head_producer_r1/MODEL.json"))
+files=[z for z in x["files"] if not z["path"].endswith("ot_rst_relay_tree3.sv")]
+for z in files:assert hashlib.sha256(Path(z["path"]).read_bytes()).hexdigest()==z["sha256"]
+Path(sys.argv[1]).write_text("".join(z["path"]+"\n" for z in files))
+PYHEAD
+ HEAD_ARGS=(+define+HBE_REAL_HEAD -f "$O/head.f")
+fi
 H=rtl/dsrom_sys/s81_dv/hostb
 # Actual selected host subtree; no additional source/macros guessed.
 "$V" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_hostb \
- +define+HBE_REAL_CONSUMER +define+DSFD_PQ_STATIC_X2 +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF \
+ "${HEAD_ARGS[@]}" +define+HBE_REAL_CONSUMER +define+DSFD_PQ_STATIC_X2 +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF \
  +incdir+tools/s81_dv/hostb_1021 -Mdir "$O/obj" -f "$O/selected.f" \
  "$H/dsdv_hostb_hold.sv" "$H/dsdv_hostb_crc512.sv" "$H/dsdv_hostb_rx.sv" "$H/dsdv_hostb_tx.sv" "$H/dsdv_hostb_stage.sv" \
  "$H/dsdv_hostb_return.sv" "$H/dsdv_hostb_head.sv" "$H/dsdv_hostb_landing.sv" tools/s81_dv/hostb_1021/tb_hostb.sv \

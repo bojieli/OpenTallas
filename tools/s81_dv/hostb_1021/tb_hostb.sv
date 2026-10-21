@@ -4,6 +4,12 @@ module tb_hostb;
  reg rst_n=0;integer cyc=-1,bad=0,got0=0,got1=0,ksgot=0;
  reg [1103:0] ri=0,local0=0,local1=0;
  wire [1103:0] tolocal0,tolocal1,next0,next1;
+`ifdef HBE_REAL_HEAD
+ wire [1103:0] from_head;
+ `include "head_instance.svh"
+`else
+ wire [1103:0] from_head=ri;
+`endif
  wire [514:0] host0,host1;wire [52:0] ks0,ks1;wire [11:0] fault0,fault1;
  wire [2:0] sl0,sl1;wire [5:0] am0,am1;wire ac0,ac1;
  reg hs0=0,hs1=0,fw0=0,fw1=0;
@@ -17,7 +23,7 @@ module tb_hostb;
  dsdv_hostb_stage #(.ENABLE(1)) a(.ck(ck),.rst_n(rst_n),.configured(1'b1),.local_stage(8'd0),.local_rank(2'd0),
  .epoch_id(32'h1021),.programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.transit_body_edge(te0),
  .expected_tid(16'd37),.expected_header_stage(expect0),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),
- .header_slot(hs0),.job_active(mode==14),.starter_armed(1'b1),.from_prev(ri),.local_ro(local0),.return_ro(1104'd0),
+ .header_slot(hs0),.job_active(mode==14),.starter_armed(1'b1),.from_prev(from_head),.local_ro(local0),.return_ro(1104'd0),
  .forward_slot(fw0),.return_slot(1'b0),.to_local(tolocal0),.next_ro(next0),.f_host(host0),.ks_descriptor(ks0),
  .ks_slot(sl0),.arm_mask(am0),.arm_commit(ac0),.fault(fault0));
  dsdv_hostb_stage #(.ENABLE(1)) b(.ck(ck),.rst_n(rst_n),.configured(1'b1),.local_stage(8'd1),.local_rank(2'd0),

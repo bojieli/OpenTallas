@@ -67,7 +67,9 @@ module dsdv_hostb_rx (
    crc1<=crc_value;expect0<=expected_crc;expect1<=expect0;
    cl0<=body_class;cl1<=cl0;cl2<=cl1;
    ks_descriptor[51:0]<=p[325:274];ks_slot<=p[329:327];arm_mask<=p[279:274];
-   forward_ring[1103:1]<=ring_i[1103:1];
+   // Intercepted HFWD is exactly512 payload +routing; selected HEAD may
+   // retain inactive ordinary upper bits. Normalize only the kind6 record.
+   forward_ring[1103:1]<={571'd0,ring_i[532:1]};
  end
  always @(posedge ck or negedge rn) begin
    if(!rn) begin
