@@ -1,0 +1,9 @@
+LANE 0 tx240 echo240 rxcredit240
+LANE 1 tx240 echo240 rxcredit240
+LANE 2 tx240 echo240 rxcredit240
+LANE 3 tx240 echo240 rxcredit240
+PASS lepab_rxlocal: received400 landed160 NB80 first151 last2537 capturedA2699 capturedB2699 reset_reassert1 rises2/2 falls1/1 mismatch0
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lepab_rxlocal.sv:151: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.632 s; speed 3.562 us/s
+- Verilator: cpu 0.627 s on 1 threads; allocated 11 MB

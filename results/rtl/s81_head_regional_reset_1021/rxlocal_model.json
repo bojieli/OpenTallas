@@ -1,0 +1,72 @@
+{
+  "status": "SOURCE_ONLY_PROPOSAL_NOT_SELECTED_NO_PHYSICAL_VIEW",
+  "source": "7d5e56579",
+  "new_endpoint": "ot_s81sl_lep_mu_ab_regional_r3r_rxlocal",
+  "new_HEAD": "ot_s81hd_lep_regional_pack",
+  "port_disposition": {
+    "removed_only_from_new_endpoint_signature": [
+      "rxv[1:0]",
+      "rxvb[1:0]"
+    ],
+    "reason": "Only reset-release startup enables, not payload/ready/credits; parent now owns local original function. Old r3r modules and views unchanged, no alias/tie/open old top ports.",
+    "original_internal_producer": "u_core.rxv remains connected to pair_rxv inside source for direct reference in equivalence bench; no endpoint output role in new signature, unused cone prunes during synthesis."
+  },
+  "old_A_path": [
+    "HEAD u_rr_a tree3 (root/group/local), leaf[2]",
+    "endpoint rst_n_a -> g_pair[0].u_core -> ot_s81sl_lep_mu -> ot_s81sl_lep",
+    "u_rstr ot_rst_relay_tree3, rr[2] (root/group/local), all clk_a",
+    "rxv_r <= 1 after rr[2], asynchronous zero",
+    "old endpoint rxv -> far lane RX[0]"
+  ],
+  "new_A_path": [
+    "HEAD same u_rr_a tree3 leaf[0/1], identical source age to leaf[2]",
+    "ot_s81hd_lane_rx_enable_local.u_rr REGIONS1 tree3, all ck_A",
+    "enable <=1 after rr[0], asynchronous zero",
+    "enable beside lane WEST RX[0]"
+  ],
+  "B_path": "Same at ck_B/u_rr_b leaf[0/1] vs old leaf[2], pair[1] and rxvb",
+  "source_state_price": {
+    "new_parent_flops": 16,
+    "removed_child_startup_flops": 4,
+    "net_source_flops": 12,
+    "mapped_area": "OWED actual synthesis; no physical gate launched for proposal"
+  },
+  "cycle_deltas": {
+    "payload": 0,
+    "ready_credit": 0,
+    "credit_RTT": 0,
+    "startup_release": 0
+  },
+  "proof": {
+    "mechanism": "Actual NB80 finite-phase bench reused; direct hierarchical reference to original real u_core.rxv in each pair; actual same-age HEAD parent tree3 leaves [0/1] vs [2]",
+    "phase_ps": [
+      80,
+      160
+    ],
+    "received": 400,
+    "landed": 160,
+    "first": 151,
+    "last": 2537,
+    "captured_edges_A": 2699,
+    "captured_edges_B": 2699,
+    "reset_reasserts": 1,
+    "rises": [
+      2,
+      2
+    ],
+    "falls": [
+      1,
+      1
+    ],
+    "mismatch": 0,
+    "negative_EARLY_source_mutant": "Caught6 mismatches per region; same NB80 data counts and first/last remain correct"
+  },
+  "physical_debts": [
+    "Root final source/port-contract adoption required; current H3 remains diagnostic r3r",
+    "No old r3r/CRED8 physical view alias",
+    "Actual LEF mirror/track check pending exported CRED12 LEF",
+    "Pin-window model alone does not qualify17.28um horizontal/min2.16um vertical corridor",
+    "Actual local reset-copy placement and every source/reset hop<=405um",
+    "ActualML/E2/land ecdd507d1 placement, GRT, CTS and reticlefit"
+  ]
+}
