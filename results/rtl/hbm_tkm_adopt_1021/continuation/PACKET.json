@@ -1,0 +1,152 @@
+{
+ "schema": "opentallas.e86_exact_leaf_continuation_packet.v1",
+ "status": "BLOCKED_SOURCE_AND_NORMAL_CONTINUATION_VERIFICATION_NO_LAUNCH",
+ "authorization": "ROOT via HBM lead: exact archived39d leaf may continue independently of global engine/ISA join once source/archive/params/geometry/admission prerequisites verified; original CANCELLED immutable; no physical reroute/fullbench duplicate/fakeeligibleflip",
+ "original_job": "hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
+ "original_source_commit": "39d901240ce0c6eb9c928e3fccaf6c0ff892bc2a",
+ "original_cancelled_reason": "cancelled by a human (EPYC6-RETIRE deadline 14:15 (owner 10-21): KILLED at epyc6 retire, relaunch elsewhere)",
+ "physical_leaf": {
+  "top": "ot_hgi_coll_tkm_tile_e86",
+  "params": {
+   "FAN32": 2,
+   "SEAM": 1
+  },
+  "internal_params": {
+   "EW": 86,
+   "PT": 64,
+   "PRE": 1,
+   "CREP": 1
+  },
+  "outline_um": [
+   302.4,
+   302.4
+  ],
+  "clock_refs": [
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3"
+  ],
+  "clock_relationship": "same PLL, same frequency, fixedphase0; all5 real physical entry clocks retained",
+  "exact_source_sha256": {
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv": "36975d5e682a5558671438bae43b0c9128967209dca3f9513b114516b291fccc",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv": "f04a28f957e4c7c87d15c3ce8cb10c7fd0e8ca4c37ab0f900b749480866faef8"
+  },
+  "new_full_engine_source": "separate ca8bc89af/e509 file only; both actual physical leaf canonical files byte-identical39d, no body alias"
+ },
+ "geometry_review": {
+  "reviewer": "coordinator",
+  "time": "2026-10-21T06:40:00-07:00",
+  "gate_commit": "4e044422f",
+  "geometry_sha256": "2c9c69d2dd36d29516b726c026b5b5b4003b15d2d51a754e71aa1cb67b4499ec",
+  "verdict": "APPROVED",
+  "scope": "existing exact original geometry authority; no new timing approval"
+ },
+ "original_component_gate": {
+  "verdict": "WARN",
+  "source_commit": "384a7ffc4afeaf0d8d0ac82fbba8ab2a2b7e7323",
+  "manifest_sha256": "94c30dfedd5dff30d25cc99a7ad423f39646634d807ae39c3486fca7e422cc84",
+  "archive_sha256": "5b22632710aa8098ac8ca2af325399b92e3831509f69e3f716227cd52ac0f701",
+  "native_summary": "original_native_census_summary.json",
+  "GRT_overflow": 0
+ },
+ "preserved_completed_route": {
+  "archive_host": "ubuntu@155.103.253.53",
+  "archive_root": "/archive/epyc6-retire-1021/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
+  "archive_receipt": "/home/ubuntu/claude-takeover-20261007/lanes/epyc6-retire/state/cancelled_fullroots_final_receipt_1446.json",
+  "fullroot_verified_files": 363,
+  "fullroot_verified_bytes": 8415901241,
+  "flow_rc": 0,
+  "corner_rc": 0,
+  "route_a1_rc": 0,
+  "final_odb_bytes": 609659324,
+  "odb_sha256": "de8b1e0bf64b6718d3aa0dd9b407d6a6b70e5ecfef5914d9c0943882b3076cba",
+  "spef_sha256": "9dffdf00a0626baa580d0eafeacc3d03470916f909e139ef952c7527f8b8904c",
+  "sdc_sha256": "d4c65583a6e0dbf8ec5c6812ef6399da3d9c628a455822a81c01a2b263b4ef36",
+  "raw_TT_setup_ps": -30.32,
+  "raw_FF_hold_ps": 6.42,
+  "raw_internal_TT_setup_ps": -30.32,
+  "raw_internal_FF_hold_ps": 6.42,
+  "SS_sensitivity_ps": -440.25,
+  "DRC": 0,
+  "qualified": false,
+  "interpretation": "physical route is COMPLETE and raw measured TT setupFAIL; CANCELLED scheduledINFRA status does not erase this measurement. Canonical routed-ioref judgment pending, no clock waiver."
+ },
+ "existing_benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.134 MB sources in 14 modules, into 0.006 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 41.389 s (elab=1.229, cvt=39.287, bld=0.000); cpu 41.388 s on 1 threads; allocated 8529.809 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_tkm_e86v4_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "TKM_RG_CREP MUT0 cycles4000 ins2139 ovf2034 up173 tau1995 errors0 PASS\n",
+   "track": "parallel"
+  },
+  "bench_tkm_e86v4_ctlmut": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "TKM_RG_CREP MUT1 cycles4000 ins2139 ovf2034 up173 tau1995 errors132 FAIL\nMISMATCH t=5120000 ovf 0/0 busy 1/1 tau 1e42859f789c4af6212925/1e42859f789c427f412925 up_eq 1 ovfb_eq 1\nMISMATCH t=5480000 ovf 1/1 busy 1/1 tau 1e1d84f57223c8c8114eb7/1e1d84f57223cc4c994eb7 up_eq 1 ovfb_eq 1\nMISMATCH t=5580000 ovf 0/0 busy 0/0 tau 1e42859f789c4af6212925/1e42859f789c427f412925 up_eq 1 ovfb_eq 1\n",
+   "track": "parallel"
+  },
+  "bench_tkm_e86v4_gnmut": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "TKM_RG_CREP MUT3 cycles4000 ins2139 ovf2034 up173 tau1995 errors1252 FAIL\nMISMATCH t=360000 ovf 0/0 busy 1/1 tau 0000000000000000000000/000d03ff51078000000000 up_eq 1 ovfb_eq 1\nMISMATCH t=370000 ovf 0/0 busy 1/1 tau 0000000000000000000000/000d03ff51078000000000 up_eq 1 ovfb_eq 0\nMISMATCH t=380000 ovf 0/0 busy 1/1 tau 135001ca976ff0eb287678/135039ff976ff0eb287678 up_eq 1 ovfb_eq 0\n",
+   "track": "parallel"
+  },
+  "bench_tkm_e86v4_seammut": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "TKM_RG_CREP MUT4 cycles4000 ins2139 ovf2034 up173 tau1995 errors1542 FAIL\nMISMATCH t=660000 ovf 0/0 busy 0/0 tau 1422077ac80a304c1ba376/17fffffffffffbfffbffff up_eq 1 ovfb_eq 1\nMISMATCH t=690000 ovf 1/1 busy 1/1 tau 0000000000000000000000/0000000000000000000000 up_eq 1 ovfb_eq 0\nMISMATCH t=700000 ovf 1/1 busy 1/1 tau 16491ef87da1c2eb67f7ae/17ffdefbffffffefffffff up_eq 1 ovfb_eq 0\n",
+   "track": "parallel"
+  }
+ },
+ "unfinished_benches": {
+  "bench_tkm_tp192_static_gate": {
+   "state": "running",
+   "tag": "bench_tkm_tp192_static_gate.a1b1",
+   "host": "ot-epyc6",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
+   "n": 1,
+   "started": "2026-10-21T08:42:47-07:00",
+   "stage_source": "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_tkm_tile_e86v4b-v4b-39d901240/bench_src_a1",
+   "wd_checked": 1792616597.1645546
+  }
+ },
+ "archive_source_gap": {
+  "src_absent": true,
+  "reaper_event": "ot-reaper15:00:52 removed92.48GB after14:47archive; disk independently identified; no deletion by this lane",
+  "component_gate_git_blob_missing": 0,
+  "readset": "required_readset.json",
+  "route_post_overlay_src_verified": false,
+  "tp192_generated_objects_verified": false,
+  "no_current_HEAD_reconstruction": true
+ },
+ "normal_continuation_API_review": {
+  "retry": "cmd_retry rejects CANCELLED; unsafe to relabel old job",
+  "resume_postroute": "requires earlier CLOSED; this job never reached verdict/CLOSED",
+  "migrate": "requires RUNNING route; not applicable to immutable archived terminal job",
+  "supported_command_verified": false,
+  "next": "rootintegration reviewing supported linked new postroute continuation; no eligibility flip or ad-hoc oldstate edit"
+ },
+ "admission": {
+  "requested_physical_reroute": false,
+  "requested_bench_duplicate": false,
+  "postroute_audit_expected_threads": 8,
+  "postroute_audit_expected_ram_GB": 40,
+  "pending_actual_guard": true,
+  "old_incomplete_TP192_bench_request_GB": 160,
+  "old_incomplete_TP192_peak_kb": 305417196,
+  "note": "old benchmark observed ~291.3GiB RSS, above160 request; no unmeasured restart or duplicatecompile. Existing objects must first be recovered/verified."
+ },
+ "parent_scope": "Current K5e0/L5f1 old32clock/SETTLE104 engine untouched; no source/param/calendar/clock160 or hardview adoption from leaf continuation."
+}
