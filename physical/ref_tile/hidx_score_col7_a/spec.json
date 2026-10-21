@@ -92,7 +92,7 @@
   "rst_n"
  ],
  "params": {},
- "structural_change": "HBM-IDXSQ8 2026-10-20: leaf core split per the top-down hierarchy contract (codex c7 source a1791bb1d, ot_hbm_idx_chunk_rt_c): the IDX-SCORE leaf (leaf_c1: CTS rc137, 189,723 flops on one root; native32 FAIL 13,574 drivers) becomes glue + 4 x this KEY COLUMN hard child (8 heads, 4 head-pair regions, ~47k flops, own CTS root), replicated 4x per leaf and hardened once. main: N-face pins, util 0.52",
+ "structural_change": "HBM-IDXSQ8 2026-10-20: leaf core split per the top-down hierarchy contract (codex c7 source a1791bb1d, ot_hbm_idx_chunk_rt_c): the IDX-SCORE leaf (leaf_c1: CTS rc137, 189,723 flops on one root; native32 FAIL 13,574 drivers) becomes glue + 4 x this KEY COLUMN hard child (8 heads, 4 head-pair regions, ~47k flops, own CTS root), replicated 4x per leaf and hardened once. main: N-face pins, 302.4 sq (7 x 43.2 hard-child lattice; synth 49,935 um2 = 56% util)",
  "reset_landing": {
   "enable": false,
   "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of each region's ot_rst_relay_l (copies clear from the last stage)"
@@ -121,7 +121,7 @@
  },
  "outline": {
   "w": 302.4,
-  "h": 302.4
- },
- "util": 0.52
+  "h": 302.4,
+  "exact": true
+ }
 }

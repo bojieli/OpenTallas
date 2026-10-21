@@ -92,7 +92,7 @@
   "rst_n"
  ],
  "params": {},
- "structural_change": "HBM-IDXSQ8 2026-10-20: leaf core split per the top-down hierarchy contract (codex c7 source a1791bb1d, ot_hbm_idx_chunk_rt_c): the IDX-SCORE leaf (leaf_c1: CTS rc137, 189,723 flops on one root; native32 FAIL 13,574 drivers) becomes glue + 4 x this KEY COLUMN hard child (8 heads, 4 head-pair regions, ~47k flops, own CTS root), replicated 4x per leaf and hardened once. fallback: same pins, util 0.44 (more room for the 4 head-pair regions and the pin column)",
+ "structural_change": "HBM-IDXSQ8 2026-10-20: leaf core split per the top-down hierarchy contract (codex c7 source a1791bb1d, ot_hbm_idx_chunk_rt_c): the IDX-SCORE leaf (leaf_c1: CTS rc137, 189,723 flops on one root; native32 FAIL 13,574 drivers) becomes glue + 4 x this KEY COLUMN hard child (8 heads, 4 head-pair regions, ~47k flops, own CTS root), replicated 4x per leaf and hardened once. fallback: same pins, 345.6 sq (8 x 43.2; 43% util: room for the 4 head-pair regions and the N pin column)",
  "reset_landing": {
   "enable": false,
   "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of each region's ot_rst_relay_l (copies clear from the last stage)"
@@ -120,8 +120,8 @@
   "reason": "the RTL registers every pin: inputs land in each head-pair region's kept pin registers (qv_p/q_p/key_p/hid_pa/hid_pb), outputs launch from cs_o (head 7) and the region online flops"
  },
  "outline": {
-  "w": 302.4,
-  "h": 302.4
- },
- "util": 0.44
+  "w": 345.6,
+  "h": 345.6,
+  "exact": true
+ }
 }
