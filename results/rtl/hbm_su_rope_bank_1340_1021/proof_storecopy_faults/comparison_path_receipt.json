@@ -1,0 +1,24 @@
+{
+  "qualification": "PENDING actual runtime; this is existing comparison-path source binding only",
+  "tb_sha256": "0adaed3fc1f5c896f08c1cd0d15b8647149c9fdd1522513dbaee5951fd557cca",
+  "replay_sha256": "990d8a0d6f922a34ddb5e05753a66b8d1f896f328800d7ec262f7ef63643c0fa",
+  "events": {
+    "D": 4124,
+    "C": 43,
+    "M": 16
+  },
+  "NEV": 4168,
+  "NEV_derivation": "4124 D +43 C +1 sentinel; 16 original-input M preloads are separate VM preload records, not NEV slots",
+  "checks": {
+    "actual_VM_SRAM_endstate_sectors": 24,
+    "actual_output_words": 64,
+    "fault_faces_zero": 19,
+    "masks": "all32bits of each of8words per VM sector",
+    "source_path": "step -> vm_rd -> vm_get -> actual dut.vmb_SW0..7.u_ot_pr_core.bank.u_a/u_c.arr; physical bank, mirror,row,bit mapping encoded in real C headers",
+    "mismatch": "increments fails/prints SLICE_CHECK_FAIL; final prints SLICE_FAIL. Process rc0 alone cannot qualify."
+  },
+  "terminal_acceptance": "Require completed replay counts drives4124/checks43/fails0, SLICE_PASS present, no SLICE_FAIL or SLICE_CHECK_FAIL; original known-invalid RFsrc1 binary never qualifies corrected replay",
+  "initial_state": "16 M original pre-op A/B/D only; inplace A alias allowed, no expected O or scratch preload; golden O comparison-only",
+  "scope": "Scoped arithmetic and VM end-state only; no normal-drain timing/liveness or full-token qualification",
+  "no_instrumentation_change": true
+}
