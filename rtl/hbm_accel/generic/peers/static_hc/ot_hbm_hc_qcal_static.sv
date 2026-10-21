@@ -142,7 +142,7 @@ module ot_hbm_hc_qcal_static #(
         end
     end else begin:g_f32
         (* keep = "true", dont_touch = "true" *) reg [7:0] wok_c,v1_c;   // 0..3 calendar groups, 4 gl, 5 gp, 6 wsel, 7 gr
-        (* keep = "true", dont_touch = "true" *) reg [3:0] sv_c;
+        (* keep = "true", dont_touch = "true" *) reg [4:0] sv_c;
         (* keep = "true", dont_touch = "true" *) reg [GLC-1:0] gl_c;
         wire wok_d=macro_data[255:240]==16'hc7a1 && macro_data[233:224]==pc0 && macro_data[239:234]==0 && macro_data[223:W]==0;
         always @(posedge clk)begin
@@ -170,13 +170,13 @@ module ot_hbm_hc_qcal_static #(
         always @(posedge clk) gr_c<={3{v1_c[7]&&wok_c[7]&&captured[0]}};
         assign gr=gr_c;
         assign wsel=ws_c;
-        wire [3:0] acc;
-        for(genvar k=0;k<4;k=k+1)begin:g_acc
+        wire [4:0] acc;
+        for(genvar k=0;k<5;k=k+1)begin:g_acc
             assign acc[k]=sv_c[k] && !busy && !cfg_we_q && legal_start;
         end
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin v1_c<=0;sv_c<=0;end
-            else begin v1_c<={8{valid0}};sv_c<={4{start_v}};end
+            else begin v1_c<={8{valid0}};sv_c<={5{start_v}};end
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin
                 running<=0;issued<=0;valid0<=0;valid1<=0;last0<=0;last1<=0;calendar_v<=0;active<=0;done<=0;fault<=0;
@@ -196,6 +196,11 @@ module ot_hbm_hc_qcal_static #(
                     end
                 end
             end
+        // Separate true state for the loop compare prevents the PC-wrap compare
+        // from driving every PC and loop-counter load (mapped native33).
+        (* keep = "true", dont_touch = "true" *) reg [10:0] limit_loop;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)limit_loop<=0;else if(acc[4])limit_loop<=start_limit_q;
         // per-group register updates (same next state as the FAN32 0 block; start accept and running are exclusive)
         always @(posedge clk or negedge rst_n)
             if(!rst_n)pc<=0;
@@ -209,7 +214,7 @@ module ot_hbm_hc_qcal_static #(
         always @(posedge clk or negedge rst_n)
             if(!rst_n)loops_left<=0;
             else if(acc[3])loops_left<=start_loops_q;
-            else if(running && {1'b0,pc}+11'd1==limit && loops_left!=1)loops_left<=loops_left-1;
+            else if(running && {1'b0,pc}+11'd1==limit_loop && loops_left!=1)loops_left<=loops_left-1;
     end endgenerate
 endmodule
 `default_nettype wire

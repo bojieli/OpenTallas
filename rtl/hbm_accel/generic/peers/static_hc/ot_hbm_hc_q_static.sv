@@ -128,7 +128,7 @@ module ot_hbm_hc_q_static #(
     // ---- programme issuer
     wire [78:0] c;
     wire cal_v,cal_fault,gb;
-    localparam integer GLC=31, GPC=11, NWS=9;
+    localparam integer GLC=15, GPC=11, NWS=9;
     wire [GLC-1:0] gl; wire [GPC-1:0] gp; wire [24*NWS-1:0] wsel; wire [2:0] gr;
     generate if(SAFE!=0)begin:g_qcal
         ot_hbm_hc_qcal_static #(.W(79),.FAN32((SAFE>=2)?1:0),.GLC(GLC),.GPC(GPC),.NWS(NWS)) programme(
