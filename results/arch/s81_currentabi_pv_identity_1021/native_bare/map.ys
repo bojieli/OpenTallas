@@ -1,0 +1,21 @@
+read_verilog -lib /src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+read_verilog -lib /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v
+read_verilog -lib /src/tools/s81_dv/svc_rs/attn1/ot_s81svc8_hgrp_s81_bounded_bb.v
+read_verilog -defer -sv -DSYNTHESIS -DOT_ATTN_HGRP_HARD -DOT_ATTN_HGRP8 -DOT_HGRP8_MOD=ot_s81svc8_hgrp_s81_bounded -DOT_SVC_LAND_SRAM -DOT_SVC_ATT_SRAM -I/src/rtl/dsrom_sys/s81_dv/svc_rs /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/v41x/ot_dsrom_su_add6.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv
+hierarchy -check -top dsdv_svc_att -chparam MUT 0 -chparam DIE_ID 0 -chparam ST 0 -chparam SRAM_MACRO 1 -chparam NTP 1 -chparam PMEM 1 -chparam QMEM_SRAM 0
+read_liberty -lib /tmp/lib/SIMPLE.lib
+read_liberty -lib /tmp/lib/AO.lib
+read_liberty -lib /tmp/lib/OA.lib
+read_liberty -lib /tmp/lib/INVBUF.lib
+read_liberty -lib /tmp/lib/SEQ.lib
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top dsdv_svc_att -flatten -noshare
+dfflibmap -liberty /tmp/lib/SEQ.lib
+abc -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/SEQ.lib
+opt_clean
+tee -o /out/stat.txt stat -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/SEQ.lib
+setattr -mod -unset keep_hierarchy
+flatten
+opt_clean
+tee -o /out/stat_flat.txt stat -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/SEQ.lib
+write_verilog -noattr /out/flat.v

@@ -1,0 +1,11 @@
+# Bare current-ABI G4 production native diagnostic
+
+Exact source d3509858e (SRAM restoration 0b50e2106), ep7 unit oth-ubuntu-657523-1792602363, terminal 2026-10-21 11:15 PT. Native FAIL: 7,563 violations, max rst_n load 15,368, no role errors. Mapping: 252,801 plain and 15,351 resettable FF, 4 hgrp8 hard interfaces, 32 256x256 SRAM and 38 32x128 SRAM. Logic-only TT area 165,669.011640 um² excludes unknown hard/macro area. Full remote netlist/log retained with SHA; compressed exact census committed.
+
+This is the bare dsdv_svc_att, NTP1, PMEM1, SRAM_MACRO1, QMEM_SRAM0, TEXT0, TLX0, PINREG off, production FPL4/FML6/F12/TILE_S1/FX5 (no FG3). It is not the actual two-clock landed LP; no reset/profile/layout qualification follows. The real LP uses TEXT1/TLX6 and D4/K2 crossing rings plus reset runs; inherited kit also declares OT_SVC_ATT_PINREG. Its continuity was repaired and elaborated in 548999b14, but its exact native/profile remains open.
+
+OT_SVC_ATT_SRAM bypasses the QMEM_SRAM generate and directly instantiates u_qmm, dsdv_svc_fmem(W512): the query storage is 16x512 bits, already four 32x128 SRAM banks, with registered read-old output replacing eq_w on the same edge. Setting QMEM_SRAM1 under this define changes nothing. The alternative selector uses eight 32x64 banks only when the define is absent. No 16x512-FP32 query buffer exists here.
+
+Remaining FF state is not all query storage. A conservative direct named mapped D-pin census identifies 117,034 FF inputs in g_m math, including 111,880 in u_a floating-point adder pipelines. Q-name inversion/anonymous signals prevent interpreting this lower bound as a full FF ownership partition. These are arithmetic/latency registers, not automatically persistent buffers.
+
+A concrete persistent-buffer obligation remains: ot_hdc_v41x_attn_merge_x declares a 33-bit x DPT per-head rotating ring at each merge level. Actual D32/NL4 gives NT4 virtual merges even with NTP1, DPT8, and MLEV5 for TROWS640/TD32: 84,480 declared persistent ring bits across 4x5x16 heads. It has no SRAM selector. SRAM replacement must preserve v-gated rotation, current head, store priority, FP add order and cycle ages. Transpose/other remaining buffers and actual legal row/tag decoder fanout also require source classification; no waiver, tile/tag tie, or blanket PASS.

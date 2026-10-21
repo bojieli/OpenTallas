@@ -1,0 +1,223 @@
+{
+  "status": "FAIL",
+  "max_dynamic_loads": 15368,
+  "violations": 7563,
+  "role_errors": [],
+  "top_violations": [
+    {
+      "driver": "rst_n",
+      "driver_role": "input_port",
+      "net": "rst_n",
+      "loads": 15368
+    },
+    {
+      "driver": "_2586894_/QN",
+      "driver_role": "sequential",
+      "net": "_0279070_",
+      "loads": 4266
+    },
+    {
+      "driver": "_2549590_/QN",
+      "driver_role": "sequential",
+      "net": "_0237497_",
+      "loads": 2373
+    },
+    {
+      "driver": "_2574716_/QN",
+      "driver_role": "sequential",
+      "net": "_0279075_",
+      "loads": 2049
+    },
+    {
+      "driver": "_2254556_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0947909_",
+      "loads": 2048
+    },
+    {
+      "driver": "_2258653_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0950981_",
+      "loads": 2048
+    },
+    {
+      "driver": "_2344332_/QN",
+      "driver_role": "sequential",
+      "net": "_0202206_",
+      "loads": 2048
+    },
+    {
+      "driver": "_2582478_/QN",
+      "driver_role": "sequential",
+      "net": "_0280097_",
+      "loads": 2036
+    },
+    {
+      "driver": "_1238820_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0408972_",
+      "loads": 1841
+    },
+    {
+      "driver": "_2587443_/QN",
+      "driver_role": "sequential",
+      "net": "_0279062_",
+      "loads": 1540
+    },
+    {
+      "driver": "_2552238_/QN",
+      "driver_role": "sequential",
+      "net": "_0019349_",
+      "loads": 1184
+    },
+    {
+      "driver": "qr_tag[27]",
+      "driver_role": "input_port",
+      "net": "qr_tag[27]",
+      "loads": 1080
+    },
+    {
+      "driver": "qr_tag[10]",
+      "driver_role": "input_port",
+      "net": "qr_tag[10]",
+      "loads": 1078
+    },
+    {
+      "driver": "_1650675_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0647078_",
+      "loads": 1046
+    },
+    {
+      "driver": "_2051132_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0851077_",
+      "loads": 1033
+    },
+    {
+      "driver": "qr_tag[28]",
+      "driver_role": "input_port",
+      "net": "qr_tag[28]",
+      "loads": 991
+    },
+    {
+      "driver": "qr_tag[11]",
+      "driver_role": "input_port",
+      "net": "qr_tag[11]",
+      "loads": 985
+    },
+    {
+      "driver": "qr_tag[29]",
+      "driver_role": "input_port",
+      "net": "qr_tag[29]",
+      "loads": 813
+    },
+    {
+      "driver": "qr_tag[12]",
+      "driver_role": "input_port",
+      "net": "qr_tag[12]",
+      "loads": 808
+    },
+    {
+      "driver": "_2039946_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0847153_",
+      "loads": 712
+    },
+    {
+      "driver": "_2602080_/QN",
+      "driver_role": "sequential",
+      "net": "_1085445_",
+      "loads": 639
+    },
+    {
+      "driver": "_2604520_/QN",
+      "driver_role": "sequential",
+      "net": "_1086665_",
+      "loads": 620
+    },
+    {
+      "driver": "_2603300_/QN",
+      "driver_role": "sequential",
+      "net": "_1086055_",
+      "loads": 588
+    },
+    {
+      "driver": "_2605740_/QN",
+      "driver_role": "sequential",
+      "net": "_1087275_",
+      "loads": 588
+    },
+    {
+      "driver": "_2050499_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_core.g_wqh[0].g_p[0].g_m.u_wqm.we",
+      "loads": 583
+    },
+    {
+      "driver": "_2050917_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0850990_",
+      "loads": 583
+    },
+    {
+      "driver": "_2054102_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0852223_",
+      "loads": 583
+    },
+    {
+      "driver": "_2054215_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_core.g_wqh[2].g_p[0].g_m.u_wqm.we",
+      "loads": 583
+    },
+    {
+      "driver": "_2582479_/QN",
+      "driver_role": "sequential",
+      "net": "_0015683_",
+      "loads": 572
+    },
+    {
+      "driver": "_2582480_/QN",
+      "driver_role": "sequential",
+      "net": "_0280088_",
+      "loads": 572
+    },
+    {
+      "driver": "_2582481_/QN",
+      "driver_role": "sequential",
+      "net": "_0280083_",
+      "loads": 572
+    },
+    {
+      "driver": "_2582482_/QN",
+      "driver_role": "sequential",
+      "net": "_0015687_",
+      "loads": 572
+    },
+    {
+      "driver": "_2602079_/QN",
+      "driver_role": "sequential",
+      "net": "_1085446_",
+      "loads": 551
+    },
+    {
+      "driver": "_2605739_/QN",
+      "driver_role": "sequential",
+      "net": "_1087276_",
+      "loads": 549
+    },
+    {
+      "driver": "_2604519_/QN",
+      "driver_role": "sequential",
+      "net": "_1086666_",
+      "loads": 548
+    }
+  ],
+  "violation_roles": {
+    "input_port": 16,
+    "combinational_or_macro": 1991,
+    "sequential": 5556
+  }
+}
