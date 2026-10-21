@@ -1,11 +1,12 @@
 {
   "base_commit": "08d715a32dc81f4574b40941682512824ed5dbb9",
   "source_hashes": {
-    "tools/ref_tile/domain_spatial_spine.py": "81c94fb4b98db5d3a7890e7255d431951397aec7cd2c0ddd5f54d3db02e699ad",
+    "tools/ref_tile/domain_spatial_spine.py": "b2ab736a9831b6ae3c8c2ff903ba3c13fdc6ed70d32537bb7071ace24821833d",
     "tools/ref_tile/ref_tile.py": "856352aef2614cd5fe22962a92a3a209e728ae12e7d1a7b2e0f4a6a51e29c362",
-    "tools/ref_tile/test_domain_spatial_spine.py": "28d7b2f9eba83e79c2e730c4f750ceeda472a0a429f7f4b510c1f7fa82566f5c",
+    "tools/ref_tile/test_domain_spatial_spine.py": "ce4069cbef5e22152e50a8138977df0e0e83285bcf4ae827b5edd419e25f3d11",
     "physical/common_flow/domain_spatial_spine.tcl": "06f44345085a8e40d4b4182aea99de1bb439d0844ee113005e2af029a4f0faf8",
-    "physical/common_flow/clock_spine.tcl": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83"
+    "physical/common_flow/clock_spine.tcl": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+    "physical/common_flow/native_pg_binding.tcl": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8"
   },
   "focused_tests": {
     "tests": 9,

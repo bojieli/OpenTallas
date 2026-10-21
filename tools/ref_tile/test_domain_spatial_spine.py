@@ -30,6 +30,7 @@ class Schema(unittest.TestCase):
     def test_existing_roots_only(self):
         s, domains = fixture()
         self.assertEqual(D.validate(s, domains, ROOT), s['domain_spatial_spine'])
+        self.assertIn(D.PG_BINDING, D.dependencies(s))
         for mutation in ('root', 'domain', 'duplicate', 'subset', 'reorder'):
             b = copy.deepcopy(s); r = b['domain_spatial_spine']['roots']
             if mutation == 'root': r[1]['port'] = 'new_clock'

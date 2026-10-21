@@ -10,6 +10,7 @@ from pathlib import Path
 ENGINE = 'physical/common_flow/clock_spine.tcl'
 ENGINE_SHA256 = 'aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83'
 GUARD = 'physical/common_flow/domain_spatial_spine.tcl'
+PG_BINDING = 'physical/common_flow/native_pg_binding.tcl'
 
 
 def validate(spec, domains, root):
@@ -87,4 +88,6 @@ def after_entries(spec):
 
 
 def dependencies(spec):
-    return [ENGINE, GUARD] if spec.get('domain_spatial_spine') is not None else []
+    # The reviewed engine sources PG binding in ordinary mode too. Preserve
+    # that transitive input even when the surrounding kit is not pg_strict.
+    return [ENGINE, GUARD, PG_BINDING] if spec.get('domain_spatial_spine') is not None else []
