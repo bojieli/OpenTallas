@@ -796,6 +796,59 @@ module ot_hgi_su_lgroup2 #(
     // ---- write side: stage (8 words) > lane writes > the single-word STREAM landing (its own group in practice)
     reg  [N-1:0] b_we; reg [RB-1:0] b_wa [0:N-1]; reg [31:0] b_wd [0:N-1];
     reg  wcoll;
+    generate if(NATIVE32 && NLW>0)begin:g_native_wsel
+        // Decode each destination bank explicitly. This preserves the exact
+        // ordered last-writer/collision semantics without dynamic writes into
+        // a bank array (which created a broad data/address mux per raw enable).
+        always @* begin:wsel
+            integer bb,ss,jj,ll,kk;
+            reg [LWB-1:0] word_addr;
+            reg [LN-1:0] bank_id;
+            reg lane_ok;
+            word_addr=0;bank_id=0;lane_ok=0;wcoll=0;
+            for(bb=0;bb<N;bb=bb+1)begin
+                b_we[bb]=0;b_wa[bb]=0;b_wd[bb]=0;
+                for(ss=0;ss<NS;ss=ss+1)begin
+                    if(WROT)begin
+                        if(sw_v[ss] && swr_m[ss*N+bb])begin
+                            if(b_we[bb])wcoll=1;
+                            b_we[bb]=1;
+                            b_wa[bb]=swr_w[ss*N+bb]?swr_r1[ss*RB+:RB]:swr_r0[ss*RB+:RB];
+                            b_wd[bb]=swr_d[32*(ss*N+bb)+:32];
+                        end
+                    end else begin
+                        for(jj=0;jj<8;jj=jj+1)begin
+                            word_addr=sw_addr[ss*LWB+:LWB]+jj;
+                            if(sw_v[ss] && sw_mask[ss*8+jj] && word_addr[LN-1:0]==bb)begin
+                                if(b_we[bb])wcoll=1;
+                                b_we[bb]=1;b_wa[bb]=word_addr[LWB-1:LN];
+                                b_wd[bb]=sw_d[ss*256+32*jj+:32];
+                            end
+                        end
+                    end
+                end
+                for(ll=0;ll<NL;ll=ll+1)begin
+                    bank_id=lwa[ll*AW+:LN];
+                    if(lw[ll] && bank_id==bb)begin
+                        lane_ok=(ll==0);
+                        for(kk=0;kk<NROT;kk=kk+1)
+                            if(cbank(ll,kk)==bank_id)lane_ok=1;
+                        if(!lane_ok)wcoll=1;
+                        if(b_we[bb] && b_wa[bb]!=lwa[ll*AW+LN+:RB])wcoll=1;
+                        if(!(|sw_v))begin
+                            b_we[bb]=1;b_wa[bb]=lwa[ll*AW+LN+:RB];
+                            b_wd[bb]=lwd[32*ll+:32];
+                        end
+                    end
+                end
+                if(s1_v && s1_a[LN-1:0]==bb)begin
+                    if(b_we[bb])wcoll=1;
+                    b_we[bb]=1;b_wa[bb]=s1_a[LWB-1:LN];b_wd[bb]=s1_d;
+                end
+            end
+            if((|sw_v) && (|lw))wcoll=1;
+        end
+    end else begin:g_original_wsel
     always @* begin : wsel
         integer wl_, wj_, wk_, ws_; reg [LWB-1:0] sb; reg [LN-1:0] wb_; reg ok_;
         sb = {LWB{1'b0}}; wb_ = {LN{1'b0}}; ok_ = 1'b0;
@@ -833,6 +886,7 @@ module ot_hgi_su_lgroup2 #(
             b_we[s1_a[LN-1:0]] = 1'b1; b_wa[s1_a[LN-1:0]] = s1_a[LWB-1:LN]; b_wd[s1_a[LN-1:0]] = s1_d;
         end
     end
+    end endgenerate
     // ---- fail-closed checks (registered)
     reg [N-1:0] rq_q, lok_q; reg [RB-1:0] lr_q [0:N-1]; reg [RB-1:0] br_q [0:N-1]; reg srv_q, wcoll_q;
     always @(posedge clk) begin
