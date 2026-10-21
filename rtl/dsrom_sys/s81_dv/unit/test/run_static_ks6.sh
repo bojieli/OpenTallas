@@ -4,7 +4,18 @@
 # that must FAIL (5: W svc half dropped from the merge, 6: host writes routed by the wrong PC bit, 7 / 8: see mdef), verilator lint.  Prints SEQHOST_GATE PASS/FAIL.
 # Usage: run_seq_host_bench.sh [outdir] [seeds] [mutant 1..9: build + run that mutant only]
 set -u
-R=$(cd "$(dirname "$0")/../../../../.." && pwd)
+KS6_SCRIPT_ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd)
+KS6_CANDIDATE_ROOT=${KS6_CANDIDATE_ROOT:-$KS6_SCRIPT_ROOT}
+R=${KS6_SELECTED_HOST_ROOT:-$KS6_SCRIPT_ROOT}
+# Evidence is qualified ONLY for the selected1bf HOST/library source closure.
+# Main's older HOST must fail closed, even if it accepts the same S10E flags.
+(cd "$R" && sha256sum -c "$KS6_CANDIDATE_ROOT/results/arch/s81_static_ks6_1021/selected_host_sources.sha256") || {
+ echo 'KS6 REFUSED: selected HOST closure differs; supply explicit KS6_SELECTED_HOST_ROOT snapshot of1bf1d11bc' >&2; exit 2;
+}
+C=$KS6_CANDIDATE_ROOT/rtl/dsrom_sys/s81_dv/unit
+printf '%s  %s\n' '758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c' "$C/dsdv_static_ks6.sv" | sha256sum -c - || {
+ echo 'KS6 REFUSED: adapter differs from native/mechanism-qualified5cf63dca5' >&2;exit 2;
+}
 O=${1:-$(mktemp -d)}; SEEDS=${2:-"1 2 3 4"}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 U=$R/rtl/dsrom_sys/s81_dv/unit
@@ -24,7 +35,7 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 build() { l=$1; shift
   verilator ${VL_EXTRA:-} --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
-    --top-module tb_static_ks6 "$@" --Mdir "$O/$l" -o tb $F $U/dsdv_static_ks6.sv $U/test/tb_static_ks6.sv > "$O/build_$l.log" 2>&1 \
+    --top-module tb_static_ks6 "$@" --Mdir "$O/$l" -o tb $F $C/dsdv_static_ks6.sv $C/test/tb_static_ks6.sv > "$O/build_$l.log" 2>&1 \
     || { echo "BUILD_FAIL $l (see $O/build_$l.log)"; return 2; }
 }
 VL_EXTRA="-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8"
