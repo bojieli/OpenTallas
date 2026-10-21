@@ -402,6 +402,9 @@ def main():
     ap.add_argument('--grt-layer-plan', choices=('legacy', 'owner1020'), default='legacy',
                     help='HBM-DIE12 (owner 10-20 21:27): owner1020 = die signals M4-M8 (M8 open over macros), M9 PG/clock only, '
                          'M8 strap share reserved; legacy = signal M4-M9, no strap reserve')
+    ap.add_argument('--carve-reserved', choices=('sm', 'all'), default='sm',
+                    help='HBM-DIE13: sm = only SYNTH SM (ot_hbm_accel_smh*) abstracts carve their grant reserved_channels '
+                         '(as before); all = every SYNTH abstract that fills its own grant slot carves them (d4g_ft_grid.py)')
     ap.add_argument('--grt-m8-pg-share', type=float, default=0.20,
                     help='HBM-DIE12: share of M8 GRT capacity kept for the regular PG straps under --grt-layer-plan owner1020')
     ap.add_argument('--lane-reach-order', choices=('area', 'chain'), default='area',
@@ -579,7 +582,18 @@ def main():
     def channels(n):
         """die-owned feedthrough column/row the instance's grant reserves (reserved_channels, slot coordinates): carved
         out of the SYNTH abstract OBS (SM: H-SM rp4c frame, owner 07:30 10-16), so relays and clock repeaters use them"""
-        if V[cell_of[n]]['kind'] != 'SYNTH' or not V[cell_of[n]]['master'].startswith(SM_CARVE):
+        if V[cell_of[n]]['kind'] != 'SYNTH':
+            return []
+        if a.carve_reserved == 'all':
+            # HBM-DIE13: every SYNTH abstract that fills its own grant slot (single user, slot outline) carves the slot's
+            # die feedthrough grid (tools/hbm_die_v16/d4g_ft_grid.py, owner 21:40 <= 405 um relay channels)
+            s_ = eslot(n) or ''
+            sl_ = slots.get(s_)
+            if not sl_ or len(slot_users.get(s_, [])) != 1 or \
+                    abs(sl_['outline']['w'] - size[cell_of[n]][0]) > 1.1 or abs(sl_['outline']['h'] - size[cell_of[n]][1]) > 1.1:
+                return []
+            return sl_.get('reserved_channels', [])
+        if not V[cell_of[n]]['master'].startswith(SM_CARVE):
             return []
         return slots.get(eslot(n) or '', {}).get('reserved_channels', [])
 
