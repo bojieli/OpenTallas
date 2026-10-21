@@ -23,8 +23,7 @@
     "OT_ATTN_HGRP8",
     "OT_HGRP8_MOD=ot_s81svc8_hgrp_s81_bounded",
     "OT_SVC_LAND_SRAM",
-    "OT_SVC_ATT_SRAM",
-    "SVCQ_ENG_FG3"
+    "OT_SVC_ATT_SRAM"
   ],
   "params": {
     "MUT": 0,
@@ -38,5 +37,6 @@
   "orfs_vars": {
     "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_dv/svc_rs"
   },
-  "scope": "Current-ABI standalone ATT parent mapped load census/area; four hard-group BB ports with role-only library. Does not qualify children or a layout, nor imply functional adoption."
+  "scope": "Current-ABI standalone ATT parent mapped load census/area; four hard-group BB ports with role-only library. Does not qualify children or a layout, nor imply functional adoption.",
+  "engine_config": "Production: FPL4/FML6/TILE_S1/NARROW1/TRX1/F121/FX5. SVCQ_ENG_FG3 MUST be absent: it selects a different generic arithmetic engine and cannot measure four hard-group parent area."
 }
