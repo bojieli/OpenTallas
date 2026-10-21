@@ -1,0 +1,17 @@
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:351:63: Instance has missing pin: 'tx_i'
+  351 |                          .SC_CRED(0), .PV_CRED(0), .NTP(NTP)) u_eng (
+      |                                                               ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:286:33: ... Location of port declaration
+  286 |     output wire [TX_NT*TXI-1:0] tx_i,
+      |                                 ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:351:63: Instance has missing pin: 'tx_o'
+  351 |                          .SC_CRED(0), .PV_CRED(0), .NTP(NTP)) u_eng (
+      |                                                               ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:287:33: ... Location of port declaration
+  287 |     input  wire [TX_NT*TXO-1:0] tx_o
+      |                                 ^~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 12.478 MB sources in 169 modules, into 516.365 MB in 663 C++ files needing 0.000 MB
+- Verilator: Walltime 295.929 s (elab=1.429, cvt=272.256, bld=0.000); cpu 295.904 s on 1 threads; allocated 22891.512 MB

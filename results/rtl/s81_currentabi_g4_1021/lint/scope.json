@@ -1,0 +1,17 @@
+{
+  "source_commit": "4b027d3be",
+  "runner_commit": "a4df1839b",
+  "result": "PASS four Verilator5.050 elaborations",
+  "top_params": [
+    "dsdv_svc_att.NTP0",
+    "dsdv_svc_att.NTP1",
+    "dsdv_svc_rs.NTP1",
+    "dsdv_svc_rs_entry.NTP1"
+  ],
+  "defines": [
+    "SVCQ_ENG_FG3",
+    "SU_SMU_T"
+  ],
+  "scope": "Generic FG3 engine elaboration only. Production arithmetic/frame behavior, SRAM candidate, native census, layout and adoption remain separate pending jobs.",
+  "infra_history": "First archive omitted sx_roles.svh; first run refused include. Second archive added exact committed include and all four tops passed."
+}

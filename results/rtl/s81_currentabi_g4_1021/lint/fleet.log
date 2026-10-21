@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   718 GB (avail 616, growth 113, headroom 0, waiters 0/0 GB) load 90/128 running 40 disk 2261 GB 
+ot-run: ot-epyc7       admits   719 GB (avail 592, growth 89, headroom 0, waiters 0/0 GB) load 152/96 running 24 disk 4680 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-g4-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-g4-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-g4-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-g4-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-g4-1021/src
+ot-run: LOAD SPILL: ot-epyc5 would run at 1.39 x cores; moving to ot-gold2
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-currentabi-g4-1021 (0.0 GB) ot-epyc5 -> ot-gold2 (no host with --dir admits 64 GB now)
+ot-run: SPILL: copied 75 changed entries in 7 s; running on ot-gold2; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-1918344-1792601430 after 0 s
+CURRENTABI_G4_LINT PASS dsdv_svc_att NTP=0
+CURRENTABI_G4_LINT PASS dsdv_svc_att NTP=1
+CURRENTABI_G4_LINT PASS dsdv_svc_rs NTP=1
+CURRENTABI_G4_LINT PASS dsdv_svc_rs_entry NTP=1
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-1918344-1792601430): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc5; RAN on ot-gold2: exit 0
