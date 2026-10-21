@@ -1,7 +1,7 @@
 {
   "original_die": "/home/ubuntu/scratch/tok-func2-hbm/conn_p40/die.v",
   "before_sha256": "35350876531724e4d2cc33c71ef85724d8e85ff1685e0bc8b612dacce906b432",
-  "after_sha256": "005539fd5f005fadb16a949afec13be6b9ef376988a11afdbe32e50da72be366",
+  "after_sha256": "cfd91a040f3a8a7b005b0847e617bc109b834920d460642ef44de4f26a0e0280",
   "params": {
     "su_SW0": {
       "PAIR_C_READS": 1
@@ -17,5 +17,5 @@
     }
   },
   "source": "923f00b0b",
-  "qualification": "source-only optin; actualRTLproof pending"
+  "qualification": "corrected parameter syntax; actualRTLproof pending"
 }

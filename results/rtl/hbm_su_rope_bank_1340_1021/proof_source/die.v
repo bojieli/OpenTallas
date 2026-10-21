@@ -14689,7 +14689,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sucore_SW__fault),
     .slice_t({su_SW3__tree_o[66:0], su_SW2__tree_o[66:0], su_SW1__tree_o[66:0], su_SW0__tree_o[66:0]})
   );
-  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(0), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1, .PAIR_C_READS(1))) su_SW0 (
+  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(0), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .PAIR_C_READS(1)) su_SW0 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -14731,7 +14731,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .tree_cmd(pgp_SW__command[2433:2422]),
     .tree_o(su_SW0__tree_o)
   );
-  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(1), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1, .PAIR_C_READS(1))) su_SW1 (
+  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(1), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .PAIR_C_READS(1)) su_SW1 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -14773,7 +14773,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .tree_cmd(pgp_SW__command[2445:2434]),
     .tree_o(su_SW1__tree_o)
   );
-  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(2), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1, .PAIR_C_READS(1))) su_SW2 (
+  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(2), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .PAIR_C_READS(1)) su_SW2 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -14815,7 +14815,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .tree_cmd(pgp_SW__command[2457:2446]),
     .tree_o(su_SW2__tree_o)
   );
-  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(3), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1, .PAIR_C_READS(1))) su_SW3 (
+  ot_hbm_su_static_pgslice_lg #(.QID(0), .G(3), .READ_RETURN(18), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .PAIR_C_READS(1)) su_SW3 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
