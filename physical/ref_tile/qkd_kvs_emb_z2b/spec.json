@@ -2,6 +2,7 @@
  "name": "qkd_kvs_emb_z2b",
  "top": "qkd_kvs_emb",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
