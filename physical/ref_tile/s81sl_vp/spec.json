@@ -247,12 +247,17 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "macro_halo_um": 5.4
  },
  "structural_change": "S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit). 10-18: vp op 7 NORMR (hc_pre = leaf row a0, one-step sequencer read) + POST coefficient rows in the G-unit's order (post a0, comb a0+1..a0+4).",
  "job": {
-  "owner": "Claude:S81-SLICE",
-  "branch": "claude/s81-vpnorm-1018",
+  "owner": "Claude:DRIVE-S81-SLICEP",
+  "branch": "claude/drive-s81-slicep-1020",
   "tag": "s81sl_vp",
   "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit). 10-18 S81-SLICE vp NORMR (op 7: hc_pre from the G-unit's leaf row R) + POST row order = the G-unit's (post R+1, comb R+2..R+5).",
   "extra_paths": [
@@ -510,6 +515,10 @@
  },
  "inhold": true,
  "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
