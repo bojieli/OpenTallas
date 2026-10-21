@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('out');ap.add_argument('--penalty',type=float,default=20.0);a=ap.parse_args();p=json.load(open(a.plan));bs=p['blocks'];W,H=p['facts']['die_um'];pad=43.2;stub=43.2
+ ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('out');ap.add_argument('--penalty',type=float,default=20.0);ap.add_argument('--history-plan');a=ap.parse_args();p=json.load(open(a.plan));bs=p['blocks'];W,H=p['facts']['die_um'];pad=43.2;stub=43.2
  # blocks plus geometry-only blockages (S81-LINKS gap reserves: no pins, never bound) are obstacles alike
  rect=[(b['x']-pad,b['y']-pad,b['x']+b['w']+pad,b['y']+b['h']+pad)for b in bs+p.get('blockages',[])]
  def outer(e,f):
@@ -26,12 +26,18 @@ def main():
  # M4/M5 are available only in macro-free corridors; no over-block capacity.
  capacity={'V':260*(.5/.640+.7/.048+.8/.064+.8/.080),
            'H':260*(.5/.640+.7/.048+.8/.064)}
- usage=collections.Counter()
+ usage=collections.Counter();history=collections.Counter()
  def windows(a,b):
   x0,y0=a;x1,y1=b
   if y0==y1:
    return [('V',k,int(y0//260)) for k in range(int(min(x0,x1)//260)+1,int(math.ceil(max(x0,x1)/260)))]
   return [('H',k,int(x1//260)) for k in range(int(min(y0,y1)//260)+1,int(math.ceil(max(y0,y1)/260)))]
+ if a.history_plan:
+  for old in json.load(open(a.history_plan))['links']:
+   seen=set()
+   for x0,y0,x1,y1,_ in old.get('h',[]):seen.update(windows((x0,y0),(x1,y1)))
+   for w in seen:history[w]+=old['b']
+  history=collections.Counter({w:max(0,n-.50*capacity[w[0]]) for w,n in history.items()})
  # Cost caches belong to one link; committed usage does not change during it.
  def route(s,t,bits):
   start=(xi[s[0]],yi[s[1]]);goal=(xi[t[0]],yi[t[1]])
@@ -51,7 +57,7 @@ def main():
     if ek not in edgecost:
      length=abs(xs[xx]-xs[x])+abs(ys[yy]-ys[y])
      ws=windows((xs[x],ys[y]),(xs[xx],ys[yy]))
-     pressure=max(((usage[w]+bits)/capacity[w[0]] for w in ws),default=0)
+     pressure=max(((usage[w]+bits+history[w])/capacity[w[0]] for w in ws),default=0)
      edgecost[ek]=length*(1+a.penalty*(pressure/.60)**6)
     ng=g+edgecost[ek]
     if ng+1e-6>=dist.get(v,math.inf):continue
@@ -94,7 +100,7 @@ def main():
  p['facts']['physical72'].update(routing='CONSTRUCTION_FAILED'if failed else'CONSTRUCTED_PENDING_REAL_PIN_PROJECTION_AND_SOURCE_GEN',routing_failures=failed,grid=[nx,ny],relay_station_count=len(stations),relay_cell_packing='PENDING exact master bodies/station collision legalization; no fictitious cell-site claim')
  p['facts']['physical72']['package_ports']=dict(placement_model='package bumps over/along actual existing interior PMA pin faces; no outer-shoreline path assumed',source_ports='retain all existing PMA external connections; actual kit/view pin manifest owed')
  p['facts'].update(relays=len(stations),bit_mm=sum(l.get('L',0)*l['b']for l in p['links'])/1000,relay_channels_seed=channels)
- p['facts']['physical72']['congestion_source_constructor']=dict(order='descending bus width then endpoint Manhattan distance',penalty=a.penalty,
+ p['facts']['physical72']['congestion_source_constructor']=dict(order='descending bus width then endpoint Manhattan distance',penalty=a.penalty,history_plan=a.history_plan,history_rule='prior window demand in excess of 50% of nominal capacity biases early wide paths; final ratios count actual current paths only',
   layers=dict(V=['M2 H .640 usable .50','M4 H .048 usable .70','M6 H .064 usable .80','M8 H .080 usable .80'],
               H=['M3 V .640 usable .50','M5 V .048 usable .70','M7 V .064 usable .80']),
   nominal_capacity_per_260um=capacity,
