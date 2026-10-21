@@ -1,0 +1,55 @@
+{
+  "source_base": "6e20f4f89",
+  "frozen_native": "q8c/q8d both737violations,max82,386599roots",
+  "sealed_fifo_sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+  "scope": "Source-local structural candidate only. No native/behavior/physical claim.",
+  "partition": {
+    "pcs": 16,
+    "logical_slices_per_pc": 20,
+    "pingpong": 2,
+    "depth": 4,
+    "original_fifo_widths": "4x15 +14x14 data,15+14 address =285 bits",
+    "subfragments": 2,
+    "fragment_widths": "8+7 for SW15, 8+6 for SW14",
+    "original_fifo_instances": 640,
+    "candidate_fifo_instances": 1280,
+    "fifo_payload_storage_bits": 36480,
+    "ring_payload_storage_bits": 13680,
+    "added_fifo_control_register_estimate": 27520,
+    "credit_pending_register_bits": 2560
+  },
+  "atomic_protocol": {
+    "write": "Same logical registered write/toggle drives both fragments; actual whole-PC credit returns are minimum accumulated releases across all40 fragments (each sums pingpong A/B). Conservative capacity prevents any sibling local-full suppression; every ovf retained. No status-slice0 credit assumption.",
+    "read": "Existing registered whole-PC pop permitted only when all logical slices and both fragments selected for next pop are nonempty. Availability cannot withdraw between decision and pop. Each ring fragment capture separately gated by its own selected !rempty; global all-valid only controls atomic pop.",
+    "credit": "pending_i_next=pending_i+wf_i-min_j(pending_j+wf_j), forty fragments/PC, each sums pingpong returns. Common minimum distributed through authentic AND cells, no new register edge. 4-bit pending values bounded by depth8 whole-word occupancy; stream reset leaf private per4-bit counter.",
+    "cycle": "No payload pipeline/capture/pop edge added. Ready buffer wire-equivalent. Credit stalls may become more conservative under synchronizer skew; existing protocol proofs and measured completion cycles must price this, no unchanged-throughput claim."
+  },
+  "native_roots": {
+    "fifo_wbin640": "Actualoriginal wbin[1]34/36loads; two <=8bit sealed fragments expected<=22; canonicalcensus decides.",
+    "rtd80": "Retain same-edge rtd for payload mux only; own-empty capture selection uses identical rtc, avoiding extra status fanout on 30-load SW15 mux selector.",
+    "ready16": "Authentic AND2x2_ASAP7_75t_R tree grouped logical ring slices; no cycles. Exact officialLiberty pin/function context and simulation wire-equivalent a&b.",
+    "cp_basem1": "Split same-edge copied base address by two PC consumers, kept replicas; no base or edge changes."
+  },
+  "ports": {
+    "readwrite": "16 HBM ports each256payload+30address bits; originalready/valid protocol; no throughput expansion",
+    "sram": "32 existing128x256 SRAMs unchanged",
+    "boundary_bits_per_accepted_beat": 4576,
+    "outline_um": [
+      777.6,
+      518.4
+    ],
+    "area": "Payload/macro area unchanged; about30k extra controlFF plus genuinebuffers, exact mapped area and fit required before any geometry gate."
+  },
+  "necessary_proofs": [
+    "existing wbq_e/wbq_w/wbq_e_wopen",
+    "existing wbq_mut_quad/span/premature/ksaddr/slice/commit/credit/pp/lock each intended WB_INTEGRITY fail",
+    "unchanged canonical Gray checker with authenticLiberty",
+    "synth-only exact-library native census <=32 allpins/no role errors"
+  ],
+  "launch_policy": "Send source/model to lead before heavy; at most2newheavy clients; no geometry gate until actual nativePASS.",
+  "helper_commit": "99eff96d0ee86f973604b0190e0cebd01388cc2f",
+  "source_delta_files": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kq8.sv"
+  ],
+  "physical_alias": "Bothq8c/doldnativefail snapshots preserved. No existinggate_binding/oldkitclaim. Freshnativekit only; c/d geometrynotinvoked."
+}

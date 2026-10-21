@@ -1,0 +1,29 @@
+{
+  "source": "6e20f4f89",
+  "raw_path": "ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/hbm_wbk_q8c_1020-20261021-104925/routes/gate/work/orfs/native_census.json",
+  "raw_sha256": "12ea5e7b2806d69a2bfb6fa733a08aed79b1053157fe4281197e0e527d507f9a",
+  "status": "FAIL",
+  "roots_examined": 386599,
+  "max": 82,
+  "violations": 737,
+  "classification": {
+    "fifo_wbin": 640,
+    "rtd": 80,
+    "w_k_rdy": 16,
+    "cp_basem": 1
+  },
+  "examples": [
+    {
+      "driver": "w_k_rdy[15]",
+      "driver_role": "input_port",
+      "net": "w_k_rdy[15]",
+      "loads": 81
+    },
+    {
+      "driver": "w_k_rdy[14]",
+      "driver_role": "input_port",
+      "net": "w_k_rdy[14]",
+      "loads": 81
+    }
+  ]
+}

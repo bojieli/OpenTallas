@@ -115,7 +115,16 @@
   "die_constant_inputs": [
    "quad"
   ],
-  "why": "quad is the quadrant identity strap (die constant); it is registered on both families (q_s stream, q_h hbm)"
+  "why": "quad is the quadrant identity strap (die constant); it is registered on both families (q_s stream, q_h hbm)",
+  "tech_cell_liberties": [
+   {
+    "path": "physical/asap7_stdcell_native_models/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+    "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "cells": [
+     "AND2x2_ASAP7_75t_R"
+    ]
+   }
+  ]
  },
  "outline": {
   "w": 777.6,

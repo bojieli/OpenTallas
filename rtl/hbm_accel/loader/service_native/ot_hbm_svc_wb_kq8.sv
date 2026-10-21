@@ -57,13 +57,14 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  localparam integer DEFF=NPP<<FAW;                   // crossing entries per PC slice
  localparam integer CW=FAW+2;                        // credit counter width (0..DEFF)
  localparam integer NDS=18, NSL=20;                  // 18 data slices (4 x 15 b + 14 x 14 b) + ordinal [14:0] + [28:15]
- // <= 15 b per slice: a reviewed FIFO entry enable / ring enable / toggle mux then drives <= 31 loads
+ // <= 15 b per ring slice (FIFO halves <=8 b): a reviewed FIFO entry enable / ring enable / toggle mux then drives <= 31 loads
  function automatic integer sw_f(input integer g); sw_f=(g<4)?15:(g<NDS)?14:(g==NDS)?15:14; endfunction
  function automatic integer so_f(input integer g); so_f=(g<4)?15*g:(g<NDS)?60+14*(g-4):(g==NDS)?0:15; endfunction
- localparam integer NFP=NSL*NPP;                     // crossing FIFOs per PC
+ localparam integer NPART=2, NC=NSL*NPART;
+ localparam integer NFP=NSL*NPP*NPART;                     // crossing FIFOs per PC
  localparam [32:0] SPACE_END=33'h020000000;
  // reset leaf maps
- localparam integer NS=29;
+ localparam integer CS=29, NS=CS+16*NC;
  localparam integer XB=4*NFP, NR=XB+13;              // per root: 4 PCs x NFP FIFO write leaves, 4 x 3 slice leaves, ready
  localparam integer NRL=8, NF=16*NFP, HB=NF, HM=HB+16*NRL, NH=HM+7;
  // ------------------------------------------------------------------------------------------------ resets
@@ -220,7 +221,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  (* keep="true",dont_touch="true" *) reg cp_bank [0:3];
  (* keep="true",dont_touch="true" *) reg [11:0] cp_commit [0:3];
  (* keep="true",dont_touch="true" *) reg [14:0] cp_base_lo [0:3];
- (* keep="true",dont_touch="true" *) reg [28:0] cp_basem [0:3];
+ (* keep="true",dont_touch="true" *) reg [28:0] cp_basem [0:7];
  wire [11:0] commit_cb=(MUT==6)?total[cb0]:committed[cb0];
  wire [29:0] base_cb={base[copy_bank_c[8]][29:23],base[cb3][22:15],base[copy_bank_c[7]][14:8],base[cb1][7:0]};
  assign copy_active_n=start_copy?1'b1:(ack_re&&copy_active&&ack_ok)?1'b0:copy_active;
@@ -232,12 +233,12 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    if(k<4)begin st1[k]<=(k==0)?start_copy:1'b0;cp_on[k]<=copy_active&&!start_copy&&!st1[0]&&!st_r[4*k]&&!fault; end
   end
  always @(posedge stream_clk)for(k=0;k<4;k=k+1)begin
-  cp_bank[k]<=cb0;cp_commit[k]<=commit_cb;cp_base_lo[k]<=base_cb[14:0];cp_basem[k]<=basem_cb;
+  cp_bank[k]<=cb0;cp_commit[k]<=commit_cb;cp_base_lo[k]<=base_cb[14:0];cp_basem[2*k]<=basem_cb;cp_basem[2*k+1]<=basem_cb;
  end
  // ------------------------------------------------------------------------------------------------ lanes
  wire [15:0] hpc_w [0:31];wire [6:0] rp_w [0:31];wire [255:0] rdl [0:31];
  wire [31:0] g_w [0:15];
- genvar gl,gp,gf,gq;
+ genvar gl,gp,gf,gq,gb;
  generate for(gl=0;gl<32;gl=gl+1)begin:g_lane
   localparam integer C=(gl>>1)&3;           // SRAM column: l[2:1]
   localparam integer SL=gl&7;               // DMA slot
@@ -263,8 +264,9 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
  // ------------------------------------------------------------------------------------------------ arbiters, credit
- // credit: entries granted and not yet freed in the PC's slice-0 crossing FIFO(s) (all slices pop in lockstep, so
- // every slice holds the same count); okc = registered (cnt < DEFF), computed from the counter's next value (exact).
+ // Credit: entries granted minus the common accumulated release of ALL fragments.
+ // Synchronizers may resolve on different edges; no single-slice capacity assumption.
+ // okc is registered (cnt < DEFF), computed from the counter next value.
  wire [CW-1:0] wfreed [0:15];wire [16*NFP-1:0] ovf;
  assign ovf_any=|ovf;
  (* keep="true",dont_touch="true" *) reg okc [0:47];
@@ -288,7 +290,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  (* keep="true",dont_touch="true" *) reg xv1c [0:16*NSL-1];
  (* keep="true",dont_touch="true" *) reg xv2c [0:16*NSL-1];
  (* keep="true",dont_touch="true" *) reg wtog [0:16*NSL-1];
- wire [15:0] fifo_rd [0:16*NFP-1];wire [16*NFP-1:0] fifo_empty;
+ wire [7:0] fifo_rd [0:16*NFP-1];wire [16*NFP-1:0] fifo_empty;
  wire [FAW:0] fifo_wf [0:16*NFP-1];wire [FAW:0] fifo_rc [0:16*NFP-1];
  (* keep="true",dont_touch="true" *) reg popc [0:16*NSL-1];        // registered lockstep pop, one copy per slice
  (* keep="true",dont_touch="true" *) reg rtc [0:16*NSL-1];         // read toggle (which ping-pong FIFO is next)
@@ -305,14 +307,37 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
     if(gqa[gp][j])aln=aln|5'(j);
    end
   end
-  always @(posedge fclk)begin gqa[gp]<=g_w[gp];xr_a<=cp_basem[K]+{17'd0,arp,aln};end
-  // credit returns of slice 0 (both ping-pong FIFOs)
-  if(NPP==2)begin:g_wf2 assign wfreed[gp]=CW'(fifo_wf[gp*NFP])+CW'(fifo_wf[gp*NFP+1]); end
-  else begin:g_wf1 assign wfreed[gp]=CW'(fifo_wf[gp*NFP]); end
+  always @(posedge fclk)begin gqa[gp]<=g_w[gp];xr_a<=cp_basem[2*K+(gp%4)/2]+{17'd0,arp,aln};end
+  // Atomic-word credits: independently synchronized fragments can return freed
+  // entries on different edges. Release only their common accumulated minimum.
+  wire [CW-1:0] credit_tree [1:127];
+  wire [CW-1:0] released [0:3];
+  for(gq=0;gq<64;gq=gq+1)begin:g_credit
+   if(gq<NC)begin:g_live
+    (* keep="true",dont_touch="true" *) reg [CW-1:0] pending;
+    localparam integer F=(gq/NPART)*NPART*NPP+(gq%NPART)*NPP;
+    wire [CW-1:0] arrived;
+    if(NPP==2)begin:g_pp assign arrived=CW'(fifo_wf[gp*NFP+F])+CW'(fifo_wf[gp*NFP+F+1]);end
+    else begin:g_one assign arrived=CW'(fifo_wf[gp*NFP+F]);end
+    assign credit_tree[64+gq]=pending+arrived;
+    always @(posedge stream_clk or negedge sl[CS+gp*NC+gq])
+     if(!sl[CS+gp*NC+gq])pending<=0;
+     else pending<=credit_tree[64+gq]-released[gq/10];
+   end else begin:g_pad assign credit_tree[64+gq]={CW{1'b1}};end
+  end
+  for(gq=1;gq<64;gq=gq+1)begin:g_cmin
+   assign credit_tree[gq]=(credit_tree[2*gq]<credit_tree[2*gq+1])?credit_tree[2*gq]:credit_tree[2*gq+1];
+  end
+  for(gq=0;gq<4;gq=gq+1)begin:g_cdist
+   for(gb=0;gb<CW;gb=gb+1)begin:g_bit
+    ot_wbk8_native_and u_buf(.a(credit_tree[1][gb]),.b(1'b1),.y(released[gq][gb]));
+   end
+  end
+  assign wfreed[gp]=credit_tree[1];
   for(gf=0;gf<NSL;gf=gf+1)begin:g_sl
    localparam integer SW=sw_f(gf), SO=so_f(gf);
    localparam integer IX=gp*NSL+gf;
-   localparam integer WL=(gp%4)*NFP+gf*NPP;            // write-side reset leaf of FIFO 0 of this slice
+   localparam integer WL=(gp%4)*NFP+gf*NPART*NPP;            // write-side reset leaf of FIFO 0 of this slice
    localparam integer XL=XB+(gp%4)*3+gf/7;
    wire [15:0] wdat;
    if(gf<NDS)begin:g_dat
@@ -328,16 +353,19 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    always @(posedge fclk or negedge rl[K][XL])
     if(!rl[K][XL])begin xv1c[IX]<=1'b0;xv2c[IX]<=1'b0;wtog[IX]<=1'b0;end
     else begin xv1c[IX]<=gany_w;xv2c[IX]<=xv1c[IX];if(xv2c[IX]&&NPP==2)wtog[IX]<=!wtog[IX];end
-   for(gq=0;gq<NPP;gq=gq+1)begin:g_f
-    localparam integer FX=gp*NFP+gf*NPP+gq;
-    wire [CW-1:0] wf;wire [SW-1:0] rdat;wire fe;
-    wire wr=xv2c[IX]&&((NPP==1)||(wtog[IX]==gq[0]));
-    wire rd=popc[IX]&&((NPP==1)||(((MUT==9&&gf==5)?1'b0:rtc[IX])==gq[0]));
-    ot_link_afifo #(.W(SW),.AW(FAW),.SYNC(2),.RCOPY(3)) u_fifo(
-     .wclk(fclk),.wrst_n(rl[K][WL+gq]),.wr(wr),.wdata(wdat[SW-1:0]),.wfull(),.wfreed(wf[FAW:0]),.ovf(ovf[FX]),
-     .rclk(hbm_clk),.rrst_n(hl[FX]),.rd(rd),.rempty(fe),.rdata(rdat),.rcount(fifo_rc[FX]));
-    assign wf[CW-1:FAW+1]=0;
-    assign fifo_empty[FX]=fe;assign fifo_rd[FX]=16'(rdat);assign fifo_wf[FX]=wf[FAW:0];
+   for(gb=0;gb<NPART;gb=gb+1)begin:g_part
+    localparam integer BW=(gb==0)?8:SW-8;
+    for(gq=0;gq<NPP;gq=gq+1)begin:g_f
+     localparam integer FX=gp*NFP+(gf*NPART+gb)*NPP+gq;
+     wire [CW-1:0] wf;wire [BW-1:0] rdat;wire fe;
+     wire wr=xv2c[IX]&&((NPP==1)||(wtog[IX]==gq[0]));
+     wire rd=popc[IX]&&((NPP==1)||(((MUT==9&&gf==5)?1'b0:rtc[IX])==gq[0]));
+     ot_link_afifo #(.W(BW),.AW(FAW),.SYNC(2),.RCOPY(3)) u_fifo(
+      .wclk(fclk),.wrst_n(rl[K][WL+gb*NPP+gq]),.wr(wr),.wdata(wdat[8*gb+:BW]),.wfull(),.wfreed(wf[FAW:0]),.ovf(ovf[FX]),
+      .rclk(hbm_clk),.rrst_n(hl[FX]),.rd(rd),.rempty(fe),.rdata(rdat),.rcount(fifo_rc[FX]));
+     assign wf[CW-1:FAW+1]=0;
+     assign fifo_empty[FX]=fe;assign fifo_rd[FX]=8'(rdat);assign fifo_wf[FX]=wf[FAW:0];
+    end
    end
   end
  end endgenerate
@@ -394,31 +422,45 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    end
   assign w_k_v[gp]=vq_pin;
   assign spurious[gp]=done_q[gp]&&cnt_h==7'd0;
+  wire [3:0] ready_local;
+  for(gb=0;gb<4;gb=gb+1)begin:g_ready
+   ot_wbk8_native_and u_buf(.a(w_k_rdy[gp]),.b(1'b1),.y(ready_local[gb]));
+  end
   wire [255:0] kd;wire [28:0] o;
   for(gf=0;gf<NSL;gf=gf+1)begin:g_s
    localparam integer SW=sw_f(gf), SO=so_f(gf);
    localparam integer IX=gp*NSL+gf;
    localparam integer RL=HB+gp*NRL+gf/3;
-   localparam integer F0=gp*NFP+gf*NPP;
-   wire e0=fifo_empty[F0];wire e1=(NPP==2)?fifo_empty[F0+NPP-1]:1'b1;
-   wire [15:0] r0=fifo_rd[F0];wire [15:0] r1=fifo_rd[F0+NPP-1];
-   // next FIFO read at t+1: toggle after a pop (PP), or the same FIFO with one more word (PP = 0)
+   localparam integer F0=gp*NFP+gf*NPART*NPP;
+   wire [NPART-1:0] e0p,e1p;
+   wire e0=|e0p,e1=|e1p;
    if(NPP==2)begin:g_av2
     wire nsel=rtc[IX]^popc[IX];
     assign avail[gf]=nsel?!e1:!e0;
    end else begin:g_av1
-    wire [FAW:0] rc0=fifo_rc[F0];
-    assign avail[gf]=popc[IX]?(rc0>=(FAW+1)'(2)):!e0;
+    wire [NPART-1:0] can;
+    for(gb=0;gb<NPART;gb=gb+1)begin:g_part
+     wire [FAW:0] rc0=fifo_rc[F0+gb*NPP];
+     assign can[gb]=popc[IX]?(rc0>=(FAW+1)'(2)):!e0p[gb];
+    end
+    assign avail[gf]=&can;
    end
-   wire [SW-1:0] din=(NPP==2&&rtd[IX])?r1[SW-1:0]:r0[SW-1:0];
    wire push=popc[IX];
-   // ring load gated by the read FIFO's own !rempty (WBK10: reviewed_gray_fifos extension-mode storage miter refused the
-   // popc-only enable; popc implies the read FIFO is non-empty, so the gate is functionally a no-op -- no cycle change)
-   wire rv=(NPP==2&&rtd[IX])?!e1:!e0;
-   wire fire=vqc[IX]&&w_k_rdy[gp];
+   wire fire=vqc[IX]&&ready_local[gf/5];
    reg [SW-1:0] ent [0:2];
-   integer e;
-   always @(posedge hbm_clk)for(e=0;e<3;e=e+1)if(push&&rv&&wpo[IX][e])ent[e]<=din;
+   // Payload capture uses each fragment's own empty signal; the atomic pop
+   // decision above requires every fragment and cannot consume a partial word.
+   for(gb=0;gb<NPART;gb=gb+1)begin:g_capture
+    localparam integer BW=(gb==0)?8:SW-8;
+    wire [7:0] r0=fifo_rd[F0+gb*NPP],r1=fifo_rd[F0+gb*NPP+NPP-1];
+    assign e0p[gb]=fifo_empty[F0+gb*NPP];
+    assign e1p[gb]=(NPP==2)?fifo_empty[F0+gb*NPP+NPP-1]:1'b1;
+    wire [BW-1:0] din=(NPP==2&&rtd[IX])?r1[BW-1:0]:r0[BW-1:0];
+    wire rv=(NPP==2&&rtc[IX])?!e1p[gb]:!e0p[gb];
+    integer e;
+    always @(posedge hbm_clk)for(e=0;e<3;e=e+1)
+     if(push&&rv&&wpo[IX][e])ent[e][8*gb+:BW]<=din;
+   end
    always @(posedge hbm_clk or negedge hl[RL])
     if(!hl[RL])begin popc[IX]<=1'b0;rtc[IX]<=1'b0;rtd[IX]<=1'b0;vqc[IX]<=1'b0;wpo[IX]<=3'b001;rpo[IX]<=3'b001;end
     else begin
@@ -461,5 +503,14 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   else begin mac<=meta_active_n;apc[0]<=ack_pending_n;apc[1]<=ack_pending_n;end
  // meta_q loads the meta FIFO head only while both meta FIFOs are non-empty (WBK10: storage miter; meta_re implies !meta_empty -> 0 cycles)
  always @(posedge hbm_clk)if(!mac&&!meta_empty)meta_q<=meta_rdata;
+endmodule
+// Authentic ASAP7 Y=A*B master; official pinned Liberty supplies synthesis/CDC
+// function. Simulation is the exact same Boolean function and adds no state.
+module ot_wbk8_native_and(input wire a,b,output wire y);
+`ifdef SYNTHESIS
+ (* keep="true",dont_touch="true" *) AND2x2_ASAP7_75t_R u_and(.A(a),.B(b),.Y(y));
+`else
+ assign y=a&b;
+`endif
 endmodule
 `default_nettype wire
