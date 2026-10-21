@@ -1,0 +1,13 @@
+# One normal engine gate packet
+
+Selected physical/ref_tile/qkd_hr_ingest_eng_e5a is a REAL generated kit, not just a proposed spec. Exactly one main345.6x518.4geometry,32actual new native macro instance bindings and all32clk pins rooted on ck_ingest. Data/native clocks ck_ingest;37reset FFs ck_rl; declared samePLL1:1 phase0, signoff1666.667ps/route1540ps. Selected source uses no behavioural params/defines; production origin AW32 HDMAX128 KVHMAX2 QKV1 APIPE0 QPIPE2 NATIVE_ROWS1 QMUT0. External ports unchanged. Internal reset ABI35ports is explicitly supplied by2first+35last18/17 leaves, and the actual whole-wrapper census includes these cells and raw2input contacts. Macro rebinding provenance is actual_macro_rebinding.json; no old34-native source/view alias.
+
+Source arithmetic was ROOT reviewed; actual selected wrapper/native/cold evidence is in READY.md +cold/ +wrapper/. Whole-wrapper max32 PASS, conditional copy proof and physical convergence distinctly scoped, bounded cold3seeds+occupied reset+wrongclock negative complete. Both direct SAT timeouts retained as inconclusive; compositional source proof never relabeled whole-state proof. Warning comparison and18dead poison aliases retained in ../sealed_packet, and original e4a setup/e4b clock refusals retained on codex/qko-hroot3-leaf-results-1021.
+
+Completed-map estimate address_cone_estimate.json, source-pinned script tools/qwen_kv_die/hroot_address_factor_1021/hroot_address_cone_estimate_1021.py, unit oth-ubuntu-4014293-1792622914. Actual old mapped w_addr31=1256.9ps/38levels; new selected wrapper eng_waddr31=1238.6ps/37levels, about1.5% improvement. Overall reg-to-reg1168.6→1148.6ps. This unchanged textbook scalar-weight graph estimate excludes wire/load/slew/placement and is NOT timing/corner qualification. Prior actual TT-overlay−810.5ps output failure remains a material risk; no closure promise.
+
+ROOT authorized exactly ONE normal engine gate THROUGH parent after these required artifacts, no further proof campaign/approval unless a concrete new failure is exposed. No launch by this lane. Parent recipe uses the finalized source commit sent with this packet:
+
+python3 tools/ref_tile/pre_route_gate.py physical/ref_tile/qkd_hr_ingest_eng_e5a --commit FINAL_SOURCE_COMMIT --remote auto --cts --mem 48 --json /home/ubuntu/scratch/qko-hroot3/gates/gate_eng_e5a.json
+
+Use the normal qualified current flow/all guards, unpinned placement; no skip/waive/reach/clock overrides. ROOTintegration remains exclusive publisher/submits. This packet is unrelated to separate NEWASR QUIESCENT_SYSTEM_RESET shell architecture and does not wait for that whole-die contract.

@@ -1,0 +1,31 @@
+{
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "cmd": [
+    "python3",
+    "native_census.py",
+    "--netlist",
+    "whole_wrapper.v",
+    "--top",
+    "qkd_hr_ingest_eng",
+    "--out",
+    "whole_native.json",
+    "--liberty",
+    "ot_sram_1r1w_32x128_m1_tt.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "--liberty",
+    "libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+  ],
+  "rc": 0,
+  "source_sha256": {
+    "qkd_host_native_engine_n32.sv": "14e2316d5a1f3d8e3d208ed7d87bf8c5bfc1350e1544500ffb98ea41a3a82f0f",
+    "qkd_hr_ingest_eng.v": "636336c7d1202613a9706ada4e346ae3c3c19449616532131ee661ce643beda0",
+    "whole_wrapper.v": "7faec52740fc07b850cc6a318d9e2e160e14ef6e43ce96d7c3c51d8c65aac883"
+  }
+}

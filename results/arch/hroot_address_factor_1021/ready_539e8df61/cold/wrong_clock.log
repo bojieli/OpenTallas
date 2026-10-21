@@ -1,0 +1,9 @@
+ENGINE_RESET_RELEASE epoch=0 reset_held_edges=8 cycle=8
+ENGINE_FIRST_ACCEPT epoch=0 release_cycle=8 accepted_cycle=8 ready_wait_edges=0 postrelease_burnin_edges=0
+ENGINE_OCCUPIED_RESET cycle=489 busy=1 accepted_beats=64 writes=195
+ENGINE_RESET_RELEASE epoch=1 reset_held_edges=8 cycle=497
+ENGINE_FIRST_ACCEPT epoch=1 release_cycle=497 accepted_cycle=497 ready_wait_edges=0 postrelease_burnin_edges=0
+ENGINE_COLD_MISMATCH cycle=1217 epoch=1 di=10 pi=181 writes=195 MUT_CLOCK=1 reason=control/counters
+[12175000] %Fatal: tb_engine_cold.sv:64: Assertion failed in tb_engine_cold.mismatch: engine pair differs
+%Error: tb_engine_cold.sv:64: Verilog $stop
+Aborting...
