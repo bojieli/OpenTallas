@@ -26,6 +26,28 @@ def digest_file(path):
     return h.hexdigest()
 
 
+def sync_file(path):
+    with pathlib.Path(path).open('rb') as f:
+        os.fsync(f.fileno())
+
+
+def sync_tree(root):
+    for dp, dirs, files in os.walk(root, topdown=False):
+        for name in files:
+            p = pathlib.Path(dp)/name
+            if not p.is_symlink():
+                sync_file(p)
+        fd = os.open(dp, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+
+
+def refs_listing(common, env=None):
+    return run(['git', '--git-dir='+common, 'for-each-ref', '--format=%(objectname) %(refname)'], env=env)
+
+
 def durable_json(path, data):
     path = pathlib.Path(path)
     tmp = path.with_suffix('.tmp')
@@ -49,6 +71,7 @@ def capture(root, output):
     if not candidates:
         raise RuntimeError('no worktrees found; no proof')
     stores = {}
+    source_refs = {}
     records, errors = {}, {}
     # Registered nested worktrees are enumerated without traversing millions of checkout files.
     for p in list(candidates):
@@ -66,7 +89,9 @@ def capture(root, output):
         temp = output/('objects-'+str(i))
         run(['git', 'init', '--bare', str(temp)])
         (temp/'objects/info/alternates').write_text(str(pathlib.Path(common)/'objects')+'\n')
-        listing = run(['git', '--git-dir='+common, 'for-each-ref', '--format=%(objectname) %(refname)'], env=env).decode()
+        source_refs[common] = refs_listing(common, env)
+        (output/('refs-'+str(i)+'.txt')).write_bytes(source_refs[common])
+        listing = source_refs[common].decode()
         for line in listing.splitlines():
             oid, ref = line.split(' ', 1)
             run(['git', '--git-dir='+str(temp), 'update-ref', ref, oid])
@@ -98,6 +123,7 @@ def capture(root, output):
             run(['git', '--git-dir='+str(temp), 'update-ref', 'refs/preserve/ep6-index-'+key, commit])
             run(['git', '--git-dir='+str(temp), 'update-ref', 'refs/preserve/ep6-head-'+key, head])
             record = dict(head=head, symbolic_ref=symbolic, index_sha256=sha(data/'index'), diff_sha256=sha(data/'working.diff'),
+                          refs_sha256=hashlib.sha256(source_refs[common]).hexdigest(),
                           index_commit=commit, index_tree=tree, metadata_dir=key, common=common)
             # A changed source snapshot is never marked reconstructible.
             assert sha(index) == record['index_sha256']
@@ -110,9 +136,15 @@ def capture(root, output):
     for i, (common, temp) in enumerate(stores.items()):
         name = 'store-'+str(i)+'.bundle'
         run(['git', '--git-dir='+str(temp), 'bundle', 'create', str(output/name), '--all'])
-        bundles[common] = dict(file=name, sha256=digest_file(output/name))
+        assert refs_listing(common, env) == source_refs[common], 'source refs changed during capture'
+        bundles[common] = dict(file=name, sha256=digest_file(output/name), refs_file='refs-'+str(i)+'.txt',
+                               refs_sha256=hashlib.sha256(source_refs[common]).hexdigest())
         # The bundle is standalone; the temporary alternate-backed object store is not the durable artifact.
     manifest = dict(at=datetime.datetime.now().astimezone().isoformat(),root=str(root),worktrees=records,errors=errors,bundles=bundles)
+    for common in stores:
+        assert refs_listing(common, env) == source_refs[common], 'source refs changed before manifest'
+    # Bundle, exact raw index/diff, and refs are durable BEFORE the manifest can advertise them.
+    sync_tree(output)
     durable_json(output/'source_manifest.json', manifest)
     print(json.dumps(dict(output=str(output),worktrees=len(records),errors=errors,bundles=bundles)), flush=True)
 
@@ -124,6 +156,7 @@ def verify(output, proof):
     for common, bundle in manifest['bundles'].items():
         path = output/bundle['file']
         assert digest_file(path) == bundle['sha256'], 'bundle SHA mismatch'
+        assert sha(output/bundle['refs_file']) == bundle['refs_sha256'], 'refs listing SHA mismatch'
         mirror = output/(bundle['file']+'.verified.git')
         if mirror.exists():
             raise RuntimeError('verification destination already exists; use fresh artifact')
@@ -133,12 +166,15 @@ def verify(output, proof):
     verified = {}
     for path, record in manifest['worktrees'].items():
         data = output/record['metadata_dir']
+        assert record['refs_sha256'] == manifest['bundles'][record['common']]['refs_sha256']
         assert sha(data/'index') == record['index_sha256']
         assert sha(data/'working.diff') == record['diff_sha256']
         mirror = mirrors[record['common']]
         for oid, kind in [(record['head'], 'commit'), (record['index_commit'], 'commit'), (record['index_tree'], 'tree')]:
             run(['git', '--git-dir='+str(mirror), 'cat-file', '-e', oid+'^{'+kind+'}'])
         verified[path] = record | dict(archive_verified=True,bundle_sha256=manifest['bundles'][record['common']]['sha256'],archive_bundle=str(output/manifest['bundles'][record['common']]['file']))
+    # A proof must never outlive the bundle/metadata/verified object artifacts it certifies.
+    sync_tree(output)
     durable_json(proof, dict(at=datetime.datetime.now().astimezone().isoformat(),worktrees=verified,errors=manifest['errors']))
     print(json.dumps(dict(proof=str(proof),verified_worktrees=len(verified),errors=manifest['errors'])), flush=True)
 

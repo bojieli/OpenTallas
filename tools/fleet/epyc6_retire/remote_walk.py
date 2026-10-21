@@ -40,6 +40,7 @@ def pristine_files(root, proofs, require_proof=False):
             diff = call("diff", "--binary", "HEAD", "--")
             if not (proof.get("archive_verified") is True and len(proof.get("bundle_sha256", "")) == 64
                     and proof.get("head") == head
+                    and proof.get("refs_sha256") == hashlib.sha256(call("for-each-ref", "--format=%(objectname) %(refname)")).hexdigest()
                     and proof.get("index_sha256") == hashlib.sha256(pathlib.Path(index).read_bytes()).hexdigest()
                     and proof.get("diff_sha256") == hashlib.sha256(diff).hexdigest()):
                 return set()
