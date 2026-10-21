@@ -1,0 +1,172 @@
+{
+ "name": "qfd_c_ringx514",
+ "top": "qfd_c_ringx514",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qcluster/qfd_c_land_k.sv",
+  "rtl/physical/qcluster/qfd_c_ring_t.sv"
+ ],
+ "params": {},
+ "clock_port": "ck_w",
+ "reset_ports": [],
+ "outline": {
+  "w": 108.0,
+  "h": 43.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "i",
+   "ck_w",
+   "rsi_w"
+  ],
+  "N": [
+   "o",
+   "ck_r",
+   "rsi_r"
+  ]
+ },
+ "pin_ranges": {
+  "i": [
+   1.08,
+   104.76
+  ],
+  "ck_w": [
+   105.84,
+   106.14
+  ],
+  "rsi_w": [
+   106.68,
+   106.98
+  ],
+  "o": [
+   1.08,
+   104.76
+  ],
+  "ck_r": [
+   105.84,
+   106.14
+  ],
+  "rsi_r": [
+   106.68,
+   106.98
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": false,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "region-crossing tile (owner 10-20 09:05: pin registers only at region crossings, i.e. here): every data input pin i lands directly in the 4 bank slot registers (enable = registered one-hot); output o = the reader's slot SELECT (bank regs on ck_w AND one-hot/warm regs on ck_r -> 2-3 gates -> pin) whose register is the closed station qfd_c_stn<W> on ck_r that the CB16 parent places at the destination (= qfd_c_land_r1k's output register); rsi_w / rsi_r land in the halves' kept reset copies (19 loads). No in->out combinational path."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "rsi_w / rsi_r are the region-calendar ring resets; each half re-registers them (rq + one kept copy per 30-bit super-group) on its own clock; the parent delivers them from each region's own equal-depth reset tree"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_w",
+  "ck_r"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_w"
+   ],
+   "inputs": [
+    "i",
+    "rsi_w"
+   ],
+   "outputs": []
+  },
+  "r": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r"
+   ],
+   "inputs": [
+    "rsi_r"
+   ],
+   "outputs": [
+    "o"
+   ]
+  }
+ },
+ "structural_change": "QW-CB16REG 10-20 main line (a): every CB16 region crossing becomes ONE hard tile (writer ring qfd_c_land_w1k on ck_w + the reader's slot select on ck_r, W=514, D 4, K 2) + ONE closed station qfd_c_stn514 on ck_r (the reader's output register) at the destination; 69 crossings, 2 tile masters.  Why: the flat soft rings gave each region root 6.7k-20.9k ring flops over 1-2 mm -> within-region TT spread 410-813 ps, WNS -1.4..-1.7 ns after 10-16 h (fulln/fullnb/fullm).  A first single-tile form (writer+reader+output register in one tile, r0 gate 10-20 WARN, spread 12 ps) could not be placed: its one tile must bridge source -> destination (CP-SAT: infeasible below ~600 um reach), so the split moved to the reader's output register: three <=400-um legs as the soft plan.  0 added cycles.",
+ "job": {
+  "owner": "Claude:QW-CB16REG",
+  "branch": "claude/qw-cb16reg-1020",
+  "tag": "x0",
+  "purpose": "CB16 hardened landing ring crossing tile W=514 (x57 in the CB16 parent)",
+  "submit": false,
+  "benches": [
+   {
+    "name": "ring_exact",
+    "cmd": "bash tools/qwen_cluster/bench_ring_t.sh pass qfd_c_ringx514 {RUN}/ring_p",
+    "expect": "pass",
+    "pass_regex": "RING_BENCH PASS qfd_c_ringx514 0 errors in 20000 cycles",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/arch/qw_cb16reg_1020/bench/out_pass_qfd_c_ringx514/run_pass_qfd_c_ringx514.log"
+   },
+   {
+    "name": "ring_mutant_k3",
+    "cmd": "bash tools/qwen_cluster/bench_ring_t.sh mut qfd_c_ringx514 {RUN}/ring_m",
+    "expect": "fail",
+    "fail_regex": "RING_BENCH FAIL qfd_c_ringx514 [1-9]\\d* errors in 20000 cycles",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_cb16reg_1020/bench/out_mut_qfd_c_ringx514/run_mut_qfd_c_ringx514.log"
+   }
+  ],
+  "extra_paths": [
+   "tools/qwen_cluster/bench_ring_t.sh",
+   "rtl/test/tb_qfd_c_ring_t.sv",
+   "rtl/physical/qcluster/qfd_c_stn.sv",
+   "results/arch/qw_cb16reg_1020/bench"
+  ]
+ }
+}

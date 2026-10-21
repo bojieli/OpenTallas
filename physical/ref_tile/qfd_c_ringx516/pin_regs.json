@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_ringx516",
+ "enable": false,
+ "reason": "region-crossing tile (owner 10-20 09:05: pin registers only at region crossings, i.e. here): every data input pin i lands directly in the 4 bank slot registers (enable = registered one-hot); output o = the reader's slot SELECT (bank regs on ck_w AND one-hot/warm regs on ck_r -> 2-3 gates -> pin) whose register is the closed station qfd_c_stn<W> on ck_r that the CB16 parent places at the destination (= qfd_c_land_r1k's output register); rsi_w / rsi_r land in the halves' kept reset copies (19 loads). No in->out combinational path."
+}
