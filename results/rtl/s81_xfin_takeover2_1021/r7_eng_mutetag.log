@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-epyc7       admits   537 GB (avail 442, growth 66, headroom 0, waiters 0/0 GB) load 67/96 running 22 disk 4619 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: -> ot-epyc7
+ot-heavy: waiting for memory on ot-epyc7: need 0.7 x 48 = 34 GB, admissible 46 GB: available 441 GB, growth charged 408 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 388 GB at x1), young 268 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-827902-1792615036 after 124 s
+E MISMATCH slice 0 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 4 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 10 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 2 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 12 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 9 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 11 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+E MISMATCH slice 15 copy 1 hh 4695993c/469e00af kk 455b7fac/45184416 dd 405165ca/405165ca
+DVXFIN16E slices=16 e_results=128 err=32 fault_cycles=0 rb=0 go_to_last_e=526,526 last_partial_to_last_e=464,464 ORD=0 GAP=0 LS=9 LE=29
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED mutetag
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-827902-1792615036): exit 0
