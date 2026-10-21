@@ -760,15 +760,17 @@ module ot_s81sl_lep_core #(
     reg mrv, mcol, mwv; reg [1103:0] mrd, mwd; reg [31:0] rtq;
 `ifdef OT_S81SL_LEP_NFACE
 `ifdef OT_S81SL_LEP_RPRLY
-    // R7 replay relay (ELEM-LEP/A 10-21, opt-in, +1 PRICED edge on ml_rv/ml_rd -> ri/mu_rt): N-face pin owners mrd_p,
-    // then one relay owner per byte between the N-west ml_rd pins and the E-face ri owners (782..812 um corner path
-    // with pin_order_desc ml_rd -> two registered hops <= 406 um).  The lookahead selects read the pin owners.
-    wire [1103:0] mrd_p; reg mrv_p;
+    // R7 replay relay (ELEM-LEP/A 10-21, opt-in, +2 PRICED edges on ml_rv/ml_rd -> ri/mu_rt): N-face pin owners mrd_p,
+    // then two relay owners per byte between the N-west ml_rd pins and the E-face ri / mu_rt owners (ml_rd[0] at
+    // x 1.4 -> ri[0] at y 16: 1,063 um corner path -> three registered hops <= 355 um; pin order unchanged, so the
+    // parent's dsdv_mu_land face is untouched).  The lookahead selects read relay 1 (= mrd one edge early).
+    wire [1103:0] mrd_p, mrd_q; reg mrv_p, mrv_q;
     for(genvar ib=0;ib<138;ib=ib+1) begin:g_ml_nface_in
       (* keep=1 *) ot_s81sl_lep_face8 u_capture(.clk(clk),.d(ml_rd[ib*8+:8]),.q(mrd_p[ib*8+:8]));
-      (* keep=1 *) ot_s81sl_lep_face8 u_relay(.clk(clk),.d(mrd_p[ib*8+:8]),.q(mrd[ib*8+:8]));
+      (* keep=1 *) ot_s81sl_lep_face8 u_relay1(.clk(clk),.d(mrd_p[ib*8+:8]),.q(mrd_q[ib*8+:8]));
+      (* keep=1 *) ot_s81sl_lep_face8 u_relay2(.clk(clk),.d(mrd_q[ib*8+:8]),.q(mrd[ib*8+:8]));
     end
-    wire ml_rv_la = mrv_p; wire [1103:0] ml_rd_la = mrd_p;
+    wire ml_rv_la = mrv_q; wire [1103:0] ml_rd_la = mrd_q;
 `else
     // Reuse the original input capture edge. Separate physical byte owners let the
     // kit place each landing at its N-face pin and audit both adjacent wire hops.
@@ -907,7 +909,7 @@ module ot_s81sl_lep_core #(
     wire mwv_d = rr_land;
 `endif
 `ifdef OT_S81SL_LEP_RPRLY
-    always @(posedge clk `OT_LEP_AR(rnx)) if (!rnx) mrv_p <= 1'b0; else mrv_p <= ml_rv;
+    always @(posedge clk `OT_LEP_AR(rnx)) if (!rnx) begin mrv_p <= 1'b0; mrv_q <= 1'b0; end else begin mrv_p <= ml_rv; mrv_q <= mrv_p; end
 `endif
 `else
     wire mwv_d = rr_land;
