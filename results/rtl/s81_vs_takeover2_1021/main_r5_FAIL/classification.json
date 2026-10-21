@@ -1,0 +1,13 @@
+{
+  "source": "8f57521dc",
+  "verdict": "FAIL",
+  "failures": [
+    {
+      "severity": "FAIL",
+      "check": "clock_rule",
+      "message": "16,239 sinks on the largest root; measured TT insertion 445.0 ps, FF insertion 378.3 ps, TT pin-flop spread 129.5 ps, FF pin-flop spread 123.1 ps; TT pin-flop spread 129.5 ps > 80 and FF pin-flop spread 123.1 ps > 80 (declared clock 'cts' does not waive it)",
+      "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+    }
+  ],
+  "next_action": "Preserve MAIN failure, no unchanged retry; larger FALLBACK exact same RTL has native32 and TT/FF pinflop spread56.4/55.9ps and accepted closure job s81sl_vs_n32f-n32f-71ac7943d. Adoption awaits actual closure result."
+}

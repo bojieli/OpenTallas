@@ -1,0 +1,161 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc9 for 48 GB memory; disk pick 23 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81sl_vs_n32_20261021-125913.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81sl_vs_n32_20261021-125913.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/s81sl_vs_n32-20261021-125913",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc9 in 435 s (gate total 4798 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2859, 'pin_rectangles': 2859, 'pin_track_checked': 2859, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 6f44395b0a8729bc2b7ba39a52d9af15d7bc484a4ae92efa4b62ccae8c5887ff",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 14475 um2 + macros 8550 in core 40236: util 59% (std-cell density 59.0% of placeable 24515 um2; total fill 57.2%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_s81sl_vs cells 117,276 flops 16,231 depth 538.4 ps util 0.5533 reach 148.3 um (4.2 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 16,231 flops > 15,000 on one root (+0 ICGs, 8 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "224 input->register endpoint(s) > 3 levels (worst s_d[55]->u_ot_pr_core.g_accept_region[3].u_accept.q[9]$_DFF_PN0_/D 7 lv, s_d[55]->u_ot_pr_core.g_accept_region[3].u_accept.q[8]$_DFF_PN0_/D 7 lv, s_d[55]->u_ot_pr_core.g_accept_region[3].u_accept.q[7]$_DFF_PN0_/D 7 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 16,239 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,239 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 387.4..554.1 ps (spread 166.7), boundary mean 445.9; tt insertion all 288.6..445.0 ps (spread 156.4), boundary mean 342.8; ff insertion all 231.9..378.3 ps (spread 146.4), boundary mean 280.4; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81sl_vs_n32/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      142 paths, worst slack -13.3 ps (e.g. ve_aval[24])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro     21 paths, worst slack 13.2 ps (e.g. u_ot_pr_core.g_hcopy[3].g_parity[0].u_hst/r_addr_in[2])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        78 paths, worst slack 55.8 ps (e.g. u_ot_pr_core.g_accept_region[1].u_accept/q[30]$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      359 paths, worst slack 57.0 ps (e.g. u_ot_pr_core.g_hcopy[3].g_parity[1].g_bypass[2].hit$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -1.3307854818123133e-11 hold WNS 3.312891627693659e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "16,239 sinks on the largest root; measured TT insertion 445.0 ps, FF insertion 378.3 ps, TT pin-flop spread 129.5 ps, FF pin-flop spread 123.1 ps; TT pin-flop spread 129.5 ps > 80 and FF pin-flop spread 123.1 ps > 80 (declared clock 'cts' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-vs-bankmux-1021/physical/ref_tile/s81sl_vs_n32/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-s81-vs-bankmux-1021/physical/ref_tile/s81sl_vs_n32/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "fill",
+   "message": "fill 53% = (hard macros 8550.2 + synthesized std cells 13712.2) / outline 41990.4 um2; pin demand per face: S 858 pins over 213.7/216.0 um (99%), N 761 pins over 213.7/216.0 um (99%), W 465 pins over 192.0/194.4 um (99%), E 855 pins over 192.1/194.4 um (99%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 53.02% used; GRT 1533 s",
+   "fix": ""
+  }
+ ]
+}
