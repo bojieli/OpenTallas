@@ -1,0 +1,33 @@
+{"corner": "ss", "classes": {"landing_window": {"endpoints": 1915, "worst": -1497.5}, "cross_domain": {"endpoints": 42, "worst": -256.59}, "reset_tree": {"endpoints": 6, "worst": -118.34}, "view_model_unmeasured": {"endpoints": 1, "worst": -8.82}}}
+## landing_window 1915 -1497.5
+    -1497.5      2 rly_serdes2_up_N -> rly_serdes2_up_N  eg ('rly_serdes2_up_7/b[0]', 'rly_serdes2_up_8/a[0]', None, {'setup': 1, 'hold': 3})
+    -1461.0      2 rly_serdes2_rxv_N -> rly_serdes2_rxv_N  eg ('rly_serdes2_rxv_7/b[0]', 'rly_serdes2_rxv_8/a[0]', None, {'setup': 1, 'hold': 3})
+    -1292.9    549 rly_dvw_dd_wo_N -> rly_dvw_dd_wo_N  eg ('rly_dvw_dd_wo_25/b[160]', 'rly_dvw_dd_wo_26/a[160]', None, {'setup': 6, 'hold': 3})
+    -1241.5      2 rly_sf_io_fault_N -> rly_sf_io_fault_N  eg ('rly_sf_io_fault_25/eb[0]', 'rly_sf_io_fault_26/ea[0]', None, {'setup': 6, 'hold': 3})
+    -1208.0    108 rly_dvw_ss_wo_N -> rly_dvw_ss_wo_N  eg ('rly_dvw_ss_wo_21/b[98]', 'rly_dvw_ss_wo_22/a[98]', None, {'setup': 5, 'hold': 3})
+    -1182.0      2 rly_sf_io_shared_fault_N -> rly_sf_io_shared_fault_N  eg ('rly_sf_io_shared_fault_25/b[0]', 'rly_sf_io_shared_fault_26/a[0]', None, {'setup': 6, 'hold': 3})
+    -1147.8      2 rly_dvw_io_collective_cmd_free_N -> rly_dvw_io_collective_cmd_free_N  eg ('rly_dvw_io_collective_cmd_free_25/eb[0]', 'rly_dvw_io_collective_cmd_free_26/ea[0]', None, {'setup': 6, 'hold': 3})
+    -1023.2     11 rly_dvw_ag_wo_N -> rly_dvw_ag_wo_N  eg ('rly_dvw_ag_wo_22/b[1]', 'rly_dvw_ag_wo_23/a[1]', None, {'setup': 5, 'hold': 3})
+     -934.9    598 rly_serdes2_rx_N -> rly_serdes2_rx_N  eg ('rly_serdes2_rx_6/b[467]', 'rly_serdes2_rx_7/a[467]', None, {'setup': 1, 'hold': 3})
+     -342.8      2 rly_dvw_tt_ctlm_cal_image_ready_N -> rly_dvw_tt_ctlm_cal_image_ready_N  eg ('rly_dvw_tt_ctlm_cal_image_ready_1/b[0]', 'rly_dvw_tt_ctlm_cal_image_ready_2/a[0]', None, {'setup': 1, 'hold': 3})
+     -171.6    598 rly_serdes0_rx_N -> rly_serdes0_rx_N  eg ('rly_serdes0_rx_1/b[493]', 'rly_serdes0_rx_2/a[493]', None, {'setup': 1, 'hold': 3})
+     -118.5     33 rly_sf_result_cycles_N -> rly_sf_result_cycles_N  eg ('rly_sf_result_cycles_2/eb[0]', 'rly_sf_result_cycles_3/ea[0]', None, {'setup': 1, 'hold': 3})
+     -110.3      2 rly_sf_strap_bump_die_ps_N -> rly_sf_strap_bump_die_ps_N  eg ('rly_sf_strap_bump_die_ps_2/eb[0]', 'rly_sf_strap_bump_die_ps_3/ea[0]', None, {'setup': 1, 'hold': 3})
+      -34.5      2 rly_sf_prog_context_slot_N -> rly_sf_prog_context_slot_N  eg ('rly_sf_prog_context_slot_2/b[0]', 'rly_sf_prog_context_slot_3/a[0]', None, {'setup': 1, 'hold': 3})
+      -22.1      1 d2d_rom -> rly_lnk_native_rx_slot_N  eg ('d2d_rom/native_rx_slot', 'rly_lnk_native_rx_slot_0/a[0]', -500.4, {'setup': 1, 'hold': 3})
+       -8.6      1 d2d_rom -> rly_lnk_native_tx_slot_N  eg ('d2d_rom/native_tx_slot', 'rly_lnk_native_tx_slot_0/a[0]', -495.79999999999995, {'setup': 1, 'hold': 3})
+## cross_domain 42 -256.59
+     -256.6      1 io_ucie -> io_collective  eg ('io_ucie/tx_up', 'io_collective/ucie_up[0]', 0.0, None)
+      -34.3      1 d2d_rom -> rly_sf_prog_context_slot_N  eg ('d2d_rom/prog_context_slot', 'rly_sf_prog_context_slot_0/a[0]', -550.4, None)
+      -25.8      1 d2d_rom -> rly_sf_prog_rx_v__fo1_N  eg ('d2d_rom/prog_rx_v', 'rly_sf_prog_rx_v__fo1_0/a[0]', -550.4, None)
+      -23.3     26 d2d_rom -> rly_lnk_rx_payload__fo2_N  eg ('d2d_rom/rx_payload[76]', 'rly_lnk_rx_payload__fo2_0/a[76]', -550.4, None)
+      -21.1      3 d2d_rom -> rly_lnk_rx_payload_N  eg ('d2d_rom/rx_payload[518]', 'rly_lnk_rx_payload_0/a[518]', -550.4, None)
+      -16.4      8 rly_sf_prog_tx_record_N -> d2d_rom  eg ('rly_sf_prog_tx_record_2/b[82]', 'd2d_rom/prog_tx_record[82]', 550.4, None)
+      -14.5      1 d2d_rom -> rly_sf_prog_context_slot__fo1_N  eg ('d2d_rom/prog_context_slot', 'rly_sf_prog_context_slot__fo1_0/a[0]', -404.7, None)
+      -13.0      1 d2d_rom -> rly_lnk_rx_payload__fo1_N  eg ('d2d_rom/rx_payload[518]', 'rly_lnk_rx_payload__fo1_0/a[518]', -550.4, None)
+## reset_tree 6 -118.34
+     -118.3      1 rly_rst_d2d__fo2_N -> rly_rst_d2d__fo2_N  eg ('rly_rst_d2d__fo2_2/b[0]', 'rly_rst_d2d__fo2_3/a[0]', None, None)
+      -23.1      2 rstt_rst_seq_ctlm_N -> rstt_rst_seq_ctlm_N  eg ('rstt_rst_seq_ctlm_38/q0', 'rstt_rst_seq_ctlm_43/d', 0.0, None)
+      -11.6      3 rstt_rst_field_N -> rstt_rst_field_N  eg ('rstt_rst_field_2433/q1', 'rstt_rst_field_10306/d', 9.0, None)
+## view_model_unmeasured 1 -8.82
+       -8.8      1 rly_lnk_fwd_lrst_N -> rly_lnk_fwd_lrst_N  eg ('rly_lnk_fwd_lrst_2/b[0]', 'rly_lnk_fwd_lrst_3/a[0]', None, None)
