@@ -342,7 +342,9 @@ ATTN_R16_TX_SHIFT = 1       # qkd_attn_cal_gen_r16 TX_SHIFT: link K RESULT / STA
 if ATTN_R16:
     if os.environ.get('OT_KV_BOOT_AGES', '0') != '1':
         raise ValueError('kv_static_die: OT_KV_ATTN_R16=1 needs OT_KV_BOOT_AGES=1 (r16 ports = the boot-age tile, i_ctl 109 b)')
-    FACE_LAND_TILES['kvs_attn'] = dict(master='qkd_kvs_attn', kit='qkd_kvs_attn_rv3', rst_release=2, fin=1, i_ctl=1)
+    # KV-ATTN7 10-20: kit qkd_kvs_attn_rv5 (r17 = r16 + calendar S1..S9 reset; same ports / edges / params; CLOSED
+    # qkd_kvs_attn_rv5-rv5-2cdc6bb28 TT +77.3 / FF +9.7; standard LEC receipt results/arch/kv_attn7_1020) replaces rv3
+    FACE_LAND_TILES['kvs_attn'] = dict(master='qkd_kvs_attn', kit='qkd_kvs_attn_rv5', rst_release=2, fin=1, i_ctl=1)
 _FL_ENV = os.environ.get('OT_KV_FACE_LAND', '0').strip()
 FACE_LAND_SEL = (set(FACE_LAND_TILES) if _FL_ENV == '1' else set() if _FL_ENV in ('', '0')
                  else {t.strip() for t in _FL_ENV.split(',') if t.strip()})

@@ -1,0 +1,212 @@
+{
+ "name": "qkd_kvs_attn_rv5-rv5-COMMIT",
+ "block": "qkd_kvs_attn_fl",
+ "ref_tile": true,
+ "owner": "Claude:KV-ATTN4",
+ "purpose": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-attn4-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/attn_rv_1019",
+   "results/rtl/kv_attn4_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv rtl/lib/ot_pin_land.sv rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rv_pair_ba5",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m0 0 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_RVPAIR_ALL PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "rv_mut1_fields_early",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m1 1 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m1/verdict.log"
+   },
+   {
+    "name": "rv_mut2_check_misaligned",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m2 2 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m2/verdict.log"
+   },
+   {
+    "name": "rv_mut3_admission_no_check",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m3 3 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m3/verdict.log"
+   },
+   {
+    "name": "rv_mut4_tx_shift0",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m4 4 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m4/verdict.log"
+   },
+   {
+    "name": "rv_mut5_status_copy_early",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m5 5 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m5/verdict.log"
+   },
+   {
+    "name": "rv_mut6_face_stale_beat",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m6 6 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m6/verdict.log"
+   },
+   {
+    "name": "rv_mut7_fault_root_one_pin",
+    "cmd": "RVB=r17 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r17rs_pair_m7 7 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/r17rs_m7/verdict.log"
+   },
+   {
+    "name": "cal_rst_witness",
+    "cmd": "bash tools/qwen_kv_die/attn_rv_1019/cal_rst_bench.sh {RUN}/calrst_m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^CALRST_ALL PASS"
+   },
+   {
+    "name": "cal_rst_mut8_no_data_reset",
+    "cmd": "bash tools/qwen_kv_die/attn_rv_1019/cal_rst_bench.sh {RUN}/calrst_m8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CALRST_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn4_1020/calrst_m8/verdict.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_attn_rv5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_attn_rv5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_attn_rv5 --out {RUN}/record/views/qkd_kvs_attn_fl  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_attn_rv5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_attn_rv5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_attn_rv5/qkd_kvs_attn_rv5-rv5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "KV-ATTN4 10-20 (COORD 09:56 decision, tree K.STA.ATTN): rv3 successor r17 = r16 + RESET (landed rst_n, flop reset pins) of the calendar data stages S1..S9 (qkd_attn_cal_gen_r17: control state; the rv3 native audit was NOT PROVEN 1089/1091 on the unreset S1..S9 startup transient, Codex CEX step 7/8). Datapath stays unreset. Reset landed by the kit (2-stage, 2 first / 64 final kept copies, <= 32 loads per copy). Same ports, same edges as rv3 (0 cycles; reset release latency unchanged = 2). Pair lockstep vs ba5 RS=1 SD=213 + mutants 1-7 + calendar reset witness (MUT 8 = r16 form FAILs)."
+ }
+}
