@@ -1,0 +1,144 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "children": [],
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "name": "hcoll_reduce_lane_u",
+ "top": "ot_hgi_coll_reduce_lane",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "outline": {
+  "w": 60.48,
+  "h": 60.48
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "load_v_n",
+   "load_tag_n",
+   "in_data"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "wb_n",
+   "wb_tag_n",
+   "add_read_n",
+   "read_tag_n",
+   "add_issue"
+  ],
+  "E": [
+   "pub_read_n",
+   "pub_tag_a_n",
+   "pub_tag_b_n",
+   "add_valid"
+  ],
+  "S": [
+   "pub_a",
+   "pub_b"
+  ]
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "peak_ram_gb": 16
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every lane input lands on a lane flop within <= 3 levels (state[t] write enable decode of load_tag / wb_tag, acc / operand / pub read registers, add-lane ap/bp/vp pin registers) and every output is flop Q (pub_a / pub_b registers, add valid pipe); a synthesis pin stage would shift the lane against the control's 8-edge writeback pipe (unbenched)"
+ },
+ "structural_change": "COLLQ7 10-21: outline 51.84^2 -> 60.48^2 (+36% area; daemon hcoll_reduce_lane_t-n32h-11226c043 FLOORPLAN_MARGIN: util 65.6% with the hold-buffer allowance > 65%) -> est. util ~48% with the allowance, inside the 40-60% safe band; RTL/pins/recipe identical to _t (6afbb5b0c native32, 0 edges). Prior: HBM-COLLQ6 10-20 native32 (0 edges): state/read registers load unconditionally, add_read/pub_read applied one edge later as a hold select on kept 2-copy registers; state in two keep_hierarchy 16-bit halves (own decode); LAT-8 add lane on ot_hdc_fp32_add_n32 (Codex FP6) with the kit-scoped copy-alias canonicalize flow (as hbm_su_qcore_r13). Fallback outline 51.84^2.",
+ "job": {
+  "owner": "Claude:HBM-COLLQ7-ISS",
+  "branch": "claude/collq7-rl-1021",
+  "tag": "n32u",
+  "purpose": "HBM COLL reduce lane (x16) for the SAFE q2/q3 COLL quadrant parents (lp_ars); gate first, route after checklist review",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/landed_parent_1018/collq",
+   "physical/ref_tile/hcoll_reduce_lane_u/copy_aliases.py",
+   "physical/ref_tile/hcoll_reduce_lane_u/synth_canonicalize.tcl",
+   "rtl/hdc/ot_hdc_fp32_add_n32.sv"
+  ],
+  "benches": [
+   {
+    "name": "rsplit_eq",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/rs rs",
+    "expect": "pass",
+    "pass_regex": "RS PASS",
+    "min_count_regex": "RSPLIT_EQ PASS cycles=(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rlane_mut_ext",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/rsmut rsmut",
+    "expect": "fail",
+    "fail_regex": "RS_MUTANT rs_mext REJECTED",
+    "fail_witness": "results/rtl/landed_parent_1018/collq/bench_witness_5050_q3_ars/rsmut_q3.log",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_reduce_lane_u/views",
+  "record_to": "results/rtl/ref_tile/hcoll_reduce_lane_u"
+ },
+ "orfs_vars": {
+  "SYNTH_CANONICALIZE_TCL": "physical/ref_tile/hcoll_reduce_lane_u/synth_canonicalize.tcl"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "reroute_reason": {
+  "kind": "floorplan_margin",
+  "failed_job": "hcoll_reduce_lane_t-n32h-11226c043",
+  "daemon_reason": "util: utilisation 65.6% with the hold-buffer allowance (1747 flops x 1.0 BUFx2) > 65%: grow the outline",
+  "fix": "outline 51.84^2 -> 60.48^2 (est. util ~48% with allowance); RTL, pins, recipe unchanged; 0 cycles"
+ }
+}
