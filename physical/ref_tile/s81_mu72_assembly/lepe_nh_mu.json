@@ -4,6 +4,9 @@
   "source": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_nh_mu_72.sv",
   "sources": [
     "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_nh_mu_72.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+    "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
     "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
@@ -49,7 +52,7 @@
     "safe8_lanes": "445e6c74c"
   },
   "outline": {
-    "w": 2505.6,
+    "w": 2851.2,
     "h": 6825.6,
     "exact": true
   },
@@ -477,8 +480,8 @@
       "inst": "u_ln0",
       "master": "dsfd_coll_lane_e_safe8_ntf",
       "at": [
-        1468.8,
-        43.2
+        2073.6,
+        2203.2
       ],
       "reserved_envelope_um": [
         725.76,
@@ -492,8 +495,8 @@
       "inst": "u_ln1",
       "master": "dsfd_coll_lane_e_safe8_ntf",
       "at": [
-        1468.8,
-        799.2
+        2073.6,
+        2894.4
       ],
       "reserved_envelope_um": [
         725.76,
@@ -508,14 +511,14 @@
       "master": "ot_s81sl_lep_mu_a",
       "at": [
         1468.8,
-        1555.2
+        2548.8
       ],
       "reserved_envelope_um": [
         561.6,
         561.6
       ],
       "count": 1,
-      "orient": "R0",
+      "orient": "MY",
       "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
     },
     {
@@ -523,7 +526,7 @@
       "master": "dsdv_mu_land",
       "at": [
         1468.8,
-        2289.6
+        3283.2
       ],
       "reserved_envelope_um": [
         475.2,
@@ -582,7 +585,7 @@
       "inst": "u_ml_wr",
       "bank_cell_corridor": [
         1468.8,
-        2116.8,
+        3110.4,
         561.6,
         172.8
       ],
@@ -593,7 +596,7 @@
       "inst": "u_ml_cmd",
       "bank_cell_corridor": [
         1468.8,
-        2116.8,
+        3110.4,
         561.6,
         172.8
       ],
@@ -604,7 +607,7 @@
       "inst": "u_ml_ret",
       "bank_cell_corridor": [
         1468.8,
-        2116.8,
+        3110.4,
         561.6,
         172.8
       ],
@@ -629,10 +632,10 @@
         "rxv[0]"
       ],
       "centre_distance_um": [
-        82.08,
-        1501.2
+        686.88,
+        334.8
       ],
-      "state": "UNLANDED long K transport; ready/data/status ages must align"
+      "state": "G3: lane W face abuts the lep lane face (43.2 gap), same K region, no long transport"
     },
     {
       "ends": [
@@ -650,10 +653,10 @@
         "rxv[1]"
       ],
       "centre_distance_um": [
-        82.08,
-        745.2
+        686.88,
+        356.4
       ],
-      "state": "UNLANDED long K transport; ready/data/status ages must align"
+      "state": "G3: lane W face abuts the lep lane face (43.2 gap), same K region, no long transport"
     },
     {
       "ends": [

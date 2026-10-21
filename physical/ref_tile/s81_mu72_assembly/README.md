@@ -82,3 +82,14 @@ that gap. Actual native placement, phase spread, PG and timing remain unmeasured
 The external `ck_ML` clock/reset is not tied to K or replaced by an SDC alias.
 No hard child source, dimensions or ports change. No new validation campaign
 was launched; ongoing die integration can exercise this next source generation.
+
+## G3 (LEAD-S81-G3 10-21)
+
+- `u_sl` in all three tops is `ot_s81sl_slice_c1x_k8_cap5r_lp`: the CAP5 normal source with `u_cap` =
+  `ot_s81sl_capc5r` (five region-landed reset ports) and the six async CAP reset synchronisers replaced by DEPTH-5
+  `ot_pl_land_reset_forest`s on each CAP region root from the same `lpr_root` (one release edge, same reset age as the
+  C/L0/L1/L3/L4 forests).
+- E-end tops (`lepe_mu`, `lepe_nh_mu`): outline 2851.2 x 6825.6. `u_lep` MY at (1468.8, 2548.8), centred on the slice
+  ri_e/ro_e pin range, so ro/ri face `u_sl`; `u_ln0` (2073.6, 2203.2) and `u_ln1` (2073.6, 2894.4) R0 beside the lep
+  (W faces abut the lep lane face, 43.2 gap); `u_land` (1468.8, 3283.2) with the 172.8 ring corridor above the lep.
+- W-end `lepw_mu` keeps 2505.6 and the R0 right stack.

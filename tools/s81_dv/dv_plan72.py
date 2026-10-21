@@ -63,7 +63,8 @@ def build(base,inventory,packing):
   links.append(l)
  p['blocks']=new;p['links']=links
  # S81-LINKS gap reserves: geometry-only blockages (no master, no pins, never bound); router + die case obstacles
- p['blockages']=[dict(name=r['name'],kind='reserve',x=r['x'],y=r['y'],w=r['w'],h=r['h'],scope=r.get('scope',''))for r in packing.get('reserves',[])];p['facts'].update(die_um=[32000,25000],die_mm2=800,n_frames=72,rom_slots=660,reticle_margin_um=[500,500],hop_um=405)
+ p['blockages']=[dict(name=r['name'],kind='reserve',x=r['x'],y=r['y'],w=r['w'],h=r['h'],scope=r.get('scope',''))for r in packing.get('reserves',[])];W,H=packing.get('die',[32000,25000])  # G3 (10-21): die size comes from the floorplan (G2 = 32000 x 25000, unchanged)
+ p['facts'].update(die_um=[W,H],die_mm2=round(W*H/1e6,3) if [W,H]!=[32000,25000] else 800,n_frames=72,rom_slots=660,reticle_margin_um=[500,500] if [W,H]==[32000,25000] else [round((33000-W)/2,3),round((26000-H)/2,3)],hop_um=405)
  p['facts']['physical72']=dict(owner_adopted=True,inventory_sha=inventory.get('inventory_sha256'),geometry_ref='5678a1aa8',block_mapping=mapping,frame_chain_bypass=bypass,endpoint_geometry='plan face seeds; existing rvcase kit/view pin reprojection required',routing='PENDING',calendar='PENDING currentGU/DENSE2 exact map; no inherited old release ages',end_parent_source='real6739.2slice reassembly required',service_source='current target envelope; parent source/views open')
  return p
 

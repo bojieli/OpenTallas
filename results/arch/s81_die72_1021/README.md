@@ -13,3 +13,13 @@ PMA placement assumption: package bumps over/along actual pin faces of the eight
 MU end parent2764.8x6825.6 reservations require source/child reassembly around the selected6739.2-high slice; old2462.4x5788.8diagnostic parents are not a binding. Co-located service1728x3758.4 remains the current target envelope; it is not a newly closed hard parent. Frame source uses actual rf3rlfs1 outlines3369.6/3672; normal h9 reused with physicalMX needs explicit pin transform and INSTANCE identity, not an invented separate logic equivalence.
 
 CurrentCAP/CPR compiler/source opt-ins are on mainb09575108: CAP+12 input/output landings, CPRQ-only launchadvance. CurrentGU source82 supersedes old capacity source. The source-correct MAP72 capacity/automatic map-exact flow runs independently; no stage/die/rate headline is adopted here. Old98/84campaigns remain diagnostic.
+
+## G3 (LEAD-S81-G3 10-21)
+
+`g3/` holds the G3 floorplan inputs/outputs: `template_fallback72_input.json` (the dv_floorplan72 template, = Codex
+fallback72/input.json) and `base_plan.json` (the dv_plan72 base), `placement_g3.json` from `tools/s81_dv/dv_floorplan72_g3.py`
+and `plan_unrouted_g3.json` from `dv_plan72.py` (die size now from the floorplan; G2 r3 output is unchanged byte-for-byte).
+Slot fixes: real SerDes 518.4 x 3844.8 (4 per side in column A from y 86.4) + 2 reserved slots per side in column B (5th
+lane pair + copy-A/B; blockage only, owner decision pending); die 32302.4 x 25200 (was 32000 x 25000) so every block keeps
+>= 86.4 streets; service 1728 x 3801.6 x16 with the ctrl row +43.2; lepe MU72 parents 2851.2 wide; idx readers
+1036.8 x 1209.6; seqhost 475.2 x 993.6. The route (dv_route72 + dv_station_dirs72) runs inside `release72/run_die72_g3.sh`.
