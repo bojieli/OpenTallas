@@ -249,6 +249,8 @@ def export_model(model, pin_pos):
     wires = relay_chains(wires, by)
     return dict(schema=SCHEMA, design='qwen_compute', reach_um=405.,
                 regions=roots, crossings=crossings, wires=wires, channels=channels(model),
+                reset_capture_plan=model.get('final_reset_capture_plan'),
+                observed_reset_captures=model.get('observed_reset_captures', []),
                 centroid_only_segments=centroid_only, reset_landings=reset_landings,
                 source_synchronous_clocks=source_sync,
                 provenance=dict(generator='tools/qwen_rom_fulldie_b3r2.py:selected final model',

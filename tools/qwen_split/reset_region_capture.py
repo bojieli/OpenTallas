@@ -67,6 +67,8 @@ def finalize(model, per, source_root=None):
             split.append(dict(rep=rep, receiving_roots=sorted(roots), loads=loads)); continue
         dst = next(iter(roots))
         if not re.fullmatch(r'clk_r\d+', dst):
+            if set(clocks[rep].values()) == {dst}:
+                continue  # An existing explicit foreign-root capture is already correctly clocked.
             unresolved.append(dict(rep=rep, reason='nonregional receiving clock; explicit foreign-domain plan required', loads=loads)); continue
         locations = [(k, p) for k, eps in per.items() for i, p in eps if i == rep]
         if len(locations) != 1:
