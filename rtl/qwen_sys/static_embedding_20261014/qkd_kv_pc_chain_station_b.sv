@@ -127,7 +127,7 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     // ---- (2) embedding slot player ----
     reg [15:0] r [0:7];
     reg [15:0] cnt, last; reg act; reg [17:0] tok; reg [15:0] ep;
-    wire home = tok[8:4] == spc && (MUT == 4 || tok[10:9] == sst);
+    wire home = tok<18'd151936 && tok[8:4] == spc && (MUT == 4 || tok[10:9] == sst);
     wire [15:0] trn = (MUT == 3 && spc == 5'd5) ? r[3] + 16'd1 : r[3];
     integer k;
     always @(posedge ck) if (ss) begin tok <= c[F_TOK +: 18]; ep <= c[F_EP +: 16]; end

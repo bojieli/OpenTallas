@@ -10,13 +10,15 @@ module qkd_embedding_static_map #(
   output wire [4:0] pc,bank,col,
   output wire [18:0] row,
   output wire valid_address);
+    wire rope=token>=18'd151936;
+    wire [9:0] rt=10'(token-18'd151936);
     wire [13:0] s=token[17:4];
-    wire [9:0] p=scale?(10'd384+{3'd0,s[13:7]}):token[9:0];
-    assign logical_sector=scale?(25'd19447808+{11'd0,s}):({token,7'd0}+{18'd0,word_index,half});
+    wire [9:0] p=scale?(10'd384+{3'd0,s[13:7]}):(rope?rt:token[9:0]);
+    assign logical_sector=scale?(25'd19447808+{11'd0,s}):(rope?(25'd19457304+{8'd0,rt,7'd0}+{18'd0,word_index,half}):({token,7'd0}+{18'd0,word_index,half}));
     assign stack=scale?s[6:5]:word_index[5:4];
     assign pc=scale?s[4:0]:{word_index[3:0],half};
     assign bank={p[9:7],p[1:0]};
     assign col=p[6:2];
-    assign row=19'(ROW0)+(scale?19'd148:{11'd0,token[17:10]});
-    assign valid_address=(token<151936)&&(!scale||!half);
+    assign row=19'(ROW0)+(scale?19'd148:(rope?19'd149:{11'd0,token[17:10]}));
+    assign valid_address=(token<152960)&&(!scale||(token<151936&&!half));
 endmodule
