@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "hfd_hgi_vms_glue_e_t",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n -> rst_l0 (plain face flop, gen_vms_glue_tiles.py) -> ot_vms_rst_forest (replicated second landing l1 per group, 2 sync, <= 24 kept leaves per group; assertion +2, release +5 edges)"
+}

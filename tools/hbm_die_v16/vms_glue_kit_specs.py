@@ -67,7 +67,15 @@ WIT = 'results/rtl/vm_glue_1018/bench_g7/'
 # (parallel gates): g7 + one deterministic dont_touch HB4 in front of every in-place pure-hop D pin (ring-stop band
 # ln_m / ln, hub request copies qr_g1 / qr_g / sq_g1 / sq_g; tools/hbm_die_v16/vms_inplace_hold.tcl).
 VARIANTS = {'_g7': ['tools/hbm_die_v16/vms_relay_lattice.tcl'],
-            '_g7d': ['tools/hbm_die_v16/vms_relay_lattice.tcl', 'tools/hbm_die_v16/vms_inplace_hold.tcl']}
+            '_g7d': ['tools/hbm_die_v16/vms_relay_lattice.tcl', 'tools/hbm_die_v16/vms_inplace_hold.tcl'],
+            '_g7s': ['tools/hbm_die_v16/vms_relay_lattice.tcl']}
+# g7s (HBM-VMG8 10-20, after the g7 / g7d gates): g7 + the SYMMETRIC spine topology (OT_SPINE_SYM=1, clock_spine.tcl
+# el1013-smh-r11): bisection nodes at the centre of their leaves' bounding box, short levels collapsed, so every leaf sees
+# the same trunk length and the balance is by construction, not by ~37k pad cells.  Why: g7 / g7d E / NW / SW balanced
+# the count-bisection spine on the RCX-calibrated clock RC (input pin-flop FF range 32-38 ps in-flow) but ck_insertion
+# measures on the platform setRC (C 0.145 vs 0.105 fF/um): the pad chains (cell delay) do not track the wire-dominated
+# 1.5 mm trunk across RC bases / corners -> TT 103-131 / FF 108-143 ps pin-flop spread (clock_rule FAIL).
+SPINE_VARS = {'_g7s': {'OT_SPINE_SYM': '1'}}
 GEN = '_g7'
 
 
@@ -153,11 +161,12 @@ def spec(k, c, gen='_g7'):
                f"reset regions; reset_landing on. g5: hub response stage 1 (bank returns +1: pr +1), hub-side registered "
                f"bank select (pq +1), kept per-port relay chains, recipe 4 die boundary hold budget. g6: no edge change; every mapped root <= 32 (kept per-slice copies, one-hot commit pointer, reset forest). "
                f"g7: reach relays on a planned lattice (kit hook vms_relay_lattice.tcl), eg tile depth 1 (eg -2), hub landing br removed (pr -1)"
-               f"{'; g7d fallback: + deterministic HB4 on the in-place pure hops (vms_inplace_hold.tcl)' if gen == '_g7d' else ''}.")
+               f"{'; g7d fallback: + deterministic HB4 on the in-place pure hops (vms_inplace_hold.tcl)' if gen == '_g7d' else ''}"
+               f"{'; g7s: + symmetric spine topology (OT_SPINE_SYM=1), balance by construction across RC bases / corners' if gen == '_g7s' else ''}.")
     return {
         'name': f'hfd_hgi_vms_glue_{k}{gen}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
         'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': False, 'reason': 'the RTL lands it: rst_n -> rst_l0 (plain face flop, gen_vms_glue_tiles.py) -> ot_vms_rst_forest (replicated second landing l1 per group, 2 sync, <= 24 kept leaves per group; assertion +2, release +5 edges)'}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 4, 'hold_budget': 'die',
-        'clock': 'spine', 'orfs_vars': {'OT_SPINE_LEAF_N': '16'},
+        'clock': 'spine', 'orfs_vars': {'OT_SPINE_LEAF_N': '16', **SPINE_VARS.get(gen, {})},
         'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 16, 'peak_ram_gb': 64, 'hold_margin_ns': 0.03,
                   'io_hold_margin_ns': 0.03, 'pin_balance': {'group_max': 1}},
         'outline': {'w': W, 'h': H}, 'pin_ranges': ranges, 'params': {}, 'children': [], 'inter': [],
