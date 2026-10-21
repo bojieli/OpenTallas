@@ -5,7 +5,7 @@ set -euo pipefail
 H=$(cd "$(dirname "$0")" && pwd)
 REF=; WORK=; FIX=; DIE=; PB=; PLAN=; LAND=; REPORT=0; ASM=; SRC=
 HEAD_PREP=; HEAD_FIX=; MU_STAGE=; HEAD_JSON=; MU_JSON=; LAYERS_JSON=
-CAL_AR=; CAL_MTP=
+CAL_AR=; CAL_MTP=; MU_LINK_JSON=
 FOLD_JSON=
 KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
 while (($#)); do
@@ -17,6 +17,7 @@ while (($#)); do
     --source-root) SRC=$2; shift 2;; --head-prep) HEAD_PREP=$2; shift 2;;
     --head-fixtures) HEAD_FIX=$2; shift 2;; --mu-stage) MU_STAGE=$2; shift 2;;
     --head-json) HEAD_JSON=$2; shift 2;; --mu-json) MU_JSON=$2; shift 2;;
+    --mu-link-json) MU_LINK_JSON=$2; shift 2;;
     --layers-json) LAYERS_JSON=$2; shift 2;; --report-only) REPORT=1; shift;;
     --calendar-ar) CAL_AR=$2; shift 2;; --calendar-mtp) CAL_MTP=$2; shift 2;;
     --owner-fold-json) FOLD_JSON=$2; shift 2;;
@@ -96,6 +97,7 @@ fi
 ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$HEAD_JSON" ] || ARGS+=(--head "$HEAD_JSON")
 [ -z "$MU_JSON" ] || ARGS+=(--mu "$MU_JSON")
+[ -z "$MU_LINK_JSON" ] || ARGS+=(--mu-link "$MU_LINK_JSON")
 [ -z "$LAYERS_JSON" ] || ARGS+=(--layers "$LAYERS_JSON")
 [ -z "$FOLD_JSON" ] || ARGS+=(--owner-fold "$FOLD_JSON")
 [ -z "$KV_JSON" ] || ARGS+=(--kv-consumer "$KV_JSON")
