@@ -20,7 +20,8 @@ c1k8() {   # $1 = 0 wrapper as committed | 1 wrapper DLK0 mutant
   [ -n "$SRCS" ] || { echo "SETUP_FAILED no SRCS"; exit 4; }
   local W=$L/ot_s81sl_slice_c1k8.sv
   [ $1 = 1 ] && { sed 's/\.DLK0(1)/.DLK0(2)/' $W > $d/ot_s81sl_slice_c1k8_mut.sv; grep -q 'DLK0(2)' $d/ot_s81sl_slice_c1k8_mut.sv || exit 4; W=$d/ot_s81sl_slice_c1k8_mut.sv; }
-  sed -E 's/ot_s81sl_slice_c1x_k8_lp #\([^)]*(\([^)]*\)[^)]*)*\) u_lp \(/ot_s81sl_slice_c1k8 u_lp (/' $L/tb_ot_s81sl_slice_c1x_k8_lp.sv > $d/tb.sv
+  # the wrapper adds one level: the child-lockstep probes u_lp.<child> become u_lp.u_lp.<child>
+  sed -E -e 's/ot_s81sl_slice_c1x_k8_lp #\([^)]*(\([^)]*\)[^)]*)*\) u_lp \(/ot_s81sl_slice_c1k8 u_lp (/' -e 's/\bu_lp\.u_/u_lp.u_lp.u_/g' $L/tb_ot_s81sl_slice_c1x_k8_lp.sv > $d/tb.sv
   grep -q 'ot_s81sl_slice_c1k8 u_lp (' $d/tb.sv || { echo "SETUP_FAILED tb rewrite"; exit 4; }
   $V $VF --top-module tb_ot_s81sl_slice_c1x_k8_lp -DDSFD_PQ_STATIC_X2 $SRCS $W $d/tb.sv -Mdir $d/obj > $d/build.log 2>&1 \
     && $d/obj/Vtb_ot_s81sl_slice_c1x_k8_lp > $d/run.log 2>&1
@@ -31,6 +32,7 @@ n32() {    # $1 H (0 a | 1 h), $2 MUT
   local d=$O/n32_h$1_m$2; mkdir -p $d
   local S="rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv
     rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv
+    physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
     physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v
     physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_n32.sv
@@ -43,6 +45,13 @@ bind_c1k8() {
   rc=0
   for top in ot_s81sl_slice_c1k8 ot_s81sl_slice_c1x_k8_lp; do
     f=$O/$top.v; src=$L/$top.sv
+    if [ $top = ot_s81sl_slice_c1x_k8_lp ]; then
+      # C1 has no band port: bi is unread and bo = 513'd0 (the die's mode_unused 'hb0' / spare-out rules own them, as for
+      # ot_s81sl_slice HB 0).  Strip exactly those two ports and the constant so the check covers every CHILD pin.
+      src=$O/c1x_k8_lp_noband.sv
+      grep -v -E "^    input wire \[1103:0\] bi,$|^    output wire \[512:0\] bo,$|^    assign bo = 513'd0;$" $L/$top.sv > $src
+      [ $(( $(wc -l < $L/$top.sv) - $(wc -l < $src) )) -eq 3 ] || { echo "SETUP_FAILED band strip"; exit 4; }
+    fi
     python3 tools/s81_slice/bind_form.py $src $top $f || exit 3
     [ $top = ot_s81sl_slice_c1k8 ] && python3 tools/s81_slice/bind_form.py $L/ot_s81sl_slice_c1x_k8_lp.sv ot_s81sl_slice_c1x_k8_lp $O/lp_for_wrapper.v
     extra=""; [ $top = ot_s81sl_slice_c1k8 ] && extra="--rtl-file $O/lp_for_wrapper.v"
