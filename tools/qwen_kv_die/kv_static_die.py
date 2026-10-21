@@ -441,7 +441,7 @@ def tile_ages():
                 VPORT_RT=int(vk.get('RT', 8)), VPORT_DQ=int(vk.get('DQ', 0)),
                 PV_FIRST_INPUT_AGE=int(cp['FIRST_INPUT_AGE']) if 'FIRST_INPUT_AGE' in cp else None,
                 PV_LEAD=at.get('PV_LEAD'), F_DLY=at.get('F_DLY'),
-                source=dict(ECTL='kv_static_ages.K_RT_BUDGET (qkd_ectl3_kiss_st rt80 children)', VPORT=VPORT_KIT,
+                source=dict(ECTL=f'kv_static_ages.K_RT_BUDGET {ECTLK_RESPONSE_LAT} (qkd_ectl3_kiss_st ' + ('rt104 children, route B KV-SAFE32D' if ECTLK_RESPONSE_LAT == 104 else 'rt80 children') + ')', VPORT=VPORT_KIT,
                             PV_CTL=f'physical/ref_tile/{ck}/spec.json', ATTN=f'{RTL_FILE} module qkd_kvs_attn'))
 
 

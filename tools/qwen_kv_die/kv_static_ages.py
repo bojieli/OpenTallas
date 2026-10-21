@@ -43,6 +43,10 @@ QK_ISSUE_AGE_KIT = 34    # template / attn_calendar QK_CONSUME (the bench-measur
 # chain to K_RT_BUDGET (kv_k_rt_eq.py) and fails when a natural round trip exceeds it.  Budget 80: kvs14q-8503e0c89
 # measured 8 + krq + krs = 12..70 on the 648 x 129.6 slots; the 725.76 x 261.36 frame adds 131.76 um a row engine; the
 # margin keeps the hardened children valid across plan iterations.  QK_ISSUE_AGE = budget + QK_WRITE_BEFORE_READ.
+# KV-SAFE32D 10-20 (COORD 20:02 decision 1): route B (strict GEN9 + OT_KV_QKH_SAFE32) runs OT_KV_K_RT=104: the SAFE32 stack
+# pitch puts the far-column frames 5/6 at natural 82..96 (kv-safe32c plan_b); children re-hardened as the *_rt104 kits
+# (qkd_static_ectla_k4_rt104 / qkd_ectl_b_tp8_direct_rt104 / qkd_ectl_c_st_rt104 / frame qkd_ectl3_kiss_st_rt104): RL 104,
+# ROW_RETURN_LAT 111, QK 115; D_QK +24 edges a layer (CALGEN derives it from this budget).  Route A keeps 80.
 K_RT_BUDGET = int(__import__('os').environ.get('OT_KV_K_RT', '80'))
 VPORT_RT_LANDING = 9     # qkd_pv16_vport r5/r6: RT = abutted landing seg -> vport 9 (KVJ-F b4d7accd4 tb_static_landing_vport:
                          # 'landing 8 + relays' faults every slot; kv_die VPORT_RT_SEG = 9) + request / return relays
