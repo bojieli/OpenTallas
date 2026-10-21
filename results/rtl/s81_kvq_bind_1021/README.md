@@ -48,9 +48,15 @@ negative VM consumer dropping exponent writes failed with8 mismatched32-bit word
 this is an observation-path negative, not a claimed arithmetic RTL mutant.
 Exact source hashes/argv and original logs are committed in kv_8ef_*.
 
-Current-source follow-up286841a83 is live at
-`ot-gold2:/srv/opentallas-scratch/claude/codex-s81-kvq-current-1021/run_286841a83`,
-unit2331998-1792603162/session4772. It preserves/reuses the completed object cache
-and adds current address guards plus fixed job/result age reporting. No live
-older source or result was edited. The native row-invalid controls are additional
-checks for the new guards; this remains one minimal KV bank vehicle.
+Current source286841a83 PASS on gold2 unit2331998-1792603162 at
+`/srv/opentallas-scratch/claude/codex-s81-kvq-current-1021/run_286841a83`.
+The committed kv_286_* receipts include exact source hashes and command inventory.
+The full D512 comparison passed with26 events,52 VM pair writes, zero mismatches
+and zero faults. Both invalid alignment and invalid operand bounds were rejected
+before starting a job or writing outputs. Dropping exponent writes still failed
+with eight mismatched words. With DRAIN_AGE1024, measured GK finish age1025,
+KV finish age1130, and result-event ages263..282. First output1421 follows last
+input read1232 by189 edges. This bench models the VM response in one edge;
+actual VP/SRAM four-edge response qualification is a separate pending component,
+so these ages are not an actual VP measurement. The fixed drain and all SRAM
+staging are real RTL. No physical gate was launched.

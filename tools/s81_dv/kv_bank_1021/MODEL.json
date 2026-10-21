@@ -59,7 +59,19 @@
     "DRAIN_AGE": "explicit imm31:16, compiler fixed edge; measured qualification required",
     "bench_candidate_DRAIN_AGE": 1024,
     "added_drain_edges": 104,
-    "result_issue_policy": "fixed calendar; missing count/deadline/shape/lifetime is sticky fault, no backpressure or wait-for-ready"
+    "result_issue_policy": "fixed calendar; missing count/deadline/shape/lifetime is sticky fault, no backpressure or wait-for-ready",
+    "component_measurement": {
+      "source_ref": "286841a838132f393f3b387f2ecce0e20111c73b",
+      "bench": "tb_s81sl_kv_leaf",
+      "VM_response_model_edges": 1,
+      "DRAIN_AGE": 1024,
+      "GK_finish_age": 1025,
+      "KV_finish_age": 1130,
+      "first_result_age": 263,
+      "last_result_age": 282,
+      "first_output_after_last_input_edges": 189,
+      "scope": "actual production arithmetic and staging SRAM, modeled VM response; actual VP/SRAM qualification pending"
+    }
   },
   "physical_holds": [
     "arithmetic leaf area and full bank slot fit must be composed from actual closed leaf records",
@@ -68,9 +80,8 @@
   ],
   "functional_holds": [
     "actual a_proj producer RD transport and layer lowering must establish input rows",
-    "both masked exponent fragments must survive",
-    "prove complete input consumption before first output",
-    "compile source hierarchy with opt-in s_3N leaf0 only"
+    "actual VP/SRAM extension response and masked output readback qualification",
+    "full enabled slice/die composition and configured source GO/FIN/CAP programme"
   ],
   "transport": "TRANSPORT.json pins existing XRT typedV/localcopy; source-only normal-slice opt-in binding"
 }

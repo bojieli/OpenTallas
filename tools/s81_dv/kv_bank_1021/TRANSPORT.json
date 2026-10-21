@@ -49,5 +49,15 @@
     "actual cross-rank KV128 x4 exchange and row routing, no fake source rows",
     "die station/landing ages and line conflicts must enter static compiler calendar",
     "bank native fanout, local clock regions and physical slot fit"
-  ]
+  ],
+  "component_reference_points": {
+    "observer": "posedge pre-NBA, tools/s81_dv/layer_prog/rdpair/tb_rd_pair.sv at241f7b963; adapted mut0 log results/rtl/s81_rtlgap_ffn_1021/bench/ub_rdp_r3 at00f45f497",
+    "CTL_pin_to_c_v": "raw source RSTOP ri_w to raw XRT c_v at VP input; includes source RSTOP and XR, not dl_ev only",
+    "lo_to_V_out": "raw VP lo_v driving XRT input to raw source RSTOP vo / partner RSTOP vi; includes XR and source RSTOP",
+    "V_input_to_sw": "raw receiver RSTOP vi to raw receiver XRT sw_v at VP input; excludes downstream SRAM commit",
+    "local_CI_to_sw": "source XRT ci valid dir0 to raw local XRT sw_v",
+    "excluded_slice_glue": "DL4 in each leaf direction (VP lo to XR and XR sw to VP sw); normal frame DR6 and streamer DX6 separate",
+    "SRAM_commit": "VP sw_v/x_wv input to macro commit adds1 sampled edge by source; not measured by raw WRITE observer",
+    "VP_extension": "VP x_rv to x_qv ABI4 edges; bank-only mock uses1 edge, so any +3 composition is inference pending actual component"
+  }
 }
