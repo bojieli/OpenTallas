@@ -1,0 +1,137 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: The netlist is the gate-level cloned ot_hbm_hc_tail_child_static: the RTL registers every data pin itself (input pin flop + 2nd stage, output pin flops, priced +2 edges in the root TAILC schedule); generated pin regs would add an unpriced stage.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_hc_tail_child_k3_20261021-045705.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_hc_tail_child_k3_20261021-045705.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_hc_tail_child_k3-20261021-045705",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=24",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 1972 s (gate total 28415 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2405, 'pin_rectangles': 2405, 'pin_track_checked': 2405, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 9a3f747643741dd1662c23b29aab3cd0f1fbcc21aca0ec9fbe4e5f49220de8dd",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 69470 um2 + macros 0 in core 147825: util 47%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_hc_tail_child_static cells 680,401 flops 45,781 depth 691.8 ps util 0.5228 reach 0.0 um (23.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 45,781 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.sk_c25127 -> u_ot_pr_core.sk_c102606/D: ~692 ps estimated (21 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 45,781 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 45,781 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 640.7..746.6 ps (spread 105.9), boundary mean 660.1; tt insertion all 497.9..587.4 ps (spread 89.5), boundary mean 516.0; ff insertion all 408.9..488.8 ps (spread 79.9), boundary mean 426.3; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hbm_hc_tail_child_k3/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      600 paths, worst slack -300.0 ps (e.g. u_ot_pr_core.sk_c648260/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -3.000485415682874e-10 hold WNS -2.2982615810462903e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 45,781 sinks on the largest root; measured TT insertion 587.4 ps, FF insertion 488.8 ps, TT pin-flop spread 28.7 ps, FF pin-flop spread 28.6 ps; WARN: 45,781 sinks on one clock root > 15,000 (guidance); insertion 587.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-hcroot8-1020/physical/ref_tile/hbm_hc_tail_child_k3/gate_layout/floorplan.png; density /home/ubuntu/wt/hbm-hcroot8-1020/physical/ref_tile/hbm_hc_tail_child_k3/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 44.69% used; GRT 1794 s",
+   "fix": ""
+  }
+ ]
+}

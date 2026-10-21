@@ -1,0 +1,50 @@
+{
+  "status": "coordinator_review_required_no_submission",
+  "kit": "hbm_hc_tail_child_k3",
+  "source_commit": "1fc8363be",
+  "geometry": {
+    "outline_um": [
+      388.8,
+      388.8
+    ],
+    "macros": 0,
+    "full_std_cell_area": true,
+    "util_synth": 0.47,
+    "aspect": 1,
+    "clock_source": "south face x~83um",
+    "visual_density": "continuous cells; local west edge hotspots, open interior pockets; no macro islands"
+  },
+  "actual": {
+    "native_max": 24,
+    "clock_boundary_TT_ps": 28.7,
+    "clock_boundary_FF_ps": 28.6,
+    "grt_overflow": 0,
+    "TT_placement_setup_ps": -300.0,
+    "placement_hold_ps": -23.0
+  },
+  "safe": {
+    "pins": "Actual pin_geometry PASS: 2405 signal/clock pins,0outside/0missing; fixed source input/output capture",
+    "reach": "388.8um square; actualSTA/route required for long diagonals",
+    "fanout": "native24PASS",
+    "depth": "OPEN: TTplacementsetup-300ps andestimated692ps stage, no timingwaiver",
+    "storage": "macro0; tail fixed pipeline/state storage, no new storage added",
+    "floorplan": "47pct synth fill, square continuous rows; viewedbothPNGs",
+    "clock": "boundary28.7/28.6PASS; insertion587/489 guidance only",
+    "reset": "existing control reset source unchanged; native24PASS"
+  },
+  "review_scope": "Geometry review only; setup/hold remain open for route or structural decision; no REVIEW.json authored",
+  "images": [
+    "k3/gate_layout/floorplan.png",
+    "k3/gate_layout/density.png"
+  ],
+  "fallback": {
+    "kit": "hbm_hc_tail_child_k3b",
+    "outline_um": [
+      440.6,
+      293.8
+    ],
+    "clock_TT_ps": 134.1,
+    "clock_FF_ps": 120.2,
+    "status": "FAIL no submit"
+  }
+}

@@ -1,0 +1,331 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /src/physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_liberty /src/physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes_ff.lib
+read_db /work/results/asap7/opentallas_ot_hbm_hc_bankq_ft_rw8_static_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_hc_bankq_ft_rw8_static_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_hc_bankq_ft_rw8_static_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_hc_bankq_ft_rw8_static_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+OT_SPINE child insertion targets: ot_hdc_v41x_hcp_lanes 192.02029
+E2_SPINE: symmetric23 glue trees beneath unchanged hybrid root/entry checks
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_ENTRIES entry ck_l[0] -> u_ot_pr_core.u_c.g_grp\[0\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 79.1 um LONG
+OT_ENTRIES entry ck_l[1] -> u_ot_pr_core.u_c.g_grp\[1\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 79.1 um LONG
+OT_ENTRIES entry ck_l[2] -> u_ot_pr_core.u_c.g_grp\[2\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 251.9 um LONG
+OT_ENTRIES entry ck_l[3] -> u_ot_pr_core.u_c.g_grp\[3\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 251.9 um LONG
+OT_ENTRIES entry ck_l[4] -> u_ot_pr_core.u_c.g_grp\[4\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 259.2 um LONG
+OT_ENTRIES entry ck_l[5] -> u_ot_pr_core.u_c.g_grp\[5\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 302.4 um LONG
+OT_ENTRIES entry ck_l[6] -> u_ot_pr_core.u_c.g_grp\[6\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 136.9 um LONG
+OT_ENTRIES entry ck_l[7] -> u_ot_pr_core.u_c.g_grp\[7\].u_lg/clk (ot_hdc_v41x_hcp_lanes) wire 136.9 um LONG
+OT_ENTRIES entry ck_w[0] -> u_ot_pr_core.u_c.g_w\[0\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 87.2 um LONG
+OT_ENTRIES entry ck_w[1] -> u_ot_pr_core.u_c.g_w\[1\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 157.7 um LONG
+OT_ENTRIES entry ck_w[2] -> u_ot_pr_core.u_c.g_w\[2\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 217.9 um LONG
+OT_ENTRIES entry ck_w[3] -> u_ot_pr_core.u_c.g_w\[3\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 217.9 um LONG
+OT_ENTRIES entry ck_w[4] -> u_ot_pr_core.u_c.g_w\[4\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 217.9 um LONG
+OT_ENTRIES entry ck_w[5] -> u_ot_pr_core.u_c.g_w\[5\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 217.9 um LONG
+OT_ENTRIES entry ck_w[6] -> u_ot_pr_core.u_c.g_w\[6\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 217.9 um LONG
+OT_ENTRIES entry ck_w[7] -> u_ot_pr_core.u_c.g_w\[7\].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2) wire 153.6 um LONG
+OT_ENTRIES entry ck_x[0] -> u_ot_pr_core.u_c.g_x\[0\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 92.8 um LONG
+OT_ENTRIES entry ck_x[1] -> u_ot_pr_core.u_c.g_x\[1\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 133.9 um LONG
+OT_ENTRIES entry ck_x[2] -> u_ot_pr_core.u_c.g_x\[2\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 133.9 um LONG
+OT_ENTRIES entry ck_x[3] -> u_ot_pr_core.u_c.g_x\[3\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 123.2 um LONG
+OT_HYBRID excluded hard entries: in-CTS -repair_clock_nets disabled; selected-root trees repaired after CTS
+OT_SPINE sym: 119 flop leaves, 0 insertion leaves (0 on their earliest tap), 30 tree nodes, estimated latest flop leaf 601 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 119 sinks 881 cells 153 leaf arrival 463.4..546.4 ps (spread 83.0) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 119 sinks 881 cells 299 leaf arrival 515.2..547.2 ps (spread 31.9) pad 60.0 / 14.4 ps
+OT_SPINE iter 2 (fine) leaves 119 sinks 881 cells 316 leaf arrival 520.8..547.2 ps (spread 26.4) pad 60.0 / 15.9 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 316 spine cells
+OT_SPINE done port clk buffers 316
+OT_SPINE sym: 47 flop leaves, 0 insertion leaves (0 on their earliest tap), 15 tree nodes, estimated latest flop leaf 645 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 47 sinks 342 cells 73 leaf arrival 487.2..598.5 ps (spread 111.3) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 47 sinks 342 cells 88 leaf arrival 518.9..598.5 ps (spread 79.7) pad 67.8 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 47 sinks 342 cells 157 leaf arrival 561.7..598.5 ps (spread 36.9) pad 67.8 / 16.7 ps
+OT_SPINE iter 3 (fine) leaves 47 sinks 342 cells 158 leaf arrival 573.7..598.5 ps (spread 24.8) pad 67.8 / 15.9 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 158 spine cells
+OT_SPINE done port clk_c buffers 158
+OT_SPINE sym: 10 flop leaves, 0 insertion leaves (0 on their earliest tap), 3 tree nodes, estimated latest flop leaf 304 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 10 sinks 65 cells 14 leaf arrival 323.0..353.1 ps (spread 30.1) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 10 sinks 65 cells 18 leaf arrival 321.7..350.4 ps (spread 28.7) pad 60.0 / 18.0 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 18 spine cells
+OT_SPINE done port clk_ce buffers 18
+OT_SPINE sym: 131 flop leaves, 0 insertion leaves (0 on their earliest tap), 25 tree nodes, estimated latest flop leaf 396 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 131 sinks 1035 cells 159 leaf arrival 329.9..415.9 ps (spread 85.9) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 131 sinks 1035 cells 267 leaf arrival 381.6..415.5 ps (spread 33.9) pad 60.0 / 16.0 ps
+OT_SPINE iter 2 (fine) leaves 131 sinks 1035 cells 279 leaf arrival 384.8..415.5 ps (spread 30.6) pad 60.0 / 19.7 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 279 spine cells
+OT_SPINE done port clk_w0 buffers 279
+OT_SPINE sym: 132 flop leaves, 0 insertion leaves (0 on their earliest tap), 25 tree nodes, estimated latest flop leaf 691 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 132 sinks 1035 cells 166 leaf arrival 401.0..692.4 ps (spread 291.4) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 132 sinks 1035 cells 497 leaf arrival 624.4..692.4 ps (spread 68.0) pad 60.3 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 132 sinks 1035 cells 607 leaf arrival 654.6..692.4 ps (spread 37.8) pad 60.3 / 3.0 ps
+OT_SPINE iter 3 (fine) leaves 132 sinks 1035 cells 1128 leaf arrival 674.1..786.5 ps (spread 112.4) pad 60.3 / 16.1 ps
+OT_SPINE iter 4 (fine) leaves 132 sinks 1035 cells 1454 leaf arrival 757.8..786.5 ps (spread 28.7) pad 60.3 / 16.3 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 1454 spine cells
+OT_SPINE done port clk_w1 buffers 1454
+OT_SPINE sym: 130 flop leaves, 0 insertion leaves (0 on their earliest tap), 24 tree nodes, estimated latest flop leaf 695 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 130 sinks 1035 cells 162 leaf arrival 411.6..694.2 ps (spread 282.6) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 130 sinks 1035 cells 475 leaf arrival 619.1..694.2 ps (spread 75.1) pad 61.1 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 130 sinks 1035 cells 633 leaf arrival 653.8..694.2 ps (spread 40.4) pad 61.1 / 9.5 ps
+OT_SPINE iter 3 (fine) leaves 130 sinks 1035 cells 726 leaf arrival 670.4..696.3 ps (spread 25.9) pad 61.1 / 16.3 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 726 spine cells
+OT_SPINE done port clk_w2 buffers 726
+OT_SPINE sym: 134 flop leaves, 0 insertion leaves (0 on their earliest tap), 33 tree nodes, estimated latest flop leaf 755 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 134 sinks 1052 cells 180 leaf arrival 459.7..671.4 ps (spread 211.7) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 134 sinks 1052 cells 344 leaf arrival 606.1..671.4 ps (spread 65.3) pad 63.8 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 134 sinks 1052 cells 499 leaf arrival 630.8..671.4 ps (spread 40.6) pad 63.8 / 8.9 ps
+OT_SPINE iter 3 (fine) leaves 134 sinks 1052 cells 586 leaf arrival 646.8..681.2 ps (spread 34.4) pad 63.8 / 16.1 ps
+OT_SPINE iter 4 (fine) leaves 134 sinks 1052 cells 600 leaf arrival 650.3..681.2 ps (spread 31.0) pad 63.8 / 15.9 ps
+OT_SPINE iter 5 (fine) leaves 134 sinks 1052 cells 602 leaf arrival 653.0..681.2 ps (spread 28.3) pad 63.8 / 16.5 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 602 spine cells
+OT_SPINE done port clk_w3 buffers 602
+OT_SPINE sym: 66 flop leaves, 0 insertion leaves (0 on their earliest tap), 15 tree nodes, estimated latest flop leaf 345 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 66 sinks 520 cells 82 leaf arrival 347.9..390.3 ps (spread 42.4) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 66 sinks 520 cells 99 leaf arrival 372.0..386.8 ps (spread 14.8) pad 60.0 / 19.5 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 99 spine cells
+OT_SPINE done port clk_x0 buffers 99
+OT_SPINE sym: 66 flop leaves, 0 insertion leaves (0 on their earliest tap), 15 tree nodes, estimated latest flop leaf 397 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 66 sinks 520 cells 82 leaf arrival 377.5..421.4 ps (spread 43.8) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 66 sinks 520 cells 107 leaf arrival 400.4..418.3 ps (spread 17.8) pad 60.0 / 18.7 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 107 spine cells
+OT_SPINE done port clk_x1 buffers 107
+OT_SPINE sym: 67 flop leaves, 0 insertion leaves (0 on their earliest tap), 15 tree nodes, estimated latest flop leaf 406 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 67 sinks 520 cells 84 leaf arrival 394.4..437.9 ps (spread 43.5) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 67 sinks 520 cells 109 leaf arrival 417.0..435.0 ps (spread 17.9) pad 60.0 / 19.4 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 109 spine cells
+OT_SPINE done port clk_x2 buffers 109
+OT_SPINE sym: 69 flop leaves, 0 insertion leaves (0 on their earliest tap), 17 tree nodes, estimated latest flop leaf 391 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 69 sinks 526 cells 86 leaf arrival 299.9..405.5 ps (spread 105.5) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 69 sinks 526 cells 96 leaf arrival 337.5..404.1 ps (spread 66.6) pad 70.6 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 69 sinks 526 cells 163 leaf arrival 375.3..400.5 ps (spread 25.2) pad 70.6 / 16.2 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 163 spine cells
+OT_SPINE done port clk_x3 buffers 163
+OT_SPINE sym: 71 flop leaves, 0 insertion leaves (0 on their earliest tap), 23 tree nodes, estimated latest flop leaf 678 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 71 sinks 512 cells 101 leaf arrival 491.1..620.4 ps (spread 129.2) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 71 sinks 512 cells 112 leaf arrival 547.4..620.0 ps (spread 72.6) pad 70.8 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 71 sinks 512 cells 252 leaf arrival 586.2..620.2 ps (spread 34.0) pad 70.8 / 16.4 ps
+OT_SPINE iter 3 (fine) leaves 71 sinks 512 cells 257 leaf arrival 593.2..620.2 ps (spread 27.0) pad 70.8 / 19.8 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 257 spine cells
+OT_SPINE done port clk_d0 buffers 257
+OT_SPINE sym: 35 flop leaves, 0 insertion leaves (0 on their earliest tap), 9 tree nodes, estimated latest flop leaf 548 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 35 sinks 256 cells 48 leaf arrival 370.5..520.8 ps (spread 150.2) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 35 sinks 256 cells 61 leaf arrival 463.2..518.3 ps (spread 55.1) pad 67.2 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 35 sinks 256 cells 104 leaf arrival 483.2..515.3 ps (spread 32.1) pad 67.2 / 16.0 ps
+OT_SPINE iter 3 (fine) leaves 35 sinks 256 cells 109 leaf arrival 496.1..515.3 ps (spread 19.2) pad 67.2 / 16.2 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 109 spine cells
+OT_SPINE done port clk_d1 buffers 109
+OT_SPINE sym: 67 flop leaves, 0 insertion leaves (0 on their earliest tap), 15 tree nodes, estimated latest flop leaf 676 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 67 sinks 512 cells 87 leaf arrival 369.7..652.9 ps (spread 283.2) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 67 sinks 512 cells 227 leaf arrival 579.3..647.0 ps (spread 67.7) pad 59.4 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 67 sinks 512 cells 316 leaf arrival 610.7..647.0 ps (spread 36.3) pad 59.4 / 11.0 ps
+OT_SPINE iter 3 (fine) leaves 67 sinks 512 cells 358 leaf arrival 623.1..647.0 ps (spread 23.9) pad 59.4 / 16.2 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 358 spine cells
+OT_SPINE done port clk_d2 buffers 358
+OT_SPINE sym: 34 flop leaves, 0 insertion leaves (0 on their earliest tap), 9 tree nodes, estimated latest flop leaf 571 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 34 sinks 256 cells 47 leaf arrival 323.1..577.1 ps (spread 254.0) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 34 sinks 256 cells 121 leaf arrival 506.6..571.7 ps (spread 65.1) pad 60.9 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 34 sinks 256 cells 159 leaf arrival 533.0..571.1 ps (spread 38.1) pad 60.9 / 3.0 ps
+OT_SPINE iter 3 (fine) leaves 34 sinks 256 cells 296 leaf arrival 555.9..664.7 ps (spread 108.8) pad 60.9 / 16.2 ps
+OT_SPINE iter 4 (fine) leaves 34 sinks 256 cells 366 leaf arrival 621.7..664.7 ps (spread 43.0) pad 60.9 / 16.3 ps
+OT_SPINE iter 5 (fine) leaves 34 sinks 256 cells 370 leaf arrival 636.8..664.7 ps (spread 27.9) pad 60.9 / 16.4 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 370 spine cells
+OT_SPINE done port clk_d3 buffers 370
+OT_SPINE sym: 72 flop leaves, 0 insertion leaves (0 on their earliest tap), 24 tree nodes, estimated latest flop leaf 679 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 72 sinks 513 cells 102 leaf arrival 492.2..621.9 ps (spread 129.7) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 72 sinks 513 cells 114 leaf arrival 549.2..621.9 ps (spread 72.7) pad 70.7 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 72 sinks 513 cells 247 leaf arrival 589.5..621.8 ps (spread 32.2) pad 70.7 / 15.9 ps
+OT_SPINE iter 3 (fine) leaves 72 sinks 513 cells 252 leaf arrival 596.7..621.8 ps (spread 25.1) pad 70.7 / 19.6 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 252 spine cells
+OT_SPINE done port clk_h0 buffers 252
+OT_SPINE sym: 67 flop leaves, 0 insertion leaves (0 on their earliest tap), 17 tree nodes, estimated latest flop leaf 736 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 67 sinks 513 cells 92 leaf arrival 373.4..681.5 ps (spread 308.1) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 67 sinks 513 cells 240 leaf arrival 612.2..676.0 ps (spread 63.8) pad 59.1 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 67 sinks 513 cells 299 leaf arrival 638.6..676.0 ps (spread 37.3) pad 59.1 / 8.2 ps
+OT_SPINE iter 3 (fine) leaves 67 sinks 513 cells 358 leaf arrival 651.0..686.9 ps (spread 36.0) pad 59.1 / 16.2 ps
+OT_SPINE iter 4 (fine) leaves 67 sinks 513 cells 370 leaf arrival 656.3..686.9 ps (spread 30.7) pad 59.1 / 16.3 ps
+OT_SPINE iter 5 (fine) leaves 67 sinks 513 cells 372 leaf arrival 658.7..686.9 ps (spread 28.2) pad 59.1 / 16.3 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 372 spine cells
+OT_SPINE done port clk_h1 buffers 372
+OT_SPINE sym: 69 flop leaves, 0 insertion leaves (0 on their earliest tap), 17 tree nodes, estimated latest flop leaf 677 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 69 sinks 513 cells 92 leaf arrival 373.3..662.9 ps (spread 289.6) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 69 sinks 513 cells 248 leaf arrival 594.9..657.6 ps (spread 62.7) pad 59.8 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 69 sinks 513 cells 302 leaf arrival 622.4..657.6 ps (spread 35.2) pad 59.8 / 8.5 ps
+OT_SPINE iter 3 (fine) leaves 69 sinks 513 cells 358 leaf arrival 632.4..660.3 ps (spread 27.8) pad 59.8 / 16.1 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 358 spine cells
+OT_SPINE done port clk_h2 buffers 358
+OT_SPINE sym: 68 flop leaves, 0 insertion leaves (0 on their earliest tap), 18 tree nodes, estimated latest flop leaf 742 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 68 sinks 513 cells 93 leaf arrival 322.1..668.8 ps (spread 346.7) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 68 sinks 513 cells 306 leaf arrival 590.7..666.0 ps (spread 75.3) pad 58.4 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 68 sinks 513 cells 426 leaf arrival 627.1..666.0 ps (spread 38.9) pad 58.4 / 8.9 ps
+OT_SPINE iter 3 (fine) leaves 68 sinks 513 cells 495 leaf arrival 644.7..668.2 ps (spread 23.5) pad 58.4 / 16.2 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 495 spine cells
+OT_SPINE done port clk_h3 buffers 495
+OT_SPINE sym: 8 flop leaves, 0 insertion leaves (0 on their earliest tap), 4 tree nodes, estimated latest flop leaf 413 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 8 sinks 42 cells 14 leaf arrival 337.4..428.8 ps (spread 91.4) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 8 sinks 42 cells 34 leaf arrival 419.4..427.0 ps (spread 7.6) pad 60.0 / 16.0 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 34 spine cells
+OT_SPINE done port clk_e0 buffers 34
+OT_SPINE sym: 7 flop leaves, 0 insertion leaves (0 on their earliest tap), 3 tree nodes, estimated latest flop leaf 503 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 7 sinks 42 cells 13 leaf arrival 398.5..515.9 ps (spread 117.4) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 7 sinks 42 cells 17 leaf arrival 468.7..511.4 ps (spread 42.7) pad 70.7 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 7 sinks 42 cells 25 leaf arrival 477.4..507.7 ps (spread 30.3) pad 70.7 / 8.6 ps
+OT_SPINE iter 3 (fine) leaves 7 sinks 42 cells 29 leaf arrival 486.9..510.0 ps (spread 23.2) pad 70.7 / 16.3 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 29 spine cells
+OT_SPINE done port clk_e1 buffers 29
+OT_SPINE sym: 7 flop leaves, 0 insertion leaves (0 on their earliest tap), 3 tree nodes, estimated latest flop leaf 398 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 7 sinks 42 cells 13 leaf arrival 367.2..442.0 ps (spread 74.8) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (fine) leaves 7 sinks 42 cells 28 leaf arrival 421.7..439.7 ps (spread 18.0) pad 60.0 / 16.1 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 28 spine cells
+OT_SPINE done port clk_e2 buffers 28
+OT_SPINE sym: 7 flop leaves, 0 insertion leaves (0 on their earliest tap), 5 tree nodes, estimated latest flop leaf 456 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 7 sinks 42 cells 14 leaf arrival 377.2..485.7 ps (spread 108.5) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 7 sinks 42 cells 19 leaf arrival 449.0..483.9 ps (spread 35.0) pad 71.8 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 7 sinks 42 cells 23 leaf arrival 449.9..483.9 ps (spread 34.1) pad 71.8 / 3.0 ps
+OT_SPINE iter 3 (fine) leaves 7 sinks 42 cells 47 leaf arrival 479.9..562.9 ps (spread 83.1) pad 71.8 / 16.1 ps
+OT_SPINE iter 4 (fine) leaves 7 sinks 42 cells 59 leaf arrival 535.6..562.9 ps (spread 27.3) pad 71.8 / 17.1 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 59 spine cells
+OT_SPINE done port clk_e3 buffers 59
+[INFO RSZ-0058] Using max wire length 163um.
+OT_HYBRID post-CTS scoped net repair on selected roots; 20 hard entries unchanged
+OT_HYBRID CTS roots clk clk_c clk_ce clk_w0 clk_w1 clk_w2 clk_w3 clk_x0 clk_x1 clk_x2 clk_x3 clk_d0 clk_d1 clk_d2 clk_d3 clk_h0 clk_h1 clk_h2 clk_h3 clk_e0 clk_e1 clk_e2 clk_e3; hard-child entries excluded
+OT_ENTRIES done: 20 independent hard entries, 23 glue CTS roots, 20 entry wires over 60.0 um
+QDM PINFLOP reference: 904 input pin flops (8 hard-child clock pins at +insertion), median arrival 619.101685 (range 220.47498099999999 .. 725.075073)
+QDM reference pin u_ot_pr_core.fb_xb_d_o[138]$_DFF_P_/CLK clock arrival max 619.101685 min 350.775391 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[0] -> u_ot_pr_core.u_c.g_w[0].u_m/clk wire=26.913948607949457 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[1] -> u_ot_pr_core.u_c.g_w[1].u_m/clk wire=65.51692548018231 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[2] -> u_ot_pr_core.u_c.g_w[2].u_m/clk wire=110.52041964695775 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[3] -> u_ot_pr_core.u_c.g_w[3].u_m/clk wire=110.48014630657855 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[4] -> u_ot_pr_core.u_c.g_w[4].u_m/clk wire=110.49021464167335 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[5] -> u_ot_pr_core.u_c.g_w[5].u_m/clk wire=110.50363446253712 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[6] -> u_ot_pr_core.u_c.g_w[6].u_m/clk wire=110.52041964695775 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_w[7] -> u_ot_pr_core.u_c.g_w[7].u_m/clk wire=62.8849266840804 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_x[0] -> u_ot_pr_core.u_c.g_x[0].u_m/clk wire=29.432154747743017 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_x[1] -> u_ot_pr_core.u_c.g_x[1].u_m/clk wire=50.801116988450644 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_x[2] -> u_ot_pr_core.u_c.g_x[2].u_m/clk wire=50.771418522423254 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_x[3] -> u_ot_pr_core.u_c.g_x[3].u_m/clk wire=44.73928190254063 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_HYBRID CLOCK_RULE tt clk WARN pin_spread=31.0 scope=boundary sinks=881 WARN: insertion all_mean 440.1 / pin_mean 440.2 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt clk sinks=881 reference_scope=boundary boundary_sinks=870 min=426.3723835490968 mean=440.1972355636002 max=457.3443864131253 all_mean=440.1339749471661
+OT_HYBRID CLOCK_RULE tt clk_c WARN pin_spread=24.8 scope=boundary sinks=342 WARN: insertion all_mean 524.7 / pin_mean 533.5 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt clk_c sinks=342 reference_scope=boundary boundary_sinks=29 min=519.6870732309181 mean=533.4862917589254 max=544.4751893342261 all_mean=524.7409902501108
+OT_HYBRID CLOCK_RULE tt clk_ce PASS pin_spread=0.6 scope=boundary sinks=65
+OT_HYBRID CTS_MEASURE tt clk_ce sinks=65 reference_scope=boundary boundary_sinks=29 min=210.72417506308972 mean=211.08746492250793 max=211.30915157710217 all_mean=203.61713571866045
+OT_HYBRID CLOCK_RULE tt clk_w0 PASS pin_spread=37.4 scope=all_internal_only sinks=1035
+OT_HYBRID CTS_MEASURE tt clk_w0 sinks=1035 reference_scope=all_internal_only boundary_sinks=1035 min=241.52413499097727 mean=264.3122641415843 max=278.9247732824828 all_mean=264.3122641415843
+OT_HYBRID CLOCK_RULE tt clk_w1 FAIL pin_spread=133.6 scope=all_internal_only sinks=1035 WARN: insertion all_mean 689.0 / pin_mean 689.0 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root clk_w1 pin-flop spread 133.6 ps > 80 at tt (all_internal_only, 1035 of 1035 sinks)
+Elapsed time: 22:41.50[h:]min:sec. CPU time: user 2055.43 sys 232.38 (168%). Peak memory: 3018260KB.
