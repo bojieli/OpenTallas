@@ -52,3 +52,11 @@ Reproduction uses `tools/s81_dv/kv_vp_1021/gate.py` with the baseline production
 bank gate's passing output as `--baseline`, and a new output directory. The
 fleet source root and original runs remain at
 `gold2:/srv/opentallas-scratch/claude/codex-s81-kv-vp-1021`.
+
+The source reconciliation against folded publication `c8bb7cf5e` is sealed in
+`source_reconciliation.json`. All 64 production RTL/SRAM files match candidate
+`286841a838132f393f3b387f2ecce0e20111c73b` exactly. At publication `c8bb7cf5e`,
+62 match, none differ, and two are absent: `ot_s81sl_kv_bank.sv` and
+`ot_s81sl_kv_leaf.sv`. Publication of this evidence and the compiler row contract
+therefore does not establish that main contains the candidate bank/adapter or
+their full source binding. The PASS remains scoped to the pinned candidate.
