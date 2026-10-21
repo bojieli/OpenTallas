@@ -118,7 +118,10 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
   # KV-DCAL 10-19 (OT_KV_DCAL_BC4=1 with OT_KV_DCAL_BC=1, kv_die.DCAL_BC4): the safe K22 successor qkd_d2d_cal_seq_pin_bc4
   # (kit OT_KV_DCAL_BC4_KIT, default qkd_d2d_cal_seq_pin_bc4; PARALLEL fallback qkd_d2d_cal_seq_pin_bc4w); own view only
   if [ "${OT_KV_DCAL_BC:-0}" = 1 ] && [ "${OT_KV_DCAL_BC4:-0}" = 1 ]; then
-    B4K=${OT_KV_DCAL_BC4_KIT:-qkd_d2d_cal_seq_pin_bc4}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
+    B4D=qkd_d2d_cal_seq_pin_bc4
+    [ -n "${OT_KV_EMB_WIN:-}" ] && B4D=qkd_d2d_cal_seq_pin_bc4_ew$OT_KV_EMB_WIN
+    [ "${OT_KV_ATTN_R16:-0}" = 1 ] && B4D=${B4D}_r16
+    B4K=${OT_KV_DCAL_BC4_KIT:-$B4D}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
     if [ -f $B4V/qkd_d2d_cal_seq_pin_bc4.lef ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_tt.lib ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_ff.lib ]; then
       DCV=$B4V; echo "OT_KV_DCAL_BC4: qkd_dcal -> $B4V (safe K22)"
     else echo "OT_KV_DCAL_BC4 FRAME: no view at $B4V yet; qkd_dcal stays an ASSUMED frame (kit $B4K not closed)"; fi

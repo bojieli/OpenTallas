@@ -1308,6 +1308,12 @@ if DCAL_BC:
 # die group (flt) so the parent fault lane (kv_static_die OT_KV_DCAL_FLT) can load it; never left open.
 DCAL_BC4 = DCAL_BC and __import__('os').environ.get('OT_KV_DCAL_BC4', '0') == '1'
 DCAL_BC4_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv'   # + ot_qwen_d2d_cal_seq_bc4.sv (core)
+# Select the same canonical EMB-window/R16 source as the physical kit below.
+_EMB_WIN = __import__('os').environ.get('OT_KV_EMB_WIN', '')
+if _EMB_WIN:
+    DCAL_BC4_FILE = f'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4_ew{int(_EMB_WIN)}.sv'
+if __import__('os').environ.get('OT_KV_ATTN_R16', '0') == '1':
+    DCAL_BC4_FILE = DCAL_BC4_FILE.replace('.sv', '_r16.sv')
 if DCAL_BC4:
     DCAL_FILE = DCAL_BC4_FILE
     DCAL_WH = (21.6, 34.56) if __import__('os').environ.get('OT_KV_DCAL_BC4_KIT', '') == 'qkd_d2d_cal_seq_pin_bc4w' \
