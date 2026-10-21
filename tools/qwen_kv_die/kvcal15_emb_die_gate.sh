@@ -32,6 +32,6 @@ for m in 1 2 3 4; do run m$m $m $DIE_DN $DIE_RT 1 1 & done
 wait
 ok=1
 for n in p_die p_land p_base; do echo "== $n: $(grep -E '^(PASS|FAIL)' "$out/$n.log" | tail -1)"; grep -q '^PASS' "$out/$n.log" && ! grep -q '^FAIL' "$out/$n.log" || ok=0; done
-for n in m1 m2 m3 m4; do echo "== $n: $(grep -E '^FAIL' "$out/$n.log" | tail -1)"; grep -q '^FAIL' "$out/$n.log" || ok=0; done
+for n in m1 m2 m3 m4; do echo "== $n: $(grep -E '^FAIL' "$out/$n.log" | tail -1)"; grep -q '^FAIL MUT' "$out/$n.log" || ok=0; done   # a build failure is not a witness
 [[ $ok == 1 ]] || { echo FAIL KVCAL15_EMB_DIE; exit 1; }
 echo PASS KVCAL15_EMB_DIE_LAND_PJ_SKEW_DIE_RELAYS_EXACT_MUTANTS_FAIL
