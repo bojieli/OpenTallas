@@ -4,7 +4,7 @@ Outline 777.6 x 648 (safe8u). CTS: route.cts_sink sink_clustering false + -no_ob
 
 ## Netlist (CALR=1, F16WTN=1, TABLE_REL producer)
 rtl/qwen_dv/lp9d_npl = QW-TLPROD lp9d_np (8349f4a11; native32 PASS, depth 718.5 ps / 24 lv, V5.050 tok_rel PASS,
-norel/abs1/drop17 FAIL) with ONLY the landing-ring instance names restored (and the sim-only ROM266 INSTANCE strings dropped: ORFS reads the liberty macro) (results/rtl/qw_ttc9_1021/landing_names.py:
+norel/abs1/drop17 FAIL) with ONLY the landing-ring instance names restored (plus: sim-only ROM266 INSTANCE strings dropped -- ORFS reads the liberty macro; 1-bit ports declared scalar as in lp8_np) (results/rtl/qw_ttc9_1021/landing_names.py:
 19,827 instances u_<idx> -> \u_lpl_<n>_<w|r>.u<idx>, 30 landings; exact construct replay namemap_lp9d.json.gz, replay RTL
 byte-identical sha 5a54cf48). Connections, modules, parameters and order unchanged (sed back-substitution diff = 0 lines).
 Macros: 6 p192 SRAM + 3 OPROM (unchanged) + 2 calendar ROM266 u_gi.u_cal.g_calrom.u_rom.m0/m1 at (475.2,388.8) /
