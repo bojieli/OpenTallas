@@ -1670,7 +1670,7 @@ def rope_context_tiles(tiles):
         raise ValueError('KV RoPE EW1627 image requires the actual 1024-edge second HBM sweep separation')
     emb['body'] = [
         f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay})) u_context ('
-        '.ck(ck), .rst_n(rst_n), '
+        '.ck(ck), .rst_n(rst_n), .i_result_record(d2d__svc), '
         '.i_ctx({i_host_record[0],i_host_record[0],i_host_record[548:513],i_host_record[61:1]}), '
         '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
         + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
