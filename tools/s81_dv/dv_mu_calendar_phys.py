@@ -985,6 +985,11 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                               stage=max((s for s in st_rec if s['copies'] == 1),
                                         key=lambda s: s['step' if mode == 'mtp' else 'occ'])['stage']),
             checker=dict(result='PASS' if n and not cal['bad'] else 'FAULT', collisions=len(cal['bad']),
+                         same_user_checked=True,
+                         source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                         position_graph_sha256=(hashlib.sha256(json.dumps(model['mtp_position_graph'],
+                             sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+                             if model.get('mtp_position_graph') and mode == 'mtp' else None),
                          resources=len(cal['nres']), windows=sum(cal['nres'].values()),
                          negative_n_plus_1=dict(users=n + 1, result='FAULT' if neg and (neg['bad']) else 'PASS?!',
                                                 collisions=len(neg['bad']) if neg else None),
