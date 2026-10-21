@@ -38,6 +38,7 @@ for l in (ROOT / 'physical/qcluster/qfd_c_b16_fullm_sites.tsv').read_text().spli
     if len(f) == 7 and not l.startswith('#'): old[f[0]] = [float(z) for z in f[1:]]
 mid = {r: (round((old[r + '_w'][0] + old[r + '_r'][0]) * 500), round((old[r + '_w'][1] + old[r + '_r'][1]) * 500)) for r in rings}
 m = cp_model.CpModel(); v = {}; st = {}; ex = {}; xi = []; yi = []
+MODE = os.environ.get('OT_RTP_MODE', 'x')   # x: tile + output station ; r0: tile with its own output register
 EXCESS = round(float(os.environ.get('OT_RTP_EXCESS_UM', 30)) * 1000)
 for r in rings:
     hw = d['halves'][r + '_w']; hr = d['halves'][r + '_r']
@@ -68,10 +69,12 @@ for r in rings:
             if pm is not None:                    # writer anchors -> tile in face
                 m.Add(sx * U * x + max(sx * TW, 0) + sy * yin - pm[str((sx, sy))] <= Rr)
             pm = hr['projection_min_nm']
-            if pm is not None:                    # station out face -> reader anchors
+            if pm is not None and MODE == 'x':    # station out face -> reader anchors
                 m.Add(sx * U * sxv + max(sx * SW, 0) + sy * sout - pm[str((sx, sy))] <= Rr)
-            # tile out face -> station in face (segments)
-            m.Add(sx * U * (x - sxv) + max(sx * TW, 0) + max(-sx * SW, 0) + sy * (yout - sin) <= Rr)
+            if pm is not None and MODE == 'r0':   # tile out face (registered o) -> reader anchors
+                m.Add(sx * U * x + max(sx * TW, 0) + sy * yout - pm[str((sx, sy))] <= Rr)
+            if MODE == 'x':                       # tile out face -> station in face (segments)
+                m.Add(sx * U * (x - sxv) + max(sx * TW, 0) + max(-sx * SW, 0) + sy * (yout - sin) <= Rr)
     # fixed hard clearance 21.6
     for hn, (hx, hy, hwid, hht) in ({} if 'hard' in DIAG else J['hard']).items():
         a, b, c, e = [round(z * 1000) for z in (hx - 21.6, hy - 21.6, hx + hwid + 21.6, hy + hht + 21.6)]
