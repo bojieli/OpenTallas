@@ -1,0 +1,32 @@
+{
+  "base_commit": "08d715a32dc81f4574b40941682512824ed5dbb9",
+  "old_default_matrix": [
+    {
+      "mode": "cts",
+      "method": "gen_hooks",
+      "byte_identical": true,
+      "sha256": "2f416918224b378b8492afe3433fe23f7cd6401aabff0a37d7432926784efe7c"
+    },
+    {
+      "mode": "cts",
+      "method": "referenced_paths",
+      "byte_identical": true,
+      "sha256": "b344da7b0c5bf02eb23d5984e4c4c5f65b1e68ff322a2f5654a75e2b02bf4bd1"
+    },
+    {
+      "mode": "multiple_cts_roots",
+      "method": "gen_hooks",
+      "byte_identical": true,
+      "sha256": "ad28b53840d6919d155a263712f42c527a103daae3fe44fb050d7867fe01599e"
+    },
+    {
+      "mode": "multiple_cts_roots",
+      "method": "referenced_paths",
+      "byte_identical": true,
+      "sha256": "d353b7415e4da64fd2cb1351916a28d024d2dfc765887ce74dce6fc55f9e25e6"
+    }
+  ],
+  "optin_only_PRE_CTS_changes": true,
+  "other_hooks_and_clock_entry_sdc_byte_identical": true,
+  "wrapper_order": "boundary -> ownership -> clock_entries -> canonical_spine -> original_CTS"
+}

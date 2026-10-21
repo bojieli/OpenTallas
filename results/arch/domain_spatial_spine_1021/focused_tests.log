@@ -1,0 +1,14 @@
+test_tcl_owner_causals (test_domain_spatial_spine.Ownership) ... ok
+test_default_has_no_generated_bytes_or_dependencies (test_domain_spatial_spine.Schema) ... ok
+test_existing_roots_only (test_domain_spatial_spine.Schema) ... ok
+test_shell_requires_distinct_macro_pin_leaves (test_domain_spatial_spine.Schema) ... ok
+test_strict_knobs_and_engine_binding (test_domain_spatial_spine.Schema) ... ok
+test_reject_missing_corner_and_ambiguous_association (test_clock_entry_constraints.BoundData) ... ok
+test_related_domain_mapping_is_mandatory_and_complete (test_clock_entry_constraints.BoundData) ... ok
+test_absent_is_empty_and_present_emits_path_delays (test_clock_entry_constraints.SeamWindows) ... ok
+test_rejects (test_clock_entry_constraints.SeamWindows) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.013s
+
+OK
