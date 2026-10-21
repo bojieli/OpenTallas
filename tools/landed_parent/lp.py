@@ -126,6 +126,10 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+# S81-LEPENH2 10-20 (ported by S81-ELEM/ENDP 10-21 from claude/drive-s81-lepenhmu-1020 aefbb0ca3): landing_kept_enable writer
+# (slot enable = registered one-hot only; rq off the data capture muxes)
+KEPT_ENABLE_RTL = "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"
+LIB_PORTS['ot_pl_land_vector_reset_kw_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 # S81-CAPC4 10-20 opt-in "landing_writer": "n32": native32-safe ring writer (slot enable = kept write_oh only), same
 # contract as ot_pl_land_chunk_w; read by the unchanged ot_pl_land_chunk_r.  Absent = byte-identical output.
 LIB_PORTS['ot_pl_land_n32_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
@@ -538,6 +542,15 @@ class Parent:
             raise SystemExit("landing_mcp must be an explicit boolean")
         if type(self.reset_forest) is not bool:
             raise SystemExit("landing_reset_forest must be an explicit boolean")
+        # landing_kept_enable (opt-in, needs landing_reset_forest; absent = byte-identical): the ring writer
+        # ot_pl_land_vector_reset_kw_w enables each slot with the registered one-hot alone; ot_pl_land_vector_reset_w's
+        # (rq && write_oh) puts rq on every data capture mux (56 actual loads per chunk at CHUNK_BITS 8: s81sl_lepenh_lra
+        # gate 10-21 pre-gate native census 552 violations, max 56).  Reader unchanged.
+        self.kept_enable = spec.get("landing_kept_enable", False)
+        if type(self.kept_enable) is not bool:
+            raise SystemExit("landing_kept_enable must be an explicit boolean")
+        if self.kept_enable and not self.reset_forest:
+            raise SystemExit("landing_kept_enable requires landing_reset_forest")
         if self.reset_forest and not self.chunk_bits:
             raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
@@ -932,7 +945,7 @@ class Parent:
             raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
         return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
                     incremental_FFs=sum(v['FFs']-depth for v in regions.values()),
-                    required_rtl_sources=RESET_FOREST_RTL,
+                    required_rtl_sources=RESET_FOREST_RTL + ([KEPT_ENABLE_RTL] if self.kept_enable else []),
                     scope='Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.')
 
     def emit(self, P, top_lp, mut=True):
@@ -1057,7 +1070,7 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                wprim = "ot_pl_land_n32_chunk" if self.writer == "n32" else primitive
+                wprim = "ot_pl_land_n32_chunk" if self.writer == "n32" else primitive + ("_kw" if self.kept_enable else "")
                 w(f"    {wprim}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
@@ -1502,7 +1515,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
-                        (RESET_FOREST_RTL if self.reset_forest else []) + ([N32_RTL] if self.writer == "n32" else []) +
+                        (RESET_FOREST_RTL if self.reset_forest else []) + ([KEPT_ENABLE_RTL] if self.kept_enable else []) + ([N32_RTL] if self.writer == "n32" else []) +
                         ([RST_COPY_RTL] if self.rcopies else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
@@ -1608,7 +1621,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_vector_reset_kw_w", "ot_pl_land_n32_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

@@ -191,5 +191,7 @@
   "why": "S81-COLLECT2/LEPENH 10-21 landed regions: d1a/d3a reset root u_lpr_root in->reg -19.6/-48.6 ns across the 2.8x5.8 mm slot and the undeclared u_lpr_root(S)->u_lpr_K crossing (d3b -3873 ps); one reset port per region landed beside its own pin, die releases all three on one edge; 7 stages = 5 registered prefix hops fenced <= ~405 um along each region's street from its E-face pin (registered reset distribution), branch, leaf"
  },
  "landing_reset_forest": true,
- "mut_landing": "lro"
+ "mut_landing": "lro",
+ "landing_kept_enable": true,
+ "_note_kept_enable": "ENDP 10-21: restored (the DRIVE-S81 lepenhmu/lepmu specs had it; the lr rebuild on main lp.py silently lost it): s81sl_lepenh_lr{a,b} 12:24 gates FAILED pre-gate native census 552 violations max 56 = u_lpl_{0,1,4,7}_w g_chunk u_local.rq on every data capture mux"
 }

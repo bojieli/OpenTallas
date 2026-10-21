@@ -377,7 +377,8 @@
    "incremental_FFs": 1145,
    "required_rtl_sources": [
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
-    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"
    ],
    "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
   },

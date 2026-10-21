@@ -216,7 +216,8 @@ def build(name, v):
     s = json.load(open(D1A / "spec.json"))
     s["name"], s["top"] = name, TOP
     s["sources"] = [LP_SV, "rtl/common/landed_parent/ot_pl_land.sv", "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
-                    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"] + [f"{views[m]}/{m}_bb.v" for m in ("ot_s81sl_slice", LEP_TOP, LANE_TOP)]
+                    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+                    "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"] + [f"{views[m]}/{m}_bb.v" for m in ("ot_s81sl_slice", LEP_TOP, LANE_TOP)]
     s["landed_record"] = RECORD
     s["clock_port"], s["clock_ports"] = "ck_S", ["ck_S", "ck_K", "ck_ML"]
     s["reset_ports"] = ["rst_n_S", "rst_n_K", "rst_n_ML"]
