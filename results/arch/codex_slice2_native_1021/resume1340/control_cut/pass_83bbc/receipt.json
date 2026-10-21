@@ -22,7 +22,17 @@
       "actual_AND_mutant_bank_differences": 724
     },
     "compared": "Actual old/new production localwriter all bank bits, valid, epoch, rq and OH; independent X/Z selector cold states, independent bank data, changing X/Z input, independent reset phases",
-    "mutation": "Same fixture instantiates actual new production writer with only mask OR replaced by AND; changed bank state is observed, not inferred from exit status"
+    "mutation": "Same fixture instantiates actual new production writer with only mask OR replaced by AND; changed bank state is observed, not inferred from exit status",
+    "executed_local_shape": {
+      "W": 12,
+      "FW": 4,
+      "FLO": 8,
+      "D": [
+        4,
+        8
+      ],
+      "meaning": "Exact RSS/RSN final local chunk shape; NB W18/FW2/FLO16 placement has static model/source restoration proof, no separate executed NB shape claimed."
+    }
   },
   "source_data_alias_premise": "../FLAG_ALIAS_BINDING.json exact source-static equations, not an extra alias simulation",
   "scope": "Only required bounded source equivalence/causal evidence. No fullparent sim, arbitrary coldstart guarantee, native/timing/reach claim.",
