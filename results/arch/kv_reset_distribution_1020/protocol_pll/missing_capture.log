@@ -1,0 +1,25 @@
+KV_FWD_LANE n=1 E=2 K=4 L_hw=4 L_compiled=3 checking L=3
+KV_FWD_LANE n=1 E=2 K=4 L_hw=4 L_compiled=3 checking L=3
+KV_FWD_LANE n=1 E=2 K=4 L_hw=4 L_compiled=3 checking L=3
+KV_FWD_LANE n=1 E=2 K=4 L_hw=4 L_compiled=3 checking L=3
+KV_FWD_LANE n=1 E=2 K=4 L_hw=4 L_compiled=3 checking L=3
+KV_FWD_LANE MISMATCH n=1 ed=120 o=0 exp=1
+KV_FWD_LANE MISMATCH n=1 ed=121 o=1 exp=0
+KV_FWD_LANE MISMATCH n=1 ed=152 o=0 exp=1
+KV_FWD_LANE MISMATCH n=1 ed=153 o=1 exp=0
+KV_FWD_LANE MISMATCH n=1 ed=190 o=1 exp=0
+KV_FWD_LANE MISMATCH n=1 ed=191 o=0 exp=1
+KV_FWD_LANE MISMATCH n=1 ed=230 o=0 exp=1
+KV_FWD_LANE MISMATCH n=1 ed=231 o=1 exp=0
+KV_FWD_LANE MISMATCH n=1 ed=280 o=0 exp=1
+KV_FWD_LANE MISMATCH n=1 ed=281 o=1 exp=0
+KV_FWD_LANE lane 0 errors 420 checks 480 fault 0
+KV_FWD_LANE lane 1 errors 392 checks 448 fault 0
+KV_FWD_LANE lane 2 errors 359 checks 410 fault 0
+KV_FWD_LANE lane 3 errors 324 checks 370 fault 0
+KV_FWD_LANE lane 4 errors 280 checks 320 fault 0
+KV_FWD_BENCH FAIL 1775 errors in 2028 checks (faults 0)
+- /srv/opentallas-scratch/claude/codex-kv-reset-protocol-pll-2303/proof/tb.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.004 s; speed 1.339 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

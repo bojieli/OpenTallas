@@ -79,3 +79,43 @@ geometry assumption. The corrected tool retains every exporter source witness
 point and uses the largest candidate distance. Original remote failures and
 intermediate reports are retained. Final inventory is compressed here without
 changing its contents; the full original remains remote.
+
+## Concrete source-preserving site trial and protocol evidence
+
+The first read-only site trial reserved 87 transport relays and two local capture
+relays for the exact worst PLL `.en`, preserving its existing reset source. With
+all 46,061 final macro envelopes treated as obstacles, its checked pin span is
+360.636 um maximum. This adds 89 reset edges: the 28-edge root-to-leaf path would
+become 117 edges. This is a **single-endpoint geometry model**, not an applied
+repair. The follow-up checks all LEF rectangle-centre pairs and emits review-only
+netlist/placement patches. Its result is recorded separately when it lands.
+
+The added edges change source epoch G relative to receiver epoch R0. Retaining
+the old `reset_cal=0` and K straps would break the lane calendar. The arithmetic
+110 -> 199 for host-root release is conditional on the root already being live;
+it does not prove cold boot, POR, IGNORE, HOLD, or first use. New reset release
+dates must feed the compiler's G-R0/K calculation and complete reset profile.
+
+`bench_kv_reset_calendar.py` exercises the concrete one-bit `qkd_landsh0_1`
+topology with 89 actual `qkd_rlys_1` reset stages and five release epochs. It
+checks changing payload words after warmup using the existing lane reference:
+
+| Run | Observed result |
+| --- | --- |
+| G-R0 recompiled for the 89 edges | PASS: 2,028 checks, zero errors/faults |
+| Old K retained despite new reset date | Expected FAIL: 1,775 errors / 2,028 checks |
+| One local capture omitted, calendar still prices 89 | Expected FAIL: 1,775 errors / 2,028 checks |
+
+This ran on pinned Verilator 5.050 through unpinned ot-run, ep9 unit
+`oth-ubuntu-3223744-1792562606`, exit 0, outputs copied back to ep6. Sources,
+generated bench, source hashes, and mutant witnesses are under `protocol_pll/`.
+This proves a release-calendar mechanism at the exact endpoint width/topology;
+it does not qualify the selected die, repeated reset assertion, cold boot,
+actual root binding, standard LEC, first-use schedule, or clock placement.
+
+The initial broader NF1/2/5/15/40 diagnostic is retained separately under
+`protocol_multiframe_diagnostic/`: NF1 passed 480 checks, while the overall run
+failed with 1,920 errors. The current source registers hop-0 en for all lanes,
+where the older KV bench/calendar accounts for that edge only at NF1. That
+existing multi-frame LAND hold is unresolved; narrowing the subsequent bench
+to the exact PLL topology does not qualify those other lanes.
