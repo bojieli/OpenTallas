@@ -112,7 +112,14 @@ def dup_gates(res):
         body=res[a:b]
         for h in nets:
             m=re.search(rf'\nassign {h} = (.*);',body);assert m,h
-            expr=m[1];ins=list(dict.fromkeys(re.findall(r'\bn_\d+(?:_[gs]\d+)*\b',expr)))
+            expr=m[1]
+            # census @f8b1bebe9: an inverter copy is transparent to the census (n_7147 = ~n_7112 left 36 on n_7112):
+            # fold the inverted gate into each kept copy so the copies are real gates on n_7112's inputs.
+            mi=re.fullmatch(r'~\((n_\d+(?:_[gs]\d+)*)\)',expr.strip())
+            if mi:
+                md=re.search(r'\nassign '+mi[1]+r' = (.*);',body)
+                if md:expr='~('+md[1]+')'
+            ins=list(dict.fromkeys(re.findall(r'\bn_\d+(?:_[gs]\d+)*\b',expr)))
             uses=[]
             lines=body.split('\n')
             cnt=0

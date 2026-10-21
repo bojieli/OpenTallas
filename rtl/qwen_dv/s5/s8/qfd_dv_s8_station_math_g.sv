@@ -10415,10 +10415,10 @@ assign n_7145 = ~(n_6916);
 assign n_7146 = ~(n_6923);
 assign n_1479 = ~(n_611);
 assign n_1484 = ~(n_614);
-(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(0)) u_dup_n_7147_0(.i({n_7112}),.y(n_7147_g0));
-(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(1)) u_dup_n_7147_1(.i({n_7112}),.y(n_7147_g1));
-(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(2)) u_dup_n_7147_2(.i({n_7112}),.y(n_7147_g2));
-(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(3)) u_dup_n_7147_3(.i({n_7112}),.y(n_7147_g3));
+(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(0)) u_dup_n_7147_0(.i({n_7110,n_7111}),.y(n_7147_g0));
+(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(1)) u_dup_n_7147_1(.i({n_7110,n_7111}),.y(n_7147_g1));
+(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(2)) u_dup_n_7147_2(.i({n_7110,n_7111}),.y(n_7147_g2));
+(* keep_hierarchy="yes" *) qfd_s8s_dup_n_7147 #(.ID(3)) u_dup_n_7147_3(.i({n_7110,n_7111}),.y(n_7147_g3));
 assign n_7147 = ~(n_7112);
 assign n_7148 = ~(n_181);
 assign n_6908 = ~(n_7142);
@@ -11424,8 +11424,8 @@ endmodule
 (* keep_hierarchy="yes" *) module qfd_s8s_dup_n_782 #(parameter integer ID=0)(input wire [1:0] i,output wire y);
 assign y = (i[0]) ? (i[1]) : (1'b1);
 endmodule
-(* keep_hierarchy="yes" *) module qfd_s8s_dup_n_7147 #(parameter integer ID=0)(input wire [0:0] i,output wire y);
-assign y = ~(i[0]);
+(* keep_hierarchy="yes" *) module qfd_s8s_dup_n_7147 #(parameter integer ID=0)(input wire [1:0] i,output wire y);
+assign y = ~((i[0]) | (i[1]));
 endmodule
 (* keep_hierarchy="yes" *) module qfd_s8s_dup_n_4766 #(parameter integer ID=0)(input wire [2:0] i,output wire y);
 assign y = (i[0]) ? (i[1]) : (i[2]);
