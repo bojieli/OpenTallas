@@ -406,7 +406,7 @@ def apply_tiles(tiles, emit):
 
 
 
-def frame_port_widths(master, widths, parent_text=None):
+def frame_port_widths(master, widths, parent_text=None, *, partial=False):
     """Physical pins describe the actual private parent slices, not the wider
     transport nets. parent_connections already emits EST[0] / H CTL[193:0].
     Keep the strict view-width comparison; refuse unexpected frames or unsliced
@@ -419,6 +419,10 @@ def frame_port_widths(master, widths, parent_text=None):
     if master == MASTERS['grp_h']:
         rules['i_ctl'] = (194, 271)
     for port, (actual, transport) in rules.items():
+        # Relay planning asks masters() for only the buses allocated so far.
+        # Full binding still requires every private port by default.
+        if partial and port not in out:
+            continue
         if port not in out or max(out[port], 1) not in (actual, transport):
             raise ValueError(f'kv_grp_safe2: unexpected frame width {master}.{port}: {out.get(port)}')
         out[port] = actual
