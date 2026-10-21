@@ -1,0 +1,12 @@
+ot-run: -> ot-epyc7
+ot-heavy: request 24G is charged 11G (class 'qfd_dv_s#_vm#r_bench.sh' measured peak 2.7G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2459125-1792594232 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 3: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2459125-1792594232): exit 0
