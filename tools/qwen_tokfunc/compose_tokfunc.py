@@ -81,7 +81,7 @@ def apply(inp, res, tree, results_dir, grade_label):
 
     def sgrade(s):
         # REL only when the stage ran on the assembly/netlist with no on-chip stand-in (result 'grade' says so)
-        g = str(res[s].get('grade', ''))
+        g = str(res[s].get('transport_grade') or res[s].get('grade', ''))
         return 'REL' if g.startswith('RTL-functional') or g.startswith('die-netlist') else 'DIAG'
 
     def ok(s):
@@ -141,7 +141,7 @@ def apply(inp, res, tree, results_dir, grade_label):
             applied.append(f'kv_service {kvs} <- kv')
             remeasured.add('kv')
     if ok('tp8'):
-        c = res['tp8']['cycles']; e = pick(c, 'E'); ls = pick(c, 'LS', 'ls')
+        c = res['tp8']['cycles']; e = pick(c, 'E', 'AR256_E'); ls = pick(c, 'LS', 'ls')
         if e is not None and ls is not None:
             q = dict(inp['allreduce'].get('qtp8') or {}); q.update(E=int(e), ls_rec=int(ls), ls_bi=int(ls))
             inp['allreduce']['qtp8'] = q; inp['allreduce']['grade'] = sgrade('tp8'); remeasured.add('allreduce')
@@ -205,7 +205,7 @@ def main():
         verdicts = {s: res[s].get('verdict') for s in res}
         missing = [s for s in STAGES if s not in res]
         diagnostic = [s for s, stage in res.items()
-                      if not str(stage.get('grade', '')).startswith(a.grade)]
+                      if not str(stage.get('transport_grade') or stage.get('grade', '')).startswith(a.grade)]
         token_pass = (not diagnostic and not problems and not missing and all(str(v).upper() == 'PASS' for v in verdicts.values()))
         report.update(stages=verdicts, missing_stages=missing, diagnostic_stages=diagnostic,
                       stage_sources={s: dict(src_commit=v.get('src_commit'), grade=v.get('grade'),

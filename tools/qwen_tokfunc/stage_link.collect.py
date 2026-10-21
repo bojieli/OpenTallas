@@ -60,6 +60,8 @@ def tp8(root, S, a):
     lanes = json.loads(Path(a.lanes).read_text()) if a.lanes else {}
     src = (S / "fx/lanes/SOURCE").read_text().strip() if (S / "fx/lanes/SOURCE").exists() else a.lanes
     return dict(verdict=verdict,
+                transport_grade=("DIAG (g5r2b forwarded lanes; current assembly transport not measured)"
+                                 if "g5r2b" in str(src) else a.grade),
                 golden="numpy fp32 all-reduce / argmax reference (tools/qwen_coll_tp8_static_bench.vectors): every output word of all 8 dies, "
                        + ", ".join(f"{k}: " + "/".join(f"{n} {v['words_out']}w mm={v['mismatches']}" for n, v in runs[k].get('cases', {}).items()) for k in positives),
                 cycles=cyc, mutants=mutants,
