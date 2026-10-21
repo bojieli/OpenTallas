@@ -1,0 +1,461 @@
+{
+ "schema": "opentallas.hbm.d4g_cluster_spread.v1",
+ "gap_um": 172.8,
+ "gap_y_um": 86.4,
+ "clusters": {
+  "hce_NE": {
+   "anchor": "top",
+   "before": {
+    "x": 12139.2,
+    "y": 17668.8,
+    "w": 2203.2,
+    "h": 2203.2,
+    "orient": "R0"
+   },
+   "after": {
+    "x": 11966.4,
+    "y": 17496.0,
+    "w": 2548.8,
+    "h": 2376.0,
+    "orient": "R0"
+   },
+   "tiles": {
+    "hc_NE": [
+     0.0,
+     -86.4
+    ],
+    "hcb_NE0": [
+     -172.8,
+     -86.4
+    ],
+    "hcb_NE1": [
+     -172.8,
+     0.0
+    ],
+    "hcb_NE2": [
+     0.0,
+     0.0
+    ],
+    "hcb_NE3": [
+     172.8,
+     0.0
+    ],
+    "hcb_NE4": [
+     172.8,
+     -86.4
+    ],
+    "hcb_NE5": [
+     172.8,
+     -172.8
+    ],
+    "hcb_NE6": [
+     0.0,
+     -172.8
+    ],
+    "hcb_NE7": [
+     -172.8,
+     -172.8
+    ],
+    "P:hc_NE": [
+     0.0,
+     -86.4
+    ]
+   }
+  },
+  "hce_NW": {
+   "anchor": "top",
+   "before": {
+    "x": 9072.0,
+    "y": 17668.8,
+    "w": 2203.2,
+    "h": 2203.2,
+    "orient": "R0"
+   },
+   "after": {
+    "x": 8899.2,
+    "y": 17496.0,
+    "w": 2548.8,
+    "h": 2376.0,
+    "orient": "R0"
+   },
+   "tiles": {
+    "hc_NW": [
+     0.0,
+     -86.4
+    ],
+    "hcb_NW0": [
+     -172.8,
+     -86.4
+    ],
+    "hcb_NW1": [
+     -172.8,
+     0.0
+    ],
+    "hcb_NW2": [
+     0.0,
+     0.0
+    ],
+    "hcb_NW3": [
+     172.8,
+     0.0
+    ],
+    "hcb_NW4": [
+     172.8,
+     -86.4
+    ],
+    "hcb_NW5": [
+     172.8,
+     -172.8
+    ],
+    "hcb_NW6": [
+     0.0,
+     -172.8
+    ],
+    "hcb_NW7": [
+     -172.8,
+     -172.8
+    ],
+    "P:hc_NW": [
+     0.0,
+     -86.4
+    ]
+   }
+  },
+  "hce_SE": {
+   "anchor": "bottom",
+   "before": {
+    "x": 12139.2,
+    "y": 12333.6,
+    "w": 2203.2,
+    "h": 2203.2,
+    "orient": "R0"
+   },
+   "after": {
+    "x": 11966.4,
+    "y": 12333.6,
+    "w": 2548.8,
+    "h": 2376.0,
+    "orient": "R0"
+   },
+   "tiles": {
+    "hc_SE": [
+     0.0,
+     86.4
+    ],
+    "hcb_SE0": [
+     -172.8,
+     86.4
+    ],
+    "hcb_SE1": [
+     -172.8,
+     172.8
+    ],
+    "hcb_SE2": [
+     0.0,
+     172.8
+    ],
+    "hcb_SE3": [
+     172.8,
+     172.8
+    ],
+    "hcb_SE4": [
+     172.8,
+     86.4
+    ],
+    "hcb_SE5": [
+     172.8,
+     0.0
+    ],
+    "hcb_SE6": [
+     0.0,
+     0.0
+    ],
+    "hcb_SE7": [
+     -172.8,
+     0.0
+    ],
+    "P:hc_SE": [
+     0.0,
+     86.4
+    ]
+   }
+  },
+  "hce_SW": {
+   "anchor": "bottom",
+   "before": {
+    "x": 9072.0,
+    "y": 12333.6,
+    "w": 2203.2,
+    "h": 2203.2,
+    "orient": "R0"
+   },
+   "after": {
+    "x": 8899.2,
+    "y": 12333.6,
+    "w": 2548.8,
+    "h": 2376.0,
+    "orient": "R0"
+   },
+   "tiles": {
+    "hc_SW": [
+     0.0,
+     86.4
+    ],
+    "hcb_SW0": [
+     -172.8,
+     86.4
+    ],
+    "hcb_SW1": [
+     -172.8,
+     172.8
+    ],
+    "hcb_SW2": [
+     0.0,
+     172.8
+    ],
+    "hcb_SW3": [
+     172.8,
+     172.8
+    ],
+    "hcb_SW4": [
+     172.8,
+     86.4
+    ],
+    "hcb_SW5": [
+     172.8,
+     0.0
+    ],
+    "hcb_SW6": [
+     0.0,
+     0.0
+    ],
+    "hcb_SW7": [
+     -172.8,
+     0.0
+    ],
+    "P:hc_SW": [
+     0.0,
+     86.4
+    ]
+   }
+  }
+ },
+ "from_plan": "results/arch/hbm_die_d4g/gen2e4r9_1020/planB",
+ "shifts": [
+  "8472.0:15742.400000000001:14537:17668:0:172.8:obs_NW,str_C"
+ ],
+ "moves": [
+  "obs_NW:0:-172.8",
+  "str_C:-345.6:172.8"
+ ],
+ "shifted": {
+  "idx_sel": [
+   0.0,
+   172.8
+  ],
+  "idx_link": [
+   0.0,
+   172.8
+  ],
+  "idx_q": [
+   0.0,
+   172.8
+  ],
+  "idx_op": [
+   0.0,
+   172.8
+  ],
+  "hc_eng": [
+   0.0,
+   172.8
+  ],
+  "host_N": [
+   0.0,
+   172.8
+  ],
+  "host_cp": [
+   0.0,
+   172.8
+  ],
+  "host_cp_ingress": [
+   0.0,
+   172.8
+  ],
+  "hb_ckgen": [
+   0.0,
+   172.8
+  ],
+  "tkm_SW": [
+   0.0,
+   172.8
+  ],
+  "idx_ctl": [
+   0.0,
+   172.8
+  ],
+  "hb_argmax": [
+   0.0,
+   172.8
+  ],
+  "collrs_SE": [
+   0.0,
+   172.8
+  ],
+  "collrs_NE": [
+   0.0,
+   172.8
+  ],
+  "host_cp_rxs": [
+   0.0,
+   172.8
+  ],
+  "host_ep": [
+   0.0,
+   172.8
+  ],
+  "hb_idx__qctl_SW": [
+   0.0,
+   172.8
+  ],
+  "hb_idx__qctl_SE": [
+   0.0,
+   172.8
+  ],
+  "hb_idx__qctl_NW": [
+   0.0,
+   172.8
+  ],
+  "hb_idx__qctl_NE": [
+   0.0,
+   172.8
+  ],
+  "col_idx": [
+   0.0,
+   172.8
+  ],
+  "hb_idx__xqr": [
+   0.0,
+   172.8
+  ],
+  "hb_router_ids": [
+   0.0,
+   172.8
+  ],
+  "obs_C": [
+   0.0,
+   172.8
+  ],
+  "obs_NW": [
+   0.0,
+   -172.8
+  ],
+  "obs_SE": [
+   0.0,
+   172.8
+  ],
+  "obs_SW": [
+   0.0,
+   172.8
+  ],
+  "str_C": [
+   -345.6,
+   172.8
+  ],
+  "P:tkm_SW": [
+   0.0,
+   172.8
+  ],
+  "P:idx_sel": [
+   0.0,
+   172.8
+  ],
+  "P:idx_link": [
+   0.0,
+   172.8
+  ],
+  "P:idx_ctl": [
+   0.0,
+   172.8
+  ],
+  "P:idx_op": [
+   0.0,
+   172.8
+  ],
+  "P:idx_q": [
+   0.0,
+   172.8
+  ],
+  "P:host_cp": [
+   0.0,
+   172.8
+  ]
+ },
+ "region_sites_moved": 10,
+ "lanes_crossing_clusters": [
+  "vmh_NW>vmh_SW:VM_RING",
+  "vmh_SW>vmh_NW:VM_RING",
+  "vmh_SE>vmh_NE:VM_RING",
+  "vmh_NE>vmh_SE:VM_RING",
+  "coll_NW>coll_NE:COLL_RING",
+  "vmh_NW>vmb_NW5:VM_HUB",
+  "vmh_SW>vmb_SW5:VM_HUB",
+  "vmh_SE>vmb_SE5:VM_HUB",
+  "vmh_NE>vmb_NE5:VM_HUB",
+  "hc_NW2>hc_NW:HC_CORE",
+  "hc_SW2>hc_SW:HC_CORE",
+  "hc_SE2>hc_SE:HC_CORE",
+  "hc_NE2>hc_NE:HC_CORE",
+  "vmb_NW1>coll_NW:COLL_VM",
+  "vmb_NE0>coll_NE:COLL_VM",
+  "vmb_SE1>coll_SE:COLL_VM",
+  "vmb_NW0>coll_NW:COLL_VM",
+  "vmb_NE1>coll_NE:COLL_VM",
+  "vmb_NW5>coll_NW:COLL_VM",
+  "vmb_SW1>coll_SW:COLL_VM",
+  "vmb_SW5>coll_SW:COLL_VM",
+  "vmb_NE5>coll_NE:COLL_VM",
+  "vmh_NW>vmb_NW7:VM_HUB",
+  "vmh_SE>vmb_SE6:VM_HUB",
+  "vmh_SE>vmb_SE7:VM_HUB",
+  "vmh_SW>vmb_SW6:VM_HUB",
+  "vmh_SW>vmb_SW7:VM_HUB",
+  "vmh_NE>vmb_NE7:VM_HUB",
+  "hc_NW>hc_NW3:HC_CORE",
+  "hc_SE>hc_SE3:HC_CORE",
+  "hc_NE>hc_NE3:HC_CORE",
+  "hc_SW3>hc_SW:HC_CORE",
+  "hc_SE3>hc_SE:HC_CORE",
+  "hc_NE3>hc_NE:HC_CORE",
+  "vmh_SW>pc_SW2:VM_HBM",
+  "pc_SW4>vmh_SE:HBM_VM",
+  "vmh_SE>pc_SW4:VM_HBM",
+  "pc_SW5>vmh_SE:HBM_VM",
+  "vmh_SE>pc_SW5:VM_HBM",
+  "pc_NW2>vmh_NW:HBM_VM",
+  "vmh_NW>pc_NW2:VM_HBM",
+  "vmh_NW>pc_NW3:VM_HBM",
+  "pc_NW4>vmh_NE:HBM_VM",
+  "vmh_NE>pc_NW4:VM_HBM",
+  "pc_NW5>vmh_NE:HBM_VM",
+  "vmh_NE>pc_NW5:VM_HBM",
+  "vmb_SE7>coll_SE:COLL_VM",
+  "vmb_SW7>sm_SW3:SM_X",
+  "vmb_SE7>sm_SW4:SM_X",
+  "vmb_NE7>sm_NW4:SM_X",
+  "sfu_SW3>sfu_SW0:SFU_CORE",
+  "sfu_SE3>sfu_SE0:SFU_CORE",
+  "su_SW3>su_SW0:SU_CORE",
+  "su_SE3>su_SE0:SU_CORE"
+ ],
+ "die_um": [
+  23396.8,
+  32464.72
+ ],
+ "new_overlaps": {
+  "plan": [],
+  "slots": [],
+  "slot_vs_plan": []
+ },
+ "verdict": "PASS",
+ "rule": "rigid tile moves per 3x3 grid cell; die outline unchanged; no tile resized/re-pinned"
+}
