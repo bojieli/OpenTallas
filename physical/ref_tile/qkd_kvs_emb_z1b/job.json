@@ -131,11 +131,11 @@
  "record": [
   {
    "from": "{RUN}/record/views",
-   "to": "physical/ref_tile/qkd_kvs_emb/views"
+   "to": "physical/ref_tile/qkd_kvs_emb_z1b/views"
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvs_emb/qkd_kvs_emb_z1b-z1b-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kvs_emb_z1b/qkd_kvs_emb_z1b-z1b-COMMIT"
   }
  ],
  "cycles_added": 0,

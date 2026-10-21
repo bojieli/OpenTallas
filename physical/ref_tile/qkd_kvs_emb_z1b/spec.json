@@ -145,8 +145,8 @@
    "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
   ],
-  "views_to": "physical/ref_tile/qkd_kvs_emb/views",
-  "record_to": "results/rtl/ref_tile/qkd_kvs_emb",
+  "views_to": "physical/ref_tile/qkd_kvs_emb_z1b/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb_z1b",
   "cycles_added": 0
  },
  "reroute_reason": {
