@@ -35,7 +35,7 @@ case $MODE in
   build -GCAPTURE_STAGE=0 -GMUT=0 -Mdir "$OUT/obj_d"
   run "$OUT/obj_d" > "$OUT/logs/default.log"
   grep -q 'TLOAD_JOIN_PASS.*first_age=5' "$OUT/logs/default.log" && echo "DEFAULT0 $(grep -o 'edge_checks=.*' "$OUT/logs/default.log")" || { echo DEFAULT0_FAIL; ok=0; }
-  build -GCAPTURE_STAGE=1 -GMUT=0 -Mdir "$OUT/obj_c"
+  build -GCAPTURE_STAGE=1 -GREGISTERED_JOIN=${TLOAD_REGJOIN:-0} -GMUT=0 -Mdir "$OUT/obj_c"
   run "$OUT/obj_c" > "$OUT/logs/capture.log"
   grep -q 'TLOAD_JOIN_PASS.*first_age=6' "$OUT/logs/capture.log" && echo "CAPTURE1 $(grep -o 'edge_checks=.*' "$OUT/logs/capture.log")" || { echo CAPTURE1_FAIL; tail -5 "$OUT/logs/capture.log"; ok=0; }
   run "$OUT/obj_c" +FAULT_CASE=1 > "$OUT/logs/collision.log"
@@ -43,11 +43,11 @@ case $MODE in
   [ $ok = 1 ] && { echo F16_TLOAD_CAPTURE_PASS; exit 0; } || { echo F16_TLOAD_CAPTURE_FAIL; exit 1; } ;;
  mut[1-5])
   m=${MODE#mut}; fc=0; case $m in 1|3) fc=1;; esac
-  build -GCAPTURE_STAGE=1 -GMUT=$m -Mdir "$OUT/obj_m$m"
+  build -GCAPTURE_STAGE=1 -GREGISTERED_JOIN=${TLOAD_REGJOIN:-0} -GMUT=$m -Mdir "$OUT/obj_m$m"
   run "$OUT/obj_m$m" +FAULT_CASE=$fc; echo "MUT$m rc=$?"; exit 1 ;;
  cmut[12])
   c=${MODE#cmut}
-  build -GCAPTURE_STAGE=1 -GMUT=0 -GCAPTURE_MUT=$c -Mdir "$OUT/obj_cm$c"
+  build -GCAPTURE_STAGE=1 -GREGISTERED_JOIN=${TLOAD_REGJOIN:-0} -GMUT=0 -GCAPTURE_MUT=$c -Mdir "$OUT/obj_cm$c"
   run "$OUT/obj_cm$c"; echo "CMUT$c rc=$?"; exit 1 ;;
  *) echo "bad mode $MODE"; exit 2 ;;
 esac

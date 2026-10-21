@@ -8,6 +8,7 @@ module qfd_dv_table_rom_loader #(
     parameter integer MUT=0,
     parameter integer BTAB_COMPACT=0,
     parameter integer LOCAL_CTRL=0, // opt-in kept stage copies per address nibble, edge-identical
+    parameter integer JOIN_CAPTURE=0, // private paired top: bundle is captured by one-hot join arms instead
     parameter integer CAPTURE_MUT=0, // bench causal: 1 metadata bypass;2 early done
     parameter integer CAPTURE_STAGE=0, // private structural ROM-capture successor (+1 write edge)
     parameter integer WE_COPIES=1       // QW-F16PROG4: >1 = kept copies of tw_we for the VM-join select (<=32 loads each)
@@ -85,6 +86,7 @@ module qfd_dv_table_rom_loader #(
         assign data_owner=owner;assign data_valid=cap_v;assign data_last=cap_last;assign data_other=p_other;
     end endgenerate
     wire [3:0] we_group;
+    wire [3:0] validation_valid,validation_enable,validation_good;
     generate for(rg=0;rg<4;rg=rg+1)begin:g_validation
         if(CAPTURE_STAGE!=0)begin:g_c
             wire [39:0] b=g_capture.meta[rg].bits_q;
@@ -93,8 +95,14 @@ module qfd_dv_table_rom_loader #(
             wire bad=(b[39:27]!=0)||(k==0)||((k==3)&&(a>=64))||((k!=3)&&(a>=128))||
                      ((BTAB_COMPACT!=0)&&(k==2)&&(a>=72))||((k==2)&&(a[1:0]!=0));
             assign we_group[rg]=g_capture.meta[rg].valid_q&&b[0]&&!bad;
+            assign validation_valid[rg]=g_capture.meta[rg].valid_q;
+            assign validation_enable[rg]=b[0];
+            assign validation_good[rg]=!bad;
         end else begin:g_o
             assign we_group[rg]=cap_v&&data[1024]&&!invalid;
+            assign validation_valid[rg]=cap_v;
+            assign validation_enable[rg]=data[1024];
+            assign validation_good[rg]=!invalid;
         end
     end endgenerate
 `ifdef SYNTHESIS
@@ -136,14 +144,35 @@ module qfd_dv_table_rom_loader #(
         (local_addr|((kind==3)?({22'd0,data_owner}<<6):({22'd0,data_owner}<<7))));
     // No combinational input-to-output path. Output is the macro capture
     // register; a following VM write samples it on the next edge.
-    always @(posedge ck)begin
-        tw_data<=(MUT==3)?{data[511:0],data[1023:512]}:data[1023:0];
-        tw_kind<=kind;tw_addr<=uaddr;
-    end
+    generate if(JOIN_CAPTURE)begin:g_join_capture
+        initial if(CAPTURE_STAGE!=1 || LOCAL_CTRL!=1) $error("JOIN_CAPTURE requires captured local-control source");
+        // These remain registered ROM payload/metadata, exposed one edge before
+        // the legacy bundle FF. The paired top captures its one-hot AND arms on
+        // that original bundle edge, preserving the loader write age.
+        always @* begin
+            tw_data=(MUT==3)?{data[511:0],data[1023:512]}:data[1023:0];
+            tw_kind=kind;tw_addr=uaddr;
+        end
+    end else begin:g_legacy_capture
+        always @(posedge ck)begin
+            tw_data<=(MUT==3)?{data[511:0],data[1023:512]}:data[1023:0];
+            tw_kind<=kind;tw_addr<=uaddr;
+        end
+    end endgenerate
     // tw_we copies: same D, same reset/r2 clear as tw_we (one hierarchy-kept register per copy, so Yosys keeps them).
     wire we_d = we_group[0];
     genvar wc;
-    generate if(WE_COPIES<=1)begin:g_we1
+    generate if(JOIN_CAPTURE)begin:g_preselect
+        // Each kept three-input decision drives at most32 real data gate
+        // inputs (two16-bit arms). Metadata flags feed <=17 independent
+        // decisions plus their original control decision, rather than a single
+        // shared select feeding the whole1024-bit bus.
+        for(wc=0;wc<WE_COPIES;wc=wc+1)begin:cp
+            (* keep=1, keep_hierarchy=1 *) qfd_tload_pre_select #(.ID(wc)) sel
+                (.valid(validation_valid[wc%4]),.enable(validation_enable[wc%4]),
+                 .good(validation_good[wc%4]),.selected(tw_we_k[wc]));
+        end
+    end else if(WE_COPIES<=1)begin:g_we1
         assign tw_we_k = tw_we;
     end else begin:g_wek
         for(wc=0;wc<WE_COPIES;wc=wc+1)begin:cp
@@ -197,6 +226,15 @@ module qfd_dv_table_rom_loader #(
             end
         end
     end
+endmodule
+
+// A real local validation decision; retaining its scope prevents merging all
+// equal decisions back into a single wide-bus select. No state or new edge.
+(* keep_hierarchy=1 *)
+module qfd_tload_pre_select #(parameter integer ID=0)(
+    input wire valid,enable,good,output wire selected);
+    assign selected=valid&&enable&&good;
+    wire unused_id=ID[0];
 endmodule
 
 // QW-F16PROG4: one kept copy register (unique ID so no two copies are the same paramod; Yosys keeps all)

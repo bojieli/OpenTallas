@@ -22,6 +22,7 @@ module qfd_dv_slice_tload #(
     parameter integer CAPTURE_MUT = 0,
     parameter integer CAPTURE_STAGE = 0,
     parameter integer LOCAL_JOIN = 0,            // opt-in: 16-bit data / 12-bit address select groups (<=32 gate loads)
+    parameter integer REGISTERED_JOIN = 0,       // opt-in one-hot AND capture: loader age unchanged, stream +1 edge
     parameter integer NWC = 34,                  // 32 data copies (32 bits each) + kind + addr
     parameter integer MUT = 0
 ) (
@@ -41,6 +42,8 @@ module qfd_dv_slice_tload #(
     output reg           fault
 );
     initial if (NWC != 34) $error("qfd_dv_slice_tload: NWC must be 34 (32 data + kind + addr copies)");
+    initial if (REGISTERED_JOIN && (!LOCAL_JOIN || CAPTURE_STAGE!=1))
+        $error("REGISTERED_JOIN requires LOCAL_JOIN1/CAPTURE_STAGE1");
     // ---- reset landing (2 registered stages at the face)
     reg rl1, rl2;
     always @(posedge ck or negedge rst_n)
@@ -69,24 +72,59 @@ module qfd_dv_slice_tload #(
     wire [1:0]    l_kind;
     wire [23:0]   l_addr;
     wire [1023:0] l_data;
-    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .LOCAL_CTRL(LOCAL_JOIN), .WE_COPIES(JOIN_COPIES)) u_ld (.ck(ck), .rst_n(rst_n),
+    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .LOCAL_CTRL(LOCAL_JOIN), .JOIN_CAPTURE(REGISTERED_JOIN), .WE_COPIES(JOIN_COPIES)) u_ld (.ck(ck), .rst_n(rst_n),
         .start(l_start), .stage(l_stage), .user_id(l_user), .other_table_write(s_we),
         .tw_we(l_we), .tw_we_k(l_we_k), .tw_kind(l_kind), .tw_addr(l_addr), .tw_data(l_data),
         .busy(busy), .done(done), .fault(l_fault));
     // ---- VM join: loader bundle iff loader write (kept copy select), else stream bundle; same edge = collision
     genvar gi;
-    generate for (gi = 0; gi < JOIN_DATA_GROUPS; gi = gi + 1) begin : g_dsel
+    wire stream_we;
+    generate if(REGISTERED_JOIN)begin:g_registered_join
+        // Fuse the loader bundle's original capture edge with the join's
+        // one-hot data gates. Every arm performs real selection work; the
+        // following output pin register receives only their OR. There is no
+        // payload->identity-FF chain or late select-FF->whole mux path.
+        for(gi=0;gi<JOIN_DATA_GROUPS;gi=gi+1)begin:g_data
+            reg [JOIN_DATA_BITS-1:0] loader_arm,stream_arm;
+            always @(posedge ck)begin
+                loader_arm<=l_we_k[gi]?l_data[JOIN_DATA_BITS*gi+:JOIN_DATA_BITS]:{JOIN_DATA_BITS{1'b0}};
+                stream_arm<=l_we_k[gi]?{JOIN_DATA_BITS{1'b0}}:s_data[JOIN_DATA_BITS*gi+:JOIN_DATA_BITS];
+            end
+            assign tw_data[JOIN_DATA_BITS*gi+:JOIN_DATA_BITS]=loader_arm|stream_arm;
+        end
+        reg [1:0] loader_kind,stream_kind;
+        always @(posedge ck)begin
+            loader_kind<=(l_we_k[64]^(MUT==5))?l_kind:2'd0;
+            stream_kind<=(l_we_k[64]^(MUT==5))?2'd0:s_kind;
+        end
+        assign tw_kind=loader_kind|stream_kind;
+        for(gi=0;gi<2;gi=gi+1)begin:g_addr
+            reg [11:0] loader_addr,stream_addr;
+            always @(posedge ck)begin
+                loader_addr<=l_we_k[65+gi]?l_addr[12*gi+:12]:12'd0;
+                stream_addr<=l_we_k[65+gi]?12'd0:s_addr[12*gi+:12];
+            end
+            assign tw_addr[12*gi+:12]=loader_addr|stream_addr;
+        end
+        reg stream_we_q;
+        always @(posedge ck or negedge rst_n)
+            if(!rst_n)stream_we_q<=0;else stream_we_q<=rl2&&s_we;
+        assign stream_we=stream_we_q;
+    end else begin:g_legacy_join
+    assign stream_we=s_we;
+    for (gi = 0; gi < JOIN_DATA_GROUPS; gi = gi + 1) begin : g_dsel
         assign tw_data[JOIN_DATA_BITS*gi +: JOIN_DATA_BITS] = l_we_k[gi] ? l_data[JOIN_DATA_BITS*gi +: JOIN_DATA_BITS] : s_data[JOIN_DATA_BITS*gi +: JOIN_DATA_BITS];
-    end endgenerate
+    end
     assign tw_kind = (l_we_k[JOIN_DATA_GROUPS] ^ (MUT == 5)) ? l_kind : s_kind;
-    generate if (LOCAL_JOIN) begin : g_addr_local
+    if (LOCAL_JOIN) begin : g_addr_local
         assign tw_addr[11:0] = l_we_k[65] ? l_addr[11:0] : s_addr[11:0];
         assign tw_addr[23:12] = l_we_k[66] ? l_addr[23:12] : s_addr[23:12];
     end else begin : g_addr_legacy
         assign tw_addr = l_we_k[33] ? l_addr : s_addr;
+    end
     end endgenerate
-    wire coll = l_we && s_we;
-    assign tw_we = (MUT == 1) ? (l_we || s_we) : (l_we ^ s_we);   // collision: both suppressed
+    wire coll = l_we && stream_we;
+    assign tw_we = (MUT == 1) ? (l_we || stream_we) : (l_we ^ stream_we);   // collision: both suppressed
     always @(posedge ck or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
         else if (!rl2) fault <= 1'b0;

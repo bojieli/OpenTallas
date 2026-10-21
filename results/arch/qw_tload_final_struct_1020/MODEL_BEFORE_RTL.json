@@ -1,0 +1,40 @@
+{
+  "source_route": "qfd_dv_slice_tload_ns4-ns4-b8e6c6f86",
+  "source_ODB_sha256": "e6037693d57ff2e9ca280c3589b39414ee540cf32e194867483a38d19fd7549d",
+  "failures": {
+    "TT_ps": -8.75,
+    "TT_path": "registered per16-bit join select cp17 to output pinFF tw_data273 through mux",
+    "FF_ps": -13.29,
+    "FF_path": "capture.payload670 to unconditional loader tw_data670 FF;22regD violations"
+  },
+  "structural_successor": "Opt-in REGISTERED_JOIN defaults0. Fuse unconditional loader bundle FF capture into two bounded registered one-hot join arms; final join is OR. Local prevalidation copies are kept nontransparent AND3 decisions from four metadata banks. Existing capture stage remains.",
+  "loader_edges_delta": 0,
+  "stream_edges_delta": 1,
+  "output_loader_first_age": 6,
+  "default_loader_first_age": 5,
+  "source_stream_bandwidth_bits_per_cycle": 1050,
+  "output_bandwidth_bits_per_cycle": 1051,
+  "events_per_cycle": 1,
+  "replicas": {
+    "data_chunks": 64,
+    "data_chunk_bits": 16,
+    "kind_chunks": 1,
+    "kind_bits": 2,
+    "address_chunks": 2,
+    "address_chunk_bits": 12,
+    "validation_banks": 4
+  },
+  "fanout_budgets": {
+    "local_select_data_AND_inputs": 32,
+    "local_select_addr_AND_inputs": 24,
+    "upstream_validation_input_consumers_max": 18,
+    "payload_register_driver_loads": 1,
+    "stream_register_driver_loads": 1
+  },
+  "logic": "Local prevalidation4-5Booleanlevels then one data AND into arm FF; arm FF->OR->output pin FF. No output-select FF->full mux path and no payload->identity FF stage. TT<=600ps stage goal to check actual synthesis.",
+  "FF_delta_model": 984,
+  "new_storage": "One-deep fixed16-bit functional AND arms, not runtime-indexed storage or a delay-line array. No allocation >2048bits. No SRAM inventory changes.",
+  "floorplan": "Retain4realROM and macro/pin geometry until actual synthesisarea check; added arm FFs/AND/OR placed in connected band, reviewed anew. No gate until actual native32, reach plan and protocol proofs.",
+  "schedule_action": "Price stream-to-VM table-write +1edge; loaderload age/done unchanged. Compiler static-exclusive stream/load window must include streamdrain+1. Defaults not adopted.",
+  "no_constraints_changed": true
+}

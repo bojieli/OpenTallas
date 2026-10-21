@@ -9,14 +9,14 @@
 //   - FAULT_CASE 1: a stream write in the same edge as a loader write -> joined tw_we low on that edge (both suppressed)
 //     and fault high exactly one edge later (the join's own registered fault, before the loader's p_other fault).
 // MUT (DUT parameter): see qfd_dv_slice_tload.  Pass line TLOAD_JOIN_PASS; fail lines TLOAD_*.
-module tb_qfd_dv_slice_tload #(parameter integer LOCAL_JOIN = 0, parameter integer MUT = 0, parameter integer CAPTURE_STAGE = 0, parameter integer CAPTURE_MUT = 0);
+module tb_qfd_dv_slice_tload #(parameter integer LOCAL_JOIN = 0, parameter integer REGISTERED_JOIN = 0, parameter integer MUT = 0, parameter integer CAPTURE_STAGE = 0, parameter integer CAPTURE_MUT = 0);
     localparam integer FIRST_AGE = 5 + CAPTURE_STAGE;
     reg ck = 0; always #5 ck = ~ck;
     reg rst_n = 0;
     reg [8:0] treq = 0;
     reg s_we = 0; reg [1:0] s_kind = 0; reg [23:0] s_addr = 0; reg [1023:0] s_data = 0;
     wire we, busy, done, jfault; wire [1:0] kind; wire [23:0] addr; wire [1023:0] data;
-    qfd_dv_slice_tload #(.SLICE(0), .LOCAL_JOIN(LOCAL_JOIN), .MUT(MUT), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT)) dut (.ck(ck), .rst_n(rst_n), .treq(treq),
+    qfd_dv_slice_tload #(.SLICE(0), .LOCAL_JOIN(LOCAL_JOIN), .REGISTERED_JOIN(REGISTERED_JOIN), .MUT(MUT), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT)) dut (.ck(ck), .rst_n(rst_n), .treq(treq),
         .s_we(s_we), .s_kind(s_kind), .s_addr(s_addr), .s_data(s_data),
         .tw_we(we), .tw_kind(kind), .tw_addr(addr), .tw_data(data), .busy(busy), .done(done), .fault(jfault));
     reg [7:0] cr_re = 0; reg [191:0] cr_addr = 0; wire [511:0] cr_q;
@@ -81,6 +81,25 @@ module tb_qfd_dv_slice_tload #(parameter integer LOCAL_JOIN = 0, parameter integ
     task automatic request(input integer s, input integer uu);
         begin @(negedge ck); treq = {1'b1, 6'(s), 2'(uu)}; @(negedge ck); treq = 9'd0; end
     endtask
+    // Observe at the VM sampling edge, before nonblocking updates. The failed
+    // NS4 LOCAL_JOIN1/CAPTURE_STAGE1 join samples the stream on edge S;
+    // REGISTERED_JOIN samples exactly the same bundle on S+1.
+    reg stream_monitor = 0, previous_stream_we = 0;
+    reg [1049:0] previous_stream_bundle = 0;
+    integer stream_checks = 0;
+    always @(posedge ck) begin : stream_edge_contract
+        reg expected_stream_we;
+        reg [1049:0] expected_stream_bundle;
+        if (stream_monitor) begin
+            expected_stream_we = REGISTERED_JOIN ? previous_stream_we : s_we;
+            expected_stream_bundle = REGISTERED_JOIN ? previous_stream_bundle : {s_addr,s_kind,s_data};
+            if (we !== expected_stream_we || (expected_stream_we && {addr,kind,data} !== expected_stream_bundle))
+                $fatal(1, "TLOAD_STREAM_EDGE_MISMATCH cycle=%0d registered=%0d", cycles, REGISTERED_JOIN);
+            if (expected_stream_we) stream_checks = stream_checks + 1;
+        end
+        previous_stream_we = s_we;
+        previous_stream_bundle = {s_addr,s_kind,s_data};
+    end
     integer lastk;
     initial begin
         if (!$value$plusargs("EXPECTED=%s", exp_file)) $fatal(1, "EXPECTED required");
@@ -104,11 +123,15 @@ module tb_qfd_dv_slice_tload #(parameter integer LOCAL_JOIN = 0, parameter integ
             $display("TLOAD_COLLISION_REJECT_PASS suppressed=1 fault_age=1"); $finish;
         end
         // shared head sentinel through the stream port (exclusive window: before any load)
+        stream_monitor = 1;
         for (k = 72; k < 272; k = k + 4) begin
             @(negedge ck); s_we = 1; s_kind = 2; s_addr = k;
             for (h = 0; h < 4; h = h + 1) s_data[256*h +: 256] = head_word(k + h);
         end
         @(negedge ck); s_we = 0; repeat(3) @(negedge ck);
+        stream_monitor = 0;
+        if (stream_checks != 50) $fatal(1, "TLOAD_STREAM_EDGE_COUNT %0d", stream_checks);
+        $display("TLOAD_STREAM_EDGE_PASS writes=%0d source_to_vm_edges=%0d", stream_checks, REGISTERED_JOIN ? 1 : 0);
         for (st = 1; st <= 36; st = st + 1) for (u = 0; u < 4; u = u + 1) begin
             request(st, u);
             wait (done); repeat(3) @(negedge ck);
