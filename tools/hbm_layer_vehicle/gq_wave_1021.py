@@ -31,7 +31,7 @@ def _source(q, direction, hops):
 
 
 def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
-              first_fire=40, rings=2):
+              first_fire=40, rings=2, read_request_delays=None):
     """Absolute stream edges relative to GQ programme-start/fire origin.
 
     source_sectors/destination_sectors: four explicit 13-bit local addresses.
@@ -56,6 +56,10 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
             raise ValueError('source crosses quadrant VM boundary')
         if q in senders and max(source_sectors[q], destination_sectors[q]) < min(source_sectors[q]+F, destination_sectors[q]+n):
             raise ValueError('source and dense destination must not overlap')
+    if read_request_delays is not None:
+        if (len(read_request_delays) != 4 or any(len(x) != 8 for x in read_request_delays)
+                or any(not isinstance(x, int) or x < 0 for row in read_request_delays for x in row)):
+            raise ValueError('explicit nonnegative 4x8 GQ-request-to-bank delays required')
     V = vm_rt[0]
     # Last event fully drains ND=40+V before next fire. No timing inferred from
     # data and no shortening from idle stops; preserve existing busy semantics.
@@ -103,12 +107,21 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
                 raise ValueError(('physical VM bank collision', kind, key))
             seen.add(key)
             assert e['bank'] == e['sector'] & 7
-            reservations.append(dict(e, kind=kind, calendar_index=e['edge']+1))
+            delay = (read_request_delays[e['quarter']][e['bank']]
+                     if kind == 'read' and read_request_delays is not None else 0)
+            reservations.append(dict(e, kind=kind,
+                edge_domain='GQ_client_request' if kind == 'read' else 'VM_bank_sample',
+                calendar_index=(None if kind == 'read' and read_request_delays is None
+                                else e['edge']+delay+1)))
     return dict(status='source_candidate_unqualified', define=DEFINE, rows=rows,
                 descriptors=[dict(sender=s, F=F, stride=F, fire=starts[j], Bs=128|(1<<s),
                                   self_land=1, rings=2, period=period) for j,s in enumerate(senders)],
                 vm_reads=reads, vm_writes=writes, ring_events=ring, reservations=reservations,
                 last_commit=max(e['edge'] for e in writes), period=period,
+                read_calendar_resolved=read_request_delays is not None,
+                read_calendar_obligation=('bind 4x8 actual request-lane delays OR reserve all banks exclusively '
+                    'to COLL read-group3/write-code2 over common full epoch, including existing run-out; '
+                    'VM_RT alone does not resolve physical bank read edges'),
                 source_quarters=list(senders), inactive_source_quarters=sorted(set(range(4))-set(senders)),
                 required_cut='four real GQ/land/ring A+B/VM calendar paths; real producer writes before wave',
                 qualifies_native_layer=False, qualifies_native_chain=False)
