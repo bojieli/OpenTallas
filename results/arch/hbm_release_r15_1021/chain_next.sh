@@ -148,6 +148,7 @@ p|={'results/arch/hbm_release_r14_1021/planB_margin','results/arch/die_reach_101
  'results/arch/hbm_die_v16','results/arch/hier_contract_1015','results/arch/die_clock_method_1016',
  'results/arch/hbm_unread_gen2e3_1019','results/arch/hbm_native_1013/sm_own_logic/retention_cell_models.sv',
  'physical/hbm_pll_views','physical/ref_tile/hdie_pc_ctrl/floorplan.json',
+ 'results/arch/hbm_die_d4g/landing','results/arch/hbm_die_d4g/gen0/die.v.pads.json',
  'results/arch/hbm_release_r15_1021/planB_cxdl_bays','results/arch/hbm_release_r15_1021/planB_h158'}
 p|={v['view_dir'] for v in V.values() if v.get('view_dir')}
 p|=set(Path('results/arch/hbm_release_r15_1021/relay_view_dirs.txt').read_text().splitlines())
