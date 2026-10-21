@@ -8,7 +8,10 @@
 # DIRECT CABLING (OWNER 10-21, no switch; results/arch/release_rack_1021/hop_latency.json @5a1c6dcea D_cycles_max):
 #   TP legs 251 cycles (D_CH 243), stage-hop leg 265 (D_ST 257); goldens_dc/dc_x|dc_xmr|dc_xmd = the same calendars with
 #   LAT S=N=362 (TP: 563 - 202 + 1) and H=376 (stage hop, class H: 563 - 188 + 1); jobs ds / dm = s / m on those.
-# bash tools/xdie_s81_2/gate_xl5.sh <out> s|m|ds|dm
+# R JOBS (10-21 recalibration): the current lep (origin/main, S81-FIX3 TXRP: TX issue -> lo_v 3 edges, was 2) makes the
+#   fixed crossing 564 (G8R2 lep: 563), so LAT 564 / 362 left beats 1 cycle late.  goldens_r: r_x* LAT 565 (switched),
+#   r_dc_x* LAT S=N=363 H=377 (direct); jobs rs / rm / rds / rdm rerun the s / m / ds / dm builds (wait for the binary).
+# bash tools/xdie_s81_2/gate_xl5.sh <out> s|m|ds|dm|rs|rm|rds|rdm
 set -u; O=$1; JOB=$2; mkdir -p $O
 X="bash tools/xdie_s81_2/xdie2.sh"; GD=goldens
 r() { n=$1; b=$2; g=$3; shift 3; ( $X run $O $b $n $GD/$g "$@" > $O/$n.txt 2>&1; echo "EXIT $?" >> $O/$n.txt
@@ -23,5 +26,12 @@ case $JOB in
      r x_min bS dc_x; r x_min_err bS dc_x +ERRP=7 ;;
   dm) GD=goldens_dc; LFIX=361; bld bM bM mu -GMU=2 -GXL5=1 -GD_CH=243 -GD_ST=257 || { touch $O/DONE_${JOB}_FAILED; exit 3; }
      r x_su bM dc_x; r x_mu_real bM dc_xmr; r x_mu_dense bM dc_xmd; r x_mu_dense_err bM dc_xmd +ERRP=7 ;;
+  rs|rm|rds|rdm) GD=goldens_r; B=${JOB#r}; SRC=out_$B; LFIX=564; P=r_x; case $B in d*) LFIX=362; P=r_dc_x;; esac
+     BD=bS; case $B in *m) BD=bM;; esac
+     until [ -x $SRC/$BD/obj/Vtb_xdie_s81_2 ] && grep -q BUILD_OK $SRC/build_$BD.txt; do
+       grep -q BUILD_FAILED $SRC/build_$BD.txt 2>/dev/null && { touch $O/DONE_${JOB}_FAILED; exit 3; }; sleep 30; done
+     ln -sfn ../$SRC/$BD $O/$BD
+     if [ $BD = bS ]; then r x_min $BD $P; r x_min_err $BD $P +ERRP=7
+     else r x_su $BD $P; r x_mu_real $BD ${P}mr; r x_mu_dense $BD ${P}md; r x_mu_dense_err $BD ${P}md +ERRP=7; fi ;;
 esac
 wait; touch $O/DONE_$JOB
