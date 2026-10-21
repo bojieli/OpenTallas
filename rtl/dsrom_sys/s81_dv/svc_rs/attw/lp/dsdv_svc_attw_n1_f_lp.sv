@@ -7,7 +7,7 @@
 module dsdv_svc_attw_n1_f_lp #(
     parameter integer AMUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                          parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1,
-                         parameter integer TLX = 0, parameter integer TXD = 0,
+                         parameter integer TLX = 0, parameter integer TXD = 0, parameter integer ROLE_EXT = 0,
     parameter integer MUT = 0
 ) (
     input wire rst,
@@ -38,6 +38,8 @@ module dsdv_svc_attw_n1_f_lp #(
     output wire [1:0] hcr,
     output wire [1:0] hack,
     output wire fault,
+    output wire [31:0] fault_code, output wire [15:0] pio_o, pvo_o, jc_o, output wire [1:0] st_o,
+    input wire [21:0] role_i, input wire [7:0] pvs_i,
     input wire ck_c,
     input wire ck_t0
 );
@@ -60,7 +62,7 @@ module dsdv_svc_attw_n1_f_lp #(
     wire lpr_c_u_c;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 8 : 7)) u_lprc_u_c (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_c));   // reference schedule: held 7 past the landing epochs
     wire lpr_c_u_t0;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_t0 (.ck(ck_t0), .d(lpr_t0), .q(lpr_c_u_t0));   // reference schedule: held 7 past the landing epochs
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    dsdv_svc_rs_attw #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ROOT), .PMEM(PMEM), .TEXT(1), .NTP(1),
-                       .TLX(TLX), .TXD(TXD)) u_c (.ck(ck_c), .rst(lpr_c_u_c), .sid(sid), .cs(cs), .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat), .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od), .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd), .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault), .tx_i0(txi0), .tx_o0(txo0__l_c));   // region c, t = 0
+    dsdv_svc_rs_attw1 #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ROOT), .PMEM(PMEM), .TEXT(1), .NTP(1), .ROLE_EXT(ROLE_EXT),
+                       .TLX(TLX), .TXD(TXD)) u_c (.ck(ck_c), .rst(lpr_c_u_c), .sid(sid), .cs(cs), .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat), .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od), .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd), .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault), .fault_code(fault_code), .pio_o(pio_o), .pvo_o(pvo_o), .jc_o(jc_o), .st_o(st_o), .role_i(role_i), .pvs_i(pvs_i), .tx_i0(txi0), .tx_o0(txo0__l_c));   // region c, t = 0
     ot_hdc_v41x_attn_tile_s #(.H(16), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(4), .FML(6), .F12(1)) u_t0 (.clk(ck_t0), .rst_n(lpr_c_u_t0), .ld_v(txi0__l_t0[0]), .ld_mode(txi0__l_t0[1]), .ld_bank(txi0__l_t0[4:2]), .ld_grp(txi0__l_t0[12:5]), .ld_w(txi0__l_t0[1036:13]), .ld_w2v(txi0__l_t0[1037]), .iv(txi0__l_t0[1038]), .ibank(txi0__l_t0[1041:1039]), .ib(txi0__l_t0[1617:1042]), .ov(txo0[0]), .oy(txo0[512:1]), .oflt(txo0[528:513]));   // region t0, t = 0
 endmodule

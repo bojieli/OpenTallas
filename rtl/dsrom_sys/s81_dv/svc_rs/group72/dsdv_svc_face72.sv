@@ -3,12 +3,12 @@
 // Existing mesochronous landing mechanism, banked at the existing 276-bit
 // face-lane width. All payload/valid/control bits have the same D=4/K=2 age.
 // No backpressure, arbitration, serialization or arithmetic transformation.
-module dsdv_svc_face72 (
+module dsdv_svc_face72 #(parameter integer W=4545) (
     input wire ck_w, ck_r, rst_w, rst_r,
-    input wire [4544:0] i,
-    output wire [4544:0] o
+    input wire [W-1:0] i,
+    output wire [W-1:0] o
 );
-    localparam integer W=4545, B=276, N=(W+B-1)/B;
+    localparam integer B=276, N=(W+B-1)/B;
     wire [N-1:0] wrst, rrst;
     ot_pl_land_reset_forest #(.DEPTH(3), .LEAVES(N)) u_wr_reset
         (.ck(ck_w), .d(rst_w), .q(wrst));
