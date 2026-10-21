@@ -1,0 +1,389 @@
+{
+  "scope": "Read-only exact executed GEN rtl_ports AST argument projection and exact DPB index selection on BOTH known XS4 definitions; no full GEN/build/physical/simulation run",
+  "GEN_tool_path": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/tools/s81_dv/dv_rvcase.py",
+  "GEN_tool_sha256": "c390a4eb85850909e7b9e2198dc2900286356c766b11fbb3d5719db2a1ba2343",
+  "DPB_tool_sha256": "fde4bc51ea83730ae97636bc05da47696ffa31ba83d00a894417f3d221cbd3b0",
+  "bind_case_path": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/bind_case.json",
+  "bind_case_sha256": "984bcc483036f9f3d81709f61b4c4166603d86d999c1902b498c48bade5a65e3",
+  "PB_path": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/port_bind.json",
+  "PB_sha256": "309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398",
+  "recorded_strict_selection": {
+    "chosen": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "by": "prefer",
+    "differ": [
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv"
+    ],
+    "iface_differ": []
+  },
+  "actual_GEN_rtl_ports_function": "def rtl_ports(cmd):\n    \"\"\"module -> {port: (dir, ranges)} from the RTL set the STRICT port bind used (bind_case port_bind_cmd)\"\"\"\n    roots, files, prefer, defines = [], [], [], {}\n    i = 0\n    while i < len(cmd):\n        k = cmd[i]\n        if k in ('--rtl-root', '--rtl-file', '--prefer', '--define') and i + 1 < len(cmd):\n            v = cmd[i + 1]\n            if k == '--define':\n                n, _, val = v.partition('=')\n                defines[n] = val or '1'\n            else:\n                {'--rtl-root': roots, '--rtl-file': files, '--prefer': prefer}[k].append(v)\n            i += 2\n            continue\n        i += 1\n    # the bind ran in another worktree / scratch: map its paths onto this worktree where they no longer exist\n    def fix(p):\n        if Path(p).exists():\n            return p\n        m = re.search(r'/(rtl|physical)/(.*)$', p)\n        q = ROOT / m.group(1) / m.group(2) if m else None\n        return str(q) if q is not None and q.exists() else p\n    idx, _ = DPB.rtl_index([fix(r) for r in roots] or [str(ROOT / 'rtl')], [fix(f) for f in files], defines, [fix(f) for f in prefer])\n    return idx",
+  "actual_GEN_index_arguments": {
+    "roots": [
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl"
+    ],
+    "files": [
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/cells_used.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_reset_sync.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/lib/ot_rst_relay.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/link/ot_link_crc32.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_rst_relay_tree3.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_sram_oldread_b64.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_sram_showahead_b64.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_rx_b64.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_tx_rc.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_divc.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_delay.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_prefix.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_sfu.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_sram_dline.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/d20b68c2baec0cb1c095550c6b7f743a107b720c/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/869be1b5afc3983e67f34460adfba4bd79a6ce47/results/rtl/s81_eng_release_1021/selected_main_binding/frozen_tap_modules.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/27ffa71c6aa40b6fc623cfbada2336ac67b81b49/rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/27ffa71c6aa40b6fc623cfbada2336ac67b81b49/rtl/lib/ot_rst_relay_bounded32.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/rom_host_ingest/rtl/dsfd_host.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"
+    ],
+    "defines": {
+      "DSFD_PQ_STATIC_X2": "1",
+      "S81CTRL_SRAM_FIFO": "1",
+      "S81CTRL_SRAM_P192": "1",
+      "S81CTRL_NATIVE32": "1",
+      "OT_COLL_NATIVE32": "1",
+      "OT_COLL_NATIVE32_OFF": "1",
+      "OT_S81ENG_TAP_N32R2": "1"
+    },
+    "prefer": [
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_reset_sync.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/lib/ot_rst_relay.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/link/ot_link_crc32.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_rst_relay_tree3.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_sram_oldread_b64.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_sram_showahead_b64.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_rx_b64.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_tx_rc.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/d20b68c2baec0cb1c095550c6b7f743a107b720c/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/869be1b5afc3983e67f34460adfba4bd79a6ce47/results/rtl/s81_eng_release_1021/selected_main_binding/frozen_tap_modules.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/27ffa71c6aa40b6fc623cfbada2336ac67b81b49/rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/27ffa71c6aa40b6fc623cfbada2336ac67b81b49/rtl/lib/ot_rst_relay_bounded32.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_divc.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_delay.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_prefix.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_sfu.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_sram_dline.sv"
+    ]
+  },
+  "XS4_definitions": [
+    {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "file_sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+      "module_body_sha256": "2714ceaae154074a120f609687a14222e49db71424de649c1165a0b5d8d2de94",
+      "ports": {
+        "clk": [
+          "input",
+          []
+        ],
+        "rst_n": [
+          "input",
+          []
+        ],
+        "g_v": [
+          "input",
+          [
+            [
+              "2",
+              "0"
+            ]
+          ]
+        ],
+        "g_fam": [
+          "input",
+          [
+            [
+              "2",
+              "0"
+            ]
+          ]
+        ],
+        "g_idx": [
+          "input",
+          [
+            [
+              "20",
+              "0"
+            ]
+          ]
+        ],
+        "g_d": [
+          "input",
+          [
+            [
+              "3071",
+              "0"
+            ]
+          ]
+        ],
+        "is_v": [
+          "input",
+          []
+        ],
+        "is_d": [
+          "input",
+          [
+            [
+              "159",
+              "0"
+            ]
+          ]
+        ],
+        "xw_v": [
+          "output",
+          []
+        ],
+        "xw_d": [
+          "output",
+          [
+            [
+              "1100",
+              "0"
+            ]
+          ]
+        ],
+        "fault": [
+          "output",
+          []
+        ]
+      },
+      "params": {
+        "NA": "21",
+        "PW": "45",
+        "ND": "8",
+        "NG": "8",
+        "M": "gm",
+        "FB": "gc >= 12 ? 1 : 0",
+        "G": "gc >= 12 ? gc - 12 : gc"
+      },
+      "GEN_explicit_prefer_indices": [
+        23
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "file_sha256": "974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9",
+      "module_body_sha256": "66a6b1d6d34691958f9817292805e904de3000fa68e9dbf96cf8ee47143ea0c0",
+      "ports": {
+        "clk": [
+          "input",
+          []
+        ],
+        "rst_n": [
+          "input",
+          []
+        ],
+        "g_v": [
+          "input",
+          [
+            [
+              "2",
+              "0"
+            ]
+          ]
+        ],
+        "g_fam": [
+          "input",
+          [
+            [
+              "2",
+              "0"
+            ]
+          ]
+        ],
+        "g_idx": [
+          "input",
+          [
+            [
+              "20",
+              "0"
+            ]
+          ]
+        ],
+        "g_d": [
+          "input",
+          [
+            [
+              "3071",
+              "0"
+            ]
+          ]
+        ],
+        "is_v": [
+          "input",
+          []
+        ],
+        "is_d": [
+          "input",
+          [
+            [
+              "159",
+              "0"
+            ]
+          ]
+        ],
+        "xw_v": [
+          "output",
+          []
+        ],
+        "xw_d": [
+          "output",
+          [
+            [
+              "1100",
+              "0"
+            ]
+          ]
+        ],
+        "fault": [
+          "output",
+          []
+        ]
+      },
+      "params": {
+        "NA": "21",
+        "PW": "45",
+        "ND": "8",
+        "NG": "8",
+        "M": "gm",
+        "FB": "gc >= 12 ? 1 : 0",
+        "G": "gc >= 12 ? gc - 12 : gc"
+      },
+      "GEN_explicit_prefer_indices": []
+    }
+  ],
+  "GEN_index_projection_winner": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "GEN_index_projection_variants": {
+    "chosen": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "by": "prefer",
+    "differ": [
+      "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv"
+    ],
+    "iface_differ": []
+  },
+  "GEN_reached_index": "Actual traceback line586 native-forwarding validation occurs after unconditional line513 idx=rtl_ports(bc.port_bind_cmd); no case RTL emitted before failure",
+  "component_file_comparison": [
+    {
+      "ref": "553741303",
+      "file_sha256": "974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9",
+      "exists": true
+    },
+    {
+      "ref": "8a495768f",
+      "file_sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+      "exists": true
+    },
+    {
+      "ref": "f5f35855d",
+      "file_sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+      "exists": true
+    },
+    {
+      "ref": "3f0c7c6e6",
+      "file_sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+      "exists": true
+    }
+  ],
+  "comparison": {
+    "ports_equal": true,
+    "params_equal": true,
+    "preprocessed_bodies_equal": false,
+    "component_f5_file_matches_GEN_winner": true,
+    "strict_vs_GEN_selector_equal": false,
+    "whole_G9_functional_source_qualification": false
+  }
+}
