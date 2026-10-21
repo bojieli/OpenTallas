@@ -107,6 +107,17 @@ class RuleCommitClasses(PreciseGateBinding):
         self.assertTrue(ok, why)
         self.assertIn('drift tolerated', why)          # textbook_lint: the earlier LINT-TOLERANT path takes it
 
+    def test_scoped_relaxing_requirement_only_judges_matching_tiles(self):
+        self.change(b'SCOPED_RELAXATION = 1\n', message=
+                    'scoped relaxation\n\nGate-Rule: relaxing requires=unknown-scoped-proof applies-to=ot_qkh_ktree_lk_nc32c')
+        ok, why, b = self.check(tile=('s81svc_attn_hgrp8',))
+        self.assertTrue(ok, why)
+        self.assertEqual(b['relaxing_rule_allowlist']['requirements'], [])
+        for tile in (('ot_qkh_ktree_lk_nc32c',), ()):
+            ok, why, _ = self.check(tile=tile)
+            self.assertFalse(ok)
+            self.assertIn('unknown relaxed-rule requirement', why)
+
     def test_tightening_outside_scope_keeps_gate(self):
         self.change(b'HBM_PIN_MAX = 4\n', message='x\n\nGate-Rule: tightening applies-to=hbm_,hsm_')
         ok, why, _ = self.check(tile=('qfd_tt_head', 'ot_qfd_tt_head'))
