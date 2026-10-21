@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=8877 cycles=3000 warm=40
+- rtl/dsrom_sys/s81_link/col/lp6/tb_ot_pdie_serdes_col_lp6.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.736 s; speed 4.078 us/s
+- Verilator: cpu 0.736 s on 1 threads; allocated 13 MB

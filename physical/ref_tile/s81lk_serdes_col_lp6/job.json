@@ -64,7 +64,8 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp6_1020/lp/mut1.log"
    },
    {
     "name": "lockstep_mut2",
@@ -75,7 +76,8 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp6_1020/lp/mut2.log"
    },
    {
     "name": "lockstep_mut4",
@@ -86,7 +88,8 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp6_1020/lp/mut4.log"
    },
    {
     "name": "lockstep_mut3",
@@ -97,7 +100,8 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp6_1020/lp/mut3.log"
    }
   ],
   "calibrate": {
