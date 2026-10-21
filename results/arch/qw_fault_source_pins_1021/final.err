@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-q-faultpins-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-q-faultpins-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-q-faultpins-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-q-faultpins-1021
+ot-run: ot-gold1       admits   728 GB (avail 613, growth 103, headroom 0, waiters 0/0 GB) load 111/112 running 24 disk 2647 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-q-faultpins-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-q-faultpins-1021
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1757279-1792604055 after 0 s
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1757279-1792604055): exit 0
