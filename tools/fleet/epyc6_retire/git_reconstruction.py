@@ -108,7 +108,7 @@ def capture(root, output):
     for p in sorted(set(candidates)):
         try:
             gitdir = run(['git', '-C', str(p), 'rev-parse', '--absolute-git-dir'], env=env).decode().strip()
-            git = ['git', '--git-dir='+gitdir, '--work-tree='+str(p)]
+            git = ['git', '-c', 'diff.autoRefreshIndex=false', '--git-dir='+gitdir, '--work-tree='+str(p)]
             common = run(git+['rev-parse', '--git-common-dir'], env=env).decode().strip()
             common = str((p/common).resolve())
             temp = stores[common]

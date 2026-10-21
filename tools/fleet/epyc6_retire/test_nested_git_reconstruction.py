@@ -146,6 +146,20 @@ class NestedGit(unittest.TestCase):
             P.verify(out, proof)
         self.assertEqual(events, ['synced', 'proof'])
 
+    def test_stat_only_change_cannot_refresh_live_source_index(self):
+        before = P.sha(self.repo/'.git/index')
+        st = (self.repo/'pristine').stat()
+        os.utime(self.repo/'pristine', ns=(st.st_atime_ns, st.st_mtime_ns+2000000000))
+        _, proofs = self.preservation()
+        self.assertEqual(P.sha(self.repo/'.git/index'), before)
+        self.assertIn('pristine', W.pristine_files(str(self.repo), proofs, True))
+        self.assertEqual(P.sha(self.repo/'.git/index'), before)
+
+    def test_missing_proof_does_not_run_unnecessary_git_diff(self):
+        with patch('subprocess.run') as run:
+            self.assertEqual(W.pristine_files(str(self.repo), {}, True), set())
+            run.assert_not_called()
+
     def test_raw_source_index_and_refs_unchanged(self):
         before = P.sha(self.repo/'.git/index')
         refs = self.git('for-each-ref')

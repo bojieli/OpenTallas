@@ -29,12 +29,14 @@ def pristine_files(root, proofs, require_proof=False):
     """Only exclude reconstructible tracked content; errors preserve the complete copy."""
     import subprocess
     try:
-        git = ["git", "--git-dir=" + str(git_dir(root)), "--work-tree=" + root, "-c", "core.quotepath=off"]
+        git = ["git", "-c", "diff.autoRefreshIndex=false", "--git-dir=" + str(git_dir(root)), "--work-tree=" + root, "-c", "core.quotepath=off"]
         env = dict(os.environ, GIT_OPTIONAL_LOCKS="0")
         def call(*args):
             return subprocess.run(git + list(args), capture_output=True, timeout=600, env=env, check=True).stdout
         if require_proof:
             proof = proofs.get(root, {})
+            if not (proof.get("archive_verified") is True and len(proof.get("bundle_sha256", "")) == 64):
+                return set()
             index = call("rev-parse", "--git-path", "index").decode().strip()
             head = call("rev-parse", "HEAD").decode().strip()
             diff = call("diff", "--binary", "HEAD", "--")
