@@ -2,13 +2,14 @@ ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qkd-class
 ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qkd-class
 ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qkd-class
 ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/qkd-class
-ot-run: ot-gold1       admits   220 GB (avail 503, growth 349, headroom 0, waiters 0/0 GB) load 191/112 running 32 disk 2897 GB 
+ot-run: ot-gold1       admits   121 GB (avail 466, growth 381, headroom 0, waiters 0/0 GB) load 192/112 running 35 disk 2838 GB 
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qkd-class
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qkd-class
 ot-run: -> ot-gold1
-ot-heavy: admitted on ot-gold1 as oth-ubuntu-1558843-1792600907 after 0 s
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1571512-1792601072 after 0 s
 test_actual_outline_pack_and_bit_reach (test_fwd_class_emit.Composition.test_actual_outline_pack_and_bit_reach) ... ok
 test_frontier_finds_sub_ring_lattice_corridor (test_fwd_class_emit.Composition.test_frontier_finds_sub_ring_lattice_corridor) ... ok
+test_frontier_rejects_empty_matching_bit_reach_domain (test_fwd_class_emit.Composition.test_frontier_rejects_empty_matching_bit_reach_domain) ... ok
 test_missing_calendar_refused (test_fwd_class_emit.Composition.test_missing_calendar_refused) ... ok
 test_missing_reservation_refused (test_fwd_class_emit.Composition.test_missing_reservation_refused) ... ok
 test_reset_lane_data_and_wide_gate_enable_share_scalar_net (test_fwd_class_emit.Composition.test_reset_lane_data_and_wide_gate_enable_share_scalar_net) ... ok
@@ -16,7 +17,7 @@ test_source_width_mismatch_refused (test_fwd_class_emit.Composition.test_source_
 test_split_source_and_native_calendar (test_fwd_class_emit.Composition.test_split_source_and_native_calendar) ... ok
 
 ----------------------------------------------------------------------
-Ran 7 tests in 0.212s
+Ran 8 tests in 0.245s
 
 OK
-ot-run: RAN on ot-gold1 (unit oth-ubuntu-1558843-1792600907): exit 0
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1571512-1792601072): exit 0

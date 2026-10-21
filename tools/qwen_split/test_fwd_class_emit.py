@@ -104,6 +104,21 @@ class Composition(unittest.TestCase):
         self.assertAlmostEqual(relay.x,101.952)
         self.assertLessEqual(relay.x+relay.w+F.C.SHAVE,right.x+1e-6)
 
+    def test_frontier_rejects_empty_matching_bit_reach_domain(self):
+        src=V.Inst('src','source',0,0,1,1)
+        dst=V.Inst('dst','sink',1000,0,1,1)
+        relay=V.Inst('relay','class',300,100,64.776,30.216)
+        by={i.name:i for i in (src,dst,relay)}
+        pos=SimpleNamespace(bits=lambda n,p,w:[(by[n].x,by[n].y)])
+        m=dict(insts=list(by.values()),die={'w':1100,'h':500},
+               buses=[('a','data',1,[('src','q'),('relay','a')]),
+                      ('b','data',1,[('relay','b'),('dst','d')])],
+               fwd_lanes={'class_emission':{}})
+        with patch('qwen_rom_fulldie_b3r2._pin_pos',return_value=pos), patch.dict(
+                'os.environ',{'OT_SPLIT_FWD_CLASS_PACK_FRONTIER':'1'}):
+            with self.assertRaisesRegex(ValueError,'no legal <=405um site'):
+                F.pack_classes(None,m,{'relay'})
+
     def test_reset_lane_data_and_wide_gate_enable_share_scalar_net(self):
         v,m=self.vehicle(1088)
         reset=V.Inst('rly_enable_0','qfd_rlyrl_1_WE_65x30',700,100,64.776,30.216)
