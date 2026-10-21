@@ -128,6 +128,7 @@ LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
 # S81-CAPC4 10-20 opt-in "landing_writer": "n32": native32-safe ring writer (slot enable = kept write_oh only), same
 # contract as ot_pl_land_chunk_w; read by the unchanged ot_pl_land_chunk_r.  Absent = byte-identical output.
 LIB_PORTS['ot_pl_land_n32_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+LIB_PORTS['ot_pl_land_n32_split_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 N32_RTL = "rtl/common/landed_parent/ot_pl_land_n32.sv"
 # S81-CAPC5 10-20 opt-in "regional_reset_copies": true -- a region's last reset stage as kept parallel copies (<= 32 loads
 # each, same reset age, no added edge).  Absent = byte-identical output.
@@ -1077,7 +1078,7 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                wprim = "ot_pl_land_n32_chunk" if self.writer == "n32" and primitive != "ot_pl_land_split" else primitive
+                wprim = ("ot_pl_land_n32_split" if primitive == "ot_pl_land_split" else "ot_pl_land_n32_chunk") if self.writer == "n32" else primitive
                 w(f"    {wprim}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
