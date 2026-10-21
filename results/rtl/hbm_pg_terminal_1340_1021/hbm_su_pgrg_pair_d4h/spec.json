@@ -1,0 +1,291 @@
+{
+ "kind": "cluster",
+ "pg_layer": "M7",
+ "refglob": "*",
+ "recipe": 1,
+ "inhold": false,
+ "outhold": false,
+ "name": "hbm_su_pgrg_pair_d4h",
+ "top": "ot_hbm_su_pgrg_pair",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_pair.sv"
+ ],
+ "params": {
+  "QID": 1,
+  "G": 2,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 456.84,
+  "h": 410.4,
+  "exact": true
+ },
+ "slot_change_request": "HBM-OWN/SU-PGLG 10-21 -> H-D4G (d4h successor of hbm_su_pgrg_pair_d4g, same outline/pins/children): LIGHT pgslice region = 8 hardened PAIR tiles 456.84 x 410.4 (1 KIND0 + 1 bank, own root; 32 per slice); replaces the 1235.52 x 885.6 region tile",
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln",
+   "at": [
+    129.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MX"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "ctl_u"
+  ],
+  "W": [
+   "dl",
+   "fwc",
+   "dwnc",
+   "pos",
+   "rpos",
+   "jpos",
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "ret_q",
+   "rf_u",
+   "ret_x",
+   "ret_f"
+  ]
+ },
+ "pin_ranges": {
+  "ctl_u": [
+   43.2,
+   413.0
+  ],
+  "dl": [
+   95.0,
+   175.0
+  ],
+  "fwc": [
+   176.0,
+   181.0
+  ],
+  "dwnc": [
+   182.0,
+   187.0
+  ],
+  "pos": [
+   188.0,
+   191.0
+  ],
+  "rpos": [
+   192.0,
+   194.0
+  ],
+  "jpos": [
+   195.0,
+   198.0
+  ],
+  "ck": [
+   205.2,
+   205.4
+  ],
+  "rst_n": [
+   207.0,
+   207.2
+  ],
+  "ret_q": [
+   90.0,
+   160.0
+  ],
+  "rf_u": [
+   165.0,
+   250.0
+  ],
+  "ret_x": [
+   255.0,
+   305.0
+  ],
+  "ret_f": [
+   310.0,
+   310.2
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 1111.111,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "job": {
+  "owner": "Claude:HBM-OWN/SU-PGLG",
+  "branch": "claude/hbm-pglg-d4h-1021",
+  "tag": "d4h",
+  "purpose": "HBM d4g LIGHT SU pgslice PAIR tile d4h (MAIN): hbm_su_pgrg_pair_d4g r2 route TT -162.97 cones repaired structurally: static identity straps landed in kept FFs (pos->ret_f), bank write port staged (vm_we->write_data -143, fwc->write_v -48; +1 bank write commit), RF words face-registered (rf_u->rd_q -71; rf_bword issued 1 serial edge early)",
+  "record_to": "results/rtl/ref_tile/hbm_su_pgrg_pair_d4h",
+  "views_to": "physical/ref_tile/hbm_su_pgrg_pair_d4h/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "tools/hbm_static/su_pgslice_rg_vl_run.sh",
+   "tools/hbm_static/su_pgrg_region_gen.py",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hdc",
+   "rtl/proto",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015",
+   "physical/ref_tile/hbm_su_static_bank6_clock7_1015",
+   "results/rtl/hbm_pglg8_1020"
+  ],
+  "benches": [
+   {
+    "name": "pair_lockstep",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m0 0 1200 1",
+    "expect": "pass",
+    "pass_regex": "PGSLICE_RG PASS checks=",
+    "pass_witness": "results/rtl/hbm_pglg_d4h_1021/b/m0/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pair_mut1",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m1 1 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m1/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "fill registered early"
+   },
+   {
+    "name": "pair_mut2",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m2 2 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m2/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "drain group select flipped"
+   },
+   {
+    "name": "pair_mut4",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m4 4 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m4/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "RF select early (pair lane glue)"
+   },
+   {
+    "name": "pair_mut20",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m20 20 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m20/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "outer-region relay 2 stages"
+   },
+   {
+    "name": "pair_mut21",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m21 21 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m21/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "drain delay line one short"
+   },
+   {
+    "name": "pair_mut23",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m23 23 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m23/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "E-face relay bypassed"
+   },
+   {
+    "name": "pair_mut101",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m101 101 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m101/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "lp landing 0 bypassed (unlanded)"
+   },
+   {
+    "name": "pair_mut103",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m103 103 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg_d4h_1021/b/m103/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "lp pad 0 one stage short"
+   }
+  ]
+ },
+ "inter": [],
+ "child_clock_ref": "boundary",
+ "orfs_vars": {
+  "OT_SPINE_TOL_PS": "10",
+  "OT_SPINE_ITERS": "12"
+ }
+}

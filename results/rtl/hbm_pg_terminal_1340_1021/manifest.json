@@ -1,0 +1,30 @@
+[
+  {
+    "tile": "hbm_su_pgrg_pair_d4p",
+    "gate_sha256": "3ff8bc661cb4a6e2f86036edc7be70f199eaf46c0b81181228654ea10ad706bd",
+    "status": null,
+    "source_wt_readonly": "/home/ubuntu/wt/hbm-pgrg-r3-1021",
+    "calendar": "zero VMwrite extraedge; DW+1serial"
+  },
+  {
+    "tile": "hbm_su_pgrg_pair_d4p_fb",
+    "gate_sha256": "8238edfb5006d1e650d2ef0fdad69c24ea4ff9271adee4f2cc313d9f3c2d1efc",
+    "status": null,
+    "source_wt_readonly": "/home/ubuntu/wt/hbm-pgrg-r3-1021",
+    "calendar": "zero VMwrite extraedge; DW+1serial"
+  },
+  {
+    "tile": "hbm_su_pgrg_pair_d4h",
+    "gate_sha256": "11570308d47e4a0cdc88195e6b385380eb1e566fb72045a167b0965adc08ea25",
+    "status": null,
+    "source_wt_readonly": "/home/ubuntu/wt/claude-hbm-pglg-d4h-1021",
+    "calendar": "VMwrite+1edge; RFword1early"
+  },
+  {
+    "tile": "hbm_su_pgrg_pair_d4h_fb",
+    "gate_sha256": "06e6d99c96fc1852782728c7f386c1f08ccc51607c8a1a89ca79445c7ab4cfea",
+    "status": null,
+    "source_wt_readonly": "/home/ubuntu/wt/claude-hbm-pglg-d4h-1021",
+    "calendar": "VMwrite+1edge; RFword1early"
+  }
+]
