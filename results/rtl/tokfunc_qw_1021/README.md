@@ -110,3 +110,19 @@ cluster-output-cut proof. `compose_stg_terminal/report.json` excludes failedSTG,
 keeps KVmissing, and reports INCOMPLETE/FAIL; numerical rates remain intermediate
 old-model diagnostics. Same-binary LMtail diagnostic is pending, not a fullstage
 rerun. Original objects remain hardlinked in the fleet preserved-object directory.
+
+LM same-binary running-partial diagnostic (`lm_tail_da610/`) now terminates FAIL
+with all26 numeric checks matching (best4926,25rounds). The only reported fault
+is station_busy512 at edge3973; no MU AMAX port fault remains. Tail148 has48rows
+(3words/K ×KC8=24 real words), exposing old monolith fixedJB8 completion.
+Selected unique S8 `qfd_dv_s8_station_tail1` source is owned by cb16_slice and
+requires its own numerical qualification; this diagnostic cannot qualify it.
+AMAX-local negative was not run because the positive fails. No padding or RTL
+change was introduced here. Whole STG and token remain FAIL/incomplete.
+
+Final RoPE compilation also requires the exact intrinsic edge ledger
+`source_intrinsic_edges.{ct_lm_sample,native_prepare_descriptor,face_held_bank}`
+and checks the explicit total against both actual GEN transport ages. The TT
+term includes its source-bound LP output landing; no LP3 or transport0 default
+is accepted. Actual selected LP receipt/KV ages remain unknown, so no final sole
+image or playback has been generated.
