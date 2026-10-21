@@ -48,6 +48,7 @@ def phase_material(field):
 def programme(die, op, ctx, phases, frames, capture):
     import dv_layer_compile as C
     import xs_calendar as XC
+    from layer_prog.slice_source import resolve
     from pq_calendar import viamap
     if not phases or not frames or any(f.get('faults') for f in frames if f.get('phase') is not None):
         raise ValueError('native a_proj requires nonempty fault-free actual frame programmes')
@@ -55,6 +56,7 @@ def programme(die, op, ctx, phases, frames, capture):
     if len(P) != 2:
         raise ValueError('native a_proj requires exactly one shared source phase')
     sl = ctx['slice']; sid = die.slices()[sl]['sid']
+    selected_source = resolve(die, sl)
     cal = XC.compile_phase(P, S, 0, sid)
     raw_returns = [w[0] for f in frames if f.get('phase') is not None for w in f['ret']]
     if any(t != int(t) for t in raw_returns):
@@ -99,9 +101,9 @@ def programme(die, op, ctx, phases, frames, capture):
                                 payload186=f'{payload:047x}', ack_edge=issue+C.SEQ['done_v']))
     # A real static END timestamp may reserve a lifetime beyond V ACKs. This
     # source-derived frame minimum is necessary, not aggregate CAP retirement.
-    # +1 is the explicit source XS4/frame pin counter convention of the sealed
-    # component (D321, measured common shift322); it grants no reuse credit.
-    last_return_min = origin + max(returns) + int(cal['D']) + 1
+    # The standalone XS4 receipt adds one capture edge; actual shipping XS
+    # has no such stage. Resolve the selected source instead of inheriting it.
+    last_return_min = origin + max(returns) + int(cal['D']) + selected_source['streamer_added_capture_edges']
     source_floor = max(last_return_min+1, origin+int(cal['end_iter']))
     inherited = int(math.ceil(op['end']))
     floor=max(source_floor,inherited)
@@ -121,7 +123,8 @@ def programme(die, op, ctx, phases, frames, capture):
         source='actual frame MAT/phase/stream + xs_calendar.compile_phase; real XRT CTL targets2/3',
         native_rows=len(rows), field_phase=0, frame_operation_tag=capture['flags'], xs_tag=0,
         actual_gather_data_emitted=False, synthetic_frame_returns_emitted=False, HOST_KS_assumed=False,
-        route=route, CTL_pin_to_XR_command_pin_edges=5, programme_origin=origin,
+        route=route, selected_slice_source=selected_source,
+        CTL_pin_to_XR_command_pin_edges=5, programme_origin=origin,
         origin_definition='op native issue anchor + ctl_path event age - RSTOP_HOP + source XRT5',
         command_descriptors=descriptors, capture=capture,
         calendar=dict(rows=len(packed), stream_words=cal['nb'], fixed_retire_row=next(
@@ -134,9 +137,8 @@ def programme(die, op, ctx, phases, frames, capture):
               'all-frame aggregate FIN/cap5r fixed completion and clock phases',
               'all-frame MAT/config image source assembly and instance binding',
               'whole A/B static schedule and native job/host adoption'],
-        gather_source_path='selected cap5r u_xg=ot_s81sl_xgt_xo: u_r ot_s81sl_rstopt_xo '
-                           'g_v/g_fam/g_idx/g_d -> u_s ot_s81sl_xs4; real leaf u_vq xf '
-                           'from VN/VP NORM, plus ri_w/e. RTL exists; fixture gather is not native lowering.',
+        gather_source_path=' -> '.join(selected_source['wrapper_chain'] + [selected_source['xg'],
+                           selected_source['ring'] + ' gather', selected_source['streamer']]),
         images={n:hashlib.sha256(s.encode()).hexdigest() for n,s in material.items()})
     files={prefix+'/'+n:s for n,s in material.items()}
     files[prefix+'/programme.json']=json.dumps(manifest,indent=1)+'\n'
