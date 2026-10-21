@@ -1227,18 +1227,7 @@ def gen_pdn(s: dict, lc: dict) -> str:
               f"  define_pdn_grid -name {{hard_{top.lower()}}} -voltage_domains {{CORE}} -macro -cells $ot_c "
               f"-orient {{R0 R180 MX MY}} -halo {{2.0 2.0 2.0 2.0}}\n"
               f"  add_pdn_connect -grid {{hard_{top.lower()}}} -layers {{M{L} M{L + 1}}}\n}}\n")
-    # macros[].pg_layer "M5" (opt-in, S81 SerDes PMA abstracts 10-19): the macro exposes its PG as M5 vertical stripes
-    # (M5 OBS between them), like a hardened child, so it is strapped M5 -> M6 instead of the SRAM M4 -> M5 recipe
-    # (lpk2 PDN-0006: M4 PG under a full M5 OBS is unreachable).
-    m5pg = sorted({view_name(m["view"]) for m in s["macros"] if m.get("pg_layer") == "M5"})
-    for m in s["macros"]:
-        assert m.get("pg_layer") in (None, "M4", "M5"), "macros[].pg_layer must be M4 (default) or M5"
-    if m5pg:
-        t += (f"set ot_s5 [ot_ref_present {{{' '.join(m5pg)}}}]\n"
-              "if {[llength $ot_s5]} {\n"
-              "  define_pdn_grid -name {macro_m5} -voltage_domains {CORE} -macro -cells $ot_s5 -orient {R0 R180 MX MY} "
-              "-halo {2.0 2.0 2.0 2.0}\n  add_pdn_connect -grid {macro_m5} -layers {M5 M6}\n}\n")
-    srams = sorted({view_name(m["view"]) for m in s["macros"] if m.get("pg_layer") != "M5"})
+    srams = sorted({view_name(m["view"]) for m in s["macros"]})
     if srams:
         t += (f"set ot_s [ot_ref_present {{{' '.join(srams)}}}]\n"
               "if {[llength $ot_s]} {\n"
