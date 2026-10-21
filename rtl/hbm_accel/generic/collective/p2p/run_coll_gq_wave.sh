@@ -14,7 +14,7 @@ LIB=("$P/ot_hgi_coll_gq.sv" "$P/ot_hgi_coll_ring_ag.sv" "$P/ot_hgi_coll_ring_ag_
      rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv)
 FL=(--binary --timing -O2 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN)
 for f in 12 16; do
- "$V" "${FL[@]}" -DOT_COLL_GQ_SINGLE_SENDER -GWAVE_F=$f --top-module tb_hgi_coll_gq_wave --Mdir "$OUT/f$f" "$P/tb_hgi_coll_gq_wave.sv" "${LIB[@]}" > "$OUT/f$f.build.log" 2>&1
+ "$V" "${FL[@]}" -DOT_COLL_GQ_SINGLE_SENDER -GWAVE_F=$f -GLANES=1 -GVM_RT=74 -GBANK_RT=72 --top-module tb_hgi_coll_gq_wave --Mdir "$OUT/f$f" "$P/tb_hgi_coll_gq_wave.sv" "${LIB[@]}" > "$OUT/f$f.build.log" 2>&1
  "$OUT/f$f/Vtb_hgi_coll_gq_wave" > "$OUT/f$f.run.log" 2>&1
  tail -4 "$OUT/f$f.run.log"
  grep -q '^COLLQ WAVE PASS ' "$OUT/f$f.run.log"
