@@ -1,0 +1,5470 @@
+[
+ {
+  "parent": "s_0S",
+  "assembly": "lepw_mu",
+  "global_origin_um": [
+   17879.392,
+   10520.6
+  ],
+  "children": [
+   {
+    "instance": "u_sl.u_lf4.u_vp",
+    "at": [
+     86.4,
+     86.4
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      10607000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      10606992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vn",
+    "at": [
+     864.0,
+     86.4
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      10607000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      10606992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_ve",
+    "at": [
+     864.0,
+     518.4
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      11039000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      11038992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vsw",
+    "at": [
+     864.0,
+     907.2
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      11427800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      11427792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vq",
+    "at": [
+     86.4,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      11514200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      11514192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vs",
+    "at": [
+     302.4,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18181792,
+      11514200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18181728,
+      11514192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_rxsf",
+    "at": [
+     518.4,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18397792,
+      11514200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18397728,
+      11514192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_rxsb",
+    "at": [
+     691.2,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18570592,
+      11514200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18570528,
+      11514192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vp",
+    "at": [
+     86.4,
+     1209.6
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      11730200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      11730192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vn",
+    "at": [
+     864.0,
+     1209.6
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      11730200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      11730192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_ve",
+    "at": [
+     864.0,
+     1641.6
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      12162200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      12162192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vsw",
+    "at": [
+     864.0,
+     2030.4
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      12551000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      12550992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vq",
+    "at": [
+     86.4,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      12637400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      12637392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vs",
+    "at": [
+     302.4,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18181792,
+      12637400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18181728,
+      12637392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_rxsf",
+    "at": [
+     518.4,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18397792,
+      12637400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18397728,
+      12637392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_rxsb",
+    "at": [
+     691.2,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18570592,
+      12637400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18570528,
+      12637392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vp",
+    "at": [
+     86.4,
+     2332.8
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      12853400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      12853392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vn",
+    "at": [
+     864.0,
+     2332.8
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      12853400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      12853392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_ve",
+    "at": [
+     864.0,
+     2764.8
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      13285400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      13285392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vsw",
+    "at": [
+     864.0,
+     3153.6
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      13674200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      13674192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vq",
+    "at": [
+     86.4,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      13760600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      13760592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vs",
+    "at": [
+     302.4,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18181792,
+      13760600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18181728,
+      13760592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_rxsf",
+    "at": [
+     518.4,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18397792,
+      13760600
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18397728,
+      13760592
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_rxsb",
+    "at": [
+     691.2,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18570592,
+      13760600
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18570528,
+      13760592
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_xg",
+    "at": [
+     86.4,
+     3456.0
+    ],
+    "view": null,
+    "unqualified_standin": false,
+    "status": "UNBOUND_NO_ACTUAL_LEF"
+   },
+   {
+    "instance": "u_sl.u_cap",
+    "at": [
+     777.6,
+     3456.0
+    ],
+    "view": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r",
+    "unqualified_standin": false,
+    "lef_sha256": "c26c50e80e4a4a00642bc4670a5638a7d4c073bf445f8fa8cc83eb5a60b4dd11",
+    "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18656992,
+      13976600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 311,
+       "offtrack": 311,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 305,
+       "offtrack": 305,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 566,
+       "offtrack": 566,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     336.96,
+     414.72
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18656928,
+      13976592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 311,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 305,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 566,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_xf",
+    "at": [
+     777.6,
+     3931.2
+    ],
+    "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
+    "unqualified_standin": false,
+    "lef_sha256": "a65a87c7bfe7128f84d26340fd6e2b6a84864ecf0be068d96468d57785fda562",
+    "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18656992,
+      14451800
+     ],
+     "layers": {
+      "M5": {
+       "pins": 114,
+       "offtrack": 114,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 692,
+       "offtrack": 692,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     181.44,
+     181.44
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18656928,
+      14451792
+     ],
+     "layers": {
+      "M5": {
+       "pins": 114,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 692,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_xr",
+    "at": [
+     86.4,
+     4060.8
+    ],
+    "view": null,
+    "unqualified_standin": false,
+    "status": "UNBOUND_NO_ACTUAL_LEF"
+   },
+   {
+    "instance": "u_sl.u_eg",
+    "at": [
+     475.2,
+     4060.8
+    ],
+    "view": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
+    "unqualified_standin": false,
+    "lef_sha256": "33f3d4d8564ad2874cd6de568d391e9376faa6f04a2a8bed16ee5b6a517cddc4",
+    "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18354592,
+      14581400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 8.0
+      },
+      "M3": {
+       "pins": 167,
+       "offtrack": 167,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 32,
+       "offtrack": 32,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     259.2,
+     259.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18354528,
+      14581392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 167,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 32,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vp",
+    "at": [
+     86.4,
+     4536.0
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      15056600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      15056592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vn",
+    "at": [
+     864.0,
+     4536.0
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      15056600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      15056592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_ve",
+    "at": [
+     864.0,
+     4968.0
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      15488600
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      15488592
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vsw",
+    "at": [
+     864.0,
+     5356.8
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      15877400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      15877392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vq",
+    "at": [
+     86.4,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      15963800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      15963792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vs",
+    "at": [
+     302.4,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18181792,
+      15963800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18181728,
+      15963792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_rxsf",
+    "at": [
+     518.4,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18397792,
+      15963800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18397728,
+      15963792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_rxsb",
+    "at": [
+     691.2,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18570592,
+      15963800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18570528,
+      15963792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vp",
+    "at": [
+     86.4,
+     5659.2
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      16179800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      16179792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vn",
+    "at": [
+     864.0,
+     5659.2
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      16179800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      16179792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_ve",
+    "at": [
+     864.0,
+     6091.2
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      16611800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      16611792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vsw",
+    "at": [
+     864.0,
+     6480.0
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18743392,
+      17000600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18743328,
+      17000592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vq",
+    "at": [
+     86.4,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17965792,
+      17087000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17965728,
+      17086992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vs",
+    "at": [
+     302.4,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18181792,
+      17087000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18181728,
+      17086992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_rxsf",
+    "at": [
+     518.4,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18397792,
+      17087000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18397728,
+      17086992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_rxsb",
+    "at": [
+     691.2,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18570592,
+      17087000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18570528,
+      17086992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_ln0",
+    "at": [
+     1468.8,
+     43.2
+    ],
+    "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+    "unqualified_standin": false,
+    "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+    "lef": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19348192,
+      10563800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 2143,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     725.76,
+     583.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19348128,
+      10563792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_ln1",
+    "at": [
+     1468.8,
+     799.2
+    ],
+    "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+    "unqualified_standin": false,
+    "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+    "lef": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19348192,
+      11319800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 2143,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     725.76,
+     583.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19348128,
+      11319792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_lep",
+    "at": [
+     1468.8,
+     1555.2
+    ],
+    "view": null,
+    "unqualified_standin": false,
+    "status": "UNBOUND_NO_ACTUAL_LEF"
+   },
+   {
+    "instance": "u_land",
+    "at": [
+     1468.8,
+     2289.6
+    ],
+    "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+    "unqualified_standin": false,
+    "lef_sha256": "8384c7fc6da26d662b75c09768a6ab2cdcee0d3b996c6db8d61ce8d43422daa3",
+    "lef": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/dsdv_mu_land.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19348192,
+      12810200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 1112,
+       "offtrack": 1112,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 1112,
+       "offtrack": 1112,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     475.2,
+     216.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19348128,
+      12810192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 1112,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 1112,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   }
+  ],
+  "common_pin_phase": {
+   "x": {
+    "period_nm": 144,
+    "legal_global_parent_delta_residues_nm": [
+     80
+    ]
+   },
+   "y": {
+    "period_nm": 48,
+    "legal_global_parent_delta_residues_nm": [
+     40
+    ]
+   }
+  },
+  "body_violations": [],
+  "scope": "All available exact553 descendant LEFs plus exact891 W replacements. Missing/unqualified standins remain explicit; no physical parent qualification."
+ },
+ {
+  "parent": "s_0N",
+  "assembly": "lepw_mab_mu",
+  "global_origin_um": [
+   17879.392,
+   17432.6
+  ],
+  "children": [
+   {
+    "instance": "u_sl.u_lf4.u_vp",
+    "at": [
+     1598.4,
+     86.4
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      17519000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      17518992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vn",
+    "at": [
+     2376.0,
+     86.4
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      17519000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      17518992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_ve",
+    "at": [
+     2376.0,
+     518.4
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      17951000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      17950992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vsw",
+    "at": [
+     2376.0,
+     907.2
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      18339800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      18339792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vq",
+    "at": [
+     1598.4,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      18426200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      18426192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_vs",
+    "at": [
+     1814.4,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19693792,
+      18426200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19693728,
+      18426192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_rxsf",
+    "at": [
+     2030.4,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19909792,
+      18426200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19909728,
+      18426192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf4.u_rxsb",
+    "at": [
+     2203.2,
+     993.6
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20082592,
+      18426200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20082528,
+      18426192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vp",
+    "at": [
+     1598.4,
+     1209.6
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      18642200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      18642192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vn",
+    "at": [
+     2376.0,
+     1209.6
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      18642200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      18642192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_ve",
+    "at": [
+     2376.0,
+     1641.6
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      19074200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      19074192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vsw",
+    "at": [
+     2376.0,
+     2030.4
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      19463000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      19462992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vq",
+    "at": [
+     1598.4,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      19549400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      19549392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_vs",
+    "at": [
+     1814.4,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19693792,
+      19549400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19693728,
+      19549392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_rxsf",
+    "at": [
+     2030.4,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19909792,
+      19549400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19909728,
+      19549392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf3.u_rxsb",
+    "at": [
+     2203.2,
+     2116.8
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20082592,
+      19549400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20082528,
+      19549392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vp",
+    "at": [
+     1598.4,
+     2332.8
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      19765400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      19765392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vn",
+    "at": [
+     2376.0,
+     2332.8
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      19765400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      19765392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_ve",
+    "at": [
+     2376.0,
+     2764.8
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      20197400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      20197392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vsw",
+    "at": [
+     2376.0,
+     3153.6
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      20586200
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      20586192
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vq",
+    "at": [
+     1598.4,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      20672600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      20672592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_vs",
+    "at": [
+     1814.4,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19693792,
+      20672600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19693728,
+      20672592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_rxsf",
+    "at": [
+     2030.4,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19909792,
+      20672600
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19909728,
+      20672592
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf2.u_rxsb",
+    "at": [
+     2203.2,
+     3240.0
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20082592,
+      20672600
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20082528,
+      20672592
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_xg",
+    "at": [
+     1598.4,
+     3456.0
+    ],
+    "view": null,
+    "unqualified_standin": false,
+    "status": "UNBOUND_NO_ACTUAL_LEF"
+   },
+   {
+    "instance": "u_sl.u_cap",
+    "at": [
+     2289.6,
+     3456.0
+    ],
+    "view": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r",
+    "unqualified_standin": false,
+    "lef_sha256": "c26c50e80e4a4a00642bc4670a5638a7d4c073bf445f8fa8cc83eb5a60b4dd11",
+    "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20168992,
+      20888600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 311,
+       "offtrack": 311,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 305,
+       "offtrack": 305,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 566,
+       "offtrack": 566,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     336.96,
+     414.72
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20168928,
+      20888592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 311,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 305,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 566,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_xf",
+    "at": [
+     2289.6,
+     3931.2
+    ],
+    "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
+    "unqualified_standin": false,
+    "lef_sha256": "a65a87c7bfe7128f84d26340fd6e2b6a84864ecf0be068d96468d57785fda562",
+    "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20168992,
+      21363800
+     ],
+     "layers": {
+      "M5": {
+       "pins": 114,
+       "offtrack": 114,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 692,
+       "offtrack": 692,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     181.44,
+     181.44
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20168928,
+      21363792
+     ],
+     "layers": {
+      "M5": {
+       "pins": 114,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 692,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_xr",
+    "at": [
+     1598.4,
+     4060.8
+    ],
+    "view": null,
+    "unqualified_standin": false,
+    "status": "UNBOUND_NO_ACTUAL_LEF"
+   },
+   {
+    "instance": "u_sl.u_eg",
+    "at": [
+     1987.2,
+     4060.8
+    ],
+    "view": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
+    "unqualified_standin": false,
+    "lef_sha256": "33f3d4d8564ad2874cd6de568d391e9376faa6f04a2a8bed16ee5b6a517cddc4",
+    "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19866592,
+      21493400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 8.0
+      },
+      "M3": {
+       "pins": 167,
+       "offtrack": 167,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 32,
+       "offtrack": 32,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     259.2,
+     259.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19866528,
+      21493392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 167,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 32,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vp",
+    "at": [
+     1598.4,
+     4536.0
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      21968600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      21968592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vn",
+    "at": [
+     2376.0,
+     4536.0
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      21968600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      21968592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_ve",
+    "at": [
+     2376.0,
+     4968.0
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      22400600
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      22400592
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vsw",
+    "at": [
+     2376.0,
+     5356.8
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      22789400
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      22789392
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vq",
+    "at": [
+     1598.4,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      22875800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      22875792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_vs",
+    "at": [
+     1814.4,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19693792,
+      22875800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19693728,
+      22875792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_rxsf",
+    "at": [
+     2030.4,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19909792,
+      22875800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19909728,
+      22875792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf1.u_rxsb",
+    "at": [
+     2203.2,
+     5443.2
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20082592,
+      22875800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20082528,
+      22875792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vp",
+    "at": [
+     1598.4,
+     5659.2
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+    "unqualified_standin": true,
+    "lef_sha256": "0865a8a1b66157589125725a701f2bcdfd7dd7a4f1fc1f0ea87c636d6f173217",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      23091800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 392,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 394,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 1627,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     734.4,
+     864.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      23091792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 392,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 394,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1627,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vn",
+    "at": [
+     2376.0,
+     5659.2
+    ],
+    "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+    "unqualified_standin": false,
+    "lef_sha256": "5b294d952ad6dc9eb406e2c819635ce00817487ac0e8793d8ff55bfea2d28c96",
+    "lef": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      23091800
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 36,
+       "max_offset_nm": 8.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 1172,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 33,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     356.4,
+     356.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      23091792
+     ],
+     "layers": {
+      "M3": {
+       "pins": 36,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1172,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 33,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_ve",
+    "at": [
+     2376.0,
+     6091.2
+    ],
+    "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+    "unqualified_standin": true,
+    "lef_sha256": "198c35b4049ce1ed4475ae787d1629e7f50799857cb819f115c10925722630de",
+    "lef": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      23523800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 1292,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 2,
+       "max_offset_nm": 16.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 1,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     345.6,
+     345.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      23523792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 1292,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 2,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M3": {
+       "pins": 1,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vsw",
+    "at": [
+     2376.0,
+     6480.0
+    ],
+    "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+    "unqualified_standin": false,
+    "lef_sha256": "4d09928af776a26973c11614b52e65e424a65b59c24c330c0ddc44b7aae9f569",
+    "lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20255392,
+      23912600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 196,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 193,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     224.64,
+     224.64
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20255328,
+      23912592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 196,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 193,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vq",
+    "at": [
+     1598.4,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+    "unqualified_standin": false,
+    "lef_sha256": "419732d21a9b56301b4ca1e43f8f33adb8fa26bcb2b8e44a8f157e67355b85ec",
+    "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19477792,
+      23999000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 21,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 11,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 798,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     129.6
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19477728,
+      23998992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 21,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 11,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 798,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_vs",
+    "at": [
+     1814.4,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+    "unqualified_standin": false,
+    "lef_sha256": "bd2a320b38a0c659d5134bd2b43a664c556162995b6ab36b5aab04a33d994d42",
+    "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19693792,
+      23999000
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 812,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 799,
+       "max_offset_nm": 16.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 1248,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     172.8,
+     172.8
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19693728,
+      23998992
+     ],
+     "layers": {
+      "M3": {
+       "pins": 812,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 799,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M4": {
+       "pins": 1248,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_rxsf",
+    "at": [
+     2030.4,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+    "unqualified_standin": false,
+    "lef_sha256": "175b188d2896be37e98c5caec1397c0f0c431865bc71a72a37b3d7a336104fdf",
+    "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      19909792,
+      23999000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 133,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      19909728,
+      23998992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 133,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_sl.u_lf0.u_rxsb",
+    "at": [
+     2203.2,
+     6566.4
+    ],
+    "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+    "unqualified_standin": false,
+    "lef_sha256": "12c5b5de2422b808c3e59022bb6ce80ba0188538f0687d1dc88c7aba79c1e6b9",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      20082592,
+      23999000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 134,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     140.4,
+     140.4
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      20082528,
+      23998992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 134,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_ln0",
+    "at": [
+     43.2,
+     1490.4
+    ],
+    "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+    "unqualified_standin": false,
+    "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+    "lef": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17922592,
+      18923000
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 2143,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     725.76,
+     583.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17922528,
+      18922992
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_ln1",
+    "at": [
+     43.2,
+     2116.8
+    ],
+    "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+    "unqualified_standin": false,
+    "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+    "lef": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17922592,
+      19549400
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 2143,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     725.76,
+     583.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17922528,
+      19549392
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_ln2",
+    "at": [
+     43.2,
+     2743.2
+    ],
+    "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+    "unqualified_standin": false,
+    "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+    "lef": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17922592,
+      20175800
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 2143,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     725.76,
+     583.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17922528,
+      20175792
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_ln3",
+    "at": [
+     43.2,
+     3369.6
+    ],
+    "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+    "unqualified_standin": false,
+    "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+    "lef": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      17922592,
+      20802200
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 2143,
+       "max_offset_nm": 8.0
+      }
+     }
+    },
+    "size_um": [
+     725.76,
+     583.2
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      17922528,
+      20802192
+     ],
+     "layers": {
+      "M4": {
+       "pins": 2143,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   },
+   {
+    "instance": "u_lep",
+    "at": [
+     820.8,
+     1728.0
+    ],
+    "view": null,
+    "unqualified_standin": false,
+    "status": "UNBOUND_NO_ACTUAL_LEF"
+   },
+   {
+    "instance": "u_land",
+    "at": [
+     820.8,
+     3888.0
+    ],
+    "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+    "unqualified_standin": false,
+    "lef_sha256": "8384c7fc6da26d662b75c09768a6ab2cdcee0d3b996c6db8d61ce8d43422daa3",
+    "lef": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/dsdv_mu_land.lef",
+    "status": "EXPORTED_PIN_CHECK",
+    "pins": {
+     "orient": "R0",
+     "origin_nm": [
+      18700192,
+      21320600
+     ],
+     "layers": {
+      "M3": {
+       "pins": 1112,
+       "offtrack": 1112,
+       "max_offset_nm": 8.0
+      },
+      "M5": {
+       "pins": 1112,
+       "offtrack": 1112,
+       "max_offset_nm": 16.0
+      }
+     }
+    },
+    "size_um": [
+     475.2,
+     216.0
+    ],
+    "candidate_phase_check": {
+     "orient": "R0",
+     "origin_nm": [
+      18700128,
+      21320592
+     ],
+     "layers": {
+      "M3": {
+       "pins": 1112,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      },
+      "M5": {
+       "pins": 1112,
+       "offtrack": 0,
+       "max_offset_nm": 0.0
+      }
+     }
+    }
+   }
+  ],
+  "common_pin_phase": {
+   "x": {
+    "period_nm": 144,
+    "legal_global_parent_delta_residues_nm": [
+     80
+    ]
+   },
+   "y": {
+    "period_nm": 48,
+    "legal_global_parent_delta_residues_nm": [
+     40
+    ]
+   }
+  },
+  "body_violations": [],
+  "scope": "All available exact553 descendant LEFs plus exact891 W replacements. Missing/unqualified standins remain explicit; no physical parent qualification."
+ }
+]

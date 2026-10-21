@@ -1,0 +1,248 @@
+{
+ "record": "89182bf29",
+ "lef_sha256": "9d36ed08537761dd1fab35deec40217516827583107feb89c038512342468718",
+ "actual_child_count": 6,
+ "checks": [
+  {
+   "parent": "s_0S",
+   "child": "u_ln0",
+   "local_um": [
+    1468.8,
+    43.2
+   ],
+   "local": {
+    "orient": "R0",
+    "origin_nm": [
+     1468800,
+     43200
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   },
+   "actual_global_um": [
+    19348.192,
+    10563.800000000001
+   ],
+   "actual_global": {
+    "orient": "R0",
+    "origin_nm": [
+     19348192,
+     10563800
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 2143,
+      "max_offset_nm": 8.0
+     }
+    }
+   }
+  },
+  {
+   "parent": "s_0S",
+   "child": "u_ln1",
+   "local_um": [
+    1468.8,
+    799.2
+   ],
+   "local": {
+    "orient": "R0",
+    "origin_nm": [
+     1468800,
+     799200
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   },
+   "actual_global_um": [
+    19348.192,
+    11319.800000000001
+   ],
+   "actual_global": {
+    "orient": "R0",
+    "origin_nm": [
+     19348192,
+     11319800
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 2143,
+      "max_offset_nm": 8.0
+     }
+    }
+   }
+  },
+  {
+   "parent": "s_0N",
+   "child": "u_ln0",
+   "local_um": [
+    43.2,
+    1490.4
+   ],
+   "local": {
+    "orient": "R0",
+    "origin_nm": [
+     43200,
+     1490400
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   },
+   "actual_global_um": [
+    17922.592,
+    18923.0
+   ],
+   "actual_global": {
+    "orient": "R0",
+    "origin_nm": [
+     17922592,
+     18923000
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 2143,
+      "max_offset_nm": 8.0
+     }
+    }
+   }
+  },
+  {
+   "parent": "s_0N",
+   "child": "u_ln1",
+   "local_um": [
+    43.2,
+    2116.8
+   ],
+   "local": {
+    "orient": "R0",
+    "origin_nm": [
+     43200,
+     2116800
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   },
+   "actual_global_um": [
+    17922.592,
+    19549.399999999998
+   ],
+   "actual_global": {
+    "orient": "R0",
+    "origin_nm": [
+     17922592,
+     19549400
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 2143,
+      "max_offset_nm": 8.0
+     }
+    }
+   }
+  },
+  {
+   "parent": "s_0N",
+   "child": "u_ln2",
+   "local_um": [
+    43.2,
+    2743.2
+   ],
+   "local": {
+    "orient": "R0",
+    "origin_nm": [
+     43200,
+     2743200
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   },
+   "actual_global_um": [
+    17922.592,
+    20175.8
+   ],
+   "actual_global": {
+    "orient": "R0",
+    "origin_nm": [
+     17922592,
+     20175800
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 2143,
+      "max_offset_nm": 8.0
+     }
+    }
+   }
+  },
+  {
+   "parent": "s_0N",
+   "child": "u_ln3",
+   "local_um": [
+    43.2,
+    3369.6
+   ],
+   "local": {
+    "orient": "R0",
+    "origin_nm": [
+     43200,
+     3369600
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   },
+   "actual_global_um": [
+    17922.592,
+    20802.199999999997
+   ],
+   "actual_global": {
+    "orient": "R0",
+    "origin_nm": [
+     17922592,
+     20802200
+    ],
+    "layers": {
+     "M4": {
+      "pins": 2143,
+      "offtrack": 2143,
+      "max_offset_nm": 8.0
+     }
+    }
+   }
+  }
+ ],
+ "scope": "Pure exported signalpin check, no adopted parent phase change"
+}

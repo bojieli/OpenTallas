@@ -176,9 +176,9 @@
   },
   "qf": {
    "master": "dsdv_idx_qf",
-   "source_candidate": "922908afa",
-   "receipt": "5d1b061c1",
-   "qualification": "Owner reports existingmechanism+MUT1/2+6seedG8equivPASS; changed-sourceMAIN/FB nativepending; no CLOSED"
+   "source_candidate": "f7412b6c2",
+   "receipt": "ed9c179a2",
+   "qualification": "Owner14:34actualMAIN/FBnativePASSmax30/0violations/roles; publicports3edgesunchanged, existingmechanism+MUT1/2+6seedG8eqPASS. CTS/physicalpending, noCLOSED"
   },
   "idx_nq": {
    "master": "dsdv_idx_rg3_nq",
@@ -196,7 +196,7 @@
   "vmtx": {
    "source_candidate": "519b78855",
    "assembly_model": "6fba87c69:results/rtl/codex_idxtx_local_1021/ASSEMBLY_MODEL.md",
-   "actual_topk": "cb73b3e99:rtl/dsrom_sys/s81_dv/bk/plana/n32/dsdv_bk_sel_pa_n32_lp.sv",
+   "actual_topk": "cb73b3e99:rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/dsdv_bk_sel_pa_n32_lp.sv",
    "scope": "Actual n32TOPK39regionalclock/resetregions224seams distinct from olddefaultdsdv_bk_sel_vmtx. Explicitconnectedvmtx profile not built. No aliases. VMUXsoftsource/no footprint; TX candidate596.16x540 MAIN/691.2x583.2 FB, unqualified. 907.2x3369.6 TOPK arithmetic only, notlegalcomposedparent. Original4190.4band cannot be assumedfree."
   }
  },
@@ -215,5 +215,19 @@
   "inventory_receipt": "kv_real_vp_component.json",
   "overlay_smoke": "PASS on actual G8 plan/table copies; only s3N changed, existing rows unchanged; wrongmaster/activeview/duplicate rejected",
   "qualification": "SOURCE_ONLY; KV_ENABLE1 actual hardware has no inherited native/physical qualification; producer/programme still OPEN"
+ },
+ "closed_child_bindings": {
+  "coll_w": {
+   "record": "89182bf29",
+   "source": "8151c3923411e4164b55eafb4ceefde005066a63",
+   "master": "dsfd_coll_lane_w_safe8_ntf",
+   "child_count": 6,
+   "assemblies": [
+    "physical/ref_tile/s81_mu72_assembly/lepw_mu.json",
+    "physical/ref_tile/s81_mu72_assembly/lepw_mab_mu.json"
+   ],
+   "qualification": "Exact CLOSED guarded CRED8 child views now materialized+bound to2S+4N existingR0slots. No CRED12/E alias. Parent unchanged/unhardened.",
+   "grid_hold": "Actual originalglobalplacement allWpins8nmofftrack. ALLavailable46S/48N descendants admitcommondelta(-64nm,-8nm),actualfullpincheck0 atcandidatephase/bodyviolations0. Tenstandins+3missingXGT/XRT/LEP perparent preventparentphysicalqualification; phase notadopted."
+  }
  }
 }
