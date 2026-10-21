@@ -1,0 +1,21 @@
+{
+  "source": "2358d56669d49981f829aa350a89a7d0c200b631",
+  "selected_defines": [
+    "OT_S81ENG_RR_N32",
+    "OT_S81ENG_RR_MUL_N32",
+    "OT_ENGRAM_CRCMAT"
+  ],
+  "phase_model": "XQearlyedge1+operatorreset2=originalrl1edge3",
+  "operator": "LAT5 originalquant18",
+  "positive_cases": 3,
+  "windows_per_case": 6,
+  "checked_rows_per_case": 288,
+  "causal_mutants_caught": 6,
+  "native_qualification": false,
+  "physical_qualification": false,
+  "leaf_dependency": "560abe5d2 exactfiles;282ef8821 native32/equivalencepacket",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1448342-1792620269",
+  "path": "/srv/opentallas-scratch/claude/codex-s81-engrr-mul5-1021/rr_r2",
+  "collected_utc": "2026-10-21T22:07:42.262126+00:00"
+}
