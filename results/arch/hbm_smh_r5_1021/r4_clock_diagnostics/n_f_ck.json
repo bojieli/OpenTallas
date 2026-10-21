@@ -1,0 +1,982 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/smh_rp4ahn_r4spb-20261021-110723/routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_smh_rp4ah_n_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 35481
+  },
+  "boundary": {
+   "n": 7308,
+   "mean": 1605.2,
+   "min": 1380.4,
+   "max": 1668.0
+  },
+  "all": {
+   "n": 35481,
+   "mean": 1606.0,
+   "min": 793.7,
+   "max": 1682.1
+  },
+  "errors": [],
+  "macros": {
+   "n": 8,
+   "nets": 8,
+   "max_per_net": 1,
+   "reg_mean": 1606.0,
+   "max_slew": 30.3,
+   "max_late": -225.6,
+   "pins": [
+    {
+     "pin": "u_lf0.g_lr.u_c.u_bdc/clk",
+     "arr": 1323.6,
+     "slew": 20.9,
+     "late": -282.4,
+     "net": "clkbuf_sp_L3918_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_h0/clk",
+     "arr": 1342.3,
+     "slew": 21.5,
+     "late": -263.7,
+     "net": "clkbuf_sp_L3241_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_h1/clk",
+     "arr": 1314.2,
+     "slew": 21.5,
+     "late": -291.8,
+     "net": "clkbuf_sp_L3240_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_merge/clk",
+     "arr": 1136.4,
+     "slew": 30.3,
+     "late": -469.6,
+     "net": "clkbuf_sp_L3239_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_qk/clk",
+     "arr": 1329.1,
+     "slew": 21.7,
+     "late": -276.9,
+     "net": "clkbuf_sp_L3238_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_xs/clk",
+     "arr": 793.7,
+     "slew": 23.2,
+     "late": -812.3,
+     "net": "clkbuf_sp_L3237_net"
+    },
+    {
+     "pin": "u_row0/clk",
+     "arr": 1374.6,
+     "slew": 21.5,
+     "late": -231.4,
+     "net": "clkbuf_sp_L2011_net"
+    },
+    {
+     "pin": "u_rowe0/clk",
+     "arr": 1380.4,
+     "slew": 18.6,
+     "late": -225.6,
+     "net": "clkbuf_sp_L2010_net"
+    }
+   ]
+  },
+  "macro_libs": 7,
+  "child_flop": {
+   "boundary": {
+    "n": 7308,
+    "mean": 1605.2,
+    "min": 1526.3,
+    "max": 1668.0
+   },
+   "all": {
+    "n": 35481,
+    "mean": 1606.1,
+    "min": 1430.7,
+    "max": 1682.1
+   },
+   "refs": {
+    "ot_hbm_accel_smh_bdc": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 236.9,
+     "pins": 1
+    },
+    "ot_hbm_accel_smh_tcl_gu": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 230.5,
+     "pins": 2
+    },
+    "ot_hbm_accel_smh_tct": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 231.1,
+     "pins": 1
+    },
+    "ot_hbm_accel_smh_xs": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 637.0,
+     "pins": 1
+    },
+    "ot_hbm_sm_pv_merge_s3": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 375.4,
+     "pins": 1
+    },
+    "ot_smh_tr_group_row_e": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 145.9,
+     "pins": 1
+    },
+    "ot_smh_tr_group_row_w": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 198.2,
+     "pins": 1
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 7307,
+     "mean": 1605.2,
+     "min": 1543.2,
+     "max": 1668.0
+    },
+    "all": {
+     "n": 35473,
+     "mean": 1606.1,
+     "min": 1536.7,
+     "max": 1682.1
+    }
+   }
+  }
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 35481
+  },
+  "boundary": {
+   "n": 7308,
+   "mean": 1238.0,
+   "min": 1050.4,
+   "max": 1300.9
+  },
+  "all": {
+   "n": 35481,
+   "mean": 1239.8,
+   "min": 604.6,
+   "max": 1314.6
+  },
+  "errors": [],
+  "macros": {
+   "n": 8,
+   "nets": 8,
+   "max_per_net": 1,
+   "reg_mean": 1239.8,
+   "max_slew": 23.1,
+   "max_late": -167.7,
+   "pins": [
+    {
+     "pin": "u_lf0.g_lr.u_c.u_bdc/clk",
+     "arr": 1042.4,
+     "slew": 15.5,
+     "late": -197.4,
+     "net": "clkbuf_sp_L3918_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_h0/clk",
+     "arr": 1060.4,
+     "slew": 16.0,
+     "late": -179.4,
+     "net": "clkbuf_sp_L3241_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_h1/clk",
+     "arr": 1022.2,
+     "slew": 15.9,
+     "late": -217.6,
+     "net": "clkbuf_sp_L3240_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_merge/clk",
+     "arr": 912.2,
+     "slew": 23.1,
+     "late": -327.6,
+     "net": "clkbuf_sp_L3239_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_qk/clk",
+     "arr": 1048.9,
+     "slew": 16.1,
+     "late": -190.9,
+     "net": "clkbuf_sp_L3238_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_xs/clk",
+     "arr": 604.6,
+     "slew": 17.4,
+     "late": -635.2,
+     "net": "clkbuf_sp_L3237_net"
+    },
+    {
+     "pin": "u_row0/clk",
+     "arr": 1072.1,
+     "slew": 15.9,
+     "late": -167.7,
+     "net": "clkbuf_sp_L2011_net"
+    },
+    {
+     "pin": "u_rowe0/clk",
+     "arr": 1050.4,
+     "slew": 13.6,
+     "late": -189.4,
+     "net": "clkbuf_sp_L2010_net"
+    }
+   ]
+  },
+  "macro_libs": 7,
+  "child_flop": {
+   "boundary": {
+    "n": 7308,
+    "mean": 1238.0,
+    "min": 1163.3,
+    "max": 1300.9
+   },
+   "all": {
+    "n": 35481,
+    "mean": 1239.9,
+    "min": 1090.1,
+    "max": 1314.6
+   },
+   "refs": {
+    "ot_hbm_accel_smh_bdc": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 180.9,
+     "pins": 1
+    },
+    "ot_hbm_accel_smh_tcl_gu": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 175.5,
+     "pins": 2
+    },
+    "ot_hbm_accel_smh_tct": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 175.8,
+     "pins": 1
+    },
+    "ot_hbm_accel_smh_xs": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 485.5,
+     "pins": 1
+    },
+    "ot_hbm_sm_pv_merge_s3": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 294.1,
+     "pins": 1
+    },
+    "ot_smh_tr_group_row_e": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 112.9,
+     "pins": 1
+    },
+    "ot_smh_tr_group_row_w": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 150.8,
+     "pins": 1
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 7307,
+     "mean": 1238.0,
+     "min": 1167.6,
+     "max": 1300.9
+    },
+    "all": {
+     "n": 35473,
+     "mean": 1239.9,
+     "min": 1145.4,
+     "max": 1314.6
+    }
+   }
+  }
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 35481
+  },
+  "boundary": {
+   "n": 7308,
+   "mean": 1011.8,
+   "min": 850.2,
+   "max": 1076.0
+  },
+  "all": {
+   "n": 35481,
+   "mean": 1013.9,
+   "min": 489.3,
+   "max": 1087.9
+  },
+  "errors": [],
+  "macros": {
+   "n": 8,
+   "nets": 8,
+   "max_per_net": 1,
+   "reg_mean": 1013.9,
+   "max_slew": 19.8,
+   "max_late": -131.3,
+   "pins": [
+    {
+     "pin": "u_lf0.g_lr.u_c.u_bdc/clk",
+     "arr": 863.8,
+     "slew": 12.9,
+     "late": -150.1,
+     "net": "clkbuf_sp_L3918_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_h0/clk",
+     "arr": 880.8,
+     "slew": 13.4,
+     "late": -133.1,
+     "net": "clkbuf_sp_L3241_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_h1/clk",
+     "arr": 840.2,
+     "slew": 13.3,
+     "late": -173.7,
+     "net": "clkbuf_sp_L3240_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_merge/clk",
+     "arr": 767.3,
+     "slew": 19.8,
+     "late": -246.6,
+     "net": "clkbuf_sp_L3239_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_qk/clk",
+     "arr": 871.0,
+     "slew": 13.5,
+     "late": -142.9,
+     "net": "clkbuf_sp_L3238_net"
+    },
+    {
+     "pin": "u_lf0.g_lr.u_c.u_xs/clk",
+     "arr": 489.3,
+     "slew": 14.7,
+     "late": -524.6,
+     "net": "clkbuf_sp_L3237_net"
+    },
+    {
+     "pin": "u_row0/clk",
+     "arr": 882.6,
+     "slew": 13.3,
+     "late": -131.3,
+     "net": "clkbuf_sp_L2011_net"
+    },
+    {
+     "pin": "u_rowe0/clk",
+     "arr": 850.2,
+     "slew": 11.2,
+     "late": -163.7,
+     "net": "clkbuf_sp_L2010_net"
+    }
+   ]
+  },
+  "macro_libs": 7,
+  "child_flop": {
+   "boundary": {
+    "n": 7308,
+    "mean": 1011.8,
+    "min": 934.6,
+    "max": 1076.0
+   },
+   "all": {
+    "n": 35481,
+    "mean": 1014.0,
+    "min": 883.2,
+    "max": 1087.9
+   },
+   "refs": {
+    "ot_hbm_accel_smh_bdc": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 148.0,
+     "pins": 1
+    },
+    "ot_hbm_accel_smh_tcl_gu": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 143.0,
+     "pins": 2
+    },
+    "ot_hbm_accel_smh_tct": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 143.1,
+     "pins": 1
+    },
+    "ot_hbm_accel_smh_xs": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 393.9,
+     "pins": 1
+    },
+    "ot_hbm_sm_pv_merge_s3": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 244.5,
+     "pins": 1
+    },
+    "ot_smh_tr_group_row_e": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 94.0,
+     "pins": 1
+    },
+    "ot_smh_tr_group_row_w": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 123.9,
+     "pins": 1
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 7307,
+     "mean": 1011.8,
+     "min": 934.6,
+     "max": 1076.0
+    },
+    "all": {
+     "n": 35473,
+     "mean": 1014.0,
+     "min": 910.2,
+     "max": 1087.9
+    }
+   }
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 8,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 1605,
+  "CK_SS_ALL_MEAN": 1606,
+  "CK_SS_MIN": 1380,
+  "CK_SS_ALL_MIN": 794,
+  "CK_SS_MAX": 1668,
+  "CK_SS_ALL_MAX": 1682,
+  "CK_TT_MEAN": 1238,
+  "CK_TT_ALL_MEAN": 1240,
+  "CK_TT_MIN": 1050,
+  "CK_TT_ALL_MIN": 605,
+  "CK_TT_MAX": 1301,
+  "CK_TT_ALL_MAX": 1315,
+  "CK_FF_MEAN": 1012,
+  "CK_FF_ALL_MEAN": 1014,
+  "CK_FF_MIN": 850,
+  "CK_FF_ALL_MIN": 489,
+  "CK_FF_MAX": 1076,
+  "CK_FF_ALL_MAX": 1088,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/smh_rp4ahn_r4spb-20261021-110723/routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_smh_rp4ah_n_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 35481
+    },
+    "boundary": {
+     "n": 7308,
+     "mean": 1605.2,
+     "min": 1380.4,
+     "max": 1668.0
+    },
+    "all": {
+     "n": 35481,
+     "mean": 1606.0,
+     "min": 793.7,
+     "max": 1682.1
+    },
+    "errors": [],
+    "macros": {
+     "n": 8,
+     "nets": 8,
+     "max_per_net": 1,
+     "reg_mean": 1606.0,
+     "max_slew": 30.3,
+     "max_late": -225.6,
+     "pins": [
+      {
+       "pin": "u_lf0.g_lr.u_c.u_bdc/clk",
+       "arr": 1323.6,
+       "slew": 20.9,
+       "late": -282.4,
+       "net": "clkbuf_sp_L3918_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_h0/clk",
+       "arr": 1342.3,
+       "slew": 21.5,
+       "late": -263.7,
+       "net": "clkbuf_sp_L3241_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_h1/clk",
+       "arr": 1314.2,
+       "slew": 21.5,
+       "late": -291.8,
+       "net": "clkbuf_sp_L3240_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_merge/clk",
+       "arr": 1136.4,
+       "slew": 30.3,
+       "late": -469.6,
+       "net": "clkbuf_sp_L3239_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_qk/clk",
+       "arr": 1329.1,
+       "slew": 21.7,
+       "late": -276.9,
+       "net": "clkbuf_sp_L3238_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_xs/clk",
+       "arr": 793.7,
+       "slew": 23.2,
+       "late": -812.3,
+       "net": "clkbuf_sp_L3237_net"
+      },
+      {
+       "pin": "u_row0/clk",
+       "arr": 1374.6,
+       "slew": 21.5,
+       "late": -231.4,
+       "net": "clkbuf_sp_L2011_net"
+      },
+      {
+       "pin": "u_rowe0/clk",
+       "arr": 1380.4,
+       "slew": 18.6,
+       "late": -225.6,
+       "net": "clkbuf_sp_L2010_net"
+      }
+     ]
+    },
+    "macro_libs": 7,
+    "child_flop": {
+     "boundary": {
+      "n": 7308,
+      "mean": 1605.2,
+      "min": 1526.3,
+      "max": 1668.0
+     },
+     "all": {
+      "n": 35481,
+      "mean": 1606.1,
+      "min": 1430.7,
+      "max": 1682.1
+     },
+     "refs": {
+      "ot_hbm_accel_smh_bdc": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 236.9,
+       "pins": 1
+      },
+      "ot_hbm_accel_smh_tcl_gu": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 230.5,
+       "pins": 2
+      },
+      "ot_hbm_accel_smh_tct": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 231.1,
+       "pins": 1
+      },
+      "ot_hbm_accel_smh_xs": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 637.0,
+       "pins": 1
+      },
+      "ot_hbm_sm_pv_merge_s3": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 375.4,
+       "pins": 1
+      },
+      "ot_smh_tr_group_row_e": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 145.9,
+       "pins": 1
+      },
+      "ot_smh_tr_group_row_w": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 198.2,
+       "pins": 1
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 7307,
+       "mean": 1605.2,
+       "min": 1543.2,
+       "max": 1668.0
+      },
+      "all": {
+       "n": 35473,
+       "mean": 1606.1,
+       "min": 1536.7,
+       "max": 1682.1
+      }
+     }
+    }
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 35481
+    },
+    "boundary": {
+     "n": 7308,
+     "mean": 1238.0,
+     "min": 1050.4,
+     "max": 1300.9
+    },
+    "all": {
+     "n": 35481,
+     "mean": 1239.8,
+     "min": 604.6,
+     "max": 1314.6
+    },
+    "errors": [],
+    "macros": {
+     "n": 8,
+     "nets": 8,
+     "max_per_net": 1,
+     "reg_mean": 1239.8,
+     "max_slew": 23.1,
+     "max_late": -167.7,
+     "pins": [
+      {
+       "pin": "u_lf0.g_lr.u_c.u_bdc/clk",
+       "arr": 1042.4,
+       "slew": 15.5,
+       "late": -197.4,
+       "net": "clkbuf_sp_L3918_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_h0/clk",
+       "arr": 1060.4,
+       "slew": 16.0,
+       "late": -179.4,
+       "net": "clkbuf_sp_L3241_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_h1/clk",
+       "arr": 1022.2,
+       "slew": 15.9,
+       "late": -217.6,
+       "net": "clkbuf_sp_L3240_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_merge/clk",
+       "arr": 912.2,
+       "slew": 23.1,
+       "late": -327.6,
+       "net": "clkbuf_sp_L3239_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_qk/clk",
+       "arr": 1048.9,
+       "slew": 16.1,
+       "late": -190.9,
+       "net": "clkbuf_sp_L3238_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_xs/clk",
+       "arr": 604.6,
+       "slew": 17.4,
+       "late": -635.2,
+       "net": "clkbuf_sp_L3237_net"
+      },
+      {
+       "pin": "u_row0/clk",
+       "arr": 1072.1,
+       "slew": 15.9,
+       "late": -167.7,
+       "net": "clkbuf_sp_L2011_net"
+      },
+      {
+       "pin": "u_rowe0/clk",
+       "arr": 1050.4,
+       "slew": 13.6,
+       "late": -189.4,
+       "net": "clkbuf_sp_L2010_net"
+      }
+     ]
+    },
+    "macro_libs": 7,
+    "child_flop": {
+     "boundary": {
+      "n": 7308,
+      "mean": 1238.0,
+      "min": 1163.3,
+      "max": 1300.9
+     },
+     "all": {
+      "n": 35481,
+      "mean": 1239.9,
+      "min": 1090.1,
+      "max": 1314.6
+     },
+     "refs": {
+      "ot_hbm_accel_smh_bdc": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 180.9,
+       "pins": 1
+      },
+      "ot_hbm_accel_smh_tcl_gu": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 175.5,
+       "pins": 2
+      },
+      "ot_hbm_accel_smh_tct": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 175.8,
+       "pins": 1
+      },
+      "ot_hbm_accel_smh_xs": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 485.5,
+       "pins": 1
+      },
+      "ot_hbm_sm_pv_merge_s3": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 294.1,
+       "pins": 1
+      },
+      "ot_smh_tr_group_row_e": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 112.9,
+       "pins": 1
+      },
+      "ot_smh_tr_group_row_w": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 150.8,
+       "pins": 1
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 7307,
+       "mean": 1238.0,
+       "min": 1167.6,
+       "max": 1300.9
+      },
+      "all": {
+       "n": 35473,
+       "mean": 1239.9,
+       "min": 1145.4,
+       "max": 1314.6
+      }
+     }
+    }
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 35481
+    },
+    "boundary": {
+     "n": 7308,
+     "mean": 1011.8,
+     "min": 850.2,
+     "max": 1076.0
+    },
+    "all": {
+     "n": 35481,
+     "mean": 1013.9,
+     "min": 489.3,
+     "max": 1087.9
+    },
+    "errors": [],
+    "macros": {
+     "n": 8,
+     "nets": 8,
+     "max_per_net": 1,
+     "reg_mean": 1013.9,
+     "max_slew": 19.8,
+     "max_late": -131.3,
+     "pins": [
+      {
+       "pin": "u_lf0.g_lr.u_c.u_bdc/clk",
+       "arr": 863.8,
+       "slew": 12.9,
+       "late": -150.1,
+       "net": "clkbuf_sp_L3918_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_h0/clk",
+       "arr": 880.8,
+       "slew": 13.4,
+       "late": -133.1,
+       "net": "clkbuf_sp_L3241_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_h1/clk",
+       "arr": 840.2,
+       "slew": 13.3,
+       "late": -173.7,
+       "net": "clkbuf_sp_L3240_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_merge/clk",
+       "arr": 767.3,
+       "slew": 19.8,
+       "late": -246.6,
+       "net": "clkbuf_sp_L3239_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_qk/clk",
+       "arr": 871.0,
+       "slew": 13.5,
+       "late": -142.9,
+       "net": "clkbuf_sp_L3238_net"
+      },
+      {
+       "pin": "u_lf0.g_lr.u_c.u_xs/clk",
+       "arr": 489.3,
+       "slew": 14.7,
+       "late": -524.6,
+       "net": "clkbuf_sp_L3237_net"
+      },
+      {
+       "pin": "u_row0/clk",
+       "arr": 882.6,
+       "slew": 13.3,
+       "late": -131.3,
+       "net": "clkbuf_sp_L2011_net"
+      },
+      {
+       "pin": "u_rowe0/clk",
+       "arr": 850.2,
+       "slew": 11.2,
+       "late": -163.7,
+       "net": "clkbuf_sp_L2010_net"
+      }
+     ]
+    },
+    "macro_libs": 7,
+    "child_flop": {
+     "boundary": {
+      "n": 7308,
+      "mean": 1011.8,
+      "min": 934.6,
+      "max": 1076.0
+     },
+     "all": {
+      "n": 35481,
+      "mean": 1014.0,
+      "min": 883.2,
+      "max": 1087.9
+     },
+     "refs": {
+      "ot_hbm_accel_smh_bdc": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 148.0,
+       "pins": 1
+      },
+      "ot_hbm_accel_smh_tcl_gu": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 143.0,
+       "pins": 2
+      },
+      "ot_hbm_accel_smh_tct": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 143.1,
+       "pins": 1
+      },
+      "ot_hbm_accel_smh_xs": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 393.9,
+       "pins": 1
+      },
+      "ot_hbm_sm_pv_merge_s3": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 244.5,
+       "pins": 1
+      },
+      "ot_smh_tr_group_row_e": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 94.0,
+       "pins": 1
+      },
+      "ot_smh_tr_group_row_w": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 123.9,
+       "pins": 1
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 7307,
+       "mean": 1011.8,
+       "min": 934.6,
+       "max": 1076.0
+      },
+      "all": {
+       "n": 35473,
+       "mean": 1014.0,
+       "min": 910.2,
+       "max": 1087.9
+      }
+     }
+    }
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 8,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 1605,
+    "CK_SS_ALL_MEAN": 1606,
+    "CK_SS_MIN": 1380,
+    "CK_SS_ALL_MIN": 794,
+    "CK_SS_MAX": 1668,
+    "CK_SS_ALL_MAX": 1682,
+    "CK_TT_MEAN": 1238,
+    "CK_TT_ALL_MEAN": 1240,
+    "CK_TT_MIN": 1050,
+    "CK_TT_ALL_MIN": 605,
+    "CK_TT_MAX": 1301,
+    "CK_TT_ALL_MAX": 1315,
+    "CK_FF_MEAN": 1012,
+    "CK_FF_ALL_MEAN": 1014,
+    "CK_FF_MIN": 850,
+    "CK_FF_ALL_MIN": 489,
+    "CK_FF_MAX": 1076,
+    "CK_FF_ALL_MAX": 1088,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}

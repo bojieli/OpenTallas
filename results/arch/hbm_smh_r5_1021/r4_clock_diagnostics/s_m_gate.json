@@ -1,0 +1,161 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_xs#0: origin (172.8, 734.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_hbm_sm_pv_merge_s3': 'M5', 'ot_hbm_accel_smh_tct': 'M6', 'ot_hbm_accel_smh_bdc': 'M6', 'ot_hbm_accel_smh_tcl_gu': 'M6', 'ot_hbm_accel_smh_xs': 'M6', 'ot_smh_tr_group_row_w': 'M5', 'ot_smh_tr_group_row_e': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tct: (f) face-pin access: 584 of 584 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (147.600,0.016), rst_a M5 (147.600,0.016), fault M6 (194.293,38.848))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tct: (h) pockets: 423 open own-layer pocket rects on M6 (1036.53 um2; gaps < 2.048 um between the child's own obstacles; largest (82.789,69.104)-(95.075,70.848), (147.013,26.848)-(165.923,27.968), (5.653,37.088)-(15.877,38.592)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_bdc: (f) face-pin access: 1136 of 1136 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (19.968,140.773), fault M5 (19.968,140.773), otag[0] M5 (19.968,140.773))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_bdc: (h) pockets: 418 open own-layer pocket rects on M6 (918.917 um2; gaps < 2.048 um between the child's own obstacles; largest (33.589,44.896)-(43.621,46.784), (67.667,5.152)-(82.021,6.208), (67.909,58.688)-(75.299,60.544)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_smh_tr_group_row_e: (f) face-pin access: 1638 of 1638 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (1.008,88.583), rst_a M5 (1.008,88.583), d[0] M4 (0.156,6.144))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-gold1 for 192 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_smh_rp4ahs_r4sp_20261021-111000.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_smh_rp4ahs_r4sp_20261021-111000.log; host dir ot-gold1:/srv/opentallas-scratch/claude/ref_gate/smh_rp4ahs_r4sp-20261021-111000",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=24",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-gold1 in 455 s (gate total 6139 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 4088, 'pin_rectangles': 4088, 'pin_track_checked': 4088, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 150816ca7aeb98c9e9b9e9675bad2cf273962c34a24ad9ac69ac205a1e2649fa",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 6599 um2 + macros 351796 in core 857556: util 1% (std-cell density 1.4% of placeable 475037 um2; total fill 41.8%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_smh_rp4ah_s cells 39,841 flops 18,865 depth 175.0 ps util 0.4179 reach 0.2 um (2.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 18,865 flops > 15,000 on one root (+0 ICGs, 8 macro clock pins; e.g. g_g1pad.u_g1p.g_s[0].u_r.q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 18,873 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,873 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 4 (fine) leaves 2414 sinks 18873 cells 23197 leaf arrival 1150.3..1181.3 ps (spread 31.0) pad 58.7 / 16.1 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 5 (fine) leaves 2414 sinks 18873 cells 23256 leaf arrival 1152.7..1181.3 ps (spread 28.6) pad 58.7 / 16.3 ps",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 18,873 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,873 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-smh-s-gate-1021/physical/ref_tile/smh_rp4ahs_r4sp/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 41% = (hard macros 351795.6 + synthesized std cells 6593.9) / outline 865935.4 um2; pin demand per face: S 231 pins over 384.1/691.2 um (56%), N 2220 pins over 645.6/691.2 um (93%), W 883 pins over 323.9/1252.8 um (26%), E 882 pins over 323.9/1252.8 um (26%) (< 50%)",
+   "fix": ""
+  }
+ ]
+}

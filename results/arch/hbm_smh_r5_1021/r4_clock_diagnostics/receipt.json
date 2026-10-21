@@ -1,0 +1,100 @@
+{
+  "scope": "Actual existing r4 post-CTS diagnostic clock reports. Three routes remain running; no terminal gate/qualification/retirement claim. s_m terminal DPL placement failure retained. r5 source repair independent.",
+  "boundary_limit_ps": 80,
+  "reports": {
+    "n_m": {
+      "tt": {
+        "boundary": {
+          "n": 7308,
+          "mean": 1421.4,
+          "min": 1341.2,
+          "max": 1573.9
+        },
+        "span_ps": 232.7,
+        "clock_family": {
+          "core_clk": 35481
+        },
+        "verdict": "FAIL"
+      },
+      "ff": {
+        "boundary": {
+          "n": 7308,
+          "mean": 1145.8,
+          "min": 1066.8,
+          "max": 1320.5
+        },
+        "span_ps": 253.7,
+        "clock_family": {
+          "core_clk": 35481
+        },
+        "verdict": "FAIL"
+      }
+    },
+    "n_f": {
+      "tt": {
+        "boundary": {
+          "n": 7308,
+          "mean": 1238.0,
+          "min": 1163.3,
+          "max": 1300.9
+        },
+        "span_ps": 137.6,
+        "clock_family": {
+          "core_clk": 35481
+        },
+        "verdict": "FAIL"
+      },
+      "ff": {
+        "boundary": {
+          "n": 7308,
+          "mean": 1011.8,
+          "min": 934.6,
+          "max": 1076.0
+        },
+        "span_ps": 141.4,
+        "clock_family": {
+          "core_clk": 35481
+        },
+        "verdict": "FAIL"
+      }
+    },
+    "s_f": {
+      "tt": {
+        "boundary": {
+          "n": 3270,
+          "mean": 1392.1,
+          "min": 1268.1,
+          "max": 1459.2
+        },
+        "span_ps": 191.1,
+        "clock_family": {
+          "core_clk": 18873
+        },
+        "verdict": "FAIL"
+      },
+      "ff": {
+        "boundary": {
+          "n": 3270,
+          "mean": 1152.2,
+          "min": 1015.1,
+          "max": 1224.6
+        },
+        "span_ps": 209.5,
+        "clock_family": {
+          "core_clk": 18873
+        },
+        "verdict": "FAIL"
+      }
+    }
+  },
+  "inputs": {
+    "s_m_gate.json": "b83388efe12e43295ab6a0c74ba47f9046f183289cb86aad1ff376611d9d72be",
+    "n_m_ck.json": "1da3291459939e0b19cf2a300439a2296d24bab5d317fe052ca841c0b6830634",
+    "s_f_ck.json": "1f062644cd3dcd43aa636b63d0b6a6ab57949c568f468eaa888ef8249817c48f",
+    "s_f_source_snapshot.json": "ab1d41273a81d79015e852a89e3e3f9a29f7fe0858145290e7c5e5117f4d6c6d",
+    "s_m_gate.log": "207331d86315bfba88d65517fd4af55c24760d51257b60b08886bdc1b1c0f4e6",
+    "n_f_ck.json": "9845aae8ffc7a410b6e47eb11ab49da6f956b7967e68a5a0ad8cfe9b9071e7da",
+    "n_m_source_snapshot.json": "5d82bab36bf09b87d870a73ef47ec549e2ba751268999abecf3f802d6b519320",
+    "n_f_source_snapshot.json": "74b2ae50444c4a577f930c0aad0db0f68ef76bd299f38cb28cb333c3b132003a"
+  }
+}
