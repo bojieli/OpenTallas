@@ -35,7 +35,8 @@ TREE_DEG = int(os.environ.get('OT_SPLIT_FAULT_DEG', '8'))   # children per regio
 CLS = 'spine_local'
 ARRAY_MASTERS = ('qfd_c_b16', 'qfd_dv_slice2')
 ROW_DY = 400.0
-GROUP_UM = float(os.environ.get('OT_SPLIT_FAULT_GROUP_UM', '300'))   # QW-G5FROOT landing-group linkage / serve radius
+GROUP_UM = float(os.environ.get('OT_SPLIT_FAULT_GROUP_UM', '300'))   # QW-G5FROOT landing-group linkage / site radius
+GROUP_SKIP_UM = float(os.environ.get('OT_SPLIT_FAULT_GROUP_SKIP_UM', '1200'))   # no group root within this of a same-clock root
 WIDE_BITS = int(os.environ.get('OT_SPLIT_FAULT_WIDE_BITS', '1024'))
 KEEP_UM = float(os.environ.get('OT_SPLIT_FAULT_KEEP_UM', '350'))
 HARD = 'io_collective:fault_code,transport_cdc_fault,transport_abort,transport_fault_cause;d2d_rom:transport_fault;' \
@@ -397,7 +398,7 @@ def pre(v, m, G):
             for ps in sorted(grps):
                 gx = sorted(q_[0] for q_ in ps)[len(ps) // 2]
                 gy = sorted(q_[1] for q_ in ps)[len(ps) // 2]
-                if any(rr['cj'] == roots[o]['cj'] and _man(rr['xy'], (gx, gy)) <= GROUP_UM for rr in roots.values()):
+                if any(rr['cj'] == roots[o]['cj'] and _man(rr['xy'], (gx, gy)) <= GROUP_SKIP_UM for rr in roots.values()):
                     continue                        # a root of the same clock already serves this group
                 okz2 = lambda b: zn.of_box(b) is not None
                 # tiers: full 350 um wide-end keep-clear (as the primary roots) -> GROUP_KEEP_UM -> none
