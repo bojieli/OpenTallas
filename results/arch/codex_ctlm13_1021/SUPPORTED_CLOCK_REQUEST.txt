@@ -1,0 +1,13 @@
+CTLM13 supported per-domain spatial-root request
+
+Exact candidate e5585fcf1, core/hr ownership is frozen in native/receipt.json and native/clock_ownership.json.gz. Current helper clock_spine.tcl SHA aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83 (qualified H16ZA/main bytes). No helper edit requested by this source packet.
+
+Existing external roots ck_core and ck_hr remain related 1:1 same PLL fixed phase zero. Native actual Liberty clock contacts: ck_core11940 (11928 FF contacts and12 macro contacts), ck_hr5187 (5184 FF and3 hard-head clock contacts). Every instance/pin/master is enumerated in compressed ownership evidence. No clock is added or gated by the source copy recut.
+
+All82 regional source-copy owners belong to ck_core. Actual completed safe12c placement assigns all80 prior owners ot_lcr_core;2 new copies are identical combinational logic. Region-local ownership is enumerated in receipt.json and kit copy_regions.tcl. W/E labels describe physical location, not new timing domains. No hr owner is moved. Existing lp_cone_regions.tcl derives exclusive clock cones and destination ownership at real sequential/hard boundaries; copy placement must preserve that original domain.
+
+Requested supported design: explicit scoped per-clock-domain spatial-spine configuration for multiple_cts_roots, with roots constrained exactly to existing clock_ports; retain generated clock_entry_domains, relationship, landing wrapper and propagated-clock timing checks. Existing canonical helper invocation ports ck_core,ck_hr / SYM1 / RC_CAL0 / ITERS10 / BIN30 / LEAF16(a) or8(b). Validate ownership before construction, fail on root mismatch/unowned/multiple ownership, retain actual CTS reach/spread checks for each root and all clocks on each hard macro. No arbitrary Tcl hook or SDC exception acceptance is requested.
+
+Current spec load rejects pre_cts_extra for multiple_cts_roots at tools/ref_tile/ref_tile.py guard near707, before kit generation. Both safe13 gates remain NOTRUN. Root/source-helper owners must approve and implement a supported schema entry before any gate. No workaround via other hook stage, timing relaxation, or old closed-view alias is permitted.
+
+Native PASS max32/91762 roots is independent of schema authorization. Source identity chain proven lp9d_npl→RR2→regional duplicate recut;1119 pins/+2comb/0state or SRAM capture/landing/data/clock edges. Actual placement/timing/CTS reach, RR2+HP symbolicGI export and coherent selected73 integration remain owed.

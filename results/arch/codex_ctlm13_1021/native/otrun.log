@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits    48 GB (avail 781, growth 748, headroom 0, waiters 0/0 GB) load 45/128 running 22 disk 1821 GB 
+ot-run: ot-epyc7       admits   253 GB (avail 481, growth 304, headroom 0, waiters 0/0 GB) load 45/96 running 20 disk 4569 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/q-ctlm13-native-1021
+ot-run: ot-gold2       admits  -509 GB (avail 132, growth 488, headroom 0, waiters 0/0 GB) load 52/112 running 26 disk 2795 GB 
+ot-run: ot-gold1       admits -1077 GB (avail 607, growth 1361, headroom 0, waiters 0/0 GB) load 59/112 running 25 disk 2157 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/q-ctlm13-native-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/q-ctlm13-native-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1031935-1792617094 after 1 s
+OT_KEEP_REGS: keep set on 0 register cells driving keep wires
+PRE_GATE_NATIVE_CENSUS PASS report=native/census.json
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1031935-1792617094): exit 0
