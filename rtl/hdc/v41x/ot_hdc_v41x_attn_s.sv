@@ -785,8 +785,38 @@ module ot_hdc_v41x_attn_s #(
                     wire bs, fs;
                     ot_hdc_v41x_kreg #(.W(2), .R(0)) u_sel (.clk(clk), .rst_n(rst_n),
                         .d((XD != 0) ? {st_bbuf_r, st_fbuf_r} : {bbuf, fbuf}), .q({bs, fs}));
+`ifdef OT_SVC_STAGESEL_N32
+                    // Actual REPL2 has fbuf/bbuf -> stage2 copy -> tile u_sel.
+                    // Preserve both edges and the legacy full-word path for unused bits.
+                    initial if(REPL!=2 || D!=32 || S!=1 || NL!=4 || TD!=32 || DPT!=8 || ROWW!=265)
+                        $error("STAGESEL_N32 requires exact current G4 staging shape");
+                    function automatic [NL*ROWW-1:0] fill_live_mask();
+                        integer lane,x,b;reg[NL*ROWW-1:0]m;
+                        begin
+                            m='0;
+                            for(lane=0;lane<NL;lane=lane+1)begin
+                                m[lane*ROWW+264]=1'b1;
+                                for(b=256;b<264;b=b+1)m[lane*ROWW+b]=1'b1;
+                                for(x=(gk*DPT)%32;x<(gk*DPT)%32+DPT;x=x+1)begin
+                                    for(b=0;b<8;b=b+1)m[lane*ROWW+8*x+b]=1'b1;
+                                    for(b=0;b<4;b=b+1)m[lane*ROWW+4*x+b]=1'b1;
+                                    for(b=0;b<8;b=b+1)m[lane*ROWW+128+8*(x/16)+b]=1'b1;
+                                end
+                            end
+                            fill_live_mask=m;
+                        end
+                    endfunction
+                    localparam [NL*ROWW-1:0] FILL_LIVE=fill_live_mask();
+                    localparam [NL*ROWW-1:0] QK_LIVE=({NL*ROWW{1'b1}}>>(NL*ROWW-GW))<<((gk/S)*ROWW);
+                    wire[NL*ROWW-1:0]qf,qq;
+                    ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW),.LIVE(FILL_LIVE))u_fill_pick(
+                        .clk(clk),.source_select(bbuf),.legacy_select(bs),.bank0(st_q0),.bank1(st_q1),.word_out(qf));
+                    ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW),.LIVE(QK_LIVE))u_qk_pick(
+                        .clk(clk),.source_select(fbuf),.legacy_select(fs),.bank0(st_q0),.bank1(st_q1),.word_out(qq));
+`else
                     wire [NL*ROWW-1:0] qf = bs ? st_q1 : st_q0;
                     wire [NL*ROWW-1:0] qq = fs ? st_q1 : st_q0;
+`endif
                     for (gl = 0; gl < NL; gl = gl + 1) begin : g_g
                         assign w_gx[gl*GW +: GW] = qf[gl*ROWW + ((gk*DPT) / 32) * GW +: GW];
                     end
