@@ -1,0 +1,74 @@
+{
+  "source_input": "input_provenance.json SHA-bound exactoriginal3_place.odb",
+  "status": "actualgeometrymodel only; no synthesized or extractedclockcandidate",
+  "root_geometry": [
+    {
+      "root": "clk_w0",
+      "actual_direct_CLK_pin_count": 1035,
+      "all_pin_names": [
+        "CLK"
+      ],
+      "pin_bbox_um": [
+        33.4665,
+        86.265,
+        228.2445,
+        199.935
+      ],
+      "RAW_PIN_BBOX_CENTER_PROXY_NOT_ACTUAL_LEGAL_NODE": [
+        130.8555,
+        143.1
+      ],
+      "proxy_obstructing_macros": [
+        {
+          "instance": "u_ot_pr_core.u_c.g_w\\[0\\].u_m",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "x0_um": "43.2",
+          "y0_um": "86.4",
+          "x1_um": "217.944",
+          "y1_um": "156.888"
+        }
+      ],
+      "macro_left_x_um": 43.2,
+      "macro_right_x_um": 217.944,
+      "west_perimeter_sink_count": 240,
+      "east_perimeter_sink_count": 795,
+      "other_sink_count": 0,
+      "reconstructed_leaf_count_60um_max8_from_bbox_pin_centres": 131
+    },
+    {
+      "root": "clk_w1",
+      "actual_direct_CLK_pin_count": 1035,
+      "all_pin_names": [
+        "CLK"
+      ],
+      "pin_bbox_um": [
+        32.1165,
+        226.395,
+        228.4605,
+        340.875
+      ],
+      "RAW_PIN_BBOX_CENTER_PROXY_NOT_ACTUAL_LEGAL_NODE": [
+        130.2885,
+        283.635
+      ],
+      "proxy_obstructing_macros": [
+        {
+          "instance": "u_ot_pr_core.u_c.g_w\\[2\\].u_m",
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "x0_um": "43.2",
+          "y0_um": "227.424",
+          "x1_um": "217.944",
+          "y1_um": "297.912"
+        }
+      ],
+      "macro_left_x_um": 43.2,
+      "macro_right_x_um": 217.944,
+      "west_perimeter_sink_count": 240,
+      "east_perimeter_sink_count": 795,
+      "other_sink_count": 0,
+      "reconstructed_leaf_count_60um_max8_from_bbox_pin_centres": 132
+    }
+  ],
+  "structural_candidate_plan": "One unchangedroot forks BELOW contiguousSRAMobstacle into west/east perimeter trunks with matched root-to-island cell/wire depth. Existing global centre-bbox tree can require obstacle displacement. Build subtree to realCLKpins only, no dummy sinks/newdomain/edges; preserve20hardentries. Model measuredALLsink TT/FF undercalibrated/platformRC and afterscopedrepair beforeanygate.",
+  "uncertainties": "Pin bboxproxy is not actualspineleaf bbox orlegal node. Clockmodel RCrestore versus laterrepair contributions stillunseparated. Geometricpartition does not establish timing/clockpass."
+}

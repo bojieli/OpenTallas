@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-clock-model-1340-r2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-clock-model-1340-r2
+ot-run: ot-epyc9       admits   199 GB (avail 379, growth 239, headroom 0, waiters 0/0 GB) load 89/128 running 33 disk 4 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-clock-model-1340-r2
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-clock-model-1340-r2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-clock-model-1340-r2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hc-e2-clock-model-1340-r2
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2743936-1792618671 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+E2_CLOCK_MODEL DONE: /out/actual_placement.tsv
+E2_CLOCK_MODEL ALL_DONE read-only original3_place geometry; no clockqualification
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2743936-1792618671): exit 0
