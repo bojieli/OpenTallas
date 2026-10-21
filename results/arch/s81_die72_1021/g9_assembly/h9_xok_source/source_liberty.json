@@ -1,5 +1,5 @@
 {
- "scope": "Bounded source/Liberty proof only, actual placedbuffertrace pending. No sharedhelperchange/defaultwaiver.",
+ "scope": "Exact source + TT/FF/SS Liberty + actual3_place buffertrace proof for ONLY four xk[i]\u2192xok[i] outputclock pairs. No sharedhelper/defaultwaiver.",
  "source_ref": "21b97190eba0b3b306026f23a2408867cd099726",
  "parent_top": "col_h9_l4_lp_kit_rf3r",
  "source_sha256": {
@@ -116,5 +116,21 @@
   "multidriver": "REJECT"
  },
  "actual_snapshot": "ep9:/srv/opentallas-scratch2/claude/codex-s81-h9cts-1021/run_cachefix",
- "actual_snapshot_hashes_match": "All5hashes read from actualsrc agree with pinned21b; original3_place.odb untouched"
+ "actual_snapshot_hashes_match": "All5hashes read from actualsrc agree with pinned21b; original3_place.odb untouched",
+ "placed_buffertrace": {
+  "status": "PASS",
+  "runtime_unit": "ot-epyc5:oth-ubuntu-2573361-1792619913",
+  "instances": 798539,
+  "nets": 546214,
+  "original_3_place_odb_sha256": "7d677c7eb92511fcd3d2b6257b3c2591219730fd1a79189d31336c6352f1bc40",
+  "copy_matches_original": true,
+  "before_after_copy_sha_identical": true,
+  "pairs": 4,
+  "paths": "Each xok[i] <- output21554+i BUFx2/Y <- u_xo{i}.ck_o <- xk[i] input; extra inversions0",
+  "mutation_commands": 0,
+  "write_db": 0,
+  "raw": "read.log",
+  "script": "read.tcl",
+  "scope": "Actual placed connectivity only, not clockspread/timing/STA qualification"
+ }
 }

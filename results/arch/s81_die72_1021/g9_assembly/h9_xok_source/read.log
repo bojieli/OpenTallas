@@ -1,0 +1,11 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+H9_XOK_DB instances=798539 nets=546214
+H9_XOK_PASS output=xok[0] root=xk[0] macro=u_xo0 extra_inversions=0 path=output21554:BUFx2_ASAP7_75t_R/Y/net=xok[0] <- u_xo0:dsfd_dvrly_276_NS/ck_o/net=net21553 <- INPUT:xk[0]
+H9_XOK_PASS output=xok[1] root=xk[1] macro=u_xo1 extra_inversions=0 path=output21555:BUFx2_ASAP7_75t_R/Y/net=xok[1] <- u_xo1:dsfd_dvrly_276_NS/ck_o/net=net21554 <- INPUT:xk[1]
+H9_XOK_PASS output=xok[2] root=xk[2] macro=u_xo2 extra_inversions=0 path=output21556:BUFx2_ASAP7_75t_R/Y/net=xok[2] <- u_xo2:dsfd_dvrly_276_NS/ck_o/net=net21555 <- INPUT:xk[2]
+H9_XOK_PASS output=xok[3] root=xk[3] macro=u_xo3 extra_inversions=0 path=output21557:BUFx2_ASAP7_75t_R/Y/net=xok[3] <- u_xo3:dsfd_dvrly_276_NS/ck_o/net=net21556 <- INPUT:xk[3]
+H9_XOK_READONLY PASS pairs=4 mutation_commands=0 write_db=0
