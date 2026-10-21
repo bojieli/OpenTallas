@@ -46,3 +46,9 @@ mutnormimm FAIL as expected (err 1 / 507 / 625 / 260).
    spread judged at the --cts gate; io_hold_margin 0.03.
 8. Schedule / reset: PASS - static, no handshake; MAIN adds 0 cycles; FALLBACK +2 on POST write-back (priced above);
    reset only control / valid bits.
+
+CODEX 10-21: source packaging fixed in fresh sparse WT. Original synth ring
+implementation inferred nonconstant ALDFFE loads from variable-index writes
+under two async resets. Constant-index per-bit ownership preserves the ring,
+pointer, regional resets and latency. Existing SAFE review above applies;
+collect existing exact benches and native census before accepting layout.
