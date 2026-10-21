@@ -44,7 +44,7 @@ def analyse(log):
                'GATE_TB_RC=0\nGATE_TB textbook_lint: PASS fixture cells 1 flops 1\n' + log)
         gate = G.Gate()
         # Isolate actual-pin acceptance from separate port-latency/clock-policy tests.
-        with patch.object(G, 'check_port_latency'), patch.object(G, 'clock_item'):
+        with patch.object(G, 'check_port_latency'), patch.object(G, 'clock_item'), patch.object(G, 'check_native_census'):
             G.analyse_remote(gate, kd, dict(kind='tile', route={}), out, False, binding, 10, 'fixture-host')
         return gate
 

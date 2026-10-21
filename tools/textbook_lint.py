@@ -138,6 +138,8 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 difference from the closed commit no longer refuses when "source" is a COMMITTED receipt (a path on the
 #                 job's commit / origin/main, not an absolute local file) that records the closed view's FAIL: such a
 #                 view cannot bind into the die, so the re-route is not a repeat (Gate-Rule: relaxing, submit lint only).
+#   native_reach  exact-job committed native-path receipt >405 um, unchanged RTL/parameters, and source-pinned
+#                 changed pin coordinate ranges on the same outline/faces; fresh native/gate qualification required.
 #   flow_failure  (ROOT-0945 2026-10-18) a re-route of the same or a fixed source after a harness / OOM / flow failure of
 #                 an ADMITTED re-route: "failed_job" (the failed job's id, in the loop's history: same block, not CLOSED,
 #                 not active, and its own spec carried a valid "reroute_reason" -- the retry inherits that admission;
@@ -151,7 +153,7 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
                        "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order",
-                       "pg_binding")
+                       "pg_binding", "native_reach")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -169,7 +171,7 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ "
                          "\"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", "
                          "\"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route "
-                         "being retried) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that "
+                         "being retried) | native_reach (+ committed exact all-path audit and changed pin coordinates; same RTL/slot) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that "
                          "records the closed view's unbound VDD/VSS terminals, \"fix\"; same RTL and outline)}")
 
 

@@ -1,0 +1,320 @@
+{
+ "name": "qfd_dv_s5_xhead2b",
+ "top": "qfd_dv_s5_xhead2",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_xhead_bounded.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_xhead_bounded_helpers.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_xhead2.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 345.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pins": {
+  "N": [
+   "n_d",
+   "cid",
+   "ck",
+   "rst_n",
+   "s_d"
+  ],
+  "W": [
+   "w0_v",
+   "w0_ep",
+   "w0_off",
+   "w0_m",
+   "w0_d",
+   "w0_ctl",
+   "c0_v",
+   "c0_ep",
+   "r0_v",
+   "r0_t",
+   "r0_ep",
+   "r0_p",
+   "q0",
+   "q0_v",
+   "q0_bad",
+   "fault",
+   "l_rst_n"
+  ],
+  "E": [
+   "a_ib",
+   "w1_v",
+   "w1_ep",
+   "w1_off",
+   "w1_m",
+   "w1_d",
+   "w1_ctl",
+   "c1_v",
+   "c1_ep",
+   "r1_v",
+   "r1_t",
+   "r1_ep",
+   "r1_p",
+   "q1",
+   "q1_v",
+   "q1_bad",
+   "fault_i"
+  ],
+  "S": [
+   "a_f"
+  ]
+ },
+ "fill_reason": {
+  "pin_bound": "~5,800 port bits (fill word 1,187 + ib 380 + two corridor words 1,032 + two leaf write/read bundles 2 x 1,670): the perimeter at <= 6 pins/um sets the outline, not the area"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input at its pin and launches every output from a flop; flow pin registers would add an unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (qfd_dv_s5_rst2)"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "period_ps": 833.333,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "safe_design_checklist": {
+  "1_pins": "FIXED: the slice retag moved in front of the n_q/s_q output registers (qfd_dv_s5_xhead_rt; was 1 comb level after the last flop): every output is flop Q; every input lands in a pin register (a_d IN_PIPE stage, lqp/lqvp/lqbp, fi_q, tids); rst_n 2-stage landing (qfd_dv_s5_rst2), mapped census rst_n loads 2",
+  "2_reach": "PASS: tile <= 432 um side, every intra-tile hop < 405 um; leaf buses leave W (chain 0) / E (chain 1)",
+  "3_fanout": "FIXED (structural): bounded constructor (tools/qwen_dv/bound_math_netlist.py --load-cap 16, retained operator boundaries) replicates every FF / comb root incl. the shared fill selects b_d/f_q (2585), fep (1707), fill-go line (877), g_pin (759) and reset; the foff rotate selects need >= 34 same-edge copies, so the a_d input lands in one extra pin stage (IN_PIPE, +1 edge) and the replica tree grows from it. ASAP7 mapped census: see results/arch/qw_slice7_1020/xhead/native/census.json",
+  "4_depth": "PASS: inherited ot_qfd_xhead stage depth (predecessor 481.8 ps / 11 lv); AO21/OA21 fusion; mapped estimate in census ps",
+  "5_storage": "PASS: largest runtime-indexed arrays wb/wbp/wbm/wo/ro [2][16] (<= 608 b), first_abs [2][16][4] x 8 = 1,024 b, all < 2 kb; go/phase delay lines (u_fill_go 5x1, u_gdx 9x1, u_phd 8x3, u_vd 8x1, u_pd 8x1 = 54 b) WAIVED from ring conversion: 1-3 bit fixed-age control lines, a ring pointer would fan out more than the line it replaces",
+  "6_floorplan": "pin-bound (~5.8k pins at <= 6 pins/um per face; std area from the mapped census); no macros; one full std-cell band; pins spread over whole faces (pin_ranges)",
+  "7_clock": "one centre-fed TritonCTS root; judged on pin-flop spread <= 80 ps TT+FF; io_hold_margin 0.03",
+  "8_schedule": "static. +1 edge on the head-row input a_d (go, descriptor, fill data, ib together: x column op latency +1, NOTICE to QW-SLICE7 / QW-GRT4 / GEN3); 0 edges from the retag move; reset release +2 as the predecessor"
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "fallback of qfd_dv_s5_xhead2: 302.4 x 345.6 (aspect 1.14, same perimeter) for a shorter clock span (xheadb 259.2 x 432 failed spread 88.3/84.5)",
+ "job": {
+  "owner": "Claude:QW-SLICE7-LEAVES",
+  "branch": "claude/qw-slice7-xhead-1020",
+  "tag": "xh2b",
+  "purpose": "QW-SLICE7 Q.STA.SLICE.2: slice2 column head leaf xhead2 (bounded fanout, registered retag), one master x 4",
+  "extra_paths": [
+   "rtl",
+   "tools/die_port_bind.py",
+   "results/arch/qw_slice7_1020/xhead"
+  ],
+  "benches": [
+   {
+    "name": "xh7_eq",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead7/bench.sh {RUN}/bench/eq eq",
+    "expect": "pass",
+    "pass_regex": "XH7_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xh7_mut",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead7/bench.sh {RUN}/bench/mut mut",
+    "expect": "fail",
+    "fail_regex": "XH7_EQ FAIL mismatches=",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice7_1020/xhead/bench/mut.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_xhead2b/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_xhead2b"
+ },
+ "macros": [],
+ "pin_ranges": {
+  "n_d": [
+   4.32,
+   148.432
+  ],
+  "cid": [
+   148.682,
+   150.111
+  ],
+  "ck": [
+   150.361,
+   151.789
+  ],
+  "rst_n": [
+   152.039,
+   153.468
+  ],
+  "s_d": [
+   153.718,
+   297.83
+  ],
+  "w0_v": [
+   4.32,
+   5.334
+  ],
+  "w0_ep": [
+   5.584,
+   6.597
+  ],
+  "w0_off": [
+   6.847,
+   7.861
+  ],
+  "w0_m": [
+   8.111,
+   21.339
+  ],
+  "w0_d": [
+   21.589,
+   236.994
+  ],
+  "w0_ctl": [
+   237.244,
+   252.157
+  ],
+  "c0_v": [
+   252.407,
+   253.42
+  ],
+  "c0_ep": [
+   253.67,
+   254.684
+  ],
+  "r0_v": [
+   254.934,
+   255.948
+  ],
+  "r0_t": [
+   256.198,
+   257.211
+  ],
+  "r0_ep": [
+   257.461,
+   258.475
+  ],
+  "r0_p": [
+   258.725,
+   282.062
+  ],
+  "q0": [
+   282.312,
+   335.976
+  ],
+  "q0_v": [
+   336.226,
+   337.239
+  ],
+  "q0_bad": [
+   337.489,
+   338.503
+  ],
+  "fault": [
+   338.753,
+   339.766
+  ],
+  "l_rst_n": [
+   340.016,
+   341.03
+  ],
+  "a_ib": [
+   4.32,
+   68.936
+  ],
+  "w1_v": [
+   69.186,
+   69.96
+  ],
+  "w1_ep": [
+   70.21,
+   70.984
+  ],
+  "w1_off": [
+   71.234,
+   72.008
+  ],
+  "w1_m": [
+   72.258,
+   82.933
+  ],
+  "w1_d": [
+   83.183,
+   257.729
+  ],
+  "w1_ctl": [
+   257.979,
+   270.019
+  ],
+  "c1_v": [
+   270.269,
+   271.043
+  ],
+  "c1_ep": [
+   271.293,
+   272.068
+  ],
+  "r1_v": [
+   272.318,
+   273.092
+  ],
+  "r1_t": [
+   273.342,
+   274.116
+  ],
+  "r1_ep": [
+   274.366,
+   275.14
+  ],
+  "r1_p": [
+   275.39,
+   294.258
+  ],
+  "q1": [
+   294.508,
+   337.957
+  ],
+  "q1_v": [
+   338.207,
+   338.982
+  ],
+  "q1_bad": [
+   339.232,
+   340.006
+  ],
+  "fault_i": [
+   340.256,
+   341.03
+  ],
+  "a_f": [
+   4.32,
+   297.83
+  ]
+ }
+}

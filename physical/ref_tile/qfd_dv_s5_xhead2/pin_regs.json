@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_xhead2",
+ "enable": false,
+ "reason": "the RTL registers every input at its pin and launches every output from a flop; flow pin registers would add an unpriced edge"
+}
