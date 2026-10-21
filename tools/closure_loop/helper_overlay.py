@@ -192,6 +192,21 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # KV-PVFIN17 10-20 21:40: 13a502b48 ("scoped cap binds to the gated tile") carries a bare 'Gate-Rule: tightening'
+    # (no applies-to), so every gate made before it was refused at submit (s81sl_ve_r5, PVFIN R15c, ...).  It only adds
+    # "scoped waiver S does not apply to tile T" when a spec's clock_rule_waiver names scope S != its block T; the scoped
+    # caps it narrows were added by its parent 3969f6fb4 (relaxing applies-to=qkd_pv_fin_s32) and both reached main in
+    # the same merge (first main commit containing either: cd50a961a), so no gate ever ran with 3969f6fb4 alone and no
+    # gate verdict relative to an older blob becomes stricter for any tile.  pre_route_gate.py only passes spec["block"].
+    "13a502b48ca210cbc317a4834ec48a7173f9ce05": dict(
+        kind="neutral", paths=("tools/textbook_lint.py", "tools/ref_tile/pre_route_gate.py"),
+        what="scoped clock-waiver cap bound to its own tile; landed on main together with the cap (3969f6fb4)"),
+    # e7358eb66 (same pattern for the MC3c7 census waiver of 0b6052c50): the new refusal fires only for the two MC3c7
+    # kits' scoped waiver -> tightening scoped to them.
+    "e7358eb6681cca4d302824840bb13c034f7ad0dd": dict(
+        kind="tightening", applies_to=("hdie_pc_ctrl_mc3c7_wel", "hdie_pc_ctrl_mc3c7_cts"),
+        paths=("tools/ref_tile/pre_route_gate.py",),
+        what="MC3c7 scoped census waiver bound to the gated kit's spec; only those two kits"),
     # ROOT11 10-20: XS bay record merge (f61a12bcc lineage). 9a21b1c63 only re-synced main's CX-IJ cross-clock gate
     # (check_cross_clock, tightening, multi-clock kits only) into the HF-5 branch; the merged tree keeps main's file.
     "9a21b1c6382c404f803e8f954db08024701dcb23": dict(
