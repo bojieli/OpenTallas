@@ -1150,6 +1150,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
     if before_relays is not None and getattr(v, 'FACE_PACK_FINAL', False):
         _face_pack_final(v, m)   # outermost: after every pin-moving wrapper
+    from qwen_split.gen_safety_facts import install as _install_gen_safety
+    _install_gen_safety(v, m, lambda: _pin_pos(v, m, strict=True))
     return v, m
 
 
@@ -5377,7 +5379,7 @@ def _reset_tree(v, m):
     return rec
 
 
-def _pin_pos(v, m):
+def _pin_pos(v, m, strict=False):
     """(inst, port) -> die position of the port's pin centroid (instance orientation applied)."""
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
@@ -5401,8 +5403,11 @@ def _pin_pos(v, m):
         if (inst, port) in extra:
             return extra[(inst, port)]
         i = by[inst]
-        c = cen.get(i.master, {}).get(port.lstrip('*'))
+        base = re.sub(r'\[.*\]$', '', port.lstrip('*'))
+        c = cen.get(i.master, {}).get(base)
         if c is None:
+            if strict:
+                raise ValueError(f'GEN safety: no pin geometry for {inst}/{port} ({i.master})')
             return (i.cx, i.cy)
         x, y = c
         if i.orient in ('MY', 'R180'):
