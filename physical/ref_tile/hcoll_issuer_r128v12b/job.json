@@ -1,0 +1,173 @@
+{
+ "name": "hcoll_issuer_r128v12b-r128v12b-COMMIT",
+ "block": "ot_hgi_coll_issuer_m_r128",
+ "ref_tile": true,
+ "owner": "Claude:HBM-COLLECT10/COL-ISS",
+ "purpose": "HBM-COLLECT10/COL-ISS (FALLBACK, SAFE successor of r128v11/v11b whose --cts gates FAILED clock_rule only): ot_hgi_coll_issuer_m_r128, RTL unchanged (e534e288a body); clock spine rebuilt with the SYMMETRIC wire-balanced topology (OT_SPINE_SYM=1, bbox-centre bisection nodes) in place of the count-centroid tree balanced by pad cells; v9b geometry 302.4 x 432.0, S x100 entry; port- and edge-identical, 0 added cycles.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/collect10-iss-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "results/arch/landed_parent_1018/collq",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_issuer_m_r128 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7r128.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "issuer_v8r128_miter_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_pos pos 3 600",
+    "expect": "pass",
+    "pass_regex": "ISSUER_V8R128_MITER PASS",
+    "min_count_regex": "ISSUER_V8R128_MITER PASS seed\\d+ progs\\d+ checks(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "note": "leaf body ot_hgi_coll_issuer_m128v8 == ot_hgi_coll_issuer_m #(ROWS 128) (v6) every port every edge, 600 random programmes"
+   },
+   {
+    "name": "issuer_v8r128_miter_mut_reload",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_reload reload 1 300",
+    "expect": "fail",
+    "fail_regex": "ISSUER_V8R128_MUTANT_REJECTED reload",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_coll_iss8_1020/witness/miter_reload.log"
+   },
+   {
+    "name": "issuer_v8r128_miter_mut_nofwd",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_nofwd nofwd 1 300",
+    "expect": "fail",
+    "fail_regex": "ISSUER_V8R128_MUTANT_REJECTED nofwd",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_coll_iss8_1020/witness/miter_nofwd.log"
+   },
+   {
+    "name": "issuer_v8r128_miter_mut_swap",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_swap swap 1 300",
+    "expect": "fail",
+    "fail_regex": "ISSUER_V8R128_MUTANT_REJECTED swap",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_coll_iss8_1020/witness/miter_swap.log"
+   },
+   {
+    "name": "coll_q3_lp_ars_eq_v8",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/q3_eq eq",
+    "expect": "pass",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE q3 COLL parent ot_hfd_coll_q3_lpf_ars (binds this leaf, v8 body) == v8x/v8g #(AR_ITER 1, ROWS 128) (v6 issuer) every output every cycle + 3 EQ mutants rejected"
+   },
+   {
+    "name": "coll_q2_lp_ars_eq_v8",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_eq eq",
+    "expect": "pass",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE q2 COLL parent ot_hfd_coll_q2_lpf_ars (binds this leaf, v8 body) == v8x/v8g #(AR_ITER 1, ROWS 128) (v6 issuer) every output every cycle + 3 EQ mutants rejected"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_issuer_r128v12b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_issuer_r128v12b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_issuer_r128v12b --out {RUN}/record/views/ot_hgi_coll_issuer_m_r128 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_issuer_r128v12b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_issuer_r128v12b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_issuer_r128v12b/hcoll_issuer_r128v12b-r128v12b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "COLLECT10/COL-ISS 10-21: r128v11/v11b --cts gates FAILED clock_rule only (pin-flop spread TT/FF 86.8/92.4 and 85.1/86.0; setup WNS +0.9/+4.2 ps, hold +33/+18, GRT ovf 0, census PASS max 32). CLASS clock-tree topology (not depth/fanout/wire): per-flop CTS dump (4_1_cts, placement RC) shows every leaf internally <= 4 ps but leaf arrival rising with distance from the S x100 entry: y 0..80 ~415 ps, y 160..280 ~450-487, y 400 up to 504 (W uop_d1 column 408..485). The count-bisection spine puts nodes at count-weighted centroids (unequal wire per branch) and equalises with pad CELLS on the RC-calibrated wire model; wire-dominated far branches then come out late on the platform RC and worse at FF (cells speed up more than wire: FF spread > TT). FIX (kit only): OT_SPINE_SYM=1 = symmetric bisection with nodes at the bbox centre of their leaves (equal wire span per child, short levels merged), so the wire is balanced by construction and the pads only trim residual cell imbalance; RTL/outline/macros/pins unchanged vs hcoll_issuer_r128v11b. 0 added cycles. Predecessor: COLLECT10/ISS2 10-21: the r128v10/v10b --cts gates FAILED (both) only because the PRE-GATE NATIVE CENSUS refused the mapped netlist (floorplan.tcl PRE_GATE_NATIVE_CENSUS_REFUSED; textbook/floorplan FAILs are downstream of that abort, no geometry error): 1 violation u_ot_pr_core.u.fwn_c[0] QN -> 34 loads (limit 32), the CN counter-forwarding select of 16 low counter bits merged into the take compare. FIX (RTL, 0 cycles, port/edge-identical): fwt_c/fwn_c widened from 2 to 4 KEPT copies, each selecting 8 counter bits (~17 loads); reset group rcp[5] 24 -> 28 loads. Geometry unchanged. Predecessor: COLLECT10/ISS 10-21 SAFE successor after the FAILED route hcoll_issuer_r128v9b-r128v9b-e4c085f25 (TT -135.42 / FF -20.25, DRC 0). CLASS (routed 6_finish + closed-loop path_summary): LOGIC DEPTH behind a macro read, not fanout / wire / clock: all 64 TT-violating D pins are g_meta[*].u_sram/rd_out -> rt/rn/pr_t/pr_n/pr_c (15-16 levels): 326 ps SRAM clk->q + the record's 32-bit count-1 DECREMENT borrow chain (AND2-AO21-OR5-OR4-OR5-OR5-OR5-OR3-OR2-OR4-XNOR-...) ~540 ps in the same edge; launch clock 33 ps late (spine). FIX (RTL, 0 cycles, port- and edge-identical): records store the RAW count; the decrement is folded into the loop decision on the registered side (take = has && q + ~cnt + 2 < 2^32, carry-save + one carry-out), removing ~10 levels from every macro->state path. FF hold -20 (fv_c->r_ce_in, aen->assemble, vm->data, <=6 levels) = route hold repair residue: hold_eco mm session + io_hold_margin 0.03 kept. Geometry: v9b geometry 302.4 x 432 (clock spine, W-centre entry) unchanged (FALLBACK)."
+}
