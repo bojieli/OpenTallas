@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_lane_h_safe2",
+ "enable": false,
+ "reason": "the RTL lands it: qfd_dv_s1_rst_land (two stages, async assert, sync release) is rst_n's only sink; it feeds 3 qfd_dv_s1_rst_relay branches -> 11 leaf relays (all at depth 4), every leaf <= 32 sinks (kept hierarchy)"
+}
