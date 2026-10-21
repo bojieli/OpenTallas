@@ -559,7 +559,9 @@ def _bdd_of(net, bdd, bit, level, cache, cut=frozenset()):
         drv = net.driver.get(b)
         if drv is None:
             raise GrayFifoError(f'reviewed_gray_fifos undriven bit {b} in a storage-gating cone')
-        if drv[0] in ('flop', 'port') or b in cut:
+        # SQK-INGEST 10-21: a hard-macro output (e.g. a dual-clock SRAM read port, extension mode) is a leaf like a
+        # flop Q: a free variable (sound, every value), as _cone_cut already treats it
+        if drv[0] in ('flop', 'port', 'macro') or b in cut:
             cache[b] = bdd.var(level(b))
             stack.pop()
             continue
