@@ -2,16 +2,16 @@
 
 The preserved HSF0 HFWD type7 carries exactly512 data bits through HD-CTL as kind6 ring payload[532:21]. Legacy stage HOST is514 bits `{class2,data512}` plus valid. A single HFWD cannot carry it. This successor uses two HFWD records per word; no implicit class, stage, rank, token, position or launch epoch is synthesized.
 
-## Protocol HBE1
+## Protocol HBE1 version2
 
-HOST_WORD uses a header followed by its512-bit body. KS_DESCRIPTOR, ARM and STAGE_RETURN are single-record messages using the reserved header region for their bounded inline fields. Other ring kinds may occur between them, but no second HOST header/body pair may interleave. All receivers track the header/body phase even for a nonlocal destination, preventing raw body data from being misdecoded as a header. Missing body by its explicitly programmed static deadline faults; no completion wait/reschedule. Every consumed header validates magic/version, opcode, source/destination range, exact length, transaction identity and context. Header-only opcodes cannot occur while a HOST_WORD body is pending. Any incoming kind6 that fails framing is a sticky fault and cannot issue a stage write/start.
+HOST_WORD uses a header followed by its512-bit body. KS_DESCRIPTOR, ARM and STAGE_RETURN are single-record messages using the reserved header region for their bounded inline fields. Other ring kinds may occur between them, but no second HOST header/body pair may interleave. All receivers track the header/body phase even for a nonlocal destination, preventing raw body data from being misdecoded as a header. Missing body at its exact compiled capture edge faults; no completion wait/reschedule. Every consumed header validates magic/version, opcode, source/destination range, exact length, transaction identity and context. Header-only opcodes cannot occur while a HOST_WORD body is pending. Detected framing/metadata/slot/CRC failures are sticky faults and cannot issue a stage write/start. CRC is a bounded error check, not a proof against every substitution/collision. A legal raw512 body equal to header magic is preserved when CRC and exact slot agree; the pending body is never magic-inspected.
 
 Header bit allocation (LSB first):
 
 |Bits|Meaning|
 |---|---|
 |31:0|magic0x31454248 (ASCII HBE1 in little endian)|
-|35:32|version1|
+|35:32|version2|
 |39:36|opcode:0 HOST_WORD,1 KS_DESCRIPTOR,2 ARM,3 STAGE_RETURN|
 |47:40|stage ID0..240, explicit configured strap matching actual rack S000..S240|
 |49:48|TP rank0..3, explicit configured rank|
@@ -22,9 +22,9 @@ Header bit allocation (LSB first):
 |108:88|position21|
 |129:109|token21|
 |161:130|epoch identity32; supplied by an actual armed epoch source|
-|209:162|static body-arrival deadline48, in explicitly bound local counter units|
+|209:162|HOST_WORD exact compiled body-capture edge48; inline-message arrival deadline48, in explicitly bound receiver local epoch units|
 |273:210|programme/source identity64, checked against actual boot contract|
-|511:274|opcode-specific inline fields, otherwise zero: KS raw53[326:274] and slot3[329:327]; RETURN t_host77[350:274] and t_kd54[404:351]; ARM active-slot mask6[279:274]|
+|511:274|opcode-specific inline fields, otherwise zero: HOST CRC32C[305:274]; KS raw53[326:274] and slot3[329:327]; RETURN t_host77[350:274] and t_kd54[404:351]; ARM active-slot mask6[279:274]|
 
 HOST_WORD's body is the original data512 without truncation. KS_DESCRIPTOR's inline[52:0] is the exact53-bit `{start,user10,tok21,pos21}` word; all other inline bits zero, length53 and duplicated header context must agree. HOST_WORD length514, ARM length0, RETURN length131 are fixed and rejected otherwise. The current fixture's corrected word is0x1000082e4fffff for user0/token16754/position1048575; old0x1001ffffe04172 swaps token/position and is retained as an unexecuted failed witness by TOKEN. This is fixture context, not a shipping descriptor or programme anchor.
 
@@ -54,3 +54,13 @@ Preserve HOST_EN1 and original endpoint views throughout this candidate. New con
 ## Actual circuit evidence and remaining binding
 
 The selected G8 plan is gold2:/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/plan_routed_g8.json. s_0N has NEXT pairA tx/rx0/1 on lk_WN0/1 and PREV pairB tx/rx2/3 on lk_WN2/3 (older overlay calls those link_0_4/5). Legacy s_7N HOST input is uniquely routed by hf_7N_l0/l1/l2 with6/7/7 stations; status ht_7N has8. A connected source successor must intercept before s_0N ordinary ring delivery and provide explicit registered crossing/landing to the real host consumer; these existing routes are evidence, not permission to pretend s_0N equals s_7N. The actual head-to-S000 rack mapping remains required.
+
+## CRC and receiver pipeline source model (before build)
+
+ROOT selected version2 without another wire beat: reflected CRC32C polynomial0x82f63b78, initial0xffffffff, final XOR0xffffffff, exactly64 raw body bytes little endian (data bit0 first). HOST header carries CRC in[305:274]. The receiver first captures the raw body at its explicitly compiled receiver-local edge, computes a generated balanced GF(2) parity network, captures CRC at+1, and compares/emits the legacy HOST record at+2. Thus the local transport adds TWO full pipeline edges before any existing physical landing path; this is source-model timing pending actual mechanism/native/physical measurement, never zero. Missing/wrongslot/CRC/identity prevents emit.
+
+Source storage budget for HOST verification is3x512=1536 unreset pipeline payload bits,32 computed CRC bits,32 expected CRC bits,2 class bits per pipeline boundary and bounded valid/fault/identity controls; no runtime indexed payload store is introduced. A separately named static NEXT merge keeps ordinary local_ro data on a combinational bypass through one banked three-way mux: ZERO added data-register edges, with actual timing still requiring qualification. Only HBE receives two registered stages (kept predicate roots then bank-select copies, aligned with two payload captures). Together with the RX forward register, each transit HBE record pays THREE edges, before any physical relay/landing costs. The source introduces three reset startup-enable edges to mask uninitialized bank selectors; production epochs must begin after actual release. A simultaneous ordinary valid beat and mature booked HBE beat faults and suppresses both; no arbitration or rescheduling. Thus ordinary payload retains its source-cycle identity once startup completes, but added mux timing and static slot disjointness remain real obligations. Existing shipping endpoint stays unchanged until this distinct source is selected/gated.
+
+TX source has3 kept roots per three-way selector, each feeding at most25 bank-selector FFs. Each bank selects at most15 output bits (at most30 two-input selector contacts before mapping). Aligned HBE payload storage is2128 unreset bits (two532-bit captures per forward/return),222 unreset bank-select FFs,9 reset root-select FFs,2 valid and3 startup-enable FFs plus4 fault bits. HOST body verification contributes1536 unreset payloadFF and64CRCFF; RETURN holding512 and head-egress553 plus explicit landing618 bits are separately counted. No indexed store is introduced. Exact mapped area, fanout/depth, clock/reset and output timing remain measured obligations; no legacy-view alias or full-rack proof.
+
+Each nonlocal adapter requires its own explicit compiled transit_body_edge, header_slot and expected_header_stage alongside receiver clock/epoch identity. It must never compare the destination receiver-local header body date against its own clock. The destination alone compares header[209:162]; each transit compares its separately booked local edge. The caller must supply and seal every local book; current production phase/anchors remain OPEN.

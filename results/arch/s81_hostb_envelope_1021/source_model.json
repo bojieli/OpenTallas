@@ -1,0 +1,19 @@
+{
+  "scope": "UNBUILT_SOURCE_MODEL_ONLY; productionroute/clock/epoch/programme/physicalOPEN",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv": "2b21adc41313635b4e4c3f16c30d76d7bd75b24ec0fc3a9e1841dd245b6173f7",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv": "56200cf4fdef13662b35a8b03fc53b42291ccdebd03cb8e178494030b5813bed",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost.sv": "e6bed5460bca19be3a2a9990f4d3fefc207f7422b85511a5404ca8c630ccb017",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_crc512.sv": "24a41becc4b4de26f957b6d58f92c8415d78d0f86676f44131c180596f31b921",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv": "5becae0ca80cd2de2927719669b6a65ae3a9ee41870206a0a88a7d992abdc7ab",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_head.sv": "43c4ea83d3a02b18de1a30cf14b1b176743ff58601cbd59a8adea39b87ce8440",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "d3bc43a6e8905f99ed21e124a15feae3b4577594f05e6ada836c286a18a1cc08",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage.sv": "cad1a59788240f9de16f01f817b18449d42196d73c0d9498e3aed4d14d865aac",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce"
+  },
+  "default": "HOSTB_ENABLE=0/ENABLE=0 preserve legacyconsumer andendpointwiring; distinctsource only",
+  "real_consumer": "dsdv_hostb_seqhost instantiates exact dsdv_seq_host; starter_f_ks input mustactualarmedsource, notgeneratedKS",
+  "crc": "explicitROOT HBE1v2 boundedCRC32C, no universalmalformedstream claim",
+  "storage": "necessaryunindexedpipeline, no persistentindexedFFheap",
+  "proof": "NOT RUN. No native, mechanism, mappedarea orphysicalclaim."
+}
