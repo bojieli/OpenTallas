@@ -16,7 +16,8 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
    "tools/orfs_allcorner_spef.py",
-   "tools/s81_head/regional_reset_sources.f"
+   "tools/s81_head/regional_reset_sources.f",
+   "results/rtl/s81_head_regional_reset_1021"
   ]
  },
  "stages": {
@@ -53,7 +54,7 @@
     ],
     "pass_regex": "^PASS lepab_regional: received400 landed160",
     "fail_regex": "^FAIL lepab_regional: received",
-    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_TAGDROP.log"
+    "fail_witness": "results/rtl/s81_head_regional_reset_1021/mutant_TAGDROP.log"
    },
    {
     "name": "lepab_wrongcopy",
@@ -66,7 +67,7 @@
     ],
     "pass_regex": "^PASS lepab_regional: received400 landed160",
     "fail_regex": "^FAIL lepab_regional: received",
-    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_WRONGCOPY.log"
+    "fail_witness": "results/rtl/s81_head_regional_reset_1021/mutant_WRONGCOPY.log"
    },
    {
     "name": "lepab_landcut",
@@ -79,7 +80,7 @@
     ],
     "pass_regex": "^PASS lepab_regional: received400 landed160",
     "fail_regex": "^FAIL lepab_regional: received",
-    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_LANDCUT.log"
+    "fail_witness": "results/rtl/s81_head_regional_reset_1021/mutant_LANDCUT.log"
    },
    {
     "name": "lepab_stalehd",
@@ -92,7 +93,7 @@
     ],
     "pass_regex": "^PASS lepab_regional: received400 landed160",
     "fail_regex": "^FAIL lepab_regional: received",
-    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_STALEHD.log"
+    "fail_witness": "results/rtl/s81_head_regional_reset_1021/mutant_STALEHD.log"
    }
   ],
   "calibrate": {
