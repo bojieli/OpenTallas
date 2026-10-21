@@ -843,6 +843,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     link_check = link_image_check(link_words, cal)        # KV-LINKCFG-MU: target 11 == the bound image (fail closed)
     hl = pr.get('hroot_landing', dict(chain=0, fan=0, gather=0, embedding=0))
     es_relay, es_return = [hl['chain']] * 4, [hl['embedding']] * 4
+    _die_rs = os.environ.get('OT_KV_EMB_FILL_RELAYS')     # KV-CAL15: compile targets 12/13 on the plan's real relays
+    if _die_rs and pr['kind'] == 'die':                   # (down / return per stack + root-join skew + LAND, emb_fill law)
+        _f = emb_fill(cal['program'], pr.get('cal_deltas') or CAL_DELTAS_ZERO, die_emb_relays(_die_rs))
+        es_relay, es_return = _f['down'], _f['ret']
     es_pc, es_beat = es_cfg_words(relay=es_relay, return_relay=es_return)
     prog_cal = cal['program']
     lay = prog_cal['layers']
