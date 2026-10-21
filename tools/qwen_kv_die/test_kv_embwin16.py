@@ -104,5 +104,30 @@ class Target11(unittest.TestCase):
         self.assertIn('target 11 differs', r.get('refused', ''))
 
 
+class WriterDie(unittest.TestCase):
+    """writer lanes composed on the die relays: KVN relay depth to the writer + LAND chain on the shared es DOWN path"""
+    @staticmethod
+    def doc(kvn=(5, 5, 5, 5)):
+        b = lambda a, ap, c, cp, n: dict(src=dict(inst=a, port=ap), dst=dict(inst=c, port=cp), stages=n)
+        out = [b('d2d_kv', 'svc', 'kvs_ctl', 'd2d__svc', 4), b('d2d_kv', 'svc', 'kvs_emb', 'd2d__svc', 3),
+               b('d2d_kv', 'emb_tx_slot', 'kvs_emb', 'd2d__emb_tx_slot', 1)]
+        for st, dn, rt in zip(('WS', 'WN', 'ES', 'EN'), DIE['down'], DIE['ret']):
+            out += [b('kvs_ctl', f'o_hroot_{st}', f'kvs_hroot_{st}', 'i_ctl', dn - 2), b(f'kvs_hroot_{st}', 'o_pc', f'kvpc_{st}_31', 'i_next', 2),
+                    b(f'kvpc_{st}_31', 'o_next', f'kvs_hroot_{st}', 'i_r', 2), b(f'kvs_hroot_{st}', 'o_emb', 'kvs_emb', f'i_hroot_{st}', rt - 2)]
+        out += [b('d2d_kv', p, 'kvs_ctl', 'd2d__' + p, n) for p, n in zip(('skw', 'srx', 'kvn_word_generation', 'kvn_word_identity'), kvn)]
+        return dict(buses=out)
+
+    def test_ages(self):
+        w = P.writer_die(self.doc(), CD)
+        self.assertEqual((w['kvn_relays'], w['land_chain']), (5, 1))
+        self.assertEqual(w['per_stack']['WS'], dict(down=83, pc31_wes=87, pc0_ctrl_es=120))   # 2 + 83 + 0 hops + 2 / + 31 hops + 2 + 2
+        w0 = P.writer_die(self.doc(), P.CAL_DELTAS_ZERO)
+        self.assertEqual(w['worst_ctrl_es_age'] - w0['worst_ctrl_es_age'], 1)                    # LAND chain +1 on the writer lanes
+
+    def test_unequal_kvn_refused(self):
+        with self.assertRaises(ValueError):
+            P.writer_die(self.doc(kvn=(5, 5, 4, 5)), CD)
+
+
 if __name__ == '__main__':
     unittest.main()
