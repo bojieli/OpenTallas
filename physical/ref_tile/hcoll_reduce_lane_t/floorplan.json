@@ -30,23 +30,23 @@
  },
  "pins": {
   "N": [
-   "load_v",
-   "load_tag",
+   "load_v_n",
+   "load_tag_n",
    "in_data"
   ],
   "W": [
    "clk",
    "rst_n",
-   "wb",
-   "wb_tag",
-   "add_read",
-   "read_tag",
+   "wb_n",
+   "wb_tag_n",
+   "add_read_n",
+   "read_tag_n",
    "add_issue"
   ],
   "E": [
-   "pub_read",
-   "pub_tag_a",
-   "pub_tag_b",
+   "pub_read_n",
+   "pub_tag_a_n",
+   "pub_tag_b_n",
    "add_valid"
   ],
   "S": [
