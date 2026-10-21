@@ -271,7 +271,8 @@ def calendar_collision(target, candidate, offset, *, exclusive_controls=False):
                for field in Q_W for edge, value in candidate.f[field].items())
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False):
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False,
+              identity_inactive_terms=False):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
     from hbm_layer_vehicle.native_profile import NativeTiming
@@ -350,6 +351,22 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                     terms |= (terms & ((1 << 240) - 1)) << (240 * index)
                     vb |= (vb & 0xffffff) << (24 * index)
             words[q] = put(put(w, "ld_c", terms), "vb", vb)
+    if identity_inactive_terms and not safe_calendar and desc["A"].m == 1:
+        # TOK-FUNC2-HBM-SU (opt-in): a single-row record (no == 1) leaves lanes >= 2**ls inactive; their lane-bit terms
+        # (outer stride 0) alias every lane onto lanes 0..2**ls-1, so a group's 8 lane addresses are not one sector.
+        # Give those bits the lane identity (+2**k): active lanes' addresses are unchanged, inactive lanes point into
+        # their own bank (pinned-bank rule), and every active group is one aligned sector.
+        sched = [list(words) for words in sched]
+        for words in sched:
+            w = words[q]
+            ls0, terms0 = get(w, "ls"), get(w, "ld_c")
+            for s_, role in enumerate("ABCDO"):
+                if role not in desc or desc[role].ibcast:
+                    continue
+                for k in range(ls0, 7):
+                    sh = 24 * (s_ * 10 + k)
+                    terms0 = (terms0 & ~(0xffffff << sh)) | ((1 << k) << sh)
+            words[q] = put(w, "ld_c", terms0)
     # per issue group: the quarter's 128 lanes' logical VM word address of every role (vb + lane terms)
     ls = get(sched[0][q], "ls")
     terms = get(sched[0][q], "ld_c")
@@ -699,6 +716,88 @@ def cp_frames(target, rows, t, base=0, loops=1, launch=True):
     return b.ev, lt, b.t
 
 
+def place_snapshot(p):
+    return dict(p.map), list(p.nxt), set(p.written), len(p.conflicts)
+
+
+def place_restore(p, snap):
+    p.map, p.nxt, p.written = dict(snap[0]), list(snap[1]), set(snap[2])
+    del p.conflicts[snap[3]:]
+
+
+def downstream_reference(fx, i, word):
+    """bits of VM word `word` as the first LATER fixture record reads it (comparison only, never a DUT input)"""
+    for j in sorted(k for k in fx if k > i):
+        v = fx[j]["vm_in"].get(word)
+        if v is not None:
+            return int(np.float32(v).view(np.uint32)), j
+    return None, None
+
+
+def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
+    """TOK-FUNC2-HBM-SU dispatch: the first production lowering whose profile matches the record; every attempt that
+    does not emit restores the layer placement (a refused record never marks its O sectors as written)."""
+    import su_program_inventory as I
+    from hbm_layer_vehicle import su_layer_lower_1021 as SL
+    _, unit, sut, desc = I.decode(raw)
+    rng = np.random.default_rng(1018)
+    tag = r["tag"]
+    tried = []
+
+    def attempt(name, fn):
+        snap = place_snapshot(place)
+        dsnap = dict(vm_data)
+        res = fn()
+        if res.get("status") != "emitted":
+            place_restore(place, snap)
+            vm_data.clear()
+            vm_data.update(dsnap)
+        tried.append(dict(lowering=name, status=res.get("status"), reasons=res.get("reasons", [])[:4]))
+        return res
+
+    core = {"str_C", "sucore_SW", "stl_SW"}
+    tree_ok = core <= set(bnd["instances"])
+    res = None
+    if unit == 2 and SL.reduce_profile(sut, desc):
+        if not tree_ok:
+            res = dict(status="unsupported_lowering", reasons=["reduction requires the real stree cut (no RF injection)"],
+                       lowering=dict(supported=False), sut=sut)
+        else:
+            ref, j = downstream_reference(fx, r["i"], desc["R"].base) if fx else (None, None)
+            res = attempt("pretree_reduce", lambda: SL.lower_reduce(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                                    timing=timing, expected_reduction_word=ref))
+            if ref is not None:
+                res["fixture_reduction_reference"] = dict(value=f"{ref:08x}", source=f"fixture record {j} input (later "
+                                                          "consumer), comparison only", matched=res["status"] == "emitted")
+    elif unit == 2 and SL.rsqrt_profile(sut, desc):
+        res = attempt("scalar_rsqrt", lambda: SL.lower_rsqrt(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                             timing=timing, side_profile=(4, 3),
+                                                             side_source_path=a.side_source))
+    else:
+        res = attempt("su_record", lambda: su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=tag,
+                                                     pad_zero=fr is not None, timing=timing))
+        if res.get("status") == "v1_unsupported":
+            b = desc.get("B")
+            if b is not None and b.ibcast and tree_ok:
+                res2 = attempt("rf_broadcast", lambda: SL.lower_bcast(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                                      timing=timing, rf_local=a.rf_local))
+            elif desc["A"].m == 1:
+                res2 = attempt("identity_inactive_terms", lambda: su_record(
+                    raw, a.quarter, rng, data=vm_data, place=place, tag=tag, pad_zero=fr is not None, timing=timing,
+                    identity_inactive_terms=True))
+            else:
+                res2 = None
+            if res2 is not None and res2.get("status") == "emitted":
+                res = res2
+    if res.get("status") == "emitted":
+        for addr, bits in res.get("expected_post_state", {}).items():
+            vm_data[int(addr)] = np.uint32(int(bits, 16)).view(np.float32)
+    res.setdefault("reasons", [])
+    res.setdefault("lowering", {})
+    res["su_lower2_attempts"] = tried
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--design", choices=["ds", "qwen"], default="ds")
@@ -720,6 +819,10 @@ def main():
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
     ap.add_argument("--connected-lowering", action="store_true", help="selected source-bound L0 reduction/scalar implementation; execution remains unqualified")
     ap.add_argument("--side-source", type=Path, help="actual repaired scoped SIDE source in compiled bundle")
+    ap.add_argument("--su-lower2", action="store_true", help="TOK-FUNC2-HBM-SU opt-in production SU lowerings by "
+                    "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
+                    "identity lane terms); failed attempts leave the VM placement / written state untouched")
+    ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
@@ -788,7 +891,9 @@ def main():
             if fr is not None:
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
-                if a.connected_lowering and lay == 0 and r['i'] in (4, 8):
+                if a.su_lower2:
+                    su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr)
+                elif a.connected_lowering and lay == 0 and r['i'] in (4, 8):
                     from hbm_layer_vehicle import su_layer_lower_1021 as SL
                     required = {'str_C', 'sucore_SW', 'sucore_SE', 'sucore_NW', 'sucore_NE'}
                     if not required <= set(bnd['instances']):
@@ -813,6 +918,8 @@ def main():
                 fixture_check(su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if su.get("su_lower2_attempts") is not None:
+                ent["su_lower2_attempts"] = su["su_lower2_attempts"]
             if su.get('timing_obligations'):
                 ent.update(timing_obligations=su['timing_obligations'], source_contract=su['source_contract'],
                            execution_qualified=False, quarter_ownership=su.get('quarter_ownership'),
@@ -868,6 +975,10 @@ def main():
             P = dict(base=want0, end=want0, ql=QLine(), recs=[])
             progs.append(P)
         o = max(0, want0 - P["base"])
+        if a.su_lower2:
+            # opt-in: records of one programme run strictly after the previous record's last commit (store rows are
+            # reused from 0 by every record; RAW through VM is then satisfied by construction, and checked below)
+            o = max(o, P.get("tail", 0))
         while True:                                                     # first offset without a slot collision
             clash = calendar_collision(P["ql"], su["ql"], o,
                                        exclusive_controls=bool(su.get("control_reservation") or P.get("exclusive_control")))
@@ -879,6 +990,7 @@ def main():
                 P["ql"].f[fld][o + e] = P["ql"].f[fld].get(o + e, 0) | v
         P["exclusive_control"] = P.get("exclusive_control", False) or bool(su.get("control_reservation"))
         P["end"] = max(P["end"], P["base"] + o + len(su["lines"]))
+        P["tail"] = o + max(len(su["lines"]), 1 + (su.get("last_commit") or 0)) + 1
         P["recs"].append((r, ent, su, o))
     cfgs = []
     for k, P in enumerate(progs):
@@ -941,6 +1053,20 @@ def main():
             if note:
                 ent.setdefault("reasons", []).append(note)
     events.sort(key=lambda x: (x["dom"], x["cyc"], x["k"]))
+    dropped_holds = 0
+    if a.su_lower2:
+        # a slice input holds its last D value (gen_slice_tb replay model); a D repeating the port's current value is
+        # a no-op on the DUT inputs -- drop it so the layer fits the built testbench's event array (NEV)
+        last, kept = {}, []
+        for e in events:
+            if e["k"] == "D":
+                key = (e["dom"], e["port"])
+                if last.get(key, "0") == e["val"] and key in last:
+                    dropped_holds += 1
+                    continue
+                last[key] = e["val"]
+            kept.append(e)
+        events = kept
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
@@ -951,6 +1077,8 @@ def main():
                             "VM operands as M preload events (no slice VM input port)",
                             f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
                events=events)
+    if a.su_lower2:
+        rep["dropped_same_value_holds"] = dropped_holds
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
                scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,

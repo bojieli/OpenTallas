@@ -31,6 +31,7 @@ QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_imag
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
 CONNECTED_LOWERING=${CONNECTED_LOWERING:-0}
 CONNECTED_ARGS=(); HC_ARGS=(); CUT_ARGS=()
+SU_LOWER2=${SU_LOWER2:-0}   # TOK-FUNC2-HBM-SU opt-in: production SU lowerings by record profile (layer_images --su-lower2)
 if [ "$CONNECTED_LOWERING" = 1 ]; then
   CONNECTED_ARGS=(--connected-lowering --side-source "$OUT/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv")
   HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}")
@@ -93,12 +94,13 @@ python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays 
 say "$(grep -m1 '^SLICE' "$L/cut.log")"
 
 # 3. replays (compiler of record on the die's own SU timing) ----------------------------------------------------------
-read RR WR < <(python3 -c "import json,sys; p=json.load(open(sys.argv[1]))['instances']['su_SW0']['params']; print(p['READ_RETURN'], p['WRITE_RETURN'])" "$FC")
+read RR WR RFL < <(python3 -c "import json,sys; p=json.load(open(sys.argv[1]))['instances']['su_SW0']['params']; print(p['READ_RETURN'], p['WRITE_RETURN'], p.get('RF_LOCAL', 0))" "$FC")
+SU2_ARGS=(); [ "$SU_LOWER2" = 1 ] && SU2_ARGS=(--su-lower2 --rf-local "$RFL")
 say "SU native timing READ_RETURN=$RR WRITE_RETURN=$WR (contract su_SW0)"
 B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
 for LL in 00 02 14; do l=$((10#$LL))
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
-     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
+     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
 done
 for st in L0 chain; do
