@@ -318,6 +318,42 @@ def landed_unused_pins(view, root):
     return sorted(pins)
 
 
+H1_DIE_SKEW_PS = 50.0
+
+
+def _standin_internal_roots(view, cm, raw_like, where, unused):
+    """HBM-TP192 10-21: DIAGNOSTIC stand-in child (tools/ref_tile/standin_from_gate.py, STANDIN_NOT_A_VIEW; never
+    bindable, never submitted) of a gated multi-root tile whose internal-only CTS roots (no boundary flops, e86
+    clk_r1/clk_r2) carry the gate's all-internal-sink reference.  Modelled exactly as the routed view's multi_root record
+    will be (same R: all-internal mean; same anchor/co-timing; tol = rule H1 die skew 50 ps), so the parent's landed
+    clock entry measures them on their region root instead of losing them (OT_LANDED 96/160).  Raw SRAM entries are not
+    modelled for stand-ins: any pin with macros or n != many fails closed."""
+    ports = sorted(cm)
+    bounded = [p for p in ports if p not in raw_like]
+    if not bounded:
+        raise ValueError(f'{where}: stand-in has no CTS root with a boundary reference')
+
+    def mean(p, c, k):
+        b = (cm[p].get(c) or {}).get(k) or {}
+        if not b.get('n') or (cm[p].get(c) or {}).get('errors'):
+            raise ValueError(f'{where}: stand-in {p}/{c}: no {k} reference')
+        return [float(b[x]) for x in ('min', 'mean', 'max')]
+    ref = max(bounded, key=lambda p: (mean(p, 'tt', 'boundary')[1], -bounded.index(p)))
+    out, R = {}, {}
+    for pin in raw_like:
+        if (cm[pin].get('tt') or {}).get('macros') or int(((cm[pin].get('tt') or {}).get('all') or {}).get('n') or 0) < 2:
+            raise ValueError(f'{where}: stand-in {pin} is not an internal-only CTS root (raw SRAM entries need a record)')
+        refs = {c: mean(pin, c, 'all') for c in CORNERS}
+        out[pin] = dict(ref=ref, tol=H1_DIE_SKEW_PS, refs=refs, record='STANDIN_NOT_A_VIEW', verdict='STANDIN_NOT_A_VIEW')
+        R[pin] = {c: refs[c][1] for c in CORNERS}
+    for p in bounded:
+        R[p] = {c: mean(p, c, 'boundary')[1] for c in CORNERS}
+    cotimed = {p: dict(ref=ref, tol=H1_DIE_SKEW_PS, record='STANDIN_NOT_A_VIEW', verdict='STANDIN_NOT_A_VIEW')
+               for p in bounded if p != ref}
+    anchor = max(ports, key=lambda p: (R[p]['tt'], -ports.index(p)))
+    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R, unused=unused)
+
+
 def landed_record_pins(view, root):
     """ROOT-INF21 10-19 (coordinator INF.21.1, pgslice_lg children): the closed-record clock reference of a hard child
     with raw clock pins (no routed boundary flops), for BOTH record models:
@@ -346,6 +382,8 @@ def landed_record_pins(view, root):
     if not raw_like:
         return empty
     where = f'{view}: raw child clock pins {raw_like}'
+    if (view / 'STANDIN_NOT_A_VIEW').is_file():
+        return _standin_internal_roots(view, cm, raw_like, where, unused)
     try:
         pl = json.loads((view / 'port_latency.json').read_text())
         job = pl['job']

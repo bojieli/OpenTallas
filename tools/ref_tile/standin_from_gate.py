@@ -31,7 +31,8 @@ def rtl_dirs(spec):
     """port base -> 'in' / 'out' from the top module header in the spec sources"""
     txt = "\n".join((ROOT / f).read_text(errors="replace") for f in spec["sources"])
     txt = re.sub(r"//[^\n]*", "", txt)
-    m = re.search(rf"\bmodule\s+{re.escape(spec['top'])}\b[^(]*\((.*?)\);", txt, re.S)
+    # skip a #(parameter ...) list (e86 FAN32/SEAM) before the port list
+    m = re.search(rf"\bmodule\s+{re.escape(spec['top'])}\b\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*\((.*?)\);", txt, re.S)
     out, d = {}, None
     for it in m.group(1).split(","):
         it = " ".join(it.split())
@@ -59,12 +60,18 @@ def main():
         for p in d.get("inputs", []) + d.get("outputs", []):
             dom[p] = d["ports"][0]
     g = json.loads((kit / "gate_result.json").read_text())
-    R = {}
+    R, NALL, INTERNAL = {}, {}, set()
     for m in g["clock"]["clock_measurements"]:
         for c in ("tt", "ff"):
             b = (m.get(c) or {}).get("boundary") or (m.get(c) or {}).get("all")
             if b:
                 R.setdefault(m["source"], {})[c] = (b["mean"], b["min"], b["max"])
+            if not (m.get(c) or {}).get("boundary") and (m.get(c) or {}).get("all"):
+                # HBM-TP192 10-21: an internal-only CTS root of the gated tile (no boundary flops, no ETM check arc;
+                # e86 clk_r1/clk_r2) is recorded like the routed view records it: an all-internal-sink reference, no
+                # boundary -> the parent's clock_entry_constraints measures it directly on its region root
+                INTERNAL.add(m["source"])
+                NALL[m["source"]] = int((m.get(c) or {})["all"]["n"])
     for ck in cks:
         R.setdefault(ck, R.get(cks[0], {}))
         R[ck]["ss"] = tuple(v * a.ss_scale for v in R[ck]["tt"])
@@ -187,7 +194,8 @@ def main():
         # multi-root child (ck_insertion.py form): one record per Liberty clock pin, so a parent's clock_entry_constraints
         # binds each pin to its own boundary (else: 'ambiguous routed clock pin association')
         ins["clock_measurements"] = {ck: {"lib_clock_pin": ck, "clock": ck, "standin": True, **{
-            c: {"boundary": {"n": len(pins), **dict(zip(("mean", "min", "max"), R[ck][c]))}, "errors": []}
+            c: ({"all": {"n": NALL[ck], **dict(zip(("mean", "min", "max"), R[ck][c]))}, "errors": []} if ck in INTERNAL else
+                {"boundary": {"n": len(pins), **dict(zip(("mean", "min", "max"), R[ck][c]))}, "errors": []})
             for c in ("tt", "ff", "ss")}} for ck in cks}
     (out / "insertion.json").write_text(json.dumps(ins, indent=1) + "\n")
     widths = {}

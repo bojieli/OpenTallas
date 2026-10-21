@@ -116,7 +116,9 @@ RESET_FOREST_RTL = ["rtl/common/landed_parent/ot_pl_land_field_copies.sv",
 KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "always_ff",
       "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if", "else", "for", "begin", "end",
       "case", "endcase", "function", "endfunction", "genvar", "integer", "signed", "unsigned", "default_nettype"}
+HOP = "ot_pl_hop"   # PL-TP192 10-18 pre-scheduled crossing (ported onto this generator by HBM-TP192 10-21)
 LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out", "epo": "out", "vld": "out"},
+             HOP: {"ck": "in", "i": "in", "o": "out"},
              "ot_pl_land_r": {"ck": "in", "rsi": "in", "bank": "in", "epo": "in", "vld": "in", "o": "out"},
              "ot_pl_pad": {"ck": "in", "d": "in", "q": "out"}}
 # Chunked primitives preserve the same top-level source/read contract.
@@ -384,6 +386,7 @@ def eval_width(rng: str | None, env: dict) -> int:
         for _ in range(8):
             for k, v in env.items():
                 x = re.sub(rf"\b{re.escape(k)}\b", f"({v})", x)
+        x = x.replace("$clog2", "_clog2")    # HBM-TP192 10-21: parameter defaults substituted above may carry $clog2
         return int(eval(c_to_py(x), {"_clog2": lambda v: max(0, math.ceil(math.log2(v))) if v > 0 else 0}))
     return abs(ev(a) - ev(b)) + 1
 
@@ -471,7 +474,9 @@ class Parent:
         self.cports, self.cwidth = {}, {}
         for ins in self.insts:
             m = ins["module"]
-            if m not in self.cports:
+            if m == HOP:
+                self.cports[m], self.cwidth[m] = dict(LIB_PORTS[HOP]), {"ck": 1}
+            elif m not in self.cports:
                 cm = parse_module(csrc, m)
                 self.cports[m] = {p["name"]: p["dir"] for p in cm["ports"]}
                 self.cwidth[m] = {p["name"]: eval_width(p["range"], dict(cm["params"])) for p in cm["ports"]}
@@ -498,6 +503,9 @@ class Parent:
         self.region = {}
         for ins in self.insts:
             hit = [r["name"] for r in spec["regions"] if any(fnmatch.fnmatchcase(ins["inst"], p) for p in r["insts"])]
+            if ins["module"] == HOP and not hit:
+                self.region[ins["inst"]] = None          # resolved in plan() (resolve_hops)
+                continue
             if len(hit) != 1:
                 raise SystemExit(f"instance {ins['inst']} matches regions {hit}: every child needs exactly one region")
             self.region[ins["inst"]] = hit[0]
@@ -601,6 +609,8 @@ class Parent:
                     continue
                 if pin in (self.S.get("clock_pins") or []) or pin in (self.S.get("reset_pins") or []):
                     continue
+                if ins["module"] == HOP and pin == "ck":
+                    continue
                 for n in sorted(idents(ex) - excl):     # sorted: a set's order is PYTHONHASHSEED-random (pslice real7)
                     if n in self.env:
                         continue
@@ -625,8 +635,64 @@ class Parent:
             raise SystemExit(f"output port {p} is driven from regions {sorted(regs)}: split the port")
         return regs.pop() if regs else self.regions[0]
 
+    def hop_n(self, ins):
+        m = re.search(r"\.N\s*\(\s*(\d+)\s*\)", ins["params"] or "")
+        return int(m.group(1)) if m else self.A
+
+    def resolve_hops(self, drv, rd):
+        """PL-TP192 10-18 (5ec845df4): region of every ot_pl_hop; self.absorbed {inst: dict(src, dst, net_in, net_out, N)}.
+        A hop whose two sides differ is ABSORBED: removed and replaced by the landing of its input into the destination
+        region (+ max(0, N - A) pad stages), so the landed parent equals the flat parent edge for edge."""
+        hops = {i["inst"]: i for i in self.insts if i["module"] == HOP}
+        self.absorbed = {}
+        if not hops:
+            return
+        for h, ins in hops.items():
+            for pin in ("i", "o"):
+                if not re.fullmatch(r"\w+", ins["conns"].get(pin, "").strip()):
+                    raise SystemExit(f"hop {h}: .{pin} must be one plain net (declare a wire and assign it)")
+        derived = {}
+        for _ in range(len(self.assigns) + 1):
+            for lhs, rhs in self.assigns:
+                for n in rhs:
+                    derived.setdefault(n, set()).update(lhs)
+                    for m in list(derived.get(n, ())):
+                        derived[n] |= derived.get(m, set())
+        def readers(net):
+            nets = {net} | derived.get(net, set())
+            return {i for n, i, _ in rd if n in nets}
+        for _ in range(len(hops) + 2):
+            for h, ins in hops.items():
+                if self.region[h] is not None and h in self.absorbed:
+                    continue
+                ni, no = ins["conns"]["i"].strip(), ins["conns"]["o"].strip()
+                ds = drv.get(ni, set())
+                sr = {self.region[d] if not d.startswith("port:") else self.node_region(d, drv, rd, {}) for d in ds}
+                if None in sr or not ds:
+                    continue
+                if len(sr) > 1:
+                    raise SystemExit(f"hop {h}: input {ni} driven from regions {sorted(sr)}")
+                rs = readers(no)
+                plain = {self.region[i] for i in rs if hops.get(i) is None}
+                via = {self.region[i] for i in rs if i in hops}
+                if len(plain) > 1:
+                    raise SystemExit(f"hop {h}: output {no} read in regions {sorted(plain)}: one hop per destination")
+                if not plain and (not via or None in via):
+                    continue
+                dst = plain.pop() if plain else via.pop()
+                src = sr.pop()
+                self.region[h] = dst
+                if src != dst:
+                    self.absorbed[h] = dict(src=src, dst=dst, net_in=ni, net_out=no, N=self.hop_n(ins))
+                else:
+                    self.absorbed.pop(h, None)
+        miss = [h for h in hops if self.region[h] is None]
+        if miss:
+            raise SystemExit(f"hops with unresolved regions: {miss}")
+
     def plan(self, mut_unland=False):
         drv, rd, out_drv = self.graph()
+        self.resolve_hops(drv, rd)
         nreg = {}
         for n, ds in drv.items():
             for d in ds:
@@ -656,8 +722,11 @@ class Parent:
                 lands[key]["readers"].append(f"{inst}.{pin}")
             if landed and n in self.loose:
                 lands[key]["loose"] = True
+            add = self.A if landed else 0
+            if landed and inst in self.absorbed:
+                add = max(0, self.A - self.absorbed[inst]["N"])
             for d in ds:
-                (loose if n in self.loose else edges).append((d, inst, n, self.A if landed else 0, landed, pin))
+                (loose if n in self.loose else edges).append((d, inst, n, add, landed, pin))
         oregs = {k: int(v) for k, v in (self.S.get("out_regs") or {}).items()}
         for p, k in oregs.items():
             if p not in out_drv or k < 1:
@@ -680,7 +749,8 @@ class Parent:
             lst = sorted(lands.values(), key=lambda L: int(L["name"]))
             if mut_unland and lst:
                 lst[0]["unlanded_mutant"] = True
-            return dict(t=t, edges=edges, lands=lst, landkey=lands, pads={}, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv)
+            return dict(t=t, edges=edges, lands=lst, landkey=lands, pads={}, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
+                        absorbed=dict(self.absorbed))
         resched = bool(self.S.get("reschedule"))
         for it in ([] if resched else range(len(nodes) + 1)):
             ch = False
@@ -746,7 +816,8 @@ class Parent:
             lst[0]["unlanded_mutant"] = True
         loose_lag = [dict(net=n, reader=b, lag_edges=max(0, v)) for (n, b), v in sorted(lags.items())]
         return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
-                    loose=loose, loose_lag=loose_lag, oregs=oregs, lag=lag, lagged=lagged, resched=resched)
+                    loose=loose, loose_lag=loose_lag, oregs=oregs, lag=lag, lagged=lagged, resched=resched,
+                    absorbed=dict(self.absorbed))
 
     def emit_lagref(self, P):
         """<top>_lagref: the FLAT parent with every lag pin delayed lag(reader) stages (the lockstep reference)"""
@@ -1078,6 +1149,16 @@ class Parent:
             w(f"    wire {rng or ''} {q};  ot_pl_pad #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
               f".d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
+        # absorbed pre-scheduled hops: the landing (+ any surplus stages) replaces the flat parent's N-edge delay
+        for h, a in sorted(P.get("absorbed", {}).items()):
+            src = sub.get((h, a["net_in"]), a["net_in"])
+            k = a["N"] - self.A
+            if k > 0:
+                rng = self.rng(a["net_in"])
+                w(f"    ot_pl_pad #(.W({width_text(rng)}), .N({k})) u_lph_{h} (.ck(ck_{a['dst']}), .d({src}), .q({a['net_out']}));"
+                  f"   // hop {h}: N {a['N']} = landing {self.A} + {k}")
+            else:
+                w(f"    assign {a['net_out']} = {src};   // hop {h} ({a['src']} -> {a['dst']}, N {a['N']}) = its landing")
         # child resets
         mc = self.mut_child(P)
         rsub = {}
@@ -1109,13 +1190,15 @@ class Parent:
         w("    // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)")
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
+            if i in P.get("absorbed", {}):
+                continue
             cs = []
             for pin, ex in ins["conns"].items():
                 binding = self.regional_bindings.get((i,pin))
                 if binding:
                     ex = ('{' + ', '.join('ck_'+r for r in reversed(binding['regions'])) + '}'
                           if binding['role']=='clocks' else brsub[i,pin])
-                elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
+                elif (pin in (S.get("clock_pins") or []) or (ins["module"] == HOP and pin == "ck")) and idents(ex) & self.ck:
                     cw = self.cwidth[ins["module"]].get(pin, 1)
                     ex = f"ck_{r}" if cw == 1 else f"{{{cw}{{ck_{r}}}}}"
                 elif i in rsub and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
@@ -1282,6 +1365,10 @@ class Parent:
                                f"-to u_lpl_{L['name']}_r.*" if self.mcp else "none: single-cycle full STA (landing_mcp false)")))
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
+            **({"prescheduled_hops": [dict(inst=h, **a, landing=next((L["name"] for L in P["lands"] if L["net"] == a["net_in"]
+                                                                      and L["dst_region"] == a["dst"]), None),
+                                           note="the flat parent's calendar already carries these N edges")
+                                      for h, a in sorted(P["absorbed"].items())]} if P.get("absorbed") else {}),
             loose_status=dict(nets=sorted(self.loose), lag=P.get("loose_lag", []),
                               sticky_outputs=S.get("sticky_outputs") or {},
                               note="sticky status flags (no reservation / valid / payload effect): landed, outside the "
@@ -1497,10 +1584,10 @@ class Parent:
         waived = {int(k): v for k, v in ((self.S.get("bench") or {}).get("mut_waivers") or {}).items()}
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
-        srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
+        srcs = " ".join(dict.fromkeys(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
                         (RESET_FOREST_RTL if self.reset_forest else []) + ([N32_RTL] if self.writer == "n32" else []) +
                         ([RST_COPY_RTL] if self.rcopies else []) +
-                        ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
+                        ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else [])))   # dedup (ot_pl_hop lives in LIB_RTL)
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
 # GENERATED by tools/landed_parent/lp.py: lockstep bench {self.S['top']} (flat) vs {top_lp} + mutants {muts[1:]} + region audit.
