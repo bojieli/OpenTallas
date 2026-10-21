@@ -5319,6 +5319,11 @@ def _reset_tree(v, m):
     # so the 16 drops of an instance leave the die tree on the cluster's clock, all at the tree's equal depth (same edge)
     _rn = {c[0] for c in cells}
     _ckf = m.setdefault('ck_follow', {})
+    if _os.environ.get('OT_SPLIT_RST_REGION_LAND', '0') == '1':
+        from qwen_split.reset_sync_contract import terminal_region_follow
+        _rf, _ru = terminal_region_follow(cells, wires, ckof, _ckf)
+        _ckf.update(_rf)
+        rec['terminal_region_follow'] = dict(leaves=len(_rf), unresolved=_ru)
     for w_ in wires:
         eps_ = w_[-1]
         drv = next((i for i, p in eps_ if i in _rn and p in ('q0', 'q1')), None)
@@ -6995,7 +7000,11 @@ def _gen16_clock_refile(m, regs, by, per):
             del per[k]
     cap = REP_SEG_MM * 1000
     for k in sorted(per):
-        reps = [(i, p) for i, p in per[k] if by[i].master.startswith('qfd_rst_rep')]
+        # Final reset captures belong to their receiving region. The later
+        # reset-column split must not undo that explicit clock ownership.
+        protect_reset = os.environ.get('OT_SPLIT_RST_REGION_LAND', '0') == '1'
+        reps = [(i, p) for i, p in per[k] if by[i].master.startswith('qfd_rst_rep')
+                and not (protect_reset and (i, p) in follow)]
         if len(reps) < 2:
             continue
         cx = lambda i: by[i].x + by[i].w / 2

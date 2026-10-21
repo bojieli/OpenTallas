@@ -66,6 +66,48 @@ def clock_inputs(model):
     return out
 
 
+def terminal_region_follow(cells, wires, ckof, follow):
+    """Attach final reset leaves to their sole receiving region's clock owner.
+
+    Multiple receiving roots are left unresolved, never chosen by majority.
+    Each downstream reset repeater already has its own two-stage capture.
+    """
+    reps = {c[0] for c in cells}
+    terminals = {}
+    for net, bus, eps in wires:
+        if eps and eps[0][0] in reps:
+            terminals.setdefault(eps[0][0], set()).update(i for i, p in eps[1:] if i not in reps)
+    result, unresolved = {}, []
+    for rep, sinks in sorted(terminals.items()):
+        if not sinks:
+            continue
+        roots = {ck for i in sinks for ck, pin in ckof.get(i, [])}
+        if len(roots) != 1:
+            unresolved.append(dict(rep=rep, sinks=sorted(sinks), roots=sorted(roots)))
+            continue
+        root = next(iter(roots))
+        if not re.fullmatch(r'clk_r\d+', root):
+            continue  # Foreign/nonregional roots retain the explicit sync plan.
+        owner = sorted(sinks)[0]
+        visited = set()
+        while owner not in visited:
+            visited.add(owner)
+            upstream = {o for (i, pin), o in follow.items() if i == owner and pin in ('ck', 'ck_s', 'clk')}
+            if not upstream:
+                break
+            if len(upstream) != 1:
+                owner = None
+                break
+            owner = next(iter(upstream))
+        else:
+            owner = None
+        if owner is None:
+            unresolved.append(dict(rep=rep, sinks=sorted(sinks), roots=sorted(roots), reason='ambiguous clock owner'))
+            continue
+        result[rep, 'clk'] = owner
+    return result, unresolved
+
+
 def fwd_clocks(model):
     """QW-G5NOROOT 10-20: FORWARDED package clocks = clock trunks driven by a package clock bump (qfd_ckbump, e.g. ckb_rom
     pll_ck -> n_pll_fwd, the ROM/KV-die link clock forwarded with its bumps) that do NOT feed the die clock receiver
