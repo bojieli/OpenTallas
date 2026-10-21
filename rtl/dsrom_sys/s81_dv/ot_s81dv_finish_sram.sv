@@ -514,11 +514,13 @@ module ot_s81dv_eng_finish_sram #(
         end
     // r_vk: same next state as r_v (reset 0; go_t[1] clears; set on the completing root write)
     (* keep *) reg [24:0] rvk;
-    always @(posedge clk or negedge rc[6])
-        if (!rc[6]) rvk <= 25'd0;
-        else if (go_t[1]) rvk <= 25'd0;
-        else rvk <= {25{dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
-                        == {T{1'b1}}}};
+    for(genvar vg=0;vg<25;vg=vg+1)begin:g_result_pulse
+      always @(posedge clk or negedge rc[6])
+        if (!rc[6]) rvk[vg] <= 1'b0;
+        else if (go_t[(vg+1)%NGO]) rvk[vg] <= 1'b0;
+        else rvk[vg] <= dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
+                        == {T{1'b1}};
+    end
     assign r_vk = rvk;
     always @(posedge clk) begin
         if (wr_v && wr_n == 1)           r_hh <= wr_d;
