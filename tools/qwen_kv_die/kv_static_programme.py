@@ -102,6 +102,19 @@ LINK_IMAGE_SU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
 LINK_IMAGE_MU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh'
 LINK_MU = os.environ.get('OT_KV_MU', '0') == '1'
 LINK_IMAGE = LINK_IMAGE_MU if LINK_MU else LINK_IMAGE_SU
+# KV-EMBWIN16 10-20 (DRIVE-KV decision, KV-CAL15 finding): OT_KV_EMB_WIN=<edges> grows the token-run embedding window
+# (d2d_link_calendar --emb-window; L0..L35 and the token period move with it) so the embedding fill meets the row header
+# slot on the die relays.  The pair image is the committed d2d_cal_image[_mu]_ew<N>.svh (d2d_cal_image_production.sh with
+# D2D_EMB_WINDOW=<N>); both link ends bind it (KV: target 11 + the dcal tile's START / period constants, compute: its
+# sequencer).  Default unset = the priced window (272), images unchanged.
+LINK_EMB_WIN = os.environ.get('OT_KV_EMB_WIN', '')
+if LINK_EMB_WIN:
+    if not LINK_EMB_WIN.isdigit():
+        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN!r}: an integer edge count expected')
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', f'_ew{int(LINK_EMB_WIN)}.svh')
+    if not (ROOT / LINK_IMAGE).is_file():
+        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN}: no committed pair image {LINK_IMAGE} '
+                         f'(D2D_MU={int(LINK_MU)} D2D_EMB_WINDOW={LINK_EMB_WIN} tools/qwen_split/d2d_cal_image_production.sh)')
 
 
 def image_die_stages(img=None, root=None):
@@ -133,7 +146,8 @@ LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else [])     # + --token-path (decompressed in link_calendar)
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
+#            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it
@@ -376,6 +390,38 @@ def die_emb_relays(relay_stages):
                 ret=[sum(g(k, s) for k in EMB_FILL_BUSES['ret']) for s in C3.STACKS],
                 svc_root=g(EMB_FILL_BUSES['svc_root']), svc_join=g(EMB_FILL_BUSES['svc_join']), slot=g(EMB_FILL_BUSES['slot']),
                 source=str(relay_stages) if not isinstance(relay_stages, dict) else 'dict')
+
+
+# ---- KV-EMBWIN16 10-20: writer lanes on the die relays (shared es chain: writer KV words ride kvs_ctl.o_hroot -> hroot h ->
+# o_pc -> PC chain, the same DOWN path as the embedding issue words, so HROOT_LAND chain +1 delays them too) ---------------
+# On the GEN9 static die the native writer sits in kvs_ctl: its KVN words arrive over d2d_kv.{skw,srx,kvn_word_*} ->
+# kvs_ctl relays (die ages d2d_to_writer is the old colocated plan's 0).  writer_die() composes (a) that KVN relay depth
+# (OT_KV_WRITER_DIE=1: compile the writer start on it, pr['kvn']) and (b) every PC's writer word arrival age at its face /
+# controller es (kvjc3_pc_chain.writer_ages on the die down relays + the HROOT_LAND chain delta) for the consumers
+# (controller write readiness, K.STA.RETIRE); the record is written with every compile that names the die relays.
+WRITER_KVN_BUSES = (('d2d_kv', 'skw', 'kvs_ctl', 'd2d__skw'), ('d2d_kv', 'srx', 'kvs_ctl', 'd2d__srx'),
+                    ('d2d_kv', 'kvn_word_generation', 'kvs_ctl', 'd2d__kvn_word_generation'),
+                    ('d2d_kv', 'kvn_word_identity', 'kvs_ctl', 'd2d__kvn_word_identity'))
+
+
+def writer_die(relay_stages, deltas):
+    doc = json.loads(Path(relay_stages).read_text()) if not isinstance(relay_stages, dict) else relay_stages
+    B = {(b['src']['inst'], b['src']['port'], b['dst']['inst'], b['dst']['port']): b['stages'] for b in doc['buses']}
+    kv = {'.'.join(k[:2]) + '->' + '.'.join(k[2:]): B[k] for k in WRITER_KVN_BUSES if k in B}
+    if not kv:
+        raise ValueError('writer_die: no d2d_kv -> kvs_ctl KVN bus in the die relays')
+    if len(set(kv.values())) != 1:
+        raise ValueError(f'writer_die: KVN buses to the writer differ in relay depth {kv}: pad them to one age')
+    import kvjc3_pc_chain as C3
+    d = die_emb_relays(doc)
+    down = [x + deltas['hroot']['chain'] for x in d['down']]
+    wa = C3.writer_ages(down)
+    per = {st: dict(down=down[i], pc31_wes=wa[f'{st}_31']['wes_lane01'], pc0_ctrl_es=wa[f'{st}_0']['ctrl_es_lane23'])
+           for i, st in enumerate(C3.STACKS)}
+    return dict(kvn_relays=next(iter(kv.values())), kvn_buses=kv, land_chain=deltas['hroot']['chain'], per_stack=per,
+                worst_ctrl_es_age=max(v['pc0_ctrl_es'] for v in per.values()),
+                rule='writer word at PC p of stack s reaches its controller es kvjc3.writer_ages(down + LAND chain) edges after '
+                     'it leaves the writer; KVN words reach the writer kvn_relays edges after the d2d end')
 
 
 def emb_fill(layout, deltas, die=None, ctrl_lat=ES_CFG_CTRL_LAT):
@@ -897,7 +943,12 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     else:
         kgo_ev = start_qk - lead_k - crossing_core(e_k + CAL_PIN_EDGES, pr) - 1 - pr['groups'] - 1
         d_v = att8192['PV_START'] + lead_k - lead_v - 2
-    writer_ev = kvn[0]['rx_out'] + LR.D2D_OUT + pr['kvn'] - LR.WRITER_T0 - pr['writer']
+    wdie = writer_die(_die_rs, pr.get('cal_deltas') or CAL_DELTAS_ZERO) if _die_rs and pr['kind'] == 'die' else None
+    kvn_age = pr['kvn']
+    if wdie and os.environ.get('OT_KV_WRITER_DIE', '0') == '1':   # KV-EMBWIN16: writer start on the die's KVN relays
+        kvn_age = wdie['kvn_relays']
+        wdie['writer_start_kvn_age'] = dict(ages_table=pr['kvn'], compiled=kvn_age)
+    writer_ev = kvn[0]['rx_out'] + LR.D2D_OUT + kvn_age - LR.WRITER_T0 - pr['writer']
     rel = dict(ctrl_go=kgo_ev, kgo=kgo_ev, vgo=kgo_ev + d_v, attention_issue=run_ev - LR.ISSUE_TO_RUN - pr['att'],
                attention_run=run_ev - pr['att'], writer_start=writer_ev, link_start=LR.LINK_START,
                expected_quiet=st[0]['cyc'] + 1)
@@ -1070,7 +1121,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     if os.environ.get('OT_KV_EMB_FILL_STRICT', '0') == '1' and fill['status'] != 'PASS':
         raise ValueError(f'embedding fill deadline: margin {fill["margin"]} (last join word {fill["last_word"]} + 1 > row_tx '
                          f'slot {fill["row_tx_slot"]}); embed window {fill["embed_window"]} -> {fill["embed_window_needed"]}')
-    return dict(profile=pr, cal_deltas=cd, emb_fill=fill, link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
+    return dict(profile=pr, cal_deltas=cd, emb_fill=fill, writer_die=wdie, link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
                                       token_cycles=prog_cal['token_cycles_through_L35'], token_period=prog_cal.get('token_period'),
                                       token_period_unpadded=prog_cal.get('token_period_pad', {}).get('unpadded')),
                 leads=dict(k=lead_k, v=lead_v, kgo_event=kgo_ev, vgo_minus_kgo=d_v, e_k=e_k, e_v=e_v, start_lead=lead, law=law),
@@ -1099,7 +1150,13 @@ def mu_images(layer_words, own_words, receipt=False, lead=0):
     rows imply (enter 3, leave = stage-36 quiet + 1, deadline = token cycles)."""
     from tools.qwen_static_schedule import mu_calendar as MC
     rows = MC.kv_rows_from_image(list(layer_words))
-    cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows)
+    if LINK_EMB_WIN:
+        # KV-EMBWIN16 10-20: the filler first starts KV_FRAME_STARTS were searched on the priced-window (272) frame; on a
+        # grown window the stage frame moves, so the same deterministic search (kv_frame_search seed 1) picks them here
+        fs, _ = MC.kv_frame_search(rows, MC.KV_FRAME_F)
+        cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows, MC.KV_FRAME_F, tuple(fs))
+    else:
+        cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows)
     own, per = MC.kv_ownership_roots_mu(rows, gaps)
     if list(own_words) != [3, per['leave_per_user'][0] + lead, per['deadline_per_user'][0], MC.KV_OWN_SEAL]:
         raise ValueError(f'single-user ownership roots {own_words} differ from the layer rows')

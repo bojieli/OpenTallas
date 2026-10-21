@@ -13,7 +13,12 @@ the fan root, and OT_KV_EMB_PJ delays every join word one edge.  This writes the
 Mutants (--mut): 1 = compile without the root/join skew, 2 = compile one return edge short (the HROOT_LAND return
 +1 missed), 3 = expectation without the PIPE_JOIN edge, 4 = compile at relays 0 (today's production es_cfg).  Each must FAIL.
 
-    kvcal15_emb_die_model.py --down 83,25,72,16 --ret 67,21,77,32 --skew 1 --pj 1 --out DIR [--mut N]
+    kvcal15_emb_die_model.py --down 83,25,72,16 --ret 67,21,77,32 --skew 1 --pj 1 --out DIR [--mut N] [--window W]
+
+KV-EMBWIN16 10-20: --window W (token-run embedding window, d2d_link_calendar --emb-window) adds the row header deadline:
+OT_KC15_HDR = the row_tx slot (header slot + emb_tx_slot relay) - the fan root start (RESULT at the KV d2d + svc relays to
+kvs_ctl), the kv_static_programme.emb_fill law; the bench requires the measured last join word + 1 <= OT_KC15_HDR (edges
+from the join start: the law counts from the root start, i.e. it is conservative by the root/join skew).
 """
 import argparse
 import json
@@ -32,6 +37,23 @@ def build(down, ret, skew, pj, mut=0, ctrl_lat=92):
     return cal, words, exp
 
 
+def header_deadline(window, svc_root=4, slot=1):
+    """OT_KC15_HDR for a token-run embed window: row_tx slot - fan root start on the production link calendar layout"""
+    import gzip
+    import sys
+    import tempfile
+    root = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(root / 'tools/qwen_split'))
+    import d2d_link_calendar as L
+    with tempfile.TemporaryDirectory() as t:
+        tp = Path(t) / 'tp.json'
+        tp.write_bytes(gzip.decompress((root / 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz').read_bytes()))
+        _, lay = L.program_profile(8, 7, str(tp), emb_window=window, host_stages=0, st_ofs=40)   # --pinreg txl/phy
+    r = lay['hbm_embedding_budget']['result_at_kv_host'] + svc_root
+    return lay['emb_header_send'] + slot - r, dict(window=lay['embed']['cycles'], header_slot=lay['emb_header_send'],
+                                                    root_start=r, row_tx_slot=lay['emb_header_send'] + slot)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--down', required=True)
@@ -40,25 +62,28 @@ def main():
     ap.add_argument('--pj', type=int, default=0)
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--window', type=int, default=None, help='embed window: add the row header deadline check')
     a = ap.parse_args()
     down = [int(x) for x in a.down.split(',')]
     ret = [int(x) for x in a.ret.split(',')]
     if len(down) != 4 or len(ret) != 4 or min(down + ret) < 0 or a.skew < 0 or a.pj not in (0, 1):
         raise SystemExit('need 4 nonnegative down / ret, skew >= 0, pj 0|1')
     cal, words, exp = build(down, ret, a.skew, a.pj, a.mut)
+    hdr, hinfo = header_deadline(a.window) if a.window is not None else (None, None)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'boot.memh').write_text(''.join(f'{ad:02x}{dt:016x}\n' for ad, dt in words))
     (a.out / 'words.memh').write_text(''.join(f'{w["edge"]:04x}{w["scale"]:01x}{w["word"]:02x}\n' for w in exp))
     (a.out / 'bench.svh').write_text(''.join(f'`define OT_KC15_DN{s} {d}\n' for s, d in enumerate(down)) +
                                      ''.join(f'`define OT_KC15_RT{s} {r}\n' for s, r in enumerate(ret)) +
                                      f'`define OT_KC15_SKEW {a.skew}\n`define OT_KC15_PJ {a.pj}\n'
-                                     f'`define OT_KC15_LAST {exp[-1]["edge"]}\n')
+                                     f'`define OT_KC15_LAST {exp[-1]["edge"]}\n' +
+                                     (f'`define OT_KC15_HDR {hdr}\n' if a.window is not None else ''))
     (a.out / 'model.json').write_text(json.dumps(dict(down=down, ret=ret, skew=a.skew, pj=a.pj, mut=a.mut,
-                                                      last_word=exp[-1]['edge'], calendar={k: cal[k] for k in (
+                                                      last_word=exp[-1]['edge'], header_deadline=hdr, header=hinfo, calendar={k: cal[k] for k in (
                                                           'issue', 'code_return', 'first_root_beat', 'scale_root_beat',
                                                           'last_word', 'beat_segments', 'relay', 'return_relay')}), indent=1) + '\n')
     print(f'down {down} ret {ret} skew {a.skew} pj {a.pj} mut {a.mut}: last join word {exp[-1]["edge"]} '
-          f'(rel join start), boot words {len(words)}')
+          f'(rel join start), boot words {len(words)}' + (f', header deadline {hdr} (window {a.window})' if hdr is not None else ''))
 
 
 if __name__ == '__main__':

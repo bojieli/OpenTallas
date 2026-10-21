@@ -1309,6 +1309,12 @@ if DCAL_BC:
 # die group (flt) so the parent fault lane (kv_static_die OT_KV_DCAL_FLT) can load it; never left open.
 DCAL_BC4 = DCAL_BC and __import__('os').environ.get('OT_KV_DCAL_BC4', '0') == '1'
 DCAL_BC4_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv'   # + ot_qwen_d2d_cal_seq_bc4.sv (core)
+# KV-EMBWIN16 10-20: OT_KV_EMB_WIN=<N> -> the same bc4 tile on the grown-window pair image (only the `include differs:
+# d2d_cal_image_mu_ew<N>.svh = START table / token period / images; tools/qwen_static_kv/gen_dcal_bc4_ew.py), kit
+# qkd_d2d_cal_seq_pin_bc4_ew<N> (module qkd_d2d_cal_seq_pin_bc4, same ports / edges)
+_EMB_WIN = __import__('os').environ.get('OT_KV_EMB_WIN', '')
+if _EMB_WIN:
+    DCAL_BC4_FILE = f'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4_ew{int(_EMB_WIN)}.sv'
 if DCAL_BC4:
     DCAL_FILE = DCAL_BC4_FILE
     DCAL_WH = (21.6, 34.56) if __import__('os').environ.get('OT_KV_DCAL_BC4_KIT', '') == 'qkd_d2d_cal_seq_pin_bc4w' \
