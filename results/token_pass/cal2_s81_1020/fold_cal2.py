@@ -13,11 +13,11 @@ New ledger (per critical occurrence):
                  (claude/s81-coll7-1020 8efb5b0b7/344f2113b, tb_coll_reach7 + 3 mutant witnesses caebd6e15).  BENCH-RTL
                  The reverse ACK relay +2 is NOT on the data path (static schedule: it only lengthens the replay
                  window), reported as a sensitivity (+2 a phase).
-  IDX3R      +57 every attn.idx.score instance, 122-frame / 140-stage variant ONLY: non-inline dsdv_idx_rg3 reader in the
+  IDX3R      +62 every attn.idx.score instance, 122-frame / 140-stage variant ONLY: non-inline dsdv_idx_rg3 reader in the
                  PHY corner strips (lanes/S81-DIE11.md spec): fixed HBM round trip 6..36 a controller pair (3/8/13/18
                  stations each way at 405 um; pairs run in parallel -> the worst pair, 36, bounds the job) + 21 edges
                  once a job on the W->E score/query chain; absorbed by raising T0 (no throughput change at P3 scan /
-                 P4 gather).  MODEL until lane S81-IDX3R's rg3 bench lands.  The 116-frame / 201-stage fallback keeps the
+                 P4 gather).  MEASURED (rg3 bench, 10-20 17:58): worst pair +41 (T0 floor), chain +21.  The 116-frame / 201-stage fallback keeps the
                  in-line idx3 readers (0 added).
   STAGE_HOP  (N - 120) stage hops x (1006 + 2) edges: the token DAG record has 120 stage hops (58 placed
                  substage_hop at 1006 = link_rt 652 + full-KP4 PHY 209 ns + UCIe 10 ns + wire, and 62 unplaced at
@@ -49,14 +49,16 @@ F = C1.F
 HOP_REF = 120                  # stage hops in the token DAG record (58 placed + 27 + 35 unplaced)
 HOP_CYC = 1006                 # ds_rom.json substage_hop (measured+vendor)
 HOP_PHASE = 2                  # CAL1 XDIE_GUARD2 +1 and LEPCAP_INPIPE +1 a crossing phase
-IDX3_RT = (6, 36)              # per-pair fixed round trip (3 / 18 stations each way)
-IDX3_CHAIN = 21
+IDX3_RT = (11, 41)             # MEASURED rg3 bench (claude/s81-idx3r-1020 @8ccaf446f): request +s+4, response +s+1
+                               # -> +2s+5 a pair = 11/21/31/41 for s = 3/8/13/18; T0 floor +41 (worst pair)
+IDX3_CHAIN = 21                # MEASURED: W->E XD = 21 stations once a job
 LEDGER = dict(
     XG5_X=dict(edges=2, per='field op instance', grade='measured-RTL bench', src='claude/s81-xg5-1020 @ff736425d'),
     XG5_RING=dict(edges=1, per='field op instance', grade='measured-RTL bench', src='claude/s81-xg5-1020 @ff736425d'),
     COLL7=dict(edges=4, per='coll crossing phase (+1 tx, +3 rx)', grade='bench-RTL', src='claude/s81-coll7-1020 344f2113b'),
-    IDX3R=dict(edges=IDX3_RT[1] + IDX3_CHAIN, per='attn.idx.score instance (140-stage variant only)', grade='MODEL',
-               src='lanes/S81-DIE11.md non-inline reader spec; RTL lane S81-IDX3R'),
+    IDX3R=dict(edges=IDX3_RT[1] + IDX3_CHAIN, per='attn.idx.score instance (122-frame variants only)',
+               grade='measured-RTL bench (rg3 vs rg2, T0 sweep +<=40 priced +41)',
+               src='claude/s81-idx3r-1020 @8ccaf446f results/rtl/s81_idx3r_1020 (lanes/S81-IDX3R.md)'),
     STAGE_HOP=dict(edges=HOP_CYC + HOP_PHASE, per='stage hop above the 120 of the DAG record', grade='MODEL',
                    src='ep9 codex-s81-stage124-1020 stage_map_f122_140 / stage_map_201'),
 )
@@ -64,6 +66,9 @@ SENS = dict(COLL7_ACK=2)       # a coll phase, not on the data path
 VARIANTS = {140: dict(frames=122, role='PRIMARY', idx3_noninline=True,
                       stage_map='ep9:/srv/opentallas-scratch/claude/codex-s81-stage124-1020/stage_map_f122_140.json',
                       campaign='f122_140.exact.log (margin f122_148)'),
+            148: dict(frames=122, role='MARGIN', idx3_noninline=True,
+                      stage_map='ep9:/srv/opentallas-scratch/claude/codex-s81-stage124-1020/stage_map_f122_148.json',
+                      campaign='f122_148.exact.log (148/148 PASS)'),
             201: dict(frames=116, role='FALLBACK', idx3_noninline=False,
                       stage_map='ep9:/srv/opentallas-scratch/claude/codex-s81-stage124-1020/stage_map_201.json',
                       campaign='req201.exact.log (margin req212)')}

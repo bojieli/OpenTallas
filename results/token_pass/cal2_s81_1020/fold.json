@@ -10,10 +10,10 @@
    "src": "claude/s81-coll7-1020 344f2113b"
   },
   "IDX3R": {
-   "edges": 57,
-   "grade": "MODEL",
-   "per": "attn.idx.score instance (140-stage variant only)",
-   "src": "lanes/S81-DIE11.md non-inline reader spec; RTL lane S81-IDX3R"
+   "edges": 62,
+   "grade": "measured-RTL bench (rg3 vs rg2, T0 sweep +<=40 priced +41)",
+   "per": "attn.idx.score instance (122-frame variants only)",
+   "src": "claude/s81-idx3r-1020 @8ccaf446f results/rtl/s81_idx3r_1020 (lanes/S81-IDX3R.md)"
   },
   "STAGE_HOP": {
    "edges": 1008,
@@ -46,58 +46,58 @@
    "composers": {
     "RATEFIX": {
      "ar": {
-      "T_after": 1125747.7,
+      "T_after": 1125787.7,
       "T_cal1": 1103233.7,
       "multi_user_legacy_groups": {
-       "aggregate_tok_s": 49034,
+       "aggregate_tok_s": 49032,
        "bound": "per-user token",
        "calendar": "results/arch/mu_s81_1018/calendar_ar_cal2_s140.json",
        "caveat": "59 legacy Sxxx stage windows (not the physical stage windows): projection only",
        "fillers": 0,
        "lemma": "PASS",
-       "per_user_tok_s": 1066.0,
+       "per_user_tok_s": 1065.9,
        "period": 1011772,
        "slot": 21995.0,
        "users": 46
       },
-      "pct_vs_cal1": -2.0,
+      "pct_vs_cal1": -2.003,
       "stage_hop_edges": 20160,
-      "structural_edges": 2354,
-      "tok_s_after": 1066.0,
+      "structural_edges": 2394,
+      "tok_s_after": 1065.9,
       "tok_s_cal1": 1087.7,
       "tok_s_structural_only": 1085.4,
-      "tok_s_with_ack_sens": 1065.5
+      "tok_s_with_ack_sens": 1065.4
      },
      "mtp": {
-      "T_after": 1518748.4,
+      "T_after": 1518788.4,
       "T_cal1": 1496096.4,
       "multi_user_legacy_groups": {
-       "aggregate_tok_s": 32861,
+       "aggregate_tok_s": 32860,
        "bound": "per-user token",
        "calendar": "results/arch/mu_s81_1018/calendar_mtp_cal2_s140.json",
        "caveat": "59 legacy Sxxx stage windows (not the physical stage windows): projection only",
        "fillers": 1,
        "lemma": "PASS",
-       "per_user_tok_s": 3286.1,
+       "per_user_tok_s": 3286.0,
        "period": 1335560,
        "slot": 126808,
        "users": 10
       },
-      "pct_vs_cal1": -1.491,
+      "pct_vs_cal1": -1.494,
       "stage_hop_edges": 20160,
-      "structural_edges": 2492,
-      "tok_s_after": 3286.1,
+      "structural_edges": 2532,
+      "tok_s_after": 3286.0,
       "tok_s_cal1": 3335.9,
-      "tok_s_structural_only": 3330.3,
+      "tok_s_structural_only": 3330.2,
       "tok_s_with_ack_sens": 3284.9
      }
     },
     "TOKSIM-S81B": {
      "ar": {
-      "T_after": 1292004.1,
+      "T_after": 1292044.1,
       "T_cal1": 1269490.1,
       "multi_user_legacy_groups": {
-       "aggregate_tok_s": 42724,
+       "aggregate_tok_s": 42723,
        "bound": "per-user token",
        "calendar": "results/arch/mu_s81_1018/calendar_ar_cal2_s140.json",
        "caveat": "59 legacy Sxxx stage windows (not the physical stage windows): projection only",
@@ -108,16 +108,16 @@
        "slot": 21995.0,
        "users": 46
       },
-      "pct_vs_cal1": -1.743,
+      "pct_vs_cal1": -1.746,
       "stage_hop_edges": 20160,
-      "structural_edges": 2354,
+      "structural_edges": 2394,
       "tok_s_after": 928.8,
       "tok_s_cal1": 945.3,
       "tok_s_structural_only": 943.5,
       "tok_s_with_ack_sens": 928.4
      },
      "mtp": {
-      "T_after": 1685215.3,
+      "T_after": 1685255.3,
       "T_cal1": 1662563.3,
       "multi_user_legacy_groups": {
        "aggregate_tok_s": 29615,
@@ -131,13 +131,13 @@
        "slot": 126808,
        "users": 10
       },
-      "pct_vs_cal1": -1.344,
+      "pct_vs_cal1": -1.347,
       "stage_hop_edges": 20160,
-      "structural_edges": 2492,
+      "structural_edges": 2532,
       "tok_s_after": 2961.5,
       "tok_s_cal1": 3001.9,
-      "tok_s_structural_only": 2997.4,
-      "tok_s_with_ack_sens": 2960.6
+      "tok_s_structural_only": 2997.3,
+      "tok_s_with_ack_sens": 2960.5
      }
     }
    },
@@ -151,7 +151,7 @@
     "ar": {
      "by_delta": {
       "COLL7": 1028,
-      "IDX3R": 456,
+      "IDX3R": 496,
       "XG5_RING": 290,
       "XG5_X": 580
      },
@@ -178,7 +178,7 @@
       },
       "attn.idx.score": {
        "edges": {
-        "IDX3R": 456
+        "IDX3R": 496
        },
        "n": 8
       },
@@ -271,54 +271,54 @@
      "per_layer": {
       "0": 45,
       "1": 48,
-      "2": 113,
+      "2": 118,
       "3": 45,
       "4": 45,
       "5": 45,
       "6": 45,
       "7": 45,
-      "8": 113,
+      "8": 118,
       "9": 45,
       "10": 45,
       "11": 45,
       "12": 45,
       "13": 45,
-      "14": 116,
+      "14": 121,
       "15": 45,
       "16": 45,
       "17": 45,
       "18": 45,
       "19": 45,
-      "20": 113,
+      "20": 118,
       "21": 45,
       "22": 45,
       "23": 45,
-      "24": 113,
+      "24": 118,
       "25": 45,
       "26": 45,
       "27": 45,
-      "28": 113,
+      "28": 118,
       "29": 45,
       "30": 45,
       "31": 45,
-      "32": 113,
+      "32": 118,
       "33": 45,
       "34": 45,
       "35": 45,
-      "36": 113,
+      "36": 118,
       "37": 45,
       "38": 45,
       "39": 45
      },
-     "per_layer_max": 116,
-     "per_layer_mean": 58.8,
+     "per_layer_max": 121,
+     "per_layer_mean": 59.8,
      "sensitivity_coll_ack_edges": 514,
-     "total": 2354
+     "total": 2394
     },
     "mtp": {
      "by_delta": {
       "COLL7": 1100,
-      "IDX3R": 456,
+      "IDX3R": 496,
       "XG5_RING": 312,
       "XG5_X": 624
      },
@@ -358,7 +358,7 @@
       },
       "attn.idx.score": {
        "edges": {
-        "IDX3R": 456
+        "IDX3R": 496
        },
        "n": 8
       },
@@ -459,49 +459,467 @@
      "per_layer": {
       "0": 45,
       "1": 48,
-      "2": 113,
+      "2": 118,
       "3": 45,
       "4": 45,
       "5": 45,
       "6": 45,
       "7": 45,
-      "8": 113,
+      "8": 118,
       "9": 45,
       "10": 45,
       "11": 45,
       "12": 45,
       "13": 45,
-      "14": 116,
+      "14": 121,
       "15": 45,
       "16": 45,
       "17": 45,
       "18": 45,
       "19": 45,
-      "20": 113,
+      "20": 118,
       "21": 45,
       "22": 45,
       "23": 45,
-      "24": 113,
+      "24": 118,
       "25": 45,
       "26": 45,
       "27": 45,
-      "28": 113,
+      "28": 118,
       "29": 45,
       "30": 45,
       "31": 45,
-      "32": 113,
+      "32": 118,
       "33": 45,
       "34": 45,
       "35": 45,
-      "36": 113,
+      "36": 118,
       "37": 45,
       "38": 45,
       "39": 45
      },
-     "per_layer_max": 116,
-     "per_layer_mean": 58.8,
+     "per_layer_max": 121,
+     "per_layer_mean": 59.8,
      "sensitivity_coll_ack_edges": 550,
-     "total": 2492
+     "total": 2532
+    }
+   }
+  },
+  "s148": {
+   "added_stage_hops": 28,
+   "calendar_edge_deltas": "edge_deltas_s148.json",
+   "campaign": "f122_148.exact.log (148/148 PASS)",
+   "composers": {
+    "RATEFIX": {
+     "ar": {
+      "T_after": 1133851.7,
+      "T_cal1": 1103233.7,
+      "pct_vs_cal1": -2.7,
+      "stage_hop_edges": 28224,
+      "structural_edges": 2394,
+      "tok_s_after": 1058.3,
+      "tok_s_cal1": 1087.7,
+      "tok_s_structural_only": 1085.4,
+      "tok_s_with_ack_sens": 1057.9
+     },
+     "mtp": {
+      "T_after": 1526852.4,
+      "T_cal1": 1496096.4,
+      "pct_vs_cal1": -2.014,
+      "stage_hop_edges": 28224,
+      "structural_edges": 2532,
+      "tok_s_after": 3268.7,
+      "tok_s_cal1": 3335.9,
+      "tok_s_structural_only": 3330.2,
+      "tok_s_with_ack_sens": 3267.5
+     }
+    },
+    "TOKSIM-S81B": {
+     "ar": {
+      "T_after": 1300108.1,
+      "T_cal1": 1269490.1,
+      "pct_vs_cal1": -2.355,
+      "stage_hop_edges": 28224,
+      "structural_edges": 2394,
+      "tok_s_after": 923.0,
+      "tok_s_cal1": 945.3,
+      "tok_s_structural_only": 943.5,
+      "tok_s_with_ack_sens": 922.6
+     },
+     "mtp": {
+      "T_after": 1693319.3,
+      "T_cal1": 1662563.3,
+      "pct_vs_cal1": -1.816,
+      "stage_hop_edges": 28224,
+      "structural_edges": 2532,
+      "tok_s_after": 2947.3,
+      "tok_s_cal1": 3001.9,
+      "tok_s_structural_only": 2997.3,
+      "tok_s_with_ack_sens": 2946.4
+     }
+    }
+   },
+   "frames": 122,
+   "idx3_noninline": true,
+   "role": "MARGIN",
+   "stage_hop_edges": 28224,
+   "stage_map": "ep9:/srv/opentallas-scratch/claude/codex-s81-stage124-1020/stage_map_f122_148.json",
+   "stages": 148,
+   "structural": {
+    "ar": {
+     "by_delta": {
+      "COLL7": 1028,
+      "IDX3R": 496,
+      "XG5_RING": 290,
+      "XG5_X": 580
+     },
+     "by_op": {
+      "attn.a_allgather": {
+       "edges": {
+        "COLL7": 160
+       },
+       "n": 40
+      },
+      "attn.a_proj": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "attn.idx.q": {
+       "edges": {
+        "XG5_RING": 8,
+        "XG5_X": 16
+       },
+       "n": 8
+      },
+      "attn.idx.score": {
+       "edges": {
+        "IDX3R": 496
+       },
+       "n": 8
+      },
+      "attn.idx.topk_merge": {
+       "edges": {
+        "COLL7": 32
+       },
+       "n": 8
+      },
+      "attn.out_allreduce": {
+       "edges": {
+        "COLL7": 320
+       },
+       "n": 40
+      },
+      "attn.rows_allgather": {
+       "edges": {
+        "COLL7": 32
+       },
+       "n": 8
+      },
+      "attn.wo_a": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "attn.wo_b": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "attn.wq_b": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "eng.dot": {
+       "edges": {
+        "XG5_RING": 2,
+        "XG5_X": 4
+       },
+       "n": 2
+      },
+      "ffn.combine_allreduce": {
+       "edges": {
+        "COLL7": 320
+       },
+       "n": 40
+      },
+      "ffn.down": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "ffn.experts_gu": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "ffn.router": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "ffn.router_allgather": {
+       "edges": {
+        "COLL7": 160
+       },
+       "n": 40
+      },
+      "head.argmax_merge": {
+       "edges": {
+        "COLL7": 4
+       },
+       "n": 1
+      }
+     },
+     "per_layer": {
+      "0": 45,
+      "1": 48,
+      "2": 118,
+      "3": 45,
+      "4": 45,
+      "5": 45,
+      "6": 45,
+      "7": 45,
+      "8": 118,
+      "9": 45,
+      "10": 45,
+      "11": 45,
+      "12": 45,
+      "13": 45,
+      "14": 121,
+      "15": 45,
+      "16": 45,
+      "17": 45,
+      "18": 45,
+      "19": 45,
+      "20": 118,
+      "21": 45,
+      "22": 45,
+      "23": 45,
+      "24": 118,
+      "25": 45,
+      "26": 45,
+      "27": 45,
+      "28": 118,
+      "29": 45,
+      "30": 45,
+      "31": 45,
+      "32": 118,
+      "33": 45,
+      "34": 45,
+      "35": 45,
+      "36": 118,
+      "37": 45,
+      "38": 45,
+      "39": 45
+     },
+     "per_layer_max": 121,
+     "per_layer_mean": 59.8,
+     "sensitivity_coll_ack_edges": 514,
+     "total": 2394
+    },
+    "mtp": {
+     "by_delta": {
+      "COLL7": 1100,
+      "IDX3R": 496,
+      "XG5_RING": 312,
+      "XG5_X": 624
+     },
+     "by_op": {
+      "V.head.argmax_merge": {
+       "edges": {
+        "COLL7": 4
+       },
+       "n": 1
+      },
+      "accept.seed": {
+       "edges": {
+        "XG5_RING": 1,
+        "XG5_X": 2
+       },
+       "n": 1
+      },
+      "attn.a_allgather": {
+       "edges": {
+        "COLL7": 172
+       },
+       "n": 43
+      },
+      "attn.a_proj": {
+       "edges": {
+        "XG5_RING": 43,
+        "XG5_X": 86
+       },
+       "n": 43
+      },
+      "attn.idx.q": {
+       "edges": {
+        "XG5_RING": 8,
+        "XG5_X": 16
+       },
+       "n": 8
+      },
+      "attn.idx.score": {
+       "edges": {
+        "IDX3R": 496
+       },
+       "n": 8
+      },
+      "attn.idx.topk_merge": {
+       "edges": {
+        "COLL7": 32
+       },
+       "n": 8
+      },
+      "attn.out_allreduce": {
+       "edges": {
+        "COLL7": 344
+       },
+       "n": 43
+      },
+      "attn.rows_allgather": {
+       "edges": {
+        "COLL7": 32
+       },
+       "n": 8
+      },
+      "attn.wo_a": {
+       "edges": {
+        "XG5_RING": 43,
+        "XG5_X": 86
+       },
+       "n": 43
+      },
+      "attn.wo_b": {
+       "edges": {
+        "XG5_RING": 43,
+        "XG5_X": 86
+       },
+       "n": 43
+      },
+      "attn.wq_b": {
+       "edges": {
+        "XG5_RING": 43,
+        "XG5_X": 86
+       },
+       "n": 43
+      },
+      "eng.dot": {
+       "edges": {
+        "XG5_RING": 2,
+        "XG5_X": 4
+       },
+       "n": 2
+      },
+      "ffn.combine_allreduce": {
+       "edges": {
+        "COLL7": 344
+       },
+       "n": 43
+      },
+      "ffn.down": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "ffn.down.r0": {
+       "edges": {
+        "XG5_RING": 3,
+        "XG5_X": 6
+       },
+       "n": 3
+      },
+      "ffn.experts_gu": {
+       "edges": {
+        "XG5_RING": 40,
+        "XG5_X": 80
+       },
+       "n": 40
+      },
+      "ffn.experts_gu.r0": {
+       "edges": {
+        "XG5_RING": 3,
+        "XG5_X": 6
+       },
+       "n": 3
+      },
+      "ffn.router": {
+       "edges": {
+        "XG5_RING": 43,
+        "XG5_X": 86
+       },
+       "n": 43
+      },
+      "ffn.router_allgather": {
+       "edges": {
+        "COLL7": 172
+       },
+       "n": 43
+      }
+     },
+     "per_layer": {
+      "0": 45,
+      "1": 48,
+      "2": 118,
+      "3": 45,
+      "4": 45,
+      "5": 45,
+      "6": 45,
+      "7": 45,
+      "8": 118,
+      "9": 45,
+      "10": 45,
+      "11": 45,
+      "12": 45,
+      "13": 45,
+      "14": 121,
+      "15": 45,
+      "16": 45,
+      "17": 45,
+      "18": 45,
+      "19": 45,
+      "20": 118,
+      "21": 45,
+      "22": 45,
+      "23": 45,
+      "24": 118,
+      "25": 45,
+      "26": 45,
+      "27": 45,
+      "28": 118,
+      "29": 45,
+      "30": 45,
+      "31": 45,
+      "32": 118,
+      "33": 45,
+      "34": 45,
+      "35": 45,
+      "36": 118,
+      "37": 45,
+      "38": 45,
+      "39": 45
+     },
+     "per_layer_max": 121,
+     "per_layer_mean": 59.8,
+     "sensitivity_coll_ack_edges": 550,
+     "total": 2532
     }
    }
   },
