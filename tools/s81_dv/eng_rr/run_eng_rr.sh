@@ -15,7 +15,7 @@ F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_has
    rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv
    rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/lib/ot_rst_relay.sv
    rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv
-   rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv
+   rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv
    physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v
    physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v
    physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
@@ -45,6 +45,7 @@ run() {   # name
   else echo "NO BUILD" > $W/$n.log; fi
   echo "$n: $(grep -h 'TB_ENG_RR PASS\|TB_ENG_RR FAIL' $W/$n.log | tail -1) $(grep -h 'ENG_RR_PY PASS\|ENG_RR_PY FAIL' $W/$n.log | tail -1)" >> $W/status
 }
+if [ "${BASE_ONLY:-0}" = 1 ]; then build base; run base; cat $W/status; grep -m20 '%Error' $W/base.build.log; tail -30 $W/base.log; exit 0; fi
 build base &
 build xq1 -GXQ_MUT=1 &
 build xq2 -GXQ_MUT=2 &
