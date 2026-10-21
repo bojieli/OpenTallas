@@ -1,0 +1,245 @@
+{
+ "name": "dsdv_seq_host_d43",
+ "top": "dsdv_seq_host_c",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 820.8,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/dsdv_seq_host_d/standin/dsdv_sh_lk",
+   "count": 1,
+   "inst": "*u_l0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "count": 1,
+   "inst": "*u_l1",
+   "at": [
+    86.4,
+    367.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc",
+   "count": 1,
+   "inst": "*u_l2",
+   "at": [
+    86.4,
+    561.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "S": [
+   "s_hc_e",
+   "s_hw_e",
+   "s_jd_e",
+   "st_rg_e",
+   "vi_s",
+   "vo_s"
+  ],
+  "N": [
+   "cw_v",
+   "cw_a",
+   "cw_d",
+   "vi_n",
+   "vo_n",
+   "tap_k",
+   "sink_k"
+  ],
+  "W": [
+   "f_host",
+   "f_lf",
+   "t_host"
+  ],
+  "E": [
+   "f_ks",
+   "s_hc_w",
+   "s_hw_w",
+   "s_j",
+   "s_jd_w",
+   "st_rg_w",
+   "t_kd",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "vi_s": [
+   166.47,
+   277.12
+  ],
+  "vo_s": [
+   277.16,
+   387.81
+  ],
+  "s_hw_e": [
+   47.81,
+   164.9
+  ],
+  "s_hc_e": [
+   44.21,
+   47.83
+  ],
+  "s_jd_e": [
+   164.88,
+   165.67
+  ],
+  "st_rg_e": [
+   165.7,
+   166.48
+  ],
+  "f_host": [
+   44.21,
+   285.09
+  ],
+  "f_lf": [
+   285.12,
+   286.96
+  ],
+  "t_host": [
+   287.0,
+   322.96
+  ],
+  "f_ks": [
+   44.93,
+   77.78
+  ],
+  "s_hc_w": [
+   78.63,
+   84.02
+  ],
+  "s_hw_w": [
+   84.24,
+   266.13
+  ],
+  "s_j": [
+   266.36,
+   286.72
+  ],
+  "s_jd_w": [
+   286.95,
+   287.97
+  ],
+  "st_rg_w": [
+   288.2,
+   289.22
+  ],
+  "t_kd": [
+   289.44,
+   322.87
+  ],
+  "cw_v": [
+   90.64,
+   91.04
+  ],
+  "cw_a": [
+   90.92,
+   93.67
+  ],
+  "cw_d": [
+   93.51,
+   160.37
+  ],
+  "vi_n": [
+   160.23,
+   232.58
+  ],
+  "vo_n": [
+   232.44,
+   304.53
+  ],
+  "tap_k": [
+   304.66,
+   306.86
+  ],
+  "sink_k": [
+   306.72,
+   308.94
+  ],
+  "ck": [
+   345.45000000000005,
+   345.75
+  ],
+  "rst_n": [
+   347.85,
+   348.15
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
+ },
+ "structural_change": "S81-SVCSEQ-1021 re-pack of dsdv_seq_host_c for the s10f lk (345.6x280.8, full-face pins): vertical stack on the 43.2 lattice, lk (43.2,43.2) / sq CLOSED (86.4,367.2) / vc CLOSED (86.4,561.6); channels 43.2 um; outline 432x820.8 = S81 die seqhost slot (needs die slot 432x820.8 (fallback B, 43.2 channels for the lk N-face -> sq S-face fan-in of cf/tw/rn/rs)). Parent S/W/E pins = lk faces, N pins = vc N face; ck/rst_n on E in the lk|sq channel.",
+ "job": {
+  "owner": "Claude:S81-SVCSEQ-1021",
+  "branch": "claude/s81-svcseq-1021",
+  "tag": "sq21d43",
+  "purpose": "S81-DV dsdv_seq_host_d43: DIAGNOSTIC --cts gate, CLOSED sq+vc views, s10f lk STAND-IN (not a view); submit only after lk closes",
+  "submit": false,
+  "hold_merge": "diagnostic: lk = s10f STAND-IN (s10f route b0972fda0 FAIL hold -273 ps / DRC 19); real gate + submit after an RL1 lk view closes",
+  "views_to": "physical/ref_tile/dsdv_seq_host_d43/views",
+  "record_to": "results/rtl/ref_tile/dsdv_seq_host_d43",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
+   "rtl/link",
+   "rtl/hdc/ingest",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_static_control",
+   "physical/rom_host_ingest/rtl",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/landed_parent_1018/dsdv_seq_host/core_b"
+  ],
+  "benches": [
+   {
+    "name": "seqhost_c_gate",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh {RUN}/seqhost_c",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_C_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
+   }
+  ]
+ },
+ "defines": [
+  "OT_DSDV_SEQHOST_HARD"
+ ],
+ "hard_define": "OT_DSDV_SEQHOST_HARD"
+}
