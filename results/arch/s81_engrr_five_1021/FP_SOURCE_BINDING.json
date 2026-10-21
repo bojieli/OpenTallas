@@ -1,0 +1,143 @@
+{
+  "ENG_source_ref": "80b6d5334",
+  "FP_baseline": "560abe5d2",
+  "imported_delta_refs": [
+    "7ebe3958e",
+    "8f11a8749"
+  ],
+  "collector_proof": "295a0d626",
+  "ENG_file_sha256": "c10cf98c23337972debe03a11f1713aa9062da97dbff5b57261182d9e8e6d4e5",
+  "collector_comparison_ref": "8f11a8749",
+  "module_body_continuity": {
+    "ot_s81dv_kcut": {
+      "ENG_sha256": "759e854d7e2c052d22b50b053c4e41ee42edc8467c09868f217cdef2c79d663a",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_fp32_add_f12_n32": {
+      "ENG_sha256": "223cc8742cbc40dc551ff2d59a6cc72b1ff071c8efca2f30a5ed886433f4054b",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_qadd_n32": {
+      "ENG_sha256": "5c71f14b3a30f14a2ef828222c654887f9a33cadf783ffab6da49cbb9c025fa5",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_rsqrt_n32": {
+      "ENG_sha256": "8903b292cf374fe24f11a892d2782806559bc7cdb3e7b94257823502d7259bfc",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_fp32_mul_f12_n32": {
+      "ENG_sha256": "aa403a2af61293d49fb82b4859dd9b2aed36de3c1a8b6ff13f3f9ce081fd9426",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_mul24_rows_n32": {
+      "ENG_sha256": "c7e0f5f7ab372c793a5048d39a5bd75878a20e20c2aed568ac4388d143c087cc",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_qmul_n32": {
+      "ENG_sha256": "d5b9edd688005d3b30d78c73c6dda26e310f64dac52a5cb6f50161aa3fc7d3fc",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_divc_n32": {
+      "ENG_sha256": "5c2fa93070979468c6d0ce056f1f9580849ddd0611f9667c8d1827256048fec9",
+      "collector_body_identical": false
+    },
+    "ot_s81dv_xfin_fp_cut": {
+      "ENG_sha256": "0442c54aaf43dd91721a83fd34fcfaa273327fc698a0082f1e83dee384e59865",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_add_n32": {
+      "ENG_sha256": "ab8427b063d1baa9bde523b90b8421b6119367067430733db1d733ec1582e8dc",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_mul_n32": {
+      "ENG_sha256": "a0eaad6c46d5607d754ecd83c8efd3bbde942bba75e6e211c2f8aaa0123c94cf",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_copy": {
+      "ENG_sha256": "177408a6bf3f422d35d5a4842284dcdc656e7d73ef87c59f5892a8b39d02877f",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_mux": {
+      "ENG_sha256": "9605fe597ed0314d52b87999f2c1ff8e16dec4de9b8c41a6531082b3ad6297d6",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_shift": {
+      "ENG_sha256": "209d31b52a7c70d1ec09c8d958b08d1d3c977d09a27f67ba0bafc3663dbeea79",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_rows3": {
+      "ENG_sha256": "f7bf488d2b71cdde9ab2a43b1e249c4ee0cdc236af872cdeb5454ebdae477011",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_pp6": {
+      "ENG_sha256": "7bab84c002f2a4cdc6bfabbacf7f1120f731f3293dea10b7b6d2c42e26b84e9e",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_shift_chain": {
+      "ENG_sha256": "f55b02708e6d74e8ec9cf66ccb1d15c9d86fa6f7c1d0da763ee43e55e8795217",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_shift_step": {
+      "ENG_sha256": "efc488184df1029205b3f66ad43c87da68f119cab54d7dd5ee9f692c99dd69c6",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_jam28": {
+      "ENG_sha256": "f53569d7635c74687e88b0d3618e6568d36166558c6fc4dfc3043ab49035907e",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_norm_pick": {
+      "ENG_sha256": "e13c695d29a9881e163f09c3601f589751a83e4a2dbcb154657abc7e30607568",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_bypass": {
+      "ENG_sha256": "c7bf014f0dcd41402144cca540205fe53372031cdea31917c9db4f210d11bd69",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_add_pick": {
+      "ENG_sha256": "cebe35c1c5f59f39da5abf1e10ce722311650fcdcc675ff8c2edafba530e61a1",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_mask8": {
+      "ENG_sha256": "d686a767c2d1b9a79d6ca742104639f39064290a3c1994aa809d66f5c87a91d0",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_sub_pick": {
+      "ENG_sha256": "5a95facba9ffbbb496383e2fdf2e3870d66e79b6a5ab8a36d3a996e6c27a085e",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_out_byte": {
+      "ENG_sha256": "a7516841144734a1244e82f2f5bca5eea32489b3baed3458e74e0d4f129bff94",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_out_zero": {
+      "ENG_sha256": "79fa64d594808cedd2737e93c7befff679f33f73bd34c8557c1b068c83e57cde",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_clear": {
+      "ENG_sha256": "42c9d8f3fd412494ff66a13cf02b77087320b2598ba510c1bb96042ec7368a92",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_norm12": {
+      "ENG_sha256": "2e32d3ed4779b417045fa7bf021b2c992f1eea92e602475766fa1f0497bf6ae1",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_lead4": {
+      "ENG_sha256": "c8399b886fbc37abca1d6e44cd23beb7eb7b35c9a3f6bda5c1827c4410c21dfd",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_lead_enable": {
+      "ENG_sha256": "97082c93e647b12fab2bb19eb0441cd7eafdf393045ffb0d05b3fadd0f424d57",
+      "collector_body_identical": true
+    },
+    "ot_s81dv_xfin_fp_lead2": {
+      "ENG_sha256": "2ab9b1d8295d502021402e8bd9007a942d4b1e6123cb53ab1d6e3f7195dc2890",
+      "collector_body_identical": true
+    }
+  },
+  "collector_only_modules": [
+    "ot_s81dv_div_shift26_n32",
+    "ot_s81dv_div_sticky8_n32"
+  ],
+  "binding_rule": "ActualMUL/helper moduleclosures maycoalesceonlywhen body+parameter+resetcontractmatch. Preserve XFINselectedDIVbody, no wholeFPfilealias orrollback. ENGnativeR6 andphysical remainunqualifiedpendingactualverdict.",
+  "reset_contract": "raw reset input twoedgesearlier; parentearly1+internalreset2=original3, unchanged."
+}
