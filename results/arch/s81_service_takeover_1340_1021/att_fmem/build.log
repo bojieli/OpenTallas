@@ -1,0 +1,419 @@
+%Warning-PINMISSING: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:351:63: Instance has missing pin: 'pv_v_reps'
+  351 |                          .SC_CRED(0), .PV_CRED(0), .NTP(NTP)) u_eng (
+      |                                                               ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:292:52: ... Location of port declaration
+  292 |     output wire [((NL*(D/TD)*H*33+8)+255)/256-1:0] pv_v_reps,
+      |                                                    ^~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:351:63: Instance has missing pin: 'tx_i'
+  351 |                          .SC_CRED(0), .PV_CRED(0), .NTP(NTP)) u_eng (
+      |                                                               ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:303:33: ... Location of port declaration
+  303 |     output wire [TX_NT*TXI-1:0] tx_i,
+      |                                 ^~~~
+%Warning-PINMISSING: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:351:63: Instance has missing pin: 'tx_o'
+  351 |                          .SC_CRED(0), .PV_CRED(0), .NTP(NTP)) u_eng (
+      |                                                               ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:304:33: ... Location of port declaration
+  304 |     input  wire [TX_NT*TXO-1:0] tx_o
+      |                                 ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6a' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_m[3].g_real.g_x.u_m.g[4].g_h[15].u_a..g_f5.u.u.u_g6'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:455:42: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wbank' generates 3 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_t[0]..g_ts.u_t.g_g[3].u_g.g_h[3].u_hdp'
+  455 |                     if (we[gk] && (wbank == bb)) ab[bb*16 +: 16] <= wd[gk*16 +: 16];
+      |                                          ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:149:20: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                   : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_t[0]..g_ts.u_t.g_g[3].u_g'
+  149 |                 hh <= gid * HG + gh;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:150:73: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'gid' generates 8 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_t[0]..g_ts.u_t.g_g[3].u_g'
+  150 |                 for (gq = 0; gq < H / HG; gq = gq + 1) gsel[gq] <= (gid == gq);
+      |                                                                         ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:186:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'r_ld_grp' generates 8 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_t[0]..g_ts.u_t.g_g[3].u_g'
+  186 |                     wire lo = (r_ld_grp == (gk / R));
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:187:54: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_ld_grp' generates 8 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_t[0]..g_ts.u_t.g_g[3].u_g'
+  187 |                     wire hi = r_ld_w2v && ((r_ld_grp + 8'd1) == (gk / R));
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:187:54: Operator ADD expects 32 bits on the RHS, but RHS's CONST '8'h1' generates 8 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_t[0]..g_ts.u_t.g_g[3].u_g'
+  187 |                     wire hi = r_ld_w2v && ((r_ld_grp + 8'd1) == (gk / R));
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv:18:29: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'r_half_i' generates 1 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_tr[3].g_x.u_tr.u_sram'
+   18 |   assign rsel_c[s]=(r_half_i==(s/DPT))&&(r_c_i==(s%DPT));
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv:18:47: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'r_c_i' generates 8 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_tr[3].g_x.u_tr.u_sram'
+   18 |   assign rsel_c[s]=(r_half_i==(s/DPT))&&(r_c_i==(s%DPT));
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv:29:47: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'w_half_i' generates 1 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_tr[3].g_x.u_tr.u_sram'
+   29 |    wire row_select=w_en_i&&((MUT==3)?(w_half_i!=(row/TD)):(w_half_i==(row/TD)))&&(w_cnt_i==((row%TD)/NL));
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv:29:68: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'w_half_i' generates 1 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_tr[3].g_x.u_tr.u_sram'
+   29 |    wire row_select=w_en_i&&((MUT==3)?(w_half_i!=(row/TD)):(w_half_i==(row/TD)))&&(w_cnt_i==((row%TD)/NL));
+      |                                                                    ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv:29:90: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'w_cnt_i' generates 8 bits.
+                                                                    : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng.g_tr[3].g_x.u_tr.u_sram'
+   29 |    wire row_select=w_en_i&&((MUT==3)?(w_half_i!=(row/TD)):(w_half_i==(row/TD)))&&(w_cnt_i==((row%TD)/NL));
+      |                                                                                          ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:424:62: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  424 |     wire        p_side = (ILV != 0) ? act_b : (act && (q_cnt == H));
+      |                                                              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:428:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  428 |     wire [15:0] blk_rows0 = pl_blk * TD;                      
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:429:35: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'T_p' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  429 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:429:35: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk_rows0' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  429 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:429:68: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'T_p' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  429 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:429:68: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'blk_rows0' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  429 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:429:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  429 |     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:439:40: Operator LTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 6 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  439 |             if (!held[ab] && (bcnt[ab] <= P_THR)) begin p_alloc = ab[BW-1:0]; p_alloc_ok = 1'b1; end
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:445:86: Operator LTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 6 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  445 |     wire p_bank_ok = (ILV != 0) ? p_alloc_ok : (!held[next_bank] && (bcnt[next_bank] <= P_THR));
+      |                                                                                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:450:94: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pl_blk' generates 6 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  450 |     wire p_ready_i = p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:450:104: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iss_blk' generates 6 bits.
+                                                                : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  450 |     wire p_ready_i = p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
+      |                                                                                                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:483:58: Operator ADD expects 32 or 16 bits on the LHS, but LHS's VARREF 'pl_word' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  483 |     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:483:95: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  483 |     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
+      |                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:485:36: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  485 |     assign q_ready = act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:500:99: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iss_c' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  500 |     wire fl_half_free = (fl_blk < iss_blk + 2) || ((fl_blk == iss_blk + 2) && pv_go_raw && (iss_c + 1 == DPT));
+      |                                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:503:46: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'qk_row' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  503 |     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:504:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  504 |     wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && ((SC_CRED == 0) || (sc_cred != 0)) && vfree &&
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:506:105: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'iss_blk' generates 6 bits.
+                                                                : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  506 |     wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? nb_p : pl_bank) : blk_bank[iss_blk % BD];
+      |                                                                                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:515:43: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  515 |             act <= 1'b0; T <= 16'd0; nblk <= 16'd0; phase_pv <= 1'b0; wptr <= 16'd0; qk_row <= 16'd0;
+      |                                           ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:518:21: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'SC_CRED' generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  518 |             sc_cred <= SC_CRED; pv_cred <= PV_CRED;
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:518:41: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'PV_CRED' generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  518 |             sc_cred <= SC_CRED; pv_cred <= PV_CRED;
+      |                                         ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:519:20: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  519 |             pl_blk <= 16'd0; pl_word <= 8'd0; pl_bank <= {BW{1'b0}};
+      |                    ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:520:20: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  520 |             fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0; iss_blk <= 16'd0; iss_c <= 8'd0;
+      |                    ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:520:58: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  520 |             fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0; iss_blk <= 16'd0; iss_c <= 8'd0;
+      |                                                          ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:520:76: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  520 |             fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0; iss_blk <= 16'd0; iss_c <= 8'd0;
+      |                                                                            ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:521:66: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  521 |             reuse_f <= 1'b0; act_b <= 1'b0; T_b <= 16'd0; nblk_b <= 16'd0; fbuf <= 1'b0; bbuf <= 1'b0;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:528:63: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'job_rows' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  528 |                 act <= 1'b1; T <= job_rows; nblk <= (job_rows + TD - 1) / TD; phase_pv <= 1'b0;
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:528:50: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  528 |                 act <= 1'b1; T <= job_rows; nblk <= (job_rows + TD - 1) / TD; phase_pv <= 1'b0;
+      |                                                  ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:532:28: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  532 |                     pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
+      |                            ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:532:62: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  532 |                     pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
+      |                                                              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:532:100: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  532 |                     pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
+      |                                                                                                    ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:533:29: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  533 |                     iss_blk <= 16'd0; iss_c <= 8'd0;
+      |                             ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:542:24: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  542 |                 pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:542:58: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  542 |                 pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
+      |                                                          ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:542:96: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  542 |                 pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
+      |                                                                                                ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:543:25: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's CONST '16'h0' generates 16 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  543 |                 iss_blk <= 16'd0; iss_c <= 8'd0;
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:550:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'next_bank' generates 3 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  550 |                     next_bank <= (next_bank == NBANK - 1) ? {BW{1'b0}} : next_bank + 1'b1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:554:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wptr' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  554 |             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:554:61: Operator COND expects 32 bits on the Conditional False, but Conditional False's FUNCREF 'count_ones' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  554 |             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
+      |                                                             ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:554:29: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  554 |             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:556:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'qk_row' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  556 |                 qk_row <= qk_row + NL;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:556:24: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  556 |                 qk_row <= qk_row + NL;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:557:30: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  557 |                 bcnt[q_bank] <= GUARD_Q + 1 + XD + VX;
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:558:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'qk_row' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  558 |                 if (qk_row + NL >= T) begin
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:571:37: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'pl_blk' generates 6 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  571 |                     blk_bank[pl_blk % BD] <= nb_p;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:573:45: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'next_bank' generates 3 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  573 |                     next_bank <= (next_bank == NBANK - 1) ? {BW{1'b0}} : next_bank + 1'b1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:579:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pl_word' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  579 |                     pl_word <= pl_word + PWORDS;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:579:29: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  579 |                     pl_word <= pl_word + PWORDS;
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:584:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'fl_cnt' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  584 |                 if (fl_cnt + 1 == FILLC) begin
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:591:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'fill_cnt_d' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  591 |             if (fill_wr && (fill_cnt_d + 1 == FILLC)) filled_upto <= fill_blk_d + 1'b1;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:594:32: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  594 |                 bcnt[iss_bank] <= ((ILV != 0) ? GUARD_Q + 1 : GUARD_Q) + XD + VX;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:595:27: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iss_c' generates 8 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  595 |                 if (iss_c + 1 == DPT) begin
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:657:35: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'qk_row' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  657 |     wire [15:0]   rd_row0 = qk_go ? qk_row : (fl_blk * TD + fl_cnt * NL);
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:657:27: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  657 |     wire [15:0]   rd_row0 = qk_go ? qk_row : (fl_blk * TD + fl_cnt * NL);
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:672:44: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'rd_row0' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  672 |     wire [15:0]   row_fl_c = (NSTAGE == 2) ? (fl_blk * TD + fl_cnt * NL) : rd_row0;
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:672:28: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  672 |     wire [15:0]   row_fl_c = (NSTAGE == 2) ? (fl_blk * TD + fl_cnt * NL) : rd_row0;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:713:32: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  713 |         rq_r0 <= qk_row; rf_r0 <= fl_blk * TD + fl_cnt * NL;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:716:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row_fl_c' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  716 |         for (pi2 = 0; pi2 < NL; pi2 = pi2 + 1) fpad_d1[pi2] <= (row_fl_c + pi2) >= T_p;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:764:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row_qk_c' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  764 |             qpad_r[pi] <= (row_qk_c + pi) >= T;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:868:67: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r0_qk_s' generates 16 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core.u_eng'
+  868 |         for (li = 0; li < NL; li = li + 1) e_mask[li] <= (r0_qk_s + li) < T;
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:439:40: Operator LTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[0].REF.u.u_eng'
+  439 |             if (!held[ab] && (bcnt[ab] <= P_THR)) begin p_alloc = ab[BW-1:0]; p_alloc_ok = 1'b1; end
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:445:86: Operator LTE expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                               : ... note: In instance 'tb_attn1_current_att.E[0].REF.u.u_eng'
+  445 |     wire p_bank_ok = (ILV != 0) ? p_alloc_ok : (!held[next_bank] && (bcnt[next_bank] <= P_THR));
+      |                                                                                      ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:557:30: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[0].REF.u.u_eng'
+  557 |                 bcnt[q_bank] <= GUARD_Q + 1 + XD + VX;
+      |                              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:594:32: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                              : ... note: In instance 'tb_attn1_current_att.E[0].REF.u.u_eng'
+  594 |                 bcnt[iss_bank] <= ((ILV != 0) ? GUARD_Q + 1 : GUARD_Q) + XD + VX;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:351:51: Operator EQ expects 3 bits on the LHS, but LHS's SEL generates 1 bits.
+                                                                        : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  351 |                     .we(wpush[wc] && wpush_pc[wc] == 3'(wp)), .wa({2'd0, wq_w[wc][wp][2:0]}),
+      |                                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:354:60: Operator EQ expects 3 bits on the LHS, but LHS's SEL generates 1 bits.
+                                                                        : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  354 |                     ,.we_reps({2{wpush[wc] && wpush_pc[wc] == 3'(wp)}})
+      |                                                            ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:423:63: Bit extraction of var[3:0] requires 2 bit index, not 7 bits.
+                                                                       : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  423 |                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:560:79: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'jpo' generates 16 bits.
+                                                                        : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  560 |     wire ep_v = job_active && p_left != 0 && jc >= po && ((PACE == 1) || (jpo % PACE == 0));
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:727:25: Bit extraction of array[2:0] requires 2 bit index, not 3 bits.
+                                                                       : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  727 |                     wq_r[npop[k]][k] <= wq_r[npop[k]][k] + 1'b1;
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:727:45: Bit extraction of array[2:0] requires 2 bit index, not 3 bits.
+                                                                       : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  727 |                     wq_r[npop[k]][k] <= wq_r[npop[k]][k] + 1'b1;
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:753:31: Bit extraction of var[639:0] requires 10 bit index, not 8 bits.
+                                                                        : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  753 |                     2'd0: pres[tg[7:0]] <= 1'b1;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:765:29: Bit extraction of var[511:0] requires 9 bit index, not 10 bits.
+                                                                       : ... note: In instance 'tb_attn1_current_att.E[1].DUT.u.u_core'
+  765 |                     sel_held[s_rank] <= sid_g[7:6] == st_r;
+      |                             ^
+%Warning-WIDTHTRUNC: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:315:63: Bit extraction of var[3:0] requires 2 bit index, not 7 bits.
+                                                                               : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  315 |                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
+      |                                                               ^
+%Warning-WIDTHEXPAND: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:336:35: Operator MODDIV expects 32 bits on the LHS, but LHS's VARREF 'jpo' generates 16 bits.
+                                                                                : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  336 |                 (PACE == 1 || jpo % PACE == 0);
+      |                                   ^
+%Warning-WIDTHEXPAND: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:388:27: Bit extraction of array[639:0] requires 10 bit index, not 8 bits.
+                                                                                : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  388 |                 2'd0: land[tg[7:0]] <= qr_data[256*k +: 256];
+      |                           ^
+%Warning-WIDTHTRUNC: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:440:25: Bit extraction of array[2:0] requires 2 bit index, not 3 bits.
+                                                                               : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  440 |                     wq_r[npop[k]][k] <= wq_r[npop[k]][k] + 1'b1;
+      |                         ^
+%Warning-WIDTHTRUNC: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:440:45: Bit extraction of array[2:0] requires 2 bit index, not 3 bits.
+                                                                               : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  440 |                     wq_r[npop[k]][k] <= wq_r[npop[k]][k] + 1'b1;
+      |                                             ^
+%Warning-WIDTHEXPAND: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:466:31: Bit extraction of var[639:0] requires 10 bit index, not 8 bits.
+                                                                                : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  466 |                     2'd0: pres[tg[7:0]] <= 1'b1;
+      |                               ^
+%Warning-WIDTHTRUNC: tools/s81_dv/svc_rs/merge_sram/att_canonical_ref.sv:478:29: Bit extraction of var[511:0] requires 9 bit index, not 10 bits.
+                                                                               : ... note: In instance 'tb_attn1_current_att.E[0].REF.u'
+  478 |                     sel_held[s_rank] <= sid_g[7:6] == st_r;
+      |                             ^
+%Warning-WIDTHTRUNC: tools/s81_dv/svc_rs/fmem_n32/tb_att_fmem.sv:68:10: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'mism' generates 32 bits.
+                                                                      : ... note: In instance 'tb_attn1_current_att'
+   68 |  if(mism || ns[0]!=(T+3)/4 || ns[1]!=ns[0] || np[0]!=40 || np[1]!=40 || ng[0]!=1 || ng[1]!=1 || done!=3 || fault!=0 || pio[0]!=123 || pio[1]!=123 || st[0]!=0 || st[1]!=0 || scale_reads[0]!=4 || scale_reads[1]!=4)$fatal(1,"CURRENT_ATT FAIL");
+      |          ^~
+make: Entering directory '/srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/out_att_fmem/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_attn1_current_att__pch.h -o Vtb_attn1_current_att__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_attn1_current_att__pch.h -o Vtb_attn1_current_att__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.fast -c Vtb_attn1_current_att_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.fast -c Vtb_attn1_current_att_vm_classes_1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.fast -c Vtb_attn1_current_att_vm_classes_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.fast -c Vtb_attn1_current_att_vm_classes_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.slow -c Vtb_attn1_current_att_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.slow -c Vtb_attn1_current_att_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.slow -c Vtb_attn1_current_att_vm_classes_Slow_2.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.slow -c Vtb_attn1_current_att_vm_classes_Slow_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_attn1_current_att__pch.h.slow -c Vtb_attn1_current_att__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_attn1_current_att__ALL.a    -pthread -lpthread -latomic   -o sim
+rm Vtb_attn1_current_att__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/out_att_fmem/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.293 MB sources in 97 modules, into 1751.003 MB in 1580 C++ files needing 0.549 MB
+- Verilator: Walltime 2607.501 s (elab=9.185, cvt=668.791, bld=1887.423); cpu 781.303 s on 4 threads; allocated 36137.238 MB

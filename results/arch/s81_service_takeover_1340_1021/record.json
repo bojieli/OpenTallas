@@ -20,6 +20,34 @@
       ],
       "unit": "3473503-1792609964",
       "scope": "real currentABI ATT SRAM/NTP0vs1 legalWINmetadataHBMfixture; notall16/fullhead/LP/resetprofile"
+    },
+    "att_fmem": {
+      "status": "PASS",
+      "source": "3e3c1e32a",
+      "fixture": "fe2205168",
+      "unit": "oth-ubuntu-983538-1792616535.scope",
+      "host": "ot-epyc7",
+      "exit": 0,
+      "admission_gb": 96,
+      "threads": 4,
+      "cases": {
+        "1": {
+          "status": "PASS",
+          "summary": "CURRENT_ATT T=1 SRAM=1 NTP=0/1 scores=1/1 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0",
+          "pv_valid_copy_edge_checks": 4306
+        },
+        "33": {
+          "status": "PASS",
+          "summary": "CURRENT_ATT T=33 SRAM=1 NTP=0/1 scores=9/9 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0",
+          "pv_valid_copy_edge_checks": 4356
+        },
+        "46": {
+          "status": "PASS",
+          "summary": "CURRENT_ATT T=46 SRAM=1 NTP=0/1 scores=12/12 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0",
+          "pv_valid_copy_edge_checks": 4375
+        }
+      },
+      "scope": "Actual legal currentABI ATT NTP0vs1 with persistent merge+transpose SRAM, dataNORST and fmem N32, all9sourcePVvalidclones checked everyedge. No wholecore native32/LP/full16/PVSO/physical/calendar qualification."
     }
   },
   "native": {
