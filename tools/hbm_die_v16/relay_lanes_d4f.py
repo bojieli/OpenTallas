@@ -343,7 +343,12 @@ def main():
             expected = {p: counts[di, p, frozenset(row['sinks'])] for p in ports}
             anchors = {p: [pc(di, [p])] + [pc(sink, sport.get((di, p, sink), set())) for sink in row['sinks']]
                        for p in ports}
-            if (sum(expected.values()) != row['bits'] or any(not expected[p] for p in ports)
+            # The initial station scan only counted bits whose original wire
+            # exceeded reach. The layer remaps ALL current contract bits with
+            # this port/sink set, including shorter bits and changed widths.
+            # Use that same population here; retaining an unresolved old row
+            # can average opposite faces into a point inside a hard macro.
+            if (any(not expected[p] for p in ports)
                     or any(x is None for v in anchors.values() for x in v)):
                 split_rows.append(row)
                 split_log.append(dict(driver=row['driver'], status='kept_unresolved',
@@ -362,11 +367,16 @@ def main():
                 new['driver'] = di + '.' + '+'.join(group)
                 new['bits'] = sum(expected[p] for p in group)
                 new['port_face_split'] = dict(original_driver=row['driver'], groups=len(groups),
-                                              max_span_um=a.pin_group_span)
+                                              max_span_um=a.pin_group_span,
+                                              original_bits=row['bits'], contract_bits=sum(expected.values()))
+                width = 48 if new['bits'] <= 48 else 624
+                for station in new['stations']:
+                    station['tiles'] = math.ceil(new['bits'] / width)
                 split_rows.append(new)
-            if len(groups) > 1:
+            if len(groups) > 1 or sum(expected.values()) != row['bits']:
                 split_log.append(dict(driver=row['driver'], status='split',
-                                      groups=[di + '.' + '+'.join(g) for g in groups], bits=row['bits']))
+                                      groups=[di + '.' + '+'.join(g) for g in groups], bits=row['bits'],
+                                      contract_bits=sum(expected.values())))
         st['rows'] = split_rows
         st['port_face_split'] = split_log
     import sys as _s
