@@ -12,8 +12,8 @@ sink order, so one copy drives both a W datapath mux-select bank and E control l
 
 ## Fix (structural, function unchanged)
 replica_role_split.py: for each replica group (same cell type, same input nets) re-deal the pooled sinks so every copy is
-role-coherent (control-only or mux-select-only, mux selects in instance order), cap 32 (MUX S = 2): 45 groups, 2428 sink pins
-re-pointed, +24 identical copies, 0 nets newly over 32.  tools/qwen_dv/rr_equiv.py: all non-cell lines identical, every
+role-coherent (control-only or mux-select-only, mux selects in instance order), cap 32 (MUX S = 2): 43 groups, 2139 sink pins
+re-pointed, +24 identical copies (only where every input net, through transparent inverters, stays <= 32), NOT replicas untouched, 0 nets grown beyond 32.  tools/qwen_dv/rr_equiv.py: all non-cell lines identical, every
 re-pointed pin reads a structurally identical driver (recursive canonical hash), 0 mismatches.
 
 ## SAFE checklist

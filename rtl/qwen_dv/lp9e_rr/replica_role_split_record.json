@@ -2,13 +2,15 @@
  "schema": "opentallas.qko_ctlm.replica_role_split.v1",
  "source": "npl.sv",
  "source_sha256": "aa8696447db4f693c0f42b38a6fa1ba8b5d9af965d9e905a568b57ddfa697d29",
- "out_sha256": "5f9bb32f3b078c8fb55871943236571f8d4dc9cd9cb4fedb37babab5b599d546",
+ "out_sha256": "7b81ef212d6bfcf88aeb4cfbfcc7fb578d5da78640d64f647a99ddcbb8d04747",
  "stats": {
-  "already_coherent": 209,
+  "already_coherent": 205,
   "copies_added": 24,
-  "groups_split": 45
+  "groups_split": 43,
+  "packed_one_mixed_input_cap": 4,
+  "left_unchanged_input_cap": 2
  },
- "sink_pins_moved": 2428,
+ "sink_pins_moved": 2139,
  "groups": [
   {
    "type": "qfd_bmath_or",
@@ -136,8 +138,7 @@
    },
    "copies": [
     "u_34525",
-    "u_68479",
-    "u_qkorr_2"
+    "u_68479"
    ],
    "cap": 32,
    "before": [
@@ -147,18 +148,15 @@
     },
     {
      "mux": 13
-    },
-    {}
+    }
    ],
    "after": [
     {
-     "logic": 1
+     "logic": 1,
+     "mux": 15
     },
     {
-     "mux": 16
-    },
-    {
-     "mux": 12
+     "mux": 13
     }
    ]
   },
@@ -171,7 +169,7 @@
    "copies": [
     "u_34696",
     "u_67769",
-    "u_qkorr_3"
+    "u_qkorr_2"
    ],
    "cap": 32,
    "before": [
@@ -206,7 +204,7 @@
     "u_35120",
     "u_67885",
     "u_67886",
-    "u_qkorr_4"
+    "u_qkorr_3"
    ],
    "cap": 32,
    "before": [
@@ -248,7 +246,7 @@
     "u_35229",
     "u_67888",
     "u_67889",
-    "u_qkorr_5"
+    "u_qkorr_4"
    ],
    "cap": 32,
    "before": [
@@ -290,7 +288,7 @@
     "u_35338",
     "u_67891",
     "u_67892",
-    "u_qkorr_6"
+    "u_qkorr_5"
    ],
    "cap": 32,
    "before": [
@@ -337,7 +335,7 @@
     "u_67852",
     "u_67853",
     "u_67854",
-    "u_qkorr_7"
+    "u_qkorr_6"
    ],
    "cap": 32,
    "before": [
@@ -445,7 +443,7 @@
    "copies": [
     "u_35858",
     "u_67803",
-    "u_qkorr_8"
+    "u_qkorr_7"
    ],
    "cap": 32,
    "before": [
@@ -518,7 +516,7 @@
     "u_37013",
     "u_67793",
     "u_67794",
-    "u_qkorr_9"
+    "u_qkorr_8"
    ],
    "cap": 32,
    "before": [
@@ -560,7 +558,7 @@
     "u_37014",
     "u_67790",
     "u_67791",
-    "u_qkorr_10"
+    "u_qkorr_9"
    ],
    "cap": 32,
    "before": [
@@ -601,7 +599,7 @@
    "copies": [
     "u_38034",
     "u_68110",
-    "u_qkorr_11"
+    "u_qkorr_10"
    ],
    "cap": 32,
    "before": [
@@ -1060,7 +1058,7 @@
     "u_68474",
     "u_68475",
     "u_68476",
-    "u_qkorr_12"
+    "u_qkorr_11"
    ],
    "cap": 32,
    "before": [
@@ -1186,7 +1184,7 @@
    "copies": [
     "u_39319",
     "u_67768",
-    "u_qkorr_13"
+    "u_qkorr_12"
    ],
    "cap": 32,
    "before": [
@@ -1208,86 +1206,6 @@
     },
     {
      "mux": 5
-    }
-   ]
-  },
-  {
-   "type": "qfd_bmath_and",
-   "inputs": {
-    "A": "n_59058",
-    "B": "n_58746"
-   },
-   "copies": [
-    "u_39322",
-    "u_68142",
-    "u_68143",
-    "u_68144",
-    "u_68145",
-    "u_68146",
-    "u_68147",
-    "u_68148",
-    "u_68149"
-   ],
-   "cap": 32,
-   "before": [
-    {
-     "logic": 19,
-     "mux": 15
-    },
-    {
-     "logic": 9,
-     "mux": 11
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 5,
-     "logic": 1
-    }
-   ],
-   "after": [
-    {
-     "logic": 29
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 15
     }
    ]
   },
@@ -1351,110 +1269,17 @@
    ],
    "after": [
     {
-     "logic": 16
+     "logic": 29
     },
     {
-     "logic": 16
+     "logic": 1
     },
     {
-     "mux": 8
+     "logic": 1
     },
     {
-     "mux": 8
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
+     "logic": 1,
      "mux": 15
-    }
-   ]
-  },
-  {
-   "type": "qfd_bmath_and",
-   "inputs": {
-    "A": "n_59058",
-    "B": "n_58748"
-   },
-   "copies": [
-    "u_39324",
-    "u_68116",
-    "u_68117",
-    "u_68118",
-    "u_68119",
-    "u_68120",
-    "u_68121",
-    "u_68122",
-    "u_68123",
-    "u_68125",
-    "u_68127"
-   ],
-   "cap": 32,
-   "before": [
-    {
-     "logic": 19,
-     "mux": 15
-    },
-    {
-     "logic": 10,
-     "mux": 11
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 16
-    },
-    {
-     "mux": 6,
-     "logic": 1
-    },
-    {
-     "logic": 1
-    },
-    {
-     "logic": 1
-    }
-   ],
-   "after": [
-    {
-     "logic": 16
-    },
-    {
-     "logic": 16
-    },
-    {
-     "mux": 8
-    },
-    {
-     "mux": 8
     },
     {
      "mux": 16
@@ -1736,7 +1561,7 @@
    "copies": [
     "u_39649",
     "u_67823",
-    "u_qkorr_14"
+    "u_qkorr_13"
    ],
    "cap": 32,
    "before": [
@@ -1771,7 +1596,7 @@
    "copies": [
     "u_39655",
     "u_67819",
-    "u_qkorr_15"
+    "u_qkorr_14"
    ],
    "cap": 32,
    "before": [
@@ -1806,7 +1631,7 @@
    "copies": [
     "u_39661",
     "u_67815",
-    "u_qkorr_16"
+    "u_qkorr_15"
    ],
    "cap": 32,
    "before": [
@@ -1841,7 +1666,7 @@
    "copies": [
     "u_39667",
     "u_67811",
-    "u_qkorr_17"
+    "u_qkorr_16"
    ],
    "cap": 32,
    "before": [
@@ -1876,7 +1701,7 @@
    "copies": [
     "u_39711",
     "u_68484",
-    "u_qkorr_18"
+    "u_qkorr_17"
    ],
    "cap": 32,
    "before": [
@@ -1960,7 +1785,7 @@
    "copies": [
     "u_39725",
     "u_67782",
-    "u_qkorr_19"
+    "u_qkorr_18"
    ],
    "cap": 32,
    "before": [
@@ -2033,7 +1858,7 @@
    "copies": [
     "u_68066",
     "u_68067",
-    "u_qkorr_20"
+    "u_qkorr_19"
    ],
    "cap": 32,
    "before": [
@@ -2068,7 +1893,7 @@
    "copies": [
     "u_68068",
     "u_68069",
-    "u_qkorr_21"
+    "u_qkorr_20"
    ],
    "cap": 32,
    "before": [
@@ -2103,7 +1928,7 @@
    "copies": [
     "u_68070",
     "u_68071",
-    "u_qkorr_22"
+    "u_qkorr_21"
    ],
    "cap": 32,
    "before": [
@@ -2144,7 +1969,8 @@
     "u_68161",
     "u_68162",
     "u_68164",
-    "u_68166"
+    "u_68166",
+    "u_qkorr_22"
    ],
    "cap": 32,
    "before": [
@@ -2179,17 +2005,21 @@
     },
     {
      "logic": 1
-    }
+    },
+    {}
    ],
    "after": [
     {
-     "logic": 12
+     "logic": 10
     },
     {
-     "mux": 8
+     "logic": 1
     },
     {
-     "mux": 8
+     "logic": 1
+    },
+    {
+     "mux": 16
     },
     {
      "mux": 16

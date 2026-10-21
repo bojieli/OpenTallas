@@ -22,14 +22,26 @@ sinks=collections.defaultdict(list)
 for n,(t,pins,i) in cells.items():
     for p,net in pins.items():
         if p not in outs(t): sinks[net].append((n,p))
-def w(s,p): return 2 if (cells[s][0]=='qfd_bmath_mux' and p=='S') else 1
+_nw={}
+def netw(net):
+    # mapped dynamic loads of a net: inverters are transparent (absorbed by mapping), MUX S = 2, other pins 1
+    if net in _nw: return _nw[net]
+    _nw[net]=0
+    _nw[net]=sum(w(s,p) for s,p in sinks.get(net,[])) + other_nets[net]
+    return _nw[net]
+def w(s,p):
+    t=cells[s][0]
+    if t=='qfd_bmath_not': return max(1,netw(cells[s][1]['Y']))
+    return 2 if (t=='qfd_bmath_mux' and p=='S') else 1
 def ismux(s,p): return cells[s][0]=='qfd_bmath_mux' and p=='S'
 def num(s): m=re.search(r'(\d+)$',s.strip('\\ ')); return int(m.group(1)) if m else 0
 grp=collections.defaultdict(list)
 for n,(t,pins,i) in cells.items():
-    if t.startswith('qfd_bmath_dff'): continue
+    if t.startswith('qfd_bmath_dff') or t=='qfd_bmath_not': continue  # NOT copies are transparent: re-dealing them moves weight upstream
     grp[(t,tuple(sorted((p,v) for p,v in pins.items() if p!='Y')))].append(n)
 edits={}  # (sink,pin) -> newnet
+extra=collections.Counter()
+drv={pins['Y']:n for n,(t,pins,i) in cells.items() if 'Y' in pins}
 added=[]
 stats=collections.Counter();changed=[]
 for k,ms in grp.items():
@@ -50,7 +62,28 @@ for k,ms in grp.items():
             buckets[-1].append(sp);cost+=w(*sp)
         return buckets
     buckets=pack(True)
-    while len(buckets)>len(ms_sorted):   # role-coherent copies need one more identical copy
+    def can_add():
+        # an extra copy loads each input net once more; inverters are transparent, so walk up NOT drivers too
+        for q,v in cells[ms_sorted[0]][1].items():
+            if q=='Y': continue
+            net=v
+            while True:
+                if netw(net)+extra[net]+1>32: return False
+                d=drv.get(net)
+                if d is None or cells[d][0]!='qfd_bmath_not': break
+                net=cells[d][1]['A']
+        return True
+    if len(buckets)>len(ms_sorted) and not can_add():
+        buckets=pack(False); stats['packed_one_mixed_input_cap']+=1
+        if len(buckets)>len(ms_sorted): stats['left_unchanged_input_cap']+=1; continue
+    while len(buckets)>len(ms_sorted):
+        for q,v in cells[ms_sorted[0]][1].items():
+            if q=='Y': continue
+            net=v
+            while True:
+                extra[net]+=1; d=drv.get(net)
+                if d is None or cells[d][0]!='qfd_bmath_not': break
+                net=cells[d][1]['A']   # role-coherent copies need one more identical copy
         base=ms_sorted[0];k2=len(added)
         nn=f'n_qkorr_{k2}';cn=f'u_qkorr_{k2}'
         t,pins,i=cells[base]
