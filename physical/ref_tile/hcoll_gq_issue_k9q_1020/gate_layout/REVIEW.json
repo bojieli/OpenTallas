@@ -14,5 +14,7 @@
     "shape": "475.2x561.6 aspect1.18,31%fill pinbound. Current237.6sqdie slot cannotfit; explicit slotupgrade owed."
   },
   "risks": "658ps/17levels logic, placementsetup-213/-171ps, quantSRAM negedgehalfcycle~-105ps are real risks. This is geometry approval, no timingPASS/SDCwaiver. Actualroute timing decides; quantwritefailure needs priced launchfix.",
-  "obligations": "VM_RT74/ISSUE_AHEAD1 exact; no74->76/localGQ/R10viewalias. Sourcefingerprint/clock/calendar/slot adoption owed. Preserve admittedR10 alternatives."
+  "obligations": "VM_RT74/ISSUE_AHEAD1 exact; no74->76/localGQ/R10viewalias. Sourcefingerprint/clock/calendar/slot adoption owed. Preserve admittedR10 alternatives.",
+  "gate_commit": "98ae16cf3048676c07effb93c0618b34bedd6e02",
+  "binding_note": "gate_commit names actual frozen snapshot start; geometry_sha256 is the primary ROOT-approved binding (gate commit field itself is null)."
 }
