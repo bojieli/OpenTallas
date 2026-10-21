@@ -26,6 +26,7 @@ module ot_hdc_v41x_exp_k8 #(
     input  wire        rst_n,                  // vline + table (HBM-KIND8: one reset leaf each group)
     input  wire        rst_m,                  // the 7 multipliers' valid bits
     input  wire        rst_a,                  // the 8 adders' valid bits
+    input  wire        rst_v,                  // HBM-KIND9: second leaf of the valid line (52 deep)
     input  wire        v,
     input  wire [31:0] x,
     output reg  [31:0] y,
@@ -309,7 +310,7 @@ module ot_hdc_v41x_exp_k8 #(
     endfunction
 
     wire [DEPTH:0] vd;
-    ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+    ot_hdc_vline_k8 #(.D(DEPTH), .R(2)) u_v (.clk(clk), .rst_n({rst_v, rst_n}), .v(v), .vd(vd));   // HBM-KIND9: 2 reset leaves
     assign vo = vd[DEPTH];
 
     // depth 1: clamp
@@ -322,7 +323,7 @@ module ot_hdc_v41x_exp_k8 #(
 
     wire [31:0] t;
     wire [2:0] f;
-    ot_hdc_qmul_lat_k8 #(LM) m_t (clk, rst_m, vd[1], xc, K_LOG2E, t, f[0]);   // 1 + LM
+    ot_hdc_qmul_lat_k8 #(LM, 3) m_t (clk, rst_m, vd[1], xc, K_LOG2E, t, f[0]);   // 1 + LM
 
     // n = rint-to-even(t), |t| < 127.  With E = field - 127, the integer part
     // is the significand shifted right by 23 - E (E in [-1, 6]); below E = -1,
@@ -365,9 +366,9 @@ module ot_hdc_v41x_exp_k8 #(
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_a, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_hdc_qadd_lat_k8 #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_a, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
     ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_a, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_hdc_qadd_lat_k8 #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_a, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -383,7 +384,7 @@ module ot_hdc_v41x_exp_k8 #(
                 ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
             ot_hdc_qmul_lat_k8 #(LM) u_m (clk, rst_m, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_a, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hdc_qadd_lat_k8 #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_a, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 
@@ -400,14 +401,11 @@ module ot_hdc_v41x_exp_k8 #(
 endmodule
 
 
-(* keep_hierarchy = "yes" *)
-module ot_hdc_kff9_k8 (input wire clk, input wire [8:0] d, output reg [8:0] q);
-    always @(posedge clk) q <= d;
+// HBM-KIND9: kept copies as ot_k9_fam copy families (it3 census: n copies 37-41, one-hot ln2 predecode 34-41)
+module ot_hdc_kff9_k8 (input wire clk, input wire [8:0] d, output wire [8:0] q);
+    ot_k9_fam #(.W(9), .N(2)) u_f (.clk(clk), .d(d), .q(q));
 endmodule
 
-(* keep_hierarchy = "yes" *)
 module ot_hdc_kff32_k8 (input wire clk, input wire [31:0] d, output wire [31:0] q);
-    (* keep = 1 *) reg [31:0] r;
-    always @(posedge clk) r <= d;
-    assign q = r;
+    ot_k9_fam #(.W(32), .N(2)) u_f (.clk(clk), .d(d), .q(q));
 endmodule

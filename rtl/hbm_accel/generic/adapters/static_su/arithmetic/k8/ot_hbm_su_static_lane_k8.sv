@@ -151,25 +151,25 @@ module ot_hbm_su_static_lane_k8 #(
 `ifdef OT_SU_SYNC_RST
     for (genvar r = 0; r < 8; r = r + 1) begin : g_rst_stage
         if (KIND != 0 || r != 4) begin : g_active
-            ot_sync_rst_relay u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_stage[r]), .rst_n_in(rst_n), .rst_n(rst_stage_n[r]));
+            ot_k9_rst_fam #(.N(3)) u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_stage[r]), .rst_n_in(rst_n), .rst_n(rst_stage_n[r]));
         end else assign rst_stage_n[r] = rst_stage_n[0];
     end
     for (genvar r = 0; r < 4; r = r + 1) begin : g_rst_insert
         if (KIND == 2 || (KIND == 1 && r < 2)) begin : g_active
-            ot_sync_rst_relay u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_insert[r]), .rst_n_in(rst_n), .rst_n(rst_insert_n[r]));
+            ot_k9_rst_fam #(.N(3)) u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_insert[r]), .rst_n_in(rst_n), .rst_n(rst_insert_n[r]));
         end else assign rst_insert_n[r] = rst_stage_n[0];
     end
 `else
     assign rst_stage_n = {8{rst_n}};
     assign rst_insert_n = {4{rst_n}};
 `endif
-    wire [6:0] rst4x;                                 // HBM-KIND8: stage-4 reset leaves (each its own relay, same edge)
+    wire [9:0] rst4x;                                 // HBM-KIND8: stage-4 reset leaves (each its own relay, same edge)
 `ifdef OT_SU_SYNC_RST
-    for (genvar r = 0; r < 7; r = r + 1) begin : g_rst4x
-        ot_sync_rst_relay u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_stage[4]), .rst_n_in(rst_n), .rst_n(rst4x[r]));
+    for (genvar r = 0; r < 10; r = r + 1) begin : g_rst4x
+        ot_k9_rst_fam #(.N(3)) u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_stage[4]), .rst_n_in(rst_n), .rst_n(rst4x[r]));
     end
 `else
-    assign rst4x = {7{rst_n}};
+    assign rst4x = {10{rst_n}};
 `endif
     /* verilator hier_block */
     localparam [1:0] SRC_VM = 0, SRC_CLO = 1, SRC_CHI = 2, SRC_WROM = 3;
@@ -375,12 +375,12 @@ module ot_hbm_su_static_lane_k8 #(
         // the same three cycles on keep-prefix adders: a group's (at most 4) masked terms in a two-level tree
         // HBM-KIND8: ldp_v as 11 kept copies (10 q-register enables, 1 for ldq), ldq_v / ldq_bank one pair per stream
         wire [10:0]  ldp_vc;
-        wire [4:0]   ldq_vc, ldq_bc;
+        wire [9:0]   ldq_vc, ldq_bc;                  // HBM-KIND9: one pair per (stream, AW half) (it3: off0/off1 enables 48)
         wire         ldp_bank;
         for (genvar c = 0; c < 11; c = c + 1) begin : g_ldpv
             ot_su_kffr_k8 u_k (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(ld_x[15]), .q(ldp_vc[c]));
         end
-        for (genvar c = 0; c < 5; c = c + 1) begin : g_ldq
+        for (genvar c = 0; c < 10; c = c + 1) begin : g_ldq
             ot_su_kffr_k8 u_v (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(ldp_vc[10]), .q(ldq_vc[c]));
             ot_su_kffe_k8 u_b (.clk(clk_stage[0]), .en(ldp_vc[10]), .d(ldp_bank), .q(ldq_bc[c]));
         end
@@ -391,10 +391,14 @@ module ot_hbm_su_static_lane_k8 #(
         wire [5*AW-1:0] s_bus;                         // stream ss's offset, at the third cycle
         integer s;
         always @(posedge clk_stage[0])
-            for (s = 0; s < 5; s = s + 1)
-                if (ldq_vc[s]) begin
-                    if (ldq_bc[s]) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
+            for (s = 0; s < 5; s = s + 1) begin
+                if (ldq_vc[2*s]) begin
+                    if (ldq_bc[2*s]) off1[s][AW/2-1:0] <= s_bus[s*AW +: AW/2]; else off0[s][AW/2-1:0] <= s_bus[s*AW +: AW/2];
                 end
+                if (ldq_vc[2*s+1]) begin
+                    if (ldq_bc[2*s+1]) off1[s][AW-1:AW/2] <= s_bus[s*AW+AW/2 +: AW-AW/2]; else off0[s][AW-1:AW/2] <= s_bus[s*AW+AW/2 +: AW-AW/2];
+                end
+            end
         for (ss = 0; ss < 5; ss = ss + 1) begin : g_s
             wire [3*AW-1:0] grp;                       // the three group sums of stream ss
             for (jj = 0; jj < 3; jj = jj + 1) begin : g_j
@@ -635,7 +639,7 @@ module ot_hbm_su_static_lane_k8 #(
     wire           f_d1, c1;
     generate
         if (HAS_SFU != 0) begin : g_m1s
-            ot_hdc_v41x_fdiv u_d1 (.clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_v && p_div), .a(p_a),
+            ot_hdc_v41x_fdiv_k8 u_d1 (.clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_v && p_div), .a(p_a),
                                    .b((cp_m1 == M1_DIVB) ? p_b : cp_imm1), .y(div1_y), .vo(), .fault(f_d1));
             wire [2*4-1:0] l1_sel;
             for (genvar c = 0; c < 4; c = c + 1) begin : g_l1s
@@ -693,7 +697,7 @@ module ot_hbm_su_static_lane_k8 #(
     end
     wire [31:0] add_y, add_byp;
     wire f_ad;
-    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_ad (clk_stage[3], rst_stage_n[3], v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
+    ot_hdc_qadd_lat_k8 #(.KEEP(K), .LAT(ALAT)) u_ad (clk_stage[3], rst_stage_n[3], v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
     wire [31:0] r_b, r_c;
     wire [AW-1:0] r_o;
     wire [2:0]  r_ad;
@@ -721,17 +725,17 @@ module ot_hbm_su_static_lane_k8 #(
             wire f_e, f_den, f_div;
             wire [D_EXP:0] ve;
             wire [D_EXP:0] vs;                 // a sigmoid-chain element, along the exp
-            ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk_stage[4]), .rst_n(rst4x[4]), .v(v3 && (is_exp || is_sig)), .vd(ve));
-            ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk_stage[4]), .rst_n(rst4x[5]), .v(v3 && is_sig), .vd(vs));
-            ot_hdc_v41x_exp_k8 #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk_stage[4]), .rst_n(rst4x[0]), .rst_m(rst4x[1]), .rst_a(rst4x[2]), .v(v3 && (is_exp || is_sig)),
+            ot_hdc_vline_k8 #(.D(D_EXP), .R(2)) u_ve (.clk(clk_stage[4]), .rst_n({rst4x[8], rst4x[4]}), .v(v3 && (is_exp || is_sig)), .vd(ve));
+            ot_hdc_vline_k8 #(.D(D_EXP), .R(2)) u_vs (.clk(clk_stage[4]), .rst_n({rst4x[9], rst4x[5]}), .v(v3 && is_sig), .vd(vs));
+            ot_hdc_v41x_exp_k8 #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk_stage[4]), .rst_n(rst4x[0]), .rst_m(rst4x[1]), .rst_a(rst4x[2]), .rst_v(rst4x[7]), .v(v3 && (is_exp || is_sig)),
                                    .x(is_exp ? R : {~R[31], R[30:0]}), .y(y_exp), .vo(), .fault(f_e));
-            ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk_stage[4], rst4x[6], vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
+            ot_hdc_qadd_lat_k8 #(.KEEP(K), .LAT(ALAT)) u_den (clk_stage[4], rst4x[6], vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
             wire silu_in = (ci_sfu == SFU_SILU);
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
             ot_hdc_delay #(.W(32), .D(D_EXP + ALAT)) u_num (.clk(clk_stage[4]), .rst_n(rst_stage_n[4]), .d(num_in), .q(num_d));
             wire [ALAT:0] vdn;
             ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk_stage[4]), .rst_n(rst4x[6]), .v(vs[D_EXP]), .vd(vdn));
-            ot_hdc_v41x_fdiv u_div (.clk(clk_stage[4]), .rst_n(rst4x[3]), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
+            ot_hdc_v41x_fdiv_k8 u_div (.clk(clk_stage[4]), .rst_n(rst4x[3]), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
                                     .fault(f_div));
             wire [6:0] sel;
             assign sel = {ci_sfu == SFU_EGATE, ci_sfu == SFU_SPSQRT, ci_sfu == SFU_SQRT, ci_sfu == SFU_RSQRT,
@@ -786,7 +790,7 @@ module ot_hbm_su_static_lane_k8 #(
     ot_hdc_qmul_lat_k8 #(MLAT) u_e1m (clk_stage[5], rst_stage_n[5], v4 && (cs_e1 == E1_MULC || cs_e1 == E1_MULIMM), S,
                        (cs_e1 == E1_MULC) ? s_c : cs_imm2, e1m, f_e1m);
     wire [31:0] e1a3;
-    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_e1a (clk_stage[5], rst_stage_n[5], v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
+    ot_hdc_qadd_lat_k8 #(.KEEP(K), .LAT(ALAT)) u_e1a (clk_stage[5], rst_stage_n[5], v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
                        (cs_e1 == E1_ADDC) ? s_c : cs_imm2, e1a3, f_e1a);
     // E1 is MLAT deep (its multiply); the 3-cycle add waits MLAT - 3 more
     ot_hdc_delay #(.W(32), .D(MLAT - ALAT)) u_e1ad (.clk(clk_stage[5]), .rst_n(rst_stage_n[5]), .d(e1a3), .q(e1a));
@@ -850,18 +854,14 @@ module ot_hbm_su_static_lane_k8 #(
     assign coll = c1 | c4;
 endmodule
 
-// HBM-KIND8 kept same-edge register copies (keep_hierarchy: synthesis never merges equal-D copies)
-(* keep_hierarchy = "yes" *)
+// HBM-KIND8 kept same-edge register copies; HBM-KIND9: each copy is an ot_k9_fam copy family (3 identical members per bit,
+// loads balanced <= 32 by the kit's ot_rst_copies splitter; it3 census: single copies drove up to 84 loads)
 module ot_su_kff_k8 #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
-    (* keep = 1 *) reg [W-1:0] r;
-    always @(posedge clk) r <= d;
-    assign q = r;
+    ot_k9_fam #(.W(W), .N(3)) u_f (.clk(clk), .d(d), .q(q));
 endmodule
-(* keep_hierarchy = "yes" *)
+// HBM-KIND9: reset copies as ot_k9_famr copy families (it3: ldp_v / g2_v copies 48 loads)
 module ot_su_kffr_k8 #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
-    (* keep = 1 *) reg [W-1:0] r;
-    always @(posedge clk `OT_SU_ARST(rst_n)) if (!rst_n) r <= {W{1'b0}}; else r <= d;
-    assign q = r;
+    ot_k9_famr #(.W(W), .N(3)) u_f (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
 endmodule
 // one kept copy of an enabled register (q <= en ? d : q)
 (* keep_hierarchy = "yes" *)

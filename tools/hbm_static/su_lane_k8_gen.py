@@ -22,18 +22,14 @@ def sub(s, old, new, n=1):
 
 
 KFF = '''
-// HBM-KIND8 kept same-edge register copies (keep_hierarchy: synthesis never merges equal-D copies)
-(* keep_hierarchy = "yes" *)
+// HBM-KIND8 kept same-edge register copies; HBM-KIND9: each copy is an ot_k9_fam copy family (3 identical members per bit,
+// loads balanced <= 32 by the kit's ot_rst_copies splitter; it3 census: single copies drove up to 84 loads)
 module ot_su_kff_k8 #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
-    (* keep = 1 *) reg [W-1:0] r;
-    always @(posedge clk) r <= d;
-    assign q = r;
+    ot_k9_fam #(.W(W), .N(3)) u_f (.clk(clk), .d(d), .q(q));
 endmodule
-(* keep_hierarchy = "yes" *)
+// HBM-KIND9: reset copies as ot_k9_famr copy families (it3: ldp_v / g2_v copies 48 loads)
 module ot_su_kffr_k8 #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
-    (* keep = 1 *) reg [W-1:0] r;
-    always @(posedge clk `OT_SU_ARST(rst_n)) if (!rst_n) r <= {W{1'b0}}; else r <= d;
-    assign q = r;
+    ot_k9_famr #(.W(W), .N(3)) u_f (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
 endmodule
 // one kept copy of an enabled register (q <= en ? d : q)
 (* keep_hierarchy = "yes" *)
@@ -115,12 +111,12 @@ def lane():
         end
         genvar ss, jj, kk;''', f'''        // HBM-KIND8: ldp_v as 11 kept copies (10 q-register enables, 1 for ldq), ldq_v / ldq_bank one pair per stream
         wire [10:0]  ldp_vc;
-        wire [4:0]   ldq_vc, ldq_bc;
+        wire [9:0]   ldq_vc, ldq_bc;                  // HBM-KIND9: one pair per (stream, AW half) (it3: off0/off1 enables 48)
         wire         ldp_bank;
         for (genvar c = 0; c < 11; c = c + 1) begin : g_ldpv
             ot_su_kffr_k8 u_k (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(ld_x[{NLD-1}]), .q(ldp_vc[c]));
         end
-        for (genvar c = 0; c < 5; c = c + 1) begin : g_ldq
+        for (genvar c = 0; c < 10; c = c + 1) begin : g_ldq
             ot_su_kffr_k8 u_v (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(ldp_vc[10]), .q(ldq_vc[c]));
             ot_su_kffe_k8 u_b (.clk(clk_stage[0]), .en(ldp_vc[10]), .d(ldp_bank), .q(ldq_bc[c]));
         end
@@ -133,10 +129,14 @@ def lane():
                 for (s = 0; s < 5; s = s + 1)
                     if (ldq_bank) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];''',
             '''        always @(posedge clk_stage[0])
-            for (s = 0; s < 5; s = s + 1)
-                if (ldq_vc[s]) begin
-                    if (ldq_bc[s]) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
-                end''')
+            for (s = 0; s < 5; s = s + 1) begin
+                if (ldq_vc[2*s]) begin
+                    if (ldq_bc[2*s]) off1[s][AW/2-1:0] <= s_bus[s*AW +: AW/2]; else off0[s][AW/2-1:0] <= s_bus[s*AW +: AW/2];
+                end
+                if (ldq_vc[2*s+1]) begin
+                    if (ldq_bc[2*s+1]) off1[s][AW-1:AW/2] <= s_bus[s*AW+AW/2 +: AW-AW/2]; else off0[s][AW-1:AW/2] <= s_bus[s*AW+AW/2 +: AW-AW/2];
+                end
+            end''')
     s = sub(s, "assign t[kk*AW +: AW] = lane_id[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};",
             "assign t[kk*AW +: AW] = lane_id_c[ss*11 + LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};")
     s = sub(s, '''                if (ld_e) begin p0 <= grp[0 +: AW]; p1 <= grp[AW +: AW]; p2 <= grp[2*AW +: AW]; end
@@ -279,6 +279,21 @@ def lane():
             '''ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk_stage[4]), .rst_n(rst4x[6]),''')
     # ---- multipliers / exp: the k8 units
     s = sub(s, 'ot_hdc_qmul_lat #(MLAT)', 'ot_hdc_qmul_lat_k8 #(MLAT)', 5)
+    # ---- FP adds: Codex FP6 ot_hdc_fp32_add_n32 (HBM-KIND9; native-32 adder internals, the HBM-QCORE9 adder)
+    s = sub(s, 'ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT))', 'ot_hdc_qadd_lat_k8 #(.KEEP(K), .LAT(ALAT))', 3)
+    # ---- dividers: native-32 halves (HBM-KIND9, k8/ot_hdc_v41x_fdiv_k8.sv)
+    s = sub(s, 'ot_hdc_v41x_fdiv u_', 'ot_hdc_v41x_fdiv_k8 u_', 2)
+    # ---- HBM-KIND9: every lane reset relay = ot_k9_rst_fam (3-member copy family of the local relay register)
+    s = sub(s, 'ot_sync_rst_relay u_reset (', 'ot_k9_rst_fam #(.N(3)) u_reset (', 3)
+    # ---- HBM-KIND9: 10 stage-4 reset leaves; the two D_EXP valid lines and the exp valid line each on 2 leaves (it3: 52-56)
+    s = sub(s, '    wire [6:0] rst4x;', '    wire [9:0] rst4x;')
+    s = sub(s, '    for (genvar r = 0; r < 7; r = r + 1) begin : g_rst4x', '    for (genvar r = 0; r < 10; r = r + 1) begin : g_rst4x')
+    s = sub(s, '    assign rst4x = {7{rst_n}};', '    assign rst4x = {10{rst_n}};')
+    s = sub(s, 'ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk_stage[4]), .rst_n(rst4x[4]),',
+            'ot_hdc_vline_k8 #(.D(D_EXP), .R(2)) u_ve (.clk(clk_stage[4]), .rst_n({rst4x[8], rst4x[4]}),')
+    s = sub(s, 'ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk_stage[4]), .rst_n(rst4x[5]),',
+            'ot_hdc_vline_k8 #(.D(D_EXP), .R(2)) u_vs (.clk(clk_stage[4]), .rst_n({rst4x[9], rst4x[5]}),')
+    s = sub(s, '.rst_m(rst4x[1]), .rst_a(rst4x[2]),', '.rst_m(rst4x[1]), .rst_a(rst4x[2]), .rst_v(rst4x[7]),')
     # ---- M1 out select (cm_m1): two copies, one per half
     s = sub(s, '''    wire [31:0] P = (cm_m1 == M1_DIVB || cm_m1 == M1_DIVIMM) ? div1_y :
                     (cm_m1 == M1_AB || cm_m1 == M1_AA || cm_m1 == M1_AIMM) ? mul1_y : byp1;''',

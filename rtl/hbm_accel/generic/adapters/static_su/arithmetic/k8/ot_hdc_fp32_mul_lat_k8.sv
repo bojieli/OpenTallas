@@ -41,7 +41,9 @@ module ot_hdc_fp32_mul_lat_k8 #(
     // identical (every copy captures the same a_n / b_n); no added cycle.  Needs CUT1.
     parameter integer KCP = 1,
     // Opt-in: reset only valid bits at extra cuts; payload is ignored until valid.
-    parameter integer DRST = 0
+    parameter integer DRST = 0,
+    // HBM-KIND9: YN > 1 (DRST 0 only): y is an ot_rst_split copy family of YN identical members per bit (exp m_t: y 81 loads)
+    parameter integer YN = 1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -305,18 +307,22 @@ module ot_hdc_fp32_mul_lat_k8 #(
             if (!rst_n) valid_out <= 1'b0;
             else valid_out <= e_v;
         end
+        wire [31:0] y_d = (e_byp || e_over || e_code[30:0] == 31'd0) ? 32'd0 : e_code;
         always @(posedge clk) begin
-            if (e_byp) begin y <= 32'd0; err <= e_err; end
-            else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
-            else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
+            if (e_byp) err <= e_err;
+            else if (e_over) err <= E_OVERFLOW;
+            else err <= E_NONE;
         end
+        wire [31:0] y_q;
+        ot_k9_fam #(.W(32), .N(YN)) u_y (.clk(clk), .d(y_d), .q(y_q));
+        always @(*) y = y_q;
     end endgenerate
 endmodule
 
 // KCP copy of the C1 operand register: kept (SYNTH_KEEP_MODULES) so equal-D copies are never merged into one driver
-(* keep_hierarchy = "yes" *)
-module ot_hdc_mul_kcp48_k8 (input wire clk, input wire rst_n, input wire [47:0] d, output reg [47:0] q);
-    always @(posedge clk) q <= d;   // payload copy: no reset (DRST 0)
+// HBM-KIND9: an ot_k9_fam copy family (2 members per bit; it3 census: KCP copies 37-38 loads)
+module ot_hdc_mul_kcp48_k8 (input wire clk, input wire rst_n, input wire [47:0] d, output wire [47:0] q);
+    ot_k9_fam #(.W(48), .N(2)) u_f (.clk(clk), .d(d), .q(q));   // payload copy: no reset (DRST 0)
 endmodule
 
 // ot_hdc_mul24_rows with the operands supplied as K copies: partial product i reads copy i*K/24 (identical values)
@@ -354,19 +360,17 @@ module ot_hdc_mul24_rows_k_k8 #(parameter integer K = 2) (
     endgenerate
 endmodule
 
-(* keep_hierarchy = "yes" *)
-module ot_hdc_kff1_k8 (input wire clk, input wire d, output reg q);
-    always @(posedge clk) q <= d;
+module ot_hdc_kff1_k8 (input wire clk, input wire d, output wire q);
+    ot_k9_fam #(.W(1), .N(2)) u_f (.clk(clk), .d(d), .q(q));
 endmodule
 
 // kept 48-bit payload copy (keep_hierarchy: never merged with the equal-D s2_prod register)
-(* keep_hierarchy = "yes" *)
-module ot_hdc_kff48_k8 (input wire clk, input wire [47:0] d, output reg [47:0] q);
-    always @(posedge clk) q <= d;
+module ot_hdc_kff48_k8 (input wire clk, input wire [47:0] d, output wire [47:0] q);
+    ot_k9_fam #(.W(48), .N(2)) u_f (.clk(clk), .d(d), .q(q));
 endmodule
 
 // the LAT-4 input-cut top (C1 only, 4 kept operand copies), as ot_hdc_fp32_mul_lat4i
-module ot_hdc_fp32_mul_lat4i_k8 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+module ot_hdc_fp32_mul_lat4i_k8 #(parameter integer YN = 1) (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                                  output wire [1:0] err, output wire valid_out);
-    ot_hdc_fp32_mul_lat_k8 #(.LAT(4), .CUTS(1), .KCP(4)) u (.*);
+    ot_hdc_fp32_mul_lat_k8 #(.LAT(4), .CUTS(1), .KCP(4), .YN(YN)) u (.*);
 endmodule
