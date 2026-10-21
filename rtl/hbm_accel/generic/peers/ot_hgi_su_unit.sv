@@ -796,10 +796,38 @@ module ot_hgi_su_lgroup2 #(
     for (genvar gs_ = 0; gs_ < N; gs_ = gs_ + 1) begin : g_ls
         assign lb_s[gs_] = (LAT == 1) ? lb_q2[gs_] : (LAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
     end
+                    function automatic integer allowed;
+                        input integer lane_, bank__;
+                        integer k_;
+                        begin
+                            allowed=(lane_==0);
+                            for(k_=0;k_<NCAND;k_=k_+1)
+                                if(bank__==cbank(lane_,k_))allowed=1;
+                        end
+                    endfunction
     // the data network: a lane takes its bank among its candidates (lane 0: any bank)
     genvar gl, gj, gk;
     for (gl = 0; gl < N; gl = gl + 1) begin : g_rd
-        if (gl == 0) begin : g_any
+        if (NATIVE32 && NLW>0 && LAT==0 && N==16) begin : g_native_read
+            // Same-edge selector capture, split across kept two-bit muxes.
+            // A shared hold mux feeds sixteen copies; no added read edge.
+            (* keep=1, dont_touch=1 *) reg [16*LN-1:0] pick_q;
+            wire [LN-1:0] next_pick = rr[gl] ? ra[gl*AW+:LN] : pick_q[0+:LN];
+            always @(posedge clk) pick_q <= {16{next_pick}};
+            for(genvar pair_=0;pair_<16;pair_=pair_+1)begin:g_pair
+                wire [2*N-1:0] data2;
+                for(genvar bank_=0;bank_<N;bank_=bank_+1)begin:g_bank
+                    if(allowed(gl,bank_))begin:g_candidate
+                        assign data2[2*bank_+:2]=b_rd[(bank_+MUT_XBAR)%N][2*pair_+:2];
+                    end else begin:g_zero
+                        assign data2[2*bank_+:2]=2'b0;
+                    end
+                end
+                ot_hgi_su_select2 #(.N(N),.LN(LN)) u_pick(
+                    .sel(pick_q[pair_*LN+:LN]),.data(data2),
+                    .q(rd[32*gl+2*pair_+:2]));
+            end
+        end else if (gl == 0) begin : g_any
             wire [LN-1:0] bs = lb_s[gl] + MUT_XBAR[LN-1:0];
             assign rd[0 +: 32] = b_rd[bs];
         end else begin : g_c
