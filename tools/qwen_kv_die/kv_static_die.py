@@ -2587,6 +2587,14 @@ if DOMSPLIT:     # KV-DOMSPLIT: the hck half of a split word sits beside its ck 
 KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
 KIT_FACE['qkd_kvs_pc_h'] = KIT_FACE['qkd_kvs_pc']
 KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
+# Selected S6C masters retain their exact source/view names. Their physical
+# contract comes from the actual closed kit, including every bit's position
+# (kv_group_view_pins), rather than the peer-selected auto-face fallback.
+if GRP_S6C:
+    import kv_group_view_pins as _group_pins
+    for _gm in (KIND_MASTER['grp'], KIND_MASTER['grp_h']):
+        KIT_FACE[_gm] = dict(_group_pins.load(_gm)['faces'])
+        KIT_DEFAULT_FACE[_gm] = 'W'
 
 
 def pin_face(master, port):
@@ -2673,6 +2681,10 @@ def face_order(master, face, ports):
     carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
     slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
     master = master.removesuffix('_private0')
+    if GRP_S6C and master in (KIND_MASTER['grp'], KIND_MASTER['grp_h']):
+        # Explicit kit order includes only ports that survive the exact ABI.
+        _order = _group_pins.load(master)['orders'].get(face, [])
+        return sorted(ports, key=lambda p: (_order.index(p) if p in _order else len(_order), p))
     if KITS and master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         # kit: PC pairs 0 / 1 below, the clocks / resets / straps / pass words mid-face (beside the register mass), 2 / 3 above
         def key(p):

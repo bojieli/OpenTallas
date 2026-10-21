@@ -1,0 +1,2683 @@
+{
+  "qkd_kvs_grp_s6c": {
+    "w": 388.8,
+    "h": 432.0,
+    "faces": {
+      "i_ctl": "N",
+      "o_ctl": "N",
+      "i_up": "S",
+      "o_dn": "S",
+      "kreq": "E",
+      "krsp": "E",
+      "rsp": "E",
+      "vreq": "E",
+      "i_pc0": "W",
+      "i_pc0_h": "W",
+      "o_pc0": "W",
+      "o_pc0_h": "W",
+      "i_pc1": "W",
+      "i_pc1_h": "W",
+      "o_pc1": "W",
+      "o_pc1_h": "W",
+      "ck": "W",
+      "hck": "W",
+      "af__fault": "W",
+      "afk": "W",
+      "afu": "W",
+      "afv": "W",
+      "hrst_n": "W",
+      "rst_n": "W",
+      "slg__cfg_group": "W",
+      "slg__cfg_stack": "W",
+      "x__est": "W",
+      "y__est__0_1": "W",
+      "i_pc2": "W",
+      "i_pc2_h": "W",
+      "o_pc2": "W",
+      "o_pc2_h": "W",
+      "i_pc3": "W",
+      "i_pc3_h": "W",
+      "o_pc3": "W",
+      "o_pc3_h": "W"
+    },
+    "lef": "physical/ref_tile/qkd_kvs_grp_s6a/views/qkd_kvs_grp_s6c/qkd_kvs_grp_s6c.lef",
+    "sha256": "f05b460e84bad49debda23911069e2d30771633f8840a4def9c2130ce2fa1aeb",
+    "ports": {
+      "af__fault": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          210.972,
+          210.972
+        ]
+      },
+      "afk": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          212.316,
+          212.316
+        ]
+      },
+      "afu": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          213.66,
+          213.66
+        ]
+      },
+      "afv": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          215.004,
+          215.004
+        ]
+      },
+      "ck": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          208.284,
+          208.284
+        ]
+      },
+      "hck": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          209.628,
+          209.628
+        ]
+      },
+      "hrst_n": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          216.348,
+          216.348
+        ]
+      },
+      "i_ctl": {
+        "n": 271,
+        "x": [
+          2.94,
+          252.012
+        ],
+        "y": [
+          431.95799999999997,
+          431.95799999999997
+        ]
+      },
+      "i_pc0": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          2.652,
+          69.468
+        ]
+      },
+      "i_pc0_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          70.764,
+          72.828
+        ]
+      },
+      "i_pc1": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          105.468,
+          172.284
+        ]
+      },
+      "i_pc1_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          173.628,
+          175.644
+        ]
+      },
+      "i_pc2": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          225.036,
+          291.852
+        ]
+      },
+      "i_pc2_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          293.148,
+          295.212
+        ]
+      },
+      "i_pc3": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          327.852,
+          394.668
+        ]
+      },
+      "i_pc3_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          396.012,
+          398.028
+        ]
+      },
+      "i_up": {
+        "n": 144,
+        "x": [
+          2.94,
+          134.892
+        ],
+        "y": [
+          0.042,
+          0.042
+        ]
+      },
+      "kreq": {
+        "n": 38,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          203.532,
+          210.78
+        ]
+      },
+      "krsp": {
+        "n": 1062,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          2.652,
+          429.18
+        ]
+      },
+      "o_ctl": {
+        "n": 144,
+        "x": [
+          253.932,
+          385.836
+        ],
+        "y": [
+          431.95799999999997,
+          431.95799999999997
+        ]
+      },
+      "o_dn": {
+        "n": 271,
+        "x": [
+          136.812,
+          385.836
+        ],
+        "y": [
+          0.042,
+          0.042
+        ]
+      },
+      "o_pc0": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          74.124,
+          81.468
+        ]
+      },
+      "o_pc0_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          82.812,
+          104.172
+        ]
+      },
+      "o_pc1": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          176.988,
+          184.236
+        ]
+      },
+      "o_pc1_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          185.58,
+          206.94
+        ]
+      },
+      "o_pc2": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          296.604,
+          303.852
+        ]
+      },
+      "o_pc2_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          305.196,
+          326.556
+        ]
+      },
+      "o_pc3": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          399.372,
+          406.668
+        ]
+      },
+      "o_pc3_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          408.012,
+          429.372
+        ]
+      },
+      "rsp": {
+        "n": 1056,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          2.796,
+          429.372
+        ]
+      },
+      "rst_n": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          217.692,
+          217.692
+        ]
+      },
+      "slg__cfg_group": {
+        "n": 3,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          218.988,
+          219.468
+        ]
+      },
+      "slg__cfg_stack": {
+        "n": 2,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          220.812,
+          221.052
+        ]
+      },
+      "vreq": {
+        "n": 15,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          225.708,
+          228.444
+        ]
+      },
+      "x__est": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          222.348,
+          222.348
+        ]
+      },
+      "y__est__0_1": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          223.692,
+          223.692
+        ]
+      }
+    }
+  },
+  "qkd_kvs_grp_h_s6c": {
+    "w": 388.8,
+    "h": 388.8,
+    "faces": {
+      "i_ctl": "N",
+      "o_ctl": "N",
+      "kreq": "E",
+      "krsp": "E",
+      "rsp": "E",
+      "vreq": "E",
+      "i_pc0": "W",
+      "i_pc0_h": "W",
+      "o_pc0": "W",
+      "o_pc0_h": "W",
+      "i_pc1": "W",
+      "i_pc1_h": "W",
+      "o_pc1": "W",
+      "o_pc1_h": "W",
+      "ck": "W",
+      "hck": "W",
+      "af__fault": "W",
+      "afk": "W",
+      "afv": "W",
+      "hrst_n": "W",
+      "rst_n": "W",
+      "slg__cfg_group": "W",
+      "slg__cfg_stack": "W",
+      "x__est": "W",
+      "y__est__0_1": "W",
+      "i_pc2": "W",
+      "i_pc2_h": "W",
+      "o_pc2": "W",
+      "o_pc2_h": "W",
+      "i_pc3": "W",
+      "i_pc3_h": "W",
+      "o_pc3": "W",
+      "o_pc3_h": "W"
+    },
+    "lef": "physical/ref_tile/qkd_kvs_grp_h_s6a/views/qkd_kvs_grp_h_s6c/qkd_kvs_grp_h_s6c.lef",
+    "sha256": "8609721853b3c5d6fde87e24819cccbd92a529c7f7385ffc2f883446a2b5d1cb",
+    "ports": {
+      "af__fault": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          190.476,
+          190.476
+        ]
+      },
+      "afk": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          191.676,
+          191.676
+        ]
+      },
+      "afv": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          192.876,
+          192.876
+        ]
+      },
+      "ck": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          188.076,
+          188.076
+        ]
+      },
+      "hck": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          189.276,
+          189.276
+        ]
+      },
+      "hrst_n": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          194.076,
+          194.076
+        ]
+      },
+      "i_ctl": {
+        "n": 194,
+        "x": [
+          3.084,
+          221.628
+        ],
+        "y": [
+          388.75800000000004,
+          388.75800000000004
+        ]
+      },
+      "i_pc0": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          2.604,
+          62.844
+        ]
+      },
+      "i_pc0_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          64.044,
+          65.916
+        ]
+      },
+      "i_pc1": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          95.34,
+          155.58
+        ]
+      },
+      "i_pc1_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          156.78,
+          158.652
+        ]
+      },
+      "i_pc2": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          201.948,
+          262.188
+        ]
+      },
+      "i_pc2_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          263.388,
+          265.26
+        ]
+      },
+      "i_pc3": {
+        "n": 295,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          294.684,
+          354.924
+        ]
+      },
+      "i_pc3_h": {
+        "n": 10,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          356.124,
+          357.948
+        ]
+      },
+      "kreq": {
+        "n": 38,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          183.18,
+          189.708
+        ]
+      },
+      "krsp": {
+        "n": 1062,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          2.604,
+          386.028
+        ]
+      },
+      "o_ctl": {
+        "n": 144,
+        "x": [
+          223.788,
+          385.74
+        ],
+        "y": [
+          388.75800000000004,
+          388.75800000000004
+        ]
+      },
+      "o_pc0": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          67.116,
+          73.644
+        ]
+      },
+      "o_pc0_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          74.844,
+          94.14
+        ]
+      },
+      "o_pc1": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          159.852,
+          166.38
+        ]
+      },
+      "o_pc1_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          167.58,
+          186.876
+        ]
+      },
+      "o_pc2": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          266.46,
+          272.988
+        ]
+      },
+      "o_pc2_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          274.188,
+          293.484
+        ]
+      },
+      "o_pc3": {
+        "n": 33,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          359.196,
+          365.724
+        ]
+      },
+      "o_pc3_h": {
+        "n": 95,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          366.924,
+          386.22
+        ]
+      },
+      "rsp": {
+        "n": 1056,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          2.748,
+          386.22
+        ]
+      },
+      "rst_n": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          195.324,
+          195.324
+        ]
+      },
+      "slg__cfg_group": {
+        "n": 3,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          196.524,
+          196.908
+        ]
+      },
+      "slg__cfg_stack": {
+        "n": 2,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          198.108,
+          198.3
+        ]
+      },
+      "vreq": {
+        "n": 15,
+        "x": [
+          388.75800000000004,
+          388.75800000000004
+        ],
+        "y": [
+          203.148,
+          205.596
+        ]
+      },
+      "x__est": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          199.548,
+          199.548
+        ]
+      },
+      "y__est__0_1": {
+        "n": 1,
+        "x": [
+          0.042,
+          0.042
+        ],
+        "y": [
+          200.748,
+          200.748
+        ]
+      }
+    }
+  },
+  "old_plan_actual_reach": {
+    "hops": 19658,
+    "reach_um": 500.0,
+    "violations": 188,
+    "worst": [
+      {
+        "bus": "est__f18__r60",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 942.7,
+        "a": "rly_est__f18_59.b",
+        "b": "slg_ES_2.x__est"
+      },
+      {
+        "bus": "est__f2__r62",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 935.8,
+        "a": "rly_est__f2_61.b",
+        "b": "slg_WS_2.x__est"
+      },
+      {
+        "bus": "est__f6__r54",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 935.8,
+        "a": "rly_est__f6_53.b",
+        "b": "slg_WS_6.x__est"
+      },
+      {
+        "bus": "est__f10__r28",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 931.5,
+        "a": "rly_est__f10_27.b",
+        "b": "slg_WN_2.x__est"
+      },
+      {
+        "bus": "est__f8__r36",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 909.9,
+        "a": "rly_est__f8_35.b",
+        "b": "slg_WN_0.x__est"
+      },
+      {
+        "bus": "est__f26__r25",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 895.2,
+        "a": "rly_est__f26_24.b",
+        "b": "slg_EN_2.x__est"
+      },
+      {
+        "bus": "est__f0__r70",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 892.6,
+        "a": "rly_est__f0_69.b",
+        "b": "slg_WS_0.x__est"
+      },
+      {
+        "bus": "est__f9__r32",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 888.3,
+        "a": "rly_est__f9_31.b",
+        "b": "slg_WN_1.x__est"
+      },
+      {
+        "bus": "est__f1__r66",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 871.0,
+        "a": "rly_est__f1_65.b",
+        "b": "slg_WS_1.x__est"
+      },
+      {
+        "bus": "est__f19__r56",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 834.7,
+        "a": "rly_est__f19_55.b",
+        "b": "slg_ES_3.x__est"
+      },
+      {
+        "bus": "est__f29__r38",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 830.4,
+        "a": "rly_est__f29_37.b",
+        "b": "slg_EN_5.x__est"
+      },
+      {
+        "bus": "est__f3__r58",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 827.8,
+        "a": "rly_est__f3_57.b",
+        "b": "slg_WS_3.x__est"
+      },
+      {
+        "bus": "est__f7__r50",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 827.8,
+        "a": "rly_est__f7_49.b",
+        "b": "slg_WS_7.x__est"
+      },
+      {
+        "bus": "est__f28__r42",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 810.0,
+        "a": "rly_est__f28_41.b",
+        "b": "slg_EN_4.x__est"
+      },
+      {
+        "bus": "ks_slg_WN_2__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 779.9,
+        "a": "rly_pinfix_ks_slg_WN_2_o_dn_r3_1.b",
+        "b": "slg_WN_1.i_ctl"
+      },
+      {
+        "bus": "ks_slg_WN_6__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 779.9,
+        "a": "rly_pinfix_ks_slg_WN_6_o_dn_r3_1.b",
+        "b": "slg_WN_3.i_ctl"
+      },
+      {
+        "bus": "krs_WN_5",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 768.8,
+        "a": "slg_WN_5.krsp",
+        "b": "rly_krs_WN_5_0.a"
+      },
+      {
+        "bus": "est__f14__r20",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 758.7,
+        "a": "rly_est__f14_19.b",
+        "b": "slg_WN_6.x__est"
+      },
+      {
+        "bus": "est__f15__r16",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 758.7,
+        "a": "rly_est__f15_15.b",
+        "b": "slg_WN_7.x__est"
+      },
+      {
+        "bus": "est__f23__r48",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 748.3,
+        "a": "rly_est__f23_47.b",
+        "b": "slg_ES_7.x__est"
+      },
+      {
+        "bus": "est__f11__r24",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 737.1,
+        "a": "rly_est__f11_23.b",
+        "b": "slg_WN_3.x__est"
+      },
+      {
+        "bus": "est__f20__r77",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 727.9,
+        "a": "rly_est__f20_76.b",
+        "b": "slg_ES_4.x__est"
+      },
+      {
+        "bus": "est__f25__r30",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 722.4,
+        "a": "rly_est__f25_29.b",
+        "b": "slg_EN_1.x__est"
+      },
+      {
+        "bus": "est__f31__r14",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 722.4,
+        "a": "rly_est__f31_13.b",
+        "b": "slg_EN_7.x__est"
+      },
+      {
+        "bus": "ks_slg_ES_0__o_dn__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 707.3,
+        "a": "rly_pinfix_ks_slg_ES_0_o_dn_r2_2.b",
+        "b": "slg_ES_5.i_ctl"
+      },
+      {
+        "bus": "est__f24__r34",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 700.8,
+        "a": "rly_est__f24_33.b",
+        "b": "slg_EN_0.x__est"
+      },
+      {
+        "bus": "est__f4__r79",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 699.4,
+        "a": "rly_est__f4_78.b",
+        "b": "slg_WS_4.x__est"
+      },
+      {
+        "bus": "ks_slg_EN_0__o_dn__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 687.0,
+        "a": "rly_pinfix_ks_slg_EN_0_o_dn_r2_2.b",
+        "b": "slg_EN_5.i_ctl"
+      },
+      {
+        "bus": "ks_kvs_hroot_WS__o_ch0__r1__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 680.5,
+        "a": "rly_pinfix_ks_kvs_hroot_WS_o_ch0_r1_2.b",
+        "b": "slg_WS_7.i_ctl"
+      },
+      {
+        "bus": "est__f30__r18",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 679.2,
+        "a": "rly_est__f30_17.b",
+        "b": "slg_EN_6.x__est"
+      },
+      {
+        "bus": "est__f5__r75",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 676.6,
+        "a": "rly_est__f5_74.b",
+        "b": "slg_WS_5.x__est"
+      },
+      {
+        "bus": "ks_slg_WN_0__o_dn__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 674.9,
+        "a": "rly_pinfix_ks_slg_WN_0_o_dn_r2_2.b",
+        "b": "slg_WN_5.i_ctl"
+      },
+      {
+        "bus": "krs_ES_6",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 667.8,
+        "a": "slg_ES_6.krsp",
+        "b": "rly_pinfix_krs_ES_6_0.a"
+      },
+      {
+        "bus": "est__f21__r73",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 640.3,
+        "a": "rly_est__f21_72.b",
+        "b": "slg_ES_5.x__est"
+      },
+      {
+        "bus": "est__f27__r22",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 636.0,
+        "a": "rly_est__f27_21.b",
+        "b": "slg_EN_3.x__est"
+      },
+      {
+        "bus": "est__f16__r68__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 625.2,
+        "a": "rly_pinfix_est_f16_r68_0.b",
+        "b": "slg_ES_0.x__est"
+      },
+      {
+        "bus": "est__f17__r64__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 625.2,
+        "a": "rly_pinfix_est_f17_r64_0.b",
+        "b": "slg_ES_1.x__est"
+      },
+      {
+        "bus": "est__f22__r53",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 618.7,
+        "a": "rly_est__f22_52.b",
+        "b": "slg_ES_6.x__est"
+      },
+      {
+        "bus": "ks_afc_WS_3__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 615.8,
+        "a": "rly_ks_afc_WS_3_1.b",
+        "b": "slg_WS_1.afu"
+      },
+      {
+        "bus": "ks_afc_ES_5",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 613.1,
+        "a": "slg_ES_2.af__fault",
+        "b": "rly_pinfix_ks_afc_ES_5_0.a"
+      }
+    ],
+    "all": [
+      {
+        "bus": "est__f18__r60",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 942.7,
+        "a": "rly_est__f18_59.b",
+        "b": "slg_ES_2.x__est"
+      },
+      {
+        "bus": "est__f2__r62",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 935.8,
+        "a": "rly_est__f2_61.b",
+        "b": "slg_WS_2.x__est"
+      },
+      {
+        "bus": "est__f6__r54",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 935.8,
+        "a": "rly_est__f6_53.b",
+        "b": "slg_WS_6.x__est"
+      },
+      {
+        "bus": "est__f10__r28",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 931.5,
+        "a": "rly_est__f10_27.b",
+        "b": "slg_WN_2.x__est"
+      },
+      {
+        "bus": "est__f8__r36",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 909.9,
+        "a": "rly_est__f8_35.b",
+        "b": "slg_WN_0.x__est"
+      },
+      {
+        "bus": "est__f26__r25",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 895.2,
+        "a": "rly_est__f26_24.b",
+        "b": "slg_EN_2.x__est"
+      },
+      {
+        "bus": "est__f0__r70",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 892.6,
+        "a": "rly_est__f0_69.b",
+        "b": "slg_WS_0.x__est"
+      },
+      {
+        "bus": "est__f9__r32",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 888.3,
+        "a": "rly_est__f9_31.b",
+        "b": "slg_WN_1.x__est"
+      },
+      {
+        "bus": "est__f1__r66",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 871.0,
+        "a": "rly_est__f1_65.b",
+        "b": "slg_WS_1.x__est"
+      },
+      {
+        "bus": "est__f19__r56",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 834.7,
+        "a": "rly_est__f19_55.b",
+        "b": "slg_ES_3.x__est"
+      },
+      {
+        "bus": "est__f29__r38",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 830.4,
+        "a": "rly_est__f29_37.b",
+        "b": "slg_EN_5.x__est"
+      },
+      {
+        "bus": "est__f3__r58",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 827.8,
+        "a": "rly_est__f3_57.b",
+        "b": "slg_WS_3.x__est"
+      },
+      {
+        "bus": "est__f7__r50",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 827.8,
+        "a": "rly_est__f7_49.b",
+        "b": "slg_WS_7.x__est"
+      },
+      {
+        "bus": "est__f28__r42",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 810.0,
+        "a": "rly_est__f28_41.b",
+        "b": "slg_EN_4.x__est"
+      },
+      {
+        "bus": "ks_slg_WN_2__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 779.9,
+        "a": "rly_pinfix_ks_slg_WN_2_o_dn_r3_1.b",
+        "b": "slg_WN_1.i_ctl"
+      },
+      {
+        "bus": "ks_slg_WN_6__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 779.9,
+        "a": "rly_pinfix_ks_slg_WN_6_o_dn_r3_1.b",
+        "b": "slg_WN_3.i_ctl"
+      },
+      {
+        "bus": "krs_WN_5",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 768.8,
+        "a": "slg_WN_5.krsp",
+        "b": "rly_krs_WN_5_0.a"
+      },
+      {
+        "bus": "est__f14__r20",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 758.7,
+        "a": "rly_est__f14_19.b",
+        "b": "slg_WN_6.x__est"
+      },
+      {
+        "bus": "est__f15__r16",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 758.7,
+        "a": "rly_est__f15_15.b",
+        "b": "slg_WN_7.x__est"
+      },
+      {
+        "bus": "est__f23__r48",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 748.3,
+        "a": "rly_est__f23_47.b",
+        "b": "slg_ES_7.x__est"
+      },
+      {
+        "bus": "est__f11__r24",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 737.1,
+        "a": "rly_est__f11_23.b",
+        "b": "slg_WN_3.x__est"
+      },
+      {
+        "bus": "est__f20__r77",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 727.9,
+        "a": "rly_est__f20_76.b",
+        "b": "slg_ES_4.x__est"
+      },
+      {
+        "bus": "est__f25__r30",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 722.4,
+        "a": "rly_est__f25_29.b",
+        "b": "slg_EN_1.x__est"
+      },
+      {
+        "bus": "est__f31__r14",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 722.4,
+        "a": "rly_est__f31_13.b",
+        "b": "slg_EN_7.x__est"
+      },
+      {
+        "bus": "ks_slg_ES_0__o_dn__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 707.3,
+        "a": "rly_pinfix_ks_slg_ES_0_o_dn_r2_2.b",
+        "b": "slg_ES_5.i_ctl"
+      },
+      {
+        "bus": "est__f24__r34",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 700.8,
+        "a": "rly_est__f24_33.b",
+        "b": "slg_EN_0.x__est"
+      },
+      {
+        "bus": "est__f4__r79",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 699.4,
+        "a": "rly_est__f4_78.b",
+        "b": "slg_WS_4.x__est"
+      },
+      {
+        "bus": "ks_slg_EN_0__o_dn__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 687.0,
+        "a": "rly_pinfix_ks_slg_EN_0_o_dn_r2_2.b",
+        "b": "slg_EN_5.i_ctl"
+      },
+      {
+        "bus": "ks_kvs_hroot_WS__o_ch0__r1__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 680.5,
+        "a": "rly_pinfix_ks_kvs_hroot_WS_o_ch0_r1_2.b",
+        "b": "slg_WS_7.i_ctl"
+      },
+      {
+        "bus": "est__f30__r18",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 679.2,
+        "a": "rly_est__f30_17.b",
+        "b": "slg_EN_6.x__est"
+      },
+      {
+        "bus": "est__f5__r75",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 676.6,
+        "a": "rly_est__f5_74.b",
+        "b": "slg_WS_5.x__est"
+      },
+      {
+        "bus": "ks_slg_WN_0__o_dn__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 674.9,
+        "a": "rly_pinfix_ks_slg_WN_0_o_dn_r2_2.b",
+        "b": "slg_WN_5.i_ctl"
+      },
+      {
+        "bus": "krs_ES_6",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 667.8,
+        "a": "slg_ES_6.krsp",
+        "b": "rly_pinfix_krs_ES_6_0.a"
+      },
+      {
+        "bus": "est__f21__r73",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 640.3,
+        "a": "rly_est__f21_72.b",
+        "b": "slg_ES_5.x__est"
+      },
+      {
+        "bus": "est__f27__r22",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 636.0,
+        "a": "rly_est__f27_21.b",
+        "b": "slg_EN_3.x__est"
+      },
+      {
+        "bus": "est__f16__r68__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 625.2,
+        "a": "rly_pinfix_est_f16_r68_0.b",
+        "b": "slg_ES_0.x__est"
+      },
+      {
+        "bus": "est__f17__r64__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 625.2,
+        "a": "rly_pinfix_est_f17_r64_0.b",
+        "b": "slg_ES_1.x__est"
+      },
+      {
+        "bus": "est__f22__r53",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 618.7,
+        "a": "rly_est__f22_52.b",
+        "b": "slg_ES_6.x__est"
+      },
+      {
+        "bus": "ks_afc_WS_3__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 615.8,
+        "a": "rly_ks_afc_WS_3_1.b",
+        "b": "slg_WS_1.afu"
+      },
+      {
+        "bus": "ks_afc_ES_5",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 613.1,
+        "a": "slg_ES_2.af__fault",
+        "b": "rly_pinfix_ks_afc_ES_5_0.a"
+      },
+      {
+        "bus": "ks_afc_ES_6",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 613.1,
+        "a": "slg_ES_3.af__fault",
+        "b": "rly_pinfix_ks_afc_ES_6_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_4",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 609.2,
+        "a": "slg_EN_1.af__fault",
+        "b": "rly_pinfix_ks_afc_EN_4_0.a"
+      },
+      {
+        "bus": "ks_afe_WS",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 605.3,
+        "a": "slg_WS_7.af__fault",
+        "b": "rly_pinfix_ks_afe_WS_0.a"
+      },
+      {
+        "bus": "krs_EN_7",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 604.8,
+        "a": "slg_EN_7.krsp",
+        "b": "rly_pinfix_krs_EN_7_0.a"
+      },
+      {
+        "bus": "krs_ES_1",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 603.5,
+        "a": "slg_ES_1.krsp",
+        "b": "rly_pinfix_krs_ES_1_0.a"
+      },
+      {
+        "bus": "ks_afc_ES_4",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 600.6,
+        "a": "slg_ES_1.af__fault",
+        "b": "rly_pinfix_ks_afc_ES_4_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_3",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 600.6,
+        "a": "slg_EN_0.af__fault",
+        "b": "rly_pinfix_ks_afc_EN_3_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_5",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 600.6,
+        "a": "slg_EN_2.af__fault",
+        "b": "rly_pinfix_ks_afc_EN_5_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_7",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 600.6,
+        "a": "slg_EN_6.af__fault",
+        "b": "rly_pinfix_ks_afc_EN_7_0.a"
+      },
+      {
+        "bus": "ks_afe_EN",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 600.2,
+        "a": "slg_EN_7.af__fault",
+        "b": "rly_pinfix_ks_afe_EN_0.a"
+      },
+      {
+        "bus": "ks_afe_WN",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 597.6,
+        "a": "slg_WN_7.af__fault",
+        "b": "rly_pinfix_ks_afe_WN_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 596.7,
+        "a": "slg_EN_5.af__fault",
+        "b": "rly_pinfix_ks_afc_EN_2_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_1__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 596.3,
+        "a": "slg_EN_1.o_dn",
+        "b": "rly_ks_slg_EN_1__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_2__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 596.3,
+        "a": "slg_EN_2.o_dn",
+        "b": "rly_ks_slg_EN_2__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_3__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 596.3,
+        "a": "slg_EN_3.o_dn",
+        "b": "rly_ks_slg_EN_3__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_5__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 596.3,
+        "a": "slg_EN_5.o_dn",
+        "b": "rly_ks_slg_EN_5__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_6__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 596.3,
+        "a": "slg_EN_6.o_dn",
+        "b": "rly_ks_slg_EN_6__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_7__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 596.3,
+        "a": "slg_EN_7.o_dn",
+        "b": "rly_ks_slg_EN_7__o_dn_0.a"
+      },
+      {
+        "bus": "est__f13__r40__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 596.2,
+        "a": "rly_pinfix_est_f13_r40_0.b",
+        "b": "slg_WN_5.x__est"
+      },
+      {
+        "bus": "ks_kvpc_EN_1__o_grp_h__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 10,
+        "um": 594.9,
+        "a": "rly_pinfix_ks_kvpc_EN_1_o_grp_h_r1_0.b",
+        "b": "slg_EN_4.i_pc1_h"
+      },
+      {
+        "bus": "ks_afc_WS_7__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 594.2,
+        "a": "rly_ks_afc_WS_7_1.b",
+        "b": "slg_WS_7.afu"
+      },
+      {
+        "bus": "krs_ES_2",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 592.7,
+        "a": "slg_ES_2.krsp",
+        "b": "rly_pinfix_krs_ES_2_0.a"
+      },
+      {
+        "bus": "krs_ES_3",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 592.7,
+        "a": "slg_ES_3.krsp",
+        "b": "rly_pinfix_krs_ES_3_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_3__r2__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 592.5,
+        "a": "rly_pinfix_ks_afc_EN_3_r2_0.b",
+        "b": "slg_EN_1.afu"
+      },
+      {
+        "bus": "ks_afc_EN_5__r2__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 592.5,
+        "a": "rly_pinfix_ks_afc_EN_5_r2_0.b",
+        "b": "slg_EN_3.afu"
+      },
+      {
+        "bus": "ks_slg_ES_5__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 592.4,
+        "a": "slg_ES_5.o_dn",
+        "b": "rly_pinfix_ks_slg_ES_5_o_dn_0.a"
+      },
+      {
+        "bus": "ks_afe_ES",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 592.4,
+        "a": "slg_ES_7.af__fault",
+        "b": "rly_pinfix_ks_afe_ES_0.a"
+      },
+      {
+        "bus": "krs_ES_7",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 592.2,
+        "a": "slg_ES_7.krsp",
+        "b": "rly_pinfix_krs_ES_7_0.a"
+      },
+      {
+        "bus": "ks_slg_ES_1__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 592.0,
+        "a": "slg_ES_1.o_dn",
+        "b": "rly_ks_slg_ES_1__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_ES_2__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 592.0,
+        "a": "slg_ES_2.o_dn",
+        "b": "rly_ks_slg_ES_2__o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_ES_3__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 592.0,
+        "a": "slg_ES_3.o_dn",
+        "b": "rly_ks_slg_ES_3__o_dn_0.a"
+      },
+      {
+        "bus": "ks_kvpc_WN_1__o_grp_h__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 10,
+        "um": 591.5,
+        "a": "rly_pinfix_ks_kvpc_WN_1_o_grp_h_r1_0.b",
+        "b": "slg_WN_4.i_pc1_h"
+      },
+      {
+        "bus": "pvrs_ES_0_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 590.8,
+        "a": "slg_ES_0.rsp",
+        "b": "rly_pvrs_ES_0_0_0.a"
+      },
+      {
+        "bus": "pvrs_ES_1_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 590.8,
+        "a": "slg_ES_2.rsp",
+        "b": "rly_pvrs_ES_1_0_0.a"
+      },
+      {
+        "bus": "pvrs_ES_3_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 590.8,
+        "a": "slg_ES_6.rsp",
+        "b": "rly_pvrs_ES_3_0_0.a"
+      },
+      {
+        "bus": "krs_ES_0",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 589.2,
+        "a": "slg_ES_0.krsp",
+        "b": "rly_pinfix_krs_ES_0_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 588.4,
+        "a": "slg_EN_4.af__fault",
+        "b": "rly_pinfix_ks_afc_EN_1_0.a"
+      },
+      {
+        "bus": "ks_afc_ES_2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 587.6,
+        "a": "slg_ES_5.af__fault",
+        "b": "rly_pinfix_ks_afc_ES_2_0.a"
+      },
+      {
+        "bus": "krs_WS_3",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 587.5,
+        "a": "slg_WS_3.krsp",
+        "b": "rly_pinfix_krs_WS_3_0.a"
+      },
+      {
+        "bus": "ks_afc_ES_1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 587.1,
+        "a": "slg_ES_4.af__fault",
+        "b": "rly_pinfix_ks_afc_ES_1_0.a"
+      },
+      {
+        "bus": "ks_afc_WS_1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 586.7,
+        "a": "slg_WS_4.af__fault",
+        "b": "rly_ks_afc_WS_1_0.a"
+      },
+      {
+        "bus": "pvrs_EN_0_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 586.5,
+        "a": "slg_EN_0.rsp",
+        "b": "rly_pvrs_EN_0_0_0.a"
+      },
+      {
+        "bus": "pvrs_EN_1_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 586.5,
+        "a": "slg_EN_2.rsp",
+        "b": "rly_pvrs_EN_1_0_0.a"
+      },
+      {
+        "bus": "pvrs_EN_3_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 586.5,
+        "a": "slg_EN_6.rsp",
+        "b": "rly_pvrs_EN_3_0_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_4__o_ctl__r3__pinfix4",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 586.3,
+        "a": "rly_pinfix_ks_slg_WN_4_o_ctl_r3_3.b",
+        "b": "slg_WN_5.i_up"
+      },
+      {
+        "bus": "ks_slg_EN_6__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 585.9,
+        "a": "rly_pinfix_ks_slg_EN_6_o_dn_r3_1.b",
+        "b": "slg_EN_3.i_ctl"
+      },
+      {
+        "bus": "ks_afk_WN_1__r3__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 585.5,
+        "a": "rly_pinfix_ks_afk_WN_1_r3_0.b",
+        "b": "slg_WN_1.afk"
+      },
+      {
+        "bus": "ks_slg_ES_2__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 584.6,
+        "a": "rly_pinfix_ks_slg_ES_2_o_dn_r3_1.b",
+        "b": "slg_ES_1.i_ctl"
+      },
+      {
+        "bus": "ks_slg_WN_1__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 584.1,
+        "a": "rly_pinfix_ks_slg_WN_1_o_ctl_r3_2.b",
+        "b": "slg_WN_2.i_up"
+      },
+      {
+        "bus": "pvrs_WS_2_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 582.2,
+        "a": "slg_WS_4.rsp",
+        "b": "rly_pvrs_WS_2_0_0.a"
+      },
+      {
+        "bus": "est__f12__r44__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 13,
+        "um": 579.3,
+        "a": "rly_pinfix_est_f12_r44_0.b",
+        "b": "slg_WN_4.x__est"
+      },
+      {
+        "bus": "pvrs_WN_0_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 577.9,
+        "a": "slg_WN_0.rsp",
+        "b": "rly_pvrs_WN_0_0_0.a"
+      },
+      {
+        "bus": "pvrs_WN_1_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 577.9,
+        "a": "slg_WN_2.rsp",
+        "b": "rly_pvrs_WN_1_0_0.a"
+      },
+      {
+        "bus": "pvrs_WN_3_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 577.9,
+        "a": "slg_WN_6.rsp",
+        "b": "rly_pvrs_WN_3_0_0.a"
+      },
+      {
+        "bus": "ks_afc_WN_3__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 576.9,
+        "a": "rly_ks_afc_WN_3_1.b",
+        "b": "slg_WN_1.afu"
+      },
+      {
+        "bus": "ks_afc_WN_4__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 576.9,
+        "a": "rly_ks_afc_WN_4_1.b",
+        "b": "slg_WN_2.afu"
+      },
+      {
+        "bus": "ks_afc_WN_5__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 576.9,
+        "a": "rly_ks_afc_WN_5_1.b",
+        "b": "slg_WN_3.afu"
+      },
+      {
+        "bus": "ks_afc_WN_6__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 576.9,
+        "a": "rly_ks_afc_WN_6_1.b",
+        "b": "slg_WN_6.afu"
+      },
+      {
+        "bus": "ks_afc_WN_7__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 576.9,
+        "a": "rly_ks_afc_WN_7_1.b",
+        "b": "slg_WN_7.afu"
+      },
+      {
+        "bus": "ks_slg_WN_3__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 573.3,
+        "a": "rly_pinfix_ks_slg_WN_3_o_ctl_r3_2.b",
+        "b": "slg_WN_6.i_up"
+      },
+      {
+        "bus": "ks_slg_WS_5__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 572.9,
+        "a": "rly_pinfix_ks_slg_WS_5_o_ctl_r3_2.b",
+        "b": "slg_WS_0.i_up"
+      },
+      {
+        "bus": "ks_afc_WS_1__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 572.6,
+        "a": "rly_ks_afc_WS_1_1.b",
+        "b": "slg_WS_5.afu"
+      },
+      {
+        "bus": "ks_slg_ES_6__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 570.4,
+        "a": "slg_ES_6.o_dn",
+        "b": "rly_ks_slg_ES_6__o_dn_0.a"
+      },
+      {
+        "bus": "pvrs_ES_2_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 569.3,
+        "a": "slg_ES_4.rsp",
+        "b": "rly_pvrs_ES_2_0_0.a"
+      },
+      {
+        "bus": "pvrs_ES_0_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 569.2,
+        "a": "slg_ES_1.rsp",
+        "b": "rly_pvrs_ES_0_1_0.a"
+      },
+      {
+        "bus": "pvrs_ES_1_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 569.2,
+        "a": "slg_ES_3.rsp",
+        "b": "rly_pvrs_ES_1_1_0.a"
+      },
+      {
+        "bus": "pvrs_ES_2_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 569.2,
+        "a": "slg_ES_5.rsp",
+        "b": "rly_pvrs_ES_2_1_0.a"
+      },
+      {
+        "bus": "pvrs_ES_3_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 569.2,
+        "a": "slg_ES_7.rsp",
+        "b": "rly_pvrs_ES_3_1_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_2__o_ctl__r3__pinfix4",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 568.6,
+        "a": "rly_pinfix_ks_slg_WN_2_o_ctl_r3_3.b",
+        "b": "slg_WN_3.i_up"
+      },
+      {
+        "bus": "ks_afc_ES_5__r2__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 567.9,
+        "a": "rly_pinfix_ks_afc_ES_5_r2_0.b",
+        "b": "slg_ES_3.afu"
+      },
+      {
+        "bus": "ks_slg_WS_6__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 567.3,
+        "a": "rly_pinfix_ks_slg_WS_6_o_ctl_r3_2.b",
+        "b": "slg_WS_7.i_up"
+      },
+      {
+        "bus": "krs_ES_4",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 565.9,
+        "a": "slg_ES_4.krsp",
+        "b": "rly_pinfix_krs_ES_4_0.a"
+      },
+      {
+        "bus": "pvrs_EN_0_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 564.9,
+        "a": "slg_EN_1.rsp",
+        "b": "rly_pvrs_EN_0_1_0.a"
+      },
+      {
+        "bus": "pvrs_EN_1_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 564.9,
+        "a": "slg_EN_3.rsp",
+        "b": "rly_pvrs_EN_1_1_0.a"
+      },
+      {
+        "bus": "pvrs_EN_2_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 564.9,
+        "a": "slg_EN_4.rsp",
+        "b": "rly_pvrs_EN_2_0_0.a"
+      },
+      {
+        "bus": "pvrs_EN_2_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 564.9,
+        "a": "slg_EN_5.rsp",
+        "b": "rly_pvrs_EN_2_1_0.a"
+      },
+      {
+        "bus": "pvrs_EN_3_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 564.9,
+        "a": "slg_EN_7.rsp",
+        "b": "rly_pvrs_EN_3_1_0.a"
+      },
+      {
+        "bus": "krs_EN_4",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 564.7,
+        "a": "slg_EN_4.krsp",
+        "b": "rly_pinfix_krs_EN_4_0.a"
+      },
+      {
+        "bus": "krs_WS_0",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 562.9,
+        "a": "slg_WS_0.krsp",
+        "b": "rly_pinfix_krs_WS_0_0.a"
+      },
+      {
+        "bus": "krs_EN_5",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 561.6,
+        "a": "slg_EN_5.krsp",
+        "b": "rly_pinfix_krs_EN_5_0.a"
+      },
+      {
+        "bus": "pvrs_WS_0_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_0.rsp",
+        "b": "rly_pvrs_WS_0_0_0.a"
+      },
+      {
+        "bus": "pvrs_WS_0_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_1.rsp",
+        "b": "rly_pvrs_WS_0_1_0.a"
+      },
+      {
+        "bus": "pvrs_WS_1_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_2.rsp",
+        "b": "rly_pvrs_WS_1_0_0.a"
+      },
+      {
+        "bus": "pvrs_WS_1_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_3.rsp",
+        "b": "rly_pvrs_WS_1_1_0.a"
+      },
+      {
+        "bus": "pvrs_WS_2_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_5.rsp",
+        "b": "rly_pvrs_WS_2_1_0.a"
+      },
+      {
+        "bus": "pvrs_WS_3_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_6.rsp",
+        "b": "rly_pvrs_WS_3_0_0.a"
+      },
+      {
+        "bus": "pvrs_WS_3_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 560.6,
+        "a": "slg_WS_7.rsp",
+        "b": "rly_pvrs_WS_3_1_0.a"
+      },
+      {
+        "bus": "ks_afc_WN_1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 559.4,
+        "a": "slg_WN_4.af__fault",
+        "b": "rly_pinfix_ks_afc_WN_1_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_3__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 556.5,
+        "a": "rly_pinfix_ks_slg_WS_3_o_ctl_r3_2.b",
+        "b": "slg_WS_6.i_up"
+      },
+      {
+        "bus": "pvrs_WN_0_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 556.3,
+        "a": "slg_WN_1.rsp",
+        "b": "rly_pvrs_WN_0_1_0.a"
+      },
+      {
+        "bus": "pvrs_WN_1_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 556.3,
+        "a": "slg_WN_3.rsp",
+        "b": "rly_pvrs_WN_1_1_0.a"
+      },
+      {
+        "bus": "pvrs_WN_2_0",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 556.3,
+        "a": "slg_WN_4.rsp",
+        "b": "rly_pvrs_WN_2_0_0.a"
+      },
+      {
+        "bus": "pvrs_WN_2_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 556.3,
+        "a": "slg_WN_5.rsp",
+        "b": "rly_pvrs_WN_2_1_0.a"
+      },
+      {
+        "bus": "pvrs_WN_3_1",
+        "cls": "kv_oneway",
+        "bits": 1056,
+        "um": 556.3,
+        "a": "slg_WN_7.rsp",
+        "b": "rly_pvrs_WN_3_1_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_1__o_dn__r3__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 555.7,
+        "a": "rly_pinfix_ks_slg_WN_1_o_dn_r3_0.b",
+        "b": "slg_WN_0.i_ctl"
+      },
+      {
+        "bus": "ks_slg_WN_3__o_dn__r3__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 555.7,
+        "a": "rly_pinfix_ks_slg_WN_3_o_dn_r3_0.b",
+        "b": "slg_WN_2.i_ctl"
+      },
+      {
+        "bus": "ks_afc_WN_2__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 555.3,
+        "a": "rly_ks_afc_WN_2_1.b",
+        "b": "slg_WN_0.afu"
+      },
+      {
+        "bus": "krs_WS_2",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 555.1,
+        "a": "slg_WS_2.krsp",
+        "b": "rly_pinfix_krs_WS_2_0.a"
+      },
+      {
+        "bus": "ks_slg_EN_3__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 554.8,
+        "a": "rly_pinfix_ks_slg_EN_3_o_dn_r3_1.b",
+        "b": "slg_EN_2.i_ctl"
+      },
+      {
+        "bus": "ks_slg_EN_7__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 554.8,
+        "a": "rly_pinfix_ks_slg_EN_7_o_dn_r3_1.b",
+        "b": "slg_EN_6.i_ctl"
+      },
+      {
+        "bus": "ks_slg_WS_7__o_dn__r3__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 553.5,
+        "a": "rly_pinfix_ks_slg_WS_7_o_dn_r3_0.b",
+        "b": "slg_WS_6.i_ctl"
+      },
+      {
+        "bus": "ks_kvs_hroot_EN__o_ch0__r2__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 553.5,
+        "a": "rly_pinfix_ks_kvs_hroot_EN_o_ch0_r2_1.b",
+        "b": "slg_EN_7.i_ctl"
+      },
+      {
+        "bus": "ks_slg_EN_2__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 552.6,
+        "a": "rly_pinfix_ks_slg_EN_2_o_dn_r3_1.b",
+        "b": "slg_EN_1.i_ctl"
+      },
+      {
+        "bus": "ks_slg_EN_0__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 551.4,
+        "a": "slg_EN_0.o_dn",
+        "b": "rly_pinfix_ks_slg_EN_0_o_dn_0.a"
+      },
+      {
+        "bus": "ks_afc_WS_2__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 551.0,
+        "a": "rly_ks_afc_WS_2_1.b",
+        "b": "slg_WS_0.afu"
+      },
+      {
+        "bus": "ks_afc_WS_4__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 551.0,
+        "a": "rly_ks_afc_WS_4_1.b",
+        "b": "slg_WS_2.afu"
+      },
+      {
+        "bus": "ks_afc_WS_5__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 551.0,
+        "a": "rly_ks_afc_WS_5_1.b",
+        "b": "slg_WS_3.afu"
+      },
+      {
+        "bus": "ks_afc_WS_6__r2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 551.0,
+        "a": "rly_ks_afc_WS_6_1.b",
+        "b": "slg_WS_6.afu"
+      },
+      {
+        "bus": "krs_WS_4",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 550.0,
+        "a": "slg_WS_4.krsp",
+        "b": "rly_pinfix_krs_WS_4_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_4__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 549.6,
+        "a": "rly_pinfix_ks_slg_WS_4_o_ctl_r3_2.b",
+        "b": "slg_WS_5.i_up"
+      },
+      {
+        "bus": "ks_slg_ES_0__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 549.2,
+        "a": "slg_ES_0.o_dn",
+        "b": "rly_pinfix_ks_slg_ES_0_o_dn_0.a"
+      },
+      {
+        "bus": "ks_slg_ES_7__o_dn",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 549.2,
+        "a": "slg_ES_7.o_dn",
+        "b": "rly_pinfix_ks_slg_ES_7_o_dn_0.a"
+      },
+      {
+        "bus": "ks_kvs_hroot_WN__o_ch0__r2__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 544.9,
+        "a": "rly_pinfix_ks_kvs_hroot_WN_o_ch0_r2_0.b",
+        "b": "slg_WN_7.i_ctl"
+      },
+      {
+        "bus": "ks_slg_EN_1__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 543.6,
+        "a": "rly_pinfix_ks_slg_EN_1_o_dn_r3_1.b",
+        "b": "slg_EN_0.i_ctl"
+      },
+      {
+        "bus": "ks_slg_ES_1__o_dn__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 541.0,
+        "a": "rly_pinfix_ks_slg_ES_1_o_dn_r3_1.b",
+        "b": "slg_ES_0.i_ctl"
+      },
+      {
+        "bus": "ks_slg_WN_0__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 540.9,
+        "a": "rly_pinfix_ks_slg_WN_0_o_ctl_r3_2.b",
+        "b": "slg_WN_1.i_up"
+      },
+      {
+        "bus": "ks_kvpc_EN_1__o_grp__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 295,
+        "um": 534.8,
+        "a": "rly_pinfix_ks_kvpc_EN_1_o_grp_r1_0.b",
+        "b": "slg_EN_4.i_pc1"
+      },
+      {
+        "bus": "ks_slg_WS_0__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_0.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_0_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_1__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_1.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_1_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_2__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_2.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_2_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_3__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_3.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_3_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_5__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_5.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_5_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_6__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_6.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_6_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_7__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 533.2,
+        "a": "slg_WS_7.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_7_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_kvpc_ES_1__o_grp__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 295,
+        "um": 532.7,
+        "a": "rly_pinfix_ks_kvpc_ES_1_o_grp_r1_0.b",
+        "b": "slg_ES_4.i_pc1"
+      },
+      {
+        "bus": "ks_slg_WN_0__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_0.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_0_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_1__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_1.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_1_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_2__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_2.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_2_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_3__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_3.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_3_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_5__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_5.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_5_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_6__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_6.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_6_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_7__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 531.0,
+        "a": "slg_WN_7.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_7_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WS_4__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 529.2,
+        "a": "slg_WS_4.o_ctl",
+        "b": "rly_pinfix_ks_slg_WS_4_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_slg_WN_4__o_ctl",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 527.0,
+        "a": "slg_WN_4.o_ctl",
+        "b": "rly_pinfix_ks_slg_WN_4_o_ctl_0.a"
+      },
+      {
+        "bus": "ks_afk_WS_4__r13__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 525.0,
+        "a": "rly_pinfix_ks_afk_WS_4_r13_0.b",
+        "b": "slg_WS_4.afk"
+      },
+      {
+        "bus": "ks_slg_EN_0__o_ctl__r2__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 524.1,
+        "a": "rly_pinfix_ks_slg_EN_0_o_ctl_r2_2.b",
+        "b": "slg_EN_1.i_up"
+      },
+      {
+        "bus": "ks_slg_WS_2__o_ctl__r3__pinfix3",
+        "cls": "kv_oneway",
+        "bits": 144,
+        "um": 523.6,
+        "a": "rly_pinfix_ks_slg_WS_2_o_ctl_r3_2.b",
+        "b": "slg_WS_3.i_up"
+      },
+      {
+        "bus": "ks_slg_WS_0__o_dn__r2__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 518.5,
+        "a": "rly_pinfix_ks_slg_WS_0_o_dn_r2_1.b",
+        "b": "slg_WS_5.i_ctl"
+      },
+      {
+        "bus": "krs_EN_0",
+        "cls": "kv_oneway",
+        "bits": 1062,
+        "um": 518.4,
+        "a": "slg_EN_0.krsp",
+        "b": "rly_pinfix_krs_EN_0_0.a"
+      },
+      {
+        "bus": "ks_afc_EN_4__r2__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 511.3,
+        "a": "rly_pinfix_ks_afc_EN_4_r2_0.b",
+        "b": "slg_EN_2.afu"
+      },
+      {
+        "bus": "ks_slg_WS_3__o_dn__r3__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 271,
+        "um": 510.3,
+        "a": "rly_pinfix_ks_slg_WS_3_o_dn_r3_0.b",
+        "b": "slg_WS_2.i_ctl"
+      },
+      {
+        "bus": "ks_afv_WN_3__f0__r1__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 509.4,
+        "a": "rly_pinfix_ks_afv_WN_3_f0_r1_1.b",
+        "b": "slg_WN_7.afv"
+      },
+      {
+        "bus": "ks_afc_ES_1__r2__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 509.1,
+        "a": "rly_pinfix_ks_afc_ES_1_r2_0.b",
+        "b": "slg_ES_5.afu"
+      },
+      {
+        "bus": "ks_afk_WN_2__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 506.5,
+        "a": "rly_pinfix_ks_afk_WN_2_r1_0.b",
+        "b": "slg_WN_2.afk"
+      },
+      {
+        "bus": "ks_afk_WN_3__r3__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 505.2,
+        "a": "rly_pinfix_ks_afk_WN_3_r3_1.b",
+        "b": "slg_WN_3.afk"
+      },
+      {
+        "bus": "ks_kvpc_WS_29__o_grp_h__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 10,
+        "um": 503.5,
+        "a": "rly_pinfix_ks_kvpc_WS_29_o_grp_h_r1_0.b",
+        "b": "slg_WS_7.i_pc1_h"
+      },
+      {
+        "bus": "ks_afk_WS_3__r6__pinfix2",
+        "cls": "kv_oneway",
+        "bits": 1,
+        "um": 503.4,
+        "a": "rly_pinfix_ks_afk_WS_3_r6_1.b",
+        "b": "slg_WS_3.afk"
+      },
+      {
+        "bus": "ks_kvpc_WS_1__o_grp_h__r1__pinfix1",
+        "cls": "kv_oneway",
+        "bits": 10,
+        "um": 502.9,
+        "a": "rly_pinfix_ks_kvpc_WS_1_o_grp_h_r1_0.b",
+        "b": "slg_WS_4.i_pc1_h"
+      }
+    ]
+  }
+}

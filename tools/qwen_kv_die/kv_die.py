@@ -1166,6 +1166,11 @@ _D2D_INST = {}
 def ep_far(inst, port, pt):
     """KV-BIND11: Manhattan distance from pt to the FARTHEST realized view pin of d2d word port (the hop every bit of
     the word makes), or None for any other end (callers keep their point distance)."""
+    if KSD.GRP_S6C:
+        import kv_group_view_pins as GP
+        group_far = GP.far(inst, port, pt)
+        if group_far is not None:
+            return group_far
     if not D2D_PINS or inst != 'd2d_kv' or 'd2d_kv' not in _D2D_INST:
         return None
     v = d2d_view_ports().get(port.lstrip('*').split('[')[0])
@@ -1952,6 +1957,11 @@ def _seq_fan_pin(it, port):
 
 def _leaf_pin(it, port):
     """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    if KSD.GRP_S6C:
+        import kv_group_view_pins as GP
+        gp_ = GP.xy(it, port)
+        if gp_ is not None:
+            return gp_
     dp_ = _d2d_pin(it, port)
     if dp_ is not None:
         return dp_
@@ -4971,6 +4981,11 @@ def _land_level_pins(m, mm, inst0, face_load, by):
 
 def pin_xy(it, mm, port):
     """qwen-1010/b: absolute centre of a face / area port of instance it (master mm), with the orientation applied."""
+    if KSD.GRP_S6C:
+        import kv_group_view_pins as GP
+        gp_ = GP.xy(it, port)
+        if gp_ is not None:
+            return gp_
     sp = mm.ports[port]
     if sp[0] == 'face':
         f, c = sp[2], sp[4]
