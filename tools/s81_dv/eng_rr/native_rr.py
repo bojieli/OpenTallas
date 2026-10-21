@@ -5,7 +5,7 @@ r=pathlib.Path.cwd();s=r/'src';w=r/'native';w.mkdir(exist_ok=False)
 t=s/'tools/s81_dv/eng_rr/native_template';shutil.copytree(t,w,dirs_exist_ok=True)
 b=json.loads((t/'reference_native.json').read_text())
 f=re.search(r'F=\((.*?)\)\n',(s/'tools/s81_dv/eng_rr/run_eng_rr.sh').read_text(),re.S)[1].split()
-f=[x for x in f if '/test/' not in x]
+f=[x for x in f if '/test/' not in x and 'ot_sram_1r1w2c_16x340_p192' not in x and 'ot_sram_1r1w2c_16x546_m1' not in x]
 macros=[]
 for i,p in enumerate(f):
  if p.startswith('physical/'):
