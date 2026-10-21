@@ -45,6 +45,8 @@ def install(v, m):
             if not g:
                 raise ValueError(f'class emission: unsupported master {it.master}')
             fam, bits, faces = g[1], int(g[2]), g[3]
+            if bits != lane['bits']:
+                raise ValueError(f'{name}: source width {bits} != calendar width {lane["bits"]}')
             parts = slices(bits)
             made = []
             reserve_w, reserve_h = reservation(bits)
@@ -56,8 +58,9 @@ def install(v, m):
                 ni.name = name if len(parts) == 1 else slice_name(name,part)
                 ni.master, ni.orient = row['cls'], row['orient']
                 ni.w, ni.h = row['class_frame']
-                ni.x = it.x
-                ni.y = round(it.y + part * (reserve_h + C.SHAVE) / len(parts), 3)
+                slot_h=(reserve_h+C.SHAVE)/len(parts)-C.SHAVE
+                ni.x = round(it.x + math.floor((reserve_w-ni.w)/2/C.GX+1e-9)*C.GX,3)
+                ni.y = round(it.y + part*(slot_h+C.SHAVE) + math.floor((slot_h-ni.h)/2/C.GY+1e-9)*C.GY,3)
                 classes[ni.master] = row
                 made.append((ni, lo, hi, row))
                 receipts.append(dict(instance=ni.name, source_instance=name, source_master=it.master,
@@ -131,6 +134,9 @@ def install(v, m):
     m['fwd_class_emission'] = dict(schema='opentallas.qwen.fwd-class-emission.v1',
                                   instances=receipts, logical_calendar=copy.deepcopy(rows),
                                   physical_instances=len(receipts), classes=sorted(classes))
+    m['fwd_lanes']['class_emission'] = m['fwd_class_emission']
+    m['fwd_lanes']['stations'] = sum(len(r['stations']) for r in physical_rows)
+    m['fwd_lanes']['landings'] = len(physical_rows)
     follow = m.get('ck_follow',{})
     for (name,p),owner in list(follow.items()):
         if name in mapping:
@@ -139,6 +145,8 @@ def install(v, m):
     base_m, base_w, writer = v.masters, v.port_widths, v.write_netlist
     def masters(model,k=1,port_bits=None):
         out=base_m(model,k,port_bits)
+        for old in {by[name].master for name in mapping} - set(classes):
+            out.pop(old,None)
         for name,row in classes.items():
             pins=C.class_pins(name)
             mst=v.Master(name,*row['class_frame'],3,'closed D4 registered-enable forwarded lane class')
@@ -180,7 +188,15 @@ def install(v, m):
                         if pn!='b': raise ValueError(f'{name}.{pn}[{j}]: missing source')
                         net=f'fc_open_{name}_{pn}_{j}'; declarations.append(f'  wire {net};'); slots[j]=net
                     bits.append(slots[j])
-                ordinary.append(f'.{pn}({{{", ".join(bits)}}})')
+                compressed=[]; j=0
+                while j<len(bits):
+                    q=re.fullmatch(r'(\w+)\[(\d+)\]',bits[j])
+                    end=j+1
+                    if q:
+                        while end<len(bits) and bits[end]==f'{q[1]}[{int(q[2])-(end-j)}]': end+=1
+                    compressed.append(f'{q[1]}[{q[2]}:{int(q[2])-(end-j)+1}]' if end-j>1 else bits[j])
+                    j=end
+                ordinary.append(f'.{pn}({{{", ".join(compressed)}}})')
             return f'  {master} {name} ('+', '.join(ordinary)+');'
         text=re.sub(r'^\s*(\w+)\s+(\w+)\s*\((.*)\);\s*$',instance,text,flags=re.M)
         text=text.replace('endmodule','\n'.join(declarations)+'\nendmodule')

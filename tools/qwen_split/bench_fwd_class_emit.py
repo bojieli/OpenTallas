@@ -16,6 +16,12 @@ original_station=m['insts'][2].master;original_landing=m['insts'][3].master
 v.write_netlist(m,1,out/'original_die.v');R.main(out/'original_die.v',out/'original_wrappers.sv')
 F.install(v,m)
 v.write_netlist(m,1,out/'die.v');R.main(out/'die.v',out/'wrappers.sv')
+if '--mutant' in sys.argv:
+    p=out/'die.v'; text=p.read_text()
+    a='.q({n_payload__s1[543:0], n_payload__s0[543:0]})'
+    b='.q({n_payload__s0[543:0], n_payload__s1[543:0]})'
+    assert a in text
+    p.write_text(text.replace(a,b,1))
 (out/'tb.sv').write_text('''`timescale 1ns/1ps
 module source(output reg [1087:0] q=0, output reg ck=0, output reg en=0);
   always #5 ck=~ck;
@@ -49,7 +55,8 @@ module tb;
 endmodule
 '''.replace('ORIGINAL_STATION',original_station).replace('ORIGINAL_LANDING',original_landing))
 root=Path(__file__).resolve().parents[2]
-cmd=['iverilog','-g2012','-s','tb','-o',str(out/'bench.vvp'),str(out/'tb.sv'),str(out/'die.v'),str(out/'wrappers.sv'),str(out/'original_wrappers.sv'),str(root/'rtl/qwen_split/qfd_fwd_lane.sv'),str(root/'rtl/hdc/ot_hdc_cg.sv')]
+verilator=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+cmd=[str(verilator),'--binary','--timing','-j','1','-Wno-fatal','-Wno-WIDTH','-Wno-MULTIDRIVEN','-Wno-COMBDLY','-Wno-LATCH','-Wno-INITIALDLY','--top-module','tb','-Mdir',str(out/'obj'),'-o','tb',str(out/'tb.sv'),str(out/'die.v'),str(out/'wrappers.sv'),str(out/'original_wrappers.sv'),str(root/'rtl/qwen_split/qfd_fwd_lane.sv'),str(root/'rtl/hdc/ot_hdc_cg.sv')]
 r=subprocess.run(cmd,text=True,capture_output=True);(out/'build.log').write_text(r.stdout+r.stderr)
 if r.returncode: raise SystemExit(r.returncode)
-r=subprocess.run(['vvp',str(out/'bench.vvp')],text=True,capture_output=True);(out/'run.log').write_text(r.stdout+r.stderr); print(r.stdout+r.stderr,end='');raise SystemExit(r.returncode)
+r=subprocess.run([str(out/'obj/tb')],text=True,capture_output=True);(out/'run.log').write_text(r.stdout+r.stderr); print(r.stdout+r.stderr,end='');raise SystemExit(r.returncode)

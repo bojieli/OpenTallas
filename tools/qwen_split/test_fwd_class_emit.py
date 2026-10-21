@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -55,6 +56,9 @@ class Composition(unittest.TestCase):
                 for row in m['fwd_class_emission']['instances']:
                     self.assertLessEqual(row['class_bits'],600)
                     self.assertEqual(v.port_widths(m,1)[(row['master'],'a')],row['class_bits'])
+                (Path(td)/'fwd_lanes.json').write_text(json.dumps(m['fwd_lanes']))
+                with patch.object(sys,'argv',['lane_latency_audit.py',str(path),'--out',str(Path(td)/'audit.json')]):
+                    self.assertEqual(LA.main(),0)
                 net=LA.parse(path)
                 self.assertEqual(set(net),{r['bid'] for r in lanes})
                 self.assertTrue(all(r['K']==4 and r['n']==2 and r['contiguous'] for r in net.values()))
@@ -69,12 +73,16 @@ class Composition(unittest.TestCase):
                     if ' rly_payload' in line and '.a(' in line:
                         self.assertNotIn("1'b0",line)
                 if width==1088:
-                    self.assertIn('.q({n_payload__s1[543]',text)
-                    self.assertIn('n_payload__s0[0]',text)
+                    self.assertIn('.q({n_payload__s1[543:0]',text)
+                    self.assertIn('n_payload__s0[543:0]',text)
 
     def test_missing_reservation_refused(self):
         v,m=self.vehicle();m['insts'][2].h=30
         with self.assertRaisesRegex(ValueError,'reservation missing'): F.install(v,m)
+
+    def test_source_width_mismatch_refused(self):
+        v,m=self.vehicle();m['fwd_lanes']['lanes'][0]['bits']=1087
+        with self.assertRaisesRegex(ValueError,'source width'): F.install(v,m)
 
     def test_missing_calendar_refused(self):
         v,m=self.vehicle();m['fwd_lanes']['lanes']=[]
