@@ -269,7 +269,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  // okc is registered expected-next-PP capacity, computed from all counter next values.
  wire [PW-1:0] wfreed_pp [0:15][0:NPP-1];wire [16*NFP-1:0] ovf;
  assign ovf_any=|ovf;
- (* keep="true",dont_touch="true" *) reg okc [0:47];
+ wire okc [0:47];
  generate for(gp=0;gp<16;gp=gp+1)begin:g_arb
   wire [31:0] req;
   for(gl=0;gl<32;gl=gl+1)begin:g_rq assign req[gl]=hpc_w[gl][gp]; end
@@ -277,27 +277,13 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   wire [15:0] glo=(okc[3*gp]||MUT==8)?low[15:0]:16'd0;
   wire [15:0] ghi=(okc[3*gp+1]||MUT==8)?low[31:16]:16'd0;
   assign g_w[gp]={ghi,glo};
-  (* keep="true",dont_touch="true" *) reg [PW-1:0] cnt [0:NPP-1];
-  reg grant_phase;
-  wire gany=(okc[3*gp+2]||MUT==8)&&(|req);
-  wire phase_n=(NPP==2)?(grant_phase^gany):1'b0;
-  wire [PW-1:0] cnt_n [0:NPP-1];
-  for(gq=0;gq<NPP;gq=gq+1)begin:g_count
-   assign cnt_n[gq]=cnt[gq]+PW'(gany&&((NPP==1)||grant_phase==gq[0]))-wfreed_pp[gp][gq];
-  end
-  wire can_next;
-  if(NPP==2)begin:g_two assign can_next=phase_n?(cnt_n[1]<PW'(1<<FAW)):(cnt_n[0]<PW'(1<<FAW));end
-  else begin:g_one assign can_next=cnt_n[0]<PW'(1<<FAW);end
+  wire [2:0] crdy;wire grant;
+  wire [NPP*PW-1:0] returned;
+  for(gq=0;gq<NPP;gq=gq+1)begin:g_return assign returned[gq*PW+:PW]=wfreed_pp[gp][gq];end
   localparam integer CR=CS+16*NC*NPP+gp;
-  integer bp;
-  always @(posedge stream_clk or negedge sl[CR])
-   if(!sl[CR])begin
-    for(bp=0;bp<NPP;bp=bp+1)cnt[bp]<=0;
-    grant_phase<=1'b0;okc[3*gp]<=1'b0;okc[3*gp+1]<=1'b0;okc[3*gp+2]<=1'b0;
-   end else begin
-    for(bp=0;bp<NPP;bp=bp+1)cnt[bp]<=cnt_n[bp];
-    grant_phase<=phase_n;okc[3*gp]<=can_next;okc[3*gp+1]<=can_next;okc[3*gp+2]<=can_next;
-   end
+  ot_wbk8_pp_credit #(.FAW(FAW),.NPP(NPP),.MUT(MUT)) u_credit(
+   .clk(stream_clk),.rst_n(sl[CR]),.req(|req),.returned(returned),.ready(crdy),.grant(grant));
+  assign okc[3*gp]=crdy[0];assign okc[3*gp+1]=crdy[1];assign okc[3*gp+2]=crdy[2];
  end endgenerate
  // ------------------------------------------------------------------------------------------------ select, crossbar, FIFOs
  (* keep="true",dont_touch="true" *) reg [31:0] sel_q [0:16*NDS-1]; // [pc*NDS+slice] one-hot lane select
@@ -518,6 +504,43 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   else begin mac<=meta_active_n;apc[0]<=ack_pending_n;apc[1]<=ack_pending_n;end
  // meta_q loads the meta FIFO head only while both meta FIFOs are non-empty (WBK10: storage miter; meta_re implies !meta_empty -> 0 cycles)
  always @(posedge hbm_clk)if(!mac&&!meta_empty)meta_q<=meta_rdata;
+endmodule
+// Actual production capacity ledger, factored only to exercise the legitimate
+// independent-PP visibility counterexample at this real hardware boundary.
+// MUT11 deliberately spends pooled capacity for the expected bank (causal only).
+module ot_wbk8_pp_credit #(parameter integer FAW=2,NPP=2,MUT=0)(
+ input wire clk,rst_n,req,input wire [NPP*(FAW+1)-1:0] returned,
+ output wire [2:0] ready,output wire grant
+);
+ localparam integer PW=FAW+1;
+ (* keep="true",dont_touch="true" *) reg [PW-1:0] cnt [0:NPP-1];
+ reg grant_phase;
+ (* keep="true",dont_touch="true" *) reg ok [0:2];
+ assign ready={ok[2],ok[1],ok[0]};
+ assign grant=(ok[2]||MUT==8)&&req;
+ wire phase_n=(NPP==2)?(grant_phase^grant):1'b0;
+ wire [PW-1:0] cnt_n [0:NPP-1];
+ genvar p;
+ generate for(p=0;p<NPP;p=p+1)begin:g_count
+  assign cnt_n[p]=cnt[p]+PW'(grant&&((NPP==1)||grant_phase==p[0]))-returned[p*PW+:PW];
+ end endgenerate
+ wire can_next;
+ generate if(NPP==2)begin:g_two
+  if(MUT==11)begin:g_bad_pool
+   assign can_next=({1'b0,cnt_n[0]}+{1'b0,cnt_n[1]})<(PW+1)'(2<<FAW);
+  end else begin:g_correct
+   assign can_next=phase_n?(cnt_n[1]<PW'(1<<FAW)):(cnt_n[0]<PW'(1<<FAW));
+  end
+ end else begin:g_one assign can_next=cnt_n[0]<PW'(1<<FAW);end endgenerate
+ integer bp,k;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin
+   for(bp=0;bp<NPP;bp=bp+1)cnt[bp]<=0;
+   grant_phase<=1'b0;for(k=0;k<3;k=k+1)ok[k]<=1'b0;
+  end else begin
+   for(bp=0;bp<NPP;bp=bp+1)cnt[bp]<=cnt_n[bp];
+   grant_phase<=phase_n;for(k=0;k<3;k=k+1)ok[k]<=can_next;
+  end
 endmodule
 // Authentic ASAP7 Y=A*B master; official pinned Liberty supplies synthesis/CDC
 // function. Simulation is the exact same Boolean function and adds no state.
