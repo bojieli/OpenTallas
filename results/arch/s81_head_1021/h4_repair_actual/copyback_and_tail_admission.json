@@ -1,0 +1,24 @@
+{
+  "repaired_odb_sha256": "c98e147cce5fd3ad0f0bd1df4b8c32839fdf4d1d7e38f9b39258bdd66a863090",
+  "equal_on_hosts": [
+    "ot-epyc5",
+    "ot-gold2"
+  ],
+  "copyback": "ot-run terminal0 and outputs copied back ep5->gold2 before tail",
+  "tail_unit": "oth-ubuntu-3072737-1792621501",
+  "tail_root": "/srv/opentallas-scratch/claude/codex-s81-head4-replay-1021/h4_physical_tail_actual",
+  "restored_H4_counts": {
+    "pre": 25171,
+    "skip": 18760,
+    "obstacles": 25219,
+    "buckets": 8346,
+    "new_repeaters": 1935707,
+    "occupancy_slots": 1935707
+  },
+  "H4_bounds": {
+    "instances_outside_die": 0,
+    "unplaced": 0,
+    "ideal_top_BPins_missing": 18760
+  },
+  "scope": "Existing normal H4 physicaltail; clock/electrical/reach/STA pending, no release promotion"
+}
