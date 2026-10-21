@@ -1,5 +1,7 @@
 # B0 only, source-bound structural model after MAIN rw9sp clk_w1 TT85.9 FAIL.
-# Same source clock, real1035 CLK sinks, no added data/reset edges or dummy loads.
+# Same source clock, real1035 CLK sinks; repair only known failing w1/w2.
+# Actual baseline-qualified w0/w3 stay on the original builder byte-for-byte.
+# No added data/reset edges or dummy loads.
 # Run AFTER clock_spine_child_ins.tcl, under the unchanged hybrid checker.
 if {[info procs ot_sp_sym_build] eq "" || [info procs ot_b0_original_sym_build] ne ""} {
   error "B0_PERIMETER: expected one fresh original symmetric spine source"
@@ -33,7 +35,7 @@ proc ot_b0_equal_depth {n} {
 }
 proc ot_sp_sym_build {ids lins rx ry} {
   set source_port [uplevel 1 {set port}]
-  if {$source_port ni {clk_w1 clk_w2 clk_w3}} {
+  if {$source_port ni {clk_w1 clk_w2}} {
     return [ot_b0_original_sym_build $ids $lins $rx $ry]
   }
   if {[dict size $lins]} {error "B0_PERIMETER: write roots must remain glue-only, no hard insertion target removed"}
@@ -71,7 +73,7 @@ proc ot_sp_sym_build {ids lins rx ry} {
     }
     if {$side eq "west"} {lappend west $id} else {lappend east $id}
   }
-  set expected_leaves [dict get [dict create clk_w1 131 clk_w2 130 clk_w3 131] $source_port]
+  set expected_leaves [dict get [dict create clk_w1 131 clk_w2 130] $source_port]
   if {$nw!=795 || $ne!=240 || [llength $ids]!=$expected_leaves} {
     error "B0_PERIMETER: ALL actual $source_port sinks/leaf partition differs from model: west=$nw east=$ne leaves=[llength $ids]"
   }
