@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/s81sl_lepenh_lrb/clock_entry.sdc

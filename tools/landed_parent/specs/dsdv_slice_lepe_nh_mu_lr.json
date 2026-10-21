@@ -1,0 +1,191 @@
+{
+ "top": "ot_s81sl_slice_lepe_nh_mu_x",
+ "top_lp": "ot_s81sl_slice_lepe_nh_mu_lr_lp",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh_mu/ot_s81sl_slice_lepe_nh_mu_x.sv"
+ ],
+ "child_sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "rtl/hdc/v41x/ot_hbm_norm_split.sv",
+  "rtl/hdc/v41x/ot_hbm_norm_split_p.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/link/ot_link_crc32.sv",
+  "rtl/common/ot_link_credit.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg.sv",
+  "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/lib/ot_sram_oldread_b64.sv",
+  "rtl/lib/ot_sram_showahead_b64.sv",
+  "rtl/common/ot_link_credit_rx_b64.sv",
+  "rtl/common/ot_link_credit_tx_rc.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v"
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81PH_LANE_CR",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF"
+ ],
+ "out_dir": "rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh_mu_lr",
+ "record_dir": "results/rtl/s81_lepenh_lr_1021/lp",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk",
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n",
+  "rs"
+ ],
+ "regions": [
+  {
+   "name": "S",
+   "insts": [
+    "u_sl"
+   ],
+   "centre": [
+    1350,
+    2830
+   ]
+  },
+  {
+   "name": "K",
+   "insts": [
+    "u_lep",
+    "u_ln0",
+    "u_ln1"
+   ],
+   "centre": [
+    1700,
+    2830
+   ]
+  },
+  {
+   "name": "ML",
+   "insts": [
+    "u_land"
+   ],
+   "centre": [
+    1700,
+    3300
+   ]
+  }
+ ],
+ "static": [
+  "sid",
+  "ch_b"
+ ],
+ "tb_static": {
+  "sid": "4'd14",
+  "ch_b": "1'b1"
+ },
+ "D": 4,
+ "E": 2,
+ "reschedule": true,
+ "bench": {
+  "cycles": 14000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "port_regions": {
+  "rx0": "K",
+  "rx1": "K",
+  "ch_b": "K",
+  "tx0": "K",
+  "tx1": "K",
+  "fault": "K",
+  "mu_c": "K",
+  "mu_rc": "ML",
+  "mu_rt": "K"
+ },
+ "landing_chunk_bits": 8,
+ "out_regs": {
+  "fault": 2
+ },
+ "_note": "S81-COLLECT2/LEPENH 10-21: landed-regions rebuild of dsdv_slice_lepe_nh MU (MU72 E-end s_7S) = DRIVE-S81-LEPENHMU flat parent with 3 local regions S (slice) / K (lep_mu_a + 2 lanes, abutting) / ML (dsdv_mu_land, die master ck_ML), regional reset ports (no root, no cross-region reset hop), landing reset forests, every crossing landed (D4/E2 chunk 8 kept-enable).",
+ "_note_bench": "lockstep tb_stimulus not built yet (lepe_nh loopback vh is port-specific); bind + gate first (DRIVE-S81-SLICEP).",
+ "regional_reset_ports": {
+  "stages": 7,
+  "why": "S81-COLLECT2/LEPENH 10-21 landed regions: d1a/d3a reset root u_lpr_root in->reg -19.6/-48.6 ns across the 2.8x5.8 mm slot and the undeclared u_lpr_root(S)->u_lpr_K crossing (d3b -3873 ps); one reset port per region landed beside its own pin, die releases all three on one edge; 7 stages = 5 registered prefix hops fenced <= ~405 um along each region's street from its E-face pin (registered reset distribution), branch, leaf"
+ },
+ "landing_reset_forest": true
+}
