@@ -31,7 +31,11 @@ import smh_attn_rp4a_lp_specs as LS  # noqa: E402
 import smh_attn_rp4a_flat_gen as R  # noqa: E402
 
 SPECS = ROOT / "tools/ref_tile/specs_hbm_attention"
-HALF = {"main": "r3a", "fb": "r3b"}
+# HBM-OWN/SMH 10-21: r3 (K64) halves FAIL the child-boundary clock rule (actual model agg 244.8 TT / 218.3 FF); the live
+# halves are the same-RTL / same-outline (691.2) r4sp (MAIN spine) / r4spb (FB spine) kits.  Override with --half form=variant
+# to bind whichever half pair CLOSES first (all four variants share RTL, ports and the 691.2 outline).
+HALF = {"main": "r4sp", "fb": "r4spb"}
+HALF_W = {"r3a": 691.2, "r3b": 734.4, "r4sp": 691.2, "r4spb": 691.2}
 HN, HS = LS.HN, LS.HS
 NC, NP, NL = R.NC, R.NP, R.NL
 LAT = 43.2
@@ -52,7 +56,8 @@ def kit(form):
     rec = json.loads((ROOT / rec_path).read_text())
     lps = json.loads((ROOT / f"results/arch/smh_attn_parent_1021/lp_spec_{form}.json").read_text())
     g = LS.form_geometry(form)
-    w = 691.2 if form == "main" else 734.4
+    gw = 691.2 if form == "main" else 734.4  # lp geometry column frame (FB keeps its 734.4 pitch: no squeeze)
+    w = HALF_W[HALF[form]]  # actual half width: centred in the frame
     W, H = snap(g["w"]), snap(g["h"])
     V = views(form)
     kids = []
@@ -158,7 +163,7 @@ def kit(form):
         landed=dict(record=rec_path, landings=len(rec["landings"]), landing_flops=rec["flops"]["landing"],
                     reset_depth=rec["reset"]["depth"], lp_spec=f"results/arch/smh_attn_parent_1021/lp_spec_{form}.json"),
         synthesis_hard_instances=hard,
-        views_status=f"PENDING: halves views {V['n']} / {V['s']} (r3 gates by SAFE-HBM); front / BE soft",
+        views_status=f"PENDING: halves views {V['n']} / {V['s']} ({HALF[form]} gates, Codex HBM lead / HBM-OWN/SMH); front / BE soft",
         job=dict(owner="Claude:HBM-DIEGAP/SMHPARENT", branch="claude/hbm-smhparent-1021", tag=f"smhp_{form}",
                  purpose=f"H.STA.BLK.14 smh_attn x16 parent from the rp4a halves, landed cluster form {form.upper()}",
                  views_to=f"physical/ref_tile/smh_attn_rp4a_{form}/views", record_to=f"results/rtl/ref_tile/smh_attn_rp4a_{form}",
@@ -172,7 +177,12 @@ def kit(form):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--gen", action="store_true", help="also run ref_tile.py gen (needs the halves views)")
+    ap.add_argument("--half", action="append", default=[], help="form=variant, e.g. fb=r4sp (bind the pair that closed)")
     a = ap.parse_args()
+    for kv in a.half:
+        k, v = kv.split("=")
+        assert k in HALF and v in HALF_W, kv
+        HALF[k] = v
     SPECS.mkdir(parents=True, exist_ok=True)
     for form in ("main", "fb"):
         s = kit(form)
