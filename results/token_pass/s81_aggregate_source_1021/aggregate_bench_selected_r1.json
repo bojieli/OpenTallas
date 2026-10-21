@@ -1,0 +1,288 @@
+{
+ "schema": "opentallas.s81.aggregate_bench_source.v1",
+ "bench_sha256": "7ada03023542b16dfb10bbc94b358339f232cecd78e8862243ba2745de92dc51",
+ "frames": [
+  "u_f_0L10",
+  "u_f_0L12",
+  "u_f_0L13",
+  "u_f_0R10",
+  "u_f_0R12",
+  "u_f_0R13"
+ ],
+ "named_root_clocks": {
+  "ck_cl0N": {
+   "signal": "root_0",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl0S": {
+   "signal": "root_1",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl1N": {
+   "signal": "root_2",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl1S": {
+   "signal": "root_3",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl2N": {
+   "signal": "root_4",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl2S": {
+   "signal": "root_5",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl3N": {
+   "signal": "root_6",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl3S": {
+   "signal": "root_7",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl4N": {
+   "signal": "root_8",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl4S": {
+   "signal": "root_9",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl5N": {
+   "signal": "root_10",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl5S": {
+   "signal": "root_11",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl6N": {
+   "signal": "root_12",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_cl6S": {
+   "signal": "root_13",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_edge2": {
+   "signal": "root_14",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_CAP_CE": {
+   "signal": "root_15",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_CAP_CW": {
+   "signal": "root_16",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_CAP_RN": {
+   "signal": "root_17",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_CAP_RS": {
+   "signal": "root_18",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_CAP_RT": {
+   "signal": "root_19",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_K": {
+   "signal": "root_20",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_L0": {
+   "signal": "root_21",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_L1": {
+   "signal": "root_22",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_L3": {
+   "signal": "root_23",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_L4": {
+   "signal": "root_24",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_ML": {
+   "signal": "root_25",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_ep_s_0N_S": {
+   "signal": "root_26",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L10_r0": {
+   "signal": "root_27",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L10_r1": {
+   "signal": "root_28",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L10_r2": {
+   "signal": "root_29",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L12_r0": {
+   "signal": "root_30",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L12_r1": {
+   "signal": "root_31",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L12_r2": {
+   "signal": "root_32",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L13_r0": {
+   "signal": "root_33",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L13_r1": {
+   "signal": "root_34",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0L13_r2": {
+   "signal": "root_35",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R10_r0": {
+   "signal": "root_36",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R10_r1": {
+   "signal": "root_37",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R10_r2": {
+   "signal": "root_38",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R12_r0": {
+   "signal": "root_39",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R12_r1": {
+   "signal": "root_40",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R12_r2": {
+   "signal": "root_41",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R13_r0": {
+   "signal": "root_42",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R13_r1": {
+   "signal": "root_43",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_frame_f_0R13_r2": {
+   "signal": "root_44",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_south2": {
+   "signal": "root_45",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_south3": {
+   "signal": "root_46",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_south4": {
+   "signal": "root_47",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_south5": {
+   "signal": "root_48",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_void2": {
+   "signal": "root_49",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_void4": {
+   "signal": "root_50",
+   "period_ns": 1,
+   "phase_ns": 0
+  },
+  "ck_void5": {
+   "signal": "root_51",
+   "period_ns": 1,
+   "phase_ns": 0
+  }
+ },
+ "physical_phase_qualified": false,
+ "global_epoch_bound": false,
+ "local_pin": "u_s_0N.ri_e",
+ "required_checks": [
+  "80 raw XQ acceptance",
+  "6 CTL",
+  "80 distinct gather/data matches",
+  "80 actual table writes/no drops",
+  "actual macro write trace",
+  "one window, five is_v, one cfg_v",
+  "each six actual frame cfg/go/12returns",
+  "24 actual CAP scalar writes; postrun fixture value comparison",
+  "all source faults and extra/late counts"
+ ]
+}

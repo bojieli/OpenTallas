@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.s81.selected_aggregate_prebuild.v1",
+ "status": "MATCHED_SELECTED_SOURCE_ASSETS_PREFLIGHT_PASS_NO_BUILD_YET",
+ "selected_frame_sha256": "c773586e5cb41288e1a296329a6d82780c6c300af60c3c4a26800bba081250d4",
+ "selected_schedule_source_unit": "ot-epyc5/oth-ubuntu-2662766-1792620624",
+ "asset_generation_unit": "ot-epyc5/oth-ubuntu-2662766-1792620624",
+ "preflight_unit": "ot-epyc5/oth-ubuntu-2687418-1792620762",
+ "preserved_failures": [
+  {
+   "unit": "ot-gold1/oth-ubuntu-3186163-1792620462",
+   "classification": "stale lane lacked newly staged script; no compile/simulator"
+  },
+  {
+   "unit": "ot-epyc5/oth-ubuntu-2653857-1792620567",
+   "classification": "canonical-root-only guard rejected selected kit root; no compile/simulator"
+  },
+  {
+   "unit": "ot-epyc5/oth-ubuntu-2680924-1792620711",
+   "classification": "replay helper missing under compiler source path; no compile/simulator"
+  }
+ ],
+ "files": {
+  "shipping_s0N_selected.json": "eb0fab26f7e6dcbe87a264bb5111d614c1accb9d4f558c529f0d448d5b483f8f",
+  "selected_rf3r_schedule_r3.json": "628b02fa953b1f56e9d4a846ddcf938c36a744025d8ffcee9dbd9f49e67ea0a7",
+  "aggregate_bench_selected_r1.json": "660a305f232dbd4c0744b8db48a5aa7babe760e367c1f930533ae914db27ac55",
+  "source_assets_selected_r2.json": "f964faf04afc1640b09cdf50ab76eecdb3d376356a6f310e4d0f10b624f6a91c",
+  "aggregate_replay_selected_A.json": "022347640498d4b9f325183b953667f69fee20a8b13476062f838e3cd7b25382",
+  "aggregate_replay_selected_B.json": "221599a26414c0532af007ab5e2d33c156905addf7fd3cb98f1c15b203a1b4f4",
+  "aggregate_preflight_selected_r1.json": "dee6cb1dfe00e00aa8b3ef62bb819e49e1b7756b16a05c166bd6bbf75b996024"
+ },
+ "helper_sha256": {
+  "tools/s81_dv/frame_return_plan.py": "d35c89f170a3ca8af35bb3aca1ed8fba9c7456685a0c4b66aa4ada47448e7fd8",
+  "tools/s81_dv/tokfunc/run_aggregate.py": "bb8dd14a579400749ad3d832ab1cf5902f483e121496d1a8b0b525616b518142",
+  "tools/s81_dv/tokfunc/prepare_aggregate_replay.py": "427b7010180993eb5565cb1dc4e489d2c5048a533566b1bb78765536283e66ef",
+  "tools/s81_dv/tokfunc/stage_aggregate_programme.py": "93b18fd8e64d935f392952f4c68b87f9ceeba8fbe6a0778dc2c7cb2eefde5052",
+  "tools/s81_dv/tokfunc/local_aggregate_cut.py": "5d3c0a4e2d83496bbd85dec5ceb563b7ed71f290d797d4c692acf9a954fe3bb5",
+  "tools/s81_dv/tokfunc/aggregate_source_path.py": "7fe1a9892d13de6e3d9c40928f4065950418cb6269052aa72a19000a9d66512c",
+  "tools/s81_dv/tokfunc/aggregate_tb.py": "680456b17c03b3f8a2cc27cc5f70dcf33a6cfc2ba445e8d347a3cc20370bdda2",
+  "tools/s81_dv/tokfunc/selected_frame_schedule.py": "878a5f35099a00666b7a2275d3457626a9084642bab37163a43fc9a71c8f9a6b",
+  "tools/s81_dv/tokfunc/bind_selected_frame.py": "e10af23ccccd6cb4a695eb059ec8f7413475e9ba71357b996afea1a7b7287170"
+ },
+ "qualification": "source and model consistency only; actual acceptance/frame returns/FIN/CAP execution pending",
+ "global_epoch_bound": false,
+ "physical_phase_qualified": false
+}

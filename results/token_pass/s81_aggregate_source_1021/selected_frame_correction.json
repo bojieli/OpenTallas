@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.s81.aggregate_selected_frame_correction.v1",
+ "status": "PREFLIGHT_REJECTED_BEFORE_BUILD",
+ "selected_module": "col_h9_l4_lp",
+ "selected_path": "rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+ "selected_sha256": "c773586e5cb41288e1a296329a6d82780c6c300af60c3c4a26800bba081250d4",
+ "rejected_canonical_sha256": "ef755f39988fa40db6d821d189ebb45baddf4d2deeee7264d0d8bc5cece9d8fb",
+ "selection": "original actual G8 port_bind rtl_extra preference; functional_kit_r2 variant_choices",
+ "functional_kit_unit": "ot-epyc5/oth-ubuntu-2123227-1792619580",
+ "functional_kit_status": "PASS 353 modules 175 files 0 problems",
+ "functional_kit_path": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2",
+ "local_cone_unit": "ot-epyc5/oth-ubuntu-2132000-1792619583",
+ "local_cone_status": "PASS 5515 instances 52 clock roots",
+ "aggregate_build_launched": false,
+ "aggregate_simulator_launched": false,
+ "producer_receipt_affected": false,
+ "old_assets_status": "HOLD: canonical ef755 model; cannot use with selected rf3r until source-specific station/return extraction",
+ "required_next": "Extract selected emitted rf3r station/control/return graph with actual vector reset landing semantics; preserve strict source guard.",
+ "physical_kit_distinct": "col_h9_l4_lp_kit_rf3r SHA668fe404 is not this selected functional body"
+}
