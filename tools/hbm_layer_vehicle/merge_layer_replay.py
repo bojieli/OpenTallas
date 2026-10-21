@@ -186,7 +186,8 @@ def main():
                                                      gather_row0_at=g.get("gather_row0_at"))))
     a.out.mkdir(parents=True, exist_ok=True)
     pr_all = [r for r in sman["records"] if r.get("i") is not None]
-    su_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted")
+    su_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted" and r.get("op", "SU.").startswith("SU."))
+    sm_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted" and r.get("lowering") == "sm_slice_v1")
     comp_i = sorted({c["i"] for c in comps})
     man_parts = []
     for k, p in enumerate(parts):
@@ -212,7 +213,8 @@ def main():
     doc = dict(schema="opentallas.hbm_merged_layer_replay.v1", lane="TOK-FUNC-HBM-PAY", layer=su.get("layer"),
                su_replay=str(a.su), fixtures=str(a.fixtures), contract=str(a.contract), nev=a.nev,
                priced_records=len(pr_all), su_emitted=su_em, component_emitted=comp_i,
-               emitted_fraction=round((len(set(su_em) | set(comp_i))) / max(1, len(pr_all)), 4),
+               emitted_fraction=round((len(set(su_em) | set(comp_i) | set(sm_em))) / max(1, len(pr_all)), 4),
+               **({"sm_emitted_separate_replay": sm_em} if sm_em else {}),
                timeline_stream_edges=t, real_hc_root=a.connected_hc, execution_qualified=False, shared_calendar_epochs=a.shared_calendar, qualifies_native_layer=False, qualifies_native_chain=False, scope="component_probe", parts=man_parts)
     (a.out / f"{a.name}_parts.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps(dict(layer=doc["layer"], priced=len(pr_all), su=len(su_em), comps=len(comp_i),

@@ -31,6 +31,14 @@ QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_imag
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
 CONNECTED_LOWERING=${CONNECTED_LOWERING:-0}
 CONNECTED_ARGS=(); HC_ARGS=(); CUT_ARGS=()
+# SM_LOWERING=1 (TOK-FUNC2-HBM-SM 10-21, opt-in): SM.MATVEC records drive the slice's real SM chain (sm_slice_lower.py);
+#   SMW=<ds_sm_weights root with L00 L02 L14>, SM_KV=<qwen_sm_mv_kv root with L0/ chain/> (Qwen rank 0).  Each lowered
+#   record set is its own component replay (ds_l<L>_sm, qw_<stage>_r0_sm_L<L>_<tag>) with its own calendar reservation.
+SM_LOWERING=${SM_LOWERING:-0}; SM_ARGS=(); QSM_ARGS=()
+if [ "$SM_LOWERING" = 1 ]; then
+  SM_ARGS=(--sm-lowering --smw "${SMW:?SMW (ds_sm_weights root)}")
+  [ -n "${SM_KV:-}" ] && QSM_ARGS=(--sm-kv "$SM_KV")
+fi
 if [ "$CONNECTED_LOWERING" = 1 ]; then
   CONNECTED_ARGS=(--connected-lowering --side-source "$OUT/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv")
   HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}")
@@ -98,12 +106,12 @@ say "SU native timing READ_RETURN=$RR WRITE_RETURN=$WR (contract su_SW0)"
 B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
 for LL in 00 02 14; do l=$((10#$LL))
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
-     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
+     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" --native-read-return $RR --native-write-return $WR "${SM_ARGS[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
 done
 for st in L0 chain; do
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/qwen_layer_images.py emit --stage $st --ranks 0,5 --boundary "$B" --operands "$QOP/operands_$st.npz" \
-     --native-read-return $RR --native-write-return $WR --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
+     --native-read-return $RR --native-write-return $WR "${QSM_ARGS[@]}" --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
   for r in 0 5; do [ -f "$OUT/qemit/$st/r$r/replay.json" ] && cp "$OUT/qemit/$st/r$r/replay.json" "$RJ/qw_${st,,}_r$r.json"; done
   say "EMIT qw_$st $(grep -o '"counts": {[^}]*}' "$L/emit_qw_$st.log" | head -1)"
 done
@@ -115,6 +123,12 @@ for n in $REPLAYS; do
     || { say "CALENDAR_FAIL $n"; exit 3; }
   mv "$RJ/$n.calendar.json" "$RJ/$n.json"
 done
+if [ "$SM_LOWERING" = 1 ]; then
+  for l in 0 2 14; do cp "$OUT/emit/ds_l$l/sm/replay.json" "$RJ/ds_l${l}_sm.json"; REPLAYS="$REPLAYS ds_l${l}_sm"; done
+  for st in L0 chain; do for d in "$OUT/qemit/$st/r0"/sm_L*; do [ -f "$d/replay.json" ] || continue
+    n="qw_${st,,}_r0_$(basename "$d")"; cp "$d/replay.json" "$RJ/$n.json"; REPLAYS="$REPLAYS $n"; done; done
+  say "SM_LOWERING replays: $(echo $REPLAYS | tr ' ' '\n' | grep -c _sm)"
+fi
 # Existing real HC/COLL payloads share the same source contract and static VM
 # ownership epochs. These remain relocated component probes: HC far-end root
 # results and COLL peer inputs retain explicit fixture provenance.
