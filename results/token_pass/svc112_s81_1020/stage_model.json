@@ -1,0 +1,49 @@
+{
+ "scope": "SPLIT112_BOUNDED_CAPACITY_MODEL_NOT_PHYSICAL_OR_MU_ADMISSION",
+ "inventory_sha256": "f92ee7195e0accb2ebf8ac5d7fc69342d16252179a74bfc2413bedfae09be607",
+ "costs": {
+  "slope": 72.0,
+  "phases_per_expert": 6.0,
+  "dense": {
+   "L0": {
+    "q": 480,
+    "bf": 1344,
+    "phases": 43
+   },
+   "L1": {
+    "q": 1024,
+    "bf": 1344,
+    "phases": 60
+   },
+   "L2": {
+    "q": 576,
+    "bf": 1408,
+    "phases": 50
+   },
+   "L14": {
+    "q": 1120,
+    "bf": 1408,
+    "phases": 67
+   },
+   "L20": {
+    "q": 576,
+    "bf": 1408,
+    "phases": 50
+   },
+   "L24": {
+    "q": 576,
+    "bf": 1344,
+    "phases": 49
+   }
+  },
+  "source": "actual split112 all-frame pinned N1/N2/N3 and dense N0 probes"
+ },
+ "required_stages_model": 139,
+ "layer_dies_model": 556,
+ "copy_b_dies_model": 32,
+ "fixed_other_dies_model": 52,
+ "total_dies_model": 640,
+ "exact_full_stage_capacity": "OWED",
+ "calendar": "OWED",
+ "rates": "NOT_QUALIFIED"
+}

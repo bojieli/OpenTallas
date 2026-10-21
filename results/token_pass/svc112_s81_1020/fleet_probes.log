@@ -1,0 +1,28 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-token-svc112-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-token-svc112-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-token-svc112-1020
+ot-run: ot-epyc9       admits  1057 GB (avail 845, growth 105, headroom 0, waiters 0/0 GB) load 106/128 running 39 disk 105 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-token-svc112-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-token-svc112-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2763392-1792560267 after 0 s
+XS_CAP_DEDUP exp_n1 frames 112 classes 17 compiled 33
+XS_CAP {"id": "exp_n1", "vdepth": null, "experts": 1, "dense_layer": null, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 72, "q_max_fill_identity": 72, "q_fill_pct": 0.88, "q_margin_words": 8120, "worst_frame": "u_f_0L10", "bf_max_fill": 0, "bf_fill_pct": 0.0, "cfg7_phases": 6, "cfg7_margin": 1018, "stream_dedup_words": 144, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 6, "layout_identical_all": true, "pass": true, "seconds": 1.3}
+XS_CAP_DEDUP exp_n2 frames 112 classes 17 compiled 33
+XS_CAP {"id": "exp_n2", "vdepth": null, "experts": 2, "dense_layer": null, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 144, "q_max_fill_identity": 144, "q_fill_pct": 1.76, "q_margin_words": 8048, "worst_frame": "u_f_0L10", "bf_max_fill": 0, "bf_fill_pct": 0.0, "cfg7_phases": 12, "cfg7_margin": 1012, "stream_dedup_words": 144, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 6, "layout_identical_all": true, "pass": true, "seconds": 1.5}
+XS_CAP_DEDUP exp_n3 frames 112 classes 17 compiled 33
+XS_CAP {"id": "exp_n3", "vdepth": null, "experts": 3, "dense_layer": null, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 216, "q_max_fill_identity": 216, "q_fill_pct": 2.64, "q_margin_words": 7976, "worst_frame": "u_f_0L10", "bf_max_fill": 0, "bf_fill_pct": 0.0, "cfg7_phases": 18, "cfg7_margin": 1006, "stream_dedup_words": 144, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 6, "layout_identical_all": true, "pass": true, "seconds": 2.3}
+XS_CAP_DEDUP dense_L0_n0 frames 112 classes 18 compiled 34
+XS_CAP {"id": "dense_L0_n0", "vdepth": null, "experts": 0, "dense_layer": 0, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 480, "q_max_fill_identity": 480, "q_fill_pct": 5.86, "q_margin_words": 7712, "worst_frame": "u_f_0L10", "bf_max_fill": 1344, "bf_fill_pct": 16.41, "cfg7_phases": 43, "cfg7_margin": 981, "stream_dedup_words": 336, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": true, "seconds": 103.8}
+XS_CAP_DEDUP dense_L1_n0 frames 112 classes 18 compiled 34
+XS_CAP {"id": "dense_L1_n0", "vdepth": null, "experts": 0, "dense_layer": 1, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 1024, "q_max_fill_identity": 1024, "q_fill_pct": 12.5, "q_margin_words": 7168, "worst_frame": "u_f_0L10", "bf_max_fill": 1344, "bf_fill_pct": 16.41, "cfg7_phases": 60, "cfg7_margin": 964, "stream_dedup_words": 432, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": true, "seconds": 127.8}
+XS_CAP_DEDUP dense_L2_n0 frames 112 classes 18 compiled 34
+XS_CAP {"id": "dense_L2_n0", "vdepth": null, "experts": 0, "dense_layer": 2, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 576, "q_max_fill_identity": 576, "q_fill_pct": 7.03, "q_margin_words": 7616, "worst_frame": "u_f_0L10", "bf_max_fill": 1408, "bf_fill_pct": 17.19, "cfg7_phases": 50, "cfg7_margin": 974, "stream_dedup_words": 336, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": true, "seconds": 123.4}
+XS_CAP_DEDUP dense_L14_n0 frames 112 classes 18 compiled 34
+XS_CAP {"id": "dense_L14_n0", "vdepth": null, "experts": 0, "dense_layer": 14, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 1120, "q_max_fill_identity": 1120, "q_fill_pct": 13.67, "q_margin_words": 7072, "worst_frame": "u_f_0L10", "bf_max_fill": 1408, "bf_fill_pct": 17.19, "cfg7_phases": 67, "cfg7_margin": 957, "stream_dedup_words": 432, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": true, "seconds": 116.6}
+XS_CAP_DEDUP dense_L20_n0 frames 112 classes 18 compiled 34
+XS_CAP {"id": "dense_L20_n0", "vdepth": null, "experts": 0, "dense_layer": 20, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 576, "q_max_fill_identity": 576, "q_fill_pct": 7.03, "q_margin_words": 7616, "worst_frame": "u_f_0L10", "bf_max_fill": 1408, "bf_fill_pct": 17.19, "cfg7_phases": 50, "cfg7_margin": 974, "stream_dedup_words": 336, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": true, "seconds": 105.9}
+XS_CAP_DEDUP dense_L24_n0 frames 112 classes 18 compiled 34
+XS_CAP {"id": "dense_L24_n0", "vdepth": null, "experts": 0, "dense_layer": 24, "frames": 112, "faults": 0, "first_fault": null, "q_max_fill": 576, "q_max_fill_identity": 576, "q_fill_pct": 7.03, "q_margin_words": 7616, "worst_frame": "u_f_0L10", "bf_max_fill": 1344, "bf_fill_pct": 16.41, "cfg7_phases": 49, "cfg7_margin": 975, "stream_dedup_words": 336, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": true, "seconds": 124.0}
+XS_CAP_DONE PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2763392-1792560267): exit 0
