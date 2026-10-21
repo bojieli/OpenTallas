@@ -1,0 +1,48 @@
+{
+ "top": "ot_pdie_ucie_col_flat",
+ "top_lp": "ot_pdie_ucie_col",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv",
+  "rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v"
+ ],
+ "out_dir": "rtl/dsrom_sys/s81_link/ucie/lp",
+ "record_dir": "rtl/dsrom_sys/s81_link/ucie/lp",
+ "clock_ports": ["clk", "pma_rck"],
+ "clock_pins": ["ck", "ck_r", "ck_t", "clk", "pma_rck", "rclk", "wclk"],
+ "reset_port": "rst",
+ "reset_pins": ["rst_n", "wrst_n", "rrst_n", "rst_r_n", "rst_t_n"],
+ "D": 4,
+ "E": 2,
+ "regions": [
+  {"name": "core", "insts": ["u_txf", "u_live_t", "u_ptx", "u_sts"], "centre": [194.4, 1468.8]},
+  {"name": "rck", "insts": ["u_prx", "u_rm", "u_rmm"], "centre": [64.8, 1404.0]}
+ ],
+ "child_pin_regions": {
+  "u_rm": {"rclk": "core", "rrst_n": "core", "r_d": "core", "fault": "core", "m_rce": "core", "m_raddr": "core", "m_rd": "core"},
+  "u_rmm": {"rclk": "core", "r_ce_in": "core", "r_addr_in": "core", "rd_out": "core"},
+  "u_sts": {"ck_r": "rck", "rst_r_n": "rck", "r_v": "rck"}
+ },
+ "out_regs": {"rx": 2, "st": 2},
+ "bench": {
+  "cycles": 3000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "expr": {"pma_rx": "u_flat.pma_tx"}
+ },
+ "clock_outputs": ["pma_tck"],
+ "mut_child": "u_live_t",
+ "mut4_stages": 40,
+ "regional_reset_ports": {
+  "stages": 2,
+  "why": "HBM-UCIE8 10-20 (method of the S81 SerDes column lp6): the die delivers one clock per region (ck_core = core PLL stream clock, ck_rck = the far die's forwarded pma_rck) and that region's reset beside it (released on the same edge by its landed die reset distribution), landed 2 stages on the region clock (synchroniser on the forwarded clock). No reset root, no cross-region reset path."
+ },
+ "note": "HBM-UCIE8 10-20 (DRIVE-HBM decision: HBM owns ot_pdie_ucie; the S81 MU die has 0 instances): landed UCIe column for the HBM GEN2e4 die slot host_N. Two regions: core (core PLL clk: tx face reg, live flag, PMA TX, rate-matcher read side, status) and rck (forwarded pma_rck: PMA RX, rate-matcher write side, SRAM write port). No landing: the only rck -> clk crossings are the CDC children u_rm (gray-FIFO rate matcher, elastic IDLE deletion, SRAM u_rmm dual clock) and u_sts (2-flop status sync). Bench loops the flat parent's own pma_tx back into pma_rx."
+}
