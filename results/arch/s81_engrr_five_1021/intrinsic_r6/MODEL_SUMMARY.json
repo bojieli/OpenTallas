@@ -1,0 +1,589 @@
+{
+  "source": "80b6d53348b2f5ee16f4888a574f2d5970c89767",
+  "scope": "MODEL_ONLY_ZERO_WIRE_INTRINSIC_NOT_PHYSICAL_CLOSURE",
+  "native_status": "PASS",
+  "period_ps": 770,
+  "uncertainty": "unchanged nativeSDC; no new uncertainty or interface budgets, not production signoff",
+  "wire": "No placement/parasitics/CTS; default ideal sourceclock with mapped clock inversions; no propagated clock added",
+  "odb_sha256": "e5f12ee47ea41e04f09ddf4028f225a9f3d05ca948d5498fda661256638b428d",
+  "sdc_sha256": "be371730b5b1d80a732e39b0831a607b1f9218aaafc4ab2f3ab7b87133bfee38",
+  "corners": {
+    "tt": {
+      "returncode": 0,
+      "libraries": [
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+          "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+          "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+          "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+          "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+          "sha256": "bed56e6769daf014adb1204d953c9696ae6aeab2ea3a55891d79e718878faaf6"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+          "sha256": "d9f3087065c69688adcf23efa793fc8adc20e284692241622ad4bf6fdd3e87eb"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "sha256": "6b00b7c554b89a7d24e02281ebef210c45b9de8b659130daeb852fd159c43d54"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+          "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48"
+        }
+      ],
+      "log_sha256": "90b5b38abcbb328c5ebd23dbd0462da83dfe9f4e12c1bc59e7b2ff3f0935ba40",
+      "worst_slack_ps": -84.41,
+      "reported_paths": [
+        {
+          "slack_ps": -84.411308,
+          "startpoint": "u_c.u_head.rr[1]$_DFFE_PN0P_",
+          "endpoint": "u_c.u_head.rco[31]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.692039,
+          "startpoint": "u_c.u_xq.g_scale_capture[3].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[3][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.469612,
+          "startpoint": "u_c.u_xq.g_scale_capture[6].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[6][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.461617,
+          "startpoint": "u_c.u_xq.g_scale_capture[11].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[11][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.243622,
+          "startpoint": "u_c.u_xq.g_scale_capture[8].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[8][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.235962,
+          "startpoint": "u_c.u_xq.g_scale_capture[29].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[29][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.235962,
+          "startpoint": "u_c.u_xq.g_scale_capture[31].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[31][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -76.013641,
+          "startpoint": "u_c.u_xq.g_scale_capture[14].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[14][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -75.697334,
+          "startpoint": "u_c.u_xq.g_scale_capture[23].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[23][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -75.302711,
+          "startpoint": "u_c.u_xq.g_scale_capture[24].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[24][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -75.1576,
+          "startpoint": "u_c.u_xq.g_scale_capture[26].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[26][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -74.862617,
+          "startpoint": "u_c.u_xq.g_scale_capture[16].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[16][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.52169,
+          "startpoint": "u_c.u_xq.g_scale_capture[20].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[20][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.496819,
+          "startpoint": "u_c.u_xq.g_scale_capture[25].u_w/q[1]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_aq.s12_dd[25][10]$_DFF_P_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.327011,
+          "startpoint": "u_c.u_win.u_map.m[1].rom",
+          "endpoint": "u_c.u_win.u_map.g_outcopy[0].u_v/q$_DFF_PN0_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.327011,
+          "startpoint": "u_c.u_win.u_map.m[1].rom",
+          "endpoint": "u_c.u_win.u_map.g_outcopy[1].u_v/q$_DFF_PN0_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.327011,
+          "startpoint": "u_c.u_win.u_map.m[1].rom",
+          "endpoint": "u_c.u_win.u_map.g_outcopy[2].u_v/q$_DFF_PN0_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.327011,
+          "startpoint": "u_c.u_win.u_map.m[1].rom",
+          "endpoint": "u_c.u_win.u_map.g_outcopy[3].u_v/q$_DFF_PN0_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.327011,
+          "startpoint": "u_c.u_win.u_map.m[1].rom",
+          "endpoint": "u_c.u_win.u_map.g_outcopy[4].u_v/q$_DFF_PN0_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": -73.327011,
+          "startpoint": "u_c.u_win.u_map.m[1].rom",
+          "endpoint": "u_c.u_win.u_map.g_outcopy[5].u_v/q$_DFF_PN0_",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 604.343628,
+          "startpoint": "u_c.u_r.g_leaf[2].q$_DFF_PN0_",
+          "endpoint": "u_c.u_win.win_slot[0]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 604.343628,
+          "startpoint": "u_c.u_r.g_leaf[2].q$_DFF_PN0_",
+          "endpoint": "u_c.u_win.win_slot[1]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 604.343628,
+          "startpoint": "u_c.u_r.g_leaf[2].q$_DFF_PN0_",
+          "endpoint": "u_c.u_win.win_slot[2]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[0]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[10]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[11]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[12]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[13]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[14]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[15]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[16]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[17]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[18]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[19]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[25].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[1]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[20]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[21]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[22]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[23]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 623.75061,
+          "startpoint": "u_c.u_r.g_leaf[26].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.crc[24]$_DFFE_PN1P_",
+          "group": "asynchronous"
+        }
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "libraries": [
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+          "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+          "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+          "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+          "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+        },
+        {
+          "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+          "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+          "sha256": "741933894777f2020a8a0cedfa6607f7850642a397a85aa59fe8c50b005cb0d0"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+          "sha256": "18a3127431ea348a3e87052ac5160fc2b46d748f9e70aef454da217102ea7864"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+          "sha256": "85b4a968d61b464fba5cda0954b638999b6178c220e76b4708fa5cc6c69659c1"
+        },
+        {
+          "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+          "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+        }
+      ],
+      "log_sha256": "7d4e53bbdb15d00637d1531bf53df26d121a712f5f5cd0b664e7d6eae5374406",
+      "worst_slack_ps": 18.01,
+      "reported_paths": [
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_lkp.u_e.rq_ea[0]$_DFF_P_",
+          "endpoint": "u_c.u_lkp.u_e.u_row_e (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_lkp.u_e.rq_ea[1]$_DFF_P_",
+          "endpoint": "u_c.u_lkp.u_e.u_row_e (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_lkp.u_e.rq_ea[2]$_DFF_P_",
+          "endpoint": "u_c.u_lkp.u_e.u_row_e (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_lkp.u_e.rq_oa[2]$_DFF_P_",
+          "endpoint": "u_c.u_lkp.u_e.u_row_o (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[0]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[100]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[101]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[102]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[103]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[104]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[105]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[106]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[107]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[108]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[109]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[10]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[110]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[111]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[112]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 18.014252,
+          "startpoint": "u_c.u_xq.bwd[113]$_DFF_P_",
+          "endpoint": "u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)",
+          "group": "ck"
+        },
+        {
+          "slack_ps": 25.900297,
+          "startpoint": "u_c.u_r.g_leaf[24].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.o_valid$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 25.900297,
+          "startpoint": "u_c.u_r.g_leaf[24].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.transport_v$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 25.900297,
+          "startpoint": "u_c.u_r.root_r$_DFF_PN0_",
+          "endpoint": "u_c.u_r.g_mid[0].d$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 25.900297,
+          "startpoint": "u_c.u_r.root_r$_DFF_PN0_",
+          "endpoint": "u_c.u_r.g_mid[0].r$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 25.900297,
+          "startpoint": "u_c.u_r.g_leaf[4].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.u_r.early_n$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 25.900297,
+          "startpoint": "u_c.u_r.g_leaf[4].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.u_r.root_r$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_r.g_leaf[22].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.g_iss[0].u_e/q$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_r.g_leaf[22].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.g_iss[1].u_e/q$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_r.g_leaf[22].q$_DFF_PN0_",
+          "endpoint": "u_c.u_lkp.u_e.g_iss[2].u_e/q$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[32].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[0]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[10]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[11]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[12]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[13]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[14]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[15]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[16]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[17]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[18]$_DFF_PN0_",
+          "group": "asynchronous"
+        },
+        {
+          "slack_ps": 30.261497,
+          "startpoint": "u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_",
+          "endpoint": "u_c.u_xq.g_ctl[0].u_c/fck[19]$_DFF_PN0_",
+          "group": "asynchronous"
+        }
+      ]
+    }
+  },
+  "status": "MODEL_ONLY_CURRENT_MAPPING_ZERO_WIRE_IDEAL_CLOCKS",
+  "physical_status": "NOT_QUALIFIED_NO_PLACEMENT_CTS_PARASITICS_OR_IO_BUDGET",
+  "limitation": "Zero-wire fixed-current-mapping cell-delay diagnostic. Cell sizing/buffering or source structure can change the mapping and delay; this is not a physical impossibility claim.",
+  "native_proof": "52120018d",
+  "full_mechanism_proof": "04a176dbb",
+  "fleet_unit": "ot-epyc9 oth-ubuntu-3652184-1792627045",
+  "next": "Complete actual endpoint/leg/row/clock ownership model; account for observed HEAD and XQ/AQ cell-budget failures before any physical gate."
+}

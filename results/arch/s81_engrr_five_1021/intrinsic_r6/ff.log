@@ -1,0 +1,1196 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+INTRINSIC_BUDGET_MODEL_ONLY_ZERO_WIRE_FF
+Startpoint: u_c.u_r.g_leaf[24].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.o_valid$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[24].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[24].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.395084   11.850399    9.459211   43.313000 ^ _293446_/Y (INVx1_ASAP7_75t_R)
+                     11.850399    0.000000   43.313000 ^ u_c.u_lkp.u_e.o_valid$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             43.313000   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.o_valid$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 17.412701   17.412701   library removal time
+                                             17.412701   data required time
+---------------------------------------------------------------------------------------------
+                                             17.412701   data required time
+                                            -43.313000   data arrival time
+---------------------------------------------------------------------------------------------
+                                             25.900297   slack (MET)
+
+
+Startpoint: u_c.u_r.g_leaf[24].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.transport_v$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[24].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[24].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.395084   11.850399    9.459211   43.313000 ^ _293446_/Y (INVx1_ASAP7_75t_R)
+                     11.850399    0.000000   43.313000 ^ u_c.u_lkp.u_e.transport_v$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             43.313000   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.transport_v$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 17.412701   17.412701   library removal time
+                                             17.412701   data required time
+---------------------------------------------------------------------------------------------
+                                             17.412701   data required time
+                                            -43.313000   data arrival time
+---------------------------------------------------------------------------------------------
+                                             25.900297   slack (MET)
+
+
+Startpoint: u_c.u_r.root_r$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_r.g_mid[0].d$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.root_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.root_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.395084   11.850399    9.459211   43.313000 ^ _293474_/Y (INVx1_ASAP7_75t_R)
+                     11.850399    0.000000   43.313000 ^ u_c.u_r.g_mid[0].d$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             43.313000   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_r.g_mid[0].d$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 17.412701   17.412701   library removal time
+                                             17.412701   data required time
+---------------------------------------------------------------------------------------------
+                                             17.412701   data required time
+                                            -43.313000   data arrival time
+---------------------------------------------------------------------------------------------
+                                             25.900297   slack (MET)
+
+
+Startpoint: u_c.u_r.root_r$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_r.g_mid[0].r$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.root_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.root_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.395084   11.850399    9.459211   43.313000 ^ _293474_/Y (INVx1_ASAP7_75t_R)
+                     11.850399    0.000000   43.313000 ^ u_c.u_r.g_mid[0].r$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             43.313000   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_r.g_mid[0].r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 17.412701   17.412701   library removal time
+                                             17.412701   data required time
+---------------------------------------------------------------------------------------------
+                                             17.412701   data required time
+                                            -43.313000   data arrival time
+---------------------------------------------------------------------------------------------
+                                             25.900297   slack (MET)
+
+
+Startpoint: u_c.u_r.g_leaf[4].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_r.early_n$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[4].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[4].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.395084   11.850399    9.459211   43.313000 ^ _293466_/Y (INVx1_ASAP7_75t_R)
+                     11.850399    0.000000   43.313000 ^ u_c.u_xq.u_r.early_n$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             43.313000   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_r.early_n$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 17.412701   17.412701   library removal time
+                                             17.412701   data required time
+---------------------------------------------------------------------------------------------
+                                             17.412701   data required time
+                                            -43.313000   data arrival time
+---------------------------------------------------------------------------------------------
+                                             25.900297   slack (MET)
+
+
+Startpoint: u_c.u_r.g_leaf[4].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_r.root_r$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[4].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[4].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.395084   11.850399    9.459211   43.313000 ^ _293466_/Y (INVx1_ASAP7_75t_R)
+                     11.850399    0.000000   43.313000 ^ u_c.u_xq.u_r.root_r$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             43.313000   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_r.root_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 17.412701   17.412701   library removal time
+                                             17.412701   data required time
+---------------------------------------------------------------------------------------------
+                                             17.412701   data required time
+                                            -43.313000   data arrival time
+---------------------------------------------------------------------------------------------
+                                             25.900297   slack (MET)
+
+
+Startpoint: u_c.u_r.g_leaf[22].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.g_iss[0].u_e/q$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[22].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[22].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _293448_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_lkp.u_e.g_iss[0].u_e/q$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.g_iss[0].u_e/q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_r.g_leaf[22].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.g_iss[1].u_e/q$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[22].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[22].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _293448_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_lkp.u_e.g_iss[1].u_e/q$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.g_iss[1].u_e/q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_r.g_leaf[22].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.g_iss[2].u_e/q$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_r.g_leaf[22].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_r.g_leaf[22].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _293448_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_lkp.u_e.g_iss[2].u_e/q$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.g_iss[2].u_e/q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[32].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[0]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[32].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[32].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297312_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[10]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297307_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[10]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[10]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[11]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[37].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297307_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[11]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[11]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[12]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297306_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[12]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[12]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[13]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[38].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297306_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[13]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[13]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[14]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297305_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[14]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[14]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[15]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[39].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297305_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[15]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[15]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[16]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297304_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[16]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[16]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[17]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[40].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297304_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[17]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[17]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[18]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297303_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[18]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[18]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.g_ctl[0].u_c/fck[19]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.510914   13.000440   33.853786   33.853786 v u_c.u_xq.u_r.g_leaf[41].q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.092626   15.611899   11.432272   45.286060 ^ _297303_/Y (INVx1_ASAP7_75t_R)
+                     15.611899    0.000000   45.286060 ^ u_c.u_xq.g_ctl[0].u_c/fck[19]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                             45.286060   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.g_ctl[0].u_c/fck[19]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                                 15.024562   15.024562   library removal time
+                                             15.024562   data required time
+---------------------------------------------------------------------------------------------
+                                             15.024562   data required time
+                                            -45.286060   data arrival time
+---------------------------------------------------------------------------------------------
+                                             30.261497   slack (MET)
+
+
+Startpoint: u_c.u_lkp.u_e.rq_ea[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.u_row_e (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_lkp.u_e.rq_ea[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_lkp.u_e.rq_ea[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _236220_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_lkp.u_e.u_row_e/r_addr_in[0] (ot_sram_1r1w_128x256_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.u_row_e/clk (ot_sram_1r1w_128x256_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_lkp.u_e.rq_ea[1]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.u_row_e (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_lkp.u_e.rq_ea[1]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_lkp.u_e.rq_ea[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _236219_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_lkp.u_e.u_row_e/r_addr_in[1] (ot_sram_1r1w_128x256_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.u_row_e/clk (ot_sram_1r1w_128x256_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_lkp.u_e.rq_ea[2]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.u_row_e (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_lkp.u_e.rq_ea[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_lkp.u_e.rq_ea[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _236184_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_lkp.u_e.u_row_e/r_addr_in[2] (ot_sram_1r1w_128x256_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.u_row_e/clk (ot_sram_1r1w_128x256_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_lkp.u_e.rq_oa[2]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_lkp.u_e.u_row_o (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_lkp.u_e.rq_oa[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_lkp.u_e.rq_oa[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _236179_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_lkp.u_e.u_row_o/r_addr_in[2] (ot_sram_1r1w_128x256_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_lkp.u_e.u_row_o/clk (ot_sram_1r1w_128x256_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269116_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[0] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[100]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[100]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[100]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269016_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[100] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[101]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[101]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[101]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269015_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[101] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[102]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[102]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[102]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269014_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[102] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[103]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[103]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[103]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269013_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[103] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[104]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[104]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[104]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269012_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[104] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[105]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[105]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[105]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269011_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[105] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[106]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[106]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[106]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269010_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[106] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[107]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[107]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[107]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269009_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[107] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[108]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[108]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[108]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269008_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[108] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[109]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[109]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[109]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269007_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[109] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[10]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[10]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269106_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[10] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[110]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[110]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[110]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269006_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[110] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[111]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[111]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[111]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269005_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[111] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[112]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[112]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[112]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269004_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[112] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+Startpoint: u_c.u_xq.bwd[113]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c.u_xq.u_b0 (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ u_c.u_xq.bwd[113]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.510914   11.589566   29.660763   29.660763 v u_c.u_xq.bwd[113]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.683700    7.790417    6.828083   36.488846 ^ _269003_/Y (INVx1_ASAP7_75t_R)
+                      7.790417    0.000000   36.488846 ^ u_c.u_xq.u_b0/wd_in[113] (ot_sram_1r1w_64x512_m1_r2c2)
+                                             36.488846   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ck (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                  0.000000    0.000000   clock reconvergence pessimism
+                                              0.000000 ^ u_c.u_xq.u_b0/clk (ot_sram_1r1w_64x512_m1_r2c2)
+                                 18.474596   18.474596   library hold time
+                                             18.474596   data required time
+---------------------------------------------------------------------------------------------
+                                             18.474596   data required time
+                                            -36.488846   data arrival time
+---------------------------------------------------------------------------------------------
+                                             18.014252   slack (MET)
+
+
+worst slack min 18.01
