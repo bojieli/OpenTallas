@@ -110,7 +110,8 @@ def reserve_component(replay, boundary):
     host leaf / calendar target.
     """
     from layer_images import cp_frames
-    if replay.get('scope') != 'component_probe':
+    if (replay.get('scope') not in (None, 'component_probe')
+            or replay.get('qualifies_native_layer') or replay.get('qualifies_native_chain')):
         raise ValueError('exclusive SU reservation requires component_probe scope')
     events = replay['events']
     drives = [e for e in events if e['k'] == 'D']
@@ -143,6 +144,7 @@ def reserve_component(replay, boundary):
     if stream_end >= launch + rows*65535:
         raise ValueError('calendar reservation ends before final observation')
     result = dict(replay)
+    result.update(scope='component_probe', qualifies_native_layer=False, qualifies_native_chain=False)
     result['events'] = sorted(events + cp, key=lambda e:(e['dom'],e['cyc'],e['k']))
     result['su_owner_calendar'] = dict(
         schema='opentallas.su_component_reservation.v1', target=96,
