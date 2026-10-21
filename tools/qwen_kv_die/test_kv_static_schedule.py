@@ -186,6 +186,18 @@ def test_slg_identity(tmp_path):
 Inst = namedtuple('Inst', 'name master')
 
 
+def test_relay_trunk_never_joins_the_clock_generator():
+    """K.RST 10-21: the PLL drives every core trunk; its lock pin relay takes the SINK's trunk (host on clk_core_c),
+    never the first trunk the PLL drives (clk_core_WS)."""
+    by = {'pll': Inst('pll', 'qkd_pllm'), 'host': Inst('host', 'qkd_host_root_integrated')}
+    buses = [('clk_core_WS', 'clock_trunk', 1, [('pll', 'pll_WS'), ('slg_WS_4', 'ck')]),
+             ('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c'), ('host', 'ck')])]
+    j, d = KPR.relay_trunk(buses, by, ('pll', 'locked'), ('host', 'pll_locked'))
+    assert (buses[j][0], d) == ('clk_core_c', 'core')
+    j, d = KPR.relay_trunk(buses, by, ('pll', 'locked'), None)          # no sink record: the core default, not WS
+    assert (buses[j][0], d) == ('clk_core_c', 'core')
+
+
 def test_relay_trunk_takes_the_launching_pin_domain():
     by = {'slg_WS_4': Inst('slg_WS_4', 'qkd_kvs_grp'), 'ectl_WS_4': Inst('ectl_WS_4', 'qkd_ectlk'),
           'kvpc_WS_1': Inst('kvpc_WS_1', 'qkd_kvs_pc'), 'kvpc_WS_2': Inst('kvpc_WS_2', 'qkd_kvs_pc')}

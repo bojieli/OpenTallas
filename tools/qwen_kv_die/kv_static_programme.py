@@ -912,10 +912,9 @@ def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period)
     need = c['reset']['required_sink_release_depth']
     reset = final_reset_calendar()
     if reset is not None:
-        # Keep missing per-source reset/first-use qualification explicit. Until
-        # supplied, budget the generated station delay against the existing
-        # whole-plane HOLD requirement instead of silently retaining HOLD273.
-        need = max(need+int(reset['max_added_reset_edges']),int(reset['conservative_required_hold']))
+        # Budget the generated station delay against THIS die plane's whole-plane requirement (K.RST 10-21: never a
+        # constant from an older plane -- the 325 of PROG17/d22hl2 made every opt-in run read 414 > HOLD273).
+        need = need + int(reset['max_added_reset_edges'])
         c['reset'].update(required_sink_release_depth=need,
                           hold_counter_bits=max(8,math.ceil(math.log2(need))),
                           final_reset_stations=reset)
