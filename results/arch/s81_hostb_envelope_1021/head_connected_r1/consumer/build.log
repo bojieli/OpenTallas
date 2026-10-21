@@ -1,0 +1,310 @@
+%Warning-MODDUP: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v:6:8: Duplicate declaration of module: 'ot_sram_1r1w_64x512_m1_r2c2'
+    6 | module ot_sram_1r1w_64x512_m1_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 results/arch/s81_hostb_envelope_1021/head_producer_r1/source/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v:6:8: ... Location of original declaration
+    6 | module ot_sram_1r1w_64x512_m1_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'
+  274 |     ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
+      |                       ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv:11:22: ... Location of port declaration
+   11 |     input wire [9:0] aq_p,  
+      |                      ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv:49:28: Instance has missing pin: 'ra_s'
+   49 |     ot_dsdv_vstop #(.V(V)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_n(vo_n),
+      |                            ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv:58:26: ... Location of port declaration
+   58 |     output wire [V-1:0]  ra_s,
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv:49:28: Instance has missing pin: 'ra_n'
+   49 |     ot_dsdv_vstop #(.V(V)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_n(vo_n),
+      |                            ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv:59:26: ... Location of port declaration
+   59 |     output wire [V-1:0]  ra_n,
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv:49:28: Instance has missing pin: 'dk_n'
+   49 |     ot_dsdv_vstop #(.V(V)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_n(vo_n),
+      |                            ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv:60:26: ... Location of port declaration
+   60 |     output reg           dk_n,
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv:49:28: Instance has missing pin: 'dk_s'
+   49 |     ot_dsdv_vstop #(.V(V)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_n(vo_n),
+      |                            ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv:61:26: ... Location of port declaration
+   61 |     output reg           dk_s
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv:12:24: ... Location of port declaration
+   12 |     output wire [14:0] cc,
+      |                        ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20139:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20143:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20144:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20145:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20149:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20150:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20151:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20152:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20156:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20157:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20158:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20159:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv:20231:25: Instance has missing pin: 'cc'
+                     /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv:12:24: ... Location of port declaration
+   12 |     output wire [14:0] cc,
+      |                        ^~
+%Error-MODMISSING: results/arch/s81_hostb_envelope_1021/head_producer_r1/source/rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv:96:5: Cannot find file containing module: 'ot_rst_relay_tree3'
+   96 |     ot_rst_relay_tree3 #(.REGIONS(NRL)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+      |     ^~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... Looked in:
+                        tools/s81_dv/hostb_1021/ot_rst_relay_tree3
+                        tools/s81_dv/hostb_1021/ot_rst_relay_tree3.v
+                        tools/s81_dv/hostb_1021/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/rom_host_ingest/rtl/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/rom_host_ingest/rtl/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/rom_host_ingest/rtl/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_hier/pinned/rtl/v41die/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_hier/pinned/rtl/v41die/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_hier/pinned/rtl/v41die/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_tiles/rtl/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_tiles/rtl/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_tiles/rtl/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_xrv/pinned/rtl/hdc/v41x/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_xrv/pinned/rtl/hdc/v41x/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/physical/s81_pq_xrv/pinned/rtl/hdc/v41x/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/common/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/common/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/common/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/engram/mix/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/engram/mix/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/engram/mix/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ctrl/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ctrl/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ctrl/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_die_bind/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_die_bind/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_die_bind/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/eng/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/eng/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/eng/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/idx/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/idx/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/idx/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/land/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/land/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/land/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/slice/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/slice/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/slice/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_dv/unit/bk/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_fill2/gen19b/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_fill2/gen19b/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_fill2/gen19b/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_glue/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_glue/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_glue/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ingest/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ingest/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ingest/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/pq/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/pq/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/pq/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/selector_native/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/selector_native/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_ph/selector_native/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_control/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_control/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_control/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/gen/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/gen/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_static_net/gen/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_suhc/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_suhc/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_suhc/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_suhc/hier/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_suhc/hier/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/dsrom_sys/s81_suhc/hier/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/ingest/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/ingest/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/ingest/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/v41/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/v41/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/v41/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/v41x/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/v41x/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/hdc/v41x/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/lib/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/lib/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/lib/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/link/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/link/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/link/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/proto/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/proto/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/proto/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/s81/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/s81/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/s81/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41die/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41die/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41die/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl/v41rom/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_rst_relay_tree3.sv
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/ot_rst_relay_tree3
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/ot_rst_relay_tree3.v
+                        /srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/selected/src/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/ot_rst_relay_tree3.sv
+                        ot_rst_relay_tree3
+                        ot_rst_relay_tree3.v
+                        ot_rst_relay_tree3.sv
+                        ../consumer/obj/ot_rst_relay_tree3
+                        ../consumer/obj/ot_rst_relay_tree3.v
+                        ../consumer/obj/ot_rst_relay_tree3.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-s81-hostb-headconnected-1021/src'
+%Error: Exiting due to 1 error(s)

@@ -24,7 +24,7 @@ if [ "${HBE_REAL_HEAD:-0}" = 1 ];then
 import json,sys,hashlib
 from pathlib import Path
 x=json.load(open("results/arch/s81_hostb_envelope_1021/head_producer_r1/MODEL.json"))
-files=[z for z in x["files"] if not z["path"].endswith("ot_rst_relay_tree3.sv")]
+files=x["files"]
 for z in files:assert hashlib.sha256(Path(z["path"]).read_bytes()).hexdigest()==z["sha256"]
 Path(sys.argv[1]).write_text("".join(z["path"]+"\n" for z in files))
 PYHEAD
