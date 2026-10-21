@@ -1,0 +1,55 @@
+{
+  "status": "PASS_PARTIAL_ACTUAL_SOURCE_COMPONENT_NOT_WHOLECORE",
+  "source_commit": "9f0ed50f9",
+  "flag": "OT_SVC_SMJ_N32 default absent",
+  "model_before_RTL": "04541dc41",
+  "actual_payload_helper_SE_mux_SMQ": {
+    "unit": "1990655-1792625158 ep7 mem32",
+    "valid_payload_checks": 2368,
+    "operand_checks": 2048,
+    "cos_checks": 2048,
+    "config_checks": 64,
+    "negative_detected": 1792,
+    "invalid_payload_differences": 5708,
+    "cycles": 8205,
+    "errors": 0
+  },
+  "actual_LP_hierarchy": {
+    "unit": "1990655-1792625158",
+    "status": "PASS terminal0",
+    "selected": "SMJ+compact132+TAG+ATT_PINREG+PSEL+FMEM+actualSRAM+NORST"
+  },
+  "paired_native": {
+    "baseline": {
+      "status": "FAIL",
+      "max": 1024,
+      "violations": 2,
+      "roles": 0
+    },
+    "candidate": {
+      "status": "PASS",
+      "max": 1,
+      "violations": 0,
+      "roles": 0
+    }
+  },
+  "allLib_component_area_um2": {
+    "baseline": 284.29542,
+    "candidate": 171.69408,
+    "delta": -112.60133999999996
+  },
+  "contract": "Exact valid SMJ data+allcontrols on original edge. Invalid data bus intentionally may differ inclreset. No added edge/clock/format.512oldreset/hold contacts targeted only.",
+  "open": [
+    "Remaining wholecore control/reset/issue/math native failures",
+    "Selected PINREG caller/HBM path",
+    "Actual SMH numerical integration",
+    "Full16/PVSO",
+    "Wholecore clock/reset/physical/calendar/G4slot"
+  ],
+  "area_scope": "512payloadFF fixture; baseline includes two localregisteredcontrols. Not wholecore/LParea or physical result.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "b0ccd3db4ccf3b627d86577292bca7f2f7bac5cee7b34ddd642e15fc39edc439",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_smj_payload_n32.sv": "4d3ecb1349c5d983c722896bad1f8eedcceac128f92c1c4e4257542095bf0829",
+    "tools/s81_dv/svc_rs/smj_n32/tb_smj_actual.sv": "e22fdf0d2fc6f54ab13e904a35841eaa9607c740f2de347ef58a609925c5ac34"
+  }
+}

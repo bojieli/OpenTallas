@@ -1,0 +1,16 @@
+read_verilog -sv -DSYNTHESIS -DBASELINE /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_smj_payload_n32.sv /src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv /src/tools/s81_dv/svc_rs/smj_n32/smj_gate.sv
+hierarchy -check -top smj_gate
+read_liberty -lib /techlib/SEQ.lib
+read_liberty -lib /techlib/SIMPLE.lib
+read_liberty -lib /techlib/AO.lib
+read_liberty -lib /techlib/OA.lib
+read_liberty -lib /techlib/INVBUF.lib
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top smj_gate -flatten -noshare
+dfflibmap -liberty /techlib/SEQ.lib
+abc -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+setattr -mod -unset keep_hierarchy
+flatten
+opt_clean
+tee -o /out/stat.txt stat -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+write_verilog -noattr /out/flat.v
