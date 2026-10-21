@@ -42,5 +42,17 @@
     "reason": "Two cohorts of32 selectorD plusownparityD=33; correctedthreecohorts31+1; immutable source/census retained."
   },
   "wholecore": "OPEN; reset source7a golden3097102 stillruns unchanged/noinheritance; no new fullATT/native/physical/calendar qualification",
-  "source_sha256": "08237090e3b4d203efca9e5e94e44e71e2faff6e0eb604b8760092aaa2310230"
+  "source_sha256": "08237090e3b4d203efca9e5e94e44e71e2faff6e0eb604b8760092aaa2310230",
+  "actual_LP_hierarchy": {
+    "source": "8e469ae4d +newprofile runner andexplicithelperclosure",
+    "unit": "1735999-1792622352 ep7 mem32",
+    "status": "PASS terminal0",
+    "scope": "Actual LP/controller/ATT/tile hierarchy resetprofile+PSEL; no fullmechanism/native/physical promotion."
+  },
+  "partial_area_um2": {
+    "SEQ_only_baseline": 0.67068,
+    "SEQ_only_candidate": 19.79964,
+    "extra_SEQ_only": 19.12896,
+    "note": "Originaltemplate stat knowsSEQ only; combareasUNKNOWN, NOT totalarea estimate."
+  }
 }

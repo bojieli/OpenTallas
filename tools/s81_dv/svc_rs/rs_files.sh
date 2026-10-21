@@ -22,5 +22,5 @@ RS_SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.
   rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
   rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_so_target.sv rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_wire.sv
   physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v
-  $D/dsdv_svc_sx_hrow.sv $D/dsdv_svc_sx.sv $D/dsdv_svc_att.sv $D/dsdv_svc_rs.sv)
+  $D/dsdv_svc_sx_hrow.sv $D/dsdv_svc_sx.sv $D/dsdv_svc_att.sv $D/dsdv_svc_pword_pick_n32.sv $D/dsdv_svc_rs.sv)
 RS_LIB=(-v rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv)
