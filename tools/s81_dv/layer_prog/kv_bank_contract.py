@@ -22,8 +22,8 @@ def dispatch(kind, gain_set, job_id, drain_age, parameter_base=PARAM_BASE, opera
     from layer_prog.lower_vs import vp_cmd
     if kind not in (1, 7) or gain_set not in range(4) or job_id not in range(256):
         raise ValueError('Unsupported production KV/GK job field')
-    if type(drain_age) is not int or not 0 < drain_age < 2**16:
-        raise ValueError('A positive measured fixed drain edge is required')
+    if type(drain_age) is not int or not 128 <= drain_age < 2**16:
+        raise ValueError('Measured fixed drain edge must satisfy the source minimum of 128')
     if operand_base is None:
         operand_base = parameter_base + (4 if kind == 7 else 20)
     if parameter_base % 4 or operand_base % 4 or not (0 <= parameter_base < 1024 and
@@ -67,6 +67,7 @@ def contract():
                         local_rows=[708 + 4 * i, 711 + 4 * i], mask16=65535) for i in range(16))
     return dict(schema='opentallas.s81.kv_bank_row_contract.v1', slice=SLICE, leaf=LEAF,
                 source='rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv',
+                adapter_ref='codex/s81-kvq-bind-1021@19170913b',
                 adapter='ot_s81sl_kv_leaf / ot_s81sl_kv_bank; requires KV_ENABLE=1',
                 dispatch_abi=dict(op=15, a0=672, a1_kv=692, a1_gain=676, n=32,
                     immediate='kind[3:0], gain_set[5:4], jid[13:6], measured_fixed_drain_age[31:16]',
@@ -80,5 +81,7 @@ def contract():
                          'the scratch epoch is exclusive through final capture and consumer transfer.',
                 completion='Two exponent writes share one address; both masks must be preserved.',
                 output_drain_pair_writes=52,
+                output_drain_cycles=104, minimum_fixed_drain_age=128,
+                measured_fixed_drain_age=None,
                 qualification='ROW ABI ONLY; dispatch RTL, cycle dates, producer transfer, service OWN_ROW '
                               'handoff, and whole-calendar lifetimes are not qualified.')
