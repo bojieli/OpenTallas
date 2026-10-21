@@ -22,7 +22,19 @@ CM="--coord-map $PD/coord_map.json --slot-map $(cat $W/$PD/slot_map.txt)"
 # Local transport override only in this successor process: ep6 public route loses packets.
 ssh() { local host=; for host in "$@"; do [ "$host" = ot-epyc6 ] && { command ssh -C -J ot-epyc5 -S none "$@"; return $?; }; done; command ssh -C -o ControlPath=none "$@"; }
 scp() { local arg=; for arg in "$@"; do [[ "$arg" == ot-epyc6:* ]] && { command scp -C -o ProxyJump=ot-epyc5 -o ControlPath=none "$@"; return $?; }; done; command scp -C -o ControlPath=none "$@"; }
-step() { if [ -e "$A/STOP_FUTURE_STAGES" ]; then echo "OWNED_STOP_FUTURE_STAGES before=$* source=$H $(date -Is)"; exit 26; fi; echo "STEP $* $(date -Is)"; }
+stop_future() {
+  [ -e "$A/STOP_FUTURE_STAGES" ] || return 0
+  python3 - "$A" "${H:-UNRESOLVED}" "$B" "$BASHPID" "$*" <<'PYSTOP'
+import datetime,json,sys
+from pathlib import Path
+a,source,remote,pid,stage=sys.argv[1:]
+r={'status':'STOPPED_BEFORE_FUTURE_ADMISSION','time':datetime.datetime.now().astimezone().isoformat(),'stage':stage,'source':source,'controller_pid':pid,'remote_root':remote,'marker':str(Path(a)/'STOP_FUTURE_STAGES'),'restart_owner':'DIE coordinator /root/hbm_lead/die_chain or returning Claude coordinator','admitted_jobs_signalled':False,'completion_claim':False,'resume':'Manual source/receipt review of identical inputs required; this runner is not automatically restartable over an existing remote root.'}
+(Path(a)/('STOP_RECEIPT_'+pid+'.json')).write_text(json.dumps(r,indent=2)+'\n')
+PYSTOP
+  echo "OWNED_STOP_FUTURE_STAGES before=$* source=${H:-UNRESOLVED} restart_owner=DIE_coordinator $(date -Is)"
+  exit 26
+}
+step() { stop_future "$@"; echo "STEP $* $(date -Is)"; }
 mkdir -p $A; touch "$AR/.keep" "$A/.keep"; echo $$ > $A/chain.pid; echo "RUN14_HBM-DIE14 VAR $VAR PLAN $PL PLAN_UM $PLAN_UM GX=$GX"
 [ "$(git -C $W rev-parse --show-toplevel)" = "$W" ] || { echo BAD_WT; exit 9; }
 cd $W
@@ -151,6 +163,7 @@ gen() {
   for k in "--grants $PD/grants_d4g.json" "--plan $PD/compact.P.json" "--lanes $PD/lanes.json" "--clock-region-map $PD/d4g_region_map.json"; do
     grep -q -- "$k" $A/gen_d4g2e9_$2.sh || { echo "GEN_SCRIPT_NOT_SET $k"; return 1; }; done
   scp -q $A/gen_d4g2e9_$2.sh $HOST:$1/gen_d4g2e9.sh || return 17
+  stop_future "GEN_ADMISSION $2"
   $OTRUN --mem 64 --threads 2 --disk 10 --priority die --dir $1 -- env OT_ABS_PIN_WINDOW_UM=3 OT_GEN2_CASE=$2 OT_RESET_GATE=$3 \
     OT_DIE_CASE_EXTRA="$4" bash $1/gen_d4g2e9.sh > $A/gen_$2.otrun 2>&1; echo "GEN_$2 ot-run rc=$? $(date -Is)"; tail -12 $A/gen_$2.otrun
   scp -q $1/$2/layout.png $A/$2_layout.png 2>/dev/null; scp -q $HOST:$1/$2/layout.png $A/$2_layout.png 2>/dev/null
@@ -227,9 +240,11 @@ gen $B/q x12_q diag "--prior-place $B/a/case_a/run.tcl --lane-reach diag $GX $CM
 S3Q=$!
 wait $S3B; R3B=$?; wait $S3Q; R3Q=$?; cat $A/s3b.log $A/s3q.log
 [ $R3B = 0 ] && [ $R3Q = 0 ] || { echo GEN_PQ_FAIL; exit 13; }
+stop_future "AFTER_PQ completed_workers"
 for tag in case_p x12_q; do python3 "$W/results/arch/hbm_release_r16_1021/verify_model_homes.py" "$W/$PD/corridor_model.json" "$A/${tag}_manifest.json" "$A/actual_model_${tag}.json" || { echo MODEL_PQ_NOT_REALIZED; exit 25; }; done
 step S4_ONLY exact_source_colh_capacity
 scp -q $W/results/arch/hbm_release_r16_1021/s4_only_remote.sh $HOST:$B/s4_only_remote.sh || exit 14
+stop_future "S4_ADMISSION exact_source_colh_capacity"
 $OTRUN --mem 96 --threads 16 --disk 20 --priority die --dir $B -- env B=$B H=$H PD=$PD OT_CAP_ARGS="--plan-um $PLAN_UM" PINS_CASE=$B/q/x12_q PINS_A_L23=1 bash $B/s4_only_remote.sh > $A/s4_only.otrun 2>&1
 rc=$?; grep -E '^(STEP|S4_|PINS|CAPACITY)' $A/s4_only.otrun | cut -c1-400
 rsync -azW --partial --timeout=120 $HOST:$B/artifacts/ $A/ || true
