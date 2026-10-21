@@ -272,7 +272,12 @@ module qfd_native59_dv_service #(
  // ---------------------------------------------------------------- embedding row read (G9), fixed 65-edge sequence
  wire emb_go=!p_cmd[0]&&p_cmd[379:376]==4'hE;
  wire cmd_bad=(emb_go&&((|p_cmd[357:1])||p_cmd[375:358]>=18'd151936))||(!p_cmd[0]&&(|p_cmd)&&!emb_go);
+ // RP1 arms on the scalar chain 12 edges before RoPE word0. Keep that
+ // arm interval free of preceding group1 embedding data/header words.
+ localparam integer ROPE_FIRST = 77; // 65 embedding reads + 12 blank return edges
+ wire emb_read;
  reg emb_act;reg[6:0]emb_k;reg[17:0]emb_tok;
+ assign emb_read=emb_act && (emb_k<=7'd64 || emb_k>=7'(ROPE_FIRST));
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin emb_act<=0;emb_k<=0;emb_tok<=0;emb_code_re<=0;emb_code_addr<=0;emb_scale_re<=0;emb_scale_addr<=0;
@@ -283,14 +288,14 @@ module qfd_native59_dv_service #(
    if(emb_act)begin
     if(emb_k<7'd64)begin emb_code_re<=1;emb_code_addr<={emb_tok,emb_k[5:0]^((MUT==3)?6'd1:6'd0)};end
     else if(emb_k==7'd64)begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
-    else begin
+    else if(emb_k>=7'(ROPE_FIRST))begin
      emb_code_re<=1;
-     emb_code_addr<=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'd65);
+     emb_code_addr<=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'(ROPE_FIRST));
     end
-    emb_k<=emb_k+7'd1;if(emb_k==(ROPE?7'd72:7'd64))emb_act<=0;
+    emb_k<=emb_k+7'd1;if(emb_k==(ROPE?7'(ROPE_FIRST+7):7'd64))emb_act<=0;
    end
    // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3)
-   e1<=emb_act;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
+   e1<=emb_read;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
   end
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
  wire g0=vm_write_v,g1=e3;
@@ -300,7 +305,7 @@ module qfd_native59_dv_service #(
   else begin
    dr_tag<=vm_write_tag;
    dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
-         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:((k3>7'd64)?6'(k3-7'd65):k3[5:0]),(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
+         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:((k3>7'd64)?6'(k3-7'(ROPE_FIRST)):k3[5:0]),(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
   end
  qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
  .ck(ck),.rst_n(rst_n),.request_slot(request_slot),.request_tag59(request_tag),
