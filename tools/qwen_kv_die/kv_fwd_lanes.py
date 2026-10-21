@@ -345,6 +345,21 @@ def ahub_post_ages(pre, F, dirs, sinks=None):
     or an undriven / missing sink is a problem (fail closed by the caller)."""
     import kv_lane_stations as KS
     net = KS.Net(pre, dirs, expr_bits)
+    # KV-AHUB11 10-21: the hub / pvfin LEFs declare every pin INOUT, so Net.drv (first endpoint wins) took the hub's own
+    # sink pin as the bus driver (a10b: every age 0 -> false 'FR_OFS -39' fail).  Relay outputs drive first; a tile
+    # driver is only taken when no relay drives the bit (a direct 0-stage bus).
+    rdrv = {}
+    for nm, (mst, _cs) in net.insts.items():
+        if STD_RE.match(mst):
+            for i, b in enumerate(net.bits(nm, 'b')):
+                if b not in ('0', '1'):
+                    rdrv.setdefault(b, (nm, 'b', i))
+
+    def drv(b):
+        d = rdrv.get(b) or net.drv.get(b)
+        if d is not None and d[0] == inst and d[1] == port:     # INOUT sink listed first: the other endpoint drives
+            d = next((e for e in net.lds.get(b, ()) if (e[0], e[1]) != (inst, port)), None)
+        return d
     lane_of = {c: L for L in F['rep']['lanes'] for c in L['stations']}
     ages, ends, probs = {}, {}, []
     for bid, (inst, port) in (sinks or AHUB_SINKS).items():
@@ -355,7 +370,7 @@ def ahub_post_ages(pre, F, dirs, sinks=None):
         for b in net.bits(inst, port):
             if b in ('0', '1'):
                 continue
-            d, age, seen, hops = net.drv.get(b), 0, set(), 0
+            d, age, seen, hops = drv(b), 0, set(), 0
             if d is None:
                 probs.append(f'{bid}: {inst}.{port} bit {b} undriven')
                 break
@@ -375,7 +390,7 @@ def ahub_post_ages(pre, F, dirs, sinks=None):
                     probs.append(f'{bid}: walk broke at {nm} bit {i}')
                     d = None
                     break
-                d = net.drv.get(a_bits[i]) if a_bits[i] not in ('0', '1') else None
+                d = drv(a_bits[i]) if a_bits[i] not in ('0', '1') else None
             vals.add(age)
         if len(vals) != 1:
             probs.append(f'{bid}: {inst}.{port} torn: bit ages {sorted(vals)}')
