@@ -1,0 +1,602 @@
+{
+ "name": "qfd_coll_face_s1_pl4r",
+ "top": "qfd_coll_face_s1_pl",
+ "kind": "cluster",
+ "sources": [
+  "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_pl.sv",
+  "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_static_transport.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "PLD": 4,
+  "PLK": 2
+ },
+ "clock_port": "cal_ck",
+ "clock_ports": [
+  "cal_ck",
+  "tx_wck",
+  "rx_rck",
+  "cal_lck",
+  "tx_rck",
+  "rx_wck",
+  "codec0",
+  "codec1",
+  "codec2",
+  "codec3",
+  "codec4",
+  "codec0p"
+ ],
+ "clock": "hybrid_entries",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "peer_slot",
+    "tx_slot",
+    "tx_valid",
+    "tx_data"
+   ],
+   "outputs": [
+    "cdc_fault"
+   ]
+  },
+  "txw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_wck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rxr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_rck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rx_valid",
+    "rx_data"
+   ]
+  },
+  "lcal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_lck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "phy_tx_slot",
+    "phy_rx_slot"
+   ]
+  },
+  "txr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_rck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rxw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_wck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec3"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0p": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec0p"
+   ],
+   "inputs": [
+    "phy_up",
+    "phy_rx_valid",
+    "phy_rx"
+   ],
+   "outputs": [
+    "phy_tx_valid",
+    "phy_tx",
+    "epoch_abort",
+    "fault_cause"
+   ]
+  }
+ },
+ "outline": {
+  "w": 734.4,
+  "h": 864.0
+ },
+ "recipe": 2,
+ "macros": [],
+ "pins": {
+  "W": [
+   "rx_valid",
+   "cdc_fault",
+   "rx_data",
+   "cal_ck",
+   "rx_rck",
+   "rx_wck",
+   "cal_lck",
+   "tx_data",
+   "tx_wck",
+   "tx_rck",
+   "tx_slot",
+   "peer_slot",
+   "tx_valid",
+   "rst_n",
+   "codec2"
+  ],
+  "E": [
+   "phy_rx_valid",
+   "codec3",
+   "phy_rx",
+   "phy_up",
+   "epoch_abort",
+   "fault_cause",
+   "codec0p",
+   "codec4",
+   "phy_tx",
+   "phy_tx_valid",
+   "phy_tx_slot",
+   "phy_rx_slot"
+  ],
+  "N": [],
+  "S": [
+   "codec1",
+   "codec0"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages."
+ },
+ "structural_change": "QW2-COLL 10-21 from qfd_coll_face_s1_pl4o on BWREG RTL (7f9b2844f: bank write port + read address landed in the bank entry before the SRAM; r_plg cross_clock SETUP fails into bank we/din). QW2-COLL 10-21 'o': CTS H-tree without obstruction-aware detours around the macro columns (-no_obstruction_aware, precedent s81 gather leaf 10-14); codec0 spread 84-129 ps with auto or 16/30 clustering, avg sink wire 643 um. QW2-COLL 10-21 from qfd_coll_face_s1_pl4j on BWREG RTL (9a0939353: bank write port captured in the bank entry before the SRAM; r_plg cross_clock SETUP fails into bank we/din). QW2-COLL 10-21 from qfd_coll_face_s1_pl4h: explicit CTS sink clustering 16 sinks / 30 um, buffers every 40 um (auto 32/112 um left codec0 spread 52-129 ps on S faces). QW2-COLL 10-21 'h' recipe from qfd_coll_face_s1_pl4g: codec0 clock-region fence 286.2-464.4 x 216-648 -> y 270.0-594.0 (g gates FAIL codec0 internal spread 85-102 ps, 432 um tall band). QW-C3-COLLIO 10-21 'g' recipe from qfd_coll_face_s1_pl4f: tx ch546 432 -> 475.2 opens a 64.8 um cal channel between rx/tx ch546 beside the cal_ck/cal_lck W pins; clock-region fences (seq by clock-port BFS, INCLUSIVE, dissolved before DPL): codec0 band, codec0p E strip, cal_ck W half of the channel, cal_lck E half + E box at the phy_*_slot pins. Fixes s1_plf cal_ck boundary spread 138.6 (cal flops squeezed in the 21.6 um rx/tx gap). QW-COLLIO2 10-21 PHY-region split (owner CLOCK RULE 10-20 08:55) of qfd_coll_face_s1_band4 (codec0 pin-flop spread 450.8 -> 150.3 -> 108.9 / band5 138.5 ps FAIL: one codec0 tree served both the E PHY pin registers and the codec core in the band; pin compaction exhausted). Now the PHY pin registers are their own clock region on a second entry codec0p (E, centred on the PHY pin group) and land to/from the codec core region (codec0, entry moved to S under the band, no boundary pins left) through fixed-latency mesochronous rings ot_coll_meso_ring D=4 K=2 (offset set at reset, no flow control; RX slots = pin capture flops, TX read regs = output pin regs). Ring depth: measured codec0 phase spread <=232 ps << T 833 ps; D4/K2 window setup 2T / hold 2T. Cost: TX +3 / RX +2 edges, face L 378 -> 383 (calendar compensated in RTL; priced via NOTICE QW-TOKSCHED). Same floorplan as band4 otherwise.",
+ "slot_change_request": "face S1 734.4x864.0; production parent places it PHY side E, core side W; die feeds codec0p from the codec0 die clock (second entry).",
+ "job": {
+  "owner": "Claude:QW-COLLIO2",
+  "branch": "claude/qw-collio-1020",
+  "tag": "pl4",
+  "purpose": "S1 face PHY-region landing split D4K2 (QW-COLLIO2); non-critical; submit on PASS",
+  "benches": [
+   {
+    "name": "coll_face_pass",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+    "pass_witness": "results/rtl/qw_collio_1020/bench4/b_m0.log",
+    "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
+   },
+   {
+    "name": "coll_face_mut_rx_early",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m1.log"
+   },
+   {
+    "name": "coll_face_mut_cdc_latency",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m2.log"
+   },
+   {
+    "name": "coll_face_mut_phy_long",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m3.log"
+   },
+   {
+    "name": "coll_face_mut_bank_hit",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m4.log"
+   },
+   {
+    "name": "coll_face_mut_ring_early",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m5.log"
+   },
+   {
+    "name": "coll_face_mut_land_unlanded",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m6.log"
+   },
+   {
+    "name": "coll_face_mut_phyland_short",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m7 7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=7$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench4/b_m7.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_coll_bank137/views",
+   "physical/ref_tile/qfd_static_ch546/views",
+   "results/rtl/qwen_coll_face_1018",
+   "rtl/test/run_coll_static_face.sh",
+   "rtl/test/tb_coll_static_face.sv",
+   "rtl/physical/qwen_coll_safe_1019",
+   "results/rtl/qwen_coll_safe_1019",
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qw_collio_1020"
+  ],
+  "views_to": "physical/ref_tile/qfd_coll_face_s1_pl4r/views",
+  "record_to": "results/rtl/ref_tile/qfd_coll_face_s1_pl4r"
+ },
+ "pin_ranges": {
+  "rx_valid": [
+   244,
+   246
+  ],
+  "cdc_fault": [
+   618,
+   622
+  ],
+  "rx_data": [
+   250,
+   416
+  ],
+  "cal_ck": [
+   419,
+   421
+  ],
+  "rx_rck": [
+   424,
+   426
+  ],
+  "rx_wck": [
+   428,
+   430
+  ],
+  "cal_lck": [
+   433,
+   435
+  ],
+  "tx_data": [
+   440,
+   580
+  ],
+  "tx_wck": [
+   588,
+   590
+  ],
+  "tx_rck": [
+   594,
+   596
+  ],
+  "tx_slot": [
+   602,
+   604
+  ],
+  "peer_slot": [
+   608,
+   610
+  ],
+  "tx_valid": [
+   614,
+   616
+  ],
+  "rst_n": [
+   626,
+   628
+  ],
+  "codec2": [
+   636,
+   638
+  ],
+  "phy_rx_valid": [
+   328,
+   330
+  ],
+  "codec3": [
+   250,
+   252
+  ],
+  "phy_rx": [
+   332,
+   437
+  ],
+  "phy_up": [
+   438,
+   440
+  ],
+  "epoch_abort": [
+   441,
+   443
+  ],
+  "fault_cause": [
+   449,
+   453
+  ],
+  "codec4": [
+   578,
+   580
+  ],
+  "phy_tx": [
+   456,
+   561
+  ],
+  "phy_tx_valid": [
+   563,
+   565
+  ],
+  "phy_tx_slot": [
+   567,
+   569
+  ],
+  "phy_rx_slot": [
+   571,
+   573
+  ],
+  "codec1": [
+   152,
+   154
+  ],
+  "codec0p": [
+   445,
+   447
+  ],
+  "codec0": [
+   376,
+   378
+  ]
+ },
+ "clock_cts_roots": [
+  "cal_ck",
+  "cal_lck",
+  "codec0",
+  "codec0p"
+ ],
+ "hard_define": "OT_QFD_FACE_HARD",
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+   "count": 1,
+   "inst": "*u_tx",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+   "count": 1,
+   "inst": "*u_rx",
+   "at": [
+    43.224,
+    259.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?0?*u_store",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?1?*u_store",
+   "at": [
+    43.2,
+    648.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?2?*u_store",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?3?*u_store",
+   "at": [
+    475.2,
+    475.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pg_layer": "M7",
+ "defines": [
+  "OT_QFD_FACE_HARD"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "cal_ck"
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inter": [],
+ "sdc_extra": [
+  "physical/ref_tile/qfd_coll_face_s1_pl4r/landing_mcp.sdc"
+ ]
+}
