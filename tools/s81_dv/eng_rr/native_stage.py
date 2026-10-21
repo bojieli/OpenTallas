@@ -9,7 +9,7 @@ paths=[]
 for p in f:
  if '/test/' in p:continue
  paths.append(str(pathlib.Path(p).parent) if p.startswith('physical/') else p)
-paths+=['tools/s81_dv/eng_rr','tools/ref_tile/native_census.py','tools/textbook_lint.py','physical/common_flow/ot_keep_regs.tcl']
+paths+=['tools/s81_dv/eng_rr','tools/ref_tile/native_census.py','tools/textbook_lint.py','physical/common_flow']
 paths=list(dict.fromkeys(paths))
 a=subprocess.Popen(['git','--git-dir='+g,'archive',ref,*paths],stdout=subprocess.PIPE)
 b=subprocess.run(['tar','-xf','-','-C',str(s)],stdin=a.stdout);a.stdout.close();assert a.wait()==0 and b.returncode==0
