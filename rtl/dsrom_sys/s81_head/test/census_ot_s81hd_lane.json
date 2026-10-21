@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "liberty": [
+  {
+   "path": "../libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+   "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+  },
+  {
+   "path": "../libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+   "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+  },
+  {
+   "path": "../libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+   "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+  },
+  {
+   "path": "../libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+  },
+  {
+   "path": "../libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+   "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  {
+   "path": "/srv/opentallas-scratch/claude/s81-head-ctl-1021/cen2_ot_s81hd_lane/hard.lib",
+   "sha256": "ae4d45bbca3f01f4bfb9da10875abd51dcb3404fcf9e29d0f9f863aa3978426e"
+  }
+ ],
+ "netlist": {
+  "path": "/srv/opentallas-scratch/claude/s81-head-ctl-1021/cen2_ot_s81hd_lane/map.ys.mapped.v",
+  "sha256": "d2bd3cdfcd782baad310e0448433dbb85abfaaf5301eba234e925a61053ae39c"
+ },
+ "top": "ot_s81hd_lane",
+ "status": "PASS",
+ "limit": 32,
+ "roots_examined": 12000,
+ "max_dynamic_loads": 32,
+ "driver_counts": 11958,
+ "constant_output_bits": 0,
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true,
+ "role_errors": [],
+ "violations": []
+}

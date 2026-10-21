@@ -1,0 +1,1245 @@
+{
+ "schema": "opentallas.s81_head.ports.v1",
+ "source": "HD-CTL 10-21 (claude/s81-head-ctl-1021)",
+ "generator": "rtl/dsrom_sys/s81_head/test/gen_ports.py",
+ "masters": {
+  "ot_s81hd_ctl": {
+   "source": "rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv",
+   "ports": [
+    {
+     "name": "ck",
+     "dir": "input",
+     "width": 1,
+     "role": "clk"
+    },
+    {
+     "name": "rst_n",
+     "dir": "input",
+     "width": 1,
+     "role": "rst"
+    },
+    {
+     "name": "ri",
+     "dir": "input",
+     "width": 1104,
+     "role": "bus"
+    },
+    {
+     "name": "mu_rt",
+     "dir": "input",
+     "width": 32,
+     "role": "bus"
+    },
+    {
+     "name": "lw",
+     "dir": "input",
+     "width": 11,
+     "role": "bus"
+    },
+    {
+     "name": "lep_f",
+     "dir": "input",
+     "width": 1,
+     "role": "bus"
+    },
+    {
+     "name": "ro",
+     "dir": "output",
+     "width": 1104,
+     "role": "bus"
+    },
+    {
+     "name": "mu_c",
+     "dir": "output",
+     "width": 34,
+     "role": "bus"
+    },
+    {
+     "name": "mu_rc",
+     "dir": "output",
+     "width": 11,
+     "role": "bus"
+    },
+    {
+     "name": "ctl_f",
+     "dir": "output",
+     "width": 1,
+     "role": "bus"
+    },
+    {
+     "name": "sn_o",
+     "dir": "output",
+     "width": 565,
+     "role": "bus"
+    },
+    {
+     "name": "ss_o",
+     "dir": "output",
+     "width": 565,
+     "role": "bus"
+    },
+    {
+     "name": "sn_i",
+     "dir": "input",
+     "width": 565,
+     "role": "bus"
+    },
+    {
+     "name": "ss_i",
+     "dir": "input",
+     "width": 565,
+     "role": "bus"
+    },
+    {
+     "name": "mtx_v",
+     "dir": "output",
+     "width": 6,
+     "role": "bus"
+    },
+    {
+     "name": "mtx_d",
+     "dir": "output",
+     "width": 3318,
+     "role": "bus"
+    },
+    {
+     "name": "mrx_v",
+     "dir": "input",
+     "width": 6,
+     "role": "bus"
+    },
+    {
+     "name": "mrx_d",
+     "dir": "input",
+     "width": 3318,
+     "role": "bus"
+    },
+    {
+     "name": "mflt",
+     "dir": "input",
+     "width": 24,
+     "role": "bus"
+    },
+    {
+     "name": "htx_v",
+     "dir": "output",
+     "width": 2,
+     "role": "bus"
+    },
+    {
+     "name": "htx_d",
+     "dir": "output",
+     "width": 1106,
+     "role": "bus"
+    },
+    {
+     "name": "hrx_v",
+     "dir": "input",
+     "width": 2,
+     "role": "bus"
+    },
+    {
+     "name": "hrx_d",
+     "dir": "input",
+     "width": 1106,
+     "role": "bus"
+    },
+    {
+     "name": "hflt",
+     "dir": "input",
+     "width": 8,
+     "role": "bus"
+    },
+    {
+     "name": "dtx_v",
+     "dir": "output",
+     "width": 5,
+     "role": "bus"
+    },
+    {
+     "name": "dtx_d",
+     "dir": "output",
+     "width": 2765,
+     "role": "bus"
+    },
+    {
+     "name": "drx_v",
+     "dir": "input",
+     "width": 5,
+     "role": "bus"
+    },
+    {
+     "name": "drx_d",
+     "dir": "input",
+     "width": 2765,
+     "role": "bus"
+    },
+    {
+     "name": "dflt",
+     "dir": "input",
+     "width": 20,
+     "role": "bus"
+    }
+   ],
+   "hard_children": [
+    "dsfd_mtp_seq (CLOSED 10-08 kit)",
+    "4 x ot_sram_1r1w_64x512_m1_r2c2"
+   ]
+  },
+  "ot_s81hd_lep": {
+   "source": "rtl/dsrom_sys/s81_head/ot_s81hd_lep.sv",
+   "ports": [
+    {
+     "name": "ck",
+     "dir": "input",
+     "width": 1,
+     "role": "clk"
+    },
+    {
+     "name": "rst_n",
+     "dir": "input",
+     "width": 1,
+     "role": "rst"
+    },
+    {
+     "name": "ch_b",
+     "dir": "input",
+     "width": 1,
+     "role": "strap",
+     "note": "strap 1 = board lane"
+    },
+    {
+     "name": "tx0",
+     "dir": "output",
+     "width": 512,
+     "role": "serdes_tx"
+    },
+    {
+     "name": "tx1",
+     "dir": "output",
+     "width": 512,
+     "role": "serdes_tx"
+    },
+    {
+     "name": "rx0",
+     "dir": "input",
+     "width": 514,
+     "role": "serdes_rx",
+     "note": "{serdes st, rx} lk_WN0 (pair A)"
+    },
+    {
+     "name": "rx1",
+     "dir": "input",
+     "width": 514,
+     "role": "serdes_rx",
+     "note": "lk_WN1 (pair A)"
+    },
+    {
+     "name": "tx2",
+     "dir": "output",
+     "width": 512,
+     "role": "serdes_tx"
+    },
+    {
+     "name": "tx3",
+     "dir": "output",
+     "width": 512,
+     "role": "serdes_tx"
+    },
+    {
+     "name": "rx2",
+     "dir": "input",
+     "width": 514,
+     "role": "serdes_rx",
+     "note": "lk_WN2 (pair B)"
+    },
+    {
+     "name": "rx3",
+     "dir": "input",
+     "width": 514,
+     "role": "serdes_rx",
+     "note": "lk_WN3 (pair B)"
+    },
+    {
+     "name": "ro",
+     "dir": "input",
+     "width": 1104,
+     "role": "bus"
+    },
+    {
+     "name": "ri",
+     "dir": "output",
+     "width": 1104,
+     "role": "bus"
+    },
+    {
+     "name": "mu_c",
+     "dir": "input",
+     "width": 34,
+     "role": "bus"
+    },
+    {
+     "name": "mu_rt",
+     "dir": "output",
+     "width": 32,
+     "role": "bus"
+    },
+    {
+     "name": "mu_rc",
+     "dir": "input",
+     "width": 11,
+     "role": "bus"
+    },
+    {
+     "name": "lw",
+     "dir": "output",
+     "width": 11,
+     "role": "bus"
+    },
+    {
+     "name": "sl_f",
+     "dir": "input",
+     "width": 1,
+     "role": "bus"
+    },
+    {
+     "name": "fault",
+     "dir": "output",
+     "width": 1,
+     "role": "bus"
+    }
+   ],
+   "hard_children": [
+    "4 x dsfd_coll_lane_w_safe8_ntf",
+    "ot_s81sl_lep_mu_ab #(RX_SRAM 1, IN_PIPE 1, NATIVE32 1)",
+    "dsdv_mu_land #(W 1104, NB 80, NS 1, SRAM 1)"
+   ]
+  },
+  "ot_s81hd_lane": {
+   "source": "rtl/dsrom_sys/s81_head/ot_s81hd_lane.sv",
+   "ports": [
+    {
+     "name": "ck",
+     "dir": "input",
+     "width": 1,
+     "role": "clk"
+    },
+    {
+     "name": "rst_n",
+     "dir": "input",
+     "width": 1,
+     "role": "rst"
+    },
+    {
+     "name": "chb",
+     "dir": "input",
+     "width": 1,
+     "role": "strap",
+     "note": "strap 1 = board lane (as the end-slice lanes, CH_BOARD 700)"
+    },
+    {
+     "name": "rx",
+     "dir": "input",
+     "width": 514,
+     "role": "serdes_rx",
+     "note": "{serdes st[1:0], serdes rx[511:0]}"
+    },
+    {
+     "name": "tx",
+     "dir": "output",
+     "width": 512,
+     "role": "serdes_tx"
+    },
+    {
+     "name": "tx_v",
+     "dir": "input",
+     "width": 1,
+     "role": "bus"
+    },
+    {
+     "name": "tx_d",
+     "dir": "input",
+     "width": 553,
+     "role": "bus"
+    },
+    {
+     "name": "rx_v",
+     "dir": "output",
+     "width": 1,
+     "role": "bus"
+    },
+    {
+     "name": "rx_d",
+     "dir": "output",
+     "width": 553,
+     "role": "bus"
+    },
+    {
+     "name": "flt",
+     "dir": "output",
+     "width": 4,
+     "role": "bus"
+    }
+   ],
+   "hard_children": [
+    "dsfd_coll_lane_w_safe8_ntf"
+   ]
+  },
+  "ot_pdie_serdes": {
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "ports": [
+    {
+     "name": "clk",
+     "dir": "input",
+     "width": 1,
+     "role": "clk"
+    },
+    {
+     "name": "rst",
+     "dir": "input",
+     "width": 1,
+     "role": "rst"
+    },
+    {
+     "name": "tx",
+     "dir": "input",
+     "width": 512,
+     "role": "serdes_tx",
+     "note": "core side: from the lane / lep tx"
+    },
+    {
+     "name": "rx",
+     "dir": "output",
+     "width": 512,
+     "role": "serdes_rx",
+     "note": "core side: to lane rx[511:0]"
+    },
+    {
+     "name": "st",
+     "dir": "output",
+     "width": 2,
+     "role": "serdes_rx",
+     "note": "{live, fault} -> lane rx[513:512]"
+    },
+    {
+     "name": "pma_tx",
+     "dir": "output",
+     "width": 544,
+     "role": "serdes_tx",
+     "note": "die pads"
+    },
+    {
+     "name": "pma_tck",
+     "dir": "output",
+     "width": 1,
+     "role": "serdes_tx",
+     "note": "die pad (forwarded clock)"
+    },
+    {
+     "name": "pma_rx",
+     "dir": "input",
+     "width": 544,
+     "role": "serdes_rx",
+     "note": "die pads"
+    },
+    {
+     "name": "pma_rck",
+     "dir": "input",
+     "width": 1,
+     "role": "serdes_rx",
+     "note": "die pad (recovered clock, separate CDR domain inside the macro)"
+    }
+   ],
+   "hard_children": [
+    "hard PHY macro (slot 518.4 x 3844.8)"
+   ]
+  }
+ },
+ "instances": {
+  "u_ctl": "ot_s81hd_ctl",
+  "u_lep": "ot_s81hd_lep",
+  "u_lnm0": "ot_s81hd_lane",
+  "u_lnm1": "ot_s81hd_lane",
+  "u_lnm2": "ot_s81hd_lane",
+  "u_lnm3": "ot_s81hd_lane",
+  "u_lnm4": "ot_s81hd_lane",
+  "u_lnm5": "ot_s81hd_lane",
+  "u_lnh0": "ot_s81hd_lane",
+  "u_lnh1": "ot_s81hd_lane",
+  "u_lnd0": "ot_s81hd_lane",
+  "u_lnd1": "ot_s81hd_lane",
+  "u_lnd2": "ot_s81hd_lane",
+  "u_lnd3": "ot_s81hd_lane",
+  "u_lnd4": "ot_s81hd_lane",
+  "u_sdm0": "ot_pdie_serdes",
+  "u_sdm1": "ot_pdie_serdes",
+  "u_sdm2": "ot_pdie_serdes",
+  "u_sdm3": "ot_pdie_serdes",
+  "u_sdm4": "ot_pdie_serdes",
+  "u_sdm5": "ot_pdie_serdes",
+  "u_sdh0": "ot_pdie_serdes",
+  "u_sdh1": "ot_pdie_serdes",
+  "u_sdd0": "ot_pdie_serdes",
+  "u_sdd1": "ot_pdie_serdes",
+  "u_sdd2": "ot_pdie_serdes",
+  "u_sdd3": "ot_pdie_serdes",
+  "u_sdd4": "ot_pdie_serdes",
+  "u_sdl0": "ot_pdie_serdes",
+  "u_sdl1": "ot_pdie_serdes",
+  "u_sdl2": "ot_pdie_serdes",
+  "u_sdl3": "ot_pdie_serdes"
+ },
+ "serdes_assignment": [
+  {
+   "serdes": "u_sdm0",
+   "client": "u_lnm0",
+   "link": "rank mesh 0"
+  },
+  {
+   "serdes": "u_sdm1",
+   "client": "u_lnm1",
+   "link": "rank mesh 1"
+  },
+  {
+   "serdes": "u_sdm2",
+   "client": "u_lnm2",
+   "link": "rank mesh 2"
+  },
+  {
+   "serdes": "u_sdm3",
+   "client": "u_lnm3",
+   "link": "rank mesh 3"
+  },
+  {
+   "serdes": "u_sdm4",
+   "client": "u_lnm4",
+   "link": "rank mesh 4"
+  },
+  {
+   "serdes": "u_sdm5",
+   "client": "u_lnm5",
+   "link": "rank mesh 5"
+  },
+  {
+   "serdes": "u_sdh0",
+   "client": "u_lnh0",
+   "link": "lk_HOST0"
+  },
+  {
+   "serdes": "u_sdh1",
+   "client": "u_lnh1",
+   "link": "lk_HOST1"
+  },
+  {
+   "serdes": "u_sdd0",
+   "client": "u_lnd0",
+   "link": "draft 0"
+  },
+  {
+   "serdes": "u_sdd1",
+   "client": "u_lnd1",
+   "link": "draft 1"
+  },
+  {
+   "serdes": "u_sdd2",
+   "client": "u_lnd2",
+   "link": "draft 2"
+  },
+  {
+   "serdes": "u_sdd3",
+   "client": "u_lnd3",
+   "link": "draft 3"
+  },
+  {
+   "serdes": "u_sdd4",
+   "client": "u_lnd4",
+   "link": "draft 4"
+  },
+  {
+   "serdes": "u_sdl0",
+   "client": "u_lep lane 0",
+   "link": "lk_WN0 (pair A, TX side: forward / token return)"
+  },
+  {
+   "serdes": "u_sdl1",
+   "client": "u_lep lane 1",
+   "link": "lk_WN1 (pair A, TX side: forward / token return)"
+  },
+  {
+   "serdes": "u_sdl2",
+   "client": "u_lep lane 2",
+   "link": "lk_WN2 (pair B: XB in)"
+  },
+  {
+   "serdes": "u_sdl3",
+   "client": "u_lep lane 3",
+   "link": "lk_WN3 (pair B: XB in)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "u_ctl.ro",
+   "to": "u_lep.ro",
+   "width": 1104,
+   "note": "pair A TX ring beats"
+  },
+  {
+   "from": "u_lep.ri",
+   "to": "u_ctl.ri",
+   "width": 1104,
+   "note": "pair A/B RX ring beats (XB in)"
+  },
+  {
+   "from": "u_ctl.mu_c",
+   "to": "u_lep.mu_c",
+   "width": 34
+  },
+  {
+   "from": "u_lep.mu_rt",
+   "to": "u_ctl.mu_rt",
+   "width": 32
+  },
+  {
+   "from": "u_ctl.mu_rc",
+   "to": "u_lep.mu_rc",
+   "width": 11
+  },
+  {
+   "from": "u_lep.lw",
+   "to": "u_ctl.lw",
+   "width": 11
+  },
+  {
+   "from": "u_lep.fault",
+   "to": "u_ctl.lep_f",
+   "width": 1
+  },
+  {
+   "from": "u_ctl.ctl_f",
+   "to": "u_lep.sl_f",
+   "width": 1
+  },
+  {
+   "from": "u_ctl.sn_o",
+   "to": "u_spo_N0.i",
+   "width": 565,
+   "note": "bus B to the bottom N spine-out node (HD-TILE / HD-FP name)"
+  },
+  {
+   "from": "u_spr_N0.o",
+   "to": "u_ctl.sn_i",
+   "width": 565,
+   "note": "bus B from the bottom N spine-return node"
+  },
+  {
+   "from": "u_ctl.ss_o",
+   "to": "u_spo_S0.i",
+   "width": 565
+  },
+  {
+   "from": "u_spr_S0.o",
+   "to": "u_ctl.ss_i",
+   "width": 565
+  },
+  {
+   "from": "u_ctl.mtx_v[0]",
+   "to": "u_lnm0.tx_v",
+   "width": 1,
+   "note": "TP4 mesh lane 0 (peer pair 0, copy 0)"
+  },
+  {
+   "from": "u_ctl.mtx_d[552:0]",
+   "to": "u_lnm0.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnm0.rx_v",
+   "to": "u_ctl.mrx_v[0]",
+   "width": 1
+  },
+  {
+   "from": "u_lnm0.rx_d",
+   "to": "u_ctl.mrx_d[552:0]",
+   "width": 553
+  },
+  {
+   "from": "u_lnm0.flt",
+   "to": "u_ctl.mflt[3:0]",
+   "width": 4
+  },
+  {
+   "from": "u_lnm0.tx",
+   "to": "u_sdm0.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdm0.st",
+   "to": "u_lnm0.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdm0.rx",
+   "to": "u_lnm0.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.mtx_v[1]",
+   "to": "u_lnm1.tx_v",
+   "width": 1,
+   "note": "TP4 mesh lane 1 (peer pair 0, copy 1)"
+  },
+  {
+   "from": "u_ctl.mtx_d[1105:553]",
+   "to": "u_lnm1.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnm1.rx_v",
+   "to": "u_ctl.mrx_v[1]",
+   "width": 1
+  },
+  {
+   "from": "u_lnm1.rx_d",
+   "to": "u_ctl.mrx_d[1105:553]",
+   "width": 553
+  },
+  {
+   "from": "u_lnm1.flt",
+   "to": "u_ctl.mflt[7:4]",
+   "width": 4
+  },
+  {
+   "from": "u_lnm1.tx",
+   "to": "u_sdm1.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdm1.st",
+   "to": "u_lnm1.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdm1.rx",
+   "to": "u_lnm1.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.mtx_v[2]",
+   "to": "u_lnm2.tx_v",
+   "width": 1,
+   "note": "TP4 mesh lane 2 (peer pair 1, copy 0)"
+  },
+  {
+   "from": "u_ctl.mtx_d[1658:1106]",
+   "to": "u_lnm2.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnm2.rx_v",
+   "to": "u_ctl.mrx_v[2]",
+   "width": 1
+  },
+  {
+   "from": "u_lnm2.rx_d",
+   "to": "u_ctl.mrx_d[1658:1106]",
+   "width": 553
+  },
+  {
+   "from": "u_lnm2.flt",
+   "to": "u_ctl.mflt[11:8]",
+   "width": 4
+  },
+  {
+   "from": "u_lnm2.tx",
+   "to": "u_sdm2.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdm2.st",
+   "to": "u_lnm2.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdm2.rx",
+   "to": "u_lnm2.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.mtx_v[3]",
+   "to": "u_lnm3.tx_v",
+   "width": 1,
+   "note": "TP4 mesh lane 3 (peer pair 1, copy 1)"
+  },
+  {
+   "from": "u_ctl.mtx_d[2211:1659]",
+   "to": "u_lnm3.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnm3.rx_v",
+   "to": "u_ctl.mrx_v[3]",
+   "width": 1
+  },
+  {
+   "from": "u_lnm3.rx_d",
+   "to": "u_ctl.mrx_d[2211:1659]",
+   "width": 553
+  },
+  {
+   "from": "u_lnm3.flt",
+   "to": "u_ctl.mflt[15:12]",
+   "width": 4
+  },
+  {
+   "from": "u_lnm3.tx",
+   "to": "u_sdm3.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdm3.st",
+   "to": "u_lnm3.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdm3.rx",
+   "to": "u_lnm3.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.mtx_v[4]",
+   "to": "u_lnm4.tx_v",
+   "width": 1,
+   "note": "TP4 mesh lane 4 (peer pair 2, copy 0)"
+  },
+  {
+   "from": "u_ctl.mtx_d[2764:2212]",
+   "to": "u_lnm4.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnm4.rx_v",
+   "to": "u_ctl.mrx_v[4]",
+   "width": 1
+  },
+  {
+   "from": "u_lnm4.rx_d",
+   "to": "u_ctl.mrx_d[2764:2212]",
+   "width": 553
+  },
+  {
+   "from": "u_lnm4.flt",
+   "to": "u_ctl.mflt[19:16]",
+   "width": 4
+  },
+  {
+   "from": "u_lnm4.tx",
+   "to": "u_sdm4.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdm4.st",
+   "to": "u_lnm4.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdm4.rx",
+   "to": "u_lnm4.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.mtx_v[5]",
+   "to": "u_lnm5.tx_v",
+   "width": 1,
+   "note": "TP4 mesh lane 5 (peer pair 2, copy 1)"
+  },
+  {
+   "from": "u_ctl.mtx_d[3317:2765]",
+   "to": "u_lnm5.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnm5.rx_v",
+   "to": "u_ctl.mrx_v[5]",
+   "width": 1
+  },
+  {
+   "from": "u_lnm5.rx_d",
+   "to": "u_ctl.mrx_d[3317:2765]",
+   "width": 553
+  },
+  {
+   "from": "u_lnm5.flt",
+   "to": "u_ctl.mflt[23:20]",
+   "width": 4
+  },
+  {
+   "from": "u_lnm5.tx",
+   "to": "u_sdm5.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdm5.st",
+   "to": "u_lnm5.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdm5.rx",
+   "to": "u_lnm5.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.htx_v[0]",
+   "to": "u_lnh0.tx_v",
+   "width": 1,
+   "note": "host lane 0 (lk_HOST0): HFWD in / RESULT out"
+  },
+  {
+   "from": "u_ctl.htx_d[552:0]",
+   "to": "u_lnh0.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnh0.rx_v",
+   "to": "u_ctl.hrx_v[0]",
+   "width": 1
+  },
+  {
+   "from": "u_lnh0.rx_d",
+   "to": "u_ctl.hrx_d[552:0]",
+   "width": 553
+  },
+  {
+   "from": "u_lnh0.flt",
+   "to": "u_ctl.hflt[3:0]",
+   "width": 4
+  },
+  {
+   "from": "u_lnh0.tx",
+   "to": "u_sdh0.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdh0.st",
+   "to": "u_lnh0.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdh0.rx",
+   "to": "u_lnh0.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.htx_v[1]",
+   "to": "u_lnh1.tx_v",
+   "width": 1,
+   "note": "host lane 1 (lk_HOST1): CSRW in / STATUS out"
+  },
+  {
+   "from": "u_ctl.htx_d[1105:553]",
+   "to": "u_lnh1.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnh1.rx_v",
+   "to": "u_ctl.hrx_v[1]",
+   "width": 1
+  },
+  {
+   "from": "u_lnh1.rx_d",
+   "to": "u_ctl.hrx_d[1105:553]",
+   "width": 553
+  },
+  {
+   "from": "u_lnh1.flt",
+   "to": "u_ctl.hflt[7:4]",
+   "width": 4
+  },
+  {
+   "from": "u_lnh1.tx",
+   "to": "u_sdh1.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdh1.st",
+   "to": "u_lnh1.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdh1.rx",
+   "to": "u_lnh1.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.dtx_v[0]",
+   "to": "u_lnd0.tx_v",
+   "width": 1,
+   "note": "draft fan-out lane 0 (SEED / DHSTEP out, DHRES / ROWS in)"
+  },
+  {
+   "from": "u_ctl.dtx_d[552:0]",
+   "to": "u_lnd0.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnd0.rx_v",
+   "to": "u_ctl.drx_v[0]",
+   "width": 1
+  },
+  {
+   "from": "u_lnd0.rx_d",
+   "to": "u_ctl.drx_d[552:0]",
+   "width": 553
+  },
+  {
+   "from": "u_lnd0.flt",
+   "to": "u_ctl.dflt[3:0]",
+   "width": 4
+  },
+  {
+   "from": "u_lnd0.tx",
+   "to": "u_sdd0.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdd0.st",
+   "to": "u_lnd0.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdd0.rx",
+   "to": "u_lnd0.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.dtx_v[1]",
+   "to": "u_lnd1.tx_v",
+   "width": 1,
+   "note": "draft fan-out lane 1 (SEED / DHSTEP out, DHRES / ROWS in)"
+  },
+  {
+   "from": "u_ctl.dtx_d[1105:553]",
+   "to": "u_lnd1.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnd1.rx_v",
+   "to": "u_ctl.drx_v[1]",
+   "width": 1
+  },
+  {
+   "from": "u_lnd1.rx_d",
+   "to": "u_ctl.drx_d[1105:553]",
+   "width": 553
+  },
+  {
+   "from": "u_lnd1.flt",
+   "to": "u_ctl.dflt[7:4]",
+   "width": 4
+  },
+  {
+   "from": "u_lnd1.tx",
+   "to": "u_sdd1.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdd1.st",
+   "to": "u_lnd1.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdd1.rx",
+   "to": "u_lnd1.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.dtx_v[2]",
+   "to": "u_lnd2.tx_v",
+   "width": 1,
+   "note": "draft fan-out lane 2 (SEED / DHSTEP out, DHRES / ROWS in)"
+  },
+  {
+   "from": "u_ctl.dtx_d[1658:1106]",
+   "to": "u_lnd2.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnd2.rx_v",
+   "to": "u_ctl.drx_v[2]",
+   "width": 1
+  },
+  {
+   "from": "u_lnd2.rx_d",
+   "to": "u_ctl.drx_d[1658:1106]",
+   "width": 553
+  },
+  {
+   "from": "u_lnd2.flt",
+   "to": "u_ctl.dflt[11:8]",
+   "width": 4
+  },
+  {
+   "from": "u_lnd2.tx",
+   "to": "u_sdd2.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdd2.st",
+   "to": "u_lnd2.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdd2.rx",
+   "to": "u_lnd2.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.dtx_v[3]",
+   "to": "u_lnd3.tx_v",
+   "width": 1,
+   "note": "draft fan-out lane 3 (SEED / DHSTEP out, DHRES / ROWS in)"
+  },
+  {
+   "from": "u_ctl.dtx_d[2211:1659]",
+   "to": "u_lnd3.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnd3.rx_v",
+   "to": "u_ctl.drx_v[3]",
+   "width": 1
+  },
+  {
+   "from": "u_lnd3.rx_d",
+   "to": "u_ctl.drx_d[2211:1659]",
+   "width": 553
+  },
+  {
+   "from": "u_lnd3.flt",
+   "to": "u_ctl.dflt[15:12]",
+   "width": 4
+  },
+  {
+   "from": "u_lnd3.tx",
+   "to": "u_sdd3.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdd3.st",
+   "to": "u_lnd3.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdd3.rx",
+   "to": "u_lnd3.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_ctl.dtx_v[4]",
+   "to": "u_lnd4.tx_v",
+   "width": 1,
+   "note": "draft fan-out lane 4 (SEED / DHSTEP out, DHRES / ROWS in)"
+  },
+  {
+   "from": "u_ctl.dtx_d[2764:2212]",
+   "to": "u_lnd4.tx_d",
+   "width": 553
+  },
+  {
+   "from": "u_lnd4.rx_v",
+   "to": "u_ctl.drx_v[4]",
+   "width": 1
+  },
+  {
+   "from": "u_lnd4.rx_d",
+   "to": "u_ctl.drx_d[2764:2212]",
+   "width": 553
+  },
+  {
+   "from": "u_lnd4.flt",
+   "to": "u_ctl.dflt[19:16]",
+   "width": 4
+  },
+  {
+   "from": "u_lnd4.tx",
+   "to": "u_sdd4.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdd4.st",
+   "to": "u_lnd4.rx[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdd4.rx",
+   "to": "u_lnd4.rx[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_lep.tx0",
+   "to": "u_sdl0.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdl0.st",
+   "to": "u_lep.rx0[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdl0.rx",
+   "to": "u_lep.rx0[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_lep.tx1",
+   "to": "u_sdl1.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdl1.st",
+   "to": "u_lep.rx1[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdl1.rx",
+   "to": "u_lep.rx1[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_lep.tx2",
+   "to": "u_sdl2.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdl2.st",
+   "to": "u_lep.rx2[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdl2.rx",
+   "to": "u_lep.rx2[511:0]",
+   "width": 512
+  },
+  {
+   "from": "u_lep.tx3",
+   "to": "u_sdl3.tx",
+   "width": 512
+  },
+  {
+   "from": "u_sdl3.st",
+   "to": "u_lep.rx3[513:512]",
+   "width": 2
+  },
+  {
+   "from": "u_sdl3.rx",
+   "to": "u_lep.rx3[511:0]",
+   "width": 512
+  }
+ ],
+ "die_level": {
+  "clocks": "ck of every block from its regional root (ctl region, lep region, one region per lane block); ot_pdie_serdes clk = its client lane region clock; pma_tck / pma_rck / pma_* = die pads",
+  "resets": "rst_n / rst from the die reset tree (regional leaves); each master lands it in 2 stages inside",
+  "straps": "chb / ch_b = 1 (board / cable lanes)",
+  "crossings": "ctl <-> lep and ctl <-> each lane are region crossings: land-plan rows (fixed-latency landing ring, no flow control), owned by HD-CHAIN",
+  "frame_format": "HSF0, documented in rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv header (S81-FIX2 owns the final choice)"
+ }
+}
