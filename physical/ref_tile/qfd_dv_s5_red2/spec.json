@@ -21,8 +21,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 205.2,
-  "h": 205.2,
+  "w": 237.6,
+  "h": 237.6,
   "exact": true
  },
  "pins": {
@@ -55,8 +55,8 @@
   "reason": "the RTL registers every input in one face register and launches every output from a face register (same in+1/out+1 as the old kit's flow wrapper); a flow wrapper would add a second, unpriced +1"
  },
  "reset_landing": {
-  "enable": false,
-  "reason": "the RTL lands rst_n in 2 registered stages (qfd_dv_s5_rst2) then the rc stage the constructor replicates into <=32-load relays"
+  "enable": true,
+  "stages": 2
  },
  "keep_pin_regs": true,
  "inhold": false,

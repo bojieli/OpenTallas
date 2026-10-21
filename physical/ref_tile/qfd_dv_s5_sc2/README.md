@@ -37,3 +37,6 @@ netlist) -- witnesses results/arch/qw_slice6_1019/scred2_1020/kitbench/sc79_{eq,
 ## BIND
 qfd_dv_s5b_su8p2_lp.sv (5949f90af) u_sc: replace module qfd_dv_s5_sc by qfd_dv_s5_sc2_leaf, identical ports/widths; the lp lagref
 adds the edges above (sc_w1_* / tok_* / sc_dn_c / sc_up_c per class).
+
+## QW2-SLICE2 10-21 gate fix
+Gate @22a9a442d FAIL util 72% (synth std 43,100 um2 in 59,575 core): outline 248.4^2 -> 291.6^2 (util ~0.52); RTL/pins unchanged. Fallback sc2b WARN-0-fail submitted (qfd_dv_s5_sc2b-sc2bk-dc13647fb).

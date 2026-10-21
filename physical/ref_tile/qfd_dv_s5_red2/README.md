@@ -41,3 +41,6 @@ netlist) -- QW-S5-SCRED 10-21 rerun on Verilator 5.050 (run_kit.sh ... red eq|mu
 ## BIND (QW-S5-SCRED 10-21)
 qfd_dv_s5b_su8p2_lp.sv (5949f90af) u_red: replace module qfd_dv_s5_red by qfd_dv_s5_red2_leaf, identical ports/widths; the lp
 lagref adds +50 edges on red_we/red_addr/red_data/fault (rd_v +0, busy registered). Boot: reset release +1, ring phases +2.
+
+## QW2-SLICE2 10-21 gate fix
+Gate @22a9a442d FAIL textbook.reset_landing (rst_n reached 8 async-clear flops of the RTL rst2/rc stage). Fix: kit reset_landing enable (2 plain face flops rst_n__ot_rl0 -> rl1 before the RTL landing). PRICE: reset assertion/release +2 cycles (scheduled constant); data latency unchanged. Main outline 205.2^2 -> 237.6^2 (gate util 69% WARN; synth std 27,735 um2 -> util ~0.50).
