@@ -1,38 +1,32 @@
-# Forwarded-lane class emission source candidate, 2026-10-20
 
-Enable with OT_SPLIT_FWD_CLASSES=1 alongside OT_SPLIT_FWD_LANES=1. Default remains off.
-The generator reserves class-sized rectangles before placement. Source composition
-uses the true class master, legal orientation and class frame, splits wide paths
-into parallel <=600-bit classes, preserves each physical lane's original n/E/K,
-and connects spare inputs to the native landing tie_lo. Spare outputs are distinct
-unused nets. Superseded per-frame masters are removed from the generated master set.
-The existing reach, native calendar, binding and per-bit geometry gates remain required.
+## Second takeover handback, 23:07 PT
 
-Committed evidence:
-- source_checks.log: four tests pass, including all widths 1/32/128/548/600/1088,
-  source/calendar mismatch refusal and missing reservation refusal. The actual
-  lane_latency_audit passes on every emitted fixture, including two physical
-  544-bit lanes for the 1088-bit source path.
-- rtl_pass.log: pinned Verilator 5.050 compares the actual generated 2x600-bit class
-  composition against the original 1088-bit ot_qfd_lane_st/ot_qfd_land chain over
-  1000 receiver cycles. All 1088 output bits agree.
-- slice_swap_fail.log: swapping the two source slices fails equivalence at cycle33.
+Source is pushed through 3ec0cf38c. It includes directional reservations,
+actual-outline packing with matching-bit <=405um checks, final GEN facts 6926,
+the production receiving-clock reset repair ed5, pinned g5 clocking and regional
+reset lookup, and the scalar reset-lane data / wide gate-enable join repair.
+Six component checks pass. Actual closed TT/FF/SS views bind both generated
+classes at full width (2 masters, 4 instances); a missing native row is refused.
+Full production geometry and native binding remain unqualified.
 
-Live integration at Claude return (22:29 PT):
-- ot-epyc6 /srv/opentallas-scratch/claude/codex-qw-classgen2220, ot-heavy unit
-  oth-ubuntu-38466-1792560109, local ot-run session28368, local log
-  /home/ubuntu/claude-takeover-20261007/qw-classgen2220.log. Independent immutable
-  g5r2b source copy from codex-qw-facts2210-v2 plus initial class hooks; no live
-  predecessor source was edited. GEN is still planning/reparing class-size frames.
-- This run uses the initial uncentered composition helper from the first candidate.
-  Current source additionally centers class frames inside reservations, compresses
-  contiguous emitted bit expressions, removes unused legacy masters, exports the
-  class receipt in fwd_lanes, validates source width, and handles split fanout merges.
-  These followups require a fresh actual GEN after the live run ends.
-- Full-die strict bind / zero lane no_view / final geometry are NOT yet established.
-  No route was submitted and no closure claim is made.
+All three GEN attempts are terminal and preserved:
+- classgen2220: maximum envelope exhausts tree-pad sites (q3h_col_47_1, pad0).
+- classpack2247: compact planning passes that stage; scalar reset.b -> wide.en
+  composition bug is then exposed, fixed in 3ec0cf38c with regression evidence.
+- classpack2258: fixed composition reaches actual closed-outline packing, which
+  refuses rly_dv_ch_E1_ar_ard_0 (qfd_landh0_600_EN_104x106): no legal <=405um site,
+  last blocker dvs_E2. Full log is committed under compact_geometry_fail/.
+  Remote unit oth-ubuntu-2140011-1792562322, PID2140037 has exited.
 
-Resume: collect the live GEN failure/pass first; preserve its evidence. Apply the
-final exporter from codex/qwen-gen-facts-1020 (6926a4cc8), preserve unconditional
-slice normalization in _pin_pos plus ext, and use current class source for the next
-fresh GEN. D4 e1 closed classes are primary; D8 remains fallback.
+The bind report hid intermediate/reset families. Actual old g5 die.v contains
+1063 data frames (91 rlyh0, 373 rlyh, 508 landh0, 91 landh) and 17 reset frames
+(4 rlyr0, 8 rlyr, 5 rlyrl): total1080. The running-source snapshots lack used
+views for rlyh_1_SN (104 instances), landh_1_EW (8), rlyr_1_EN (2), rlyrl_1_NE (2).
+Current main already contains rlyh_1_SN and landh_1_EW; use actual main views for
+those two. The conventional canonical main view paths for rlyr_1_EN and
+rlyrl_1_NE remain absent. Verify archive/provenance or close them; no waiver.
+
+Future full-case binding must set OT_BIND_FWD_CLASSES=1 so intermediate/reset
+stations cannot hide in the plain-relay skip, then run audit_fwd_class_bind.py.
+The regional A/B source work belongs to the parent. No combined GEN was launched.
+No further source, test, launch or merge work after CLAUDE IS BACK.
