@@ -88,7 +88,10 @@ def main():
         keys = {f'L{L}': lay(L) for L in layers}
         keys['head'] = lambda n: str(n.get('group', '')).startswith('S0') and any(
             gg['id'] == n.get('group') and gg['kind'] == 'head' for gg in doc['groups'])
-        keys['mtp_draft'] = lambda n: 'mtp' in str(n.get('cls', '')).lower() or str(n.get('op', '')).startswith(('mtp', 'draft'))
+        # the draft layer = every node of the DAG's draft phase: the three DSpark stages (groups D0..D2, ids mtp.<s>.*),
+        # the draft head / Markov chain (DH) and the draft block charges (MC.draft).  (10-18 LB2-S81/MTP: the earlier
+        # cls/op test matched only the 11 DH nodes -- 42,457.5 of the phase's 163,508 cycles.)
+        keys['mtp_draft'] = lambda n: n.get('phase') == 'draft'
         tab, tot = layer_table(doc, delta, keys)
         res['workloads'][wl] = dict(token_cycles_dv=round(tot, 1), layers=tab)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)

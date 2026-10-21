@@ -28,8 +28,9 @@ Outputs (DIR):
     python3 tools/s81_dv/dv_layer_fixtures.py --verify DIR --manifest results/rtl/s81_layer_tput_1018/fixtures/L0.sha256.json
 
 Layers: L0 (sliding), L2 (ratio2 + compressor + indexer), L14 (Engram + ratio2 + compressor + indexer), L20 (ratio1 +
-compressor + indexer + candidates), HEAD (final hc_pre + norm + lm_head + argmax from the L39 shard), MTP (DSpark draft:
-see GAPS in meta / the README; the w17 shard has no draft stage).
+compressor + indexer + candidates), HEAD (final hc_pre + norm + lm_head + argmax from the L39 shard), MTP (the DSpark
+draft layer at the same anchor: three stages mtp.0..2 over the 5 block rows + the 5-step draft head / Markov chain, on
+the reference's DSpark window-state snapshot -- see gen_mtp).
 """
 from __future__ import annotations
 
@@ -51,7 +52,7 @@ CTX = 1048576
 SEED = 20260930
 GOLD = Path(os.environ.get("OT_DSROM_1M_GOLD", "/home/ubuntu/w17work/ref/ctx1048576_seed20260930"))
 SCHEMA = "opentallas.s81_dv.layer_fixture.v1"
-LAYERS = {"L0": 0, "L2": 2, "L14": 14, "L20": 20, "HEAD": 40, "MTP": None}
+LAYERS = {"L0": 0, "L2": 2, "L14": 14, "L20": 20, "HEAD": 40, "MTP": "MTP"}
 SOURCES = ["tools/s81_dv/dv_layer_fixtures.py", "tools/hdc_golden_v41.py", "tools/hdc_golden.py",
            "tools/rtl_v41_fullshape_layer_campaign.py", "compiler/models/deepseek-v4.1-flash/inference_config.json"]
 TP = 4
@@ -480,9 +481,8 @@ def gen_layer(a):
     ck = LC.Checkpoint()
     if L == 40:
         return gen_head(a, V, LC, ck, o)
-    if L is None:
-        raise SystemExit("MTP: GAP -- the w17 1M shard has no DSpark draft stage (no golden op values to pin); "
-                         "see results/rtl/s81_layer_tput_1018/fixtures/README.md")
+    if L == "MTP":
+        return gen_mtp(a, V, LC, ck, o)
     shard = GOLD / f"ctx{CTX}_L{L:02d}.npz"
     sj = json.loads((GOLD / f"ctx{CTX}_L{L:02d}.json").read_text())
     z = np.load(shard)
@@ -592,6 +592,290 @@ def gen_head(a, V, LC, ck, o):
         write_committed(a, meta, o, ops)
 
 
+# ---------------------------------------------------------------------------------------------- MTP draft layer
+MTP_REF = "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json"   # the committed 1M draft golden (10-04)
+MTP_ROWS_PER = ("attn.max", "attn.exp", "attn.den", "attn.sink", "attn.normalize", "attn.normalize.unrope", "attn.pv")
+MTP_RENAME = {"attn.scores": "attn.scores.r0", "ffn.experts_gu": "ffn.experts_gu.r0", "ffn.swiglu": "ffn.swiglu.r0",
+              "ffn.route_w": "ffn.route_w.r0", "ffn.quant2": "ffn.quant2.r0", "ffn.down": "ffn.down.r0"}
+
+
+def _row_id(k, i):
+    """per-row op id of a DAG op priced per block row (attn.max.r<i>; parts keep their suffix after the row)."""
+    for b in sorted(MTP_ROWS_PER, key=len, reverse=True):
+        if k == b or k.startswith(b + "."):
+            if b == "attn.normalize.unrope":
+                return f"attn.normalize.r{i}.unrope"
+            return f"{b}.r{i}" + k[len(b):]
+    return None
+
+
+class _Window:
+    """state["dsk"][st] as the reference holds it (len = anchor + 1; only the 128 window positions are ever read)."""
+
+    def __init__(self, rows, anchor):
+        self.rows, self.anchor = rows, anchor
+
+    def __len__(self):
+        return self.anchor + 1
+
+    def __getitem__(self, p):
+        return self.rows[p]
+
+
+def mtp_state(V, m, anchor):
+    """The DSpark window-state snapshot at the anchor, carried exactly as the reference does (coordinator 0hq(2)):
+    tools/dsrom_1m_draft_blocks.py build_state, whose stage hashes are pinned in MTP_REF golden.state.sha256.
+    - anchor row: REAL -- Model.dspark_seed of the anchor's main hidden state (main_hidden_part of the h_in of the
+      dspark_target layers 37 / 38 / 39 in the w17 shards -> mtp.0.main_proj -> main_norm -> each stage's wkv /
+      kv_norm / RoPE / FP8 QDQ);
+    - the 127 older rows: the reference's 1M state convention (as the w17 main window rows): default_rng([seed, ctx,
+      4, stage]) unit-RMS normal x the stage's kv_norm gain, BF16, RoPE at the row's position, FP8 QDQ."""
+    zs = [np.load(GOLD / f"ctx{CTX}_L{L:02d}.npz") for L in m.dspark_targets]
+    mh = np.concatenate([m.main_hidden_part(z["h_in"].astype(F)) for z in zs])
+    main_x = V.rmsnorm_bf16(V.linear_q(m.w["mtp.0.main_proj.weight"], mh), m.w["mtp.0.main_norm.weight"], m.eps)
+    dsk, sha = [], OrderedDict()
+    for st in range(m.n_mtp):
+        L = m.L + st
+        rows = {anchor: m.dspark_row(L, main_x, anchor)}
+        g = np.asarray(m.lw(L, "attn.kv_norm.weight"), F)
+        rng = np.random.default_rng([SEED, CTX, 4, st])
+        for p in range(anchor - m.window + 1, anchor):
+            x = V.to_bf16(rng.standard_normal(m.hd).astype(F) * g)
+            rows[p] = V.qdq_fp8(V.rope_tail(x, V.rope_cs(m.freqs_plain, p)))
+        dsk.append(_Window(rows, anchor))
+        sha[f"stage{st}"] = sha_b(b"".join(np.asarray(rows[p], F).tobytes() for p in sorted(rows)))
+    return {"dsk": dsk}, mh, main_x, sha
+
+
+def mtp_stage(V, m, st, hs, pres, anchor, state, rec):
+    """Model.dspark_stage of stage st with every DAG op boundary (results/arch/token_path_20261009/ds_rom_mtp.json
+    group D<st>, ids mtp.<st>.*) recorded.  Row-batched ops hold the 5 block rows stacked [5, ...]; ops the DAG prices
+    per row (attn.max / exp / den / sink / normalize) are .r<i>; routed-expert parts are ffn.experts.r<i>.<id>.*."""
+    L = m.L + st
+    P = f"mtp.{st}."
+    B = len(hs)
+    rec(P + "hop_in", np.stack(hs), "transport: the block rows' residual h [5, hc, dim] entering the stage")
+    rec(P + "hop_in.pre", np.stack(pres), "transport: the block rows' hc pre mix [5, hc]")
+    rr, ctxs = [], []
+    for i, (h, p) in enumerate(zip(hs, pres)):
+        r = Rec()
+        mx = hc_mixes(V, m, h, L, "attn", r)
+        xp = r("attn.hc_pre", m.hc_pre(h, p))
+        x = rms_parts(V, xp, m.lw(L, "attn_norm.weight"), m.eps, r, "attn.norm")
+        xq, xe = V.quant_fp8(x)
+        r("attn.quant", np.concatenate([xq, xe.astype(np.float64)]), "E4M3 code values [5120] then block exps [160]")
+        cs = V.rope_cs(m.freqs_plain, anchor + 1 + i)
+        qa = V.linear_q(m.lw(L, "attn.wq_a.weight"), x)
+        kraw = V.linear_q(m.lw(L, "attn.wkv.weight"), x)
+        r("attn.a_proj", np.concatenate([qa, kraw]), "wq_a out [1280] then wkv out [512] (BF16): one a_proj sweep")
+        r("attn.a_allgather", np.concatenate([qa, kraw]), "the gathered a_proj vector (TP4 all-gather, same bits)")
+        qr = rms_parts(V, qa, m.lw(L, "attn.q_norm.weight"), m.eps, r, "attn.q_norm")
+        qq, qe = V.quant_fp8(qr)
+        r("attn.q_quant", np.concatenate([qq, qe.astype(np.float64)]), "E4M3 code values [1280] then block exps [40]")
+        qb = r("attn.wq_b", V.linear_q(m.lw(L, "attn.wq_b.weight"), qr))
+        q = r("attn.q_rope", V.rope_tail(qb.reshape(m.heads, m.hd), cs))
+        kvn = rms_parts(V, kraw, m.lw(L, "attn.kv_norm.weight"), m.eps, r, "attn.kv_norm")
+        kv = r("attn.kv_rope_qdq", V.qdq_fp8(V.rope_tail(kvn, cs)), "the block row's KV (attended, not cached)")
+        rr.append(r)
+        ctxs.append(dict(h=h, mx=mx, q=q, cs=cs, kv=kv))
+    win = m.dspark_window(st, anchor, state)
+    kvm = np.stack(win + [c["kv"] for c in ctxs])
+    outs_h, outs_pre = [], []
+    for i, (r, c) in enumerate(zip(rr, ctxs)):
+        y = attend(V, m, L, c["q"], kvm, c["cs"], r)
+        h = r("attn.hc_post", m.hc_post(y, c["h"], c["mx"][1], c["mx"][2]))
+        f_pre, f_post, f_comb = hc_mixes(V, m, h, L, "ffn", r)
+        xp = r("ffn.hc_pre", m.hc_pre(h, c["mx"][0]))
+        x = rms_parts(V, xp, m.lw(L, "ffn_norm.weight"), m.eps, r, "ffn.norm")
+        xq, xe = V.quant_fp8(x)
+        r("ffn.quant", np.concatenate([xq, xe.astype(np.float64)]), "E4M3 code values [5120] then block exps [160]")
+        y2, ids = moe(V, m, L, x, r)
+        r.v["ffn.ids_hop.r0"] = r.v["ffn.top6_order"]
+        r.v["ffn.ret_hop.r0"] = r.v["ffn.down"]
+        outs_h.append(r("ffn.hc_post", m.hc_post(y2, h, f_post, f_comb)))
+        outs_pre.append(np.asarray(f_pre, F))
+    # distribute the per-row records onto the DAG op ids
+    per_expert = lambda k: k.startswith("ffn.experts.") and k[len("ffn.experts."):][:1].isdigit()  # noqa: E731
+    common = [k for k in rr[0].v if all(k in r.v for r in rr) and not per_expert(k)]
+    notes = {"ffn.ids_hop.r0": "transport: the 5 rows' expert ids (= ffn.top6_order) to the expert dies",
+             "ffn.ret_hop.r0": "transport: the 5 rows' routed down outputs (= ffn.down.r0) back to the stage",
+             "attn.scores.r0": "[5, heads, T=133] scaled scores of every block row (the DAG prices one scores node)"}
+    for k in rr[0].v:
+        if k == "ffn.experts_gu":
+            for i, r in enumerate(rr):
+                for kk in r.v:
+                    if per_expert(kk):
+                        rec(P + "ffn.experts.r%d." % i + kk[len("ffn.experts."):], r.v[kk], r.note.get(kk))
+        if k not in common:
+            continue
+        rid = _row_id(k, 0)
+        if rid is not None:
+            for i, r in enumerate(rr):
+                rec(P + _row_id(k, i), r.v[k], r.note.get(k))
+            continue
+        name = MTP_RENAME.get(k, k)
+        rec(P + name, np.stack([np.asarray(r.v[k]) for r in rr]), notes.get(name) or (
+            f"[{B}, ...] block rows stacked; " + (rr[0].note.get(k) or "")).rstrip("; "))
+    rec(P + "attn.window_load", np.stack(win), "the stage's 128 window rows in ring-slot (p mod 128) order")
+    return outs_h, outs_pre
+
+
+def mtp_head(V, m, hs, pres, y, rec):
+    """Model.draft's tail: per block row i the last stage's hc_pre + norm + lm_head (draft.head<i>), then the serial
+    Markov chain (draft.markov<i>: the Markov bias of d_i's embedding, added to row i's logits, argmax -> d_{i+1})."""
+    Lf = m.L + m.n_mtp - 1
+    heads = []
+    for i, (h, p) in enumerate(zip(hs, pres)):
+        xh = rec(f"draft.head{i}.hc_pre", V.to_bf16(m.hc_pre(h, p)), "last stage hc_pre, BF16")
+        xn = rms_parts(V, xh, m.lw(Lf, "norm.weight"), m.eps, rec, f"draft.head{i}.norm")
+        heads.append(rec(f"draft.head{i}", V.mv(m.w["head.weight"], xn), "[129280] lm_head logits FP32 (before the "
+                                                                         "Markov bias)"))
+    emb, mhead = m.lw(Lf, "markov_head.embed.weight"), m.lw(Lf, "markov_head.head.weight")
+    out = [int(y)]
+    v4 = -(-len(heads[0]) // TP)
+    for i in range(len(hs)):
+        e = rec(f"draft.markov{i}.embed", np.asarray(emb[out[i]], F), f"Markov embedding row of token {out[i]}")
+        mb = rec(f"draft.markov{i}", V.mv(mhead, e), "[129280] Markov bias (FP32)")
+        lg = rec(f"draft.markov{i}.logits", V.add(heads[i], mb), "row logits + Markov bias (the argmax operand)")
+        loc = [int(np.argmax(lg[r * v4:(r + 1) * v4])) + r * v4 for r in range(TP)]
+        rec(f"draft.markov{i}.argmax", np.asarray(loc, np.int64), f"per-rank argmax over its vocab quarter ({v4})")
+        t = loc[int(np.argmax([lg[j] for j in loc]))]
+        rec(f"draft.markov{i}.token", np.asarray([t], np.int64), f"d_{i + 1}")
+        out.append(int(t))
+    return out[1:], heads
+
+
+def mtp_weights(LC, ck, m, rank, o, experts):
+    s = dict(tp=TP, dim=m.dim, hd=m.hd, heads=m.heads, q_rank=1280, o_groups=m.groups, o_rank=m.o_rank,
+             n_exp=m.dspark_n_exp, moe_ff=2304, hc=m.hc, ratio=m.ratio)
+    LC.R_KV_SRC, LC.R_IDX_SRC = (lambda: m.kv_src), (lambda: m.idx_src)
+    for st in range(m.n_mtp):
+        L = m.L + st
+        for name, tensor, rows, cols in LC.die_slices(L, rank, s, experts[st], False):
+            tensor = tensor.replace(f"layers.{L}.", f"mtp.{st}.")
+            a, dt = LC._raw(ck, tensor, rows, cols)
+            o.put(f"weights/mtp{st}/{name}.bin", a, tensor=tensor, rows=rows, cols=cols, format=dt)
+    v = m.w["head.weight"].shape[0] if hasattr(m.w["head.weight"], "shape") else 129280
+    q = lambda n: (rank * n // TP, (rank + 1) * n // TP)  # noqa: E731
+    Lf = m.n_mtp - 1
+    extra = [("seed.main_proj", "mtp.0.main_proj.weight", None, None), ("seed.main_proj.scale", "mtp.0.main_proj.scale",
+                                                                         None, None),
+             ("seed.main_norm", "mtp.0.main_norm.weight", None, None), ("head.norm", f"mtp.{Lf}.norm.weight", None, None),
+             ("head.lm_head", "head.weight", q(v), None),
+             ("markov.embed", f"mtp.{Lf}.markov_head.embed.weight", None, None),
+             ("markov.head", f"mtp.{Lf}.markov_head.head.weight", q(v), None)]
+    for name, tensor, rows, cols in extra:
+        a, dt = LC._raw(ck, tensor, rows, cols)
+        o.put(f"weights/{name}.bin", a, tensor=tensor, rows=rows, cols=cols, format=dt)
+
+
+def gen_mtp(a, V, LC, ck, o):
+    """MTP: the DSpark draft layer of the w17 1M token (anchor = position 1,048,575; y = the head's next token 21946;
+    block rows y + 4 noise tokens at positions anchor+1 .. anchor+5).  Exactness: every stage's recorded run equals
+    Model.dspark_stage, the whole layer equals Model.draft (tokens and logit rows), and the state / stage outputs /
+    experts equal the committed reference record MTP_REF (dsrom_1m_draft_blocks golden, pass 10-04)."""
+    ref = json.loads((ROOT / MTP_REF).read_text())["golden"]
+    zh = np.load(GOLD / f"ctx{CTX}_head.npz")
+    y = int(np.argmax(zh["logits"]))
+    anchor = CTX - 1
+    m, init_sha = LC.build_model(ck, engram=False)
+    state, mh, main_x, ssha = mtp_state(V, m, anchor)
+    ids = [y] + [m.noise_id] * (m.dspark_block - 1)
+    emb = dict(zip(sorted(set(ids)), ck.rows("embed.weight", sorted(set(ids)))))
+    hs0 = [np.repeat(np.asarray(emb[t], F)[None, :], m.hc, axis=0).astype(F) for t in ids]
+    pres0 = [np.array([1, 0, 0, 0], dtype=F)[:m.hc] for _ in ids]
+    rec = Rec()
+    checks = OrderedDict(y_equals_reference=y == int(ref["y"]), anchor_equals_reference=anchor == int(ref["anchor"]))
+    for st in range(m.n_mtp):
+        checks[f"state_stage{st}_equals_reference"] = ssha[f"stage{st}"] == ref["state"]["sha256"][f"stage{st}"]
+    hs, pres, experts = hs0, pres0, []
+    for st in range(m.n_mtp):
+        L = m.L + st
+        gh, gp = m.dspark_stage(L, [h.copy() for h in hs], [p.copy() for p in pres], anchor, state)
+        oh, op = mtp_stage(V, m, st, hs, pres, anchor, state, rec)
+        ex = [list(map(int, e)) for e in rec.v[f"mtp.{st}.ffn.top6_order"]]
+        experts.append(sorted({e for row in ex for e in row}))
+        checks[f"mtp{st}_equals_dspark_stage"] = all(same(x, g) for x, g in zip(oh, gh)) and all(
+            same(x, g) for x, g in zip(op, gp))
+        checks[f"mtp{st}_out_equals_reference"] = sha_b(b"".join(np.asarray(h, F).tobytes() for h in oh)) == \
+            ref["stages"][f"mtp.{st}"]["out_sha256"]
+        checks[f"mtp{st}_experts_equal_reference"] = ex == ref["stages"][f"mtp.{st}"]["experts"]
+        hs, pres = oh, op
+        print(f"mtp.{st}: experts {ex}", flush=True)
+    drafts, heads = mtp_head(V, m, hs, pres, y, rec)
+    m.w["embed.weight"] = emb      # the golden's draft indexes embed.weight[t]; the lazy loader serves it by row only
+    gd, glog = m.draft(y, anchor, state)
+    checks["draft_tokens_equal_model_draft"] = [int(t) for t in gd] == drafts
+    checks["draft_logits_equal_model_draft"] = all(same(rec.v[f"draft.markov{i}.logits"], glog[i])
+                                                   for i in range(len(glog)))
+    print(json.dumps(checks, indent=1))
+    if not all(checks.values()):
+        raise SystemExit("MTP: recorded draft run is NOT bit-exact against the golden / reference -- nothing published")
+    ops = OrderedDict((k, o.put(f"ops/{k}.bin", v, note=rec.note.get(k))) for k, v in rec.v.items())
+    o.put("io/h_in.bin", np.stack(hs0), note="[5, hc, dim] embed rows of y, noise x4")
+    o.put("io/pre_in.bin", np.stack(pres0))
+    o.put("io/block_tokens.bin", np.asarray(ids, np.int64))
+    o.put("io/h_out.bin", np.stack(hs), note="last stage residual [5, hc, dim]")
+    o.put("io/pre_out.bin", np.stack(pres))
+    o.put("io/draft_tokens.bin", np.asarray(drafts, np.int64))
+    if not a.no_state:
+        o.put("state/seed.main_hidden.bin", mh, note="anchor: main_hidden_part(h_in L37|L38|L39), BF16 [15360]")
+        o.put("state/seed.main_x.bin", main_x, note="anchor: main_norm(main_proj(main_hidden)), BF16 [5120]")
+        for st in range(m.n_mtp):
+            win = np.stack(m.dspark_window(st, anchor, state))
+            c8, e8 = pack_fp8_exact(V, LC, win)
+            o.put(f"state/dsk{st}.window.codes.bin", c8, format="F8_E4M3", rows=len(win),
+                  note="128 window rows in ring-slot (p mod 128) order; the anchor row is slot anchor % 128")
+            o.put(f"state/dsk{st}.window.scale.bin", e8, format="F8_E8M0")
+    if not a.no_weights:
+        mtp_weights(LC, ck, m, a.rank, o, experts)
+    dag = json.loads((ROOT / "results/arch/token_path_20261009/ds_rom_mtp.json").read_text())
+    dnodes = [n["id"] for n in dag["nodes"] if n.get("phase") == "draft"]
+    novalue = [i for i in dnodes if i not in ops]
+    meta = OrderedDict(
+        schema=SCHEMA, layer="MTP", context=CTX, anchor=anchor, positions=[anchor + 1 + i for i in range(len(ids))],
+        seed=SEED, y=y, block_tokens=ids, draft_tokens=drafts, experts=experts, rank=a.rank, tp=TP, arith=V.ARITH,
+        fuse=sorted(V.FUSE), checks=checks,
+        shard=dict(path=str(GOLD), targets={f"L{L}": sha_b((GOLD / f"ctx{CTX}_L{L:02d}.npz").read_bytes())
+                                            for L in m.dspark_targets},
+                   head=sha_b((GOLD / f"ctx{CTX}_head.npz").read_bytes())),
+        reference=dict(record=MTP_REF, sha256=sha_b((ROOT / MTP_REF).read_bytes()),
+                       generator="tools/dsrom_1m_draft_blocks.py golden (build_state, capture_stage)"),
+        state=dict(rule="coordinator 0hq(2): the reference's DSpark window-state snapshot at the token, carried exactly "
+                        "as the reference does", anchor_row=ref["state"]["anchor_row"],
+                   older_rows=ref["state"]["older_rows"], sha256=ssha),
+        checkpoint=str(LC.HF), golden_init_sha256=init_sha, sources=src_pins(), tp_split=tp_split(m),
+        dag=dict(record="results/arch/token_path_20261009/ds_rom_mtp.json", draft_nodes=len(dnodes),
+                 with_value=len(dnodes) - len(novalue), no_value=novalue,
+                 no_value_why="draft.fixed = head-element SAFE overhead cycles, mc.* = MTP block control charges: "
+                              "no datapath value"),
+        binding=MTP_BINDING, op_order=list(ops),
+        command=f"HDC_V41_ARITH=chunk8 python3 tools/s81_dv/dv_layer_fixtures.py --layer MTP --rank {a.rank} --out DIR"
+                + (" --no-state" if a.no_state else "") + (" --no-weights" if a.no_weights else ""))
+    o.text("ops.json", json.dumps(ops, indent=1) + "\n")
+    o.text("files.json", json.dumps(o.files, indent=1) + "\n")
+    o.text("meta.json", json.dumps(meta, indent=1, default=str) + "\n")
+    lines = o.manifest()
+    print(f"{a.out}: {len(lines)} files, {len(ops)} ops")
+    if a.manifest_out:
+        write_committed(a, meta, o, ops)
+
+
+MTP_BINDING = OrderedDict(
+    p4l_netlist="not in the p4l DV bind (results/arch/s81_dv_1016/bind9/die.v holds the 40-layer S81 layer die only); "
+                "no head / draft die design in results/fleet_viz/die_sources.json (designs: s81, qwen_compute, "
+                "qwen_kvsys, hbm)",
+    stages="mtp.0..2 (DAG groups D0..D2): DP1-EP5 dedicated draft dies of the S81 layer class, one TP4 group a stage "
+           "(results/arch/mtp_die_20261008/plan.json ds_rom_array; placement as the backbone sliding layer L0, "
+           "tools/dsrom_1m_draft_blocks.py); measured 10-04 on the full-shape units ot_v41_fieldtop_w17w10 (field), "
+           "ot_hdc_v41x_vec (SU), ot_hdc_actquant, ot_hdc_select, the H16/D512 attention engine; DAG hw status none",
+    head="draft.head<i> / draft.markov<i> (group DH): the head dies' lm_head bundle rtl/v41rom/ot_dsrom_head_bundle.sv "
+         "+ ot_dsrom_head_elem.sv (+ rtl/s81/ot_dsrom_head_bundle_glue.sv; elem A/B SAFE closed 10-08); the Markov "
+         "head has no full-shape RTL (DAG: modelled)",
+    seed="accept.seed (previous step, accept phase): main_proj + each stage's wkv on the head group",
+    gap="a measured draft layer needs the head / draft die netlist of record (not in die_sources.json)")
+
+
 def write_committed(a, meta, o, ops):
     doc = OrderedDict(schema=SCHEMA + ".manifest", layer=a.layer, command=meta["command"], sources=meta["sources"],
                       shard=meta["shard"], checks=meta["checks"], experts=meta.get("experts"),
@@ -599,6 +883,9 @@ def write_committed(a, meta, o, ops):
                       bulk=a.bulk or "", files={k: v["sha256"] for k, v in o.files.items()},
                       meta_sha256=sha_b((o.d / "meta.json").read_bytes()),
                       ops={k: dict(shape=v["shape"], dtype=v["dtype"], sha256=v["sha256"]) for k, v in ops.items()})
+    for k in ("draft_tokens", "reference", "state", "dag", "binding"):     # MTP only (other layers: unchanged keys)
+        if k in meta and a.layer == "MTP":
+            doc[k] = meta[k]
     Path(a.manifest_out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.manifest_out).write_text(json.dumps(doc, indent=1) + "\n")
     print("committed manifest", a.manifest_out)
