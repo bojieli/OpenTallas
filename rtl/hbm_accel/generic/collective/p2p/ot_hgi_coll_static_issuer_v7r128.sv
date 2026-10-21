@@ -382,29 +382,32 @@ module ot_hgi_coll_issuer_m128v8 (
  // ---------------- state ----------------
  reg busy_r,done_r,fault_r,v1,uop_v_r,h0,h1,cfg_selected;
  reg [3:0] fragment;reg [2:0] write_v;reg [1:0] ph;
- (* keep = "true" *) reg [2:0] fch_c;          // fetching: [0] control, [1] it0 lo, [2] it0 hi + fetch_pc
+ (* keep = "true" *) reg [3:0] fch_c;          // fetching: [0] control, [1] it0 lo, [2] it0 hi, [3] fetch_pc
  (* keep = "true" *) reg [3:0] fv_c;           // fetch_v: [b] bank b read enable + its v1 mask copies, [3] v1
  (* keep = "true" *) reg [15:0] vm0,vm1,vm2;   // v1 copies: bank data mask (32 bits each)
  reg [6:0] uop_pc_r;reg [31:0] iteration;
  reg [6:0] cfg_row;reg [1:0] cfg_bank;reg [511:0] assemble;reg [6:0] write_row;
- reg [6:0] pc;(* keep = "true" *) reg [4:0] pcm0,pcm1,pcm2,pcm3;
+ reg [6:0] pc;(* keep = "true" *) reg [3:0] pcm[0:7];   // pc[3:0] copies, 16 rows each
  reg [6:0] fetch_pc,pc1;reg [31:0] it0,it1;reg [6:0] sp_q;
  reg [20:0] rc;                                // {next [20:14], tgt [13:7], lid [6:2], halt [1], has [0]} of C
  reg [RW-1:0] rt,rn,pr_c,pr_t,pr_n;
  reg [31:0] q;(* keep = "true" *) reg [31:0] qa,qb,qf;   // visits (= v7 lp1 - 1): state / L1 write lo rows / hi rows / fwd
  reg [31:0] L1q[0:31];reg [31:0] L1v,L1z;       // stored q+1, valid (cleared at start), zero (stored value is 0)
  // registered predicates (kept copies)
- (* keep = "true" *) reg [14:0] sacc_c;        // start accepted this edge
- (* keep = "true" *) reg [14:0] adv_c;         // advance (fetching && !halt(C))
- (* keep = "true" *) reg [18:0] tk_c;          // loop decision
+ // copy maps (<= 8-14 mux bits per copy: an enable / 2:1 mux maps to 2 load pins per bit)
+ //  sacc_c / adv_c: [0] control, [1:2] C, [3:6] CT, [7:10] CN, [11:14] q, [15:18] L1 valid (sacc) / metadata address k (adv)
+ //  tk_c: [0] control, [1:2] C, [3:10] CT word, [11:18] CN word, [19:22] q, [23:26] L1 zero flag, [27:30] forwarded q+1
+ (* keep = "true" *) reg [18:0] sacc_c;        // start accepted this edge
+ (* keep = "true" *) reg [18:0] adv_c;         // advance (fetching && !halt(C))
+ (* keep = "true" *) reg [30:0] tk_c;          // loop decision
  (* keep = "true" *) reg [2:0] mw_c;           // metadata write this edge
  (* keep = "true" *) reg [3:0] pe1_c;          // prime C (phe == 1, no mw / advance)
  (* keep = "true" *) reg [7:0] pe2_c;          // prime CT / CN (phe == 2)
  (* keep = "true" *) reg [1:0] p0_c,p1_c,p2_c; // effective priming phase (macros 0-1 / 2-3)
  (* keep = "true" *) reg [1:0] fwt_c,fwn_c;    // counter forwarding into the CT / CN reads (lo / hi bits)
  (* keep = "true" *) reg [31:0] stl,sth,snl,snh;   // one-hot lid(CT) / lid(CN) & valid & !zero, lo / hi bit copies
- (* keep = "true" *) reg [31:0] wlc,whc;       // L1 write one-hot (update && lid(C)), lo / hi bit copies
- (* keep = "true" *) reg [15:0] aen_c;         // assembly fragment enables
+ (* keep = "true" *) reg [31:0] wac,wbc,wcc;   // L1 write one-hot (update && lid(C)): bits 9:0 + valid / zero, 20:10, 31:21
+ (* keep = "true" *) reg [15:0] aen_a,aen_b,aen_c;   // assembly fragment enables: bits 10:0 / 21:11 / 31:22
  reg [31:0] rh_q;reg [3:0] en_w0,en_w1,en_w2,en_ml,en_mh;   // registered row-valid set: one-hot row[4:0], group enables
  // ---------------- current-edge conditions ----------------
  wire sacc=sacc_c[0],adv=adv_c[0],take=tk_c[0],mw=mw_c[0];
@@ -424,16 +427,16 @@ module ot_hgi_coll_issuer_m128v8 (
  wire [63:0] nt_w,nn_w;
  for(genvar k=0;k<4;k=k+1)begin:g_ntw
 `ifdef OT_COLL_ISS8_MUT_SWAP
-  assign nt_w[k*16+:16]=tk_c[3+k] ? mo2[k*16+:16] : mo0[k*16+:16];
-  assign nn_w[k*16+:16]=tk_c[7+k] ? mo3[k*16+:16] : mo1[k*16+:16];
+  assign nt_w[k*16+:16]={tk_c[4+2*k] ? mo2[k*16+8+:8] : mo0[k*16+8+:8],tk_c[3+2*k] ? mo2[k*16+:8] : mo0[k*16+:8]};
+  assign nn_w[k*16+:16]={tk_c[12+2*k] ? mo3[k*16+8+:8] : mo1[k*16+8+:8],tk_c[11+2*k] ? mo3[k*16+:8] : mo1[k*16+:8]};
 `else
-  assign nt_w[k*16+:16]=tk_c[3+k] ? mo0[k*16+:16] : mo2[k*16+:16];
-  assign nn_w[k*16+:16]=tk_c[7+k] ? mo1[k*16+:16] : mo3[k*16+:16];
+  assign nt_w[k*16+:16]={tk_c[4+2*k] ? mo0[k*16+8+:8] : mo2[k*16+8+:8],tk_c[3+2*k] ? mo0[k*16+:8] : mo2[k*16+:8]};
+  assign nn_w[k*16+:16]={tk_c[12+2*k] ? mo1[k*16+8+:8] : mo3[k*16+8+:8],tk_c[11+2*k] ? mo1[k*16+:8] : mo3[k*16+:8]};
 `endif
  end
  wire [63:0] mw_d={{32{wdh_c}} & cfg_q[31:0],{32{wdl_c}} & cfg_q[31:0]};
  for(genvar k=0;k<4;k=k+1)begin:g_meta
-  wire mwk=mw_c[1+k/2],advk=adv_c[13+k/2],p0k=p0_c[k/2],p1k=p1_c[k/2],p2k=p2_c[k/2];
+  wire mwk=mw_c[1+k/2],advk=adv_c[15+k],p0k=p0_c[k/2],p1k=p1_c[k/2],p2k=p2_c[k/2];
   reg [6:0] a;reg rce;
   always @*begin
    if(mwk)begin a=cfg_row;rce=1'b1;end
@@ -464,8 +467,8 @@ module ot_hgi_coll_issuer_m128v8 (
    aon=aon | ({{16{snh[i]}},{16{snl[i]}}} & L1q[i]);
   end
  end
- wire [31:0] nft={{16{tk_c[15]}} & incf[31:16],{16{tk_c[16]}} & incf[15:0]};   // forwarded q+1 / 0 (CT read)
- wire [31:0] nfn={{16{tk_c[17]}} & incf[31:16],{16{tk_c[18]}} & incf[15:0]};   // (CN read)
+ wire [31:0] nft={{16{tk_c[27]}} & incf[31:16],{16{tk_c[28]}} & incf[15:0]};   // forwarded q+1 / 0 (CT read)
+ wire [31:0] nfn={{16{tk_c[29]}} & incf[31:16],{16{tk_c[30]}} & incf[15:0]};   // (CN read)
 `ifdef OT_COLL_ISS8_MUT_NOFWD
  wire [31:0] l_t=aot,l_n=aon;
 `else
@@ -484,7 +487,7 @@ module ot_hgi_coll_issuer_m128v8 (
   assign rn_n[i]=sacc_c[7+i/14] ? pr_n[i] : adv_c[7+i/14] ? rec_nn[i] : rn[i];
  end
  for(genvar i=0;i<32;i=i+1)begin:g_qn
-  assign q_n[i]=sacc_c[11+i/16] ? 1'b0 : adv_c[11+i/16] ? (tk_c[11+i/16] ? l_t[i] : l_n[i]) : q[i];
+  assign q_n[i]=sacc_c[11+i/8] ? 1'b0 : adv_c[11+i/8] ? (tk_c[19+i/8] ? l_t[i] : l_n[i]) : q[i];
  end
  always @(posedge clk)begin
   rc<=rc_n;rt<=rt_n;rn<=rn_n;q<=q_n;qa<=q_n;qb<=q_n;qf<=q_n;sp_q<=start_pc_q;
@@ -500,11 +503,12 @@ module ot_hgi_coll_issuer_m128v8 (
  wire [31:0] L1v_n,L1z_n;
  for(genvar i=0;i<32;i=i+1)begin:g_l1
   wire [31:0] wd=(i<16) ? inca : incb;
-  assign L1v_n[i]=sacc_c[13+i/16] ? 1'b0 : wlc[i] ? 1'b1 : L1v[i];
-  assign L1z_n[i]=wlc[i] ? !tk_c[13+i/16] : L1z[i];
+  assign L1v_n[i]=sacc_c[15+i/8] ? 1'b0 : wac[i] ? 1'b1 : L1v[i];
+  assign L1z_n[i]=wac[i] ? !tk_c[23+i/8] : L1z[i];
   always @(posedge clk)begin
-   if(wlc[i])L1q[i][15:0]<=wd[15:0];
-   if(whc[i])L1q[i][31:16]<=wd[31:16];
+   if(wac[i])L1q[i][9:0]<=wd[9:0];
+   if(wbc[i])L1q[i][20:10]<=wd[20:10];
+   if(wcc[i])L1q[i][31:21]<=wd[31:21];
    L1v[i]<=L1v_n[i];L1z[i]<=L1z_n[i];
   end
  end
@@ -537,27 +541,35 @@ module ot_hgi_coll_issuer_m128v8 (
  wire [15:0] aen_x;
  for(genvar f=0;f<16;f=f+1)begin:g_aenx assign aen_x[f]=m1ok_x && frag_n==f; end
  // pc copies for the 128-row fetch check (32 rows each)
- wire [127:0] rowok;wire [3:0] rsel;
- assign rsel[0]=rowok[{2'd0,pcm0}];assign rsel[1]=rowok[{2'd1,pcm1}];
- assign rsel[2]=rowok[{2'd2,pcm2}];assign rsel[3]=rowok[{2'd3,pcm3}];
- assign rok=rsel[pc[6:5]];
+ wire [127:0] rowok;
+ wire [7:0] rsel;
+ for(genvar j=0;j<8;j=j+1)begin:g_rsel assign rsel[j]=rowok[j*16+pcm[j]]; end
+ assign rok=rsel[pc[6:4]];
  always @(posedge clk)begin
   // free data registers (they hold while reset: written only under reset-cleared enables)
-  pc<=pc_n;pcm0<=pc_n[4:0];pcm1<=pc_n[4:0];pcm2<=pc_n[4:0];pcm3<=pc_n[4:0];
+  pc<=pc_n;for(integer j=0;j<8;j=j+1)pcm[j]<=pc_n[3:0];
   if(c0)begin cfg_row<={cfg_q[8],cfg_q[5:0]};cfg_bank<=cfg_q[7:6];end
   if(fw)write_row<=cfg_row;
   if(fch_c[1])it0[15:0]<=q[15:0];
-  if(fch_c[2])begin it0[31:16]<=q[31:16];fetch_pc<=pc;end
-  tk_c<={19{take_x}};
+  if(fch_c[2])it0[31:16]<=q[31:16];
+  if(fch_c[3])fetch_pc<=pc;
+  tk_c<={31{take_x}};
   stl<=oht_x & L1v_n & ~L1z_n;sth<=oht_x & L1v_n & ~L1z_n;snl<=ohn_x & L1v_n & ~L1z_n;snh<=ohn_x & L1v_n & ~L1z_n;
-  wlc<=wr_x;whc<=wr_x;
+  wac<=wr_x;wbc<=wr_x;wcc<=wr_x;aen_a<=aen_x;aen_b<=aen_x;aen_c<=aen_x;
   rh_q<=f_dec(1'b1,cfg_row[4:0]);
  end
  for(genvar f=0;f<16;f=f+1)begin:g_asm
-  always @(posedge clk) if(aen_c[f])assemble[f*32+:32]<=cfg_q[31:0];
+  always @(posedge clk)begin
+   if(aen_a[f])assemble[f*32+:11]<=cfg_q[10:0];
+   if(aen_b[f])assemble[f*32+11+:11]<=cfg_q[21:11];
+   if(aen_c[f])assemble[f*32+22+:10]<=cfg_q[31:22];
+  end
  end
- always @(posedge clk) if(rcp[29])begin pc1<=fetch_pc;it1[15:0]<=it0[15:0];end
- always @(posedge clk) if(rcp[30])it1[31:16]<=it0[31:16];
+ // hold while reset (v7: pc1 / it1 sit in the reset block without a reset value)
+ always @(posedge clk) if(rcp[8])pc1<=fetch_pc;
+ always @(posedge clk) if(rcp[29])it1[10:0]<=it0[10:0];
+ always @(posedge clk) if(rcp[30])it1[21:11]<=it0[21:11];
+ always @(posedge clk) if(rcp[31])it1[31:22]<=it0[31:22];
  // G0: control + pin + delay chains
  reg busy_d1,done_d1,done_d2,start_d1;
  always @(posedge clk or negedge rcp[0])
@@ -577,40 +589,43 @@ module ot_hgi_coll_issuer_m128v8 (
  always @(posedge clk or negedge rcp[1])
   if(!rcp[1])begin fch_c<=0;fv_c<=0;uop_pc_r<=0;md_q<=0;en_ml<=0;en_mh<=0;end
   else begin
-   fch_c<={3{fch_n}};fv_c<={4{fch_c[0]}};uop_pc_r<=pc1;
+   fch_c<={4{fch_n}};fv_c<={4{fch_c[0]}};uop_pc_r<=pc1;
    md_q<={cfg[36] && cfg[35:32]==4'd3,cfg[36] && cfg[35:32]==4'd2,cfg[36] && cfg[35:32]==4'd1,cfg[36] && cfg[35:32]==4'd0};
    for(integer g=0;g<4;g=g+1)begin
     en_ml[g]<=c2 && m2_ok && cfg_row[6:5]==g;en_mh[g]<=c3 && m3_ok && cfg_row[6:5]==g;
    end
   end
- // G2/G3: iteration halves
- always @(posedge clk or negedge rcp[2]) if(!rcp[2])iteration[15:0]<=0;else iteration[15:0]<=it1[15:0];
- always @(posedge clk or negedge rcp[3]) if(!rcp[3])iteration[31:16]<=0;else iteration[31:16]<=it1[31:16];
- // G4..G6: bank masks + programme-word valid-set enables
- always @(posedge clk or negedge rcp[4])
-  if(!rcp[4])begin vm0<=0;en_w0<=0;end
-  else begin vm0<={16{fv_c[0]}};for(integer g=0;g<4;g=g+1)en_w0[g]<=fw && cfg_bank==2'd0 && cfg_row[6:5]==g;end
- always @(posedge clk or negedge rcp[5])
-  if(!rcp[5])begin vm1<=0;en_w1<=0;end
-  else begin vm1<={16{fv_c[1]}};for(integer g=0;g<4;g=g+1)en_w1[g]<=fw && cfg_bank==2'd1 && cfg_row[6:5]==g;end
- always @(posedge clk or negedge rcp[6])
-  if(!rcp[6])begin vm2<=0;en_w2<=0;end
-  else begin vm2<={16{fv_c[2]}};for(integer g=0;g<4;g=g+1)en_w2[g]<=fw && cfg_bank==2'd2 && cfg_row[6:5]==g;end
- // G7: start-accept / advance copies
- always @(posedge clk or negedge rcp[7])
-  if(!rcp[7])begin sacc_c<=0;adv_c<=0;end
-  else begin sacc_c<={15{sacc_x}};adv_c<={15{adv_x}};end
- // G8: metadata write, priming enables, effective phase, forwarding
- always @(posedge clk or negedge rcp[8])
-  if(!rcp[8])begin mw_c<=0;pe1_c<=0;pe2_c<=0;p0_c<=2'b11;p1_c<=0;p2_c<=0;fwt_c<=0;fwn_c<=0;end
+ // G2: iteration (32)
+ always @(posedge clk or negedge rcp[2]) if(!rcp[2])iteration<=0;else iteration<=it1;
+ // G3: bank-0 mask + programme-word valid-set enables (28)
+ always @(posedge clk or negedge rcp[3])
+  if(!rcp[3])begin vm0<=0;en_w0<=0;en_w1<=0;en_w2<=0;end
   else begin
-   mw_c<={3{mw_x}};
-   pe1_c<={4{!mw_x && !adv_x && phe_x==2'd1}};pe2_c<={8{!mw_x && !adv_x && phe_x==2'd2}};
-   p0_c<={2{phe_x==2'd0}};p1_c<={2{phe_x==2'd1}};p2_c<={2{phe_x==2'd2}};
-   fwt_c<={2{upd_x && r_lid(rt_n)==rc_n[6:2]}};fwn_c<={2{upd_x && r_lid(rn_n)==rc_n[6:2]}};
+   vm0<={16{fv_c[0]}};
+   for(integer g=0;g<4;g=g+1)begin
+    en_w0[g]<=fw && cfg_bank==2'd0 && cfg_row[6:5]==g;en_w1[g]<=fw && cfg_bank==2'd1 && cfg_row[6:5]==g;
+    en_w2[g]<=fw && cfg_bank==2'd2 && cfg_row[6:5]==g;
+   end
   end
- // G31: assembly enables (G29 / G30 gate the pc1 / it1 hold-while-reset, as v7)
- always @(posedge clk or negedge rcp[31]) if(!rcp[31])aen_c<=0;else aen_c<=aen_x;
+ // G4: bank-1 mask, metadata write, effective phase (25)
+ always @(posedge clk or negedge rcp[4])
+  if(!rcp[4])begin vm1<=0;mw_c<=0;p0_c<=2'b11;p1_c<=0;p2_c<=0;end
+  else begin vm1<={16{fv_c[1]}};mw_c<={3{mw_x}};p0_c<={2{phe_x==2'd0}};p1_c<={2{phe_x==2'd1}};p2_c<={2{phe_x==2'd2}};end
+ // G5: bank-2 mask, forwarding, prime C (24)
+ always @(posedge clk or negedge rcp[5])
+  if(!rcp[5])begin vm2<=0;fwt_c<=0;fwn_c<=0;pe1_c<=0;end
+  else begin
+   vm2<={16{fv_c[2]}};
+   fwt_c<={2{upd_x && r_lid(rt_n)==rc_n[6:2]}};fwn_c<={2{upd_x && r_lid(rn_n)==rc_n[6:2]}};
+   pe1_c<={4{!mw_x && !adv_x && phe_x==2'd1}};
+  end
+ // G6: start accept + prime CT / CN (27)
+ always @(posedge clk or negedge rcp[6])
+  if(!rcp[6])begin sacc_c<=0;pe2_c<=0;end
+  else begin sacc_c<={19{sacc_x}};pe2_c<={8{!mw_x && !adv_x && phe_x==2'd2}};end
+ // G7: advance (19)
+ always @(posedge clk or negedge rcp[7]) if(!rcp[7])adv_c<=0;else adv_c<={19{adv_x}};
+ // G8: pc1 hold; G29..G31: it1 hold (above).  Assembly enables need no reset: every slot is rewritten after a select.
  // G9..G28: row-valid bits, 20 groups of 32 (set one edge after the cfg word)
  wire [3:0] envec[0:4];
  assign envec[0]=en_w0;assign envec[1]=en_w1;assign envec[2]=en_w2;assign envec[3]=en_ml;assign envec[4]=en_mh;
