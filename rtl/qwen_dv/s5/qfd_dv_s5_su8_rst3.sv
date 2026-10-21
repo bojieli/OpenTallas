@@ -52,7 +52,7 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     // ---------------------------------------------------------------------------------------------- reset: two raw async sync FFs, then local leaf stage
     // ASSERT remains asynchronous, including with ck held; RELEASE leaf age2->3 (+1 boot).
     // (standard 2-FF reset landing; recovery/removal checked by the gate STA)
-    localparam integer NR2 = 6, NRC = 10;
+    localparam integer NR2 = 10, NRC = 10;
     (* async_reg = "true" *) reg rs0, rs1;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end
@@ -72,16 +72,17 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     // ---------------------------------------------------------------------------------------------- su_go (c_su + 2)
     localparam integer NFA = 31;               // accept-only field chunks (12 b)
     localparam integer NCH = 32;               // active-updated register chunks (8 b: cur 12, row 12, rrow 3, v 2, o 2, cls 1)
-    localparam integer NXS = 8;                // lane copies of the stride fields (12 b select groups)
+    localparam integer NXS = 64;                // lane copies of the stride fields (12 b select groups)
     localparam integer NACC = NFA + NCH + 10 + NXS; // + act_next A, vl_next A, ol_next/gvr, first_mark, c_su_prog, r_mark, c_su_rows, su_go, act_next B, vl_next B
     wire c_su = aligned_start;
-    wire [2:0] sg0;
-    generate for (gi = 0; gi < 3; gi = gi + 1) begin : g_sg0
+    localparam integer NSG = 6;
+    wire [NSG-1:0] sg0;
+    generate for (gi = 0; gi < NSG; gi = gi + 1) begin : g_sg0
         qfd_dv_su8_kffr #(.W(1), .ID(200 + gi)) u (.ck(ck), .rn(rst_k[1]), .d(c_su), .q(sg0[gi]));
     end endgenerate
     wire [NACC-1:0] acc_k;
     generate for (gi = 0; gi < NACC; gi = gi + 1) begin : g_acc
-        qfd_dv_su8_kffr #(.W(1), .ID(300 + gi)) u (.ck(ck), .rn(rst_k[2 + (gi % 4)]), .d(sg0[gi % 3]), .q(acc_k[gi]));
+        qfd_dv_su8_kffr #(.W(1), .ID(300 + gi)) u (.ck(ck), .rn(rst_k[2 + (gi % 8)]), .d(sg0[gi % NSG]), .q(acc_k[gi]));
     end endgenerate
     wire su_go = acc_k[NFA + NCH + 7];        // c_su_idle, c_su_nr / fault
 
@@ -199,17 +200,17 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     wire [4*AW-1:0] cur_nx = {cura_nx, curb_nx, curc_nx, curd_nx};
     wire [4*AW-1:0] xs_cur = {asi, bsi, csi, dsi};
     wire [4*AW-1:0] xs_in  = {i_asi, i_bsi, i_csi, i_dsi};
-    wire [4*AW-1:0] xs_nx;
-    generate for (gc = 0; gc < NXS; gc = gc + 1) begin : g_xs
-        assign xs_nx[12*gc +: 12] = acc_k[NFA + NCH + 10 + gc] ? xs_in[12*gc +: 12] : xs_cur[12*gc +: 12];
-    end endgenerate
     wire [4*AW-1:0] cur_l [0:3];
     wire [4*AW-1:0] xs_l [0:7];
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_curl
         qfd_dv_su8_kff #(.W(4*AW), .ID(650 + gc)) u (.ck(ck), .d(cur_nx), .q(cur_l[gc]));
     end
     for (gc = 0; gc < 8; gc = gc + 1) begin : g_xsl
-        wire [4*AW-1:0] lane_offsets;
+        // Independent kept accept copies prevent sharing the mux before lane multipliers.
+        wire [4*AW-1:0] lane_offsets, xs_nx;
+        for (genvar sx = 0; sx < 8; sx = sx + 1) begin : g_stride_select
+            assign xs_nx[12*sx +: 12] = acc_k[NFA + NCH + 10 + 8*gc + sx] ? xs_in[12*sx +: 12] : xs_cur[12*sx +: 12];
+        end
         for (genvar field = 0; field < 4; field = field + 1) begin : g_offset
             qfd_dv_su8_stride #(.K(gc)) u_off (.x(xs_nx[24*field +: 24]), .y(lane_offsets[24*field +: 24]));
         end
