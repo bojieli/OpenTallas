@@ -18,18 +18,27 @@
 //   every other beat (tags stripped from ri: the full-beat compare); no lep / lane / PHY / landing fault; all lanes live.
 // Run-time plusargs (one build serves several runs): +NS= +NM= +ERRP=n (pad bit errors every n cycles on every lane)
 // +LATE=n (die 1 ES lane 1 n cycles late: schedule mutant) +CHB=0|1 (lane tile ch_b strap; die straps 1).
+// XL5 = 1 (S81-LINK5 10-21, owner-approved 5th lane pair): the stage hop on its OWN circuit, TP4 full mesh on the others:
+//   d.WS A <-> (d-1).ES A, d.ES A <-> (d+1).WS A (TP d+-1, unchanged), d.EN A <-> (d+2).EN A (TP d+2, ONE bidirectional
+//   circuit), d.WN pair A -> next stage rank d WN pair B (stage NEXT; WN = ot_s81sl_lep_mu_ab AB_EN 1, 4 lane tiles) and
+//   d.WN pair B <- previous stage rank d WN pair A (stage PREV; pair B TX = lane link layer only).  The stage chain is
+//   closed on this one group (stage s+1 = the same 4 dies, rank d -> rank d): each lane direction is its own fixed-delay
+//   circuit, so the hop sees exactly the crossing of a separate stage group.  MU 0 or MU 2 only.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_xdie_s81_2 #(
     parameter integer D_CH = 445,
     parameter integer MU = 0,
     parameter integer LEG = 1,
     parameter integer DMUT = 0,
+    parameter integer XL5 = 0,
     parameter integer NSMAX = 32768,
     parameter integer NMMAX = 1024,
     parameter integer QD = 4096,
     parameter integer MAXCYC = 400000
 );
     localparam integer ND = 4, NP = 4, NE = ND * NP, NL = (MU == 1) ? 4 : 2;     // MU 2 = MU die (pair A only)
+    localparam integer NLT = (MU == 1) ? 4 * NE : 2 * NE + ((XL5 != 0) ? 2 * ND : 0);   // live lanes (XL5: WN has 4)
+    initial if (XL5 != 0 && MU == 1) $fatal(1, "XL5 needs MU 0 or 2");
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     integer cyc = 0;
@@ -44,8 +53,8 @@ module tb_xdie_s81_2 #(
             case (p)
                 0: peer_a = ((d + ND - 1) % ND) * NP + 1;
                 1: peer_a = ((d + 1) % ND) * NP + 0;
-                2: peer_a = ((d + 2) % ND) * NP + 3;
-                default: peer_a = ((d + 2) % ND) * NP + 2;
+                2: peer_a = (XL5 != 0) ? e : ((d + 2) % ND) * NP + 3;      // XL5: stage PREV = rank d (closed chain)
+                default: peer_a = ((d + 2) % ND) * NP + ((XL5 != 0) ? 3 : 2);
             endcase
         end
     endfunction
@@ -76,20 +85,26 @@ module tb_xdie_s81_2 #(
         localparam integer P = ge % NP;
         localparam integer DA = (P == 0) ? (((ge / NP) + ND - 1) % ND) * NP + 1 :
                                 (P == 1) ? (((ge / NP) + 1) % ND) * NP + 0 :
-                                (P == 2) ? (((ge / NP) + 2) % ND) * NP + 3 : (((ge / NP) + 2) % ND) * NP + 2;
+                                (P == 2) ? ((XL5 != 0) ? ge : (((ge / NP) + 2) % ND) * NP + 3) :
+                                (((ge / NP) + 2) % ND) * NP + ((XL5 != 0) ? 3 : 2);
+        localparam integer AB = (XL5 != 0 && P == 2) ? 1 : 0;              // XL5: WN = the 5th pair endpoint
+        localparam integer NLE = (MU == 1 || AB != 0) ? 4 : 2;
         localparam integer DB = (P == 0) ? (((ge / NP) + 1) % ND) * NP + 1 :
                                 (P == 1) ? (((ge / NP) + ND - 1) % ND) * NP + 0 :
                                 (P == 2) ? (((ge / NP) + 1) % ND) * NP + 3 : (((ge / NP) + ND - 1) % ND) * NP + 2;
-        xdie_s81_2_ep #(.SIDE(P % 2), .HOST((P == 3 && MU != 1) ? 1 : 0), .MU(MU), .LEG(LEG), .DMUT(DMUT)) u_ep (
+        xdie_s81_2_ep #(.SIDE(P % 2), .HOST((P == 3 && MU != 1) ? 1 : 0), .MU(MU), .AB(AB), .LEG(LEG), .DMUT(DMUT)) u_ep (
             .clk(clk), .rst_n(rst_n), .sid(4'((P % 2 ? 14 : 0) + (P >= 2 ? 1 : 0))), .ch_b(chb[0]),
             .ri_n(ri[ge]), .ro_n(ro[ge]), .pma_tx(ptx[ge]), .pma_rx(prx[ge]), .mu_c(muc[ge]), .mu_rt(mrt[ge]),
             .lep_ri(lri[ge]), .fault(flt[ge]), .live(lv[4*ge +: 4]));
         for (gl = 0; gl < 4; gl = gl + 1) begin : g_c
             localparam integer SRC = (gl < 2) ? DA : DB;
-            if (gl < NL) begin : g_on
+            // XL5 WN: pair A RX <- next stage's pair B TX (lanes 2/3), pair B RX <- previous stage's pair A TX (lanes 0/1)
+            localparam integer SL = (AB != 0) ? ((gl < 2) ? gl + 2 : gl - 2) : gl;
+            localparam integer SRCX = (AB != 0) ? ge : SRC;
+            if (gl < NLE) begin : g_on
                 // receive channel: from the circuit peer's pads (lane k -> lane k); LATE on die 1 ES lane 1 (as gate_g5)
-                xdie2_chan #(.W(544), .D(D_CH)) u_ch (.clk(clk), .errp(errp), .extra((SRC == 1 * NP + 1 && gl == 1) ? latec : 0),
-                    .d(ptx[SRC][544*gl +: 544]), .q(prx[ge][544*gl +: 544]));
+                xdie2_chan #(.W(544), .D(D_CH)) u_ch (.clk(clk), .errp(errp), .extra((SRCX == 1 * NP + 1 && gl == 1) ? latec : 0),
+                    .d(ptx[SRCX][544*SL +: 544]), .q(prx[ge][544*gl +: 544]));
                 // link-layer statistics (hierarchical reads of ot_s81ph_link_ep's counters; no logic added to the DUT)
                 if (P % 2 == 0) begin : g_sw
                     assign to_l[4*ge+gl] = u_ep.g_l[gl].g_w.u_ln.u.u_ep.st_timeouts;
@@ -126,7 +141,7 @@ module tb_xdie_s81_2 #(
         if (!$value$plusargs("CHB=%d", chb)) chb = 1;
         $readmemh("stim.hex", stim);
         if (nm > 0) $readmemh("mu.hex", mcmd);
-        $display("XDIE2_CFG MU %0d LEG %0d DMUT %0d NS %0d NM %0d ERRP %0d LATE %0d CHB %0d", MU, LEG, DMUT, ns, nm, errp, latec, chb);
+        $display("XDIE2_CFG XL5 %0d MU %0d LEG %0d DMUT %0d NS %0d NM %0d ERRP %0d LATE %0d CHB %0d", XL5, MU, LEG, DMUT, ns, nm, errp, latec, chb);
         repeat (8) @(posedge clk); rst_n = 1;
         go = 1;
     end
@@ -213,16 +228,16 @@ module tb_xdie_s81_2 #(
         repeat (2000) @(posedge clk);
         lvc = 0; for (e2 = 0; e2 < 4 * NE; e2 = e2 + 1) lvc = lvc + lv[e2];
         tto = 0; trt = 0; for (e2 = 0; e2 < 4 * NE; e2 = e2 + 1) begin tto = tto + to_l[e2]; trt = trt + rt_l[e2]; end
-        $display("XDIE_LINK timeouts %0d retx_flits %0d (all %0d lanes; go-back-N ACK timeouts and replayed flits)", tto, trt, NL * NE);
+        $display("XDIE_LINK timeouts %0d retx_flits %0d (all %0d lanes; go-back-N ACK timeouts and replayed flits)", tto, trt, NLT);
         $display("XDIE_MU tagged_expected %0d tagged_seen %0d tag_errors %0d", ntag_exp, ntag, tagbad);
         $display("XDIE_STATS beats %0d landed %0d mismatches %0d late %0d maxlate %0d extra %0d faults %b live %0d/%0d last_cycle %0d",
-            ns, nland, bad, late, maxlate, extra, fseen, lvc, NL * NE, cyc);
-        if (ns > 0 && nland == ns && bad == 0 && late == 0 && extra == 0 && fseen == 0 && lvc == NL * NE && tagbad == 0 && ntag == ntag_exp)
+            ns, nland, bad, late, maxlate, extra, fseen, lvc, NLT, cyc);
+        if (ns > 0 && nland == ns && bad == 0 && late == 0 && extra == 0 && fseen == 0 && lvc == NLT && tagbad == 0 && ntag == ntag_exp)
             $display("PASS xdie_s81: %0d beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault%s",
                      ns, MU != 0 ? ", every MU tag delivered" : "");
         else
             $display("FAIL xdie_s81: landed %0d/%0d mismatches %0d late %0d extra %0d faults %b live %0d/%0d tags %0d/%0d tag_errors %0d",
-                     nland, ns, bad, late, extra, fseen, lvc, NL * NE, ntag, ntag_exp, tagbad);
+                     nland, ns, bad, late, extra, fseen, lvc, NLT, ntag, ntag_exp, tagbad);
         $finish;
     end
 endmodule
