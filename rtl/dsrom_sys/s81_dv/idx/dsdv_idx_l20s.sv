@@ -44,6 +44,20 @@
 // ===================================================================================================================
 // dsdv_idx_txm_n32: score store (D windows x 256 b), 1 read + 1 masked write a cycle, read data 2 edges after re.
 // ===================================================================================================================
+// Same-edge consumer copy; no inserted pipeline stage. RESET0 is datapath
+// staging, RESET1 preserves the caller's existing regional release age.
+(* keep_hierarchy="yes" *)
+module dsdv_tx_copy #(parameter integer W=1,RESET=0,ID=0)(
+ input wire ck,rn,input wire[W-1:0]d,output wire[W-1:0]q);
+ (* keep *)reg[W-1:0]r;
+ generate if(RESET!=0)begin:g_r
+  always @(posedge ck or negedge rn)if(!rn)r<=0;else r<=d;
+ end else begin:g_d
+  always @(posedge ck)r<=d;
+ end endgenerate
+ assign q=r;
+endmodule
+
 module dsdv_idx_txm_n32 #(
     parameter integer D = 8192,
     parameter bit SRAM_MACRO = 0
@@ -55,7 +69,8 @@ module dsdv_idx_txm_n32 #(
     input  wire                 we,
     input  wire [$clog2(D)-1:0] wa,
     input  wire [255:0]         wd,
-    input  wire [255:0]         wm
+    input wire[255:0]wm,
+    input wire[15:0]wm_next // next value of original registered sixteen lane masks
 );
     localparam integer AW = $clog2(D);
     generate if (SRAM_MACRO) begin : g_m
@@ -64,9 +79,15 @@ module dsdv_idx_txm_n32 #(
         wire [255:0] q [0:NB-1];
         genvar b, c;
         for (b = 0; b < NB; b = b + 1) begin : g_b
+            wire[255:0]wm_bank;
+            for(genvar f=0;f<16;f=f+1)begin:g_mask
+                wire bit_q;
+                dsdv_tx_copy #(.W(1),.ID(1000+b*16+f))u(.ck(ck),.rn(1'b1),.d(wm_next[f]),.q(bit_q));
+                assign wm_bank[f*16+:16]={16{bit_q}};
+            end
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
                 .clk(ck), .r_ce_in(re && (NB == 1 || ra[AW-1:10] == b)), .r_addr_in(ra[9:0]), .rd_out(q[b]),
-                .w_ce_in(we && (NB == 1 || wa[AW-1:10] == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm),
+                .w_ce_in(we && (NB == 1 || wa[AW-1:10] == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm_bank),
                 .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
         end
         // bank select of the read issued at edge t: valid in cycle t + 1 (the only cycle the consumer samples rd at
@@ -130,8 +151,8 @@ module dsdv_idx_tx_n32 #(
     // ------------------------------------------------------------------ reset forest (control / valid bits only)
     // rl[0] pins + lookup control (24), rl[1] job / staging control (19), rl[2] CTL copies + faults (23),
     // rl[3] output selects + lo[0] (25), rl[4] status (16).
-    wire [4:0] rl;
-    ot_rst_relay #(.REGIONS(5), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
+    wire [6:0] rl;
+    ot_rst_relay #(.REGIONS(7), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
 
     // ------------------------------------------------------------------ pin registers
     reg [V-1:0] vi_r, vo_r;
@@ -144,25 +165,24 @@ module dsdv_idx_tx_n32 #(
     wire       n_p0w  = vi[0] && vi[3:1] == 3'(IK) && !vi[6] && !vi[7];      // BEAT part 0 of kind IK
     wire       n_octl = vo[0] && vo[3:1] == 3'd0 && vo[28:21] == 8'(UID) && vo[31:29] == 3'd2;
     wire       n_ep0  = vo[0] && vo[3:1] == 3'(EK) && !vo[6];                 // egress part 0
-    (* keep = "true" *) reg [31:0] hsw;      // [8 l + c]: hs[l][32 c +: 32] write enable
+    (* keep = "true" *) reg [63:0] hsw;      // [8 l + c]: hs[l][32 c +: 32] write enable
     (* keep = "true" *) reg [31:0] shs;      // [8 l + c]: lane l one-hot for m_wd[32 c +: 32]
     (* keep = "true" *) reg [3:0]  scl_m, scl_w;
-    (* keep = "true" *) reg [7:0]  eph;      // e_lo[32 c +: 32] load
-    (* keep = "true" *) reg [6:0]  okk;      // the CTL (o_ctl) copies, see the job block
+    (* keep = "true" *) reg [15:0] eph;      // e_lo[32 c +: 32] load
+    (* keep = "true" *) reg [15:0] okk;      // the CTL (o_ctl) copies, see the job block
     always @(posedge ck) begin : g_pre
         integer l_, c_;
         for (l_ = 0; l_ < 4; l_ = l_ + 1) begin
-            for (c_ = 0; c_ < 8; c_ = c_ + 1) begin
-                hsw[8 * l_ + c_] <= n_p0w && vi[5:4] == 2'(l_);
-                shs[8 * l_ + c_] <= vi[5:4] == 2'(l_);
-            end
+            for (c_ = 0; c_ < 16; c_ = c_ + 1)
+                hsw[16*l_+c_] <= n_p0w && vi[5:4] == 2'(l_);
+            for(c_=0;c_<8;c_=c_+1)shs[8*l_+c_] <= vi[5:4] == 2'(l_);
             scl_m[l_] <= vi[5:4] == 2'(l_);
             scl_w[l_] <= vi[5:4] == 2'(l_);
         end
-        eph <= {8{n_ep0}};
+        eph <= {16{n_ep0}};
     end
     always @(posedge ck or negedge rl[2])
-        if (!rl[2]) okk <= 7'd0; else okk <= {7{n_octl}};
+        if (!rl[2]) okk <= 16'd0; else okk <= {16{n_octl}};
 
     reg [7:0] fc_set, fc;
 
@@ -187,7 +207,7 @@ module dsdv_idx_tx_n32 #(
         for (l_ = 0; l_ < 4; l_ = l_ + 1) begin
             if (scl_w[l_] && c_v && !c_p1 && c_sg && (c_ty == 4'd1 || c_ty == 4'd6)) cur[l_] <= vi_r[39:20];
             else if (scl_w[l_] && c_v && c_p1) cur[l_] <= c_cur + 20'd16;
-            for (c_ = 0; c_ < 8; c_ = c_ + 1) if (hsw[8 * l_ + c_]) hs[l_][32 * c_ +: 32] <= vi_r[20 + 32 * c_ +: 32];
+            for(c_=0;c_<16;c_=c_+1)if(hsw[16*l_+c_])hs[l_][16*c_+:16]<=vi_r[20+16*c_+:16];
         end
     end
     // score-store write port: free-running data / address / mask (used only with m_we), m_we = a BEAT part 1
@@ -211,17 +231,20 @@ module dsdv_idx_tx_n32 #(
     wire         o_eg = o_v && vo_r[3:1] == 3'(EK);
     reg  [1:0]  j_l; reg [7:0] j_pt, j_ot; reg [9:0] j_k; reg [19:0] j_hb; reg [15:0] j_dly; reg [2:0] j_r; reg [11:0] j_sm;
     always @(posedge ck) begin
-        if (okk[0]) begin j_l <= cp[22:21]; j_pt <= cp[30:23]; j_k <= cp[40:31]; j_r <= cp[87:85]; end
-        if (okk[1]) j_hb <= cp[60:41];
-        if (okk[2]) begin j_ot <= cp[68:61]; j_sm <= cp[99:88]; end
-        if (okk[3]) j_dly <= cp[84:69];
+        if(okk[0])begin j_l<=cp[22:21];j_pt<=cp[30:23];end
+        if(okk[1])begin j_k<=cp[40:31];j_r<=cp[87:85];end
+        if(okk[2])j_hb[9:0]<=cp[50:41];
+        if(okk[3])j_hb[19:10]<=cp[60:51];
+        if(okk[4])j_ot<=cp[68:61];
+        if(okk[5])j_sm<=cp[99:88];
+        if(okk[6])j_dly<=cp[84:69];
     end
 
     // ------------------------------------------------------------------ egress capture -> IDX buffer
     reg  [255:0] e_lo;
     always @(posedge ck) begin : g_elo
         integer c_;
-        for (c_ = 0; c_ < 8; c_ = c_ + 1) if (eph[c_]) e_lo[32 * c_ +: 32] <= vo_r[20 + 32 * c_ +: 32];
+        for(c_=0;c_<16;c_=c_+1)if(eph[c_])e_lo[16*c_+:16]<=vo_r[20+16*c_+:16];
     end
     reg          armed, busy, done, in_end, e_h;
     wire [511:0] e_w    = {vo_r[275:20], e_lo};
@@ -238,7 +261,10 @@ module dsdv_idx_tx_n32 #(
 
     // ------------------------------------------------------------------ lookup
     reg  [1:0]  fw;
-    (* keep = "true" *) reg [9:0] fwk;        // fw[1] copies: iw[32 c +: 32] load
+    (* keep = "true" *) reg [19:0]fwk;        // fw[1] copies: iw[32 c +: 32] load
+    wire fw_ctl,fw_lvl;
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(2000))u_fwc(.ck(ck),.rn(rl[0]),.d(fw[0]),.q(fw_ctl));
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(2001))u_fwl(.ck(ck),.rn(rl[0]),.d(fw[0]),.q(fw_lvl));
     reg         iw_v;
     assign      ib_re = !iw_v && fw == 2'b00 && ib_r != ib_w && armed;
     reg  [319:0] iw;                          // 16 x 20-b selected positions (bits [335:320] = lv go to lvl)
@@ -259,7 +285,7 @@ module dsdv_idx_tx_n32 #(
     wire        lk_go = iw_v && ne_v && rq_room;
     wire [255:0] m_rd;
     dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_idx[19:4])), .rd(m_rd),
-        .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm));
+        .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]));
     reg  [1:0]  lp_v; reg [19:0] lp_i [0:1];
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
@@ -277,7 +303,7 @@ module dsdv_idx_tx_n32 #(
         end else begin
             fw <= {fw[0], ib_re};
             if (ib_re) ib_r <= ib_r + 1'b1;
-            if (fw[1]) iw_v <= 1'b1;
+            if (fw_ctl) iw_v <= 1'b1;
             if (lk_go && (lvl & ~(16'd1 << ne)) == 16'd0) iw_v <= 1'b0;
             if (iw_v && !ne_v) iw_v <= 1'b0;
             lp_v <= {lp_v[0], lk_go};
@@ -287,12 +313,12 @@ module dsdv_idx_tx_n32 #(
         end
     always @(posedge ck) begin : g_lk
         integer c_;
-        fwk <= {10{fw[0]}};
-        for (c_ = 0; c_ < 10; c_ = c_ + 1) if (fwk[c_]) iw[32 * c_ +: 32] <= ib_q[32 * c_ +: 32];
-        if (fw[1]) lvl <= ib_q[335:320];
+        fwk <= {20{fw[0]}};
+        for(c_=0;c_<20;c_=c_+1)if(fwk[c_])iw[16*c_+:16]<=ib_q[16*c_+:16];
+        if (fw_lvl) lvl <= ib_q[335:320];
         if (lk_go) lvl[ne] <= 1'b0;
         lp_i[0] <= ne_idx; lp_i[1] <= lp_i[0];
-        if (lp_v[1]) rf[rf_w] <= {lp_i[1], lk_s};
+
     end
     always @* rq_n = rf_n + 4'(lp_v[0]) + 4'(lp_v[1]);
 
@@ -308,7 +334,23 @@ module dsdv_idx_tx_n32 #(
     reg         hdr_q, fin;
     reg  [15:0] tc; reg [2:0] rc; reg [11:0] sn;
     reg         slot_q;                      // = the grid slot of this cycle (precomputed from the next state)
-    wire [35:0] rh   = rf[rf_r];
+    wire[35:0]rh;
+    wire[2:0]rf_read_next=rf_r+3'(rf_pop),rf_write_next=rf_w+3'(lp_v[1]);
+    generate for(genvar c=0;c<9;c=c+1)begin:g_rf_read
+        wire[2:0]sel;
+        dsdv_tx_copy #(.W(3),.RESET(1),.ID(3000+c))u(.ck(ck),.rn(rl[5+(c>=5)]),.d(rf_read_next),.q(sel));
+        reg[3:0]part;
+        always @*begin part=0;for(integer a=0;a<8;a=a+1)part=part|(rf[a][4*c+:4]&{4{sel==3'(a)}});end
+        assign rh[4*c+:4]=part;
+    end
+    for(genvar a=0;a<8;a=a+1)begin:g_rf_write
+        for(genvar c=0;c<9;c=c+1)begin:g_field
+            wire go;
+            dsdv_tx_copy #(.W(1),.ID(4000+a*9+c))u(.ck(ck),.rn(1'b1),.d(lp_v[0]&&(rf_write_next==3'(a))),.q(go));
+            wire[35:0]data={lp_i[1],lk_s};
+            always @(posedge ck)if(go)rf[a][4*c+:4]<=data[4*c+:4];
+        end
+    end endgenerate
     wire [19:0] r_i  = rh[35:16];
     wire        r_in = wv && r_i[19:4] == w0c[19:4];
     wire        pop  = slot_q && bq_n != 3'd0;
@@ -316,9 +358,9 @@ module dsdv_idx_tx_n32 #(
     assign      rf_pop = rf_n != 4'd0 && armed && hdr_q && !fin && (!wv || r_in || flush_ok);
     wire        in_done = in_end && lk_idle && rf_n == 4'd0;
     wire        fl  = armed && hdr_q && !fin && flush_ok && ((rf_pop && wv && !r_in) || (in_done && rf_n == 4'd0));
-    wire        o_ctl_c = okk[4];            // control copy
-    wire        o_ctl_t = okk[5];            // tc / rc / sn copy
-    wire        o_ctl_j = okk[6];            // next-state job-field copy
+    wire        o_ctl_c = okk[7];            // control copy
+    wire        o_ctl_t = okk[10];            // tc / rc / sn copy
+    wire        o_ctl_j = okk[13];            // next-state job-field copy
     wire        g_on = armed && tc >= j_dly + ((MUT == 3) ? 16'(j_r) : 16'd0);
     wire        lastf = in_done && rf_n == 4'd0 && (MUT != 2);
     wire        nb_t = wv ? ~act : act;      // buffer a new window opens in
@@ -335,16 +377,11 @@ module dsdv_idx_tx_n32 #(
         if (o_ctl_c) begin
             nx_armed = 1'b1; nx_busy = 1'b1; nx_done = 1'b0; nx_in_end = 1'b0; nx_wv = 1'b0; nx_fin = 1'b0; nx_hdr_q = 1'b0;
         end
-        if (o_ctl_t) begin nx_tc = 16'd0; nx_rc = 3'd0; nx_sn = 12'd0; end
-        else if (armed) begin
-            if (tc != 16'hFFFF) nx_tc = tc + 16'd1;
-            if (g_on && !done) begin
-                nx_rc = (rc == 3'd0) ? j_r - 3'd1 : rc - 3'd1;
-                if (slot_q) nx_sn = sn + 12'd1;
-            end
-        end
+        if(okk[10])nx_tc=0;else if(armed&&tc!=16'hffff)nx_tc=tc+16'd1;
+        if(okk[11])nx_rc=0;else if(armed&&g_on&&!done)nx_rc=(rc==0)?j_r-3'd1:rc-3'd1;
+        if(okk[12])nx_sn=0;else if(armed&&g_on&&!done&&slot_q)nx_sn=sn+12'd1;
         // staging: HDR first, else pop / flush
-        if (armed && !hdr_q && !o_ctl_c) begin
+        if (armed && !hdr_q && !okk[8]) begin
             nx_d_h = 1'b1; nx_bq_n = 3'd1; nx_bix = 2'd0; nx_hdr_q = 1'b1; nx_lcur = j_hb;
         end else begin
             if (pop) begin nx_bq_n = bq_n - 3'd1; nx_bix = bix + 2'd1; end
@@ -359,7 +396,7 @@ module dsdv_idx_tx_n32 #(
         if (rf_pop && !r_in) begin nx_wv = 1'b1; nx_w0c = {r_i[19:4], 4'd0}; nx_act = nb_t; end
         if (fin && bq_n == 3'd0 && armed && !done) begin nx_done = 1'b1; nx_busy = 1'b0; end
         // the next cycle's grid slot
-        nx_dly = o_ctl_j ? cp[84:69] : j_dly; nx_sm = o_ctl_j ? cp[99:88] : j_sm; nx_r = o_ctl_j ? cp[87:85] : j_r;
+        nx_dly = okk[13] ? cp[84:69] : j_dly; nx_sm = okk[14] ? cp[99:88] : j_sm; nx_r = okk[15] ? cp[87:85] : j_r;
         nx_slot = nx_armed && nx_tc >= nx_dly + ((MUT == 3) ? 16'(nx_r) : 16'd0) && nx_rc == 3'd0 && nx_sn < nx_sm && !nx_done;
     end
     always @(posedge ck or negedge rl[1])
@@ -412,11 +449,13 @@ module dsdv_idx_tx_n32 #(
             s_b0 <= nx_pop && nx_isb0; s_b1 <= nx_pop && nx_isb1; s_h <= nx_pop && nx_d_h; s_p <= nx_pop;
             lo[0] <= s_p;
         end
+    wire s_h_data;
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(5000))u_shd(.ck(ck),.rn(rl[3]),.d(nx_pop&&nx_d_h),.q(s_h_data));
     wire [255:0] wmk0 = wscb[0] & lvmask(wlvb[0]), wmk1 = wscb[1] & lvmask(wlvb[1]);   // stale fields masked
     always @(posedge ck) begin : g_lo
         integer c_;
         reg [255:0] dd; reg [11:0] tt;
-        dd = {224'd0, {32{s_h}} & {j_l, j_k, j_hb}};                          // HDR {L, K, HB}
+        dd = {224'd0, {32{s_h_data}} & {j_l, j_k, j_hb}};                          // HDR {L, K, HB}
         dd[255:252] = dd[255:252] | ({4{s_b1}} & 4'd2);                       // part 1 {2, PT, 0, last, lv}
         dd[251:244] = dd[251:244] | ({8{s_b1}} & j_pt);
         dd[16]      = dd[16] | (s_b1 && d_last);
@@ -435,8 +474,8 @@ module dsdv_idx_tx_n32 #(
             fc_set <= 8'd0;
             if (o_eg && vo_r[6] && !e_h) fc_set[0] <= 1'b1;                           // part 1 without part 0
             if (ib_push && (ib_w - ib_r) == (IW + 1)'(IB)) fc_set[1] <= 1'b1;          // IDX buffer overflow
-            if (o_ctl_c && busy) fc_set[2] <= 1'b1;                                     // a job while one is active
-            if (o_ctl_c && (cp[87:85] == 3'd0 || cp[20:16] < 5'd8)) fc_set[3] <= 1'b1;
+            if (okk[9] && busy) fc_set[2] <= 1'b1;                                     // a job while one is active
+            if (okk[9] && (cp[87:85] == 3'd0 || cp[20:16] < 5'd8)) fc_set[3] <= 1'b1;
             if (rf_pop && !r_in && wv && r_i[19:4] < w0c[19:4]) fc_set[4] <= 1'b1;     // selection not ascending
             if (armed && !done && sn == j_sm && g_on) fc_set[5] <= 1'b1;               // grid exhausted, job not done
             if (cap_unal) fc_set[6] <= 1'b1;

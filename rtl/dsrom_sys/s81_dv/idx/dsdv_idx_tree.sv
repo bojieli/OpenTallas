@@ -25,6 +25,14 @@
 // ===================================================================================================================
 // dsdv_idx_vmux
 // ===================================================================================================================
+// Independent kept same-edge bit captures for the VMUX valid and reset leaves.
+(* keep_hierarchy="yes" *)
+module dsdv_vm_bit #(parameter integer ID=0)(input wire ck,rn,d,output wire q);
+    (* keep *)reg r;
+    always @(posedge ck or negedge rn)if(!rn)r<=0;else r<=d;
+    assign q=r;
+endmodule
+
 module dsdv_idx_vmux #(
     parameter integer V = 276
 ) (
@@ -37,9 +45,20 @@ module dsdv_idx_vmux #(
     output reg  [V-1:0]  o,        // -> u_bk_sel.vi_s
     output reg           fault     // sticky: two valid beats met in one cycle (a compile error)
 );
-    reg [1:0] rs;
-    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
-    wire rn = rs[1];
+    localparam integer NJ=(V-1+23)/24;
+    reg rs0;
+    always @(posedge ck or negedge rst)if(!rst)rs0<=0;else rs0<=1;
+    wire[3:0]rl;wire rn=rl[0];
+    generate for(genvar l=0;l<4;l=l+1)begin:g_reset
+        dsdv_vm_bit #(.ID(l))u(.ck(ck),.rn(rst),.d(rs0),.q(rl[l]));
+    end endgenerate
+    wire[4*NJ-1:0]vk;
+    generate for(genvar c=0;c<NJ;c=c+1)begin:g_valid
+        dsdv_vm_bit #(.ID(100+c))u_r(.ck(ck),.rn(rl[0]),.d(i_r[0]),.q(vk[c]));
+        dsdv_vm_bit #(.ID(200+c))u_s(.ck(ck),.rn(rl[1]),.d(i_s[0]),.q(vk[NJ+c]));
+        dsdv_vm_bit #(.ID(300+c))u_a(.ck(ck),.rn(rl[2]),.d(i_a[0]),.q(vk[2*NJ+c]));
+        dsdv_vm_bit #(.ID(400+c))u_b(.ck(ck),.rn(rl[3]),.d(i_b[0]),.q(vk[3*NJ+c]));
+    end endgenerate
     reg [V-1:0] r_r, r_s, r_a, r_b;
     always @(posedge ck or negedge rn)
         if (!rn) begin r_r[0] <= 1'b0; r_s[0] <= 1'b0; r_a[0] <= 1'b0; r_b[0] <= 1'b0; o[0] <= 1'b0; fault <= 1'b0; end
@@ -50,8 +69,13 @@ module dsdv_idx_vmux #(
         end
     always @(posedge ck) begin
         r_r[V-1:1] <= i_r[V-1:1]; r_s[V-1:1] <= i_s[V-1:1]; r_a[V-1:1] <= i_a[V-1:1]; r_b[V-1:1] <= i_b[V-1:1];
-        o[V-1:1] <= (r_r[0] ? r_r[V-1:1] : '0) | (r_s[0] ? r_s[V-1:1] : '0) | (r_a[0] ? r_a[V-1:1] : '0) | (r_b[0] ? r_b[V-1:1] : '0);
+
     end
+    generate for(genvar c=0;c<NJ;c=c+1)begin:g_out
+        localparam integer LO=1+24*c,SW=(V-LO<24)?V-LO:24;
+        always @(posedge ck)o[LO+:SW]<=(r_r[LO+:SW]&{SW{vk[c]}})|(r_s[LO+:SW]&{SW{vk[NJ+c]}})|
+            (r_a[LO+:SW]&{SW{vk[2*NJ+c]}})|(r_b[LO+:SW]&{SW{vk[3*NJ+c]}});
+    end endgenerate
 endmodule
 
 // ===================================================================================================================
