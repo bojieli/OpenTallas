@@ -34,7 +34,10 @@ def main():
     # terminal phase2/deadline proof qualifies the current source link scope.
     link = evidence['mu_link'].get('receipt') or {}
     phase = link.get('phase_congruence') or {}
-    checks = dict(terminal_pass=link.get('result') == 'PASS' and (link.get('run') or {}).get('exit') == 0,
+    model_identity = dict(calendar_sha256='04145d2cd1b03ff3ff29d5047fb9791a0d77a6f80caaf6cdd58ccffc81f0b233',
+                          graph_sha256='8fde842fb6f61fb31d6024c300dcbcd27538836d63f50f1faa90454f9d98ddc5')
+    checks = dict(exact_bound_model=all(link.get(k) == v for k,v in model_identity.items()),
+                  terminal_pass=link.get('result') == 'PASS' and (link.get('run') or {}).get('exit') == 0,
                   graph_phase_two=phase.get('quantum') == 4 and phase.get('graph_first_send') == 18138,
                   exact_rebase=phase.get('bench_first_issue') == 12002 and phase.get('offset') == -6136,
                   phase_preserved=phase.get('preserved') is True,
@@ -42,11 +45,17 @@ def main():
                   landing_lower_bounds=link.get('first_landing_lower_bounds_checked') is True,
                   all_positions=link.get('positions_executed') == 6 and link.get('beats') == 3840)
     current_link = dict(status='PASS_SOURCE_COMPONENT' if all(checks.values()) else 'PENDING_CURRENT_SOURCE_LINK',
-                        checks=checks, current_token_provenance_qualified=link.get('current_token_provenance_qualified', False),
+                        checks=checks, bound_model={k:link.get(k) for k in model_identity},
+                        bound_model_grade='MODEL identity attached to one source transport component',
+                        current_token_provenance_qualified=link.get('current_token_provenance_qualified', False),
                         qualification_scope=link.get('qualification_scope', 'PENDING_EXPLICIT_COMPONENT_SCOPE'),
                         cycle_domain='absolute bench cycles with certified offset -6136; no HOST/KS global epoch',
                         qualification='Explicit phase2 source link only; HOST/KS, whole stage, rates and full token remain separate')
     selected_calendar = (evidence['mu'].get('receipt') or {}).get('calendar', {}).get('selected')
+    chosen_mtp = (selected_calendar or {}).get('mtp') or {}
+    current_link['selected_mu_model_identity_matches'] = bool(
+        checks['exact_bound_model'] and chosen_mtp.get('sha256') == link.get('calendar_sha256')
+        and (chosen_mtp.get('checker') or {}).get('position_graph_sha256') == link.get('graph_sha256'))
     # Component receipts remain scoped. A serial composition and independent
     # endpoint benches do not establish an end-to-end token delivery verdict.
     record = dict(schema='opentallas.tokfunc_s81.v1', source_ref=a.ref,

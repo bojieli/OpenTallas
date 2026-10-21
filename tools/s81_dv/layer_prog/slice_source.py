@@ -5,6 +5,7 @@ qualify a physical binding. Materialized kit inventories remain authoritative
 for a run; source-only programmes retain their explicit adoption hold.
 """
 import hashlib
+import os
 import re
 from pathlib import Path
 
@@ -12,8 +13,9 @@ ROOT = Path(__file__).resolve().parents[3]
 BASE = Path('rtl/dsrom_sys/s81_dv/slice')
 
 
-def resolve(die, slice_inst, source_root=ROOT):
-    source_root = Path(source_root)
+def resolve(die, slice_inst, source_root=None):
+    explicit = source_root is not None or bool(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT'))
+    source_root = Path(source_root or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
     sources = {}
     chain = []
 
@@ -70,5 +72,5 @@ def resolve(die, slice_inst, source_root=ROOT):
                 die_master=die.inst[slice_inst]['master'], wrapper_chain=chain,
                 xg=xg, ring=ring, streamer=streamer, capture=cap,
                 streamer_added_capture_edges=added, source_sha256=sources,
-                source_root=str(source_root), physical_binding_qualified=False,
+                source_root=str(source_root), explicit_source_root=explicit, physical_binding_qualified=False,
                 qualification='SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required')
