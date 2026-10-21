@@ -1,0 +1,355 @@
+{
+ "name": "qfd_dv_slice2_vm8pb",
+ "top": "qfd_dv_s5_vm8p",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/qwen_dv/s5/p2/qfd_dv_s5_vm8p.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "defines": [],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1123.2,
+  "h": 1183.68,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "pins": {
+  "S": [
+   "a_re",
+   "a_addr",
+   "a_q",
+   "f_va",
+   "cr_re",
+   "cr_addr",
+   "cr_q",
+   "f_crl",
+   "f_crh",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data",
+   "rst_n",
+   "b_re",
+   "b_addr",
+   "b_q",
+   "f_vb",
+   "vm_we",
+   "ck",
+   "vm_waddr",
+   "vm_wdata",
+   "w16_we",
+   "w16_addr",
+   "w16_data",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "bs_re",
+   "bs_addr",
+   "bs_q",
+   "f_bt",
+   "c_re",
+   "c_addr",
+   "c_q",
+   "f_vc",
+   "p_re",
+   "p_idx",
+   "p_q"
+  ],
+  "N": [],
+  "E": [],
+  "W": []
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "count": 1,
+   "inst": "u_cl",
+   "at": [
+    86.4,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "count": 1,
+   "inst": "u_ch",
+   "at": [
+    86.4,
+    864.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab",
+   "count": 1,
+   "inst": "u_bt",
+   "at": [
+    432.0,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog",
+   "count": 1,
+   "inst": "u_pg",
+   "at": [
+    777.6,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_va",
+   "at": [
+    86.4,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_vb",
+   "at": [
+    432.0,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_vc",
+   "at": [
+    777.6,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "threads": 32,
+  "peak_ram_gb": 128,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "P2 one clock region (owner 10-20 09:05: pin registers only at region crossings and on wires > 405 um): inputs are captured by the closed leaves own pin registers (tier 1 direct) or by static relays (tiers 2/3), every output is the S-face capture register qfd_dv_s5_vm8out (flop-last)"
+ },
+ "structural_change": "QW-SLICE2W 10-20 P2 successor of qfd_dv_slice2_vm8l / vm8lh (P1, 8 regions + 71 D4 rings: gates FAIL clock_rule ck_r_io 31k sinks TT/FF spread 339/300 ps, leaf regions 129-289 ps, in->reg -544 ps, reset-run cross_clock -71 ps; vm8l placement setup -963 / hold -433 ps). One clock region for the 7 CLOSED leaves (vmr x3, crh x2, btab, prog), no landing rings, tiered floorplan (tier 1 VM replicas at the S face d=0, tier 2 btab/prog d=1 + cl d=2 pad, tier 3 ch d=2) with static relays; lockstep == vm8fh with answers +2*d (VM 0, BTAB/PROG +2, CROM +4). PARALLEL FALLBACK vm8pb: S band 172.8 um and S-face pin_ranges aligned to the leaf columns (VM writes / table writes centred).",
+ "job": {
+  "owner": "Claude:QW-SLICE2W",
+  "branch": "claude/qw-slice2r-1020",
+  "tag": "vm8pb",
+  "submit": false,
+  "purpose": "slice2 VM8 leaf group P2 (one region, tier relays): critical, gate only -> COORD-REVIEW-QUEUE",
+  "hold_merge": "QW-SLICE2W proof vehicle; the full slice2 parent absorbs it",
+  "extra_paths": [
+   "rtl/test/qwen_dv/s5",
+   "rtl/qwen_dv/s5/p2"
+  ],
+  "benches": [
+   {
+    "name": "p2_vm8p",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/qwen_dv/s5/p2/qfd_dv_s5_vm8p_bench.sh {RUN}/bench/p2_vm8p",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BENCH_EXIT 0"
+   }
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "a_re": [
+   5.4,
+   268.0
+  ],
+  "a_addr": [
+   5.4,
+   268.0
+  ],
+  "a_q": [
+   5.4,
+   268.0
+  ],
+  "f_va": [
+   5.4,
+   268.0
+  ],
+  "cr_re": [
+   5.4,
+   268.0
+  ],
+  "cr_addr": [
+   5.4,
+   268.0
+  ],
+  "cr_q": [
+   5.4,
+   268.0
+  ],
+  "f_crl": [
+   5.4,
+   268.0
+  ],
+  "f_crh": [
+   5.4,
+   268.0
+  ],
+  "vm_we": [
+   268.0,
+   504.0
+  ],
+  "vm_waddr": [
+   268.0,
+   504.0
+  ],
+  "vm_wdata": [
+   268.0,
+   504.0
+  ],
+  "w16_we": [
+   268.0,
+   504.0
+  ],
+  "w16_addr": [
+   268.0,
+   504.0
+  ],
+  "w16_data": [
+   268.0,
+   504.0
+  ],
+  "w1_we": [
+   268.0,
+   504.0
+  ],
+  "w1_addr": [
+   268.0,
+   504.0
+  ],
+  "w1_data": [
+   268.0,
+   504.0
+  ],
+  "b_re": [
+   504.0,
+   670.0
+  ],
+  "b_addr": [
+   504.0,
+   670.0
+  ],
+  "b_q": [
+   504.0,
+   670.0
+  ],
+  "f_vb": [
+   504.0,
+   670.0
+  ],
+  "bs_re": [
+   504.0,
+   670.0
+  ],
+  "bs_addr": [
+   504.0,
+   670.0
+  ],
+  "bs_q": [
+   504.0,
+   670.0
+  ],
+  "f_bt": [
+   504.0,
+   670.0
+  ],
+  "tw_we": [
+   670.0,
+   906.0
+  ],
+  "tw_kind": [
+   670.0,
+   906.0
+  ],
+  "tw_addr": [
+   670.0,
+   906.0
+  ],
+  "tw_data": [
+   670.0,
+   906.0
+  ],
+  "c_re": [
+   906.0,
+   1117.8
+  ],
+  "c_addr": [
+   906.0,
+   1117.8
+  ],
+  "c_q": [
+   906.0,
+   1117.8
+  ],
+  "f_vc": [
+   906.0,
+   1117.8
+  ],
+  "p_re": [
+   906.0,
+   1117.8
+  ],
+  "p_idx": [
+   906.0,
+   1117.8
+  ],
+  "p_q": [
+   906.0,
+   1117.8
+  ]
+ }
+}

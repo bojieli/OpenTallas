@@ -1,0 +1,32 @@
+
+17. Printing statistics.
+
+=== qfd_dv_s5_vm8p ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     6447        - wires
+    34277        - wire bits
+      167        - public wires
+    27997        - public wire bits
+       39        - ports
+     4937        - port bits
+    12591 2.11E+03 cells
+       24        -   $scopeinfo
+     6280 1.83E+03   DFFHQNx1_ASAP7_75t_R
+     6280  274.687   INVx1_ASAP7_75t_R
+        1        -   qfd_dv_s8x_btab
+        2        -   qfd_dv_s8x_crh
+        1        -   qfd_dv_s8x_prog
+        3        -   qfd_dv_s8x_vmr
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \qfd_dv_s8x_vmr is unknown!
+   Area for cell type \qfd_dv_s8x_crh is unknown!
+   Area for cell type \qfd_dv_s8x_btab is unknown!
+   Area for cell type \qfd_dv_s8x_prog is unknown!
+
+   Chip area for module '\qfd_dv_s5_vm8p': 2105.935200
+     of which used for sequential elements: 1831.248000 (86.96%)
+

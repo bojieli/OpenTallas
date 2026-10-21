@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_vm8p",
+ "enable": false,
+ "reason": "P2 one clock region (owner 10-20 09:05: pin registers only at region crossings and on wires > 405 um): inputs are captured by the closed leaves own pin registers (tier 1 direct) or by static relays (tiers 2/3), every output is the S-face capture register qfd_dv_s5_vm8out (flop-last)"
+}
