@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_s5_vm8r",
+ "enable": false,
+ "reason": "the lp.py RTL lands it: rst_n -> regional reset runs from region pg (depth 5, 1-bit hops <= 405 um), last stage = kept copies <= 32 loads (regional_reset_copies) -> leaf rst_n pins; the port net has ONE sink"
+}
