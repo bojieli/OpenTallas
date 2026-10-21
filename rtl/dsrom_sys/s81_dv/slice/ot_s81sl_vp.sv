@@ -83,17 +83,36 @@ module ot_s81sl_vp #(
     integer i, k;
 
     // ---------------------------------------------------------------- input pin flops
-    reg cv_c, swv_c, hqv_c, xrv_c, xwv_c; reg [1:0] cwv_c; reg [9:0] xra_c, xwa_c; reg [7:0] xwm_c; reg [255:0] xwd_c;
+    reg cv_c, hqv_c, xrv_c; reg [9:0] xra_c, xwa_c; reg [7:0] xwm_c; reg [255:0] xwd_c;
     reg [159:0] cd_c; reg [9:0] swa_c; reg [7:0] swm_c; reg [255:0] swd_c; reg [23:0] cwa_c; reg [63:0] cwd_c;
     reg [255:0] hqd_c;
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin cv_c <= 1'b0; swv_c <= 1'b0; cwv_c <= 2'b00; hqv_c <= 1'b0; xrv_c <= 1'b0; xwv_c <= 1'b0; end
-        else begin cv_c <= c_v; swv_c <= sw_v; cwv_c <= cw_v; hqv_c <= hq_v; xrv_c <= x_rv; xwv_c <= x_wv; end
+        if (!rs_c) begin cv_c <= 1'b0; hqv_c <= 1'b0; xrv_c <= 1'b0; end
+        else begin cv_c <= c_v; hqv_c <= hq_v; xrv_c <= x_rv; end
     always @(posedge clk) begin
         xra_c <= x_ra; xwa_c <= x_wa; xwm_c <= x_wm; xwd_c <= x_wd;
         cd_c <= c_d; swa_c <= sw_a; swm_c <= sw_m; swd_c <= sw_d; cwa_c <= cw_a; cwd_c <= cw_d; hqd_c <= hq_d;
     end
     wire [3:0] op = cd_c[3:0]; wire [9:0] a0 = cd_c[13:4], a1 = cd_c[23:14]; wire [7:0] cn = cd_c[31:24];
+    // S81-SLICE/VP SAFE 10-21 (c318a2024 NEEDS_RTL TT -102): the bank write-port selects (sw / cw / xw valid, bank bit,
+    // word masks) and the NORM load decode each fanned out to 256+ mux / enable loads from ONE pin flop.  Every such
+    // select now lands from its pin in KEPT copies, one per 32-bit word group (g 0..7 = bank g/4, word g%4) plus one per
+    // bank address / enable group (g 8, 9), and one per 32-bit n_pre word (4) + the m_* group: <= ~40 loads per copy.
+    // Same edge as the original pin flop: no latency change.
+    localparam integer NG = 10;
+    (* keep *) reg [NG-1:0]   k_swv, k_xwv, k_swa0, k_xwa0;
+    (* keep *) reg [2*NG-1:0] k_cwv;
+    (* keep *) reg [8*NG-1:0] k_swm, k_xwm;
+    (* keep *) reg [6*NG-1:0] k_cws;                 // {cw_a[14:12], cw_a[2:0]}: port 1 / port 0 {bank, word}
+    (* keep *) reg [4:0]      k_cv;
+    (* keep *) reg [19:0]     k_op;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin k_swv <= {NG{1'b0}}; k_xwv <= {NG{1'b0}}; k_cwv <= {(2*NG){1'b0}}; k_cv <= 5'd0; end
+        else begin k_swv <= {NG{sw_v}}; k_xwv <= {NG{x_wv}}; k_cwv <= {NG{cw_v}}; k_cv <= {5{c_v}}; end
+    always @(posedge clk) begin
+        k_swa0 <= {NG{sw_a[0]}}; k_xwa0 <= {NG{x_wa[0]}}; k_swm <= {NG{sw_m}}; k_xwm <= {NG{x_wm}};
+        k_cws <= {NG{cw_a[14:12], cw_a[2:0]}}; k_op <= {5{c_d[3:0]}};
+    end
 
     // ---------------------------------------------------------------- sequencer (one op at a time; fixed timelines)
     reg [3:0] sop; reg [7:0] si, sn; reg [9:0] sa0, sa1; reg [1:0] sqb; reg srun;
@@ -139,107 +158,140 @@ module ot_s81sl_vp #(
     wire xrcol = xrv_c && srun && sop != OP_HSTORE;   // the extension read shares the sequencer's read ports
 
     // ---------------------------------------------------------------- leaf store: write port selection per bank
-    // writers: row write (sw), capture port 0 / 1, HSTORE (two rows a cycle)
-    reg [1:0] wv; reg [8:0] wa [0:1]; reg [127:0] wd [0:1]; reg [127:0] wm [0:1]; reg wcol;
+    // writers: row write (sw), capture port 0 / 1, extension write (xw), HSTORE (two rows a cycle).  Every writer
+    // overwrites a whole bank's (data, mask) when it targets that bank, the later writer winning (sw, cw0, cw1, xw, hs):
+    // decomposed per 32-bit word group g = 4 b + w, each group on its own kept select copies (S81-SLICE/VP SAFE 10-21).
+    wire [255:0] wd_f, wm_f; wire [17:0] wa_f; wire [1:0] wv, wcb; wire wcol = |wcb;
     reg hs_v; reg [9:0] hs_a; reg [255:0] hs_d;    // HSTORE write-back (registered from hq)
-    reg [2:0] nw [0:1];
-    always @(*) begin
-        wv = 2'b00; wcol = 1'b0;
-        for (k = 0; k < 2; k = k + 1) begin wa[k] = 9'd0; wd[k] = 128'd0; wm[k] = 128'd0; nw[k] = 3'd0; end
-        if (swv_c) begin
-            // row a -> bank a[0] at a >> 1; row a + 1 -> the other bank at (a + 1) >> 1 (a word mask of 0 skips a row)
-            k = swa_c[0];
-            if (|swm_c[3:0]) begin wv[k] = 1'b1; wa[k] = swa_c[9:1]; wd[k] = swd_c[127:0]; nw[k] = nw[k] + 3'd1;
-                for (i = 0; i < 4; i = i + 1) wm[k][32 * i +: 32] = {32{swm_c[i]}}; end
-            if (|swm_c[7:4]) begin wv[1 - k] = 1'b1; wa[1 - k] = swa_c[9:1] + {8'd0, swa_c[0]}; wd[1 - k] = swd_c[255:128];
-                nw[1 - k] = nw[1 - k] + 3'd1;
-                for (i = 0; i < 4; i = i + 1) wm[1 - k][32 * i +: 32] = {32{swm_c[4 + i]}}; end
-        end
-        for (i = 0; i < 2; i = i + 1)
-            if (cwv_c[i]) begin
-                k = cwa_c[12 * i + 2]; wv[k] = 1'b1; wa[k] = cwa_c[12 * i + 3 +: 9];
-                wd[k] = {4{cwd_c[32 * i +: 32]}}; wm[k] = 128'd0; wm[k][32 * cwa_c[12 * i +: 2] +: 32] = {32{1'b1}};
-                nw[k] = nw[k] + 3'd1;
+    (* keep *) reg [NG-1:0] k_hsv, k_hsa0;           // kept copies of hs_v / hs_a[0] (= hs_base[0]: the step adds 2 i)
+    genvar gb, gw;
+    generate for (gb = 0; gb < 2; gb = gb + 1) begin : g_wb
+        for (gw = 0; gw < 4; gw = gw + 1) begin : g_ww
+            localparam integer G = 4 * gb + gw;
+            reg [31:0] wdw; reg wmw;
+            always @(*) begin
+                wdw = 32'd0; wmw = 1'b0;
+                if (k_swv[G]) begin
+                    if (k_swa0[G] == (gb == 1)) begin
+                        if (|k_swm[8 * G +: 4]) begin wdw = swd_c[32 * gw +: 32]; wmw = k_swm[8 * G + gw]; end
+                    end else if (|k_swm[8 * G + 4 +: 4]) begin wdw = swd_c[128 + 32 * gw +: 32]; wmw = k_swm[8 * G + 4 + gw]; end
+                end
+                if (k_cwv[2 * G] && k_cws[6 * G + 2] == (gb == 1)) begin
+                    wdw = cwd_c[31:0]; wmw = (k_cws[6 * G +: 2] == gw); end
+                if (k_cwv[2 * G + 1] && k_cws[6 * G + 5] == (gb == 1)) begin
+                    wdw = cwd_c[63:32]; wmw = (k_cws[6 * G + 3 +: 2] == gw); end
+                if (k_xwv[G]) begin
+                    if (k_xwa0[G] == (gb == 1)) begin
+                        if (|k_xwm[8 * G +: 4]) begin wdw = xwd_c[32 * gw +: 32]; wmw = k_xwm[8 * G + gw]; end
+                    end else if (|k_xwm[8 * G + 4 +: 4]) begin wdw = xwd_c[128 + 32 * gw +: 32]; wmw = k_xwm[8 * G + 4 + gw]; end
+                end
+                if (k_hsv[G]) begin wdw = (k_hsa0[G] == (gb == 1)) ? hs_d[32 * gw +: 32] : hs_d[128 + 32 * gw +: 32]; wmw = 1'b1; end
             end
-        if (xwv_c) begin
-            k = xwa_c[0];
-            if (|xwm_c[3:0]) begin wv[k] = 1'b1; wa[k] = xwa_c[9:1]; wd[k] = xwd_c[127:0]; nw[k] = nw[k] + 3'd1;
-                for (i = 0; i < 4; i = i + 1) wm[k][32 * i +: 32] = {32{xwm_c[i]}}; end
-            if (|xwm_c[7:4]) begin wv[1 - k] = 1'b1; wa[1 - k] = xwa_c[9:1] + {8'd0, xwa_c[0]}; wd[1 - k] = xwd_c[255:128];
-                nw[1 - k] = nw[1 - k] + 3'd1;
-                for (i = 0; i < 4; i = i + 1) wm[1 - k][32 * i +: 32] = {32{xwm_c[4 + i]}}; end
+            assign wd_f[128 * gb + 32 * gw +: 32] = wdw; assign wm_f[128 * gb + 32 * gw +: 32] = {32{wmw}};
         end
-        if (hs_v) begin
-            wv = 2'b11; wa[0] = hs_a[9:1]; wa[1] = hs_a[9:1];
-            wd[hs_a[0]] = hs_d[127:0]; wd[!hs_a[0]] = hs_d[255:128];
-            wm[0] = {128{1'b1}}; wm[1] = {128{1'b1}}; nw[0] = nw[0] + 3'd1; nw[1] = nw[1] + 3'd1;
+        // bank enable / address / write count (group 8 + b)
+        localparam integer GA = 8 + gb;
+        reg [2:0] nwb; reg wvb; reg [8:0] wab;
+        always @(*) begin
+            wvb = 1'b0; wab = 9'd0; nwb = 3'd0;
+            if (k_swv[GA]) begin
+                if (k_swa0[GA] == (gb == 1)) begin
+                    if (|k_swm[8 * GA +: 4]) begin wvb = 1'b1; wab = swa_c[9:1]; nwb = nwb + 3'd1; end
+                end else if (|k_swm[8 * GA + 4 +: 4]) begin wvb = 1'b1; wab = swa_c[9:1] + {8'd0, k_swa0[GA]}; nwb = nwb + 3'd1; end
+            end
+            if (k_cwv[2 * GA] && k_cws[6 * GA + 2] == (gb == 1)) begin wvb = 1'b1; wab = cwa_c[11:3]; nwb = nwb + 3'd1; end
+            if (k_cwv[2 * GA + 1] && k_cws[6 * GA + 5] == (gb == 1)) begin wvb = 1'b1; wab = cwa_c[23:15]; nwb = nwb + 3'd1; end
+            if (k_xwv[GA]) begin
+                if (k_xwa0[GA] == (gb == 1)) begin
+                    if (|k_xwm[8 * GA +: 4]) begin wvb = 1'b1; wab = xwa_c[9:1]; nwb = nwb + 3'd1; end
+                end else if (|k_xwm[8 * GA + 4 +: 4]) begin wvb = 1'b1; wab = xwa_c[9:1] + {8'd0, k_xwa0[GA]}; nwb = nwb + 3'd1; end
+            end
+            if (k_hsv[GA]) begin wvb = 1'b1; wab = hs_a[9:1]; nwb = nwb + 3'd1; end
         end
-        wcol = (nw[0] > 3'd1) || (nw[1] > 3'd1);
-    end
+        assign wv[gb] = wvb; assign wa_f[9 * gb +: 9] = wab; assign wcb[gb] = nwb > 3'd1;
+    end endgenerate
     wire [127:0] rq0, rq1;
     ot_sram_1r1w_512x128_m4_r2c2 u_b0 (.clk(clk), .r_ce_in(re_e), .r_addr_in(ra_e[9:1]), .rd_out(rq0),
-        .w_ce_in(wv[0]), .w_addr_in(wa[0]), .wd_in(wd[0]), .w_mask_in(wm[0]),
+        .w_ce_in(wv[0]), .w_addr_in(wa_f[8:0]), .wd_in(wd_f[127:0]), .w_mask_in(wm_f[127:0]),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
     ot_sram_1r1w_512x128_m4_r2c2 u_b1 (.clk(clk), .r_ce_in(re_o), .r_addr_in(ra_o[9:1]), .rd_out(rq1),
-        .w_ce_in(wv[1]), .w_addr_in(wa[1]), .wd_in(wd[1]), .w_mask_in(wm[1]),
+        .w_ce_in(wv[1]), .w_addr_in(wa_f[17:9]), .wd_in(wd_f[255:128]), .w_mask_in(wm_f[255:128]),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
     // macro output registers + the step that launched the read (2 edges: address edge, output register)
-    reg [127:0] q0, q1; reg [3:0] dop; reg [7:0] dsi; reg dv, dodd, dswp;
+    reg [127:0] q0, q1; reg [3:0] dop; reg [7:0] dsi; reg dv;
     reg [3:0] dop1; reg [7:0] dsi1; reg dv1, dodd1, dswp1;
     reg [9:0] dmq1, dmq;                                      // NORMR: {n[1:0], a1[7:0]} riding with the read step
-    reg xr1, xr2, xsw1, xsw2;
-    always @(posedge clk) begin q0 <= rq0; q1 <= rq1; xsw1 <= xra_c[0]; xsw2 <= xsw1; end
+    reg xr1, xr2, xsw1;
+    always @(posedge clk) begin q0 <= rq0; q1 <= rq1; xsw1 <= xra_c[0]; end
     always @(posedge clk or negedge rs_s) if (!rs_s) begin xr1 <= 1'b0; xr2 <= 1'b0; end else begin xr1 <= xrv_c; xr2 <= xr1; end
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin dv1 <= 1'b0; dv <= 1'b0; end
         else begin dv1 <= srun; dv <= dv1; end
     always @(posedge clk) begin
         dop1 <= sop; dsi1 <= si; dodd1 <= re_o && !re_e; dswp1 <= swp; dmq1 <= {sqb, sa1[7:0]};
-        dop <= dop1; dsi <= dsi1; dodd <= dodd1; dswp <= dswp1; dmq <= dmq1;
+        dop <= dop1; dsi <= dsi1; dmq <= dmq1;
     end
-    wire [127:0] qe = dswp ? q1 : q0, qo = dswp ? q0 : q1;   // rows a0 + 2i (first) / a0 + 2i + 1 (second)
-    wire [127:0] q1r = dodd ? q1 : q0;                        // POST: the one row read this step
+    // S81-SLICE/VP SAFE 10-21: the bank-swap / odd-row / extension-swap selects drove 128..768 mux loads from one flop
+    // (dswp -> hw_d / wl_d / lo_d, dodd -> cf / n_pre / yrow, xsw2 -> x_qd): kept copies per 32-bit word, same edge.
+    (* keep *) reg [7:0] k_dswp, k_xsw2; (* keep *) reg [3:0] k_dodd;
+    always @(posedge clk) begin k_dswp <= {8{dswp1}}; k_dodd <= {4{dodd1}}; k_xsw2 <= {8{xsw1}}; end
+    wire [127:0] qe, qo, q1r;                                 // rows a0 + 2i (first) / a0 + 2i + 1 (second); POST row
+    wire [255:0] qoe = {qo, qe};
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_qw
+        assign qe[32 * gq +: 32] = k_dswp[gq] ? q1[32 * gq +: 32] : q0[32 * gq +: 32];
+        assign qo[32 * gq +: 32] = k_dswp[4 + gq] ? q0[32 * gq +: 32] : q1[32 * gq +: 32];
+        assign q1r[32 * gq +: 32] = k_dodd[gq] ? q1[32 * gq +: 32] : q0[32 * gq +: 32];
+    end endgenerate
 
     // ---------------------------------------------------------------- hc_post: coefficients, operands, lanes
+    // coefficient capture: POST steps 0..4 one-hot, decoded one edge early from the read-step pipe and kept per
+    // (step, word) so each enable drives 32 flops (was dv / dop / dsi decode -> 640 enables).
     reg [31:0] cf [0:19];
-    reg [31:0] yv [0:3];
+    (* keep *) reg [19:0] k_cfe;                              // [4 s + i]: POST step s, word i
+    always @(posedge clk or negedge rs_p)
+        if (!rs_p) k_cfe <= 20'd0;
+        else for (k = 0; k < 5; k = k + 1) k_cfe[4 * k +: 4] <= {4{dv1 && dop1 == OP_POST && dsi1 == k[7:0]}};
     always @(posedge clk)
-        if (dv && dop == OP_POST && dsi < 8'd5)
-            for (i = 0; i < 4; i = i + 1) begin
+        for (k = 0; k < 5; k = k + 1)
+            for (i = 0; i < 4; i = i + 1)
+                if (k_cfe[4 * k + i]) begin
 `ifndef OT_S81SL_VP_MUT_POSTLAST
-                // step 0 = post row -> cf[16 + k]; steps 1..4 = comb row j = step - 1 -> cf[4 j + k]
-                if (dsi == 8'd0) cf[16 + i] <= q1r[32 * i +: 32]; else cf[4 * (dsi - 8'd1) + i] <= q1r[32 * i +: 32];
+                    // step 0 = post row -> cf[16 + i]; steps 1..4 = comb row j = step - 1 -> cf[4 j + i]
+                    if (k == 0) cf[16 + i] <= q1r[32 * i +: 32]; else cf[4 * (k - 1) + i] <= q1r[32 * i +: 32];
 `else
-                cf[4 * dsi + i] <= q1r[32 * i +: 32];   // bench mutant: the old order (comb rows a0..a0+3, post a0+4)
+                    cf[4 * k + i] <= q1r[32 * i +: 32];   // bench mutant: the old order (comb rows a0..a0+3, post a0+4)
 `endif
-            end
+                end
     // POST step s >= 5 (cycle T): the y row read and the h half-row request (hr) leave together; the y row is at q in
     // T + 2 (macro + output register) and at yrow_d[2] in T + 5, the h half row at hqd_c in T + 5 (hr out flop, vn pin
     // flop, vn h macro edge, vn output flop, this leaf's pin flop): the lanes issue in T + 5.
-    reg [255:0] yrow_d [0:3]; reg [3:0] ydv;
+    reg [127:0] yrow_d [0:2]; reg [3:0] ydv;
     always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= 4'd0;
         else ydv <= {ydv[2:0], dv && dop == OP_POST && dsi >= 8'd5};
-    always @(posedge clk) begin
-        yrow_d[0] <= {128'd0, q1r}; yrow_d[1] <= yrow_d[0]; yrow_d[2] <= yrow_d[1]; yrow_d[3] <= yrow_d[2];
-    end
+    always @(posedge clk) begin yrow_d[0] <= q1r; yrow_d[1] <= yrow_d[0]; yrow_d[2] <= yrow_d[1]; end
     // lanes: r0..r3 = h copies (BF16 -> FP32 pattern), y = y[e], c_j = comb[j][k] (word 4j + k), p = post[k]
+    // SAFE 10-21: lr / ly are KEPT per lane (Yosys merged the 4 identical column copies with hs_d into one flop that
+    // drove 4 lanes ~520 um apart + the bank write mux); lane_v is a kept copy per lane row (4) + one for the
+    // write-back valid ring.
     wire [15:0] lv, lf; wire [31:0] lo [0:15];
-    reg  lane_v; reg [31:0] lr [0:15][0:3]; reg [31:0] ly [0:15];
+    (* keep *) reg [4:0] k_lanev;
+    (* keep *) reg [31:0] lr [0:15][0:3]; (* keep *) reg [31:0] ly [0:15];
     genvar gl;
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_ln
         localparam integer KK = gl / 4, II = gl % 4;
 `ifndef OT_S81SL_VP_HARD
-        ot_dsrom_su_hcpost_lane_pr #(.ML(ML), .AL(AL)) u_l (.clk(clk), .rst_n(rs_p), .v(lane_v),
+        ot_dsrom_su_hcpost_lane_pr #(.ML(ML), .AL(AL)) u_l (.clk(clk), .rst_n(rs_p), .v(k_lanev[KK]),
 `else
         // hardened cluster: the closed s81sl_hcpl view (its kit fixes ML 7 / AL 6; no #() on a hard child)
-        ot_dsrom_su_hcpost_lane_pr u_l (.clk(clk), .rst_n(rs_p), .v(lane_v),
+        ot_dsrom_su_hcpost_lane_pr u_l (.clk(clk), .rst_n(rs_p), .v(k_lanev[KK]),
 `endif
             .r0(lr[gl][0]), .r1(lr[gl][1]), .r2(lr[gl][2]), .r3(lr[gl][3]), .y(ly[gl]),
             .c0(cf[KK]), .c1(cf[4 + KK]), .c2(cf[8 + KK]), .c3(cf[12 + KK]), .p(cf[16 + KK]),
             .vo(lv[gl]), .o(lo[gl]), .fault(lf[gl]));
     end endgenerate
     // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
-    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[2];
+    always @(posedge clk or negedge rs_p) if (!rs_p) k_lanev <= 5'd0; else k_lanev <= {5{ydv[2]}};
     always @(posedge clk) begin
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
@@ -250,15 +302,20 @@ module ot_s81sl_vp #(
                 ly[4 * k + i] <= yrow_d[2][32 * i +: 32];
             end
     end
-    // write-back tag: the half-row index rides a delay line of the lane latency
-    reg [3:0] pidx_q [0:4]; reg [3:0] pidx;
-    always @(posedge clk) begin
-        pidx_q[0] <= si[3:0] - 4'd5; pidx_q[1] <= pidx_q[0]; pidx_q[2] <= pidx_q[1]; pidx_q[3] <= pidx_q[2];
-        pidx_q[4] <= pidx_q[3]; pidx <= pidx_q[4];
-    end
-    wire [3:0] widx; wire wvl;
-    ot_hdc_delay #(.W(4), .D(HPL)) u_wi (.clk(clk), .rst_n(rs_p), .d(pidx), .q(widx));
-    ot_hdc_delay #(.W(1), .D(HPL), .RESET(1)) u_wv (.clk(clk), .rst_n(rs_p), .d(lane_v), .q(wvl));
+    // write-back valid: lane_v delayed by the lane latency HPL, as a RING (HPL - 1 entries, rotating pointer) + an
+    // output register with kept copies (SAFE 10-21: was a 33-deep flop->flop shift line; same latency).  The write-back
+    // half-row index is the position inside the contiguous 16-issue POST burst (bursts are >= 5 idle cycles apart:
+    // POST steps 0..4 issue no lane op), so it is a counter over wvl instead of a 33-deep tag line (same value).
+    localparam integer RD = HPL - 1;
+    localparam integer PW = (RD <= 2) ? 1 : $clog2(RD);
+    reg [RD-1:0] wv_ring; reg [PW-1:0] wv_p;
+    always @(posedge clk or negedge rs_p)
+        if (!rs_p) begin wv_ring <= {RD{1'b0}}; wv_p <= {PW{1'b0}}; end
+        else begin wv_ring[wv_p] <= k_lanev[4]; wv_p <= (wv_p == RD - 1) ? {PW{1'b0}} : wv_p + 1'b1; end
+    reg wvl; (* keep *) reg [8:0] k_wvl; reg [3:0] widx;
+    always @(posedge clk or negedge rs_p)
+        if (!rs_p) begin wvl <= 1'b0; k_wvl <= 9'd0; widx <= 4'd0; end
+        else begin wvl <= wv_ring[wv_p]; k_wvl <= {9{wv_ring[wv_p]}}; widx <= wvl ? widx + 4'd1 : 4'd0; end
 
     // ---------------------------------------------------------------- vn seam (registered outputs)
     reg hrq_v; reg [3:0] hrq_i;                  // h read request this cycle (POST / HSTORE)
@@ -267,20 +324,29 @@ module ot_s81sl_vp #(
         if (srun && sop == OP_POST && si >= 8'd5) begin hrq_v = 1'b1; hrq_i = si[3:0] - 4'd5; end
         if (srun && sop == OP_HSTORE) begin hrq_v = 1'b1; hrq_i = si[3:0]; end
     end
-    // HSTORE: the half row returns from vn three edges after hr, plus this leaf's input flop
-    reg [3:0] hsi_q [0:4];
-    reg [4:0] hsv_q;
-    always @(posedge clk or negedge rs_o) if (!rs_o) hsv_q <= 5'd0;
-        else hsv_q <= {hsv_q[3:0], srun && sop == OP_HSTORE};
-    always @(posedge clk) begin
-        hsi_q[0] <= si[3:0]; hsi_q[1] <= hsi_q[0]; hsi_q[2] <= hsi_q[1]; hsi_q[3] <= hsi_q[2]; hsi_q[4] <= hsi_q[3];
-    end
+    // HSTORE: the half row returns from vn three edges after hr, plus this leaf's input flop.  The half-row index is
+    // the position inside the contiguous 16-step HSTORE burst (counter over hsv_q[4]; was a 5-deep tag line).
+    reg [4:0] hsv_q; reg [3:0] hs_cnt;
+    always @(posedge clk or negedge rs_o) if (!rs_o) begin hsv_q <= 5'd0; hs_cnt <= 4'd0; end
+        else begin hsv_q <= {hsv_q[3:0], srun && sop == OP_HSTORE}; hs_cnt <= hsv_q[4] ? hs_cnt + 4'd1 : 4'd0; end
     reg [9:0] hs_base;
     always @(posedge clk) if (cv_c && op == OP_HSTORE) hs_base <= a0;
-    always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[4] && hqv_c;
-    always @(posedge clk) begin hs_a <= hs_base + {hsi_q[4], 1'b0}; hs_d <= hqd_c; end
+    always @(posedge clk or negedge rs_o)
+        if (!rs_o) begin hs_v <= 1'b0; k_hsv <= {NG{1'b0}}; end
+        else begin hs_v <= hsv_q[4] && hqv_c; k_hsv <= {NG{hsv_q[4] && hqv_c}}; end
+    always @(posedge clk) begin hs_a <= hs_base + {hs_cnt, 1'b0}; k_hsa0 <= {NG{hs_base[0]}}; hs_d <= hqd_c; end
 
-    wire nr_done = dv && dop == OP_NORMR;          // NORMR: the hc_pre row is at q this cycle
+    // NORM / NORMR load of n_pre / m_*: decoded per 32-bit word from kept command copies (k_cv / k_op, landed at the
+    // pin) and a registered NORMR-done flag with kept copies (was cv_c && op == NORM / dv && dop == NORMR -> 140 loads).
+    reg nr_done; (* keep *) reg [4:0] k_nrd;
+    always @(posedge clk or negedge rs_o)
+        if (!rs_o) begin nr_done <= 1'b0; k_nrd <= 5'd0; end
+        else begin nr_done <= dv1 && dop1 == OP_NORMR; k_nrd <= {5{dv1 && dop1 == OP_NORMR}}; end
+    wire [4:0] k_norm;
+    genvar gn;
+    generate for (gn = 0; gn < 5; gn = gn + 1) begin : g_nm
+        assign k_norm[gn] = k_cv[gn] && k_op[4 * gn +: 4] == OP_NORM;
+    end endgenerate
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin hw_v <= 1'b0; hr_v <= 1'b0; n_go <= 1'b0; m_v <= 1'b0; wl_v <= 1'b0; lo_v <= 1'b0; s_v <= 1'b0; x_qv <= 1'b0; end
         else begin
@@ -294,37 +360,52 @@ module ot_s81sl_vp #(
             x_qv <= xr2;
         end
     always @(posedge clk) begin
-        if (wvl) begin
-            hw_j <= widx[3:1]; hw_hf <= widx[0];
-            for (k = 0; k < 4; k = k + 1) for (i = 0; i < 4; i = i + 1)
-                hw_d[(4 * k + i) * 16 +: 16] <= lo[4 * k + i][31:16];
-        end else begin
-            hw_j <= dsi[3:1]; hw_hf <= dsi[0]; hw_d <= {qo, qe};
-        end
+        // hw_d word k (lanes 2k, 2k + 1) on its own kept wvl copy: lane write-back, else the HLOAD row pair
+        for (k = 0; k < 8; k = k + 1)
+            if (k_wvl[k]) begin hw_d[32 * k +: 16] <= lo[2 * k][31:16]; hw_d[32 * k + 16 +: 16] <= lo[2 * k + 1][31:16]; end
+            else hw_d[32 * k +: 32] <= qoe[32 * k +: 32];
+        if (k_wvl[8]) begin hw_j <= widx[3:1]; hw_hf <= widx[0]; end
+        else begin hw_j <= dsi[3:1]; hw_hf <= dsi[0]; end
         hr_j <= hrq_i[3:1]; hr_hf <= hrq_i[0];
-        if (cv_c && op == OP_NORM) begin n_pre <= cd_c[159:32]; m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
-        else if (nr_done) begin
+        for (k = 0; k < 4; k = k + 1)
+            if (k_norm[k]) n_pre[32 * k +: 32] <= cd_c[32 + 32 * k +: 32];
+            else if (k_nrd[k])
 `ifndef OT_S81SL_VP_MUT_NORMIMM
-            n_pre <= q1r;
+                n_pre[32 * k +: 32] <= q1r[32 * k +: 32];
 `else
-            n_pre <= 128'd0;                       // bench mutant: NORMR ignores the row (the old imm-only NORM)
+                n_pre[32 * k +: 32] <= 32'd0;          // bench mutant: NORMR ignores the row (the old imm-only NORM)
 `endif
-            m_q <= dmq[8]; m_b <= dmq[9]; m_i <= dmq[7:0];
-        end
+        if (k_norm[4]) begin m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
+        else if (k_nrd[4]) begin m_q <= dmq[8]; m_b <= dmq[9]; m_i <= dmq[7:0]; end
         wl_i <= dsi[2:0]; wl_d <= {qo, qe};
         lo_d <= {qo, qe};
         s_d <= cd_c;
-        x_qd <= xsw2 ? {q0, q1} : {q1, q0};
+        for (k = 0; k < 4; k = k + 1) begin
+            x_qd[32 * k +: 32] <= k_xsw2[k] ? q1[32 * k +: 32] : q0[32 * k +: 32];
+            x_qd[128 + 32 * k +: 32] <= k_xsw2[4 + k] ? q0[32 * k +: 32] : q1[32 * k +: 32];
+        end
     end
 
     // ---------------------------------------------------------------- faults
-    reg lvbad;
+    // SAFE 10-21 (c318a2024 worst path: lane fault pin -> 16-way OR + 9 sources -> fault, 989 ps): the sources are
+    // registered where they arise (per-lane fault / valid flops beside the lanes, one local-source flop), reduced per
+    // lane row, then folded.  The sticky fault is a diagnostic: it rises 2..3 edges later than before (no schedule use).
+    (* keep *) reg [15:0] lf_q, lv_q;
+    reg wvl_d, wvl_dd, lv0_d, src1, src2, lvbad, lfa;
+    reg [3:0] lfr, lvor, lvand;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin fault <= 1'b0; lvbad <= 1'b0; end
-        else begin
-            lvbad <= (lv[0] != wvl) || (|lv != &lv);
-            fault <= fault | wcol | busy_hit | xrcol | (|lf) | lvbad | (wvl && dv && dop == OP_HLOAD) |
-                     (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c) |
-                     (cv_c && op == OP_NORM && nr_done);
+        if (!rs_o) begin
+            fault <= 1'b0; lf_q <= 16'd0; lv_q <= 16'd0; wvl_d <= 1'b0; wvl_dd <= 1'b0; lv0_d <= 1'b0; src1 <= 1'b0; src2 <= 1'b0;
+            lvbad <= 1'b0; lfa <= 1'b0; lfr <= 4'd0; lvor <= 4'd0; lvand <= 4'd0;
+        end else begin
+            lf_q <= lf; lv_q <= lv; wvl_d <= wvl;
+            for (k = 0; k < 4; k = k + 1) begin lfr[k] <= |lf_q[4 * k +: 4]; lvor[k] <= |lv_q[4 * k +: 4]; lvand[k] <= &lv_q[4 * k +: 4]; end
+            lv0_d <= lv_q[0]; wvl_dd <= wvl_d;
+            lfa <= |lfr;
+            lvbad <= (lv0_d != wvl_dd) || (|lvor != &lvand);
+            src1 <= wcol | busy_hit | xrcol | (wvl && dv && dop == OP_HLOAD) | (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c) |
+                    (cv_c && op == OP_NORM && nr_done);
+            src2 <= src1;
+            fault <= fault | src2 | lfa | lvbad;
         end
 endmodule
