@@ -2,7 +2,7 @@
   "source_base": "6e20f4f89",
   "frozen_native": "q8c/q8d both737violations,max82,386599roots",
   "sealed_fifo_sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
-  "scope": "SOURCE-ONLY PER-PP SAFETY SUCCESSOR. e886 admitted diagnostic clients preserved and cannot qualify these changed bytes.",
+  "scope": "SOURCE-ONLY REGISTERED-CREDIT successor. Olde886 native and9ee witness clients preserved; neither qualifies these changedbytes.",
   "partition": {
     "pcs": 16,
     "logical_slices_per_pc": 20,
@@ -16,19 +16,21 @@
     "fifo_payload_storage_bits": 36480,
     "ring_payload_storage_bits": 13680,
     "added_fifo_control_register_estimate": 55040,
-    "credit_pending_register_bits": 5760
+    "credit_pending_register_bits": 5760,
+    "registered_credit_copy_bits": 672
   },
   "atomic_protocol": {
     "write": "All3fragments see same logicalwrite/toggle; next expectedPP can grant ONLY if thatPP has a free reserved slot common to ALLfragments. Counts include in-flight grants. Independent pointer visibility cannot borrow B capacity for A.",
     "read": "Existing registered whole-PC pop permitted only when all logical slices and both fragments selected for next pop are nonempty. Availability cannot withdraw between decision and pop. Each ring fragment capture separately gated by its own selected !rempty; global all-valid only controls atomic pop.",
-    "credit": "PerPP independent common-min release across60fragments; each3bit pending_i_next=pending_i+thatPP.wfreed_i-min_j(pending_j+thatPP.wfreed_j). NoA/Bsum. PerPP3bit outstanding count includes accepted grants in fixed3edgewritepipeline. Grantphase toggles each acceptedPCgrant, initiallyA matching actual delayedwtog. Registered okc_next checks nextphase cnt_n<4. Private reset perpending and perPCcounter/phase control.",
-    "cycle": "No payload pipeline/capture/pop edge added. Ready buffer wire-equivalent. Credit stalls may become more conservative under synchronizer skew; existing protocol proofs and measured completion cycles must price this, no unchanged-throughput claim."
+    "credit": "PerPP balanced64leaf/6level3bitmin (60realfragmentcandidates,4padded7). Candidate_i=pending_i+thatPP.wfreed_i-release_copy[group]; pending_next=candidate_i. SevenKEPT3bitreleasecopies/PP/PC capturemin(candidate) together:6groups10pending subtractors,1counterledger. Previousrelease is consumed by pending andledger sameedge, prevents doublecredit. No AND(A,1) buffering.",
+    "cycle": "EXACT +1stream CREDIT-feedback edge relative to9ee/e886/oldpooledreturn. Payload/RQ/FIFOwrite/pop/ringcapture/Kpin edges unchanged. Delayedcapacity can add conservativestalls; actualexistingWBKbenchcycle/elapsedprice before adoption. No unchangedthroughputclaim."
   },
   "native_roots": {
     "fifo_wbin640": "Actualoriginal W14=34(480roots),W15=36(160roots). Empirical2W+6 is not guaranteed after remap. Conservative AW2 four-row payload contacts4W +8 pointer/control allowance: W5<=28<32, W8could40>32. ChooseW5 beforeheavy; actualcanonicalcensus stillmandatory.",
     "rtd80": "Retain same-edge rtd for payload mux only; own-empty capture selection uses identical rtc, avoiding extra status fanout on 30-load SW15 mux selector.",
-    "ready16": "Authentic AND2x2_ASAP7_75t_R tree grouped logical ring slices; no cycles. Exact officialLiberty pin/function context and simulation wire-equivalent a&b.",
-    "cp_basem1": "Split same-edge copied base address by two PC consumers, kept replicas; no base or edge changes."
+    "ready16": "Authentic dynamic AND ready&vqc perlogicalslice:20cells/PC (plusoriginalcontrolpath), no constantB cell. No newpayloadedge.",
+    "cp_basem1": "Split same-edge copied base address by two PC consumers, kept replicas; no base or edge changes.",
+    "credit_return": "Commonminimum drives7FF Dpins perbit. Eachreleasedcopybit feeds10local3bitsubtractors, estimate<=3contacts/subtractor=30, NOT nativePASS; allrealpins countedbycanonicalcensus. Ledgercopyseparate. Private3bitresetleaf/copy; PCcountercontrolresetprivate."
   },
   "ports": {
     "readwrite": "16 HBM ports each256payload+30address bits; originalready/valid protocol; no throughput expansion",
@@ -38,7 +40,7 @@
       777.6,
       518.4
     ],
-    "area": "Payload/macro area unchanged; priorconservative59k controlFF estimate plus1920 pendingbits and~1k resetforestFF plusphase/counters \u224862k additionalcontrolFF. Mappedinventory/area/fit required; no physicalclaim."
+    "area": "Payload/macro unchanged. Prior~62kadditionalcontrolFF estimate plus672releasecopyFF and~240resetrelayFF \u224863kadditionalcontrolFF conservative. Realmappedcounts/area/slotfit required."
   },
   "necessary_proofs": [
     "New bounded real-production ot_wbk8_pp_credit module counterexample: fillA4/B4, observeBfree1/Astale0, rejectA; thenAfree1permitsA. MUT11 pooledeligibility must fail capacity. Abstractlegalcredit-return boundary only; fullWBK+canonicalCDC stillrequired.",
@@ -67,5 +69,11 @@
     "Perfragmentpending is its observedrelease count minus commonrelease; withbank outstanding<=4, itfits3bits. CanonicalCDC plus actualexistingwitness/native still mandatory, this argument is not testPASS."
   ],
   "credit_module": "Factored exactproductioncounter/phase/ready register equations into ot_wbk8_pp_credit, instantiated by every realPC. Unit witness uses this actualhardwaremodule, not a handwritten model; no additionalcycles/state from factoring. MUT11 pooledeligibility causal is pruned in actualMUT0.",
-  "new_source_state": "Unbuilt perPP final successor, no newheavy untiloldscope correspondingclientterminal."
+  "new_source_state": "Unbuilt registered-creditfinalsuccessor; existingcurrentchildren/native unchanged, no duplicateheavy.",
+  "credit_feedback_step": [
+    "edge t: allfragmentsobservefree1; candidate1, min1, pendingbecomes1, copiesbecome1; ledger consumespreviouscopy0.",
+    "edge t+1: no newfree; candidate1-previouscopy1=0, pending0/copies0, ledger consumes1.",
+    "edge t+2: candidate0, ledger consumes0; no repeatedrelease."
+  ],
+  "implementation_policy": "No constant-input ANDbuffer dependence; canonicalhelper/policy unchanged. ActualdynamicANDY=A*B for ringfire only. No schemawaiver."
 }

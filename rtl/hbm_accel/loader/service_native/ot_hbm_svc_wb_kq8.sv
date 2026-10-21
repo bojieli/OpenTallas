@@ -64,7 +64,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  localparam integer NFP=NSL*NPP*NPART;                     // crossing FIFOs per PC
  localparam [32:0] SPACE_END=33'h020000000;
  // reset leaf maps
- localparam integer CS=29, NS=CS+16*NC*NPP+16;
+ localparam integer CS=29, RB=CS+16*NC*NPP+16, NS=RB+16*NPP*7;
  localparam integer XB=4*NFP, NR=XB+13;              // per root: 4 PCs x NFP FIFO write leaves, 4 x 3 slice leaves, ready
  localparam integer NRL=8, NF=16*NFP, HB=NF, HM=HB+16*NRL, NH=HM+7;
  // ------------------------------------------------------------------------------------------------ resets
@@ -309,31 +309,35 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    end
   end
   always @(posedge fclk)begin gqa[gp]<=g_w[gp];xr_a<=cp_basem[2*K+(gp%4)/2]+{17'd0,arp,aln};end
+  // One extra stream credit-feedback edge (payload/pop edges unchanged).
   // Each ping-pong FIFO has its OWN capacity ledger. Gray synchronizers
   // may expose B's release before A's; pooled free capacity cannot admit an
   // A write. Grant phase tracks accepted grants, ahead of the delayed wtog.
   for(gr=0;gr<NPP;gr=gr+1)begin:g_pp_credit
    wire [PW-1:0] credit_tree [1:127];
-   wire [PW-1:0] released [0:5];
+   (* keep="true",dont_touch="true" *) reg [PW-1:0] released [0:6];
    for(gq=0;gq<64;gq=gq+1)begin:g_credit
     if(gq<NC)begin:g_live
      (* keep="true",dont_touch="true" *) reg [PW-1:0] pending;
      localparam integer F=(gq/NPART)*NPART*NPP+(gq%NPART)*NPP+gr;
-     assign credit_tree[64+gq]=pending+PW'(fifo_wf[gp*NFP+F]);
+     assign credit_tree[64+gq]=pending+PW'(fifo_wf[gp*NFP+F])-released[gq/10];
      always @(posedge stream_clk or negedge sl[CS+gp*NC*NPP+gr*NC+gq])
       if(!sl[CS+gp*NC*NPP+gr*NC+gq])pending<=0;
-      else pending<=credit_tree[64+gq]-released[gq/10];
+      else pending<=credit_tree[64+gq];
     end else begin:g_pad assign credit_tree[64+gq]={PW{1'b1}};end
    end
    for(gq=1;gq<64;gq=gq+1)begin:g_cmin
     assign credit_tree[gq]=(credit_tree[2*gq]<credit_tree[2*gq+1])?credit_tree[2*gq]:credit_tree[2*gq+1];
    end
-   for(gq=0;gq<6;gq=gq+1)begin:g_cdist
-    for(gb=0;gb<PW;gb=gb+1)begin:g_bit
-     ot_wbk8_native_and u_buf(.a(credit_tree[1][gb]),.b(1'b1),.y(released[gq][gb]));
-    end
+   // Balanced six-level minimum loads only seven kept FF copies, never
+   // sixty subtractors. The delayed release is subtracted in candidate above
+   // AND consumed by the ledger on the same edge, so it cannot release twice.
+   for(gq=0;gq<7;gq=gq+1)begin:g_cdist
+    localparam integer LR=RB+gp*NPP*7+gr*7+gq;
+    always @(posedge stream_clk or negedge sl[LR])
+     if(!sl[LR])released[gq]<=0;else released[gq]<=credit_tree[1];
    end
-   assign wfreed_pp[gp][gr]=credit_tree[1];
+   assign wfreed_pp[gp][gr]=released[6];
   end
   for(gf=0;gf<NSL;gf=gf+1)begin:g_sl
    localparam integer SW=sw_f(gf), SO=so_f(gf);
@@ -423,10 +427,6 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    end
   assign w_k_v[gp]=vq_pin;
   assign spurious[gp]=done_q[gp]&&cnt_h==7'd0;
-  wire [3:0] ready_local;
-  for(gb=0;gb<4;gb=gb+1)begin:g_ready
-   ot_wbk8_native_and u_buf(.a(w_k_rdy[gp]),.b(1'b1),.y(ready_local[gb]));
-  end
   wire [255:0] kd;wire [28:0] o;
   for(gf=0;gf<NSL;gf=gf+1)begin:g_s
    localparam integer SW=sw_f(gf), SO=so_f(gf);
@@ -447,7 +447,8 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
     assign avail[gf]=&can;
    end
    wire push=popc[IX];
-   wire fire=vqc[IX]&&ready_local[gf/5];
+   wire fire;
+   ot_wbk8_native_and u_fire(.a(w_k_rdy[gp]),.b(vqc[IX]),.y(fire));
    reg [SW-1:0] ent [0:2];
    // Payload capture uses each fragment's own empty signal; the atomic pop
    // decision above requires every fragment and cannot consume a partial word.
