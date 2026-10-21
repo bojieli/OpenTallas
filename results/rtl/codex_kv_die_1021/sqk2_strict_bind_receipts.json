@@ -1,0 +1,3652 @@
+[
+  {
+    "variant": "c432",
+    "source_commit": "0ae42aa9c19a440774ccce71b664a375352ce7e4",
+    "run": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c432",
+    "original": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c432/port_bind_v2/port_bind_v2.json",
+    "original_sha256": "a2b927b62dfa7265b90e5569ddeabc72fe06fc41060eda1ca4ed0973b604dfe6",
+    "die_sha256": "51f856f5436eddc4a0faaea93d684147dea13a3344f8aae9d2cfbed67b6d7bbe",
+    "verdict": "PASS",
+    "failing": [],
+    "summary": {
+      "masters": 69,
+      "instances": 46544,
+      "unbound_masters": 0,
+      "stub_masters": 0,
+      "ambiguous_masters": 0,
+      "port_not_in_rtl": 0,
+      "width_mismatch": 0,
+      "input_unconnected": 0,
+      "input_tied": 0,
+      "unparsed_connections": 0,
+      "duplicate_port_connections": 0,
+      "undriven_net_bits": 0,
+      "multi_driven_net_bits": 0,
+      "unread_net_bits": 0,
+      "output_open_ports": 0,
+      "top_assigns": 0,
+      "params_not_in_rtl": 0,
+      "strap_ports": 36,
+      "pad_bits": 212556,
+      "spare_out_bits": 654769,
+      "unresolved_children": 0,
+      "ambiguous_children": 0,
+      "variant_children": 19
+    },
+    "masters": {
+      "ot_qfd_serdes_112g_x12_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c432/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qkh_head_frontq_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\", \"Q_FP32\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qkh_head_score4_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 128
+        }
+      },
+      "ot_qkh_head_stin_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_head_stk_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_ktree_lk": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"MUL_LAT\": \"32'sb00000000000000000000000000000110\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"SCALE\": \"32'sb00111101101101010000010011110011\"}": 128
+        }
+      },
+      "ot_qkh_lane8": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"LTW\": \"32'sb00000000000000000000000000001100\"}": 2048
+        }
+      },
+      "ot_qkvd_ucie_x64_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c432/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qwen_tp8_pv_join_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 64,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"J_LAT\": \"32'sb00000000000000000000000000000111\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 64
+        }
+      },
+      "ot_qwen_tp8_pv_slice_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qwen_tp8_pv_wide_ctl_tbf": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"END_FLOOR\": \"32'sb00000000000000000000000000000001\", \"FIRST_INPUT_AGE\": \"32'sb00000000000000000000000001111111\", \"FLAG_D\": \"32'sb00000000000000000000000000111010\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\", \"TRUNK_D\": \"32'sb00000000000000000000000000110110\"}": 2
+        }
+      },
+      "qkd_ahub_static_dw": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"AP_OFS\": \"{16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}\", \"FR_OFS\": \"-7\", \"Z_IN_STRIDE\": \"4\"}": 1
+        }
+      },
+      "qkd_astk_ctl_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"Z_STRIDE\": \"32'sb00000000000000000000000000000100\"}": 4
+        }
+      },
+      "qkd_astk_ep_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 32
+        }
+      },
+      "qkd_astk_er_owner_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"N\": \"32'sb00000000000000000000000000000100\"}": 32
+        }
+      },
+      "qkd_astk_ex_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_astk_fault_join": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9
+        }
+      },
+      "qkd_astk_rly_296_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 912,
+        "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 912
+        }
+      },
+      "qkd_astk_zn": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_ckbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c432/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_ctrl_kc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_d2d_cal_seq_pin_bc4": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"EP_SKEW\": \"3\", \"GO_OFS\": \"0\", \"MUT\": \"0\"}": 1
+        }
+      },
+      "qkd_d2d_static_sfm": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"FEG\": \"1\", \"NL\": \"2\", \"NTX\": \"3\", \"SAFE_RC\": \"1\", \"SRAMV\": \"2\", \"TXDP\": \"50529302\"}": 1
+        }
+      },
+      "qkd_ectl3_kiss_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"HXK\": \"13\", \"MUT\": \"0\", \"QK_ISSUE_AGE\": \"91\", \"RESPONSE_LAT\": \"80\"}": 32
+        }
+      },
+      "qkd_embgw_boot_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"BD\": \"4\", \"GAP\": \"1\", \"HOLD\": \"64\", \"MUT\": \"0\", \"ROW0\": \"24427\"}": 1
+        }
+      },
+      "qkd_fwdbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c432/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_hbm3e_phy_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c432/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_host_pc_slice_die": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_host_root_admission_obsx": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+        }
+      },
+      "qkd_hp_or2": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 356,
+        "rtl": "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 356
+        }
+      },
+      "qkd_kvs_attn_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RETIRE_STATIC\": \"1\", \"STATUS_DELAY\": \"213\"}": 1
+        }
+      },
+      "qkd_kvs_ctl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_emb": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_grp": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 28,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 28
+        }
+      },
+      "qkd_kvs_grp_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_hroot": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 124,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 124
+        }
+      },
+      "qkd_kvs_pc_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_landsh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_landsh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 12,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 12
+        }
+      },
+      "qkd_landsh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_landsh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_pll_analog_model": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_pv16_vport_b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"DQ\": \"15\", \"MUT\": \"0\", \"RT\": \"31\"}": 16
+        }
+      },
+      "qkd_pv_fin_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"7\", \"MUL_LAT\": \"6\", \"MUT\": \"0\", \"SKEW\": \"1\"}": 1
+        }
+      },
+      "qkd_pv_rs_hd_f": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KV\": \"32'sb00000000000000000000000000100000\"}": 2
+        }
+      },
+      "qkd_rlyi_258s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_rlys_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 7220,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 7220
+        }
+      },
+      "qkd_rlys_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4379,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4379
+        }
+      },
+      "qkd_rlys_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 10300,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 10300
+        }
+      },
+      "qkd_rlys_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2186,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2186
+        }
+      },
+      "qkd_rlysh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_rlysh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_rlysh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 552,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 552
+        }
+      },
+      "qkd_rlysh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 253,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 253
+        }
+      },
+      "qkd_rlysh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9739,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9739
+        }
+      },
+      "qkd_rlysh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1066,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1066
+        }
+      },
+      "qkd_rst_region_pr_h273b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 42,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 42
+        }
+      },
+      "qkd_seq_core_static_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KP0\": \"32'sb00000000000000000000000000100100\", \"KVN_A0\": \"32'sb00000000000000000000000000100000\", \"LP_WIN\": \"32'sb00000000000000000000000001000000\", \"MUT\": \"32'sb00000000000000000000000000000000\"}": 1
+        }
+      },
+      "qkd_seq_fan_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkd_seq_xs_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkh_head_gather_stage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 384,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 64,
+          "{}": 320
+        }
+      },
+      "qkh_head_sstage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 256,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 256
+        }
+      }
+    },
+    "child_modules": 313,
+    "unresolved_children": {}
+  },
+  {
+    "variant": "c216",
+    "source_commit": "0ae42aa9c19a440774ccce71b664a375352ce7e4",
+    "run": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c216",
+    "original": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c216/port_bind_v2/port_bind_v2.json",
+    "original_sha256": "f0f1dd05c289844f0a6eceab238685aa1a58790cbb4105ddf90ed4563a72fb24",
+    "die_sha256": "acb3510e5478b278c59779e69b53a51f71874aedf4235c4ae6bb50e62d270dec",
+    "verdict": "PASS",
+    "failing": [],
+    "summary": {
+      "masters": 69,
+      "instances": 46585,
+      "unbound_masters": 0,
+      "stub_masters": 0,
+      "ambiguous_masters": 0,
+      "port_not_in_rtl": 0,
+      "width_mismatch": 0,
+      "input_unconnected": 0,
+      "input_tied": 0,
+      "unparsed_connections": 0,
+      "duplicate_port_connections": 0,
+      "undriven_net_bits": 0,
+      "multi_driven_net_bits": 0,
+      "unread_net_bits": 0,
+      "output_open_ports": 0,
+      "top_assigns": 0,
+      "params_not_in_rtl": 0,
+      "strap_ports": 36,
+      "pad_bits": 212930,
+      "spare_out_bits": 655273,
+      "unresolved_children": 0,
+      "ambiguous_children": 0,
+      "variant_children": 19
+    },
+    "masters": {
+      "ot_qfd_serdes_112g_x12_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c216/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qkh_head_frontq_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\", \"Q_FP32\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qkh_head_score4_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 128
+        }
+      },
+      "ot_qkh_head_stin_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_head_stk_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_ktree_lk": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"MUL_LAT\": \"32'sb00000000000000000000000000000110\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"SCALE\": \"32'sb00111101101101010000010011110011\"}": 128
+        }
+      },
+      "ot_qkh_lane8": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"LTW\": \"32'sb00000000000000000000000000001100\"}": 2048
+        }
+      },
+      "ot_qkvd_ucie_x64_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c216/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qwen_tp8_pv_join_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 64,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"J_LAT\": \"32'sb00000000000000000000000000000111\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 64
+        }
+      },
+      "ot_qwen_tp8_pv_slice_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qwen_tp8_pv_wide_ctl_tbf": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"END_FLOOR\": \"32'sb00000000000000000000000000000001\", \"FIRST_INPUT_AGE\": \"32'sb00000000000000000000000001111111\", \"FLAG_D\": \"32'sb00000000000000000000000000111010\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\", \"TRUNK_D\": \"32'sb00000000000000000000000000110110\"}": 2
+        }
+      },
+      "qkd_ahub_static_dw": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"AP_OFS\": \"{16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}\", \"FR_OFS\": \"-7\", \"Z_IN_STRIDE\": \"4\"}": 1
+        }
+      },
+      "qkd_astk_ctl_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"Z_STRIDE\": \"32'sb00000000000000000000000000000100\"}": 4
+        }
+      },
+      "qkd_astk_ep_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 32
+        }
+      },
+      "qkd_astk_er_owner_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"N\": \"32'sb00000000000000000000000000000100\"}": 32
+        }
+      },
+      "qkd_astk_ex_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_astk_fault_join": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9
+        }
+      },
+      "qkd_astk_rly_296_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 912,
+        "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 912
+        }
+      },
+      "qkd_astk_zn": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_ckbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c216/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_ctrl_kc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_d2d_cal_seq_pin_bc4": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"EP_SKEW\": \"3\", \"GO_OFS\": \"0\", \"MUT\": \"0\"}": 1
+        }
+      },
+      "qkd_d2d_static_sfm": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"FEG\": \"1\", \"NL\": \"2\", \"NTX\": \"3\", \"SAFE_RC\": \"1\", \"SRAMV\": \"2\", \"TXDP\": \"50529302\"}": 1
+        }
+      },
+      "qkd_ectl3_kiss_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"HXK\": \"13\", \"MUT\": \"0\", \"QK_ISSUE_AGE\": \"91\", \"RESPONSE_LAT\": \"80\"}": 32
+        }
+      },
+      "qkd_embgw_boot_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"BD\": \"4\", \"GAP\": \"1\", \"HOLD\": \"64\", \"MUT\": \"0\", \"ROW0\": \"24427\"}": 1
+        }
+      },
+      "qkd_fwdbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c216/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_hbm3e_phy_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c216/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_host_pc_slice_die": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_host_root_admission_obsx": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+        }
+      },
+      "qkd_hp_or2": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 356,
+        "rtl": "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 356
+        }
+      },
+      "qkd_kvs_attn_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RETIRE_STATIC\": \"1\", \"STATUS_DELAY\": \"213\"}": 1
+        }
+      },
+      "qkd_kvs_ctl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_emb": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_grp": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 28,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 28
+        }
+      },
+      "qkd_kvs_grp_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_hroot": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 124,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 124
+        }
+      },
+      "qkd_kvs_pc_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_landsh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_landsh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 12,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 12
+        }
+      },
+      "qkd_landsh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_landsh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_pll_analog_model": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_pv16_vport_b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"DQ\": \"15\", \"MUT\": \"0\", \"RT\": \"31\"}": 16
+        }
+      },
+      "qkd_pv_fin_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"7\", \"MUL_LAT\": \"6\", \"MUT\": \"0\", \"SKEW\": \"1\"}": 1
+        }
+      },
+      "qkd_pv_rs_hd_f": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KV\": \"32'sb00000000000000000000000000100000\"}": 2
+        }
+      },
+      "qkd_rlyi_258s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_rlys_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 7251,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 7251
+        }
+      },
+      "qkd_rlys_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4392,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4392
+        }
+      },
+      "qkd_rlys_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 10299,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 10299
+        }
+      },
+      "qkd_rlys_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2193,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2193
+        }
+      },
+      "qkd_rlysh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_rlysh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_rlysh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 547,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 547
+        }
+      },
+      "qkd_rlysh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 253,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 253
+        }
+      },
+      "qkd_rlysh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9734,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9734
+        }
+      },
+      "qkd_rlysh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1067,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1067
+        }
+      },
+      "qkd_rst_region_pr_h273b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 42,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 42
+        }
+      },
+      "qkd_seq_core_static_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KP0\": \"32'sb00000000000000000000000000100100\", \"KVN_A0\": \"32'sb00000000000000000000000000100000\", \"LP_WIN\": \"32'sb00000000000000000000000001000000\", \"MUT\": \"32'sb00000000000000000000000000000000\"}": 1
+        }
+      },
+      "qkd_seq_fan_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkd_seq_xs_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkh_head_gather_stage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 384,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 64,
+          "{}": 320
+        }
+      },
+      "qkh_head_sstage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 256,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 256
+        }
+      }
+    },
+    "child_modules": 313,
+    "unresolved_children": {}
+  },
+  {
+    "variant": "nl",
+    "source_commit": "0ae42aa9c19a440774ccce71b664a375352ce7e4",
+    "run": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2nl",
+    "original": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2nl/port_bind_v2/port_bind_v2.json",
+    "original_sha256": "a12c7293362ecebad8cc7c7a34f323b8e53eaae8c210d8f24fa1d3b4c15532ad",
+    "die_sha256": "e4627332d360d2bb08ad2de17c78cad34f550e4c14662b80cb91447d9bb5bd19",
+    "verdict": "PASS",
+    "failing": [],
+    "summary": {
+      "masters": 69,
+      "instances": 46565,
+      "unbound_masters": 0,
+      "stub_masters": 0,
+      "ambiguous_masters": 0,
+      "port_not_in_rtl": 0,
+      "width_mismatch": 0,
+      "input_unconnected": 0,
+      "input_tied": 0,
+      "unparsed_connections": 0,
+      "duplicate_port_connections": 0,
+      "undriven_net_bits": 0,
+      "multi_driven_net_bits": 0,
+      "unread_net_bits": 0,
+      "output_open_ports": 0,
+      "top_assigns": 0,
+      "params_not_in_rtl": 0,
+      "strap_ports": 36,
+      "pad_bits": 212740,
+      "spare_out_bits": 655095,
+      "unresolved_children": 0,
+      "ambiguous_children": 0,
+      "variant_children": 19
+    },
+    "masters": {
+      "ot_qfd_serdes_112g_x12_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2nl/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qkh_head_frontq_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\", \"Q_FP32\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qkh_head_score4_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 128
+        }
+      },
+      "ot_qkh_head_stin_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_head_stk_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_ktree_lk": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"MUL_LAT\": \"32'sb00000000000000000000000000000110\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"SCALE\": \"32'sb00111101101101010000010011110011\"}": 128
+        }
+      },
+      "ot_qkh_lane8": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"LTW\": \"32'sb00000000000000000000000000001100\"}": 2048
+        }
+      },
+      "ot_qkvd_ucie_x64_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2nl/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qwen_tp8_pv_join_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 64,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"J_LAT\": \"32'sb00000000000000000000000000000111\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 64
+        }
+      },
+      "ot_qwen_tp8_pv_slice_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qwen_tp8_pv_wide_ctl_tbf": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"END_FLOOR\": \"32'sb00000000000000000000000000000001\", \"FIRST_INPUT_AGE\": \"32'sb00000000000000000000000001111111\", \"FLAG_D\": \"32'sb00000000000000000000000000111010\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\", \"TRUNK_D\": \"32'sb00000000000000000000000000110110\"}": 2
+        }
+      },
+      "qkd_ahub_static_dw": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"AP_OFS\": \"{16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}\", \"FR_OFS\": \"-7\", \"Z_IN_STRIDE\": \"4\"}": 1
+        }
+      },
+      "qkd_astk_ctl_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"Z_STRIDE\": \"32'sb00000000000000000000000000000100\"}": 4
+        }
+      },
+      "qkd_astk_ep_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 32
+        }
+      },
+      "qkd_astk_er_owner_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"N\": \"32'sb00000000000000000000000000000100\"}": 32
+        }
+      },
+      "qkd_astk_ex_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_astk_fault_join": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9
+        }
+      },
+      "qkd_astk_rly_296_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 912,
+        "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 912
+        }
+      },
+      "qkd_astk_zn": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_ckbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2nl/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_ctrl_kc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_d2d_cal_seq_pin_bc4": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"EP_SKEW\": \"3\", \"GO_OFS\": \"0\", \"MUT\": \"0\"}": 1
+        }
+      },
+      "qkd_d2d_static_sfm": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"FEG\": \"1\", \"NL\": \"2\", \"NTX\": \"3\", \"SAFE_RC\": \"1\", \"SRAMV\": \"2\", \"TXDP\": \"50529302\"}": 1
+        }
+      },
+      "qkd_ectl3_kiss_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"HXK\": \"13\", \"MUT\": \"0\", \"QK_ISSUE_AGE\": \"91\", \"RESPONSE_LAT\": \"80\"}": 32
+        }
+      },
+      "qkd_embgw_boot_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"BD\": \"4\", \"GAP\": \"1\", \"HOLD\": \"64\", \"MUT\": \"0\", \"ROW0\": \"24427\"}": 1
+        }
+      },
+      "qkd_fwdbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2nl/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_hbm3e_phy_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2nl/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_host_pc_slice_die": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_host_root_admission_obsx": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+        }
+      },
+      "qkd_hp_or2": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 356,
+        "rtl": "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 356
+        }
+      },
+      "qkd_kvs_attn_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RETIRE_STATIC\": \"1\", \"STATUS_DELAY\": \"213\"}": 1
+        }
+      },
+      "qkd_kvs_ctl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_emb": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_grp": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 28,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 28
+        }
+      },
+      "qkd_kvs_grp_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_hroot": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 124,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 124
+        }
+      },
+      "qkd_kvs_pc_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_landsh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_landsh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 12,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 12
+        }
+      },
+      "qkd_landsh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_landsh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_pll_analog_model": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_pv16_vport_b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"DQ\": \"15\", \"MUT\": \"0\", \"RT\": \"31\"}": 16
+        }
+      },
+      "qkd_pv_fin_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"7\", \"MUL_LAT\": \"6\", \"MUT\": \"0\", \"SKEW\": \"1\"}": 1
+        }
+      },
+      "qkd_pv_rs_hd_f": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KV\": \"32'sb00000000000000000000000000100000\"}": 2
+        }
+      },
+      "qkd_rlyi_258s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_rlys_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 7241,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 7241
+        }
+      },
+      "qkd_rlys_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4392,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4392
+        }
+      },
+      "qkd_rlys_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 10302,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 10302
+        }
+      },
+      "qkd_rlys_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2187,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2187
+        }
+      },
+      "qkd_rlysh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_rlysh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_rlysh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 546,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 546
+        }
+      },
+      "qkd_rlysh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 253,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 253
+        }
+      },
+      "qkd_rlysh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9727,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9727
+        }
+      },
+      "qkd_rlysh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1068,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1068
+        }
+      },
+      "qkd_rst_region_pr_h273b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 42,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 42
+        }
+      },
+      "qkd_seq_core_static_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KP0\": \"32'sb00000000000000000000000000100100\", \"KVN_A0\": \"32'sb00000000000000000000000000100000\", \"LP_WIN\": \"32'sb00000000000000000000000001000000\", \"MUT\": \"32'sb00000000000000000000000000000000\"}": 1
+        }
+      },
+      "qkd_seq_fan_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkd_seq_xs_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkh_head_gather_stage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 384,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 64,
+          "{}": 320
+        }
+      },
+      "qkh_head_sstage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 256,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 256
+        }
+      }
+    },
+    "child_modules": 313,
+    "unresolved_children": {}
+  },
+  {
+    "variant": "c108",
+    "source_commit": "0ae42aa9c19a440774ccce71b664a375352ce7e4",
+    "run": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c108",
+    "original": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c108/port_bind_v2/port_bind_v2.json",
+    "original_sha256": "b378973808848bfe8d35d679c742d2da7cc0881b0d2db9107d4aa841a5232b79",
+    "die_sha256": "b9e5d9c935c41e4362079330159e0020b25ed22985bac0dbbf0380eabe1f9b82",
+    "verdict": "PASS",
+    "failing": [],
+    "summary": {
+      "masters": 69,
+      "instances": 46585,
+      "unbound_masters": 0,
+      "stub_masters": 0,
+      "ambiguous_masters": 0,
+      "port_not_in_rtl": 0,
+      "width_mismatch": 0,
+      "input_unconnected": 0,
+      "input_tied": 0,
+      "unparsed_connections": 0,
+      "duplicate_port_connections": 0,
+      "undriven_net_bits": 0,
+      "multi_driven_net_bits": 0,
+      "unread_net_bits": 0,
+      "output_open_ports": 0,
+      "top_assigns": 0,
+      "params_not_in_rtl": 0,
+      "strap_ports": 36,
+      "pad_bits": 212930,
+      "spare_out_bits": 655273,
+      "unresolved_children": 0,
+      "ambiguous_children": 0,
+      "variant_children": 19
+    },
+    "masters": {
+      "ot_qfd_serdes_112g_x12_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c108/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qkh_head_frontq_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\", \"Q_FP32\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qkh_head_score4_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 128
+        }
+      },
+      "ot_qkh_head_stin_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_head_stk_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_ktree_lk": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"MUL_LAT\": \"32'sb00000000000000000000000000000110\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"SCALE\": \"32'sb00111101101101010000010011110011\"}": 128
+        }
+      },
+      "ot_qkh_lane8": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"LTW\": \"32'sb00000000000000000000000000001100\"}": 2048
+        }
+      },
+      "ot_qkvd_ucie_x64_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c108/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qwen_tp8_pv_join_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 64,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"J_LAT\": \"32'sb00000000000000000000000000000111\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 64
+        }
+      },
+      "ot_qwen_tp8_pv_slice_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qwen_tp8_pv_wide_ctl_tbf": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"END_FLOOR\": \"32'sb00000000000000000000000000000001\", \"FIRST_INPUT_AGE\": \"32'sb00000000000000000000000001111111\", \"FLAG_D\": \"32'sb00000000000000000000000000111010\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\", \"TRUNK_D\": \"32'sb00000000000000000000000000110110\"}": 2
+        }
+      },
+      "qkd_ahub_static_dw": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"AP_OFS\": \"{16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}\", \"FR_OFS\": \"-7\", \"Z_IN_STRIDE\": \"4\"}": 1
+        }
+      },
+      "qkd_astk_ctl_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"Z_STRIDE\": \"32'sb00000000000000000000000000000100\"}": 4
+        }
+      },
+      "qkd_astk_ep_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 32
+        }
+      },
+      "qkd_astk_er_owner_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"N\": \"32'sb00000000000000000000000000000100\"}": 32
+        }
+      },
+      "qkd_astk_ex_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_astk_fault_join": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9
+        }
+      },
+      "qkd_astk_rly_296_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 912,
+        "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 912
+        }
+      },
+      "qkd_astk_zn": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_ckbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c108/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_ctrl_kc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_d2d_cal_seq_pin_bc4": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"EP_SKEW\": \"3\", \"GO_OFS\": \"0\", \"MUT\": \"0\"}": 1
+        }
+      },
+      "qkd_d2d_static_sfm": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"FEG\": \"1\", \"NL\": \"2\", \"NTX\": \"3\", \"SAFE_RC\": \"1\", \"SRAMV\": \"2\", \"TXDP\": \"50529302\"}": 1
+        }
+      },
+      "qkd_ectl3_kiss_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"HXK\": \"13\", \"MUT\": \"0\", \"QK_ISSUE_AGE\": \"91\", \"RESPONSE_LAT\": \"80\"}": 32
+        }
+      },
+      "qkd_embgw_boot_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"BD\": \"4\", \"GAP\": \"1\", \"HOLD\": \"64\", \"MUT\": \"0\", \"ROW0\": \"24427\"}": 1
+        }
+      },
+      "qkd_fwdbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c108/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_hbm3e_phy_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c108/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_host_pc_slice_die": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_host_root_admission_obsx": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+        }
+      },
+      "qkd_hp_or2": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 356,
+        "rtl": "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 356
+        }
+      },
+      "qkd_kvs_attn_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RETIRE_STATIC\": \"1\", \"STATUS_DELAY\": \"213\"}": 1
+        }
+      },
+      "qkd_kvs_ctl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_emb": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_grp": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 28,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 28
+        }
+      },
+      "qkd_kvs_grp_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_hroot": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 124,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 124
+        }
+      },
+      "qkd_kvs_pc_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_landsh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_landsh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 12,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 12
+        }
+      },
+      "qkd_landsh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_landsh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_pll_analog_model": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_pv16_vport_b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"DQ\": \"15\", \"MUT\": \"0\", \"RT\": \"31\"}": 16
+        }
+      },
+      "qkd_pv_fin_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"7\", \"MUL_LAT\": \"6\", \"MUT\": \"0\", \"SKEW\": \"1\"}": 1
+        }
+      },
+      "qkd_pv_rs_hd_f": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KV\": \"32'sb00000000000000000000000000100000\"}": 2
+        }
+      },
+      "qkd_rlyi_258s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_rlys_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 7251,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 7251
+        }
+      },
+      "qkd_rlys_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4392,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4392
+        }
+      },
+      "qkd_rlys_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 10299,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 10299
+        }
+      },
+      "qkd_rlys_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2193,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2193
+        }
+      },
+      "qkd_rlysh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_rlysh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_rlysh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 547,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 547
+        }
+      },
+      "qkd_rlysh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 253,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 253
+        }
+      },
+      "qkd_rlysh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9734,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9734
+        }
+      },
+      "qkd_rlysh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1067,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1067
+        }
+      },
+      "qkd_rst_region_pr_h273b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 42,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 42
+        }
+      },
+      "qkd_seq_core_static_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KP0\": \"32'sb00000000000000000000000000100100\", \"KVN_A0\": \"32'sb00000000000000000000000000100000\", \"LP_WIN\": \"32'sb00000000000000000000000001000000\", \"MUT\": \"32'sb00000000000000000000000000000000\"}": 1
+        }
+      },
+      "qkd_seq_fan_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkd_seq_xs_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkh_head_gather_stage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 384,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 64,
+          "{}": 320
+        }
+      },
+      "qkh_head_sstage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 256,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 256
+        }
+      }
+    },
+    "child_modules": 313,
+    "unresolved_children": {}
+  },
+  {
+    "variant": "c324",
+    "source_commit": "0ae42aa9c19a440774ccce71b664a375352ce7e4",
+    "run": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c324",
+    "original": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c324/port_bind_v2/port_bind_v2.json",
+    "original_sha256": "3407952927e2a92cce7dd1d34588106cde9440d47a2cf0037e0ced517b77c111",
+    "die_sha256": "49dabf105ea9ff8484ee69015a335c5cbc37e56c4f8087af8248f171ab1261e1",
+    "verdict": "PASS",
+    "failing": [],
+    "summary": {
+      "masters": 69,
+      "instances": 46571,
+      "unbound_masters": 0,
+      "stub_masters": 0,
+      "ambiguous_masters": 0,
+      "port_not_in_rtl": 0,
+      "width_mismatch": 0,
+      "input_unconnected": 0,
+      "input_tied": 0,
+      "unparsed_connections": 0,
+      "duplicate_port_connections": 0,
+      "undriven_net_bits": 0,
+      "multi_driven_net_bits": 0,
+      "unread_net_bits": 0,
+      "output_open_ports": 0,
+      "top_assigns": 0,
+      "params_not_in_rtl": 0,
+      "strap_ports": 36,
+      "pad_bits": 212897,
+      "spare_out_bits": 655259,
+      "unresolved_children": 0,
+      "ambiguous_children": 0,
+      "variant_children": 19
+    },
+    "masters": {
+      "ot_qfd_serdes_112g_x12_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c324/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qkh_head_frontq_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\", \"Q_FP32\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qkh_head_score4_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 128
+        }
+      },
+      "ot_qkh_head_stin_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_head_stk_native": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 2048
+        }
+      },
+      "ot_qkh_ktree_lk": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"MUL_LAT\": \"32'sb00000000000000000000000000000110\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"SCALE\": \"32'sb00111101101101010000010011110011\"}": 128
+        }
+      },
+      "ot_qkh_lane8": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2048,
+        "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"32'sb00000000000000000000000000000111\", \"LTW\": \"32'sb00000000000000000000000000001100\"}": 2048
+        }
+      },
+      "ot_qkvd_ucie_x64_phy": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-0ae42aa9c-sqk2c324/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "ot_qwen_tp8_pv_join_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 64,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"J_LAT\": \"32'sb00000000000000000000000000000111\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 64
+        }
+      },
+      "ot_qwen_tp8_pv_slice_t": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 512,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RESET_PIN\": \"32'sb00000000000000000000000000000001\"}": 512
+        }
+      },
+      "ot_qwen_tp8_pv_wide_ctl_tbf": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"END_FLOOR\": \"32'sb00000000000000000000000000000001\", \"FIRST_INPUT_AGE\": \"32'sb00000000000000000000000001111111\", \"FLAG_D\": \"32'sb00000000000000000000000000111010\", \"MUT\": \"32'sb00000000000000000000000000000000\", \"RESET_PIN\": \"32'sb00000000000000000000000000000001\", \"TRUNK_D\": \"32'sb00000000000000000000000000110110\"}": 2
+        }
+      },
+      "qkd_ahub_static_dw": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"AP_OFS\": \"{16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}\", \"FR_OFS\": \"-7\", \"Z_IN_STRIDE\": \"4\"}": 1
+        }
+      },
+      "qkd_astk_ctl_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"Z_STRIDE\": \"32'sb00000000000000000000000000000100\"}": 4
+        }
+      },
+      "qkd_astk_ep_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 32
+        }
+      },
+      "qkd_astk_er_owner_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"N\": \"32'sb00000000000000000000000000000100\"}": 32
+        }
+      },
+      "qkd_astk_ex_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_astk_fault_join": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9
+        }
+      },
+      "qkd_astk_rly_296_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 912,
+        "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 912
+        }
+      },
+      "qkd_astk_zn": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_ckbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c324/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_ctrl_kc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_d2d_cal_seq_pin_bc4": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"EP_SKEW\": \"3\", \"GO_OFS\": \"0\", \"MUT\": \"0\"}": 1
+        }
+      },
+      "qkd_d2d_static_sfm": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"FEG\": \"1\", \"NL\": \"2\", \"NTX\": \"3\", \"SAFE_RC\": \"1\", \"SRAMV\": \"2\", \"TXDP\": \"50529302\"}": 1
+        }
+      },
+      "qkd_ectl3_kiss_st": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 32,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"HXK\": \"13\", \"MUT\": \"0\", \"QK_ISSUE_AGE\": \"91\", \"RESPONSE_LAT\": \"80\"}": 32
+        }
+      },
+      "qkd_embgw_boot_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"BD\": \"4\", \"GAP\": \"1\", \"HOLD\": \"64\", \"MUT\": \"0\", \"ROW0\": \"24427\"}": 1
+        }
+      },
+      "qkd_fwdbump": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c324/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_hbm3e_phy_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "/srv/opentallas-scratch2/claude/ot-scratch-home/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c324/port_bind_v2/kv_hard_models.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_host_pc_slice_die": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_host_root_admission_obsx": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+        }
+      },
+      "qkd_hp_or2": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 356,
+        "rtl": "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 356
+        }
+      },
+      "qkd_kvs_attn_fl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"RETIRE_STATIC\": \"1\", \"STATUS_DELAY\": \"213\"}": 1
+        }
+      },
+      "qkd_kvs_ctl": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_emb": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_kvs_grp": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 28,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 28
+        }
+      },
+      "qkd_kvs_grp_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_hroot": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_kvs_pc": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 124,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 124
+        }
+      },
+      "qkd_kvs_pc_h": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4
+        }
+      },
+      "qkd_landsh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2
+        }
+      },
+      "qkd_landsh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 12,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 12
+        }
+      },
+      "qkd_landsh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_landsh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_landsh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_landsh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_pll_analog_model": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+        "kind": "model",
+        "param_sets": {
+          "{}": 1
+        }
+      },
+      "qkd_pv16_vport_b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"DQ\": \"15\", \"MUT\": \"0\", \"RT\": \"31\"}": 16
+        }
+      },
+      "qkd_pv_fin_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"ADD_LAT\": \"7\", \"MUL_LAT\": \"6\", \"MUT\": \"0\", \"SKEW\": \"1\"}": 1
+        }
+      },
+      "qkd_pv_rs_hd_f": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KV\": \"32'sb00000000000000000000000000100000\"}": 2
+        }
+      },
+      "qkd_rlyi_258s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 128,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 128
+        }
+      },
+      "qkd_rlys_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 7237,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 7237
+        }
+      },
+      "qkd_rlys_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4388,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 4388
+        }
+      },
+      "qkd_rlys_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 10304,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 10304
+        }
+      },
+      "qkd_rlys_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 2193,
+        "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 2193
+        }
+      },
+      "qkd_rlysh0_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 16,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 16
+        }
+      },
+      "qkd_rlysh0_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 264,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 264
+        }
+      },
+      "qkd_rlysh0_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 39,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 39
+        }
+      },
+      "qkd_rlysh_1": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 547,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 547
+        }
+      },
+      "qkd_rlysh_296": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 253,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 253
+        }
+      },
+      "qkd_rlysh_36": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 9734,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 9734
+        }
+      },
+      "qkd_rlysh_528": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1066,
+        "rtl": "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 1066
+        }
+      },
+      "qkd_rst_region_pr_h273b": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 42,
+        "rtl": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273b.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 42
+        }
+      },
+      "qkd_seq_core_static_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 1,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"KP0\": \"32'sb00000000000000000000000000100100\", \"KVN_A0\": \"32'sb00000000000000000000000000100000\", \"LP_WIN\": \"32'sb00000000000000000000000001000000\", \"MUT\": \"32'sb00000000000000000000000000000000\"}": 1
+        }
+      },
+      "qkd_seq_fan_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkd_seq_xs_s": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 4,
+        "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 4
+        }
+      },
+      "qkh_head_gather_stage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 384,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+        "kind": "real",
+        "param_sets": {
+          "{\"MUT\": \"32'sb00000000000000000000000000000000\"}": 64,
+          "{}": 320
+        }
+      },
+      "qkh_head_sstage": {
+        "verdict": "PASS",
+        "fails": [],
+        "instances": 256,
+        "rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+        "kind": "real",
+        "param_sets": {
+          "{}": 256
+        }
+      }
+    },
+    "child_modules": 313,
+    "unresolved_children": {}
+  }
+]
