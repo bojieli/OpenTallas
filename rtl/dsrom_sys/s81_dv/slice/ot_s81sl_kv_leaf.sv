@@ -50,7 +50,9 @@ module ot_s81sl_kv_leaf (
    if(start && !busy)begin
     // No generic opcode fallback; unsupported kind/shape or impossible calendar
     // fails visibly, rather than silently running a different norm shape.
-    if((imm[3:0]!=1 && imm[3:0]!=7)||c_d[31:24]!=32||imm[31:16]<128)fault<=1;
+    if((imm[3:0]!=1 && imm[3:0]!=7)||c_d[31:24]!=32||imm[31:16]<128 ||
+       c_d[5:4]!=0 || c_d[15:14]!=0 || c_d[23:14]>896 ||
+       c_d[13:4]>(imm[3:0]==1?1004:1020) || imm[127:32]!=0 || imm[15:14]!=0)fault<=1;
     else begin
      busy<=1;age<=0;drain_age<=imm[31:16];pbase<=c_d[13:4];ibase<=c_d[23:14];
      issued<=0;received<=0;npairs<=imm[3:0]==1?74:66;kind<=imm[3:0];gsel<=imm[5:4];jid<=imm[13:6];dn_st<=1;
