@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021
+ot-run: ot-epyc7       admits   254 GB (avail 482, growth 304, headroom 0, waiters 0/0 GB) load 45/96 running 20 disk 4569 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1031933-1792617094 after 0 s
+Referenced but unset environment variable evaluates to an empty string: f
+bash: /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021/src/rtl/hbm_accel/sm/repack/h2a5/lp_s_m/ot_hbm_smh_rp5_bench.sh: No such file or directory
+LP_FORM_EXIT s_m 127
+bash: /srv/opentallas-scratch/claude/codex-smh-r5-reset-lp-1021/src/rtl/hbm_accel/sm/repack/h2a5/lp_s_f/ot_hbm_smh_rp5_bench.sh: No such file or directory
+LP_FORM_EXIT s_f 127
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1031933-1792617094): exit 1
