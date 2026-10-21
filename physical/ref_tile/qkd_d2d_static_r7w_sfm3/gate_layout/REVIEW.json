@@ -1,0 +1,14 @@
+{
+ "reviewer": "claude KV-D2D3 (DRIVE-KV sub-lane)",
+ "time": "2026-10-20 21:48",
+ "gate_commit": "3802573e75daaf9c01fdb41fcd52260b4b77a62e",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "PASS: 4 d2d_sram_1r1w_64x137 p288 at the 43.2-um 2x2 lattice slots (43.2/259.2 x 43.2/172.8), same as closed sfm2",
+  "std_cell_band": "PASS: one full-width std-cell field, no islands; post-place density low (fill 16.5%, pin-bound outline)",
+  "pin_spread": "PASS: pins on full faces (S 4.9/um, W 4.5/um <= 6/um); CTS pin-flop spread TT 69.4 / FF 64.4 ps <= 80",
+  "clock_entry": "PASS: clock root mid E face, beside the register mass (as closed sfm2)",
+  "shape": "PASS: 475.2 x 280.8, aspect 1.69, GRT overflow 0 (worst M2 25.9%)"
+ },
+ "notes": "gate3 WARN (fill/pin-bound, 207 native driver wires >405 um centre, max 544 um inside the 475-um tile): RULE FREEZE 10-20 09:35 -- tile rules are guidance, die GRT/STA decide; diag placement setup +74 ps. Codex 08:14 HOLD lifted by this review."
+}
