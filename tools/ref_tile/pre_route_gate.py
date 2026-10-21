@@ -2783,7 +2783,8 @@ def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
     items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
     if not isinstance(w, dict) or not items:
         return
-    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w,
+                                          tile=spec.get("block"))
     if not applied:
         for i in items:
             i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"

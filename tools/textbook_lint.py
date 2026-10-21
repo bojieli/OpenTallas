@@ -248,7 +248,7 @@ SCOPED_CLOCK_WAIVER_CAPS = {
 }
 
 
-def clock_waiver_eval(evidence, waiver):
+def clock_waiver_eval(evidence, waiver, tile=None):
     """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess, the job
     spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Applies only when every
     over-limit corner spread of the evidence is <= limit + CLOCK_WAIVER_MAX_PS, <= the recorded value, and (child-pair
@@ -277,7 +277,10 @@ def clock_waiver_eval(evidence, waiver):
         rec_ps = waiver.get(f"{c}_ps")
         if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
             why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
-        cap = SCOPED_CLOCK_WAIVER_CAPS.get(str(waiver.get("scope", "")), {}).get(c)
+        scope = str(waiver.get("scope", ""))
+        cap = SCOPED_CLOCK_WAIVER_CAPS.get(scope, {}).get(c)
+        if cap is not None and tile is not None and str(tile) != scope:
+            why.append(f"scoped waiver {scope} does not apply to tile {tile}")
         if cap is not None:
             if v > cap + 1e-6:
                 why.append(f"{c.upper()} {v:.1f} ps exceeds the scoped cap {cap} of {waiver.get('scope')}")
