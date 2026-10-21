@@ -1,0 +1,16 @@
+{
+  "qualified": false,
+  "status": "RUNNING, not CLOSED",
+  "checked_at": "2026-10-21T11:57:47.576684-07:00",
+  "job": "qkd_kvs_ctl_c32d-c32d-104fb88b7",
+  "host": "ot-epyc7",
+  "route_path": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_c32d-c32d-104fb88b7/routes/qkd_kvs_ctl_c32d_c32d_104fb88b7/work/orfs/results/asap7/opentallas_qkd_kvs_ctl_asap7_ref_qkd_kvs_ctl_c32d_c32d_104fb88b7/base/ot_pin_regs_wrapper.v",
+  "sha256": "b1777ef1c095145de9333f15acaa1722aafb1afb4e7aab32707e315459a88893",
+  "bytes": 18484,
+  "gate_archive": "results/arch/codex_k_ctl_1021/gate_ot_pin_regs_wrapper.v",
+  "exact_match": true,
+  "input_added_edges": 1,
+  "non_hroot_output_added_edges": 1,
+  "hroot_output_added_edges": 0,
+  "scope": "Direct SHA check of actual route-generated wrapper; source and edge identity only, not timing closure or die adoption"
+}
