@@ -1,8 +1,9 @@
 {
- "schema": "qwen.compute.bind_view_select.v1",
- "note": "QW-GEN2 10-19 variant B (dv2f19g2j): qfd_d2d_static -> the NEWEST closed view, r9j (closure-loop qfd_d2d_static_r9j-r9j-7f431abe6, record 3f089f09c; the daemon wrote it into the r6 view dir; native_pin_audit 9cba02d14 spread TT 54.6 / FF 49.9). Default bind_view_select.json keeps r5 (= dv2f18dh2 binding, so the compiled_L1 relay schedule matches) for variant A. QW closure pickup 10-21: bind MU ctx_rx c1 CLOSED main view (fallback c1b retained), same 43.2 x 97.2 frame; existing native receipts df1f9d4c7.",
- "views": {
-  "qfd_d2d_static": "physical/ref_tile/qfd_d2d_static_r6/views/qfd_d2d_static",
-  "qfd_mu_ctx_rx_die": "physical/ref_tile/qfd_mu_ctx_rx_die/views/qfd_mu_ctx_rx_die"
- }
+  "schema": "qwen.compute.bind_view_select.v1",
+  "note": "QW-GEN2 10-19 variant B (dv2f19g2j): qfd_d2d_static -> the NEWEST closed view, r9j (closure-loop qfd_d2d_static_r9j-r9j-7f431abe6, record 3f089f09c; the daemon wrote it into the r6 view dir; native_pin_audit 9cba02d14 spread TT 54.6 / FF 49.9). Default bind_view_select.json keeps r5 (= dv2f18dh2 binding, so the compiled_L1 relay schedule matches) for variant A. QW closure pickup 10-21: bind MU ctx_rx c1 CLOSED main view (fallback c1b retained), same 43.2 x 97.2 frame; existing native receipts df1f9d4c7. DHOBS d2 CLOSED 794de2141 selected explicitly; current R16/595 geometry diagnostic only.",
+  "views": {
+    "qfd_d2d_static": "physical/ref_tile/qfd_d2d_static_r6/views/qfd_d2d_static",
+    "qfd_mu_ctx_rx_die": "physical/ref_tile/qfd_mu_ctx_rx_die/views/qfd_mu_ctx_rx_die",
+    "qfd_sys_face_mu_dhobs": "physical/ref_tile/qfd_sys_face_mu_dhobs/views/qfd_sys_face_mu_dhobs"
+  }
 }
