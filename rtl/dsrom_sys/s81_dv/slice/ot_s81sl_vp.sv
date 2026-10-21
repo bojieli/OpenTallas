@@ -77,9 +77,12 @@ module ot_s81sl_vp #(
     output reg           fault
 );
     localparam [3:0] OP_GAIN = 4'd1, OP_POST = 4'd2, OP_HLOAD = 4'd3, OP_HSTORE = 4'd4, OP_NORM = 4'd5, OP_RDOUT = 4'd6, OP_NORMR = 4'd7;
-    wire [3:0] rsv;
-    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
-    wire rs_c = rsv[0], rs_s = rsv[1], rs_p = rsv[2], rs_o = rsv[3];
+    // SAFE 10-21: 10 reset regions (was 4 with ~100 loads each): every relay leaf resets <= ~33 control / valid flops;
+    // coefficient enables, relays and the fault reduce pipe carry no reset (they flush while reset is held).
+    wire [9:0] rsv;
+    ot_rst_relay #(.REGIONS(10), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
+    wire rs_c = rsv[0], rs_c2 = rsv[1], rs_s = rsv[2], rs_p = rsv[3], rs_r0 = rsv[4], rs_r1 = rsv[5], rs_w = rsv[6],
+         rs_o = rsv[7], rs_o2 = rsv[8], rs_o3 = rsv[9];
     integer i, k;
 
     // ---------------------------------------------------------------- input pin flops
@@ -104,14 +107,17 @@ module ot_s81sl_vp #(
     (* keep *) reg [2*NG-1:0] k_cwv;
     (* keep *) reg [8*NG-1:0] k_swm, k_xwm;
     (* keep *) reg [6*NG-1:0] k_cws;                 // {cw_a[14:12], cw_a[2:0]}: port 1 / port 0 {bank, word}
-    (* keep *) reg [4:0]      k_cv;
-    (* keep *) reg [19:0]     k_op;
+    (* keep *) reg [8:0]      k_cv;                  // n_pre 16-bit groups 0..7 + the m_* group 8
+    (* keep *) reg [35:0]     k_op;
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin k_swv <= {NG{1'b0}}; k_xwv <= {NG{1'b0}}; k_cwv <= {(2*NG){1'b0}}; k_cv <= 5'd0; end
-        else begin k_swv <= {NG{sw_v}}; k_xwv <= {NG{x_wv}}; k_cwv <= {NG{cw_v}}; k_cv <= {5{c_v}}; end
+        if (!rs_c) begin k_swv <= {NG{1'b0}}; k_xwv <= {NG{1'b0}}; end
+        else begin k_swv <= {NG{sw_v}}; k_xwv <= {NG{x_wv}}; end
+    always @(posedge clk or negedge rs_c2)
+        if (!rs_c2) begin k_cwv <= {(2*NG){1'b0}}; k_cv <= 9'd0; end
+        else begin k_cwv <= {NG{cw_v}}; k_cv <= {9{c_v}}; end
     always @(posedge clk) begin
         k_swa0 <= {NG{sw_a[0]}}; k_xwa0 <= {NG{x_wa[0]}}; k_swm <= {NG{sw_m}}; k_xwm <= {NG{x_wm}};
-        k_cws <= {NG{cw_a[14:12], cw_a[2:0]}}; k_op <= {5{c_d[3:0]}};
+        k_cws <= {NG{cw_a[14:12], cw_a[2:0]}}; k_op <= {9{c_d[3:0]}};
     end
 
     // ---------------------------------------------------------------- sequencer (one op at a time; fixed timelines)
@@ -233,8 +239,8 @@ module ot_s81sl_vp #(
     end
     // S81-SLICE/VP SAFE 10-21: the bank-swap / odd-row / extension-swap selects drove 128..768 mux loads from one flop
     // (dswp -> hw_d / wl_d / lo_d, dodd -> cf / n_pre / yrow, xsw2 -> x_qd): kept copies per 32-bit word, same edge.
-    (* keep *) reg [7:0] k_dswp, k_xsw2; (* keep *) reg [3:0] k_dodd;
-    always @(posedge clk) begin k_dswp <= {8{dswp1}}; k_dodd <= {4{dodd1}}; k_xsw2 <= {8{xsw1}}; end
+    (* keep *) reg [7:0] k_dswp; (* keep *) reg [15:0] k_xsw2; (* keep *) reg [3:0] k_dodd;
+    always @(posedge clk) begin k_dswp <= {8{dswp1}}; k_dodd <= {4{dodd1}}; k_xsw2 <= {16{xsw1}}; end
     wire [127:0] qe, qo, q1r;                                 // rows a0 + 2i (first) / a0 + 2i + 1 (second); POST row
     wire [255:0] qoe = {qo, qe};
     genvar gq;
@@ -249,9 +255,8 @@ module ot_s81sl_vp #(
     // (step, word) so each enable drives 32 flops (was dv / dop / dsi decode -> 640 enables).
     reg [31:0] cf [0:19];
     (* keep *) reg [19:0] k_cfe;                              // [4 s + i]: POST step s, word i
-    always @(posedge clk or negedge rs_p)
-        if (!rs_p) k_cfe <= 20'd0;
-        else for (k = 0; k < 5; k = k + 1) k_cfe[4 * k +: 4] <= {4{dv1 && dop1 == OP_POST && dsi1 == k[7:0]}};
+    always @(posedge clk)   // no reset: dv1 is reset, so k_cfe is 0 one edge into reset
+        for (k = 0; k < 5; k = k + 1) k_cfe[4 * k +: 4] <= {4{dv1 && dop1 == OP_POST && dsi1 == k[7:0]}};
     always @(posedge clk)
         for (k = 0; k < 5; k = k + 1)
             for (i = 0; i < 4; i = i + 1)
@@ -331,7 +336,7 @@ module ot_s81sl_vp #(
     genvar go;
     generate if (LRELAY != 0) begin : g_orl
         (* keep *) reg [15:0] lv_r, lf_r; (* keep *) reg [31:0] lo_r [0:15];
-        always @(posedge clk or negedge rs_p) if (!rs_p) begin lv_r <= 16'd0; lf_r <= 16'd0; end else begin lv_r <= lv; lf_r <= lf; end
+        always @(posedge clk) begin lv_r <= lv; lf_r <= lf; end   // no reset: the lanes hold vo / fault low in reset
         always @(posedge clk) for (k = 0; k < 16; k = k + 1) lo_r[k] <= lo[k];
         assign lv_s = lv_r; assign lf_s = lf_r;
         for (go = 0; go < 16; go = go + 1) begin : g_o assign lo_s[go] = lo_r[go]; end
@@ -346,13 +351,17 @@ module ot_s81sl_vp #(
     localparam integer RD = HPL - 1 + LRELAY;          // + the output relay (fallback)
     localparam integer PW = (RD <= 2) ? 1 : $clog2(RD);
     reg [RD-1:0] wv_ring; reg [PW-1:0] wv_p;
-    always @(posedge clk or negedge rs_p)
-        if (!rs_p) begin wv_ring <= {RD{1'b0}}; wv_p <= {PW{1'b0}}; end
-        else begin wv_ring[wv_p] <= k_lanev[4]; wv_p <= (wv_p == RD - 1) ? {PW{1'b0}} : wv_p + 1'b1; end
-    reg wvl; (* keep *) reg [8:0] k_wvl; reg [3:0] widx;
-    always @(posedge clk or negedge rs_p)
-        if (!rs_p) begin wvl <= 1'b0; k_wvl <= 9'd0; widx <= 4'd0; end
-        else begin wvl <= wv_ring[wv_p]; k_wvl <= {9{wv_ring[wv_p]}}; widx <= wvl ? widx + 4'd1 : 4'd0; end
+    localparam integer RH = RD / 2;                         // ring reset split over two relay leaves
+    always @(posedge clk or negedge rs_r0)
+        if (!rs_r0) begin wv_ring[RH-1:0] <= {RH{1'b0}}; end
+        else if (wv_p < RH) wv_ring[wv_p] <= k_lanev[4];
+    always @(posedge clk or negedge rs_r1)
+        if (!rs_r1) begin wv_ring[RD-1:RH] <= {(RD-RH){1'b0}}; wv_p <= {PW{1'b0}}; end
+        else begin if (wv_p >= RH) wv_ring[wv_p] <= k_lanev[4]; wv_p <= (wv_p == RD - 1) ? {PW{1'b0}} : wv_p + 1'b1; end
+    reg wvl; (* keep *) reg [16:0] k_wvl; reg [3:0] widx;
+    always @(posedge clk or negedge rs_w)
+        if (!rs_w) begin wvl <= 1'b0; k_wvl <= 17'd0; widx <= 4'd0; end
+        else begin wvl <= wv_ring[wv_p]; k_wvl <= {17{wv_ring[wv_p]}}; widx <= wvl ? widx + 4'd1 : 4'd0; end
 
     // ---------------------------------------------------------------- vn seam (registered outputs)
     reg hrq_v; reg [3:0] hrq_i;                  // h read request this cycle (POST / HSTORE)
@@ -375,13 +384,13 @@ module ot_s81sl_vp #(
 
     // NORM / NORMR load of n_pre / m_*: decoded per 32-bit word from kept command copies (k_cv / k_op, landed at the
     // pin) and a registered NORMR-done flag with kept copies (was cv_c && op == NORM / dv && dop == NORMR -> 140 loads).
-    reg nr_done; (* keep *) reg [4:0] k_nrd;
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin nr_done <= 1'b0; k_nrd <= 5'd0; end
-        else begin nr_done <= dv1 && dop1 == OP_NORMR; k_nrd <= {5{dv1 && dop1 == OP_NORMR}}; end
-    wire [4:0] k_norm;
+    reg nr_done; (* keep *) reg [8:0] k_nrd;
+    always @(posedge clk or negedge rs_o2)
+        if (!rs_o2) begin nr_done <= 1'b0; k_nrd <= 9'd0; end
+        else begin nr_done <= dv1 && dop1 == OP_NORMR; k_nrd <= {9{dv1 && dop1 == OP_NORMR}}; end
+    wire [8:0] k_norm;
     genvar gn;
-    generate for (gn = 0; gn < 5; gn = gn + 1) begin : g_nm
+    generate for (gn = 0; gn < 9; gn = gn + 1) begin : g_nm
         assign k_norm[gn] = k_cv[gn] && k_op[4 * gn +: 4] == OP_NORM;
     end endgenerate
     always @(posedge clk or negedge rs_o)
@@ -397,29 +406,31 @@ module ot_s81sl_vp #(
             x_qv <= xr2;
         end
     always @(posedge clk) begin
-        // hw_d word k (lanes 2k, 2k + 1) on its own kept wvl copy: lane write-back, else the HLOAD row pair
-        for (k = 0; k < 8; k = k + 1)
-            if (k_wvl[k]) begin hw_d[32 * k +: 16] <= lo_s[2 * k][31:16]; hw_d[32 * k + 16 +: 16] <= lo_s[2 * k + 1][31:16]; end
-            else hw_d[32 * k +: 32] <= qoe[32 * k +: 32];
-        if (k_wvl[8]) begin hw_j <= widx[3:1]; hw_hf <= widx[0]; end
+        // hw_d lane field k on its own kept wvl copy (16 bits + the flow's pin-side copy): lane write-back, else the
+        // HLOAD row pair
+        for (k = 0; k < 16; k = k + 1)
+            if (k_wvl[k]) hw_d[16 * k +: 16] <= lo_s[k][31:16];
+            else hw_d[16 * k +: 16] <= qoe[16 * k +: 16];
+        if (k_wvl[16]) begin hw_j <= widx[3:1]; hw_hf <= widx[0]; end
         else begin hw_j <= dsi[3:1]; hw_hf <= dsi[0]; end
         hr_j <= hrq_i[3:1]; hr_hf <= hrq_i[0];
-        for (k = 0; k < 4; k = k + 1)
-            if (k_norm[k]) n_pre[32 * k +: 32] <= cd_c[32 + 32 * k +: 32];
+        // 16-bit groups: the flow keeps a pin-side copy of every output flop, so a group select sees 2 x 16 loads
+        for (k = 0; k < 8; k = k + 1)
+            if (k_norm[k]) n_pre[16 * k +: 16] <= cd_c[32 + 16 * k +: 16];
             else if (k_nrd[k])
 `ifndef OT_S81SL_VP_MUT_NORMIMM
-                n_pre[32 * k +: 32] <= q1r[32 * k +: 32];
+                n_pre[16 * k +: 16] <= q1r[16 * k +: 16];
 `else
-                n_pre[32 * k +: 32] <= 32'd0;          // bench mutant: NORMR ignores the row (the old imm-only NORM)
+                n_pre[16 * k +: 16] <= 16'd0;          // bench mutant: NORMR ignores the row (the old imm-only NORM)
 `endif
-        if (k_norm[4]) begin m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
-        else if (k_nrd[4]) begin m_q <= dmq[8]; m_b <= dmq[9]; m_i <= dmq[7:0]; end
+        if (k_norm[8]) begin m_q <= cn[0]; m_b <= cn[1]; m_i <= a1[7:0]; end
+        else if (k_nrd[8]) begin m_q <= dmq[8]; m_b <= dmq[9]; m_i <= dmq[7:0]; end
         wl_i <= dsi[2:0]; wl_d <= {qo, qe};
         lo_d <= {qo, qe};
         s_d <= cd_c;
-        for (k = 0; k < 4; k = k + 1) begin
-            x_qd[32 * k +: 32] <= k_xsw2[k] ? q1[32 * k +: 32] : q0[32 * k +: 32];
-            x_qd[128 + 32 * k +: 32] <= k_xsw2[4 + k] ? q0[32 * k +: 32] : q1[32 * k +: 32];
+        for (k = 0; k < 8; k = k + 1) begin
+            x_qd[16 * k +: 16] <= k_xsw2[k] ? q1[16 * k +: 16] : q0[16 * k +: 16];
+            x_qd[128 + 16 * k +: 16] <= k_xsw2[8 + k] ? q0[16 * k +: 16] : q1[16 * k +: 16];
         end
     end
 
@@ -430,12 +441,15 @@ module ot_s81sl_vp #(
     (* keep *) reg [15:0] lf_q, lv_q;
     reg wvl_d, wvl_dd, lv0_d, src1, src2, lvbad, lfa;
     reg [3:0] lfr, lvor, lvand;
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin
-            fault <= 1'b0; lf_q <= 16'd0; lv_q <= 16'd0; wvl_d <= 1'b0; wvl_dd <= 1'b0; lv0_d <= 1'b0; src1 <= 1'b0; src2 <= 1'b0;
+    always @(posedge clk or negedge rs_o2)
+        if (!rs_o2) begin fault <= 1'b0; lf_q <= 16'd0; end
+        else begin lf_q <= lf_s; fault <= fault | src2 | lfa | lvbad; end
+    always @(posedge clk or negedge rs_o3)
+        if (!rs_o3) begin
+            lv_q <= 16'd0; wvl_d <= 1'b0; wvl_dd <= 1'b0; lv0_d <= 1'b0; src1 <= 1'b0; src2 <= 1'b0;
             lvbad <= 1'b0; lfa <= 1'b0; lfr <= 4'd0; lvor <= 4'd0; lvand <= 4'd0;
         end else begin
-            lf_q <= lf_s; lv_q <= lv_s; wvl_d <= wvl;
+            lv_q <= lv_s; wvl_d <= wvl;
             for (k = 0; k < 4; k = k + 1) begin lfr[k] <= |lf_q[4 * k +: 4]; lvor[k] <= |lv_q[4 * k +: 4]; lvand[k] <= &lv_q[4 * k +: 4]; end
             lv0_d <= lv_q[0]; wvl_dd <= wvl_d;
             lfa <= |lfr;
@@ -443,6 +457,5 @@ module ot_s81sl_vp #(
             src1 <= wcol | busy_hit | xrcol | (wvl && dv && dop == OP_HLOAD) | (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c) |
                     (cv_c && op == OP_NORM && nr_done);
             src2 <= src1;
-            fault <= fault | src2 | lfa | lvbad;
         end
 endmodule
