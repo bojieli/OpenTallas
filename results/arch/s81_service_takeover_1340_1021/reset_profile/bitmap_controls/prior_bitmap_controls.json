@@ -1,0 +1,92 @@
+{
+  "scope": "Read-only prior NORST map unknown reset-DFF ancestry at most6 comb levels; a source witness, NOT symbolic equivalence, nativePASS or authority to remove state.",
+  "unattributed_states": 2910,
+  "groups": [
+    [
+      "feedback | ",
+      1972
+    ],
+    [
+      "feedback | u_core.lw_a",
+      906
+    ],
+    [
+      "no-feedback | ",
+      32
+    ]
+  ],
+  "examples": {
+    "no-feedback | ": [
+      {
+        "cell": "_1870163_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "named_ancestry": [
+          "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.q5",
+          "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k5.g_r.v",
+          "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k5.q",
+          "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_v"
+        ]
+      },
+      {
+        "cell": "_1873274_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "named_ancestry": [
+          "u_core.ow_blk",
+          "u_core.qt",
+          "u_core.rh",
+          "u_core.tile",
+          "u_core.u_pv_identity.tile"
+        ]
+      }
+    ],
+    "feedback | ": [
+      {
+        "cell": "_1872086_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "named_ancestry": [
+          "u_core.g_wqh.g_p.g_m.u_wqm.wa",
+          "u_core.wq_w"
+        ]
+      },
+      {
+        "cell": "_1872087_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "named_ancestry": []
+      }
+    ],
+    "feedback | u_core.lw_a": [
+      {
+        "cell": "_1873368_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "named_ancestry": [
+          "u_core.h_mask",
+          "u_core.h_type",
+          "u_core.lw_a",
+          "u_core.q_d",
+          "u_core.u_qmm.wd",
+          "u_core.u_qmm.wdp",
+          "u_core.u_swm.wd",
+          "u_core.u_swm.wdp"
+        ]
+      },
+      {
+        "cell": "_1873375_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "named_ancestry": [
+          "u_core.h_mask",
+          "u_core.h_type",
+          "u_core.lw_a",
+          "u_core.q_d",
+          "u_core.qt",
+          "u_core.tile",
+          "u_core.u_pv_identity.cfg_owner",
+          "u_core.u_pv_identity.tile",
+          "u_core.u_qmm.wd",
+          "u_core.u_qmm.wdp",
+          "u_core.u_swm.wd",
+          "u_core.u_swm.wdp"
+        ]
+      }
+    ]
+  }
+}

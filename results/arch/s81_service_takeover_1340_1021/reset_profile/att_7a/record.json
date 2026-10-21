@@ -1,0 +1,61 @@
+{
+  "status": "PASS_EXACT_7A_FULL_ATT_FIXTURE_NOT_LATER_SOURCE",
+  "source_commit": "7a272679d",
+  "unit": "oth-ubuntu-3097102-1792621724",
+  "host": "ot-epyc5",
+  "origin_and_return_host": "ot-epyc7",
+  "memory_GiB": 96,
+  "threads": 4,
+  "source_snapshot": "/srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_profile_att",
+  "output": "/srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/out_profile_att",
+  "reset_semantics": "Actual LP assert11C/release13C; generic512 forest source frozen before compact132",
+  "results": [
+    {
+      "T": 1,
+      "scores": 1,
+      "pv_words": 40,
+      "GO": 1,
+      "done": 11,
+      "faults": 0,
+      "mismatches": 0,
+      "PIO": 123,
+      "dynamic_ST": 0
+    },
+    {
+      "T": 33,
+      "scores": 9,
+      "pv_words": 40,
+      "GO": 1,
+      "done": 11,
+      "faults": 0,
+      "mismatches": 0,
+      "PIO": 123,
+      "dynamic_ST": 0
+    },
+    {
+      "T": 46,
+      "scores": 12,
+      "pv_words": 40,
+      "GO": 1,
+      "done": 11,
+      "faults": 0,
+      "mismatches": 0,
+      "PIO": 123,
+      "dynamic_ST": 0
+    }
+  ],
+  "excluded": [
+    "Later PSEL/TAG/compact132 source",
+    "PINREG caller legal HBM path",
+    "full16/PVSO",
+    "wholecore native/clock/reset/physical/calendar"
+  ],
+  "artifact_sha256": {
+    "otrun.log": "9edc341e085acce0cf3ff7aa2605c43acd044f29b8e68b6c44f8bdefe71648ee",
+    "sources.sha256": "3d5010c91fe717537cfbef0768ac5b8e2118d210bb753ca587eaf0889386edb3",
+    "t1.log": "fd3240b8abdf772375b74232bf074ec026df7907b77d946eadb361310ebc4185",
+    "t33.log": "e268ba952c424260649237f0b94923ef60267a4534aeea7a2617b0518159617b",
+    "t46.log": "af1f1dd280af74763af379296069a6fdd1a9ef302b0222fe39dc5fb8460606df",
+    "verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  }
+}

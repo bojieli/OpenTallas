@@ -1,0 +1,7 @@
+FMEM_PV_VALID_COPIES checks=4374
+CURRENT_ATT T=46 SRAM=1 NTP=0/1 scores=12/12 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+- tools/s81_dv/svc_rs/reset_profile/tb_att_reset.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 82.429 s; speed 53.295 ns/s
+- Verilator: cpu 82.426 s on 1 threads; allocated 119 MB
