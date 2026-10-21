@@ -274,6 +274,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     reg = {b['name']: region_of(b, pitch) for b in blocks}
     regions = sorted(set(reg.values()))
     M = T['masters']
+    # Validate optional endpoint contracts even when a forwarded clock or an
+    # equal-depth calendar would bypass clock selection during emission.
+    for link in plan['links']:
+        endpoint_clock_override(T, blocks, reg, link, True)
+        endpoint_clock_override(T, blocks, reg, link, False)
     # one net per 0-stage link (no top assigns: the strict checker resolves drivers through ports only)
     dname = lambda nm: f'w_{nm}_src' if not chains_pts[nm] else f'w_{nm}_dst'
     # ------------------------------------------------------------------ endpoints per instance (plan order)
