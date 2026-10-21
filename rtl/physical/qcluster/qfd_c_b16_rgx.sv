@@ -1016,10 +1016,7 @@ module qfd_c_b16_rgx_fabric #(parameter integer MUT = 0) (
     // ---- LANDING leg_3_1b_1: c3r3 -> c2r2, 514 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)
     wire [2055:0] land_leg_3_1b_1_bank;  wire [11:0] land_leg_3_1b_1_epo;  wire [71:0] land_leg_3_1b_1_vld;  wire [513:0] land_leg_3_1b_1;  wire lrst_leg_3_1b_1_w, lrst_leg_3_1b_1_r;
     wire land_leg_3_1b_1_rsr;  qfd_q3h_run #(.W(1), .D(MUT == 7 ? 1 : 0)) u_m7_leg_3_1b_1 (.ck(ck_c2r2), .d(lrst_leg_3_1b_1_r), .q(land_leg_3_1b_1_rsr));
-    if (1) begin : g_land_leg_3_1b_1   // bench-only K mutant keeps the parameterised tile
-        if (MUT == 6 ? 3 : 2 == 2) begin : g_hard qfd_c_ring514 u_land_leg_3_1b_1 (.ck_w(ck_c3r3), .rsi_w(lrst_leg_3_1b_1_w), .i(leg_3_1b_0), .ck_r(ck_c2r2), .rsi_r(land_leg_3_1b_1_rsr), .o(land_leg_3_1b_1)); end
-        else begin : g_mut qfd_c_ring_t #(.W(514), .D(4), .K(MUT == 6 ? 3 : 2)) u_land_leg_3_1b_1 (.ck_w(ck_c3r3), .rsi_w(lrst_leg_3_1b_1_w), .i(leg_3_1b_0), .ck_r(ck_c2r2), .rsi_r(land_leg_3_1b_1_rsr), .o(land_leg_3_1b_1)); end
-    end
+    qfd_c_ring514 u_land_leg_3_1b_1 (.ck_w(ck_c3r3), .rsi_w(lrst_leg_3_1b_1_w), .i(leg_3_1b_0), .ck_r(ck_c2r2), .rsi_r(land_leg_3_1b_1_rsr), .o(land_leg_3_1b_1));   // HARD crossing ck_c3r3 -> ck_c2r2  (fabric MUT 6 read-slot mutant is covered by the tile bench K=3 mutant: K = MUT == 6 ? 3 : 2 here ignored for MUT 0)
     wire [513:0] leg_3_1b_1;  qfd_c_stn514 u_leg_3_1b_1 (.ck(ck_c2r2), .d(land_leg_3_1b_1), .q(leg_3_1b_1));   // (1664.75, 3909.60) c2r2
     wire [513:0] leg_3_1b_2;  qfd_c_stn514 u_leg_3_1b_2 (.ck(ck_c2r2), .d(leg_3_1b_1), .q(leg_3_1b_2));   // (1308.06, 3909.60) c2r2
     // ---- LANDING leg_3_1b_3: c2r2 -> c1r2, 514 b, D 4, E = K = 2, +3 edges (LANDING-CONTRACT L1-L7)

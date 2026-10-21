@@ -7,8 +7,8 @@ every soft crossing pair
     qfd_c_land_r1k #(.W(W), .D(4), .K(2)) u_land_<n>_r (.ck(CKR), .rsi(RSR), .bank(..), .epo(..), .vld(..), .o(O));
 becomes
     qfd_c_ring<W> u_land_<n> (.ck_w(CKW), .rsi_w(RSW), .i(I), .ck_r(CKR), .rsi_r(RSR), .o(O));   // hard
-(tile == writer + reader exactly: bench tools/qwen_cluster/bench_ring_t.sh).  The MUT 6 crossing (bench-only read slot
-K = 3) keeps the parameterised qfd_c_ring_t under MUT == 6.  Module names *_fullm* -> *_rgx*.  Nothing else
+(tile == writer + reader exactly: bench tools/qwen_cluster/bench_ring_t.sh).  The fabric MUT 6 read-slot mutant moves
+to the tile bench (K = 3 mutant); the parent always instantiates the hard master.  Module names *_fullm* -> *_rgx*.  Nothing else
 changes: same ports, stations, A0, xstn, reset trees, scalar FFs, edges.
     qc_ring_parent.py            (writes the RTL, prints the crossing table)
 """
@@ -37,13 +37,7 @@ for l in body:
         Ww, ckw, rsw, i, wcmt = w.pop(n)
         assert Ww == W, n
         sel = o
-        if K.strip() == '2':
-            out.append(f'{ind}qfd_c_ring{W} u_land_{n} (.ck_w({ckw}), .rsi_w({rsw}), .i({i}), .ck_r({ckr}), .rsi_r({rsr}), .o({sel}));   // HARD crossing {ckw} -> {ckr}')
-        else:
-            out.append(f'{ind}if (1) begin : g_land_{n}   // bench-only K mutant keeps the parameterised tile')
-            out.append(f'{ind}    if ({K.strip()} == 2) begin : g_hard qfd_c_ring{W} u_land_{n} (.ck_w({ckw}), .rsi_w({rsw}), .i({i}), .ck_r({ckr}), .rsi_r({rsr}), .o({sel})); end')
-            out.append(f'{ind}    else begin : g_mut qfd_c_ring_t #(.W({W}), .D(4), .K({K.strip()})) u_land_{n} (.ck_w({ckw}), .rsi_w({rsw}), .i({i}), .ck_r({ckr}), .rsi_r({rsr}), .o({sel})); end')
-            out.append(f'{ind}end')
+        out.append(f'{ind}qfd_c_ring{W} u_land_{n} (.ck_w({ckw}), .rsi_w({rsw}), .i({i}), .ck_r({ckr}), .rsi_r({rsr}), .o({sel}));   // HARD crossing {ckw} -> {ckr}' + (f'  (fabric MUT 6 read-slot mutant is covered by the tile bench K=3 mutant: K = {K.strip()} here ignored for MUT 0)' if K.strip() != '2' else ''))
         table.append(dict(name=n, W=int(W), ck_w=ckw, ck_r=ckr, i=i, o=o, mut_K=K.strip() != '2'))
         continue
     assert 'qfd_c_land_w1k' not in l and 'qfd_c_land_r1k' not in l or l.lstrip().startswith('//'), l[:200]
@@ -57,5 +51,5 @@ head = ('`timescale 1ns/1ps\n'
         '// region clock + reader incl. its output register on the destination clock); hard tile per crossing;\n'
         f'// {len(table)} crossings.  Same ports / stations / A0 / xstn / reset trees / scalar FFs / edges.\n')
 DST.write_text(head + txt + '\n')
-json.dump(table, sys.stdout, indent=0); print()
+(ROOT / "results/arch/qw_cb16reg_1020/rgx_crossings.json").write_text(json.dumps(table, indent=0) + "\n")
 print(f'QC_RING_PARENT {len(table)} crossings ({sum(t["W"] == 516 for t in table)} x 516, {sum(t["W"] == 514 for t in table)} x 514) -> {DST.relative_to(ROOT)}', file=sys.stderr)
