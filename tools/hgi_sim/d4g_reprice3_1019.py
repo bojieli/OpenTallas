@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 from hgi_sim import d4g_reprice_1019 as R
 from hgi_sim import timing as T
+from hgi_sim.smb_head_price_1021 import head_schedule_price
 
 
 def main():
@@ -33,7 +34,7 @@ def main():
         'pg_fault': (0, 'measured', 'fault +2 serial is status only, no successful token latency', 'TW3-PGSTREAM'),
         'att_prog': (0, 'measured', '2048 words: 1019 attention + 152 matvec resident; one-op spans enabled', 'HBM-SMBUDGET main e248c89e7'),
         'att_desc': (0, 'measured', '256 token-resident relative descriptors; no rewrite', 'HBM-SMBUDGET main e248c89e7'),
-        'sm_svc': (43 * 388 + 4, 'priced', 'fully exposed partial block granularity, worst layer 388 x43 + head4', 'HBM-SMBUDGET sm_svc_granularity.json'),
+        'sm_svc': (43 * 388 + 4 + head_schedule_price()['delta_stream_edges'], 'priced', 'fully exposed partial granularity388x43+head4; measured fixed head schedule+6360; old53100stagebudgetFAILED', 'HBM-SMBUDGET + results/token_pass/hbm_functional_1021/smb_param1/receipt.json'),
         'qwen_int8': (0, 'measured', 'INT8 path within price; opt-in successor, all9984 rows bit-exact', 'SMB-INT8 e592ae5d0; default-off die adoption owed'),
         'pvm_fold': (1, 'priced', '+1 per Qwen PV 128-token block per SM column; DS no fold', 'HBM-PVM-SAFE node0 publication F0+23 vs22; node1 unchanged'),
     }

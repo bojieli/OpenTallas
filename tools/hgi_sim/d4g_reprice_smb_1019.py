@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 from hgi_sim import d4g_reprice_1019 as R
+from hgi_sim.smb_head_price_1021 import head_schedule_price
 
 DS_LAYERS = 43          # DS V4.1 decode layers of the AR token (token_compose hds_sched)
 
@@ -37,7 +38,8 @@ def sm_svc_cycles(g):
     charges 1.375 edges a line), busiest SM, exposed in full (conservative); MoE layers take the worst kind."""
     kinds = {k: v["excess"] for k, v in g.items() if k != "head"}
     per = max(kinds.values())
-    return dict(per_layer_kind=kinds, per_layer=per, head=g["head"]["excess"], token=DS_LAYERS * per + g["head"]["excess"])
+    extra = head_schedule_price()["delta_stream_edges"]
+    return dict(per_layer_kind=kinds, per_layer=per, head=g["head"]["excess"] + extra, head_schedule_extra=extra, token=DS_LAYERS * per + g["head"]["excess"] + extra)
 
 
 def main():

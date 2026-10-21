@@ -5,73 +5,84 @@
  "clock": "833 ps stream edge; tok/s = 1/(cycles x 833 ps)",
  "row": "info_banklat_all (the composed d4g schedule incl. bank-latency budgets)",
  "release": {
-  "ds_ar_tok_s": 1162.5,
+  "ds_ar_tok_s": 1155.4,
   "qwen_tok_s": 776.3,
-  "qwen_note": "HBM-QINT8 10-20: measured packed INT8 (was 1002.9 from the BF16w affine law)"
+  "qwen_note": "HBM-QINT8 10-20: measured packed INT8 (was 1002.9 from the BF16w affine law)",
+  "ds_ar_cycles": 1038612.0,
+  "rate_grade": "model composition; no full-token or production-throughput PASS"
  },
  "scenarios": {
   "census": {
-   "what": "price of record: LH-REPRICE3 d4g, H9b 45.03 B/edge/SM (composed info_banklat_all)",
-   "ds_ar_cycles": 994749.7,
-   "ds_ar_tok_s": 1206.3,
+   "what": "price of record: LH-REPRICE3 d4g, H9b 45.03 B/edge/SM (composed info_banklat_all); +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 1001109.7,
+   "ds_ar_tok_s": 1198.7,
    "qwen_cycles": 2948059.6,
-   "qwen_tok_s": 407.0
+   "qwen_tok_s": 407.0,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "census_succ": {
-   "what": "price, successor 90.67 + bridge 1",
-   "ds_ar_cycles": 852914.9,
-   "ds_ar_tok_s": 1406.9,
+   "what": "price, successor 90.67 + bridge 1; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 859274.9,
+   "ds_ar_tok_s": 1396.5,
    "qwen_cycles": 1607084.4,
-   "qwen_tok_s": 746.7
+   "qwen_tok_s": 746.7,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "price98": {
-   "what": "price, successor 98 (HBM-ROTLAYOUT) + bridge 1",
-   "ds_ar_cycles": 843960.1,
-   "ds_ar_tok_s": 1421.9,
+   "what": "price, successor 98 (HBM-ROTLAYOUT) + bridge 1; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 850320.1,
+   "ds_ar_tok_s": 1411.2,
    "qwen_cycles": 1509467.4,
-   "qwen_tok_s": 795.0
+   "qwen_tok_s": 795.0,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "price1039": {
-   "what": "price, successor 103.9 + bridge 1",
-   "ds_ar_cycles": 842844.0,
-   "ds_ar_tok_s": 1423.8,
+   "what": "price, successor 103.9 + bridge 1; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 849204.0,
+   "ds_ar_tok_s": 1413.1,
    "qwen_cycles": 1497270.6,
-   "qwen_tok_s": 801.5
+   "qwen_tok_s": 801.5,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "meas_h9b": {
-   "what": "MEASURED, bound H9b controller (asbuilt layout, pace 180/220), serial attention, Qwen 1 KV head/die",
-   "ds_ar_cycles": 1201275.2,
-   "ds_ar_tok_s": 998.9,
+   "what": "MEASURED, bound H9b controller (asbuilt layout, pace 180/220), serial attention, Qwen 1 KV head/die; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 1207635.2,
+   "ds_ar_tok_s": 993.7,
    "qwen_cycles": 2232996.1,
-   "qwen_tok_s": 537.4
+   "qwen_tok_s": 537.4,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "meas_succ": {
-   "what": "MEASURED, successor controller p96, serial attention, remainder 90.67",
-   "ds_ar_cycles": 1085099.8,
-   "ds_ar_tok_s": 1105.9,
+   "what": "MEASURED, successor controller p96, serial attention, remainder 90.67; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 1091459.8,
+   "ds_ar_tok_s": 1099.4,
    "qwen_cycles": 1354822.6,
-   "qwen_tok_s": 885.7
+   "qwen_tok_s": 885.7,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "ser98": {
-   "what": "MEASURED, successor p80 (rotated), serial attention, remainder 98",
-   "ds_ar_cycles": 1062676.8,
-   "ds_ar_tok_s": 1129.2,
+   "what": "MEASURED, successor p80 (rotated), serial attention, remainder 98; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 1069036.8,
+   "ds_ar_tok_s": 1122.5,
    "qwen_cycles": 1241575.3,
-   "qwen_tok_s": 966.5
+   "qwen_tok_s": 966.5,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "rel98": {
-   "what": "RELEASE MEASURED: successor p80 rotated + multi-block attention (HBM-ATTN-MB), remainder 98/103.9 [Qwen SM.MATVEC = BF16w affine LAW; superseded by rel98_int8]",
-   "ds_ar_cycles": 1032252.0,
-   "ds_ar_tok_s": 1162.5,
+   "what": "RELEASE MEASURED: successor p80 rotated + multi-block attention (HBM-ATTN-MB), remainder 98/103.9 [Qwen SM.MATVEC = BF16w affine LAW; superseded by rel98_int8]; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 1038612.0,
+   "ds_ar_tok_s": 1155.4,
    "qwen_cycles": 1196507.8,
-   "qwen_tok_s": 1002.9
+   "qwen_tok_s": 1002.9,
+   "rate_grade": "model composition; inherited other stages not requalified"
   },
   "rel98_int8": {
-   "what": "RELEASE MEASURED with Qwen SM.MATVEC measured on the PACKED INT8 stream (HBM-QINT8 svg S1-copy fix, successor p80 rotated, TP-8 rows); everything else = rel98",
-   "ds_ar_cycles": 1032252.0,
-   "ds_ar_tok_s": 1162.5,
+   "what": "RELEASE MEASURED with Qwen SM.MATVEC measured on the PACKED INT8 stream (HBM-QINT8 svg S1-copy fix, successor p80 rotated, TP-8 rows); everything else = rel98; +6360 fixed head schedule, composed rate only; old stage budget FAIL",
+   "ds_ar_cycles": 1038612.0,
+   "ds_ar_tok_s": 1155.4,
    "qwen_cycles": 1545794.2,
-   "qwen_tok_s": 776.3
+   "qwen_tok_s": 776.3,
+   "rate_grade": "model composition; inherited other stages not requalified"
   }
  },
  "per_class": {
@@ -534,5 +545,89 @@
   "measured_json": "ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm/measured_rel.json",
   "tool": "tools/hgi_sim/toksim_hbm_census_1019.py --measured + toksim_hbm_merge_units_1019.py",
   "measured_json_int8": "measured_rel_int8.json (measured_rel.json with qwen SM.MATVEC <- units_variants/smhbm_int8.json); census run ot-epyc6:/srv/opentallas-scratch/claude/hbm-qint8-tok/rel98_i8.json (copy rel98_int8_census.json); reproduction rel98_chk = 1002.9"
- }
+ },
+ "historical_before_smb_head_repair": {
+  "release": {
+   "ds_ar_tok_s": 1162.5,
+   "qwen_tok_s": 776.3,
+   "qwen_note": "HBM-QINT8 10-20: measured packed INT8 (was 1002.9 from the BF16w affine law)"
+  },
+  "scenarios": {
+   "census": {
+    "what": "price of record: LH-REPRICE3 d4g, H9b 45.03 B/edge/SM (composed info_banklat_all)",
+    "ds_ar_cycles": 994749.7,
+    "ds_ar_tok_s": 1206.3,
+    "qwen_cycles": 2948059.6,
+    "qwen_tok_s": 407.0
+   },
+   "census_succ": {
+    "what": "price, successor 90.67 + bridge 1",
+    "ds_ar_cycles": 852914.9,
+    "ds_ar_tok_s": 1406.9,
+    "qwen_cycles": 1607084.4,
+    "qwen_tok_s": 746.7
+   },
+   "price98": {
+    "what": "price, successor 98 (HBM-ROTLAYOUT) + bridge 1",
+    "ds_ar_cycles": 843960.1,
+    "ds_ar_tok_s": 1421.9,
+    "qwen_cycles": 1509467.4,
+    "qwen_tok_s": 795.0
+   },
+   "price1039": {
+    "what": "price, successor 103.9 + bridge 1",
+    "ds_ar_cycles": 842844.0,
+    "ds_ar_tok_s": 1423.8,
+    "qwen_cycles": 1497270.6,
+    "qwen_tok_s": 801.5
+   },
+   "meas_h9b": {
+    "what": "MEASURED, bound H9b controller (asbuilt layout, pace 180/220), serial attention, Qwen 1 KV head/die",
+    "ds_ar_cycles": 1201275.2,
+    "ds_ar_tok_s": 998.9,
+    "qwen_cycles": 2232996.1,
+    "qwen_tok_s": 537.4
+   },
+   "meas_succ": {
+    "what": "MEASURED, successor controller p96, serial attention, remainder 90.67",
+    "ds_ar_cycles": 1085099.8,
+    "ds_ar_tok_s": 1105.9,
+    "qwen_cycles": 1354822.6,
+    "qwen_tok_s": 885.7
+   },
+   "ser98": {
+    "what": "MEASURED, successor p80 (rotated), serial attention, remainder 98",
+    "ds_ar_cycles": 1062676.8,
+    "ds_ar_tok_s": 1129.2,
+    "qwen_cycles": 1241575.3,
+    "qwen_tok_s": 966.5
+   },
+   "rel98": {
+    "what": "RELEASE MEASURED: successor p80 rotated + multi-block attention (HBM-ATTN-MB), remainder 98/103.9 [Qwen SM.MATVEC = BF16w affine LAW; superseded by rel98_int8]",
+    "ds_ar_cycles": 1032252.0,
+    "ds_ar_tok_s": 1162.5,
+    "qwen_cycles": 1196507.8,
+    "qwen_tok_s": 1002.9
+   },
+   "rel98_int8": {
+    "what": "RELEASE MEASURED with Qwen SM.MATVEC measured on the PACKED INT8 stream (HBM-QINT8 svg S1-copy fix, successor p80 rotated, TP-8 rows); everything else = rel98",
+    "ds_ar_cycles": 1032252.0,
+    "ds_ar_tok_s": 1162.5,
+    "qwen_cycles": 1545794.2,
+    "qwen_tok_s": 776.3
+   }
+  }
+ },
+ "sm_head_reprice": {
+  "delta_stream_edges": 6360,
+  "head_rc_edges": 18310,
+  "prior_head_rc_edges": 11950,
+  "measured_stage_edges": 59460,
+  "failed_stage_budget": 53100,
+  "receipt": "results/token_pass/hbm_functional_1021/smb_param1/receipt.json",
+  "receipt_sha256": "b46048483ba3994895879bf8b6763f118137841e254a4f9922972c403b95ed19",
+  "old_budget_qualification": "FAIL (+11.98%, exceeds inherited10%)",
+  "price_scope": "one fixed DS head schedule increment per user token; model composition only"
+ },
+ "qualification": "SM service component functional PASS; old budget FAIL; token rates are composed estimates"
 }
