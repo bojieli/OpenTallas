@@ -945,8 +945,8 @@ always @(posedge ck)begin #1;
  if(u_o.n_995!==u_n.n_995)$fatal(1,"PREFIX_STATE_MISMATCH n_995 cycle%0d",cyc);
  if(u_o.n_997!==u_n.n_997)$fatal(1,"PREFIX_STATE_MISMATCH n_997 cycle%0d",cyc);
  if(u_o.n_999!==u_n.n_999)$fatal(1,"PREFIX_STATE_MISMATCH n_999 cycle%0d",cyc);
- if(cyc<4&&$isunknown({yo,eo}))unknown_start=unknown_start+1;
- if(!$isunknown({yo,eo}))known_outputs=known_outputs+1;
+ if(cyc<4&&((^{yo,eo})===1'bx))unknown_start=unknown_start+1;
+ if(!((^{yo,eo})===1'bx))known_outputs=known_outputs+1;
  if(cyc==160)begin
  if(unknown_start==0||known_outputs==0)$fatal(1,"PREFIX_VACUOUS_X_OR_KNOWN unknown_start%0d known_outputs%0d y%h err%h",unknown_start,known_outputs,yo,eo);
  $display("PREFIX_RESET_EQ_PASS cycles160 unknown_start%0d known_outputs%0d exact_state_outputs883 full_raw_y_err all_X_start reset_reassert real48fixture_operands",unknown_start,known_outputs);$finish;end
