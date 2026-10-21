@@ -222,7 +222,7 @@ module ot_s81sl_vs #(
     wire [23:0] region_busy;
     genvar bg;
     generate for(bg=0;bg<4;bg=bg+1) begin:g_busy_region
-      ot_s81sl_vs_busy6 u_busy(.clk(clk),.rst_n(rsv[35]),.sv(sv_c),.busy(busy),.bad(c_bad),.done(done),.q(region_busy[6*bg+:6]));
+      ot_s81sl_vs_busy6 u_busy(.clk(clk),.rst_n(rsv[35]),.sv(sv_c),.bad(c_bad),.done(done),.q(region_busy[6*bg+:6]));
     end endgenerate
     wire [79:0] cmd_payload={c_a0,c_a1,c_ph,c_n,c_imm[9:0],c_imm[10],c_uq,c_j0,c_imm[63:32],c_wr,c_imm[28:26]};
     wire [79:0] cmd_latched;
@@ -313,7 +313,11 @@ module ot_s81sl_vs #(
         endcase
 
     // arrivals: the k-th read's row pair is at xq_c in arrival k (x_qv marks it, a fixed number of edges after x_rv)
+`ifdef OT_S81SL_VS_SRAM
+    wire arr = xqv_c && region_busy[20];                               // region-3 busy copy (bit 20) == busy
+`else
     wire arr = xqv_c && busy;
+`endif
     wire [31:0] xw [0:7];
     genvar gl;
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_xw
@@ -587,15 +591,22 @@ module ot_s81sl_vs #(
     wire hph_n = `S81_VS_ACC(121) ? c_ph : ph;
     wire [2:0] haddr_n = hfl_on_n ? hfl_n[3:1] :
                                hph_n ? hka_n[2:0] : hep_n ? ka[3:1] : hka_n[3:1];
+`ifdef OT_S81SL_VS_SRAM
+    wire hbusy_n = rs_c && (`S81_VS_ACC(122) || (region_busy[21] && !done));
+`else
     wire hbusy_n = rs_c && (`S81_VS_ACC(122) || (busy && !done));
+`endif
     wire [3:0] hop_n = `S81_VS_ACC(123) ? c_op : region_op_c[19][31:28];
     (* keep="true" *) reg [15:0] hfl_parity;
     wire [19:0] hpend_data;
     (* keep="true" *) reg [31:0] k_capture;
     (* keep="true" *) reg [15:0] w_capture;
+    wire hq_pre_k,hq_pre_b;                                             // x_qv && hbusy_n && hop_n==ENG && !hph_n, shared
+    ot_s81sl_vs_hqpre u_hqpre_k(.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.q(hq_pre_k));
+    ot_s81sl_vs_hqpre u_hqpre_b(.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.q(hq_pre_b));
     for(genvar kc=0;kc<6;kc=kc+1) begin:g_capture_group
       wire [7:0] capture;
-      ot_s81sl_vs_kcapture8 #(.ODD(kc>=4)) u_capture(.clk(clk),.rs(rsv[133+kc/3]),.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.ka(region_ka_c[18+kc/3][8*(kc%3)+:8]),.arr(region_arr[18+kc/3]),.accept(cmd_accept[117]),.q(capture));
+      ot_s81sl_vs_kcapture8 #(.ODD(kc>=4)) u_capture(.clk(clk),.rs(rsv[133+kc/3]),.pre(hq_pre_k),.ka(region_ka_c[18+kc/3][8*(kc%3)+:8]),.arr(region_arr[18+kc/3]),.accept(cmd_accept[117]),.q(capture));
       if(kc<4) assign k_capture[8*kc+:8]=capture;
       else assign w_capture[8*(kc-4)+:8]=capture;
     end
@@ -608,7 +619,7 @@ module ot_s81sl_vs #(
     generate for(hj=0;hj<4;hj=hj+1) begin:g_hcopy
       for(hp=0;hp<2;hp=hp+1) begin:g_parity
         wire [7:0] fill_b,add_b;
-        ot_s81sl_vs_bankctl8 #(.PARITY(hp),.COPY(hj)) u_ctl(.clk(clk),.rs(rsv[128+hj/2]),.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.ka(region_ka_c[18+hj/2][23:16]),.arr(region_arr[18+hj/2]),.accept(cmd_accept[117]),.ov(ve_ov),.oc(ve_oc),.fill(fill_b),.add(add_b));
+        ot_s81sl_vs_bankctl8 #(.PARITY(hp),.COPY(hj)) u_ctl(.clk(clk),.rs(rsv[128+hj/2]),.pre(hq_pre_b),.op_next(hop_n),.ph_next(hph_n),.ka(region_ka_c[18+hj/2][23:16]),.arr(region_arr[18+hj/2]),.accept(cmd_accept[117]),.ov(ve_ov),.oc(ve_oc),.fill(fill_b),.add(add_b));
         wire we = fill_b[0] || add_b[0];
         wire [2:0] wa = fill_b[0] ? ka[3:1] : ko_e[2:0];
         wire [63:0] wd;
@@ -652,7 +663,15 @@ module ot_s81sl_vs #(
         ve_rh[32*gr+:32]<={hw8(hrow,copy_sel1,gr,1),hw8(hrow,copy_sel0,gr,0),16'd0};
       end
     end endgenerate
-    always @(*) gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
+    // gate select from regional ka copies (region 16/17 byte 2 = ka), one copy per two gate bytes: no 32-load ka decode
+    genvar gb;
+    wire [31:0] gsel_r;
+    for(gb=0;gb<4;gb=gb+1) begin:g_gsel
+      wire [1:0] gk=region_ka_c[16+gb/2][20:19];
+      wire [31:0] gw=gate[(MUT == 7) ? gk ^ 2'd1 : gk];
+      assign gsel_r[8*gb+:8] = gw[8*gb+:8];
+    end
+    always @(*) gsel = gsel_r;
 `else
     always @(*) begin
         for (rq = 0; rq < 4; rq = rq + 1) begin
@@ -931,10 +950,10 @@ module ot_s81sl_vs_ka8(input wire clk,rst_n,accept,busy,xqv,output reg[7:0]q);
     else if(xqv && busy) q<=q+1'b1;
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_busy6(input wire clk,rst_n,sv,busy,bad,done,output wire[5:0]q);
+module ot_s81sl_vs_busy6(input wire clk,rst_n,sv,bad,done,output wire[5:0]q);
   (* keep="true" *) reg [5:0] state;
   assign q=state;
-  wire accept=sv && !busy && !bad;
+  wire accept=sv && !state[0] && !bad;                     // state == busy (same accept/done/reset edges)
   always @(posedge clk or negedge rst_n)
     if(!rst_n) state<=0;
     else if(accept) state<=6'h3f;
@@ -1022,19 +1041,26 @@ module ot_s81sl_vs_swweight8 #(parameter integer BYTE=0,MUT=0)(input wire clk,in
   always @(posedge clk) q<=MUT==1?MUT_WEIGHT[8*BYTE+:8]:(kg >= 8'd8 ? w1 : w0);
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_bankctl8 #(parameter integer PARITY=0,COPY=0)(input wire clk,rs,qv,busy_next,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka,input wire arr,accept,input wire ov,input wire[1:0]oc,output wire[7:0]fill,add);
+module ot_s81sl_vs_bankctl8 #(parameter integer PARITY=0,COPY=0)(input wire clk,rs,pre,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka,input wire arr,accept,input wire ov,input wire[1:0]oc,output wire[7:0]fill,add);
   (* keep="true" *) reg [7:0] f,a;
   wire[7:0] ka_next=(!rs || accept)?8'd0:ka+{7'd0,arr};
   always @(posedge clk) begin
-    f<={8{rs && qv && busy_next && op_next==4'd14 && !ph_next && ka_next<8'd16 && ka_next[0]==PARITY}};
+    f<={8{rs && pre && ka_next<8'd16 && ka_next[0]==PARITY}};
     a<={8{rs && ov && op_next==4'd14 && ph_next && oc==COPY}};
   end
   assign fill=f;assign add=a;
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_kcapture8 #(parameter integer ODD=0)(input wire clk,rs,qv,busy_next,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka,input wire arr,accept,output reg[7:0]q);
+module ot_s81sl_vs_kcapture8 #(parameter integer ODD=0)(input wire clk,rs,pre,input wire[7:0]ka,input wire arr,accept,output wire[7:0]q);
+ // 8 kept flag copies (one per captured byte group of 16 loads); an un-kept output reg merged them into one 128-load FF.
+ (* keep="true" *) reg [7:0] s;
  wire[7:0] kn=(!rs || accept)?8'd0:ka+{7'd0,arr};
- always @(posedge clk) q<={8{rs && qv && busy_next && op_next==4'd14 && !ph_next && kn>=8'd16 && kn[0]==ODD}};
+ always @(posedge clk) s<={8{rs && pre && kn>=8'd16 && kn[0]==ODD}};
+ assign q=s;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_hqpre(input wire qv,busy_next,input wire[3:0]op_next,input wire ph_next,output wire q);
+ assign q=qv && busy_next && op_next==4'd14 && !ph_next;
 endmodule
 
 `endif
