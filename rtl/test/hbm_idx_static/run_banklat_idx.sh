@@ -29,8 +29,14 @@ Q=(rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv rtl/hbm_accel/index/ot_
 T=rtl/test/hbm_idx_static
 sim() {  # $1 name, $2 pass tag, $3 tb, $4.. iverilog defines/sources
   local n=$1 tag=$2 tb=$3; shift 3
-  iverilog -g2012 -o "$out/$n.vvp" "$@" "$tb" > "$out/build_$n.log" 2>&1 || { echo "BUILD FAIL $n"; tail -5 "$out/build_$n.log"; return 2; }
-  local r; r=$( (cd "$out/$n.d" && vvp -n "$out/$n.vvp") 2>&1 | grep -Ev '\$finish|^VCD' | tail -4 | tr '\n' ' ')
+  local r
+  if [[ "$n" == *fq* ]]; then
+    "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" --binary --timing -j "${VL_JOBS:-4}" -Wno-fatal -Wno-WIDTHCONCAT --top-module "$(basename "$tb" .sv)" "$@" "$tb" -Mdir "$out/obj_$n" > "$out/build_$n.log" 2>&1 || { echo "BUILD FAIL $n"; tail -5 "$out/build_$n.log"; return 2; }
+    r=$( (cd "$out/$n.d" && "$out/obj_$n/V$(basename "$tb" .sv)") 2>&1 | grep -E "$tag (PASS|FAIL)|TOPK_LAT|ARGMAX_LAT|RQ |WRITE |EVENT |COUNT " | tail -4 | tr '\n' ' ')
+  else
+    iverilog -g2012 -o "$out/$n.vvp" "$@" "$tb" > "$out/build_$n.log" 2>&1 || { echo "BUILD FAIL $n"; tail -5 "$out/build_$n.log"; return 2; }
+    r=$( (cd "$out/$n.d" && vvp -n "$out/$n.vvp") 2>&1 | grep -Ev '\$finish|^VCD' | tail -4 | tr '\n' ' ')
+  fi
   echo "CASE $n $r"
   case "$r" in *"$tag PASS"*) return 0;; *) return 1;; esac
 }

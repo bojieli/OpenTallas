@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "codex/hbm-idx-g2g-1021",
+  "branch": "codex/hbm-idx-g2g-evidence-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_idx_static/run_banklat_idx.sh",
@@ -81,10 +81,10 @@
     "name": "g2gb_topk_fq",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_fq topk_fq",
     "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "IDX_AM_TOPK_LAT PASS",
     "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/topk_fq.log"
@@ -93,10 +93,10 @@
     "name": "g2gb_am0_fq",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am0_fq am0_fq",
     "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "IDX_AM_PATH_LAT PASS",
     "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/am0_fq.log"
@@ -105,10 +105,10 @@
     "name": "g2gb_topk_fq_vm64",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_fq_vm64 topk_fq_vm64",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "fail_regex": "IDX_AM_TOPK_LAT FAIL",
     "fail_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/topk_fq_vm64.log"
@@ -117,10 +117,10 @@
     "name": "g2gb_am_fq_vmx76",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_fq_vmx76 am_fq_vmx76",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "fail_regex": "IDX_AM_PATH_LAT FAIL",
     "fail_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/am_fq_vmx76.log"

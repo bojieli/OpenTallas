@@ -136,7 +136,7 @@
  "structural_change": "FACEQ=1 recovery of g2ef EARLY_FAIL_SETUP: replace one-OR-level boundary outputs with kept literal face registers; ARGMAX request retimed with no external latency change. TOPK +1 per row, INDEX +2 round-trip (die lane pad -2); default FACEQ=0 preserved. One local spine region over 410.4x216 um, no regional clock crossings.",
  "job": {
   "owner": "Codex:CODEX-HBM-IDX-1021",
-  "branch": "codex/hbm-idx-g2g-1021",
+  "branch": "codex/hbm-idx-g2g-evidence-1021",
   "tag": "g2g",
   "purpose": "FACEQ=1 recovery of g2ef EARLY_FAIL_SETUP: replace one-OR-level boundary outputs with kept literal face registers; ARGMAX request retimed with no external latency change. TOPK +1 per row, INDEX +2 round-trip (die lane pad -2); default FACEQ=0 preserved. One local spine region over 410.4x216 um, no regional clock crossings.",
   "extra_paths": [
@@ -201,10 +201,10 @@
     "name": "g2g_topk_fq",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_fq topk_fq",
     "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "IDX_AM_TOPK_LAT PASS",
     "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/topk_fq.log"
@@ -213,10 +213,10 @@
     "name": "g2g_am0_fq",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am0_fq am0_fq",
     "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "pass_regex": "IDX_AM_PATH_LAT PASS",
     "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/am0_fq.log"
@@ -225,10 +225,10 @@
     "name": "g2g_topk_fq_vm64",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_fq_vm64 topk_fq_vm64",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "fail_regex": "IDX_AM_TOPK_LAT FAIL",
     "fail_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/topk_fq_vm64.log"
@@ -237,10 +237,10 @@
     "name": "g2g_am_fq_vmx76",
     "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_fq_vmx76 am_fq_vmx76",
     "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 6,
+    "threads": 4,
+    "peak_ram_gb": 24,
     "needs": [
-     "iverilog"
+     "verilator"
     ],
     "fail_regex": "IDX_AM_PATH_LAT FAIL",
     "fail_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/am_fq_vmx76.log"
