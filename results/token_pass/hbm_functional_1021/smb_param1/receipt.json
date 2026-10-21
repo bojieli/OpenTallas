@@ -1,0 +1,87 @@
+{
+  "schema": "opentallas.hbm_smb_current_params.v1",
+  "functional_verdict": "PASS",
+  "old_budget_qualification": "FAIL: actual59460 is11.98%over inherited53100 (>10%); model/reprice required",
+  "qualifies_layer": false,
+  "qualifies_full_token": false,
+  "source_scope": {
+    "coherent_release_source": "5fbd4d07ac12750940f3e76884cd52c1cb675a96",
+    "next_overlay": "0ad75fd57",
+    "compiled_onchip_files": 62,
+    "byte_match_assembled_release_bundle": 62,
+    "unchanged_source_paths_between_release_and_overlay": 62,
+    "raw_git_differences": "5 deterministicbundleuniquification transforms; exact assembledbyteidentity verified",
+    "compiled_input_content_key": "9f031d4e14e1",
+    "ordered64file_hash_reproduces_key": true,
+    "binary_sha256": "16a75f353d18ad58d085b37075901ee0ef6553599a1c48e25fae1eead6d68dbe"
+  },
+  "actual_params": {
+    "SMH_ENABLE_INT8": 1,
+    "SMH_INT8W": 0,
+    "SVG_LBANKS": 4,
+    "NID": 6,
+    "IDW": 9,
+    "PAW": 11,
+    "PREL": 1,
+    "DD": 256,
+    "SVG_ID_COHORT": 1,
+    "SVG_XSLOT": 0,
+    "SVG_OPEN_IL": 0,
+    "VMKS_MUT": 0,
+    "VMKS_KRL1": 1,
+    "PC_MASTER": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+    "PC_PARAMS": {
+      "OREG": 1,
+      "KREG": 1,
+      "KRREG": 1,
+      "RREG": 1,
+      "WPAY": 1,
+      "QREG": 1
+    }
+  },
+  "unit": "ot-gold2:oth-ubuntu-2424846-1792603963",
+  "results": {
+    "ops": 66,
+    "ops_pass": 66,
+    "result_rows": 301,
+    "programme_gos": 154,
+    "go_slots_exact": true,
+    "runs": 4,
+    "fault": null,
+    "stream_edges": 59460,
+    "ingress": 624,
+    "x_beats": 25688,
+    "ids": 3,
+    "dram_reads": 35372
+  },
+  "fixed_schedule": {
+    "generic_pace_num": 200,
+    "head_pace_num": 320,
+    "den": 64,
+    "add": 4,
+    "residency_model": 1,
+    "fetch_bound": 202,
+    "runtime_wait": false
+  },
+  "price": {
+    "retained_failed_compiled_budget": 53100,
+    "measured_current_component_sequence": 59460,
+    "delta_stream_edges": 6360,
+    "delta_us_at1p2GHz": 5.3,
+    "percent": 11.977401129943503,
+    "head_old_compiled": 11950,
+    "head_actual": 18310,
+    "other_three_kinds": "unchanged",
+    "claim": "four-kind representative SM service sequence only; not a full-token price"
+  },
+  "model_owner_notice": "HBM lead notified exactdelta6360edges5.3us; oldtokenrates remain unqualified until explicitmodel/pricecomposition update",
+  "successor_scope": "SVG_H/SAFE_PC eb2816 and later42c remain separate; no aliasproof. UpdatedCOLL proof602c75a8a separate.",
+  "artifact_sha256": {
+    "param1_build_command.txt": "c013de5dfe93852b0a059f5abe5d52dadc8df3a420559ed83aab39415a8b02fa",
+    "param1_source_hashes.json": "2d0fb16e34da31290f8c2302eb3d05cba72b608bbef306bd02a631b9f4e3f163",
+    "run.log": "f08b0e4043293a13a39552e5003301cc082ba2a9c62b17332500622dce18c0ae",
+    "smb_head320_param1.json": "67a5f0ba7089c268b3779983c40c41a4a5ca07d12c3fe40d85771e8130775ad9",
+    "tb_svg_rel_dram_sparse.sv": "8d374db52a8788c2056fc8c4069775b4ce8041227fb8cc4ce2515e8b75721213",
+    "tb_toksim_smhbm.sv": "c0a97514dc9097e060ce7527d43f060413356c2998747527f14306b41b11b4f4"
+  }
+}
