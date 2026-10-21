@@ -24,6 +24,7 @@ m=json.loads(Path('qualification/baseline_manifest.json').read_text())
 for f,sha in m['files'].items():
     assert hashlib.sha256(Path(f).read_bytes()).hexdigest()==sha,f
 assert hashlib.sha256(Path('candidate/native32_1r_param.v').read_bytes()).hexdigest()=='44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7'
+assert hashlib.sha256(Path('candidate/native32_helpers.sv').read_bytes()).hexdigest()=='1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88'
 PY
   python3 qualification/prepare_bench.py --native-dir candidate
   touch PREPARED
