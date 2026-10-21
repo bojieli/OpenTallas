@@ -108,7 +108,6 @@ class Die:
 
     def __init__(self, tree):
         self.tree = Path(tree)
-        self.timing_contract = source_contract(tree, ROOT)
         b = self.tree / 'results/arch/s81_dv_1016/bind9'
         raw = gzip.decompress((b / 'die.v.gz').read_bytes()).decode()
         self.die_sha = hashlib.sha256(raw.encode()).hexdigest()
@@ -122,6 +121,7 @@ class Die:
             for c in CONN_RE.finditer(body):
                 conns[c.group(1)] = c.group(2).strip()
             self.inst[name] = dict(master=master, params=params or '', conns=conns)
+        self.timing_contract = source_contract(tree, ROOT, self.inst)
         self.plan = json.loads((self.tree / 'results/arch/s81_dv_1016/p4l/plan.json').read_text())
         self.land = json.loads((self.tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json').read_text())
         self.E = {l['link']: l for l in self.land['links']}

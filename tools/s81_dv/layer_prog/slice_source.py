@@ -21,6 +21,13 @@ def resolve(die, slice_inst, source_root=None):
 
     def body(master):
         paths = list((source_root / BASE).rglob(master + '.sv'))
+        if not paths:
+            # Selected wrappers such as xr1/xrt1 can be real module definitions
+            # in their family's source file. Resolve the definition, never a
+            # similarly named candidate or a presumed compatible alias.
+            definition = re.compile(r'\bmodule\s+' + re.escape(master) + r'\b')
+            paths = [p for p in (source_root / 'rtl/dsrom_sys/s81_dv').rglob('*.sv')
+                     if definition.search(re.sub(r'/\*.*?\*/|//[^\n]*', '', p.read_text(), flags=re.S))]
         if len(paths) != 1:
             raise ValueError('selected slice master needs one explicit source definition: ' + master)
         path = paths[0]
@@ -37,12 +44,17 @@ def resolve(die, slice_inst, source_root=None):
         return match[1] if match else None
 
     master = die.inst[slice_inst]['master']
+    hb = re.search(r'\.HB\(\s*(\d+)\s*\)', die.inst[slice_inst].get('params', ''))
+    hb = int(hb.group(1)) if hb else None
     seen = set()
     while True:
         if master in seen:
             raise ValueError('recursive slice wrapper ' + master)
         seen.add(master)
         text = body(master)
+        default_hb = re.search(r'parameter\s+integer\s+HB\s*=\s*(\d+)', text)
+        if hb is None and default_hb:
+            hb = int(default_hb.group(1))
         chain.append(master)
         xg = child(text, 'u_xg')
         if xg:
@@ -54,6 +66,20 @@ def resolve(die, slice_inst, source_root=None):
     cap = child(text, 'u_cap')
     if cap is None:
         raise ValueError('selected source CAP instance is unresolved')
+    xr = child(text, 'u_xr')
+    xr_options = set(re.findall(r'\b(ot_s81sl_xr[0-9t]*)\s+u_xr\s*\(', text))
+    if len(xr_options) > 1:
+        if xr_options not in ({'ot_s81sl_xr1', 'ot_s81sl_xr3'}, {'ot_s81sl_xrt1', 'ot_s81sl_xrt3'}) or hb is None:
+            raise ValueError('selected XR generate branch requires explicit HB binding')
+        xr = next(x for x in xr_options if x.endswith('3' if hb != 0 else '1'))
+    if xr is None:
+        raise ValueError('selected source XR instance is unresolved')
+    before = set(sources)
+    body(xr)
+    xr_paths = set(sources) - before
+    if len(xr_paths) != 1:
+        raise ValueError('selected XR source file is unresolved')
+    xr_path = xr_paths.pop()
     xg_text = body(xg)
     streamer = child(xg_text, 'u_s')
     ring = child(xg_text, 'u_r')
@@ -71,6 +97,8 @@ def resolve(die, slice_inst, source_root=None):
     return dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,
                 die_master=die.inst[slice_inst]['master'], wrapper_chain=chain,
                 xg=xg, ring=ring, streamer=streamer, capture=cap,
+                xr=xr, xr_source_path=xr_path,
+                selected_hb=hb,
                 streamer_added_capture_edges=added, source_sha256=sources,
                 source_root=str(source_root), explicit_source_root=explicit, physical_binding_qualified=False,
                 qualification='SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required')
