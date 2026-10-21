@@ -234,7 +234,7 @@
     "tool": {
      "cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
      "clock_entry_constraints.py": "bbc5a97b5f80fb2b46526b2ff90dcd4b765c84346fad0292f3ed38bfb8f8096f",
-     "gray_fifo_cdc_constraints.py": "5f0c988a480c3a04daf838c95acdbb8847ed450eb126f788d9aa04e1fda87896",
+     "gray_fifo_cdc_constraints.py": "cb1f4e337a86b9aba37d924967d09bb36c956deab2460f5db39239c1b1b5164f",
      "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
     },
     "tool_data": {
@@ -242,9 +242,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-20T22:38:05-0700",
+   "created": "2026-10-20T23:13:25-0700",
    "host": "ot-epyc7",
-   "key": "cdc99059fa1baeee392b2b8bc671d282921f91e6780f757ad1d40f9d8aa0f1ac",
+   "key": "7c8ad39a781eb825aab61b4eaf957381eb4e1d675722aad0b42c806c58d65195",
    "record": {
     "counts": {
      "consumer": 4525,
@@ -446,6 +446,29 @@
      "feed.producer.u_descriptor.rd_gray[2]": [
       "f8"
      ]
+    },
+    "launch_aliases": {
+     "feed.producer.ordinal_bank[0].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[0].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[0].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[0].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[1].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[1].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[1].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[1].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[2].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[2].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[2].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[2].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[3].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[3].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[3].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[3].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[4].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[4].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[4].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[4].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[5].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[5].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[5].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[5].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[6].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[6].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[6].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[6].u_bank.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[7].u_bank.u_response.rd_bin[3]": "feed.producer.ordinal_bank[7].u_bank.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[7].u_bank.u_response.wr_bin[3]": "feed.producer.ordinal_bank[7].u_bank.u_response.wr_gray[3]",
+     "feed.producer.u_descriptor.wr_bin[2]": "feed.producer.u_descriptor.wr_gray[2]",
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_bin[2]": "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[2]",
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_bin[2]": "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[2]",
+     "feed.producer.u_stream_fault_cdc.u_status.rd_bin[2]": "feed.producer.u_stream_fault_cdc.u_status.rd_gray[2]",
+     "feed.producer.u_stream_fault_cdc.u_status.wr_bin[2]": "feed.producer.u_stream_fault_cdc.u_status.wr_gray[2]"
     },
     "levels": {},
     "macros": {
@@ -17120,6 +17143,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[0].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[0].u_bank.u_response.rd_gray[0]": [
       "src",
       "f0",
@@ -17251,6 +17280,12 @@
       "r1",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f0",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[0].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -34256,6 +34291,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[1].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[1].u_bank.u_response.rd_gray[0]": [
       "src",
       "f1",
@@ -34387,6 +34428,12 @@
       "r3",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f1",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[1].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -51392,6 +51439,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[2].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f2",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[2].u_bank.u_response.rd_gray[0]": [
       "src",
       "f2",
@@ -51523,6 +51576,12 @@
       "r5",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f2",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[2].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -68528,6 +68587,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[3].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f3",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[3].u_bank.u_response.rd_gray[0]": [
       "src",
       "f3",
@@ -68659,6 +68724,12 @@
       "r7",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f3",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[3].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -85664,6 +85735,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[4].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f4",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[4].u_bank.u_response.rd_gray[0]": [
       "src",
       "f4",
@@ -85795,6 +85872,12 @@
       "r9",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f4",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[4].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -102800,6 +102883,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[5].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f5",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[5].u_bank.u_response.rd_gray[0]": [
       "src",
       "f5",
@@ -102931,6 +103020,12 @@
       "r11",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f5",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[5].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -119936,6 +120031,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[6].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f6",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[6].u_bank.u_response.rd_gray[0]": [
       "src",
       "f6",
@@ -120067,6 +120168,12 @@
       "r13",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f6",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[6].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -137072,6 +137179,12 @@
       "mem",
       0
      ],
+     "feed.producer.ordinal_bank[7].u_bank.u_response.rd_bin[3]": [
+      "src",
+      "f7",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[7].u_bank.u_response.rd_gray[0]": [
       "src",
       "f7",
@@ -137203,6 +137316,12 @@
       "r15",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.u_response.wr_bin[3]": [
+      "src",
+      "f7",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[7].u_bank.u_response.wr_gray[0]": [
       "src",
@@ -145388,6 +145507,12 @@
       "pipe",
       1
      ],
+     "feed.producer.u_descriptor.wr_bin[2]": [
+      "src",
+      "f8",
+      "wptr",
+      2
+     ],
      "feed.producer.u_descriptor.wr_gray[0]": [
       "src",
       "f8",
@@ -145520,6 +145645,12 @@
       "pipe",
       1
      ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_bin[2]": [
+      "src",
+      "f9",
+      "rptr",
+      2
+     ],
      "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[0]": [
       "src",
       "f9",
@@ -145633,6 +145764,12 @@
       "r21",
       "pipe",
       1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_bin[2]": [
+      "src",
+      "f9",
+      "wptr",
+      2
      ],
      "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[0]": [
       "src",
@@ -145760,6 +145897,12 @@
       "pipe",
       1
      ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_bin[2]": [
+      "src",
+      "f10",
+      "rptr",
+      2
+     ],
      "feed.producer.u_stream_fault_cdc.u_status.rd_gray[0]": [
       "src",
       "f10",
@@ -145873,6 +146016,12 @@
       "r25",
       "pipe",
       1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_bin[2]": [
+      "src",
+      "f10",
+      "wptr",
+      2
      ],
      "feed.producer.u_stream_fault_cdc.u_status.wr_gray[0]": [
       "src",
@@ -146040,7 +146189,7 @@
      "id_stack"
     ]
    },
-   "seconds": 101
+   "seconds": 107
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
