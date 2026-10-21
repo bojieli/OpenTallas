@@ -81,8 +81,7 @@ def main():
     run(['-m', 'qwen_static_schedule.mu_d2d_ovl', '--out', str(out / 'ovl'),
          '--pair-calendar', str(pair / 'calendar.json'), '--stages', receipt['die_stages'],
          '--kv-codec', str(receipt['kv_codec']), '--kv-prog',
-         '--token-path', str(a.token_path.resolve()),
-               '--link-handoff', str(a.link_handoff.resolve())], 'ovl.log')
+         '--token-path', str(a.token_path.resolve())], 'ovl.log')
     run(['tools/qwen_split/d2d_ovl_release.py', str(out / 'ovl'), str(image),
          str(out / 'ovl_release_rope')], 'release.log')
     release = json.loads((out / 'ovl_release_rope/source.json').read_text())
