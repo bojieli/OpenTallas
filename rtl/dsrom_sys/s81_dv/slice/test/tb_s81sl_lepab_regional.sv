@@ -73,13 +73,13 @@ module tb_s81sl_lepab_regional;
   end
  endfunction
  task automatic window(input integer u,input bit copy_b,land);
-  reg [1103:0] q,tagged;
+  reg [1103:0] q,stamped;
   begin
    @(negedge clk);mc={21'(100+u),10'(u),land,copy_b,1'b1};
    @(negedge clk);mc=0;
    for(integer b=0;b<80;b=b+1) begin
-    q=payload(u,b);tagged=q;tagged[1045+:33]={21'(100+u),10'(u),land,1'b1};
-    if(land) begin qw[nw]=tagged;nw=nw+1;end
+    q=payload(u,b);stamped=q;stamped[1045+:33]={21'(100+u),10'(u),land,1'b1};
+    if(land) begin qw[nw]=stamped;nw=nw+1;end
     else begin qr[nr]=q;qt[nr]={1'b1,10'(u),21'(100+u)};nr=nr+1;end
     ro=q;
     @(negedge clk);ro=0;
