@@ -357,16 +357,28 @@ CAL_DELTAS_ZERO = dict(hroot=dict(chain=0, fan=0, gather=0, embedding=0), emb_jo
                        ahub=dict(compiler_edges=0, pad=False), seam=dict(compiler_edges=0, pin=False))
 
 
+def final_reset_calendar():
+    path = os.environ.get('OT_KV_FINAL_RESET_CALENDAR')
+    if not path: return None
+    data = json.loads(Path(path).read_text())
+    if data.get('schema') != 'opentallas.kv_final_reset_stations.v1':
+        raise ValueError('unknown final reset station calendar')
+    return dict(data, ledger_path=path)
+
+
 def cal_deltas(ksd=None):
     env = os.environ.get
     ctl = env('OT_KV_CTL_C32', '0')
     if ctl not in ('0', '1', '2'):
         raise ValueError(f'OT_KV_CTL_C32={ctl!r}: no calendar law')
     hl = hroot_landing(ksd)
-    return dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
+    deltas = dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
                 ctl_own_leave=CTL_OWN_GUARD_LEAD if ctl != '0' else 0, ctl_boot_setup_ready=2 if ctl != '0' else 0,
                 ahub=dict(compiler_edges=0, pad=env('OT_KV_AHUB_PAD', '0') == '1', proof='kv_static_params AHUB_OFS_BOUND'),
                 seam=dict(compiler_edges=0, pin=env('OT_KV_SEAM_PIN', '0') == '1', proof='link_image_check (TXDP_K 22)'))
+    reset = final_reset_calendar()
+    if reset is not None: deltas['final_reset_stations'] = reset
+    return deltas
 
 
 # ---- KV-CAL15: embedding row fill deadline (RESULT -> the row_tx header slot) -----------------------------------------
@@ -898,6 +910,16 @@ def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period)
                 token_period=token_period)
     c = RC.build(succ, rst, prog, 6 + 5, default_depth=None if depth is None else int(depth))   # link = --txl 6 --phy 5
     need = c['reset']['required_sink_release_depth']
+    reset = final_reset_calendar()
+    if reset is not None:
+        # Keep missing per-source reset/first-use qualification explicit. Until
+        # supplied, budget the generated station delay against the existing
+        # whole-plane HOLD requirement instead of silently retaining HOLD273.
+        need = max(need+int(reset['max_added_reset_edges']),int(reset['conservative_required_hold']))
+        c['reset'].update(required_sink_release_depth=need,
+                          hold_counter_bits=max(8,math.ceil(math.log2(need))),
+                          final_reset_stations=reset)
+        for source in c['sources']: source['sink_release_age'] = need
     c['reset'].update(bound_hold=RETIRE_HOLD_BOUND, fits_bound_hold=need <= RETIRE_HOLD_BOUND,
                       default_depth=None if depth is None else int(depth))
     return c
