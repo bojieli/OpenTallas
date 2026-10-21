@@ -1,0 +1,42 @@
+{
+  "source_commit": "447f9e381",
+  "shared_mul_commit": "3834fc6d3",
+  "bench": "tools/s81_head_r3/bench.sh ALL none",
+  "terminal": "ot-run0/BENCH_PASS4of4",
+  "result": "bit-exact golden traffic plusstartup/reset-reassertion passed all4 scenarios; actual age8366 unchanged; old2 vsselected3 resetstage only,1reassert/0mismatch/3delta_windows each",
+  "physical": "R4 native/CTS gates pending; this is functional qualification only",
+  "logs": [
+    {
+      "log": "run_A_none.log",
+      "sha256": "1c38b07148bae1d4b9840a20229f8f498907aba11c0b80dbf63687ee1ea3c891",
+      "result": [
+        "RESET_AGE checked_edges=18226 old_stages=2 selected_stages=3 reassertions=1 mismatches=0 delta_windows=3 traffic_delta=0",
+        "TB_PASS positions 2"
+      ]
+    },
+    {
+      "log": "run_B_none.log",
+      "sha256": "d5ad7999b19af29baa195a972a8060315af98084acb6e72d6878d637156984d9",
+      "result": [
+        "RESET_AGE checked_edges=9226 old_stages=2 selected_stages=3 reassertions=1 mismatches=0 delta_windows=3 traffic_delta=0",
+        "TB_PASS positions 1"
+      ]
+    },
+    {
+      "log": "run_C_none.log",
+      "sha256": "967b8ec9c7c626106b4353f7a602733e7d52ebc3b4b0d7e4f33b54c700590101",
+      "result": [
+        "RESET_AGE checked_edges=9226 old_stages=2 selected_stages=3 reassertions=1 mismatches=0 delta_windows=3 traffic_delta=0",
+        "TB_PASS positions 1"
+      ]
+    },
+    {
+      "log": "run_D_none.log",
+      "sha256": "df3681ddc160a349ee1d758cc122eeff2876b33d608802755ca2925e311d175a",
+      "result": [
+        "RESET_AGE checked_edges=9226 old_stages=2 selected_stages=3 reassertions=1 mismatches=0 delta_windows=3 traffic_delta=0",
+        "TB_PASS positions 1"
+      ]
+    }
+  ]
+}
