@@ -4,7 +4,7 @@
  "frozen_helpers": 50,
  "final_source_files": 13972,
  "all_final_sha_match": true,
- "proof_canonical_sha256": "7fa3bdc6243a05b87c6f39c7fd1938dd24f547d1ca33806daec2adfb0c8031c2",
+ "proof_canonical_sha256": "868b3cc1eea80beb9febb38785e8bc7d3c1f02464a8790ad5eb57f5687a36c8c",
  "script_sequence": [
   {
    "exit": 0,
@@ -24,5 +24,13 @@
  ],
  "no_runtime_staged": true,
  "selected_runtime_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
- "required_runtime_library_count": 25
+ "required_runtime_library_count": 25,
+ "fixed_checkpoint_inputs": {
+  "routes/s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/work/orfs/config.mk": "4f59d31e664e291717468c5a20423d76e5f166adeb1506d40788bbbc526a1f8b",
+  "routes/s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/work/orfs/results/asap7/opentallas_ot_s81sl_ve_asap7_ref_s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/base/5_2_route.odb": "52d46d106551b1e076859a132ae3764bbb7861099b86e128aa4bcb9756a17ddf",
+  "routes/s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/work/orfs/results/asap7/opentallas_ot_s81sl_ve_asap7_ref_s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/base/6_final.odb": "ffda348e3a699c30aa7b9e091c08c8de631f5d3688512e2adff36da99e7eefae",
+  "routes/s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/work/orfs/results/asap7/opentallas_ot_s81sl_ve_asap7_ref_s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/base/6_final.sdc": "070de93ca5aad25ba2c71cdc363431286fbc595959ebd3ccc32b5d1d2c110a72",
+  "routes/s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/work/orfs/results/asap7/opentallas_ot_s81sl_ve_asap7_ref_s81sl_ve_r5_s81sl_ve_r5_f51f4ec42/base/6_final.spef": "51f0bdfa3b6cfe4b7ccbb34184a1d953650f707bb33df7516fe4cbbff755c3eb"
+ },
+ "original_corner_json_sha256": "8a1a5e2cda568ce2ab9fc7a46cd405bf4255db5fd4e3e9baaf98375b50898aa5"
 }

@@ -43,7 +43,7 @@ class LinkedECOTests(unittest.TestCase):
             p=self.runtime/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(rel)
             self.manifest['file_hashes'][rel]=ie.file_sha(p)
         corner=self.runtime/self.manifest['checkpoint']['corner_sta']
-        corner.write_text(json.dumps(dict(orfs_dir=str(self.runtime/Path(base).parents[3]))))
+        corner.write_text(json.dumps(dict(orfs_dir=str(self.runtime/Path(base).parents[3])),sort_keys=True,indent=1)+'\n')
         self.manifest['file_hashes'][self.manifest['checkpoint']['corner_sta']]=ie.file_sha(corner)
         self.parent['route_overlay_plan']['files'][0]['sha256']=self.manifest['file_hashes']['cl/helper.py']
         self.manifest['parent']['state_sha256']=ie.canonical_sha(self.parent)
@@ -52,7 +52,10 @@ class LinkedECOTests(unittest.TestCase):
             frozen_overlay_plan_sha256=ie.canonical_sha(self.parent['route_overlay_plan']),
             gate_files={p[4:]:h for p,h in self.manifest['file_hashes'].items() if p.startswith('src/')},
             frozen_files={},transformed_templates={},
-            approved_runtime={k:self.manifest['runtime'][k] for k in ('image','library_hashes')})
+            approved_runtime={k:self.manifest['runtime'][k] for k in ('image','library_hashes')},
+            checkpoint=self.manifest['checkpoint'],post_sdc_files=self.manifest['post_sdc_files'],
+            immutable_input_hashes={p:h for p,h in self.manifest['file_hashes'].items() if p.startswith('routes/') and p!=self.manifest['checkpoint']['corner_sta']},
+            corner_sta_original=json.loads(corner.read_text()))
         self.manifest['canonical_source_readset']=proof
         self.proof_patch=patch.dict(ie.APPROVED_SOURCE_PROOFS,{self.parent['commit_full']:ie.canonical_sha(proof)})
         self.proof_patch.start();self.addCleanup(self.proof_patch.stop)
@@ -66,10 +69,12 @@ class LinkedECOTests(unittest.TestCase):
         m=copy.deepcopy(self.manifest);m['parent'].update(source_commit=p['commit_full'],state_sha256=ie.canonical_sha(p))
         m['canonical_source_readset']=proof
         m['runtime'].update(proof['approved_runtime'])
+        m['checkpoint']=proof['checkpoint']
+        m['post_sdc_files']=proof['post_sdc_files']
         m['file_hashes']={k:v for k,v in m['file_hashes'].items() if not k.startswith(('src/','cl/'))}
         m['file_hashes'].update(ie.expected_source_hashes(p,m))
         m['file_hashes'].update({'cl/'+Path(x['path']).name:x['sha256'] for x in p['route_overlay_plan']['files']})
-        m['post_sdc_files']=['src/physical/ref_tile/s81sl_ve_r5/signoff.sdc']
+        m['file_hashes'].update(ie.expected_checkpoint_hashes(m))
         ie.build(p,m,'new-linked')
         rtl=next(x for x in m['file_hashes'] if x.startswith('src/rtl/'))
         omitted=copy.deepcopy(m);del omitted['file_hashes'][rtl]
@@ -80,7 +85,13 @@ class LinkedECOTests(unittest.TestCase):
         omitted_lib=copy.deepcopy(m);omitted_lib['runtime']['library_hashes'].pop(next(iter(omitted_lib['runtime']['library_hashes'])))
         changed_lib=copy.deepcopy(m);changed_lib['runtime']['library_hashes'][next(iter(changed_lib['runtime']['library_hashes']))]='0'*64
         image=copy.deepcopy(m);image['runtime']['image']='sha256:'+'b'*64
-        for candidate in (omitted,changed,wrong,transform,omitted_lib,changed_lib,image):
+        odb=copy.deepcopy(m);odb['file_hashes'][m['checkpoint']['eco_odb']]='0'*64
+        config=copy.deepcopy(m);config['file_hashes'][m['checkpoint']['config']]='0'*64
+        corner=copy.deepcopy(m);forged_corner=copy.deepcopy(proof['corner_sta_original'])
+        forged_corner['orfs_dir']=str(Path(m['runtime']['run'])/Path(m['checkpoint']['route_base']).parents[3])
+        forged_corner['setup_tt']['worst_slack_ps']=999.0
+        corner['file_hashes'][m['checkpoint']['corner_sta']]=hashlib.sha256((json.dumps(forged_corner,sort_keys=True,indent=1)+'\n').encode()).hexdigest()
+        for candidate in (omitted,changed,wrong,transform,omitted_lib,changed_lib,image,odb,config,corner):
             with self.subTest(),self.assertRaisesRegex(ValueError,'canonical'):
                 ie.build(p,candidate,'new-linked')
         other=copy.deepcopy(m);other['runtime']['run']+='_different'

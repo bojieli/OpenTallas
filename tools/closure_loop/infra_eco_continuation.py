@@ -36,7 +36,7 @@ def relative(path):
 # exact old hold/TT/hold transformation. Other sources require their own review.
 APPROVED_SOURCE_PROOFS = {
     'f51f4ec42ca6f555ae0bb93558d1c485cee732c2':
-        '7fa3bdc6243a05b87c6f39c7fd1938dd24f547d1ca33806daec2adfb0c8031c2',
+        '868b3cc1eea80beb9febb38785e8bc7d3c1f02464a8790ad5eb57f5687a36c8c',
 }
 
 
@@ -65,6 +65,7 @@ def expected_source_hashes(parent, manifest):
 
 def validate_source_readset(parent, manifest):
     expected = expected_source_hashes(parent, manifest)
+    validate_checkpoint_inputs(manifest)
     actual = {p:h for p,h in manifest.get('file_hashes', {}).items() if p.startswith('src/')}
     if actual != expected:
         missing = sorted(expected.keys()-actual.keys())
@@ -73,6 +74,25 @@ def validate_source_readset(parent, manifest):
         raise ValueError('canonical source readset differs: missing=%s changed=%s extra=%s' %
                          (missing[:3], changed[:3], extra[:3]))
     return expected
+
+
+
+def expected_checkpoint_hashes(manifest):
+    proof=manifest['canonical_source_readset']
+    corner=copy.deepcopy(proof['corner_sta_original'])
+    corner['orfs_dir']=str(Path(manifest['runtime']['run'])/Path(proof['checkpoint']['route_base']).parents[3])
+    hashes=dict(proof['immutable_input_hashes'])
+    hashes[proof['checkpoint']['corner_sta']]=hashlib.sha256((json.dumps(corner,sort_keys=True,indent=1)+'\n').encode()).hexdigest()
+    return hashes
+
+
+def validate_checkpoint_inputs(manifest):
+    proof=manifest['canonical_source_readset']
+    if manifest.get('checkpoint') != proof['checkpoint'] or manifest.get('post_sdc_files') != proof['post_sdc_files']:
+        raise ValueError('canonical checkpoint/config/SDC binding differs')
+    for path,sha in expected_checkpoint_hashes(manifest).items():
+        if manifest.get('file_hashes',{}).get(path)!=sha:
+            raise ValueError('canonical original checkpoint/config or exact corner path-only rebase differs: '+path)
 
 
 def build(parent, manifest, new_name):

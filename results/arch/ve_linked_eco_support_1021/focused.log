@@ -54,7 +54,7 @@
    "live"
   ],
   "host": "live",
-  "run": "/tmp/tmpkp326dv5/new-linked",
+  "run": "/tmp/tmpibs570jt/new-linked",
   "commit_full": "ffffffffffffffffffffffffffffffffffffffff",
   "source_synced": true,
   "freeze_helper_overlay": true,
@@ -75,13 +75,13 @@
   "events": [],
   "errors": [],
   "eco_overlay_recovery": {
-   "guard": "/tmp/tmpkp326dv5/new-linked/cl/linked_infra_eco/inputs.json",
-   "out": "/tmp/tmpkp326dv5/new-linked/cl/linked_infra_eco/candidate"
+   "guard": "/tmp/tmpibs570jt/new-linked/cl/linked_infra_eco/inputs.json",
+   "out": "/tmp/tmpibs570jt/new-linked/cl/linked_infra_eco/candidate"
   },
   "linked_infra_eco": {
    "parent": {
     "name": "old-parent",
-    "state_sha256": "f41895f9afc6b3739ce0f581f1e9aa3415fbc9f7cc5f7b9abe69ff2d575eb641",
+    "state_sha256": "6a4ee3a4f5ed2c37360542eef1e4a9c4102165ad5eace742a73628c1191c6168",
     "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
    },
    "manifest": {
@@ -90,7 +90,7 @@
     "infrastructure_cause": "scheduled_retirement",
     "parent": {
      "name": "old-parent",
-     "state_sha256": "f41895f9afc6b3739ce0f581f1e9aa3415fbc9f7cc5f7b9abe69ff2d575eb641",
+     "state_sha256": "6a4ee3a4f5ed2c37360542eef1e4a9c4102165ad5eace742a73628c1191c6168",
      "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
     },
     "physical_disposition": {
@@ -106,7 +106,7 @@
     },
     "runtime": {
      "host": "live",
-     "run": "/tmp/tmpkp326dv5/new-linked",
+     "run": "/tmp/tmpibs570jt/new-linked",
      "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
      "ram_gb": 64,
      "library_hashes": {
@@ -129,7 +129,7 @@
      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
      "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1",
-     "routes/old_parent/corner_sta.json": "d396ccad39230be0ed21e4e1500895fa628237b018b4a154630ecdcb70c157ab",
+     "routes/old_parent/corner_sta.json": "14fd9a58a17238dc506dfa20a30d4b704bebf2d7c99737918f798295d6c816c9",
      "src/physical/signoff.sdc": "794b26946f13307e1d486099a9c121b64de70ba25609e2f06600d2b055eb0539",
      "src/rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48",
      "cl/helper.py": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
@@ -149,10 +149,30 @@
       "library_hashes": {
        "/OpenROAD-flow-scripts/lib.lib": "2222222222222222222222222222222222222222222222222222222222222222"
       }
+     },
+     "checkpoint": {
+      "kind": "5_2_route",
+      "route_base": "routes/old_parent/work/orfs/results/asap7/design/base",
+      "eco_odb": "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb",
+      "config": "routes/old_parent/work/orfs/config.mk",
+      "corner_sta": "routes/old_parent/corner_sta.json"
+     },
+     "post_sdc_files": [
+      "src/physical/signoff.sdc"
+     ],
+     "immutable_input_hashes": {
+      "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb": "50d87be4582247b1c05f87ab065e3cffcc293af881f0096e9be47abf96e77a42",
+      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.odb": "56cdc49f730a9b2d0786caadba070a158bf9eeb4cf14c8c38befbbb1004002f6",
+      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
+      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
+      "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1"
+     },
+     "corner_sta_original": {
+      "orfs_dir": "/tmp/tmpibs570jt/new-linked/routes/old_parent/work/orfs"
      }
     }
    },
-   "manifest_sha256": "167b7298046687b54fa6f5b574fdea5474932c2e33dde29de43dc10265bd9c2d",
+   "manifest_sha256": "72ea9d156a48cd6ec8d9cfd6d4c2f8831fe07110b5b709f99309fbd620927ca7",
    "inherited_benches": {
     "bench:positive": {
      "ok": true,
@@ -164,11 +184,11 @@
   "stage_idx": 2
  }
 }
-2026-10-21T16:05:56-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
+2026-10-21T16:09:54-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
 ..new-linked
-2026-10-21T16:05:56-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
+2026-10-21T16:09:54-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
 ......
 ----------------------------------------------------------------------
-Ran 10 tests in 0.505s
+Ran 10 tests in 0.684s
 
 OK
