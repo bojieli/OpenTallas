@@ -20,7 +20,7 @@ module dsdv_hbc1_loader #(
   localparam[47:0] COMMIT_DELTA=BOOT_COMMIT_EDGE-BODY_EDGE;
   localparam VALID_PROFILE=PHASE_BOUND!=0&&LOCAL_STAGE<241&&LOCAL_STAGE>=0&&LOCAL_RANK<4&&LOCAL_RANK>=0&&
    CLOCK_RESET_ID!=0&&BOOT_HEADER_EDGE!=48'hffffffffffff&&BOOT_COMMIT_EDGE!=48'hffffffffffff&&BOOT_COMMIT_EDGE>BODY_EDGE+2;
-  wire[3:0] pending,ready;wire[511:0] shadow;
+  wire[3:0] pending,ready,shadow_date,active_date;wire[511:0] shadow;
   wire rn;(* keep_hierarchy="yes" *)ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
   reg valid;reg[7:0] f;reg body_seen;
   assign fault=f;assign context_valid=valid&&f==0;
@@ -72,14 +72,19 @@ module dsdv_hbc1_loader #(
   end
   genvar k;
   for(k=0;k<4;k=k+1)begin:g_clock
-   wire carry_boot=(k==0)?1'b1:(&boot_edge[k*12-1:0]);
+   wire carry_boot,carry_epoch;
+   if(k==0)begin:g_first assign carry_boot=1'b1;assign carry_epoch=1'b1;end
+   else begin:g_carry assign carry_boot=&boot_edge[k*12-1:0];assign carry_epoch=&receiver_edge[k*12-1:0];end
    (* keep_hierarchy="yes" *)dsdv_hbc_boot12 #(.ID(k)) u_boot(.ck(ck),.rst_n(rst_n),.carry(carry_boot),.q(boot_edge[12*k+:12]));
-   wire carry_epoch=(k==0)?1'b1:(&receiver_edge[k*12-1:0]);
    wire[47:0] epoch_at_next=seed+COMMIT_DELTA+1;
    (* keep_hierarchy="yes" *)dsdv_hbc_epoch12 #(.ID(k)) u_epoch(.ck(ck),.load(commit_good),.run(context_valid),.carry(carry_epoch),
     .d(epoch_at_next[12*k+:12]),.q(receiver_edge[12*k+:12]));
    (* keep_hierarchy="yes" *)dsdv_hbc_owner #(.ID(k),.BODY_EDGE(BODY_EDGE),.COMMIT_EDGE(BOOT_COMMIT_EDGE)) u_owner(
     .ck(ck),.rst_n(rst_n),.load_header(load_good),.body_good(body_good),.edge_now(boot_edge),.pending(pending[k]),.ready(ready[k]));
+  end
+  for(k=0;k<4;k=k+1)begin:g_dates
+   (* keep_hierarchy="yes" *)dsdv_hbc_fixed_date #(.ID(k),.DATE(BODY_EDGE)) u_shadow_date(.edge_now(boot_edge),.match(shadow_date[k]));
+   (* keep_hierarchy="yes" *)dsdv_hbc_fixed_date #(.ID(k+4),.DATE(BOOT_COMMIT_EDGE)) u_active_date(.edge_now(boot_edge),.match(active_date[k]));
   end
   for(k=0;k<8;k=k+1)begin:g_header
    wire[95:0] d={p[241:178],p[113:82]};
@@ -87,10 +92,10 @@ module dsdv_hbc1_loader #(
   end
   for(k=0;k<43;k=k+1)begin:g_field
    localparam integer LO=12*k,W=(512-LO<12)?512-LO:12;
-   (* keep_hierarchy="yes" *)dsdv_hbc_field #(.ID(k),.W(W),.DATE(BODY_EDGE)) u_shadow(
-    .ck(ck),.owner(pending[k/11]),.edge_now(boot_edge),.d(p[LO+:W]),.q(shadow[LO+:W]));
-   (* keep_hierarchy="yes" *)dsdv_hbc_field #(.ID(k+43),.W(W),.DATE(BOOT_COMMIT_EDGE)) u_active(
-    .ck(ck),.owner(ready[k/11]),.edge_now(boot_edge),.d(shadow[LO+:W]),.q(active_fields[LO+:W]));
+   (* keep_hierarchy="yes" *)dsdv_hbc_field #(.ID(k),.W(W)) u_shadow(
+    .ck(ck),.owner(pending[k/11]),.date_match(shadow_date[k/11]),.d(p[LO+:W]),.q(shadow[LO+:W]));
+   (* keep_hierarchy="yes" *)dsdv_hbc_field #(.ID(k+43),.W(W)) u_active(
+    .ck(ck),.owner(ready[k/11]),.date_match(active_date[k/11]),.d(shadow[LO+:W]),.q(active_fields[LO+:W]));
   end
  end endgenerate
 endmodule
@@ -110,13 +115,16 @@ module dsdv_hbc_owner #(parameter integer ID=0,parameter[47:0]BODY_EDGE=0,COMMIT
   if(body_good)ready<=1;else if(edge_now>=COMMIT_EDGE)ready<=0;
  end
 endmodule
-module dsdv_hbc_field #(parameter integer ID=0,W=12,parameter[47:0]DATE=0)(
- input wire ck,owner,input wire[47:0]edge_now,input wire[W-1:0]d,output wire[W-1:0]q);
+module dsdv_hbc_field #(parameter integer ID=0,W=12)(
+ input wire ck,owner,date_match,input wire[W-1:0]d,output wire[W-1:0]q);
  wire en;
- (* keep_hierarchy="yes" *)dsdv_hbc_fixed_enable #(.ID(ID),.DATE(DATE)) u_enable(.owner(owner),.edge_now(edge_now),.en(en));
+ (* keep_hierarchy="yes" *)dsdv_hbc_fixed_enable #(.ID(ID)) u_enable(.owner(owner),.date_match(date_match),.en(en));
  (* keep_hierarchy="yes" *)dsdv_hostb_hold_bits #(.ID(ID),.W(W)) u_bits(.ck(ck),.en(en),.d(d),.q(q));
 endmodule
-module dsdv_hbc_fixed_enable #(parameter integer ID=0,parameter[47:0]DATE=0)(input wire owner,input wire[47:0]edge_now,output wire en);
- assign en=owner&&edge_now==DATE;
+module dsdv_hbc_fixed_enable #(parameter integer ID=0)(input wire owner,date_match,output wire en);
+ assign en=owner&&date_match;
+endmodule
+module dsdv_hbc_fixed_date #(parameter integer ID=0,parameter[47:0]DATE=0)(input wire[47:0]edge_now,output wire match);
+ assign match=edge_now==DATE;
 endmodule
 `default_nettype wire
