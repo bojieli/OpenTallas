@@ -44,8 +44,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 138.24,
-  "h": 86.4
+  "w": 172.8,
+  "h": 108
  },
  "route": {
   "pd": 0.5,
@@ -131,7 +131,8 @@
    }
   ],
   "views_to": "physical/ref_tile/dsdv_eng_tap_w/views",
-  "record_to": "results/rtl/ref_tile/dsdv_eng_tap_w"
+  "record_to": "results/rtl/ref_tile/dsdv_eng_tap_w",
+  "hold_merge": "Successor geometry: currentG8 stand-in slot is not a qualified view; exactnewabstract/pin/clock/reset grant required in G9, no old-outline alias."
  },
  "children": [],
  "inter": [],
