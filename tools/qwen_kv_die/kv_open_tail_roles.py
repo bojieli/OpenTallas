@@ -49,6 +49,7 @@ SOURCES = {
     'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv': '1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80',
     'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv': '713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a',
     'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv': 'c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42',
+    'rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv': 'a0db1639e4fb5448e3bcbe91761933a5c2b990733058ee5eaa1fd6877debf983',
     # KV-BIND4 10-19: the d2ds successor master qkd_d2d_static_sfm (CLOSED r7w_sfm2 view) + the attention RX codec that
     # recomputes the Z17 reserved-zero predicates from rx_payload (z17_dup)
     SFM: 'e17a16804b4125e5c171dc92e78366edb3d73a933195b3c0a4b619477ffb50d3',
@@ -84,7 +85,8 @@ SOURCES = {
 # kv_static_die --check RTL current at route A (d22bu), HROOT_LAND (d22hl2), and both + N32/PJ.  GEN_ASSERT below re-checked.
 # SQK-DIE 10-21: re-pin after 8c06b1180/dc3a6373f/8ed15aacb (default-off OT_KV_KRT_ES6_HOME placement block only;
 # no instance, port or chain-end text changed).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '8fb31acbf5e49cffa597fee3e8501e089d6f03942c054ed7bfa0d377d9ee68bd')
+# CODEX-K-DIE 10-21: QKC-GRP adds opt-in S6C masters/slots; legacy chain strings below stay asserted.
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'da9774af70772374c0bcffe288507dc9727fd4b4837eee4fc164f1b7b9e74419')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -291,6 +293,34 @@ if __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
         ('rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv', 'ot_qkvd_kcmd_tap', ['o_v <= i_v;', 'o_d <= i_d;'])]
 
 
+# CODEX-K-DIE 10-21: source-pinned DS/S6C point. The private group ABI DELETES
+# the duplicate token/epoch faces and the terminal o_dn face. It creates no new
+# spare output: remove those legacy roles; every surviving group output must
+# have a real reader in strict bind. PC tails/duplicates keep their source and
+# exact chain-end checks, now on the DS wrapper actually selected by bindings().
+DS_GROUP_SOURCES = {}
+if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
+    import kv_static_die as _D
+    _expected = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv'
+    if _D.RTL_FILE != _expected:
+        raise ValueError('open-tail DS/S6C recipe unproved: ' + _D.RTL_FILE)
+    _T0 = TILES
+    TILES = _expected
+    SOURCES.pop(_T0)
+    SOURCES[TILES] = '5375388226c71629575cdae949047f85f7c39e55d4e117641b623669b4e9aa69'
+    DS_GROUP_SOURCES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv': 'b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00', 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv': '6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1'}
+    SOURCES.update(DS_GROUP_SOURCES)
+    GRP = ()
+    for _role in ('tok_dup', 'odn_tail'):
+        ASSERT.pop(_role)
+        GEN_ASSERT.pop(_role)
+    ROLES = {key: value for key, value in ROLES.items()
+             if value[0] not in ('tok_dup', 'odn_tail')}
+    for _role, _items in ASSERT.items():
+        ASSERT[_role] = [(TILES if rel == _T0 else rel, mod, list(subs))
+                         for rel, mod, subs in _items]
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -316,6 +346,13 @@ def check_sources(root, pins=None):
     gtext = (Path(root) / GENERATOR[0]).read_text()
     if sha(Path(root) / GENERATOR[0]) != gwant:
         raise ValueError('generator changed; re-prove chain ends: ' + GENERATOR[0])
+    for rel in DS_GROUP_SOURCES:
+        body = module_body((Path(root) / rel).read_text(), Path(rel).stem)
+        for port in ('x__tok', 'x__tep', 'y__tok', 'y__tep'):
+            if re.search(r'\b' + port + r'\b', body):
+                raise ValueError('DS private group face reappeared: ' + port)
+        if Path(rel).stem == 'qkd_kvs_grp_h_s6c' and re.search(r'\bo_dn\b', body):
+            raise ValueError('DS terminal group o_dn reappeared')
     for role, items in ASSERT.items():
         for rel, mod, subs in items:
             body = module_body((Path(root) / rel).read_text(), mod)
