@@ -1,0 +1,69 @@
+CLOCK_SPLIT_KM: ck_dw cluster 0 569 sinks x 216.5..230.5 y 360.7..422.0 buffer at (227.8, 397.1)
+CLOCK_SPLIT_KM: ck_dw cluster 1 582 sinks x 216.5..230.5 y 300.2..360.4 buffer at (226.6, 324.9)
+CLOCK_SPLIT_KM: ck_dw cluster 3 762 sinks x 374.9..459.3 y 138.5..178.7 buffer at (417.2, 157.5)
+CLOCK_SPLIT_KM: ck_dw cluster 5 762 sinks x 374.4..458.9 y 309.7..350.7 buffer at (416.4, 329.1)
+CLOCK_SPLIT_KM: ck_dw cluster 6 256 sinks x 395.1..425.7 y 406.1..430.1 buffer at (404.7, 414.9)
+CLOCK_SPLIT_KM: ck_dw cluster 7 484 sinks x 412.0..464.8 y 466.0..503.0 buffer at (444.9, 486.5)
+CLOCK_SPLIT_KM: ck_dw cluster 8 534 sinks x 361.8..414.9 y 464.4..499.0 buffer at (384.5, 481.0)
+CLOCK_SPLIT_KM: ck_dw cluster 9 381 sinks x 445.5..476.0 y 622.1..673.6 buffer at (459.8, 649.6)
+CLOCK_SPLIT_KM: ck_dw cluster 10 381 sinks x 355.0..395.5 y 622.9..670.4 buffer at (374.1, 648.5)
+CLOCK_SPLIT_KM: ck_dw cluster 11 597 sinks x 216.5..230.5 y 516.8..559.7 buffer at (225.2, 541.5)
+CLOCK_SPLIT_KM: ck_dw cluster 12 621 sinks x 216.5..230.5 y 467.9..516.8 buffer at (226.7, 490.7)
+CLOCK_SPLIT_KM: ck_dw cluster 13 359 sinks x 218.2..230.5 y 421.7..469.3 buffer at (228.2, 446.2)
+CLOCK_SPLIT_KM: ck_de cluster 0 358 sinks x 379.1..437.8 y 384.2..432.8 buffer at (414.4, 407.3)
+CLOCK_SPLIT_KM: ck_de cluster 1 660 sinks x 375.0..457.8 y 342.9..382.1 buffer at (420.2, 361.7)
+CLOCK_SPLIT_KM: ck_de cluster 2 381 sinks x 375.1..389.6 y 172.8..222.8 buffer at (381.5, 196.0)
+CLOCK_SPLIT_KM: ck_de cluster 3 381 sinks x 443.5..458.9 y 178.7..221.9 buffer at (451.2, 198.6)
+CLOCK_SPLIT_KM: ck_de cluster 4 460 sinks x 589.7..603.2 y 300.2..341.3 buffer at (593.7, 318.6)
+CLOCK_SPLIT_KM: ck_de cluster 5 339 sinks x 589.7..603.2 y 339.9..386.6 buffer at (591.9, 362.6)
+CLOCK_SPLIT_KM: ck_de cluster 6 431 sinks x 589.7..601.6 y 386.9..436.1 buffer at (592.0, 410.7)
+CLOCK_SPLIT_KM: ck_de cluster 7 306 sinks x 589.7..601.6 y 436.1..480.9 buffer at (591.0, 462.0)
+CLOCK_SPLIT_KM: ck_de cluster 8 599 sinks x 589.7..603.2 y 477.6..518.9 buffer at (594.6, 496.3)
+CLOCK_SPLIT_KM: ck_de cluster 9 593 sinks x 589.7..603.2 y 518.9..559.7 buffer at (595.0, 541.3)
+CLOCK_SPLIT_KM: ck_de cluster 10 381 sinks x 439.3..458.0 y 666.9..708.2 buffer at (449.6, 688.7)
+CLOCK_SPLIT_KM: ck_de cluster 11 381 sinks x 375.3..392.1 y 666.1..707.1 buffer at (383.1, 686.7)
+CLOCK_SPLIT_KM: ck_de cluster 12 636 sinks x 409.9..458.0 y 472.8..542.4 buffer at (442.9, 506.5)
+CLOCK_SPLIT_KM: ck_de cluster 13 382 sinks x 375.0..405.9 y 486.3..534.6 buffer at (383.7, 515.5)
+OT_CKKM CTS -clk_nets += 26 cluster nets
+OT_CKKM balance ck_dw iter 0 (coarse) clusters 12 latest 817.7..876.7 ps (spread 58.9) pad 45.0 / 12.0 ps pads 0
+OT_CKKM balance ck_dw iter 1 (fine) clusters 12 latest 865.0..886.5 ps (spread 21.5) pad 45.0 / 17.2 ps pads 25
+OT_CKKM balance ck_de iter 0 (coarse) clusters 14 latest 715.3..923.3 ps (spread 208.1) pad 45.0 / 17.2 ps pads 25
+OT_CKKM balance ck_de iter 1 (coarse) clusters 14 latest 875.0..970.7 ps (spread 95.7) pad 60.8 / 17.2 ps pads 54
+OT_CKKM balance ck_de iter 2 (fine) clusters 14 latest 915.9..970.7 ps (spread 54.8) pad 60.8 / 3.0 ps pads 71
+OT_CKKM balance ck_de iter 3 (fine) clusters 14 latest 955.5..1139.4 ps (spread 183.9) pad 60.8 / 15.8 ps pads 160
+OT_CKKM balance ck_de iter 4 (fine) clusters 14 latest 1100.5..1139.4 ps (spread 38.9) pad 60.8 / 15.8 ps pads 237
+OT_CKKM balance ck_de iter 5 (fine) clusters 14 latest 1114.2..1139.4 ps (spread 25.2) pad 60.8 / 15.8 ps pads 239
+OT_HYBRID CLOCK_RULE tt ck WARN pin_spread=0.0 scope=boundary sinks=7043 WARN: insertion all_mean 689.9 / pin_mean 770.2 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE tt ck_rn PASS pin_spread=44.2 scope=all_internal_only sinks=2660
+OT_HYBRID CLOCK_RULE tt ck_rs PASS pin_spread=14.1 scope=all_internal_only sinks=2661
+OT_HYBRID CLOCK_RULE tt ck_rsw PASS pin_spread=12.8 scope=all_internal_only sinks=2661
+OT_HYBRID CLOCK_RULE tt ck_rnw PASS pin_spread=50.4 scope=all_internal_only sinks=2660
+OT_HYBRID CLOCK_RULE tt ck_dw WARN pin_spread=27.9 scope=all_internal_only sinks=6288 WARN: insertion all_mean 572.9 / pin_mean 572.9 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE tt ck_de WARN pin_spread=29.8 scope=all_internal_only sinks=6288 WARN: insertion all_mean 855.4 / pin_mean 855.4 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE tt ck_tx0 PASS pin_spread=19.7 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx1 PASS pin_spread=23.1 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx2 PASS pin_spread=21.2 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx3 PASS pin_spread=26.3 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx4 PASS pin_spread=20.4 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx5 PASS pin_spread=13.4 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx6 PASS pin_spread=19.5 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_tx7 PASS pin_spread=18.2 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE tt ck_fa2 PASS pin_spread=7.8 scope=boundary sinks=514
+OT_HYBRID CLOCK_RULE tt ck_fa4 PASS pin_spread=7.8 scope=boundary sinks=286
+OT_HYBRID CLOCK_RULE ff ck WARN pin_spread=0.0 scope=boundary sinks=7043 WARN: insertion all_mean 587.3 / pin_mean 660.4 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE ff ck_rn PASS pin_spread=53.7 scope=all_internal_only sinks=2660
+OT_HYBRID CLOCK_RULE ff ck_rs PASS pin_spread=17.2 scope=all_internal_only sinks=2661
+OT_HYBRID CLOCK_RULE ff ck_rsw PASS pin_spread=15.3 scope=all_internal_only sinks=2661
+OT_HYBRID CLOCK_RULE ff ck_rnw PASS pin_spread=57.8 scope=all_internal_only sinks=2660
+OT_HYBRID CLOCK_RULE ff ck_dw WARN pin_spread=74.8 scope=all_internal_only sinks=6288 WARN: insertion all_mean 513.0 / pin_mean 513.0 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE ff ck_de WARN pin_spread=77.4 scope=all_internal_only sinks=6288 WARN: insertion all_mean 732.6 / pin_mean 732.6 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE ff ck_tx0 PASS pin_spread=23.7 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx1 PASS pin_spread=25.4 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx2 PASS pin_spread=22.8 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx3 PASS pin_spread=29.4 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx4 PASS pin_spread=30.4 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx5 PASS pin_spread=16.8 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx6 PASS pin_spread=20.2 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_tx7 PASS pin_spread=27.0 scope=all_internal_only sinks=1375
+OT_HYBRID CLOCK_RULE ff ck_fa2 PASS pin_spread=8.2 scope=boundary sinks=514
+OT_HYBRID CLOCK_RULE ff ck_fa4 PASS pin_spread=7.4 scope=boundary sinks=286
