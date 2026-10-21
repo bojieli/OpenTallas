@@ -1,0 +1,1649 @@
+{
+ "schema": "opentallas.head.spr-closed-route-delta.v1",
+ "h3_source": "1e1bf1340",
+ "h4_source": "8916a1cb6",
+ "old_stations": 2604,
+ "new_stations": 2630,
+ "changed_links": [
+  {
+   "link": "sp_r_N0",
+   "old_stations": 5,
+   "new_stations": 6,
+   "delta": 1,
+   "old_length_um": 2038.114,
+   "new_length_um": 2254.105,
+   "old_endpoints": [
+    [
+     1,
+     "o",
+     9676.8,
+     12830.4,
+     "box"
+    ],
+    [
+     279,
+     "sn_i",
+     9388.2857,
+     11080.8,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     1,
+     "o",
+     9676.791,
+     13046.4,
+     "box"
+    ],
+    [
+     279,
+     "sn_i",
+     9388.2857,
+     11080.8,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_N1",
+   "old_stations": 2,
+   "new_stations": 3,
+   "delta": 1,
+   "old_length_um": 864.0,
+   "new_length_um": 1296.0,
+   "old_endpoints": [
+    [
+     23,
+     "o",
+     9676.8,
+     14342.4,
+     "box"
+    ],
+    [
+     1,
+     "i",
+     9676.8,
+     13478.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     23,
+     "o",
+     9676.791,
+     14558.4,
+     "box"
+    ],
+    [
+     1,
+     "i",
+     9676.791,
+     13262.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_N2",
+   "old_stations": 2,
+   "new_stations": 3,
+   "delta": 1,
+   "old_length_um": 864.0,
+   "new_length_um": 1296.0,
+   "old_endpoints": [
+    [
+     45,
+     "o",
+     9676.8,
+     15854.4,
+     "box"
+    ],
+    [
+     23,
+     "i",
+     9676.8,
+     14990.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     45,
+     "o",
+     9676.791,
+     16070.4,
+     "box"
+    ],
+    [
+     23,
+     "i",
+     9676.791,
+     14774.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_N3",
+   "old_stations": 2,
+   "new_stations": 3,
+   "delta": 1,
+   "old_length_um": 864.0,
+   "new_length_um": 1296.0,
+   "old_endpoints": [
+    [
+     67,
+     "o",
+     9676.8,
+     17366.4,
+     "box"
+    ],
+    [
+     45,
+     "i",
+     9676.8,
+     16502.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     67,
+     "o",
+     9676.791,
+     17582.4,
+     "box"
+    ],
+    [
+     45,
+     "i",
+     9676.791,
+     16286.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_N4",
+   "old_stations": 2,
+   "new_stations": 3,
+   "delta": 1,
+   "old_length_um": 864.0,
+   "new_length_um": 1296.0,
+   "old_endpoints": [
+    [
+     89,
+     "o",
+     9676.8,
+     18878.4,
+     "box"
+    ],
+    [
+     67,
+     "i",
+     9676.8,
+     18014.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     89,
+     "o",
+     9676.791,
+     19094.4,
+     "box"
+    ],
+    [
+     67,
+     "i",
+     9676.791,
+     17798.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_N5",
+   "old_stations": 2,
+   "new_stations": 3,
+   "delta": 1,
+   "old_length_um": 864.0,
+   "new_length_um": 1296.0,
+   "old_endpoints": [
+    [
+     110,
+     "o",
+     9676.8,
+     20390.4,
+     "box"
+    ],
+    [
+     89,
+     "i",
+     9676.8,
+     19526.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     110,
+     "o",
+     9676.791,
+     20606.4,
+     "box"
+    ],
+    [
+     89,
+     "i",
+     9676.791,
+     19310.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_N6",
+   "old_stations": 2,
+   "new_stations": 3,
+   "delta": 1,
+   "old_length_um": 864.0,
+   "new_length_um": 1296.0,
+   "old_endpoints": [
+    [
+     130,
+     "o",
+     9676.8,
+     21902.4,
+     "box"
+    ],
+    [
+     110,
+     "i",
+     9676.8,
+     21038.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     130,
+     "o",
+     9676.791,
+     22118.4,
+     "box"
+    ],
+    [
+     110,
+     "i",
+     9676.791,
+     20822.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_u_N",
+   "old_stations": 3,
+   "new_stations": 2,
+   "delta": -1,
+   "old_length_um": 1166.4,
+   "new_length_um": 950.391,
+   "old_endpoints": [
+    [
+     129,
+     "o",
+     9352.8,
+     21794.4,
+     "box"
+    ],
+    [
+     130,
+     "i",
+     9676.8,
+     22550.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     129,
+     "o",
+     9352.8,
+     21794.4,
+     "box"
+    ],
+    [
+     130,
+     "i",
+     9676.791,
+     22334.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_S0",
+   "old_stations": 5,
+   "new_stations": 7,
+   "delta": 2,
+   "old_length_um": 2038.114,
+   "new_length_um": 2556.505,
+   "old_endpoints": [
+    [
+     150,
+     "o",
+     9676.8,
+     8294.4,
+     "box"
+    ],
+    [
+     279,
+     "ss_i",
+     9388.2857,
+     10044.0,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     150,
+     "o",
+     9676.791,
+     7862.4,
+     "box"
+    ],
+    [
+     279,
+     "ss_i",
+     9388.2857,
+     10044.0,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_S1",
+   "old_stations": 2,
+   "new_stations": 6,
+   "delta": 4,
+   "old_length_um": 864.0,
+   "new_length_um": 2203.182,
+   "old_endpoints": [
+    [
+     172,
+     "o",
+     9676.8,
+     6782.4,
+     "box"
+    ],
+    [
+     150,
+     "i",
+     9676.8,
+     7646.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     172,
+     "o",
+     9676.791,
+     6350.4,
+     "box"
+    ],
+    [
+     150,
+     "i",
+     9676.791,
+     8078.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_S2",
+   "old_stations": 2,
+   "new_stations": 6,
+   "delta": 4,
+   "old_length_um": 864.0,
+   "new_length_um": 2203.182,
+   "old_endpoints": [
+    [
+     194,
+     "o",
+     9676.8,
+     5270.4,
+     "box"
+    ],
+    [
+     172,
+     "i",
+     9676.8,
+     6134.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     194,
+     "o",
+     9676.791,
+     4838.4,
+     "box"
+    ],
+    [
+     172,
+     "i",
+     9676.791,
+     6566.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_S3",
+   "old_stations": 2,
+   "new_stations": 6,
+   "delta": 4,
+   "old_length_um": 864.0,
+   "new_length_um": 2203.182,
+   "old_endpoints": [
+    [
+     216,
+     "o",
+     9676.8,
+     3758.4,
+     "box"
+    ],
+    [
+     194,
+     "i",
+     9676.8,
+     4622.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     216,
+     "o",
+     9676.791,
+     3326.4,
+     "box"
+    ],
+    [
+     194,
+     "i",
+     9676.791,
+     5054.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_S4",
+   "old_stations": 2,
+   "new_stations": 6,
+   "delta": 4,
+   "old_length_um": 864.0,
+   "new_length_um": 2203.182,
+   "old_endpoints": [
+    [
+     238,
+     "o",
+     9676.8,
+     2246.4,
+     "box"
+    ],
+    [
+     216,
+     "i",
+     9676.8,
+     3110.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     238,
+     "o",
+     9676.791,
+     1814.4,
+     "box"
+    ],
+    [
+     216,
+     "i",
+     9676.791,
+     3542.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_r_S5",
+   "old_stations": 2,
+   "new_stations": 6,
+   "delta": 4,
+   "old_length_um": 864.0,
+   "new_length_um": 2203.182,
+   "old_endpoints": [
+    [
+     260,
+     "o",
+     9676.8,
+     734.4,
+     "box"
+    ],
+    [
+     238,
+     "i",
+     9676.8,
+     1598.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     260,
+     "o",
+     9676.791,
+     302.4,
+     "box"
+    ],
+    [
+     238,
+     "i",
+     9676.791,
+     2030.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "sp_u_S",
+   "old_stations": 3,
+   "new_stations": 1,
+   "delta": -2,
+   "old_length_um": 1166.4,
+   "new_length_um": 647.991,
+   "old_endpoints": [
+    [
+     259,
+     "o",
+     9352.8,
+     842.4,
+     "box"
+    ],
+    [
+     260,
+     "i",
+     9676.8,
+     86.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     259,
+     "o",
+     9352.8,
+     842.4,
+     "box"
+    ],
+    [
+     260,
+     "i",
+     9676.791,
+     518.4,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N00W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     11,
+     "o",
+     9028.8,
+     13154.4,
+     "box"
+    ],
+    [
+     1,
+     "iw",
+     9568.8,
+     13154.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     11,
+     "o",
+     9028.8,
+     13154.4,
+     "box"
+    ],
+    [
+     1,
+     "iw",
+     9568.8,
+     13154.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N00E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     21,
+     "o",
+     10000.8,
+     13154.4,
+     "box"
+    ],
+    [
+     1,
+     "ie",
+     9784.8,
+     13154.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     21,
+     "o",
+     10000.8,
+     13154.4,
+     "box"
+    ],
+    [
+     1,
+     "ie",
+     9784.8,
+     13154.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N01W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     33,
+     "o",
+     9028.8,
+     14666.4,
+     "box"
+    ],
+    [
+     23,
+     "iw",
+     9568.8,
+     14666.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     33,
+     "o",
+     9028.8,
+     14666.4,
+     "box"
+    ],
+    [
+     23,
+     "iw",
+     9568.8,
+     14666.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N01E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     43,
+     "o",
+     10000.8,
+     14666.4,
+     "box"
+    ],
+    [
+     23,
+     "ie",
+     9784.8,
+     14666.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     43,
+     "o",
+     10000.8,
+     14666.4,
+     "box"
+    ],
+    [
+     23,
+     "ie",
+     9784.8,
+     14666.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N02W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     55,
+     "o",
+     9028.8,
+     16178.4,
+     "box"
+    ],
+    [
+     45,
+     "iw",
+     9568.8,
+     16178.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     55,
+     "o",
+     9028.8,
+     16178.4,
+     "box"
+    ],
+    [
+     45,
+     "iw",
+     9568.8,
+     16178.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N02E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     65,
+     "o",
+     10000.8,
+     16178.4,
+     "box"
+    ],
+    [
+     45,
+     "ie",
+     9784.8,
+     16178.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     65,
+     "o",
+     10000.8,
+     16178.4,
+     "box"
+    ],
+    [
+     45,
+     "ie",
+     9784.8,
+     16178.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N03W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     77,
+     "o",
+     9028.8,
+     17690.4,
+     "box"
+    ],
+    [
+     67,
+     "iw",
+     9568.8,
+     17690.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     77,
+     "o",
+     9028.8,
+     17690.4,
+     "box"
+    ],
+    [
+     67,
+     "iw",
+     9568.8,
+     17690.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N03E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     87,
+     "o",
+     10000.8,
+     17690.4,
+     "box"
+    ],
+    [
+     67,
+     "ie",
+     9784.8,
+     17690.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     87,
+     "o",
+     10000.8,
+     17690.4,
+     "box"
+    ],
+    [
+     67,
+     "ie",
+     9784.8,
+     17690.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N04W_09",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "old_length_um": 1296.0,
+   "new_length_um": 1296.012,
+   "old_endpoints": [
+    [
+     98,
+     "o",
+     8272.8,
+     19202.4,
+     "box"
+    ],
+    [
+     89,
+     "iw",
+     9568.8,
+     19202.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     98,
+     "o",
+     8272.8,
+     19202.4,
+     "box"
+    ],
+    [
+     89,
+     "iw",
+     9568.8,
+     19202.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N04E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     108,
+     "o",
+     10000.8,
+     19202.4,
+     "box"
+    ],
+    [
+     89,
+     "ie",
+     9784.8,
+     19202.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     108,
+     "o",
+     10000.8,
+     19202.4,
+     "box"
+    ],
+    [
+     89,
+     "ie",
+     9784.8,
+     19202.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N05W_09",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "old_length_um": 1296.0,
+   "new_length_um": 1296.012,
+   "old_endpoints": [
+    [
+     119,
+     "o",
+     8272.8,
+     20714.4,
+     "box"
+    ],
+    [
+     110,
+     "iw",
+     9568.8,
+     20714.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     119,
+     "o",
+     8272.8,
+     20714.4,
+     "box"
+    ],
+    [
+     110,
+     "iw",
+     9568.8,
+     20714.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N05E_09",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "old_length_um": 972.0,
+   "new_length_um": 972.012,
+   "old_endpoints": [
+    [
+     128,
+     "o",
+     10756.8,
+     20714.4,
+     "box"
+    ],
+    [
+     110,
+     "ie",
+     9784.8,
+     20714.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     128,
+     "o",
+     10756.8,
+     20714.4,
+     "box"
+    ],
+    [
+     110,
+     "ie",
+     9784.8,
+     20714.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N06W_09",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "old_length_um": 1296.0,
+   "new_length_um": 1296.012,
+   "old_endpoints": [
+    [
+     139,
+     "o",
+     8272.8,
+     22226.4,
+     "box"
+    ],
+    [
+     130,
+     "iw",
+     9568.8,
+     22226.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     139,
+     "o",
+     8272.8,
+     22226.4,
+     "box"
+    ],
+    [
+     130,
+     "iw",
+     9568.8,
+     22226.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_N06E_09",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "old_length_um": 972.0,
+   "new_length_um": 972.012,
+   "old_endpoints": [
+    [
+     148,
+     "o",
+     10756.8,
+     22226.4,
+     "box"
+    ],
+    [
+     130,
+     "ie",
+     9784.8,
+     22226.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     148,
+     "o",
+     10756.8,
+     22226.4,
+     "box"
+    ],
+    [
+     130,
+     "ie",
+     9784.8,
+     22226.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S00W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     160,
+     "o",
+     9028.8,
+     7970.4,
+     "box"
+    ],
+    [
+     150,
+     "iw",
+     9568.8,
+     7970.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     160,
+     "o",
+     9028.8,
+     7970.4,
+     "box"
+    ],
+    [
+     150,
+     "iw",
+     9568.8,
+     7970.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S00E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     170,
+     "o",
+     10000.8,
+     7970.4,
+     "box"
+    ],
+    [
+     150,
+     "ie",
+     9784.8,
+     7970.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     170,
+     "o",
+     10000.8,
+     7970.4,
+     "box"
+    ],
+    [
+     150,
+     "ie",
+     9784.8,
+     7970.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S01W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     182,
+     "o",
+     9028.8,
+     6458.4,
+     "box"
+    ],
+    [
+     172,
+     "iw",
+     9568.8,
+     6458.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     182,
+     "o",
+     9028.8,
+     6458.4,
+     "box"
+    ],
+    [
+     172,
+     "iw",
+     9568.8,
+     6458.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S01E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     192,
+     "o",
+     10000.8,
+     6458.4,
+     "box"
+    ],
+    [
+     172,
+     "ie",
+     9784.8,
+     6458.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     192,
+     "o",
+     10000.8,
+     6458.4,
+     "box"
+    ],
+    [
+     172,
+     "ie",
+     9784.8,
+     6458.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S02W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     204,
+     "o",
+     9028.8,
+     4946.4,
+     "box"
+    ],
+    [
+     194,
+     "iw",
+     9568.8,
+     4946.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     204,
+     "o",
+     9028.8,
+     4946.4,
+     "box"
+    ],
+    [
+     194,
+     "iw",
+     9568.8,
+     4946.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S02E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     214,
+     "o",
+     10000.8,
+     4946.4,
+     "box"
+    ],
+    [
+     194,
+     "ie",
+     9784.8,
+     4946.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     214,
+     "o",
+     10000.8,
+     4946.4,
+     "box"
+    ],
+    [
+     194,
+     "ie",
+     9784.8,
+     4946.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S03W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     226,
+     "o",
+     9028.8,
+     3434.4,
+     "box"
+    ],
+    [
+     216,
+     "iw",
+     9568.8,
+     3434.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     226,
+     "o",
+     9028.8,
+     3434.4,
+     "box"
+    ],
+    [
+     216,
+     "iw",
+     9568.8,
+     3434.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S03E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     236,
+     "o",
+     10000.8,
+     3434.4,
+     "box"
+    ],
+    [
+     216,
+     "ie",
+     9784.8,
+     3434.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     236,
+     "o",
+     10000.8,
+     3434.4,
+     "box"
+    ],
+    [
+     216,
+     "ie",
+     9784.8,
+     3434.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S04W_10",
+   "old_stations": 1,
+   "new_stations": 1,
+   "delta": 0,
+   "old_length_um": 540.0,
+   "new_length_um": 540.012,
+   "old_endpoints": [
+    [
+     248,
+     "o",
+     9028.8,
+     1922.4,
+     "box"
+    ],
+    [
+     238,
+     "iw",
+     9568.8,
+     1922.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     248,
+     "o",
+     9028.8,
+     1922.4,
+     "box"
+    ],
+    [
+     238,
+     "iw",
+     9568.8,
+     1922.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S04E_10",
+   "old_stations": 0,
+   "new_stations": 0,
+   "delta": 0,
+   "old_length_um": 216.0,
+   "new_length_um": 216.012,
+   "old_endpoints": [
+    [
+     258,
+     "o",
+     10000.8,
+     1922.4,
+     "box"
+    ],
+    [
+     238,
+     "ie",
+     9784.8,
+     1922.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     258,
+     "o",
+     10000.8,
+     1922.4,
+     "box"
+    ],
+    [
+     238,
+     "ie",
+     9784.8,
+     1922.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S05W_09",
+   "old_stations": 3,
+   "new_stations": 3,
+   "delta": 0,
+   "old_length_um": 1296.0,
+   "new_length_um": 1296.012,
+   "old_endpoints": [
+    [
+     269,
+     "o",
+     8272.8,
+     410.4,
+     "box"
+    ],
+    [
+     260,
+     "iw",
+     9568.8,
+     410.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     269,
+     "o",
+     8272.8,
+     410.4,
+     "box"
+    ],
+    [
+     260,
+     "iw",
+     9568.8,
+     410.412,
+     "box"
+    ]
+   ]
+  },
+  {
+   "link": "ch_S05E_09",
+   "old_stations": 2,
+   "new_stations": 2,
+   "delta": 0,
+   "old_length_um": 972.0,
+   "new_length_um": 972.012,
+   "old_endpoints": [
+    [
+     278,
+     "o",
+     10756.8,
+     410.4,
+     "box"
+    ],
+    [
+     260,
+     "ie",
+     9784.8,
+     410.4,
+     "box"
+    ]
+   ],
+   "new_endpoints": [
+    [
+     278,
+     "o",
+     10756.8,
+     410.4,
+     "box"
+    ],
+    [
+     260,
+     "ie",
+     9784.8,
+     410.412,
+     "box"
+    ]
+   ]
+  }
+ ]
+}
