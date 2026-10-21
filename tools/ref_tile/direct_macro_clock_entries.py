@@ -204,22 +204,15 @@ proc ot_ce_direct_rows {corner} {
       set want_library $expected_library; set want_sha $expected_sha
       # The multi-mode route's synthesis SDC read happens before any scene is
       # defined: the unscened default scene binds the LAST-read corner library
-      # (FF after TT). The floorplan-step read of the same SDC can instead land
-      # in an already defined scene (BC/mode ff, QW-SUVM8 vm8h 10-20) while the
-      # CE corner is the setup corner. Neither read carries a timing claim
-      # (pre-CTS raw-entry rows are Liberty-pin references), so pre-CTS only
-      # it is admitted when it is exactly one DECLARED corner library
-      # (digest-checked). Every post-CTS read stays strict in every scene.
-      if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      # (FF after TT). That read carries no timing claim, so pre-CTS only it is
+      # admitted when it is exactly one DECLARED corner library (digest-checked).
+      # Every defined scene and every post-CTS read stays strict.
+      if {[dict get $binding scene] eq "default" && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
           [dict get $actual library] ne $expected_library} {
         dict for {c lib} $libraries {
           if {[lindex $lib 0] eq [dict get $actual library]} { lassign $lib want_library want_sha }
         }
-        if {[dict get $binding scene] eq "default"} {
-          puts "OT_DIRECT_MACRO PRE_CTS_DEFAULT_SCENE $cellname $mm=$want_library (declared corner library, no timing claim)"
-        } else {
-          puts "OT_DIRECT_MACRO PRE_CTS_SCENE [dict get $binding scene] $cellname $mm=$want_library (declared corner library, no timing claim)"
-        }
+        puts "OT_DIRECT_MACRO PRE_CTS_DEFAULT_SCENE $cellname $mm=$want_library (declared corner library, no timing claim)"
       }
       if {[dict get $actual library] ne $want_library || [dict get $actual cell] ne $master ||
           [dict get $actual clock_pin] ne $libpin} {

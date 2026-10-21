@@ -31,7 +31,7 @@
    },
    {
     "name": "cxport_split_lockstep",
-    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/pos 2 0 0 0",
+    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_lockstep.sh && bash tools/hbm_static/.vl_cxport_split_lockstep.sh {RUN}/bench/pos 2 0 0 0",
     "expect": "pass",
     "pass_regex": "CXPORT_SPLIT PASS",
     "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q2_pos.log",
@@ -44,7 +44,7 @@
    },
    {
     "name": "cxport_split_lockstep_q0",
-    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/q0 0 1 0 0",
+    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_lockstep_q0.sh && bash tools/hbm_static/.vl_cxport_split_lockstep_q0.sh {RUN}/bench/q0 0 1 0 0",
     "expect": "pass",
     "pass_regex": "CXPORT_SPLIT PASS",
     "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q0_pos.log",
@@ -57,7 +57,7 @@
    },
    {
     "name": "cxport_split_mut1",
-    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut1 2 0 1 1",
+    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_mut1.sh && bash tools/hbm_static/.vl_cxport_split_mut1.sh {RUN}/bench/mut1 2 0 1 1",
     "expect": "fail",
     "fail_regex": "CXPORT_SPLIT FAIL",
     "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut1.log",
@@ -69,7 +69,7 @@
    },
    {
     "name": "cxport_split_mut4",
-    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut4 2 0 4 1",
+    "cmd": "sed 's/ -GOBR=$obr//' tools/hbm_static/su_cxport_split_vl_run.sh > tools/hbm_static/.vl_cxport_split_mut4.sh && bash tools/hbm_static/.vl_cxport_split_mut4.sh {RUN}/bench/mut4 2 0 4 1",
     "expect": "fail",
     "fail_regex": "CXPORT_SPLIT FAIL",
     "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut4.log",
@@ -203,6 +203,6 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "what": "hbm_su_cx_ijq_1019t-t1-1a33555b8 ended NEEDS_RTL 10-21 before route: bench_cxport_split_lockstep rc=1, Verilator 5.050 '%Error: Parameters from the command line were not found in the design: OBR' (run script from main passes -GOBR; this branch's tb/split predate OBR). Earlier: route hbm_su_cx_ijq_1018w-rw-136f736ca (w kit, 136f736ca) ended NEEDS_RTL 10-19 08:39: TT -73.23 ps / FF +25.2 / DRC 0; worst path ioh[13] -> ob0[99], 77 violating D pins (one-cycle 64-bit onehot x 256 loads into a 16-way OR gather). No closed ij_q view exists.",
-  "why": "bench-harness only: su_cxport_split_vl_run.sh passes -GOBR only when nonzero (5965a90d9); RTL, kit and gate view unchanged; all benches re-run on 5.050 with committed witnesses. Structural fix stands: structural fix per the SAFE-DESIGN checklist: SAFE_GATHER=1 two-stage gather on existing edges with 512 kept onehot copies (<=32 loads), registered per-copy control, one-hot control ring; same ports/outline/latency."
+  "why": "bench-harness only: the spec's split benches drop -GOBR (sed of the run script; this branch's tb/split predate OBR); RTL, kit and gate view unchanged; all benches re-run on 5.050 with committed witnesses. Structural fix stands: structural fix per the SAFE-DESIGN checklist: SAFE_GATHER=1 two-stage gather on existing edges with 512 kept onehot copies (<=32 loads), registered per-copy control, one-hot control ring; same ports/outline/latency."
  }
 }

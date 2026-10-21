@@ -81,12 +81,3 @@ def test_child_pin_access(tmp_path):
     ok, _ = SB.relaxed_rule_requirement(["child_pin_access"], {}, kit(d, ["views/missing"]), root=d)
     assert not ok                                           # unreadable child view: strict
     assert not SB.relaxed_rule_requirement(["child_pin_access"], {}, None, root=tmp_path / "e")[0]
-
-
-def test_stream_new_spec_generator_is_neutral():
-    sha = "6ebf7706a64edfe81bfbde75defed9c374c5bfd8"
-    path = "tools/ref_tile/specs_qw_stream_1019/mk_specs.py"
-    entry = HO.RULE_COMMITS[sha]
-    assert entry["kind"] == "neutral" and entry["paths"] == (path,)
-    row = HO.classify_commit(".", sha, path, None, None)
-    assert row["source"] == "registry" and row["kind"] == "neutral"

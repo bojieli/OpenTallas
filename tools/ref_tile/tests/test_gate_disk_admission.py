@@ -99,7 +99,7 @@ class RemoteAdmission(unittest.TestCase):
             stack.enter_context(patch.object(PG, 'absent_working_inputs', return_value=[]))
             stack.enter_context(patch.object(PG, 'referenced_closure', return_value=(set(), {}, set())))
             stack.enter_context(patch.object(PG.SB, 'git_head', return_value='abc'))
-            stack.enter_context(patch.object(PG.HO, 'capture_plan', return_value=({'files': [], 'origin_main': None}, {})))
+            stack.enter_context(patch.object(PG.HO, 'capture_plan', return_value=({'files': []}, {})))
             stack.enter_context(patch.object(PG, 'ship_tar', return_value=archive()))
             stack.enter_context(patch.object(PG.SB, 'snapshot', return_value={
                 'commit': 'abc', 'archive_sha256': 'sha', 'files': []} ))

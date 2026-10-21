@@ -12,25 +12,17 @@ CHANNEL_UM = 20.0
 APPROVERS = ("ROOT", "codex coordinator")
 
 
-def lattice_band_errors(s, W, H, blocks, std_area, *, planning=False, root=None):
+def lattice_band_errors(s, W, H, blocks, std_area):
     q = (s.get("fill_reason") or {}).get("lattice_channel_bound")
     errors = []
     if not isinstance(q, dict):
         return ["missing lattice_channel_bound object"]
     if not str(q.get("why", "")).strip() or q.get("approved_by") not in APPROVERS:
         errors.append("missing coordinator approval/reason")
-    # This call site is opt-in for sizing only. The placed checker below calls
-    # the default mode with its actual band cell population, never this budget.
-    if planning and ("planning_birth_budget" in s or "planning_std_area_um2" in s):
-        try:
-            from planning_birth_budget import planning_area
-            std_area = planning_area(s, std_area, root)
-        except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
-            return errors + ["invalid planning birth budget: " + str(exc)]
     try:
         lo, hi = map(float, q["std_band_y_um"])
         density = std_area / ((W - 2 * CORE_MARGIN) * (hi - lo))
-        if not (CORE_MARGIN - 1e-6 <= lo < hi <= H - CORE_MARGIN + 1e-6 and 0.4 <= density <= 0.6):
+        if not (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6):
             errors.append("measured std-band density outside 40..60% or invalid band")
     except (ValueError, TypeError, KeyError, ZeroDivisionError):
         return errors + ["invalid standard-cell band"]

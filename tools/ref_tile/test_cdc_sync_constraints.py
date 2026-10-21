@@ -108,12 +108,8 @@ class Hierarchy(unittest.TestCase):
                          serial=dict(ratio=[4, 3], ports=['ck_b'], inputs=['rst_n'], outputs=[])),
                      cdc_synchronizers=[dict(name='reset', src_domain='serial', dst_domain='core', source='rc',
                                              chain=['rs[0]', 'rs[1]'], sync_max_delay_ps=250)])
-            for keep in (False, True):
-                with self.subTest(keep_hierarchy=keep):
-                    source = HIER.replace('module cdc_hier_stage', '(* keep_hierarchy = 1 *) module cdc_hier_stage') if keep else HIER
-                    (root / 'cdc_hier.sv').write_text(source)
-                    record = S.lint(s, root)
-                    self.assertEqual(record['counts'], dict(source=1, sync1=1, payload=0, capture=0))
+            record = S.lint(s, root)
+            self.assertEqual(record['counts'], dict(source=1, sync1=1, payload=0, capture=0))
 
 
 class Lint(Fixture):

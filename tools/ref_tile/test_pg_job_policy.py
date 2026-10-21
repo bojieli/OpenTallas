@@ -34,7 +34,7 @@ def capture(tree, strict=False):
 
 
 def helpers(tree):
-    for rel in set(HO.helper_paths(HO.HELPERS + HO.PG_HELPERS)) | set(G.SHIP_HELPERS):
+    for rel in HO.helper_paths(HO.HELPERS + HO.PG_HELPERS):
         p = tree / rel
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text('frozen input ' + rel + '\n')

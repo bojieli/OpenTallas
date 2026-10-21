@@ -84,14 +84,7 @@ def input_files(spec, root):
         if isinstance(item, dict) and isinstance(item.get('view'), str):
             view = root / item['view']
             files += sorted(str(p.relative_to(root)) for p in view.glob(f'{view.name}_*.lib'))
-    dual=(spec.get('reviewed_gray_fifo_extensions') or {}).get('dual_clock_srams', [])
-    if dual:
-        files.append('physical/common_flow/ot_keep_regs.tcl')
-        for item in spec.get('macros', []):
-            if Path(item['view']).name in dual:
-                view=Path(item['view'])
-                files += [str(view/(view.name+suffix)) for suffix in ('.v','_bb.v')]
-    return list(dict.fromkeys(files))
+    return files
 
 
 def yosys_version(yosys):
