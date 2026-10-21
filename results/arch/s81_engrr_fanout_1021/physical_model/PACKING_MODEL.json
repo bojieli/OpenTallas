@@ -1,0 +1,689 @@
+{
+  "status": "MODEL_ONLY_NOT_ADOPTED",
+  "source_rtl": "33ec02b71",
+  "native_snapshot": "166b99363",
+  "bbox_um": [
+    648,
+    691.2
+  ],
+  "external_clock_ports": [
+    "ck"
+  ],
+  "macro_count": 15,
+  "macro_placements": [
+    {
+      "hierarchy": "u_c.u_lkp.u_e.u_row_e",
+      "origin": [
+        43.2,
+        43.2
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_lkp.u_e.u_row_o",
+      "origin": [
+        43.2,
+        129.6
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_lkp.u_e.u_row_a",
+      "origin": [
+        172.8,
+        43.2
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[0].rom",
+      "origin": [
+        43.2,
+        259.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[1].rom",
+      "origin": [
+        129.60000000000002,
+        259.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[2].rom",
+      "origin": [
+        43.2,
+        367.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[3].rom",
+      "origin": [
+        129.60000000000002,
+        367.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[4].rom",
+      "origin": [
+        43.2,
+        475.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[5].rom",
+      "origin": [
+        129.60000000000002,
+        475.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[6].rom",
+      "origin": [
+        43.2,
+        583.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_map.m[7].rom",
+      "origin": [
+        129.60000000000002,
+        583.2
+      ],
+      "size": [
+        38.016,
+        62.91
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_win.u_h",
+      "origin": [
+        216,
+        367.2
+      ],
+      "size": [
+        174.096,
+        29.7
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_xq.u_wl",
+      "origin": [
+        432,
+        216
+      ],
+      "size": [
+        171.288,
+        77.76
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_xq.u_b0",
+      "origin": [
+        432,
+        345.6
+      ],
+      "size": [
+        171.288,
+        77.76
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    },
+    {
+      "hierarchy": "u_c.u_xq.u_b1",
+      "origin": [
+        432,
+        475.2
+      ],
+      "size": [
+        171.288,
+        77.76
+      ],
+      "orientation": "R0",
+      "halo": 5.4
+    }
+  ],
+  "proposed_regions": {
+    "shared_cur_ia_ib": [
+      414.72,
+      518.4,
+      426.6,
+      561.6
+    ],
+    "north_output": [
+      388.8,
+      669.6,
+      604.8,
+      691.2
+    ],
+    "east_output": [
+      626.4,
+      475.2,
+      648,
+      648
+    ],
+    "north_control": [
+      388.8,
+      626.4,
+      604.8,
+      648
+    ],
+    "east_control": [
+      583.2,
+      475.2,
+      604.8,
+      648
+    ],
+    "main_control": [
+      414.72,
+      453.6,
+      426.6,
+      475.2
+    ],
+    "lookup_output": [
+      302.4,
+      216,
+      345.6,
+      237.6
+    ],
+    "id_raw_capture": [
+      345.6,
+      216,
+      388.8,
+      237.6
+    ],
+    "wl_raw_landing": [
+      410.4,
+      302.4,
+      426.6,
+      345.6
+    ],
+    "aq_region": [
+      345.6,
+      259.2,
+      410.4,
+      475.2
+    ],
+    "paired_hold": [
+      388.8,
+      432,
+      410.4,
+      475.2
+    ],
+    "fks_capture": [
+      2.16,
+      432,
+      21.6,
+      475.2
+    ],
+    "map_selector": [
+      194.4,
+      432,
+      216,
+      453.6
+    ],
+    "window_ids": [
+      194.4,
+      259.2,
+      216,
+      280.8
+    ],
+    "history_capture": [
+      216,
+      302.4,
+      259.2,
+      324
+    ],
+    "head_records": [
+      172.8,
+      108,
+      216,
+      129.6
+    ],
+    "lookup_hq": [
+      172.8,
+      2.16,
+      345.6,
+      43.2
+    ],
+    "chain_south": [
+      86.4,
+      2.16,
+      259.2,
+      21.6
+    ],
+    "lookup_hrd": [
+      172.8,
+      43.2,
+      388.8,
+      86.4
+    ],
+    "status": [
+      302.4,
+      259.2,
+      324,
+      280.8
+    ],
+    "lookup_fault": [
+      194.4,
+      216,
+      216,
+      237.6
+    ],
+    "window_fault": [
+      194.4,
+      432,
+      216,
+      453.6
+    ]
+  },
+  "sampled_registered_leg_bounds": [
+    {
+      "from": [
+        432,
+        345.6,
+        603.288,
+        423.36
+      ],
+      "to": "shared_cur_ia_ib",
+      "conservative_corner_distance_um": 404.568,
+      "within405": true
+    },
+    {
+      "from": [
+        432,
+        475.2,
+        603.288,
+        552.96
+      ],
+      "to": "shared_cur_ia_ib",
+      "conservative_corner_distance_um": 274.968,
+      "within405": true
+    },
+    {
+      "from": "shared_cur_ia_ib",
+      "to": "north_output",
+      "conservative_corner_distance_um": 362.88,
+      "within405": true
+    },
+    {
+      "from": "shared_cur_ia_ib",
+      "to": "east_output",
+      "conservative_corner_distance_um": 362.88,
+      "within405": true
+    },
+    {
+      "from": "shared_cur_ia_ib",
+      "to": "north_control",
+      "conservative_corner_distance_um": 319.68,
+      "within405": true
+    },
+    {
+      "from": "shared_cur_ia_ib",
+      "to": "east_control",
+      "conservative_corner_distance_um": 319.68,
+      "within405": true
+    },
+    {
+      "from": "lookup_output",
+      "to": "id_raw_capture",
+      "conservative_corner_distance_um": 108.0,
+      "within405": true
+    },
+    {
+      "from": "id_raw_capture",
+      "to": [
+        432,
+        216,
+        603.288,
+        293.76
+      ],
+      "conservative_corner_distance_um": 335.448,
+      "within405": true
+    },
+    {
+      "from": "wl_raw_landing",
+      "to": [
+        432,
+        216,
+        603.288,
+        293.76
+      ],
+      "conservative_corner_distance_um": 322.488,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        43.2,
+        259.2,
+        81.21600000000001,
+        322.11
+      ],
+      "conservative_corner_distance_um": 295.056,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        43.2,
+        259.2,
+        81.21600000000001,
+        322.11
+      ],
+      "conservative_corner_distance_um": 367.2,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        129.60000000000002,
+        259.2,
+        167.616,
+        322.11
+      ],
+      "conservative_corner_distance_um": 381.456,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        129.60000000000002,
+        259.2,
+        167.616,
+        322.11
+      ],
+      "conservative_corner_distance_um": 280.8,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        43.2,
+        367.2,
+        81.21600000000001,
+        430.11
+      ],
+      "conservative_corner_distance_um": 187.056,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        43.2,
+        367.2,
+        81.21600000000001,
+        430.11
+      ],
+      "conservative_corner_distance_um": 259.2,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        129.60000000000002,
+        367.2,
+        167.616,
+        430.11
+      ],
+      "conservative_corner_distance_um": 273.456,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        129.60000000000002,
+        367.2,
+        167.616,
+        430.11
+      ],
+      "conservative_corner_distance_um": 172.8,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        43.2,
+        475.2,
+        81.21600000000001,
+        538.11
+      ],
+      "conservative_corner_distance_um": 185.166,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        43.2,
+        475.2,
+        81.21600000000001,
+        538.11
+      ],
+      "conservative_corner_distance_um": 278.91,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        129.60000000000002,
+        475.2,
+        167.616,
+        538.11
+      ],
+      "conservative_corner_distance_um": 271.566,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        129.60000000000002,
+        475.2,
+        167.616,
+        538.11
+      ],
+      "conservative_corner_distance_um": 192.51,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        43.2,
+        583.2,
+        81.21600000000001,
+        646.11
+      ],
+      "conservative_corner_distance_um": 293.166,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        43.2,
+        583.2,
+        81.21600000000001,
+        646.11
+      ],
+      "conservative_corner_distance_um": 386.91,
+      "within405": true
+    },
+    {
+      "from": "fks_capture",
+      "to": [
+        129.60000000000002,
+        583.2,
+        167.616,
+        646.11
+      ],
+      "conservative_corner_distance_um": 379.566,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": [
+        129.60000000000002,
+        583.2,
+        167.616,
+        646.11
+      ],
+      "conservative_corner_distance_um": 300.51,
+      "within405": true
+    },
+    {
+      "from": "map_selector",
+      "to": "window_ids",
+      "conservative_corner_distance_um": 216.0,
+      "within405": true
+    },
+    {
+      "from": "history_capture",
+      "to": "window_ids",
+      "conservative_corner_distance_um": 129.6,
+      "within405": true
+    },
+    {
+      "from": "lookup_hq",
+      "to": "head_records",
+      "conservative_corner_distance_um": 300.24,
+      "within405": true
+    },
+    {
+      "from": "chain_south",
+      "to": "lookup_hrd",
+      "conservative_corner_distance_um": 386.64,
+      "within405": true
+    },
+    {
+      "from": "lookup_fault",
+      "to": "status",
+      "conservative_corner_distance_um": 194.4,
+      "within405": true
+    },
+    {
+      "from": "window_fault",
+      "to": "status",
+      "conservative_corner_distance_um": 324.0,
+      "within405": true
+    },
+    {
+      "from": "main_control",
+      "to": "north_control",
+      "conservative_corner_distance_um": 384.48,
+      "within405": true
+    },
+    {
+      "from": "main_control",
+      "to": "east_control",
+      "conservative_corner_distance_um": 384.48,
+      "within405": true
+    }
+  ],
+  "coverage": "Selected critical legs only. This is not exhaustive mapped registered-leg, routing, DPL, row-capacity or clock proof.",
+  "shared_midstation": {
+    "cur_bits": 539,
+    "ia_bits": 276,
+    "ib_bits": 276,
+    "total_ff": 1091,
+    "box_area_um2": 513.2160000000003,
+    "diagnostic_DFF_area_um2": 318.1356,
+    "diagnostic_FF_only_fill": 0.6198863636363632,
+    "capacity_status": "UNQUALIFIED until actual mapped cells, legal rows, reset and control cells are fenced and nonempty groups checked"
+  },
+  "ports": {
+    "N": [
+      "vi_n",
+      "vo_n"
+    ],
+    "E": [
+      "vi_s",
+      "vo_s"
+    ],
+    "S": [
+      "pci",
+      "rco"
+    ],
+    "W": [
+      "cfg",
+      "fks",
+      "st",
+      "ck",
+      "rst_n"
+    ]
+  },
+  "parent_face_grant": "PENDING die_chain/G9; Eface is a new interface placement",
+  "ages": "Measured zero added cycles: three existing positive cases, all578 recorded output/latency records per case identical to2358.",
+  "clock_rule": ">15000 sinks or >300ps insertion guidance only. Actual TT/FF pin and linked-child spread <=80ps, coverage, reset removal and hold required.",
+  "remaining": [
+    "Authoritative nativeR5 must pass, count15 actual macros and inspect mapped area.",
+    "Enumerate every mapped sequential-to-sequential/macro/port leg, not just selected pairs.",
+    "Resolve exact hierarchy fences/nonempty groups and actual row capacity; 404.568um midpoint leg leaves only0.432um model margin.",
+    "Model all reset leaf/consumer local clock cohorts and require actual CTS/removal results.",
+    "G9 must grant actual new bbox/faces and prove parent landing/reach/STA; no oldslot alias.",
+    "Only then source a physical kit and request gate review; no physical launch currently authorized by this model alone."
+  ],
+  "macro_halo_overlap_pairs": [],
+  "macro_halo_overlap_model_pass": true
+}
