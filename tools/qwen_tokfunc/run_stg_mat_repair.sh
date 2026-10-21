@@ -17,16 +17,30 @@ job() {
   ln -s "$R/bin/Vtb" "$W/$name/obj_n12/Vtb"
   python3 "$bench" --work "$W/$name" "$@" > "$W/$name/bench.out" 2>&1
 }
-job calibrate --calibrate
-grep -q '^CALIBRATE OK' "$W/calibrate/bench.out"
-ages=$W/calibrate/stn_ages.json
-for op in qkv gu od; do
-  job "$op" --run "$op" --ages "$ages" --fixture "$R/fx/L0_mat_$op.npz"
-done
-if job drop_last_k --run qkv --ages "$ages" --fixture "$R/fx/L0_mat_qkv.npz" --mutant drop_last_k; then
-  echo 'UNEXPECTED PASS: missing final k block'
-  exit 1
+mode=${2:-mat}
+if [ "$mode" = lm ]; then
+  ages=$R/ages.json  # exact calibrated receipt from the same source-pinned Vtb
+  test -s "$ages"
+  job lm --run lm --ages "$ages"
+  if job amax_local --run lm --ages "$ages" --mutant amax_local; then
+    echo 'UNEXPECTED PASS: local AMAX index instead of global owner index'
+    exit 1
+  fi
+  grep -q '^DV_LOWER_MAT lm FAIL' "$W/amax_local/bench.out"
+  python3 "$T/tools/qwen_tokfunc/collect_mat_repair.py" "$R" --lm-only
+else
+  job calibrate --calibrate
+  grep -q '^CALIBRATE OK' "$W/calibrate/bench.out"
+  ages=$W/calibrate/stn_ages.json
+  for op in qkv gu od; do
+    job "$op" --run "$op" --ages "$ages" --fixture "$R/fx/L0_mat_$op.npz"
+  done
+  if job drop_last_k --run qkv --ages "$ages" --fixture "$R/fx/L0_mat_qkv.npz" --mutant drop_last_k; then
+    echo 'UNEXPECTED PASS: missing final k block'
+    exit 1
+  fi
+  grep -q '^DV_LOWER_MAT qkv FAIL' "$W/drop_last_k/bench.out"
+  python3 "$T/tools/qwen_tokfunc/collect_mat_repair.py" "$R"
 fi
-grep -q '^DV_LOWER_MAT qkv FAIL' "$W/drop_last_k/bench.out"
 sha256sum "$R/bin/Vtb" "$T/tools/qwen_layerbench/dv_lower_mat.py" "$bench" > "$W/source.sha256"
-echo 'STG MAT REPAIR: qkv/gu/od PASS and missing-last-k FAIL; STN/VM cut only, no upstream MAC/full-token claim'
+echo 'STG MAT REPAIR completed; scoped STN/VM/AMAX cut, no upstream MAC/full-token claim'
