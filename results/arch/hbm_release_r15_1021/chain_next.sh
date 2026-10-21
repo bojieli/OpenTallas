@@ -252,7 +252,11 @@ assert not missing, ('S2 incomplete',missing)
 print('R15_REUSE_COMPLETED_S2 exact source/params; original a4843ffdd receipts retained')
 PYS2
 fi
-ssh $HOST "mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q && cp -al $R11B/p/views $B/p/views" || { echo R14_INIT_REMOTE_FAIL; exit 9; }
+# The old r11 directory is not present on every eligible staging host. Use the exact
+# recovered, completed r14 P seed on EP5; this is a view seed, never a closure claim.
+P_SEED=/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/p/views
+P_SEED_CONTRACT_SHA=45c49be9583eac6d5548916d3ffe79a7deb71875021934bd818d0e62604e31f8
+ssh $HOST "test \"\$(sha256sum $P_SEED/contract.json | cut -d' ' -f1)\" = $P_SEED_CONTRACT_SHA && test -f $P_SEED/synth/ot_hbm_su_programme_pslice_c5/meta.json && mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q && cp -al $P_SEED $B/p/views" || { echo R15_P_SEED_STAGE_FAIL; exit 9; }
 views_to $B/a/views $A/vplan_a $A/net/pre_relay_r14.json || { echo R14_INIT_AVIEWS_FAIL; exit 9; }
 (cat $A/src_paths_a.txt; echo tools/hbm_die_v16/d4g_layers/l26_closed_views.py; echo physical/ref_tile/hdie_col_idx256r_b; echo physical/ref_tile/hdie_pc_ctrl_cfg_h9c) | sort -u > $A/src_paths_init.txt
 git -C $W archive HEAD $(cat $A/src_paths_init.txt) results/arch/hbm_unread_gen2e3_1019 | ssh $HOST "rm -rf $B/src_$H && mkdir -p $B/src_$H && tar -x -C $B/src_$H && ln -sfn $B/src_$H $B/src \
