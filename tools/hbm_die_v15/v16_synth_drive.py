@@ -11,7 +11,8 @@ PREFER below (the variant whose parameters the parent instantiates).  Every roun
 VIEWS_DIR/drive/<cell>.json; logs in VIEWS_DIR/drive/<cell>.r<k>.log.  Nothing is stubbed: a module that cannot be
 resolved fails the cell (it is then an excluded region of the die case, with its owner).
 """
-import argparse, json, re, subprocess, sys, threading
+import argparse, json, re, shutil, subprocess, sys, threading, time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -53,8 +54,8 @@ def run(cell, row, a, idx, lock, summary):
             return ''
         pf = f'v16w/prefer_{cell}.txt'
         (Path(a.views) / 'wrap' / f'prefer_{cell}.txt').write_text('\n'.join(prefs) + '\n')
-        for h in HOSTS.values():
-            subprocess.run(['scp', '-q', str(Path(a.views) / 'wrap' / f'prefer_{cell}.txt'), f'{h}:{S}/{pf}'])
+        for h in sorted(a.ready_hosts):
+            subprocess.run(['scp', '-q', '-o', 'ConnectTimeout=8', str(Path(a.views) / 'wrap' / f'prefer_{cell}.txt'), f'{h}:{S}/{pf}'])
         return f' --prefer {pf}'
     for k in range(8):
         prefer = push_prefer()
@@ -64,8 +65,8 @@ def run(cell, row, a, idx, lock, summary):
                f'MEMG={mem} bash tools/hbm_die_v15/synth_etm.sh . {out} {cell}')
         log = drive / f'{cell}.r{k}.log'
         with open(log, 'w') as f:
-            rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--dir', S,
-                                 '--priority', 'die', '--', 'bash', '-c', cmd],
+            rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--priority', 'die', '--dir', S,
+                                 '--', 'bash', '-c', cmd],
                                 stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL).returncode
         txt = log.read_text()
         hm = re.search(r'^HOST (\S+)', txt, re.M)
@@ -109,22 +110,80 @@ def run(cell, row, a, idx, lock, summary):
         print(cell, 'OK' if rec.get('ok') else 'FAIL', rec['rounds'][-1].get('errors', [])[:2], flush=True)
 
 
+def remote_state(host, remote_root, commit):
+    """Collect existing outputs and admitted commands before dispatching work."""
+    script = r'''
+import json, pathlib, re, subprocess, sys
+root=pathlib.Path(sys.argv[1]); src=root/('src_'+sys.argv[2])
+if not src.is_dir():
+ print(json.dumps(dict(ready=False, complete=[], running=[]))); raise SystemExit
+complete=[]
+for d in (root/'syn').glob('*'):
+ if d.is_dir() and any(d.glob('*_synth_tt.lib')) and any(d.glob('*_synth_ff.lib')):
+  log=d/'etm.log'
+  if log.is_file() and 'OT_ETM_DONE_ff' in log.read_text(errors='replace'):
+   complete.append(d.name)
+running=set()
+for line in subprocess.check_output(['ps','-eo','args='],text=True).splitlines():
+ if str(root/'syn')+'/' in line:
+  running.update(re.findall(re.escape(str(root/'syn')+'/')+r'([^/\s;]+)',line))
+print(json.dumps(dict(ready=True,complete=complete,running=sorted(running))))
+'''
+    p = subprocess.run(['ssh', '-o', 'ConnectTimeout=8', host,
+                        'python3 - ' + remote_root + ' ' + commit],
+                       input=script, capture_output=True, text=True)
+    if p.returncode:
+        raise RuntimeError(f'{host} existing-job collection failed: {p.stderr[-300:]}')
+    return json.loads(p.stdout.splitlines()[-1])
+
+
 def main():
+    global ROOT
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True)
     ap.add_argument('--commit', required=True)
     ap.add_argument('--remote-root', default='/srv/opentallas-scratch/claude/hdie-v16case')
+    ap.add_argument('--source-root', type=Path, help='immutable source checkout when dispatcher code lives separately')
+    ap.add_argument('--workers', type=int, choices=range(1, 9), default=8)
+    ap.add_argument('--resume-remote', action='store_true', help='collect and preserve admitted builds and completed objects')
     ap.add_argument('cells', nargs='+')
     a = ap.parse_args()
+    if a.source_root:
+        ROOT = a.source_root.resolve()
     (Path(a.views) / 'drive').mkdir(exist_ok=True)
     rows = {r.split('\t')[0]: r.rstrip('\n').split('\t') for r in open(Path(a.views) / 'jobs.tsv')}
     idx = module_index(a.commit)
-    lock, summary, th = threading.Lock(), {}, []
-    for c in a.cells:
-        t = threading.Thread(target=run, args=(c, rows[c], a, idx, lock, summary))
-        t.start(); th.append(t)
-    for t in th:
-        t.join()
+    lock, summary = threading.Lock(), {}
+    pending = set(a.cells)
+    hosts = sorted(set(HOSTS.values()) - {'ot-epyc4'})
+    while pending:
+        states = {}
+        with ThreadPoolExecutor(max_workers=a.workers) as pool:
+            futures = {pool.submit(remote_state, h, a.remote_root, a.commit): h for h in hosts}
+            for future in as_completed(futures):
+                states[futures[future]] = future.result()
+        a.ready_hosts = {h for h, state in states.items() if state['ready']}
+        if not a.ready_hosts:
+            raise RuntimeError('no prepared source host; no new dispatch')
+        complete, running = {}, {}
+        for h, state in states.items():
+            complete.update({c: h for c in state['complete']})
+            running.update({c: h for c in state['running']})
+        if a.resume_remote:
+            for c in sorted(pending & complete.keys()):
+                summary[c] = True
+                print(c, 'REUSE_REMOTE', complete[c], flush=True)
+            pending -= complete.keys()
+        busy = pending & running.keys()
+        free = sorted(pending - busy)
+        print('DISPATCH', 'workers', a.workers, 'completed', len(summary), 'admitted_running', len(busy), 'ready', len(free), flush=True)
+        with ThreadPoolExecutor(max_workers=a.workers) as pool:
+            futures = [pool.submit(run, c, rows[c], a, idx, lock, summary) for c in free]
+            for future in as_completed(futures):
+                future.result()
+        pending -= set(free)
+        if pending:
+            time.sleep(30)
     print('DRIVE_DONE', json.dumps(summary))
 
 
