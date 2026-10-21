@@ -638,8 +638,15 @@ module ot_s81dv_xfin_fp_mul_n32 #(
     // ---- normalise (a subnormal's significand {frac, 0} << clz23; mul_lat's a_raw << (1 + clz23)), powers ---
     wire a_s = (o0_ae == 8'd0), b_s = (o0_be == 8'd0);
     wire [23:0] a_n,b_n,a_shift,b_shift;
-    ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_na(.clk(clk),.x({o0_af,1'b0}),.raw_count(a_cz[4:0]),.y(a_shift));
-    ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_nb(.clk(clk),.x({o0_bf,1'b0}),.raw_count(b_cz[4:0]),.y(b_shift));
+    if (K0) begin:g_norm_captured
+      ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_na(.clk(clk),.x({o0_af,1'b0}),.raw_count(a_cz[4:0]),.y(a_shift));
+      ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_nb(.clk(clk),.x({o0_bf,1'b0}),.raw_count(b_cz[4:0]),.y(b_shift));
+    end else begin:g_norm_comb
+      for(genvar g=0;g<6;g=g+1)begin:g_byte
+        ot_s81dv_xfin_fp_norm4 #(.LO(4*g)) u_a(.frac(o0_af),.y(a_shift[4*g+:4]));
+        ot_s81dv_xfin_fp_norm4 #(.LO(4*g)) u_b(.frac(o0_bf),.y(b_shift[4*g+:4]));
+      end
+    end
     wire[23:0] a_normal={1'b1,o0_af},b_normal={1'b1,o0_bf};
     for(genvar g=0;g<6;g=g+1)begin:g_norm
       ot_s81dv_xfin_fp_norm_pick u_a(.e(o0_ae),.s(a_shift[4*g+:4]),.n(a_normal[4*g+:4]),.y(a_n[4*g+:4]));
@@ -926,4 +933,19 @@ endmodule
 
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_clear(input wire byp,zero,over,nz,output wire clear);
  assign clear=byp||zero||over||!nz;
+endmodule
+
+// LAT5 has no K0 register: decode the leading-one locally for four real
+// normalized payload consumers rather than broadcast a five-bit shift count.
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_norm4 #(parameter integer LO=0)(input wire[22:0] frac,output reg[3:0] y);
+ integer k; reg[23:0] shifted;
+ always @* begin
+   y=4'd0; shifted=24'd0;
+   for(k=0;k<23;k=k+1)begin
+     if(frac[k])begin
+       shifted={frac,1'b0} << (22-k);
+       y=shifted[LO+:4];
+     end
+   end
+ end
 endmodule
