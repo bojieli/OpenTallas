@@ -1,0 +1,178 @@
+tt_setup
+  other|fwd                                n=      3 neg=      2 wns=  -5642.7 tns=     -6776.5 fwd_r_f_6R13/ENA
+  reset|station                            n=   8412 neg=      6 wns=  -3725.4 tns=     -7256.1 st_rsg_rs_64_42_cl6N_65_53_0/i
+  block_in|s                               n=    276 neg=    276 wns=   -351.9 tns=    -67115.9 u_s_1S/vi[253]
+  xtier|relay                              n=  12359 neg=    276 wns=   -222.4 tns=    -38374.1 st_tvN_bk_col_0/i[250]
+  block_in|rsv                             n=   2248 neg=    447 wns=    -86.6 tns=     -8536.7 u_rsv_02/r_tag[29]
+  landing|unit                             n=   3237 neg=      0 wns=     98.3 tns=         0.0 ld_mu_0S/i[116]
+  block_in|phy                             n=  10944 neg=      0 wns=    128.9 tns=         0.0 u_phy_hbm/k_wdata[764]
+  unit|relay                               n=  48818 neg=      0 wns=    134.1 tns=         0.0 st_mu_0S_72/i[76]
+  landing|ret                              n=   3563 neg=      0 wns=    138.9 tns=         0.0 ld_r_f_6R11/rs
+  landing|attn                             n=   1184 neg=      0 wns=    149.2 tns=         0.0 ld_q_E_l1/i[116]
+  landing|xtier                            n=   4687 neg=      0 wns=    149.4 tns=         0.0 ld_tvN_s_7S/i[73]
+  hbm|relay                                n=   1888 neg=      0 wns=    161.1 tns=         0.0 st_hrq_01_4/i[102]
+  landing|hbm                              n=   2098 neg=      0 wns=    186.9 tns=         0.0 ld_hrq_05/i[224]
+  ret|relay                                n=   9891 neg=      0 wns=    194.3 tns=         0.0 st_r_f_4L10_6/i[4]
+  x_frame|relay                            n=  19195 neg=      0 wns=    210.1 tns=         0.0 st_x_f_1R10_l0_6/i[52]
+  landing|xring                            n=  19895 neg=      0 wns=    218.3 tns=         0.0 ld_xrE_6S_l2/i[34]
+  xring|relay                              n=  59732 neg=      0 wns=    225.3 tns=         0.0 st_xrE_2N_l1_6/i[89]
+  landing|coll                             n=    701 neg=      0 wns=    238.6 tns=         0.0 ld_lt_lk_EN0/i[496]
+tt_hold
+  landing|hbm                              n=     10 neg=     10 wns=  -2025.0 tns=    -12693.5 ld_hrq_01/rs
+  block_in|bk                              n=    553 neg=    553 wns=   -303.6 tns=    -94795.1 u_bk_col/vi_s[229]
+  block_in|ctrl                            n=  18903 neg=  18717 wns=   -244.0 tns=  -2626176.5 u_ctrl_04/rq[469]
+  x_frame|relay                            n= 100464 neg= 100464 wns=   -224.0 tns= -15791113.2 st_x_f_5L03_l2_0/i[29]
+  xtier|relay                              n=   4692 neg=   4692 wns=   -207.2 tns=   -708987.1 st_tvS_s_5N_0/i[30]
+  hbm|relay                                n=   6818 neg=   6816 wns=   -183.7 tns=   -677487.9 st_hrq_01_0/i[157]
+  unit|relay                               n=   1864 neg=   1864 wns=   -181.3 tns=   -215631.7 st_jw_W_l0_0/i[18]
+  attn|relay                               n=   1026 neg=   1026 wns=   -179.4 tns=   -154709.2 st_q_E_l0_0/i[187]
+  xring|relay                              n=  30912 neg=  30912 wns=   -170.7 tns=  -3645036.6 st_xrW_3N_l3_0/i[187]
+  coll|relay                               n=   8208 neg=   8208 wns=   -153.7 tns=   -854254.9 st_lr_lk_WS1_0/i[156]
+  ret|relay                                n=   1820 neg=   1820 wns=   -102.6 tns=   -126029.9 st_r_f_4L11_0/i[3]
+  block_in|rsv                             n=  33690 neg=      0 wns=      2.7 tns=         0.0 u_rsv_07/gi_d[5393]
+  block_in|phy                             n=  10944 neg=      0 wns=    491.6 tns=         0.0 u_phy_hbm/k_tag[84]
+ff_setup
+  other|fwd                                n=      2 neg=      2 wns=  -4943.3 tns=     -5756.7 fwd_r_f_6R13/ENA
+  reset|station                            n=   1454 neg=      2 wns=  -3040.0 tns=     -5817.7 st_rsg_rs_64_42_cl6N_65_53_0/i
+  block_in|s                               n=    276 neg=    276 wns=   -178.8 tns=    -20702.0 u_s_1S/vi[253]
+  xtier|relay                              n=  11257 neg=    120 wns=    -71.7 tns=     -2452.9 st_tvN_bk_col_0/i[250]
+  block_in|rsv                             n=   2248 neg=      0 wns=     73.5 tns=         0.0 u_rsv_02/r_tag[29]
+  landing|unit                             n=   2783 neg=      0 wns=    183.3 tns=         0.0 ld_mu_0S/i[116]
+  unit|relay                               n=  64587 neg=      0 wns=    191.9 tns=         0.0 st_rt_0N_60/i[52]
+  landing|xtier                            n=   3945 neg=      0 wns=    192.2 tns=         0.0 ld_tvN_s_7S/i[73]
+  landing|attn                             n=   1006 neg=      0 wns=    196.0 tns=         0.0 ld_q_E_l1/i[116]
+  hbm|relay                                n=   1489 neg=      0 wns=    201.9 tns=         0.0 st_hrq_01_4/i[102]
+  ret|relay                                n=   9446 neg=      0 wns=    221.2 tns=         0.0 st_r_f_4L10_6/i[4]
+  landing|hbm                              n=   2009 neg=      0 wns=    227.7 tns=         0.0 ld_hrq_05/i[224]
+  x_frame|relay                            n=  19433 neg=      0 wns=    228.4 tns=         0.0 st_x_f_1R10_l0_6/i[52]
+  landing|ret                              n=   4150 neg=      0 wns=    231.9 tns=         0.0 ld_r_f_7L00/i[4]
+  landing|xring                            n=  20928 neg=      0 wns=    241.8 tns=         0.0 ld_xrE_6S_l2/i[34]
+  xring|relay                              n=  53401 neg=      0 wns=    253.2 tns=         0.0 st_xrE_3N_l1_6/i[119]
+  landing|coll                             n=    535 neg=      0 wns=    257.9 tns=         0.0 ld_lt_lk_EN0/i[496]
+  coll|relay                               n=   1037 neg=      0 wns=    265.4 tns=         0.0 st_lr_lk_WN0_2/i[6]
+ff_hold
+  landing|hbm                              n=      9 neg=      9 wns=  -1617.3 tns=     -9945.4 ld_hrq_01/rs
+  block_in|bk                              n=    553 neg=    553 wns=   -295.9 tns=   -108379.8 u_bk_col/vi_s[229]
+  block_in|ctrl                            n=  19862 neg=  19838 wns=   -192.3 tns=  -2452984.2 u_ctrl_06/rq[356]
+  x_frame|relay                            n= 100464 neg= 100463 wns=   -174.3 tns= -12028413.9 st_x_f_5L03_l2_0/i[29]
+  xtier|relay                              n=   4692 neg=   4692 wns=   -169.5 tns=   -538509.4 st_tvS_s_5N_0/i[30]
+  hbm|relay                                n=   6812 neg=   6803 wns=   -147.9 tns=   -521642.4 st_hrq_01_0/i[157]
+  xring|relay                              n=  30912 neg=  30912 wns=   -138.2 tns=  -2809951.9 st_xrW_3N_l3_0/i[187]
+  attn|relay                               n=   1026 neg=   1026 wns=   -133.3 tns=   -110044.8 st_q_E_l0_0/i[187]
+  unit|relay                               n=   1864 neg=   1864 wns=   -132.5 tns=   -148252.7 st_jw_W_l0_0/i[18]
+  coll|relay                               n=   8208 neg=   8208 wns=   -127.8 tns=   -652314.8 st_lr_lk_WS1_0/i[156]
+  ret|relay                                n=   1820 neg=   1820 wns=    -74.9 tns=    -85268.7 st_r_f_4L11_0/i[3]
+  block_in|rsv                             n=  32738 neg=      0 wns=      2.7 tns=         0.0 u_rsv_07/gi_d[5393]
+  block_in|phy                             n=  10944 neg=      0 wns=    381.2 tns=         0.0 u_phy_hbm/k_tag[84]
+{
+ "rule": "landed crossing: ring window (setup_E / hold_E >= 0) at TT and FF; unlanded neighbour pair: |clock entry skew| <= 80 ps at TT and FF",
+ "regional_roots": "IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)",
+ "landed": {
+  "n": 276,
+  "verdicts": {
+   "UNMEASURED": 276
+  },
+  "max_tt_ff_drift_ps": 4990.1,
+  "worst": []
+ },
+ "frame_lanes": {
+  "n": 364,
+  "verdicts": {
+   "UNMEASURED": 256,
+   "PASS": 108
+  },
+  "worst": [
+   [
+    816.1,
+    "x_f_3R11_l0"
+   ],
+   [
+    830.5,
+    "x_f_3R11_l1"
+   ],
+   [
+    831.7,
+    "x_f_6R11_l0"
+   ],
+   [
+    838.7,
+    "x_f_7R01_l0"
+   ],
+   [
+    847.0,
+    "x_f_4L11_l3"
+   ],
+   [
+    847.2,
+    "x_f_0R11_l0"
+   ],
+   [
+    847.4,
+    "x_f_1R11_l0"
+   ],
+   [
+    851.3,
+    "x_f_6R01_l0"
+   ],
+   [
+    851.5,
+    "x_f_4R11_l0"
+   ],
+   [
+    851.5,
+    "x_f_7R11_l0"
+   ]
+  ]
+ },
+ "unlanded_pairs": {
+  "n": 295,
+  "verdicts": {
+   "PASS": 261,
+   "UNMEASURED": 34
+  },
+  "worst": [
+   [
+    0.0,
+    "x_f_7R12_l3"
+   ],
+   [
+    0.0,
+    "x_f_7R12_l2"
+   ],
+   [
+    0.0,
+    "x_f_7R12_l1"
+   ],
+   [
+    0.0,
+    "x_f_7R12_l0"
+   ],
+   [
+    0.0,
+    "x_f_7R02_l3"
+   ],
+   [
+    0.0,
+    "x_f_7R02_l2"
+   ],
+   [
+    0.0,
+    "x_f_7R02_l1"
+   ],
+   [
+    0.0,
+    "x_f_7R02_l0"
+   ],
+   [
+    0.0,
+    "x_f_7L12_l3"
+   ],
+   [
+    0.0,
+    "x_f_7L12_l2"
+   ]
+  ]
+ },
+ "die_clock_check_tt": "unavailable ([Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-s81-clock-replay-1020/mu7v2c_ck2/sta/die_clock_check_tt.json')",
+ "die_clock_check_ff": "unavailable ([Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-s81-clock-replay-1020/mu7v2c_ck2/sta/die_clock_check_ff.json')"
+}

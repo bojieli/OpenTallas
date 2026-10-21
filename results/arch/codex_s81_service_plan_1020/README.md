@@ -23,3 +23,13 @@ The96-frame monolithic candidates FAIL actual allocator dense one-phase capacity
 mu7v2c finished22:24:37, GRT0 but STA FAIL. TTsetup-9246.6ps (framexk modeled asdata), FFhold-1617.3ps (ld_hrq_01/rs). Reset stations/fwdENA remaining TT-3725.4/-5642.7ps are real reset reach/startup mechanisms. bk_col geometry fixes improve prior-2.3ns family toTTsetup slicevi-351.9/xtier-222.4ps; residual hold budgets still need planned repair. Native forwarded-clock audit FAIL14/3777 judgedhops postGRT, pairingerrors0. `mu7v2c_classes.txt` preserves complete classes.
 
 `mu7v2c_ir_drop.json`: ROOT14 tool window-model PASS8.85mV rail-to-rail vs35mV on3hotwindows; assumed density1.2W/mm² and735.238Wdiepeak. M8signal0.04% +bothPGstraps19.61%=19.65%. Not final signoff; child-internalPG/package/via-blockage absent. Original immutable route explicitly M2-M8signals/M5-M9clock and M8RC; actual signalguide inspection still needed.
+
+## Clock input replay and reset graph qualification, 22:40 takeover
+
+The immutable GRT replay completed TT and FF with all232 declared clock input bits reached by propagated clocks (`CLOCK_ROLE_PROBE missing=0`). It changed58 stand-in clock-input port models, and actual source Liberty proved16 contributing forwarded clock ports. Native source Liberty and original ODB were untouched. The historical frame-xk setup class(-9246.6ps) disappears. Remaining TTsetup-5642.7ps is gate ENA; FFhold-1617.3ps is landing reset. These are actual obligations, not closure. Replay scripts, manifest and complete classes are preserved here.
+
+`calendar_reset_probe.json` compares the actual baseline graph with retained calendar endpoint paths:4394->4713 reset nodes,1290 additional endpoint consumers, missing local reset sources7->0, zero physical over-reach hops. The original graph was pruned only for block-reset pins and data relay resets; endpoint-serving nodes were discarded. `calendar_reset_endpoints` is an opt-in bind-table flag retaining those paths. It makes cal_tap refuse non-local fallbacks. Eight causal/reset reach tests pass. Full strict source bind is running separately; no full route was launched on an unqualified reset tree.
+
+This reset change addresses physical reach only. Receiving-region two-stage synchronous reset release, native clock roles and actual reset timing remain required. The unrelated645-lane startup proof does not waive arbitrary regional reset crossings.
+
+Actual Claude ATTN1 generator requires1036.8×2160 primary or1123.2×2160 fallback to provide macro-face pin channels. The950.4-wide G4split112 model is not a qualified placement for these real tiles. ATTN1 source qualification is separately pinned on codex/s81-svc-nt-1020@21b79b7e5.

@@ -405,7 +405,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         for s in m.get('straps', []):
             straps.append([mod, s])
     # ------------------------------------------------------------------ reset tree
-    rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'))
+    rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'),
+                     calendar_endpoints=T.get('calendar_reset_endpoints', False))
     early = {m.get('master') for m in T.get('frame_members', []) if m.get('reset')}
     fw = set(T.get('frame_wrapper', {}).get('masters', []))
     # TOK-S81-GAPS/G8R (10-18): frame x-chain read epoch.  A frame x lane lands in the RECEIVING frame's dsfd_cfifo_crs4
@@ -711,6 +712,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         cands = [(abs(q[0] - xy[0]) + abs(q[1] - xy[1]), -rdep[n_], n_) for n_, q in tree_nodes if rdep[n_] <= tgt]
         near = [c for c in cands if c[0] <= RESET_REACH_UM]
         base = (min(near)[2] if near else leaf)
+        if not near and T.get('calendar_reset_endpoints'):
+            raise ValueError(f'calendar reset source unreachable within {RESET_REACH_UM} um: {xy} target={tgt} {why}')
         if not near:
             print(f'DV_BIND WARN calendar tap {why}: no reset node with depth <= {tgt} within {RESET_REACH_UM} um of {xy}; chained from {leaf}')
         k_ = tgt - rdep[base]
@@ -1110,7 +1113,7 @@ def reset_reach_gate(blocks, nodes, sinks, edges, reach=RESET_REACH_UM, mode=Non
     return rec
 
 
-def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
+def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM, calendar_endpoints=False):
     """Regional synchronous-release reset tree (die standard item 2).
     Nodes: one reset station per 400-um block-free street cell (as before) PLUS, S81-DIE5 (coordinator 0dt+ / ROOT
     4f7440ccf), the RESET BIT CARRIED IN THE LANE STATIONS: every relay station of a planned lane may hold a 1-b
@@ -1271,8 +1274,24 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
             _, xy, s = best
         block_pin[b['name']] = xy; block_srv[b['name']] = s
         sinks.append((f"{b['name']}.rst", xy, b['name'], s))
+    # Calendar taps are physical reset consumers too. Pruning their serving
+    # nodes caused the three remaining mu7v2c multi-mm gate/landing reset hops.
+    # Opt-in: retain paths to connected gated-lane endpoints before cal_tap
+    # selects a local release source; no new timing exception is introduced.
+    endpoint_srv = {}
+    if calendar_endpoints:
+        for link in plan.get('links', []):
+            nm = link['i'].replace('-', '_')
+            if not chains_pts.get(nm):
+                continue
+            for side, e in enumerate(link['e']):
+                block = blocks[e[0]]
+                xy = tuple(e[2:4]); serving = serve(*xy)
+                key = f'{nm}:{side}'
+                endpoint_srv[key] = serving
+                sinks.append((f'{key}.calendar_reset', xy, block['name'], serving))
     tree = set()
-    for s in list(station_srv.values()) + list(block_srv.values()):
+    for s in list(station_srv.values()) + list(block_srv.values()) + list(endpoint_srv.values()):
         while s is not None and s not in tree:
             tree.add(s); s = par[s]
     gate = reset_reach_gate(blocks, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
@@ -1306,7 +1325,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     leaves = collections.Counter(list(station_srv.values()) + list(block_srv.values()))
     depths = [dep(c) + 2 for c in tree]
     ncomp = sum(1 for c in tree if c[0] == 's')
-    summary = dict(grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2,
+    summary = dict(calendar_endpoints=len(endpoint_srv), grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2,
                    street_stations=len(tree) - ncomp, lane_reset_bits=ncomp, max_release_depth=max(depths),
                    min_release_depth=min(depths), max_relay_fanout=max(leaves.values()),
                    region_release_depth={r: max(dep(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
