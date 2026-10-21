@@ -1,0 +1,228 @@
+[
+  {
+    "source": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+    "sha256": "f4a2b22a7479ebcbca2a9dbe676e36b20d933d28ae13aff4b15f8b66c7280f66",
+    "size_um": [
+      777.6,
+      777.6
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pins_count_including_pg": 1173,
+    "clock_named_pins": {
+      "clk": {
+        "layers": [
+          "M5"
+        ],
+        "direction": "INPUT"
+      }
+    },
+    "pg": {
+      "VDD": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      },
+      "VSS": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      }
+    },
+    "json_pins": {
+      "pin_block_x_um": [
+        276.384,
+        501.216
+      ],
+      "pin_edge": "top (core-facing)",
+      "pin_layer": "M5",
+      "pin_pitch_um": 0.192,
+      "signal_pins": 1171
+    },
+    "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+    "bundle_hashes": {
+      "ot_qkvd_ucie_x64_phy_bb.v": "c9699325c5e7134940f41f21b9c8c5d2a65f396f4201ca2d148b1b4d9204c7be",
+      "ot_qkvd_ucie_x64_phy_tt.lib": "4537813c653458ff6a9c35be6f3fb4671dc98c124e49be2de00910341c6347dc",
+      "ot_qkvd_ucie_x64_phy.json": "a1d77cc57a6a1010e3d40e735a1ca9f9d38be102bb5041487d9eaf7acecf973c",
+      "ot_qkvd_ucie_x64_phy_model.sv": "2b14efcc89a0841eddae12d1ca3c8f5ab7944773b2460887fe7496fd10500066",
+      "ot_qkvd_ucie_x64_phy_ss.lib": "3a2cff90556b744aa79d7564e47fe1560c8fd5ad1a921a5f99b2a798eafac954",
+      "ot_qkvd_ucie_x64_phy_ff.lib": "a93f474f35cc1b3a72a0e99c6473196d5c30a65c8448230a820861be4585e262",
+      "ot_qkvd_ucie_x64_phy.lef": "f4a2b22a7479ebcbca2a9dbe676e36b20d933d28ae13aff4b15f8b66c7280f66"
+    }
+  },
+  {
+    "source": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+    "sha256": "0b763c286c50518244330e57ea367435a98be9ae9f9d1489b946a03f2b402f8c",
+    "size_um": [
+      777.6,
+      777.6
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pins_count_including_pg": 2094,
+    "clock_named_pins": {
+      "lclk": {
+        "layers": [
+          "M5"
+        ],
+        "direction": "OUTPUT"
+      },
+      "clk": {
+        "layers": [
+          "M5"
+        ],
+        "direction": "INPUT"
+      }
+    },
+    "pg": {
+      "VDD": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      },
+      "VSS": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      }
+    },
+    "json_pins": {
+      "pin_block_x_um": [
+        338.568,
+        438.984
+      ],
+      "pin_edge": "top (core-facing)",
+      "pin_layer": "M5",
+      "pin_pitch_um": 0.048,
+      "signal_pins": 2092
+    },
+    "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+    "bundle_hashes": {
+      "ot_qfd_ucie_x64_phy.json": "1df4d8eef7a21e532bcaed2cb04243d82833d6b8280549d09854ec43a78c5399",
+      "ot_qfd_ucie_x64_phy_ff.lib": "32c45b975dafaf22186881d195b05be421158c4c9ccb309c6b4776fc410acfff",
+      "ot_qfd_ucie_x64_phy.lef": "0b763c286c50518244330e57ea367435a98be9ae9f9d1489b946a03f2b402f8c",
+      "ot_qfd_ucie_x64_phy_ss.lib": "026ce018ba828d6ed925f86a08c61621c37ccaf5bdb192f6fe583fb714a8fd0a",
+      "ot_qfd_ucie_x64_phy_bb.v": "e459a9f81d360767530dab5142df2592333dd35136e4845741b291b6e794f02f",
+      "ot_qfd_ucie_x64_phy_tt.lib": "9e96810b1ccbd899e769e1558714487bf1c0ae730fb8a730e30ebdb9ad757289",
+      "ot_qfd_ucie_x64_phy_model.sv": "a29d98a67e186c40c5b967eb99c339b5dd78194b87b7727a031cdec21959d013"
+    }
+  },
+  {
+    "source": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+    "sha256": "eb7bba3928fbc62ab8e5be449fcf1a56cbadcee47e82d1badc9b46a8008a7152",
+    "size_um": [
+      2320.056,
+      1563.57
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pins_count_including_pg": 1201,
+    "clock_named_pins": {
+      "clk": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INPUT"
+      }
+    },
+    "pg": {
+      "VDD": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      },
+      "VSS": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      }
+    },
+    "json_pins": {
+      "pin_block_y_um": [
+        600.0,
+        657.552
+      ],
+      "pin_edge": "west (adapter-facing)",
+      "pin_layer": "M4",
+      "pin_pitch_um": 0.048,
+      "signal_pins": 1199
+    },
+    "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+    "bundle_hashes": {
+      "ot_qfd_serdes_112g_x12_phy_s597_tt.lib": "6c7273c4a1b099d92a40bd6c864cc774e739def09ae11e729a9954eb269b2acb",
+      "ot_qfd_serdes_112g_x12_phy_s597.json": "afd8b22be0444bf239dff961cbed9a49ae19bb1333a1fbc01f36975b6ec574b1",
+      "ot_qfd_serdes_112g_x12_phy_s597_model.sv": "2dab794e5d37d091b3794a8d6d652397fcb232f205c54ca9ffef7509017a65be",
+      "ot_qfd_serdes_112g_x12_phy_s597_ss.lib": "bf6f0c76f86b11cd26c7a376bb7dcececba765d8de4e01932ce09969db043478",
+      "ot_qfd_serdes_112g_x12_phy_s597_bb.v": "1ff474c61d06c8776b03b83f93ee4af0904fe63463bfa75d1a3fa5e00c587391",
+      "ot_qfd_serdes_112g_x12_phy_s597_ff.lib": "043998d19b083fdfaf4c3c76dee0695c7224abcf07cb09ceec9e6d8bf0260fc8",
+      "ot_qfd_serdes_112g_x12_phy_s597.lef": "eb7bba3928fbc62ab8e5be449fcf1a56cbadcee47e82d1badc9b46a8008a7152"
+    }
+  },
+  {
+    "source": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+    "sha256": "1fcc313e1c0b74de491710e0da235edd683823db1590c26f44489f620264d34a",
+    "size_um": [
+      777.6,
+      777.6
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pins_count_including_pg": 2093,
+    "clock_named_pins": {
+      "clk": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INPUT"
+      }
+    },
+    "pg": {
+      "VDD": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      },
+      "VSS": {
+        "layers": [
+          "M4"
+        ],
+        "direction": "INOUT"
+      }
+    },
+    "json_pins": {
+      "pin_block_y_um": [
+        600.0,
+        700.368
+      ],
+      "pin_edge": "west (adapter-facing)",
+      "pin_layer": "M4",
+      "pin_pitch_um": 0.048,
+      "signal_pins": 2091
+    },
+    "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+    "bundle_hashes": {
+      "ot_qfd_ucie_x64_phy.json": "041c21b1f1c3a9f54d83060e29ea2183ea7c4a9ee35fdf5d8aedfa1be627d285",
+      "ot_qfd_ucie_x64_phy_ff.lib": "63c838f2e1ffc3b9a12ba5d93cc91a84cb33618df18f7f48419268779ffaa012",
+      "ot_qfd_ucie_x64_phy.lef": "1fcc313e1c0b74de491710e0da235edd683823db1590c26f44489f620264d34a",
+      "ot_qfd_ucie_x64_phy_ss.lib": "573ef75c13dcfe88606ad235a57aa8ad336a7e364e2e6a37005c5a4a6a60a5e8",
+      "ot_qfd_ucie_x64_phy_bb.v": "21f613f164d8d19b980328e87a2d9895d8452c83d132fea107f6299e3f534be1",
+      "ot_qfd_ucie_x64_phy_tt.lib": "083e34158c1b8a6f65727075994fb51e3a803f2326a3ec0322529498b37655f9",
+      "ot_qfd_ucie_x64_phy_model.sv": "e14e655ed48b14e596823a6298a91cf4f94b7c81edf843b64b25e1b97060c010"
+    }
+  }
+]
