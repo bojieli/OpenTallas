@@ -1,0 +1,238 @@
+{
+ "name": "hidx_rootctl_am_g2c_1019-g2c-COMMIT",
+ "block": "ot_hbm_idx_rootctl_static_am",
+ "ref_tile": true,
+ "owner": "Claude:HBM-BANKLAT-IDX",
+ "purpose": "d4g GEN2c IDX root (share + TOPK + selector) at VM_RT 65 / CR_RT 36 / SEL_LAT 30 (HBM-BANKLAT-IDX); benches: TOPK vs the PIN_IN 1 reference at the budget offsets, the SW operand reader through this share, the ARGMAX r2 path, the as-built VMX 1 TOPK bench (default unchanged); mutants (am_pin values, VM_RT 64, CR_RT 35, share VM_RT 1 under the reader) FAIL.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-banklat-idx-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static/run_banklat_idx.sh",
+   "rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk_lat.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path_lat.sv",
+   "rtl/test/hbm_idx_static/run_vm_query_n12.sh",
+   "rtl/test/hbm_idx_static/tb_vm_query_n12.sv",
+   "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+   "rtl/hdc/ot_hdc_delay_rf.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "tools/hbm_idx_static_query_vectors.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+   "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+   "rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "results/arch/hbm_banklat_1019/idx_budget.json",
+   "tools/hbm_die_v16/d4g_idx_lat_budget.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_rootctl_static_am #(.VM_RT(65), .CR_RT(36), .SEL_LAT(30)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctl_g2c_topk",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk topk",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^CASE topk .*TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=65 CR_RT_P=36 AMMUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_TOPK_LAT PASS",
+    "pass_witness": "results/rtl/hbm_banklat_1019/idx/topk.log"
+   },
+   {
+    "name": "ctl_g2c_n12_ctl",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/n12_ctl n12_ctl",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^CASE n12_ctl IDX_VM_QUERY_N12_LAT MUT0 via_ctl1 vmrt171 dut171 .*commits514 reads514 blocks128 quant32 errors0 fault0 share_fault0 .*IDX_VM_QUERY_N12_LAT PASS",
+    "pass_witness": "results/rtl/hbm_banklat_1019/idx/n12_ctl.log"
+   },
+   {
+    "name": "ctl_g2c_argmax_t0",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am0 am0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^CASE am0 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
+    "pass_witness": "results/rtl/hbm_banklat_1019/idx/am0.log"
+   },
+   {
+    "name": "ctl_g2c_reg_topk_vmx1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/reg_topk1 reg_topk1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^TOPK AMMUT=0 TOPK VMX=1 DUT_RT=1 AMMUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_TOPK PASS",
+    "pass_witness": "results/rtl/hbm_banklat_1019/idx/reg_topk1.log"
+   },
+   {
+    "name": "ctl_g2c_topk_pin",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_pin topk_pin",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^CASE topk_pin .*TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=1 CR_RT_P=1 AMMUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_TOPK_LAT FAIL",
+    "fail_witness": "results/rtl/hbm_banklat_1019/idx/topk_pin.log"
+   },
+   {
+    "name": "ctl_g2c_topk_vm64",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_vm64 topk_vm64",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^CASE topk_vm64 .*TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=64 CR_RT_P=36 AMMUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_TOPK_LAT FAIL",
+    "fail_witness": "results/rtl/hbm_banklat_1019/idx/topk_vm64.log"
+   },
+   {
+    "name": "ctl_g2c_topk_cr35",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_cr35 topk_cr35",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^CASE topk_cr35 .*TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=65 CR_RT_P=35 AMMUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_TOPK_LAT FAIL",
+    "fail_witness": "results/rtl/hbm_banklat_1019/idx/topk_cr35.log"
+   },
+   {
+    "name": "ctl_g2c_n12_share_pin",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/n12_ctl_m4 n12_ctl_m4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^CASE n12_ctl_m4 IDX_VM_QUERY_N12_LAT MUT4 .*fault1 .*IDX_VM_QUERY_N12_LAT FAIL",
+    "fail_witness": "results/rtl/hbm_banklat_1019/idx/n12_ctl_m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_rootctl_am_g2c_1019/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_rootctl_am_g2c_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_rootctl_am_g2c_1019 --out {RUN}/record/views/ot_hbm_idx_rootctl_static_am --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_rootctl_am_g2c_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_rootctl_am_g2c_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_rootctl_am_g2c_1019/hidx_rootctl_am_g2c_1019-g2c-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-BANKLAT-IDX 10-19: hb_idx__ctl at the d4g GEN2c BUDGET = ot_hbm_idx_rootctl_static_am #(VM_RT 65, CR_RT 36, SEL_LAT 30) (GEN2c budget results/arch/hbm_banklat_1019/idx_budget.json (tools/hbm_die_v16/d4g_idx_lat_budget.py: faces bank pin 1 + die lanes, NO_E landings at worst E 8)): VM_RT 65 = faces pin 1 + rq4/rr4 lanes padded to 64 (GEN2c 41..57 + worst-E landings), CR_RT 36 = faces pin 1 + cq 18 + cr 17, SEL_LAT 30 = 4 + sel_op 13 + selected_v 13. Share owner tap own[72] (+64 x 6 flops per leaf), TOPK RT_EXTRA 66 / ACK 49 (engine counter widened 4 -> 8 bits only when it would overflow: ot_hbm_idx_topk_static CW; every as-built elaboration keeps 4), ingest predictor 30 deep. Ports, faces, outline, macros identical to the CLOSED r4 / the am_pin kit.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "vs": "hidx_rootctl_am_1018-r4-49a5acb8f",
+  "why": "params VM_RT 0 -> 65, CR_RT 0 -> 36, SEL_LAT 4 -> 30 (d4g GEN2c budget, HBM-BANKLAT-IDX) + TOPK engine counter width at large RT/ACK; same outline/faces/macros"
+ }
+}

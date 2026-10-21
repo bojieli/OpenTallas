@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_op_n12_g2c_1019-pg1b-f7377a019 bench bench_n12_g2c_m2_unpadded host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hidx_op_n12_g2c_1019-pg1b-f7377a019 log cl/bench_n12_g2c_m2_unpadded.a1b1.log captured 2026-10-19T16:46:24-07:00
+# fail_regex '^CASE n12_dir_m2 IDX_VM_QUERY_N12_LAT MUT2 .*fault1 .*IDX_VM_QUERY_N12_LAT FAIL'
+CASE n12_dir_m2 IDX_VM_QUERY_N12_LAT MUT2 via_ctl0 vmrt171 dut171 ctl0 bank_lanes167..168 commits514 reads514 blocks128 quant32 errors96 fault1 share_fault0 firstblock371 IDX_VM_QUERY_N12_LAT FAIL FATAL: rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv:125: n12 at the d4g budget: query/weight/quant/latency mismatch        Time: 6410000000  Scope: tb_vm_query_n12_lat 

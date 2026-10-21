@@ -1,0 +1,36 @@
+{
+  "reviewer": "codex coordinator takeover 2026-10-20",
+  "time": "2026-10-20T22:12:21.243593-07:00",
+  "gate_commit": "b40e7034b",
+  "verdict": "APPROVED",
+  "geometry_sha256": "df005d743f7f6902f3ef08590aa91d349637f8d0ab26df9ef4a8d84cba6a3922",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "df005d743f7f6902f3ef08590aa91d349637f8d0ab26df9ef4a8d84cba6a3922",
+    "components": {
+      "outline": "63e60edf91d327f24d5e5b23dff1cef0b4b5827f9d9535451da4a5d9cf78b545",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "6bb1139406f91ce3ecc547b041ed66a747c3e736b661063cfe632d2eab0a9312",
+      "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+    }
+  },
+  "checklist": {
+    "lattice": "N/A: no hard macros.",
+    "std_cell_band": "PASS: actually viewed original floorplan/density; continuous full outline rows, no isolated logic islands. c1b lower fill retained as parallel fallback.",
+    "pin_spread": "PASS: W inputs/E outputs use full faces; 641 pins; compact outline.",
+    "clock_entry": "PASS: W-bottom entry; TT/FF intra-root spread 9.9/9.7 ps <=80; final routed timing remains required.",
+    "shape": "PASS: c1 129.6x97.2 um (1.33); c1b 129.6x129.6 um (1.0)."
+  },
+  "evidence": {
+    "gate_generated": "2026-10-20T21:40:30-0700",
+    "source_start_commit": "3a30eed68d9c69a70c4f272edff89d0197833760",
+    "source_manifest_sha256": "2647311ede8303028aa9741091b16ae2959ba40752fde4a4de761699b7524f73",
+    "native_max_loads": 24,
+    "grt_overflow": 0,
+    "images_viewed": {
+      "floorplan.png": "0469289de8da3a3f3d671afb11484d326a2a1bdc09e0e2b086a3f7a9d6b4a0c4",
+      "density.png": "9122f916407b5a0a4e213913b65d488f7976b18b11817a591088a8cd84a9868a"
+    },
+    "scope": "Geometry approval for route submission only; earlier failure was bench wrapper verdict filtering, fixed by 963640b19, regated. Final route decides closure."
+  }
+}

@@ -1,0 +1,6 @@
+ot-run: ot-epyc6       admits   742 GB (avail 734, growth 214, headroom 0, waiters 0/0 GB) load 11/128 running 12 disk 6708 GB 
+ot-run: ot-epyc7       admits  1087 GB (avail 887, growth 126, headroom 0, waiters 0/0 GB) load 68/96 running 31 disk 6797 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-48153-1792402259 after 0 s
+CASE am_vmx5 WRITE 2 differs mask 00f00000/00000000 WRITE 3 differs mask 000f0000/00000000 ARGMAX_LAT CTL_M=65 VMX_P=5 ACK_P=52 ACK_M=52 MUT=0 requests 3207 writes 474 events 300 (done 204) offsets rq 1 write 6 event 46 share_fault 0/0 ties 0 errors 642 IDX_AM_PATH_LAT FAIL 
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-48153-1792402259): exit 1

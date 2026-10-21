@@ -1,0 +1,29 @@
+{
+ "cell": "ot_hbm_hc_qtree16_static",
+ "view": "views/ot_hbm_hc_qtree16_static",
+ "lib_cell": "ot_hbm_hc_qtree16_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 194.5,
+ "spread_ps": 13.0,
+ "outputs": 78,
+ "inputs": 514,
+ "launch_ps": 192.4,
+ "launch_pin": "nv_o[4]",
+ "capture_ps": 70.4,
+ "capture_pin": "s_in[62]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pin_rule": "owner 10-20: registered at region crossings (none declared); same-region pins may connect directly (die / parent STA judges)",
+ "direct_pins": 0,
+ "direct_first": [],
+ "ff_spread_ps": 13.8,
+ "ff_launch_min_ps": 89.2,
+ "ff_hold_need_ps": -17.1,
+ "pass": true,
+ "fail_why": ""
+}
