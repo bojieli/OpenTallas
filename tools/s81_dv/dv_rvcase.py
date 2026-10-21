@@ -576,6 +576,9 @@ def main():
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
     orientations = {f'u_{b["name"]}': orientation(T, b['name']) for b in blocks.values()}
+    _rm = a.bind_dir / 'relay_mirror.json'  # historical IDX4 opposite vertical view placed MX
+    if _rm.exists():
+        orientations.update({i: v['orient'] for i, v in json.loads(_rm.read_text()).items()})
     for b in blocks.values():
         loc[f'u_{b["name"]}'] = (b['x'], b['y'], b['w'], b['h'], 'FIRM')
         placer.add((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
