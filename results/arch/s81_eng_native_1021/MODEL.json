@@ -1,0 +1,12 @@
+{
+ "schema":"opentallas.s81.eng_native_source.v1",
+ "baseline_source":"d5e45464e",
+ "baseline_native":{"status":"FAIL","max_loads":189,"violations":286,"role_errors":0,"netlist_sha256":"3c7c3f2337fcc28cfbb87f90cce1cf8fda3237c21e29df503e04630409e29c83"},
+ "actual_cause":{"acceptance":"win_valid && !active shared combinational enable drives189 actual loadpins across accepted-window captures/control","hash":"Product id table controls and residue selector q bits reach55/54 loads despite8-bit output partitions; reduce actual consumer width, no buffers/waivers"},
+ "arithmetic":"No MAC or mathematical change. Exact shipped integer hash, same native Engram row response and existing CRC operations.",
+ "sizing":{"hash_product_candidate":"8-bit to4-bit output slices:64 product bits use16 kept17-bit window copies instead of8 perproduct","hash_residue_candidate":"24 residue bits use6 kept64-bit input copies instead of3 percolumn","estimated_additional_hash_FF":10304,"estimated_FF_cell_area_um2_at_0p3_each":3091.2,"acceptance_candidate":"Separate kept consumer modules decode actual acceptance locally, W<=16 payload bits. Existing valid/data capture edges unchanged; no independent timer or completion wait."},
+ "storage":"Existing in-flight storage13824bits remains in3 actual128x256 SRAM macros; no new data FIFO or array. Hash replica FFs carry same-cycle fanout copies, not new buffering capacity.",
+ "ports":{"HBM_response_bytes_per_cycle":32,"external_HBM_requests_per_window":6,"atoms_per_request":9,"row_output_bits_per_cycle":264,"output_rows_per_window":6},
+ "timing":{"RETURN_AGE":640,"II":704,"external_bound_pins":642,"added_cycles":0,"reset_edges_added":0,"all_existing_root_clock_phase_and_halfcycle_crossings":"unchanged;11roots"},
+ "qualification":"MODEL first, source repair next. Existing eng_rr exact functional+6causal suite and authoritative original-configuration native measurement only. No new layout/route gate until real native admission; no current fit/clock/SSFF claim. Baseline failed ra640a/b preserved. Exact production source/view/calendar binding remains required."
+}
