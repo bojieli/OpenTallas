@@ -1,0 +1,167 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'dsdv_sh_lk': 'M5', 'dsdv_sh_sq': 'M5', 'dsdv_sh_vc': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsdv_seq_host_d43_20261021-033538.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsdv_seq_host_d43_20261021-033538.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsdv_seq_host_d43-20261021-033538",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=3",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 133 s (gate total 3217 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2735, 'pin_rectangles': 2735, 'pin_track_checked': 2735, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 44e499855176256805d5debc6d484ec6e23eba76818c070cce7f2bcccdef0b84",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 1 um2 + macros 184081 in core 349192: util 0% (std-cell density 0.0% of placeable 148851 um2; total fill 52.7%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS dsdv_seq_host_c cells 7 flops 2 depth 11.7 ps util 0.5272 reach 0.0 um (0.2 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 356.0..1156.5 ps (spread 800.5), boundary mean 707.2; tt insertion all 288.3..829.7 ps (spread 541.4), boundary mean 533.1; ff insertion all 243.5..640.5 ps (spread 397.0), boundary mean 427.3; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "spine built on port ck",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 2 (fine) leaves 5 sinks 5 cells 47 leaf arrival 729.0..754.8 ps (spread 25.7) pad 63.8 / 12.7 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 3 (fine) leaves 5 sinks 5 cells 48 leaf arrival 736.1..754.8 ps (spread 18.7) pad 63.8 / 16.0 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/dsdv_seq_host_d43/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       299 paths, worst slack 122.3 ps (e.g. u_ot_pr_core.u_l0/f_ks[52])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg        1 paths, worst slack 273.2 ps (e.g. u_ot_pr_core.u_l2/rst_n)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.2234480095685285e-10 hold WNS 6.099942773118983e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_child_pair",
+   "message": "TT linked children u_l0-u_l1: boundary-flop arrival difference 92.9 ps (u_l0 715.6..791.9, u_l1 754.2..808.5; limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_child_pair",
+   "message": "TT linked children u_l1-u_l2: boundary-flop arrival difference 43.9 ps (u_l1 754.2..808.5, u_l2 767.2..798.1; limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_child_pair",
+   "message": "FF linked children u_l0-u_l1: boundary-flop arrival difference 65.7 ps (u_l0 595.2..661.7, u_l1 608.9..660.9; limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_child_pair",
+   "message": "FF linked children u_l1-u_l2: boundary-flop arrival difference 48.8 ps (u_l1 608.9..660.9, u_l2 628.1..657.7; limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "5 sinks on the largest root; measured TT insertion 829.7 ps, FF insertion 640.5 ps, TT pin-flop spread 92.9 ps, FF pin-flop spread 65.7 ps; TT pin-flop spread 92.9 ps > 80",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-svcseq-1021/physical/ref_tile/dsdv_seq_host_d43/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-svcseq-1021/physical/ref_tile/dsdv_seq_host_d43/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "fill",
+   "message": "fill 52% = (hard macros 184081.2 + synthesized std cells 0.7) / outline 354585.6 um2; pin demand per face: S 857 pins over 343.2/432.0 um (79%), N 835 pins over 218.0/432.0 um (50%), W 636 pins over 365.9/820.8 um (45%), E 487 pins over 365.2/820.8 um (44%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 2.58% used; GRT 2895 s",
+   "fix": ""
+  }
+ ]
+}
