@@ -16,8 +16,8 @@ ot_pl_land_split_r #(.W(1095),.D(D),.K(K)) r(rc,{2{rst}},bank,epo,vld,land);
 wire [45:0]sa,sd;
 wire[D-1:0]ba,bd;
 for(genvar i=0;i<D;i=i+1)begin assign ba[i]=bank[i*1095+1094];assign bd[i]=bank[i*1095+547];end
-ot_pl_land_field_copies #(.COPIES(46),.D(D),.K(K+(MUT==1))) ca(rc,rst,ba,epo,vld[45*D+:D],sa);
-ot_pl_land_field_copies #(.COPIES(46),.D(D),.K(K+(MUT==1))) cd(rc,rst,(MUT==2)?ba:bd,epo,vld[22*D+:D],sd);
+ot_pl_land_field_copies #(.COPIES(46),.D(D),.K(K+(MUT==1))) ca(.ck(rc),.rsi(rst),.bank(ba),.epo(epo),.vld(vld[45*D+:D]),.o(sa));
+ot_pl_land_field_copies #(.COPIES(46),.D(D),.K(K+(MUT==1))) cd(.ck(rc),.rsi(rst),.bank((MUT==2)?ba:bd),.epo(epo),.vld(vld[22*D+:D]),.o(sd));
 wire[1094:0]q0,q1;wire p0,p1;
 qfd_dv_s8_fdn_arf1 a(.ck(rc),.rst_n(rst),.cmd_i(116'd0),.chu_q(land),.own_ch(own),.ch_dn_o(q0),.pc_bad(p0),.agu_q(10'd0),.ag_own(10'd0));
 qfd_dv_s8_fdn_arf1 #(.USE_SEL_COPIES(1)) b(.ck(rc),.rst_n(rst),.cmd_i(116'd0),.chu_q(land),.own_ch(own),.chu_ar_sel(sa),.chu_dd_sel(sd),.ch_dn_o(q1),.pc_bad(p1),.agu_q(10'd0),.ag_own(10'd0));
