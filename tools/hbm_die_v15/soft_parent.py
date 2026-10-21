@@ -96,11 +96,15 @@ def soft_flatten(parent, nm, insts, ports, drv, E, clocks, straps, rtl, problems
         del drv[k]
     for (n, p), bv in soft_straps.items():
         bv.sort()
-        lo = bv[0][0]; hi = bv[-1][0] + 1
-        if [b for b, _ in bv] != list(range(lo, hi)):
-            problems.append(f'soft flatten: non-contiguous constant bits on {n}.{p}')
-        straps.append(dict(inst=n, port=p, lo=lo, hi=hi, value=sum(v << (b - lo) for b, v in bv), master=insts[n]['master'],
-                           reason=f'composition constant of {nm["top"]} (RTL literal, not a tie of a real producer)'))
+        runs = []
+        for b, v in bv:
+            if not runs or b != runs[-1][-1][0] + 1:
+                runs.append([])
+            runs[-1].append((b, v))
+        for run in runs:
+            lo = run[0][0]; hi = run[-1][0] + 1
+            straps.append(dict(inst=n, port=p, lo=lo, hi=hi, value=sum(v << (b - lo) for b, v in run), master=insts[n]['master'],
+                               reason=f'composition constant of {nm["top"]} (RTL literal, not a tie of a real producer)'))
     # ---- clocks / resets
     newc = []
     for c_ in clocks:

@@ -133,7 +133,8 @@ SHARE_PAIRS = {'ot_hbm_idx_vm_share2_static': 4, 'ot_hbm_idx_vm_share2_static_r'
 # keeps its RL = fixed VM read latency at its pins, 7 = rq register n -> share face n+8 capture at RL 7, HBM-BANKLAT-COLL)
 DOWN_PARAM = {'ot_hbm_idx_vm_query_static_n12': ('VM_RT_EXTRA', 4, 4, 2),
               'ot_hgi_qdq_host_split': ('RL', 7, 7, 0), 'ot_hgi_qdq_host_split_r2': ('RL', 7, 7, 0),
-              'ot_hgi_qdq_host_static': ('RL', 7, 7, 0)}
+              'ot_hgi_qdq_host_static': ('RL', 7, 7, 0),
+              'ot_hgi_qdq_lg_port_group_r2': ('RL', 7, 7, 0)}
 INFO_MASTERS = re.compile(r'^(hfd_hgi_vms|hfd_hgi_vm_calendar|hfd_vms_wq2_merge|ot_hbm_svc_vmdel|ot_hgi_coll_kq_share2|'
                           r'ot_hbm_sm_vm_wr_q)')
 
@@ -210,6 +211,7 @@ class Graph:
 
 def param(I, inst, name, dflt):
     v = I[inst].get('params', {}).get(name)
+    if v is None: v = I[inst].get('latency_budget', {}).get(name)
     return dflt if v is None else int(v)
 
 
@@ -372,7 +374,7 @@ def check(c, G=None):
                 row['status'] = 'FAIL'
                 row['bad'].append(f'no return path {si}.{rport} -> {ci} (pairs {[p[0] for p in pairs if p[4] is None]})')
                 rows.append(row); continue
-            if len({p[1] for p in pairs}) > 1:
+            if len({I[p[1]].get('split_of',p[1]) if I[p[1]]['master']=='ot_hgi_qdq_lg_port_group_r2' else p[1] for p in pairs}) > 1:
                 row['bad'].append(f'share {si}.{sport} pairs driven by different clients {sorted({p[1] for p in pairs})}')
             lanes = [p[3] + p[4] for p in pairs]
             lmax = max(lanes)

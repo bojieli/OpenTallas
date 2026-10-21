@@ -276,6 +276,10 @@ def set_params(c, rep, bm=None, bi=None):
             prob.append(f'no instance of budget master {m}')
     for n, (mre, b) in bi.items():
         x = I.get(n)
+        if n == 'hb_quant_NW' and x is None and c.get('qdq_split'):
+            q = c['qdq_split']; q['RL'] = int(b['RL'])
+            for lg in q['lgs']: I[lg].setdefault('latency_budget', {})['RL'] = q['RL']
+            continue
         if x is None or not re.fullmatch(mre, x['master']):
             prob.append(f'{n}: expected {mre}, got {None if x is None else x["master"]}'); continue
         old = {k: x.get('params', {}).get(k) for k in b}
@@ -368,7 +372,7 @@ def plan_row(N, G, I, row, rows_by, rep):
         sr = rows_by.get((row['share'], 'rd'))
         if sr is None or sr['status'] != 'PASS':
             return 0
-        have = int(I[row['client']].get('params', {}).get(row['param']))
+        have = L.param(I, row['client'], row['param'], None)
         tgt = have - row['ref'] - row['share_excess'] - row['share_extra'] + row['ref_lanes']
         for pe in row['pair_ends']:
             pad = tgt - pe['lanes']
@@ -434,6 +438,8 @@ def run(c, rep, max_iter=8, check=L.check, bm=None, bi=None, segs=None):
     rep['problems'] += set_params(c, rep, bm, bi)
     if rep['problems']:
         return N, None
+    from qdq_split_price import price as price_qdq_split
+    price_qdq_split(c, N, L, rep)
     seg_done = False
     for it in range(max_iter):
         t0 = time.time()

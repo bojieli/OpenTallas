@@ -231,10 +231,10 @@ def resolve_split(c, S):
         srcs = [x['src']]; dsts = [x['dst']]
         si, sp_, slo = x['src']
         if si in sp:
-            srcs = [[ch, cp, slo] for ch, cp in sp[si]['ports'].get(sp_, [[si, sp_]])]
+            srcs = ([r[:3] for r in sp[si]['port_bits'][sp_][slo]] if 'port_bits' in sp[si] else [[ch, cp, slo] for ch, cp in sp[si]['ports'].get(sp_, [[si, sp_]])])
         di, dp, dlo = x['dst']
         if di in sp:
-            dsts = [[ch, cp, dlo] for ch, cp in sp[di]['ports'].get(dp, [[di, dp]])]
+            dsts = ([r[:3] for r in sp[di]['port_bits'][dp][dlo]] if 'port_bits' in sp[di] else [[ch, cp, dlo] for ch, cp in sp[di]['ports'].get(dp, [[di, dp]])])
         for s_ in srcs:
             for d_ in dsts:
                 out.append(dict(x, src=s_, dst=d_))
