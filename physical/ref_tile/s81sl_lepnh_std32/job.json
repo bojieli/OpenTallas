@@ -1,0 +1,156 @@
+{
+ "name": "s81sl_lepnh_std32-std32-COMMIT",
+ "block": "ot_s81sl_lep_nh",
+ "ref_tile": true,
+ "owner": "Codex:S81-STD-LEP32",
+ "purpose": "Standard LEP true RX SRAM and bounded control successor; +1 outward edge, unchanged RX ages",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/s81-lep-native32-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_dv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/mu_s81b_1019",
+   "results/rtl/mu_s81_kit_1019",
+   "results/rtl/mu_s81_2_rx_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "results/rtl/s81_lepcap_1019",
+   "rtl/common/ot_link_credit.sv",
+   "rtl/dsrom_sys/s81_dv/slice/test",
+   "tools/s81_slice/lep_bench.sh",
+   "tools/s81_slice/lep_std_phase_bench.sh",
+   "results/rtl/s81_standard_lep_native32_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep_nh #(.NATIVE32_STD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lep_nh_none_5",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nh_none_5 none 5 lep_nh",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lep_nh:"
+   },
+   {
+    "name": "lep_nhr_none_7",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nhr_none_7 none 7 lep_nhr",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lep:"
+   },
+   {
+    "name": "lep_nh_nhacc_5",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nh_nhacc_5 nhacc 5 lep_nh",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep_nh:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/benches_v3/lep_nh_nhacc_5/run_lep_nh_nhacc_5.log"
+   },
+   {
+    "name": "phase_h0_none",
+    "cmd": "bash tools/s81_slice/lep_std_phase_bench.sh {RUN}/phase/h0_none 0 none",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "LEP_STD_PHASE_PASS"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81sl_lepnh_std32/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lepnh_std32/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lepnh_std32 --out {RUN}/record/views/ot_s81sl_lep_nh --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lepnh_std32/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lepmua_dr/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lepmua_dr/s81sl_lepnh_std32-std32-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Actual standard native census526/502 over32 and RX flop storage replaced by true SRAM; grouped TX qualifiers and independent same-age RX metadata/nonempty copies. Default-off NATIVE32_STD; +1 outward command edge, RX0. No mask or dynamic schedule."
+}
