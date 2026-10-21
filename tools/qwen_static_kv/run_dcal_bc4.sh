@@ -2,6 +2,13 @@
 set -euo pipefail
 O=$(realpath -m "$1"); MUT=${2:-0};mkdir -p "$O"
 D=rtl/qwen_sys/d2d_static_20261015
+# KV-EMBWIN16 10-20: EW=<N> runs the miter on the grown-window pair image d2d_cal_image_mu_ew<N>.svh: the reference
+# (frozen bootcfg + MU sequencer) includes it through $O/inc (shadowing d2d_cal_image_mu.svh), the candidate is
+# qkd_d2d_cal_seq_bc4_ew<N>.sv.  MUT 7 (EW only): the reference stays on the base window image -> must FAIL.
+INC=(); CAND=qkd_d2d_cal_seq_bc4.sv
+if [ -n "${EW:-}" ]; then CAND=qkd_d2d_cal_seq_bc4_ew$EW.sv; mkdir -p "$O/inc"
+  [ "$MUT" = 7 ] || cp $D/d2d_cal_image_mu_ew$EW.svh "$O/inc/d2d_cal_image_mu.svh"; INC=(-I"$O/inc"); fi
+export CAND
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 python3 - "$O" "$MUT" <<'PY'
 from pathlib import Path
@@ -9,7 +16,8 @@ import sys
 O=Path(sys.argv[1]);mut=int(sys.argv[2]);D=Path('rtl/qwen_sys/d2d_static_20261015')
 s=(D/'qkd_d2d_cal_seq_bootcfg.sv').read_text().replace('module qkd_d2d_cal_seq_pin_bc #(','module qkd_d2d_cal_seq_pin_bc__ot_pr_core #(')
 (O/'frozen_core.sv').write_text(s)
-candidate=(D/'qkd_d2d_cal_seq_bc4.sv').read_text()
+import os
+candidate=(D/os.environ['CAND']).read_text()
 if mut==1: candidate=candidate.replace('land1 <= {4{land0}}', 'land1 <= {4{rst_n}}')
 if mut==2: candidate=candidate.replace('if (!rel1[18]) fault <= 0', 'if (!rel1[18]) fault <= 1').replace('if (!rel1[18]) f_early <= 0', 'if (!rel1[18]) f_early <= 1')
 if mut==3: candidate=candidate.replace("cfg_data[14:0] <= ((32'(0)) >> 0)", "cfg_data[14:0] <= 1")
@@ -65,7 +73,7 @@ endmodule
 '''
 (O/'miter.sv').write_text(s)
 PY
-"$VL" --binary --timing -O1 -Wno-fatal -j 4 -I$D --top-module tb_dcal_bc4 --Mdir "$O/obj" \
+"$VL" --binary --timing -O1 -Wno-fatal -j 4 "${INC[@]}" -I$D --top-module tb_dcal_bc4 --Mdir "$O/obj" \
  "$O/frozen_core.sv" results/arch/kv_dcal_bc3safe_1019/frozen_outer_wrapper.v \
  $D/ot_qwen_d2d_cal_seq.sv $D/ot_qwen_d2d_cal_seq_dies_mu.sv \
  $D/ot_qwen_d2d_cal_seq_bc4.sv "$O/candidate.sv" "$O/miter.sv" > "$O/build.log" 2>&1

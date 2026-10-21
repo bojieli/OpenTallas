@@ -102,6 +102,19 @@ LINK_IMAGE_SU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
 LINK_IMAGE_MU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh'
 LINK_MU = os.environ.get('OT_KV_MU', '0') == '1'
 LINK_IMAGE = LINK_IMAGE_MU if LINK_MU else LINK_IMAGE_SU
+# KV-EMBWIN16 10-20 (DRIVE-KV decision, KV-CAL15 finding): OT_KV_EMB_WIN=<edges> grows the token-run embedding window
+# (d2d_link_calendar --emb-window; L0..L35 and the token period move with it) so the embedding fill meets the row header
+# slot on the die relays.  The pair image is the committed d2d_cal_image[_mu]_ew<N>.svh (d2d_cal_image_production.sh with
+# D2D_EMB_WINDOW=<N>); both link ends bind it (KV: target 11 + the dcal tile's START / period constants, compute: its
+# sequencer).  Default unset = the priced window (272), images unchanged.
+LINK_EMB_WIN = os.environ.get('OT_KV_EMB_WIN', '')
+if LINK_EMB_WIN:
+    if not LINK_EMB_WIN.isdigit():
+        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN!r}: an integer edge count expected')
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', f'_ew{int(LINK_EMB_WIN)}.svh')
+    if not (ROOT / LINK_IMAGE).is_file():
+        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN}: no committed pair image {LINK_IMAGE} '
+                         f'(D2D_MU={int(LINK_MU)} D2D_EMB_WINDOW={LINK_EMB_WIN} tools/qwen_split/d2d_cal_image_production.sh)')
 
 
 def image_die_stages(img=None, root=None):
@@ -133,7 +146,8 @@ LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else [])     # + --token-path (decompressed in link_calendar)
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
+#            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it

@@ -175,8 +175,16 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
         raise SystemExit("L1..L35 op windows differ: one replayed segment-0 image cannot serve them")
     tail = status_delay + attn_tx_shift     # per-layer edges added after attn_kv (KV-BIND4: tx shift + STATUS tail)
     m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs, status_delay, attn_tx_shift)
-    emb = int(nodes["embed"]["cycles"]) if emb_window is None else emb_window
-    l0_start = int(groups[0]["start"])
+    emb_priced = int(nodes["embed"]["cycles"])
+    emb = emb_priced if emb_window is None else emb_window
+    # KV-EMBWIN16 10-20 (DRIVE-KV decision, +323 cycles/token inside the owner-accepted cost): --emb-window grows the
+    # token run's embedding window beyond the priced token-path node; L0 and every later layer (and the token period)
+    # move by the same edges, so no window shrinks and the layer images (segment 0) are unchanged.  Default None = the
+    # priced window, images byte-identical.
+    if type(emb) is not int or emb < emb_priced:
+        raise ValueError(f"emb_window {emb_window!r} must be an integer >= the priced embed window {emb_priced}")
+    d_emb = emb - emb_priced
+    l0_start = int(groups[0]["start"]) + d_emb
     e_last = emb - (txl + phy + 2)
     m1 = [dict(seg=1, src="C", cyc=2, tx_port=2, rx_port=2, kind=15, beat=0)]
     # kind-8 row header (Q-NETLIST qfd_sys_face record layout, 2026-10-16) one edge before word 0: 65 port-2 records
@@ -210,8 +218,8 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     adm_w = PREC_K0 + 1 + txl + phy + 4 + ADM_REPLAY
     m2.append(dict(seg=2, src="C", cyc=adm_w, tx_port=1, rx_port=1, kind=14, beat=1))
     ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs, status_delay, attn_tx_shift)
-    layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]) + i * tail, cycles=int(g["cycles"]) + tail) for i, g in enumerate(groups)],
-                  embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
+    layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]) + i * tail + d_emb, cycles=int(g["cycles"]) + tail) for i, g in enumerate(groups)],
+                  embed=dict(start=0, cycles=emb, priced=emb_priced, grown_by=d_emb), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
                   L1_35=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63, e_last], emb_header_send=e_last - 64,
                   program_records=dict(k_send=[ctx_k, ctx_k], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
@@ -224,7 +232,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                                                 "the budget must cover join last + 1, else the embed window grows"))),
                   admission=dict(k_send=[PREC_K0, PREC_K0 + 1], kinds="13/1 BEGIN, 13/2 AUTH S->C; 14/1 WITNESS C->S",
                                  witness_send=adm_w, replay_edges=ADM_REPLAY),
-                  token_period=int(d["totals"]["cycles"]) + 36 * tail, attn_tx_shift=attn_tx_shift,
+                  token_period=int(d["totals"]["cycles"]) + 36 * tail + d_emb, attn_tx_shift=attn_tx_shift,
                   retirement=dict(status_delay=status_delay, token_added_edges=36 * status_delay,
                                   qualification="UNQUALIFIED: requires full source deadline/path/reset proof"),
                   result_handoff=(dict(source=handoff, op="qkv", pc=hw["qkv"][1], visible_after_go=hw["qkv"][0],
@@ -383,11 +391,16 @@ def main():
     ap.add_argument("--mu", action="store_true",
                     help="MU-KV-CTX 10-19 (Qwen ROM 4 users): add the token run's MU context slot (S->C kind 12 beat 1, one "
                          "cycle before the existing kind-12 slot); default off = the single-user images, unchanged")
+    ap.add_argument("--emb-window", type=int, default=None,
+                    help="KV-EMBWIN16 10-20: token-run embedding window in edges (>= the priced embed node); L0, every later "
+                         "layer and the token period move by the growth; default = the priced window (images unchanged)")
     ap.add_argument("--attn-tx-shift", type=int, default=0, help="KV-BIND4: edges the KV attention tile adds before RESULT (r16 TX_SHIFT); K RESULT/STATUS and attn_kv +N per layer")
     ap.add_argument("--status-delay", type=int, default=0, help="opt-in static STATUS-only tail per layer; priced in every layer/token window; requires retirement proof")
     a = ap.parse_args()
     if a.attn_tx_shift < 0 or (a.attn_tx_shift and a.profile != "program"):
         ap.error("--attn-tx-shift requires program profile and nonnegative edges")
+    if a.emb_window is not None and a.profile != "program":
+        ap.error("--emb-window requires the program profile")
     if a.status_delay < 0 or (a.status_delay and a.profile != "program"):
         ap.error("--status-delay requires program profile and nonnegative edges")
     if a.profile == "program" and a.host_stages is None and not a.allow_unmeasured_host:
@@ -410,7 +423,7 @@ def main():
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
                                         st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
-                                        host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges,
+                                        host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
                                         attn_tx_shift=a.attn_tx_shift)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:

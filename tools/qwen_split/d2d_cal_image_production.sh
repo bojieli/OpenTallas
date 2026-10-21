@@ -31,6 +31,8 @@ MU_ARGS=()
 # RESULT(n) reaches the KV HOST; D2D_EMB_FILL=<fork + 2 + join last + 1> fails closed on a short fill budget
 [ -n "${D2D_CTX_HOST_REQ:-}" ] && MU_ARGS+=(--ctx-host-req "$D2D_CTX_HOST_REQ")
 [ -n "${D2D_EMB_FILL:-}" ] && MU_ARGS+=(--emb-fill-edges "$D2D_EMB_FILL")
+# KV-EMBWIN16 10-20: D2D_EMB_WINDOW=<edges> grows the token-run embedding window (L0..L35 + token period move with it)
+[ -n "${D2D_EMB_WINDOW:-}" ] && MU_ARGS+=(--emb-window "$D2D_EMB_WINDOW")
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \

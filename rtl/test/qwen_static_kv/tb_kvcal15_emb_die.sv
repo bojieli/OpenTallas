@@ -133,6 +133,11 @@ module tb_kvcal15_emb_die;
         else begin
             if (cyc - r0 != wexp[nw][27:12] || wsc != wexp[nw][8] || wi != (wsc ? wi : wexp[nw][5:0]) || wt != tok || we != epo)
                 begin errors = errors + 1; if (errors < 10) $display("FAIL word %0d edge %0d (exp %0d) idx %0d scale %0d", nw, cyc - r0, wexp[nw][27:12], wi, wsc); end
+`ifdef OT_KC15_HDR
+            // KV-EMBWIN16: the row is resident for row_tx at the header slot (compiler emb_fill law, edges from the start)
+            if (nw == 64 && cyc - r0 + 1 > `OT_KC15_HDR)
+                begin errors = errors + 1; $display("FAIL header: last word edge %0d + 1 > row_tx slot %0d", cyc - r0, `OT_KC15_HDR); end
+`endif
             if (!wsc && wd != {hdat(wi[5:4], {wi[3:0], 1'b1}, code_ad(tok)), hdat(wi[5:4], {wi[3:0], 1'b0}, code_ad(tok))})
                 begin errors = errors + 1; if (errors < 10) $display("FAIL word %0d data", wi); end
             sd = hdat(tok[10:9], tok[8:4], scale_ad(tok));
@@ -166,7 +171,12 @@ module tb_kvcal15_emb_die;
             $display("FAIL faults root %0d station %h merge %h train %h join %0d", root_fault, sf, mf, hf, jfault);
         end
         if (errors) $display("FAIL MUT %0d errors %0d", MUT, errors);
-        else $display("PASS KVCAL15_EMB_DIE 5 tokens x 65 words exact edges/data, LAT %0d, DN %0d/%0d/%0d/%0d RT %0d/%0d/%0d/%0d SKEW %0d PJ %0d, no fault", LAT, `OT_KC15_DN0, `OT_KC15_DN1, `OT_KC15_DN2, `OT_KC15_DN3, `OT_KC15_RT0, `OT_KC15_RT1, `OT_KC15_RT2, `OT_KC15_RT3, `OT_KC15_SKEW, `OT_KC15_PJ);
+        else begin
+`ifdef OT_KC15_HDR
+        $display("PASS KVEMBWIN16_HEADER row_tx slot %0d >= last word + 1", `OT_KC15_HDR);
+`endif
+        $display("PASS KVCAL15_EMB_DIE 5 tokens x 65 words exact edges/data, LAT %0d, DN %0d/%0d/%0d/%0d RT %0d/%0d/%0d/%0d SKEW %0d PJ %0d, no fault", LAT, `OT_KC15_DN0, `OT_KC15_DN1, `OT_KC15_DN2, `OT_KC15_DN3, `OT_KC15_RT0, `OT_KC15_RT1, `OT_KC15_RT2, `OT_KC15_RT3, `OT_KC15_SKEW, `OT_KC15_PJ);
+        end
         $finish;
     end
 endmodule
