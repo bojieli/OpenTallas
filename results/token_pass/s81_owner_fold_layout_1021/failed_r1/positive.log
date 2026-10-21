@@ -1,0 +1,26 @@
+PAIR_WRITE 89 row=896 mask=0f
+PAIR_WRITE 97 row=897 mask=0f
+PAIR_WRITE 105 row=898 mask=0f
+PAIR_WRITE 113 row=899 mask=0f
+PAIR_WRITE 121 row=900 mask=0f
+PAIR_WRITE 129 row=901 mask=0f
+PAIR_WRITE 137 row=902 mask=0f
+PAIR_WRITE 145 row=903 mask=0f
+PAIR_WRITE 238 row=904 mask=ff
+PAIR_WRITE 318 row=905 mask=ff
+PAIR_WRITE 398 row=908 mask=ff
+PAIR_WRITE 478 row=909 mask=ff
+RB_WRITE 548 row=912 mask=0f
+RB_WRITE 628 row=913 mask=0f
+RB_WRITE 708 row=916 mask=0f
+PAIR_WRITE 798 row=904 mask=ff
+PAIR_WRITE 878 row=905 mask=ff
+PAIR_WRITE 958 row=908 mask=ff
+PAIR_WRITE 1038 row=909 mask=ff
+RB_WRITE 1108 row=912 mask=0f
+RB_WRITE 1188 row=913 mask=0f
+RB_WRITE 1268 row=917 mask=0f
+OWNER_PAIR mut=0 bad=125 commands=30 rf=0 xf=0 pf=0 sf=1
+[2132000] %Fatal: tb_owner_pair.sv:60: Assertion failed in tb_owner_pair: OWNER_PAIR FAIL
+%Error: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/tools/s81_dv/owner_pair_1021/tb_owner_pair.sv:60: Verilog $stop
+Aborting...

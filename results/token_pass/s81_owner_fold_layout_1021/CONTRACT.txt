@@ -1,0 +1,17 @@
+Owner-fold operand layout correction (2026-10-21)
+
+Existing current source supports this mechanism:
+- ot_s81sl_xrt.sv full-width rrow=RD[49:40], sw_a=ur+2*un: no even-row restriction.
+- XRT local copy s_local=1, dir=0, own-sid mask loops full-width RD through the same unpacker.
+- Typed V explicitly rejects odd rows and is excluded from this recipe.
+- ot_s81sl_vp.sv sw writes bank a[0] at a>>1 and the other bank at (a+1)>>1; odd writes are legal.
+- VP RDOUT uses rr0=a0+2*i, rr1=rr0+1, parity-selected banks and dswp to restore ordered payloads, including odd a0.
+- Existing VS11 writes the four FP32 pairwise sums to one128b row. Three VS11 operations implement canonical TP4 tree.
+
+Per eight FP32 values, four rank partials first occupy disjoint staging pairs896..903. Copy low half from rows896/898/900/902 into904/905/908/909, in order. The second row of each copy is overwritten by the next rank or discarded in reserved906/910. RB904->912, RB908->913, RB912->916. Repeat with high halves897/899/901/903, output917. The extra source row of an odd RDOUT is only a discarded spill. No input bit is manufactured and no rounding order changes.
+
+The compiler now emits this native data-free command recipe as PARTIAL, with no calendar rows. It is not an executable layer qualification: real wo_b captures/output-index ownership, four-rank full-width ingress routes, current XRT selection, fixed CTL/lo/SRAM-commit epochs, tile lifetime reuse and result delivery still require binding. Source V ACK is never a destination SRAM commit. No aggregate rate or fixed completion date is claimed. The old GAP claiming operand placement impossible is superseded, while prior result artifacts remain immutable.
+
+Source candidate scope: tools at 068e60d49 plus fold7f127176b, canonical base-slice transport6893686b3 (local cherry7cca59d6c), selected-source resolver05ec01597 (local9b9a16a8e). The compiler topology remains G7 die86dd;689 changes an internal slice body, not this top-level topology hash. This is an RTL-source candidate overlay. It is not equivalent to the materialized G8 end wrappers (fbbd94f cap5r->xgt_xo/XS4), whose exact assembly is a separate parent-owned binding. The minimum fold proof directly instantiates current XRT/RSTOPT/VP/VS and real DL4 relays; it does not instantiate the full shipping slice/array.
+
+Source-owner notice: G9 candidate09744841a supplies a selected u_s_3N-only KV_ENABLE binder over copies of the completed G8 overlays, but its programme producer/TP4/lifetimes remain open. This fold receipt does not adopt that die or change the four KV op qualification statuses.

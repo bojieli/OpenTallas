@@ -1,0 +1,640 @@
+{
+  "status": "FAIL",
+  "full_layer": false,
+  "full_token": false,
+  "admitted": false,
+  "scope": "Synthetic eight-element rank partials -> real native target5 staging -> XRT local RD/DL4/VP SRAM -> canonical VS11",
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+    "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv": "3292e2e8fa73ac1cbef5042171364e9ced031cf5c5af5f95ec83ac559456309a",
+    "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "3b1749f5d4c5bdea21ffe08ccf534aaf83fe693a372ad9d0c2340a0a6340452f",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": "c30d4547f90149895e501063639ca1ad0e394fb23031bd4df21f947385eac638",
+    "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv": "ea24cb175e22bba62ebe85fbea7f6ab8b0174b1d285e25487ce7667f0e5910fc",
+    "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv": "b5340082cf91c28bcd88cf61b7eb49723ae7a39ea6d4d75939db323d8f3ae5cc",
+    "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv": "eb940d1da87c783432778e360dc3310be78157707da45c97630a67375cbdd9cd",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv": "68a1ae09050c3116dcb6b3bf6b861a8fad387d0851d3e255e8bd8262601abc5b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv": "ac0eacf15609196b72ba28738eed1c2fcaa88d7d0cb95135e335dc09b2df719c",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "4187b6a2d0e317f2b7d059c173fb43f8f09ade4638566d89946ba1f913a7ec7a",
+    "tools/s81_dv/owner_pair_1021/tb_owner_pair.sv": "2bd2f51c446005d4efd263de696e77d232880d40badaf192718fe9df28f82c83"
+  },
+  "compiler_sha256": {
+    "tools/s81_dv/layer_prog/owner_fold.py": "2429e4092c9cdb3be56a44bc2fbad2960224f73e186a3fabd2c733d491ee03d8",
+    "tools/s81_dv/layer_prog/lower_vpx.py": "88ecb8004323aa33abaf0349964221da0cecddc055ae5d32c2611f714e5c5d5b"
+  },
+  "argv": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--binary",
+    "--timing",
+    "-O1",
+    "-fno-dfg",
+    "--unroll-count",
+    "4",
+    "-Wno-fatal",
+    "-Wno-WIDTH",
+    "--top-module",
+    "tb_owner_pair",
+    "-Mdir",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/component_r1/obj",
+    "-j",
+    "2",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/lib/ot_rst_relay.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_delay.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_sfu.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fpu.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41/ot_hdc_actquant.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_aq12.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/ot_hdc_prefix.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "/srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r2/src/tools/s81_dv/owner_pair_1021/tb_owner_pair.sv",
+    "-CFLAGS",
+    "-O1"
+  ],
+  "vehicle": {
+    "schema": "opentallas.s81.owner_fold.pair_vehicle.v1",
+    "admitted": false,
+    "layer": "L0",
+    "row_lease": {
+      "slice_sid": 4,
+      "leaf": 0,
+      "rows": [
+        896,
+        917
+      ],
+      "qualified": false,
+      "requires": "check actual producer CAP and all L0 writer live ranges before scheduling"
+    },
+    "staged_pairs": [
+      {
+        "rank": 0,
+        "rows": [
+          896,
+          897
+        ],
+        "producer": "actual rank-local wo_b partial; unbound"
+      },
+      {
+        "rank": 1,
+        "rows": [
+          898,
+          899
+        ],
+        "producer": "actual rank-local wo_b partial; unbound"
+      },
+      {
+        "rank": 2,
+        "rows": [
+          900,
+          901
+        ],
+        "producer": "actual rank-local wo_b partial; unbound"
+      },
+      {
+        "rank": 3,
+        "rows": [
+          902,
+          903
+        ],
+        "producer": "actual rank-local wo_b partial; unbound"
+      }
+    ],
+    "reserved_rows": [
+      896,
+      897,
+      898,
+      899,
+      900,
+      901,
+      902,
+      903,
+      904,
+      905,
+      906,
+      907,
+      908,
+      909,
+      910,
+      911,
+      912,
+      913,
+      914,
+      915,
+      916,
+      917
+    ],
+    "operand_pairs": [
+      904,
+      908
+    ],
+    "discarded_spill_rows": [
+      906,
+      910
+    ],
+    "intermediate_pair": 912,
+    "output_rows": [
+      916,
+      917
+    ],
+    "arithmetic": "FP32 ((p0+p1)+(p2+p3)), independently for both128b halves",
+    "commands": [
+      {
+        "id": "h0.copy0",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 896,
+        "destination_rows": [
+          904,
+          905
+        ],
+        "kept_row": 904,
+        "depends": [
+          "rank0.stage_pair_sram_commit",
+          "rank1.stage_pair_sram_commit",
+          "rank2.stage_pair_sram_commit",
+          "rank3.stage_pair_sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471000040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e018200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h0.copy1",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 898,
+        "destination_rows": [
+          905,
+          906
+        ],
+        "kept_row": 905,
+        "depends": [
+          "h0.copy0.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471200040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e098200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h0.copy2",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 900,
+        "destination_rows": [
+          908,
+          909
+        ],
+        "kept_row": 908,
+        "depends": [
+          "h0.copy1.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471800040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e118200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h0.copy3",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 902,
+        "destination_rows": [
+          909,
+          910
+        ],
+        "kept_row": 909,
+        "depends": [
+          "h0.copy2.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471a00040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e198200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h0.rb0",
+        "kind": "VS_RB",
+        "source_pair": 904,
+        "output_row": 912,
+        "depends": [
+          "h0.copy3.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 0,
+            "word": "000000000000000000000000000000e400400e22c200010"
+          }
+        ],
+        "requires": [
+          "previous VS command retired and source SRAM writes committed"
+        ]
+      },
+      {
+        "id": "h0.rb1",
+        "kind": "VS_RB",
+        "source_pair": 908,
+        "output_row": 913,
+        "depends": [
+          "h0.rb0.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 0,
+            "word": "000000000000000000000000000000e440400e32c200010"
+          }
+        ],
+        "requires": [
+          "previous VS command retired and source SRAM writes committed"
+        ]
+      },
+      {
+        "id": "h0.rb2",
+        "kind": "VS_RB",
+        "source_pair": 912,
+        "output_row": 916,
+        "depends": [
+          "h0.rb1.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 0,
+            "word": "000000000000000000000000000000e500400e42c200010"
+          }
+        ],
+        "requires": [
+          "previous VS command retired and source SRAM writes committed"
+        ]
+      },
+      {
+        "id": "h1.copy0",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 897,
+        "destination_rows": [
+          904,
+          905
+        ],
+        "kept_row": 904,
+        "depends": [
+          "h0.rb2.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471000040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e058200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h1.copy1",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 899,
+        "destination_rows": [
+          905,
+          906
+        ],
+        "kept_row": 905,
+        "depends": [
+          "h1.copy0.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471200040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e0d8200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h1.copy2",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 901,
+        "destination_rows": [
+          908,
+          909
+        ],
+        "kept_row": 908,
+        "depends": [
+          "h1.copy1.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471800040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e158200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h1.copy3",
+        "kind": "LOCAL_RD_PAIR",
+        "source_row": 903,
+        "destination_rows": [
+          909,
+          910
+        ],
+        "kept_row": 909,
+        "depends": [
+          "h1.copy2.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 4,
+            "word": "00000000000000000000000000000471a00040100040010"
+          },
+          {
+            "target": 0,
+            "word": "0000000000000000000000000000000000400e1d8200010"
+          }
+        ],
+        "requires": [
+          "config captured before lo; config and lo must not coincide",
+          "RDOUT input read and whole-pair destination SRAM commit completed"
+        ]
+      },
+      {
+        "id": "h1.rb0",
+        "kind": "VS_RB",
+        "source_pair": 904,
+        "output_row": 912,
+        "depends": [
+          "h1.copy3.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 0,
+            "word": "000000000000000000000000000000e400400e22c200010"
+          }
+        ],
+        "requires": [
+          "previous VS command retired and source SRAM writes committed"
+        ]
+      },
+      {
+        "id": "h1.rb1",
+        "kind": "VS_RB",
+        "source_pair": 908,
+        "output_row": 913,
+        "depends": [
+          "h1.rb0.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 0,
+            "word": "000000000000000000000000000000e440400e32c200010"
+          }
+        ],
+        "requires": [
+          "previous VS command retired and source SRAM writes committed"
+        ]
+      },
+      {
+        "id": "h1.rb2",
+        "kind": "VS_RB",
+        "source_pair": 912,
+        "output_row": 917,
+        "depends": [
+          "h1.rb1.sram_commit"
+        ],
+        "templates": [
+          {
+            "target": 0,
+            "word": "000000000000000000000000000000e540400e42c200010"
+          }
+        ],
+        "requires": [
+          "previous VS command retired and source SRAM writes committed"
+        ]
+      }
+    ],
+    "lifetime_qualified": false,
+    "requires": [
+      "real wo_b capture to stage pairs, including rank identity and output indices",
+      "current full-width RD routes to this owner; no odd-row typed V",
+      "source-pinned fixed CTL/lo/commit/VS calendar and nonalias lifetimes",
+      "repeat per actual owned eight-element tile; consumer/result allgather binding"
+    ],
+    "qualification": "ENCODED_UNSCHEDULED: no payload, issue dates, ACK extension or completion credit"
+  },
+  "fixed_stimulus_dates": [
+    80,
+    88,
+    96,
+    104,
+    112,
+    120,
+    128,
+    136,
+    200,
+    209,
+    280,
+    289,
+    360,
+    369,
+    440,
+    449,
+    520,
+    600,
+    680,
+    760,
+    769,
+    840,
+    849,
+    920,
+    929,
+    1000,
+    1009,
+    1080,
+    1160,
+    1240
+  ],
+  "inputs_bits": [
+    [
+      1621981420,
+      1065353216,
+      3225419776,
+      1065353217,
+      1082130432,
+      3769465068,
+      1088421888,
+      897988541
+    ],
+    [
+      3769465068,
+      1073741824,
+      786163455,
+      3212836864,
+      1073741824,
+      1621981420,
+      3221225472,
+      1082130432
+    ],
+    [
+      1077936128,
+      1621981420,
+      1082130432,
+      1073741824,
+      3238002688,
+      1077936128,
+      1621981420,
+      3229614080
+    ],
+    [
+      786163455,
+      3769465068,
+      3221225472,
+      869711765,
+      1065353216,
+      786163455,
+      3769465068,
+      1073741824
+    ]
+  ],
+  "expected_bits": [
+    1077936128,
+    1077936128,
+    3212836864,
+    1073741824,
+    3212836864,
+    1077936128,
+    1084227584,
+    1073741828
+  ],
+  "open": [
+    "actual wo_b producer/capture",
+    "four-rank ingress",
+    "selected die row leases/routes",
+    "full tile/result calendar"
+  ],
+  "checks": {
+    "positive": {
+      "exit_code": 1,
+      "passed": false
+    },
+    "negative_odd_destination": {
+      "exit_code": 1,
+      "passed": true
+    }
+  }
+}
