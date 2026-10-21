@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.s81.aggregate_schedule_diagnostic.v1",
+  "status": "REJECTED_BEFORE_EXECUTION",
+  "artifact": "aggregate_replay_r1",
+  "commit": "32050b46d",
+  "actual_XQ_pin_edges": [
+    64,
+    222
+  ],
+  "offset_load_pin_edge": 1048,
+  "CAP_cfg_pin_edge": 1173,
+  "XS_window_open_command_pin_edge": 1174,
+  "prime_pin_edge": 1304,
+  "start_pin_edge": 1324,
+  "go_pin_edge": 1347,
+  "reason": "All actual producer XQ traffic precedes its own explicit source XS window; opening window clears those arrivals.",
+  "simulation_launched": false,
+  "replacement": "aggregate_replay_r2",
+  "replacement_note": "Source field decode guard requires first gather after delayed window and last gather before prime; actual protocol timing/physical phases remain unqualified."
+}

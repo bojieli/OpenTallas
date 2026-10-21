@@ -1,0 +1,1100 @@
+{
+ "schema": "opentallas.s81.shipping_aggregate_clock_roots.v1",
+ "status": "SOURCE_CLOCK_IDENTITIES_ONLY_NOT_PHASE_QUALIFIED",
+ "cone_sv_sha256": "24e1a097c9f9d8129e74041907b63a2eee638e5f3a1c1fba4b79f7d390bf4942",
+ "ports_sha256": "3c2746358273273f076ca9dfa5016bf67c11370a3c751500824487970e8b7412",
+ "clock_inputs": {
+  "i__ck_cl0N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl0N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl0N"
+   ]
+  },
+  "i__ck_cl0S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl0S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl0S"
+   ]
+  },
+  "i__ck_cl1N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl1N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl1N"
+   ]
+  },
+  "i__ck_cl1S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl1S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl1S"
+   ]
+  },
+  "i__ck_cl2N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl2N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl2N"
+   ]
+  },
+  "i__ck_cl2S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl2S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl2S"
+   ]
+  },
+  "i__ck_cl3N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl3N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl3N"
+   ]
+  },
+  "i__ck_cl3S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl3S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl3S"
+   ]
+  },
+  "i__ck_cl4N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl4N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl4N"
+   ]
+  },
+  "i__ck_cl4S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl4S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl4S"
+   ]
+  },
+  "i__ck_cl5N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl5N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl5N"
+   ]
+  },
+  "i__ck_cl5S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl5S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl5S"
+   ]
+  },
+  "i__ck_cl6N": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl6N",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl6N"
+   ]
+  },
+  "i__ck_cl6S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_cl6S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl6S"
+   ]
+  },
+  "i__ck_edge2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_edge2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_edge2"
+   ]
+  },
+  "i__ck_ep_s_0N_CAP_CE": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_CAP_CE",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_CAP_CE"
+   ]
+  },
+  "i__ck_ep_s_0N_CAP_CW": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_CAP_CW",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_CAP_CW"
+   ]
+  },
+  "i__ck_ep_s_0N_CAP_RN": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_CAP_RN",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_CAP_RN"
+   ]
+  },
+  "i__ck_ep_s_0N_CAP_RS": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_CAP_RS",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_CAP_RS"
+   ]
+  },
+  "i__ck_ep_s_0N_CAP_RT": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_CAP_RT",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_CAP_RT"
+   ]
+  },
+  "i__ck_ep_s_0N_K": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_K",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_K"
+   ]
+  },
+  "i__ck_ep_s_0N_L0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_L0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_L0"
+   ]
+  },
+  "i__ck_ep_s_0N_L1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_L1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_L1"
+   ]
+  },
+  "i__ck_ep_s_0N_L3": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_L3",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_L3"
+   ]
+  },
+  "i__ck_ep_s_0N_L4": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_L4",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_L4"
+   ]
+  },
+  "i__ck_ep_s_0N_ML": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_ML",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_ML"
+   ]
+  },
+  "i__ck_ep_s_0N_S": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_ep_s_0N_S",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_ep_s_0N_S"
+   ]
+  },
+  "i__ck_frame_f_0L10_r0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L10_r0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L10_r0"
+   ]
+  },
+  "i__ck_frame_f_0L10_r1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L10_r1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L10_r1"
+   ]
+  },
+  "i__ck_frame_f_0L10_r2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L10_r2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L10_r2"
+   ]
+  },
+  "i__ck_frame_f_0L12_r0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L12_r0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L12_r0"
+   ]
+  },
+  "i__ck_frame_f_0L12_r1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L12_r1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L12_r1"
+   ]
+  },
+  "i__ck_frame_f_0L12_r2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L12_r2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L12_r2"
+   ]
+  },
+  "i__ck_frame_f_0L13_r0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L13_r0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L13_r0"
+   ]
+  },
+  "i__ck_frame_f_0L13_r1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L13_r1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L13_r1"
+   ]
+  },
+  "i__ck_frame_f_0L13_r2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0L13_r2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0L13_r2"
+   ]
+  },
+  "i__ck_frame_f_0R10_r0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R10_r0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R10_r0"
+   ]
+  },
+  "i__ck_frame_f_0R10_r1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R10_r1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R10_r1"
+   ]
+  },
+  "i__ck_frame_f_0R10_r2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R10_r2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R10_r2"
+   ]
+  },
+  "i__ck_frame_f_0R12_r0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R12_r0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R12_r0"
+   ]
+  },
+  "i__ck_frame_f_0R12_r1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R12_r1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R12_r1"
+   ]
+  },
+  "i__ck_frame_f_0R12_r2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R12_r2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R12_r2"
+   ]
+  },
+  "i__ck_frame_f_0R13_r0": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R13_r0",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R13_r0"
+   ]
+  },
+  "i__ck_frame_f_0R13_r1": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R13_r1",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R13_r1"
+   ]
+  },
+  "i__ck_frame_f_0R13_r2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_frame_f_0R13_r2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_frame_f_0R13_r2"
+   ]
+  },
+  "i__ck_south2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_south2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_south2"
+   ]
+  },
+  "i__ck_south3": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_south3",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_south3"
+   ]
+  },
+  "i__ck_south4": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_south4",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_south4"
+   ]
+  },
+  "i__ck_south5": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_south5",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_south5"
+   ]
+  },
+  "i__ck_void2": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_void2",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_void2"
+   ]
+  },
+  "i__ck_void4": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_void4",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_void4"
+   ]
+  },
+  "i__ck_void5": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "ck_void5",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_void5"
+   ]
+  },
+  "i__u_s_1N_ck_line": {
+   "dir": "input",
+   "width": 16,
+   "lo": 0,
+   "net": "u_s_1N_ck_line",
+   "bits": [
+    [
+     15,
+     12
+    ]
+   ],
+   "peers": [
+    "u_s_1N"
+   ],
+   "kind": "clock",
+   "clock_from": [
+    "ck_cl1N"
+   ]
+  }
+ },
+ "selected_instances": {
+  "u_s_0N": {
+   "ck_S": "ck_ep_s_0N_S",
+   "ck_K": "ck_ep_s_0N_K",
+   "ck_ML": "ck_ep_s_0N_ML",
+   "ck_L0": "ck_ep_s_0N_L0",
+   "ck_L1": "ck_ep_s_0N_L1",
+   "ck_L3": "ck_ep_s_0N_L3",
+   "ck_L4": "ck_ep_s_0N_L4",
+   "ck_CAP_RT": "ck_ep_s_0N_CAP_RT",
+   "ck_CAP_CW": "ck_ep_s_0N_CAP_CW",
+   "ck_CAP_CE": "ck_ep_s_0N_CAP_CE",
+   "ck_CAP_RN": "ck_ep_s_0N_CAP_RN",
+   "ck_CAP_RS": "ck_ep_s_0N_CAP_RS",
+   "rst_n": "rs_48_43_1",
+   "ck_line": "u_s_0N_ck_line",
+   "ck_v": "u_s_0N_ck_v",
+   "ck_xc": "u_s_0N_ck_xc"
+  },
+  "u_f_0L10": {
+   "ck_r0": "ck_frame_f_0L10_r0",
+   "ck_r1": "ck_frame_f_0L10_r1",
+   "ck_r2": "ck_frame_f_0L10_r2",
+   "xk": "{nx_f_0L10_l3_fck[75], nx_f_0L10_l2_fck[75], nx_f_0L10_l1_fck[75], nx_f_0L10_l0_fck[75]}",
+   "rst_n": "rsx_f_0L10_2"
+  },
+  "u_f_0L12": {
+   "ck_r0": "ck_frame_f_0L12_r0",
+   "ck_r1": "ck_frame_f_0L12_r1",
+   "ck_r2": "ck_frame_f_0L12_r2",
+   "xk": "{nx_f_0L12_l3_fck[68], nx_f_0L12_l2_fck[68], nx_f_0L12_l1_fck[67], nx_f_0L12_l0_fck[67]}",
+   "rst_n": "rs_3_35_1",
+   "xok": "u_f_0L12_xok"
+  },
+  "u_f_0L13": {
+   "ck_r0": "ck_frame_f_0L13_r0",
+   "ck_r1": "ck_frame_f_0L13_r1",
+   "ck_r2": "ck_frame_f_0L13_r2",
+   "xk": "{nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}",
+   "rst_n": "rs_2_44_2"
+  },
+  "u_f_0R10": {
+   "ck_r0": "ck_frame_f_0R10_r0",
+   "ck_r1": "ck_frame_f_0R10_r1",
+   "ck_r2": "ck_frame_f_0R10_r2",
+   "xk": "{nx_f_0R10_l3_fck[92], nx_f_0R10_l2_fck[92], nx_f_0R10_l1_fck[92], nx_f_0R10_l0_fck[92]}",
+   "rst_n": "rsx_f_0R10_10"
+  },
+  "u_f_0R12": {
+   "ck_r0": "ck_frame_f_0R12_r0",
+   "ck_r1": "ck_frame_f_0R12_r1",
+   "ck_r2": "ck_frame_f_0R12_r2",
+   "xk": "{nx_f_0R12_l3_fck[95], nx_f_0R12_l2_fck[95], nx_f_0R12_l1_fck[95], nx_f_0R12_l0_fck[95]}",
+   "rst_n": "rsx_f_0R12_5",
+   "xok": "u_f_0R12_xok"
+  },
+  "u_f_0R13": {
+   "ck_r0": "ck_frame_f_0R13_r0",
+   "ck_r1": "ck_frame_f_0R13_r1",
+   "ck_r2": "ck_frame_f_0R13_r2",
+   "xk": "{nx_f_0R13_l3_fck[13], nx_f_0R13_l2_fck[13], nx_f_0R13_l1_fck[13], nx_f_0R13_l0_fck[13]}",
+   "rst_n": "rs_6_35_2"
+  }
+ },
+ "reset_root_inputs": {
+  "i__rst_n": {
+   "dir": "input",
+   "width": 1,
+   "lo": 0,
+   "net": "rst_n",
+   "bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "peers": [
+    "<die_in>"
+   ],
+   "kind": "die_input",
+   "clock_from": null
+  }
+ },
+ "runtime_phase_bound": false,
+ "forwarded_clock_netlist_preserved": true
+}

@@ -46,19 +46,36 @@ def main():
         word=sum(int(f['data276'],16)<<(276*i) for i,f in enumerate(fragments))
         assert word&1 and (word>>1)&7==1 and (word>>4)&31==1
         assert (word>>9)&15==context['sid'] and (word>>13)&255==beat
-        local=a.gather_origin+2*beat
+        local=a.gather_origin+beat
         packets.append(dict(edge=local,kind='ACTUAL_VQ_XQ',data1104=f'{word:0276x}',
             sid=context['sid'],leaf=context['leaf'],global_beat=beat,
             source_fragment_cycles=[f['cycle'] for f in fragments],
             source_first_fragment_to_local_line_edge_offset=local-fragments[0]['cycle'],
             conversion='four consecutive real VQ fragments concatenated low-first; no payload changes',
             source_log_sha256=context['log_sha256']))
-    assert a.command_origin>a.gather_origin+160
     for half in ['A','B']:
         native_path=next((a.source_assets/half/'prog').rglob('programme.json'))
         native=json.loads(native_path.read_text())
         assert native['selected_slice_source']['streamer']=='ot_s81sl_xs4'
         assert native['selected_slice_source']['streamer_added_capture_edges']==1
+        commands=native['command_descriptors']
+        decoded=[]
+        for c in commands:
+            if c['target']!=2:continue
+            word=int(c['body160'],16)
+            decoded.append(dict(relative=c['relative_pin_edge'],off_load=(word>>123)&1,
+                off=(word>>124)&255,window=(word>>120)&1,family=(word>>121)&1,
+                parity=(word>>122)&1,prime=(word>>93)&1,start=(word>>94)&1,go=word&1))
+        only=lambda key:next(x for x in decoded if x[key])
+        assert all(sum(bool(x[key]) for x in decoded)==1 for key in ['off_load','window','prime','start','go'])
+        off=only('off_load');window=only('window');prime=only('prime');start=only('start');go=only('go')
+        assert not window['family'] and not window['parity']
+        # Necessary source-model ordering guard, not a measured timing receipt.
+        # OFF acts at the pin; window is delayed OFF+2 after source XS input.
+        window_model=a.command_origin+window['relative']+5+1+off['off']+2
+        assert a.gather_origin>window_model, ('gathers precede selected XS window',a.gather_origin,window_model)
+        assert a.gather_origin+79<a.command_origin+prime['relative']
+        assert prime['relative']<start['relative']<go['relative']
         events=list(packets)
         for c in native['command_descriptors']:
             payload=int(c['payload186'],16)
@@ -85,6 +102,11 @@ def main():
             source_assets_sha256=sha(a.source_assets/'assets.json'),inventory_sha256=sha(a.inventory),
             production_ROM_images={f.name:sha(f) for f in rom.iterdir()},
             gather_origin=a.gather_origin,command_origin=a.command_origin,events=events,
+            command_field_decode=decoded,
+            ordering_guard=dict(qualification='NECESSARY SOURCE MODEL ONLY; actual trace required',
+                window_open_model_edge=window_model,first_gather_edge=a.gather_origin,
+                last_gather_edge=a.gather_origin+79,prime_pin_edge=a.command_origin+prime['relative'],
+                start_pin_edge=a.command_origin+start['relative'],go_pin_edge=a.command_origin+go['relative']),
             expected_XRT_pin_age=dict(edges=5,qualification='SOURCE MODEL TO BE MEASURED ON SELECTED RSTOPT_XO/XRT'),
             clocks='preserve every named source clock and forwarded clock path; no independent frame broadcast',
             capture=native['capture'],physical_phase_qualified=False,global_epoch_bound=False,
