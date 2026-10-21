@@ -33,11 +33,14 @@
     "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
     "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
-    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",
-    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop_xo.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
     "rtl/lib/ot_rst_relay.sv",
-    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv"
   ],
   "defines": [
     "DSFD_PQ_STATIC_X2",
@@ -66,7 +69,7 @@
     "safe8_lanes": "445e6c74c"
   },
   "outline": {
-    "w": 2505.6,
+    "w": 2851.2,
     "h": 6825.6,
     "exact": true
   },
@@ -308,8 +311,15 @@
         86.4,
         3456.0
       ],
-      "master": "ot_s81sl_xg_xo",
-      "binding_state": "UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias"
+      "master": "ot_s81sl_xgt_xo",
+      "binding_state": "UNBOUND: ot_s81sl_xgt_xo (S81-FIX2/XG 6aac44322, ONE combined xg_xo + rstopt + xs4 master) kits s81sl_xgtxo 734.4x777.6 / s81sl_xgtxo_b 648x864 --cts gates live; binds the first CLOSED; never an old xg/xg_xo alias",
+      "g8_slot": {
+        "wh": [
+          734.4,
+          864.0
+        ],
+        "note": "S81-G8: xg slot = union of both kit outlines (was 604.8 x 518.4 between u_xg/u_cap/u_xr); the unhardened parent is placed by the die GEN, the children re-layout follows the closed kit"
+      }
     },
     {
       "count": 1,
@@ -711,5 +721,6 @@
     "Actual child pins, clock/reset placement and PG composition feed ongoing die flow",
     "External ports and source widths preserved; no tied functional ports or false paths",
     "No copy-B/AB physical release alias: this two-lane envelope is copy-A only"
-  ]
+  ],
+  "g8_note": "S81-G8 10-21: s_0S end slot 2505.6 -> 2851.2 (all four end parents 2851.2; room for the enlarged xg and the per-region clock roots)"
 }
