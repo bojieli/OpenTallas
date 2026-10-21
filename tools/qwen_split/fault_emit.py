@@ -368,6 +368,18 @@ def pre(v, m, G):
     # static, observation-only edge as every tree edge).  Plan field owners[o].pts = the g5 landing sites (mkplan.py).
     nz = 0
     if os.environ.get('OT_SPLIT_FAULT_ZONE_ROOTS', '1') == '1':
+        # group roots sit AT their landings: the 350 um wide-bus end keep-clear boxes cover many landing faces (dv2f20g5rf
+        # try 2: none free within 300 um of c16_E0_0's (19262, 5448) group), so group roots use a smaller keep-clear
+        # (GROUP_KEEP_UM) over the same insts + reserved relay sites + every root already placed
+        gk = float(os.environ.get('OT_SPLIT_FAULT_GROUP_KEEP_UM', '100'))
+        occ_g = Occ(m)      # m['insts'] already holds the primary roots
+        for r_ in plan.get('reserved', ()):
+            occ_g.add(tuple(r_))
+        for bid, cl, bits, eps in m['buses']:
+            if bits >= WIDE_BITS and cl not in ('clock_trunk', 'reset', 'constant'):
+                for e in eps:
+                    x_, y_ = pos(e[0], e[1].lstrip('*'))
+                    occ_g.add((x_ - gk, y_ - gk, x_ + gk, y_ + gk))
         for o, r in sorted(owners.items()):
             pts = r.get('pts') or []
             if not pts or o not in roots:
@@ -384,7 +396,9 @@ def pre(v, m, G):
                 if any(rr['cj'] == roots[o]['cj'] and _man(rr['xy'], (gx, gy)) <= GROUP_UM for rr in roots.values()):
                     continue                        # a root of the same clock already serves this group
                 okz2 = lambda b: zn.of_box(b) is not None
-                s = occ.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
+                s = occ_g.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
+                if s is not None:
+                    occ.add((s[0], s[1], s[0] + W, s[1] + H))
                 if s is None:
                     raise ValueError(f'fault emit: no free site within {GROUP_UM:.0f} um for the group root of {o} near ({gx:.0f}, {gy:.0f})')
                 z = zn.of_box((s[0], s[1], s[0] + W, s[1] + H))
