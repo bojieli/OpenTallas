@@ -196,15 +196,15 @@
   "macro_placements": "unchanged3 R0 SRAMs fromb2cf:43.2/43.2,43.2/129.6,172.8/43.2 actual94.824x41.064 and5.4halo",
   "seed_logic_box_um": [
     302.4,
-    21.6,
-    583.2,
+    43.2,
+    561.6,
     108
   ],
   "seed_roll_n_box_um": [
-    367.2,
-    172.8,
     388.8,
-    194.4
+    216,
+    410.4,
+    237.6
   ],
   "area_basis": "actualpriorstd46294um2 andhalo-adjustedmacro11682um2; sixgroup boxes each11197.44um2,5312registerclockpins~1550um2DFFarea lowerbound; actual per-groupmappedcomb+seqarea androwcapacity MUSTmeasure beforegate",
   "latency": {
@@ -224,11 +224,20 @@
     "PhysicalcriticalPNGrootreview required; no arbitraryCTSkinob retry or clockconstraintrelaxation."
   ],
   "seed_roll_to_group_conservative_bounds_um": [
-    259.2,
-    151.2,
-    280.8,
-    345.6,
-    237.6,
-    367.2
-  ]
+    324.0,
+    194.4,
+    302.4,
+    324.0,
+    194.4,
+    302.4
+  ],
+  "seed_roll_s_box_um": [
+    367.2,
+    216,
+    388.8,
+    237.6
+  ],
+  "seed_logic_to_roll_s_bound_um": 388.8,
+  "seed_roll_s_to_roll_n_bound_um": 64.8,
+  "seed_ownership_refinement": "Disjoint seedmain fence excludes original roll_s FFs (Q-net semantic match) and kept u_n* negative FF leaves; separate adjacent21.6square fences in the row gap216..237.6. No source/edge/register change. Must bind actual mapped Qnets/nonempty groups, no guessed instance match."
 }
