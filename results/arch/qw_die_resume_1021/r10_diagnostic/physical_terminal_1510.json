@@ -1,0 +1,48 @@
+{
+  "status": "DIAGNOSTIC_TERMINAL_PRE_GRT",
+  "unit": "oth-ubuntu-3097292-1792619155",
+  "exit": 11,
+  "original_GEN_rc": 1,
+  "original_compiler_status": "FAIL",
+  "manifest_sha256": "187fdf67026f7e707ecace89742b0ef272ef5cfb130a1c5092eff6854485b98c",
+  "physical_stage": "tools/phy_pg/apply_case.py",
+  "failure": "no source PHY abstracts found in new case",
+  "cause": "captured emitted Q/K UCIE and SerDes LEFs use M7/M8 power pins; source-PHY apply contract requires actual M4-only power pins",
+  "no_bypass": true,
+  "GRT": "NOTRUN",
+  "STA": "NOTRUN",
+  "CLK": "NOTRUN",
+  "actual_source_candidates": [
+    {
+      "path": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+      "sha256": "eb7bba3928fbc62ab8e5be449fcf1a56cbadcee47e82d1badc9b46a8008a7152",
+      "size": [
+        2320.056,
+        1563.57
+      ],
+      "case_size": [
+        1563.57,
+        2320.056
+      ],
+      "status": "TRANSPOSED_OUTLINE_REFUSED"
+    },
+    {
+      "path": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+      "sha256": "1fcc313e1c0b74de491710e0da235edd683823db1590c26f44489f620264d34a",
+      "lclk": false,
+      "status": "MISSING_ACTUAL_PORT_REFUSED"
+    },
+    {
+      "path": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+      "sha256": "0b763c286c50518244330e57ea367435a98be9ae9f9d1489b946a03f2b402f8c",
+      "lclk": true,
+      "size": [
+        777.6,
+        777.6
+      ],
+      "status": "EXISTING_SOURCE_CANDIDATE_NOT_ADOPTED"
+    }
+  ],
+  "K_UCIE": "NO_SAME_NAME_VIEW",
+  "next": "actual source/master/interface/outline contracts required before an earliest-stage continuation; original captured case and failure remain unchanged"
+}
