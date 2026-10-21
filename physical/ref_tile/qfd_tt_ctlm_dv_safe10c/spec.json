@@ -333,8 +333,8 @@
   }
  },
  "job": {
-  "owner": "QK-CLOSEOUT/QKC-CTLM",
-  "branch": "claude/qkc-ctlm10-1021",
+  "owner": "CODEX-Q-CLOSE-1021",
+  "branch": "codex/q-ctlm-safe10-submit-1021",
   "tag": "safe10c",
   "purpose": "QKC-CTLM 10-21 safe10a: Q.STA.TTC.4 ctlm_dv CALR successor, safe9c gate FAIL fixes: pw pins N beside wtn (wire_reach), macro rows raised 86.4 um (S pin-band std band, clock_rule spread); outline 777.6 x 734.4. Parallel set safe10c/safe10d: bind first to close.",
   "extra_paths": [
@@ -389,12 +389,63 @@
    "results/rtl/qw_ttc9_1021",
    "results/rtl/qw_tlprod_1020",
    "results/rtl/qw_calr_1020/ctlm9c",
-   "physical/ref_tile/qfd_tt_ctlm_dv_wtn"
+   "physical/ref_tile/qfd_tt_ctlm_dv_wtn",
+   "results/arch/codex_ctlm_safe10_1021"
   ],
-  "benches": [],
+  "benches": [
+   {
+    "name": "safe10_tok_rel",
+    "cmd": "bash results/arch/codex_ctlm_safe10_1021/run_case.sh {RUN}/safe10_qualification tok_rel",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TLOAD_PRODUCER PASS",
+    "min_count_regex": "TLOAD_STAGE_STARTS ([0-9]+)",
+    "min_count": 38
+   },
+   {
+    "name": "safe10_tok_norel",
+    "cmd": "bash results/arch/codex_ctlm_safe10_1021/run_case.sh {RUN}/safe10_qualification tok_norel",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_PRODUCER FAIL",
+    "fail_witness": "results/arch/codex_ctlm_safe10_1021/witness/tok_norel.log"
+   },
+   {
+    "name": "safe10_tok_abs1",
+    "cmd": "bash results/arch/codex_ctlm_safe10_1021/run_case.sh {RUN}/safe10_qualification tok_abs1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_PRODUCER FAIL",
+    "fail_witness": "results/arch/codex_ctlm_safe10_1021/witness/tok_abs1.log"
+   },
+   {
+    "name": "safe10_tok_drop17",
+    "cmd": "bash results/arch/codex_ctlm_safe10_1021/run_case.sh {RUN}/safe10_qualification tok_drop17",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_PRODUCER FAIL",
+    "fail_witness": "results/arch/codex_ctlm_safe10_1021/witness/tok_drop17.log"
+   }
+  ],
   "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe10c/views",
   "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe10c",
-  "benched_by": "QW-CTLM4 (Verilator 5.050, fleet ep8/ep6): FIREDQ calendar = mu_seq_bench MUT0 PASS (lockstep vs unmodified qfd_dv_cmd_cal, compiled NU4 timeline), MUT34 FAIL 26,836 mismatches, MUT1 FAIL 168; tile ctlm_abi_m0 PASS, ctlm_cal_m0 PASS 62/62, cal_m1/m2/m3 FAIL 2/2/60 of 62 (re-witnessed on the new RTL: bench_witness/ctlm4_v5050). lp landing RTL unchanged -> QW-CTLM3 lp_v5050 witnesses (MUT0 PASS; MUT1/2/4/5 FAIL) reused. GI/cal/guard/leaf and acceptedreceiver/context RTL match source-receipt hashes after1650f9344 merge; original exact mu_opcal compiler receipt source preserved in bench_witness/source_receipt/mu_opcal.py (active compiler differs). NativeGI9,140,490edgesPASS/negativesFAIL; absolute epoch and fullsystem remain unbound."
+  "benched_by": "Pending exact lp9d_npl producer qualification: tok_rel plus norel/abs1/drop17. This metadata-only update lives outside active gate worktrees; commit actual source-bound witnesses before submit."
  },
  "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports).",
  "clock": "multiple_cts_roots",
