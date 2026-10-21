@@ -1,0 +1,96 @@
+{
+  "scope": "GEOMETRY LOWER BOUNDS ONLY; no route, source bind, capacity or release adoption",
+  "sources": {
+    "h9": {
+      "path": "/home/ubuntu/wt/s81-frrst/physical/ref_tile/s81frame_col_h9_rf3rl/spec.json",
+      "sha256": "699e4649ed657df942f1241ae206dfbdb7c26dd469fddba5caa0477b6f6e7254",
+      "top": "col_h9_l4_lp",
+      "outline": {
+        "w": 1436.832,
+        "h": 3369.6,
+        "exact": true
+      },
+      "children": 115
+    },
+    "h10": {
+      "path": "/home/ubuntu/wt/s81-frrst/physical/ref_tile/s81frame_col_h10_rf3rl/spec.json",
+      "sha256": "66f4dda499f1fd0f7887cfcd0fa26891d1896c30bf131f117b051aebb3d5b361",
+      "top": "col_h10_l4_lp",
+      "outline": {
+        "w": 1436.832,
+        "h": 3672.0,
+        "exact": true
+      },
+      "children": 123
+    },
+    "slice": {
+      "path": "/home/ubuntu/wt/drive-s81-slicep-1020/physical/ref_tile/s81dv_slice_lp_k8a/spec.json",
+      "sha256": "e5b23c9817d61daf1dbf07f7e8785b129bc6fa1ea9d6004159e127393372e612",
+      "top": "ot_s81sl_slice_c1x_k8_lp",
+      "outline": {
+        "w": 1252.8,
+        "h": 6739.2,
+        "exact": true
+      },
+      "children": 45
+    },
+    "end": {
+      "path": "/home/ubuntu/wt/drive-s81-lepenhmu-1020/physical/ref_tile/s81sl_lepenhmu_d1a/spec.json",
+      "sha256": "4763b166c0acd50b514d14c62d17e6a0eac38e38e4b6237f72b14a6f7aea3397",
+      "top": "ot_s81sl_slice_lepe_nh_mu_x_lp",
+      "outline": {
+        "w": 2764.8,
+        "h": 5788.8,
+        "exact": true
+      },
+      "children": 5
+    }
+  },
+  "reticle_legal_die_um": [
+    32000,
+    25000
+  ],
+  "margin_um": 500,
+  "capacity_inventory": {
+    "plan_sha256": "6c1d6d930c6b9d44850946e08862476f8cc9bd3c8dd0d24f3e216d375d75fd2f",
+    "frame98_sorted_names_sha256": "653badb6086c78fbb905d0c1d5c5df75d996ec28037b12cb228748a197a2fc0e",
+    "frame_columns": 14,
+    "h9_per_column": 5,
+    "h10_per_column": 2,
+    "frames": 98
+  },
+  "current98_stack": {
+    "body_height_um": 24192.0,
+    "two_ring_streets_um": 760,
+    "top_allowance_um": 250,
+    "minimum_height_before_south_band_um": 25202.0,
+    "width_with_actual_end_um": 34523.848,
+    "verdict": "FAIL conventional stack under actual selected outlines"
+  },
+  "current84_inventory": {
+    "frame_columns": 12,
+    "frames_per_column": 7,
+    "frames": 84,
+    "minimum_height_before_south_band_um": 25202.0,
+    "verdict": "same vertical failure; not a six-row vehicle"
+  },
+  "lower_count_comparison": {
+    "frames": 72,
+    "frame_columns": 12,
+    "frames_per_column": 6,
+    "assumed_h9_per_column": 5,
+    "assumed_h10_per_column": 1,
+    "frame_and_street_height_plus_1700_band_and_250_top_um": 23230.0,
+    "width_with_actual_end_um": 31632.784,
+    "verdict": "CONDITIONAL arithmetic only; actual inventory, service placement, relay channels, source capacity and calendar UNPROVEN; NOT ADOPTED"
+  },
+  "preserve98_options": [
+    "Repack actual frame hard children and MU endpoints; new outlines require synthesis/physical closure and reset/clock qualification.",
+    "Redistribute retained frames into slice-column voids with complete hard-child rectangles and relay channels; preserve logical inventory and arithmetic, reprice actual paths."
+  ],
+  "other_holds": [
+    "GU_PROP consumer-qualified source differs from running exact capacity source; transport/calendar unresolved.",
+    "MU end parent embeds old 1252.8x5702.4 slice stand-in; selected normal slice is taller. Its own outline is not final.",
+    "Actual 98 stage-map and source bind not qualified; no release chain launched on impossible geometry."
+  ]
+}
