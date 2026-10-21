@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_pv_fin_s32",
+ "enable": false,
+ "reason": "Input pin registers are part of the same static calendar. No extra stage is permitted; bounded reset farm releases after 3 edges (+2 boot-only edges). Outputs are registers."
+}
