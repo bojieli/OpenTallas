@@ -6,5 +6,5 @@ LP_MISMATCH port=selected_line_0 cycle=715 flat=000cf6ced000670b6d8003348f040019
 LP_LOCKSTEP FAIL MUT=4 mismatches=788 of 7839 stimulus=idx s3 programme
 - rtl/hbm_accel/index/sel_s3/lp/tb_ot_hidx_s3_flat_lp.sv:72: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 902ns; walltime 0.107 s; speed 8.457 us/s
-- Verilator: cpu 0.107 s on 1 threads; allocated 10 MB
+- Verilator: $finish at 902ns; walltime 0.033 s; speed 27.364 us/s
+- Verilator: cpu 0.033 s on 1 threads; allocated 10 MB
