@@ -1,0 +1,28 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-epyc7       admits   366 GB (avail 357, growth 101, headroom 0, waiters 0/0 GB) load 63/96 running 27 disk 4747 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2154880-1792589637 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+SVC8LOCK cycles=20000 mismatches=0 ov=14983 invalid_diff=6 seed=1 gid=1
+- tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 3.956 s; speed 10.113 us/s
+- Verilator: cpu 3.951 s on 1 threads; allocated 20 MB
+SVC8_BENCH PASS tag=m0w run=1:1:4:3 SVC8LOCK cycles=20000 mismatches=0 ov=14983 invalid_diff=6 seed=1 gid=1
+SVC8LOCK cycles=20000 mismatches=0 ov=19942 invalid_diff=6 seed=2 gid=3
+- tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 3.943 s; speed 10.145 us/s
+- Verilator: cpu 3.942 s on 1 threads; allocated 20 MB
+SVC8_BENCH PASS tag=m0w run=2:3:0:2 SVC8LOCK cycles=20000 mismatches=0 ov=19942 invalid_diff=6 seed=2 gid=3
+SVC8LOCK cycles=20000 mismatches=0 ov=10036 invalid_diff=6 seed=3 gid=0
+- tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 3.976 s; speed 10.061 us/s
+- Verilator: cpu 3.969 s on 1 threads; allocated 20 MB
+SVC8_BENCH PASS tag=m0w run=3:0:2:1 SVC8LOCK cycles=20000 mismatches=0 ov=10036 invalid_diff=6 seed=3 gid=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2154880-1792589637): exit 0

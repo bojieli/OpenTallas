@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-epyc7       admits   366 GB (avail 357, growth 101, headroom 0, waiters 1/48 GB) load 63/96 running 27 disk 4746 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2155115-1792589638 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=61 ov 1/0 oy cd0cf0005a13d0000567000002dd6000 / 829aca00fb2280765d63d0007619c000 of f / 0
+MISMATCH cyc=62 ov 1/0 oy ad480000fb2280765d63d0007619c000 / 4e403000db4990002e3640002b718000 of f / 0
+MISMATCH cyc=63 ov 1/0 oy 4e403000db4990002e3640002b718000 / 00000000000000000000000000000000 of f / 0
+SVC8LOCK cycles=6000 mismatches=5519 ov=4485 invalid_diff=435 seed=1 gid=1
+[12001000] %Fatal: tb_svc8_hgrp.sv:86: Assertion failed in tb_svc8_hgrp: SVC8LOCK FAIL mismatches=5519 ov=4485
+%Error: tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:86: Verilog $stop
+Aborting...
+SVC8_BENCH FAIL tag=maddrw run=1:1:4:3 rc=1 MISMATCH cyc=58 ov 1/0 oy 00000000000000000000000000000000 / b4290000000000003e4570003b82d000 of f / 0 MISMATCH cyc=60 ov 1/0 oy 00000000000000000000000000000000 / cd0cf0005a13d0000567000002dd6000 of f / 0 
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2155115-1792589638): exit 1
