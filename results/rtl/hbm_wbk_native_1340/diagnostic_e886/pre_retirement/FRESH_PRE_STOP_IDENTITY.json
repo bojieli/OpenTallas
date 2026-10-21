@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-10-21T22:57:56.383475+00:00",
+  "unit": "oth-ubuntu-2891515-1792618756.scope",
+  "pids": {
+    "2891515": {
+      "cmdline": "bash /srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021/src/tools/hbm_static/wbk_native_1340/native.sh ",
+      "start_ticks": "16078670",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2891515-1792618756.scope\n"
+    },
+    "2893098": {
+      "cmdline": "python3 tools/ref_tile/ref_tile.py gen tools/hbm_static/wbk_native_1340/spec.json --commit e886cd0b8 ",
+      "start_ticks": "16078760",
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2891515-1792618756.scope\n"
+    }
+  },
+  "memory_current": 2493976576,
+  "memory_peak": 4680175616,
+  "authorization": "ROOT via HBM lead: exact obsolete e886 scope only, not timeout-based; no independent selected use."
+}
