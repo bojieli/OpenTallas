@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hdie_pc_ctrl_mc3c7_wel",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-20T21:23:00-07:00",
+ "gate_commit": "0040206a0",
+ "checklist": {
+  "lattice": "23 SRAM 128x64 macros in a regular 4-column grid (2 rows), on lattice",
+  "std_cell_band": "logic in one central band between the macro rows, even green density, no red",
+  "pin_spread": "1317 pins on N/S faces in 4 groups each",
+  "clock_entry": "clock W mid-edge; spread 63.0/58.9 TT/FF, insertion 366 (guidance)",
+  "shape": "241.9x272.2, fill 42%, trial GRT0; census 51 under scoped waiver"
+ },
+ "notes": "COORD 10-20 21:50: APPROVED wel (lower insertion than cts); route decides; die keeps h9c until this closes",
+ "geometry_sha256": "b75d2540f735f0dd590a4f79bdebb962c5e774b12187554720e716d053c6d2d8"
+}
