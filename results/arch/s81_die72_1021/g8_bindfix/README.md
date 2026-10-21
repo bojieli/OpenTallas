@@ -44,3 +44,9 @@ Full strict binding, GEN/GRT, TT/FF/SS and clock results are pending. Do not
 interpret this source packet as a passing die or as ready for merge.
 
 The pre-existing G3/G4/G5 strict binds and original G8 Yosys parse were preserved.
+
+`available_descendants.json` records exact GUNIT leaf and XR3 closure inputs.
+Both are NOT_BINDABLE onto current R4 source: new leaf parameters/source and
+XR3 source/FOREG1 plus its C3 entry age must first enter the parent successor.
+A later emitter optimization counts reset-net occurrences once per pruning
+pass, preserving the same tested decisions; R4 remains pinned and untouched.

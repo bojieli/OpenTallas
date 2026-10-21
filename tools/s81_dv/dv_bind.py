@@ -889,13 +889,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         removed = []
         while True:
             text = '\n'.join(v)
+            uses = collections.Counter(re.findall(r'\brs(?:l)?_[A-Za-z0-9_]+\b', text))
             dead = []
             for row in rst['place']:
                 inst = row['inst']
                 net = inst[3:]
                 if inst in removed:
                     continue
-                if len(re.findall(r'\b' + re.escape(net) + r'\b', text)) == 2:
+                if uses[net] == 2:
                     dead.append(inst)  # one declaration + the station's own .o
             if not dead:
                 break

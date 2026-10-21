@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.s81_g8.available_descendants.v1",
+  "state": "NOT_BINDABLE_ON_CURRENT_R4_SOURCE",
+  "gunit": {
+    "die_master": "dsdv_gunit",
+    "descendant": "u_gunit.u_l5",
+    "module": "dsdv_gunit_l5",
+    "record_ref": "a13792409",
+    "source_ref": "1766568f0",
+    "kit": "physical/ref_tile/dsdv_gunit_l5_n32",
+    "required_params": {
+      "PIN_COPY": 1,
+      "CONTROL_SAFE": 1,
+      "Q4": 1,
+      "FANOUT_SAFE": 1,
+      "NAT32": 1
+    },
+    "hold": "Current parent instantiates legacy MUT-only leaf; native32 source and exact parameters require parent successor. Do not alias leaf view onto die parent. Parent l1f/l1fb terminal GRT failures remain independent.",
+    "timing_ps": {
+      "tt": 49.93,
+      "ff": 13.78,
+      "ss_sensitivity": -293.05
+    },
+    "drc": 0
+  },
+  "xr3": {
+    "module": "ot_s81sl_xr3",
+    "record_ref": "f54d55f96",
+    "source_ref": "e656ad73c",
+    "kit": "physical/ref_tile/s81sl_xr3",
+    "required_params": {
+      "FOREG": 1
+    },
+    "closed_source_blob": "a206984e9d3a339ccf3967173d9c17c583aa2b12",
+    "current_source_blob": "3056cf2d160983855836328d9ecca5c4daba9f98",
+    "hold": "Current G8 source differs and default FOREG is0. Closed source adds1 C3 ring/V/BAND entry edge; schedule adoption and source integration required. End-parent xrt1 is a different master.",
+    "timing_ps": {
+      "tt": 13.65,
+      "ff": 7.4,
+      "ss_sensitivity": -281.79
+    },
+    "drc": 0
+  }
+}
