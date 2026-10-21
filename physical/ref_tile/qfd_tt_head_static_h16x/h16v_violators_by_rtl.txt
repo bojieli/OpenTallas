@@ -1,0 +1,36 @@
+# h16v CTS ODB (ot-agidock128 ref_gate/qfd_tt_head_static_h16v-20261020-223159 4_1_cts.odb), TT placement RC, signoff.sdc, 613 violating endpoints grouped by RTL register (bit_generic_abc.json net ids): worst ps, count, register <- startpoints
+ -321.5  263 u_head.prog_q                                                <- SRAM:ot_sram_1r1w_64x512.rd_out[] x263
+ -282.0    1 u_head.u_fixed_issue.g_seg.u_store.core_fault                <- u_head.u_fixed_issue.g_seg.u_store.u_issue.index x1
+ -223.6   47 u_head.u_fixed_issue.g_seg.u_store.q                         <- u_head.u_fixed_issue.g_seg.u_store.gdesc_q x47
+ -158.4    1 u_head.u_fixed_issue.g_seg.u_store.sealed                    <- u_head.u_fixed_issue.g_seg.u_store.rows[] x1
+ -158.0    1 u_head.u_fixed_issue.g_seg.u_store.loading                   <- u_head.u_fixed_issue.g_seg.u_store.rows[] x1
+ -157.6   11 u_head.u_ctrl_me.g_dtab.pq_r                                 <- u_head.q_pos x11
+ -152.8    1 u_head.u_fixed_issue.g_seg.u_store.u_issue.sched_q           <- u_head.u_fixed_issue.g_seg.u_store.u_issue.stop_q x1
+ -151.2   44 u_head.u_fixed_issue.g_seg.u_store.grows[]                   <- u_head.u_isd.q x44
+ -149.1    8 u_head.u_ctrl_me.dyn[]                                       <- kvd_pos x8
+ -127.1   19 u_head.u_ctrl_me.fqv[]                                       <- u_head.u_ctrl_me.st x13; u_head.u_fixed_issue.g_seg.u_store.gdesc_q x6
+ -123.1   10 u_head.u_ctrl_me.h_rd_c                                      <- u_head.u_ctrl_me.st x10
+ -121.9   11 u_head.c_me_i_mbase                                          <- u_head.u_ctrl_me.st x11
+ -119.8   14 u_head.u_ctrl_me.tq1                                         <- SRAM:ot_sram_1r1w_32x128.rd_out[] x14
+ -119.5   14 u_head.u_ctrl_me.tq0                                         <- SRAM:ot_sram_1r1w_32x128.rd_out[] x14
+ -117.6   16 m_fidx_o                                                     <- u_head.u_ctrl_me.fqv[] x16
+ -115.1    1 u_head.u_ctrl_me.tok_r                                       <- u_head.u_is1.q x1
+ -107.4    3 u_head.u_ctrl_me.me_row0                                     <- u_head.u_ctrl_me.st x3
+ -104.8    1 u_head.u_fixed_issue.g_seg.u_store.cfg_fault                 <- u_head.u_ctrl_me.fqv[] x1
+ -103.2   29 m_fval_o                                                     <- u_head.u_ctrl_me.fqv[] x29
+ -101.1   17 u_head.u_ctrl_me.run_val                                     <- u_head.u_ctrl_me.fqv[] x17
+  -89.9   24 u_head.u_fixed_issue.cycle                                   <- u_head.u_fixed_issue.g_seg.u_store.gdesc_q x24
+  -86.9    1 u_head.u_fixed_issue.g_seg.u_store.read_fault                <- u_head.u_fixed_issue.g_seg.u_store.gdesc_q x1
+  -68.1   14 u_head.u_ctrl_me.run_idx                                     <- u_head.u_ctrl_me.fqv[] x14
+  -63.0   37 u_head.u_fixed_issue.g_seg.u_store.rows[]                    <- u_head.u_isd.q x37
+  -61.2    9 u_head.u_ctrl_me.run_key                                     <- u_head.u_ctrl_me.fqv[] x9
+  -46.4    3 u_head.u_fixed_issue.g_seg.u_store.u_issue.pending_index     <- u_head.u_fixed_issue.g_seg.u_store.gdesc_q x3
+  -36.0    1 u_head.u_fixed_issue.g_seg.u_store.meta_q                    <- u_head.u_isd.q x1
+  -32.1    1 u_head.schedule_active                                       <- u_head.u_fixed_issue.g_seg.u_store.gdesc_q x1
+  -30.0    1 u_head.u_ctrl_me.pre1_me_obase                               <- u_head.u_fixed_issue.g_seg.u_store.gdesc_q x1
+  -28.6    1 kvd_tiles                                                    <- u_head.u_ctrl_me.st x1
+  -24.7    2 kvd_nout                                                     <- u_head.u_ctrl_me.st x2
+  -15.8    2 kvd_wbase                                                    <- u_head.u_ctrl_me.st x2
+   -7.2    3 kvd_pos                                                      <- u_head.u_ctrl_me.fqv[] x3
+   -3.8    1 rb_scale                                                     <- stage_start__ot_q$_DFF_P_? x1
+   -0.8    1 u_head.c_me_i_xbase                                          <- u_head.u_ctrl_me.st x1
