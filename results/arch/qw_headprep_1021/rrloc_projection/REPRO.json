@@ -1,0 +1,12 @@
+{
+ "status":"SYMBOLIC_SOURCE_BASE_MATCH_ONLY_NOT_SELECTED_LP_OR_NATIVE",
+ "actual_RR2":"7b81ef212d6bfcf88aeb4cfbfcc7fb578d5da78640d64f647a99ddcbb8d04747",
+ "actual_RRloc":"cf82d273a9ccd40c7236a76f929d7595db3b1aa90e4cf73901b4dd7e412d3de2",
+ "original_generic_recipe":"actual qko source results/rtl/qw_calr_1020/ctlm9c/full_generic9.ys; XPF20 historical fixture",
+ "proof":"Reversing exactly the HP position/user declarations, c_emb-bank capture and thru forwarding plus unique module names yields byte-identical actual qko symbolic inputs. No evolved RR2/RRloc native body replacement or n_* signal inference.",
+ "source_law":"Actual GI reads pos_b[c_user]/c_user at same edge as existing emb_token; emb_start is validity. Source capture1 is preserved; actual new LP offset minus actual producer offset must be generated and qualified again.",
+ "selected_recipe_requirement":"New unique source/top, actual explicit XPF_TRANSPORT_EDGES21, actual H16ZA source/ports, regenerated LP +bounded native+RRrole+RRloc, new physical view. Prior XPF20 component offsets4 are not selected21 qualification.",
+ "actual_new_LP_offsets":null,
+ "actual_new_GEN_transport_ages":null,
+ "remaining":["construct exact new unique HP LP/native assembly with explicit21", "apply exact RRrole and placed RRloc transformations to actual new cells, preserving available physical constraints", "source-functional/native export qualification", "actual selected S8/TT source ABI/newmaster/view and final GEN endpoint receipts"]
+}
