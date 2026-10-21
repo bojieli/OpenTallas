@@ -18,4 +18,4 @@ for t in targets:
   ty,pins=cells[n];q['master']=ty;q['input_named_aliases']={p:[g.net_name[x]for x in bs[:4]]for p,bs in pins.items()if p not in ['Q','QN','Y','RESETN','SETN','CLK']}
  records.append(q)
 Path(out).write_text(json.dumps({'scope':'Immutable prior NORST map source classification only; actual fmem and reset successor effects not inferred.','top':top,'records':records},indent=2)+'\n')
-for q in records[:35]:print(q['loads'],q['driver'],q['source_aliases'])
+for q in records[:35]:print(q['loads'],q['driver'],q['source_aliases'][:3])

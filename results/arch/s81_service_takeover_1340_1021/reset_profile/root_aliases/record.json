@@ -1,0 +1,42 @@
+{
+  "status": "PRIOR_MAP_ATTRIBUTION_NOT_NEW_NATIVE",
+  "unit": "oth-ubuntu-1649376-1792621761",
+  "scope": "Top80 highest-load roots in immutable priorNORST187 baremap only; exactsame mapandnativecensus. No resynthesis. Optimized unnamedrootaliases remain unknown.",
+  "concrete_sources": [
+    {
+      "prior_load": 4268,
+      "input_of_driver": "u_core.u_eng.m_ov[0]",
+      "interpretation": "priorPVvalid capture; FMEM3e3 changes this mechanism, new wholecore effect unmeasured"
+    },
+    {
+      "prior_load": 2048,
+      "input_of_driver": "u_core.pr_n[0]",
+      "interpretation": "actual next-read-address capture remains source obligation"
+    },
+    {
+      "prior_load": 1540,
+      "input_of_driver": "u_core.u_eng.p_go",
+      "interpretation": "actual p-go capture remains source obligation"
+    },
+    {
+      "prior_load": 1060,
+      "input_of_driver": "qr_tag[10] and qr_tag[27]",
+      "interpretation": "real registered tag decoder fields, cannot tie or waive"
+    },
+    {
+      "prior_load": 1019,
+      "input_of_driver": "qr_tag[11]",
+      "interpretation": "real registered tag decoder"
+    },
+    {
+      "prior_load": 992,
+      "input_of_driver": "qr_tag[28]",
+      "interpretation": "real registered tag decoder"
+    },
+    {
+      "prior_load": 632,
+      "input_of_driver": "u_core.u_eng.g_tr[3].g_x.g_bs.u_sel.d[1]",
+      "interpretation": "actual transpose-select distribution; other632/616/584 roots share input"
+    }
+  ]
+}
