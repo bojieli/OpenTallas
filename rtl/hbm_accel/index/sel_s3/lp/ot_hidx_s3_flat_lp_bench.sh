@@ -6,7 +6,7 @@
 set -u
 cd "${LP_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "$0")/../../../../.." && pwd))}"
 OUT=${1:-lp_bench_out}; mkdir -p "$OUT"; SIM=${SIM:-iverilog}; rc=0
-SRCS="rtl/hbm_accel/index/sel_s3/ot_hidx_s3_flat.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v rtl/common/landed_parent/ot_pl_land.sv rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp.sv rtl/hbm_accel/index/sel_s3/lp/tb_ot_hidx_s3_flat_lp.sv"
+SRCS="rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_landing_native.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_flat.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v rtl/common/landed_parent/ot_pl_land.sv rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp.sv rtl/hbm_accel/index/sel_s3/lp/tb_ot_hidx_s3_flat_lp.sv"
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/hidx_sel_s3.json > "$OUT/audit.log" 2>&1 && echo "AUDIT PASS" || { echo "AUDIT FAIL"; rc=1; }
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/hidx_sel_s3.json --rtl "$OUT/unland.sv" --make-unland > "$OUT/audit_unland.log" 2>&1 \
   && { echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; } || echo "AUDIT-UNLAND FAIL (expected)"

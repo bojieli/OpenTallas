@@ -8,7 +8,8 @@
   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv",
   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_landing_native.sv"
  ],
  "out_dir": "rtl/hbm_accel/index/sel_s3/lp",
  "record_dir": "results/rtl/hbm_idx_static/selector_s3",

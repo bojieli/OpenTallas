@@ -101,7 +101,7 @@ endmodule
 // Keeping hierarchy prevents synthesis from merging the identical selectors back
 // into a bus-wide high-fanout select. At CHUNK_BITS24 each ring stores96 data bits.
 module ot_pl_land_chunk_w #(
-    parameter integer W = 514, D = 4, CHUNK_BITS = 24,
+    parameter integer W = 514, D = 4, CHUNK_BITS = 24, RESET_DATA = 1,
     parameter integer AW = (D <= 2) ? 1 : $clog2(D)
 ) (
     input wire ck, rsi,
@@ -116,7 +116,7 @@ module ot_pl_land_chunk_w #(
         wire [D*CW-1:0] cb;
         wire [D*(AW+1)-1:0] ce;
         wire [D-1:0] cv;
-        (* keep_hierarchy = "yes" *) ot_pl_land_local_w #(.W(CW), .D(D)) u_local (
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_w #(.W(CW), .D(D), .RESET_DATA(RESET_DATA)) u_local (
             .ck(ck), .rsi(rsi), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(cv));
         for (s = 0; s < D; s = s + 1) begin : g_slot
             assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
@@ -163,7 +163,7 @@ endmodule
 // wide mux; the one-hot register advances ahead of the capture edge so K and the
 // reset age remain exactly the original contract.
 module ot_pl_land_local_w #(
-    parameter integer W = 24, D = 4,
+    parameter integer W = 24, D = 4, RESET_DATA = 1,
     parameter integer AW = (D <= 2) ? 1 : $clog2(D)
 ) (
     input wire ck, rsi,
@@ -188,7 +188,7 @@ module ot_pl_land_local_w #(
         end
     genvar s;
     generate for (s=0;s<D;s=s+1) begin:g_slot
-        always @(posedge ck) if (rq && write_oh[s]) begin data[s] <= i; epoch[s] <= wc; end
+        always @(posedge ck) if ((!RESET_DATA || rq) && write_oh[s]) begin data[s] <= i; epoch[s] <= wc; end
         assign bank[s*W+:W] = data[s];
         assign epo[s*(AW+1)+:AW+1] = epoch[s];
     end endgenerate
