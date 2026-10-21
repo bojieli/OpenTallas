@@ -436,8 +436,16 @@ module ot_s81_ing_stream_n32 #(
     endfunction
     // stage A1: {lph, lp, mine, pitch, row, gs, local, rbase}
     localparam integer A1W = 32+32+32+32+5+1+32+32;      // 198
+`ifdef OT_N32_ADDR_CSA
+    // Same A0->A1 edge and 32-bit modular result; no new state/enable/reset.
+    wire [31:0] ap0_rbase;
+    ot_s81_ing_sum4_csa32 u_rbase_csa (.a(ap0_base), .b(ap0_pp0),
+        .c(ap0_pp1), .d(ap0_pp2), .y(ap0_rbase));
+`else
+    wire [31:0] ap0_rbase = ap0_base + ap0_pp0 + ap0_pp1 + ap0_pp2;
+`endif
     wire [A1W-1:0] a1_in = {pmul(ap0_local, pitch_c, 3, 4), pmul(ap0_local, pitch_c, 0, 2), ap0_mine, ap0_pitch,
-                            ap0_row, ap0_gs, ap0_local, ap0_base + ap0_pp0 + ap0_pp1 + ap0_pp2};
+                            ap0_row, ap0_gs, ap0_local, ap0_rbase};
     localparam integer A1S = (A1W + AS - 1) / AS;
     (* keep *) reg [A1S-1:0] ok1_c;
     reg [A1W-1:0] a1;
@@ -752,4 +760,27 @@ module ot_s81_ing_stream_n32 #(
     always @(posedge clk) if (rst_n && (drdy_b != d_rdy || inrdy_b != in_rdy || busy_b != busy || wv_b != w_v))
         $fatal(1, "ot_s81_ing_stream_n32: replica-B status diverged");
 `endif
+endmodule
+
+// Two carry-save reductions, then four parallel 8-bit carry-select blocks.
+// Carry bit32 is intentionally discarded, matching the original 32-bit sum.
+module ot_s81_ing_sum4_csa32(input wire [31:0] a,b,c,d, output wire [31:0] y);
+    wire [31:0] s0 = a ^ b ^ c;
+    wire [31:0] c0 = ((a & b) | (a & c) | (b & c)) << 1;
+    wire [31:0] s1 = s0 ^ c0 ^ d;
+    wire [31:0] c1 = ((s0 & c0) | (s0 & d) | (c0 & d)) << 1;
+    wire [3:0] p,g;
+    wire [4:0] carry;
+    assign carry[0]=1'b0;
+    assign carry[1]=g[0];
+    assign carry[2]=g[1] | (p[1]&g[0]);
+    assign carry[3]=g[2] | (p[2]&g[1]) | (p[2]&p[1]&g[0]);
+    assign carry[4]=g[3] | (p[3]&g[2]) | (p[3]&p[2]&g[1]) | (p[3]&p[2]&p[1]&g[0]);
+    for(genvar q=0;q<4;q=q+1)begin:g_blk
+        wire [8:0] z0={1'b0,s1[q*8+:8]}+{1'b0,c1[q*8+:8]};
+        wire [7:0] z1=s1[q*8+:8]+c1[q*8+:8]+8'd1;
+        assign p[q]=&(s1[q*8+:8]^c1[q*8+:8]);
+        assign g[q]=z0[8];
+        assign y[q*8+:8]=carry[q]?z1:z0[7:0];
+    end
 endmodule

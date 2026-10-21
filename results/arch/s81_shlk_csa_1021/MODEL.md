@@ -1,0 +1,9 @@
+# Same-edge address sum source candidate
+
+The selected source06daaa354 SHLK gs/hs placed diagnostics identify the actual u_h.host.u_hi.u_eng.a0[2] -> a1[22] register stage. Both map the four-operand32-bit rbase sum to26logic levels/~905.2ps textbook estimate; placed TT setup WNS -203.9ps MAIN/-200.7ps FB. These are placement diagnostics, not final routed results. Current production gates remain immutable.
+
+Default-absent OT_N32_ADDR_CSA changes only this modular sum in ot_s81_ing_stream_n32.sv. Two full-adder carry-save levels reduce four operands to two; four parallel8-bit carry-select blocks and a four-group carry prefix finish the sum. Every intermediate is32bits, dropping carry32, exactly as the original concatenation's32-bit slot. A0/A1 registers, data enables, reset/startup, descriptor paths, pipeline dates, interface and format remain identical. No source/slot adoption or timing closure follows from the construction alone.
+
+The helper adds no state. The mapped comparison uses identical incoming128FF and output32FF around each actual combinational implementation. Area/depth/census will be measured against the original expression using identical ASAP7Libs/ABC recipe. This component does not prove the whole ingress or SHLK native32/clock/reset/physical result.
+
+The exact32-bit modular proof includes zero/fullscale, carry boundaries, wrapping overflows, and one million deterministic random vectors. Existing native stream-vs-original lockstep runs seeds1/2 with300legal RAW/ROWS/IKEY segments, bubbles and random write backpressure. Existing WIN causal control remains enabled on a separate build. Existing full sequencer legal host golden seeds1/2 use the selected S10E/APIPE10/ACKP source plus this flag. No broad campaign or new physical gate is requested by this packet.
