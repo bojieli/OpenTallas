@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.s81.bal195_link_check.v1",
+ "lane": "S81-BAL195",
+ "grade": "source-read (RTL + plan) + arithmetic",
+ "plan": {
+  "branch": "claude/s81-sweet-1020",
+  "commit": "21b9cecc0",
+  "map": "results/arch/s81_sweet_1020/stage_map_s195_dsc4L1.json",
+  "copies": {
+   "R004 (L1)": 2,
+   "R008 (L2)": 4,
+   "R037 (L8)": 4,
+   "R066 (L14)": 4,
+   "R095 (L20)": 4,
+   "R115/R135/R155/R175 (L24/28/32/36)": 2
+  },
+  "period_cycles": 1241264,
+  "ar_users": 96
+ },
+ "verdict": "FAIL",
+ "why": [
+  "Copy routing is a STATIC CIRCUIT per lane pair, not a destination field: the lane tile link layer (ot_s81ph_link_ep seq/CRC/go-back-N/credits, FROZEN HF-3) is end-to-end per peer pair across the switch (rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv header (c); results/arch/mu_s81_1018/chain_plan.json form). One copy = one extra lane pair on every pre-group TX and post-group RX rank die.",
+  "The multi-user endpoint is hard 2-way: ot_s81sl_lep_core AB_EN gives NL = 4 lanes (pair A lanes 0/1, pair B lanes 2/3); the copy select is ONE bit (mu_c[1] -> w_ab; ab_ok forces user 0 to A). x3/x4 have no encoding and no lanes 4..7.",
+  "Hence x4 on L2/8/14/20 needs: (1) endpoint RTL with a 2-bit copy field, 8 lanes, 4-way TX select and 4-way RX merge (the 2-way pair-B RX merge already missed setup by 575 ps before the MU-S81-2/RX redesign); (2) mu_c command / seq_host calendar word change; (3) +2 SerDes lane pairs (4 PHY lanes, 4 more dsfd_coll_lane tiles, ~+4.4k face pins) on each of the 4 rank dies of the 4 pre-group and 4 post-group stages = 32 dies of a new p4l die master, new hardened lepmu kit + parent + die GEN/GRT/STA. dsplit makes the post-group (receiving) stage gather from 4 copies, same RX change.",
+  "Relay-tree alternative (copy A forwards to C) also needs AB endpoints on both faces of the copy dies (new die master) and holds copy A stage/links for C users: physical change + calendar violation.",
+  "Today the 2-way endpoint itself is still closing (DRIVE-S81-LEPMU / LEPENHMU gating 10-20): closure risk even before x4."
+ ],
+ "bandwidth": {
+  "note": "bandwidth is NOT the limiter; ports/endpoints are",
+  "h_msg_bits_per_rank_die": 327808,
+  "h_msg_cycles": 652,
+  "lane_pair_bits_per_cycle": 1024,
+  "msg_bits_per_cycle_while_sending": 502.8,
+  "per_copy_link_users": 24,
+  "per_copy_link_occupancy": 0.0126,
+  "per_copy_link_avg_bits_per_cycle": 6.34,
+  "all_users_one_pair_occupancy": 0.0504
+ },
+ "l1_x2": "L1 x2 alone fits the existing AB endpoint (die-count + mab die variant instances only), but it is only useful with dsplit + x4.",
+ "no_new_rtl_best": {
+  "note": "best rows with copies <= 2 (sweep_all.json)",
+  "redeal_141": {
+   "dies": 648,
+   "users": 48,
+   "agg": 48486,
+   "per_die": 74.82
+  },
+  "ds_164": {
+   "dies": 740,
+   "users": 54,
+   "agg": 53553,
+   "per_die": 72.37
+  }
+ },
+ "decision": "Ship 141 stages / 648 dies (48 AR users x 1,010.1 = 48,486 tok/s, 74.8/die). B/C/D (dsplit compiler/allocator, x4 calendar) NOT started per the decision rule."
+}
