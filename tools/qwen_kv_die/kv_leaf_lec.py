@@ -138,9 +138,13 @@ def lec(a):
     res = dict(schema=SCHEMA, module=a.top, parameters=params, expect=a.expect, gate=str(a.gate),
                gate_sha256=sha(a.gate), gate_top=a.gate_top, sources={s_: sha(src / s_) for s_ in srcs},
                wrapper=None, gold_opt=bool(a.gold_opt), reset=dict(port=a.reset, active=a.reset_active, cycles=a.reset_cycles, once=bool(a.reset_once)), verdict=None)
-    cells = lib.load_cells(lib.default_asap7_liberty(), work / 'cache')
+    liberty_paths = lib.default_asap7_liberty()
+    cells = lib.load_cells(liberty_paths, work / 'cache')
     gmod, macros, gflops = prepare_gate(a.gate, a.gate_top, cells, work)
     res['gate_stats'] = dict(instances=len(gmod.instances), flops=gflops, macros=macros)
+    res['library_models'] = dict(liberty={str(p): sha(p) for p in liberty_paths},
+                                 cells_v_sha256=sha(work / 'cells.v'),
+                                 gold_and_gate_same_models=True)
     # macro cut models (same model on both sides)
     cutf = {}
     for cell in sorted(set(macros.values())):
@@ -156,7 +160,10 @@ def lec(a):
     cut_bb = {b_ for _f, b_ in cutf.values()}
     rd = [str(src / s_) for s_ in srcs if s_ not in cut_bb] + [str(f) for f, _b in cutf.values()]
     # 1. gold
-    G = [f'read_verilog -sv -DSYNTHESIS {" ".join(rd)}']
+    # Some exact gold sources contain committed native primitive graphs. They
+    # use the SAME actual-Liberty models as gate, never stub/blackbox models.
+    # hierarchy -check still rejects any primitive absent from those models.
+    G = ['read_verilog -sv cells.v', f'read_verilog -sv -DSYNTHESIS {" ".join(rd)}']
     G += [f'chparam -set {k} {int(v)} {a.top}' for k, v in sorted(params.items())]
     if a.wrapper:
         wt = Path(a.wrapper).read_text()

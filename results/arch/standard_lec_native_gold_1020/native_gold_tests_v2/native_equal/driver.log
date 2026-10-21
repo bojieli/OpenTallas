@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/qwen_kv_die/kv_leaf_lec.py", line 323, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/qwen_kv_die/kv_leaf_lec.py", line 315, in main
+    r = lec(a)
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/qwen_kv_die/kv_leaf_lec.py", line 143, in lec
+    gmod, macros, gflops = prepare_gate(a.gate, a.gate_top, cells, work)
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/qwen_kv_die/kv_leaf_lec.py", line 105, in prepare_gate
+    mod = nl.read_module(Path(netlist), top)
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/dft/netlist.py", line 312, in read_module
+    mods = parse_netlist(text)
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/dft/netlist.py", line 307, in parse_netlist
+    return _Parser(text).parse_modules()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/dft/netlist.py", line 172, in parse_modules
+    mods.append(self.parse_module(tok.start))
+                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-reviews-2240-native/tools/dft/netlist.py", line 229, in parse_module
+    raise ValueError(f"netlist: bad declaration near offset {sep.start}")
+ValueError: netlist: bad declaration near offset 50
