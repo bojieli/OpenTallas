@@ -3,7 +3,7 @@
 1021u = 1019t + SAFE_GATHER=2. Main's mapped pre-gate native census refused 1019t (route 1019t-t1-5a6486280 runs on the
 old gate): rp[*] 65 pins x64, jb-mux copy rp[64] 49, ring wsel[*] 41 x4, landed reset copy c2 52. SAFE_GATHER=2:
 256 per-bit bank-select copies (4 ob bits/bank, ~17 pins), 4 jb-mux copies (8 bits each), 4 kept ring write-select
-copies (5-bit slice of each ring word), landed reset last stage x14 (ot_rst_copies spreads ~330 async loads, <=32 each;
+copies (5-bit slice of each ring word), landed reset last stage x16 (x14 census left c13 at 35; ot_rst_copies spreads ~330 async loads, <=32 each;
 per-bit rp cells so the pass can split them). Same ports, outline, pins, clock, latency and seam calendar as 1019t.
 Evidence: results/rtl/cxijq_safe_1019/sg2/ (Verilator 5.050 ot-epyc5: SD0 13365 / SD2 13347 PASS vs legacy ij_q,
 mut4/5/6 FAIL; split lockstep PASS). Checklist item 3 now: every dynamic driver designed <= ~17 mapped pins; the
