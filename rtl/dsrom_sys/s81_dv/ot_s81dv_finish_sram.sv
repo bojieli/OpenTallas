@@ -204,24 +204,48 @@ module ot_s81dv_norm_finish_sram #(
     reg f_q; wire [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: issue mux -> adder)
     always @(posedge clk or negedge rc[4]) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NVP];
+    function automatic integer mem_group_live(input integer q);
+      integer j;
+      begin
+        mem_group_live=0;
+        for(j=0;j<8;j=j+1)if(q*8+j>=1 && isadd(q*8+j))mem_group_live=1;
+      end
+    endfunction
+    function automatic integer mem_group_index(input integer q);
+      integer j;
+      begin mem_group_index=0;for(j=0;j<q;j=j+1)mem_group_index=mem_group_index+mem_group_live(j);end
+    endfunction
+    localparam integer MLG=mem_group_index(NVP/8), MREAD=(P*K+2+2)/3;
     wire[7:0] read_fire;wire[71:0] read_tags;
-    wire[8*NG8-1:0] mem_reset;
-    ot_s81dv_finish_reset2 #(.LEAVES(8*NG8)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
-    (* keep *) reg[15:0] mem_go;
-    for(genvar mg=0;mg<16;mg=mg+1)begin:g_mem_go
+    wire[MREAD*MLG*1-1:0] mem_reset;
+    ot_s81dv_finish_reset2 #(.LEAVES(MREAD*MLG*1)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
+    (* keep *) reg[MLG-1:0] mem_go;
+    for(genvar mg=0;mg<MLG;mg=mg+1)begin:g_mem_go
       always @(posedge clk or negedge mem_reset[mg])
         if(!mem_reset[mg])mem_go[mg]<=0;else mem_go[mg]<=go_mem;
     end
-    for(genvar mc=0;mc<8;mc=mc+1)begin:g_mem_command
+    // Every kept copy serves an actual bank group and live issue node.
+    for(genvar mc=0;mc<MREAD;mc=mc+1)begin:g_mem_command
       wire[NVP-1:0] mo;wire[NG8-1:0] mg;
       for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
-        wire[7:0] mr=rdy[mq*8+:8];
-        (* keep *) reg[7:0] o;(* keep *) reg g;
-        always @(posedge clk or negedge mem_reset[mc*NG8+mq])
-          if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
-          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !mem_go[(mc*NG8+mq)%16];end
-        assign mo[mq*8+:8]=o;
-        assign mg[mq]=g && !mem_go[(mc*NG8+mq)%16];
+        localparam integer Q=mq%(NVP/8), GI=mem_group_index(Q);
+        if(mem_group_live(Q))begin:g_live
+          localparam integer RI=mc*MLG*1+(mq/(NVP/8))*MLG+GI;
+          wire[7:0] mr=rdy[mq*8+:8],oh=mr & ~(mr-8'd1);
+          (* keep *) reg g;
+          always @(posedge clk or negedge mem_reset[RI])
+            if(!mem_reset[RI])g<=0;else g<=(|mr) && !mem_go[GI];
+          for(genvar mb=0;mb<8;mb=mb+1)begin:g_bit
+            if(Q*8+mb>=1 && isadd(Q*8+mb))begin:g_node
+              (* keep *) reg o;
+              always @(posedge clk or negedge mem_reset[RI])if(!mem_reset[RI])o<=0;else o<=oh[mb];
+              assign mo[mq*8+mb]=o;
+            end else assign mo[mq*8+mb]=1'b0;
+          end
+          assign mg[mq]=g && !mem_go[GI];
+        end else begin:g_empty
+          assign mo[mq*8+:8]=8'd0;assign mg[mq]=1'b0;
+        end
       end
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
       wire[NVP-1:0] mw;
@@ -232,6 +256,9 @@ module ot_s81dv_norm_finish_sram #(
       end
       assign read_fire[mc]=|mw;
       assign read_tags[mc*9+:9]=mt[NVP];
+    end
+    for(genvar mc=MREAD;mc<8;mc=mc+1)begin:g_unused_command
+      assign read_fire[mc]=1'b0;assign read_tags[mc*9+:9]=9'd0;
     end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(1)) u_values(
       .clk(clk),.ivb(ivb),.itb({(NBK*P*2){1'b0}}),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
@@ -459,24 +486,48 @@ module ot_s81dv_eng_finish_sram #(
     reg f_q; wire [31:0] a_q, b_q; reg [CW-1:0] t_q;
     always @(posedge clk or negedge rc[4]) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NC];
+    function automatic integer mem_group_live(input integer q);
+      integer j;
+      begin
+        mem_group_live=0;
+        for(j=0;j<8;j=j+1)if(q*8+j>=1 && isadd(q*8+j))mem_group_live=1;
+      end
+    endfunction
+    function automatic integer mem_group_index(input integer q);
+      integer j;
+      begin mem_group_index=0;for(j=0;j<q;j=j+1)mem_group_index=mem_group_index+mem_group_live(j);end
+    endfunction
+    localparam integer MLG=mem_group_index(NVP/8), MREAD=(P*K+4+2)/3;
     wire[7:0] read_fire;wire[71:0] read_tags;
-    wire[8*NG8-1:0] mem_reset;
-    ot_s81dv_finish_reset2 #(.LEAVES(8*NG8)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
-    (* keep *) reg[15:0] mem_go;
-    for(genvar mg=0;mg<16;mg=mg+1)begin:g_mem_go
+    wire[MREAD*MLG*3-1:0] mem_reset;
+    ot_s81dv_finish_reset2 #(.LEAVES(MREAD*MLG*3)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
+    (* keep *) reg[MLG-1:0] mem_go;
+    for(genvar mg=0;mg<MLG;mg=mg+1)begin:g_mem_go
       always @(posedge clk or negedge mem_reset[mg])
         if(!mem_reset[mg])mem_go[mg]<=0;else mem_go[mg]<=go_mem;
     end
-    for(genvar mc=0;mc<8;mc=mc+1)begin:g_mem_command
+    // Every kept copy serves an actual bank group and live issue node.
+    for(genvar mc=0;mc<MREAD;mc=mc+1)begin:g_mem_command
       wire[NC-1:0] mo;wire[NG8-1:0] mg;
       for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
-        wire[7:0] mr=rdy[mq*8+:8];
-        (* keep *) reg[7:0] o;(* keep *) reg g;
-        always @(posedge clk or negedge mem_reset[mc*NG8+mq])
-          if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
-          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !mem_go[(mc*NG8+mq)%16];end
-        assign mo[mq*8+:8]=o;
-        assign mg[mq]=g && !mem_go[(mc*NG8+mq)%16];
+        localparam integer Q=mq%(NVP/8), GI=mem_group_index(Q);
+        if(mem_group_live(Q))begin:g_live
+          localparam integer RI=mc*MLG*3+(mq/(NVP/8))*MLG+GI;
+          wire[7:0] mr=rdy[mq*8+:8],oh=mr & ~(mr-8'd1);
+          (* keep *) reg g;
+          always @(posedge clk or negedge mem_reset[RI])
+            if(!mem_reset[RI])g<=0;else g<=(|mr) && !mem_go[GI];
+          for(genvar mb=0;mb<8;mb=mb+1)begin:g_bit
+            if(Q*8+mb>=1 && isadd(Q*8+mb))begin:g_node
+              (* keep *) reg o;
+              always @(posedge clk or negedge mem_reset[RI])if(!mem_reset[RI])o<=0;else o<=oh[mb];
+              assign mo[mq*8+mb]=o;
+            end else assign mo[mq*8+mb]=1'b0;
+          end
+          assign mg[mq]=g && !mem_go[GI];
+        end else begin:g_empty
+          assign mo[mq*8+:8]=8'd0;assign mg[mq]=1'b0;
+        end
       end
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
       wire[NC-1:0] mw;
@@ -487,6 +538,9 @@ module ot_s81dv_eng_finish_sram #(
       end
       assign read_fire[mc]=|mw;
       assign read_tags[mc*9+:9]=mt[NC];
+    end
+    for(genvar mc=MREAD;mc<8;mc=mc+1)begin:g_unused_command
+      assign read_fire[mc]=1'b0;assign read_tags[mc*9+:9]=9'd0;
     end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3)) u_values(
       .clk(clk),.ivb(ivb),.itb(itb),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag(ot[NC]),
@@ -537,13 +591,13 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  input wire fire,input wire[8:0] issue_tag,input wire[7:0] read_fire,input wire[71:0] read_tags,input wire rd_active,output reg[31:0] a_q,b_q,
  input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
 );
- localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM;
+ localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM,NREAD=(NB+2)/3,NOWNER=(NREAD+2)/3;
  localparam integer MUT_ASSOC=`ifdef OT_S81DV_MUT_EASSOC (TREES==3) `else 0 `endif;
  if(NV!=80 || K!=5 || P!=3 || (TREES!=1 && TREES!=3))begin:g_bad_profile
   ot_s81dv_finish_SRAM_requires_NV80_K5_P3_T1or3 u_bad();
  end
  reg[1:0] owner[0:TREES*NV-1];
- (* keep *) reg[1:0] owner_read[0:3*TREES*NV-1];
+ (* keep *) reg[1:0] owner_read[0:NOWNER*TREES*NV-1];
  // Each three-descriptor owner region owns a same-edge copy of the selected flit
  // owner, so retaining bank-local decode cannot move load onto owner flops.
  for(genvar t=0;t<TREES;t=t+1)begin:g_ot
@@ -552,7 +606,7 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
    always @(posedge clk)begin
     if(e[0])owner[t*NV+ix]<=2'd0; else if(e[1])owner[t*NV+ix]<=2'd1; else if(e[2])owner[t*NV+ix]<=2'd2;
    end
-   for(genvar c=0;c<3;c=c+1)begin:g_copy
+   for(genvar c=0;c<NOWNER;c=c+1)begin:g_copy
     always @(posedge clk)begin
       if(e[0])owner_read[(c*TREES+t)*NV+ix]<=2'd0;
       else if(e[1])owner_read[(c*TREES+t)*NV+ix]<=2'd1;
@@ -1259,8 +1313,8 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  wire[10:0] dw=descriptor({1'b0,wr_tag[6:0]},wr_tag[8:7]);
  reg[NB-1:0] asel,bsel;
  (* keep *) reg[NB-1:0] ahc,bhc;
- wire[3*TREES*NV*2-1:0] owner_bits;
- for(genvar oi=0;oi<3*TREES*NV;oi=oi+1)begin:g_owner_bits
+ wire[NOWNER*TREES*NV*2-1:0] owner_bits;
+ for(genvar oi=0;oi<NOWNER*TREES*NV;oi=oi+1)begin:g_owner_bits
    assign owner_bits[oi*2+:2]=owner_read[oi];
  end
  wire[63:0] rd[0:NB-1];
