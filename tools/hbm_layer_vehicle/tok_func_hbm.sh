@@ -92,6 +92,13 @@ for st in L0 chain; do
   say "EMIT qw_$st $(grep -o '"counts": {[^}]*}' "$L/emit_qw_$st.log" | head -1)"
 done
 REPLAYS=${REPLAYS:-$(cd "$RJ" && ls *.json | sed 's/\.json$//' | tr '\n' ' ')}
+# The isolated SU probe must own the bank on every request/write-return edge.
+# This explicit reservation is component-only; it does not qualify a production layer calendar.
+for n in $REPLAYS; do
+  python3 "$T/native_su_calendar.py" reserve-component "$RJ/$n.json" "$B" "$RJ/$n.calendar.json" > "$L/calendar_$n.log" 2>&1 \
+    || { say "CALENDAR_FAIL $n"; exit 3; }
+  mv "$RJ/$n.calendar.json" "$RJ/$n.json"
+done
 NEV=$(python3 -c "import json,sys; print(max(16, 1 + max(sum(e['k']!='M' for e in json.load(open(f))['events']) for f in sys.argv[1:])))" $(for n in $REPLAYS; do echo "$RJ/$n.json"; done))
 python3 "$T/gen_slice_tb.py" --boundary "$B" --out "$OUT/bundle/slice" --nev "$NEV" $(for n in $REPLAYS; do echo --replay "$RJ/$n.json"; done) > "$L/tb.log" 2>&1 || { say TB_FAIL; cat "$L/tb.log"; exit 3; }
 say "$(tail -1 "$L/tb.log")"
