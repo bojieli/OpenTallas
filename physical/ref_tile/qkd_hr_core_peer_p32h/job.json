@@ -21,6 +21,45 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "peer_native_exact",
+    "cmd": "bash rtl/test/host_peer_main_fixture_1020/mu_sram/closure_bench_mu.sh . {RUN}/peer_exact exact",
+    "expect": "pass",
+    "pass_regex": "^PEER_NATIVE PASS edges=\\d+",
+    "pass_witness": "rtl/test/host_peer_main_fixture_1020/mu_sram/closure_witnesses/exact.log",
+    "note": "mapped MU 1 PEER (qkd_hr_core_peer_sram_mu) vs n32 copy, real p192 SRAM model, copy-state monitor",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "peer_native_invert_d",
+    "cmd": "bash rtl/test/host_peer_main_fixture_1020/mu_sram/closure_bench_mu.sh . {RUN}/peer_invert_d invert_d",
+    "expect": "fail",
+    "fail_regex": "^PEER_NATIVE FAIL COPY_STATE edge=\\d+",
+    "fail_witness": "rtl/test/host_peer_main_fixture_1020/mu_sram/closure_witnesses/invert_d.log",
+    "note": "one copied reset flop D inverted",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "peer_native_hold_clk",
+    "cmd": "bash rtl/test/host_peer_main_fixture_1020/mu_sram/closure_bench_mu.sh . {RUN}/peer_hold_clk hold_clk",
+    "expect": "fail",
+    "fail_regex": "^PEER_NATIVE FAIL COPY_STATE edge=\\d+",
+    "fail_witness": "rtl/test/host_peer_main_fixture_1020/mu_sram/closure_witnesses/hold_clk.log",
+    "note": "one copied reset flop CLK tied 0",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {
