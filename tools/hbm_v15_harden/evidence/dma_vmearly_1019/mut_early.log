@@ -1,0 +1,9 @@
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-618686-1792461682 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+VMEARLY FAIL mv_fault at cycle 114 (moves issued 2): lag_ok 1 busy 0
+[1140000] %Fatal: tb_dma_vp4_vmearly.sv:84: Assertion failed in tb_dma_vp4_vmearly
+%Error: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vmearly.sv:84: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-618686-1792461682): exit 1
+EXIT 1

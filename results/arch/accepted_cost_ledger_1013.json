@@ -1467,6 +1467,44 @@
   },
   {
    "design": "s81",
+   "unit": "S81.FRAME_LANDED_RESCHEDULE (col_h9/col_h9_MX/col_h10 frames: 3 local clock regions, every region crossing LANDED as a compiler re-schedule, 3017/3143 landings, +3 edges a crossing)",
+   "group": "S81.FRAME_LANDED_RESCHEDULE",
+   "measured": 12456.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 1.436,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "frame_schedule_cost (col_h9/h10 3-region landed re-schedule: worst extracted station+return path, +18 edges/phase worst, charged once per existing field phase on the full AR token DAG over the p4l2E price; COMPOSED_NOT_NATIVE)",
+     "base_cycles": 854861.9478,
+     "cycles": 867317.9478,
+     "added_cycles": 12456.0,
+     "changed_field_nodes": 324,
+     "e2e_loss_pct": 1.436
+    },
+    "mtp": {
+     "model": "same, full MTP token DAG incl. wave expansion",
+     "base_cycles": 1206605.8754,
+     "cycles": 1221131.8754,
+     "added_cycles": 14526.0,
+     "changed_field_nodes": 280,
+     "e2e_loss_pct": 1.19
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/cost.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "accepted",
+   "note": "Codex frame_schedule_cost.py on codex/s81-frame-reschedule-1019 7d4329d8b; native frame bench (Verilator 5.050, plan K2048/nseg4 all-12-Q cycle-exact vs calendar, each 12/12, unland/landread/reset mutants FAIL) results/arch/s81_dv_1016/frame_l4_cluster/compiler/bench_lp_1019 on claude/tw3-frame-1019 2911edcc2 (merge that branch first: evidence path). Composed bound, not a die run.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-19",
+   "acceptance_note": "COORD 10-19 ~05:10 (HANDOFF 0jy): frame landing = option A (landed-regions standard, owner 10-18 0fd accepted landing cost); ledger row AR -1.44 % / MTP -1.19 % accepted"
+  },
+  {
+   "design": "s81",
    "unit": "SU.HC_POST (ot_dsrom_su_hcpost, current production POST)",
    "group": "SU.HC_POST",
    "measured": 287.0,
@@ -3104,13 +3142,13 @@
    "superseded_pct_not_counted": 0
   },
   "s81": {
-   "accepted_pct": 2.063,
+   "accepted_pct": 3.499,
    "proposed_pct": 6.039,
-   "accepted_plus_proposed_pct": 8.102,
+   "accepted_plus_proposed_pct": 9.538,
    "limit_pct": 15.0,
-   "accepted_rows": 2,
+   "accepted_rows": 3,
    "proposed_rows": 8,
-   "headroom_pct": 12.937,
+   "headroom_pct": 11.501,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
    "superseded_rows": 17,

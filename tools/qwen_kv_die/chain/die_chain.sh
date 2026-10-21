@@ -35,7 +35,15 @@ say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM
 # ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset).  The KV die
 # runs it after the strict bind below (QXF-SEAMK 10-18: netlist-walk export + the compiler's schedule for THIS die)
 if [ "$DIE" != kv ]; then
-RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"; [ "$RCR" = 0 ] || exit 1
+RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"
+# QW-DIECHAIN2 10-19: same OT_BIND_DIAGNOSTIC=1 convention as the KV branch below -- a relay FAIL is stamped on STATUS and
+# in NOT_A_DIE_RESULT and the chain continues as PATHFINDING only (never a die result); default stays: stop.
+if [ "$RCR" != 0 ]; then
+  if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+    say "RELAY_CHECK FAIL ($R/relay_check.json): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT"
+    echo "RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+  else exit 1; fi
+fi
 fi
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
 # every launch, including preserved-case resumes. HARD_PHY still needs real ports.

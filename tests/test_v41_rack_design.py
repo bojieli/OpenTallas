@@ -198,3 +198,35 @@ def test_rack_model_gaps_are_priced_not_open():
     fc = c10["concurrency"]["fill28_mtp"]
     assert fc["drafts_in_flight"] > 1.0 and fc["contended_draft_s"] > fc["isolated_draft_s"]
     assert fc["throughput_cap"] == 1.0 and fc["bank_read_utilisation"] < 1.0 and fc["fits_slots"]
+
+
+def test_release_rack_design_smoke():
+    """RACK-1021: the release rack generator builds every system, every circuit is within reach, and every S81 rank
+    die uses at most its 5 lane pairs (6 on the copy-A/B pre/post-group dies)."""
+    spec = importlib.util.spec_from_file_location("release_rack_design", ROOT / "tools/release_rack_design.py")
+    rel = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rel)
+    record = rel.build()
+    for s in record["systems"]:
+        rows = s.pop("_rows")
+        assert rows and all(r["D"]["reach_ok"] for r in rows)
+        assert s["compare"]["D"]["switch_chips"] == 0 < s["compare"]["S"]["switch_chips"]
+        assert s["trays"]["worst_dc_w"] <= s["trays"]["liquid_limit_w"]
+        if s["name"] == "S81":
+            pairs = {}
+            for r in rows:
+                for die, pair in ((r["a_die"], r["a_pair"]), (r["b_die"], r["b_pair"])):
+                    if die >= 0 and pair != "HX":           # host NIC / mgmt rows; HX = head-tray host SerDes
+                        pairs.setdefault(die, set()).add(pair)
+            # S81.HOST: host links only on head dies, none on stage dies; one mgmt sideband row per tray
+            host = [r for r in rows if r["cls"] == "host"]
+            assert len(host) == s["counts"]["head_dies"] and all(r["a_unit"].startswith("H") for r in host)
+            assert sum(r["cls"] == "mgmt" for r in rows) == s["trays"]["count"]
+            # 5-circuit lane plan: TP d+2 is s_7N A <-> s_7N A (EN<->EN); stage hop s_0N A (WN) -> s_0N B (W5)
+            assert all(r["a_pair"] == r["b_pair"] == "EN" for r in rows
+                       if r["cls"] == "tp_mesh" and "EN" in (r["a_pair"], r["b_pair"]))
+            assert all((r["a_pair"], r["b_pair"]) == ("WN", "W5") for r in rows
+                       if r["cls"] in ("stage_hop", "head_hop", "token_return", "copyb_hop"))
+            assert max(len(p) for p in pairs.values()) == 6
+            assert sum(len(p) == 6 for p in pairs.values()) == 2 * 4 * s["counts"]["copy_b_groups"]
+            assert s["counts"]["layer_dies"] == 4 * s["counts"]["stages"]
