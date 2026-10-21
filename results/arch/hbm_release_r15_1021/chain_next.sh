@@ -56,7 +56,7 @@
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
 VAR=${1:?plan A|B}; PL=${VAR:0:1}; PLAN_UM=300; HOST=ot-epyc5
-W=/home/ubuntu/wt/codex-hbm-r15-binding-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_release_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
+W=/home/ubuntu/wt/codex-hbm-r15-gen-overlay-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_release_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
@@ -64,7 +64,7 @@ AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
 B=/srv/opentallas-scratch/claude/hbm-die15-r15-1021-ep5/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r15-binding-1021
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r15-gen-overlay-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
 # Local transport override only in this successor process: ep6 public route loses packets.
@@ -231,7 +231,20 @@ echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"
 step S2a synth_a_r14_masters
 # ROWS256 changes the source and parameters; old r14 S2 receipts cannot be reused wholesale.
 [ -z "${R14_REUSE_PRIMARY:-}" ] || { echo R15_REFUSES_R14_PRIMARY_REUSE; exit 12; }
+if [ -z "${R15_REUSE_COMPLETED_S2:-}" ]; then
 synth_round $A/net/pre_relay_r14.json $A/vplan_a a $R11A/vplan_b || { echo S2A_SYNTH_FAIL; exit 12; }
+else
+  python3 - "$A/net/pre_relay_r14.json" "$A/vplan_a" <<'PYS2'
+import hashlib,json,sys
+from pathlib import Path
+p=Path(sys.argv[1]); expected='d37b1cb31508e086b45d2217a606bbd203d7d0b76c20ff678da4f600fbba10b9'
+assert hashlib.sha256(p.read_bytes()).hexdigest()==expected, 'source/parameter contract changed; cannot reuse S2'
+v=Path(sys.argv[2]); cells=json.loads((v/'views.json').read_text())
+missing=[name for name,item in cells.items() if item['kind']=='SYNTH' and not (v/'synth'/name/'meta.json').is_file()]
+assert not missing, ('S2 incomplete',missing)
+print('R15_REUSE_COMPLETED_S2 exact source/params; original a4843ffdd receipts retained')
+PYS2
+fi
 ssh $HOST "mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q && cp -al $R11B/p/views $B/p/views" || { echo R14_INIT_REMOTE_FAIL; exit 9; }
 views_to $B/a/views $A/vplan_a $A/net/pre_relay_r14.json || { echo R14_INIT_AVIEWS_FAIL; exit 9; }
 (cat $A/src_paths_a.txt; echo tools/hbm_die_v16/d4g_layers/l26_closed_views.py; echo physical/ref_tile/hdie_col_idx256r_b; echo physical/ref_tile/hdie_pc_ctrl_cfg_h9c) | sort -u > $A/src_paths_init.txt
@@ -239,7 +252,7 @@ git -C $W archive HEAD $(cat $A/src_paths_init.txt) results/arch/hbm_unread_gen2
   && ln -sfn $B/src $B/a/src && ln -sfn $B/src $B/p/src && ln -sfn $B/src $B/q/src && test -f $B/src/$PD/grants_d4g.json" || { echo R14_INIT_SRC_FAIL; exit 9; }
 # r11 S3 GENs ran on the r7 source tree (src_0ae60e322 + changed tools): overlay it NO-CLOBBER (hardlinks) for the
 # physical/ref_tile relay/landing views GEN reads that the git archive path list does not carry
-ssh $HOST "for d in $B7/src_0ae60e322/physical/ref_tile/hbfd*; do [ -d \$d/views ] || continue; t=$B/src_$H/physical/ref_tile/\$(basename \$d); mkdir -p \$t; cp -aln \$d/views \$t/; [ ! -f \$d/spec.json ] || cp -n \$d/spec.json \$t/; done; test -f $B/src_$H/physical/ref_tile/hbfd_rly_1136_ew/views/hbfd_rly_1136_EW/hbfd_rly_1136_EW.lef" || { echo R14_INIT_R7SRC_OVERLAY_FAIL; exit 9; }
+git -C $W archive HEAD $(cat results/arch/hbm_release_r15_1021/relay_view_dirs.txt) | ssh $HOST "tar -x --skip-old-files -C $B/src_$H" || { echo R15_RELAY_VIEW_STAGE_FAIL; exit 9; }
 views_to $B/q/views $R11A/vplan_b $R11A/net/contract_pre.json || { echo R14_INIT_QVIEWS_FAIL; exit 9; }
 mkdir -p $A; rm -rf $A/banklat; cp -a $R11A/banklat $A/banklat
 echo "R14_INIT_OK src_$H plan $PD plan_um=$PLAN_UM"

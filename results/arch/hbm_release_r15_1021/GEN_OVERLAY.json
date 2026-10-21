@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.hbm.r15.gen_overlay.v1",
+ "synthesis_source": "a4843ffdd",
+ "synthesis_contract_sha256": "d37b1cb31508e086b45d2217a606bbd203d7d0b76c20ff678da4f600fbba10b9",
+ "changes": {
+  "tools/hbm_die_v16/d4g_channel_cuts.py": "8e74fae18703c87321de739cb5e7111884fa128663eb3e62ec0fdf1ded0ec964",
+  "results/arch/hbm_release_r14_1021/planB_margin/coord_map.json": "cb37beb8915235af45aca1dc9670d3867a0bccedfa6d4d298f4b817bbcc8d247"
+ },
+ "semantic_report": "results/arch/hbm_release_r14_1021/coord_map_composition_report.json",
+ "actual_note_sites": 168,
+ "max_coordinate_delta_um": 0,
+ "rtl_changed": false,
+ "physical_floorplan_changed": false,
+ "launch": "R15_REUSE_COMPLETED_S2=1 bash results/arch/hbm_release_r15_1021/chain_next.sh B",
+ "qualification": "GEN source overlay only; no synthesis restart or qualification claim"
+}
