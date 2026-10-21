@@ -100,7 +100,73 @@ def add_host_replay(source,boundary,output,words,meta, *, stream_limit=3700,
                 policy='all original drives and numeric checks in the observation window retained byte-for-byte; only later events omitted')
     (output/'calendar_model.json').write_text(json.dumps(meta,indent=2)+'\n')
 
+def reserve_component(replay, boundary):
+    """Reserve all SW banks for the isolated SU component probe.
+
+    Grants are a static resident calendar, including idle slots. Bank owner0
+    still consumes only actual SU requests. This is deliberately not a shared
+    production schedule: every non-SU client must remain idle. No data/check
+    event or return age is changed, and all programming goes through the real
+    host leaf / calendar target.
+    """
+    from layer_images import cp_frames
+    if replay.get('scope') != 'component_probe':
+        raise ValueError('exclusive SU reservation requires component_probe scope')
+    events = replay['events']
+    drives = [e for e in events if e['k'] == 'D']
+    if any(not e['port'].startswith('su_prog__') for e in drives):
+        raise ValueError('exclusive SU reservation refuses other programmed clients')
+    ports = {e['name'] for e in boundary['inputs']}
+    if not drives:
+        return replay
+    # 4/3 converts the serial observation extent; HBM events are not supported.
+    if any(e['dom'] not in ('stream', 'serial') for e in events):
+        raise ValueError('unsupported clock domain in isolated SU replay')
+    stream_end = max((e['cyc'] if e['dom']=='stream' else (4*e['cyc']+2)//3)
+                     for e in events) + 64
+    rows = max(1, (stream_end + 65534)//65535)
+    if rows > 1024:
+        raise ValueError('isolated SU reservation exceeds resident calendar capacity')
+    payload = cal_word(rslot_v=255, wslot_v=255,
+                       lg_local_read=255, lg_local_write=255)
+    words = [prog_row(i, payload, 187) for i in range(rows)]
+    cp, launch, _ = cp_frames(96, words, 3, loops=65535)
+    missing = {e['port'] for e in cp} - ports
+    if missing:
+        raise ValueError(f'calendar ingress missing from slice: {sorted(missing)}')
+    first_start = min(e['cyc'] for e in drives
+                      if e['port']=='su_prog__r_start' and int(e['val'],16))
+    # The earliest possible SU command is after start; reserve a conservative
+    # fixed guard beyond host publication before allowing that start.
+    if (4*first_start)//3 <= launch + 32:
+        raise ValueError('SU starts before calendar publication; increase load gap')
+    if stream_end >= launch + rows*65535:
+        raise ValueError('calendar reservation ends before final observation')
+    result = dict(replay)
+    result['events'] = sorted(events + cp, key=lambda e:(e['dom'],e['cyc'],e['k']))
+    result['su_owner_calendar'] = dict(
+        schema='opentallas.su_component_reservation.v1', target=96,
+        owner=0, banks=list(range(8)), rows=rows, loops=65535,
+        host_launch_stream=launch, end_observation_stream=stream_end,
+        first_su_start_serial=first_start,
+        calendar_sha256=hashlib.sha256(''.join(f'{w:064x}\n' for w in words).encode()).hexdigest(),
+        policy='exclusive SW owner0 reservation; other clients idle; component probe only',
+        production_schedule_qualified=False)
+    return result
+
+
 def main():
+    import sys
+    if len(sys.argv)>1 and sys.argv[1]=='reserve-component':
+        p=argparse.ArgumentParser(description=reserve_component.__doc__)
+        p.add_argument('mode');p.add_argument('replay',type=Path)
+        p.add_argument('boundary',type=Path);p.add_argument('output',type=Path)
+        a=p.parse_args()
+        result=reserve_component(json.loads(a.replay.read_text()), json.loads(a.boundary.read_text()))
+        a.output.parent.mkdir(parents=True,exist_ok=True)
+        a.output.write_text(json.dumps(result)+'\n')
+        print(json.dumps(result.get('su_owner_calendar',{})))
+        return
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('commands',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--first-serial',type=int,required=True);p.add_argument('--bridge-serial',type=int,required=True)
     p.add_argument('--bridge-stream',type=int,required=True);p.add_argument('--host-launch',type=int,required=True)
