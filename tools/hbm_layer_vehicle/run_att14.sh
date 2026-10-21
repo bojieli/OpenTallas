@@ -4,6 +4,7 @@
 #   run_att14.sh REV BUNDLE OUT HOST
 #     REV     tools/tb revision (this branch)          BUNDLE  local r14 bundle (master_files.json, views.json, rtl/, physical/)
 #     OUT     remote run root on HOST                   HOST    staging host (ot-run then qualifies hosts holding OUT)
+#   ONLY=att|idx|merge and REUSE_STAGE=1 resume selected original cases on existing stage/binaries.
 #   env SRC_REV (r14 source, default 1fe61477b = codex/hbm-die14-release-1021) for the IDX / SU sources and their benches;
 #       L00_KV (DS T128 L00 ATT capture, TOKSIM-HBM-att) default ot-epyc5:.../dsfix/att_toksim/L00.
 # Jobs (ot-run, Verilator 5.050):
@@ -43,27 +44,31 @@ QKV=$OUT/src/results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/kv
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 A="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/att_images.py unit --kv $OUT/kv --bundle $OUT/bundle"
 Q="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/qwen_att_unit.py run --kv $QKV --bundle $OUT/bundle"
-RUN="/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir $OUT/.fleet-ready --"
+# SCRATCH2 permits a missing nested --dir on hosts holding its broad lane root.
+# An exact unique lane-root alias preserves strict locality for existing input data.
+FLEET_LANE=${FLEET_LANE:-/srv/opentallas-scratch/claude/tok-hbm-att-$(basename "$OUT")}
+ssh "$H" "test -d $FLEET_LANE || ln -s $OUT $FLEET_LANE" || exit 2
+RUN="/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir $FLEET_LANE --"
 stage_job() { printf '%s\n' "$2" | ssh "$H" "cat > $OUT/$1.sh"; }
 P1=; P2=; P3=; P4=
 # one build dir (obj_d0_p0 / obj_d0_p1) per job; the first op of each job builds it
 J_FULL=""; for L in 0 2 14; do
   J_FULL="$J_FULL $A --layer $L --work $OUT/w_full --out $OUT/out/ds_L${L}_full.json > $OUT/out/ds_L${L}_full.log 2>&1; r=\$?; echo DS_L${L}_FULL_RC \$r; test \$r = 0 || exit \$r;"; done
-if [ "$ONLY" = all ]; then
+if [ "$ONLY" = all ] || [ "$ONLY" = att ]; then
 stage_job job_ds_full "$J_FULL"
 $RUN bash "$OUT/job_ds_full.sh" > "$LOGD/ds_full.otrun.log" 2>&1 &
 P1=$!
 fi
 J_S32=""; for L in 2 14; do
   J_S32="$J_S32 $A --layer $L --subrun 32 --work $OUT/w_s32 --out $OUT/out/ds_L${L}_s32.json > $OUT/out/ds_L${L}_s32.log 2>&1; r=\$?; echo DS_L${L}_S32_RC \$r; test \$r = 0 || exit \$r;"; done
-if [ "$ONLY" = all ]; then
+if [ "$ONLY" = all ] || [ "$ONLY" = att ]; then
 stage_job job_ds_s32 "$J_S32"
 $RUN bash "$OUT/job_ds_s32.sh" > "$LOGD/ds_s32.otrun.log" 2>&1 &
 P2=$!
 fi
 J_Q="$Q --stage L0 --L 0 --work $OUT/w_q --out $OUT/out/qw_L0_L0.json > $OUT/out/qw_L0_L0.log 2>&1; r=\$?; echo QW_L0_RC \$r; test \$r = 0 || exit \$r; \
 $Q --stage chain --L 1 --work $OUT/w_q --out $OUT/out/qw_chain_L1.json > $OUT/out/qw_chain_L1.log 2>&1; r=\$?; echo QW_CHAIN_RC \$r; test \$r = 0 || exit \$r"
-if [ "$ONLY" = all ]; then
+if [ "$ONLY" = all ] || [ "$ONLY" = att ]; then
 stage_job job_qwen "$J_Q"
 $RUN bash "$OUT/job_qwen.sh" > "$LOGD/qwen.otrun.log" 2>&1 &
 P3=$!
@@ -74,7 +79,7 @@ for c in topk_r14_fix topk_r14; do bash rtl/test/toksim_idxdma/run_toksim_idxdma
 for c in topk n12_ctl n12_dir; do bash rtl/test/hbm_idx_static/run_banklat_idx.sh $OUT/out/banklat \$c > $OUT/out/banklat_\$c.log 2>&1; r=\$?; echo BANKLAT_\${c}_RC \$r; test \$r = 0 || exit \$r; done"
 if [ "$ONLY" = all ] || [ "$ONLY" = idx ]; then
 stage_job job_idx "$J_I"
-/home/ubuntu/bin/ot-run --mem 32 --threads 8 --dir "$OUT/.fleet-ready" -- bash "$OUT/job_idx.sh" > "$LOGD/idx.otrun.log" 2>&1 &
+/home/ubuntu/bin/ot-run --mem 32 --threads 8 --dir "$FLEET_LANE" -- bash "$OUT/job_idx.sh" > "$LOGD/idx.otrun.log" 2>&1 &
 P4=$!
 fi
 [ -z "$P2" ] || wait "$P2" || STATUS=1
@@ -95,9 +100,9 @@ cd $OUT/r14src; d=rtl/hbm_accel/generic/adapters/static_su; \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > $OUT/merge/build.log 2>&1; \
 set +e; $OUT/merge/obj/Vtb_su_static_arithmetic +DIR=$OUT/merge/vec_pos > $OUT/merge/pos.log 2>&1; r=\$?; echo MERGE_POS_RC \$r; test \$r = 0 || exit \$r; \
 grep -h 'SU_ARITH' $OUT/merge/pos.log | cut -c1-300"
-if { [ "$ONLY" = all ] || [ "$ONLY" = merge ]; } && timeout 120 ssh "$H" "python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1]))[\"summary\"][\"verdict\"]==\"PASS\" else 1)' $OUT/out/ds_L2_s32.json"; then
+if { [ "$ONLY" = all ] || [ "$ONLY" = att ] || [ "$ONLY" = merge ]; } && timeout 120 ssh "$H" "python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1]))[\"summary\"][\"verdict\"]==\"PASS\" else 1)' $OUT/out/ds_L2_s32.json"; then
   stage_job job_merge "$M"
-  /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$OUT/.fleet-ready" -- bash "$OUT/job_merge.sh" > "$LOGD/merge.otrun.log" 2>&1 || STATUS=1
+  /home/ubuntu/bin/ot-run --mem ${MEM_SU:-400} --threads 8 --dir "$FLEET_LANE" -- bash "$OUT/job_merge.sh" > "$LOGD/merge.otrun.log" 2>&1 || STATUS=1
 else echo "MERGE SKIPPED (DS L2 s32 not PASS)" > "$LOGD/merge.otrun.log"; fi
 for pid in "$P1" "$P3" "$P4"; do [ -z "$pid" ] || wait "$pid" || STATUS=1; done
 grep -h "_RC \|RAN on\|NOT RUN\|SKIPPED" "$LOGD"/*.otrun.log
