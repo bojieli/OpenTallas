@@ -17,7 +17,7 @@ GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
 FFS={'$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_',
      '$_SDFF_PN0_','$_SDFF_PP0_','$_SDFF_PN1_','$_SDFF_PP1_'}
 
-def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False):
+def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False,reuse_copies=False):
  if not 1 <= load_cap <= 32:raise ValueError("load_cap must be1..32")
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  # --retain-keep (QW-SLICE7 10-20): every (* keep *) net of the flattened source (e.g. the Kogge-Stone prefix levels of
@@ -166,11 +166,35 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
   else:terminal_sinks={b:[(*sink,0) for sink in x] for b,x in sinks.items()}
   overloaded=[(b,x) for b,x in terminal_sinks.items() if sum(v[0] for v in x)>(load_cap if b in drivers else 32)]
   if not overloaded:break
+  # --reuse-copies (QW-S5-SCRED 10-21, opt-in): an overflow first fills SPARE load slots of existing copies of the same
+  # source cell (same output bit position) before a new copy is made.  Without it a driver whose sinks are themselves
+  # copied one per pass gains one 1-load copy per pass, so an async-chained reset / landed enable cascade grows by one
+  # copy per iteration up to the raw input pin ("input bit exceeds32 loads" on qfd_dv_s5_sc2 rst_n / cfg_v).
+  spare={};sib=defaultdict(list)
+  if reuse_copies:
+   over={b for b,_ in overloaded}
+   for ob,(dn,dp,di) in drivers.items():
+    if cells[dn]['type'] in ('$_QFD_RING_','$_NOT_') or '__polarity' in dn or ob not in terminal_sinks:continue
+    sib[(dn.split('__bounded_')[0],dp,di)].append(ob)
+    if ob not in over:spare[ob]=load_cap-sum(v[0] for v in terminal_sinks.get(ob,()))
   # Reverse cell order helps process a downstream copy before its parents.
   for b,x in reversed(overloaded):
    if b not in drivers:raise ValueError(f'input bit{b} exceeds32 loads; source producer replicas required')
    n,p,i=drivers[b];c=cells[n];assert c['type']=='$_QFD_RING_' or sum(len(bs) for pn,bs in c['connections'].items() if c['port_directions'][pn]=='output')==1
    chunks=[];part=[];cost=0
+   if reuse_copies and c['type']!='$_QFD_RING_':
+    keep=[];used_cost=0
+    for sink in x:
+     if used_cost+sink[0]<=load_cap:keep.append(sink);used_cost+=sink[0];continue
+     tgt=None
+     if not sink[-1]:
+      for ob in sib[(n.split('__bounded_')[0],p,i)]:
+       if ob!=b and spare.get(ob,0)>=sink[0]:tgt=ob;break
+     if tgt is None:keep.append(sink);continue
+     spare[tgt]-=sink[0];_,kind,sn,sp,si,_inv=sink
+     if kind=='cell':cells[sn]['connections'][sp][si]=tgt
+     else:ports[sn]['bits'][si]=tgt
+    x=keep
    for sink in x:
     if part and cost+sink[0]>load_cap:chunks.append(part);part=[];cost=0
     part.append(sink);cost+=sink[0]
@@ -232,6 +256,6 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  return '\n'.join(lines)+'\n',helpers,dict(source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--retain-keep',action='store_true');a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--retain-keep',action='store_true');p.add_argument('--reuse-copies',action='store_true',help='fill spare slots of existing copies before making a new one (QW-S5-SCRED)');a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,a.reuse_copies);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;r['reuse_copies']=a.reuse_copies;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()

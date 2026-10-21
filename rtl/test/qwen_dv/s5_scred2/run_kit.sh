@@ -16,6 +16,8 @@ NET="rtl/qwen_dv/s5/$N.sv rtl/qwen_dv/s5/${N}_helpers.sv"
 DEF=()
 if [[ $M == mut ]]; then
   MUTDEF=-DOT_S5_RED2_MUT; EXTRA=""; [[ $K == sc ]] && { MUTDEF=-DOT_S5_SC2_MUT; EXTRA="rtl/qwen_dv/s5/qfd_dv_s5_sc2.sv rtl/qwen_dv/qfd_dv_scalar2.sv"; }
+  # sc2 kit netlists are built with --reuse-copies (QW-S5-SCRED); the mutant must be constructed the same way
+  [[ $K == sc ]] && export CFLAGS="--load-cap 8 --transparent-inverters --retain-mux --shared-helpers --retain-keep --reuse-copies"
   PFX=qfd_${K:0:1}2_ bash rtl/test/qwen_dv/s5_scred2/construct.sh "$O/mutnet" qfd_dv_s5_${K}2 ${N}_mut "-set LA $LA -set LM $LM" "$MUTDEF" $EXTRA $COM
   NET="$O/mutnet/${N}_mut.sv $O/mutnet/${N}_mut_helpers.sv"; DEF=(+define+OT_S5_SCRED2_MUT_NETLIST)
 fi
