@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.s81_kv_bridge.model.v1",
+  "state": "SOURCE_INTEGRATION_ONLY_NOT_ADOPTED",
+  "shape": {
+    "D": 512,
+    "taps": 4,
+    "tap_slots": 16,
+    "KVE": 64,
+    "rotating_KVE": 8,
+    "QNH": 4,
+    "QNH_NE": 16,
+    "QNR_NE": 4,
+    "QNR_NV": 1,
+    "KVQ": 16,
+    "LM": 5,
+    "LA": 4,
+    "ERL": 3,
+    "replicas_per_die": 1
+  },
+  "binding": {
+    "slice": "s_3N",
+    "leaf": 0,
+    "parameter": "KV_ENABLE=1",
+    "default": 0,
+    "reserved_opcode": 15
+  },
+  "VM": {
+    "native_row_bits": 128,
+    "extension_bits": 256,
+    "param_rows_KV": 20,
+    "operand_rows": 128,
+    "pair_reads_KV": 74,
+    "pair_reads_GK": 66,
+    "output_unique_512b_rows": 25,
+    "output_masked_events": 26,
+    "pair_writes": 52,
+    "fixed_drain_edges": 104,
+    "scratch_lifetime": "input672..819 completely consumed before any output write; output672..771; exp words masked",
+    "read_bw_bits_per_edge": 256,
+    "write_bw_bits_per_edge": 256,
+    "spine_active_slots_per_two_responses": 1
+  },
+  "staging": {
+    "macro": "ot_sram_1r1w2c_32x64_m1",
+    "banks": 16,
+    "macros_per_bank": 9,
+    "macros": 144,
+    "physical_bits": 294912,
+    "occupied_packet_entries_per_bank_max": 2,
+    "packet_bits": 576,
+    "macro_outline_um": [
+      31.992,
+      17.304
+    ],
+    "macro_area_total_mm2": 0.07971689779199999
+  },
+  "latency": {
+    "DRAIN_AGE": "explicit imm31:16, compiler fixed edge; measured qualification required",
+    "bench_candidate_DRAIN_AGE": 1024,
+    "added_drain_edges": 104,
+    "result_issue_policy": "fixed calendar; missing count/deadline/shape/lifetime is sticky fault, no backpressure or wait-for-ready"
+  },
+  "physical_holds": [
+    "arithmetic leaf area and full bank slot fit must be composed from actual closed leaf records",
+    "native fanout, per-region clocks and fixed-latency landed crossings require qualification",
+    "no physical gate or adopted rate from this source receipt"
+  ],
+  "functional_holds": [
+    "actual a_proj producer RD transport and layer lowering must establish input rows",
+    "both masked exponent fragments must survive",
+    "prove complete input consumption before first output",
+    "compile source hierarchy with opt-in s_3N leaf0 only"
+  ]
+}
