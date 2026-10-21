@@ -7,7 +7,7 @@
   "cancelled_state_sha256": "ccfc1eb8aa32ea6b603047bf3628f0454564a56438f26635e4ee35a6e43d72fe",
   "infrastructure_reason": "cancelled by a human (EPYC6-RETIRE deadline 14:15 (owner 10-21): KILLED at epyc6 retire, relaunch elsewhere)",
   "prohibited": "Do not mutate CANCELLED eligibility/history; do not call migrate/retry-eco on cancelled job; no duplicate route or bench; no assumed interrupted ECO ODB.",
-  "durable_source": "Original fully routed ODB in metrics.orfs_dir/results/.../base; final C3 archive+hash receipt PENDING from Disk",
+  "durable_source": "VERIFIED C3 2026-10-21 14:47:51 PT, 289files 8.766GB, no missing/size/hash mismatches; input_hashes.json records original actual5_2routeODB+6final SPEF/SDC and cl helpers",
   "interrupted_ECO": "No ODB/checkpoint produced in cl/eco/pass1; logs/SDCs only, per Disk actual filesystem inspection",
   "original_metrics": {
     "setup_corner": "TT",
@@ -23,13 +23,14 @@
   ],
   "resource_model": {
     "actual_log_peak_MB": 36812,
-    "note": "Use measured peak plus actual fleet headroom; initial32GB record is below observed peak. No arbitrary runtime or memory cap."
+    "note": "Use measured peak plus actual fleet headroom; initial32GB record is below observed peak. No arbitrary runtime or memory cap.",
+    "old_docker_memory_GB": 128
   },
   "support_owner": "ROOT integration inspecting supported new linked continuation; await prescription before action",
   "receipts_owed": [
-    "Disk finalC3 path/hash manifest",
-    "Exact original route ODB/lib/SDC/source hashes",
     "New linked supported continuation identity and actual fleet unit",
     "PostECO exact qualification and final verdict"
-  ]
+  ],
+  "original_ECO_input": "5_2_route.odb (52d46d106551b1e076859a132ae3764bbb7861099b86e128aa4bcb9756a17ddf), with6_final.spef and6_final.sdc, per exact cl/hold_eco.a3.sh",
+  "source_restore": "Archive policy excludes src. Exactf51f Git27RTL/signoff +50frozenoverlay files verified by Gitblob SHA; source_and_overlay.json."
 }
