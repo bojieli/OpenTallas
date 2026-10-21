@@ -23,3 +23,13 @@ Slot fixes: real SerDes 518.4 x 3844.8 (4 per side in column A from y 86.4) + 2 
 lane pair + copy-A/B; blockage only, owner decision pending); die 32302.4 x 25200 (was 32000 x 25000) so every block keeps
 >= 86.4 streets; service 1728 x 3801.6 x16 with the ctrl row +43.2; lepe MU72 parents 2851.2 wide; idx readers
 1036.8 x 1209.6; seqhost 475.2 x 993.6. The route (dv_route72 + dv_station_dirs72) runs inside `release72/run_die72_g3.sh`.
+
+## G4 (S81-LINK5 L5-G4 10-21, owner-approved 5th lane pair)
+
+`g4/placement_g4.json` from `tools/s81_dv/dv_floorplan72_g4.py` (G3 template): W column B link_0_4/0_5 are REAL
+ot_pdie_serdes slots 518.4 x 3844.8 (plan lk_WN2/lk_WN3); E column B link_1_4/1_5 stay copy-A/B blockage reserves;
+end_parent_1 (s_0N) = ot_s81sl_slice_lepw_mab_mu_72 2851.2 x 6825.6 (s_0S stays 2505.6); die 32302.4 -> 32648.0 x 25200
+(column 1 + E side +345.6, centre blocks +172.8; every G3 street/channel unchanged). `g4/plan_unrouted_g4.json` from
+`tools/s81_dv/dv_plan72_g4.py` (G3 base + lk_WN2/3 + links lt/lr_lk_WN2/3: s_0N tx2/tx3 512 b -> SerDes tx, SerDes rx
+562 b -> s_0N rx2/rx3, copied from lt/lr_lk_WN0/1); 144 blocks, 752 links, 2 blockages. Route + chain in
+`release72/run_die72_g4.sh` (land plan + 4 sibling rows via `release72/mk_land_plan_g4.py`).
