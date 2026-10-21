@@ -377,6 +377,28 @@ def lower(die, op, ctx):
         return dict(status=st, unit='end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive', insts=insts,
                     gap=gap, rows=rows, templates=templates, events=events, bench=BENCH)
     if name.endswith('allreduce'):
+        if name == 'attn.out_allreduce' and 'owner_fold_binding' in ctx:
+            from layer_prog.owner_fold import program
+            from layer_prog.lower_vs import ctl_payload
+            b = ctx['owner_fold_binding']
+            p = program(b['pair01'], b['pair23'], b['scratch'], b['output'],
+                        start=b['start'])
+            sl = ctx['slice']
+            sid = die.slices()[sl]['sid']
+            leaf = int(ctx['leaf'])
+            templates = [(f'{name}.RB{k}', ctl_payload(1 << sid, 0, 1 << leaf,
+                           int(c['word'], 16))) for k, c in enumerate(p['commands'])]
+            return dict(status='PARTIAL', unit='VS11 canonical TP4 owner pair tree',
+                        insts=[sl], templates=templates,
+                        rows=[dict(eng=0 if sl.endswith('N') else 1, issue=c['issue'], arg=k,
+                                   what=f'owner fold {c["expression"]}')
+                              for k, c in enumerate(p['commands'])], events=[],
+                        files={f'prog/owner_fold/{op["id"]}.json': json.dumps(p, indent=2) + '\n'},
+                        gap=dict(module='owner-fold producer and collective transport binding',
+                                 port='four real rank-partial rows -> two adjacent source pairs',
+                                 missing='bind actual producer captures, RD gather paths and lifetimes; '
+                                         'the emitted arithmetic commands alone do not qualify the collective'),
+                        bench='tools/s81_dv/tokfunc/run_owner_fold.sh')
         if name == 'ffn.combine_allreduce' and 'final_ffn' in ctx:
             from layer_prog.final_ffn import local_program
             sl = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
