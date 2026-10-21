@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "scope": "actual allocator capacity and identical expert slot layouts; full MU schedule and behavioural token chain still owed",
+  "map_sha256": "f5608b1e5f2a122cb3b22b115d300df4809b75bf24fa65bf9d2ab1315ae96a8e",
+  "stages": 140,
+  "rank_dies_per_stage": 4,
+  "layer_dies": 560,
+  "nominal_total_dies": 644,
+  "experts_exactly_once": 15360,
+  "dense_layers_exactly_once": 40,
+  "worst_q_fill": 8136,
+  "all_expert_layouts_identical": true
+}
