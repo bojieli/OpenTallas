@@ -90,7 +90,7 @@ module ot_hgi_coll_issuer_m256v8 (
  (* keep = "true" *) reg [18:0] sacc_c;        // start accepted this edge
  (* keep = "true" *) reg [18:0] adv_c;         // advance (fetching && !halt(C))
  (* keep = "true" *) reg [30:0] tk_c;          // loop decision
- (* keep = "true" *) reg [2:0] mw_c;           // metadata write this edge
+ (* keep = "true" *) reg [4:0] mw_c;           // metadata write this edge
  (* keep = "true" *) reg [3:0] pe1_c;          // prime C (phe == 1, no mw / advance)
  (* keep = "true" *) reg [7:0] pe2_c;          // prime CT / CN (phe == 2)
  (* keep = "true" *) reg [1:0] p0_c,p1_c,p2_c; // effective priming phase (macros 0-1 / 2-3)
@@ -126,7 +126,7 @@ module ot_hgi_coll_issuer_m256v8 (
  end
  wire [63:0] mw_d={{32{wdh_c}} & cfg_q[31:0],{32{wdl_c}} & cfg_q[31:0]};
  for(genvar k=0;k<4;k=k+1)begin:g_meta
-  wire mwk=mw_c[1+k/2],advk=adv_c[15+k],p0k=p0_c[k/2],p1k=p1_c[k/2],p2k=p2_c[k/2];
+  wire mwk=mw_c[1+k],advk=adv_c[15+k],p0k=p0_c[k/2],p1k=p1_c[k/2],p2k=p2_c[k/2];
   reg [7:0] a;reg rce;
   always @*begin
    if(mwk)begin a=cfg_row;rce=1'b1;end
@@ -300,7 +300,7 @@ module ot_hgi_coll_issuer_m256v8 (
  // G4: bank-1 mask, metadata write, effective phase (25)
  always @(posedge clk or negedge rcp[4])
   if(!rcp[4])begin vm1<=0;mw_c<=0;p0_c<=2'b11;p1_c<=0;p2_c<=0;end
-  else begin vm1<={16{fv_c[1]}};mw_c<={3{mw_x}};p0_c<={2{phe_x==2'd0}};p1_c<={2{phe_x==2'd1}};p2_c<={2{phe_x==2'd2}};end
+  else begin vm1<={16{fv_c[1]}};mw_c<={5{mw_x}};p0_c<={2{phe_x==2'd0}};p1_c<={2{phe_x==2'd1}};p2_c<={2{phe_x==2'd2}};end
  // G5: bank-2 mask, forwarding, prime C (28)
  always @(posedge clk or negedge rcp[5])
   if(!rcp[5])begin vm2<=0;fwt_c<=0;fwn_c<=0;pe1_c<=0;end
