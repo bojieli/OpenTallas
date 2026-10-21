@@ -1,9 +1,17 @@
 {
   "source": "e886cd0b889340939e5d67989d577ca9de8bfb3e",
-  "status": "EXISTING_wbq_e_PASS_ONLY",
+  "status": "THREE_EXISTING_POSITIVES_PASS_ONLY",
   "blocks": 8,
   "sectors": 5563,
   "lockstep_windows": 8,
   "group_requests": 1920,
-  "scope": "PooledPP e886 diagnostic; doesnotqualifyperPP successor or arbitrary independentPP visibility. Other11witness/nativejobs remainrunning and preserved."
+  "scope": "PooledPP e886 diagnostic; doesnotqualifyperPP successor or arbitrary independentPP visibility. Other11witness/nativejobs remainrunning and preserved.",
+  "cases": [
+    "wbq_e",
+    "wbq_w",
+    "wbq_e_wopen"
+  ],
+  "future_mutants": "All9 NOTRUN under authorized safe boundary controllerstop; exit75 is orchestratorstop, not behavioralFAIL.",
+  "native": "CanonicalGEN running on unchangede886; independentreceiptpending.",
+  "controller": "Nochildsignal; currentwbq_e_wopen completedPASS before nextmutant guardedrefusal."
 }

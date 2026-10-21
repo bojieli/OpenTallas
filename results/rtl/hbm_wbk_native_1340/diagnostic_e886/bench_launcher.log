@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021
+ot-run: ot-epyc9       admits   283 GB (avail 380, growth 182, headroom 0, waiters 0/0 GB) load 81/128 running 32 disk 2261 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021
+ot-run: ot-gold1       admits  -606 GB (avail 374, growth 798, headroom 0, waiters 0/0 GB) load 61/112 running 21 disk 2148 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2891514-1792618756 after 1 s
+- Verilator: cpu 31.656 s on 1 threads; allocated 29 MB
+STK_WBQ PASS wbq_e
+- Verilator: cpu 28.992 s on 1 threads; allocated 29 MB
+STK_WBQ PASS wbq_w
+- Verilator: cpu 27.960 s on 1 threads; allocated 29 MB
+STK_WBQ PASS wbq_e_wopen
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2891514-1792618756): exit 75
