@@ -892,27 +892,9 @@ def split_jobs(prog, cap=NOPS - 2):
     rows cut in issue order, each job's issue / done rebased to its first issue (the host re-boots the next calendar
     after END: the reload is a host-lane cost the price must carry, reported in calendar.json)"""
     rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
-    jobs, chunks, cur, used = [], [], [], set()
-    for r in rows:                    # cut on the row budget AND the per-job template budget (TOK-S81-GAPS)
-        t = {r['tix']} if 'tix' in r else set()
-        if cur and (len(cur) >= cap or len(used | t) > NOPS):
-            # MU-DIE-S81/HOP: never cut inside an atomic op (the stage hop's fixed-edge command chain): the cut moves
-            # before the op's first row (a job is re-booted after the previous END, so a split op loses its edges)
-            g = r.get('grp')
-            k = len(cur)
-            while g is not None and k > 0 and cur[k - 1].get('grp') == g:
-                k -= 1
-            if 0 < k < len(cur):
-                chunks.append(cur[:k])
-                cur = cur[k:]
-                used = {x['tix'] for x in cur if 'tix' in x}
-            else:
-                chunks.append(cur)
-                cur, used = [], set()
-        cur.append(r)
-        used |= t
-    if cur:
-        chunks.append(cur)
+    from layer_prog.aproj_native import atomic_chunks
+    chunks = atomic_chunks(rows, cap, NOPS)
+    jobs = []
     for k, ch in enumerate(chunks):
         t0 = ch[0]['issue']
         jp = Prog(prog.die)
