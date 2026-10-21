@@ -40,6 +40,12 @@ PY
 python3 "$TOOLS/die_safety/gen_check.py" --design hbm --facts "$FACTS" \
   --hbm-reach "$OUT/reach_check.json" --out "$OUT/gen_safety.json" --packet "$OUT/GEN_PACKET.json" \
   > "$OUT/gen_safety.log" 2>&1 || { cat "$OUT/gen_safety.log"; exit 1; }
+python3 - "$OUT/gen_safety.json" <<'PY' || exit 1
+import json,sys
+r=json.load(open(sys.argv[1]))
+if not r.get('physical_qualification_eligible') or not r.get('coverage_complete'):
+    raise SystemExit('GEN_SAFETY FAIL: complete C1/C2/W1/W2 source-bound coverage required before GRT')
+PY
 [ "${4:-}" = --check-only ] && exit 0
 bash "$CASE/run.sh" > "$OUT/route_driver.log" 2>&1
 RC=$?
