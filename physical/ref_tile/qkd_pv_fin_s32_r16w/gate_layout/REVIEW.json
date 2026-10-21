@@ -1,0 +1,38 @@
+{
+  "reviewer": "codex takeover coordinator",
+  "time": "2026-10-21T16:47:57.483023-07:00",
+  "gate_commit": "2026-10-21T16:37:34-0700",
+  "verdict": "APPROVED",
+  "geometry_sha256": "03439f436a6418ac465011c5d05cf36a669ab329328057305a62af817d1fd1ad",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "03439f436a6418ac465011c5d05cf36a669ab329328057305a62af817d1fd1ad",
+    "components": {
+      "outline": "6b6aa12300c5e9862569023b337ee2f1b5fbfafe0cbe04782b50f21cca0af4c5",
+      "macros": "81b89b86aec4fd3b4b67d80a4b1e8ace6e31d0400b73e9ae7e2e0cb27e845c5b",
+      "pins": "3cd0ba3c27594310906fb5cc95eecebb37fae5e21b9a00593f29fc15116c4cfd",
+      "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+    }
+  },
+  "source_content_manifest_sha256": "527d8e63bb4d9a3bba0949d8ff9b87a39e24a3ebe7aa6d9cdb479494deff7cd5",
+  "source_archive_sha256": "51696694cda35f383957acb280fb5a9d0b948b227980b6318ad401c5872153a3",
+  "source_identity": "exact_content_snapshot; commit=None retained",
+  "approval_provenance": "ROOT personally viewed both original PNGs, then formally approved exact fd21e7f2f packet geometry/source manifest/archive after source84/84, native and full-clock evidence review. Transcription of explicit ROOT coordinator approval; no independent stream-lead approval.",
+  "checklist": {
+    "lattice": "Four51.408x39.96 SRAM macros in2x2 on existing lattice; horizontal34.992um and vertical89.64um channels.",
+    "std_cell_band": "ROOT observed broad center/perimeter channels and distributed cells with isolated east-edge hot bins; exact images/hash retained.",
+    "pin_spread": "Original southp0/northp1/westoutput/eastcontrol grouping and registered-pin opt-out source unchanged; no new data/reset-age edge or pin exception.",
+    "clock_entry": "Actual boundary TT27.7/FF25.7ps and all-clock29.9/28.8ps;4actualSRAM clocks present, collector0errors. Root38020/insertion428.4/343.9 guidance retained, no80ps waiver.",
+    "shape": "Same259.2square parent slot, no outline/pin/macro change. ROOT reviewed exact frozen geometry.",
+    "cost": "Eight-point source/state/area/compute/port/cycle/native/clock/programme ledger in READY_PACKET.md; actual area stage provenance retained."
+  },
+  "risks": [
+    "Raw GRT setup-9.61431ps/hold-53.6156ps diagnostics retained; geometry approval is not final routed timing or DRC closure.",
+    "No old CLOSED view, child-view or parent source alias; zero data/token/fault/reset-age change versus selected source only.",
+    "Three historical helper blobs preserve exact gate source; they must not overwrite current main. Publisher must honor current tightening using existing measurement-only path if necessary, no guard waiver/duplicate gate."
+  ],
+  "image_sha256": {
+    "density.png": "c26e20b0490f4f58cd27a9421fabe687a043e38df89e3244c423ea8bfcfe1488",
+    "floorplan.png": "4b56a899c4c2981f50e084c126de99feb77d32c8209ed6891c0011c6c8c49866"
+  }
+}

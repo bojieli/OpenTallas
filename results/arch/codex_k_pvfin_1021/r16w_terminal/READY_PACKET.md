@@ -1,4 +1,4 @@
-# PVFIN r16w frozen review packet — formal geometry approval pending
+# PVFIN r16w frozen review packet — formal geometry approved
 
 The actual gate is WARN with zero FAIL, generated 2026-10-21T16:37:34-0700; original execution ended GATE_SCRIPT_RC=0 and GATE_DONE. Gate source identity is exact_content_snapshot, commit=None retained. Gate start source commit is 2c228c39803f5a1b8a1e8ab577342e915a3a792a. The prepared source branch also preserves the source-specific bench and function proof. No route is submitted by this lane.
 
@@ -10,7 +10,7 @@ Full canonical gate_result.json is separate from scratch_verdict_summary.json. s
 Original PNGs copied byte-for-byte to this packet and kit/gate_layout:
 - floorplan.png SHA4b56a899c4c2981f50e084c126de99feb77d32c8209ed6891c0011c6c8c49866
 - density.png SHAc26e20b0490f4f58cd27a9421fabe687a043e38df89e3244c423ea8bfcfe1488
-ROOT personally viewed both original images and described four macros in2x2, broad center/perimeter channels, distributed cells and isolated east-edge hot bins. This records ROOT's observation only; formal approval/REVIEW.json is pending this exact packet.
+ROOT personally viewed both original images and described four macros in2x2, broad center/perimeter channels, distributed cells and isolated east-edge hot bins. ROOT formally approved this exact geometry/source packet. The hash-bound approval transcription is FORMAL_REVIEW.json and kit/gate_layout/REVIEW.json. Final routed timing/DRC remain pending.
 
 ## Safe-design and geometry checklist
 
