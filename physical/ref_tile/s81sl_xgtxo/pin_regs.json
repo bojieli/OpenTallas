@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_xgt_xo",
+ "enable": false,
+ "reason": "Source-registered leaf: every rstopt_xo input lands in an input flop (iw / ie / iv / xf_q / neo_q / nwo_q / ci_q / sid_c; pin-decided selects are decoded at the pin and registered as kept copies on the same edge) and every ring output leaves a flop (ro_* / vo / dl_* / nx_*); is_v / is_d land in the xs4 K=1 capture flops; xw_v / xw_d / fault leave flops.  A recipe pin_regs stage would add an unpriced ring-hop edge (~8 cycles per traversal)."
+}
