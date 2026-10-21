@@ -642,7 +642,7 @@ module dsdv_eng_rr_c #(
 );
     wire[15:0] rl;
 `ifdef OT_S81ENG_RR_N32
-    ot_rst_relay_bounded32 #(.REGIONS(16)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl));
+    ot_s81eng_reset3n32 #(.LEAVES(16)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl),.early_n());
 `else
     ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl[1:0]));
     assign rl[15:2]=0;

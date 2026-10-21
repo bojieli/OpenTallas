@@ -17,7 +17,7 @@ F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_has
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv
    physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
-   rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_relay_bounded32.sv
+   rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_relay_bounded32.sv rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv
    rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv
    rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv
    physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v

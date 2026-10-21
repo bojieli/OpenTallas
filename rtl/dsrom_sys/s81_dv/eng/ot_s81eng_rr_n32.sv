@@ -15,7 +15,7 @@ module ot_s81eng_xq_n32 #(
     output reg          fault
 );
     wire [127:0] rl;
-    ot_rst_relay_bounded32 #(.REGIONS(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+    ot_s81eng_reset3n32 #(.LEAVES(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl),.early_n());
     // ---------------------------------------------------------------- input flops + decode
     reg         iv; reg [4:0] ic; reg [2:0] ib; reg [263:0] id;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
