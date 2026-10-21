@@ -1,6 +1,6 @@
-# qkd_kvs_emb_z1b -- die-bindable kvs_emb (KV-EMB4, 10-20)
+# qkd_kvs_emb_z2b -- die-bindable kvs_emb (KV-EMB4, 10-20)
 
-Element K.STA.EMB (kvs_emb singleton, KV die). Sibling variants z1a (pd 0.50) / z1b (pd 0.45) gated + submitted in parallel.
+Element K.STA.EMB (kvs_emb singleton, KV die). Sibling variants z2a (pd 0.50) / z2b (pd 0.45) gated + submitted in parallel.
 
 ## Why
 The CLOSED e1 view (qkd_kvs_emb-e1-c84feb9f9, TT +27.3 / FF +13.35) can never bind into the KV die:
@@ -12,13 +12,13 @@ The CLOSED e1 view (qkd_kvs_emb-e1-c84feb9f9, TT +27.3 / FF +13.35) can never bi
   results/rtl/ref_tile/qkd_kvs_emb/native_pin_audit_e1-c84feb9f9.json).
 e2a (spine fix, 32.7/29.9 at gate) keeps the pin registers, so it has the same edge mismatch.
 
-## Fix (z1b)
-- RTL = the die's own module text (qkd_kvs_tiles_hroot_ff_k_mu_ba.sv at main 69528ba94) -> tile_views identity.
+## Fix (z2b)
+- RTL = the die's own module text under OT_KV_EMB_N32=1 (qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv: u_join NATIVE32=1; z1 = default join was refused by the pre-gate native census, 26 drivers >32, max 530) -> tile_views identity.
 - pin_regs OFF (0 face edges = die charge); owner 10-20 09:05: pin regs only at region crossings / >405 um wires,
   crossings land at die level (die relays / landing slots, already priced).
 - reset_landing 2 stages, 64 kept last-stage copies, reset_relay_split max 32 loads.
 - Clock: OT_SPINE_SYM=1 (symmetric insertion-aware spine, e2a recipe) + RC-CAL leaves, child_clock_ref boundary (e1).
-- Views record into physical/ref_tile/qkd_kvs_emb_z1b/views (the e1 view stays untouched).
+- Views record into physical/ref_tile/qkd_kvs_emb_z2b/views (the e1 view stays untouched).
 
 ## SAFE checklist (owner 10-19; RULE FREEZE 10-20 09:35: tile rules guidance, die GRT/STA decide)
 1 Pins: WAIVED-with-reason: no kit pin registers (die schedule 0 edges; owner 09:05 rule). px_tok/px_tep = 34-bit
@@ -29,7 +29,7 @@ e2a (spine fix, 32.7/29.9 at gate) keeps the pin registers, so it has the same e
 5 Storage: row buffer = SRAM in the hard child u_rowtx (CLOSED+native r2 view).
 6 Floorplan: 388.8 x 302.4 (1.29:1), one std-cell band; u_rowtx at (129.624, 86.4) site-snapped (macro_grid WARN, as e1).
 7 Clock: one spine root, OT_SPINE_SYM; pin-flop spread <=80 judged by --cts gate + routed native audit; io_hold 0.03.
-8 Schedule: 0 added edges (static); reset release +2 within FACE_LAND_RST_BUDGET.
+8 Schedule: 0 added active edges (static; NATIVE32 join = same stream timing, Codex cal/join native32 miters PASS); reset release +2 kit landing + 6 NATIVE32 regional release (startup only) within FACE_LAND_RST_BUDGET 126.
 
 ## Gate
 (filled after the gate: PNG review + numbers)
