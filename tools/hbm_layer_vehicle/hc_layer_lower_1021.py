@@ -100,6 +100,8 @@ def root_rows(parameters, response_phase):
     return table, words, dict(root_apply_origin=origin, gather_row0_at=g0,
                              tail_launch_after=tail, result_after=emit,
                              tail_latency=TAIL_RESULT_LATENCY, emit_guard=TAIL_EMIT_GUARD,
+                             gather_period=max(24,response_phase+1), npos=1,
+                             extra_edges_per_additional_position=max(0,response_phase+1-24),
                              emit_after_row0=emit - (g0 - 1),
                              schedule=[dict(after_launch=edge, sequencer_time=edge-origin, fields=fields)
                                        for edge, fields in schedule])

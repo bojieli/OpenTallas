@@ -5,7 +5,7 @@
 // rg/wg request-grant) for the far HC tap lg_<q>_2 (READ_RETURN 18 / WRITE_RETURN 15). Every VM access of the
 // static HC engine in this quadrant is issued here on a compiler-fixed edge:
 //   residual read   ot_hgi_hc_residual_vm_static       320*npos slots x 8 sectors -> 8192-b x_wave every 4 edges
-//   gathered mixes  ot_hgi_hc_gathered_mix_reader_static 3 sectors per position, one per 24-edge period
+//   gathered mixes  ot_hgi_hc_gathered_mix_reader_static 3 sectors per position, one per explicit period >=24 edges
 //   result store    ot_hgi_hc_result_vm_static          3 sectors (24 FP32) per position from the engine tail
 // The three leaves are the codex/hc-static-engine-1014 datapath leaves (a35449ada), unchanged except the
 // gathered reader's response phase is now a parameter. The issuer is a programme SRAM (ot_vms_calendar_static,
@@ -121,7 +121,11 @@ module ot_hbm_hc_q_static #(
         .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
         .local_rq(res_rq),.local_read(res_read),.local_rr(gather_phase?2056'd0:rr_q),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault));
-    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE)) gather(
+    // A full 24-word stream fits each request period; long routed returns
+    // retain their actual phase. Phase39 => PERIOD40, six-bit phase counter.
+    // The compiler prices (GATHER_PERIOD-24) extra edges per repeated position.
+    localparam integer GATHER_PERIOD = GATHER_PHASE < 24 ? 24 : GATHER_PHASE + 1;
+    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE), .PERIOD(GATHER_PERIOD)) gather(
         .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),
         .local_rq(gat_rq),.local_read(gat_read),.local_rr(gather_phase?rr_q:2056'd0),
