@@ -1294,7 +1294,7 @@ def lower_scalar_rf(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
         return v
     S2 = max(last_load + 1, rf_ready + 4 + rf_local)
     ql.f["control"][S2] = pack(dict(ctl, ld=1, vb=vb_op(0)))
-    W = LI.FIRST_OUT + 12
+    W = LI.FIRST_OUT + 2 + rf_local + LI.SETUP_TO_EMIT   # next op's RF hold starts after this op's ends
     issues, out_ex = [], []
     for j in range(n):
         I = S2 + LI.SETUP_TO_EMIT + j * W

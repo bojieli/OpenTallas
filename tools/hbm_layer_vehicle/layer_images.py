@@ -876,6 +876,8 @@ def main():
                     "identity lane terms); failed attempts leave the VM placement / written state untouched")
     ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
     ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
+    ap.add_argument("--defer-records", default="", help="(--su-lower2, internal) records left unlowered because their "
+                    "VM-linked programme group exceeds the TB event depth")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
@@ -961,7 +963,11 @@ def main():
             if fr is not None:
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
-                if a.su_lower2:
+                if a.su_lower2 and str(r["i"]) in a.defer_records.split(","):
+                    su = dict(status="deferred_nev", reasons=[f"VM-linked programme group exceeds the built TB event "
+                                                               f"depth NEV {a.nev}; record left for a larger TB"],
+                              lowering=dict(supported=True, deferred=True))
+                elif a.su_lower2:
                     su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr, sfu_layout=sfu_layout)
                 elif a.connected_lowering and lay == 0 and r['i'] in (4, 8):
                     from hbm_layer_vehicle import su_layer_lower_1021 as SL
@@ -1178,6 +1184,21 @@ def main():
                     break
             else:
                 bins.append(dict(events=list(evs), progs=list(g)))
+        too_big = [b for b in bins if cap is not None and nonm(b["events"]) > cap]
+        if too_big:
+            # defer the latest record of the oversize VM-linked group (no later record of the group consumes it)
+            # and recompile the layer; never an expected-value carry between parts
+            last = max(((r_["i"], P["base"] + o_) for k_ in too_big[0]["progs"] for r_, _, _, o_ in progs[k_]["recs"]),
+                       key=lambda x: x[1])[0]
+            import os
+            args = [x for x in sys.argv]
+            if "--defer-records" in args:
+                j_ = args.index("--defer-records")
+                args[j_ + 1] = f"{args[j_ + 1]},{last}".strip(",")
+            else:
+                args += ["--defer-records", str(last)]
+            print(f"SU_LOWER2 NEV: deferring record {last}", file=sys.stderr)
+            os.execv(sys.executable, [sys.executable] + args)
         stray = pev.get(None, [])
         if bins:
             bins[0]["events"] += stray
