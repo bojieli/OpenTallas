@@ -328,6 +328,14 @@ def pre(v, m, G):
     if missing:
         raise ValueError(f'fault emit: plan owners not on this GEN: {missing[:10]}')
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
+    # rfs try 11: plan pts carry the landing's receiving clock net (n_<bid>); a c16 cluster's _clock_bus pick is NOT the
+    # clock its landings land on, so cover roots go per (owner, clock)
+    cknet = {}
+    for j_, (bid_, cl_, bits_, eps_) in enumerate(m['buses']):
+        if cl_ == 'clock_trunk':
+            cknet.setdefault(bid_, j_)
+            cknet.setdefault('n_' + bid_, j_)
+    v._ot_fault_cknet = cknet
     occ = Occ(m)
     # QW-G5FROOT 10-20: each reserved base relay / landing box carries a RES_HALO_UM halo: _relays books a frame as
     # w + SHAVE by h + SHAVE and its spot search snaps within a tolerance, so a root touching the bare box still moved the
@@ -366,7 +374,8 @@ def pre(v, m, G):
             # rfs try 2 (dv2f20g5rh 'flt_root_dvs_E2 has no input'): the primary root sits within CAP_UM of one of the
             # owner's landings (nearest the gap target), so it always captures at least one source; a hard fault owner
             # (no landing pts) within CAP_UM of its fault port median (rfs try 8: 'flt_root_mu_dhobs has no input')
-            pts_ = sorted(map(tuple, r.get('pts') or [r['xy']]), key=lambda p_: _man(p_, (tx, ty)))
+            own_ = [p_ for p_ in (r.get('pts') or []) if len(p_) < 3 or cknet.get(p_[2], cj) == cj]
+            pts_ = sorted((tuple(p_[:2]) for p_ in (own_ or [r['xy']])), key=lambda p_: _man(p_, (tx, ty)))
             for p_ in pts_[:8]:
                 s = occ.site(v, p_[0], p_[1], rmax=CAP_UM, step=8.64,
                              ok=lambda b, p_=p_: okz(b) and _man(((b[0] + b[2]) / 2, (b[1] + b[3]) / 2), p_) <= CAP_UM)
@@ -472,15 +481,11 @@ def pre(v, m, G):
         for o_, r_ in owners.items():
             if o_ in roots:
                 for p_ in (r_.get('pts') or []):
-                    cand_pts[roots[o_]['cj']].append(tuple(p_))
-        for inst_, ports_ in hard.items():
-            if inst_ in roots:
-                for p_ in ports_:
-                    cand_pts[roots[inst_]['cj']].append(pos(inst_, p_))
+                    cand_pts[cknet.get(p_[2], roots[o_]['cj']) if len(p_) > 2 else roots[o_]['cj']].append(tuple(p_[:2]))
         dropped = []
         for key in sorted(roots):
             r_ = roots[key]
-            if key == ROOT_OWNER or any(_man(r_['xy'], p_) <= CAP_UM for p_ in cand_pts[r_['cj']]):
+            if key == ROOT_OWNER or key in hard or any(_man(r_['xy'], p_) <= CAP_UM for p_ in cand_pts[r_['cj']]):
                 continue
             if not any(k2 != key and roots[k2]['cj'] == r_['cj'] for k2 in roots):
                 continue
@@ -541,7 +546,17 @@ def _cover_roots(v, m, o, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unpl
     clock.  Greedy: seed = first uncovered point, members = the <= CAP_MAXM uncovered points within CAP_UM of it; the root
     site must be within CAP_UM of EVERY member (tiers: 350 um wide-end keep-clear -> GROUP_KEEP_UM -> none -> any box,
     reserved base relay sites always kept); no site -> half the members -> the seed alone -> recorded unplaced."""
-    cj0 = roots[o]['cj']
+    cknet = getattr(v, '_ot_fault_cknet', {})
+    byck = collections.defaultdict(list)
+    for p_ in pts:
+        byck[cknet.get(p_[2], roots[o]['cj']) if len(p_) > 2 else roots[o]['cj']].append((p_[0], p_[1]))
+    n_new = 0
+    for cj0, pl_ in sorted(byck.items()):
+        n_new += _cover_clock(v, m, o, cj0, pl_, roots, by, q, occ, occ_g, occ_0, zn, follow, unplaced, tiers)
+    return n_new
+
+
+def _cover_clock(v, m, o, cj0, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unplaced, tiers):
     same = lambda: [rr['xy'] for rr in roots.values() if rr['cj'] == cj0]
     unc = sorted(tuple(p_) for p_ in pts if not any(_man(p_, c_) <= CAP_UM for c_ in same()))
     n_new = 0
@@ -578,14 +593,14 @@ def _cover_roots(v, m, o, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unpl
         it = v.Inst(nm, q.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[o].region, domain='stream_1p2')
         m['insts'].append(it)
         by[nm] = it
-        _join(m, roots[o]['cj'], (nm, 'ck'))
+        _join(m, cj0, (nm, 'ck'))
         _join(m, roots[o]['rj'], (nm, 'rs'))
         follow[(nm, 'ck')] = o
         c_ = _ctr(it)
         cov = [q_ for q_ in unc if _man(c_, q_) <= CAP_UM][:CAP_MAXM]
         z = zn.of_box((it.x, it.y, it.x + W, it.y + H))
-        roots[key] = dict(roots[o], inst=nm, xy=c_, children=[], zone=z if z is not None else 'out',
-                          landings_in_group=len(cov), site_tier=tier)
+        roots[key] = dict(roots[o], inst=nm, xy=c_, children=[], zone=z if z is not None else 'out', cj=cj0,
+                          clock=m['buses'][cj0][0], landings_in_group=len(cov), site_tier=tier)
         tiers[tier] += 1
         n_new += 1
         unc = [q_ for q_ in unc if q_ not in cov]
