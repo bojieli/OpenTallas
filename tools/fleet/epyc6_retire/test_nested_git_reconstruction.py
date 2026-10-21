@@ -152,7 +152,8 @@ class NestedGit(unittest.TestCase):
         os.utime(self.repo/'pristine', ns=(st.st_atime_ns, st.st_mtime_ns+2000000000))
         _, proofs = self.preservation()
         self.assertEqual(P.sha(self.repo/'.git/index'), before)
-        self.assertIn('pristine', W.pristine_files(str(self.repo), proofs, True))
+        # With refresh disabled, Git conservatively names a stat-only change: copy the extra file.
+        self.assertNotIn('pristine', W.pristine_files(str(self.repo), proofs, True))
         self.assertEqual(P.sha(self.repo/'.git/index'), before)
 
     def test_missing_proof_does_not_run_unnecessary_git_diff(self):
