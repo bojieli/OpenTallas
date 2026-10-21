@@ -1,0 +1,10 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=hold repair over 3.0 h
+chunks (wns_ps tns_ps viol_endpoints): {-62.5 -4301.2 597.0} {-39.7 -122.1 5.0}
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+R2R            5     -39.7  u_ot_pr_core.c590168/QN -> u_ot_pr_core.c587584/D
+top pin groups (class start -> end, bus indices folded):
+      1      -1.2  R2R u_ot_pr_core.c587988/QN -> u_ot_pr_core.c590234/D
+      1     -39.7  R2R u_ot_pr_core.c590136/QN -> u_ot_pr_core.c587552/D
+      1     -39.7  R2R u_ot_pr_core.c590168/QN -> u_ot_pr_core.c587584/D
+      1      -3.0  R2R u_ot_pr_core.c587981/QN -> u_ot_pr_core.c590227/D
+      1     -38.5  R2R u_ot_pr_core.c590133/QN -> u_ot_pr_core.c587549/D
