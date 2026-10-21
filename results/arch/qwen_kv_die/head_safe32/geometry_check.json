@@ -1,0 +1,195 @@
+{
+ "schema": "kv-bind12/head-safe32-geometry/v1",
+ "method": "fleet ot-epyc6: kv_die._build(split, host v14/north/trees, v143, reserve_native_astk, kv_wq_mirror) with the kvs14r-a34df2a74-gen9d15p kv_flags.env (OT_KV_QKH_SAFE32=1), _relays disabled (geometry only, never a gate / bind); then each head master elaborated (kv_expand.elaborate, yosys) and its leaves placed by kv_expand.frames() plans under kv_expand's containment / overlap checks. before = the run tree a34df2a74; after / alt = a34df2a74 + this branch (alt: OT_KV_QKH_SAFE32_PLANS=.../alt_5x4).",
+ "runs": {
+  "before": {
+   "die_um": [
+    13476.672,
+    28216.08
+   ],
+   "die_mm2": 380.259,
+   "head": [
+    1080.0,
+    492.48
+   ],
+   "head_ft": [
+    1080.0,
+    508.68
+   ],
+   "head_plans": [
+    "results/arch/qwen_kv_die/head_reach400/head_r4_plan.json",
+    "results/arch/qwen_kv_die/head_reach400/head_ft_plan.json"
+   ],
+   "eng_h": 2548.7999999999997,
+   "stack_pitch": 12141.336,
+   "stack_h": 12141.336,
+   "seam_um": {
+    "W": 1138.32
+   },
+   "v143_ft": {
+    "ftg": [
+     356.4,
+     191.7
+    ],
+    "fts": [
+     685.8,
+     191.7
+    ]
+   },
+   "n_heads": 128,
+   "inst_overlaps": 0,
+   "outside": [],
+   "expand_qkd_rhead": {
+    "inst": "head_WS_0_0",
+    "module": "ot_qkh_head_native_r4_s_lk_nc32c",
+    "frame": [
+     1079.976,
+     492.456
+    ],
+    "leaves": 54,
+    "n_errors": 43,
+    "errors": [
+     "head_WS_0_0: overlapping closed leaves g_t[11].u_stk / g_t[11].u_l8",
+     "head_WS_0_0/g_t[12].u_l8: closed leaf outside contract frame",
+     "head_WS_0_0/g_t[13].u_l8: closed leaf outside contract frame"
+    ]
+   },
+   "expand_qkd_rhead_ft": {
+    "inst": "head_WS_0_1",
+    "module": "ot_qkh_head_native_r4_ft_s_lk_nc32c",
+    "frame": [
+     1079.976,
+     508.656
+    ],
+    "leaves": 56,
+    "n_errors": 43,
+    "errors": [
+     "head_WS_0_1: overlapping closed leaves g_t[11].u_l8 / g_t[10].u_stk",
+     "head_WS_0_1/g_t[12].u_l8: closed leaf outside contract frame",
+     "head_WS_0_1/g_t[13].u_l8: closed leaf outside contract frame"
+    ]
+   }
+  },
+  "after_6x3": {
+   "die_um": [
+    14513.472,
+    29425.68
+   ],
+   "die_mm2": 427.069,
+   "head": [
+    1339.2,
+    604.8
+   ],
+   "head_ft": [
+    1339.2,
+    621.0
+   ],
+   "head_plans": [
+    "results/arch/qwen_kv_die/head_safe32/head_r4_plan.json",
+    "results/arch/qwen_kv_die/head_safe32/head_ft_plan.json"
+   ],
+   "eng_h": 2998.08,
+   "stack_pitch": 13955.735999999999,
+   "stack_h": 12141.336,
+   "seam_um": {
+    "W": 1155.6
+   },
+   "v143_ft": {
+    "ftg": [
+     486.0,
+     232.2
+    ],
+    "fts": [
+     815.4,
+     232.2
+    ]
+   },
+   "n_heads": 128,
+   "inst_overlaps": 0,
+   "outside": [],
+   "expand_qkd_rhead": {
+    "inst": "head_WS_0_0",
+    "module": "ot_qkh_head_native_r4_s_lk_nc32c",
+    "frame": [
+     1339.1760000000002,
+     604.776
+    ],
+    "leaves": 54,
+    "n_errors": 0,
+    "errors": []
+   },
+   "expand_qkd_rhead_ft": {
+    "inst": "head_WS_0_1",
+    "module": "ot_qkh_head_native_r4_ft_s_lk_nc32c",
+    "frame": [
+     1339.1760000000002,
+     620.976
+    ],
+    "leaves": 56,
+    "n_errors": 0,
+    "errors": []
+   }
+  },
+  "alt_5x4": {
+   "die_um": [
+    13649.472,
+    35214.48
+   ],
+   "die_mm2": 480.659,
+   "head": [
+    1123.2,
+    777.6
+   ],
+   "head_ft": [
+    1123.2,
+    804.6
+   ],
+   "head_plans": [
+    "results/arch/qwen_kv_die/head_safe32/alt_5x4/head_r4_plan.json",
+    "results/arch/qwen_kv_die/head_safe32/alt_5x4/head_ft_plan.json"
+   ],
+   "eng_h": 3710.8799999999997,
+   "stack_pitch": 16893.336,
+   "stack_h": 12141.336,
+   "seam_um": {
+    "W": 1155.6
+   },
+   "v143_ft": {
+    "ftg": [
+     378.0,
+     232.2
+    ],
+    "fts": [
+     707.4,
+     232.2
+    ]
+   },
+   "n_heads": 128,
+   "inst_overlaps": 0,
+   "outside": [],
+   "expand_qkd_rhead": {
+    "inst": "head_WS_0_0",
+    "module": "ot_qkh_head_native_r4_s_lk_nc32c",
+    "frame": [
+     1123.1760000000002,
+     777.576
+    ],
+    "leaves": 54,
+    "n_errors": 0,
+    "errors": []
+   },
+   "expand_qkd_rhead_ft": {
+    "inst": "head_WS_0_1",
+    "module": "ot_qkh_head_native_r4_ft_s_lk_nc32c",
+    "frame": [
+     1123.1760000000002,
+     804.576
+    ],
+    "leaves": 56,
+    "n_errors": 0,
+    "errors": []
+   }
+  }
+ },
+ "reticle_note": "alt_5x4 die height 35.2 mm exceeds the 33-mm reticle field: comparison only"
+}

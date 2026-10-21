@@ -25,6 +25,21 @@ class StaticHeadTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             run=Path(d);die=self.fixture(run);p=run/'expand.json';p.write_text(p.read_text().replace('ot_qkh_head_native_r4_s','ot_qkh_head_native_r4'))
             with self.assertRaisesRegex(ValueError,'not the pinned static'):H.derive(run,die)
+    def test_kpv_lockstep_role_admitted(self):
+        with tempfile.TemporaryDirectory() as d:
+            run=Path(d);die=self.fixture(run);p=run/'expand.json';p.write_text(p.read_text().replace('ot_qkh_head_native_r4_s','ot_qkh_head_native_r4_s_lk'))
+            doc=H.derive(run,die);self.assertEqual(doc['static_head_unused_contract']['role_suffix'],'_lk')
+            self.assertEqual(doc['static_head_unused_contract']['bits'],1024)
+    def test_unproved_safe32_role_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            run=Path(d);die=self.fixture(run);p=run/'expand.json';p.write_text(p.read_text().replace('ot_qkh_head_native_r4_s','ot_qkh_head_native_r4_s_lk_nc32c'))
+            with self.assertRaisesRegex(ValueError,'not the pinned static'):H.derive(run,die)
+    def test_mixed_roles_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            run=Path(d);die=self.fixture(run)
+            (run/'expand.json').write_text(json.dumps(dict(frames=dict(qkd_rhead=dict(module='ot_qkh_head_native_r4_s',instances=1),qkd_rhead_ft=dict(module='ot_qkh_head_native_r4_ft_s_lk',instances=1)))))
+            (run/'case_kv/die.v.preexp').write_text('module die();\nwire ck;\nqkd_rhead head(.ck(ck));\nqkd_rhead_ft head2(.ck(ck));\nendmodule\n')
+            with self.assertRaisesRegex(ValueError,'mixed static-QK'):H.derive(run,die)
     def test_real_consumer_refused(self):
         with tempfile.TemporaryDirectory() as d:
             run=Path(d);die=self.fixture(run);die.write_text(die.read_text().replace('endmodule','consumer live(.a(n_head__nb_t[127]));\nendmodule'))
