@@ -41,6 +41,7 @@ for signal in ['fixed_issue','fixed_end','fixed_pc','fixed_unit']:
     m = re.search(r'wire (\[[^\]]+\]) \\u_head\.'+signal+r'\s*;', new_text)
     assert m, signal
     wrapper += ['wire '+m[1]+' \\u_head.'+signal+' ;', 'assign \\u_head.'+signal+' = u_candidate.\\u_head.'+signal+' ;']
+wrapper += ['wire head_fault=u_candidate.head_fault;', 'wire relocation_sticky=u_candidate.relocation_sticky;']
 wrapper += ['integer diff_edges=0;', 'always @(negedge ck_head) if(rst_n) begin']
 for width,port in outputs:
     wrapper += [' if('+port+' !== old_'+port+') $fatal(1,"H16_NATIVE_DIFF '+port+' edge=%0d new=%h old=%h",diff_edges,'+port+',old_'+port+');']
