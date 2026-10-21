@@ -171,13 +171,27 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
    grow_bad_q[gj]<=gp_n?((gj<gc_n)?(gn[45]||gn[46]!=(gj==gc_n-1)):(gn!=0)):(gn!=0);
   end
  end
+ // Wide descriptor checks are also held on the actual descriptor write edge.
+ // Seen bits still qualify completeness; reset values exactly describe zero data.
+ reg meta_bad_q,gd_bad_q,gd_nz_q,gs_bad_q,gs_nz_q;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin meta_bad_q<=1;gd_bad_q<=1;gd_nz_q<=0;gs_bad_q<=1;gs_nz_q<=0;end
+  else begin
+   if(meta_we)meta_bad_q<=pw_data[63:32]!=32'h43414c53||pw_data[31:28]!=0||pw_data[27:18]==0||pw_data[27:18]>=61;
+   if(gd_we)begin
+    gd_bad_q<=pw_data[31:28]!=0||pw_data[23:12]!=0||pw_data[11:0]==0||pw_data[27:24]==0||pw_data[27:24]>DEPTH;
+    gd_nz_q<=pw_data!=0;
+   end
+   if(pw_v&&!active&&pw_addr==GSTOP)begin gs_bad_q<=pw_data[63:32]!=32'h43414c47||pw_data[31:0]==0;gs_nz_q<=pw_data!=0;end
+  end
+ end
  // seal_bad as a flat vector of independent terms OR-reduced as a balanced tree (the as-built procedural
  // "seal_bad=1" if-chain mapped to a 28-level NAND/AND chain).  Same terms, same function.
  (* keep *) wire[15:0] sb_misc;
  (* keep *) wire[DEPTH-1:0] sb_v, sb_r, sb_gv, sb_gr;
  (* keep *) wire[2:0] sb_cv, sb_cp;
- assign sb_misc={!loading,!stop_seen,!meta_seen,meta_q[63:32]!=32'h43414c53,meta_q[31:28]!=0,
-                 meta_q[27:18]==0,meta_q[27:18]>=61,count==0,count>DEPTH,
+ assign sb_misc={!loading,!stop_seen,!meta_seen,((H16X>=3)?meta_bad_q:(meta_q[63:32]!=32'h43414c53)),((H16X>=3)?1'b0:(meta_q[31:28]!=0)),
+                 ((H16X>=3)?1'b0:(meta_q[27:18]==0)),((H16X>=3)?1'b0:(meta_q[27:18]>=61)),count==0,count>DEPTH,
                  pw_data[63:32]!=32'h58504631,pw_data[31:13]!=0,pw_data[1:0]!=2,
                  pw_data[11:6]!=meta_q[17:12],pw_data[5:2]==0,pw_data[5:2]>4,cge[4]};
  for(gj=0;gj<DEPTH;gj=gj+1)begin:g_sbk
@@ -192,9 +206,10 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
   assign sb_cp[gj]=cge[gj+1]?(!cp_rows[gj][0]||cp_rows[gj][55:49]==0||cp_rows[gj][55:49]>64):(cp_rows[gj]!=0);
  end
  (* keep *) wire sb_g=!gstop_seen||!gdesc_seen||
-   (g_present?(gdesc_q[31:28]!=0||gdesc_q[23:12]!=0||g_base==0||g_count==0||g_count>DEPTH||
+   ((H16X>=3)?(g_present?(gd_bad_q||gs_bad_q):(gd_nz_q||gs_nz_q)):
+    (g_present?(gdesc_q[31:28]!=0||gdesc_q[23:12]!=0||g_base==0||g_count==0||g_count>DEPTH||
                gstop_q[63:32]!=32'h43414c47||gstop_q[31:0]==0)
-             :(gdesc_q!=0||gstop_q!=0));
+             :(gdesc_q!=0||gstop_q!=0)));
  always @* seal_bad=(|sb_misc)||(|sb_v)||(|sb_r)||(|sb_cv)||(|sb_cp)||sb_g||(|sb_gv)||(|sb_gr);
 `ifndef SYNTHESIS
  // the as-built procedural form (reference)
