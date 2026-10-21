@@ -1,0 +1,5 @@
+RX_HEAD PASS token=0 edges=100000 commands=6542 frames=46289 heads=98143 rxheads=69460 maxcount=1
+- rtl/test/host_peer_main_fixture_1020/mechanism/tb_rx.sv:165: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.142 s; speed 7.027 ms/s
+- Verilator: cpu 0.142 s on 1 threads; allocated 7 MB
