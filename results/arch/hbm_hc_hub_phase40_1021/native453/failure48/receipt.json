@@ -1,0 +1,233 @@
+{
+  "status": "NATIVE_FAIL_NO_LAYOUT_OR_GATE_QUALIFICATION",
+  "unit": "oth-ubuntu-3492010-1792625673",
+  "host": "ot-gold1",
+  "source_projection": "453f3acef",
+  "published_authority": "45386657d47b3997fd1c019b85cd60bb98a01ea0",
+  "native_helper_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+  "max_dynamic_loads": 48,
+  "violation_count": 1,
+  "role_errors": [],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_native/base/1_2_yosys.v",
+    "sha256": "a70608cd23add1054e2e396d8f26ed1ba551585c111ba1cabb7a9eb466c70651"
+  },
+  "violation": {
+    "driver": "_42679_/Y",
+    "driver_role": "combinational_or_macro",
+    "net": "_19848_",
+    "loads": 48,
+    "endpoints": [
+      [
+        28250,
+        "A1",
+        0
+      ],
+      [
+        28253,
+        "B",
+        0
+      ],
+      [
+        28255,
+        "A",
+        0
+      ],
+      [
+        28277,
+        "A1",
+        0
+      ],
+      [
+        28285,
+        "A1",
+        0
+      ],
+      [
+        28286,
+        "B",
+        0
+      ],
+      [
+        28288,
+        "A1",
+        0
+      ],
+      [
+        28290,
+        "C",
+        0
+      ],
+      [
+        28293,
+        "C",
+        0
+      ],
+      [
+        28297,
+        "A1",
+        0
+      ],
+      [
+        28298,
+        "B",
+        0
+      ],
+      [
+        28300,
+        "A1",
+        0
+      ],
+      [
+        28301,
+        "B",
+        0
+      ],
+      [
+        28311,
+        "A1",
+        0
+      ],
+      [
+        31724,
+        "B",
+        0
+      ],
+      [
+        7765,
+        "B",
+        0
+      ],
+      [
+        7789,
+        "A1",
+        0
+      ],
+      [
+        7800,
+        "A1",
+        0
+      ],
+      [
+        7801,
+        "C",
+        0
+      ],
+      [
+        7805,
+        "A1",
+        0
+      ],
+      [
+        7806,
+        "C",
+        0
+      ],
+      [
+        7811,
+        "A1",
+        0
+      ],
+      [
+        7814,
+        "B",
+        0
+      ],
+      [
+        7816,
+        "B",
+        0
+      ],
+      [
+        7822,
+        "A1",
+        0
+      ],
+      [
+        7827,
+        "B2",
+        0
+      ],
+      [
+        7835,
+        "B",
+        0
+      ],
+      [
+        7838,
+        "A1",
+        0
+      ],
+      [
+        7839,
+        "C",
+        0
+      ],
+      [
+        7842,
+        "A1",
+        0
+      ],
+      [
+        8051,
+        "B",
+        0
+      ],
+      [
+        8058,
+        "A1",
+        0
+      ],
+      [
+        8060,
+        "B",
+        0
+      ],
+      [
+        8062,
+        "A1",
+        0
+      ],
+      [
+        8063,
+        "B",
+        0
+      ],
+      [
+        8065,
+        "A1",
+        0
+      ],
+      [
+        8066,
+        "B",
+        0
+      ],
+      [
+        8068,
+        "B",
+        0
+      ],
+      [
+        8070,
+        "B",
+        0
+      ],
+      [
+        8072,
+        "A",
+        0
+      ]
+    ]
+  },
+  "mapped_driver": "AOI211x1_ASAP7_75t_R _42679_ inputs A1(_19809_) A2(_19823_) B(u_q.target.g_f32.cv_l) C(_19847_) -> Y(_19848_)",
+  "source_cone": "static_program_target FAN32 descriptor validity/base-limit comparator prefix; exact RTL control-site localization still being completed",
+  "target_source_sha256": "4182e59549e00472097e2409b7c08a0bd52ecc5573cd004e5d663fea2d5ca8c6",
+  "target_source_unchanged_from_C6": true,
+  "limits": [
+    "reader24/40 lockstep remains scoped functional evidence only",
+    "root SAFE2/QCHX12 common caller input profile source-only",
+    "no threshold/Lib/phase/SDC change, source-local structural correction required before fresh native",
+    "existing SMH gate unchanged; E2 failure immutable; no new physicalgate"
+  ]
+}

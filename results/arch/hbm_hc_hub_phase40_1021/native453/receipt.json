@@ -1,5 +1,5 @@
 {
-  "status": "CANONICAL_GEN_PASS_NATIVE_NOTRUN",
+  "status": "CANONICAL_GEN_PASS_FRESH_NATIVE_FAIL48",
   "source_projection": "7b99bdb63",
   "published_authority": "45386657d47b3997fd1c019b85cd60bb98a01ea0",
   "native_census_py_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
@@ -15,5 +15,6 @@
     "DONE_LAT": 35
   },
   "native_prerequisite": "canonical ref_route floorplan stop with mandatory pre-floorplan native census; no GPL/CTS/trial GRT",
-  "full_clock_model_gate": "NOTRUN"
+  "full_clock_model_gate": "NOTRUN",
+  "actual_native_failure": "failure48/receipt.json"
 }
