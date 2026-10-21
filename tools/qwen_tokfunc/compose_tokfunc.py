@@ -109,14 +109,17 @@ def apply(inp, res, tree, results_dir, grade_label):
         else:
             problems.append('stg: PASS but no ages files -> dv stays record')
     if ok('xt1'):
-        c = res['xt1']['cycles']; near = c.get('near', c); far = c.get('far')
+        c = res['xt1']['cycles']
+        c = c.get('landed_nominal_l8_g4', c)
+        near = c.get('near', c); far = c.get('far')
         ops = {}
         for op in ('qkv', 'o', 'gu', 'down'):
             n = near.get(op)
             if n and all(k in n for k in ('first_rs', 'first_final', 'last_final')):
                 ops[op] = {k: int(n[k]) for k in ('first_rs', 'first_final', 'last_final')}
         if len(ops) == 4:
-            inp['tile']['ops'] = ops; inp['tile']['grade'] = sgrade('xt1'); remeasured.add('tile')
+            inp['tile']['ops'] = ops; inp['tile']['grade'] = sgrade('xt1');
+            inp['tile']['source'] = f"TOK-FUNC-QW XT1 landed_nominal_l8_g4 source {res['xt1'].get('src_commit')}; measured near/far edges in stage result.json"; remeasured.add('tile')
             if far and far.get('qkv', {}).get('first_rs') is not None:
                 inp['tile']['far'] = int(far['qkv']['first_rs']) - ops['qkv']['first_rs']
             applied.append(f"tile ops near + far {inp['tile']['far']} <- xt1")

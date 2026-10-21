@@ -97,7 +97,16 @@ def main():
               for p in sorted(out.rglob('*')) if p.is_file()}
     (out / 'generated.json').write_text(json.dumps(dict(
         grade='SOURCE GENERATION ONLY; no functional or die-netlist PASS',
-        compiler_recovery='e18e3d597', actual_gen_inputs=receipt, sha256=hashes), indent=2) + '\n')
+        compiler_recovery='e18e3d597', actual_gen_inputs=receipt,
+        owner_callbacks=dict(
+            admission=dict(segment=2, base=release['admission_base'],
+                           phase='before actual sequencer adm_done',
+                           owner='accepted HOST O61; filler owner may be 1..3 while cal_user is 0',
+                           compare_cal_user_to_O61=False),
+            recurrent_head=dict(segment=1, direction='C->K', kind=12,
+                                phase='after actual sequencer adm_done, per-user token playhead',
+                                owner='actual earliest c_emb token/position/user and held O61',
+                                compare_cal_user_to_O61=True)), sha256=hashes), indent=2) + '\n')
 
 
 if __name__ == '__main__':
