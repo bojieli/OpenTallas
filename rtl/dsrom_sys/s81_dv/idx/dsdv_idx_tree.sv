@@ -402,7 +402,15 @@ endmodule
 // then the 64 query words (pin -> pin 3 edges, the same latency as the children: END reaches every die's reader 0 at a
 // fixed offset from END at the parent).  No matching entry: nothing goes to the readers.  Frames of other types pass
 // to the readers unchanged (and to the children).  qs (local source) and ql (parent link) both valid in a cycle = fault.
-// MUT (bench only): 1 the entry of the next uid is taken.
+// MUT (bench only): 1 the entry of the next uid is taken; 2 the local-source payload mask of slice 15 is stuck at 0.
+// NAT32 (TOK-FUNC2-IDX_QF 2026-10-21, successor of blob c31c5c582 = G8IQ 553741303): same ports, same function, same
+// latency (pin -> pin 3 edges, reset release 2 edges); every control net drives <= 32 loads after synthesis:
+//   * qs_r[0] / ql_r[0] (were 513 loads each, the payload masks) -> 16 + 16 kept copies, one per 32-bit payload slice;
+//   * s1[0] (v; drove the 512-bit qr rewrite select + framing) -> 18 kept copies (16 slice selects, framing, counters);
+//   * w_hit (drove the 107-bit spec mux + spec enable) -> 5 kept uid copies, the entry compare replicated per copy
+//     (4 spec slices of 27 / 27 / 27 / 26 bits + 1 framing copy);
+//   * rn (drove ~45 async pins + the hold enables of spec / hdr) -> 4 kept second-stage copies; spec / tag / user are
+//     plain enable registers (no reset), only control / valid bits are reset;  hdr keeps only the 18 bits it forwards.
 module dsdv_idx_qf #(
     parameter integer MUT = 0
 ) (
@@ -411,79 +419,122 @@ module dsdv_idx_qf #(
     input  wire [7:0]    uid,        // die tree uid (die configuration input)
     input  wire [512:0]  qs,         // local frame source (s_3S)
     input  wire [512:0]  ql,         // parent tree link
-    output reg  [512:0]  qr,         // -> irg_00 qi
-    output reg  [512:0]  qc0,        // -> child link 0
-    output reg  [512:0]  qc1,        // -> child link 1
+    output wire [512:0]  qr,         // -> irg_00 qi
+    output wire [512:0]  qc0,        // -> child link 0
+    output wire [512:0]  qc1,        // -> child link 1
     output reg  [3:0]    st          // {no-entry seen, bad frame, collision, fault}
 );
-    reg [1:0] rs;
-    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
-    wire rn = rs[1];
-    reg [512:0] qs_r, ql_r, s1;
-    reg [7:0]   me;
-    always @(posedge ck or negedge rn)
-        if (!rn) begin qs_r[0] <= 1'b0; ql_r[0] <= 1'b0; s1[0] <= 1'b0; qc0[0] <= 1'b0; qc1[0] <= 1'b0; me <= 8'd0; end
+    localparam integer NJ = 16;      // 32-bit payload slices
+    localparam integer NC = 5;       // uid compare copies: spec slices 0..3 + framing (4)
+    genvar j, c, e;
+    // ---- reset: landed in 2 stages (rst -> rs0, its only sink; rs0 -> 4 kept copies rnk, each <= 32 async pins).
+    // rs0 low clears rnk at once (assert stays asynchronous), release 2 edges after rst as before ----
+    reg rs0;
+    always @(posedge ck or negedge rst) if (!rst) rs0 <= 1'b0; else rs0 <= 1'b1;
+    (* keep = "true" *) reg [3:0] rnk;
+    always @(posedge ck or negedge rs0) if (!rs0) rnk <= 4'd0; else rnk <= 4'hF;
+    // ---- stage 1 (pin flops) and stage 2 (merged source), valid copies ----
+    reg          qs_v0, ql_v0, s1_v0, qc0_v, qc1_v;
+    reg  [511:0] qs_d, ql_d, s1_d, qc0_d, qc1_d;
+    (* keep = "true" *) reg [NJ-1:0] qs_vk, ql_vk;   // copies of qs_r[0] / ql_r[0]: slice j masks payload [32 j +: 32]
+    (* keep = "true" *) reg [NJ+1:0] s1_vk;          // copies of s1[0]: [15:0] qr rewrite select, [16] framing, [17] counters
+    always @(posedge ck or negedge rnk[0])
+        if (!rnk[0]) begin qs_v0 <= 1'b0; ql_v0 <= 1'b0; s1_v0 <= 1'b0; qc0_v <= 1'b0; qc1_v <= 1'b0; qs_vk <= '0; end
         else begin
-            qs_r[0] <= qs[0]; ql_r[0] <= ql[0]; s1[0] <= qs_r[0] | ql_r[0];
-            qc0[0] <= s1[0]; qc1[0] <= s1[0]; me <= uid;
+            qs_v0 <= qs[0]; ql_v0 <= ql[0]; s1_v0 <= qs_v0 | ql_v0; qc0_v <= s1_v0; qc1_v <= s1_v0;
+            qs_vk <= {NJ{qs[0]}};
         end
-    always @(posedge ck) begin
-        qs_r[512:1] <= qs[512:1]; ql_r[512:1] <= ql[512:1];
-        s1[512:1] <= (qs_r[0] ? qs_r[512:1] : 512'd0) | (ql_r[0] ? ql_r[512:1] : 512'd0);
-        qc0[512:1] <= s1[512:1]; qc1[512:1] <= s1[512:1];
-    end
-    wire        v  = s1[0];
-    wire [511:0] d = s1[512:1];
-    // framing
-    reg         infr, tree, hit;
+    always @(posedge ck or negedge rnk[1]) if (!rnk[1]) ql_vk <= '0; else ql_vk <= {NJ{ql[0]}};
+    always @(posedge ck or negedge rnk[2]) if (!rnk[2]) s1_vk <= '0; else s1_vk <= {(NJ + 2){qs_v0 | ql_v0}};
+    always @(posedge ck) begin qs_d <= qs[512:1]; ql_d <= ql[512:1]; qc0_d <= s1_d; qc1_d <= s1_d; end
+    generate for (j = 0; j < NJ; j = j + 1) begin : g_m
+        wire qsm = qs_vk[j] && !(MUT == 2 && j == NJ - 1);
+        always @(posedge ck)
+            s1_d[32 * j +: 32] <= (qsm ? qs_d[32 * j +: 32] : 32'd0) | (ql_vk[j] ? ql_d[32 * j +: 32] : 32'd0);
+    end endgenerate
+    assign qc0 = {qc0_d, qc0_v};
+    assign qc1 = {qc1_d, qc1_v};
+    wire [511:0] d = s1_d;
+    wire         v  = s1_vk[NJ];       // framing copy
+    wire         vc = s1_vk[NJ + 1];   // counter copy
+    // ---- this die's entry: compare replicated per kept uid copy ----
+    (* keep = "true" *) reg [8 * NC - 1:0] mek;      // die configuration, no reset (used only with a valid word)
+    always @(posedge ck) mek <= {NC{uid}};
+    wire [4 * NC - 1:0] hit;                         // hit[4 c + e]: entry e of d is this die's (copy c)
+    generate for (c = 0; c < NC; c = c + 1) begin : g_h
+        wire [7:0] want = (MUT == 1) ? mek[8 * c +: 8] + 8'd1 : mek[8 * c +: 8];
+        for (e = 0; e < 4; e = e + 1) begin : g_e
+            assign hit[4 * c + e] = d[128 * e + 127] && d[128 * e + 119 +: 8] == want;
+        end
+    end endgenerate
+    wire w_hit_f = |hit[19:16];
+    // ---- framing ----
+    reg         infr, tree, hit_seen, qr_v;
     reg  [11:0] left;
     reg  [3:0]  nsl;                    // spec words left
-    reg  [511:0] hdr;
-    reg  [106:0] spec;
-    wire [7:0]  want = (MUT == 1) ? me + 8'd1 : me;
-    reg  [106:0] w_spec; reg w_hit;
-    integer e;
-    always @* begin
-        w_spec = 107'd0; w_hit = 1'b0;
-        for (e = 0; e < 4; e = e + 1)
-            if (d[128 * e + 127] && d[128 * e + 119 +: 8] == want) begin w_spec = d[128 * e +: 107]; w_hit = 1'b1; end
-    end
-    reg [3:0] fl;
-    always @(posedge ck or negedge rn)
-        if (!rn) begin infr <= 1'b0; tree <= 1'b0; hit <= 1'b0; left <= 0; nsl <= 0; qr[0] <= 1'b0; fl <= 4'd0; st <= 4'd0; end
+    reg  [3:0]  fl;
+    wire        is_tree = d[511:508] == 4'd10;
+    always @(posedge ck or negedge rnk[3])
+        if (!rnk[3]) begin infr <= 1'b0; tree <= 1'b0; hit_seen <= 1'b0; qr_v <= 1'b0; fl <= 4'd0; st <= 4'd0; end
         else begin
-            qr[0] <= 1'b0;
-            if (qs_r[0] && ql_r[0]) fl[1] <= 1'b1;
+            qr_v <= 1'b0;
+            if (qs_v0 && ql_v0) fl[1] <= 1'b1;
             if (v) begin
                 if (!infr) begin                                          // header
-                    infr <= d[491:480] != 12'd0; left <= d[491:480];
-                    tree <= d[511:508] == 4'd10; hit <= 1'b0;
-                    if (d[511:508] == 4'd10) begin
-                        hdr <= d; nsl <= d[3:0];
+                    infr <= d[491:480] != 12'd0;
+                    tree <= is_tree; hit_seen <= 1'b0;
+                    if (is_tree) begin
                         if (d[3:0] == 4'd0 || d[491:480] != 12'(64) + 12'(d[3:0])) fl[2] <= 1'b1;
-                    end else qr[0] <= 1'b1;                               // other frames pass
+                    end else qr_v <= 1'b1;                                // other frames pass
                 end else begin
-                    left <= left - 12'd1;
                     if (left == 12'd1) infr <= 1'b0;
                     if (tree && nsl != 4'd0) begin                       // spec word
-                        nsl <= nsl - 4'd1;
-                        if (w_hit) begin spec <= w_spec; hit <= 1'b1; end
+                        if (w_hit_f) hit_seen <= 1'b1;
                         if (nsl == 4'd1) begin
-                            if (w_hit || hit) qr[0] <= 1'b1;             // this die's header goes out now
+                            if (w_hit_f || hit_seen) qr_v <= 1'b1;       // this die's header goes out now
                             else fl[3] <= 1'b1;
                         end
-                    end else if (!tree || hit) qr[0] <= 1'b1;            // query words (or another frame's payload)
+                    end else if (!tree || hit_seen) qr_v <= 1'b1;        // query words (or another frame's payload)
                 end
             end
             st <= {fl[3], fl[2], fl[1], fl[1] | fl[2]};
         end
-    // data path of qr (header rewrite in the cycle of the last spec word)
-    wire [106:0] my_spec = w_hit ? w_spec : spec;
-    always @(posedge ck) begin
-        if (v && infr && tree && nsl == 4'd1) begin
-            qr[512:1] <= 512'd0;
-            qr[512:509] <= 4'd4; qr[503:496] <= hdr[502:495]; qr[492:481] <= 12'd64; qr[459:450] <= hdr[458:449];
-            qr[107:1] <= my_spec;
-        end else qr[512:1] <= d;
-    end
+    always @(posedge ck or negedge rnk[3])
+        if (!rnk[3]) begin left <= 12'd0; nsl <= 4'd0; end
+        else if (vc) begin
+            if (!infr) begin left <= d[491:480]; if (is_tree) nsl <= d[3:0]; end
+            else begin left <= left - 12'd1; if (tree && nsl != 4'd0) nsl <= nsl - 4'd1; end
+        end
+    // forwarded header fields (tag, user) of the current tree frame
+    reg [7:0] h_tag; reg [9:0] h_user;
+    always @(posedge ck) if (v && !infr && is_tree) begin h_tag <= d[502:495]; h_user <= d[458:449]; end
+    // ---- spec: 4 slices, each with its own compare copy ----
+    wire        specw = v && infr && tree && nsl != 4'd0;
+    reg  [106:0] spec;
+    wire [106:0] my_spec;
+    generate for (c = 0; c < 4; c = c + 1) begin : g_s
+        localparam integer LO = 27 * c, N = (c == 3) ? 26 : 27;
+        wire [3:0] h = hit[4 * c +: 4];
+        assign my_spec[LO +: N] = h[3] ? d[384 + LO +: N] : h[2] ? d[256 + LO +: N] : h[1] ? d[128 + LO +: N] :
+                                  h[0] ? d[LO +: N] : spec[LO +: N];
+        always @(posedge ck) if (specw && |h) spec[LO +: N] <= my_spec[LO +: N];
+    end endgenerate
+    // ---- qr: header rewrite in the cycle of the last spec word, else the word itself ----
+    wire [511:0] rw;
+    assign rw[511:508] = 4'd4;
+    assign rw[507:503] = 5'd0;
+    assign rw[502:495] = h_tag;
+    assign rw[494:492] = 3'd0;
+    assign rw[491:480] = 12'd64;
+    assign rw[479:459] = 21'd0;
+    assign rw[458:449] = h_user;
+    assign rw[448:107] = '0;
+    assign rw[106:0]   = my_spec;
+    wire ctl1 = infr && tree && nsl == 4'd1;
+    reg [511:0] qr_d;
+    generate for (j = 0; j < NJ; j = j + 1) begin : g_r
+        wire sel = s1_vk[j] && ctl1;
+        always @(posedge ck) qr_d[32 * j +: 32] <= sel ? rw[32 * j +: 32] : d[32 * j +: 32];
+    end endgenerate
+    assign qr = {qr_d, qr_v};
 endmodule
