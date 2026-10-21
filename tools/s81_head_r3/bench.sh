@@ -40,7 +40,7 @@ run() {    # run NAME T0SRC T1SRC args...
   ln -sf $IMG/xa.hex $W/xa.hex; ln -sf $IMG/xb.hex $W/xb.hex; link $W t0 $a; link $W t1 $b
   ln -sf $IMG/${a}lg.hex $W/t0lg.hex; ln -sf $IMG/${b}lg.hex $W/t1lg.hex
   $OBJ/Vtb_s81hd_mini +DIR=$W +OT_ROM_DIR=$W "$@" > $O/run_${N}_$M.log 2>&1
-  grep -E "^(POS|LOGITS|LOGIT_MISMATCH|TB_PASS|TB_FAIL|%Error|.*readmem)" $O/run_${N}_$M.log | sed "s/^/$N: /" | head -12
+  grep -E "^(POS|LOGITS|LOGIT_MISMATCH|RESET_AGE|TB_PASS|TB_FAIL|%Error|.*readmem)" $O/run_${N}_$M.log | sed "s/^/$N: /" | head -12
   grep -q "^TB_PASS" $O/run_${N}_$M.log
 }
 ok=0; n=0

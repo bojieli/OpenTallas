@@ -12,6 +12,23 @@
 // golden logits t0lg.hex / t1lg.hex in +DIR (local row order): "LOGITS <tile> <exact>/<formed>".
 module tb_s81hd_mini #(parameter integer SK = 7);
     reg ck = 1'b0, rst_n = 1'b0;
+    // Actual successor reset path versus old kit's two-stage landing model.
+    reg [2:0] reset_age_ref=3'b000;
+    reg [1:0] reset_old_ref=2'b00;
+    integer reset_edges=0, reset_age_errors=0, reset_reassertions=0;
+    always @(posedge ck) begin
+        reset_age_ref <= {reset_age_ref[1:0],rst_n};
+        reset_old_ref <= {reset_old_ref[0],rst_n};
+        reset_edges <= reset_edges+1;
+    end
+    always @(negedge ck) if (reset_edges>=3) begin
+        if (u_t0.tile_r2[0] !== reset_age_ref[2] ||
+            u_t1.tile_r2[0] !== reset_age_ref[2]) begin
+            reset_age_errors=reset_age_errors+1;
+            $display("TB_FAIL RESET_AGE old2=%b expected3=%b tile0=%b tile1=%b",reset_old_ref[1],reset_age_ref[2],u_t0.tile_r2[0],u_t1.tile_r2[0]);
+        end
+    end
+
     always #0.5 ck = ~ck;
     reg  [564:0] bi = '0;
     wire [564:0] so, sw, se, t0o, t1o, ro;
@@ -106,6 +123,14 @@ module tb_s81hd_mini #(parameter integer SK = 7);
         $display("LOGITS t0 %0d/%0d t1 %0d/%0d", lok[0], lnum[0], lok[1], lnum[1]);
         if (!$test$plusargs("NOLG") && (lok[0] != lnum[0] || lok[1] != lnum[1])) begin $display("TB_FAIL logits"); bad = bad + 1; end
         if (lnum[0] != 128 * npos * ten0 || lnum[1] != 128 * npos * ten1) begin $display("TB_FAIL logit count"); bad = bad + 1; end
+        // Reassert between sampled edges after the real golden traffic has
+        // completed, then capture both assertion and release at every edge.
+        @(negedge ck); #0.2; rst_n=1'b0; reset_reassertions=reset_reassertions+1;
+        repeat(5) @(negedge ck);
+        #0.2; rst_n=1'b1;
+        repeat(8) @(negedge ck);
+        $display("RESET_AGE checked_edges=%0d old_stages=2 selected_stages=3 reassertions=%0d mismatches=%0d traffic_delta=0",reset_edges,reset_reassertions,reset_age_errors);
+        if(reset_age_errors!=0) bad=bad+reset_age_errors;
         if (bad == 0) $display("TB_PASS positions %0d", npos); else $display("TB_FAIL %0d mismatches", bad);
         $finish;
     end
