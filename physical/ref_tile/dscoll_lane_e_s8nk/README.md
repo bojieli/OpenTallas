@@ -21,7 +21,8 @@ DRIVE-S81-SLICERTL). Generator results/rtl/s81_coll_native32_1020/kit_s8n/gen_s8
   pre-gate native census (limit 32) runs first in the gate.
 4 Depth: decision cone ends at a flop pair now (was c_diff -> compare -> count_r/wp_r adder in one cycle).
 5 Storage: unchanged 55 bank64 SRAMs; +1,106 reset-free data-stage flops (payload in flight, not storage).
-6 Floorplan: unchanged s8 = s7/s6c (lattice, channels, aspect 1.24, pins <= 3.6/um on full W/E faces).
+6 Floorplan: unchanged s8 = s7/s6c (lattice, channels, aspect 1.24, pins <= 3.6/um on full W/E faces); pins: route.pin_balance
+  group_max 1 (M4 W/E faces) = defined bit order on rx/tx/lo_d/li_d (main-tool pin_order check).
 7 Clock: as above; pin-flop spread judged by the --cts gate (TT/FF <= 80 within the region); io_hold_margin 0.03.
 8 Schedule: off-die link boundary (elastic by owner rule 10-14). Added edges vs s7: link->core +2 (write landing), credit return +2
   (freed counts drains). Measured mean lo->li latency: bench m0 log COLL_REACH7_STATS (ref4 vs safe8) -> collective ledger.

@@ -33,6 +33,9 @@ def make(side, km):
             face.remove("tf")
     s["pin_ranges"].pop("tf", None)
     s["sdc_extra"] = [x for x in s.get("sdc_extra", []) if "tf_fwdclk" not in x]
+    # main gate tools (pin_order, 10-20): the four >32 b buses get a defined bit order -- balanced placer, one pin per group,
+    # uniform over each port's own (disjoint) range in bit order; M4 on the W/E faces (signals M2-M5)
+    s["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
     s["structural_change"] = __doc__.strip() + "\n\n--- s8 base ---\n" + s["structural_change"]
     j = s["job"]
     for b in j["benches"]:
