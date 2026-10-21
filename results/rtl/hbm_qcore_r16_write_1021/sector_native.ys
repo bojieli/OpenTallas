@@ -1,0 +1,16 @@
+read_verilog -sv -defer -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv
+chparam -set S 7 -set MUT 0 -set COLLPORT 1 ot_hbm_su_qcore_r13_sec
+hierarchy -check -top ot_hbm_su_qcore_r13_sec
+proc
+select -set ot_kw w:* a:keep %i
+select -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i
+techmap @ot_kc
+select -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* t:$_*DFF* t:$_*LATCH* %u %u %u %i
+setattr -set keep 1 @ot_kc
+select -clear
+synth -top ot_hbm_su_qcore_r13_sec -flatten
+dfflibmap -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+opt_clean
+autoname
+write_verilog ../sector_native/mapped.v

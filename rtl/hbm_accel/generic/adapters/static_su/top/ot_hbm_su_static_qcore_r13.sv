@@ -309,13 +309,28 @@ module ot_hbm_su_qcore_r13_wb #(parameter integer S=0,B=0,COLLPORT=1)(
  ot_hbm_su_qcore_r13_selq u_q(.hit(hit),.sel(sel),.any(wvb),.multi(multi));
  wire [15:0] wdb=({16{sel[0]}}&wd16[0+:16])|({16{sel[1]}}&wd16[16+:16])|({16{sel[2]}}&wd16[32+:16])|({16{sel[3]}}&wd16[48+:16]);
  wire [1:0] wab=({2{sel[0]}}&row[0+:2])|({2{sel[1]}}&row[2+:2])|({2{sel[2]}}&row[4+:2])|({2{sel[3]}}&row[6+:2]);
- wire rrb=(COLLPORT!=0)&&(|rr_hit);
- assign d=rrb?rrd16:wdb;
+ wire rrb;
+ ot_hbm_su_qcore_r16_col_any u_control_sel(.hit(rr_hit),.selected(rrb));
+ for(genvar byte_n=0;byte_n<2;byte_n=byte_n+1)begin:g_col_byte
+  ot_hbm_su_qcore_r16_col_byte u_mux(.hit(rr_hit),.col(rrd16[8*byte_n+:8]),.lane(wdb[8*byte_n+:8]),.d(d[8*byte_n+:8]));
+ end
  // A collective write overrides all lane writers, including writes to another row.
  for(genvar r=0;r<4;r=r+1)begin:g_en
   assign en[r]=rr_hit[r]||(!rrb&&wvb&&(wab==2'(r)));
  end
  assign conf=multi||(rrb&&wvb);
+endmodule
+
+// Isolate each byte's COL selection from the row/conflict root (actual r16 census: 34 loads).
+(* keep_hierarchy *) module ot_hbm_su_qcore_r16_col_byte(input wire[3:0]hit,input wire[7:0]col,lane,output wire[7:0]d);
+ wire selected;
+ ot_hbm_su_qcore_r16_col_any u_data_sel(.hit(hit),.selected(selected));
+ assign d=selected?col:lane;
+endmodule
+
+// Keep the OR node behind a hierarchy boundary: ABC must not absorb each hit into eight mux bits.
+(* keep_hierarchy *) module ot_hbm_su_qcore_r16_col_any(input wire[3:0]hit,output wire selected);
+ assign selected=|hit;
 endmodule
 
 // r10 operand byte select: one-hot {sl3,sl2,sl1,sl0,rf,sfu,pt}

@@ -14,10 +14,11 @@
     "logic_increment_ps": 482.23,
     "delay_note": "reported incremental cell+net delays; cannot separate pure wire without additional STA, no new campaign"
   },
-  "change": "COLL sector+row decode before existing k capture, four kept row hits per2bank group instead of raw5bit address+valid; same k+1 storage commit, existing data priority unchanged",
+  "change": "COLL sector+row decode before existing k capture, four kept row hits per2bank group instead of raw5bit address+valid; same k+1 storage commit, existing data priority unchanged; two per-byte data mux modules with own kept OR4 child and separate control OR4 child prevent ABC select-absorption",
   "storage_delta_flops_per_sector": -8,
   "storage_note": "old4groups*(5addr+1valid)=24, new4groups*4rowhits=16; resettable bits4->16",
-  "native": "pending including changed reset load",
-  "function": "pending existing actual qcore lockstep",
-  "physical": "no gate/no geometry alias"
+  "native": "source1 FAIL16/max34 on COL select, source2 FAIL16/max84 on rowhits after ABC absorption; finalsource3 actual sector7 PASS10939 roots/max32/0violations; fullparent reset/ports pending",
+  "function": "source1 full existing qcore lockstep PASS9104/scalars312/read5918/fault_lags0. Exact source3 functional run pending; no newlaunch after lead instruction",
+  "physical": "no gate/no geometry alias",
+  "qualification": "changed sector native only; source-only parent, no geometry/route adoption"
 }
