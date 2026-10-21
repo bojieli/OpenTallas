@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hv16_dbk_cpl_l1b",
  "verdict": "FAIL",
- "generated": "2026-10-20T06:54:34-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-20T08:12:26-0700",
+ "host": "ot-pve1",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "3e42dc14461cd79238a1343d2c5f5a1ef851de54",
+  "start_commit": "320e14b1beb181492a15222177481c0ed9ff9307",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3032deb691d8030ccf0d98017e0a3dfc84e5a00eee93346df472ae9b2d42cf18",
-  "manifest_sha256": "134e0caaa6808bfac4d8cb956adb53500d9fa3e972ae0a76f940ff5921cb6f53",
+  "archive_sha256": "5797b97eed1caea04278745fb095f9bf19c03de23ce8239ee10c310f30fa5380",
+  "manifest_sha256": "a208453ea38b6361448b18a642fb0beb60e8786fa6a95131a6ec4421049dacaa",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17759,48 +17759,48 @@
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/README.md",
     "kind": "file",
-    "sha256": "f82f0fbb7dc858ec0cbcec68451c73a0587934bb159eb26be6264a5d40a2fffe",
-    "git_blob": "3ed45cdb573f14b03e66db7e4b3448c6b9d09167",
+    "sha256": "4fcb859efc8230a565f3ccb99d5f9cdb419225019432897b9b463fd80231a7a9",
+    "git_blob": "0868a9365ab17a5d887ed34213f341427adadf22",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/clock.sdc",
     "kind": "file",
-    "sha256": "e0b6c89fec9adf8ec5dadbac58e18bbe7e836f6fc97824cff2f7bd77f92ec210",
-    "git_blob": "49fdd5f15c819af5768c15c8a786ed41b047a38e",
+    "sha256": "eea1c357ce84e26dc393c365a7aeed666d095d660720ca38d5ebaee362d52ada",
+    "git_blob": "ec44128efe2487f3631a396bb91569422ffac917",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/clock_entry.sdc",
     "kind": "file",
-    "sha256": "4c80a0c95413853aed5cc55edf238a68dd06a46c6ccf1aafa61b5b7a231b680a",
-    "git_blob": "a7071a2fc7267cb07e283c68423a9cd77285c078",
+    "sha256": "089f786781ad50649723130a4079d260e483682fffc572959e2447ae32263094",
+    "git_blob": "42b09f6c75f723cdc9f5ea465a7622dbebcff009",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/floorplan.json",
     "kind": "file",
-    "sha256": "63c04f35a1017fafd4bfe169746034081085f497ae0aecc44a44fe331f20f4d3",
-    "git_blob": "b39830e43dd6f09758ad04146850339c08ce2ec0",
+    "sha256": "634298ef940701ba6e9b53020cfd6f20c1a87cb14c65117a35d102f4be918a0a",
+    "git_blob": "c00d7b6c8b720d26918177af0afaf2dff00fa46f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/job.json",
     "kind": "file",
-    "sha256": "31ee09b3003c6f45360d8bc556b166f482a1ac184cea4bc282512cf07fa2369b",
-    "git_blob": "b5fa6054718e6d5c832eaca67d864dee6a4bd953",
+    "sha256": "c1e269c40ef0790ee8d6e2ab675127f8f0da646cb495b706d18e9143b6a22cd7",
+    "git_blob": "34c00c3907ba993d228f6a62f7bd7856c12a76f0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/kit.env",
     "kind": "file",
-    "sha256": "3256dceb4abb455a635116f2200f3016855d4df3f86effcbaadb5a18778480ca",
-    "git_blob": "82b39a6d4ba1a5bcb2905d53b96f1089347b6f0d",
+    "sha256": "606b03e67b9bcd7d659a4275a112d7f04bb13cb93e4eceb81b7ce870f72d9d8d",
+    "git_blob": "ca34d8bb9ee4db6bcb76723cf6b61d904e8c454e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17863,8 +17863,8 @@
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/pre_cts.tcl",
     "kind": "file",
-    "sha256": "26a38e9f76ceeaeb1275b41971b317c0a2b194e00a0196f39cf16256105b1784",
-    "git_blob": "79784464e2cccceca2d3acfae44145078121fd22",
+    "sha256": "e91f8568b841cbd1210e773c452b73d85e034adf77b840a8d37f3d3906065052",
+    "git_blob": "36d9588fbbbee461d281a66e53e9edf9d7297862",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17919,16 +17919,16 @@
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/signoff.sdc",
     "kind": "file",
-    "sha256": "02f5dcb54c858fbffc2ea382ba23eef6b8128af3c8f7f8939b84cc600d2b09a7",
-    "git_blob": "246525f55506a8fbbc66084cec8c15e4ff63e4e9",
+    "sha256": "cd641d8db3c226fb633c9051432bfde631afce674a4fc2aee5783528f7bbea33",
+    "git_blob": "cccfe84bdf35d3e600eb9bfeafc7184e5e58b379",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hv16_dbk_cpl_l1b/spec.json",
     "kind": "file",
-    "sha256": "4bfc75ed771b2d30f6759d9a751052b50d3a6cf28b9c9696500dc0fab360b7dc",
-    "git_blob": "e4a405161e4d66239b429110c8cd311007c860ce",
+    "sha256": "e49a2caf2cb43dc109f5e05db6f1710b86b49a64a7a3864e28d8496d61c30aba",
+    "git_blob": "ee3334c3504d00c4de7e333153e1c89fba55e668",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18063,24 +18063,24 @@
    {
     "path": "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1.tcl",
     "kind": "file",
-    "sha256": "59589cd09b3ce3c0ad492d4b093b10b90a8831ce048352eae7f6af5d551a1000",
-    "git_blob": "4eb98e3ce5bdf3ae122e6b29b8a064359ad92ecb",
+    "sha256": "bee816b252135f0d5499d3d9473d69d656d08918bddbe715958bfd21f22f66ef",
+    "git_blob": "0853773589e4571f5c99e9740b9d819b3676c7b0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1b.tcl",
     "kind": "file",
-    "sha256": "548eb726e9aade83bdcac5c7c93ac35cbb7a80e7611e0ba9b752751c303d2969",
-    "git_blob": "40da012c0817bd4f8e0b1e227c6f3f59689a8978",
+    "sha256": "a81e2d5f69fbb3134f9f3f11f2e528d4f8f3a80b2494a5c1ba868dc3f1cb3015",
+    "git_blob": "f6c00c246f888e0c8707f13a456b8a7732a6c30c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "results/arch/hbm_dbkcpl_land_1020/make_pins.py",
     "kind": "file",
-    "sha256": "b627d130dcfceeb5800bdede7e7b651a6bb1ac748b439bb4a21265f0560f0398",
-    "git_blob": "a69176f82ab385dd59bead1c1235c7e15d3f886b",
+    "sha256": "640f65475ef1b2d6d34e58a428f2b28bf0502b58aa4b9baee5133c28ff01b083",
+    "git_blob": "729633318a2786abdf2a18b7812c97deac516e0b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18831,8 +18831,8 @@
    {
     "path": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cpl.sv",
     "kind": "file",
-    "sha256": "688042bc6eaa46930479edd5de9862f4c50b248607ed8da4958e2447c560bcb2",
-    "git_blob": "11e0f6ba186919ab34449237cbf32eaef7b87c8e",
+    "sha256": "e8076d29979cee6044cbee5b14404540f012fb376c203f5335eeded26efc883a",
+    "git_blob": "2f688a5cbcee87d8ff21f245cf40dab57808d42a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18991,8 +18991,8 @@
    {
     "path": "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rl.sv",
     "kind": "file",
-    "sha256": "a7092debc8e19b600914d96c1bdadc877a1ef6505894598743c04bb07e8a32fb",
-    "git_blob": "d4c8063e6443bd037fb84dbebef8676537c2bc46",
+    "sha256": "9b1f5a8f3313ae27014de7a09c60b7ae4bc346d3161df6a80789cccaef825f8a",
+    "git_blob": "bbf3e2a8a96337ffa1b8bf86023a684923e28628",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -19015,8 +19015,8 @@
    {
     "path": "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cpl.sv",
     "kind": "file",
-    "sha256": "9a05fc8cacc98309864c6aac05f428889937552e9d7486ebb11ae84167970a1f",
-    "git_blob": "685764dc9d49ebf9c171c5695c2ca36c64b8f614",
+    "sha256": "90d070372de8008dbee09d9021ee60dbf3b0e1747db17e5d54b96d9b2780975a",
+    "git_blob": "23544db8e590cad3bda3612d1992200cb47d082d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -72311,8 +72311,8 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 80525047,
-   "unpacked_bytes": 557903872,
+   "archive_bytes": 80525203,
+   "unpacked_bytes": 557907968,
    "pick_gb": 22,
    "runtime_gb": 22
   },
@@ -73580,11 +73580,11 @@
     "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar/provenance/abstract_pin_stub.json": "f76d2d10e8996b0439efae2ccdeb5eff215abd689cda7003b174227ba7936470",
     "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar/provenance/raw/ot_hgi_dma_back_cp_collar.lef": "7605bfd0ecf4d1ce8ac7f5c407f0164ccdadbe61e61de9a875197b8ca88fa954",
     "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar/provenance/view_export.abstract.json": "6ab40d4688b7fe2626afd1f78611bd7d7df35716696642ef932a166bfa5a7df9",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/README.md": "f82f0fbb7dc858ec0cbcec68451c73a0587934bb159eb26be6264a5d40a2fffe",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/clock.sdc": "e0b6c89fec9adf8ec5dadbac58e18bbe7e836f6fc97824cff2f7bd77f92ec210",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/clock_entry.sdc": "4c80a0c95413853aed5cc55edf238a68dd06a46c6ccf1aafa61b5b7a231b680a",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/floorplan.json": "63c04f35a1017fafd4bfe169746034081085f497ae0aecc44a44fe331f20f4d3",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/kit.env": "3256dceb4abb455a635116f2200f3016855d4df3f86effcbaadb5a18778480ca",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/README.md": "4fcb859efc8230a565f3ccb99d5f9cdb419225019432897b9b463fd80231a7a9",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/clock.sdc": "eea1c357ce84e26dc393c365a7aeed666d095d660720ca38d5ebaee362d52ada",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/clock_entry.sdc": "089f786781ad50649723130a4079d260e483682fffc572959e2447ae32263094",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/floorplan.json": "634298ef940701ba6e9b53020cfd6f20c1a87cb14c65117a35d102f4be918a0a",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/kit.env": "606b03e67b9bcd7d659a4275a112d7f04bb13cb93e4eceb81b7ce870f72d9d8d",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pdn.tcl": "8036ed4b469308ae4781b00e63f66181584f073436eed12c4c9587c69ccf308a",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pin_regs.json": "0954e2f695403f8c39e6e19982d306c2bf9713deb8f855225457e8f87207cc1d",
     "physical/ref_tile/hv16_dbk_cpl_l1b/place.tcl": "433392f30ea47d0b720117243a4a53399cffcf2079934e9679ecfa64a0ed10dd",
@@ -73592,15 +73592,15 @@
     "physical/ref_tile/hv16_dbk_cpl_l1b/post_drt.tcl": "f4b5f98fc50b03fc35cd2efeea2d7f385cd06a0b34146fa9c4b3c9a10e88ac45",
     "physical/ref_tile/hv16_dbk_cpl_l1b/post_fill.tcl": "124c27d348312894d879da67c5b6cec2ff0cacaee50952e04080329f7fd47922",
     "physical/ref_tile/hv16_dbk_cpl_l1b/post_grt.tcl": "124c27d348312894d879da67c5b6cec2ff0cacaee50952e04080329f7fd47922",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/pre_cts.tcl": "26a38e9f76ceeaeb1275b41971b317c0a2b194e00a0196f39cf16256105b1784",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/pre_cts.tcl": "e91f8568b841cbd1210e773c452b73d85e034adf77b840a8d37f3d3906065052",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pre_dpl.tcl": "191fd6a8028e1f073ed5bd347446a101ef5753b0394f8d8c9c5e285b0aa8dbfb",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pre_drt.tcl": "4aa88238ace40b9879d8d46c771a0c0417b8b3b5f5c8899e7ecb346346bc47b1",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pre_fill.tcl": "4aa88238ace40b9879d8d46c771a0c0417b8b3b5f5c8899e7ecb346346bc47b1",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pre_gpl.tcl": "c7e4e5443e293791fad0951a19299342526f1822a62ba61d3b5ee13bcbb3e701",
     "physical/ref_tile/hv16_dbk_cpl_l1b/pre_grt.tcl": "465d797aa0ac04e09b2440f5dd02d508452977de088c91e4041e0c628279a48a",
     "physical/ref_tile/hv16_dbk_cpl_l1b/reset_landing.json": "4759c8bae9b79e2a05009e94aadcd164d1095b677694a3df888d365900292223",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/signoff.sdc": "02f5dcb54c858fbffc2ea382ba23eef6b8128af3c8f7f8939b84cc600d2b09a7",
-    "physical/ref_tile/hv16_dbk_cpl_l1b/spec.json": "4bfc75ed771b2d30f6759d9a751052b50d3a6cf28b9c9696500dc0fab360b7dc",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/signoff.sdc": "cd641d8db3c226fb633c9051432bfde631afce674a4fc2aee5783528f7bbea33",
+    "physical/ref_tile/hv16_dbk_cpl_l1b/spec.json": "e49a2caf2cb43dc109f5e05db6f1710b86b49a64a7a3864e28d8496d61c30aba",
     "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller/abstract.json": "e8fc9e673a08d1db32aade32a4cc3ac4b6a2b9929603d316719c62dd4a31d035",
     "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller/child_lint.json": "d33ce1ad0ae107423b89af6c7f0a3a6cd1094a4edb69226db381a7232feeaec2",
     "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller/export_ff.log": "cc2a3dc33a3aa3c20f44d06592dc3ed62fb655f6efa9a5c2b571d44321f67d04",
@@ -73617,9 +73617,9 @@
     "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller/provenance/abstract_pin_stub.json": "6afb38d4d59605ddfd478271e8f272afaa8f51cb430223c09a546e1591a0c291",
     "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller/provenance/raw/ot_hgi_dma_back_static_vp4_controller.lef": "053b5333d80609dff471f2f27ba390e01485b8f8376d6752882fab5f4ef9c52d",
     "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller/provenance/view_export.abstract.json": "eb9802042b80c40fc8246723ff399bb80f37b0bdc2b9d234573d8112ba7fd756",
-    "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1.tcl": "59589cd09b3ce3c0ad492d4b093b10b90a8831ce048352eae7f6af5d551a1000",
-    "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1b.tcl": "548eb726e9aade83bdcac5c7c93ac35cbb7a80e7611e0ba9b752751c303d2969",
-    "results/arch/hbm_dbkcpl_land_1020/make_pins.py": "b627d130dcfceeb5800bdede7e7b651a6bb1ac748b439bb4a21265f0560f0398",
+    "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1.tcl": "bee816b252135f0d5499d3d9473d69d656d08918bddbe715958bfd21f22f66ef",
+    "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1b.tcl": "a81e2d5f69fbb3134f9f3f11f2e528d4f8f3a80b2494a5c1ba868dc3f1cb3015",
+    "results/arch/hbm_dbkcpl_land_1020/make_pins.py": "640f65475ef1b2d6d34e58a428f2b28bf0502b58aa4b9baee5133c28ff01b083",
     "results/arch/hbm_dbkcpl_land_1020/relay_anchor_l1.txt": "32910257ad17aa682cb0d4db9b4327d615a32330d7c0839cc3e1359607d439e6",
     "results/arch/hbm_dbkcpl_land_1020/relay_anchor_post_l1.txt": "1ae3d4770a0aa0d171b72a5ab4223a466f8830c4dfc24fe995bb806a9cbdd08e",
     "rtl/hbm_accel/generic/peers/static/dma_back_static_abi.json": "65d6d2991fe8ca3f3367e08ed49e61dc49c677bbb9787c4c55bb538b8f5f3ecc",
@@ -73713,7 +73713,7 @@
     "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp.sv": "a8329b1decc2a3e57f04f71c81f3ce57e9bb16d46e9e8fd230a8b5ba29cf3b19",
     "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "1e47ee8115671a990f2b814d5e81b974fb3cf23d3c2bfa4225082d34d7042f8e",
     "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv": "8ecb2a27377ffad4c091c94819eda42df0787c46b506d0d036a7812c90ef1c88",
-    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cpl.sv": "688042bc6eaa46930479edd5de9862f4c50b248607ed8da4958e2447c560bcb2",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cpl.sv": "e8076d29979cee6044cbee5b14404540f012fb376c203f5335eeded26efc883a",
     "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
     "rtl/hbm_accel/generic/peers/static/run_dma_back_rows.sh": "89b73eeed0e6f2e68bda740d43096e44344047426ccc08abf839645ac7d072e8",
     "rtl/hbm_accel/generic/peers/static/run_dma_back_static.sh": "5defee8f855ec56ddaf4282f6f98e60765d4e16f6c8fa7681fc4fc6bbcce9a09",
@@ -73733,10 +73733,10 @@
     "rtl/hbm_accel/generic/peers/static/tb_dma_native_controller_static.sv": "4857c1d1c1768d9de34fd06701782ae7a8ea4ab9cf5d777ea45728271658ebe7",
     "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_ackfault.sv": "bdb84fe160ab280c9536a3fe9849339c78fb18f5b4a3a61e036640df071b48bd",
     "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat.sv": "5452b73ab3c178eb39c4282b85cd58c5e290a1dcbe87b46479f5e33a9ce3dafd",
-    "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rl.sv": "a7092debc8e19b600914d96c1bdadc877a1ef6505894598743c04bb07e8a32fb",
+    "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rl.sv": "9b1f5a8f3313ae27014de7a09c60b7ae4bc346d3161df6a80789cccaef825f8a",
     "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_clock.sv": "3f1842a6ed79a54e0d885f6ed7120e35de7b811a5ee14bbe0953f5aa65299d91",
     "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cp.sv": "a7acf22ca3c722b55cf731238eb71c0aa9f3803976ba72172d2d4557641156f3",
-    "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cpl.sv": "9a05fc8cacc98309864c6aac05f428889937552e9d7486ebb11ae84167970a1f",
+    "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cpl.sv": "90d070372de8008dbee09d9021ee60dbf3b0e1747db17e5d54b96d9b2780975a",
     "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_native_fault.sv": "c3e8bd91686a87cd0d0552012dc42bc57e53afe320e9c6534968706b7edbf477",
     "rtl/hbm_accel/generic/peers/static/tb_dma_vp4_wbready_fault.sv": "9566ab6a255f6f41b596093899d59aac0a49340168e350b140d2514edb9e917f",
     "rtl/hbm_accel/generic/peers/static/tb_dma_wb_phy_static.sv": "d2bb3f9126c40fcf01c0d0af3eaada0f5649fd11102a80b6f1b60f85e1b09a7e",
@@ -74281,16 +74281,16 @@
    },
    "digest": "e584ae9667f17c8585d1c04278cce47b19ec4779f2d67a59b3945e864ba18144"
   },
-  "captured": "2026-10-20T06:33:29-0700",
+  "captured": "2026-10-20T06:59:13-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hv16_dbk_cpl_l1b/signoff.sdc"
   },
-  "remote_script_sha256": "3a039b54c7968d6d21f580fc70909ca3625f087f8b0c92a59686dd013f2a6091",
+  "remote_script_sha256": "35f4d9585599431a2eb887ecfcc28fce4d11ab8d6b94d023c2ef868c14c6b0bf",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hv16_dbk_cpl_l1b-20261020-063306",
+  "remote_host": "ot-pve1",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hv16_dbk_cpl_l1b-20261020-065851",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -74298,23 +74298,1949 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 299,
+  "max_root_sinks": 257,
   "root": "port:clk_land[0]",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
-  "tt_pin_spread_ps": null,
-  "ff_insertion_ps": null,
-  "ff_spread_ps": null,
-  "ff_pin_spread_ps": null,
+  "tt_insertion_ps": 117.5,
+  "tt_spread_ps": 36.3,
+  "tt_pin_spread_ps": 36.3,
+  "ff_insertion_ps": 98.8,
+  "ff_spread_ps": 35.2,
+  "ff_pin_spread_ps": 35.2,
   "declared_clock": "hybrid_entries",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "ot_entry_0",
+    "tt": {
+     "clock_family": {
+      "ot_entry_0": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 169.4,
+      "min": 169.4,
+      "max": 169.4
+     },
+     "all": {
+      "n": 1,
+      "mean": 169.4,
+      "min": 169.4,
+      "max": 169.4
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 169.4,
+      "max_slew": 537.1,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.u_control/clk",
+        "arr": 169.4,
+        "slew": 537.1,
+        "late": 0.0,
+        "net": "clk"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 305.4,
+       "min": 305.4,
+       "max": 305.4
+      },
+      "all": {
+       "n": 1,
+       "mean": 305.4,
+       "min": 305.4,
+       "max": 305.4
+      },
+      "refs": {
+       "ot_hgi_dma_back_static_vp4_controller": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 136.0,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 170.8,
+      "min": 170.8,
+      "max": 170.8
+     },
+     "all": {
+      "n": 1,
+      "mean": 170.8,
+      "min": 170.8,
+      "max": 170.8
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 280.3,
+       "min": 280.3,
+       "max": 280.3
+      },
+      "all": {
+       "n": 1,
+       "mean": 280.3,
+       "min": 280.3,
+       "max": 280.3
+      },
+      "refs": {
+       "ot_hgi_dma_back_static_vp4_controller": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 109.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 170.8,
+      "max_slew": 541.4,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.u_control/clk",
+        "arr": 170.8,
+        "slew": 541.4,
+        "late": -0.0,
+        "net": "clk"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_cp",
+    "clock": "ot_entry_1",
+    "tt": {
+     "clock_family": {
+      "ot_entry_1": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 9.4,
+      "min": 9.4,
+      "max": 9.4
+     },
+     "all": {
+      "n": 1,
+      "mean": 9.4,
+      "min": 9.4,
+      "max": 9.4
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 9.4,
+      "max_slew": 29.9,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_cp/clk",
+        "arr": 9.4,
+        "slew": 29.9,
+        "late": 0.0,
+        "net": "clk_cp"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 226.5,
+       "min": 226.5,
+       "max": 226.5
+      },
+      "all": {
+       "n": 1,
+       "mean": 226.5,
+       "min": 226.5,
+       "max": 226.5
+      },
+      "refs": {
+       "ot_hgi_dma_back_cp_collar": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 217.1,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 9.7,
+      "min": 9.7,
+      "max": 9.7
+     },
+     "all": {
+      "n": 1,
+      "mean": 9.7,
+      "min": 9.7,
+      "max": 9.7
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 191.9,
+       "min": 191.9,
+       "max": 191.9
+      },
+      "all": {
+       "n": 1,
+       "mean": 191.9,
+       "min": 191.9,
+       "max": 191.9
+      },
+      "refs": {
+       "ot_hgi_dma_back_cp_collar": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 182.2,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 9.7,
+      "max_slew": 30.7,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_cp/clk",
+        "arr": 9.7,
+        "slew": 30.7,
+        "late": -0.0,
+        "net": "clk_cp"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_rst",
+    "clock": "ot_entry_2",
+    "tt": {
+     "clock_family": {
+      "ot_entry_2": 33
+     },
+     "boundary": {
+      "n": 19,
+      "mean": 352.9,
+      "min": 348.8,
+      "max": 389.0
+     },
+     "all": {
+      "n": 33,
+      "mean": 355.2,
+      "min": 348.8,
+      "max": 389.0
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 19,
+      "mean": 295.6,
+      "min": 291.8,
+      "max": 329.9
+     },
+     "all": {
+      "n": 33,
+      "mean": 297.5,
+      "min": 291.8,
+      "max": 329.9
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_bank[0]",
+    "clock": "ot_entry_3",
+    "tt": {
+     "clock_family": {
+      "ot_entry_3": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 39.5,
+      "min": 39.5,
+      "max": 39.5
+     },
+     "all": {
+      "n": 1,
+      "mean": 39.5,
+      "min": 39.5,
+      "max": 39.5
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 39.5,
+      "max_slew": 125.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[0].u_bank/clk",
+        "arr": 39.5,
+        "slew": 125.3,
+        "late": 0.0,
+        "net": "clk_bank[0]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 165.4,
+       "min": 165.4,
+       "max": 165.4
+      },
+      "all": {
+       "n": 1,
+       "mean": 165.4,
+       "min": 165.4,
+       "max": 165.4
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 40.6,
+      "min": 40.6,
+      "max": 40.6
+     },
+     "all": {
+      "n": 1,
+      "mean": 40.6,
+      "min": 40.6,
+      "max": 40.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 142.1,
+       "min": 142.1,
+       "max": 142.1
+      },
+      "all": {
+       "n": 1,
+       "mean": 142.1,
+       "min": 142.1,
+       "max": 142.1
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 40.6,
+      "max_slew": 128.8,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[0].u_bank/clk",
+        "arr": 40.6,
+        "slew": 128.8,
+        "late": 0.0,
+        "net": "clk_bank[0]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[1]",
+    "clock": "ot_entry_4",
+    "tt": {
+     "clock_family": {
+      "ot_entry_4": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 69.1,
+      "min": 69.1,
+      "max": 69.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 69.1,
+      "min": 69.1,
+      "max": 69.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 69.1,
+      "max_slew": 219.0,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[1].u_bank/clk",
+        "arr": 69.1,
+        "slew": 219.0,
+        "late": -0.0,
+        "net": "clk_bank[1]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 195.0,
+       "min": 195.0,
+       "max": 195.0
+      },
+      "all": {
+       "n": 1,
+       "mean": 195.0,
+       "min": 195.0,
+       "max": 195.0
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 70.7,
+      "min": 70.7,
+      "max": 70.7
+     },
+     "all": {
+      "n": 1,
+      "mean": 70.7,
+      "min": 70.7,
+      "max": 70.7
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 172.2,
+       "min": 172.2,
+       "max": 172.2
+      },
+      "all": {
+       "n": 1,
+       "mean": 172.2,
+       "min": 172.2,
+       "max": 172.2
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 70.7,
+      "max_slew": 224.0,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[1].u_bank/clk",
+        "arr": 70.7,
+        "slew": 224.0,
+        "late": -0.0,
+        "net": "clk_bank[1]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[2]",
+    "clock": "ot_entry_5",
+    "tt": {
+     "clock_family": {
+      "ot_entry_5": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 65.9,
+      "min": 65.9,
+      "max": 65.9
+     },
+     "all": {
+      "n": 1,
+      "mean": 65.9,
+      "min": 65.9,
+      "max": 65.9
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 65.9,
+      "max_slew": 208.8,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[2].u_bank/clk",
+        "arr": 65.9,
+        "slew": 208.8,
+        "late": -0.0,
+        "net": "clk_bank[2]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 191.8,
+       "min": 191.8,
+       "max": 191.8
+      },
+      "all": {
+       "n": 1,
+       "mean": 191.8,
+       "min": 191.8,
+       "max": 191.8
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 67.4,
+      "min": 67.4,
+      "max": 67.4
+     },
+     "all": {
+      "n": 1,
+      "mean": 67.4,
+      "min": 67.4,
+      "max": 67.4
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 168.9,
+       "min": 168.9,
+       "max": 168.9
+      },
+      "all": {
+       "n": 1,
+       "mean": 168.9,
+       "min": 168.9,
+       "max": 168.9
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 67.4,
+      "max_slew": 213.7,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[2].u_bank/clk",
+        "arr": 67.4,
+        "slew": 213.7,
+        "late": 0.0,
+        "net": "clk_bank[2]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[3]",
+    "clock": "ot_entry_6",
+    "tt": {
+     "clock_family": {
+      "ot_entry_6": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 39.5,
+      "min": 39.5,
+      "max": 39.5
+     },
+     "all": {
+      "n": 1,
+      "mean": 39.5,
+      "min": 39.5,
+      "max": 39.5
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 39.5,
+      "max_slew": 125.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[3].u_bank/clk",
+        "arr": 39.5,
+        "slew": 125.3,
+        "late": 0.0,
+        "net": "clk_bank[3]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 165.4,
+       "min": 165.4,
+       "max": 165.4
+      },
+      "all": {
+       "n": 1,
+       "mean": 165.4,
+       "min": 165.4,
+       "max": 165.4
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 40.6,
+      "min": 40.6,
+      "max": 40.6
+     },
+     "all": {
+      "n": 1,
+      "mean": 40.6,
+      "min": 40.6,
+      "max": 40.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 142.1,
+       "min": 142.1,
+       "max": 142.1
+      },
+      "all": {
+       "n": 1,
+       "mean": 142.1,
+       "min": 142.1,
+       "max": 142.1
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 40.6,
+      "max_slew": 128.8,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[3].u_bank/clk",
+        "arr": 40.6,
+        "slew": 128.8,
+        "late": 0.0,
+        "net": "clk_bank[3]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[4]",
+    "clock": "ot_entry_7",
+    "tt": {
+     "clock_family": {
+      "ot_entry_7": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 39.5,
+      "min": 39.5,
+      "max": 39.5
+     },
+     "all": {
+      "n": 1,
+      "mean": 39.5,
+      "min": 39.5,
+      "max": 39.5
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 39.5,
+      "max_slew": 125.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[4].u_bank/clk",
+        "arr": 39.5,
+        "slew": 125.3,
+        "late": 0.0,
+        "net": "clk_bank[4]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 165.4,
+       "min": 165.4,
+       "max": 165.4
+      },
+      "all": {
+       "n": 1,
+       "mean": 165.4,
+       "min": 165.4,
+       "max": 165.4
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 40.6,
+      "min": 40.6,
+      "max": 40.6
+     },
+     "all": {
+      "n": 1,
+      "mean": 40.6,
+      "min": 40.6,
+      "max": 40.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 142.1,
+       "min": 142.1,
+       "max": 142.1
+      },
+      "all": {
+       "n": 1,
+       "mean": 142.1,
+       "min": 142.1,
+       "max": 142.1
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 40.6,
+      "max_slew": 128.8,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[4].u_bank/clk",
+        "arr": 40.6,
+        "slew": 128.8,
+        "late": 0.0,
+        "net": "clk_bank[4]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[5]",
+    "clock": "ot_entry_8",
+    "tt": {
+     "clock_family": {
+      "ot_entry_8": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 4.4,
+      "min": 4.4,
+      "max": 4.4
+     },
+     "all": {
+      "n": 1,
+      "mean": 4.4,
+      "min": 4.4,
+      "max": 4.4
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 4.4,
+      "max_slew": 14.0,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[5].u_bank/clk",
+        "arr": 4.4,
+        "slew": 14.0,
+        "late": 0.0,
+        "net": "clk_bank[5]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 130.3,
+       "min": 130.3,
+       "max": 130.3
+      },
+      "all": {
+       "n": 1,
+       "mean": 130.3,
+       "min": 130.3,
+       "max": 130.3
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 4.6,
+      "min": 4.6,
+      "max": 4.6
+     },
+     "all": {
+      "n": 1,
+      "mean": 4.6,
+      "min": 4.6,
+      "max": 4.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 106.1,
+       "min": 106.1,
+       "max": 106.1
+      },
+      "all": {
+       "n": 1,
+       "mean": 106.1,
+       "min": 106.1,
+       "max": 106.1
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 4.6,
+      "max_slew": 14.7,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[5].u_bank/clk",
+        "arr": 4.6,
+        "slew": 14.7,
+        "late": 0.0,
+        "net": "clk_bank[5]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[6]",
+    "clock": "ot_entry_9",
+    "tt": {
+     "clock_family": {
+      "ot_entry_9": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 4.4,
+      "min": 4.4,
+      "max": 4.4
+     },
+     "all": {
+      "n": 1,
+      "mean": 4.4,
+      "min": 4.4,
+      "max": 4.4
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 4.4,
+      "max_slew": 14.0,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[6].u_bank/clk",
+        "arr": 4.4,
+        "slew": 14.0,
+        "late": 0.0,
+        "net": "clk_bank[6]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 130.3,
+       "min": 130.3,
+       "max": 130.3
+      },
+      "all": {
+       "n": 1,
+       "mean": 130.3,
+       "min": 130.3,
+       "max": 130.3
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 4.6,
+      "min": 4.6,
+      "max": 4.6
+     },
+     "all": {
+      "n": 1,
+      "mean": 4.6,
+      "min": 4.6,
+      "max": 4.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 106.1,
+       "min": 106.1,
+       "max": 106.1
+      },
+      "all": {
+       "n": 1,
+       "mean": 106.1,
+       "min": 106.1,
+       "max": 106.1
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 4.6,
+      "max_slew": 14.7,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[6].u_bank/clk",
+        "arr": 4.6,
+        "slew": 14.7,
+        "late": 0.0,
+        "net": "clk_bank[6]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_bank[7]",
+    "clock": "ot_entry_10",
+    "tt": {
+     "clock_family": {
+      "ot_entry_10": 1
+     },
+     "boundary": {
+      "n": 1,
+      "mean": 4.4,
+      "min": 4.4,
+      "max": 4.4
+     },
+     "all": {
+      "n": 1,
+      "mean": 4.4,
+      "min": 4.4,
+      "max": 4.4
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 4.4,
+      "max_slew": 14.0,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[7].u_bank/clk",
+        "arr": 4.4,
+        "slew": 14.0,
+        "late": 0.0,
+        "net": "clk_bank[7]"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 130.3,
+       "min": 130.3,
+       "max": 130.3
+      },
+      "all": {
+       "n": 1,
+       "mean": 130.3,
+       "min": 130.3,
+       "max": 130.3
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 125.9,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 4.6,
+      "min": 4.6,
+      "max": 4.6
+     },
+     "all": {
+      "n": 1,
+      "mean": 4.6,
+      "min": 4.6,
+      "max": 4.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1,
+       "mean": 106.1,
+       "min": 106.1,
+       "max": 106.1
+      },
+      "all": {
+       "n": 1,
+       "mean": 106.1,
+       "min": 106.1,
+       "max": 106.1
+      },
+      "refs": {
+       "ot_hgi_dma_back_landing_bank": {
+        "basis": "insertion.json boundary mean",
+        "ref_ps": 101.5,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": null,
+       "all": null
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 4.6,
+      "max_slew": 14.7,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.u_dbk.L[7].u_bank/clk",
+        "arr": 4.6,
+        "slew": 14.7,
+        "late": 0.0,
+        "net": "clk_bank[7]"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "clk_land[0]",
+    "clock": "ot_entry_11",
+    "tt": {
+     "clock_family": {
+      "ot_entry_11": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 84.3,
+      "min": 81.2,
+      "max": 117.5
+     },
+     "all": {
+      "n": 257,
+      "mean": 84.3,
+      "min": 81.2,
+      "max": 117.5
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 66.7,
+      "min": 63.6,
+      "max": 98.8
+     },
+     "all": {
+      "n": 257,
+      "mean": 66.7,
+      "min": 63.6,
+      "max": 98.8
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[1]",
+    "clock": "ot_entry_12",
+    "tt": {
+     "clock_family": {
+      "ot_entry_12": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 90.2,
+      "min": 86.4,
+      "max": 132.2
+     },
+     "all": {
+      "n": 257,
+      "mean": 90.2,
+      "min": 86.4,
+      "max": 132.2
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 71.9,
+      "min": 68.1,
+      "max": 112.3
+     },
+     "all": {
+      "n": 257,
+      "mean": 71.9,
+      "min": 68.1,
+      "max": 112.3
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[2]",
+    "clock": "ot_entry_13",
+    "tt": {
+     "clock_family": {
+      "ot_entry_13": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 89.0,
+      "min": 85.0,
+      "max": 162.5
+     },
+     "all": {
+      "n": 257,
+      "mean": 89.0,
+      "min": 85.0,
+      "max": 162.5
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 71.0,
+      "min": 67.0,
+      "max": 142.8
+     },
+     "all": {
+      "n": 257,
+      "mean": 71.0,
+      "min": 67.0,
+      "max": 142.8
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[3]",
+    "clock": "ot_entry_14",
+    "tt": {
+     "clock_family": {
+      "ot_entry_14": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 82.5,
+      "min": 80.4,
+      "max": 110.3
+     },
+     "all": {
+      "n": 257,
+      "mean": 82.5,
+      "min": 80.4,
+      "max": 110.3
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 65.1,
+      "min": 62.7,
+      "max": 91.9
+     },
+     "all": {
+      "n": 257,
+      "mean": 65.1,
+      "min": 62.7,
+      "max": 91.9
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[4]",
+    "clock": "ot_entry_15",
+    "tt": {
+     "clock_family": {
+      "ot_entry_15": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 81.1,
+      "min": 79.1,
+      "max": 109.8
+     },
+     "all": {
+      "n": 257,
+      "mean": 81.1,
+      "min": 79.1,
+      "max": 109.8
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 63.9,
+      "min": 61.7,
+      "max": 91.6
+     },
+     "all": {
+      "n": 257,
+      "mean": 63.9,
+      "min": 61.7,
+      "max": 91.6
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[5]",
+    "clock": "ot_entry_16",
+    "tt": {
+     "clock_family": {
+      "ot_entry_16": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 84.0,
+      "min": 81.2,
+      "max": 129.1
+     },
+     "all": {
+      "n": 257,
+      "mean": 84.0,
+      "min": 81.2,
+      "max": 129.1
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 66.4,
+      "min": 63.3,
+      "max": 110.2
+     },
+     "all": {
+      "n": 257,
+      "mean": 66.4,
+      "min": 63.3,
+      "max": 110.2
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[6]",
+    "clock": "ot_entry_17",
+    "tt": {
+     "clock_family": {
+      "ot_entry_17": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 86.8,
+      "min": 83.6,
+      "max": 90.6
+     },
+     "all": {
+      "n": 257,
+      "mean": 86.8,
+      "min": 83.6,
+      "max": 90.6
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 68.8,
+      "min": 65.4,
+      "max": 72.6
+     },
+     "all": {
+      "n": 257,
+      "mean": 68.8,
+      "min": 65.4,
+      "max": 72.6
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_land[7]",
+    "clock": "ot_entry_18",
+    "tt": {
+     "clock_family": {
+      "ot_entry_18": 257
+     },
+     "boundary": {
+      "n": 257,
+      "mean": 87.4,
+      "min": 83.8,
+      "max": 93.4
+     },
+     "all": {
+      "n": 257,
+      "mean": 87.4,
+      "min": 83.8,
+      "max": 93.4
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 257,
+      "mean": 69.4,
+      "min": 65.7,
+      "max": 75.4
+     },
+     "all": {
+      "n": 257,
+      "mean": 69.4,
+      "min": 65.7,
+      "max": 75.4
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_rly[0]",
+    "clock": "ot_entry_19",
+    "tt": {
+     "clock_family": {
+      "ot_entry_19": 126
+     },
+     "boundary": {
+      "n": 3,
+      "mean": 229.7,
+      "min": 222.8,
+      "max": 236.1
+     },
+     "all": {
+      "n": 126,
+      "mean": 218.9,
+      "min": 211.6,
+      "max": 236.1
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 3,
+      "mean": 191.7,
+      "min": 184.6,
+      "max": 198.2
+     },
+     "all": {
+      "n": 126,
+      "mean": 181.4,
+      "min": 174.2,
+      "max": 198.2
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_rly[1]",
+    "clock": "ot_entry_20",
+    "tt": {
+     "clock_family": {
+      "ot_entry_20": 126
+     },
+     "boundary": {
+      "n": 3,
+      "mean": 211.4,
+      "min": 197.5,
+      "max": 238.2
+     },
+     "all": {
+      "n": 126,
+      "mean": 207.6,
+      "min": 189.8,
+      "max": 238.2
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 3,
+      "mean": 176.8,
+      "min": 162.9,
+      "max": 203.7
+     },
+     "all": {
+      "n": 126,
+      "mean": 173.1,
+      "min": 155.9,
+      "max": 203.7
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   },
+   {
+    "source": "clk_rly[2]",
+    "clock": "ot_entry_21",
+    "tt": {
+     "clock_family": {
+      "ot_entry_21": 84
+     },
+     "boundary": {
+      "n": 2,
+      "mean": 139.1,
+      "min": 138.9,
+      "max": 139.2
+     },
+     "all": {
+      "n": 84,
+      "mean": 137.6,
+      "min": 133.6,
+      "max": 141.5
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 3
+    },
+    "ff": {
+     "boundary": {
+      "n": 2,
+      "mean": 116.6,
+      "min": 116.5,
+      "max": 116.7
+     },
+     "all": {
+      "n": 84,
+      "mean": 115.5,
+      "min": 111.6,
+      "max": 119.1
+     },
+     "child_flop": null,
+     "macros": null
+    }
+   }
+  ],
+  "measured_clock": "ot_entry_11",
   "verdict": "PASS",
-  "text": "299 sinks on the largest root; no measured clock tree (no --cts gate evidence)"
+  "text": "257 sinks on the largest root; measured TT insertion 117.5 ps, FF insertion 98.8 ps, TT pin-flop spread 36.3 ps, FF pin-flop spread 35.2 ps (spread <= 80 ps)",
+  "other_roots": [
+   {
+    "source": "clk",
+    "clock": "ot_entry_0",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 305.4,
+    "ff_insertion_ps": 280.3,
+    "verdict": "WARN",
+    "text": "1 sinks on the largest root; measured TT insertion 305.4 ps, FF insertion 280.3 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps; WARN: insertion 305.4 ps > 300 (guidance; boundary matched by parent compensation / landing)"
+   },
+   {
+    "source": "clk_cp",
+    "clock": "ot_entry_1",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 226.5,
+    "ff_insertion_ps": 191.9,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 226.5 ps, FF insertion 191.9 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_rst",
+    "clock": "ot_entry_2",
+    "sinks": 33,
+    "tt_pin_spread_ps": 40.2,
+    "ff_pin_spread_ps": 38.1,
+    "tt_insertion_ps": 389.0,
+    "ff_insertion_ps": 329.9,
+    "verdict": "WARN",
+    "text": "33 sinks on the largest root; measured TT insertion 389.0 ps, FF insertion 329.9 ps, TT pin-flop spread 40.2 ps, FF pin-flop spread 38.1 ps; WARN: insertion 389.0 ps > 300 (guidance; boundary matched by parent compensation / landing)"
+   },
+   {
+    "source": "clk_bank[0]",
+    "clock": "ot_entry_3",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 165.4,
+    "ff_insertion_ps": 142.1,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 165.4 ps, FF insertion 142.1 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[1]",
+    "clock": "ot_entry_4",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 195.0,
+    "ff_insertion_ps": 172.2,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 195.0 ps, FF insertion 172.2 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[2]",
+    "clock": "ot_entry_5",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 191.8,
+    "ff_insertion_ps": 168.9,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 191.8 ps, FF insertion 168.9 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[3]",
+    "clock": "ot_entry_6",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 165.4,
+    "ff_insertion_ps": 142.1,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 165.4 ps, FF insertion 142.1 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[4]",
+    "clock": "ot_entry_7",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 165.4,
+    "ff_insertion_ps": 142.1,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 165.4 ps, FF insertion 142.1 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[5]",
+    "clock": "ot_entry_8",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 130.3,
+    "ff_insertion_ps": 106.1,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 130.3 ps, FF insertion 106.1 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[6]",
+    "clock": "ot_entry_9",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 130.3,
+    "ff_insertion_ps": 106.1,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 130.3 ps, FF insertion 106.1 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_bank[7]",
+    "clock": "ot_entry_10",
+    "sinks": 1,
+    "tt_pin_spread_ps": 0.0,
+    "ff_pin_spread_ps": 0.0,
+    "tt_insertion_ps": 130.3,
+    "ff_insertion_ps": 106.1,
+    "verdict": "PASS",
+    "text": "1 sinks on the largest root; measured TT insertion 130.3 ps, FF insertion 106.1 ps, TT pin-flop spread 0.0 ps, FF pin-flop spread 0.0 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[1]",
+    "clock": "ot_entry_12",
+    "sinks": 257,
+    "tt_pin_spread_ps": 45.8,
+    "ff_pin_spread_ps": 44.2,
+    "tt_insertion_ps": 132.2,
+    "ff_insertion_ps": 112.3,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 132.2 ps, FF insertion 112.3 ps, TT pin-flop spread 45.8 ps, FF pin-flop spread 44.2 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[2]",
+    "clock": "ot_entry_13",
+    "sinks": 257,
+    "tt_pin_spread_ps": 77.5,
+    "ff_pin_spread_ps": 75.8,
+    "tt_insertion_ps": 162.5,
+    "ff_insertion_ps": 142.8,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 162.5 ps, FF insertion 142.8 ps, TT pin-flop spread 77.5 ps, FF pin-flop spread 75.8 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[3]",
+    "clock": "ot_entry_14",
+    "sinks": 257,
+    "tt_pin_spread_ps": 29.9,
+    "ff_pin_spread_ps": 29.2,
+    "tt_insertion_ps": 110.3,
+    "ff_insertion_ps": 91.9,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 110.3 ps, FF insertion 91.9 ps, TT pin-flop spread 29.9 ps, FF pin-flop spread 29.2 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[4]",
+    "clock": "ot_entry_15",
+    "sinks": 257,
+    "tt_pin_spread_ps": 30.7,
+    "ff_pin_spread_ps": 29.9,
+    "tt_insertion_ps": 109.8,
+    "ff_insertion_ps": 91.6,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 109.8 ps, FF insertion 91.6 ps, TT pin-flop spread 30.7 ps, FF pin-flop spread 29.9 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[5]",
+    "clock": "ot_entry_16",
+    "sinks": 257,
+    "tt_pin_spread_ps": 47.9,
+    "ff_pin_spread_ps": 46.9,
+    "tt_insertion_ps": 129.1,
+    "ff_insertion_ps": 110.2,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 129.1 ps, FF insertion 110.2 ps, TT pin-flop spread 47.9 ps, FF pin-flop spread 46.9 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[6]",
+    "clock": "ot_entry_17",
+    "sinks": 257,
+    "tt_pin_spread_ps": 7.0,
+    "ff_pin_spread_ps": 7.2,
+    "tt_insertion_ps": 90.6,
+    "ff_insertion_ps": 72.6,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 90.6 ps, FF insertion 72.6 ps, TT pin-flop spread 7.0 ps, FF pin-flop spread 7.2 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_land[7]",
+    "clock": "ot_entry_18",
+    "sinks": 257,
+    "tt_pin_spread_ps": 9.6,
+    "ff_pin_spread_ps": 9.7,
+    "tt_insertion_ps": 93.4,
+    "ff_insertion_ps": 75.4,
+    "verdict": "PASS",
+    "text": "257 sinks on the largest root; measured TT insertion 93.4 ps, FF insertion 75.4 ps, TT pin-flop spread 9.6 ps, FF pin-flop spread 9.7 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_rly[0]",
+    "clock": "ot_entry_19",
+    "sinks": 126,
+    "tt_pin_spread_ps": 13.3,
+    "ff_pin_spread_ps": 13.6,
+    "tt_insertion_ps": 236.1,
+    "ff_insertion_ps": 198.2,
+    "verdict": "PASS",
+    "text": "126 sinks on the largest root; measured TT insertion 236.1 ps, FF insertion 198.2 ps, TT pin-flop spread 13.3 ps, FF pin-flop spread 13.6 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_rly[1]",
+    "clock": "ot_entry_20",
+    "sinks": 126,
+    "tt_pin_spread_ps": 40.7,
+    "ff_pin_spread_ps": 40.8,
+    "tt_insertion_ps": 238.2,
+    "ff_insertion_ps": 203.7,
+    "verdict": "PASS",
+    "text": "126 sinks on the largest root; measured TT insertion 238.2 ps, FF insertion 203.7 ps, TT pin-flop spread 40.7 ps, FF pin-flop spread 40.8 ps (spread <= 80 ps)"
+   },
+   {
+    "source": "clk_rly[2]",
+    "clock": "ot_entry_21",
+    "sinks": 84,
+    "tt_pin_spread_ps": 0.3,
+    "ff_pin_spread_ps": 0.2,
+    "tt_insertion_ps": 141.5,
+    "ff_insertion_ps": 119.1,
+    "verdict": "PASS",
+    "text": "84 sinks on the largest root; measured TT insertion 141.5 ps, FF insertion 119.1 ps, TT pin-flop spread 0.3 ps, FF pin-flop spread 0.2 ps (spread <= 80 ps)"
+   }
+  ]
  },
  "items": [
   {
@@ -74326,40 +76252,93 @@
   {
    "severity": "WARN",
    "check": "pins",
-   "message": "4 port group(s) left to the IO placer (ANY): ['clk_bank', 'clk_land', 'rr', 'wd']",
+   "message": "5 port group(s) left to the IO placer (ANY): ['clk_bank', 'clk_land', 'clk_rly', 'rr']",
    "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
   },
   {
    "severity": "WARN",
    "check": "pins",
-   "message": "4 port group(s) left to the IO placer (ANY): ['clk_bank', 'clk_land', 'rr', 'wd']",
+   "message": "5 port group(s) left to the IO placer (ANY): ['clk_bank', 'clk_land', 'clk_rly', 'rr']",
    "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: ",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=None",
-   "fix": ""
-  },
-  {
-   "severity": "WARN",
-   "check": "cross_clock",
-   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
-   "fix": "fix the signoff SDC read and re-gate with --cts"
   },
   {
    "severity": "WARN",
    "check": "fill",
-   "message": "fill 38% = (hard macros 122630.6 + synthesized std cells 816.1) / outline 329069.4 um2; pin demand per face: S 1685 pins over 597.3/607.0 um (98%), N 1768 pins over 597.3/607.0 um (98%), W 1221 pins over 517.0/542.2 um (95%), E 393 pins over 529.3/542.2 um (98%) (< 50%)",
+   "message": "fill 38% = (hard macros 122630.6 + synthesized std cells 816.1) / outline 329069.4 um2; pin demand per face: S 1686 pins over 597.3/607.0 um (98%), N 1769 pins over 597.3/607.0 um (98%), W 1222 pins over 517.0/542.2 um (95%), E 393 pins over 529.3/542.2 um (98%) (< 50%)",
    "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "trial_route",
+   "message": "trial global route failed (GATE_GRT_RC=2); trial GRT: total overflow 0; worst layer M3 8.88% used; GRT 761 s",
+   "fix": "read the remote grt.log; preserve this failed run"
   }
  ],
+ "trial_route": {
+  "schema": "opentallas.ref_tile.trial_route.v1",
+  "overflow": 0,
+  "kind": "parent",
+  "skip_incremental_repair": false,
+  "rc": "2",
+  "grt_s": 761,
+  "layers": [
+   {
+    "layer": "M1",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   },
+   {
+    "layer": "M2",
+    "capacity": 6101647,
+    "usage": 530169,
+    "pct": 8.69,
+    "overflow": 0
+   },
+   {
+    "layer": "M3",
+    "capacity": 7269621,
+    "usage": 645499,
+    "pct": 8.88,
+    "overflow": 0
+   },
+   {
+    "layer": "M4",
+    "capacity": 5579315,
+    "usage": 297706,
+    "pct": 5.34,
+    "overflow": 0
+   },
+   {
+    "layer": "M5",
+    "capacity": 7358008,
+    "usage": 330662,
+    "pct": 4.49,
+    "overflow": 0
+   },
+   {
+    "layer": "M6",
+    "capacity": 5230064,
+    "usage": 88071,
+    "pct": 1.68,
+    "overflow": 0
+   },
+   {
+    "layer": "M7",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   }
+  ],
+  "worst_layer_usage": [
+   "M3",
+   8.88
+  ],
+  "hotspot": null,
+  "congestion_png": null
+ },
  "reset_landing": {
   "max_sinks": 2,
   "ports": [
