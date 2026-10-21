@@ -21,8 +21,11 @@
 // the PHY has taken, one wd per completed write): the service slice uses them as its buffer-block ready checks.
 //
 // Pins (owner pin-register rule): every die-face input is captured in a flop at the pin and every output is a flop
-// (inside ot_s81ph_ctrl_pc, plus the status register here).  The one exception is the PHY's k_rdy on the abutted PHY
-// face (one gate into the request hold register's load enable: the PHY valid/ready contract).
+// (inside the per-PC channel, plus the status register here).
+// S81-SAFE-FIX/CTRL 10-19 (c1/c2 routes missed TT -6.38 in->reg on k_rdy): the per-PC channel is now ot_s81ph_ctrl_pcr
+// (the safe redesign; ot_s81ph_ctrl_pc is unchanged for the closed S81-PH views): k_rdy lands in a flop at the PHY face
+// (no exception left), the issue is present-then-decide (<= 1 request / 2 ckh per PC, same PHY valid/ready contract),
+// and the hold-register enable and FIFO read selects are replicated per 32-bit group as kept copies (<= ~32 loads).
 //
 // Port bundles:
 //   rq[341p +: 341]  = PC p request {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v}           (p = 0, 1)
@@ -68,7 +71,7 @@ module dsfd_ctrl_rg2 #(
         wire [255:0] rdat;
         wire [16:0]  rtag;
         wire [3:0]   rbeat;
-        ot_s81ph_ctrl_pc #(.DQ(DQ), .DR(DR)) u_pc (
+        ot_s81ph_ctrl_pcr #(.DQ(DQ), .DR(DR)) u_pc (
             .cks(clk), .ckh(ckh), .rst(rst_n), .ci(ci), .co(co),
             .rq(rq[p*341 +: 341]), .rk(rk_w), .rv(rv_w), .r_data(rdat), .r_tag(rtag), .r_beat(rbeat), .wd(wd_w),
             .s_ovf(s_ovf[p]),

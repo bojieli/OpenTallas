@@ -1,0 +1,19 @@
+{
+ "summary": {
+  "words": 18,
+  "rows": 6,
+  "complete_rows_at_root": 0,
+  "partial_words": 18,
+  "plan_exact": false,
+  "end": "END edges=1075 ret_words=18 xo_checked=1073 fault=0"
+ },
+ "fixture_rows": 6,
+ "errors": [
+  "PLAN_MISMATCH predicted 18 words, got 18; first diff ((384, 4, (0, 1, 5), 3186273600, 0), (383, 4, (0, 1, 5), 3186273600, 0))"
+ ],
+ "frame": "u_f_3L01",
+ "op": "ffn.experts_gu",
+ "field_phase": 2,
+ "mutant": "shift",
+ "pass": false
+}

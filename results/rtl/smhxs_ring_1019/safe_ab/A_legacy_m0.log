@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/lhsmatt-xs-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/lhsmatt-xs-1019/src
+ot-run: ot-epyc6       admits   791 GB (avail 667, growth 113, headroom 0, waiters 0/0 GB) load 36/128 running 16 disk 5917 GB 
+ot-run: ot-epyc7       admits  1035 GB (avail 825, growth 101, headroom 0, waiters 0/0 GB) load 45/96 running 29 disk 6373 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/lhsmatt-xs-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/lhsmatt-xs-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/lhsmatt-xs-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3811213-1792435821 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+XS_RING_SAFE variant=A ref=legacy mut=0 seed=31 cycles=5000
+DUT -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_HIER -DOT_SMH_XSE -DOT_SMH_XSRST -DOT_SMH_XSRING -DOT_SMH_FAN32 -DOT_SMH_RING_LOCAL_ADDR -DOT_SMH_RING_LOCAL_WADDR -DOT_SMH_RING_RST2
+REF -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_HIER -DOT_SMH_XSE -DOT_SMH_XSRST
+XS_RING_EQUIV cycles=5000 seed=31 mismatches=0 itag_e_toggles=4520 valid_cycles=3416
+XS_RING_EQUIV PASS
+- rtl/hbm_accel/sm/xs_ring/tb_xs_ring_equiv.sv:73: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.076 s; speed 132.145 us/s
+- Verilator: cpu 0.076 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3811213-1792435821): exit 0

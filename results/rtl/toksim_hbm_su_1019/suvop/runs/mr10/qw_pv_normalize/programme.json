@@ -1,0 +1,37 @@
+{
+ "schema": "toksim.hbm.su_vop_record.v1",
+ "record": "qw_pv_normalize",
+ "design": "qwen",
+ "N": 128,
+ "rows": 8,
+ "roles": {
+  "A": "vm",
+  "B": "rf"
+ },
+ "mods": {
+  "cp_m1": 4,
+  "cm_m1": 4
+ },
+ "red": null,
+ "sfu_lanes": true,
+ "lanes_per_quarter": 32,
+ "issues": 8,
+ "emissions": 8,
+ "issue_to_write": 43,
+ "RR": 12,
+ "WR": 10,
+ "fill_slack": 1,
+ "drain_slack": 2,
+ "dispatch_edge": 128,
+ "first_emit": 144,
+ "last_emit": 207,
+ "last_lg_write": 256,
+ "retire_edge": 266,
+ "cycles_serial": 138,
+ "cycles_stream_833ps": 184.0,
+ "edges": 274,
+ "expected_vm_writes": 128,
+ "expected_scalars": 8,
+ "reduction": {},
+ "golden": "hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order"
+}

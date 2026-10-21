@@ -1,0 +1,22 @@
+FAIL word 2 tok 25680
+FAIL word 3 tok 25680
+FAIL word 4 tok 25680
+FAIL word 5 tok 25680
+FAIL token 0 words 54
+FAIL token 1 words 49
+FAIL token 2 words 53
+FAIL token 3 words 48
+FAIL token 4 words 47
+FAIL token 5 words 54
+FAIL token 6 words 52
+FAIL token 7 words 48
+FAIL token 8 words 51
+FAIL token 9 words 52
+FAIL token 10 words 54
+FAIL token 11 words 48
+FAIL fault on legal traffic
+FAIL join4 errors=599
+- rtl/test/qwen_static_kv/tb_qkd_embedding_static_join4.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.003 s; speed 2.357 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

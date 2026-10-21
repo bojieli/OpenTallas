@@ -1,0 +1,20 @@
+{
+  "source": {
+    "source": "c9b5e9d1296b0e7d4baffe2d01c0657f20f43f78",
+    "archive_sha256": "94010b0a3a88f16dc8d03c6ef19b30e5a74f78d2034bc44e68a13c594bf365e4",
+    "baseline": "6586b0856e98d05b893e5a46d13a90a84ea12ee5",
+    "previous_product_checks": "baseline9/projected68 PASS; native coupon infra dbTechLayer.create type argument missing"
+  },
+  "baseline": {
+    "commit": "6586b0856e98d05b893e5a46d13a90a84ea12ee5",
+    "archive_sha256": "dcb698bc552161d56b226d616a5efb1a2652c0a009fd44b84f576fd313368673",
+    "bytes": 962560
+  },
+  "harness": {
+    "native5.py": "b040242e374c8f4d355b93c8306ca86140eac54bdb152d0083c3272f6e43ba93",
+    "cohort5.py": "abcc094face4bf3e1cb033569fabd5c3d0b9f666878c6ee99d4ef3410d33a8f5",
+    "continue5.sh": "6c256758e28c9b158c1cac76251d279141384fef9994143dd4a64768a08b5f16",
+    "pytest_portable.tar": "ce86911715a21e98da46326721f6dc0e64337e07d867d8a4d6fab02acac0286a",
+    "pytest_compat.tar": "37ea84151ad05ffc44708d9e10ba704963cc0cef862d399590f73a7a404fd648"
+  }
+}

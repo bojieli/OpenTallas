@@ -39,6 +39,18 @@ SOURCES = {
     O.RTL: O.RTL_SHA,
 }
 CTL_MASTER = 'ot_qwen_tp8_pv_wide_ctl_tb'
+# KV-FLOOR1 10-20 (OT_KV_PVFIN_FLOOR=1, default off): the frame is qkd_pvw_die_t_bf.sv (module qkd_pvw_die_tbf) and the pair
+# control the END FLOOR successor ot_qwen_tp8_pv_wide_ctl_tbf (same ports; out_age<=k_oa+nq_end is its only out_age write).
+# Same three contracts; the station rows of _bf are byte-identical to _ba (kv_bootage.pvw_variant_floor changes the module
+# name and the u_ctl master / END_FLOOR only).
+FLOOR = __import__('os').environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'
+if FLOOR:
+    FRAME = 'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_bf.sv'
+    CTL = 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv'
+    SOURCES = {k: v for k, v in SOURCES.items() if not k.endswith(('_ba.sv', 'ctl_tb.sv'))}
+    SOURCES.update({FRAME: '3edcf1637c22361c7c96d31ba3eed8d7c491b87907620ec42fe743e587f4d98f',
+                    CTL: '4cde7a0dad952d890f14f789b058b34399bd2b3d473788fb2e63978e8fd39a02'})
+    CTL_MASTER = 'ot_qwen_tp8_pv_wide_ctl_tbf'
 PARENT = re.compile(r'^(pvw_[01])__(?:g_ok_)?(u_\w+)$')
 CLASSES = [
     (re.compile(r'^pvw_[01]__(?:g_ok_)?u_CP\w+_r\d+$'), 'branch_subset_cargo_CP'),
@@ -56,6 +68,25 @@ CTL_FACTS = [  # exact source statements the self_checked_status / reserved_zero
     r'if\(state!=IDLE&&cv_r\[0\]!=out_slot\)cbad=1;',
     r'output reg\[59:0\] cmd',
 ]
+CMD_WRITE = r'\bcmd\[(\d+)(?::\d+)?\]\s*<='
+if FLOOR:
+    # KV-FLOOR2 10-20 r2 safe rebuild of ctl_tbf: same contracts on the restructured text -- cmd[59:32] reserved zero
+    # (cmd = {28'd0, cmd_q1, cmd_q0}), command bits written only through cmd_n[31:0] (default 0), both halves and the
+    # flags / out_age / out_epoch cleared under their reset leaves, abort -> IDLE + fault, column-valid slot check.
+    CTL_FACTS = [
+        r"always @\*cmd=\{28'd0,cmd_q1,cmd_q0\};",
+        r'cmd_n=0;',
+        r'if\(!rl\[R_CMD0\]\)cmd_q0<=0;else cmd_q0<=cmd_n\[15:0\];',
+        r'if\(!rl\[R_CMD1\]\)cmd_q1<=0;else cmd_q1<=cmd_n\[31:16\];',
+        r'if\(!rl\[R_IV\]\)begin fault<=0;busy<=0;req_valid<=0;end\s*else begin fault<=flt;busy<=state!=IDLE;req_valid<=rq;end',
+        r'if\(!rl\[R_OA\]\)out_age<=0;else out_age<=k_oa\+nq_end;',
+        r'if\(!rl\[R_OE\]\)out_epoch<=0;else out_epoch<=ep;',
+        r'wire abort=\(start_r&&!idle\)\|\|\(!idle&&cbad\);',
+        r'if\(abort\)begin state_n=IDLE;flt_n=1;end',
+        r'if\(!idle_k\[I_BAD\]&&cv_r\[0\]!=out_slot\)cbad=1;',
+        r'output reg\[59:0\] cmd',
+    ]
+    CMD_WRITE = r'\bcmd_n\[(\d+)(?::\d+)?\]\s*='
 
 
 def ranges(bits):
@@ -80,7 +111,7 @@ def ctl_facts(text):
     for f in CTL_FACTS:
         if not re.search(f, t):
             raise ValueError('pinned PV control fact absent: ' + f)
-    hi = [int(m.group(1)) for m in re.finditer(r'\bcmd\[(\d+)(?::\d+)?\]\s*<=', t)]
+    hi = [int(m.group(1)) for m in re.finditer(CMD_WRITE, t)]
     if not hi or max(hi) > 31:
         raise ValueError('PV control writes a command bit above 31')
     for sig, n in (('busy', 2), ('out_age', 2)):

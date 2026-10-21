@@ -12,6 +12,7 @@ R=$(cd "$(dirname "$0")/../../.." && pwd)
 DIMG=d2d_cal_image.svh; DSEQ=ot_qwen_d2d_cal_seq_dies.sv
 if [ "${D2D_MU:-0}" = 1 ]; then DIMG=d2d_cal_image_mu.svh; DSEQ=ot_qwen_d2d_cal_seq_dies_mu.sv; fi
 export DIMG
+# ROOT4-SYSFACE 10-19: SF_MU_HEAD=1 = the die's qfd_sys_face MU_HEAD 1 (HOST context RX checks user-0 head contexts only)
 # production token timeline: the D2D sequencer's compiled starts (d2d_cal_image.svh) + the bench layer / row events
 python3 - $R $OUT <<'PY'
 import json, re, sys
@@ -72,7 +73,7 @@ F="$R/rtl/qwen_split/qfd_sys_face.sv $R/rtl/qwen_split/qfd_embedding_word_provid
    $R/rtl/test/qwen_split/tb_qfd_sys_face.sv"
 rc=0
 for M in 0 $MUTS; do
-    iverilog -g2012 -s tb_qfd_sys_face -I $OUT -I $R/rtl/qwen_sys/d2d_static_20261015 -Ptb_qfd_sys_face.MUT=$M -Ptb_qfd_sys_face.MU=${D2D_MU:-0} -Ptb_qfd_sys_face.IMG=\"$OUT/img\" -o $OUT/sim_$M $F
+    iverilog -g2012 -s tb_qfd_sys_face -I $OUT -I $R/rtl/qwen_sys/d2d_static_20261015 -Ptb_qfd_sys_face.MUT=$M -Ptb_qfd_sys_face.MU=${D2D_MU:-0} -Ptb_qfd_sys_face.MU_HEAD=${SF_MU_HEAD:-0} -Ptb_qfd_sys_face.IMG=\"$OUT/img\" -o $OUT/sim_$M $F
     (cd $OUT && vvp -n sim_$M > run_$M.log 2>&1) || true
     L=$(grep -E "SYS_FACE_(PASS|FAIL)" $OUT/run_$M.log | tail -1); echo "$L"
     if [ $M = 0 ]; then case "$L" in SYS_FACE_PASS*) ;; *) rc=1;; esac

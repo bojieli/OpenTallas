@@ -1,0 +1,1620 @@
+{
+  "schema": "opentallas.placed_net_diameter.v1",
+  "scope": "all non-PG non-CLOCK net terminal centers, all pairs Manhattan diameter; direct nets only, not full sequential cone path length",
+  "odb": "/frozen/routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_accel_smh_xs_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "b027b03e21bb9d2356ddcdd36e719825774841f21f58dc4d6f7ea26f781528a3",
+  "limit_um": 405,
+  "net_type_counts": {
+    "SIGNAL": 109873,
+    "CLOCK": 1673,
+    "GROUND": 1,
+    "POWER": 1
+  },
+  "checked_nets": 109515,
+  "missing_pin_geometry": [],
+  "max_um": 234.47,
+  "over_limit_count": 0,
+  "top": [
+    {
+      "net": "u_bkd2/net40585",
+      "type": "SIGNAL",
+      "diameter_um": 234.47,
+      "a": [
+        135.412,
+        9.855,
+        "u_bkd2/wire40586/Y"
+      ],
+      "z": [
+        369.342,
+        9.315,
+        "u_bkd2/q\\[183\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40586",
+      "type": "SIGNAL",
+      "diameter_um": 232.04,
+      "a": [
+        136.546,
+        10.125,
+        "u_bkd2/wire40587/Y"
+      ],
+      "z": [
+        368.586,
+        10.125,
+        "u_bkd2/q\\[180\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40614",
+      "type": "SIGNAL",
+      "diameter_um": 231.122,
+      "a": [
+        89.62,
+        21.465,
+        "u_bkd2/wire40615/Y"
+      ],
+      "z": [
+        316.962,
+        25.245,
+        "u_bkd2/q\\[191\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40588",
+      "type": "SIGNAL",
+      "diameter_um": 226.586,
+      "a": [
+        129.796,
+        4.995,
+        "u_bkd2/wire40589/Y"
+      ],
+      "z": [
+        355.572,
+        5.805,
+        "u_bkd2/q\\[117\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40607",
+      "type": "SIGNAL",
+      "diameter_um": 222.968,
+      "a": [
+        105.01,
+        2.835,
+        "u_bkd2/wire40608/Y"
+      ],
+      "z": [
+        327.168,
+        3.645,
+        "u_bkd2/q\\[126\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40610",
+      "type": "SIGNAL",
+      "diameter_um": 219.35,
+      "a": [
+        104.632,
+        22.545,
+        "u_bkd2/wire40611/Y"
+      ],
+      "z": [
+        321.822,
+        24.705,
+        "u_bkd2/q\\[186\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40604",
+      "type": "SIGNAL",
+      "diameter_um": 218.81,
+      "a": [
+        98.908,
+        31.185,
+        "u_bkd2/wire40605/Y"
+      ],
+      "z": [
+        307.728,
+        41.175,
+        "u_bkd2/q\\[110\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40613",
+      "type": "SIGNAL",
+      "diameter_um": 217.244,
+      "a": [
+        102.688,
+        23.895,
+        "u_bkd2/wire40614/Y"
+      ],
+      "z": [
+        315.882,
+        27.945,
+        "u_bkd2/q\\[190\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40612",
+      "type": "SIGNAL",
+      "diameter_um": 217.082,
+      "a": [
+        106.252,
+        23.895,
+        "u_bkd2/wire40613/Y"
+      ],
+      "z": [
+        320.094,
+        27.135,
+        "u_bkd2/q\\[189\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40609",
+      "type": "SIGNAL",
+      "diameter_um": 216.542,
+      "a": [
+        103.066,
+        24.975,
+        "u_bkd2/wire40610/Y"
+      ],
+      "z": [
+        318.258,
+        26.325,
+        "u_bkd2/q\\[185\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40611",
+      "type": "SIGNAL",
+      "diameter_um": 209.684,
+      "a": [
+        108.952,
+        24.435,
+        "u_bkd2/wire40612/Y"
+      ],
+      "z": [
+        318.366,
+        24.705,
+        "u_bkd2/q\\[188\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40602",
+      "type": "SIGNAL",
+      "diameter_um": 202.934,
+      "a": [
+        118.672,
+        13.095,
+        "u_bkd2/wire40603/Y"
+      ],
+      "z": [
+        317.826,
+        9.315,
+        "u_bkd2/q\\[105\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_bkd2/net40603",
+      "type": "SIGNAL",
+      "diameter_um": 195.05,
+      "a": [
+        124.558,
+        31.185,
+        "u_bkd2/wire40604/Y"
+      ],
+      "z": [
+        309.888,
+        40.905,
+        "u_bkd2/q\\[109\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.g_sm\\[27\\].q1\\[4\\]",
+      "type": "SIGNAL",
+      "diameter_um": 194.346,
+      "a": [
+        250.92,
+        57.375,
+        "place18817/A"
+      ],
+      "z": [
+        327.006,
+        175.635,
+        "u_leaf.g_s1\\[827\\].q\\[4\\]$_DFF_P_/D"
+      ],
+      "term_points": 10
+    },
+    {
+      "net": "u_leaf.g_sm\\[26\\].q1\\[3\\]",
+      "type": "SIGNAL",
+      "diameter_um": 194.184,
+      "a": [
+        225.81,
+        83.835,
+        "place18803/A"
+      ],
+      "z": [
+        328.464,
+        175.365,
+        "u_leaf.g_s1\\[762\\].q\\[3\\]$_DFF_P_/D"
+      ],
+      "term_points": 5
+    },
+    {
+      "net": "u_bkd2/net40587",
+      "type": "SIGNAL",
+      "diameter_um": 193.286,
+      "a": [
+        164.446,
+        4.185,
+        "u_bkd2/wire40588/Y"
+      ],
+      "z": [
+        357.462,
+        4.455,
+        "u_bkd2/q\\[118\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net8302",
+      "type": "SIGNAL",
+      "diameter_um": 185.456,
+      "a": [
+        175.914,
+        228.555,
+        "u_leaf.g2p\\[2\\]$_DFF_P_/D"
+      ],
+      "z": [
+        126.538,
+        364.635,
+        "wire8303/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9911",
+      "type": "SIGNAL",
+      "diameter_um": 184.359,
+      "a": [
+        68.613,
+        2.835,
+        "wire9912/Y"
+      ],
+      "z": [
+        229.212,
+        26.595,
+        "u_bkd2/place22922/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9833",
+      "type": "SIGNAL",
+      "diameter_um": 183.405,
+      "a": [
+        103.479,
+        4.995,
+        "wire9834/Y"
+      ],
+      "z": [
+        286.344,
+        5.535,
+        "u_bkd2/q\\[54\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net40410",
+      "type": "SIGNAL",
+      "diameter_um": 182.391,
+      "a": [
+        97.648,
+        260.955,
+        "wire40411/Y"
+      ],
+      "z": [
+        84.007,
+        429.705,
+        "wire8076/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9935",
+      "type": "SIGNAL",
+      "diameter_um": 180.705,
+      "a": [
+        86.415,
+        4.455,
+        "wire9936/Y"
+      ],
+      "z": [
+        266.85,
+        4.725,
+        "u_bkd2/q\\[101\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9922",
+      "type": "SIGNAL",
+      "diameter_um": 180.597,
+      "a": [
+        101.103,
+        14.175,
+        "wire9923/Y"
+      ],
+      "z": [
+        281.7,
+        14.175,
+        "u_bkd2/q\\[114\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9936",
+      "type": "SIGNAL",
+      "diameter_um": 180.381,
+      "a": [
+        92.787,
+        3.105,
+        "wire9937/Y"
+      ],
+      "z": [
+        271.818,
+        4.455,
+        "u_bkd2/q\\[100\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9924",
+      "type": "SIGNAL",
+      "diameter_um": 180.381,
+      "a": [
+        106.287,
+        10.395,
+        "wire9925/Y"
+      ],
+      "z": [
+        286.128,
+        10.935,
+        "u_bkd2/q\\[112\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net4736",
+      "type": "SIGNAL",
+      "diameter_um": 179.643,
+      "a": [
+        73.801,
+        429.435,
+        "wire8145/A"
+      ],
+      "z": [
+        72.358,
+        251.235,
+        "_066247_/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9821",
+      "type": "SIGNAL",
+      "diameter_um": 179.625,
+      "a": [
+        97.215,
+        29.835,
+        "wire9822/Y"
+      ],
+      "z": [
+        275.76,
+        30.915,
+        "u_bkd2/q\\[98\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net40569",
+      "type": "SIGNAL",
+      "diameter_um": 179.03,
+      "a": [
+        183.258,
+        226.395,
+        "u_leaf.g2p\\[3\\]$_DFF_P_/D"
+      ],
+      "z": [
+        145.978,
+        368.145,
+        "wire40570/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[441\\]",
+      "type": "SIGNAL",
+      "diameter_um": 178.887,
+      "a": [
+        225.702,
+        423.225,
+        "u_leaf.o_ix\\[441\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        254.028,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[185]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net40411",
+      "type": "SIGNAL",
+      "diameter_um": 178.869,
+      "a": [
+        71.533,
+        429.705,
+        "wire8159/A"
+      ],
+      "z": [
+        37.654,
+        284.715,
+        "wire40412/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net19069",
+      "type": "SIGNAL",
+      "diameter_um": 178.851,
+      "a": [
+        69.967,
+        427.815,
+        "wire8169/A"
+      ],
+      "z": [
+        68.236,
+        250.695,
+        "place19070/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net40409",
+      "type": "SIGNAL",
+      "diameter_um": 178.761,
+      "a": [
+        75.421,
+        428.895,
+        "wire8038/A"
+      ],
+      "z": [
+        37.06,
+        288.495,
+        "wire40410/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9921",
+      "type": "SIGNAL",
+      "diameter_um": 178.491,
+      "a": [
+        106.179,
+        12.825,
+        "wire9922/Y"
+      ],
+      "z": [
+        283.86,
+        13.635,
+        "u_bkd2/q\\[115\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[494\\]",
+      "type": "SIGNAL",
+      "diameter_um": 178.431,
+      "a": [
+        297.792,
+        360.855,
+        "place20029/A"
+      ],
+      "z": [
+        216.012,
+        264.204,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[238]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9928",
+      "type": "SIGNAL",
+      "diameter_um": 178.275,
+      "a": [
+        129.345,
+        2.835,
+        "wire9929/Y"
+      ],
+      "z": [
+        307.08,
+        3.375,
+        "u_bkd2/q\\[108\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9887",
+      "type": "SIGNAL",
+      "diameter_um": 177.951,
+      "a": [
+        80.421,
+        6.885,
+        "wire9888/Y"
+      ],
+      "z": [
+        257.562,
+        7.695,
+        "u_bkd2/place22936/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[166\\]",
+      "type": "SIGNAL",
+      "diameter_um": 177.573,
+      "a": [
+        216.012,
+        120.78,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[166]"
+      ],
+      "z": [
+        213.174,
+        295.515,
+        "place20479/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net4749",
+      "type": "SIGNAL",
+      "diameter_um": 177.483,
+      "a": [
+        75.421,
+        429.435,
+        "wire8131/A"
+      ],
+      "z": [
+        75.058,
+        252.315,
+        "_066235_/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[188\\]",
+      "type": "SIGNAL",
+      "diameter_um": 177.291,
+      "a": [
+        216.012,
+        125.004,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[188]"
+      ],
+      "z": [
+        210.312,
+        296.595,
+        "place20431/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[701\\]",
+      "type": "SIGNAL",
+      "diameter_um": 177.207,
+      "a": [
+        345.612,
+        125.196,
+        "u_leaf.g_xm\\[2\\].u_x/rd_out[189]"
+      ],
+      "z": [
+        344.124,
+        300.915,
+        "place19747/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[291\\]",
+      "type": "SIGNAL",
+      "diameter_um": 177.069,
+      "a": [
+        268.794,
+        349.515,
+        "place19996/A"
+      ],
+      "z": [
+        216.012,
+        225.228,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[35]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[435\\]",
+      "type": "SIGNAL",
+      "diameter_um": 177.069,
+      "a": [
+        231.642,
+        414.315,
+        "u_leaf.o_ix\\[435\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        252.876,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[179]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net40549",
+      "type": "SIGNAL",
+      "diameter_um": 177.045,
+      "a": [
+        98.62,
+        264.735,
+        "wire40550/Y"
+      ],
+      "z": [
+        86.545,
+        429.705,
+        "wire8064/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[261\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.997,
+      "a": [
+        264.312,
+        348.165,
+        "place19970/A"
+      ],
+      "z": [
+        216.012,
+        219.468,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[5]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[657\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.967,
+      "a": [
+        152.802,
+        331.965,
+        "place20707/A"
+      ],
+      "z": [
+        129.612,
+        178.188,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[17]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[383\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.961,
+      "a": [
+        78.336,
+        427.545,
+        "u_leaf.o_iw\\[383\\]$_DFF_P_/D"
+      ],
+      "z": [
+        43.212,
+        285.708,
+        "u_leaf.g_wr_ring\\[2\\].u_w/rd_out[127]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[175\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.601,
+      "a": [
+        216.012,
+        122.508,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[175]"
+      ],
+      "z": [
+        213.228,
+        296.325,
+        "place20459/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[279\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.295,
+      "a": [
+        263.556,
+        351.675,
+        "place20027/A"
+      ],
+      "z": [
+        216.012,
+        222.924,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[23]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[147\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.253,
+      "a": [
+        216.012,
+        117.132,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[147]"
+      ],
+      "z": [
+        213.552,
+        290.925,
+        "place20521/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[473\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.253,
+      "a": [
+        289.962,
+        362.475,
+        "place20053/A"
+      ],
+      "z": [
+        216.012,
+        260.172,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[217]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[477\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.187,
+      "a": [
+        290.664,
+        362.475,
+        "place20048/A"
+      ],
+      "z": [
+        216.012,
+        260.94,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[221]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[259\\]",
+      "type": "SIGNAL",
+      "diameter_um": 176.031,
+      "a": [
+        266.742,
+        344.385,
+        "place19991/A"
+      ],
+      "z": [
+        216.012,
+        219.084,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[3]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[171\\]",
+      "type": "SIGNAL",
+      "diameter_um": 175.965,
+      "a": [
+        216.012,
+        121.74,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[171]"
+      ],
+      "z": [
+        209.232,
+        290.925,
+        "place20467/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[385\\]",
+      "type": "SIGNAL",
+      "diameter_um": 175.491,
+      "a": [
+        216.414,
+        418.365,
+        "u_leaf.o_ix\\[385\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        243.276,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[129]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[393\\]",
+      "type": "SIGNAL",
+      "diameter_um": 175.413,
+      "a": [
+        217.062,
+        419.175,
+        "u_leaf.o_ix\\[393\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        244.812,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[137]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net40566",
+      "type": "SIGNAL",
+      "diameter_um": 175.357,
+      "a": [
+        23.398,
+        429.705,
+        "wire40567/Y"
+      ],
+      "z": [
+        122.615,
+        353.565,
+        "wire8315/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[252\\]",
+      "type": "SIGNAL",
+      "diameter_um": 175.101,
+      "a": [
+        216.012,
+        137.292,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[252]"
+      ],
+      "z": [
+        215.334,
+        311.715,
+        "place20287/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[728\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.993,
+      "a": [
+        345.612,
+        130.38,
+        "u_leaf.g_xm\\[2\\].u_x/rd_out[216]"
+      ],
+      "z": [
+        340.884,
+        300.645,
+        "place19692/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[766\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.825,
+      "a": [
+        345.612,
+        137.676,
+        "u_leaf.g_xm\\[2\\].u_x/rd_out[254]"
+      ],
+      "z": [
+        336.186,
+        303.075,
+        "place19617/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[674\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.567,
+      "a": [
+        144.486,
+        341.145,
+        "place20688/A"
+      ],
+      "z": [
+        129.612,
+        181.452,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[34]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[423\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.513,
+      "a": [
+        229.212,
+        411.885,
+        "u_leaf.o_ix\\[423\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        250.572,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[167]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[227\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.447,
+      "a": [
+        216.012,
+        132.492,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[227]"
+      ],
+      "z": [
+        215.118,
+        306.045,
+        "place20343/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[653\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.441,
+      "a": [
+        151.398,
+        330.075,
+        "place20711/A"
+      ],
+      "z": [
+        129.612,
+        177.42,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[13]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[659\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.207,
+      "a": [
+        150.966,
+        331.425,
+        "place20705/A"
+      ],
+      "z": [
+        129.612,
+        178.572,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[19]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[224\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.111,
+      "a": [
+        97.074,
+        313.605,
+        "u_leaf.o_iw\\[224\\]$_DFF_P_/D"
+      ],
+      "z": [
+        43.212,
+        193.356,
+        "u_leaf.g_wr_ring\\[1\\].u_w/rd_out[96]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[470\\]",
+      "type": "SIGNAL",
+      "diameter_um": 174.075,
+      "a": [
+        291.258,
+        358.425,
+        "place20056/A"
+      ],
+      "z": [
+        216.012,
+        259.596,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[214]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[285\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.955,
+      "a": [
+        264.528,
+        349.515,
+        "place20004/A"
+      ],
+      "z": [
+        216.012,
+        224.076,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[29]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[664\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.787,
+      "a": [
+        149.346,
+        333.585,
+        "place20699/A"
+      ],
+      "z": [
+        129.612,
+        179.532,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[24]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[245\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.745,
+      "a": [
+        216.012,
+        135.948,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[245]"
+      ],
+      "z": [
+        209.664,
+        303.345,
+        "place20303/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[211\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.685,
+      "a": [
+        216.012,
+        129.42,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[211]"
+      ],
+      "z": [
+        213.822,
+        300.915,
+        "place20377/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[487\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.511,
+      "a": [
+        293.958,
+        358.425,
+        "place20036/A"
+      ],
+      "z": [
+        216.012,
+        262.86,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[231]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net9913",
+      "type": "SIGNAL",
+      "diameter_um": 173.361,
+      "a": [
+        68.271,
+        14.175,
+        "wire9914/Y"
+      ],
+      "z": [
+        240.822,
+        14.985,
+        "u_bkd2/place22920/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[71\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.349,
+      "a": [
+        216.012,
+        102.54,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[71]"
+      ],
+      "z": [
+        205.398,
+        265.275,
+        "place20177/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[648\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.187,
+      "a": [
+        153.504,
+        325.755,
+        "place20646/A"
+      ],
+      "z": [
+        129.612,
+        176.46,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[8]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[251\\]",
+      "type": "SIGNAL",
+      "diameter_um": 173.079,
+      "a": [
+        216.012,
+        137.1,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[251]"
+      ],
+      "z": [
+        202.428,
+        296.595,
+        "place20289/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.g_sm\\[26\\].q1\\[4\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.854,
+      "a": [
+        250.056,
+        81.945,
+        "place18801/A"
+      ],
+      "z": [
+        329.22,
+        175.635,
+        "u_leaf.g_s1\\[762\\].q\\[4\\]$_DFF_P_/D"
+      ],
+      "term_points": 5
+    },
+    {
+      "net": "u_leaf.ring_rd\\[670\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.689,
+      "a": [
+        151.56,
+        331.425,
+        "place20692/A"
+      ],
+      "z": [
+        129.612,
+        180.684,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[30]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[661\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.581,
+      "a": [
+        150.264,
+        330.885,
+        "place20702/A"
+      ],
+      "z": [
+        129.612,
+        178.956,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[21]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[201\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.581,
+      "a": [
+        216.012,
+        127.5,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[201]"
+      ],
+      "z": [
+        212.256,
+        296.325,
+        "place20399/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[289\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.485,
+      "a": [
+        271.926,
+        341.415,
+        "place19999/A"
+      ],
+      "z": [
+        216.012,
+        224.844,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[33]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "ot_ihdrv_n00022",
+      "type": "SIGNAL",
+      "diameter_um": 172.477,
+      "a": [
+        21.256,
+        429.435,
+        "ot_ihdrv_00022/Y"
+      ],
+      "z": [
+        128.123,
+        363.825,
+        "wire8309/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[673\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.221,
+      "a": [
+        149.238,
+        333.855,
+        "place20689/A"
+      ],
+      "z": [
+        129.612,
+        181.26,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[33]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[652\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.149,
+      "a": [
+        149.994,
+        328.995,
+        "place20712/A"
+      ],
+      "z": [
+        129.612,
+        177.228,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[12]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.c3bd\\[0\\]",
+      "type": "SIGNAL",
+      "diameter_um": 172.098,
+      "a": [
+        31.896,
+        428.085,
+        "u_leaf.o_itag\\[0\\]$_DFF_P_/D"
+      ],
+      "z": [
+        120.834,
+        344.925,
+        "u_leaf.u_ctle/place19226/A"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_leaf.xrd\\[395\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.789,
+      "a": [
+        216.522,
+        416.475,
+        "u_leaf.o_ix\\[395\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        245.196,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[139]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[663\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.603,
+      "a": [
+        149.13,
+        331.425,
+        "place20700/A"
+      ],
+      "z": [
+        129.612,
+        179.34,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[23]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[161\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.513,
+      "a": [
+        216.012,
+        119.82,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[161]"
+      ],
+      "z": [
+        211.284,
+        286.605,
+        "place20489/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[746\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.315,
+      "a": [
+        346.608,
+        304.155,
+        "place19654/A"
+      ],
+      "z": [
+        345.612,
+        133.836,
+        "u_leaf.g_xm\\[2\\].u_x/rd_out[234]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[402\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.255,
+      "a": [
+        216.522,
+        417.285,
+        "u_leaf.o_ix\\[402\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        246.54,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[146]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[196\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.165,
+      "a": [
+        216.012,
+        126.54,
+        "u_leaf.g_xm\\[0\\].u_x/rd_out[196]"
+      ],
+      "z": [
+        213.552,
+        295.245,
+        "place20413/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[676\\]",
+      "type": "SIGNAL",
+      "diameter_um": 171.051,
+      "a": [
+        150.804,
+        331.695,
+        "place20686/A"
+      ],
+      "z": [
+        129.612,
+        181.836,
+        "u_leaf.g_wr_ring\\[5\\].u_w/rd_out[36]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[443\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.835,
+      "a": [
+        230.994,
+        410.265,
+        "u_leaf.o_ix\\[443\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        254.412,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[187]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[405\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.787,
+      "a": [
+        216.36,
+        417.555,
+        "u_leaf.o_ix\\[405\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        247.116,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[149]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.c3bd\\[19\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.748,
+      "a": [
+        25.632,
+        427.005,
+        "u_leaf.o_ifirst$_DFF_P_/D"
+      ],
+      "z": [
+        117.54,
+        348.165,
+        "u_leaf.u_ctle/place18262/A"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_leaf.xrd\\[415\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.703,
+      "a": [
+        217.926,
+        417.825,
+        "u_leaf.o_ix\\[415\\]$_DFF_P_/D"
+      ],
+      "z": [
+        216.012,
+        249.036,
+        "u_leaf.g_xm\\[1\\].u_x/rd_out[159]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[382\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.511,
+      "a": [
+        72.774,
+        426.465,
+        "u_leaf.o_iw\\[382\\]$_DFF_P_/D"
+      ],
+      "z": [
+        43.212,
+        285.516,
+        "u_leaf.g_wr_ring\\[2\\].u_w/rd_out[126]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.ring_rd\\[380\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.409,
+      "a": [
+        70.668,
+        428.085,
+        "u_leaf.o_iw\\[380\\]$_DFF_P_/D"
+      ],
+      "z": [
+        43.212,
+        285.132,
+        "u_leaf.g_wr_ring\\[2\\].u_w/rd_out[124]"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_rl2.g_p.u_v/net40292",
+      "type": "SIGNAL",
+      "diameter_um": 170.39,
+      "a": [
+        237.852,
+        386.775,
+        "u_rl2.g_p.u_v/place19325/A"
+      ],
+      "z": [
+        213.532,
+        240.705,
+        "u_rl2.g_p.u_v/wire40293/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net40594",
+      "type": "SIGNAL",
+      "diameter_um": 170.228,
+      "a": [
+        102.42,
+        280.395,
+        "u_leaf.a2p\\[9\\]$_DFF_P_/D"
+      ],
+      "z": [
+        18.862,
+        367.065,
+        "wire40595/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ohl2/net40616",
+      "type": "SIGNAL",
+      "diameter_um": 170.174,
+      "a": [
+        76.318,
+        313.875,
+        "u_ohl2/wire40617/Y"
+      ],
+      "z": [
+        181.152,
+        248.535,
+        "u_ohl2/place22987/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_leaf.xrd\\[687\\]",
+      "type": "SIGNAL",
+      "diameter_um": 170.067,
+      "a": [
+        345.612,
+        122.508,
+        "u_leaf.g_xm\\[2\\].u_x/rd_out[175]"
+      ],
+      "z": [
+        343.152,
+        290.115,
+        "place19773/A"
+      ],
+      "term_points": 2
+    }
+  ],
+  "over_limit": []
+}

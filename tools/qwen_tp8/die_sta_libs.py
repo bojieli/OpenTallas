@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import qwen_die_element_lib as E   # noqa: E402
 from hier_contract.pinreg_audit import parse_lib, clock_refs
 from die_port_bind import parse_die, expr_bits
+from die_clock.qualification import carry_unqualified as clock_qualification
 
 HARD = {'ot_hbm3e_phy': 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy'}
 PERIOD = dict(stream=833.333, serial=833.333 * 4.0 / 3.0, ucie=833.333, serdes=833.333)
@@ -159,18 +160,38 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
     return '\n'.join(lines) + '\n'
 
 
+CLOCK_SOURCE_PORTS = {('qfd_ckdiv6', 'blk_o'), ('ot_qfd_ucie_x64_phy', 'lclk')}
+
+
+def validate_clock_drivers(drivers, sinks):
+    bad = {net: drivers.get(net, []) for net in sinks if len(drivers.get(net, [])) != 1}
+    if bad:
+        raise ValueError(f'unknown or multiple source clock roots: {bad}')
+
+
 def clock_connections(path, dirs, leaves, clock_ports=None):
     """Resolve scalar and concatenated vector clock nets at actual physical bits."""
     nets, _, _, instances = parse_die(path)
-    drivers, sinks, pins = {}, set(), {}
+    drivers, sinks, pins, all_outputs = {}, set(), {}, {}
     for master, inst, _, connections in instances:
         for port, expression in connections.items():
+            if dirs.get(master, {}).get(port) in ('output', 'inout'):
+                for net, bit in expr_bits(expression, nets) or []:
+                    if net in nets and nets[net][0] == 1 and bit == 0:
+                        all_outputs.setdefault(net, []).append(f'{inst}/{port}')
             refs = leaves.get(master, {}).get('tt', {})
             hits = [p for p in refs if re.sub(r'\[\d+\]$', '', p) == port]
             is_clock = port in E.CLOCKS or port in (clock_ports or {}).get(master, ()) or hits
             if E.FWD_RE.match(master) and port in E.FWD_NOT_ROOT:
                 continue        # Q-DIE11-RLY: a forwarded lane clock (n_fck_*) propagates through the ck -> ck_o arcs
             bits = expr_bits(expression, nets)
+            if (master, port) in CLOCK_SOURCE_PORTS:
+                if dirs.get(master, {}).get(port) != 'output':
+                    raise ValueError(f'{inst}/{port}: declared clock source is not an actual output pin')
+                if not bits or len(bits) != 1 or bits[0][0] not in nets or nets[bits[0][0]][0] != 1 or bits[0][1] != 0:
+                    raise ValueError(f'{inst}/{port}: source clock must be an actual scalar declared net')
+                drivers.setdefault(bits[0][0], []).append(f'{inst}/{port}')
+                continue
             if is_clock:
                 if not bits or any(net in ('CONST', 'Z', 'UNDECL') for net, _ in bits):
                     raise ValueError(f'{inst}/{port}: missing or non-net clock connection')
@@ -187,6 +208,9 @@ def clock_connections(path, dirs, leaves, clock_ports=None):
             elif dirs.get(master, {}).get(port) == 'output' and port.startswith('pll'):
                 if bits and len(bits) == 1 and bits[0][0] in nets:
                     drivers.setdefault(bits[0][0], []).append(f'{inst}/{port}')
+    for net, known in drivers.items():
+        if all_outputs.get(net) != known:
+            raise ValueError(f'{net}: unknown or multiple actual output drivers: {all_outputs.get(net)}')
     return drivers, sinks, pins
 
 
@@ -269,6 +293,8 @@ def main():
         for pin in drv.get(net, []):
             doms.setdefault(domain(net), []).append(pin)
     undriven = sorted(n for n in sinks if n not in drv)
+    if contract:
+        validate_clock_drivers(drv, sinks)
     leaf_doms = {}
     for net in sorted(sinks):
         for inst, mst, pin in sink_pins[net]:
@@ -295,6 +321,7 @@ def main():
                  clock_budget='related shallow/early levels: setup 60 + 90 ps shallow/shallow, 60 + 150 ps when either TT R > 300 ps; hold H1 50 margin + 50 skew = 100 ps',
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
+    views.update(clock_qualification(contract))
     fwd_m = sorted(m_ for m_ in dirs if E.FWD_RE.match(m_))
     if land or fwd_m:      # Q-DIE11-RLY (only on an OT_SPLIT_FWD_LANES case: older cases keep views.json byte-identical)
         views.update(fwd_landing_sdc=bool(land), fwd_lane_masters=fwd_m)

@@ -1,0 +1,110 @@
+{
+  "supported_and2": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    }
+  },
+  "undriven_output": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "combinational_cycle": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "x_input": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "multiple_drivers": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "pmux_multihot": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "bmux_out_of_range": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "shiftx_out_of_range": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  },
+  "x_output": {
+    "base": {
+      "status": "OK",
+      "moves": 300,
+      "leaf_equiv": true
+    },
+    "cand": {
+      "status": "REFUSED copies are not identical registers (D / clock / reset / type differ)",
+      "moves": 0,
+      "leaf_equiv": true
+    }
+  }
+}

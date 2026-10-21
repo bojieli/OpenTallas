@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-epyc7       admits   827 GB (avail 680, growth 101, headroom 0, waiters 0/0 GB) load 54/96 running 24 disk 5473 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4104267-1792497990 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ECTL_SAFE32_CAPTURE_PASS mutant=0 req=256 consume=256 firstreq=7 localstart=3 firstconsume=94 fault=0
+[262000] %Fatal: tb_qkd_ectl3_pr0_capture.sv:60: Assertion failed in tb_qkd_ectl3_pr0_capture: SCORE_AGE_MISMATCH score0 at175 expected174
+[263000] %Fatal: tb_qkd_ectl3_pr0_capture.sv:60: Assertion failed in tb_qkd_ectl3_pr0_capture: SCORE_AGE_MISMATCH score0 at176 expected174
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4104267-1792497990): exit 0

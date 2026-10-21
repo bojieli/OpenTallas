@@ -1,0 +1,367 @@
+{
+ "PASS": false,
+ "checks": {
+  "R4_go_count_eq_phases": true,
+  "R4_go_spacing_eq_period": true,
+  "R4_cfg_count_eq_phases": true,
+  "R1_lives_on_exactly_the_capturing_elements": true,
+  "R1_one_life_per_go": true,
+  "R1_every_life_retires": true,
+  "R1_retire_before_deadline": true,
+  "R1_tag_alternates_per_phase": true,
+  "R1_slot_rearmed_only_after_retire": true,
+  "R1_element_fault_zero": true,
+  "R2_one_window_per_cfg": true,
+  "R2_window_retires_before_next_cfg": true,
+  "R2_cap_causes_zero": true,
+  "R2_rbase_domains_rotate": true,
+  "R3_deadline_defined": true,
+  "R3_consumer_reads_512_golden_at_deadline": false,
+  "R3_no_vp_collision": true,
+  "R3_full_word_commits": true,
+  "R3_retained_no_overwrite_to_end": true,
+  "R3_terminal_trace_present": true
+ },
+ "failed": {
+  "R3_consumer_reads_512_golden_at_deadline": {
+   "n_wrong": 1,
+   "first": [
+    [
+     [
+      2,
+      187
+     ],
+     511,
+     null
+    ]
+   ]
+  }
+ },
+ "calendar": {
+  "mode": "pipeline",
+  "period": 126,
+  "cfg_lead": 52,
+  "nphases": 15,
+  "predicted_span": 1987,
+  "tail": 195,
+  "deadline_shift": -119
+ },
+ "first_capture": 1573,
+ "deadline": 3636,
+ "last_vp_commit": 3637,
+ "last_element_retire": 3551,
+ "last_cap_retire": 3619,
+ "slack_edges": -1,
+ "go_edges": [
+  1487,
+  1613,
+  1739,
+  1865,
+  1991,
+  2117,
+  2243,
+  2369,
+  2495,
+  2621,
+  2747,
+  2873,
+  2999,
+  3125,
+  3251
+ ],
+ "cfg_edges": [
+  1819,
+  1945,
+  2071,
+  2197,
+  2323,
+  2449,
+  2575,
+  2701,
+  2827,
+  2953,
+  3079,
+  3205,
+  3331,
+  3457,
+  3588
+ ],
+ "cap_windows": [
+  [
+   1822,
+   1879,
+   "5800"
+  ],
+  [
+   1948,
+   2005,
+   "9800"
+  ],
+  [
+   2074,
+   2131,
+   "d800"
+  ],
+  [
+   2200,
+   2257,
+   "1800"
+  ],
+  [
+   2326,
+   2383,
+   "5800"
+  ],
+  [
+   2452,
+   2509,
+   "9800"
+  ],
+  [
+   2578,
+   2635,
+   "d800"
+  ],
+  [
+   2704,
+   2761,
+   "1800"
+  ],
+  [
+   2830,
+   2887,
+   "5800"
+  ],
+  [
+   2956,
+   3013,
+   "9800"
+  ],
+  [
+   3082,
+   3139,
+   "d800"
+  ],
+  [
+   3208,
+   3265,
+   "1800"
+  ],
+  [
+   3334,
+   3391,
+   "5800"
+  ],
+  [
+   3460,
+   3517,
+   "9800"
+  ],
+  [
+   3593,
+   3619,
+   "d800"
+  ]
+ ],
+ "element_lives_example": {
+  "u_f_3L01_q0": [
+   [
+    0,
+    1,
+    1576,
+    1767
+   ],
+   [
+    1,
+    2,
+    1702,
+    1893
+   ],
+   [
+    0,
+    3,
+    1828,
+    2019
+   ],
+   [
+    1,
+    0,
+    1954,
+    2145
+   ],
+   [
+    0,
+    1,
+    2080,
+    2271
+   ],
+   [
+    1,
+    2,
+    2206,
+    2397
+   ],
+   [
+    0,
+    3,
+    2332,
+    2523
+   ],
+   [
+    1,
+    0,
+    2458,
+    2649
+   ],
+   [
+    0,
+    1,
+    2584,
+    2775
+   ],
+   [
+    1,
+    2,
+    2710,
+    2901
+   ],
+   [
+    0,
+    3,
+    2836,
+    3027
+   ],
+   [
+    1,
+    0,
+    2962,
+    3153
+   ],
+   [
+    0,
+    1,
+    3088,
+    3279
+   ],
+   [
+    1,
+    2,
+    3214,
+    3405
+   ],
+   [
+    0,
+    3,
+    3340,
+    3531
+   ]
+  ],
+  "u_f_3L01_q12": [
+   [
+    0,
+    1,
+    1590,
+    1785
+   ],
+   [
+    1,
+    2,
+    1716,
+    1911
+   ],
+   [
+    0,
+    3,
+    1842,
+    2037
+   ],
+   [
+    1,
+    0,
+    1968,
+    2163
+   ],
+   [
+    0,
+    1,
+    2094,
+    2289
+   ],
+   [
+    1,
+    2,
+    2220,
+    2415
+   ],
+   [
+    0,
+    3,
+    2346,
+    2541
+   ],
+   [
+    1,
+    0,
+    2472,
+    2667
+   ],
+   [
+    0,
+    1,
+    2598,
+    2793
+   ],
+   [
+    1,
+    2,
+    2724,
+    2919
+   ],
+   [
+    0,
+    3,
+    2850,
+    3045
+   ],
+   [
+    1,
+    0,
+    2976,
+    3171
+   ],
+   [
+    0,
+    1,
+    3102,
+    3297
+   ],
+   [
+    1,
+    2,
+    3228,
+    3423
+   ],
+   [
+    0,
+    3,
+    3354,
+    3549
+   ]
+  ]
+ },
+ "vp_words": 512,
+ "consumed": 512,
+ "trace_end": [
+  "FULLSIX_PREPARATORY_TRACE_END CAPfault=0 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
+ ],
+ "tmax": 3637,
+ "run": "/srv/opentallas-scratch/claude/codex-cap-contract-1020/source_compiled",
+ "golden_self_check": {
+  "contract_cross_check": true,
+  "contract_rows": 512,
+  "contract_mismatch": [],
+  "shard_bf16_mismatch": []
+ },
+ "expect": "fail",
+ "verdict_as_expected": true
+}

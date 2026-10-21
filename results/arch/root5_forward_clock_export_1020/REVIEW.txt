@@ -1,0 +1,116 @@
+Forwarded clock ETM export: source/model handback packet (ROOT publication review pending)
+
+Fresh projection base 4a7636d6723a50de327c7f50a0e9b4c3228c080c.
+Exporter at 4a is byte-identical to original baseline c0768b96a.
+Candidate source 28ad73b73 + 35e931766 is cherry-picked without byte changes.
+Only native evidence commits 4d4256bc9/c23484bc9 are cherry-picked from the
+S81 truth branch; no old550 ancestry or old exporter/tools are imported.
+No runtime CDC, physical gates, frozen views, main, or daemon changes.
+
+Problem and scope
+The original exporter recognizes clk_in/clk_out with a direct driver but assumes
+positive_unate and subtracts input rise from output rise, even for an inverter.
+The actual dsfd_dvrlyh_276_EW RTL has one kept INV ck_o=~ck, with a generated
+clock divide_by 1 -invert. Its published Liberty ck_o SELF edge arcs are wrong.
+FRAME5 5501d3f80/f9 positive chain evidence covers other noninverting families.
+Original failed EW views and die STA remain untouched. The original routed EW
+ODB/SPEF cannot currently be found; Liberty alone cannot support re-export.
+
+Source admission and model
+--forwarded-clock INPUT:OUTPUT declares distinct scalar boundary names. Existing
+clk_in/clk_out discovery remains automatic; absent default ports do nothing.
+An explicitly missing pair is an error. Walk backward from OUTPUT to INPUT,
+requiring a unique driver at every net, one actual input and output per physical
+cell, no cycles, disconnected nodes, foreign boundary roots, or aliases.
+For each cell, inspect every loaded Liberty definition for that physical master
+at that export corner: output function must be exactly input or its inverse.
+All definitions must agree. XOR unary inversion parity across the physical path.
+The input must have one primary source clock. Any output clock must be generated
+with the same period and the physical polarity's waveform modulo that period.
+The canonical native write_sdc source/master must identify the declared input and
+its unique source clock. A user cannot waive polarity with a sense flag.
+
+For output edge e and path inversion parity p, the matching input edge is e XOR p.
+Preserve the actual root waveform, source latency, input transition/driver,
+original output load, all routed SPEF, and original physical driver.
+Record actual terminal arrivals before phase normalization:
+  local_max(e) = output_arrival_max(e) - input_arrival_max(e XOR p)
+  local_min(e) = output_arrival_min(e) - input_arrival_min(e XOR p)
+Driver transfer uses the same matching actual input arrival. Output-net delay
+is output minus driver for the same edge/bound. Input/output/driver absolute
+and waveform-normalized values remain separately recorded. Finite values,
+early/late ordering, correct phase indices, and nonnegative physical transfers
+are checked. A root SOURCE_LATENCY 17 must shift absolute arrivals by 17 while
+leaving local cell/wire transfer and native ETM lookup tables unchanged.
+
+ETM preservation
+Record original OT_WS sign-off first, then emit the entire original main ETM
+before any forwarding-clock mutation. Remove only output boundary clocks for
+native propagated metrics. Delete clocks for a second native clock-free ETM;
+its naturally extracted combinational arc must relate to INPUT and carry the
+physical Liberty parity's positive_unate or negative_unate sense, with cell
+rise/fall and transition tables. Replace only OUTPUT's complete pin group in
+the original ETM. Every other pin and FF group remains byte-identical. Preserve
+sequential_<corner>.lib.raw and forwarded_<corner>.lib.raw plus hashes. No
+positive-arc transplant, label rewrite, timing mask, or physical qualification
+is implied by this export repair.
+
+Validation so far
+- Full affected tools/tt_views fleet baseline: 32 tests, PASS, one existing native
+  route integration skipped because no route fixture was configured.
+- Final candidate source35e931766: 36 tests, PASS, same one existing skip.
+  ot-run ep9 unit oth-ubuntu-2872077-1792496576, exact log included.
+- Initial candidate28 native API probe: actual detailed-routed BUF, INV and
+  BUF-INV-BUF with OpenRCX SPEF successfully extracted all SS/FF/TT. These initial
+  outputs retain source latency in metrics and are superseded by final35 proof.
+- Final native source-bound evidence is committed independently at 4d4256bc9,
+  branch codex/s81-halfclock-truth-1020, path
+  results/arch/s81_halfclock_truth_1020/native35/{README.md,NATIVE_PROOF.json,FILES_SHA256.json}.
+  Exact exporter35e931766b755a6432d5663dff461a25a57d3a43 SHA256
+  578418117d3547dc46dcf08c119533d1fc36db122a7a8c22f44cf6d4ae7b82b3.
+- Fifteen actual SS/FF/TT exports PASS: BUF, INV, BUF-INV-BUF and default-named
+  clk_in/clk_out BUF/INV. All bytes outside the forwarded output group,
+  including all other pins and FF groups, equal the raw original main ETM.
+- Three SOURCE_LATENCY17 -> 0 comparisons: merged Liberty files byte-identical;
+  absolute arrivals shift 17ps, and local transfer differences are at most
+  0.000061ps from native STA floating-point precision. No root source latency
+  is embedded in the local transfer. Default absent ports emit no receipt.
+- Six actual CLI causal cases reject: wrong generated inversion, source,
+  master, input root, missing SPEF and partial proof. Output load37 -> 74 and
+  doubling full SPEF R/C both change measured local propagation and native Lib.
+- INV TT: input absolute rise40/fall394ps (wave23/377 + source17), output
+  rise462.137909/fall97.340271ps; local opposite-edge transfer rise68.137909 /
+  fall57.340271ps. Native related_pin ck and negative_unate come from extraction.
+- Supplement c23484bc9 completed before handback: input slew20 -> 40ps is
+  preserved at the actual input terminal and changes native INV TT local rise
+  68.137909 -> 76.477814ps and fall57.340271 -> 65.018692ps; native Liberty changes.
+  Actual routed AND2x2 physical master is refused, rc1. All proof jobs terminal.
+
+Source review and consumer boundary
+Independent review confirms phase XOR inversion parity, coherent same-bound
+actual-input subtraction, original sign-off extraction before all clock mutation,
+unique physical driver/root and actual Liberty parity admission, and output-only
+native ETM replacement. Source35 bytes and the existing full suite/native proof
+remain unchanged; no additional broad tests were run for this clean projection.
+
+Prospective S81 consumer319daccb1 removes dv_rvcase.py's SELF arc conversion and
+negative-unate string relabel. It guards both every requested STA corner library
+and the TT GRT copy, checks master/missing relay pin identity, and requires native
+raw ETM/provenance. Independent review reproduced a NaN absolute-arrival fail-open in319, then
+verified final a5edacdfa checks both finite operands and observed transfer.
+Native positive still admits and the same coherent-receipt NaN now refuses.
+Owner fleet result9native admits/8causal refusals PASS. Consumer approval is
+for prospective case generation only; existing frozen42STA/14TT files remain
+immutable and are not silently repaired. The exporter packet does not contain
+consumer source or authorize a runtime deployment.
+
+Publication restriction
+ROOT owns merge/publication/deployment. No actual EW re-export is authorized:
+the original routed ODB/SPEF is absent and Liberty alone cannot regenerate it.
+The original failed SELF/40ns STA evidence and live immutable c076 bind job are
+preserved. No main push, daemon deployment, actual EW export or die GRT occurred.
+
+ROOT-approved classification for both exporter source commits:
+Gate-Rule: neutral requires=native_forwarded_clock_model applies-to=BUF,INV,BUF_INV_BUF
+This is a post-verdict model repair with actual physical function, phase, and
+SPEF source guards; no timing budget changes or proof waiver.

@@ -1,0 +1,1 @@
+IDXRD_CASE OK b3/closed_glate: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 60 P 4 mut 0 sram 1 ckh 900 hdr_to_last 4394 end_to_last 4201 nerr 1024 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214760 wall=2:16.44

@@ -1,0 +1,17 @@
+TB_CTRL3 A!=C status cyc 3440 01 11
+TB_CTRL3 A!=C status cyc 3441 01 11
+TB_CTRL3 A!=C status cyc 3442 01 11
+TB_CTRL3 A!=C status cyc 3443 01 11
+TB_CTRL3 reader beat mismatch pc 1 tag 01a/016 beat 0/0
+TB_CTRL3 reader beat mismatch pc 1 tag 01a/016 beat 1/1
+TB_CTRL3 reader beat mismatch pc 1 tag 01f/016 beat 0/2
+TB_CTRL3 reader beat mismatch pc 1 tag 01f/018 beat 1/0
+TB_CTRL3 reader requests unanswered 232 246
+TB_CTRL3 status fault a 0 c 1
+TB_CTRL3_FAULTS c: chain 11 reader-face pc0 1 pc1 1
+TB_CTRL3_STATS mut 3 seed 1 slothit 0 svc_rq 801 rd_rq 600 rd_beats 310 pops 600 e_ab 0 e_ac 11061 e_rd 257
+TB_CTRL3 FAIL
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_dsfd_ctrl_rg3_mux.sv:195: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.172 s; speed 70.168 us/s
+- Verilator: cpu 0.172 s on 1 threads; allocated 7 MB

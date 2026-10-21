@@ -217,6 +217,17 @@ def plan(name, frame_rect, leaves, loads, driver, clock_of):
             cand = fr.spots()
             cen = cand + STN / 2
     allst = [n for n in nodes if not n.get('root')]
+    # KV-BIND6 10-20: a hop-chain toward a cluster can be abandoned when a later iteration attaches the cluster to a
+    # shallower node; those stations then feed nothing (gen9d5p replay strict bind: unread n_rrs_n_hboot_t0_0__g4_s1, a
+    # 2-station dead branch beside the 7-station d2d_kv host_boot_begin chain).  Drop every station with no load and no
+    # child, iteratively (dead logic, never a waiver); the spots stay taken, which only makes later plans conservative.
+    while True:
+        used = {id(n['parent']) for n in allst}
+        dead = [n for n in allst if not n['members'] and id(n) not in used]
+        if not dead:
+            break
+        gone = {id(n) for n in dead}
+        allst = [n for n in allst if id(n) not in gone]
     for k, n in enumerate(allst):
         n['name'] = f'{name}_s{k}'
     out, assign = [], {}
