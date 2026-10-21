@@ -1,0 +1,197 @@
+{
+ "name": "qkd_kvs_emb_z2b",
+ "top": "qkd_kvs_emb",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [],
+  "S": [
+   "ck",
+   "rst_n",
+   "i_ctl",
+   "i_hroot_ES",
+   "i_hroot_EN"
+  ],
+  "E": [
+   "d2d__svc",
+   "d2d__emb_tx_slot",
+   "rowtx__emb_tx_v",
+   "rowtx__emb_tx_payload",
+   "px_tok",
+   "px_tep"
+  ],
+  "W": [
+   "i_hroot_WS",
+   "i_hroot_WN"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "KV-EMB4 z1 10-20: the KV die static schedule charges 0 edges at every kvs_emb face (kv_tile_views EDGES rule; i2 reason: every tile<->tile / die-master hop is priced in the compiled join ages with the die relays only). Owner 10-20 09:05: pin registers only at region crossings / wires > 405 um; the e1 recipe-3 pin registers (+1 in / +1 out on every pin) made the e1 view unbindable (tile_views edges, LEC != die RTL). Crossings land at die level (die relays / landing slots, priced)."
+ },
+ "kind": "cluster",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+   "count": 1,
+   "orient": "MY",
+   "at": [
+    129.60000000000002,
+    86.4
+   ],
+   "inst": "*u_rowtx"
+  }
+ ],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 302.40000000000003,
+  "exact": true
+ },
+ "structural_change": "KV-EMB4 z2b 10-20: die-bindable kvs_emb: module text == die tile file qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv (OT_KV_EMB_N32=1: u_join NATIVE32=1; z1 gate refused by the pre-gate native census: 26 drivers >32, max 530), pin_regs OFF (0 face edges = die charge), reset_landing 2 stages / 64 copies, clock OT_SPINE_SYM=1 + child_clock_ref boundary; same outline 388.8x302.4, faces, child u_rowtx placement as e1/i2. Parallel fallback (pd 0.45, more channel room).",
+ "job": {
+  "owner": "Claude:KV-EMB4 (DRIVE-KV, tree K.STA.EMB)",
+  "branch": "claude/kv-emb4-z1-1020",
+  "tag": "z2b",
+  "purpose": "KV-EMB4 z2b: die-bindable qkd_kvs_emb (die RTL identity, 0 face edges, reset landing, symmetric spine). Parallel fallback (pd 0.45, more channel room). NATIVE32 join/cal (OT_KV_EMB_N32=1).",
+  "benches": [
+   {
+    "name": "emb_lockstep",
+    "cmd": "OT_KV_EMB_N32=1 OT_KV_MU=1 OT_KV_BOOT_AGES=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m0 emb 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb .* errors=0 mut=0",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_emb4_z2_1020/emb_m0.log"
+   },
+   {
+    "name": "emb_mut1",
+    "cmd": "OT_KV_EMB_N32=1 OT_KV_MU=1 OT_KV_BOOT_AGES=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m1 emb 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_kv_emb4_z2_1020/emb_m1.log"
+   },
+   {
+    "name": "emb_mut2",
+    "cmd": "OT_KV_EMB_N32=1 OT_KV_MU=1 OT_KV_BOOT_AGES=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m2 emb 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=2 ",
+    "fail_witness": "results/rtl/qwen_kv_emb4_z2_1020/emb_m2.log"
+   },
+   {
+    "name": "emb_mut3",
+    "cmd": "OT_KV_EMB_N32=1 OT_KV_MU=1 OT_KV_BOOT_AGES=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m3 emb 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_kv_emb4_z2_1020/emb_m3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/rtl/qwen_kv_die/kvs_kits_ns_1018",
+   "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_emb_z2b/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb_z2b",
+  "cycles_added": 0
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "closed_job": "qkd_kvs_emb-e1-c84feb9f9",
+  "cell": "qkd_kvs_emb",
+  "source": "KV die strict bind kvs14r-ccc9418ac-gen9d22bu tile_views.json: qkd_kvs_emb REFUSE tile RTL differs (die binds qkd_kvs_tiles_hroot_ff_k_mu_ba.sv: u_join #(.NATIVE32(0),.PIPE_JOIN(0)); join4_cal/join4 sources changed since c84feb9f9); registry die_bindable native FAIL TT pin-flop spread 149.9",
+  "fix": "die-identical RTL (OT_KV_EMB_N32 tile file _mu_ba_n32: u_join NATIVE32=1 kept per-segment controls, fixes the 26 native-census drivers >32 of the default join/cal) + NO pin registers (die charges 0 face edges; e1 +1/+1 pin regs = unbindable) + 2-stage reset landing (64 kept copies) + OT_SPINE_SYM clock (e2a gate 32.7/29.9)",
+  "previous_attempts": [
+   "qkd_kvs_emb-i2-5561116d2",
+   "qkd_kvs_emb-e1-d99def0cd (flow failure, no TT overlay)",
+   "qkd_kvs_emb-e1-939c4f0de (NEEDS_RTL FF hold -6.74 child->pin-flop skew)",
+   "qkd_kvs_emb gate 1202b0612 WARN 0 fail (GRT 0) refused at daemon check: stale overlay tools (orfs_hold_mm.tcl RC-CAL 594825ff5, textbook_lint RESET-LANDING d4c49c8d3); tools re-taken from origin/main, reset_landing opt-out recorded",
+   "qkd_kvs_emb-e1-c84feb9f9 (CLOSED, routed spread TT 149.9 / FF 66.7: native FAIL)",
+   "qkd_kvs_emb_e2a gate WARN 0 fail spread 32.7/29.9 (pin regs: same edge mismatch, never submitted)",
+   "qkd_kvs_emb_z1b gate FAIL PRE_GATE_NATIVE_CENSUS (default NATIVE32=0 join: 26 drivers >32, max 530 comb / hot[] 298 / cnt[] 37-64)"
+  ]
+ },
+ "fill_reason": {
+  "pin_bound": "the outline is the exact KV die frame slot of the closed i2 view (388.8 x 302.4, kvs_tile_kits SEED_OUTLINE / kv_static_die FRAME; a smaller outline is a slot_change of the KV die plan). The height is set by the E face: 786 pins over 227.7 of 302.4 um (75%) at pin_min_tracks 3; the width by the 216 x 151.2 hard u_rowtx plus its channels and the S face 673 pins. Gate e1 3d52043cd fill 29% (macro 32659 + std 1890 um2)"
+ },
+ "child_clock_ref": "boundary",
+ "child_clock_ref_reason": "HKV-EMBHOLD 10-18: e1-939c4f0de NEEDS_RTL FF hold -6.74 = 41 reg->reg pairs u_rowtx/emb_tx_payload[*] -> rowtx__emb_tx_payload[*] pin registers (launch child ck 535.8 + child boundary-flop insertion FF 159-221, capture parent flop 787.9): the spine targeted the child's TT lib max_clock_tree_path 293.5 ps, but the flops the parent talks to are the child's boundary pin registers at TT mean 226.0 (insertion.json), so the child launched ~67 ps TT / ~50 ps FF early against every parent capture flop. Target = the child's routed boundary-register insertion (the s81 die clock delivery rule).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 2
+  },
+  "copies": {
+   "rst_n": 64
+  }
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_RST_COPIES_WIDE": "1"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true
+}

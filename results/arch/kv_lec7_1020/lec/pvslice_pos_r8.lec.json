@@ -1,0 +1,64 @@
+{
+ "aig": null,
+ "aig_sha256": "dbceabba057d88aa74555fed7e485936a4c065e31fd9186f4fa2153eabe05250",
+ "engine": {
+  "abc_cmd": "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800",
+  "abc_log_sha256": "1536f703f94b0f3ad6073e26539e6cdd7fa9a4ebdaa266d7be87a83f07c87fcf",
+  "abc_tail": "\nReached limit on the number of timeframes (20).\nOriginal miter:       Latches = 47130. Nodes = 273423.\nSequential cleanup:   Latches = 46772. Nodes = 273375. Time =     1.66 sec\nForward retiming:     Latches = 34745. Nodes = 273257. Time =     1.10 sec\nLatch-corr (I= 24):   Latches = 33556. Nodes = 271457. Time =    39.23 sec\nFraiging:             Latches = 33556. Nodes = 247504. Time =    90.92 sec\nMin-reg retiming:     Latches = 30884. Nodes = 247504. Time =     5.55 sec\nK-step (K= 1,I= 16):  Latches = 30882. Nodes = 245359. Time =  1194.61 sec\nMin-reg retiming:     Latches = 30882. Nodes = 245359. Time =     0.86 sec\nRewriting:            Latches = 30882. Nodes = 210735. Time =     6.23 sec\nSeq simulation  :     Latches = 30882. Nodes = 210735. Time =     1.15 sec\nK-step (K= 2,I= 13):  Latches = 25116. Nodes = 170823. Time =   825.33 sec\nMin-reg retiming:     Latches = 24972. Nodes = 170823. Time =     2.03 sec\nRewriting:            Latches = 24972. Nodes = 167537. Time =     4.28 sec\nSeq simulation  :     Latches = 24972. Nodes = 167537. Time =     1.70 sec\nK-step (K= 4,I=  8):  Latches =     0. Nodes =      0. Time =   524.36 sec\nNetworks are equivalent.  Time =  2699.20 sec\n",
+  "rc": 0,
+  "seconds": [
+   4.6,
+   238.6,
+   2701.0
+  ],
+  "tool": "yosys 0.68 miter -equiv + ABC dprove"
+ },
+ "expect": "pass",
+ "gate": "/srv/opentallas-scratch/claude/kv-lec7-e6-1020/pvslice/6_final.v",
+ "gate_sha256": "41b0c57ce8220eab244d1eb6f16594724f879abe5194860b3965f8002febd733",
+ "gate_stats": {
+  "flops": 14858,
+  "instances": 98266,
+  "macros": {
+   "u_slice.g_mem[0].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[1].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[2].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[3].u_mem": "ot_sram_1r1w_32x128_m1"
+  }
+ },
+ "gate_top": "ot_qwen_tp8_pv_slice_t",
+ "gold_opt": false,
+ "gold_ys_sha256": "4e9779466a35e14de6d71d7a834a0b17997fb3acb0caee08141ad31a54a3d2e7",
+ "lec_ys_sha256": "0dc6aa96977f18bd61f18c0f0f78386ba88c8764a3be39a61efc49cdd770c19f",
+ "macro_models": {
+  "ot_sram_1r1w_32x128_m1": {
+   "blackbox": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v",
+   "model": "/srv/opentallas-scratch/claude/kv-lec7-e6-1020/w_pvslice_pos_r8/ot_sram_1r1w_32x128_m1_model.v",
+   "sha256": "8a08098070590e89a8a15f8ec13d11f877e7a288c6b2737e44c593f62404c306"
+  }
+ },
+ "module": "ot_qwen_tp8_pv_slice_t",
+ "ok": true,
+ "parameters": {
+  "RESET_PIN": 1
+ },
+ "reset": {
+  "active": 0,
+  "cycles": 16,
+  "once": false,
+  "port": "rst_n"
+ },
+ "schema": "opentallas.kv_leaf_lec.v1",
+ "sources": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+ },
+ "verdict": "EQUIVALENT",
+ "wrapper": null
+}

@@ -41,7 +41,7 @@ set i [ot_ref_pick $ot_ref_by ot_nhb_zh {*g_zh?3?*u_zh}]
 $i setOrient R0; $i setLocation [expr {round(259.2 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_nhb_zh at 259.2 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_qkh_recip_leaf {u_recip}]
-$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(302.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qkh_recip_leaf at 475.2 302.4 R0"
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkh_recip_leaf at 475.2 259.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 5} { error "ref_tile place: expected 5 macros, netlist has $nb" }

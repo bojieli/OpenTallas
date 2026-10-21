@@ -13,6 +13,12 @@ O=$(realpath -m "$1"); MUT=${2:-0}; mkdir -p "$O"
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 D=rtl/qwen_sys/d2d_static_20261015; S=rtl/qwen_sys/static_kv_20261014
 IMG=$D/d2d_cal_image_mu.svh; [ "$MUT" = 2 ] && IMG=$D/d2d_cal_image.svh
+# KV-EMBWIN16 10-20: EW=<N> = the grown-window pair image d2d_cal_image_mu_ew<N>.svh (reference pin tile + tb include it
+# through $O/inc, shadowing d2d_cal_image_mu.svh; the DUT is qkd_d2d_cal_seq_bc4_ew<N>.sv; target 11 from it).
+# MUT 7 (EW only): target 11 from the BASE window image (stale boot image for the grown window) -> must FAIL.
+INC=(); CAND=$D/qkd_d2d_cal_seq_bc4.sv; TMUT=$MUT
+if [ -n "${EW:-}" ]; then CAND=$D/qkd_d2d_cal_seq_bc4_ew$EW.sv; mkdir -p "$O/inc"; cp $D/d2d_cal_image_mu_ew$EW.svh "$O/inc/d2d_cal_image_mu.svh"
+  INC=(-I"$O/inc"); [ "$MUT" = 2 ] || IMG=$D/d2d_cal_image_mu_ew$EW.svh; [ "$MUT" = 7 ] && { IMG=$D/d2d_cal_image_mu.svh; TMUT=0; }; fi
 "$VL" --version
 # KV-DCAL 10-19: the tile is generated only on the coherent codec2 K22 image (gen_dcal_bc4.py refuses others)
 grep -q "localparam \[31:0\] D2D_TXDP_K = 32'h03030416;" $D/d2d_cal_image_mu.svh || { echo "DCALBC_FAIL image not codec2 K22"; exit 1; }
@@ -35,13 +41,13 @@ if sys.argv[3]:
 open(sys.argv[2], 'w').write(''.join(f'{x:016x}\n' for x in w))
 print(f'target11: {sys.argv[1]} SEG2 TX {w[64]} RX {w[65]}')
 EOF
-sha256sum $D/qkd_d2d_cal_seq_bc4.sv $D/ot_qwen_d2d_cal_seq_bc4.sv $D/qkd_d2d_cal_seq_pin.sv $D/ot_qwen_d2d_cal_seq.sv $D/ot_qwen_d2d_cal_seq_dies_mu.sv \
+sha256sum $CAND $IMG $D/ot_qwen_d2d_cal_seq_bc4.sv $D/qkd_d2d_cal_seq_pin.sv $D/ot_qwen_d2d_cal_seq.sv $D/ot_qwen_d2d_cal_seq_dies_mu.sv \
   $D/d2d_cal_image_mu.svh $D/d2d_cal_image.svh $D/ot_qwen_d2d_static.sv $S/qkd_static_kv_boot_dispatch.sv \
   rtl/test/qwen_static_kv/tb_kv_dcal_bc4.sv > "$O/source.sha256"
 "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-VARHIDDEN \
-  -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-BLKSEQ -Wno-INITIALDLY -j 4 -I$D --top-module tb_kv_dcal_bootcfg -GMUT=$MUT \
+  -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-BLKSEQ -Wno-INITIALDLY -j 4 "${INC[@]}" -I$D --top-module tb_kv_dcal_bootcfg -GMUT=$TMUT \
   --Mdir "$O/obj" $S/qkd_static_kv_boot_dispatch.sv $D/ot_qwen_d2d_cal_seq.sv $D/ot_qwen_d2d_cal_seq_dies_mu.sv \
-  $D/qkd_d2d_cal_seq_pin.sv $D/qkd_d2d_cal_seq_bc4.sv $D/ot_qwen_d2d_cal_seq_bc4.sv $D/ot_qwen_d2d_static.sv rtl/test/qwen_static_kv/tb_kv_dcal_bc4.sv \
+  $D/qkd_d2d_cal_seq_pin.sv $CAND $D/ot_qwen_d2d_cal_seq_bc4.sv $D/ot_qwen_d2d_static.sv rtl/test/qwen_static_kv/tb_kv_dcal_bc4.sv \
   > "$O/build.log" 2>&1 || { tail -30 "$O/build.log"; echo "DCALBC_FAIL build"; exit 1; }
 (cd "$O" && ./obj/Vtb_kv_dcal_bootcfg) > "$O/run.log" 2>&1; rc=$?
 cat "$O/run.log"
