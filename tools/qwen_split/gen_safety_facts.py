@@ -63,16 +63,21 @@ def relay_chains(segments, by):
     W2 must see the whole chain: splitting at each relay would reset its unsited
     distance at precisely the site whose channel membership needs checking.
     """
-    outgoing = defaultdict(list)
+    outgoing, by_source = defaultdict(list), defaultdict(list)
     for k, w in enumerate(segments):
         outgoing[tuple(w['src'])].append(k)
+        by_source[w['src'][0]].append((w['src'][1], k))
     thru = dict(a='b', a_d='b_d', b_r='a_r', d='q')
     succ, predecessors = {}, set()
     for k, w in enumerate(segments):
         i, p = w['dst']
         dest = by[i]
         out = thru.get(p.lstrip('*')) if dest.kind in ('relay', 'reset_rep') else None
-        nxt = outgoing.get((i, out), []) if out else []
+        if dest.kind == 'reset_rep' and p.lstrip('*') == 'd':
+            # Actual qfd_rst_rep outputs are q0..q7 (kept copies), not q.
+            nxt = [j for port, j in by_source[i] if re.fullmatch(r'q[0-9]*', port)]
+        else:
+            nxt = outgoing.get((i, out), []) if out else []
         succ[k] = nxt
         predecessors.update(nxt)
     result, visited = [], set()
@@ -115,7 +120,17 @@ def export_model(model, pin_pos):
         clock_source[bid] = source
         for inst, port in eps[1:]:
             clock[inst].add(bid)
-            pin_clock[(inst, port.lstrip("*"))] = bid
+            alias = port.lstrip("*")
+            pin_clock[(inst, alias)] = bid
+            joins = model.get('port_join', {}).get(by[inst].master, {})
+            joined = joins.get(alias)
+            if joined:
+                real, indexes = joined
+                for bit in indexes:
+                    pin_clock[(inst, f'{real}[{bit}]')] = bid
+                all_indexes = {j for p, js in joins.values() if p == real for j in js}
+                if all_indexes == {0}:
+                    pin_clock[(inst, real)] = bid
     source_sync = []
     def canonical(net, seen=()):
         if net in seen:
@@ -174,7 +189,7 @@ def export_model(model, pin_pos):
                 if a == b:
                     continue
                 crossings.append(dict(id=bid, src_region=a, dst_region=b,
-                                      landing=landing, bits=bits, src=si, dst=di))
+                                      landing=landing, bits=bits, src=si, dst=di, src_port=sp, dst_port=dp))
     lane_segments = set()
     for lane in (model.get('fwd_lanes') or {}).get('lanes', []):
         st = lane.get('stations') or []
@@ -210,10 +225,12 @@ def export_model(model, pin_pos):
             if bid in lane_segments:
                 continue
             ring = di if by[di].master.startswith(RING) else None
-            if by[di].master.startswith('qfd_rst_rep') and dp.lstrip('*') == 'd':
+            rep_sync = by[di].master.startswith('qfd_rst_rep') and dp.lstrip('*') == 'd'
+            package_sync = by[di].master == 'qfd_rstsync' and dp.lstrip('*') == 'arst_n'
+            if rep_sync or package_sync:
                 reset_landings.append(dict(id=bid, src=[si, sp], dst=[di, dp],
                     src_regions=sorted(region(si, sp)), dst_regions=sorted(region(di, dp)),
-                    landing=di, kind='two_stage_reset_synchronizer'))
+                    landing=di, kind='two_stage_reset_synchronizer' if rep_sync else 'package_reset_synchronizer'))
                 continue
             cross(bid, si, di, bits, ring, sp=sp, dp=dp)
     wires = relay_chains(wires, by)

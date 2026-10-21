@@ -179,3 +179,40 @@ def test_reserved_relay_keepout_is_not_claimed_as_cell_row():
     m, pos = fixture()
     m['relay_keepouts'] = [dict(rect=[50., 0., 80., 30.])]
     assert not any(a < 60 < c and b < 15 < d for a,b,c,d in channels(m))
+
+
+def test_real_vector_clock_alias_resolves_related_pin_without_guessing():
+    m, pos = fixture()
+    m['buses'][0][3].append(('b', 'face_ck6'))
+    m['port_join'] = dict(block=dict(face_ck6=('face_ck', [6]), fdi_rx_ck0=('fdi_rx_ck', [0])))
+    m['dv_cluster_clocks'] = dict(master='block', related_pins=dict(q=['ck']*8, d=['face_ck[6]']*8))
+    m['buses'].append(('direct', 'data', 8, [('a', 'q'), ('b', 'd')]))
+    f = export_model(m, pos)
+    assert not [c for c in f['crossings'] if c['id'] == 'direct']
+    assert not any(k.startswith('UNDRIVEN:b/face_ck') for k in f['regions'])
+
+
+def test_actual_reset_q_copy_ports_are_traced_across_branches():
+    from qwen_split.gen_safety_facts import relay_chains
+    by = {n: Inst(kind='reset_rep' if n.startswith('r') else 'block') for n in ('a','r0','r1','b','c')}
+    def w(n, si, sp, di, dp, x0, x1):
+        return dict(id=n,src=[si,sp],dst=[di,dp],pts=[[x0,5],[x1,5]],kind='reset',bits=1)
+    ws = [w('a','a','q','r0','d',0,200),w('b','r0','q0','r1','d',210,400),
+          w('c','r1','q0','b','d',410,600),w('d','r1','q1','c','d',410,650)]
+    chains=relay_chains(ws,by)
+    assert len(chains)==2 and all(len(c['segments'])==3 for c in chains)
+    f=dict(regions={},crossings=[],channels=[[0,50,1000,100]],wires=chains)
+    r=check_facts(f)
+    assert r['counts']['hops_over']==0 and r['counts']['wires_no_site']==2
+
+
+def test_package_reset_synchronizer_is_not_a_clocked_data_capture():
+    m, pos = fixture()
+    m['insts'].append(Inst(name='rstsync', master='qfd_rstsync', x=60, y=10, w=10, h=10, kind='block'))
+    m['buses'].append(('rstsync_ck', 'clock_trunk', 1, [('pll', 'cb'), ('rstsync', 'ck')]))
+    m['buses'].append(('package_rst', 'reset', 1, [('a', 'q'), ('rstsync', 'arst_n')]))
+    f = export_model(m, pos)
+    assert not [c for c in f['crossings'] if c['id'] == 'package_rst']
+    assert f['reset_landings'][-1]['kind'] == 'package_reset_synchronizer'
+    m['insts'][-1].master = 'raw_reset_flop'
+    assert [c for c in export_model(m, pos)['crossings'] if c['id'] == 'package_rst']
