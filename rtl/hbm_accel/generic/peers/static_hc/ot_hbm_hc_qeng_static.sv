@@ -212,6 +212,25 @@ module ot_hbm_hc_qeng_static #(
         .clk_x1(clk), .clk_x2(clk), .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .clk_d0(clk), \
         .clk_d1(clk), .clk_d2(clk), .clk_d3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
   `endif
+  `ifdef HC_BANK_RW8
+    // HBM-COLLECT10/COL-HC 10-21: b0 / cb / e2 _rw8 (row assembler h on clk_d<r>, a on clk_h<r>; weight copies on clk_w<r>
+    // (WR 4 kits: on clk_h<r>; identical in this all-clk bench); x copies on clk_x<r>; cb fin_q / f_o on clk_f).  Needs HC_BANK_RW7.
+    `undef OT_HCQ_B0
+    `undef OT_HCQ_BQ
+    `undef OT_HCQ_BF
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rw8_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rw8_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw8_static
+    `undef OT_HCQ_BCK
+    `undef OT_HCQ_BQCK
+    `undef OT_HCQ_BFCK
+    `define OT_HCQ_H8 .clk_h0(clk), .clk_h1(clk), .clk_h2(clk), .clk_h3(clk),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RLW `OT_HCQ_H8
+    `define OT_HCQ_BQCK `OT_HCQ_BCK .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk), .clk_f(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), .clk_ce(clk), .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), \
+        .clk_x1(clk), .clk_x2(clk), .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .clk_d0(clk), \
+        .clk_d1(clk), .clk_d2(clk), .clk_d3(clk), `OT_HCQ_H8 .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+  `endif
     `undef OT_HCQ_B0CK
     `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
  `elsif HC_BANK_RM

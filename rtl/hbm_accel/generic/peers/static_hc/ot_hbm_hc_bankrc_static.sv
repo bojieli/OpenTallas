@@ -54,6 +54,39 @@
     end
 endmodule
 
+// HBM-COLLECT10/COL-HC 10-21 (rw8): the same row assembler split over two regional roots by stage.  The rw6 / rw7 --cts gates
+// failed at clk_d<r> (b0 175.5 / 147.3 ps, e2 301.3 / 212.1 ps TT over 1,537..2,580 sinks): the hold stage h and the
+// output stage a sit at different points of the ~400..1,000 um write path (xb_d face pins -> SRAM faces), so one root
+// over both (plus the anchored write copies at both SRAM faces) spans 330..570 um.  ck_h clocks h, ck_a clocks a + bad.
+// Same registers, same edges, same data as ot_hcb_row_write_asm (0 added edges).
+(* keep_hierarchy = 1 *) module ot_hcb_row_write_asm2 #(
+    parameter integer ROW = 0, MUT = 0
+)(input wire ck_h, ck_a, input wire [15:0] vq, input wire [31:0] bq,
+  input wire [255:0] d, output reg [511:0] a, output reg bad);
+    if ((ROW % 2) == 0) begin : g_lo
+        reg [511:0] h;
+        always @(posedge ck_h)
+            for (integer k=0;k<16;k=k+1)
+                for (integer b=0;b<2;b=b+1)
+                    if (vq[k] && bq[2*k+:2] == ((MUT==2 && k==5) ? 2'((b+1)%3) : 2'(b)))
+                        h[b*256+16*k+:16] <= d[16*k+:16];
+        always @(posedge ck_a) a <= h;
+    end else begin : g_hi
+        reg [255:0] h;
+        always @(posedge ck_h) begin
+            for (integer k=0;k<16;k=k+1)
+                if (vq[k] && bq[2*k+:2] == ((MUT==2 && k==5) ? 2'd0 : 2'd2))
+                    h[16*k+:16] <= d[16*k+:16];
+        end
+        // the old a <= {d, h} loads d (the d_q pin flops) directly into a: kept as is (same edge) on ck_a
+        always @(posedge ck_a) a <= {d,h};
+    end
+    always @(posedge ck_a) begin
+        bad <= 1'b0;
+        for (integer m=0;m<16;m=m+1) if (|a[m*32+:16]) bad <= 1'b1;
+    end
+endmodule
+
 // HBM-COLLECT10/HCE2 10-21: ring writer with the ot_pl_land_local_w calendar (slot-major bank, write one-hot from reset,
 // valid, sim-only epochs) but each slot's write enable is a KEPT register computed one edge ahead from rsi, so the
 // reset leaf / rq never fan into every slot bit (native census <= 32).  we[s] at edge n == rq(n) && write_oh(n).
@@ -106,7 +139,11 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     // the E row-3 root clk_rx[3] OR lf_any (= old f_o edge): 0 added edges.  The x SRAM write copies move from clk_d[h]
     // to their x SRAM's root clk_rx[h] (E side) so no root spans the W weight column and the E x column.  Requires CPO 0.
     // MUT 3 (bench): chain read offset K 3 (one edge late) -> ring lockstep must FAIL.
-    parameter integer CSPL = 0)(
+    parameter integer CSPL = 0,
+    // COL-HC 10-21 FQR 1 (cb rw8): the fault-flag relay pair fin_q / f_o leaves clk_c for clk_a (its own 2-sink root; clk_a
+    // is dead at WROW >= 2).  cb_rw6 --cts: clk_c 127.4 ps TT with fin_q / f_o placed 230 um off the chain mass (they relay
+    // f_in NW corner -> f_out SE corner).  Same registers, same edges.  FQR 0 = unchanged.
+    parameter integer FQR = 0)(
     input  wire          clk, clk_c, clk_o,
     // HBM-HCBANK9 10-20: clk_a = write mass (beat assembler hold / asm_q, lb_q, write data wd_q) off the in-face pin root
     // clk (the _rl / _rm cb tops; every older top ties it to clk).
@@ -118,6 +155,8 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     // capture xd) and clk_re[r] (lane enables lv / sv of leaves 2r / 2r+1); older tops pass their clk_rc net to all three.
     input  wire [3:0]    clk_ri, clk_rw, clk_rx, clk_re, clk_q,
     input  wire [3:0]    clk_d,
+    // COL-HC rw8 (WROW 3 / 4): clk_h[r] = output stage a (+ bad) of row r's assembler; clk_d[r] keeps the hold stage h.
+    input  wire [3:0]    clk_h,
     input  wire [7:0]    ck_l, ck_w,
     input  wire [3:0]    ck_x,
     input  wire          rst_n, first,
@@ -204,7 +243,10 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     always @(posedge clk_a) wd_q <= asm_q;
     wire [2047:0] row_asm;
     generate for (genvar ar=0; ar<4; ar=ar+1) begin : g_row_asm
-        if (WROW >= 2) begin : g_local
+        if (WROW >= 3) begin : g_local2
+            ot_hcb_row_write_asm2 #(.ROW(ar),.MUT(MUT)) u_a(
+                .ck_h(clk_d[ar]),.ck_a(clk_h[ar]),.vq(vq_c),.bq(bq_c),.d(d_q),.a(row_asm[ar*512+:512]),.bad(row_bad[ar]));
+        end else if (WROW >= 2) begin : g_local
             ot_hcb_row_write_asm #(.ROW(ar),.MUT(MUT)) u_a(
                 .clk(clk_d[ar]),.vq(vq_c),.bq(bq_c),.d(d_q),.a(row_asm[ar*512+:512]),.bad(row_bad[ar]));
         end
@@ -216,14 +258,17 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     reg fin_q, f_o, w_re, x_re, ov_r; reg [9:0] w_addr, x_addr;
     wire [7:0] lfg; wire lf_any = |lfg;
     always @(posedge clk_c or negedge rn_st) begin
-        if (!rn_st) begin cv <= '0; w_re <= 1'b0; x_re <= 1'b0; fin_q <= 1'b0; f_o <= 1'b0; end
+        if (!rn_st) begin cv <= '0; w_re <= 1'b0; x_re <= 1'b0; end
         else begin
             cv <= {cv[NC-1:0], c_v};
             w_re <= cv[0] && !cd[0][DW-2];
             x_re <= cv[0];
-            fin_q <= c_f;
-            f_o <= fin_q || lf_any;
         end
+    end
+    wire ck_f = (FQR != 0) ? clk_a : clk_c;
+    always @(posedge ck_f or negedge rn_st) begin
+        if (!rn_st) begin fin_q <= 1'b0; f_o <= 1'b0; end
+        else begin fin_q <= c_f; f_o <= fin_q || lf_any; end
     end
     always @(posedge clk_c) begin
         cd[0] <= {c_ss, c_nv, c_wa, c_xa};
@@ -334,7 +379,12 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
         end
         if (WROW != 0) begin : g_wr
             (* keep = "true" *) reg [255:0] wr;
-            always @(posedge clk_d[g/2]) wr <= ds;
+            // COL-HC rw8: WROW 3 = the copy on its SRAM pair's read root clk_rw (beside the macro faces); WROW 4 = on clk_h
+            wire ckw_w;
+            if (WROW == 3) begin : g_cw assign ckw_w = clk_rw[g/2]; end
+            else if (WROW == 4) begin : g_ch assign ckw_w = clk_h[g/2]; end
+            else begin : g_cd assign ckw_w = clk_d[g/2]; end
+            always @(posedge ckw_w) wr <= ds;
             assign d = wr;
         end else begin : g_nwr
             assign d = ds;
@@ -354,7 +404,7 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
         if (WROW != 0) begin : g_wr
             (* keep = "true" *) reg [255:0] wr;
             wire ckx_w;
-            if (CSPL != 0) begin : g_cx assign ckx_w = clk_rx[h]; end else begin : g_cd assign ckx_w = clk_d[h]; end
+            if (CSPL != 0 || WROW >= 3) begin : g_cx assign ckx_w = clk_rx[h]; end else begin : g_cd assign ckx_w = clk_d[h]; end
             always @(posedge ckx_w) wr <= ds;
             assign d = wr;
         end else begin : g_nwr
@@ -826,6 +876,57 @@ module ot_hbm_hc_bankq_rw5m_static #(parameter integer MUT = 0, parameter intege
         .clk_ri({clk_i3, clk_i2, clk_i1, clk_i0}), .first(1'b0),
         `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 endmodule
+// ================= HBM-COLLECT10/COL-HC 10-21: _rw8 (b0, cb, e2) =================
+// rw6 / rw7 --cts gates (10-21): b0 clk_d0 175.5 / 147.3 ps TT, e2 clk_d0 301.3 / 212.1 ps, cb clk_c 127.4 / 127.9 ps.
+// 3_place sink dumps: clk_d<r> = row assembler h + a (spread along the xb_d-pins -> SRAM write path, x 31..599 in e2,
+// x 145..363 in b0) + anchored write copies at both faces of the weight pair and the x SRAM; cb clk_c = the chain plus
+// fin_q / f_o relayed 230 um away.  rw8 (0 added edges, same registers / ages):
+//   clk_d<r>  hold stage h of row r only          clk_h<r> (NEW port) output stage a + bad of row r
+//   weight copies: WR 3 -> clk_w<r> (their SRAM pair's read root), WR 4 -> clk_h<r>;  x copies -> clk_x<r>
+//   cb: FQR 1, fin_q / f_o on clk_f (NEW port, 2 sinks); the kit fences the cv / cd chain beside the d_* / o_* pins.
+`define OT_HCB_RW8_CK input wire clk_h0, clk_h1, clk_h2, clk_h3,
+`define OT_HCB_RW8_V .clk_h({clk_h3, clk_h2, clk_h1, clk_h0})
+module ot_hbm_hc_bankq0_rw8_static #(parameter integer MUT = 0, parameter integer DRLY = 2, parameter integer CPO = 1,
+    parameter integer WR = 3)(
+    `OT_HCB_RL_ROOTS input wire clk_s0, clk_s1, `OT_HCB_RW_CK `OT_HCB_RW8_CK input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x,
+    input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    output wire [2047:0] sum_out, output wire f_out, input wire [2048:0] s_i, output wire [2048:0] s_o
+);
+    initial if (CPO == 0 || WR < 3) $fatal(1, "_rw8 b0: CPO = 1, WR 3 / 4");
+    `OT_HCB_RR0_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO), .WROW(WR), .STG(1)) u_c (`OT_HCB_RL_V, .clk_a(clk), `OT_HCB_RW_V,
+        `OT_HCB_RW8_V, .clk_ri({4{clk}}), .first(1'b1),
+        `OT_HCB_RC_CONN, .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out));
+endmodule
+module ot_hbm_hc_bankq_rw8_static #(parameter integer MUT = 0, parameter integer CPI = 1, parameter integer CPO = 1,
+    parameter integer WR = 3)(
+    `OT_HCB_RL_ROOTS `OT_HCB_CPI_ROOTS `OT_HCB_RW_CK `OT_HCB_RW8_CK input wire clk_f, input wire [7:0] ck_l, ck_w,
+    input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out
+);
+    initial if (CPI == 0 || CPO == 0 || WR < 3) $fatal(1, "_rw8 bank: CPI = CPO = 1, WR 3 / 4");
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO), .WROW(WR), .STG(1), .FQR(1)) u_c (`OT_HCB_RL_V, .clk_a(clk_f),
+        `OT_HCB_RW_V, `OT_HCB_RW8_V, .clk_ri({clk_i3, clk_i2, clk_i1, clk_i0}), .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
+endmodule
+module ot_hbm_hc_bankq_ft_rw8_static #(parameter integer MUT = 0, parameter integer WR = 3)(
+    input wire clk, clk_c, clk_ce, clk_w0, clk_w1, clk_w2, clk_w3, clk_x0, clk_x1, clk_x2, clk_x3, clk_e0, clk_e1, clk_e2, clk_e3,
+    `OT_HCB_RW_CK `OT_HCB_RW8_CK input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out,
+    `OT_HCB_RCFT_PORTS
+);
+    initial if (WR < 3) $fatal(1, "_rw8 e2: WR 3 / 4");
+    `OT_HCB_RCFT_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .WROW(WR), .STG(1), .CSPL(1)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_ce), .clk_a(clk),
+        .clk_ri({4{clk}}), .clk_rw({clk_w3, clk_w2, clk_w1, clk_w0}), .clk_rx({clk_x3, clk_x2, clk_x1, clk_x0}),
+        .clk_re({clk_e3, clk_e2, clk_e1, clk_e0}), .clk_q({4{clk}}), `OT_HCB_RW_V, `OT_HCB_RW8_V, .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
+endmodule
+`undef OT_HCB_RW8_CK
+`undef OT_HCB_RW8_V
 `undef OT_HCB_FTRW4_BODY
 `undef OT_HCB_FTRW_BODY
 `undef OT_HCB_RW_CK
