@@ -1,0 +1,35 @@
+{
+  "gs": {
+    "gate": "WARN",
+    "source": "06daaa354",
+    "native": {
+      "status": "PASS",
+      "max": 32,
+      "violations": 0,
+      "roles": 0
+    },
+    "actual_pin_geometry": "actual pin geometry PASS: {'signal_clock_pins': 3107, 'pin_rectangles': 3107, 'pin_track_checked': 3107, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 0e08e8357c5d76a9ff1a662c7d9f33e4beb53d76f9484e029a8149ea1dfc15ca",
+    "trial_route": "trial GRT: total overflow 0; worst layer M3 28.25% used; GRT 1473 s",
+    "clock": "root port:ck: 14,327 sinks on the largest root; measured TT insertion 636.2 ps, FF insertion 529.4 ps, TT pin-flop spread 56.5 ps, FF pin-flop spread 47.3 ps; WARN: insertion 636.2 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+    "remaining": "Actual ~905ps/26level A0->A1 sum warning; candidateCSA component source fix distinct. Full signoff/no implicit timing closure."
+  },
+  "hs": {
+    "gate": "WARN",
+    "source": "06daaa354",
+    "native": {
+      "status": "PASS",
+      "max": 32,
+      "violations": 0,
+      "roles": 0
+    },
+    "actual_pin_geometry": "actual pin geometry PASS: {'signal_clock_pins': 3107, 'pin_rectangles': 3107, 'pin_track_checked': 3107, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4ef7deca67625243017a6a11863e38a7c72b728b86e49e9487d1a17dd5a63927",
+    "trial_route": "trial GRT: total overflow 0; worst layer M3 24.13% used; GRT 2148 s",
+    "clock": "root port:ck: 14,327 sinks on the largest root; measured TT insertion 663.4 ps, FF insertion 554.5 ps, TT pin-flop spread 70.5 ps, FF pin-flop spread 58.6 ps; WARN: insertion 663.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+    "remaining": "Actual ~905ps/26level A0->A1 sum warning; candidateCSA component source fix distinct. Full signoff/no implicit timing closure."
+  },
+  "visual_inspection": {
+    "status": "CHECKLIST_ONLY_NO_REVIEW_APPROVAL",
+    "observed": "Viewed final density PNGs and same actual floorplan dumps preview. Six contained hardSRAMs, two columns xthree rows, clear centre/horizontal streets. No macro overlap or red denseisland observed; pinplan matches actual3107pins alltrackchecked/0inaccessible/0outside.",
+    "limits": "Native/clock-rule/GRT admissions are actual. Final routed TT/FF/SS closure and parent clock compensation stillrequired. No REVIEW file edited or submitperformed. Does not qualify changedCSA source."
+  }
+}

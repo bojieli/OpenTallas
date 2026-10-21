@@ -1,0 +1,131 @@
+{
+  "verdict": "WARN",
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "fill",
+      "message": "fill 30% = (macros/children 44618 + std 7840) / outline 176360 um2 (pin-bound: Width >= 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height set by three rows of p192 masters (77-86 um tall: the pin-pitch fix doubles macro height) plus 43-65-um row channels; fill ~30-35% is the cost of the p192 pin-access perimeter (Codex accd38c70: +1.95x macro area).)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "pin_regs",
+      "message": "pin registers opted out: Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam.",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "layer",
+      "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "remote",
+      "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "source_binding",
+      "message": "immutable shipping manifest /tmp/ref_gate_dsdv_sh_lk_s10hs_20261021-134724.source_snapshot.json",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "remote",
+      "message": "remote log /tmp/ref_gate_dsdv_sh_lk_s10hs_20261021-134724.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10hs-20261021-134724",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "native_census",
+      "message": "mapped dynamic load limit32 PASS; max=32",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "remote",
+      "message": "synth + floorplan + PDN OK on ot-agidock128 in 302 s (gate total 3707 s)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "floorplan.pin_geometry",
+      "message": "actual pin geometry PASS: {'signal_clock_pins': 3107, 'pin_rectangles': 3107, 'pin_track_checked': 3107, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4ef7deca67625243017a6a11863e38a7c72b728b86e49e9487d1a17dd5a63927",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "util",
+      "message": "synthesized std area 7802 um2 + macros 44618 in core 172739: util 8% (std-cell density 7.6% of placeable 102939 um2; total fill 30.3%)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "textbook",
+      "message": "WARN dsdv_sh_lk cells 52,585 flops 14,327 depth 905.2 ps util 0.3039 reach 1.5 um (1.8 s)",
+      "fix": ""
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.logic_depth",
+      "message": "reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.a0[2]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.a1[22]$_DFFE_PN_/D: ~905 ps estimated (26 logic levels) > 600 ps: pipeline / restructure the stage",
+      "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+    },
+    {
+      "severity": "INFO",
+      "check": "cts_calibration",
+      "message": "ss insertion all 740.0..848.1 ps (spread 108.1), boundary mean 809.3; tt insertion all 584.2..663.4 ps (spread 79.2), boundary mean 634.3; ff insertion all 483.2..554.5 ps (spread 71.3), boundary mean 524.0; macro_clk flag False",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "density",
+      "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "path_classes",
+      "message": "constraints signoff /src/physical/ref_tile/dsdv_sh_lk_s10hs/signoff.sdc (TT placement RC; diagnostic)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "path_classes",
+      "message": "reg->reg      600 paths, worst slack -200.7 ps (e.g. u_ot_pr_core.u_h.host.u_hi.u_eng.a1[30]$_DFFE_PN_/D)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "path_classes",
+      "message": "setup WNS -2.0069179651471813e-10 hold WNS 1.5204337788787825e-11",
+      "fix": ""
+    },
+    {
+      "severity": "WARN",
+      "check": "clock_rule",
+      "message": "root port:ck: 14,327 sinks on the largest root; measured TT insertion 663.4 ps, FF insertion 554.5 ps, TT pin-flop spread 70.5 ps, FF pin-flop spread 58.6 ps; WARN: insertion 663.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+      "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+    },
+    {
+      "severity": "INFO",
+      "check": "layout_images",
+      "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-shlk-source-recover-1021/physical/ref_tile/dsdv_sh_lk_s10hs/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-s81-shlk-source-recover-1021/physical/ref_tile/dsdv_sh_lk_s10hs/gate_layout/density.png",
+      "fix": ""
+    },
+    {
+      "severity": "WARN",
+      "check": "fill",
+      "message": "fill 30% = (hard macros 44618.3 + synthesized std cells 7876.3) / outline 176359.7 um2; pin demand per face: S 857 pins over 386.4/388.8 um (99%), N 1207 pins over 386.5/388.8 um (99%), W 668 pins over 450.9/453.6 um (99%), E 519 pins over 450.6/453.6 um (99%) (pin-bound: Width >= 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height set by three rows of p192 masters (77-86 um tall: the pin-pitch fix doubles macro height) plus 43-65-um row channels; fill ~30-35% is the cost of the p192 pin-access perimeter (Codex accd38c70: +1.95x macro area).)",
+      "fix": ""
+    },
+    {
+      "severity": "INFO",
+      "check": "trial_route",
+      "message": "trial GRT: total overflow 0; worst layer M3 24.13% used; GRT 2148 s",
+      "fix": ""
+    }
+  ]
+}
