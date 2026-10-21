@@ -1,0 +1,216 @@
+{
+ "name": "dscoll_lane_e_s8nk-s8nk-COMMIT",
+ "block": "dsfd_coll_lane_e_safe8_ntf",
+ "ref_tile": true,
+ "owner": "Claude:DRIVE-S81-NTF",
+ "purpose": "DRIVE-S81-NTF: MU-die tf-less param-free lane top (lepe_mu/lepw_mu), s8 REACH=2 fix (RX FIFO write landing + s7 relay hops); k-means regional CTS K=16. SAFE checklist in kit README.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-ntf-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/dscoll_cx/coll_s5_cell_band.tcl",
+   "physical/ref_tile/dscoll_lane_w_ltr/kit.env",
+   "results/rtl/s81_coll_native32_1020/native_v8/bench",
+   "results/rtl/s81_coll_native32_1020/reach7/bench",
+   "results/rtl/s81_coll_native32_1020/reach8n/bench",
+   "rtl",
+   "tools/xdie_s81"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_e_safe8_ntf u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_NATIVE32 -DOT_COLL_NATIVE32_OFF --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/lib/ot_sram_oldread_b64.sv rtl/lib/ot_sram_showahead_b64.sv rtl/common/ot_link_credit_rx_b64.sv rtl/common/ot_link_credit_tx_rc.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_reach8n_m0",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 OT_COLL_REACH8N=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "pass_witness": "results/rtl/s81_coll_native32_1020/reach8n/bench/m0.log"
+   },
+   {
+    "name": "lane_reach8n_m5",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 OT_COLL_REACH8N=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach5 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach8n/bench/m5.log"
+   },
+   {
+    "name": "lane_reach8n_m6",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 OT_COLL_REACH8N=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach6 6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach8n/bench/m6.log"
+   },
+   {
+    "name": "lane_reach8n_m7",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 OT_COLL_REACH8N=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach8n/bench/m7.log"
+   },
+   {
+    "name": "lane_reach8n_m8",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 OT_COLL_REACH8N=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach8n/bench/m8.log"
+   },
+   {
+    "name": "lane_miter_v8_m1",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE4_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m1.log"
+   },
+   {
+    "name": "lane_miter_v8_m2",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "COLL_COLLISION_UNSAFE",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m2.log"
+   },
+   {
+    "name": "lane_miter_v8_m3",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE4_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m3.log"
+   },
+   {
+    "name": "lane_miter_v8_m4",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE4_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dscoll_lane_e_s8nk/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dscoll_lane_e_s8nk/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dscoll_lane_e_s8nk --out {RUN}/record/views/dsfd_coll_lane_e_safe8_ntf --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dscoll_lane_e_s8nk/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dscoll_lane_e_s8nk/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dscoll_lane_e_s8nk/dscoll_lane_e_s8nk-s8nk-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "DRIVE-S81-NTF (10-20) MU-die COLL lane kits dscoll_lane_{w,e}_s8n (TritonCTS) / dscoll_lane_{w,e}_s8nk (k-means K=16):\nthe tf-less lane tiles of the lepe_mu / lepw_mu landed parents (release die), ported from the DRIVE-S81-COLL s8 kits.\n\nTop dsfd_coll_lane_{w,e}_safe8_ntf = ot_s81ph_coll_lane_safe4 REACH = 2 (s7 relay hops + endpoint RX FIFO write landing,\nthe s8 structural fix of the s7 GRT reach FAIL: 5,379 pairs > 405 um from c_diff / c_crc_ok / xp_v fanned across the tile),\nCH_BOARD 700, TF_CLEANUP 1, NO tf pin and NO parameters (a default-parameter die bind is this view).  Same outline, macro map,\npins (minus tf), PDN, layer contract and clock recipe as s8 / s8k; K=16 fallback for both sides.\n\n--- s8 base ---\nS81-COLL8 (10-20) COLL lane kits dscoll_lane_{w,e}_s8 (TritonCTS) / dscoll_lane_e_s8k (k-means regional CTS, K=16):\nstructural fallback of s7 (S81.STA.LKTO.2), gated in parallel with the running s7 routes.\n\ns7 E gates WARN (GRT0, spread 73.3/67.9 and 67.2/65.3) and route, but the actual GRT native reach audit on the s7 E\ngate ODB (scratch/s81-tilesf/reach_e_s7) still FAILS: 5,379 pairs > 405 um, max 765 um; 4.8k of them are ONE cone:\nu_ep c_diff / c_crc_ok / xp_v (receive decision, placed by the gearbox at the link face) -> the 18 RX FIFO address\ngroups (g_fifo_safe g_address[].count_r / wp_r) and u_m g_slice[].valid_r beside the 18 RX FIFO banks at the core\nface, in one cycle (W s7 gate placement TT reg->reg -246 ps at g_address[5].wp_r).  The REACH = 1 frame hops did not\nmove the decision: the placer keeps it by the gearbox.\n\ns8 = RTL top dsfd_coll_lane_{w,e}_safe8 (ot_s81ph_coll_lane_safe4 REACH = 2 = REACH 1 + ot_s81ph_link_ep_safe4\nWRL = 2): RX FIFO write LANDING.  c_acc -> 3 kept copies (edge 1, one per 6 groups) -> 18 per-group kept copies\n(edge 2, each on its group's reset leaf) beside the banks; write data 2 reset-free stages; logical occupancy (fill,\nc_full / overflow) still counts c_acc at once, physical occupancy (fillw / tail / drain) counts the landed write.\nNo single-cycle wire from the decision to the FIFO groups; +2 receive edges (credits return 2 edges later).\nSame outline, macro map, pins, PDN, layer contract as s7."
+}

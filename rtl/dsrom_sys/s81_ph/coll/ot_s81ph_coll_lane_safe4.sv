@@ -259,3 +259,25 @@ module dsfd_coll_lane_e_safe8 #(parameter integer CH_BOARD = 700) (
 `endif
 endmodule
 
+
+// DRIVE-S81-NTF 10-20: parameter-free tf-less REACH = 2 tops for the S81 DV MU die (lepe_mu / lepw_mu landed parents;
+// successors of dsfd_coll_lane_{w,e}_ntf in ot_s81ph_coll_lane.sv, which bind the legacy core at LCR 1).  Same core
+// configuration as dsfd_coll_lane_{w,e}_safe8 (safe4 = legacy GFMT 1 / EPPIPE 2 / LCR 1 / RXSRAM 1 cycle-identical,
+// + REACH 2 relay hops and the RX FIFO write landing), no tf pin (the clock feedthrough has no consumer on the die), and
+// NO parameters, so a default-parameter die bind is the closed view (kits dscoll_lane_{w,e}_s8n*).
+module dsfd_coll_lane_w_safe8_ntf (
+    input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
+    input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
+    output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
+    wire tf_unused;
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+        .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+endmodule
+module dsfd_coll_lane_e_safe8_ntf (
+    input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
+    input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
+    output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
+    wire tf_unused;
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+        .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
+endmodule
