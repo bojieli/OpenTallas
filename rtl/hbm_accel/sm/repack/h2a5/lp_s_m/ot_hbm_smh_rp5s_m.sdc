@@ -14,8 +14,8 @@ set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_m]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_m] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_m] -to [get_clocks core_clk]
-# 23 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22}
+# 25 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
+set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
@@ -31,9 +31,9 @@ set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_m [get_ports {xss_a1[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_m [get_ports {xss_g1[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_m [get_ports {xss_a2[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_m [get_ports {xss_g2[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_m [get_ports {attn[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_x [get_ports {xi_b[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_x [get_ports {xi_g0[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_x [get_ports {xi_gp[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_m [get_ports {gout[*]}]
 if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_x ck_m}] }
-set_case_analysis 0 [get_ports {attn[*]}]   ;# identity strap

@@ -90,7 +90,6 @@
   {
    "name": "c",
    "insts": [
-    "u_as_c",
     "u_bdc1",
     "u_cap1",
     "u_h01",
@@ -113,7 +112,6 @@
   {
    "name": "x",
    "insts": [
-    "u_as_x",
     "u_bk1",
     "u_lands",
     "u_oh1",
@@ -136,7 +134,7 @@
   {
    "name": "m",
    "insts": [
-    "u_as_m",
+    "u_as",
     "u_fp1",
     "u_g1p",
     "u_go1",
@@ -153,9 +151,6 @@
   }
  ],
  "reset_region": "c",
- "static": [
-  "attn"
- ],
  "D": 4,
  "E": 2,
  "reschedule": true,
@@ -164,7 +159,10 @@
  "bench": {
   "cycles": 3000,
   "reset_cycles": 16,
-  "sim": "verilator"
+  "sim": "verilator",
+  "expr": {
+   "attn": "5'd13"
+  }
  },
  "tb_static": {
   "attn": "5'd13"

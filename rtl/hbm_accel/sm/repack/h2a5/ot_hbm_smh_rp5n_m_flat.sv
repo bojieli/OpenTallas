@@ -24,9 +24,13 @@ module ot_hbm_smh_rp5n_m_flat #(parameter integer HMUT = 0) (
     wire [2068:0] bin_l, bt1, bm, be1, bk1_n, xb1, xb2;
     wire [99:0] gin_a, gin_r, gpm, gpr;
     wire [49:0] g0m, g0r;
+    wire [4:0] at_s0;
     wire [4:0] at_x;
+    assign at_x = at_s0;
     wire [4:0] at_c;
+    assign at_c = at_s0;
     wire [4:0] at_m;
+    assign at_m = at_s0;
     wire [25:0] st_r0;
     wire [817:0] rl1_r0;
     wire [2068:0] bk1_r0;
@@ -58,9 +62,7 @@ module ot_hbm_smh_rp5n_m_flat #(parameter integer HMUT = 0) (
     ot_rp5_rst #(.N(9), .NC(2)) u_rst_m13 (.clk(clk), .rst_n(rst_n), .r(r_m13));
     ot_rp5_rst #(.N(3), .NC(2)) u_rst_x7 (.clk(clk), .rst_n(rst_n), .r(r_x7));
     ot_rp4l_strap u_sr_n (.clk(clk), .d({xs_g2, xs_a2, xs_g1, xs_a1}), .q(st_n));
-    ot_rp4a_astrap u_as_x (.clk(clk), .d((HMUT == 5) ? {attn[4:3] + 2'd1, attn[2:0]} : attn), .q(at_x));
-    ot_rp4a_astrap u_as_c (.clk(clk), .d((HMUT == 5) ? {attn[4:3] + 2'd1, attn[2:0]} : attn), .q(at_c));
-    ot_rp4a_astrap u_as_m (.clk(clk), .d((HMUT == 5) ? {attn[4:3] + 2'd1, attn[2:0]} : attn), .q(at_m));
+    ot_rp4a_astrap u_as (.clk(clk), .d((HMUT == 5) ? {attn[4:3] + 2'd1, attn[2:0]} : attn), .q(at_s0));
     ot_rp4l_pinrow u_pr_n (.clk(clk), .rst_n(rst_n), .d(rin_n), .q(rl_n));
     ot_rp4l_pinbeat u_pb (.clk(clk), .rst_n(rst_n), .d(bin), .q(bin_l));
     ot_smh_tr_group_row_w u_row0 (.clk(clk), .rst_a(rst_n), .d(rl_n), .first(rl1_n), .last(rpm_n));

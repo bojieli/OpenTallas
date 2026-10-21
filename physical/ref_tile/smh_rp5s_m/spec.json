@@ -425,8 +425,7 @@
    ],
    "inputs": [
     "rin_s",
-    "rst_n",
-    "attn"
+    "rst_n"
    ],
    "outputs": [
     "rout_s"
@@ -459,7 +458,8 @@
     "xss_a1",
     "xss_g1",
     "xss_a2",
-    "xss_g2"
+    "xss_g2",
+    "attn"
    ],
    "outputs": [
     "gout"
@@ -473,14 +473,14 @@
   "3_fanout": "r3 kept copies (xq NIPV 24 / k_oh 16, go k_b/k_p, pub rpp 16) unchanged; landings chunked 24 b (kept per-chunk counters / selectors), reset forest leaves <= 32 loads; pre-gate native census decides.",
   "4_depth": "PASS: cut only at existing register stages (xq stage-2 bundles, column / merge outputs); landing read is a registered slot mux; no new combinational path.",
   "5_storage": "PASS: unchanged hard SRAM children (x store, PV merge, columns); landing rings D=4 slots of flops.",
-  "6_floorplan": "r4sp outline 691.2 x 1252.8 and child placement unchanged (8 children on the 43.2 lattice); +19675 landing flops (~5.9k um2) in the existing W / E / centre channels.",
-  "7_clock": "3 regional CTS roots (ck_c, ck_x, ck_m): x store region (child refs 453-529 TT) apart from the columns (104-188) and the PV merge (263-313); every region crossing landed (lp audit PASS, 23 landings), 1-bit reset runs only; judged per region.",
+  "6_floorplan": "r4sp outline 691.2 x 1252.8 and child placement unchanged (8 children on the 43.2 lattice); +19767 landing flops (~5.9k um2) in the existing W / E / centre channels.",
+  "7_clock": "3 regional CTS roots (ck_c, ck_x, ck_m): x store region (child refs 453-529 TT) apart from the columns (104-188) and the PV merge (263-313); every region crossing landed (lp audit PASS, 25 landings), 1-bit reset runs only; judged per region.",
   "8_schedule": "static; reschedule +3 edges per landed net, absorbed in r3 pads where possible; vs r3 halves: gout +8 (all 4 lanes), xo_b +1 (n), xo_g0/gp +7 (n), rout/bout 0; reset depths shifted with their data. PRICED: rp4a gout G 10 -> 18 per tile hop (parent BE_DELAY / GPAD re-solve)."
  },
  "landed": {
   "record": "results/arch/hbm_smh_r5_1021/ot_hbm_smh_rp5s_m_record.json",
-  "landings": 23,
-  "landing_flops": 19675,
+  "landings": 25,
+  "landing_flops": 19767,
   "reset_depth": 3,
   "lp_spec": "results/arch/hbm_smh_r5_1021/lp_spec_s_m.json"
  }

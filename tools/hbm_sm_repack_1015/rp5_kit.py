@@ -50,8 +50,8 @@ def spec(h, v):
     for r in regions:
         name = "core" if r == "c" else r
         dom[name] = dict(ratio=[1, 1], ports=[f"ck_{r}"],
-                         inputs=[p["name"] for p in ports if p["dir"] == "in" and p["name"] != "attn" and P["nreg"].get(f"port:{p['name']}") == r]
-                         + (["rst_n", "attn"] if r == "c" else []),
+                         inputs=[p["name"] for p in ports if p["dir"] == "in" and P["nreg"].get(f"port:{p['name']}") == r]
+                         + (["rst_n"] if r == "c" else []),
                          outputs=[p["name"] for p in ports if p["dir"] == "out" and P["nreg"].get(f"port:{p['name']}") == r])
     kids = []
     for c in base["children"]:

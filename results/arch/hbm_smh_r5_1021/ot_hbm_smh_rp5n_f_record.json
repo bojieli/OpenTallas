@@ -8,7 +8,6 @@
   "c": {
    "clock_port": "ck_c",
    "children": [
-    "u_as_c",
     "u_bdc0",
     "u_cap0",
     "u_fp0",
@@ -36,7 +35,7 @@
   "x": {
    "clock_port": "ck_x",
    "children": [
-    "u_as_x",
+    "u_as",
     "u_be1",
     "u_be2",
     "u_bk0",
@@ -136,6 +135,24 @@
   },
   {
    "name": "3",
+   "net": "at_c",
+   "src_region": "x",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_as"
+   ],
+   "width": 5,
+   "readers": [
+    "u_pub0.at",
+    "u_go0.at"
+   ],
+   "ring": "u_lpl_3_w (ck_x)",
+   "read": "u_lpl_3_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
    "net": "pp0",
    "src_region": "x",
    "dst_region": "c",
@@ -146,13 +163,13 @@
    "readers": [
     "u_pub0.pp"
    ],
-   "ring": "u_lpl_3_w (ck_x)",
-   "read": "u_lpl_3_r (ck_c)",
+   "ring": "u_lpl_4_w (ck_x)",
+   "read": "u_lpl_4_r (ck_c)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
   },
   {
-   "name": "4",
+   "name": "5",
    "net": "pf0",
    "src_region": "x",
    "dst_region": "c",
@@ -163,13 +180,13 @@
    "readers": [
     "u_fp0.d"
    ],
-   "ring": "u_lpl_4_w (ck_x)",
-   "read": "u_lpl_4_r (ck_c)",
+   "ring": "u_lpl_5_w (ck_x)",
+   "read": "u_lpl_5_r (ck_c)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
   },
   {
-   "name": "5",
+   "name": "6",
    "net": "gin_a",
    "src_region": "x",
    "dst_region": "c",
@@ -180,13 +197,13 @@
    "readers": [
     "u_gi2.d"
    ],
-   "ring": "u_lpl_5_w (ck_x)",
-   "read": "u_lpl_5_r (ck_c)",
+   "ring": "u_lpl_6_w (ck_x)",
+   "read": "u_lpl_6_r (ck_c)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
   },
   {
-   "name": "6",
+   "name": "7",
    "net": "xb2",
    "src_region": "x",
    "dst_region": "c",
@@ -197,10 +214,10 @@
    "readers": [
     "u_xbo.d"
    ],
-   "ring": "u_lpl_6_w (ck_x)",
-   "read": "u_lpl_6_r (ck_c)",
+   "ring": "u_lpl_7_w (ck_x)",
+   "read": "u_lpl_7_r (ck_c)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
   }
  ],
  "pads": [],
@@ -223,12 +240,13 @@
    "root_D_loads": 14,
    "regions": {
     "c": {
-     "leaves": 199,
+     "leaves": 200,
      "terms": [
       "1",
       "(((((817) - (0) + 1))+24-1)/24)",
       "(((((1083) - (0) + 1))+24-1)/24)",
       "(((((533) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
       "(((((4) - (0) + 1))+24-1)/24)",
       "(((((6) - (0) + 1))+24-1)/24)",
       "(((((99) - (0) + 1))+24-1)/24)",
@@ -273,36 +291,45 @@
        "first_leaf": 106,
        "chunks": 1,
        "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
       },
       {
        "landing": "5",
        "role": "r",
        "first_leaf": 107,
-       "chunks": 5,
-       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
       },
       {
        "landing": "6",
        "role": "r",
-       "first_leaf": 112,
+       "first_leaf": 108,
+       "chunks": 5,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "7",
+       "role": "r",
+       "first_leaf": 113,
        "chunks": 87,
-       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)",
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)",
        "chunks_expr": "(((((2068) - (0) + 1))+24-1)/24)"
       }
      ],
      "branches": 7,
-     "FFs": 206,
+     "FFs": 207,
      "scalar_child_pad_port_uses": 12
     },
     "x": {
-     "leaves": 199,
+     "leaves": 200,
      "terms": [
       "1",
       "(((((817) - (0) + 1))+24-1)/24)",
       "(((((1083) - (0) + 1))+24-1)/24)",
       "(((((533) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
       "(((((4) - (0) + 1))+24-1)/24)",
       "(((((6) - (0) + 1))+24-1)/24)",
       "(((((99) - (0) + 1))+24-1)/24)",
@@ -347,31 +374,39 @@
        "first_leaf": 106,
        "chunks": 1,
        "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
       },
       {
        "landing": "5",
        "role": "w",
        "first_leaf": 107,
-       "chunks": 5,
-       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
       },
       {
        "landing": "6",
        "role": "w",
-       "first_leaf": 112,
+       "first_leaf": 108,
+       "chunks": 5,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "7",
+       "role": "w",
+       "first_leaf": 113,
        "chunks": 87,
-       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)",
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)",
        "chunks_expr": "(((((2068) - (0) + 1))+24-1)/24)"
       }
      ],
      "branches": 7,
-     "FFs": 206,
+     "FFs": 207,
      "scalar_child_pad_port_uses": 10
     }
    },
-   "incremental_FFs": 408,
+   "incremental_FFs": 410,
    "required_rtl_sources": [
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
@@ -381,9 +416,9 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 27243,
+  "landing": 27289,
   "pads": 0,
-  "reset": 413
+  "reset": 415
  },
  "communicating_region_pairs": {
   "landed": [
@@ -401,8 +436,7 @@
    "u_rst_c10": 0,
    "u_rst_x7": 0,
    "u_sr_n": 0,
-   "u_as_x": 0,
-   "u_as_c": 0,
+   "u_as": 0,
    "u_pr_n": 0,
    "u_pb": 0,
    "u_row0": 0,
@@ -442,6 +476,7 @@
    "xs_g1": 0,
    "xs_a2": 0,
    "xs_g2": 0,
+   "attn": 0,
    "rin_n": 0,
    "bin": 0,
    "gin": 0
@@ -510,6 +545,17 @@
     "added_edges": 3
    },
    {
+    "net": "at_c",
+    "src_region": "x",
+    "dst_region": "c",
+    "readers": [
+     "u_pub0.at",
+     "u_go0.at"
+    ],
+    "width": 5,
+    "added_edges": 3
+   },
+   {
     "net": "pp0",
     "src_region": "x",
     "dst_region": "c",
@@ -575,7 +621,7 @@
  ],
  "audit": {
   "ok": true,
-  "landings": 7,
+  "landings": 8,
   "reset_hops": 1,
   "fails": []
  }
