@@ -46,3 +46,5 @@ Existing benchmarks +INV and slot/dep/iaign failurewitnesses committed results/r
     "GRT_overflow": 0
   }
 ]
+
+Packaging correction: batch135434 NEEDS_HUMAN before route because stale extra_path results/rtl/hbm_vmearly_k4_1020 was absent from tree. No benchmark command uses this directory. job.json already binds slot/dep/iaign to committed R9 receipts; spec.json three stale witness pointers aligned to those exact same files. Only obsolete directory extra removed. Frozen RTL/spec geometry/gate/ROOT REVIEW unchanged. Failed queue objects retained; normal resubmit authorized, no regate.
