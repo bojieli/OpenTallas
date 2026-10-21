@@ -1,0 +1,15 @@
+{
+  "qualified": false,
+  "canonical_checker": "unchanged gray_fifo_cdc_constraints.py from closure daemon snapshot",
+  "result": "PASS",
+  "adoption": "not yet; selected shell coldboot/equivalence, mapped native32 and physical retention owed",
+  "sources": {
+    "rtl/qwen_sys/host_cluster_cdc_20261018/qkc_afifo_bits_1021.sv": "0bfc91be1c5eee013248fba5069b4a45659dbe36f756968d3b74db3fa1b1fb14",
+    "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "fixture_sha256": {
+    "top.sv": "eae90b82ac46f21817688bd3a28fe9ece91e0eb1fb231344dd5386809042af9d",
+    "check.py": "a220880a63d0908908751669f5851687276164c047c6bd31b8c6c83cd8ad2bba"
+  }
+}

@@ -1,0 +1,5 @@
+Unqualified source exploration. The unchanged canonical Gray checker refuses source keep_hierarchy, then refuses global-allvalid payload capture at its 2M BDD node bound, including the own-valid masked raw-head variant. No checker or bound changes.
+
+Current fixture uses the SVG pattern: each payload bit captures under local read intent and its own primitive valid, while the separate q_v captures global allvalid admission. All FIFO pointer pops remain globally coordinated. This preserves same-cycle output capture with the valid, and the consumer must ignore speculative payload changes when q_v is false. The local rd_valid output is an explicit new wrapper port and requires exact integrated caller wiring; it is not an alias of global rempty.
+
+Standalone prior behavior and area receipts refer to the exact earlier wrapper SHA recorded in cxbits_atomic/summary.json. The new plain wrapper and fixture require their own source-bound CDC result and exact integrated cold-reset/native32 checks. No host source or physical tile is adopted here.

@@ -10,7 +10,7 @@ module qkc_afifo_bits_1021 #(
     input wire [W-1:0] wdata,
     output wire wfull,output wire [AW:0] wfreed,output wire ovf,
     input wire rclk,rrst_n,rd,
-    output wire rempty,output wire [W-1:0] rdata,output wire [AW:0] rcount
+    output wire rempty,output wire [W-1:0] rdata,output wire [W-1:0] rd_valid,output wire [AW:0] rcount
 );
     localparam integer LEAVES=1<<$clog2(W), CW=AW+2;
     wire [W-1:0] full_b,empty_b,ovf_b,head;
@@ -21,7 +21,6 @@ module qkc_afifo_bits_1021 #(
     for(genvar b=0;b<W;b=b+1)begin:g_bit
         // SKEW_SYNC is a validation-only model of unequal legal visibility.
         // The release uses SYNC=2 on every original primitive.
-        (* keep_hierarchy="yes" *)
         ot_link_afifo #(.W(1),.AW(AW),.SYNC(SYNC+((SKEW_SYNC!=0)?b%2:0))) u_fifo(
             .wclk(wclk),.wrst_n(wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
             .wfull(full_b[b]),.wfreed(freed_b[(AW+1)*b +: AW+1]),.ovf(ovf_b[b]),
@@ -60,5 +59,6 @@ module qkc_afifo_bits_1021 #(
     // credits. Equal visibility reduces exactly to the original pulse/edge.
     assign wfreed=free_tree[1][AW:0];
     assign rcount=count_tree[1];
+    assign rd_valid=~empty_b;
     assign rdata=(MUT_ROTATE!=0)?{head[W-2:0],head[W-1]}:head;
 endmodule
