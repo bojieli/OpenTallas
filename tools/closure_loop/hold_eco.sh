@@ -173,8 +173,12 @@ if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
 fi
 orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
   local log=$1 tcl=$2; shift 2
+  local pg_args=()
+  if [ "${OT_PG_STRICT:-0}" = 1 ]; then
+    pg_args=(-e OT_PG_STRICT=1 -e OT_PG_HELPER=/cl/native_pg_binding.tcl)
+  fi
   docker run --rm -v $CUR_DIR:/in:ro -v $(dirname $CUR_SPEF):/inspef:ro -v $OB:/ob:ro -v $P:/p -v $PWD:/src:ro -v $CLD:/cl:ro \
-    -e OT_MACROS="${MS# }" -e OT_VT="$OT_VT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-SS} "$@" $IMG bash -lc \
+    -e OT_MACROS="${MS# }" -e OT_VT="$OT_VT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-SS} "${pg_args[@]}" "$@" $IMG bash -lc \
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/$tcl" > $log 2>&1
 }
 best=""; bestscore=-1e9

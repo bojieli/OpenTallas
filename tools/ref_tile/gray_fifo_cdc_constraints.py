@@ -24,7 +24,23 @@ Yosys scope metadata, and refuses unless every cross-family dependence of every 
       (ot_link_afifo: !rempty; ot_qwen_async_fifo_w / ot_async_fifo: rd_valid). The proof is an exact BDD check
       over the actual elaborated cone: for every storage bit s, (D|s=0 xor D|s=1) & !valid == 0;
   (c) asynchronous reset: an ot_reset_sync pipe register's asynchronous control (assert asynchronously, deassert
-      through its own >= 2-stage pipe whose stage 0 D is constant 1 and drives only stage 1).
+      through its own >= 2-stage pipe whose stage 0 D is constant 1 and drives only stage 1);
+  (d) opt-in event synchronisers (KV-HOSTCL-CDC2 design, ported onto this file by KV-HROOT-CDC 2026-10-18):
+      ``cdc_synchronizers`` groups (the cdc_sync_constraints.py schema over the declared families: name, src_domain,
+      dst_domain, source, chain, optional payload / seen, sync_max_delay_ps, payload_max_delay_ps, why), proved
+      exactly with BDDs over the actual cone: the source is Gray (no two bits change on one source edge; 1 bit
+      trivially), the chain is >= 2 posedge destination flops (stage 1 D exactly the source bit, later stages exactly
+      the previous stage, stage 1 driving only stage 2), every payload bit holds whenever the source holds, and every
+      destination register whose D reads payload is a capture that reads no source / stage-1 bit, reads at least one
+      chain stage >= 2 (or ``seen``) and is payload-independent while all late stages and ``seen`` agree (no event in
+      flight). ``seen`` (toggle/ack handshakes) is a destination flop whose next state is provably the last chain
+      stage. Crossings: source bit i -> stage-1 bit i (sync_max_delay_ps <= faster family period - 60) and payload ->
+      capture (payload_max_delay_ps <= destination period - 60). With groups declared, a FIFO chain whose synchroniser
+      flops synthesis removed entirely (a side tied off by a parameter) carries no crossing (``constant_chains``); a
+      partly folded chain is refused and a FIFO with folded chains may keep no storage. In extension mode a storage
+      read into an event source / payload / capture register is proved by the extension's SAT miter (``gated``).
+      Event proofs treat each FIFO's combinational head (ot_link_afifo ``rdata``, else ``rd_data``) as free
+      variables (a sound over-approximation). Absent groups, the policy and its SDC are unchanged.
 
 Everything else is refused: an unsynchronised crossing, a 1-stage synchroniser, logic in a synchroniser, a storage
 read not gated by the FIFO's valid, cross-family asynchronous control of any other register, a cross-family input
@@ -94,6 +110,12 @@ REVIEWED = {
         chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
         valid='link', read_stage=None, min_ptr_bits=3),
 }
+# HOST-SRAM opt-in: exact reviewed source, unchanged Gray/publication/rendezvous semantics.
+REVIEWED['ot_host_async_fifo_sram'] = dict(REVIEWED['ot_qwen_async_fifo_w'], path='rtl/physical/ot_host_async_fifo_sram.sv',
+    sha256=('da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22',), read_stage=None)
+RESET_BANK = ('ot_host_reset_bank', 'rtl/physical/ot_host_die_cdc_sram.sv', ('a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d',))
+DUAL_SRAM = {'ot_sram_1r1w2c_32x546_m1_p192_mir': {'ot_sram_1r1w2c_32x546_m1_p192_mir.v': 'cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841', 'ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v': 'ae8045e620759351ff9b2f5fb469c32da7e5924a51d4a8b0040261a634ee0c3d', 'ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib': '7c6833d7970e4921d3d6725af4e8dedede326fa837485bc7214a210622ba6e31', 'ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib': 'd28d59a0e127ac833916594e54a7483158c028bbf02e0462e323e80203b3da23', 'ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib': '4b7aeff31a66cae303368232b2ba8fa99f0600902e0a53a2c00e356ad761f213'}}
+
 STORAGE = re.compile(r'mem\[\d+\](?:\[\d+\])?')
 RESERVED_ATTRIBUTE = re.compile(rb'\b(?:src|hdlname|module\w*|cell_\w*|keep_hierarchy)\s*=')
 BDD_NODE_LIMIT = 2_000_000
@@ -116,8 +138,6 @@ def relationship(spec):
         raise GrayFifoError('reviewed_gray_fifos elaborates SYNTHESIS sources only; build defines/ORFS overrides are unsupported')
     if any(spec.get(k) for k in ('sdc_extra', 'boundary_tcl', 'pre_cts_extra', 'forwarded_clock')):
         raise GrayFifoError('reviewed_gray_fifos owns all clock/crossing constraints; custom timing hooks are unsupported')
-    if spec.get('cdc_synchronizers') is not None:
-        raise GrayFifoError('reviewed_gray_fifos cannot be combined with cdc_synchronizers')
     ext = extensions(spec)
     if spec.get('children') or (spec.get('macros') and ext is None):
         raise GrayFifoError('reviewed_gray_fifos supports soft native leaves only; no hard children/macros')
@@ -132,6 +152,60 @@ def relationship(spec):
     for name, d in declared.items():
         if not isinstance(d, dict) or d.get('ratio') != family_ratio(name):
             raise GrayFifoError(f'reviewed_gray_fifos {name} ratio must be {family_ratio(name)} ({FAMILIES[name]} ps family period)')
+    event_groups(spec)
+
+
+EVENT_KEYS = {'name', 'src_domain', 'dst_domain', 'source', 'chain', 'seen', 'payload', 'sync_max_delay_ps',
+              'payload_max_delay_ps', 'why'}
+
+
+def event_groups(spec):
+    """Schema of the optional cdc_synchronizers groups (cdc_sync_constraints.py rules, family periods)."""
+    groups = spec.get(S.KEY)
+    if groups is None:
+        return []
+    if not isinstance(groups, list) or not groups:
+        raise GrayFifoError('reviewed_gray_fifos cdc_synchronizers must be a nonempty list')
+    declared = spec['clock_entry_domains']
+    names, refs = set(), set()
+    for g in groups:
+        if not isinstance(g, dict) or set(g) - EVENT_KEYS:
+            raise GrayFifoError('reviewed_gray_fifos cdc_synchronizers entries are objects with keys '
+                                f'{sorted(EVENT_KEYS)} only (no false paths/groups)')
+        n = g.get('name')
+        if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', n) or n in names:
+            raise GrayFifoError('reviewed_gray_fifos cdc_synchronizers group names must be distinct identifiers')
+        names.add(n)
+        s, d = g.get('src_domain'), g.get('dst_domain')
+        if s not in declared or d not in declared:
+            raise GrayFifoError(f'{n}: src_domain/dst_domain must be declared clock families')
+        if s == d:
+            raise GrayFifoError(f'{n}: same-family path; a synchronizer exception needs two different clock families')
+        chain, payload = g.get('chain'), g.get('payload', [])
+        if not isinstance(chain, list) or len(chain) < 2:
+            raise GrayFifoError(f'{n}: chain needs >= 2 destination-clock stages')
+        if not isinstance(payload, list):
+            raise GrayFifoError(f'{n}: payload must be a list')
+        seen = [g['seen']] if 'seen' in g else []
+        for r in [g.get('source')] + chain + payload + seen:
+            if not isinstance(r, str) or not S.REF.fullmatch(r):
+                raise GrayFifoError(f'{n}: register references are literal names or name[bit]: {r!r}')
+            if r in refs and r not in seen and not any(x.get('seen') == r for x in groups):
+                raise GrayFifoError(f'{n}: register {r} named twice')
+            refs.add(r)
+        cap = round(min(FAMILIES[s], FAMILIES[d]) - SETUP_UNCERTAINTY_PS, 3)
+        bound = g.get('sync_max_delay_ps')
+        if isinstance(bound, bool) or not isinstance(bound, (int, float)) or not 0 < bound <= cap:
+            raise GrayFifoError(f'{n}: sync_max_delay_ps must be in (0, {cap}] (faster family period minus setup uncertainty)')
+        pb = g.get('payload_max_delay_ps')
+        if payload:
+            cap = round(FAMILIES[d] - SETUP_UNCERTAINTY_PS, 3)
+            if isinstance(pb, bool) or not isinstance(pb, (int, float)) or not 0 < pb <= cap:
+                raise GrayFifoError(f'{n}: payload_max_delay_ps must be in (0, {cap}] (destination period minus setup)')
+        elif pb is not None:
+            raise GrayFifoError(f'{n}: payload_max_delay_ps without payload')
+    return groups
+
 
 
 EXTENSIONS = 'reviewed_gray_fifo_extensions'
@@ -154,9 +228,12 @@ def extensions(spec):
     ext = spec.get(EXTENSIONS)
     if ext is None:
         return None
-    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'why'}:
+    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'why'}:
         raise GrayFifoError(f'reviewed_gray_fifos {EXTENSIONS} must be an object with level_synchronizers / '
                             'die_constant_inputs / why only (no false paths, groups or waivers)')
+    dual = ext.get('dual_clock_srams', [])
+    if not isinstance(dual, list) or len(set(dual)) != len(dual) or any(n not in DUAL_SRAM for n in dual):
+        raise GrayFifoError('reviewed_gray_fifos dual_clock_srams must name distinct fingerprinted supported masters')
     levels = ext.get('level_synchronizers', [])
     if not isinstance(levels, list):
         raise GrayFifoError('reviewed_gray_fifos level_synchronizers must be a list')
@@ -201,11 +278,19 @@ def _macro_clock_pins(spec, root):
         libs = sorted(view.glob(f'{master}_*.lib'))
         if not libs:
             raise GrayFifoError(f'reviewed_gray_fifos macro {master} has no Liberty view')
+        dual = master in (extensions(spec) or {}).get('dual_clock_srams', [])
+        if dual:
+            for filename, digest in DUAL_SRAM[master].items():
+                if not (view/filename).is_file() or hashlib.sha256((view/filename).read_bytes()).hexdigest() != digest:
+                    raise GrayFifoError(f'reviewed_gray_fifos dual-clock SRAM {master} source/view changed: {filename}')
+            if len(libs) != 3:
+                raise GrayFifoError('reviewed_gray_fifos dual-clock SRAM requires TT/FF/SS views')
         for lib in libs:
-            found.add(_liberty_clock(lib.read_text(), master))
+            found.add(_liberty_dual_sram(lib.read_text(), master) if dual else _liberty_clock(lib.read_text(), master))
         if len(found) != 1:
             raise GrayFifoError(f'reviewed_gray_fifos macro {master} clock pin differs between corners')
-        out[master] = found.pop()
+        value = found.pop()
+        out[master] = dict(read_clock='rclk', write_clock='wclk', pin_clock=dict(value)) if dual else value
     return out
 
 
@@ -235,6 +320,51 @@ def _liberty_clock(text, master):
     return next(iter(clocks))
 
 
+
+def _liberty_dual_sram(text, master):
+    """Exact 32x546 1R1W2C roles from each actual Liberty pin/arc, no cross-clock timing exception.
+    Every bit must have its expected direction and exactly one related clock. The caller additionally
+    binds the model, blackbox and all corner views to reviewed immutable SHA256s.
+    """
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.S).replace('\\\n', ' ')
+    stack, clocks, dirs, related = [], set(), {}, {}
+    for tok in re.finditer(r'(\w+)\s*\(([^()]*)\)\s*\{|\}|(\w+)\s*:\s*("[^"]*"|[^;{}]+);', text):
+        if tok.group(1):
+            stack.append((tok.group(1), tok.group(2).strip().strip('"'))); continue
+        if tok.group(0) == '}':
+            if stack: stack.pop()
+            continue
+        if len(stack)<2 or stack[1] != ('cell',master):continue
+        pin=next((v for k,v in reversed(stack) if k in ('pin','bus')),None)
+        if pin is None:continue
+        k,v=tok.group(3),tok.group(4).strip().strip('"')
+        if k=='clock' and v=='true':clocks.add(pin)
+        if k=='direction':dirs[pin]=v
+        if k=='related_pin':related.setdefault(pin,set()).update(v.split())
+    expected={'rclk':('input','rclk'),'wclk':('input','wclk'),
+              'r_ce_in':('input','rclk'),'w_ce_in':('input','wclk'),
+              'r_addr_in':('input','rclk'),'w_addr_in':('input','wclk'),
+              'rd_out':('output','rclk'),'wd_in':('input','wclk'),'w_mask_in':('input','wclk')}
+    if clocks!={'rclk','wclk'} or dirs!={p:d for p,(d,c) in expected.items()}:
+        raise GrayFifoError(f'dual-clock SRAM {master} clock/port directions differ from reviewed interface')
+    for pin,(d,c) in expected.items():
+        want=set() if pin in clocks else {c}
+        if related.get(pin,set())!=want:
+            raise GrayFifoError(f'dual-clock SRAM {master} pin {pin} arcs must relate only to {sorted(want)}')
+    for base,n in [('r_addr_in',5),('w_addr_in',5),('rd_out',546),('wd_in',546),('w_mask_in',546)]:
+        m=re.search(r'type\s*\(\s*'+re.escape(master+'_'+base+'_t')+r'\s*\)\s*\{([^}]+)\}',text)
+        if not m or not re.search(r'bit_width\s*:\s*'+str(n)+r'\s*;',m.group(1)):
+            raise GrayFifoError(f'dual-clock SRAM {master} wrong Liberty width for {base}')
+    return tuple(sorted((pin,c) for pin,(d,c) in expected.items()))
+
+
+def _macro_output_domain(net, cname):
+    mc=net.macros[cname];clock=mc['clock']
+    pin=clock['read_clock'] if isinstance(clock,dict) else clock
+    bits=mc['conn'].get(pin,[])
+    return net.clock_domain.get(bits[0]) if len(bits)==1 else None
+
+
 def _elaborate_sources(spec, root):
     root = Path(root)
     hashes, reviewed_files = [], {}
@@ -246,7 +376,8 @@ def _elaborate_sources(spec, root):
         digest = hashlib.sha256(content).hexdigest()
         hashes.append((path, digest))
         reviewed = [(m, r) for m, r in REVIEWED.items() if r['path'] == path] + \
-                   ([(RESET_SYNC[0], dict(path=RESET_SYNC[1], sha256=RESET_SYNC[2]))] if path == RESET_SYNC[1] else [])
+                   ([(RESET_SYNC[0], dict(path=RESET_SYNC[1], sha256=RESET_SYNC[2]))] if path == RESET_SYNC[1] else []) + \
+                   ([(RESET_BANK[0], dict(path=RESET_BANK[1], sha256=RESET_BANK[2]))] if path == RESET_BANK[1] else [])
         if reviewed:
             module, r = reviewed[0]
             if digest not in r['sha256']:
@@ -266,7 +397,7 @@ def _elaborate_sources(spec, root):
 
 
 @lru_cache(maxsize=16)
-def elaborate(root, top, sources, params, yosys):
+def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False):
     # Byte hashes are part of the key; no caller-supplied graph or receipt can stand in for this elaboration.
     root = Path(root)
     if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', top):
@@ -284,8 +415,11 @@ def elaborate(root, top, sources, params, yosys):
         args += f' -chparam {name} {value}'
     with tempfile.TemporaryDirectory(prefix='ot-gray-fifo-') as tmp:
         out = Path(tmp) / 'netlist.json'
-        cmd = (f'read_verilog -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
-               f'proc; flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
+        # (d) mode reads -defer (as the census / KV-HOSTCL-CDC2 lint): modules elaborate only with their actual
+        # parameters, so a default-parameter elaboration guard ($fatal in an initial) does not fire
+        keep = f'tcl {root}/physical/common_flow/ot_keep_regs.tcl; ' if preserve_kept else ''
+        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+               f'proc; {keep}flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
             raise GrayFifoError('reviewed_gray_fifos source elaboration failed: ' + (run.stdout + run.stderr)[-1500:])
@@ -368,7 +502,26 @@ GATES = {
 }
 
 
-def _bdd_of(net, bdd, bit, level, cache):
+def _cone_cut(net, bit, cut):
+    """Leaf bits of the combinational fan-in of `bit`, stopping at the `cut` nets as well as flops/ports/macros."""
+    seen, out, stack = set(), set(), [bit]
+    while stack:
+        b = stack.pop()
+        if not isinstance(b, int) or b in seen:
+            continue
+        seen.add(b)
+        drv = net.driver.get(b)
+        if b in cut or drv is None or drv[0] in ('flop', 'port', 'macro'):
+            out.add(b)
+        elif drv[0] == 'unsupported':
+            raise GrayFifoError(f'reviewed_gray_fifos unsupported cell {drv[2]} in a gating cone')
+        else:
+            stack.extend(drv[3].values())
+    return out
+
+
+
+def _bdd_of(net, bdd, bit, level, cache, cut=frozenset()):
     """Exact BDD of a netlist bit over its leaf (flop Q / input port) variables. Iterative (deep cones).
 
     A Yosys 'x' gate input (e.g. an out-of-range read-mux arm) is an unconstrained free variable of its own per gate
@@ -389,7 +542,7 @@ def _bdd_of(net, bdd, bit, level, cache):
         drv = net.driver.get(b)
         if drv is None:
             raise GrayFifoError(f'reviewed_gray_fifos undriven bit {b} in a storage-gating cone')
-        if drv[0] in ('flop', 'port'):
+        if drv[0] in ('flop', 'port') or b in cut:
             cache[b] = bdd.var(level(b))
             stack.pop()
             continue
@@ -433,7 +586,7 @@ def _scopes(document, spec, reviewed_files):
     module = document['modules'][spec['top']]
     found = []
     top_src = module.get('attributes', {}).get('src', '')
-    if spec['top'] in REVIEWED or spec['top'] == RESET_SYNC[0]:
+    if spec['top'] in REVIEWED or spec['top'] in (RESET_SYNC[0], RESET_BANK[0]):
         found.append(('', spec['top'], top_src))
     for name, cell in module['cells'].items():
         if cell['type'] != '$scopeinfo':
@@ -442,7 +595,7 @@ def _scopes(document, spec, reviewed_files):
         base = a.get('module_hdlname') or a.get('module', '')
         if base.startswith('$paramod'):
             base = base.rsplit('\\', 1)[-1]
-        if base in REVIEWED or base == RESET_SYNC[0]:
+        if base in REVIEWED or base in (RESET_SYNC[0], RESET_BANK[0]):
             found.append((name.lstrip('\\'), base, a.get('module_src', '')))
     out = []
     for scope, base, src in found:
@@ -470,27 +623,30 @@ def _extension_leaves(spec, ext, net, module, port_domain):
     macro_domain = {}
     for cname, mc in sorted(net.macros.items()):
         name = cname.lstrip('\\')
-        ck = mc['conn'].get(mc['clock'], [])
-        if mc['dirs'].get(mc['clock']) != 'input' or len(ck) != 1 or ck[0] not in net.clock_domain:
-            raise GrayFifoError(f'reviewed_gray_fifos macro {name} clock pin {mc["clock"]} is not tied directly to one '
-                                'declared clock root')
-        fam = macro_domain[cname] = net.clock_domain[ck[0]]
-        for pin, bits in sorted(mc['conn'].items()):
-            if pin == mc['clock'] or mc['dirs'][pin] != 'input':
-                continue
+        clock=mc['clock']
+        dual=isinstance(clock,dict)
+        clock_pins={clock['read_clock'],clock['write_clock']} if dual else {clock}
+        for cp in clock_pins:
+            ck=mc['conn'].get(cp,[])
+            if mc['dirs'].get(cp)!='input' or len(ck)!=1 or ck[0] not in net.clock_domain:
+                raise GrayFifoError(f'reviewed_gray_fifos macro {name} clock {cp} is not a declared direct root')
+        macro_domain[cname]=_macro_output_domain(net,cname)
+        for pin,bits in sorted(mc['conn'].items()):
+            if pin in clock_pins or mc['dirs'][pin]!='input':continue
+            target_clock=clock['pin_clock'].get(pin) if dual else clock
+            if target_clock is None:raise GrayFifoError(f'dual-clock SRAM {name} undeclared input role {pin}')
+            fam=net.clock_domain[mc['conn'][target_clock][0]]
             for b in bits:
                 for leaf in net.cone(b):
-                    if leaf in net.flops:
-                        ldom = net.domain(leaf)
-                    elif net.driver.get(leaf, ('',))[0] == 'macro':
-                        ldom = net.clock_domain.get(net.macros[net.driver[leaf][1]]['conn'][
-                            net.macros[net.driver[leaf][1]]['clock']][0])
-                    else:
-                        ldom = port_domain.get(leaf)
-                    if ldom != fam:
-                        what = net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('', str(leaf)))[1]
-                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
-                                            f'({ldom}); a macro must sit in one clock family')
+                    if leaf in net.flops:ldom=net.domain(leaf)
+                    elif net.driver.get(leaf,('',))[0]=='macro':ldom=_macro_output_domain(net,net.driver[leaf][1])
+                    else:ldom=port_domain.get(leaf)
+                    if ldom!=fam:
+                        if not dual:
+                            what=net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('',str(leaf)))[1]
+                            raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
+                                                f'({ldom}); a macro must sit in one clock family')
+                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} input {pin} reads wrong family {ldom}; expected {fam}')
     straps = {}
     for p in ext.get('die_constant_inputs', []):
         if p not in module['ports'] or module['ports'][p]['direction'] != 'input':
@@ -651,6 +807,8 @@ def _unsat(aig, po, abc):
 
 def _valid_lit(net, aig, fifo, memo):
     kind, terms = fifo['valid']
+    if kind == 'false':
+        return 0
     if kind == 'neq':
         valid = 0
         for a, b in terms:
@@ -710,7 +868,8 @@ def _lint(spec, root):
     ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
-                         tuple(sorted(spec.get('params', {}).items())), _yosys())
+                         tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None,
+                         preserve_kept=bool((ext or {}).get('dual_clock_srams')))
     net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
@@ -736,14 +895,16 @@ def _lint(spec, root):
             return macro_domain[drv[1]]
         return port_domain.get(leaf)
 
-    def bits_of(scope, reg):
+    evmode = spec.get(S.KEY) is not None
+
+    def bits_of(scope, reg, constant=False):
         prefix = scope + '.' if scope else ''
         keys = [k for k in net.bit_of if k == prefix + reg or re.fullmatch(re.escape(prefix + reg) + r'\[\d+\]', k)]
         keys.sort(key=lambda k: int(k[k.rfind('[') + 1:-1]) if k != prefix + reg else -1)
         out = []
         for k in keys:
             b = net.bit_of[k]
-            if b not in net.flops:
+            if b not in net.flops and not (constant and b in ('0', '1')):
                 raise GrayFifoError(f'reviewed_gray_fifos {k} is not a single flop Q')
             out.append(b)
         return out
@@ -755,8 +916,22 @@ def _lint(spec, root):
             raise GrayFifoError(f'reviewed_gray_fifos {net.key(q)} carries two roles {role[q]} / {r} (merged registers)')
         role[q] = r
 
-    fifos, resets, scopes = {}, [], _scopes(document, spec, reviewed_files)
+    fifos, resets, scopes, dead = {}, [], _scopes(document, spec, reviewed_files), []
     for scope, base in scopes:
+        if base == RESET_BANK[0]:
+            first=bits_of(scope,'first');last=bits_of(scope,'last')
+            if len(first)!=1 or not last or len(last)>32:
+                raise GrayFifoError('reviewed reset bank requires one landing and 1..32 kept leaves')
+            first=first[0];last=list(dict.fromkeys(last));pipe=[first]+last
+            doms={net.domain(q) for q in pipe}
+            if len(doms)!=1 or not all(net.flops[q]['pos'] for q in pipe) or net.flops[first]['d']!='1' or \
+               any(net.flops[q]['d']!=first for q in last) or len({net.flops[q]['r'] for q in pipe})!=1:
+                raise GrayFifoError('reviewed reset bank must be exactly 1 -> landing -> same-domain leaves with common async control')
+            if set(net.consumers.get(first,[]))!={(net.flops[q]['cell'],'D') for q in last}:
+                raise GrayFifoError('reviewed reset bank landing may drive only its final leaves')
+            for q in pipe:tag(q,('rst',f'r{len(resets)}','pipe',0 if q==first else 1))
+            resets.append(dict(scope=scope,domain=doms.pop(),stages=2,leaves=len(last)))
+            continue
         if base == RESET_SYNC[0]:
             pipe = bits_of(scope, 'reset_pipe')
             if len(pipe) < 2:
@@ -778,15 +953,23 @@ def _lint(spec, root):
         fid = f'f{len(fifos)}'
         chains = []
         for cname, src_reg, stages, direction in r['chains']:
-            src = bits_of(scope, src_reg)
+            src = bits_of(scope, src_reg, evmode)
             if isinstance(stages, str):
                 names, k = [], 0
-                while bits_of(scope, stages.format(k=k)):
+                while bits_of(scope, stages.format(k=k), evmode):
                     names.append(stages.format(k=k))
                     k += 1
             else:
                 names = list(stages)
-            st = [bits_of(scope, s) for s in names]
+            st = [bits_of(scope, s, evmode) for s in names]
+            if evmode and all(b in ('0', '1') for s in st for b in s):
+                # (d) mode only: synthesis left no synchroniser flop (a side tied off by a parameter, e.g. RMW_EN 0):
+                # the chain carries no crossing and tags nothing; every remaining dependence still meets the census.
+                dead.append(f'{scope or "<top>"}.{cname}')
+                continue
+            if any(b in ('0', '1') for b in src + [x for s in st for x in s]):
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) {cname} synchroniser is partly '
+                                    'constant (a pointer bit or stage was folded away)')
             if not src:
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) lost its {src_reg} publication register')
             if len(src) < r.get('min_ptr_bits', 1):
@@ -796,6 +979,8 @@ def _lint(spec, root):
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) {cname} synchroniser has '
                                     f'{len(st)} full-width stage(s); >= 2 destination stages are required')
             chains.append((cname, src_reg, names, direction, src, st))
+        if not chains:
+            continue                       # (d) mode: every publication constant, no crossing through this FIFO
         w_dom = {net.domain(q) for c in chains for q in (c[4] if c[3] == 'w2r' else c[5][0])}
         r_dom = {net.domain(q) for c in chains for q in (c[4] if c[3] == 'r2w' else c[5][0])}
         if len(w_dom) != 1 or len(r_dom) != 1:
@@ -842,7 +1027,13 @@ def _lint(spec, root):
         #   ot_link_afifo:  !rempty = (rgray != wgray_s[SYNC-1])
         #   ot_qwen_async_fifo_w / ot_async_fifo: rd_valid = rd_domain_rst_n && wr_online_r2 && !rd_empty
         stage = {c[0]: c for c in chains}
-        if r['valid'] == 'link':
+        if len(chains) < len(r['chains']):
+            # (d) mode: a partly constant FIFO never presents data: no storage or read stage may survive.
+            if storage or any(x[0] == 'rstage' and x[1] == fid for x in role.values()):
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) has constant publications but '
+                                    'live storage; unsupported')
+            valid = ('false', ())
+        elif r['valid'] == 'link':
             valid = ('neq', tuple(zip(stage['rptr'][4], stage['wptr'][5][-1])))
         else:
             empty = bits_of(scope, 'rd_empty')
@@ -858,7 +1049,9 @@ def _lint(spec, root):
             if net.domain(empty[0]) != reader:
                 raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
             valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
-        fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid,
+        head = {b for k, b in net.bit_of.items() if isinstance(b, int) and b not in net.flops and
+                re.fullmatch(re.escape(prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')) + r'(?:\[\d+\])?', k)}
+        fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid, head=head,
                           storage=set(storage), chains={c[0]: len(c[4]) for c in chains},
                           pointer_max_delay_ps=round(min(period[writer], period[reader]) - SETUP_UNCERTAINTY_PS, 3),
                           storage_max_delay_ps=round(period[reader] - SETUP_UNCERTAINTY_PS, 3))
@@ -892,9 +1085,11 @@ def _lint(spec, root):
         levels[lid] = dict(name=g['name'], src=sd, dst=dd, stages=len(st),
                            max_delay_ps=round(min(period[sd], period[dd]) - SETUP_UNCERTAINTY_PS, 3))
     straps_used = set()
+    heads = frozenset().union(*(f['head'] for f in fifos.values()))
+    events = _events(spec, net, tag, heads)
 
     # Census of every actual cross-family dependence (flop D and asynchronous control, and output ports).
-    consumers = {}
+    consumers, captures = {}, {}
     for q, f in net.flops.items():
         dom = net.domain(q)
         for pin, bit in (('D', f['d']), ('R', f['r'])):
@@ -928,6 +1123,16 @@ def _lint(spec, root):
                 if leaf not in net.flops:
                     raise GrayFifoError(f'reviewed_gray_fifos macro output {lname} ({ldom}) drives {net.key(q)} ({dom}); '
                                         'a hard macro is a leaf of its own clock family')
+                if lr and qr and lr[0] == 'esrc' and qr[0] == 'esync1' and lr[1:] == qr[1:]:
+                    if dom != events[lr[1]]['dst_domain'] or ldom != events[lr[1]]['src_domain']:
+                        raise GrayFifoError(f'{lr[1]}: crossing {lname} ({ldom}) -> {net.key(q)} ({dom}) is not the declared '
+                                            f'{events[lr[1]]["src_domain"]} -> {events[lr[1]]["dst_domain"]}')
+                    continue
+                if lr and lr[0] == 'epay' and (qr is None or qr[0] == 'ecap'):
+                    if dom != events[lr[1]]['dst_domain']:
+                        raise GrayFifoError(f'{lr[1]}: payload {lname} captured on {dom}, not {events[lr[1]]["dst_domain"]}')
+                    captures.setdefault(q, set()).add(lr[1])
+                    continue
                 if lr and qr and lr[0] == 'src' and qr[0] == 'sync1' and lr[1:] == qr[1:]:
                     continue
                 if lr and qr and lr[0] == 'lsrc' and qr[0] == 'lsync1' and lr[1] == qr[1]:
@@ -960,7 +1165,7 @@ def _lint(spec, root):
         # (b) storage gating, extension mode: every storage bit against ITS OWN FIFO's read-valid, exact SAT miter.
         _miter_storage_proof(net, consumers, fifos)
         for q, owners in sorted(consumers.items()):
-            if q not in role and len(owners) == 1:
+            if q not in role and q not in captures and len(owners) == 1:
                 tag(q, ('consumer', next(iter(owners)), 'mem', 0))
             else:
                 gated[q] = sorted(owners)
@@ -974,7 +1179,9 @@ def _lint(spec, root):
         fid = next(iter(owners))
         fifo = fifos[fid]
         kind, terms = fifo['valid']
-        if kind == 'neq':
+        if kind == 'false':
+            v = 0
+        elif kind == 'neq':
             v = 0
             for a, b in terms:
                 x, y = _bdd_of(net, bdd, a, level, cache), _bdd_of(net, bdd, b, level, cache)
@@ -993,6 +1200,7 @@ def _lint(spec, root):
                 raise GrayFifoError(f'reviewed_gray_fifos consumer {net.key(q)} loads FIFO {fifo["scope"] or "<top>"} '
                                     f'storage {net.key(s)} while the FIFO read-valid is false (read not gated by the FIFO)')
         tag(q, ('consumer', fid, 'mem', 0))
+    _event_captures(net, events, captures, role, tag, heads)
     record = dict(source_sha256=dict(hashes), roles={}, resets=resets,
                   fifos={fid: dict(scope=f['scope'], module=f['module'], writer=f['writer'], reader=f['reader'],
                                    chains=f['chains'], storage_bits=len(f['storage']),
@@ -1007,8 +1215,41 @@ def _lint(spec, root):
         cell = net.flops[q]['cell'].lstrip('\\')
         if not cell.startswith('$'):
             record['roles'].setdefault(cell, list(r))
+    # Launch aliases (HKV-HROOT 10-18): an untagged flop of the same cell type with the same D, clock and reset net as a
+    # tagged launch register (pointer src / event esrc / level lsrc) is the same register; ORFS synthesis' opt_merge
+    # may keep either one (qkd_hr_cdc_host r2: ot_async_fifo rd_gray[MSB] folded into rd_bin[MSB], Gray MSB == binary
+    # MSB).  Its names carry the launch role so the SDC binds whichever survives; a signature shared by two different
+    # tagged roles aliases nothing.
+    sig = {}
+    for p, f in net.flops.items():
+        sig.setdefault((f.get('t'), f['d'], f['c'], f['r']), []).append(p)
+    for q, r in sorted(role.items(), key=lambda x: str(x[0])):
+        if r[0] not in ('src', 'esrc', 'lsrc'):
+            continue
+        f = net.flops[q]
+        group = sig[(f.get('t'), f['d'], f['c'], f['r'])]
+        if len({role[x] for x in group if x in role}) != 1:
+            continue
+        for p in group:
+            if p in role:
+                continue
+            cell = net.flops[p]['cell'].lstrip('\\')
+            for k in list(net.names.get(p, [])) + ([cell] if not cell.startswith('$') else []):
+                if k not in record['roles']:
+                    record['roles'][k] = list(r)
+                    record.setdefault('launch_aliases', {})[k] = net.key(q)
     record['counts'] = {k: sum(1 for x in role.values() if x[0] == k)
                         for k in ('src', 'sync1', 'stage', 'mem', 'rstage', 'consumer', 'rst')}
+    if dead:
+        record['constant_chains'] = dead
+    if events:
+        record['events'] = {n: dict(src_domain=g['src_domain'], dst_domain=g['dst_domain'], width=g['width'],
+                                    payload_bits=g['payload_bits'], seen=g['seen_bits'],
+                                    sync_max_delay_ps=float(g['sync_max_delay_ps']),
+                                    payload_max_delay_ps=float(g.get('payload_max_delay_ps') or 0.0))
+                            for n, g in events.items()}
+        record['counts'].update({k: sum(1 for x in role.values() if x[0] == k)
+                                 for k in ('esrc', 'esync1', 'estage', 'epay', 'ecap')})
     if ext is not None:
         for fid, f in record['fifos'].items():
             f['storage_read'] = f['storage_read'] or any(fid in o for o in gated.values())
@@ -1023,8 +1264,159 @@ def _lint(spec, root):
         record['straps'] = sorted({p for p, _ in straps_used})
         record['strap_crossings'] = sorted(f'{p}->{d}' for p, d in straps_used)
         record['macros'] = {c.lstrip('\\'): macro_domain[c] for c in sorted(macro_domain)}
+        dual_macros = {}
+        for cname, mc in sorted(net.macros.items()):
+            if not isinstance(mc['clock'], dict):
+                continue
+            info = mc['clock']
+            clocks = {}
+            for cp in (info['read_clock'], info['write_clock']):
+                bit = mc['conn'][cp][0]
+                roots = []
+                for d in spec['clock_entry_domains'].values():
+                    for port in d['ports']:
+                        bits = m['ports'].get(port, {}).get('bits', [])
+                        bus = re.fullmatch(r'([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]', port)
+                        if not bits and bus and bus.group(1) in m['ports']:
+                            p = m['ports'][bus.group(1)]
+                            idx = int(bus.group(2)) - p.get('offset', 0)
+                            bits = [p['bits'][idx]] if not p.get('upto') and 0 <= idx < len(p['bits']) else []
+                        if bits == [bit]:
+                            roots.append(port)
+                if len(roots) != 1:
+                    raise GrayFifoError(f'dual-clock SRAM {cname}: ambiguous actual root for {cp}')
+                clocks[cp] = [roots[0], net.clock_domain[bit]]
+            dual_macros[cname.lstrip('\\')] = dict(master=mc['type'], clocks=clocks,
+                input_clocks={pin: info['pin_clock'][pin] for pin in mc['conn']
+                              if mc['dirs'][pin] == 'input' and pin not in clocks})
+        if dual_macros:
+            record['dual_clock_macros'] = dual_macros
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
     return record
+
+
+def _order(net):
+    """BDD variable order: interleave registers by bit index (comparators and adders stay linear)."""
+    def level(b):
+        idx = 0
+        for k in net.names.get(b, []):
+            m = re.search(r'\[(\d+)\]$', k)
+            if m:
+                idx = int(m.group(1))
+                break
+        return (idx << 24) + b
+    return level
+
+
+def _events(spec, net, tag, heads=frozenset()):
+    """(d): the cdc_sync_constraints group rules on the actual netlist, proved exactly (BDD)."""
+    groups = event_groups(spec)
+    out = {}
+    if not groups:
+        return out
+    bdd, cache, level = Bdd(), {}, _order(net)
+    f = lambda b: _bdd_of(net, bdd, b, level, cache, heads)       # FIFO heads as free variables (sound)
+    xor = lambda a, b: bdd.ite(a, bdd.neg(b), b)
+    for g in groups:
+        n, sd, dd = g['name'], g['src_domain'], g['dst_domain']
+        _, src = net.resolve(g['source'], 'source')
+        stages = [net.resolve(r, 'chain')[1] for r in g['chain']]
+        pay = [b for r in g.get('payload', []) for b in net.resolve(r, 'payload')[1]]
+        seen = net.resolve(g['seen'], 'seen')[1] if 'seen' in g else []
+        for q in src + pay:
+            if net.domain(q) != sd:
+                raise GrayFifoError(f'{n}: {net.key(q)} is not on the declared source family {sd}')
+        for bits in stages + ([seen] if seen else []):
+            if len(bits) != len(src):
+                raise GrayFifoError(f'{n}: chain/seen width {len(bits)} differs from the source width {len(src)}')
+            for q in bits:
+                if net.domain(q) != dd:
+                    raise GrayFifoError(f'{n}: chain/seen flop {net.key(q)} is not on the destination family {dd}')
+        for q in src + pay + seen + [b for s in stages for b in s]:
+            if not net.flops[q]['pos']:
+                raise GrayFifoError(f'{n}: {net.key(q)} is not a posedge flop')
+        # Gray: no two source bits change on one source edge, over every assignment of the actual cone.
+        change = [xor(f(net.flops[q]['d']), f(q)) for q in src]
+        for i in range(len(src)):
+            for j in range(i + 1, len(src)):
+                if bdd.ite(change[i], change[j], 0) != 0:
+                    raise GrayFifoError(f'{n}: source {g["source"]} is not a Gray counter (more than one bit changes per edge)')
+        # Chain: stage 1 D is the source bit, stage k+1 D is stage k Q, stage 1 Q drives only stage 2.
+        prev = src
+        for j, bits in enumerate(stages):
+            for i, q in enumerate(bits):
+                if net.flops[q]['d'] != prev[i]:
+                    raise GrayFifoError(f'{n}: chain stage {j + 1} bit {i} ({net.key(q)}) is not a direct flop of '
+                                        f'{"the source" if j == 0 else "the previous stage"} (logic in the synchroniser)')
+            prev = bits
+        for i, q in enumerate(stages[0]):
+            if net.consumers.get(q, []) != [(net.flops[stages[1][i]]['cell'], 'D')]:
+                raise GrayFifoError(f'{n}: stage-1 flop {net.key(q)} drives more than stage 2 '
+                                    f'({len(net.consumers.get(q, []))} sinks); a metastable stage must not be consumed')
+        # Seen: next state provably equal to the last chain stage (an acknowledge that follows the synchronised toggle).
+        for i, q in enumerate(seen):
+            if f(net.flops[q]['d']) != f(stages[-1][i]):
+                raise GrayFifoError(f'{n}: seen {net.key(q)} next state is not the last chain stage bit {i}')
+        # Payload holds whenever the source holds (published on the same edge).
+        hold = 1
+        for q, c in zip(src, change):
+            hold = bdd.ite(hold, bdd.neg(c), 0)
+        for p in pay:
+            if bdd.ite(hold, xor(f(net.flops[p]['d']), f(p)), 0) != 0:
+                raise GrayFifoError(f'{n}: payload {net.key(p)} changes while the Gray count holds '
+                                    '(payload not published with the event)')
+        for i, q in enumerate(src):
+            tag(q, ('esrc', n, 'ev', i))
+        for j, bits in enumerate(stages):
+            for i, q in enumerate(bits):
+                tag(q, ('esync1' if j == 0 else 'estage', n, 'ev', i))
+        for q in pay:
+            tag(q, ('epay', n, 'ev', 0))
+        out[n] = dict(g, src=src, stages=stages, pay=set(pay), seen=seen, width=len(src), payload_bits=len(pay),
+                      seen_bits=len(seen))
+    return out
+
+
+def _event_captures(net, events, captures, role, tag, heads=frozenset()):
+    """Gated capture: no source / stage-1 bit, >= one late stage (or seen), payload-independent with no event in flight."""
+    if not events:
+        return
+    bdd, cache, level = Bdd(), {}, _order(net)
+    f = lambda b: _bdd_of(net, bdd, b, level, cache, heads)
+    for q, gs in sorted(captures.items()):
+        if len(gs) != 1:
+            raise GrayFifoError(f'reviewed_gray_fifos capture {net.key(q)} mixes payload of several groups')
+        n = next(iter(gs))
+        e = events[n]
+        if q in role:
+            raise GrayFifoError(f'{n}: capture {net.key(q)} already carries role {role[q][:2]}')
+        leaves = net.cone(net.flops[q]['d'])
+        if leaves & (set(e['src']) | set(e['stages'][0])):
+            raise GrayFifoError(f'{n}: capture {net.key(q)} reads the Gray source or the metastable stage 1')
+        late = [s for s in e['stages'][1:]] + ([e['seen']] if e['seen'] else [])
+        if not leaves & {b for s in late for b in s}:
+            raise GrayFifoError(f'{n}: capture {net.key(q)} is not gated by the synchronised count (no chain stage >= 2)')
+        for leaf in leaves:
+            # Another group's metastable first stage is never data; its later stages, captures and destination-family
+            # registers are ordinary destination-family state (free variables of the gating proof below).
+            r = role.get(leaf)
+            if leaf in net.flops and r and r[0] in ('sync1', 'esync1'):
+                raise GrayFifoError(f'{n}: capture {net.key(q)} reads the metastable stage 1 of {r[1]}')
+        quiet = 1
+        for i in range(e['width']):
+            for a, b in zip(late, late[1:]):
+                quiet = bdd.ite(quiet, bdd.ite(f(a[i]), f(b[i]), bdd.neg(f(b[i]))), 0)
+        fn = f(net.flops[q]['d'])
+        for s in sorted(leaves & e['pay']):
+            dep = bdd.ite(bdd.restrict(fn, level(s), 0), bdd.neg(bdd.restrict(fn, level(s), 1)), bdd.restrict(fn, level(s), 1))
+            if bdd.ite(dep, quiet, 0) != 0:
+                raise GrayFifoError(f'{n}: capture {net.key(q)} loads payload {net.key(s)} with no event on the '
+                                    'synchronised count (capture not gated)')
+        tag(q, ('ecap', n, 'ev', 0))
+    for n, e in events.items():
+        if e['pay'] and not any(r[0] == 'ecap' and r[1] == n for r in role.values()):
+            raise GrayFifoError(f'{n}: payload has no capture register')
+
 
 
 def _word(value):
@@ -1043,6 +1435,14 @@ def bindings(record):
     periods = ' '.join(f'{n} {p!r}' for n, p in sorted(record['periods_ps'].items()))
     text = (f'set ::ot_gf_roles [dict create {roles}]\nset ::ot_gf_fifos [dict create {fifos}]\n'
             f'set ::ot_gf_periods [dict create {periods}]\nset ::ot_gf_uncertainty {SETUP_UNCERTAINTY_PS!r}\n')
+    if record.get('dual_clock_macros'):
+        entries = []
+        for name, m in sorted(record['dual_clock_macros'].items()):
+            clocks = ' '.join(_word(cp) + ' {' + _word(root) + ' ' + _word(domain) + '}'
+                              for cp, (root, domain) in sorted(m['clocks'].items()))
+            pins = ' '.join(_word(pin) + ' ' + _word(cp) for pin, cp in sorted(m['input_clocks'].items()))
+            entries.append(_word(name) + ' {master ' + _word(m['master']) + ' clocks {' + clocks + '} inputs {' + pins + '}}')
+        text += 'set ::ot_gf_dual_macros [dict create ' + ' '.join(entries) + ']\n'
     if 'levels' not in record:
         return text
     levels = ' '.join('{' + lid + '} {src ' + v['src'] + ' dst ' + v['dst'] + ' bound ' + repr(v['max_delay_ps']) + '}'
@@ -1066,14 +1466,92 @@ def extend(body, spec, root):
                                     '          continue\n')
     body = body.replace(ASYNC_GUARD, '    if {[dict exists $async_pins [get_full_name $pin]]} {ot_gf_async $pin $cells $inputs; continue}')
     body = body.replace(S.MARKER, '  ot_gf_complete $cells\n' + S.MARKER)
+    if record.get('dual_clock_macros'):
+        marker = '    set expected [dict get $cells $cell]\n'
+        if body.count(marker) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM input ownership hook changed')
+        body = body.replace(marker, marker + '    set expected [ot_gf_dual_input_domain $cell $pin $expected]\n')
+        start = 'proc ot_ce_leaf_ownership {inputs outputs} {\n'
+        if body.count(start) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM ownership cache boundary changed')
+        body = body.replace(start, start + '  set ::ot_gf_dual_checked {}\n  set ::ot_gf_dual_constant_counts {}\n')
+        fanin = '    foreach start [get_fanin -flat -startpoints_only -to $pin] {\n'
+        if body.count(fanin) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM fanin hook changed')
+        body = body.replace(fanin, fanin + '      if {[ot_gf_dual_constant_self $start $pin]} continue\n')
+        body = body.replace('  ot_gf_complete $cells\n',
+                            '  ot_gf_complete $cells\n  puts \"OT_GF DUAL_LIBERTY_CONSTANT_INPUTS $::ot_gf_dual_constant_counts\"\n')
+        body = DUAL_CLOCK_TCL + '\n' + body
     if 'levels' not in record:
-        return bindings(record) + TCL + '\n' + body
+        return bindings(record) + _event_tcl(TCL, record) + '\n' + body
     if body.count(STRAP_GUARD) != 1:
         raise GrayFifoError('reviewed_gray_fifos multi-root input ownership check changed; revalidate extension')
     body = body.replace(STRAP_GUARD, STRAP_GUARD.replace(
         '        set name [get_full_name $start]\n',
         '        set name [get_full_name $start]\n        if {[ot_gf_strap $start $pin $name $expected $inputs]} continue\n'))
-    return bindings(record) + ext_tcl() + '\n' + body
+    return bindings(record) + _event_tcl(ext_tcl(), record) + '\n' + body
+
+
+def _event_tcl(tcl, record):
+    """(d) only: the event-synchroniser branches (absent, the generated SDC is byte-identical)."""
+    if not record.get('events'):
+        return tcl
+    hooks = (EVENT_CROSSING_HOOK, EVENT_COMPLETE_HOOK, EVENT_DONE_HOOK)
+    if any(tcl.count(h) != 1 for h in hooks):
+        raise GrayFifoError('reviewed_gray_fifos crossing procedures changed; revalidate event extension')
+    tcl = (tcl.replace(EVENT_CROSSING_HOOK, EVENT_CROSSING_HOOK + EVENT_CROSSING_CALL)
+           .replace(EVENT_COMPLETE_HOOK, EVENT_COMPLETE_CALL + EVENT_COMPLETE_HOOK)
+           .replace(EVENT_DONE_HOOK, '  ot_gf_event_complete\n' + EVENT_DONE_HOOK))
+    events = ' '.join('{' + n + '} {src ' + g['src_domain'] + ' dst ' + g['dst_domain'] + ' width ' + str(g['width'])
+                      + ' payload ' + str(g['payload_bits']) + ' sync ' + repr(g['sync_max_delay_ps'])
+                      + ' pay ' + repr(g['payload_max_delay_ps']) + '}' for n, g in sorted(record['events'].items()))
+    return f'set ::ot_gf_events [dict create {events}]\n' + EVENT_TCL + tcl
+
+
+EVENT_CROSSING_HOOK = '    error "OT_GF: cross-family control pin [get_full_name $pin]"\n  }\n'
+EVENT_CROSSING_CALL = '  if {[ot_gf_event_crossing $start $pin $source $target $source_domain $target_domain]} return\n'
+EVENT_COMPLETE_HOOK = '    if {$k eq "" || $k eq "rst"} continue\n'
+EVENT_COMPLETE_CALL = '    if {[string index $k 0] eq "e"} {ot_gf_event_domain $cell $domain $k $f; continue}\n'
+EVENT_DONE_HOOK = '  puts "OT_GF STRUCTURAL_PASS '
+EVENT_TCL = r'''
+# OT_GF events (gray_fifo_cdc_constraints.py (d)): reviewed event-synchroniser groups. Source bit i -> stage-1 bit i and
+# payload -> gated capture only, each bounded from the actual launch register to the actual D pin.
+proc ot_gf_event_crossing {start pin source target source_domain target_domain} {
+  lassign [ot_gf_role $source] sk sf sc si
+  lassign [ot_gf_role $target] tk tf tc ti
+  if {$sk ni {esrc epay} && ($sk eq "mem" || $tk ni {esync1 estage ecap})} {return 0}
+  if {$sf ne $tf || ![dict exists $::ot_gf_events $sf]} {
+    error "OT_GF: unapproved actual event crossing $source -> $target ($sk $sf -> $tk $tf)"
+  }
+  set g [dict get $::ot_gf_events $sf]
+  if {$source_domain ne [dict get $g src] || $target_domain ne [dict get $g dst]} {
+    error "OT_GF: event crossing $source -> $target is $source_domain -> $target_domain, declared [dict get $g src] -> [dict get $g dst]"
+  }
+  if {$sk eq "esrc" && $tk eq "esync1" && $si == $ti} {
+    ot_gf_bound $start $pin [dict get $g sync]
+  } elseif {$sk eq "epay" && $tk eq "ecap"} {
+    ot_gf_bound $start $pin [dict get $g pay]
+  } else {
+    error "OT_GF: unapproved actual event crossing $source -> $target ($sf $sk $si -> $tk $ti)"
+  }
+  dict incr ::ot_gf_seen [list $sf $sk ev $si]
+  puts "OT_GF BOUNDED $sf $sk ev -> $tk $source -> $target"
+  return 1
+}
+proc ot_gf_event_domain {cell domain k g} {
+  set info [dict get $::ot_gf_events $g]
+  set want [expr {$k in {esrc epay} ? [dict get $info src] : [dict get $info dst]}]
+  if {$domain ne $want} {error "OT_GF: event register $cell ($g $k) is in $domain, declared $want; no exception on a same-family path"}
+}
+proc ot_gf_event_complete {} {
+  dict for {g info} $::ot_gf_events {
+    for {set i 0} {$i < [dict get $info width]} {incr i} {
+      if {![dict exists $::ot_gf_seen [list $g esrc ev $i]]} {error "OT_GF: missing actual synchronised event crossing $g bit $i"}
+    }
+    if {[dict get $info payload] && ![dict exists $::ot_gf_seen [list $g epay ev 0]]} {error "OT_GF: missing actual payload crossing $g"}
+  }
+}
+'''
 
 
 STRAP_GUARD = ('        set name [get_full_name $start]\n'
@@ -1111,7 +1589,7 @@ proc ot_gf_gated_fifos {cell} {
     foreach net [get_nets -quiet -of_objects $p] {lappend names [string map {\\ {}} [get_full_name $net]]}
   }
   set out {}
-  foreach n $names {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
   return [dict keys $out]
 }
 proc ot_gf_ext_crossing {start pin source target source_domain target_domain sk sf tk tf} {
@@ -1171,18 +1649,27 @@ TCL = r'''
 # synchroniser, a FIFO-valid-gated storage read or an ot_reset_sync input. Each actual mapped crossing must match a
 # tagged pair; no other path receives an exception and no false path or clock group exists.
 set ::ot_gf_seen {}
+proc ot_gf_names {names} {
+  # Recipe-3 pin registers (physical/common_flow/ot_pin_regs.tcl, OT_PIN_REGS=1) wrap the elaborated top as instance
+  # u_ot_pr_core (a reserved name); the generator tagged the unwrapped names, so a wrapped name is also looked up without
+  # that prefix (a name matching two roles is still refused as ambiguous).
+  set out $names
+  foreach n $names {if {[regexp {^u_ot_pr_core[./](.+)$} $n -> inner]} {lappend out $inner}}
+  return $out
+}
 proc ot_gf_role {cell} {
   set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
   set names [list $full]
   if {[regexp {^([^$]+)\$} $full -> base]} {lappend names $base}
   set roles {}
-  foreach n $names {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
   if {![dict size $roles]} {
     foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
       if {[get_property $p direction] ne "output"} continue
       foreach net [get_nets -quiet -of_objects $p] {
-        set n [string map {\\ {}} [get_full_name $net]]
-        if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        foreach n [ot_gf_names [list [string map {\\ {}} [get_full_name $net]]]] {
+          if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        }
       }
     }
   }
@@ -1198,20 +1685,31 @@ proc ot_gf_launch {start} {
   if {[llength $launch] != 1} {error "OT_GF: missing unique launch register"}
   return $launch
 }
+set ::ot_gf_pending {}
 proc ot_gf_bound {start target bound} {
+  # Constraints are applied here; the finite-path proof runs once all are applied (ot_gf_verify). Interleaving
+  # set_*_delay with find_timing_paths re-searched the whole design per crossing (O(N^2): ~13-50 crossings/min, a
+  # 12.8k-bit storage FIFO leaf ~15 h in synth_odb, HKV-HRADM 10-19).
   set launch [ot_gf_launch $start]
   set_max_delay -ignore_clock_latency $bound -from $launch -to $target
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_GF PATH_DEFERRED [get_full_name $start] -> [get_full_name $target] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_GF: missing finite bounded $kind path [get_full_name $start] -> [get_full_name $target]"
+  lappend ::ot_gf_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+}
+proc ot_gf_verify {} {
+  foreach item $::ot_gf_pending {
+    lassign $item launch target sname tname
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_GF PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_GF: missing finite bounded $kind path $sname -> $tname"
+      }
     }
   }
+  set ::ot_gf_pending {}
 }
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
@@ -1267,11 +1765,41 @@ proc ot_gf_async {pin cells inputs} {
     puts "OT_GF BOUNDED reset $name -> [get_full_name $pin]"
   }
 }
+proc ot_gf_chain_dir {info c} {
+  # (source family, destination family) of chain c: wptr/wonl publish writer -> reader, rptr/ronl reader -> writer.
+  if {[lsearch -exact {wptr wonl} $c] >= 0} {return [list [dict get $info writer] [dict get $info reader]]}
+  return [list [dict get $info reader] [dict get $info writer]]
+}
+proc ot_gf_online_merged {f c live} {
+  # HKV-HRADM3 10-19 (qkd_hr_cdc_host/pc r5, as OT_ASYNC_GRAY's ot_ag_online_merged, HBMA-SVC 10-17): an online flag
+  # chain is constant 1 after its domain reset, then a two-flop synchroniser.  Two FIFOs whose online chains have the
+  # same launch family, capture family and conditioned reset (u_done host->core ronl == u_ing core->host wonl: core
+  # launch, host stages) are bit-identical, and synthesis' opt_merge keeps ONE chain under one FIFO's names.  A missing
+  # online crossing is admitted only when (a) no mapped register of this FIFO's chain is left (src, stage 1 or stage 2:
+  # merged away, not left unaudited) and (b) another FIFO's online chain in the same direction is live and its crossing
+  # was bounded here.  Gray pointers and storage are never admitted this way.
+  if {$c ni {wonl ronl} || [dict exists $live [list $f $c]]} {return 0}
+  set dir [ot_gf_chain_dir [dict get $::ot_gf_fifos $f] $c]
+  dict for {g ginfo} $::ot_gf_fifos {
+    if {$g eq $f} continue
+    foreach gc {wonl ronl} {
+      if {![dict exists [dict get $ginfo chains] $gc] || [ot_gf_chain_dir $ginfo $gc] ne $dir} continue
+      if {[dict exists $live [list $g $gc]] && [dict exists $::ot_gf_seen [list $g src $gc 0]]} {
+        puts "OT_GF MERGED_ONLINE $f $c -> $g $gc ([join $dir { -> }])"
+        return 1
+      }
+    }
+  }
+  return 0
+}
 proc ot_gf_complete {cells} {
+  ot_gf_verify
+  set live {}
   # Every tagged register sits in its tagged family (a tag on a same-family path is refused here).
   dict for {cell domain} $cells {
     lassign [ot_gf_role $cell] k f c i
     if {$k eq "" || $k eq "rst"} continue
+    if {$k in {src sync1 stage}} {dict set live [list $f $c] 1}
     set info [dict get $::ot_gf_fifos $f]
     set w [dict get $info writer]; set r [dict get $info reader]
     set wside [expr {[lsearch -exact {wptr wonl} $c] >= 0}]
@@ -1286,11 +1814,120 @@ proc ot_gf_complete {cells} {
   dict for {f info} $::ot_gf_fifos {
     dict for {c width} [dict get $info chains] {
       for {set i 0} {$i < $width} {incr i} {
-        if {![dict exists $::ot_gf_seen [list $f src $c $i]]} {error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"}
+        if {![dict exists $::ot_gf_seen [list $f src $c $i]] && !($i == 0 && $width == 1 && [ot_gf_online_merged $f $c $live])} {
+          error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"
+        }
       }
     }
     if {[dict get $info store_read] && ![dict exists $::ot_gf_seen [list $f mem mem 0]]} {error "OT_GF: missing actual storage crossing $f"}
   }
   puts "OT_GF STRUCTURAL_PASS [dict size $::ot_gf_seen] crossing classes (bounded reviewed FIFO crossings only; no physical closure claim)"
+}
+'''
+
+# Only the explicitly source/three-corner-role-verified dual-clock SRAM mode uses this hook.
+# No crossing is excepted: the original ownership loop checks the same actual input cone
+# against this pin's own clock family instead of the macro output/read-clock family.
+DUAL_CLOCK_TCL = r'''
+proc ot_gf_dual_root_port {pin} {
+  set block [ord::get_db_block]
+  set instance [$block findInst [get_full_name [get_cells -of_objects $pin]]]
+  if {$instance in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock instance"}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock pin"}
+  set net [$iterm getNet];set seen {}
+  for {set step 0} {$step < 256 && $net ni {"" NULL}} {incr step} {
+    set n [$net getName]
+    if {[dict exists $seen $n]} {error "OT_GF: cyclic dual SRAM clock cone"}
+    dict set seen $n 1
+    set ports [$net getBTerms]
+    if {[llength $ports]} {
+      if {[llength $ports] != 1 || [[lindex $ports 0] getIoType] ne "INPUT"} {
+        error "OT_GF: ambiguous dual SRAM clock port"
+      }
+      return [[lindex $ports 0] getName]
+    }
+    set drivers {}
+    foreach term [$net getITerms] {if {[$term isOutputSignal]} {lappend drivers $term}}
+    if {[llength $drivers] != 1} {error "OT_GF: missing unique dual SRAM clock driver"}
+    set driver [lindex $drivers 0];set cell [$driver getInst];set inputs {};set outputs {}
+    foreach term [$cell getITerms] {
+      if {[$term isInputSignal]} {lappend inputs $term}
+      if {[$term isOutputSignal]} {lappend outputs $term}
+    }
+    if {[llength $inputs] != 1 || [llength $outputs] != 1} {
+      error "OT_GF: dual SRAM clock cone must contain only actual unary BUF/INV functions"
+    }
+    set input [lindex $inputs 0];set input_name [[$input getMTerm] getName]
+    set master [[$cell getMaster] getName];set output_name [[$driver getMTerm] getName]
+    set truth {};set matched 0
+    foreach library [get_libs -quiet *] {
+      set lc [$library find_liberty_cell $master]
+      if {$lc in {"" NULL}} continue
+      set lp [$lc find_liberty_port $output_name]
+      if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {
+        error "OT_GF: dual SRAM clock buffer lacks actual Liberty output role"
+      }
+      set function [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$lp function]]
+      if {$function eq $input_name} {set value 1} elseif {$function in [list !$input_name ~$input_name ${input_name}']} {
+        set value -1
+      } else {error "OT_GF: dual SRAM clock cone is not Liberty-functional BUF/INV"}
+      dict set truth $value 1;incr matched
+    }
+    if {!$matched || [dict size $truth] != 1} {error "OT_GF: dual SRAM clock buffer Liberty corners disagree"}
+    set net [$input getNet]
+  }
+  error "OT_GF: dual SRAM clock root is not a unique declared input"
+}
+proc ot_gf_dual_constant_self {start pin} {
+  # OpenSTA constant-prunes an input's upstream graph and can return that input
+  # itself as the startpoint. Prove its OpenDB NET from actual Liberty functions;
+  # never infer constancy from a pin/cell name, clock absence, or case analysis.
+  if {[sta::object_type $start] ne "Pin" || [get_full_name $start] ne [get_full_name $pin]} {return 0}
+  set cell [get_cells -of_objects $pin];set full [string map {\\ {}} [get_full_name $cell]]
+  set reviewed 0
+  foreach n [ot_gf_names [list $full]] {if {[dict exists $::ot_gf_dual_macros $n]} {set reviewed 1}}
+  if {!$reviewed} {return 0}
+  set instance [[ord::get_db_block] findInst [get_full_name $cell]]
+  if {$instance in {"" NULL}} {return 0}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL} || ![$iterm isInputSignal]} {return 0}
+  if {![ot_ce_constant_net [$iterm getNet] {} 64]} {return 0}
+  set base [get_property $pin lib_pin_name];regsub {\[[0-9]+\]$} $base {} base
+  dict incr ::ot_gf_dual_constant_counts "$full/$base" 1
+  return 1
+}
+proc ot_gf_dual_input_domain {cell pin fallback} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set found {}
+  foreach n [ot_gf_names [list $full]] {
+    if {[dict exists $::ot_gf_dual_macros $n]} {lappend found $n}
+  }
+  if {![llength $found]} {return $fallback}
+  if {[llength $found] != 1} {error "OT_GF: ambiguous reviewed dual SRAM identity"}
+  set info [dict get $::ot_gf_dual_macros [lindex $found 0]]
+  if {[get_property [get_cells $cell] ref_name] ne [dict get $info master]} {
+    error "OT_GF: mapped dual SRAM master differs from reviewed source/Liberty role"
+  }
+  if {![dict exists $::ot_gf_dual_checked $full]} {
+    dict for {cp role} [dict get $info clocks] {
+      lassign $role root domain
+      set pins [get_pins -quiet $cell/$cp]
+      if {[llength $pins] != 1 || [ot_gf_dual_root_port [lindex $pins 0]] ne $root} {
+        error "OT_GF: mapped dual SRAM clock $cell/$cp differs from its exact reviewed root $root"
+      }
+    }
+    if {$fallback ne [lindex [dict get $info clocks rclk] 1]} {
+      error "OT_GF: mapped dual SRAM output ownership differs from its reviewed read-clock family"
+    }
+    dict set ::ot_gf_dual_checked $full 1
+  }
+  set base [get_property $pin lib_pin_name]
+  regsub {\[[0-9]+\]$} $base {} base
+  if {![dict exists $info inputs $base] || [get_property $pin direction] ne "input"} {
+    error "OT_GF: unreviewed actual dual SRAM input pin [get_full_name $pin]"
+  }
+  set cp [dict get $info inputs $base]
+  return [lindex [dict get $info clocks $cp] 1]
 }
 '''

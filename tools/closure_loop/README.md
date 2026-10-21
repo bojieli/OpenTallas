@@ -395,3 +395,13 @@ the job source shared only by its sequential bench stages. CWD, `$SRC`, `{SRC}`
 and legacy `{RUN}/src` point there. Route stages retain their original `src`.
 This prevents a negative control's in-place source mutation from racing synthesis.
 Previously launched stages require an owner audit before adoption.
+
+## Restarts are drained (DAEMON-FIX2, 2026-10-19)
+
+`systemctl --user restart closure-loop` (tool syncs) sends SIGTERM to the daemon (KillMode=process). The daemon then
+starts no new job step, lets every in-flight step finish and save its job, waits for the recovery pass and a running
+deferred record merge, logs `DRAINED`, and exits; systemd starts the new daemon. The unit drop-in sets
+`TimeoutStopSec=45min` so a long verdict step is not SIGKILLed; the restart command may therefore block for the length
+of the longest in-flight step (`DRAIN:` lines in daemon.log name them). Steps that change files on a remote host save
+the job first (`checkpoint()`), and the helper set is unpacked into `cl/.ship.*` and moved in with the sidecar last, so
+even a SIGKILL cannot leave a job and its run dir on different helper plans that the daemon cannot reconcile.
