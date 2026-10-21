@@ -1,0 +1,440 @@
+{
+ "c45_n0": {
+  "vme": {
+   "issue_ahead": {
+    "xl": 0,
+    "coll": 0,
+    "dma": 0,
+    "idx": 0
+   },
+   "bl_dma": "kvwb",
+   "layout": "rotated",
+   "bw": 45.03
+  },
+  "ds_ar_tok_s": 1217.6,
+  "qwen_tok_s": 407.2,
+  "ds_ar_cycles": 985561.6,
+  "qwen_cycles": 2947002.2,
+  "ds_clients": {
+   "xl": {
+    "base": 52499.0,
+    "exposed": 52499.0,
+    "records": 1175.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 30449.2,
+    "exposed": 30449.2,
+    "records": 562.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 1112.4,
+    "exposed": 1112.4,
+    "records": 40.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 8763.0,
+    "exposed": 8763.0,
+    "records": 49.0,
+    "raw_bound": 0
+   }
+  },
+  "qwen_clients": {
+   "xl": {
+    "base": 12912.5,
+    "exposed": 12912.5,
+    "records": 289.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 3955.1,
+    "exposed": 3955.1,
+    "records": 73.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 2002.3,
+    "exposed": 2002.3,
+    "records": 72.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 0.0,
+    "exposed": 0.0,
+    "records": 0,
+    "raw_bound": 0
+   }
+  },
+  "all_row": {
+   "ds": 1338.1,
+   "qwen": 410.1
+  }
+ },
+ "c45_n0_all": {
+  "vme": {
+   "issue_ahead": {
+    "xl": 0,
+    "coll": 0,
+    "dma": 0,
+    "idx": 0
+   },
+   "bl_dma": "all",
+   "layout": "rotated",
+   "bw": 45.03
+  },
+  "ds_ar_tok_s": 1206.3,
+  "qwen_tok_s": 407.0,
+  "ds_ar_cycles": 994749.7,
+  "qwen_cycles": 2948059.6,
+  "ds_clients": {
+   "xl": {
+    "base": 52499.0,
+    "exposed": 52499.0,
+    "records": 1175.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 30449.2,
+    "exposed": 30449.2,
+    "records": 562.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 1112.4,
+    "exposed": 1112.4,
+    "records": 40.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 8763.0,
+    "exposed": 8763.0,
+    "records": 49.0,
+    "raw_bound": 0
+   }
+  },
+  "qwen_clients": {
+   "xl": {
+    "base": 12912.5,
+    "exposed": 12912.5,
+    "records": 289.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 3955.1,
+    "exposed": 3955.1,
+    "records": 73.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 2002.3,
+    "exposed": 2002.3,
+    "records": 72.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 0.0,
+    "exposed": 0.0,
+    "records": 0,
+    "raw_bound": 0
+   }
+  },
+  "all_row": {
+   "ds": 1338.1,
+   "qwen": 410.1
+  }
+ },
+ "c45_n1": {
+  "vme": {
+   "issue_ahead": {
+    "xl": 1,
+    "coll": 1,
+    "dma": 1,
+    "idx": 1
+   },
+   "bl_dma": "kvwb",
+   "layout": "rotated",
+   "bw": 45.03
+  },
+  "ds_ar_tok_s": 1276.6,
+  "qwen_tok_s": 408.4,
+  "ds_ar_cycles": 939965.2,
+  "qwen_cycles": 2937949.3,
+  "ds_clients": {
+   "xl": {
+    "base": 52499.0,
+    "exposed": 11954.6,
+    "records": 1175.0,
+    "raw_bound": 373.0
+   },
+   "coll": {
+    "base": 30449.2,
+    "exposed": 13513.9,
+    "records": 562.0,
+    "raw_bound": 270.0
+   },
+   "dma": {
+    "base": 1112.4,
+    "exposed": 632.4,
+    "records": 40.0,
+    "raw_bound": 40.0
+   },
+   "idx": {
+    "base": 8763.0,
+    "exposed": 7872.0,
+    "records": 49.0,
+    "raw_bound": 48.0
+   }
+  },
+  "qwen_clients": {
+   "xl": {
+    "base": 12912.5,
+    "exposed": 5915.1,
+    "records": 289.0,
+    "raw_bound": 181.0
+   },
+   "coll": {
+    "base": 3955.1,
+    "exposed": 3663.1,
+    "records": 73.0,
+    "raw_bound": 73.0
+   },
+   "dma": {
+    "base": 2002.3,
+    "exposed": 245.2,
+    "records": 72.0,
+    "raw_bound": 0.0
+   },
+   "idx": {
+    "base": 0.0,
+    "exposed": 0.0,
+    "records": 0,
+    "raw_bound": 0
+   }
+  },
+  "all_row": {
+   "ds": 1338.1,
+   "qwen": 410.1
+  }
+ },
+ "s90_n0": {
+  "vme": {
+   "issue_ahead": {
+    "xl": 0,
+    "coll": 0,
+    "dma": 0,
+    "idx": 0
+   },
+   "bl_dma": "kvwb",
+   "layout": "rotated",
+   "bw": 90.67
+  },
+  "ds_ar_tok_s": 1422.3,
+  "qwen_tok_s": 747.2,
+  "ds_ar_cycles": 843726.2,
+  "qwen_cycles": 1606026.8,
+  "ds_clients": {
+   "xl": {
+    "base": 52499.0,
+    "exposed": 52499.0,
+    "records": 1175.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 30449.2,
+    "exposed": 30449.2,
+    "records": 562.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 1112.4,
+    "exposed": 1112.4,
+    "records": 40.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 8763.0,
+    "exposed": 8763.0,
+    "records": 49.0,
+    "raw_bound": 0
+   }
+  },
+  "qwen_clients": {
+   "xl": {
+    "base": 12912.5,
+    "exposed": 12912.5,
+    "records": 289.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 3955.1,
+    "exposed": 3955.1,
+    "records": 73.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 2002.3,
+    "exposed": 2002.3,
+    "records": 72.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 0.0,
+    "exposed": 0.0,
+    "records": 0,
+    "raw_bound": 0
+   }
+  },
+  "all_row": {
+   "ds": 1596.8,
+   "qwen": 757.0
+  }
+ },
+ "s90_n0_all": {
+  "vme": {
+   "issue_ahead": {
+    "xl": 0,
+    "coll": 0,
+    "dma": 0,
+    "idx": 0
+   },
+   "bl_dma": "all",
+   "layout": "rotated",
+   "bw": 90.67
+  },
+  "ds_ar_tok_s": 1406.9,
+  "qwen_tok_s": 746.7,
+  "ds_ar_cycles": 852914.9,
+  "qwen_cycles": 1607084.4,
+  "ds_clients": {
+   "xl": {
+    "base": 52499.0,
+    "exposed": 52499.0,
+    "records": 1175.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 30449.2,
+    "exposed": 30449.2,
+    "records": 562.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 1112.4,
+    "exposed": 1112.4,
+    "records": 40.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 8763.0,
+    "exposed": 8763.0,
+    "records": 49.0,
+    "raw_bound": 0
+   }
+  },
+  "qwen_clients": {
+   "xl": {
+    "base": 12912.5,
+    "exposed": 12912.5,
+    "records": 289.0,
+    "raw_bound": 0
+   },
+   "coll": {
+    "base": 3955.1,
+    "exposed": 3955.1,
+    "records": 73.0,
+    "raw_bound": 0
+   },
+   "dma": {
+    "base": 2002.3,
+    "exposed": 2002.3,
+    "records": 72.0,
+    "raw_bound": 0
+   },
+   "idx": {
+    "base": 0.0,
+    "exposed": 0.0,
+    "records": 0,
+    "raw_bound": 0
+   }
+  },
+  "all_row": {
+   "ds": 1596.8,
+   "qwen": 757.0
+  }
+ },
+ "s90_n1": {
+  "vme": {
+   "issue_ahead": {
+    "xl": 1,
+    "coll": 1,
+    "dma": 1,
+    "idx": 1
+   },
+   "bl_dma": "kvwb",
+   "layout": "rotated",
+   "bw": 90.67
+  },
+  "ds_ar_tok_s": 1494.3,
+  "qwen_tok_s": 751.4,
+  "ds_ar_cycles": 803045.4,
+  "qwen_cycles": 1596973.9,
+  "ds_clients": {
+   "xl": {
+    "base": 52499.0,
+    "exposed": 14721.4,
+    "records": 1175.0,
+    "raw_bound": 450.0
+   },
+   "coll": {
+    "base": 30449.2,
+    "exposed": 13541.5,
+    "records": 562.0,
+    "raw_bound": 270.0
+   },
+   "dma": {
+    "base": 1112.4,
+    "exposed": 632.4,
+    "records": 40.0,
+    "raw_bound": 40.0
+   },
+   "idx": {
+    "base": 8763.0,
+    "exposed": 7872.0,
+    "records": 49.0,
+    "raw_bound": 48.0
+   }
+  },
+  "qwen_clients": {
+   "xl": {
+    "base": 12912.5,
+    "exposed": 5915.1,
+    "records": 289.0,
+    "raw_bound": 181.0
+   },
+   "coll": {
+    "base": 3955.1,
+    "exposed": 3663.1,
+    "records": 73.0,
+    "raw_bound": 73.0
+   },
+   "dma": {
+    "base": 2002.3,
+    "exposed": 245.2,
+    "records": 72.0,
+    "raw_bound": 0.0
+   },
+   "idx": {
+    "base": 0.0,
+    "exposed": 0.0,
+    "records": 0,
+    "raw_bound": 0
+   }
+  },
+  "all_row": {
+   "ds": 1596.8,
+   "qwen": 757.0
+  }
+ }
+}
