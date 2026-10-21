@@ -14,6 +14,15 @@
     "unreset_payload_FF": 312,
     "mux": 3260
   },
-  "native": "PENDING existing die_chain helper; no layout",
+  "native": {
+    "baseline_status": "FAIL",
+    "mapped_RVT_TT_cells": 3452,
+    "FF": 511,
+    "area_um2": 395.87616,
+    "max_dynamic_loads": 203,
+    "unknown_or_role_errors": 0,
+    "cause": "reset fanout203 plus shared dynamic selector/control54/71/106; actual report preserved by existing die_chain helper",
+    "next": "Exact fixed-word/banked-control/default-off source repair, same mechanism recheck required. No layout."
+  },
   "production_hold": "Configured DENSE2 A current compiler has zero command rows, hence no genuine stage PWrow0/phase/absolute-firstcommand anchor; six real HOST transport descriptor provenance and epoch authority still owed. Immutable graph reservation dates alone do not supply these. DefaultOFF remains."
 }
