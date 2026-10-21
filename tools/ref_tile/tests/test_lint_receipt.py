@@ -119,6 +119,44 @@ class Receipt(unittest.TestCase):
         self.assertIn('refusing', res['error'])
 
 
+class FreshKitGeneration(unittest.TestCase):
+    def test_write_creates_receipt_before_sdc_and_preview_keeps_directory_absent(self):
+        import ref_tile as RT
+        # Run real kit generation; only the expensive lint inside SDC generation
+        # is replaced by a deterministic lint using the real keyed receipt store.
+        template = RT.HERE / 'specs_hcoll_v5/hcoll_v5_ctl2.json'
+        for write in (False, True):
+            with self.subTest(write=write), tempfile.TemporaryDirectory() as d:
+                root, yosys = make_root(d, kit=False)
+                raw = json.loads(template.read_text())
+                raw.update(name='kit_a', top='a', sources=['rtl/a.v'])
+                io_fixture = root / RT.QDM / 'io_ref_skew.sdc'
+                io_fixture.parent.mkdir(parents=True)
+                io_fixture.write_text('# IO constraint fixture\n')
+                path = root / 'input.json'; path.write_text(json.dumps(raw))
+                calls = []
+                def lint(s, repo):
+                    calls.append(1)
+                    return {'counts': {'consumer': 3}}
+                def sdc(s, period):
+                    L.record('reviewed_gray_fifos', lint, Boom, s, root, yosys)
+                    return '# deterministic SDC fixture\n'
+                L._MEMO.clear()
+                with mock.patch.object(RT, 'ROOT', root), mock.patch.object(RT, 'gen_sdc', side_effect=sdc):
+                    result = RT.gen(str(path), out_root=root, write=write)
+                kit = root / result['kit']
+                self.assertEqual(kit.exists(), write)
+                self.assertEqual(len(calls), 1)
+                if write:
+                    receipt = json.loads((kit / L.RECEIPT).read_text())
+                    self.assertIn('reviewed_gray_fifos', receipt['lints'])
+                    self.assertTrue((kit / 'clock.sdc').is_file())
+                    L._MEMO.clear()
+                    with mock.patch.object(RT, 'ROOT', root), mock.patch.object(RT, 'gen_sdc', side_effect=sdc):
+                        RT.gen(str(path), out_root=root, write=True)
+                    self.assertEqual(len(calls), 1, 'matching keyed receipt must be reusable')
+
+
 
 
 class NativeDataDependency(unittest.TestCase):

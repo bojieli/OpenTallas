@@ -245,6 +245,7 @@ CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pai
 # "scope" and its recorded tt_ps/ff_ps stay within the cap.  Never a general relaxation.
 SCOPED_CLOCK_WAIVER_CAPS = {
     "qkd_pv_fin_s32": {"tt": 88.4, "ff": 84.6},     # KV PVFIN R15c, 38k-sink single root, COORD 10-20 19:25
+    "qfd_native59_svc": {"tt": 84.6},               # Qwen N59 svc4 (TT 84.6 / FF 77.5), 21,950-sink root, COORD 10-20 17:33
 }
 
 

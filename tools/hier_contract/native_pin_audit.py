@@ -57,6 +57,15 @@ import die_real_census as DRC  # noqa: E402
 
 LAUNCH_PS = 220.0
 CAPTURE_PS = 190.0
+# OWNER 10-20 ~09:05 PIN REGISTERS (supersedes the 10-15 every-pin rule): a pin must be registered only when it is a
+# region crossing (landing ring) or drives a wire over the 405 um reach; touching tiles in the same region may connect
+# directly when the combined path meets timing (die / parent STA checks it).  So by default a launch / capture over
+# budget or a combinational arc FAILS only on pins named region crossings (--crossing PAT[,PAT]); the others are
+# listed as direct_pins (reported, not a defect).  --strict-pin-regs restores the every-pin verdict.
+# OWNER 10-20 ~08:50 CLOCK RULE: across a ring-landed crossing the ring's tolerance window governs, not the 80 ps
+# neighbour match: with --landed the relative-mode boundary mismatch is reported, never a FAIL (pin-flop spread
+# within the tile still is).
+PIN_RULE_DEFAULT = {"strict": False, "crossing": (), "landed": False}
 STATE = Path(os.environ.get("CL_STATE", str(Path.home() / ".local/state/closure_loop")))
 # current die contracts (10-14 07:10): Qwen = the TP8 ROM die v4 + the KV die (the compute / KV-system split contracts
 # are not published yet), S81 v17, HBM r25gq v12; recorded die-case censuses add the case bindings
@@ -136,6 +145,10 @@ def audit_one(arg):
     root, cell, view = arg[:3]
     comp = arg[3] if len(arg) > 3 else None
     case = tuple(arg[4]) if len(arg) > 4 and arg[4] else ()
+    rule = dict(PIN_RULE_DEFAULT, **(arg[5] if len(arg) > 5 and arg[5] else {}))
+    cross = tuple(rule["crossing"] or ())
+    judged = lambda n: rule["strict"] or any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c)
+                                             for c in cross)
     is_case = lambda n: any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for c in case)
     root = Path(root)
     lib_path = root / view / f"{cell}_tt.lib"
@@ -165,25 +178,46 @@ def audit_one(arg):
     nl = nc = nout = nin = 0
     comb = []
     case_raw = {}
+    xl = xc = None          # worst launch / capture over the JUDGED pins (region crossings; every pin when strict)
+    xnl = xnc = 0
+    xcomb, direct = [], set()
     for name, m in PA.pin_metrics(lib, refs).items():
         if case and m["dir"] == "input" and is_case(name):
             case_raw[name] = None if m["inp"] is None else round(m["inp"], 1)
             continue
+        j = judged(name)
         if m["comb"] and m["dir"] in ("input", "output"):
             comb.append(name)
+            (xcomb.append(name) if j else direct.add(name))
         if m["dir"] == "output" and m["out"] is not None:
             nout += 1
             nl += m["out"] > LAUNCH_PS
             if wl is None or m["out"] > wl[1]:
                 wl = (name, m["out"])
+            if m["out"] > LAUNCH_PS:
+                if j:
+                    xnl += 1
+                    xl = (name, m["out"]) if xl is None or m["out"] > xl[1] else xl
+                else:
+                    direct.add(name)
         elif m["dir"] == "input" and m["inp"] is not None:
             nin += 1
             nc += m["inp"] > CAPTURE_PS
             if wc is None or m["inp"] > wc[1]:
                 wc = (name, m["inp"])
+            if m["inp"] > CAPTURE_PS:
+                if j:
+                    xnc += 1
+                    xc = (name, m["inp"]) if xc is None or m["inp"] > xc[1] else xc
+                else:
+                    direct.add(name)
     rec.update(outputs=nout, inputs=nin, launch_ps=round(wl[1], 1) if wl else None, launch_pin=wl[0] if wl else None,
                capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
-               comb_pins=len(comb), comb_first=sorted(comb)[:3])
+               comb_pins=len(comb), comb_first=sorted(comb)[:3],
+               pin_rule=("strict: every pin registered (10-15)" if rule["strict"] else
+                         "owner 10-20: registered at region crossings" + (f" {list(cross)}" if cross else " (none declared)")
+                         + "; same-region pins may connect directly (die / parent STA judges)"),
+               direct_pins=len(direct), direct_first=sorted(direct)[:3])
     if case:
         miss = [c for c in case if not any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for n in case_raw)]
         if miss:
@@ -213,12 +247,12 @@ def audit_one(arg):
         except Exception as e:  # noqa: BLE001
             rec["ff_error"] = f"{type(e).__name__}: {e}"
     why = []
-    if wl and wl[1] > LAUNCH_PS:
-        why.append(f"launch {wl[1]:.9g} > {LAUNCH_PS:.0f} ({nl} pins)")
-    if wc and wc[1] > CAPTURE_PS:
-        why.append(f"capture {wc[1]:.9g} > {CAPTURE_PS:.0f} ({nc} pins)")
-    if comb:
-        why.append(f"{len(comb)} combinational pins")
+    if xl:
+        why.append(f"launch {xl[1]:.9g} > {LAUNCH_PS:.0f} ({xnl} pins)" + ("" if rule["strict"] else f" at region crossing {xl[0]}"))
+    if xc:
+        why.append(f"capture {xc[1]:.9g} > {CAPTURE_PS:.0f} ({xnc} pins)" + ("" if rule["strict"] else f" at region crossing {xc[0]}"))
+    if xcomb:
+        why.append(f"{len(xcomb)} combinational pins" + ("" if rule["strict"] else " at region crossings"))
     if "ff_spread_ps" not in rec and isinstance(((ins or {}).get("ff") or {}).get("boundary"), dict):
         b = ins["ff"]["boundary"]           # no FF Liberty: the measured FF pin-flop range of insertion.json
         if b.get("min") is not None and b.get("max") is not None:
@@ -229,11 +263,13 @@ def audit_one(arg):
     if comp is not None:
         rec["relative"] = rel
         for c, m in rel.items():
-            if m and m["mismatch_ps"] > PA.NEIGHBOUR_SKEW_PS:
+            if m and m["mismatch_ps"] > PA.NEIGHBOUR_SKEW_PS and not rule["landed"]:
                 why.append(f"{c.upper()} boundary vs neighbour {m['mismatch_ps']} > {PA.NEIGHBOUR_SKEW_PS:.0f} "
                            f"(pin flops {m['rel_min_ps']}..{m['rel_max_ps']} ps from C {m['comp_ps']:g})")
         if not rel:
             why.append("relative mode: no clock reference to compensate against")
+        if rule["landed"]:
+            rec["landed"] = "ring-landed crossing: the ring tolerance window governs the boundary mismatch (owner 10-20)"
     rec["pass"] = not why
     rec["fail_why"] = "; ".join(why)
     return rec
@@ -304,14 +340,21 @@ def main(argv=None) -> int:
                          "(strap / ID pins): excluded from the launch / capture metric and listed (alias --static-pins)")
     ap.add_argument("--case-evidence", "--static-evidence", dest="case_evidence",
                     help="--view: where the die ties the case pins (bind table / RTL contract); recorded as case_evidence")
+    ap.add_argument("--crossing", help="comma list of pin patterns that are region crossings (owner 10-20: only these "
+                                       "must be registered; other pins may connect directly inside the region)")
+    ap.add_argument("--strict-pin-regs", action="store_true", help="strict 10-15 form: every pin must be registered")
+    ap.add_argument("--landed", action="store_true", help="--relative-to names a ring-landed neighbour: the boundary "
+                                                         "mismatch is reported, the ring window governs (owner 10-20)")
     a = ap.parse_args(argv)
     root = Path(a.root).resolve()
+    rule = dict(strict=a.strict_pin_regs, landed=a.landed,
+                crossing=tuple(c.strip() for c in (a.crossing or "").split(",") if c.strip()))
     comp = PA.compensation(a.relative_to) if a.relative_to else None
     if a.view:
         vd = root / a.view
         cell = a.cell or next(p.name[:-7] for p in sorted(vd.glob("*_tt.lib")))
         case = [c.strip() for c in (a.case or "").split(",") if c.strip()]
-        r = audit_one((str(root), cell, a.view, comp, case))
+        r = audit_one((str(root), cell, a.view, comp, case, rule))
         if case and a.case_evidence and not r.get("error"):
             r["case_evidence"] = a.case_evidence
         print(json.dumps(r, indent=1))
@@ -330,7 +373,7 @@ def main(argv=None) -> int:
             continue
         keep.append((cell, view, job, "loop" if st == "CLOSED" else ("loop job not in state" if job else "store")))
     with mp.Pool(a.jobs) as pool:
-        recs = pool.map(audit_one, [(str(root), c, v, comp) for c, v, _, _ in keep], chunksize=4)
+        recs = pool.map(audit_one, [(str(root), c, v, comp, (), rule) for c, v, _, _ in keep], chunksize=4)
     db = die_bindings(root)
     rows = []
     for (cell, view, job, how), r in zip(keep, recs):
