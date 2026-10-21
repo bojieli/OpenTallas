@@ -294,8 +294,14 @@ def die_sources(bundle: Path):
     return [bundle / p for p in mf["ot_hbm_accel_smh_attn"]]
 
 
+def die_int8():
+    """SM_MV_DIE_INT8=1: build the master at die.v's parameters #(.ENABLE_INT8(1)) (tb -DOT_SMH_ATTN_INT8; the d4g r14 die binds
+    every sm_* that way).  Default 0 = the bench's historical ENABLE_INT8 0 build."""
+    return os.environ.get("SM_MV_DIE_INT8", "0") == "1"
+
+
 def build(work: Path, bundle: Path):
-    obj = work / "obj_mv"
+    obj = work / ("obj_mv_i8" if die_int8() else "obj_mv")
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
@@ -304,7 +310,7 @@ def build(work: Path, bundle: Path):
     cmd = [vl, "--binary", "-j", os.environ.get("VL_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast",
            "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256",
            "--top-module", "tb_hbm_smh_attn", f"-GMAXC={MAXC}", "--Mdir", str(obj)] + \
-          [f"-D{d}" for d in DIE_DEFINES] + \
+          [f"-D{d}" for d in DIE_DEFINES + (["OT_SMH_ATTN_INT8"] if die_int8() else [])] + \
           [f"-I{bundle / p}" for p in sorted({str(Path(s).parent.relative_to(bundle)) for s in die_sources(bundle)})] + \
           [str(s) for s in die_sources(bundle)] + [str(tb)]
     t0 = time.time()
@@ -421,7 +427,8 @@ def cmd_run(a):
               f"sm0 R={R} lines={s0['lines']} cyc={s0['cycles_first_line_to_last_result']} "
               f"priced={(rec.get('priced') or [{}])[0].get('base_cost')} fault={fault}", flush=True)
     doc = dict(schema="opentallas.hbm_sm_mv_unit.v1", fixtures=str(fix), weights=str(smw), bundle=a.bundle,
-               mut=a.mut or None, rtl="ot_hbm_accel_smh_attn die master (bundle master_files.json, DIE_DEFINES) in "
+               mut=a.mut or None, params={"ENABLE_INT8": 1 if die_int8() else 0},
+               rtl="ot_hbm_accel_smh_attn die master (bundle master_files.json, DIE_DEFINES) in "
                "rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv, Verilator 5.050", records=report,
                verdict="PASS" if ok_all else "FAIL")
     Path(a.out).write_text(json.dumps(doc, indent=1) + "\n")
