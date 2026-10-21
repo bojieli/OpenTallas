@@ -1,0 +1,4 @@
+IDLE_RESET_QUIESCENT PASS cycle=67
+[60000] %Fatal: tb_hkv_mu4_idle.sv:49: Assertion failed in tb_hkv_mu4_idle: IDLE_FAIL leaf boundary firstedge
+%Error: rtl/test/qwen_host/tb_hkv_mu4_idle.sv:49: Verilog $stop
+Aborting...

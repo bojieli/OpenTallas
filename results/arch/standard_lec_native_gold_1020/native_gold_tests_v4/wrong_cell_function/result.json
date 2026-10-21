@@ -1,0 +1,55 @@
+{
+ "aig": null,
+ "aig_sha256": "25a7a9b99fb7c48ad878b312a60d66492143c91064b3ce93627fb97ab99dce70",
+ "cex_frame": 8,
+ "engine": {
+  "abc_cmd": "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800",
+  "abc_log_sha256": "7520be63d3b13dbfe689ff596d2ead3785feacf83d5e983a95fa7a9c730a05cd",
+  "abc_tail": "======== ABC command line \"read_aiger lec.aig; print_stats; strash; dprove -v -T 10800\"\n\u001b[1;37mlec                           :\u001b[0m i/o =    4/    1  lat =   11  and =     83  lev = 14\nRunning \"bmc2\". AIG:  PI/PO/Reg = 4/1/11.  Node =     83. Lev =    14.\nParams: FramesMax = 20. NodesDelta = 2000. ConfMaxOne = 2000. ConfMaxAll = 0.\n   0 : F =   20. O =   0.  And =     165. Var =      69. Conf =      0.    0 MB     0.00 sec\nOutput 0 of miter \"lec\" was asserted in frame 8. Time =     0.00 sec\nNetworks are not equivalent.\n",
+  "rc": 0,
+  "seconds": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "tool": "yosys 0.68 miter -equiv + ABC dprove"
+ },
+ "expect": "fail",
+ "gate": "/srv/opentallas-scratch/claude/codex-reviews-2240-native/native_gold_tests_v4/wrong_cell_function/gate.v",
+ "gate_sha256": "1dea979764ec8b9799348f3e65878cbbd4cf4edddae59ca6c7a4adadfc2d3b3f",
+ "gate_stats": {
+  "flops": 2,
+  "instances": 7,
+  "macros": {}
+ },
+ "gate_top": "native_gate",
+ "gold_opt": false,
+ "gold_ys_sha256": "fd85ff2e5122e0426d82a26ea8f363dc5e18fff6144c943ba65b1b239a152441",
+ "lec_ys_sha256": "228bd2b5eb8016e4e0484af8e4adab7b4f644fdc9a5f1a8be1ebf8c1515a635a",
+ "library_models": {
+  "cells_v_sha256": "a90410826cf0be46422afe97d52d1cfdb38221c7ca7c1e72da6b40a47270f38e",
+  "gold_and_gate_same_models": true,
+  "liberty": {
+   "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+   "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+   "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+   "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+   "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  }
+ },
+ "module": "native_gold",
+ "ok": true,
+ "parameters": {},
+ "reset": {
+  "active": 0,
+  "cycles": 8,
+  "once": false,
+  "port": "rst_n"
+ },
+ "schema": "opentallas.kv_leaf_lec.v1",
+ "sources": {
+  "gold.sv": "2317fa4271722e428573bdac1df618fa74e6b93977ea8e8d1fc40d9bff4d5c69"
+ },
+ "verdict": "NOT_EQUIVALENT",
+ "wrapper": null
+}

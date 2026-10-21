@@ -153,7 +153,16 @@ def check_facts(f, reach=None, max_list=40):
         fails.append(f"W2 {cnt['wires_no_site']} die wires with a >{reach:g} um stretch over no relay/repeater site")
     if not (cnt['crossings'] or cnt['wires']):
         fails.append('EMPTY: no crossing and no wire in the facts (the GEN export is missing; never a pass)')
+    coverage = dict(C1='CHECKED' if 'crossings' in f else 'NOT_EXPORTED',
+                    C2='CHECKED' if 'crossings' in f and 'regions' in f else 'NOT_EXPORTED',
+                    W1='CHECKED' if cnt['wires'] else 'NOT_EXPORTED',
+                    W2='CHECKED' if idx is not None and f.get('wires') else 'NOT_EXPORTED')
+    complete = all(v == 'CHECKED' for v in coverage.values())
     return dict(schema=SCHEMA, design=f.get('design'), reach_um=reach, verdict='FAIL' if fails else 'PASS',
+                check_coverage=coverage, coverage_complete=complete,
+                verdict_scope='FULL_GEN_SAFETY' if complete else 'SCOPED_CHECK_ONLY',
+                physical_qualification_eligible=complete and not fails,
+                qualification='GEN safety preconditions only; source-bound facts and native/clock/route/IR signoff remain required',
                 counts=cnt, max_hop_um=round(max_hop, 1), channels_declared=bool(idx), fails=fails, examples=ex,
                 regions=len(regions), regions_without_root=sorted(k for k, v in regions.items() if not (v or {}).get('root')),
                 summaries=srcs)
@@ -202,7 +211,9 @@ def merge_packet(packet, rep):
     p = Path(packet)
     d = json.loads(p.read_text()) if p.exists() and p.stat().st_size else {}
     d['gen_safety'] = {k: rep[k] for k in ('schema', 'verdict', 'reach_um', 'counts', 'max_hop_um', 'fails', 'channels_declared',
-                                          'regions_without_root', 'summaries', 'diagnostic') if k in rep}
+                                          'regions_without_root', 'summaries', 'diagnostic', 'check_coverage',
+                                          'coverage_complete', 'verdict_scope', 'physical_qualification_eligible',
+                                          'qualification') if k in rep}
     p.write_text(json.dumps(d, indent=1) + '\n')
 
 
@@ -211,7 +222,9 @@ def status_line(rep):
     return (f"DIE_GEN_SAFETY {rep['verdict']}{' (DIAGNOSTIC: ' + rep['diagnostic'] + ')' if rep.get('diagnostic') else ''} "
             f"design={rep.get('design')} reach={rep['reach_um']:g} crossings={c['crossings']} no_landing={c['no_landing']} "
             f"no_root={c['no_root']} wires={c['wires']} hops_over={c['hops_over']} wires_over={c['wires_over']} "
-            f"max_hop={rep['max_hop_um']:g} no_site={c['wires_no_site']}" + ('' if rep['verdict'] == 'PASS' else ' | ' + ' | '.join(rep['fails'])))
+            f"max_hop={rep['max_hop_um']:g} no_site={c['wires_no_site']} "
+            f"scope={rep['verdict_scope']} physical_qualification_eligible={int(rep['physical_qualification_eligible'])}" +
+            ('' if rep['verdict'] == 'PASS' else ' | ' + ' | '.join(rep['fails'])))
 
 
 def run(design=None, facts=None, landed_pairs=None, hbm_reach=None, relay_stages=None, reach=None, diagnostic=None):
@@ -229,6 +242,7 @@ def run(design=None, facts=None, landed_pairs=None, hbm_reach=None, relay_stages
     rep = check_facts(f, r)
     if diagnostic:
         rep['diagnostic'] = diagnostic
+        rep['physical_qualification_eligible'] = False
     return rep
 
 
