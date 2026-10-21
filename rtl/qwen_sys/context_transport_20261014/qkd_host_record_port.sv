@@ -24,7 +24,7 @@ module qkd_host_record_port(
  .request_v(request_v),.request_tag(request_tag),.request_gen(request_gen),.request_token(request_token),.request_position(request_position),
  .token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),.program_ready(program_ready),.installed_fusedcap(installed_fusedcap),
  .program_epoch(program_epoch),.program_digest(program_digest),.tx_v(cv),.tx_observed_v(co),.tx_record(cr),.fault(cf));
- qkd_program_witness_rx u_witness(.ck(ck),.rst_n(rst_n),.program_begin_v(begin_v),.receive_slot(witness_slot),.rx_v(rx_v),.rx_record(rx_record),
+ qkd_program_witness_rx u_witness(.ck(ck),.rst_n(rst_n),.program_begin_v(begin_v),.receive_slot(witness_slot),.rx_v(rx_v&&witness_slot),.rx_record(rx_record),
  .expected_epoch(auth_epoch),.expected_digest(auth_digest),.authorized_footer_valid(authorized_footer_valid),.authorized_footer(authorized_footer),
  .program_commit_v(commit_v),.program_commit_epoch(commit_epoch),.program_commit_digest(commit_digest),
  .program_installed_valid(installed_valid),.installed_fusedcap(installed_fusedcap),.fault(wf));
