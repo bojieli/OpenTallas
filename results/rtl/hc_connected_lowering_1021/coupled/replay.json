@@ -1,0 +1,5011 @@
+{
+ "schema": "opentallas.hc_connected_lowering.v1",
+ "status": "source_assembly_only",
+ "execution_qualified": false,
+ "qualifies_native_layer": false,
+ "qualifies_native_chain": false,
+ "required_instance_names": [
+  "hc_eng",
+  "hleaf_SE",
+  "hc_SW",
+  "calendar_SW",
+  "hleaf_SW",
+  "hb_ckgen"
+ ],
+ "include_regex": "^(hc_eng|hleaf_SE)$",
+ "boundary_checked": true,
+ "component_allocation": true,
+ "projection_open": "G22 post only: full HC weight projection and inter-rank producer remain separate",
+ "root_programme_rows": [
+  "c7a1000000000000000000000000000000000100000000000000000000000027",
+  "c7a1000100000000000000000000000000000000000000009000000000000028",
+  "c7a1000200000000000000000000000000000200000000000000000000000043",
+  "c7a1000300000000000000000000000000000000000000001000000000000045",
+  "c7a100040000000000000000000000000002000000000000000000000000004b",
+  "c7a1000500000000000000000000000000c0000000000000000000000000023f"
+ ],
+ "root_table_rows": [
+  "c7a10000bc06b574bc4d55803c8962f9bc7b9a223b267a1d3c014032bb82972a",
+  "c7a10001bbd31770bacf82f73c882247bc87d3ae3d0153a53c1ec58fbb8597d0",
+  "c7a100023cbf67fabd3321bfbb818b003c9403c83c71c2203b78d6a1bb15eb70",
+  "c7a10003000000003c914a18bcba4bbdbc80c75d3bd011e73c3d54683cc6a7e0"
+ ],
+ "root_targets": {
+  "programme": 164,
+  "table": 165
+ },
+ "root_schedule": {
+  "root_apply_origin": 8,
+  "gather_row0_at": 51,
+  "tail_launch_after": 83,
+  "result_after": 583,
+  "tail_latency": 496,
+  "emit_guard": 4,
+  "emit_after_row0": 533,
+  "schedule": [
+   {
+    "after_launch": 47,
+    "sequencer_time": 39,
+    "fields": {
+     "clear": 1
+    }
+   },
+   {
+    "after_launch": 48,
+    "sequencer_time": 40,
+    "fields": {
+     "gm": 1,
+     "gmq": 0,
+     "gmo": 1
+    }
+   },
+   {
+    "after_launch": 75,
+    "sequencer_time": 67,
+    "fields": {
+     "tf": 1,
+     "tset": 0
+    }
+   },
+   {
+    "after_launch": 77,
+    "sequencer_time": 69,
+    "fields": {
+     "gm": 1,
+     "gmq": 0,
+     "gmo": 0
+    }
+   },
+   {
+    "after_launch": 83,
+    "sequencer_time": 75,
+    "fields": {
+     "tl": 1,
+     "tunit": 0,
+     "tpos": 0
+    }
+   },
+   {
+    "after_launch": 583,
+    "sequencer_time": 575,
+    "fields": {
+     "emit": 1,
+     "qmask": 1,
+     "eunit": 0
+    }
+   }
+  ],
+  "launch": 3991,
+  "finish": 4574
+ },
+ "root_data_producer": "actual ot_hbm_hc_root_static via hleaf_SE, never fixture O",
+ "checkpoint_parameters_are_runtime_inputs": true,
+ "events": [
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__eng_fault",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__gathered_mix_data",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__gathered_mix_pos",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__gathered_mix_row",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__gathered_mix_v",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__ps",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__ps_f",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NE__ps_v",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__eng_fault",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__gathered_mix_data",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__gathered_mix_pos",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__gathered_mix_row",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__gathered_mix_v",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__ps",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__ps_f",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_NW__ps_v",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__eng_fault",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__gathered_mix_data",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__gathered_mix_pos",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__gathered_mix_row",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__gathered_mix_v",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__ps",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__ps_f",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 0,
+   "port": "hc_SE__ps_v",
+   "val": "0",
+   "src": "component:inactive_other_hubs",
+   "rec": 30
+  },
+  {
+   "k": "M",
+   "dom": "stream",
+   "cyc": 0,
+   "mem": "vm",
+   "quarter": 0,
+   "sector": 64,
+   "bank": 0,
+   "row": 8,
+   "val": "c2a36c83c2727e28c3372331c36cff3242e41521c28b2e50c2e67891c2c77f32",
+   "src": "image:VM_preload",
+   "rec": 30
+  },
+  {
+   "k": "M",
+   "dom": "stream",
+   "cyc": 0,
+   "mem": "vm",
+   "quarter": 0,
+   "sector": 65,
+   "bank": 1,
+   "row": 8,
+   "val": "bb68cd9ebcc1691041973979c197085643017d53c3139cccbcd4de3041930f6d",
+   "src": "image:VM_preload",
+   "rec": 30
+  },
+  {
+   "k": "M",
+   "dom": "stream",
+   "cyc": 0,
+   "mem": "vm",
+   "quarter": 0,
+   "sector": 66,
+   "bank": 2,
+   "row": 8,
+   "val": "3e0bdbb3bca082e8bc8674ebbdce7711bbd037c641c5267ec1c4de71bcfed98b",
+   "src": "image:VM_preload",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 61,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a5",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 61,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 61,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a10000bc06b574bc4d55803c8962f9bc7b9a223b267a1d3c014032bb82972a",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 61,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 62,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 101,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a5",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 101,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 101,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a10001bbd31770bacf82f73c882247bc87d3ae3d0153a53c1ec58fbb8597d0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 101,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 102,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 141,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a5",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 141,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 141,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a100023cbf67fabd3321bfbb818b003c9403c83c71c2203b78d6a1bb15eb70",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 141,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 142,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 181,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a5",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 181,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "3",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 181,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a10003000000003c914a18bcba4bbdbc80c75d3bd011e73c3d54683cc6a7e0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 181,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 182,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_TABLE",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 226,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 226,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 226,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000000000000000000000000000000000100000000000000000000000027",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 226,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 227,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 266,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 266,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 266,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000100000000000000000000000000000000000000009000000000000028",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 266,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 267,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 306,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 306,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 306,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000200000000000000000000000000000200000000000000000000000043",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 306,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 307,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 346,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 346,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "3",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 346,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000300000000000000000000000000000000000000001000000000000045",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 346,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 347,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 386,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 386,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 386,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a100040000000000000000000000000002000000000000000000000000004b",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 386,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 387,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 426,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 426,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "5",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 426,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000500000000000000000000000000c0000000000000000000000000023f",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 426,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 427,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 436,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "a4",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 436,
+   "port": "host_cp_ingress__desc_base",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 436,
+   "port": "host_cp_ingress__desc_limit",
+   "val": "6",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 436,
+   "port": "host_cp_ingress__desc_loops",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 436,
+   "port": "host_cp_ingress__desc_v",
+   "val": "1",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 437,
+   "port": "host_cp_ingress__desc_v",
+   "val": "0",
+   "src": "image:HC_REAL_ROOT",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 481,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 481,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 481,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000000000000000000000000000000000000000000000000000200e00000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 481,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 482,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 521,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 521,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 521,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000100000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 521,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 522,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 561,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 561,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 561,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000200000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 561,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 562,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 601,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 601,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "3",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 601,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000300000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 601,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 602,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 641,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 641,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "4",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 641,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000400000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 641,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 642,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 681,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 681,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "5",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 681,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000500000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 681,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 682,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 721,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 721,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "6",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 721,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000600000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 721,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 722,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 761,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 761,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "7",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 761,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000700000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 761,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 762,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 801,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 801,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "8",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 801,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000800000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 801,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 802,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 841,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 841,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "9",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 841,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000900000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 841,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 842,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 881,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 881,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "a",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 881,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000a00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 881,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 882,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 921,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 921,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "b",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 921,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000b00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 921,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 922,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 961,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 961,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 961,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000c00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 961,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 962,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1001,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1001,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "d",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1001,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000d00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1001,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1002,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1041,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1041,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "e",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1041,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000e00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1041,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1042,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1081,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1081,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "f",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1081,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000f00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1081,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1082,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1121,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1121,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "10",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1121,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001000000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1121,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1122,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1161,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1161,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "11",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1161,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001100000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1161,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1162,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1201,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1201,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "12",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1201,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001200000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1201,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1202,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1241,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1241,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "13",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1241,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001300000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1241,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1242,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1281,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1281,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "14",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1281,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001400000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1281,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1282,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1321,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1321,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "15",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1321,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001500000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1321,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1322,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1361,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1361,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "16",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1361,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001600000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1361,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1362,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1401,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1401,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "17",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1401,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001700000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1401,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1402,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1441,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1441,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "18",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1441,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001800000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1441,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1442,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1481,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1481,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "19",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1481,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001900000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1481,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1482,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1521,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1521,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1a",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1521,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001a00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1521,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1522,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1561,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1561,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1b",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1561,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001b00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1561,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1562,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1601,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1601,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1601,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001c00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1601,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1602,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1641,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1641,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1d",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1641,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001d00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1641,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1642,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1681,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1681,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1e",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1681,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001e00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1681,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1682,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1721,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1721,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1f",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1721,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001f00000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1721,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1722,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1761,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1761,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "20",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1761,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002000000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1761,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1762,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1801,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1801,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "21",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1801,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002100000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1801,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1802,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1841,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1841,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "22",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1841,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002200000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1841,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1842,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1881,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1881,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "23",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1881,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002300000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1881,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1882,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1921,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1921,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "24",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1921,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002400000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1921,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1922,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1961,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1961,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "25",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1961,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002500000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1961,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 1962,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2001,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2001,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "26",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2001,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002600000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2001,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2002,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2041,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2041,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "27",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2041,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002700000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2041,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2042,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2081,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2081,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "28",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2081,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002800000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2081,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2082,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2121,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2121,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "29",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2121,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002900000000000000000000000000000000000000000000000000200000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2121,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2122,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2161,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2161,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2a",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2161,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002a00000000000000000000000000000000000000000000000000000000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2161,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2162,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2201,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2201,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2b",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2201,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002b00000000000000000000000000000000000000000000000000000000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2201,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2202,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2241,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2241,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2241,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002c00000000000000000000000000000000000000000000000000000000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2241,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2242,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2281,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2281,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2d",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2281,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002d00000000000000000000000000000000000000000000000000000000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2281,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2282,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2321,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2321,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2e",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2321,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002e00000000000000000000000000000000000000048800000000000000",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2321,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2322,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2366,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2366,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2366,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000000000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2366,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2367,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2406,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2406,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2406,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000100000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2406,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2407,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2446,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2446,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "2",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2446,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000200000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2446,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2447,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2486,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2486,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "3",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2486,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000300000000000000003800000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2486,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2487,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2526,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2526,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "4",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2526,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000400000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2526,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2527,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2566,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2566,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "5",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2566,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000500000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2566,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2567,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2606,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2606,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "6",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2606,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000600000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2606,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2607,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2646,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2646,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "7",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2646,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000700000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2646,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2647,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2686,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2686,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "8",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2686,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000800000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2686,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2687,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2726,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2726,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "9",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2726,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000900000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2726,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2727,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2766,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2766,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "a",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2766,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000a00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2766,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2767,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2806,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2806,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "b",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2806,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000b00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2806,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2807,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2846,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2846,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "c",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2846,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000c00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2846,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2847,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2886,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2886,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "d",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2886,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000d00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2886,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2887,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2926,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2926,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "e",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2926,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000e00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2926,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2927,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2966,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2966,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "f",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2966,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1000f00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2966,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 2967,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3006,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3006,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "10",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3006,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001000000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3006,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3007,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3046,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3046,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "11",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3046,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001100000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3046,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3047,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3086,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3086,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "12",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3086,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001200000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3086,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3087,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3126,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3126,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "13",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3126,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001300000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3126,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3127,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3166,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3166,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "14",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3166,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001400000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3166,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3167,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3206,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3206,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "15",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3206,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001500000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3206,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3207,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3246,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3246,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "16",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3246,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001600000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3246,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3247,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3286,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3286,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "17",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3286,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001700000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3286,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3287,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3326,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3326,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "18",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3326,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a10018000000000000000000000000000000000000000e0000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3326,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3327,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3366,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3366,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "19",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3366,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001900000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3366,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3367,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3406,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3406,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1a",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3406,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001a00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3406,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3407,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3446,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3446,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1b",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3446,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001b00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3446,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3447,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3486,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3486,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1c",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3486,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001c00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3486,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3487,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3526,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3526,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1d",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3526,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001d00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3526,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3527,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3566,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3566,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1e",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3566,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001e00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3566,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3567,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3606,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3606,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "1f",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3606,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1001f00000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3606,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3607,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3646,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3646,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "20",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3646,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002000000000003800000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3646,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3647,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3686,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3686,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "21",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3686,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002100000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3686,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3687,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3726,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3726,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "22",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3726,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002200000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3726,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3727,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3766,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3766,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "23",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3766,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002300000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3766,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3767,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3806,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3806,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "24",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3806,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002400000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3806,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3807,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3846,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3846,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "25",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3846,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002500000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3846,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3847,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3886,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3886,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "26",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3886,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a100260000000000000000000000000000000000000e000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3886,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3887,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3926,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3926,
+   "port": "host_cp_ingress__cfg_addr",
+   "val": "27",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3926,
+   "port": "host_cp_ingress__cfg_data",
+   "val": "c7a1002700000000000000000000000000000000000000000000000000000000",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3926,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3927,
+   "port": "host_cp_ingress__cfg_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3941,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3941,
+   "port": "host_cp_ingress__desc_base",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3941,
+   "port": "host_cp_ingress__desc_limit",
+   "val": "2a",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3941,
+   "port": "host_cp_ingress__desc_loops",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3941,
+   "port": "host_cp_ingress__desc_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3942,
+   "port": "host_cp_ingress__desc_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3956,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3956,
+   "port": "host_cp_ingress__desc_base",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3956,
+   "port": "host_cp_ingress__desc_limit",
+   "val": "1a",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3956,
+   "port": "host_cp_ingress__desc_loops",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3956,
+   "port": "host_cp_ingress__desc_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3957,
+   "port": "host_cp_ingress__desc_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 3991,
+   "port": "hleaf_SW__s_ready",
+   "val": "480",
+   "mask": "480",
+   "src": "check:targets_configured",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3991,
+   "port": "host_cp_ingress__launch_v",
+   "val": "1",
+   "src": "image:launch"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 3992,
+   "port": "host_cp_ingress__launch_v",
+   "val": "0",
+   "src": "image:launch"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4066,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "6c",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4066,
+   "port": "host_cp_ingress__desc_base",
+   "val": "2a",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4066,
+   "port": "host_cp_ingress__desc_limit",
+   "val": "2f",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4066,
+   "port": "host_cp_ingress__desc_loops",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4066,
+   "port": "host_cp_ingress__desc_v",
+   "val": "1",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4067,
+   "port": "host_cp_ingress__desc_v",
+   "val": "0",
+   "src": "image:HC"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4081,
+   "port": "host_cp_ingress__cfg_target",
+   "val": "60",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4081,
+   "port": "host_cp_ingress__desc_base",
+   "val": "1a",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4081,
+   "port": "host_cp_ingress__desc_limit",
+   "val": "28",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4081,
+   "port": "host_cp_ingress__desc_loops",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4081,
+   "port": "host_cp_ingress__desc_v",
+   "val": "1",
+   "src": "image:CAL"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4082,
+   "port": "host_cp_ingress__desc_v",
+   "val": "0",
+   "src": "image:CAL"
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4562,
+   "port": "hleaf_SW__s_ready",
+   "val": "480",
+   "mask": "480",
+   "src": "check:targets_configured",
+   "rec": 30
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4562,
+   "port": "host_cp_ingress__launch_v",
+   "val": "1",
+   "src": "image:launch"
+  },
+  {
+   "k": "D",
+   "dom": "stream",
+   "cyc": 4563,
+   "port": "host_cp_ingress__launch_v",
+   "val": "0",
+   "src": "image:launch"
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4575,
+   "port": "hc_eng__result_v",
+   "val": "1",
+   "rec": 30,
+   "src": "check:actual_root"
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4575,
+   "port": "hc_eng__result",
+   "val": "3f66bd9b3c0301ef3c3e12d73bd7ddad2f02da6c3f7dba663dbff3b335697ac22ebf128e354ee2e93f64b5d83e02b6173dca12b63a65c97d3aa6a8813f5da29f3e2af8a8315209e23b8c18903aec5fba3f7e3d993a00a39737d78f193cfd8710",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "rec": 30,
+   "src": "check:actual_root"
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "vm:48",
+   "val": "3e2af8a8315209e23b8c18903aec5fba3f7e3d993a00a39737d78f193cfd8710",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "src": "golden:ds_native_fixture",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "vm:40",
+   "val": "c2a36c83c2727e28c3372331c36cff3242e41521c28b2e50c2e67891c2c77f32",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "src": "golden:ds_native_fixture(A kept)",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "vm:49",
+   "val": "2ebf128e354ee2e93f64b5d83e02b6173dca12b63a65c97d3aa6a8813f5da29f",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "src": "golden:ds_native_fixture",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "vm:41",
+   "val": "bb68cd9ebcc1691041973979c197085643017d53c3139cccbcd4de3041930f6d",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "src": "golden:ds_native_fixture(A kept)",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "vm:4a",
+   "val": "3f66bd9b3c0301ef3c3e12d73bd7ddad2f02da6c3f7dba663dbff3b335697ac2",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "src": "golden:ds_native_fixture",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "vm:42",
+   "val": "3e0bdbb3bca082e8bc8674ebbdce7711bbd037c641c5267ec1c4de71bcfed98b",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "src": "golden:ds_native_fixture(A kept)",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4618,
+   "port": "hleaf_SW__s_fault",
+   "val": "0",
+   "mask": "4c00",
+   "src": "check:no_fault",
+   "rec": 30
+  },
+  {
+   "k": "C",
+   "dom": "stream",
+   "cyc": 4650,
+   "port": "hleaf_SE__s_fault",
+   "val": "0",
+   "rec": 30,
+   "src": "check:root_leaf_fault"
+  }
+ ],
+ "owner_footprints": {
+  "vm_reads": [
+   64,
+   65,
+   66
+  ],
+  "vm_writes": [
+   72,
+   73,
+   74
+  ],
+  "f20_targets": [
+   108,
+   96,
+   164,
+   165
+  ]
+ },
+ "qhub_timing": {
+  "status": "emitted",
+  "form": "G22 gathered-mix (TP-96 rank-0 HC_MIX_POST: gather + root tail + store)",
+  "a_sector": 64,
+  "o_sector": 72,
+  "launch": [
+   3991,
+   4562
+  ],
+  "word0_edge": [
+   4001,
+   4572
+  ],
+  "gather_row0_at": 4042,
+  "result_pins_after": 4574,
+  "store_word": 4,
+  "check_cyc": 4618,
+  "qhub_rows": {
+   "A": 42,
+   "B": 5
+  },
+  "calendar_rows": {
+   "A": 26,
+   "B": 14
+  },
+  "emit_after_row0": 533,
+  "timing": {
+   "resp_phase": 39,
+   "lg_arrive_r": 21,
+   "lg_arrive_w": 6,
+   "emit_after_row0": 533,
+   "read_pads": {
+    "l12p_hc_SW0_near_rq_": 6,
+    "l12p_sfu_SW0_near_rq_": 2,
+    "l12p_su_SW0_lg_rq_vmb_SW0_": 7
+   },
+   "src": "contract contract_func.json hc_SW + l12 request pads"
+  },
+  "words_checked": 48
+ },
+ "record": 30,
+ "fixture_record": 31,
+ "tag": "hc_attn (mixes + Sinkhorn)",
+ "checkpoint_input_provenance": {
+  "checkpoint": "/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors",
+  "checkpoint_sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d",
+  "tensors": {
+   "base": {
+    "tensor": "layers.0.hc_attn_base",
+    "dtype": "F32",
+    "shape": [
+     24
+    ],
+    "data_offsets": [
+     304,
+     400
+    ],
+    "sha256": "9ea515c1fc9e9ffb040bb5eb32b2f23d3c003991accadd12368bdcaa556a2d06"
+   },
+   "scale": {
+    "tensor": "layers.0.hc_attn_scale",
+    "dtype": "F32",
+    "shape": [
+     3
+    ],
+    "data_offsets": [
+     61840,
+     61852
+    ],
+    "sha256": "d7540d8fdcc9127e6e0b6b6d2b6c1228582b87469f4872186df25b63b46e9fa7"
+   }
+  }
+ },
+ "selected_root": {
+  "master": "ot_hbm_hc_root_static",
+  "source": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+  "params": {
+   "QDRLY": 2,
+   "QCHX": 11
+  },
+  "slot": "hc_eng",
+  "owner": "HC owner (H-NETLIST hceng)",
+  "region": "d4g_gen1_l3",
+  "note": "Static full-form HC engine (HC.HC_MIX: 2,048 FP32 MAC lanes W256 in 8 bank tiles, 4 weight slots in 256 x 1024x256 macros, 2 exact tail units, event programme, bases/scales table). Pin-registered (every input a pin flop, every output a flop). Area estimate ~9.5 mm2 (results/uarch/hbm_hc_eng_0030/model.json). Bench rtl/test/tb_hbm_hc_eng_static.sv + tools/rtl_hbm_hc_eng_static_gate.py (results/rtl/hbm_hc_eng_0030/receipt.json) | d4g_gen1_l3: ot_hbm_hc_eng_static -> ot_hbm_hc_root_static; centre HC root: programme/table/core TPRE 6/mix/tails; XRD=XRU=0 (set to the root<->hub relay stage counts when the relay layer stations those links); QDRLY 2 = the U-ring b7->b0 die relay (HBM-RTL5, coordinator 0fi) | L10 HH-9 chain pin registers {'QCHX': 11} (DIE-HBM-LEAD 10-19)",
+  "replaces_v15": null,
+  "rtl_deps": [],
+  "ports": {
+   "clk": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "bits": 1
+   },
+   "tgt": {
+    "direction": "input",
+    "bits": 8
+   },
+   "cfg_v": {
+    "direction": "input",
+    "bits": 1
+   },
+   "cfg_target": {
+    "direction": "input",
+    "bits": 8
+   },
+   "cfg_addr": {
+    "direction": "input",
+    "bits": 12
+   },
+   "cfg_data": {
+    "direction": "input",
+    "bits": 256
+   },
+   "desc_v": {
+    "direction": "input",
+    "bits": 1
+   },
+   "desc_base": {
+    "direction": "input",
+    "bits": 12
+   },
+   "desc_limit": {
+    "direction": "input",
+    "bits": 13
+   },
+   "desc_loops": {
+    "direction": "input",
+    "bits": 16
+   },
+   "launch_v": {
+    "direction": "input",
+    "bits": 1
+   },
+   "configured": {
+    "direction": "output",
+    "bits": 1
+   },
+   "qd_v": {
+    "direction": "output",
+    "bits": 4
+   },
+   "qd_ss": {
+    "direction": "output",
+    "bits": 4
+   },
+   "qd_nv": {
+    "direction": "output",
+    "bits": 28
+   },
+   "qd_wa": {
+    "direction": "output",
+    "bits": 40
+   },
+   "qd_xa": {
+    "direction": "output",
+    "bits": 40
+   },
+   "qi_v": {
+    "direction": "output",
+    "bits": 4
+   },
+   "qi_kind": {
+    "direction": "output",
+    "bits": 4
+   },
+   "qi_slot": {
+    "direction": "output",
+    "bits": 8
+   },
+   "qi_lo": {
+    "direction": "output",
+    "bits": 20
+   },
+   "qi_w": {
+    "direction": "output",
+    "bits": 20
+   },
+   "qi_cnt": {
+    "direction": "output",
+    "bits": 48
+   },
+   "qi_word": {
+    "direction": "output",
+    "bits": 40
+   },
+   "qps_v": {
+    "direction": "input",
+    "bits": 4
+   },
+   "qps": {
+    "direction": "input",
+    "bits": 128
+   },
+   "qps_f": {
+    "direction": "input",
+    "bits": 4
+   },
+   "q_fault": {
+    "direction": "input",
+    "bits": 4
+   },
+   "gathered_mix_v": {
+    "direction": "input",
+    "bits": 4
+   },
+   "gathered_mix_row": {
+    "direction": "input",
+    "bits": 20
+   },
+   "gathered_mix_pos": {
+    "direction": "input",
+    "bits": 12
+   },
+   "gathered_mix_data": {
+    "direction": "input",
+    "bits": 128
+   },
+   "result_v": {
+    "direction": "output",
+    "bits": 4
+   },
+   "result_position": {
+    "direction": "output",
+    "bits": 12
+   },
+   "result": {
+    "direction": "output",
+    "bits": 3072
+   },
+   "program_active": {
+    "direction": "output",
+    "bits": 1
+   },
+   "program_done": {
+    "direction": "output",
+    "bits": 1
+   },
+   "fault": {
+    "direction": "output",
+    "bits": 1
+   }
+  }
+ },
+ "source_files": [
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  {
+   "path": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+   "sha256": "7a64c3c9e5200841c58cdecafd7117e56b22a3a80778f08b19e9f5ce2254379f"
+  },
+  {
+   "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+   "sha256": "653f0a9ceea31efbae71dbafb62947985830528f870883955d1648a070087378"
+  },
+  {
+   "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf_r2.sv",
+   "sha256": "734f18e496e1d78be8834806bdb02e8d4c3ed2cc3d7594522c69dae045c3afcd"
+  },
+  {
+   "path": "rtl/lib/ot_rst_relay.sv",
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  }
+ ],
+ "source_contract_sha256": "ac05e98f3e9e37d78c68d7917f55b8e91fd627d8316e795b2763797cb9cad269",
+ "fixture_logical_addresses": {
+  "A_word": 145536,
+  "A_sector": 18192,
+  "O_word": 41024,
+  "O_sector": 5128
+ },
+ "allocation_note": "explicit relocated bounded component allocation; actual native L0 allocation not claimed",
+ "scope": "component_probe",
+ "state_seed_provenance": [
+  "actual input fixture k31 A24; released checkpoint base24/scale3 SHA pinned; expected O checks only"
+ ],
+ "inactive_other_hub_inputs": [
+  "hc_NE__eng_fault",
+  "hc_NE__gathered_mix_data",
+  "hc_NE__gathered_mix_pos",
+  "hc_NE__gathered_mix_row",
+  "hc_NE__gathered_mix_v",
+  "hc_NE__ps",
+  "hc_NE__ps_f",
+  "hc_NE__ps_v",
+  "hc_NW__eng_fault",
+  "hc_NW__gathered_mix_data",
+  "hc_NW__gathered_mix_pos",
+  "hc_NW__gathered_mix_row",
+  "hc_NW__gathered_mix_v",
+  "hc_NW__ps",
+  "hc_NW__ps_f",
+  "hc_NW__ps_v",
+  "hc_SE__eng_fault",
+  "hc_SE__gathered_mix_data",
+  "hc_SE__gathered_mix_pos",
+  "hc_SE__gathered_mix_row",
+  "hc_SE__gathered_mix_v",
+  "hc_SE__ps",
+  "hc_SE__ps_f",
+  "hc_SE__ps_v"
+ ],
+ "tools_commit": "9f2ae79aac7a25d72eba314e4cc0d641e79aed49",
+ "helper_commit": "32a1e7b6c"
+}
