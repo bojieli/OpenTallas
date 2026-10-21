@@ -1,0 +1,31 @@
+{
+  "source": "8f3718c55",
+  "unit": "oth-ubuntu-1622434-1792621560",
+  "mem_gib": 32,
+  "actual_verdict": "PASS",
+  "slices": 16,
+  "results": 128,
+  "errors": 0,
+  "fault_cycles": 0,
+  "rb": 0,
+  "ORD": 0,
+  "GAP": 0,
+  "golden_seed": 1,
+  "go_to_last_e": [
+    526,
+    526
+  ],
+  "last_partial_to_last_e": [
+    464,
+    464
+  ],
+  "simulation_wall_seconds": 121.986,
+  "caveat": "Diagnostic predecessor only: unused kept group/copy FFs removed in current b004 source; no current whole-source/native/physical adoption",
+  "files_sha256": {
+    "gold.log": "be3e1bc6da679ff47069558662969c6063f36b913888de3ed1269a4039d8c1ca",
+    "source_manifest.json": "2eb8cb966930febb99c0cfa66a26d509725715b0f3a94c65f127380fbcb29725",
+    "existing_runner.sh": "bcfedaf19cb6bd99e583107028299458dc6c38eb42db039fc7d0550cda300766",
+    "build.log": "7a1704dbca739c4e26f77228e9ca1967200ef82344c30789b3cdd84f7e645c97",
+    "run.log": "be461518fafa5f0637d06d73538caa3d6f52f440ce1d1b6c80ca28a734e7c4e1"
+  }
+}

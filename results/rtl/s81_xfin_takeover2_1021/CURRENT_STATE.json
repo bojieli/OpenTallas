@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T15:48:20.976183-07:00",
+  "updated": "2026-10-21T15:50:20.563109-07:00",
   "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
   "qualified_FP": {
     "source": "560abe5d2",
@@ -35,7 +35,7 @@
     "mechanism": {
       "source": "8f3718c55",
       "unit": "oth-ubuntu-1622434-1792621560",
-      "state": "LIVE existing ENG base; compiler binary built, guarded Verilator wrapper still active; no raw run verdict yet"
+      "state": "TERMINAL PASS16 slices128results err0/fault0/rb0 GO526 partial464; diagnostic predecessor only"
     }
   },
   "prior_measured": {
@@ -71,5 +71,16 @@
     "Current exact whole-source goldens+causals/native required before XFINphysicalgate;criticalprefix rootreview",
     "Collect terminal XGT views and reviewPNG/submit per actual policy; preserve livejobs",
     "Collect VS daemon terminal closure; no MAIN retry"
-  ]
+  ],
+  "current_exact_mechanism": {
+    "source": "6881b49a7",
+    "control": "b00440f56",
+    "FP": "731be030b",
+    "unit": "oth-ubuntu-1786476-1792622966",
+    "client": 4030024,
+    "mem_gib": 32,
+    "state": "LIVE compile",
+    "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r27-1021",
+    "all18_sha_match_git": true
+  }
 }
