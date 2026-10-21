@@ -8,12 +8,13 @@
 module qfd_native59_svc #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  parameter integer RECV_INPUTS=0,RECV_MUT=0,LOCAL32=0,LOCAL_MUT=0,
- parameter integer ROPE=0,USER_BIND=0,NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
+ parameter integer ROPE=0,USER_BIND=0,HEAD_PREP=0,NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
  input wire[58:0]host_tag,input wire[1:0]host_generation,
  input wire layer_context_v,input wire[5:0]command_stage,
+ input wire head_prepare_v,input wire[1:0]head_prepare_user,input wire[17:0]head_prepare_token,head_prepare_position,
  input wire[17:0]native_token,native_position,input wire[379:0]native_cmd,
  input wire[547:0]dd_i,
  input wire kv_word_slot,input wire[1:0]kv_word_index,input wire kv_x3_slot,
@@ -368,6 +369,16 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   assign rq_pub={NRQ{p_cmd[0]}};assign pu_pub[0]=p_pos[17:16];assign pu_pub[1]=p_pos[17:16];assign pu_pub[2]=p_pos[17:16];assign pu_pub[3]=p_pos[17:16];assign pu_pub[4]=p_pos[17:16];assign pu_pub[5]=p_pos[17:16];assign ws_pub={2{p_kvs}};
  end endgenerate
  wire[4:0]emit_beat_pub[0:5];   // R3e/g/i: kept copies of dr_o[516:512], 3 per landing slot (check low / pipe, decode, check high)
+ // Recurring filler context comes from the actual CTLM c_emb bank sample, before embedding HBM fetch.
+ // A dedicated two-edge input pipeline keeps valid/user/token/position at one age. HEAD_PREP=0 retains
+ // the legacy stage-1 epoch advance. HEAD_PREP=1 advances that SAME fseq bank here; stage 1 reuses it.
+ reg[1:0]hp_v;reg[1:0]hp_u0,hp_u1;reg[17:0]hp_t0,hp_t1,hp_p0,hp_p1;
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin hp_v<=0;hp_u0<=0;hp_u1<=0;hp_t0<=0;hp_t1<=0;hp_p0<=0;hp_p1<=0;end
+  else begin
+   hp_v<={hp_v[0],head_prepare_v};hp_u0<=head_prepare_user;hp_u1<=hp_u0;
+   hp_t0<=head_prepare_token;hp_t1<=hp_t0;hp_p0<=head_prepare_position;hp_p1<=hp_p0;
+  end
  // ---------------------------------------------------------------- command context (unchanged child)
  wire[94:0]service_ret_raw;
  always @(posedge ck or negedge rst_pin)
@@ -388,7 +399,9 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[1:0]c_user_r=MU?pu_pub[0]:2'd0,c_user_h=MU?pu_pub[2]:2'd0,c_user_w=MU?pu_pub[1]:2'd0;
  wire[13:0]fseq_rd={fseq[c_user_h][13:7],fseq[c_user_r][6:0]};
  wire[1:0]c_user_f=MU?pu_pub[4]:2'd0;   // R3i: == c_user (fstart read)
- wire[13:0]c_seq=(fstart[c_user_f]&&c_l0&&MUT!=6)?fseq_rd+14'd1:fseq_rd;
+ wire[13:0]c_seq=(HEAD_PREP==0&&fstart[c_user_f]&&c_l0&&MUT!=6)?fseq_rd+14'd1:fseq_rd;
+ wire hp_fill=HEAD_PREP!=0&&MU!=0&&hp_v[1]&&hp_u1!=2'd0;
+ wire[13:0]hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd1:fseq[hp_u1];
  wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
  wire[1:0]c_user_e=MU?pu_pub[3]:2'd0,c_user_e2=MU?pu_pub[5]:2'd0;   // R3h/j: == c_user (begin_tag epoch select low / high)
  wire[15:0]c_epoch_f={c_seq,c_tag};
@@ -396,9 +409,15 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  integer fu;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin for(fu=0;fu<4;fu=fu+1)fseq[fu]<=MU_SEQ0;fstart<=0;mu_fault<=0;end
-  else if(MU!=0&&native_context&&c_user_w!=2'd0)begin   // R3h: c_user_w == c_user
-   fseq[c_user_w]<=c_seq;if(c_l0)fstart[c_user_w]<=1'b1;
-   if({1'b0,c_user}>=3'(NU)||(!c_l0&&!fstart[c_user]))mu_fault<=1'b1;
+  else begin
+   if(hp_fill)begin
+    fseq[hp_u1]<=hp_seq;fstart[hp_u1]<=1'b1;
+    if({1'b0,hp_u1}>=3'(NU)||hp_t1>=18'd151936||hp_p1>=18'd8192)mu_fault<=1'b1;
+   end
+   if(MU!=0&&native_context&&c_user_w!=2'd0)begin   // R3h: c_user_w == c_user
+    if(HEAD_PREP==0)begin fseq[c_user_w]<=c_seq;if(c_l0)fstart[c_user_w]<=1'b1;end
+    if({1'b0,c_user}>=3'(NU)||(!fstart[c_user]&&(HEAD_PREP!=0||!c_l0)))mu_fault<=1'b1;
+   end
   end
  generate if(MU==0)begin:g_ctx1
   qfd_native59_command_context u_context(
@@ -422,8 +441,11 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin head_descriptor_v<=0;head_descriptor_tag<=0;head_descriptor_generation<=0;end
   else begin
-   head_descriptor_v<=begin_slot&&(begin_tag[42:37]==6'd1);
-   if(begin_slot&&(begin_tag[42:37]==6'd1))begin
+   head_descriptor_v<=HEAD_PREP!=0?hp_fill:(begin_slot&&(begin_tag[42:37]==6'd1));
+   if(hp_fill)begin
+    head_descriptor_tag<={hp_seq,hp_u1,6'd0,hp_t1,hp_p1[12:0],6'd0};
+    head_descriptor_generation<=p_hg;
+   end else if(HEAD_PREP==0&&begin_slot&&(begin_tag[42:37]==6'd1))begin
     head_descriptor_tag<={begin_tag[58:43],6'd0,begin_tag[36:0]};
     head_descriptor_generation<=p_hg;
    end
