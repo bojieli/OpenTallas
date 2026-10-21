@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # LAYERBENCH-HBM (10-18): build + run a cut d4g slice (cut_slice.py + gen_slice_tb.py) under Verilator 5.050.
 #   SRC=<bundle root (make_bundle.py: rtl/ physical/ files.f incdirs.f master_files.json views.json) + slice/>  OUT=<dir>
-#   [NOHIER=hfd_vms_bank_native_q0_faces (masters built flat: the VM backdoor reaches the bank macros)] [JOBS=8] [CYCLES=] [REPLAY=slice/replay/<name>] [HBM_IMG_DIR=] [BUILD_ONLY=0] [REUSE=0: 1 = skip the build if OUT/obj exists]
+#   [NOHIER=hfd_vms_bank_native_q0_faces (masters built flat: the VM backdoor reaches the bank macros)] [JOBS=8: C++ build] [HIER_JOBS=1: Verilator hierarchy] [CYCLES=] [REPLAY=slice/replay/<name>] [HBM_IMG_DIR=] [BUILD_ONLY=0] [REUSE=0: 1 = skip the build if OUT/obj exists]
 # slice/ holds slice.v, tb_slice.sv, masters.txt (from the cutter) and replay/<name>/*.mem.  The HBM PHY blackbox master is
 # replaced by the off-chip PHY+DRAM model rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv; every other slice
 # master is the die's real bound RTL (one flattened namespace per master, as the die vehicle).
 # Writes OUT/build.log, OUT/run.log, OUT/times.json.
 set -u
-SRC=${SRC:?}; OUT=${OUT:?}; JOBS=${JOBS:-8}
+SRC=${SRC:?}; OUT=${OUT:?}; JOBS=${JOBS:-8}; HIER_JOBS=${HIER_JOBS:-1}
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$OUT"; cd "$SRC"
 T0=$(date +%s); BRC=0
@@ -15,17 +15,17 @@ if [ "${REUSE:-0}" = 1 ] && [ -x "$OUT/obj/Vtb_hbm_slice" ]; then echo "REUSE bu
   python3 flatten_masters.py --bundle . --views views.json --hier ${HIERMARK:-1} --nohier "${NOHIER-hfd_vms_bank_native_q0_faces}" --verilator "$VL" > "$OUT/flatten.log" 2>&1 || { cat "$OUT/flatten.log"; exit 3; }
   sed 's#^#masters/#; s#$#.sv#' slice/masters.txt | grep -v '^masters/ot_hbm3e_phy_rc_e8p5\.sv$' > slice/masters.f
   for f in $(cat slice/masters.f); do [ -f "$f" ] || { echo "MISSING $f"; exit 4; }; done
-  # Verilate WITHOUT --build: the hier blocks are verilated serially (make -j1 hier_verilation) -- Verilator 5.050's
+  # Verilate WITHOUT --build (5.050 also starts hierarchy from this invocation): the hier blocks are verilated serially by default (HIER_JOBS=1 at both launch points) -- Verilator 5.050's
   # _hier.mk two-target rule runs a block twice under make -j (PCH race + double memory, HBM-TKM3 47debc90b) -- then
   # the C++ is built in parallel (hier_build -j JOBS).
-  /usr/bin/time -v -o "$OUT/build.time" bash -c '"$0" --cc --exe --main --timing ${HIER:---hierarchical} -j "$1" -O1 \
+  /usr/bin/time -v -o "$OUT/build.time" bash -c '"$0" --cc --exe --main --timing ${HIER:---hierarchical} -j "$3" -O1 \
     --unroll-count 16384 --unroll-stmts 4000000 --top-module tb_hbm_slice -Mdir "$2/obj" \
     -Wno-fatal -Wno-lint -Wno-style -Wno-MODDUP -Wno-PINMISSING -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-TIMESCALEMOD \
     -Wno-INITIALDLY -Wno-COMBDLY -Wno-BLKANDNBLK -Wno-SELRANGE -Wno-WIDTH -Wno-CASEINCOMPLETE \
     --x-initial unique --x-assign unique \
     -f slice/masters.f rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv slice/slice.v slice/tb_slice.sv &&
-    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j1 hier_verilation &&
-    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j "$1" hier_build' "$VL" "$JOBS" "$OUT" > "$OUT/build.log" 2>&1
+    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j "$3" hier_verilation &&
+    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j "$1" hier_build' "$VL" "$JOBS" "$OUT" "$HIER_JOBS" > "$OUT/build.log" 2>&1
   BRC=$?
 fi
 T1=$(date +%s); RRC=-1
