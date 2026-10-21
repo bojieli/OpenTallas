@@ -169,7 +169,11 @@ module ot_hgi_sm_xload_cl2_ctl #(
         c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt; c_xb <= x_xb;
     end
     wire c_bdf = c_fmt == 2'd1 || c_fmt == 2'd2;
-    wire c_bad = c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] ||
+    // space2 is a VM FP32 probability row: one scalar broadcast to eight physical columns,
+    // one vector, one pstore row at x_xb. It uses the real VM rq/rr path.
+    wire c_pvrow = c_space == 2'd2;
+    wire c_pvbad = c_pvrow && (c_fmt != 2'd0 || c_p != 4'd1 || c_n != 21'd1 || |c_base[39:18]);
+    wire c_bad = (c_space != 2'd1 && !c_pvrow) || c_pvbad || (!c_pvrow && |c_base[2:0]) || |c_stride[2:0] ||
                  c_p > PMAX || c_p == 4'd0 || c_n == 21'd0 || (c_bdf && |c_n[4:0]);
     reg [17:0] base, st; reg [3:0] pp; reg [20:0] kk; reg [7:0] gn; reg [6:0] nb; reg [10:0] ew; reg [6:0] xb;
     reg [10:0] em_off;
@@ -179,6 +183,8 @@ module ot_hgi_sm_xload_cl2_ctl #(
     wire start = cmd_v && !c_bad && !x_busy;
     wire start_bf = start && !c_bdf, start_bd = start && c_bdf;
     reg bdm;
+    reg pvrow;
+    reg [2:0] pv_word;
     wire bd_fault;
     wire resp_bad;
     always @(posedge clk or negedge rn) begin
@@ -202,12 +208,12 @@ module ot_hgi_sm_xload_cl2_ctl #(
     reg [17:0] a_g, a_gp; reg signed [21:0] r_g, r_w;
     wire i_wrap = iw == ew - 11'd1;
     always @(posedge clk) begin
-        if (start) bdm <= c_bdf;
+        if (start) begin bdm <= c_bdf; pvrow <= c_pvrow; pv_word <= c_base[2:0]; end
         if (start) begin
             base <= c_base[17:0]; st <= c_stride[17:0]; pp <= c_p; kk <= c_n; xb <= c_xb;
             gn <= 8'(((c_n - 21'd1) >> 9) + 21'd1);
-            nb <= 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
-            ew <= 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);
+            nb <= c_pvrow ? 7'd1 : 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
+            ew <= c_pvrow ? 11'd1 : 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);
             em_off <= (MUT == 2) ? 11'(RLM) : 11'({c_p, 3'd0} + RLM + LAND + 2);   // + 1: raw rr pin capture
             ig <= 8'd0; iw <= 11'd0; tc <= 11'd0; eg <= 8'd0; et <= 3'd0; eb <= 7'd0;
             a_g <= c_base[17:0]; a_gp <= c_base[17:0];
@@ -355,6 +361,10 @@ module ot_hgi_sm_xload_cl2_ctl #(
         c_mhi <= l_wq[0] ^ (MUT == 4); c_mlo <= ~l_wq[0] ^ (MUT == 4);
         for (integer l = 0; l < 8; l = l + 1) for (integer tv = 0; tv < 8; tv = tv + 1)
             c_d[(tv*8 + l)*16 +: 16] <= (7'(l * 8 + tv) < l_rem) ? bf16(l_dcs[l*256 + 32*tv +: 32]) : 16'd0;
+        // Only the selected probability mode changes the SRAM image layout.
+        // Macro0's low128 bits hold all eight physical-column probabilities.
+        if (pvrow) for (integer pc = 0; pc < 8; pc = pc + 1)
+            c_d[pc*16 +: 16] <= bf16(l_dcs[pv_word*32 +: 32]);
     end
     // ---- emission decision E0 (as cl) ...
     reg [3:0] e_slot; reg e_has;
@@ -363,7 +373,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
         for (integer x = 0; x < NBMAX; x = x + 1)
             if (eb == 7'(x) && bslot(x) >= 0) begin e_has = 1'b1; e_slot = 4'(bslot(x)); end
     end
-    wire e_slot_ok = em_on && e_has && e_slot < pp;
+    wire e_slot_ok = em_on && (pvrow ? (et == 0 && eb == 0) : (e_has && e_slot < pp));
     // ... and its one-edge LOOKAHEAD: the macro read enables / address registered here hold, during cycle n, the E0
     // decision of cycle n, so the quarter's per-macro pin registers load it on the same edge as cl's rp_ce / rp_a.
     reg em_on_n; reg [7:0] eg_n; reg [2:0] et_n; reg [6:0] eb_n; reg [3:0] pp_n;
@@ -386,15 +396,17 @@ module ot_hgi_sm_xload_cl2_ctl #(
     end
     always @(posedge clk or negedge rn)
         if (!rn) r_ce <= 8'd0;
-        else for (integer t = 0; t < 8; t = t + 1) r_ce[t] <= em_on_n && e_has_n && e_slot_n < pp_n && et_n == 3'(t);
-    always @(posedge clk) r_a <= {eg_n[3:0], e_slot_n[2:0]};
+        else for (integer t = 0; t < 8; t = t + 1) r_ce[t] <= em_on_n &&
+            (pvrow ? (et_n == 0 && eb_n == 0 && t == 0) : (e_has_n && e_slot_n < pp_n && et_n == 3'(t)));
+    always @(posedge clk) r_a <= pvrow ? 7'd0 : {eg_n[3:0], e_slot_n[2:0]};
     localparam integer EW = 1 + 1 + 1 + 7 + 7;
     reg [EW-1:0] ed [0:RDP-1];
     wire e_last = em_on && et == 3'd7 && eb == nb - 7'd1 && eg == gn - 8'd1;
     always @(posedge clk or negedge rn) begin
         if (!rn) for (integer d = 0; d < RDP; d = d + 1) ed[d] <= '0;
         else begin
-            ed[0] <= {em_on, e_slot_ok, e_last, 7'({eg[3:0], et} + xb), eb};
+            ed[0] <= pvrow ? {e_slot_ok, e_slot_ok, e_slot_ok, xb, 7'd127} :
+                               {em_on, e_slot_ok, e_last, 7'({eg[3:0], et} + xb), eb};
             for (integer d = 1; d < RDP; d = d + 1) ed[d] <= ed[d-1];
         end
     end
@@ -426,6 +438,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     always @(posedge clk_eg) for (integer k = 0; k < NR; k = k + 1) begin
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
+        if (e5r[k][7] && e5r[k][6:0] == 7'd127) xbeat[k*RB +: RB] <= ({1920'd0, rw[127:0]} >> (k*RB));
     end
     // =================================================================================================================
     // BLOCK-DOT issue / tags / write stage / emission sequencer (as cl); the issue word is a running register.

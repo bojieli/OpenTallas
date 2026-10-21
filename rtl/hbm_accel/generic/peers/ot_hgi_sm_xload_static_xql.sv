@@ -133,6 +133,7 @@ module ot_hgi_sm_xload_xq_pegress #(
     always @(posedge clk_c) for (integer k = 0; k < NR; k = k + 1) begin
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
+        if (e5r[k][7] && e5r[k][6:0] == 7'd127) xbeat[k*RB +: RB] <= ({1920'd0, rw[127:0]} >> (k*RB));
     end
     always @(posedge clk) begin
         if (!rnr[2]) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
