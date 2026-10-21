@@ -29,6 +29,7 @@ def main():
         ap.add_argument('--'+name.replace('_','-'),required=True)
     ap.add_argument('--slot',default='d4f_relay_sink:pgp_NE.command->su_NE1')
     ap.add_argument('--bus', required=True, help='exact relay_splice_v2 bus identity; a slot can contain several chains')
+    ap.add_argument('--macro-only', action='store_true', help='diagnostic upper bound: all other relay rows require joint replanning; never a physical pass')
     a=ap.parse_args(); packet,spec,man,sizes,end,stations=(load(getattr(a,n)) for n in
         ('sites','layer','manifest','size_manifest','endpoint','stations'))
     by_inst={i['name']: i for i in spec['instances']}
@@ -78,7 +79,8 @@ def main():
         try:w,h=shape(rec)
         except ValueError:missing.add(inst['master']);continue
         existing[m[1]]=(float(m[5]),float(m[6]),w,h)
-    for x,y,w,h in existing.values():mark(blocked,x-w/2,y-h/2,w,h)
+    if not a.macro_only:
+        for x,y,w,h in existing.values():mark(blocked,x-w/2,y-h/2,w,h)
     free0=~blocked;used=np.zeros_like(blocked)
     # Explicit per-window free-cell budget; unlike old consume(), never force
     # demand into an overfull bin or move a stage past reach to find capacity.
@@ -101,7 +103,12 @@ def main():
         else:
             ok &= np.abs(X-parentpt[0])+np.abs(Y-parentpt[1])<remaining*230+200
         indices=np.argwhere(ok)
-        if not len(indices):failure=dict(row=key,reason='no footprint-legal <=395um all-pin-envelope site',placed=len(selected));break
+        if not len(indices):
+            legal=collision==0
+            failure=dict(row=key,reason='no footprint-legal <=395um all-pin-envelope site',placed=len(selected),
+                         free_footprint_centres=int(legal.sum()),
+                         nearest_all_pin_bound_um=float(np.min(distance[legal])+half+prevhalf) if legal.any() else None)
+            break
         scores=distance[ok]+.015*(np.abs(X[ok]-goal[0])+np.abs(Y[ok]-goal[1]))
         found=False
         for j in np.argsort(scores,kind='stable'):
@@ -114,9 +121,11 @@ def main():
         if not found:failure=dict(row=key,reason='all reachable legal footprints exceed50pct actualfree-cell window budget',placed=len(selected));break
     ratio=float(np.max(np.divide(charged,capacity,out=np.zeros_like(charged),where=capacity>0)))
     verdict='FOCUSED_MODEL_PASS' if failure is None and not missing else 'FOCUSED_MODEL_FAIL'
+    if a.macro_only: verdict='JOINT_REPLAN_UPPER_BOUND_'+('FEASIBLE' if failure is None and not missing else 'FAIL')
     result=dict(verdict=verdict,slot=a.slot,bus=a.bus,stages=len(target),placed=len(selected),failure=failure,
                 selected=selected,missing_master_dimensions=sorted(missing),max_window_ratio=ratio,
                 conservative_family_dimension_fallbacks=fallback,
+                other_relay_rows_held_fixed=not a.macro_only,
                 input_sha256={n:hashlib.sha256(Path(getattr(a,n)).read_bytes()).hexdigest() for n in
                               ('sites','layer','manifest','size_manifest','endpoint','stations')},
                 geometry_qualified=False,clock_phase_qualified=False,
