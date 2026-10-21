@@ -1,0 +1,11 @@
+{
+ "source_commit": "6c9b2dbf3",
+ "host": "ot-epyc5",
+ "unit": "oth-ubuntu-3215023-1792623055",
+ "admission": "unpinned ot-run96GiB8threads",
+ "remote_root": "/srv/opentallas-scratch/claude/codex-e86-v5-6c9b2dbf3",
+ "fourstate": "PASS actual Icarus4state widths1/6/85 oldbitwise vschunked, GN exact ternary caseequality includingX/Z;9506ns",
+ "source_full_lockstep_mutants": "PENDING existing4000cycle M0+1/3/4/5/6 serial",
+ "physical": "NOT LAUNCHED/no timing or native qualification claim",
+ "local_diagnostic": "not qualification; preserved separately scratch/codex-e86-v5-fourstate/local_diagnostic_nonqualification.log"
+}
