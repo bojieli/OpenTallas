@@ -47,6 +47,7 @@ P_CMD, P_ARET, P_DRET, P_SWI = 0, 1, 40, 41
 SK = 14
 KC = 2
 RB_PIDX = dict(QKV=500, GU=501, X=502)
+ARF = dict(on=False)   # QW-LAYERGAP --arf: the slice AR message framer (qfd_dv_slice2 ARF 1) contract is part of PASS
 
 
 def P_RSS(k):
@@ -289,6 +290,8 @@ def run_od(work, ages, rng, mutant):
         xcs[n] = M.lower_xc(ch, ages, w0[n], 256, k, mutant=mutant)          # exact edge: reserved first
         lows[n] = M.lower_matvec(n, w0[n], ages, ch, own=own, mutant=None if mutant in ('xc_bc',) else mutant)
     coll = {n: M.ar_collisions(lows[n], ages) for n in lows}
+    if ARF['on']:
+        M.ar_framer_order([(xcs[n], lows[n]['expected_ar']) for n in lows])
     base = t + 20 - min(c['edge'] for c in ch.commands())
     put_chain(ev, base, ch.commands())
     for n in lows:
@@ -303,7 +306,8 @@ def run_od(work, ages, rng, mutant):
     gap = []
     for n in ('o', 'down'):
         y = gms[n]['y']
-        for e in lows[n]['expected_ar']:
+        exp_ar = M.ar_framed(lows[n]['expected_ar'], xcs[n]) if ARF['on'] else lows[n]['expected_ar']
+        for e in exp_ar:
             n_ += 1
             w = ar.get(base + e['edge'])
             want_d = sum(int(y[e['row'] + l]) << (32 * l) for l in range(16))
@@ -389,7 +393,8 @@ def run_lm(work, ages, rng, mutant):
         else:
             errs.append(f'slice {s}: gather token {toks[-1:]} value {stv:#x} want {cand[gbest][0]} (rank {gbest})')
     ar = [(c, w) for c, w in log.get('S0AR', [])]
-    want = (1 << 546) | ((row0 + best) << 514) | (1 << 513) | (1 << 512) | ((row0 + best) << 32) | y[best]
+    atag = (lm['xc']['cc_word'] & 0xFFFFFFFF) if ARF['on'] else row0 + best     # ARF: framed with the XC tag
+    want = (1 << 546) | (atag << 514) | (1 << 513) | (1 << 512) | ((row0 + best) << 32) | y[best]
     n += 1
     if [w for _, w in ar] == [want] and ar[0][0] == base + lm['arx_at_w5']:
         ok += 1
@@ -449,10 +454,13 @@ def main():
     ap.add_argument('--mutant')
     ap.add_argument('--ages', default=None)
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--arf', action='store_true', help='QW-LAYERGAP: expect the framed AR words (build with '
+                    'DV_LOWER_VFLAGS=-GARF=1): tag = XC tag on every word, last only on the message\'s last word')
     ap.add_argument('--fixture', help='npz of real operands + ISA gold (tools/qwen_layerbench/dv_layer_fixture.py)')
     a = ap.parse_args()
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
+    ARF['on'] = a.arf
     if a.calibrate:
         return calibrate(work, a.seed)
     if a.mutant and a.mutant not in MUTANTS[a.run]:
@@ -468,7 +476,7 @@ def main():
         print(f'DV_LOWER_MAT {a.run} REFUSED mutant={a.mutant or 0}: {e}')
         return 1
     v = 'PASS' if ok == n and not errs else 'FAIL'
-    print(f'DV_LOWER_MAT {a.run} {v} {ok}/{n} mutant={a.mutant or 0} fixture={Path(a.fixture).name if a.fixture else 0} '
+    print(f'DV_LOWER_MAT {a.run} {v} {ok}/{n} mutant={a.mutant or 0} arf={int(a.arf)} fixture={Path(a.fixture).name if a.fixture else 0} '
           f'{json.dumps(info)}')
     for e in errs[:10]:
         print('   ', e)
