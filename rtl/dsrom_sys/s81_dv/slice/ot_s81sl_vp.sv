@@ -352,12 +352,23 @@ module ot_s81sl_vp #(
     localparam integer PW = (RD <= 2) ? 1 : $clog2(RD);
     reg [RD-1:0] wv_ring; reg [PW-1:0] wv_p;
     localparam integer RH = RD / 2;                         // ring reset split over two relay leaves
-    always @(posedge clk or negedge rs_r0)
-        if (!rs_r0) begin wv_ring[RH-1:0] <= {RH{1'b0}}; end
-        else if (wv_p < RH) wv_ring[wv_p] <= k_lanev[4];
+    // Constant bit ownership keeps each async reset local. A variable vector
+    // lvalue in two processes made the untouched half an async-load value.
+    genvar gr;
+    generate for (gr = 0; gr < RD; gr = gr + 1) begin : g_valid_ring
+        if (gr < RH) begin : g_lo
+            always @(posedge clk or negedge rs_r0)
+                if (!rs_r0) wv_ring[gr] <= 1'b0;
+                else if (wv_p == gr) wv_ring[gr] <= k_lanev[4];
+        end else begin : g_hi
+            always @(posedge clk or negedge rs_r1)
+                if (!rs_r1) wv_ring[gr] <= 1'b0;
+                else if (wv_p == gr) wv_ring[gr] <= k_lanev[4];
+        end
+    end endgenerate
     always @(posedge clk or negedge rs_r1)
-        if (!rs_r1) begin wv_ring[RD-1:RH] <= {(RD-RH){1'b0}}; wv_p <= {PW{1'b0}}; end
-        else begin if (wv_p >= RH) wv_ring[wv_p] <= k_lanev[4]; wv_p <= (wv_p == RD - 1) ? {PW{1'b0}} : wv_p + 1'b1; end
+        if (!rs_r1) wv_p <= {PW{1'b0}};
+        else wv_p <= (wv_p == RD - 1) ? {PW{1'b0}} : wv_p + 1'b1;
     reg wvl; (* keep *) reg [16:0] k_wvl; reg [3:0] widx;
     always @(posedge clk or negedge rs_w)
         if (!rs_w) begin wvl <= 1'b0; k_wvl <= 17'd0; widx <= 4'd0; end
