@@ -1,0 +1,14 @@
+{
+  "source": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv",
+  "source_sha256": "68fc3d6713de59579146184fdebc1f030fa3af157fabe6373c57a74f791d94de",
+  "codec": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv",
+  "codec_sha256": "b3ab1c85eedd08a9b6d9bd3d76f5a0bdfb4418ee2b188c4265dd1df4bf7f370f",
+  "top": "qkd_d2d_static_ovl_sfm3_obs1",
+  "output": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv",
+  "output_sha256": "85146b39d6302dc3883289c0b4e1b1a741630d28308dc2b88c6e1dfd17237502",
+  "capture_groups": 24,
+  "capture_bits": 364,
+  "observation_bits": 225,
+  "calendar_delta": 0,
+  "physical_qualification": "NOTRUN; new exact source/view required"
+}
