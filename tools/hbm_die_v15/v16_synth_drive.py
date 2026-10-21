@@ -42,7 +42,7 @@ def module_index(commit):
     if head != wanted:
         raise ValueError('module index requires a checkout of the pinned synthesis commit')
     # L2H-GEN2E 10-19: rtl/model_ready_hbm_r14 = the SAFE PC controller core ot_hbm_r14_aq_pc_safe (HBM-MC3 release ctrl)
-    roots = ['rtl/hbm_accel', 'rtl/hbm_next', 'rtl/hbm_mtp', 'rtl/hdc', 'rtl/lib', 'rtl/model_ready_hbm_r14', 'rtl/dsrom_sys/s81_window_la/recovered_ctl_m2',
+    roots = ['rtl/gpu', 'rtl/v41rom', 'rtl/hbm_accel', 'rtl/hbm_next', 'rtl/hbm_mtp', 'rtl/hdc', 'rtl/lib', 'rtl/model_ready_hbm_r14', 'rtl/dsrom_sys/s81_window_la/recovered_ctl_m2',
              'physical/hbm_accel_die_views', 'physical/hbm_generic', 'physical/hbm_mtp',
              'physical/hbm_xp_aq_tree13_1014', 'physical/asap7_memory_macros', 'physical/asap7_memory_macros_v2']
     roots = [p for p in roots if (ROOT / p).is_dir()]

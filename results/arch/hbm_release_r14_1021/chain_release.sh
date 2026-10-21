@@ -204,8 +204,8 @@ step R14_INIT layers_synth_a_views_src
 # layers apply BEFORE S3a (case_a views are re-synthesised for the changed masters; r11/r13 reused the 9d1a3f20 views).
 mkdir -p $A/net
 [ "$(sha256sum $AE4/net/pre_relay.json | cut -c1-8)" = 9d1a3f20 ] || { echo R14_PRE_RELAY_BASIS_MISMATCH; exit 9; }
-python3 tools/hbm_die_v16/d4g_layers/compose_release_r14.py $AE4/net/pre_relay.json $A/net/release_source_closed || { echo R14_RELEASE_COMPOSE_FAIL; exit 9; }
-cp $A/net/release_source_closed/pre_relay_release.json $A/net/pre_relay_r14.json
+python3 tools/hbm_die_v16/d4g_layers/compose_release_r14.py $AE4/net/pre_relay.json $A/net/release_source_closed_$H || { echo R14_RELEASE_COMPOSE_FAIL; exit 9; }
+cp $A/net/release_source_closed_$H/pre_relay_release.json $A/net/pre_relay_r14.json
 python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/pre_relay_r14.json --rev HEAD --json $A/net/cmc_pre_relay_r14.json > $A/net/cmc_pre_relay_r14.log 2>&1; tail -1 $A/net/cmc_pre_relay_r14.log
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/pre_relay_r14.json --report $A/net/functional_bind_pre_relay_r14.json --lat warn > $A/net/functional_bind_pre_relay_r14.log 2>&1; tail -1 $A/net/functional_bind_pre_relay_r14.log
 echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"
