@@ -1,0 +1,50 @@
+{
+  "source_ref": "21b97190e",
+  "receipt_ref": "1bb4ee3e3",
+  "receipt": "results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/closed/receipt.json",
+  "params": {
+    "MTP": "1",
+    "EARLY": "1",
+    "NB": "2",
+    "FAST": "1",
+    "PP": "1",
+    "QTIMING_FIX": "1",
+    "QPIPE": "1",
+    "QP_XS": "1",
+    "QP_CAP": "0",
+    "QP_P1": "1",
+    "QP_CSAM": "10",
+    "QZ": "1",
+    "QZ_NS": "8",
+    "QZ_NE": "4",
+    "QY": "1",
+    "QX": "10",
+    "PQ": "1",
+    "QW": "0",
+    "QM": "5",
+    "QS": "5",
+    "RSTP": "1",
+    "CPR": "1"
+  },
+  "closure_record": "cc0ec1c19",
+  "parent_status": "OPEN",
+  "compiler_env": {
+    "OT_XS_Q_CPR": "1"
+  },
+  "parents": {
+    "col_h9_l4_lp_cpr": {
+      "source": "rtl/dsrom_sys/s81_dv/frame_lp/cpr/col_h9_l4_lp_cpr.sv",
+      "q_children": 12,
+      "old_source": "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+      "instance_identity": "unchanged",
+      "physical_closure": "OWED"
+    },
+    "col_h10_l4_lp_cpr": {
+      "source": "rtl/dsrom_sys/s81_dv/frame_lp/cpr/col_h10_l4_lp_cpr.sv",
+      "q_children": 12,
+      "old_source": "rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+      "instance_identity": "unchanged",
+      "physical_closure": "OWED"
+    }
+  }
+}
