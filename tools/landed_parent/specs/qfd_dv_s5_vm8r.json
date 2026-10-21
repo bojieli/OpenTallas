@@ -1,0 +1,206 @@
+{
+ "why": "QW2-VM8P4 10-21 Q.STA.SLICE.2: VM8 leaf group P4 = landed parent (P3 vm8q one 1.43 mm clock root: post-CTS setup -460/-522 SS from parent-flop vs hard-child clock skew). One region per leaf column (leaf + its kept relay copies + its d_out relays) + S-face regions for broadcast / row-2 traffic (table-write pins moved beside PROG = region pg, so PROG reads stay +0; fv VM writes, fc CROM reads + cr_q capture, fb BTAB reads + bs_q capture); D 4 / E 2, landing_chunk_bits 24, share_rings, regional_reset_copies (census-safe library as QW-S5-LP s6 / S81-CAPC5).",
+ "top": "qfd_dv_s5_vm8rf",
+ "top_lp": "qfd_dv_s5_vm8r",
+ "sources": [
+  "rtl/qwen_dv/s5/p4/qfd_dv_s5_vm8rf.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "rtl/test/qwen_dv/s5/sram_models_nofatal.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "out_dir": "rtl/qwen_dv/s5/p4/lp",
+ "record_dir": "results/arch/qw2_vm8p4_1021/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 4,
+ "E": 2,
+ "share_rings": true,
+ "landing_chunk_bits": 24,
+ "regional_reset_copies": true,
+ "reset_region": "pg",
+ "regions": [
+  {
+   "name": "pg",
+   "insts": [
+    "u_pg",
+    "u_rpg",
+    "u_twp",
+    "u_rapg",
+    "u_opg"
+   ],
+   "centre": [
+    1209.6,
+    307.0
+   ]
+  },
+  {
+   "name": "va",
+   "insts": [
+    "u_va",
+    "u_rda",
+    "u_vwa",
+    "u_oa",
+    "u_ofa"
+   ],
+   "centre": [
+    216.0,
+    268.0
+   ]
+  },
+  {
+   "name": "vb",
+   "insts": [
+    "u_vb",
+    "u_rdb",
+    "u_vwb",
+    "u_ob",
+    "u_ofb"
+   ],
+   "centre": [
+    561.6,
+    268.0
+   ]
+  },
+  {
+   "name": "vc",
+   "insts": [
+    "u_vc",
+    "u_rdc",
+    "u_vwc",
+    "u_oc",
+    "u_ofc"
+   ],
+   "centre": [
+    907.2,
+    268.0
+   ]
+  },
+  {
+   "name": "cl",
+   "insts": [
+    "u_cl",
+    "u_twl1",
+    "u_twl2",
+    "u_crl1",
+    "u_crl2",
+    "u_racl"
+   ],
+   "centre": [
+    216.0,
+    700.0
+   ]
+  },
+  {
+   "name": "ch",
+   "insts": [
+    "u_ch",
+    "u_twh1",
+    "u_twh2",
+    "u_crh1",
+    "u_crh2",
+    "u_rach"
+   ],
+   "centre": [
+    561.6,
+    700.0
+   ]
+  },
+  {
+   "name": "bt",
+   "insts": [
+    "u_bt",
+    "u_rbs",
+    "u_twb",
+    "u_rabs"
+   ],
+   "centre": [
+    907.2,
+    739.0
+   ]
+  },
+  {
+   "name": "fc",
+   "insts": [
+    "u_ocr",
+    "u_ofcl",
+    "u_ofch"
+   ],
+   "centre": [
+    242.0,
+    40.0
+   ]
+  },
+  {
+   "name": "fb",
+   "insts": [
+    "u_obs",
+    "u_ofbt"
+   ],
+   "centre": [
+    950.0,
+    40.0
+   ]
+  },
+  {
+   "name": "fv",
+   "insts": [],
+   "centre": [
+    570.0,
+    40.0
+   ]
+  }
+ ],
+ "port_regions": {
+  "cr_re": "fc",
+  "cr_addr": "fc",
+  "bs_re": "fb",
+  "bs_addr": "fb",
+  "vm_we": "fv",
+  "vm_waddr": "fv",
+  "vm_wdata": "fv",
+  "w16_we": "fv",
+  "w16_addr": "fv",
+  "w16_data": "fv",
+  "w1_we": "fv",
+  "w1_addr": "fv",
+  "w1_data": "fv",
+  "tw_we": "pg",
+  "tw_kind": "pg",
+  "tw_addr": "pg",
+  "tw_data": "pg"
+ },
+ "mut_child": "u_cl",
+ "bench": {
+  "cycles": 4000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "expr": {
+   "vm_we": "(cyc < 48) ? 0 : $urandom",
+   "w16_we": "(cyc < 48) ? 0 : $urandom",
+   "w1_we": "(cyc < 48) ? 0 : $urandom",
+   "tw_we": "(cyc < 48) ? 0 : $urandom"
+  },
+  "why_expr": "no VM / table writes before reset release + landing warm-up (the static schedule starts after the release; flat SRAMs would take writes during reset that the landed rings correctly drop)"
+ },
+ "tb_static": {
+  "vm_we": 0,
+  "w16_we": 0,
+  "w1_we": 0,
+  "tw_we": 0
+ },
+ "mut4_stages": 64,
+ "why_mut4": "u_cl (CROM half) is event-driven (no free-running calendar): a 1-stage reset slip is invisible to random lockstep; MUT 4 holds its reset run 64 stages (past the 48-cycle write warm-up) so the mutant proves the run reaches the child"
+}

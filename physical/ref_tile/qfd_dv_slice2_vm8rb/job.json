@@ -1,0 +1,131 @@
+{
+ "name": "qfd_dv_slice2_vm8rb-vm8rb-COMMIT",
+ "block": "qfd_dv_s5_vm8r",
+ "ref_tile": true,
+ "owner": "Claude:QW2-VM8P4",
+ "purpose": "slice2 VM8 leaf group P4 (landed regions): critical, gate only -> COORD-REVIEW-QUEUE",
+ "threads": 32,
+ "peak_ram_gb": 128,
+ "source": {
+  "branch": "claude/qw2-vm8p4-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_dv/s5",
+   "rtl/qwen_dv/s5/p3",
+   "rtl/qwen_dv/s5/p4",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "results/arch/qw2_vm8p4_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_s5_vm8r #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/common/landed_parent/ot_pl_land_split.sv rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "p4_lp_lockstep",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator MUTS=0 bash rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BENCH_EXIT 0"
+   },
+   {
+    "name": "p4_lp_mut1_unland",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/qwen_dv/s5/p4/run_vm8r_mut.sh {RUN}/bench/lp1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL"
+   },
+   {
+    "name": "p4_flat_vs_fh",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/qwen_dv/s5/p4/qfd_dv_s5_vm8rf_p3_bench.sh {RUN}/bench/fh",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BENCH_EXIT 0"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_dv_slice2_vm8rb/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_dv_slice2_vm8rb/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 128
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_dv_slice2_vm8rb --out {RUN}/record/views/qfd_dv_s5_vm8r --macro-view physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab --macro-view physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh --macro-view physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog --macro-view physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_dv_slice2_vm8rb/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab",
+   "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog",
+   "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_dv_slice2_vm8rb/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_dv_slice2_vm8rb/qfd_dv_slice2_vm8rb-vm8rb-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "QW2-VM8P4 proof vehicle; the slice2 W parent (w6 VM8Q_VIEW) absorbs it",
+ "structural_change": "QW2-VM8P4 10-21 P4 successor of P3 vm8q / vm8qb (in-flow ep6: ONE clock root over 1.43 mm, parent flop arrival 1.2..2.2 ns vs hard-child insertion 333-485 ps -> post-CTS setup -460 / -522 ps SS on ~9.6k endpoints, repair 0 buffers = skew). P4 = landed parent: 10 regional CTS roots (va vb vc pg | cl ch bt | fc fb fv), every cross-region net an lp landing (D4/E2, chunk 24, shared rings), regional reset runs with kept copies. Lockstep landed == flat qfd_dv_s5_vm8rf (lp bench) and flat == vm8fh (P3 tb). Price vs flat vm8rf: VM answers +3 (writes +3, write->read distance unchanged), PROG +0, BTAB / CROM +6, reset release +5. PARALLEL FALLBACK: ENLARGED 1555.2 x 1123.2 (S band 216, 129.6 column channels, 121-um inter-row channel, 86.4 N band) for the ~29k landing-ring flops"
+}

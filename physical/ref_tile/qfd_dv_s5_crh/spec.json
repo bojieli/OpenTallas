@@ -1,0 +1,187 @@
+{
+ "name": "qfd_dv_s5_crh",
+ "top": "qfd_dv_s8x_crh",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 276.48
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crb?0?*u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crb?1?*u_m",
+   "at": [
+    43.2,
+    181.44
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "cr_re",
+   "cr_addr",
+   "q"
+  ],
+  "S": [
+   "rst_n",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_d",
+   "fault",
+   "ck"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input and every output at its pin (vm8 pin registers, priced); a flow pin register would add a second, unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (rl0 -> rl1) and rl1 resets only the sticky fault register"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: RTL registers every input and output at its pin (= vm8 pin registers); rst_n lands rl0 -> rl1 and resets only the sticky fault; no combinational pin arc",
+  "2_reach": "PASS (by floorplan): outline 259.2 x 276.48, every pin <= 276 um from any sink; gate wire_reach checks 405 um",
+  "3_fanout": "pre-gate mapped census results/arch/qw_vm8split_1020/native/<top> (kept copies as vm8)",
+  "4_depth": "PASS: = vm8 (census depth recorded); no logic before a macro pin except the 2-register collision compare",
+  "5_storage": "PASS: all > 2 kb state in SRAM macros",
+  "6_floorplan": "PASS: x on 43.2, y on 8.64, macro channels >= 20 um, S band 86.4, aspect 1.07, faces W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um",
+  "7_clock": "ONE CTS root (S-centre ck) over the whole leaf = one region; pin-flop spread <= 80 TT+FF judged in the gate; every crossing to a slice2 neighbour lands in a parent mesochronous ring; io_hold_margin 0.03",
+  "8_schedule": "static; 0 edges vs vm8 (reads 2 -> 4, VM write -> read 1 -> 3, tw +2, fault +1 = vm8b prices)"
+ },
+ "fill_reason": {
+  "pin_bound": "macro- and pin-bound leaf: the dense S face (W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um) carries the registered table/VM write bus; the leaf is kept <= 259.2 um wide on that face so every pin register sits <= 130 um from the S-centre clock pin (r1 leaves 302-475 um wide: pin-flop spread 107-146 ps); the outline is set by the face width x macro column, not by the std-cell area"
+ },
+ "structural_change": "QW-VM8SPLIT: vm8 split into single-root leaves (COORD 09:45); this leaf = CROM word half (lo | hi; x2 in slice2): banks 0/1 of the half (2 x 1024x256, the vmr shape) -- parallel fallback of crom",
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:QW-VM8SPLIT",
+  "branch": "claude/qw-vm8split-1020",
+  "tag": "xcrh",
+  "purpose": "QW-VM8SPLIT slice2 VM leaf: CROM word half (lo | hi; x2 in slice2): banks 0/1 of the half (2 x 1024x256, the vmr shape) -- parallel fallback of crom",
+  "extra_paths": [
+   "rtl",
+   "rtl/test/qwen_dv",
+   "physical/asap7_memory_macros_v2",
+   "results/arch/qw_vm8split_1020"
+  ],
+  "benches": [
+   {
+    "name": "vm8x_eq",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/eq 0 0",
+    "expect": "pass",
+    "pass_regex": "VM8X_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8x_eq_split1",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/eq1 0 1",
+    "expect": "pass",
+    "pass_regex": "VM8X_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8x_eq_split2",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/eq2 0 2",
+    "expect": "pass",
+    "pass_regex": "VM8X_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8x_mut_coll",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/m_coll coll 0",
+    "expect": "fail",
+    "fail_regex": "VM8X_EQ FAIL",
+    "fail_witness": "results/arch/qw_vm8split_1020/bench/run_coll_0.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8x_mut_wpri",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/m_wpri wpri 0",
+    "expect": "fail",
+    "fail_regex": "VM8X_EQ FAIL",
+    "fail_witness": "results/arch/qw_vm8split_1020/bench/run_wpri_0.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8x_mut_bsel",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/m_bsel bsel 0",
+    "expect": "fail",
+    "fail_regex": "VM8X_EQ FAIL",
+    "fail_witness": "results/arch/qw_vm8split_1020/bench/run_bsel_0.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_crh/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_crh"
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

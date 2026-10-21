@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_vm8r",
+ "enable": false,
+ "reason": "landed parent: every input lands on a flop of its own region beside its pin range (the leaf's kept relay copy in a column region, or the landing ring writer in an S-face region fc / fb / fv); every output is a vm8out capture flop in its region; lp offsets are the compiler record"
+}

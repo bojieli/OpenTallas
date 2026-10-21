@@ -1,0 +1,676 @@
+{
+ "name": "qfd_dv_slice2_vm8r",
+ "top": "qfd_dv_s5_vm8r",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+  "rtl/common/landed_parent/ot_pl_land_split.sv",
+  "rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "defines": [],
+ "clock_port": "ck_pg",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1425.6,
+  "h": 993.6,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "pins": {
+  "S": [
+   "a_re",
+   "a_addr",
+   "ck_va",
+   "a_q",
+   "f_va",
+   "cr_re",
+   "cr_addr",
+   "ck_fc",
+   "cr_q",
+   "f_crl",
+   "f_crh",
+   "b_re",
+   "b_addr",
+   "ck_vb",
+   "b_q",
+   "f_vb",
+   "vm_we",
+   "vm_waddr",
+   "ck_fv",
+   "vm_wdata",
+   "w16_we",
+   "w16_addr",
+   "w16_data",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "c_re",
+   "c_addr",
+   "ck_vc",
+   "c_q",
+   "f_vc",
+   "bs_re",
+   "bs_addr",
+   "ck_fb",
+   "bs_q",
+   "f_bt",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data",
+   "ck_pg",
+   "p_re",
+   "p_idx",
+   "p_q",
+   "rst_n"
+  ],
+  "N": [
+   "ck_cl",
+   "ck_ch",
+   "ck_bt"
+  ],
+  "E": [],
+  "W": []
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_va",
+   "at": [
+    86.4,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_vb",
+   "at": [
+    432.0,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr",
+   "count": 1,
+   "inst": "u_vc",
+   "at": [
+    777.6,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog",
+   "count": 1,
+   "inst": "u_pg",
+   "at": [
+    1080.0,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "count": 1,
+   "inst": "u_cl",
+   "at": [
+    86.4,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh",
+   "count": 1,
+   "inst": "u_ch",
+   "at": [
+    432.0,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab",
+   "count": 1,
+   "inst": "u_bt",
+   "at": [
+    777.6,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "route": {
+  "pd": 0.45,
+  "threads": 32,
+  "peak_ram_gb": 128,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "synth_keep_modules": [
+   "qfd_dv_s5_vm8q_vrd",
+   "qfd_dv_s5_vm8q_vwr",
+   "qfd_dv_s5_vm8q_twb",
+   "qfd_dv_s5_vm8q_twp",
+   "qfd_dv_s5_vm8q_twc"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "landed parent: every input lands on a flop of its own region beside its pin range (the leaf's kept relay copy in a column region, or the landing ring writer in an S-face region fc / fb / fv); every output is a vm8out capture flop in its region; lp offsets are the compiler record"
+ },
+ "structural_change": "QW2-VM8P4 10-21 P4 successor of P3 vm8q / vm8qb (in-flow ep6: ONE clock root over 1.43 mm, parent flop arrival 1.2..2.2 ns vs hard-child insertion 333-485 ps -> post-CTS setup -460 / -522 ps SS on ~9.6k endpoints, repair 0 buffers = skew). P4 = landed parent: 10 regional CTS roots (va vb vc pg | cl ch bt | fc fb fv), every cross-region net an lp landing (D4/E2, chunk 24, shared rings), regional reset runs with kept copies. Lockstep landed == flat qfd_dv_s5_vm8rf (lp bench) and flat == vm8fh (P3 tb). Price vs flat vm8rf: VM answers +3 (writes +3, write->read distance unchanged), PROG +0, BTAB / CROM +6, reset release +5. MAIN: P3 geometry (1425.6 x 993.6, S band 129.6, 86.4 column channels, 155-um inter-row channel); landing rings in the S band / channels",
+ "job": {
+  "owner": "Claude:QW2-VM8P4",
+  "branch": "claude/qw2-vm8p4-1021",
+  "tag": "vm8r",
+  "submit": false,
+  "purpose": "slice2 VM8 leaf group P4 (landed regions): critical, gate only -> COORD-REVIEW-QUEUE",
+  "hold_merge": "QW2-VM8P4 proof vehicle; the slice2 W parent (w6 VM8Q_VIEW) absorbs it",
+  "extra_paths": [
+   "rtl/test/qwen_dv/s5",
+   "rtl/qwen_dv/s5/p3",
+   "rtl/qwen_dv/s5/p4",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "results/arch/qw2_vm8p4_1021"
+  ],
+  "benches": [
+   {
+    "name": "p4_lp_lockstep",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator MUTS=0 bash rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BENCH_EXIT 0"
+   },
+   {
+    "name": "p4_lp_mut1_unland",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/qwen_dv/s5/p4/run_vm8r_mut.sh {RUN}/bench/lp1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LP_LOCKSTEP FAIL"
+   },
+   {
+    "name": "p4_flat_vs_fh",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/qwen_dv/s5/p4/qfd_dv_s5_vm8rf_p3_bench.sh {RUN}/bench/fh",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BENCH_EXIT 0"
+   }
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "a_re": [
+   5.4,
+   9.319
+  ],
+  "a_addr": [
+   9.319,
+   63.62
+  ],
+  "ck_va": [
+   63.62,
+   65.622
+  ],
+  "a_q": [
+   65.622,
+   137.448
+  ],
+  "f_va": [
+   137.448,
+   139.45
+  ],
+  "cr_re": [
+   139.45,
+   143.369
+  ],
+  "cr_addr": [
+   143.369,
+   197.67
+  ],
+  "ck_fc": [
+   197.67,
+   199.672
+  ],
+  "cr_q": [
+   199.672,
+   341.596
+  ],
+  "f_crl": [
+   341.596,
+   343.598
+  ],
+  "f_crh": [
+   343.598,
+   345.6
+  ],
+  "b_re": [
+   345.6,
+   349.023
+  ],
+  "b_addr": [
+   349.023,
+   391.426
+  ],
+  "ck_vb": [
+   391.426,
+   393.366
+  ],
+  "b_q": [
+   393.366,
+   449.327
+  ],
+  "f_vb": [
+   449.327,
+   451.267
+  ],
+  "vm_we": [
+   451.267,
+   454.69
+  ],
+  "vm_waddr": [
+   454.69,
+   497.093
+  ],
+  "ck_fv": [
+   497.093,
+   499.032
+  ],
+  "vm_wdata": [
+   499.032,
+   554.994
+  ],
+  "w16_we": [
+   554.994,
+   556.934
+  ],
+  "w16_addr": [
+   556.934,
+   563.746
+  ],
+  "w16_data": [
+   563.746,
+   673.941
+  ],
+  "w1_we": [
+   673.941,
+   675.88
+  ],
+  "w1_addr": [
+   675.88,
+   682.693
+  ],
+  "w1_data": [
+   682.693,
+   691.2
+  ],
+  "c_re": [
+   691.2,
+   696.473
+  ],
+  "c_addr": [
+   696.473,
+   783.271
+  ],
+  "ck_vc": [
+   783.271,
+   785.442
+  ],
+  "c_q": [
+   785.442,
+   900.598
+  ],
+  "f_vc": [
+   900.598,
+   902.769
+  ],
+  "bs_re": [
+   902.769,
+   904.94
+  ],
+  "bs_addr": [
+   904.94,
+   917.302
+  ],
+  "ck_fb": [
+   917.302,
+   919.473
+  ],
+  "bs_q": [
+   919.473,
+   1034.629
+  ],
+  "f_bt": [
+   1034.629,
+   1036.8
+  ],
+  "tw_we": [
+   1036.8,
+   1038.77
+  ],
+  "tw_kind": [
+   1038.77,
+   1040.982
+  ],
+  "tw_addr": [
+   1040.982,
+   1048.518
+  ],
+  "tw_data": [
+   1048.518,
+   1298.06
+  ],
+  "ck_pg": [
+   1298.06,
+   1300.03
+  ],
+  "p_re": [
+   1300.03,
+   1302.0
+  ],
+  "p_idx": [
+   1302.0,
+   1305.906
+  ],
+  "p_q": [
+   1305.906,
+   1418.23
+  ],
+  "rst_n": [
+   1418.23,
+   1420.2
+  ],
+  "ck_cl": [
+   215.136,
+   216.864
+  ],
+  "ck_ch": [
+   560.736,
+   562.464
+  ],
+  "ck_bt": [
+   906.336,
+   908.064
+  ]
+ },
+ "params": {
+  "MUT": 0
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_pg",
+  "ck_va",
+  "ck_vb",
+  "ck_vc",
+  "ck_cl",
+  "ck_ch",
+  "ck_bt",
+  "ck_fc",
+  "ck_fb",
+  "ck_fv"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_pg"
+   ],
+   "inputs": [
+    "p_idx",
+    "p_re",
+    "rst_n",
+    "tw_addr",
+    "tw_data",
+    "tw_kind",
+    "tw_we"
+   ],
+   "outputs": [
+    "p_q"
+   ]
+  },
+  "va": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_va"
+   ],
+   "inputs": [
+    "a_addr",
+    "a_re"
+   ],
+   "outputs": [
+    "a_q",
+    "f_va"
+   ]
+  },
+  "vb": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_vb"
+   ],
+   "inputs": [
+    "b_addr",
+    "b_re"
+   ],
+   "outputs": [
+    "b_q",
+    "f_vb"
+   ]
+  },
+  "vc": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_vc"
+   ],
+   "inputs": [
+    "c_addr",
+    "c_re"
+   ],
+   "outputs": [
+    "c_q",
+    "f_vc"
+   ]
+  },
+  "cl": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_cl"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ch": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ch"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bt": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bt"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "fc": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_fc"
+   ],
+   "inputs": [
+    "cr_addr",
+    "cr_re"
+   ],
+   "outputs": [
+    "cr_q",
+    "f_crh",
+    "f_crl"
+   ]
+  },
+  "fb": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_fb"
+   ],
+   "inputs": [
+    "bs_addr",
+    "bs_re"
+   ],
+   "outputs": [
+    "bs_q",
+    "f_bt"
+   ]
+  },
+  "fv": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_fv"
+   ],
+   "inputs": [
+    "vm_waddr",
+    "vm_wdata",
+    "vm_we",
+    "w16_addr",
+    "w16_data",
+    "w16_we",
+    "w1_addr",
+    "w1_data",
+    "w1_we"
+   ],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/qw2_vm8p4_1021/lp/qfd_dv_s5_vm8r_record.json",
+ "child_clock_ref": "boundary",
+ "hold_budget": "tile",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> regional reset runs from region pg (depth 5, 1-bit hops <= 405 um), last stage = kept copies <= 32 loads (regional_reset_copies) -> leaf rst_n pins; the port net has ONE sink"
+ },
+ "landed": {
+  "record": "results/arch/qw2_vm8p4_1021/lp/qfd_dv_s5_vm8r_record.json",
+  "landings": 50,
+  "landing_flops": 27580,
+  "reset_depth": 5,
+  "lp_spec": "tools/landed_parent/specs/qfd_dv_s5_vm8r.json",
+  "D": 4,
+  "E": 2,
+  "landing_chunk_bits": 24,
+  "regional_reset_copies": true,
+  "offsets": {
+   "a_q": 3,
+   "b_q": 3,
+   "c_q": 3,
+   "cr_q": 6,
+   "bs_q": 6,
+   "p_q": 0,
+   "f_va": 3,
+   "f_vb": 3,
+   "f_vc": 3,
+   "f_crl": 6,
+   "f_crh": 6,
+   "f_bt": 6
+  }
+ },
+ "safe_design_checklist": {
+  "1_pins": "every port lands on a flop of its own small region beside its S pin range; outputs flop-last",
+  "2_reach": "row-2 / broadcast traffic only through landings (multicycle 2 per window); no pin -> far-leaf wire",
+  "3_fanout": "kept per-leaf relay copies; landing_chunk_bits 24 + shared rings + reset copies <= 32; census in gate",
+  "4_depth": "relays + ring select only",
+  "5_storage": "all arrays inside the 7 closed hard children",
+  "6_floorplan": "P3 lattice placement (MAIN) / enlarged (FALLBACK)",
+  "7_clock": "10 regional roots, child clock pins sinks of their region root (landed_cluster), crossings landed",
+  "8_reset": "lp regional reset runs, leaf rst_n only; datapath unreset"
+ }
+}
