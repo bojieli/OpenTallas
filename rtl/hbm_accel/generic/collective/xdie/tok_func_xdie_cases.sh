@@ -55,6 +55,7 @@ case_run() {  # name swd kind frames
 CASES="qw_ag64:4:ag:64 qw_ag32:4:ag:32 qw_ag16:4:ag:16 qw_rs64:4:rs:64 qw_rs32:4:rs:32 qw_rs16:4:rs:16
  ds_ag48:333:ag:48 ds_ag144:333:ag:144 ds_rs48:333:rs:48 ds_rs144:333:rs:144"
 [ "$VAR" = main_rows256 ] && CASES="ds_ag48:333:ag:48 ds_ag144:333:ag:144 ds_rs144:333:rs:144"
+[ -s "$SRC/xdie_cases.txt" ] && CASES=$(cat "$SRC/xdie_cases.txt")
 : > "$OUT/cases.txt"
 for c in $CASES; do IFS=: read -r n s k p <<< "$c"; case_run $n $s $k $p | tee -a "$OUT/cases.txt"; done
 rm -rf "$OUT/obj"

@@ -28,7 +28,7 @@
 #   SUCC_BASE fed23480d, SUCC_RL d755fcd4c (hcoll_reduce_lane_u), SUCC_LINK 34f85027d (hcoll_link_e2u, RTL edc9ede07),
 #   SUCC_ISS 8827e4001 (issuer_m_r128 v12), MAIN256_REV origin/main,
 #   RUN=fleet|local|assemble (assemble: sources + manifests only; fleet: src staged to FLEET_STAGE hosts under FLEET_ROOT, one unpinned ot-run per variant),
-#   FLEET_STAGE "ot-gold1 ot-gold2", FLEET_ROOT /srv/opentallas-scratch/claude/tok-func-hbm-xdie-1021, OT_MEM 48.
+#   XDIE_CASES (optional subset, e.g. "qw_ag16:4:ag:16"), FLEET_STAGE "ot-gold1 ot-gold2", FLEET_ROOT /srv/opentallas-scratch/claude/tok-func-hbm-xdie-1021, OT_MEM 48.
 # Output: OUTROOT/<variant>/{src.manifest.json,run/*.log}, OUTROOT/report.json (tools/tok_func_hbm_xdie_report.py).
 set -u
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -150,6 +150,7 @@ assemble() {  # variant -> $OUTROOT/$v/src + flist + defines + manifest
   fi
   echo "$fl" | tr ' ' '\n' | grep -v '^$' | grep -v "^$X/tb_xdie_hbm_step.sv$" > "$S/xdie_flist.txt"
   echo "$defs" > "$S/xdie_defines.txt"
+  [ -n "${XDIE_CASES:-}" ] && echo "$XDIE_CASES" > "$S/xdie_cases.txt"   # optional case subset (name:swd:kind:frames ...)
   python3 - "$OUTROOT/$v" "$v" "$DIE_REV" "$DIE_CONTRACT" "$BENCH_REV" "$ovr" "$dut" <<'EOF'
 import json, sys, pathlib, hashlib
 o, v, die_rev, contract, bench, ovr, dut = sys.argv[1:8]
