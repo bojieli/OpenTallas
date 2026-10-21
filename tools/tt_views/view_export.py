@@ -114,7 +114,7 @@ if {[llength [get_ports -quiet clk_in]] && [llength [get_ports -quiet clk_out]]}
 
 
 
-def forwarded_clock_tcl(inp='clk_in', outp='clk_out', max_cells=16):
+def forwarded_clock_tcl(inp='clk_in', outp='clk_out', max_cells=16, sense='positive_unate'):
     """Default clk_in/clk_out keeps the historical one-buffer TCL byte for byte.
 
     Any other declared forwarding pair (e.g. a relay ck -> ck_o through its kept
@@ -123,7 +123,9 @@ def forwarded_clock_tcl(inp='clk_in', outp='clk_out', max_cells=16):
     (a multi-input cell, a flop, no driver, > max_cells) refuses the receipt.
     The positive_unate check on the merged native arc still decides polarity.
     """
-    if (inp, outp) == ('clk_in', 'clk_out'):
+    if sense not in ('positive_unate', 'negative_unate'):
+        raise VerdictError('forwarded-clock sense must be positive_unate or negative_unate')
+    if (inp, outp) == ('clk_in', 'clk_out') and sense == 'positive_unate':
         return FORWARDED_CLOCK_TCL
     for n in (inp, outp):
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n):
@@ -158,15 +160,54 @@ if {{[llength [get_ports -quiet {inp}]] && [llength [get_ports -quiet {outp}]]}}
   set ot_fc_inst [$ot_fc_it getInst]
   puts "OT_FC_DRIVER [[$ot_fc_inst getMaster] getName] [$ot_fc_inst getName]"
 """
+    if sense == 'negative_unate':
+        # Resolve parity from the actual mapped chain and loaded corner Liberty,
+        # rather than accepting a requested label as physical evidence.
+        head = head.replace('  set ot_fc_chain {}', '  set ot_fc_chain {}\n  set ot_fc_parity 0')
+        role = r'''
+    set ot_fc_input [lindex $ot_fc_ins 0]
+    set ot_fc_ip [[$ot_fc_input getMTerm] getName]
+    set ot_fc_op [[$ot_fc_d getMTerm] getName]
+    set ot_fc_master [[$ot_fc_ci getMaster] getName]
+    set ot_fc_functions {}
+    foreach ot_fc_lib [get_libs -quiet *] {
+      set ot_fc_lc [$ot_fc_lib find_liberty_cell $ot_fc_master]
+      if {$ot_fc_lc in {"" NULL}} continue
+      set ot_fc_lp [$ot_fc_lc find_liberty_port $ot_fc_op]
+      if {$ot_fc_lp in {"" NULL} || [sta::liberty_port_direction $ot_fc_lp] ne "output"} {error OT_FC_LIBERTY_OUTPUT}
+      set ot_fc_fn [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$ot_fc_lp function]]
+      dict set ot_fc_functions $ot_fc_fn 1
+      puts "OT_FC_LIB $ot_fc_master [get_full_name $ot_fc_lib] $ot_fc_fn"
+    }
+    if {[dict size $ot_fc_functions] != 1} {error OT_FC_LIBERTY_AMBIGUOUS_FUNCTION}
+    set ot_fc_fn [lindex [dict keys $ot_fc_functions] 0]
+    if {$ot_fc_fn eq $ot_fc_ip} {
+      set ot_fc_inv 0
+    } elseif {$ot_fc_fn in [list !$ot_fc_ip ~$ot_fc_ip ${ot_fc_ip}']} {
+      set ot_fc_inv 1
+    } else {error "OT_FC_LIBERTY_NOT_UNARY $ot_fc_master $ot_fc_fn"}
+    set ot_fc_parity [expr {$ot_fc_parity ^ $ot_fc_inv}]
+    puts "OT_FC_ROLE $ot_fc_master [$ot_fc_ci getName] $ot_fc_ip $ot_fc_op $ot_fc_fn $ot_fc_inv"
+'''
+        head = head.replace('    lappend ot_fc_chain $ot_fc_ci', role + '    lappend ot_fc_chain $ot_fc_ci')
+        head += '''
+  if {$ot_fc_parity != 1} {error OT_FC_NATIVE_POLARITY_MISMATCH}
+  puts "OT_FC_SENSE negative_unate"
+  puts "OT_FC_PHASE rise fall"
+  puts "OT_FC_PHASE fall rise"
+'''
     tail = FORWARDED_CLOCK_TCL[FORWARDED_CLOCK_TCL.index('  set ot_fc_root {}'):]
     tail = tail.replace('"clk_in"', f'"{inp}"').replace('"clk_out"', f'"{outp}"')
     tail = tail.replace('[get_ports clk_in]', f'[get_ports {inp}]').replace('[get_ports clk_out]', f'[get_ports {outp}]')
     tail = tail.replace('forwarded clk_in', f'forwarded {inp}').replace('OT_FC_ROOT clk_in', f'OT_FC_ROOT {inp}')
+    if sense == 'negative_unate':
+        tail = tail.replace('set phase [sta::time_sta_ui [lindex $ot_fc_wave $edge]]',
+                            'set phase [sta::time_sta_ui [lindex $ot_fc_wave [expr {1 - $edge}]]]')
     assert 'clk_in' not in tail and 'clk_out' not in tail, tail
     return head + tail
 
 
-def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp='clk_in', outp='clk_out'):
+def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp='clk_in', outp='clk_out', sense='positive_unate'):
     """Parse native propagated STA; absence is ordinary for non-forwarded tiles."""
     driver = re.findall(r"^OT_FC_DRIVER (\S+) (.+)$", log, re.M)
     if not driver:
@@ -206,6 +247,30 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp='clk_in', 
                 odb_sha256=odb_sha256, spef_sha256=spef_sha256)
     if chain:
         rec['chain_out_to_in'] = [dict(cell=c, instance=i) for c, i in chain]
+    native_sense = re.findall(r'^OT_FC_SENSE (\S+)$', log, re.M)
+    if sense == 'negative_unate':
+        roles = re.findall(r'^OT_FC_ROLE (\S+) (\S+) (\S+) (\S+) (\S+) ([01])$', log, re.M)
+        phases = re.findall(r'^OT_FC_PHASE (\S+) (\S+)$', log, re.M)
+        libs = re.findall(r'^OT_FC_LIB (\S+) (\S+) (\S+)$', log, re.M)
+        if native_sense != [sense] or phases != [('rise', 'fall'), ('fall', 'rise')]:
+            raise VerdictError('missing native inverted clock phase provenance')
+        if not roles or [(c, i) for c, i, *_ in roles] != chain:
+            raise VerdictError('native inverted clock roles do not match the mapped chain')
+        parity = 0
+        for cell, inst, ip, op, fn, bit in roles:
+            expected = 0 if fn == ip else 1 if fn in ('!' + ip, '~' + ip, ip + "'") else None
+            actual_libs = [f for c, _, f in libs if c == cell]
+            if expected is None or int(bit) != expected or not actual_libs or any(f != fn for f in actual_libs):
+                raise VerdictError('native inverted clock function/Liberty provenance mismatch')
+            parity ^= expected
+        if parity != 1:
+            raise VerdictError('native forwarded clock chain is not inverting')
+        rec.update(timing_sense=sense, input_edge_for_output=dict(phases),
+                   native_unary_roles=[dict(cell=c, instance=i, input_pin=ip, output_pin=op, function=fn, inversion=int(bit))
+                                       for c, i, ip, op, fn, bit in roles],
+                   loaded_corner_functions=[dict(cell=c, library=l, function=f) for c, l, f in libs])
+    elif sense != 'positive_unate' or native_sense:
+        raise VerdictError('unexpected native forwarded clock polarity')
     return rec
 
 
@@ -230,7 +295,7 @@ def liberty_pin_group(text, pin):
     raise VerdictError('unterminated native forwarded-clock Liberty group')
 
 
-def merge_forwarded_clock_model(main, combinational, inp='clk_in', outp='clk_out'):
+def merge_forwarded_clock_model(main, combinational, inp='clk_in', outp='clk_out', sense='positive_unate'):
     """Use the native clock-free characterization for the one combinational path.
 
     Main ETM registers/setup/hold remain byte-identical. OpenSTA's sequential
@@ -244,8 +309,8 @@ def merge_forwarded_clock_model(main, combinational, inp='clk_in', outp='clk_out
     types = re.findall(r'timing_type\s*:\s*(\w+)\s*;', group)
     if related != [inp] or types != ['combinational']:
         raise VerdictError(f'native forwarding characterization is not one {inp} combinational arc')
-    if not re.search(r'timing_sense\s*:\s*positive_unate\s*;', group):
-        raise VerdictError('native forwarding characterization is not a noninverting buffer')
+    if sense not in ('positive_unate', 'negative_unate') or re.findall(r'timing_sense\s*:\s*(\w+)\s*;', group) != [sense]:
+        raise VerdictError('native forwarding characterization has the wrong transfer polarity')
     for table in ('cell_rise', 'cell_fall', 'rise_transition', 'fall_transition'):
         if not re.search(r'\b' + table + r'\s*\(', group):
             raise VerdictError('native forwarding characterization is missing load tables')
@@ -707,11 +772,13 @@ def main():
     ap.add_argument("--forwarded-clock", default="clk_in:clk_out", metavar="IN:OUT",
                     help="forwarded clock port pair (default clk_in:clk_out = historical one-buffer check); any other "
                          "pair is walked back through single-input cells (e.g. a relay ck:ck_o kept-inverter pair)")
+    ap.add_argument("--forwarded-clock-sense", default="positive_unate", choices=("positive_unate", "negative_unate"),
+                    help="expected native transfer polarity; negative requires mapped unary Liberty proof and opposite-edge phase measurements")
     a = ap.parse_args()
     fc_ports = tuple(a.forwarded_clock.split(':'))
     if len(fc_ports) != 2 or fc_ports[0] == fc_ports[1]:
         ap.error('--forwarded-clock wants IN:OUT')
-    forwarded_clock_tcl(*fc_ports)   # validates the names
+    forwarded_clock_tcl(*fc_ports, sense=a.forwarded_clock_sense)   # validates the names
     strict = a.signal_max_layer is not None
     if strict:
         if (not re.fullmatch(r"M[2-9]", a.signal_max_layer)
@@ -840,7 +907,7 @@ def main():
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
                          f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs, *seq, *audit,
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
-                         forwarded_clock_tcl(*fc_ports),
+                         forwarded_clock_tcl(*fc_ports, sense=a.forwarded_clock_sense),
                          f"write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib",
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
                          f"file copy -force {PLAT}/lef/asap7_tech_1x_201209.lef /out/pin_only_tech.lef"
@@ -872,13 +939,13 @@ def main():
         try:
             fc = forwarded_clock_receipt(log, c,
                 sha(base / '6_final.odb') if 'OT_FC_DRIVER ' in log else '',
-                sha(base / '6_final.spef') if 'OT_FC_DRIVER ' in log else '', *fc_ports)
+                sha(base / '6_final.spef') if 'OT_FC_DRIVER ' in log else '', *fc_ports, sense=a.forwarded_clock_sense)
             if fc is not None:
                 main_lib = out / f'{a.name}_{c}.lib'
                 comb_lib = out / f'forwarded_{c}.lib.raw'
                 fc['native_combinational_lib_sha256'] = sha(comb_lib)
                 fc['sequential_etm_before_merge_sha256'] = sha(main_lib)
-                merged = merge_forwarded_clock_model(main_lib.read_text(), comb_lib.read_text(), *fc_ports)
+                merged = merge_forwarded_clock_model(main_lib.read_text(), comb_lib.read_text(), *fc_ports, sense=a.forwarded_clock_sense)
                 # Docker writes the native ETM as root; replace through our output
                 # directory, rather than trying to truncate its root-owned file.
                 with tempfile.NamedTemporaryFile(mode='w', dir=out, delete=False) as tmp:

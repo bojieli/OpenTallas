@@ -125,5 +125,61 @@ class NamedForwardingPair(unittest.TestCase):
             ve.merge_forwarded_clock_model(main, 'cell(x) {\n' + selfarc + '\n}', 'ck', 'ck_o')
 
 
+class InvertedForwardingPair(unittest.TestCase):
+    LOG = GOOD.replace('OT_FC_DRIVER BUFx12f_ASAP7_75t_R u.u_fcb_ck.u_cell',
+                       'OT_FC_CHAIN BUF outbuf\nOT_FC_CHAIN INV invert\nOT_FC_CHAIN BUF inbuf\n'
+                       'OT_FC_DRIVER BUF outbuf').replace('OT_FC_ROOT clk_in', 'OT_FC_ROOT ck') + '''
+OT_FC_LIB BUF corner_tt A
+OT_FC_LIB INV corner_tt !A
+OT_FC_ROLE BUF outbuf A Y A 0
+OT_FC_ROLE INV invert A Y !A 1
+OT_FC_ROLE BUF inbuf A Y A 0
+OT_FC_SENSE negative_unate
+OT_FC_PHASE rise fall
+OT_FC_PHASE fall rise
+'''
+
+    def test_inversion_requires_actual_loaded_functions_and_phase_map(self):
+        rec = ve.forwarded_clock_receipt(self.LOG, 'tt', 'odb', 'spef', 'ck', 'ck_o', sense='negative_unate')
+        self.assertEqual(rec['timing_sense'], 'negative_unate')
+        self.assertEqual(rec['input_edge_for_output'], {'rise': 'fall', 'fall': 'rise'})
+        self.assertEqual(sum(r['inversion'] for r in rec['native_unary_roles']), 1)
+        for bad in (self.LOG.replace('OT_FC_PHASE rise fall', 'OT_FC_PHASE rise rise'),
+                    self.LOG.replace('OT_FC_LIB INV corner_tt !A', ''),
+                    self.LOG.replace('OT_FC_LIB INV corner_tt !A', 'OT_FC_LIB INV corner_tt A'),
+                    self.LOG.replace('OT_FC_ROLE INV invert A Y !A 1', 'OT_FC_ROLE INV invert A Y A 0'),
+                    self.LOG.replace('OT_FC_ROLE INV invert A Y !A 1', 'OT_FC_ROLE INV invert A Y !A 0'),
+                    self.LOG + 'OT_FC_LIB INV other_corner A\n',
+                    self.LOG.replace('OT_FC_SENSE negative_unate', ''),
+                    self.LOG.replace('OT_FC_CHAIN INV invert', 'OT_FC_CHAIN INV other')):
+            with self.subTest(log=bad), self.assertRaises(ve.VerdictError):
+                ve.forwarded_clock_receipt(bad, 'tt', 'odb', 'spef', 'ck', 'ck_o', sense='negative_unate')
+        with self.assertRaises(ve.VerdictError):
+            ve.forwarded_clock_receipt(self.LOG, 'tt', 'odb', 'spef', 'ck', 'ck_o')
+
+    def test_native_negative_arc_only_and_other_groups_unchanged(self):
+        pin = NativeModelMerge.PIN.replace('clk_in', 'ck').replace('clk_out', 'ck_o').replace('positive_unate', 'negative_unate')
+        untouched = '\npin("q") { timing() { related_pin : "ck"; timing_type : rising_edge; } }\n'
+        main = 'cell(x) {\npin("ck_o") { direction : output; }' + untouched + '}'
+        native = 'cell(x) {\n' + pin + '\n}'
+        merged = ve.merge_forwarded_clock_model(main, native, 'ck', 'ck_o', sense='negative_unate')
+        self.assertEqual(main.replace('pin("ck_o") { direction : output; }', ''), merged.replace(pin, ''))
+        for bad in (native.replace('negative_unate', 'positive_unate'),
+                    native.replace('related_pin : "ck"', 'related_pin : "ck_o"'),
+                    native.replace('combinational', 'rising_edge')):
+            with self.subTest(lib=bad), self.assertRaises(ve.VerdictError):
+                ve.merge_forwarded_clock_model(main, bad, 'ck', 'ck_o', sense='negative_unate')
+        with self.assertRaises(ve.VerdictError):
+            ve.merge_forwarded_clock_model(main, native, 'ck', 'ck_o')
+
+    def test_opposite_input_phase_and_native_root_proof_in_tcl(self):
+        tcl = ve.forwarded_clock_tcl('ck', 'ck_o', sense='negative_unate')
+        self.assertIn('find_liberty_cell', tcl)
+        self.assertIn('[$ot_fc_lp function]', tcl)
+        self.assertIn('if {$ot_fc_parity != 1}', tcl)
+        self.assertIn('lindex $ot_fc_wave [expr {1 - $edge}]', tcl)
+        self.assertIs(ve.forwarded_clock_tcl(), ve.FORWARDED_CLOCK_TCL)
+
+
 if __name__ == '__main__':
     unittest.main()
