@@ -28,3 +28,12 @@ an include override; the DUT is the ew595 source.
    d2d_link_calendar --emb-window and bound on both link ends (KV target 11 + this tile; compute side LEAD9-QW)
 
 Gate review (PNG inspection per item) is appended below after the --cts gate.
+
+## Gate review (--cts, 37d8f203e, gate_result.json): WARN 0 fail
+- util WARN only (std 264-277 um2 in 653 um2 core = 40-42%, same as the CLOSED bc4 at this die slot outline; kept: the slot is the die's).
+- PRE-GATE NATIVE CENSUS: mapped dynamic load limit32 PASS, max 28.  355 flops, depth 438 ps.
+- Clock: one root (ck, 355 sinks), TT/FF insertion 93.4/70.6 ps, pin-flop spread TT 3.3 / FF 3.3 ps (<= 80).
+- Trial GRT overflow 0 (M2 22.1%); placement setup WNS +156 ps, hold +49 ps.
+- PNGs inspected (gate_layout/floorplan.png, density.png): no macros; W/E pins full-face centred, S clock centre with reset/reload
+  beside it; one std-cell band, density even across the core (no hot spot, no island); M5 PG stripes full length.
+- Checklist items 1-8 confirmed at the gate (above).
