@@ -35,6 +35,11 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  output wire[45:0]program_start_ctx,   // {row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}
  input wire program_done
 );
+`ifdef SVGH_MUT
+ localparam integer HM=`SVGH_MUT;     // HBM-SVGREL8 bench negative controls (see the kit README)
+`else
+ localparam integer HM=0;
+`endif
  initial if(NID<1||NID>15||IDW<1||IDW>9||(PAW!=10&&PAW!=11)||(DD!=128&&DD!=256)||QD!=4)$fatal(1,"issuer_rel_h parameters");
  // ---------------- descriptor table (DD/128 128x256 SRAMs, registered write port, written at install only)
  reg desc_we_q;reg[DAW-1:0]desc_addr_q;reg[255:0]desc_data_q;
@@ -172,7 +177,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  always @(posedge clk or negedge rst_n[4])begin
   if(!rst_n[4])begin gqw_k<={{(QD-1)*NQS{1'b0}},{NQS{1'b1}}};gqr_k<={{(QD-1)*NQS{1'b0}},{NQS{1'b1}}};end
   else for(wk=0;wk<QD;wk=wk+1)begin
-   gqw_k[wk*NQS+:NQS]<={NQS{gq_w_n==wk&&gq_n_n<QD}};gqr_k[wk*NQS+:NQS]<={NQS{gq_r_n==wk}};
+   gqw_k[wk*NQS+:NQS]<={NQS{gq_w_n==wk&&gq_n_n<QD}};gqr_k[wk*NQS+:NQS]<={NQS{((HM==3)?gq_r:gq_r_n)==wk}};
   end
  end
  // ---------------- datapath (no reset)

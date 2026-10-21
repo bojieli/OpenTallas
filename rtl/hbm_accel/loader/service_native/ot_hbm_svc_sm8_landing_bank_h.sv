@@ -2,10 +2,13 @@
 // HBM-SVGREL8 2026-10-20: HARDENED ot_hbm_svc_sm8_landing_bank (LBANKS 4: one 256x256 SRAM = four 64-row landing
 // blocks; that module stays byte-identical).  Same identity checks (epoch, ordinal%8 bank, row < count, duplicate),
 // same faults.  Changes:
-//   * response FIFO = ot_hbm_svc_async_fifo_oh (registered one-hot slot selects, no 570-load decode / mux nets);
+//   * response FIFO = the reviewed, fingerprinted ot_hbm_svc_async_fifo, unchanged (the only primitive the HBM CDC
+//     admission accepts for a crossing; its internal 8-slot decode / read mux is the reviewed primitive's);
 //   * SRAM write port from STREAM flops (as the fg2 WREG=1 master): the accepted word lands one stream edge later and
 //     complete_v is registered with it (landing -> resident +1 stream edge, before the elastic block_ready); a macro pin
-//     then reads only stream-family flops (reviewed_gray_fifos);
+//     then reads only stream-family flops.  The capture registers load while the FIFO head is valid (storage read only
+//     under rd_valid, as reviewed_gray_fifos proves), through per-slice AND gates with KEPT qualifier flops (each AND
+//     drives <= 32 capture enables; packet_v itself drives only the ANDs);
 //   * the reserve arrives REGISTERED (the producer's per-bank copy) and is registered once more here into KEPT per-slot
 //     enable copies (each <= 32 flops): a block's bank state is set 2 stream edges after its reserve (the first response
 //     of a block needs the descriptor crossing + DRAM, >> 2 edges; a bank is only re-reserved after its drain);
@@ -24,13 +27,16 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  output wire [255:0] read_data
 );
  initial if(LBANKS!=4)$fatal(1,"landing_bank_h: LBANKS 4 (one 256x256 macro)");
- wire[3:0]hr;wire[4:0]sr;
- ot_rst_fanout #(.N(4)) u_hr(.clk(hbm_clk),.rst_n_in(hbm_rst_n),.rst_n(hr));
- ot_rst_fanout #(.N(5)) u_sr(.clk(stream_clk),.rst_n_in(stream_rst_n),.rst_n(sr));
+ wire[1:0]sr;
+ ot_rst_fanout #(.N(2)) u_sr(.clk(stream_clk),.rst_n_in(stream_rst_n),.rst_n(sr));
  wire packet_v,packet_take,underflow;wire [IW-1:0] packet;
- ot_hbm_svc_async_fifo_oh #(.WIDTH(IW),.DEPTH(RESPONSE_DEPTH),.NRW(4),.NRR(4)) u_response(
-  .wr_clk(hbm_clk),.wr_rst_n(hr),.wr_valid(in_v),.wr_ready(in_ready),.wr_data(in_data),.wr_overflow(overflow),
-  .rd_clk(stream_clk),.rd_rst_n(sr[3:0]),.rd_valid(packet_v),.rd_ready(packet_take),.rd_data(packet),.rd_underflow(underflow));
+ ot_hbm_svc_async_fifo #(.WIDTH(IW),.DEPTH(RESPONSE_DEPTH)) u_response(
+  .wr_clk(hbm_clk),.wr_rst_n(hbm_rst_n),.wr_valid(in_v),.wr_ready(in_ready),.wr_data(in_data),.wr_overflow(overflow),
+  .rd_clk(stream_clk),.rd_rst_n(stream_rst_n),.rd_valid(packet_v),.rd_ready(packet_take),.rd_data(packet),.rd_underflow(underflow));
+ // capture qualifiers: KEPT flops (0 in reset, 1 after), one per 32-bit capture slice (8 data + 1 bank/row)
+ (* keep="true",dont_touch="true" *) reg[8:0]cq_k;
+ always @(posedge stream_clk or negedge sr[1])if(!sr[1])cq_k<=0;else cq_k<={9{1'b1}};
+ wire[8:0]cap_en=cq_k&{9{packet_v}};
  // reserve stage 2: KEPT per-slot enables [slot*4+c] (c0: valid/epoch/count 24, c1/c2: seen halves 32, c3: received 7)
  (* keep="true",dont_touch="true" *) reg[LBANKS*4-1:0]ren_k;
  reg[15:0]r_epoch;reg[6:0]r_count;
@@ -46,8 +52,8 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  reg w_ce_q,cmp_q;reg [LB-1:0] w_bank_q;reg [5:0] w_row_q;reg [255:0] w_data_q;
  assign complete_v=cmp_q;assign complete_bank=w_bank_q;assign fault=sticky||underflow;
  integer b,c;
- always @(posedge stream_clk or negedge sr[4])begin
-  if(!sr[4])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;ren_k<=0;end
+ always @(posedge stream_clk or negedge sr[0])begin
+  if(!sr[0])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;ren_k<=0;end
   else begin
    w_ce_q<=landing_write;cmp_q<=complete_now;
    for(b=0;b<LBANKS;b=b+1)for(c=0;c<4;c=c+1)ren_k[b*4+c]<=reserve_v&&reserve_bank==b;
@@ -57,7 +63,8 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  end
  always @(posedge stream_clk)begin
   r_epoch<=reserve_epoch;r_count<=reserve_total>BANK?7'((reserve_total+7-BANK)/8):7'd0;
-  w_bank_q<=bank;w_row_q<=row;w_data_q<=packet[255:0];
+  if(cap_en[8])begin w_bank_q<=bank;w_row_q<=row;end
+  for(c=0;c<8;c=c+1)if(cap_en[c])w_data_q[c*32+:32]<=packet[c*32+:32];
   for(b=0;b<LBANKS;b=b+1)begin
    if(ren_k[b*4])begin epoch_q[b]<=r_epoch;count_q[b]<=r_count;end
    if(ren_k[b*4+1])seen_q[b][31:0]<=0;

@@ -25,6 +25,11 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  output wire [15:0] response_epoch,output wire [LB-1:0] response_bank,output wire fault,
  output wire issue_done
 );
+`ifdef SVGH_MUT
+ localparam integer HM=`SVGH_MUT;     // HBM-SVGREL8 bench negative controls (see the kit README)
+`else
+ localparam integer HM=0;
+`endif
  localparam integer ENTRIES=1<<OWNER_AW,GW=17-OWNER_AW;
  initial if(ENTRIES!=32)$fatal(1,"owner_rel_h: OWNER_AW 5 (reset leaves sized for 32 entries)");
  reg [4:0] pc_q;always @(posedge clk)pc_q<=pc_id; // strap identity (static), this owner's physical PC
@@ -93,7 +98,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  always @(posedge clk or negedge rst_n[1])if(!rst_n[1])valid_q<=0;else valid_q<=valid_n;
  always @(posedge clk or negedge rst_n[2])if(!rst_n[2])vfree_a<={ENTRIES{1'b1}};else vfree_a<=~valid_n;
  // vfree_b: no reset -- a pure function of the reset valid_q (all free one edge into reset)
- always @(posedge clk)vfree_b<=~valid_n;
+ always @(posedge clk)vfree_b<=(HM==5)?~valid_q:~valid_n;
  // datapath: cursor + tag table (no reset)
  always @(posedge clk)begin
   if(blk_start)cursor<=0;

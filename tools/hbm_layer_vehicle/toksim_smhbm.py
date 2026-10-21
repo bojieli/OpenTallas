@@ -50,7 +50,7 @@ ot_hbm_svc_prefetch_overlap_owner_rel_id.sv ot_hbm_svc_sm4pc_cdc_rel_id.sv ot_hb
 ot_hbm_svc_sm_feed_programmed_rel_id.sv ot_hbm_svc_sm_group_rel_id.sv ot_hbm_svc_sm_xcal_rel.sv ot_hbm_svc_sm_xcal_rel_t.sv
 ot_hbm_svc_vm_kshare_splitstrap.sv ot_hbm_svc_ring_h9b.sv ot_hbm_svc_ring_h9b_ff.sv ot_hbm_svc_pin_skid2_h9.sv
 ot_hbm_svc_pc_ctrl_leaf.sv ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv
-ot_hbm_svc_async_fifo_oh.sv ot_hbm_svc_pin_skid2_r32.sv ot_hbm_svc_prefetch_owner_rel_h.sv ot_hbm_svc_sm8_landing_bank_h.sv
+ot_hbm_svc_pin_skid2_r32.sv ot_hbm_svc_prefetch_owner_rel_h.sv ot_hbm_svc_sm8_landing_bank_h.sv
 ot_hbm_svc_sm4pc_cdc_rel_h.sv ot_hbm_svc_static_sm_packed136_h.sv ot_hbm_svc_sm_feed_rel_h.sv ot_hbm_svc_sm_issuer_rel_h.sv
 ot_hbm_svc_sm_group_rel_h.sv""".split()] + \
     ["rtl/lib/ot_rst_fanout.sv", "rtl/hbm_accel/sm/static/ot_smh_calendar_static_xh.sv"] + \

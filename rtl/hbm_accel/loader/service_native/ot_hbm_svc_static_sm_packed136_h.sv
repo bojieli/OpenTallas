@@ -25,6 +25,11 @@ module ot_hbm_svc_static_sm_packed136_h (
  input wire retire_v,retire_bank,input wire [15:0] retire_epoch,
  output wire [1:0] block_ready,bank_owned,output wire busy,fault,output wire [1098:0] out_packet
 );
+`ifdef SVGH_MUT
+ localparam integer HM=`SVGH_MUT;     // HBM-SVGREL8 bench negative controls (see the kit README)
+`else
+ localparam integer HM=0;
+`endif
  localparam integer NPS=34;                          // 1088-bit row = 34 x 32-bit slices
  reg [1:0] owned,filled;reg [15:0] epoch[0:1];reg [6:0] count[0:1];reg [9:0] tagb[0:1];
  reg running,load_bank,sticky;reg [15:0] load_epoch;reg [6:0] load_rows,emitted;
@@ -98,7 +103,7 @@ module ot_hbm_svc_static_sm_packed136_h (
  // datapath (no reset): bank fields while the bank is unowned, fill registers while idle, counters while running
  always @(posedge clk)begin
   d1<=sector_data;d2<=d1;
-  for(i=0;i<NPS;i=i+1)for(j=0;j<4;j=j+1)rph_k[i*4+j]<=rph_n==j;
+  for(i=0;i<NPS;i=i+1)for(j=0;j<4;j=j+1)rph_k[i*4+j]<=rph_n==((HM==1)?2'(j+1):2'(j));
   record_phase<=rph_n;
   if(read_ok)out_tag<=read_tag;
   for(b=0;b<2;b=b+1)begin

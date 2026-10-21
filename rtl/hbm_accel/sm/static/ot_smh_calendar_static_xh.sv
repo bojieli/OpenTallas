@@ -31,6 +31,11 @@ module ot_smh_calendar_static_xh #(
     output reg [31:0] ordinal,
     output reg active,done,fault
 );
+`ifdef SVGH_MUT
+ localparam integer HM=`SVGH_MUT;     // HBM-SVGREL8 bench negative controls (see the kit README)
+`else
+ localparam integer HM=0;
+`endif
     initial begin
         if(W<1 || W>223)$fatal(1,"SM calendar width must fit protected programme payload");
         if(AW!=10 && AW!=11)$fatal(1,"programme store: 1,024 or 2,048 words");
@@ -66,7 +71,7 @@ module ot_smh_calendar_static_xh #(
     wire legal_start=start_limit_q>{1'b0,start_base_q} && start_limit_q<=(1<<AW) && start_loops_q!=0;
     wire final_issue=({1'b0,pc}+1'b1==limit) && loops_left==1;
     wire [255:0] idmask=256'((1<<AW)-1)<<224;
-    wire wok_d=macro_data[255:240]==16'hc7a1 && macro_data[224+:AW]==pc0 &&
+    wire wok_d=macro_data[255:240]==16'hc7a1 && macro_data[224+:AW]==((HM==4)?pc1:pc0) &&
                (macro_data[239:224]&~idmask[239:224])==0 && macro_data[223:W]==0;
     wire word_ok=wok_k[NCS];
     wire wr_ok=cfg_we_q && !busy && !start_v_q;

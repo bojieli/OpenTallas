@@ -12,9 +12,8 @@
 //            element: tie-free removal of its g write path, or a die-level 0 -- HBM-DIE12 / vmks owner decision).
 // Everything else is cycle-identical at the SM ports (sm_packet, sm_command, running, run_done, program_active, fault
 // up to the HBM-side latencies listed in the kit README: +1 hbm edge per K direction (pin skids), +1 hbm edge
-// descriptor -> first command, +1 stream edge landing -> resident; reset release +4 stream / hbm edges).
-// Reset: each port lands in an ot_rst_relay (2 sync + 1 KEPT relay stage); the producer families take the AND of both
-// ports (as the original's reset_both), the issuer / programme / feed / cache take stream_rst_n only (as the original).
+// descriptor -> first command, +1 stream edge landing -> resident; reset release +1..3 edges).
+// Reset: see the reset-landing block (relay / reviewed ot_reset_sync + KEPT leaf stages, each leaf <= 32 reset pins).
 module ot_hbm_svc_sm_group_rel_h #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
  parameter integer NID=6,parameter integer IDW=9,parameter integer PAW=11,parameter integer PREL=1,parameter integer DD=256,parameter integer IMUT=0,
  parameter integer DAW=(DD>128)?8:7,parameter integer ID_COHORT=0)(
@@ -32,12 +31,17 @@ module ot_hbm_svc_sm_group_rel_h #(parameter integer LBANKS=4,parameter integer 
  input wire[3:0]kr_v,output wire[3:0]kr_rdy,input wire[67:0]kr_tag,input wire[15:0]kr_beat,input wire[1023:0]kr_data
 );
  initial if(LBANKS!=4||PREL!=1||PAW!=11||DD!=256)$fatal(1,"sm_group_rel_h: the r11 hard view parameters only");
- // ---------------- reset landing (port loads: stream_rst_n 2+9+1, hbm_rst_n 1; AND output 2+12 + 2+15)
- wire[8:0]st;wire[11:0]sr;wire[14:0]hr;
+ // ---------------- reset landing.  stream_rst_n alone (issuer / programme / feed / cache, as the original): one
+ // ot_rst_relay (2 sync + 1 KEPT relay stage).  Producer families (either port reset, as the original's reset_both):
+ // the AND enters ONE reviewed ot_reset_sync per family (the only admitted cross-family asynchronous control), then a
+ // KEPT ot_rst_fanout leaf stage (release +1 edge).  Port loads: stream_rst_n 2+9 + AND; AND -> 2 + 2 sync stages.
+ wire[8:0]st;wire[11:0]sr;wire[14:0]hr;wire srs,hrs;
  ot_rst_relay #(.REGIONS(9),.SYNC_STAGES(2),.TREE_STAGES(1)) u_st(.clk(stream_clk),.rst_n_in(stream_rst_n),.rst_n(st));
  wire both_rst_n=stream_rst_n&&hbm_rst_n;
- ot_rst_relay #(.REGIONS(12),.SYNC_STAGES(2),.TREE_STAGES(1)) u_sr(.clk(stream_clk),.rst_n_in(both_rst_n),.rst_n(sr));
- ot_rst_relay #(.REGIONS(15),.SYNC_STAGES(2),.TREE_STAGES(1)) u_hr(.clk(hbm_clk),.rst_n_in(both_rst_n),.rst_n(hr));
+ ot_reset_sync u_srs(.clk(stream_clk),.async_rst_n(both_rst_n),.sync_rst_n(srs));
+ ot_reset_sync u_hrs(.clk(hbm_clk),.async_rst_n(both_rst_n),.sync_rst_n(hrs));
+ ot_rst_fanout #(.N(12)) u_sr(.clk(stream_clk),.rst_n_in(srs),.rst_n(sr));
+ ot_rst_fanout #(.N(15)) u_hr(.clk(hbm_clk),.rst_n_in(hrs),.rst_n(hr));
  // st[0..4] issuer, st[5] feed control, st[6..7] programme leaf, st[8] cache
  wire reserve_v,reserve_ready,start_v,program_start_v,program_done,feed_fault,issuer_fault;
  wire[31:0]reserve_base;wire[14:0]reserve_row_base;wire[11:0]reserve_total;wire[LB-1:0]reserve_bank,start_bank;

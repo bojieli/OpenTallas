@@ -40,14 +40,18 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  input wire [3:0] kr_v,output wire [3:0] kr_rdy,input wire [67:0] kr_tag,
  input wire [15:0] kr_beat,input wire [1023:0] kr_data
 );
+`ifdef SVGH_MUT
+ localparam integer HM=`SVGH_MUT;     // HBM-SVGREL8 bench negative controls (see the kit README)
+`else
+ localparam integer HM=0;
+`endif
  initial if(LBANKS!=4||OWNER_AW!=5||RESPONSE_DEPTH!=8)$fatal(1,"sm4pc_cdc_rel_h: r11 parameters only");
  // ---------------- reset leaves: s_rst [0] core, [1] reserve copies, [2] descriptor FIFO writer, [3] fault CDCs,
- // [4..11] landing banks; h_rst [0] core, [1] descriptor FIFO reader, [2..5] PCs (owner + skids), [6..13] banks, [14] CDCs
- wire[1:0]sc;wire[2:0]hc;wire[1:0]dw;wire[1:0]dr;
+ // [4..11] landing banks; h_rst [0] core, [1] descriptor FIFO reader, [2..5] PCs (owner + skids), [6..13] banks (FIFO
+ // writers), [14] CDCs.  The FIFOs / fault CDCs AND their two leaves into their own reviewed ot_reset_sync per side.
+ wire[1:0]sc;wire[2:0]hc;
  ot_rst_fanout #(.N(2)) u_sc(.clk(stream_clk),.rst_n_in(s_rst[0]),.rst_n(sc));
  ot_rst_fanout #(.N(3)) u_hc(.clk(hbm_clk),.rst_n_in(h_rst[0]),.rst_n(hc));
- ot_rst_fanout #(.N(2)) u_dw(.clk(stream_clk),.rst_n_in(s_rst[2]),.rst_n(dw));
- ot_rst_fanout #(.N(2)) u_dr(.clk(hbm_clk),.rst_n_in(h_rst[1]),.rst_n(dr));
  // strap identity (static): stream-side copies for the reserve check/PC set, hbm-side copy for the re-check
  reg [1:0] stack_s,stack_h;reg [2:0] sm_s;
  always @(posedge stream_clk)begin stack_s<=id_stack;sm_s<=id_sm;end
@@ -72,10 +76,10 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire [DW-1:0] desc_data;
  assign reserve_ready=sc[0]&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
- ot_hbm_svc_async_fifo_oh #(.WIDTH(DW),.DEPTH(4),.NRW(2),.NRR(2)) u_descriptor(
- .wr_clk(stream_clk),.wr_rst_n(dw),.wr_valid(reserve_fire),.wr_ready(desc_wr_ready),
+ ot_hbm_svc_async_fifo #(.WIDTH(DW),.DEPTH(4)) u_descriptor(
+ .wr_clk(stream_clk),.wr_rst_n(s_rst[2]),.wr_valid(reserve_fire),.wr_ready(desc_wr_ready),
  .wr_data({reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch}),.wr_overflow(desc_ov),
- .rd_clk(hbm_clk),.rd_rst_n(dr),.rd_valid(desc_rd_valid),.rd_ready(desc_rd_ready),.rd_data(desc_data),.rd_underflow(desc_un));
+ .rd_clk(hbm_clk),.rd_rst_n(h_rst[1]),.rd_valid(desc_rd_valid),.rd_ready(desc_rd_ready),.rd_data(desc_data),.rd_underflow(desc_un));
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);
  assign block_ready=ready_q;
  // ---------------- hbm side: block registers (load while no block is issuing), owners, skids, landing FIFO feed
@@ -90,11 +94,14 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  assign desc_rd_ready=!h_active&&!hbm_fault&&hc[0]&&desc_rd_valid&&rx_left[desc_data[T0-1:16]]==0;
  wire desc_good=desc_data[S0+1:S0]==stack_h&&desc_data[T0+11:T0]!=0&&desc_data[T0+11:T0]<=512&&
                 {3'b0,desc_data[A0+29:A0]}+desc_data[T0+11:T0]<=33'h040000000;
+ // block-field captures: while no block issues AND the descriptor FIFO head is valid (storage read only under
+ // rd_valid); one AND per <= 32-bit slice, each with its own KEPT idle copy
+ wire[3:0]hcap=hidle_k&{4{desc_rd_valid}};
  always @(posedge hbm_clk)begin
-  if(hidle_k[0])h_pcs<=desc_data[P0+19:P0];
-  if(hidle_k[1])h_base<=desc_data[A0+29:A0];
-  if(hidle_k[2])begin h_row_base<=desc_data[R0+14:R0];h_total<=desc_data[T0+11:T0];end
-  if(hidle_k[3])begin h_bank<=desc_data[T0-1:16];h_epoch<=desc_data[15:0];end
+  if(hcap[0])h_pcs<=desc_data[P0+19:P0];
+  if(hcap[1])h_base<=desc_data[A0+29:A0];
+  if(hcap[2])begin h_row_base<=desc_data[R0+14:R0];h_total<=desc_data[T0+11:T0];end
+  if(hcap[3])begin h_bank<=desc_data[T0-1:16];h_epoch<=desc_data[15:0];end
  end
  wire [7:0] fifo_wr_ready,fifo_ov;wire [7:0] fifo_wr_valid;wire [IW-1:0] fifo_wr_data[0:7];
  wire [3:0] ri_v,ri_r,ko_v,ko_r;wire [67:0] ri_tag,ko_tag;wire [15:0] ri_beat,ko_len;wire [1023:0] ri_data;wire [119:0] ko_addr;
@@ -186,7 +193,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  (* keep="true",dont_touch="true" *) reg [255:0] osel_k;
  integer ol,os,ok;
  always @(posedge stream_clk)for(ol=0;ol<4;ol=ol+1)for(os=0;os<8;os=os+1)for(ok=0;ok<8;ok=ok+1)
-  osel_k[(ol*8+os)*8+ok]<=((drain_ordinal[2:0]+3'(ol))==3'(ok));
+  osel_k[(ol*8+os)*8+ok]<=((drain_ordinal[2:0]+3'(ol)+((HM==2)?3'd1:3'd0))==3'(ok));
  generate for(g=0;g<4;g=g+1)begin:out_lane
   for(genvar s=0;s<8;s=s+1)begin:sl
    reg[31:0]o;integer k;
