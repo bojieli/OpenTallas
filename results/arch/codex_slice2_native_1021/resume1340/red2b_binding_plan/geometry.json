@@ -1,0 +1,859 @@
+{
+  "verdict": "FAIL direct hard-red binding",
+  "rule_um": 405.0,
+  "legal_domain": [
+    950.4,
+    2980.8,
+    1512.0,
+    3542.4
+  ],
+  "outline_um": [
+    280.8,
+    194.4
+  ],
+  "source_pin_span_lower_um": 1771.116,
+  "any_placement_orientation_minimax_horizontal_lower_um": 745.158,
+  "legal_grid_candidates": [
+    {
+      "at": [
+        950.4,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1314.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1357.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1400.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1444.092,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1487.292,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1530.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1573.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1616.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 43.2,
+      "max_matching_rect_min_um": 1660.092,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1271.292,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1314.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1357.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1400.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1444.092,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1487.292,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1530.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 86.4,
+      "max_matching_rect_min_um": 1573.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1616.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1254.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1297.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1340.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 129.6,
+      "max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.832,
+      "max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1297.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1340.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 151.2,
+      "max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1340.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 108.0,
+      "max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1686.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1686.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 64.8,
+      "max_matching_rect_min_um": 1729.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        2980.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3024.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3067.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3110.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3153.6
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3196.8
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3240.0
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1686.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3283.2
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1729.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3326.4
+      ],
+      "orientation": "R0",
+      "min_macro_clearance_um": 21.6,
+      "max_matching_rect_min_um": 1772.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    }
+  ],
+  "best_R0": {
+    "at": [
+      1036.8,
+      2980.8
+    ],
+    "orientation": "R0",
+    "min_macro_clearance_um": 129.6,
+    "max_matching_rect_min_um": 1254.096,
+    "worst_lane_bit": [
+      0,
+      31
+    ]
+  },
+  "source_edge": "Direct L_l_out wires; no LP landing on this edge",
+  "scope": "Source geometry model only, not a placed-parent qualification",
+  "required_action": "Real registered transport or distributed reduction; stage count unpriced",
+  "input_sha256": {
+    "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8_lp.sv": "027348b1bc6d43074072ec84658afb53651628d3a224531f76efdc218e846ccf",
+    "results/arch/codex_slice2_native_1021/resume1340/red2b_binding_plan/selected_parent_floorplan.json": "3267cf9f764a520b3b5eb0198598a41f86fd4b71bb669242c9c344868419e432",
+    "results/arch/codex_slice2_native_1021/resume1340/red2b_binding_plan/red2b.lef": "9f67cce37b813fd60cf6a863a2bd74c70d5b81e4a5cc073c66693d3eb739ef3d",
+    "results/arch/codex_slice2_native_1021/resume1340/red2b_binding_plan/lrly.lef": "32d87e16baeb410ddeda2e386db4cf8f0b9d7dfe17dd8974e3139114e56b4d37"
+  }
+}

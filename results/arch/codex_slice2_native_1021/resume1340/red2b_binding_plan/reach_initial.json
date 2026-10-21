@@ -1,0 +1,713 @@
+{
+  "source_pin_span_lower_um": 1771.116,
+  "all_translation_orientation_horizontal_minimax_lower_um": 745.158,
+  "rule_um": 405,
+  "source_edges": "Actual LP u_lrly0..7 .l_out slices -> u_red .l_out(L_l_out); same r_su, t=0; no landing instance on these wires",
+  "R0_grid_candidates": [
+    {
+      "at": [
+        950.4,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1314.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1357.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1400.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1444.092,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1487.292,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1530.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1573.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1616.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        950.4,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1660.092,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1271.292,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1314.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1357.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1400.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1444.092,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1487.292,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1530.492,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1573.692,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        993.6,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1616.892,
+      "worst_lane_bit": [
+        7,
+        0
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1254.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1297.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1340.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1036.8,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1297.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1340.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1080.0,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1340.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1123.2,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1686.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1383.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1686.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1166.4,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1729.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        2980.8
+      ],
+      "R0_max_matching_rect_min_um": 1426.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3024.0
+      ],
+      "R0_max_matching_rect_min_um": 1470.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3067.2
+      ],
+      "R0_max_matching_rect_min_um": 1513.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3110.4
+      ],
+      "R0_max_matching_rect_min_um": 1556.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3153.6
+      ],
+      "R0_max_matching_rect_min_um": 1599.696,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3196.8
+      ],
+      "R0_max_matching_rect_min_um": 1642.896,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3240.0
+      ],
+      "R0_max_matching_rect_min_um": 1686.096,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3283.2
+      ],
+      "R0_max_matching_rect_min_um": 1729.296,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    },
+    {
+      "at": [
+        1209.6,
+        3326.4
+      ],
+      "R0_max_matching_rect_min_um": 1772.496,
+      "worst_lane_bit": [
+        0,
+        31
+      ]
+    }
+  ],
+  "best_R0": {
+    "at": [
+      1036.8,
+      2980.8
+    ],
+    "R0_max_matching_rect_min_um": 1254.096,
+    "worst_lane_bit": [
+      0,
+      31
+    ]
+  },
+  "verdict": "FAIL direct CLOSED hard-red binding; extra actual registered transport required"
+}

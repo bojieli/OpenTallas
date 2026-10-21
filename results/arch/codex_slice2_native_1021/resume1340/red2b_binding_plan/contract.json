@@ -1,0 +1,79 @@
+{
+  "observed_at": "2026-10-21T15:08:18.356699-07:00",
+  "closed_record": "0ca1c5855",
+  "closed_source": "134f1aa894df66fa2f5b0c593558d24f4d15bd56",
+  "selected_source": "369c54773",
+  "selected_top": "qfd_dv_s8_lp",
+  "selected_instance": "u_red",
+  "closed_top": "qfd_dv_s5_red2_leaf",
+  "params": {},
+  "source_file_matches": [
+    {
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+      "closed_blob": "03ec53983d5a562abc4d365a1149b1f14c1c67cd",
+      "selected_blob": "03ec53983d5a562abc4d365a1149b1f14c1c67cd"
+    },
+    {
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+      "closed_blob": "2d196a0b862844dcafa11e36b26b4ecbd0103fb3",
+      "selected_blob": "2d196a0b862844dcafa11e36b26b4ecbd0103fb3"
+    },
+    {
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
+      "closed_blob": "d5cabadc1fb025c16565717e9333345cfca0a3c3",
+      "selected_blob": "d5cabadc1fb025c16565717e9333345cfca0a3c3"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_vreduce.sv",
+      "closed_blob": "ffcb73a4618c626db4e058415a010df7a1511fd9",
+      "selected_blob": "ffcb73a4618c626db4e058415a010df7a1511fd9"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "closed_blob": "83a0e3f0423e812ee2a11496d638945b1fbe51f5",
+      "selected_blob": "83a0e3f0423e812ee2a11496d638945b1fbe51f5"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "closed_blob": "8ec3f3c48aa559bfd6e5de83b749d79544748260",
+      "selected_blob": "8ec3f3c48aa559bfd6e5de83b749d79544748260"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "closed_blob": "b3d664d7d691d94d0220f7856f1856343ae6b46b",
+      "selected_blob": "b3d664d7d691d94d0220f7856f1856343ae6b46b"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "closed_blob": "73a8c705c11a9d9a9361163529cbd0652e1e14c6",
+      "selected_blob": "73a8c705c11a9d9a9361163529cbd0652e1e14c6"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "closed_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "selected_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "closed_blob": "738d9c8c2a4c23fe4bb68e3396d7484b09569b8c",
+      "selected_blob": "738d9c8c2a4c23fe4bb68e3396d7484b09569b8c"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu_q.sv",
+      "closed_blob": "3fcf465cf3befd6f14cee332bc8d8cbda3c4a58e",
+      "selected_blob": "3fcf465cf3befd6f14cee332bc8d8cbda3c4a58e"
+    }
+  ],
+  "latency": "Identical complete source body/stages; no new numeric delay inferred from comments",
+  "body_contract_verdict": "PASS exact source/params/ports",
+  "hard_binding_verdict": "FAIL geometry/reach; no adoption",
+  "view": "physical/ref_tile/qfd_dv_s5_red2b/views/qfd_dv_s5_red2_leaf",
+  "outline_um": [
+    280.8,
+    194.4
+  ],
+  "clock_region": "r_su / ck_r_su",
+  "source_frame": "u_red inputs .l_out(L_l_out) directly driven by8u_lrly outputs; selected LP t(u_red)=0; no named landing at this edge",
+  "geometry_scope": "OpaqueouterS8 403.686 matching-bit result does not establish internal hardred reach",
+  "no_changes": "Current native jobs, pfx gates, source cycles, and parent binding remain unchanged."
+}
