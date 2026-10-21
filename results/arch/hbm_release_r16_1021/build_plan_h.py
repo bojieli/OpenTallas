@@ -21,7 +21,7 @@ for name,x in moves.items():
  assert not bad,(name,bad)
  checks.append(dict(name=name,before=actual[name],after=r,overlaps=bad))
 for f in base.iterdir():
- if f.is_file():shutil.copyfile(f,out/f.name)
+ if f.is_file() and f.name not in ['plan.png','report.json']:shutil.copyfile(f,out/f.name)
 g=json.load(open(out/'grants_d4g.json'));p=json.load(open(out/'compact.P.json'))
 for name,x in moves.items():
  slot=next(s for s in g['slots'] if s['name']==name)
