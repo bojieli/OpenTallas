@@ -16,6 +16,6 @@ cp results/rtl/hbm_pv_producer_1340/inputs/*.hex "$OUT/"
 cd "$OUT"
 for m in 0 1 2;do
  "$OUT/obj/Vtb_hbm_pv_vm_producer" +MUT=$m > "$OUT/run_m$m.log" 2>&1
- if [ "$m" = 0 ];then grep -q 'PVROW PASS rows128' "$OUT/run_m$m.log";else grep -q 'PVROW FAIL' "$OUT/run_m$m.log";fi
+ if [ "$m" = 0 ];then grep -q 'PVROW PASS rows128' "$OUT/run_m$m.log"; ! grep -q 'PVROW FAIL' "$OUT/run_m$m.log";else grep -q 'PVROW FAIL' "$OUT/run_m$m.log"; ! grep -q 'PVROW PASS' "$OUT/run_m$m.log";fi
 done
 printf '%s\n' 'PVROW_EXPECTATIONS_MET'

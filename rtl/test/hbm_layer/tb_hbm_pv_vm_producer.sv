@@ -18,7 +18,8 @@ ot_hgi_sm_xload_cl2_ctlx #(.PMAX(8),.RD_LAT(RL),.NR(32),.LEAD(8)) ctl(
 .r_wsel(),.zlo(),.zhi(),.bsel(),.lane_en(),.eg_ed5(ed5),.eg_ede(ede),.eg_bqv(bqv),.eg_bqlast(bql),.eg_bqaddr(bqa),.eg_bqb(bqb));
 // The omitted quantizer/BD boundary is inactive in format0, and asserted below.
 reg [31:0] vm [0:262143]; reg [31:0] probs[0:127];reg [15:0] gold[0:127];reg [17:0] src[0:127];
-integer errors=0,beats[0:1],reqs=0,cyc=0,mut=0;integer first_rq=-1,first_xw=-1,launch_edge=-1;
+integer errors=0,beats[0:1],reqs=0,cyc=0,mut=0;integer first_rq=-1,first_xw=-1,launch_edge=-1,first_cmd=-1,first_start=-1,first_write=-1,last_xw=-1;
+integer read_valid[0:1];
 always @(posedge clk)cyc<=cyc+1;
 generate for(genvar b=0;b<8;b=b+1)begin:VB
  localparam integer L=(RL>>(8*b))&255;
@@ -56,6 +57,7 @@ generate for(genvar p=0;p<2;p=p+1)begin:P
  always @(posedge clk)if(rst_n && en)begin
   beats[p]=beats[p]+1;
   if(first_xw<0)first_xw=cyc;
+  last_xw=cyc;
   if(grp!=127 || !last || |data[2047:128] || data[127:0]!=={8{gold[addr]}})begin
    if(errors<5)$display("PVROW_MISMATCH pair%0d cyc%0d row%0d grp%0d data%h gold%h",p,cyc,addr,grp,data[127:0],gold[addr]);
    errors=errors+1;
@@ -63,6 +65,10 @@ generate for(genvar p=0;p<2;p=p+1)begin:P
  end
 end endgenerate
 always @(posedge clk)if(rst_n)begin
+ if(ctl.u_w.x_v && first_cmd<0)first_cmd=cyc;
+ if(ctl.u_w.u_ctl.start && first_start<0)first_start=cyc;
+ if(P[0].ps.wce && first_write<0)first_write=cyc;
+ for(integer pp=0;pp<2;pp=pp+1)if(pv[pp])read_valid[pp]=read_valid[pp]+1;
  if(qvlo||qvhi||bqv)$fatal(1,"PVROW_INACTIVE_BOUNDARY");
  for(integer b=0;b<8;b=b+1)if(rq[b*17+16])begin reqs=reqs+1;if(first_rq<0)first_rq=cyc;end
 end
@@ -71,7 +77,7 @@ initial begin
  for(integer i=0;i<262144;i=i+1)vm[i]=0;
  $readmemh("p_fp32.hex",probs);$readmemh("p_bf16.hex",gold);$readmemh("p_addr.hex",src);
  for(integer i=0;i<128;i=i+1)vm[src[i]]=probs[i];
- beats[0]=0;beats[1]=0;
+ beats[0]=0;beats[1]=0;read_valid[0]=0;read_valid[1]=0;
  repeat(5)@(negedge clk);rst_n=1;repeat(20)@(negedge clk);
  clear_v=1;@(negedge clk);clear_v=0;
  for(integer i=0;i<128;i=i+1)begin
@@ -90,8 +96,11 @@ initial begin
   read_addr=7'(i);read_v=1;@(negedge clk);read_v=0;repeat(5)@(negedge clk);
   if(pd!=={16{gold[i]}})begin if(errors<5)$display("PVROW_READ row%0d actual%h gold%h",i,pd,gold[i]);errors=errors+1;end
  end
+ if(read_valid[0]!=128||read_valid[1]!=128)errors=errors+1;
+ $display("PVROW_BOUNDARY cmd%0d start%0d xw%0d write%0d last_xw%0d readvalid%0d/%0d",first_cmd,first_start,first_xw,first_write,last_xw,read_valid[0],read_valid[1]);
  $display("PVROW_TIMING launch%0d first_rq%0d first_xw%0d delta_rq%0d delta_xw%0d",launch_edge,first_rq,first_xw,first_rq-launch_edge,first_xw-launch_edge);
- if(errors||pf||fault)begin $display("PVROW FAIL errors%0d pstorefault%b ctlfault%b",errors,pf,fault);$finish;end
- $display("PVROW PASS rows128 pairs2 columns8 request1024 pstore_reads256");$finish;
+ if(errors||pf||fault) $display("PVROW FAIL errors%0d pstorefault%b ctlfault%b",errors,pf,fault);
+ else $display("PVROW PASS rows128 pairs2 columns8 request1024 pstore_reads256");
+ $finish;
 end
 endmodule
