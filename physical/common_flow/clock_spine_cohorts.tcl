@@ -45,9 +45,22 @@ proc ot_sp_cohort_bins {blk net0 u lmax} {
     if {[llength $members] > $lmax} {error "OT_SPINE cohort $label: [llength $members] sinks exceed LEAF_N $lmax"}
     # Verify the declared receivers really are direct async-reset consumers of
     # a source output. Arbitrary data fanout cannot qualify as a reset cohort.
+    # Narrow production contract: measured LEPA source/receivers are this exact
+    # ASAP7 asynchronous-reset FF. seq.lib: clocked_on CLK; next_state !D;
+    # QN output, preset !RESETN, clear !SETN. Unknown masters refuse.
+    if {[[$source getMaster] getName] ne "DFFASRHQNx1_ASAP7_75t_R"} {
+      error "OT_SPINE cohort $label: unsupported sequential source master"
+    }
     set output_nets {}
     foreach it [$source getITerms] {
-      if {[$it getIoType] eq "OUTPUT" && [$it getNet] ne "NULL"} {lappend output_nets [$it getNet]}
+      if {[$it getIoType] eq "OUTPUT" && [[$it getMTerm] getName] eq "QN" &&
+          [$it getNet] ni {NULL ""}} {lappend output_nets [$it getNet]}
+    }
+    if {[llength $output_nets] != 1} {error "OT_SPINE cohort $label: missing supported source QN"}
+    foreach inst $receivers {
+      if {[[$inst getMaster] getName] ne "DFFASRHQNx1_ASAP7_75t_R"} {
+        error "OT_SPINE cohort $label: unsupported async-reset receiver master"
+      }
     }
     # No immediate asynchronous-reset consumer may silently remain outside the
     # atomic leaf. Also preserve the native dynamic-fanout bound on source Q.
@@ -58,7 +71,7 @@ proc ot_sp_cohort_bins {blk net0 u lmax} {
       foreach it [$net getITerms] {
         if {[$it getIoType] ne "INPUT"} continue
         incr loads
-        if {[[$it getMTerm] getName] in {RESETN RESETB RESET_B RN RB CLR CLRN CDN RESET SETN} &&
+        if {[[$it getMTerm] getName] eq "RESETN" &&
             [lsearch -exact $declared [[$it getInst] getName]] < 0} {
           error "OT_SPINE cohort $label: undeclared immediate reset receiver [[$it getInst] getName]"
         }
@@ -69,7 +82,7 @@ proc ot_sp_cohort_bins {blk net0 u lmax} {
       set connected 0
       foreach it [$inst getITerms] {
         if {[$it getIoType] eq "INPUT" &&
-            [[$it getMTerm] getName] in {RESETN RESETB RESET_B RN RB CLR CLRN CDN RESET SETN} &&
+            [[$it getMTerm] getName] eq "RESETN" &&
             [lsearch -exact $output_nets [$it getNet]] >= 0} {set connected 1}
       }
       if {!$connected} {error "OT_SPINE cohort $label: [$inst getName] is not a direct async-reset consumer"}
@@ -81,6 +94,7 @@ proc ot_sp_cohort_bins {blk net0 u lmax} {
       if {![dict exists $clock $name]} {error "OT_SPINE cohort $label: missing/cross-root clock member $name"}
       if {[[$inst getMaster] isBlock]} {error "OT_SPINE cohort $label: hard macro member $name"}
       set it [dict get $clock $name]
+      if {[[$it getMTerm] getName] ne "CLK"} {error "OT_SPINE cohort $label: unsupported/data clock input $name"}
       lassign [$it getAvgXY] ok x y
       if {!$ok} {error "OT_SPINE cohort $label: unplaced clock member $name"}
       foreach entry $entries {
@@ -94,4 +108,33 @@ proc ot_sp_cohort_bins {blk net0 u lmax} {
     puts "OT_SPINE cohort $label: [llength $entries] connected same-clock sinks, atomic leaf"
   }
   return $result
+}
+
+# Called by production spine after original spatial binning. Declared sinks are
+# removed exactly once and appended atomically; undeclared entries are unchanged.
+proc ot_sp_cohort_merge_bins {bins cohorts} {
+  if {![dict size $cohorts]} {return $bins}
+  set declared [dict create]
+  dict for {key entries} $cohorts {
+    if {[dict exists $bins $key]} {error "OT_SPINE cohort: bin key collision $key"}
+    foreach entry $entries {
+      set it [lindex $entry 0]
+      if {[dict exists $declared $it]} {error "OT_SPINE cohort: duplicate grouped clock sink"}
+      dict set declared $it 0
+    }
+  }
+  set out [dict create]
+  dict for {key entries} $bins {
+    set remain {}
+    foreach entry $entries {
+      set it [lindex $entry 0]
+      if {[dict exists $declared $it]} {dict incr declared $it} else {lappend remain $entry}
+    }
+    if {[llength $remain]} {dict set out $key $remain}
+  }
+  dict for {it count} $declared {
+    if {$count != 1} {error "OT_SPINE cohort: grouped sink appears $count times in spatial bins"}
+  }
+  dict for {key entries} $cohorts {dict set out $key $entries}
+  return $out
 }

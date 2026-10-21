@@ -595,15 +595,10 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     source /src/physical/common_flow/clock_spine_cohorts.tcl
     set cohorts [ot_sp_cohort_bins $blk $net0 $u $lmax]
   }
-  set cohort_members [dict create]
-  dict for {key entries} $cohorts {
-    foreach entry $entries {dict set cohort_members [lindex $entry 0] 1}
-  }
-  # sinks -> bins -> leaves
-  set bins $cohorts; set ns 0
+  # sinks -> bins -> leaves (original spatial bins first)
+  set bins [dict create]; set ns 0
   foreach it [$net0 getITerms] {
     if {[$it getIoType] ne "INPUT"} continue
-    if {[dict exists $cohort_members $it]} {incr ns; continue}
     lassign [$it getAvgXY] ok x y
     if {!$ok} { set l [[$it getInst] getLocation]; lassign $l x y }
     # OT_SPINE_MACRO_LEAF=1 (el1011-q-coll): a hard-macro clock pin is its own leaf, so a child-insertion target never
@@ -621,6 +616,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     }
     incr ns
   }
+  if {[dict size $cohorts]} {set bins [ot_sp_cohort_merge_bins $bins $cohorts]}
   set ::ot_sp_pos [dict create]; set ::ot_sp_cnt [dict create]; set ::ot_sp_members [dict create]; set nl 0
   set ::ot_sp_kids [dict create]; set lins [dict create]
   foreach k [dict keys $bins] {

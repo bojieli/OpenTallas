@@ -2386,7 +2386,7 @@ def referenced_paths(s: dict, kd: str) -> list:
     if s["route"].get("hold_delay"):
         out.append(HDLY_TCL)
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
-        out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
+        out += ["physical/common_flow/clock_spine.tcl", "physical/common_flow/clock_spine_cohorts.tcl", f"{kd}/spine_ins.tcl"]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
