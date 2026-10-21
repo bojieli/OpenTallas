@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.s81_head.regional_lep.v1",
+  "module": "ot_s81hd_lep_regional",
+  "source": "rtl/dsrom_sys/s81_head/ot_s81hd_lep_regional.sv",
+  "child_source": "f6f2fcc48",
+  "roots": {
+    "ck": "C",
+    "ck_A": "A",
+    "ck_B": "B"
+  },
+  "lanes": {
+    "0": {
+      "clock": "ck_A",
+      "CORE_CRED": 12,
+      "reset_parent": "rr_a[0]"
+    },
+    "1": {
+      "clock": "ck_A",
+      "CORE_CRED": 12,
+      "reset_parent": "rr_a[1]"
+    },
+    "2": {
+      "clock": "ck_B",
+      "CORE_CRED": 12,
+      "reset_parent": "rr_b[0]"
+    },
+    "3": {
+      "clock": "ck_B",
+      "CORE_CRED": 12,
+      "reset_parent": "rr_b[1]"
+    }
+  },
+  "port_clock": {
+    "tx0": "ck_A",
+    "tx1": "ck_A",
+    "tx2": "ck_B",
+    "tx3": "ck_B",
+    "rx0": "ck_A",
+    "rx1": "ck_A",
+    "rx2": "ck_B",
+    "rx3": "ck_B"
+  },
+  "child_parameters": {
+    "DR": 12,
+    "CRED": 12,
+    "RX_SRAM": 1,
+    "IN_PIPE": 1,
+    "NATIVE32": 1
+  },
+  "cycles_vs_legacy": {
+    "C_to_pair": 4,
+    "pair_to_C": 5,
+    "outer_lane_payload_valid": 2,
+    "reverse_credit": 2,
+    "credit_RTT": 4
+  },
+  "parent_ML_additional_cycles": "not assumed; actual E2 midpoint placement must prove <=405um or add and price registered boundary",
+  "physical_status": "new master; no legacy single-root LEP/CRED8 lane aliases; packing and closed views outstanding"
+}
