@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       admits   616 GB (avail 545, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 30 disk 28 GB 
+ot-run: ot-epyc6       admits   -12 GB (avail 105, growth 113, headroom 0, waiters 2/48 GB) load 61/128 running 40 disk 1844 GB 
+ot-run: ot-epyc7       admits  1012 GB (avail 809, growth 101, headroom 0, waiters 521/24793 GB) load 55/96 running 30 disk 4982 GB 
+ot-run: ot-epyc9       admits   559 GB (avail 575, growth 184, headroom 0, waiters 0/0 GB) load 163/128 running 52 disk 79 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-kind8/src2
+ot-run: ot-agidock128  admits    44 GB (avail 43, growth 13, headroom 0, waiters 0/0 GB) load 35/64 running 19 disk 180 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-49226-1792562154 after 0 s
+K8 exp y 7ef882b7/7ef882b7
+K8 exp y 6abe62ba/6abe62ba
+K8 exp y 00b33686/00b33686
+K8 exp y 7ef882b7/7ef882b7
+K8 exp y 3fb89020/3fb89020
+K8 exp y 3f8002d1/3f8002d1
+K8 exp y 00b33686/00b33686
+K8_UNITS FAIL mul_checks=350062 exp_checks=350062 sub_results=55895 errors=350062
+[800166000] %Fatal: tb_k8_units.sv:41: Assertion failed in tb_k8_units: K8_UNITS FAIL
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/k8/tb_k8_units.sv:41: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-49226-1792562154): exit 1

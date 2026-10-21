@@ -80,6 +80,8 @@ module ot_hbm_su_static_lane_k8 #(
     input  wire [2*1-1:0] co_rnd_c,     // HBM-KIND8: 2 kept pin-register copies of co_rnd
     input  wire [2*2-1:0] ce_e2_c,     // HBM-KIND8: 2 kept pin-register copies of ce_e2
     input  wire [2*3-1:0] cs_e1_c,     // HBM-KIND8: 2 kept pin-register copies of cs_e1
+    input  wire [4*3-1:0] cp_m1_c,     // HBM-KIND8: 4 kept pin-register copies of cp_m1
+    input  wire [4*3-1:0] ci_sfu_c,     // HBM-KIND8: 4 kept pin-register copies of ci_sfu
     input  wire [16-1:0] ld_x,     // HBM-KIND8: kept copies of the ld strobe
     input  wire [5-1:0] bank_x,   // HBM-KIND8: kept copies of bank (one per stream)
     input  wire              ld,
@@ -595,6 +597,10 @@ module ot_hbm_su_static_lane_k8 #(
     always @(posedge clk_stage[0] `OT_SU_ARST(rst_stage_n[0])) begin
         if (!rst_stage_n[0]) p_v <= 1'b0; else p_v <= x_v;
     end
+    wire [4-1:0] p_vc;                             // HBM-KIND8: kept copies of p_v for the M1 insertion line slices
+    for (genvar c = 0; c < 4; c = c + 1) begin : g_pvc
+        ot_su_kffr_k8 u_k (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(x_v), .q(p_vc[c]));
+    end
     always @(posedge clk_stage[0]) begin
         p_a <= a_m; p_b <= x_b; p_c <= c_m; p_d <= x_d; p_o <= x_o; p_par <= x_par;
     end
@@ -618,8 +624,13 @@ module ot_hbm_su_static_lane_k8 #(
         if (HAS_SFU != 0) begin : g_m1s
             ot_hdc_v41x_fdiv u_d1 (.clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_v && p_div), .a(p_a),
                                    .b((cp_m1 == M1_DIVB) ? p_b : cp_imm1), .y(div1_y), .vo(), .fault(f_d1));
-            ot_hdc_v41x_ins #(.W(T1W), .K(2), .DEPTHS({H_DIV, H_M}), .DMAX(19)) u_l1 (
-                .clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_v), .sel({p_div, !p_div}), .d({p_b, p_c, p_d, p_o, p_par}),
+            wire [2*4-1:0] l1_sel;
+            for (genvar c = 0; c < 4; c = c + 1) begin : g_l1s
+                wire dv = (cp_m1_c[3*c +: 3] == M1_DIVB) || (cp_m1_c[3*c +: 3] == M1_DIVIMM);
+                assign l1_sel[2*c +: 2] = {dv, !dv};
+            end
+            ot_hdc_v41x_ins_k8 #(.W(T1W), .K(2), .DEPTHS({H_DIV, H_M}), .DMAX(19)) u_l1 (
+                .clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_vc), .sel(l1_sel), .d({p_b, p_c, p_d, p_o, p_par}),
                 .vo(v1), .q(t1), .coll(c1), .busy());
         end else begin : g_m1l
             assign div1_y = 32'd0; assign f_d1 = 1'b0; assign c1 = 1'b0;
@@ -678,6 +689,10 @@ module ot_hbm_su_static_lane_k8 #(
     wire [ALAT:0] v3l;
     ot_hdc_vline #(.D(ALAT)) u_v3 (.clk(clk_stage[3]), .rst_n(rst_stage_n[3]), .v(v2), .vd(v3l));
     wire v3 = v3l[ALAT];
+    wire [4-1:0] v3c;                              // HBM-KIND8: kept copies of v3 for the S insertion line slices
+    for (genvar c = 0; c < 4; c = c + 1) begin : g_v3c
+        ot_su_kffr_k8 u_k (.clk(clk_stage[3]), .rst_n(rst_stage_n[3]), .d(v3l[ALAT-1]), .q(v3c[c]));
+    end
     wire [31:0] R = (r_ad == AD_BYP) ? add_byp : add_y;
     // ---- S --------------------------------------------------------------------------------------------------
     localparam integer T4W = 32 * 3 + AW;                 // R, B, C', O
@@ -708,21 +723,31 @@ module ot_hbm_su_static_lane_k8 #(
             wire [6:0] sel;
             assign sel = {ci_sfu == SFU_EGATE, ci_sfu == SFU_SPSQRT, ci_sfu == SFU_SQRT, ci_sfu == SFU_RSQRT,
                           is_sig, is_exp, ci_sfu == SFU_NONE};
+            wire [7*4-1:0] l4_sel;
+            for (genvar c = 0; c < 4; c = c + 1) begin : g_l4s
+                wire [2:0] cf = ci_sfu_c[3*c +: 3];
+                assign l4_sel[7*c +: 7] = {cf == SFU_EGATE, cf == SFU_SPSQRT, cf == SFU_SQRT, cf == SFU_RSQRT,
+                                           cf == SFU_SIGM || cf == SFU_SILU, cf == SFU_EXP, cf == SFU_NONE};
+            end
+            wire [3*4-1:0] l4_sel3;
+            for (genvar c = 0; c < 4; c = c + 1) begin : g_l4t
+                assign l4_sel3[3*c +: 3] = l4_sel[7*c +: 3];
+            end
             if (FULL != 0) begin : g_full
-                ot_hbm_su_static_ins #(.W(T4W), .K(7),
+                ot_hbm_su_static_ins_k8 #(.W(T4W), .K(7),
                     .DEPTHS({H_EG, H_SP, H_SQRT, H_RSQ, H_SIG, H_EXP, 16'd0}), .DMAX(D_SP)) u_l4 (
                     .clk(clk_insert), .rst_n(rst_n),
 `ifdef OT_SU_SYNC_RST
                     .rst_regions_n(rst_insert_n),
 `endif
-                    .v(v3), .sel(sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());
+                    .v(v3c), .sel(l4_sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());
             end else begin : g_vec
-                ot_hbm_su_static_ins #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (
+                ot_hbm_su_static_ins_k8 #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (
                     .clk(clk_insert), .rst_n(rst_n),
 `ifdef OT_SU_SYNC_RST
                     .rst_regions_n(rst_insert_n),
 `endif
-                    .v(v3), .sel(sel[2:0]), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),
+                    .v(v3c), .sel(l4_sel3), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),
                     .coll(c4), .busy());
             end
             function automatic [15:0] ssel(input [2:0] c, input [15:0] e, input [15:0] dv, input [15:0] t, input [15:0] sd);

@@ -165,6 +165,14 @@ module ot_hbm_su_static_lane_pinreg_k8 #(
     for (genvar j = 0; j < 2; j = j + 1) begin : g_k_cs_e1
         ot_su_kff_k8 #(.W(3)) u_k (.clk(c0), .d(cs_e1), .q(k_cs_e1[j*3 +: 3]));
     end
+    wire [4*3-1:0] k_cp_m1;
+    for (genvar j = 0; j < 4; j = j + 1) begin : g_k_cp_m1
+        ot_su_kff_k8 #(.W(3)) u_k (.clk(c0), .d(cp_m1), .q(k_cp_m1[j*3 +: 3]));
+    end
+    wire [4*3-1:0] k_ci_sfu;
+    for (genvar j = 0; j < 4; j = j + 1) begin : g_k_ci_sfu
+        ot_su_kff_k8 #(.W(3)) u_k (.clk(c0), .d(ci_sfu), .q(k_ci_sfu[j*3 +: 3]));
+    end
     wire [16-1:0] k_ld; wire [5-1:0] k_bank;
 `ifdef OT_SU_SYNC_RST
     wire k_cmd = rst_command_n;
@@ -183,7 +191,7 @@ module ot_hbm_su_static_lane_pinreg_k8 #(
     wire [31:0] l_vm_wdata, l_kv_wdata, l_ro_x, l_side_x;
     ot_hbm_su_static_lane_k8 #(.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES + 2), .AW(AW), .CW(CW), .LN(LN), .KIND(KIND),
                             .KVT_SH(KVT_SH), .LEAF(LEAF), .MLAT(MLAT), .ALAT(ALAT), .RSYNC_EXT(PIN_ROOT)) u_lane (
-        .clk_rsync(c0), .clk_stage(clk_stage), .lane_id_c(k_lane_id), .cx_imm3_c(k_cx_imm3), .ca_ad_c(k_ca_ad), .cs_sfu_c(k_cs_sfu), .cm_m1_c(k_cm_m1), .cm_m2_c(k_cm_m2), .co_rnd_c(k_co_rnd), .ce_e2_c(k_ce_e2), .cs_e1_c(k_cs_e1), .ld_x(k_ld), .bank_x(k_bank),  .clk_insert(clk_insert), .rst_n(rst_i), .lane_id(q_lane_id),
+        .clk_rsync(c0), .clk_stage(clk_stage), .lane_id_c(k_lane_id), .cx_imm3_c(k_cx_imm3), .ca_ad_c(k_ca_ad), .cs_sfu_c(k_cs_sfu), .cm_m1_c(k_cm_m1), .cm_m2_c(k_cm_m2), .co_rnd_c(k_co_rnd), .ce_e2_c(k_ce_e2), .cs_e1_c(k_cs_e1), .cp_m1_c(k_cp_m1), .ci_sfu_c(k_ci_sfu), .ld_x(k_ld), .bank_x(k_bank),  .clk_insert(clk_insert), .rst_n(rst_i), .lane_id(q_lane_id),
         .ld(s_q[3]), .ld_bank(s_q[2]), .ld_c(q_ld_c), .emit(s_q[1]), .bank(s_q[0]), .o_v(q_o_v), .i_v(q_i_v), .no(q_no),
         .ni(q_ni), .ls(q_ls), .lvw(q_lvw), .vb(q_vb), .krow(q_krow), .obase(q_obase), .aibase(q_aibase), .aind(q_aind),
         .gsh(q_gsh), .cpair(q_cpair), .dst(q_dst), .srcs(q_srcs),

@@ -46,7 +46,47 @@ endmodule
 
 # copies the pin-register wrapper supplies (field, width, copies)
 COPIES = [('lane_id', 11, 5), ('cx_imm3', 32, 4), ('ca_ad', 3, 4), ('cs_sfu', 3, 2), ('cm_m1', 3, 2),
-          ('cm_m2', 2, 2), ('co_rnd', 1, 2), ('ce_e2', 2, 2), ('cs_e1', 3, 2)]
+          ('cm_m2', 2, 2), ('co_rnd', 1, 2), ('ce_e2', 2, 2), ('cs_e1', 3, 2), ('cp_m1', 3, 4), ('ci_sfu', 3, 4)]
+NS = 4                    # insertion-line slices (each slice's load select reads its own v / sel copy)
+
+
+def ins(src, old_mod, new_mod):
+    """insertion line with NS slices: v / sel arrive as NS copies; slice j's load / bypass selects use copy j"""
+    s = sub(src, f'module {old_mod} #(', f'module {new_mod} #(\n    parameter integer NS = {NS},             // HBM-KIND8: v / sel copies, one per data slice')
+    s = sub(s, '''    input  wire         v,
+    input  wire [K-1:0] sel,                 // one-hot depth choice''', '''    input  wire [NS-1:0]   v,                // HBM-KIND8: NS kept copies of v
+    input  wire [NS*K-1:0] sel,              // NS copies of the one-hot depth choice''')
+    s = sub(s, '''                    wire ld = v && has(p, sel);
+                    assign cl[p] = ld && nxv;''', '''                    wire [NS-1:0] ldv;
+                    wire [W-1:0]  nxt;
+                    for (genvar j = 0; j < NS; j = j + 1) begin : g_sl
+                        localparam integer LO = j * ((W + NS - 1) / NS);
+                        localparam integer HI = (LO + (W + NS - 1) / NS > W) ? W : LO + (W + NS - 1) / NS;
+                        assign ldv[j] = v[j] && has(p, sel[j*K +: K]);
+                        if (HI > LO) begin : g_d
+                            assign nxt[HI-1:LO] = ldv[j] ? d[HI-1:LO] : nx[HI-1:LO];
+                        end
+                    end
+                    wire ld = ldv[0];
+                    assign cl[p] = ld && nxv;''')
+    s = sub(s, 'r[p] <= ld ? d : nx;', 'r[p] <= nxt;', 2)
+    s = sub(s, '''            wire now = v && has(0, sel);
+            assign vo = now || rv[1];
+            assign q  = now ? d : r[1];''', '''            wire [NS-1:0] nowv;
+            for (genvar j = 0; j < NS; j = j + 1) begin : g_q
+                localparam integer LO = j * ((W + NS - 1) / NS);
+                localparam integer HI = (LO + (W + NS - 1) / NS > W) ? W : LO + (W + NS - 1) / NS;
+                assign nowv[j] = v[j] && has(0, sel[j*K +: K]);
+                if (HI > LO) begin : g_d
+                    assign q[HI-1:LO] = nowv[j] ? d[HI-1:LO] : r[1][HI-1:LO];
+                end
+            end
+            wire now = nowv[0];
+            assign vo = now || rv[1];''')
+    s = sub(s, '            assign vo = v; assign q = d; assign coll = 1\'b0; assign busy = 1\'b0;',
+            '            assign vo = v[0]; assign q = d; assign coll = 1\'b0; assign busy = 1\'b0;')
+    return s
+
 NLD, NBK = 16, 5          # ld strobe copies (5 streams x 3 groups + 1), bank copies (one per stream)
 
 
@@ -158,6 +198,47 @@ def lane():
             "    ot_hdc_kge #(.W(32), .K(K)) u_clo (.a(k_imm3c), .b(okey(c_lo)), .ge(c_lohi));")
     s = sub(s, "    wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : cx_imm3) : (c_lohi ? c_lo : cx_imm3);",
             "    wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : imm3_3) : (c_lohi ? c_lo : imm3_3);")
+    # ---- insertion lines: v / sel copies (p_v x NS kept, v3 x NS kept; cp_m1 / ci_sfu pin copies)
+    s = sub(s, '''        if (!rst_stage_n[0]) p_v <= 1'b0; else p_v <= x_v;
+    end''', f'''        if (!rst_stage_n[0]) p_v <= 1'b0; else p_v <= x_v;
+    end
+    wire [{NS}-1:0] p_vc;                             // HBM-KIND8: kept copies of p_v for the M1 insertion line slices
+    for (genvar c = 0; c < {NS}; c = c + 1) begin : g_pvc
+        ot_su_kffr_k8 u_k (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(x_v), .q(p_vc[c]));
+    end''')
+    s = sub(s, '''            ot_hdc_v41x_ins #(.W(T1W), .K(2), .DEPTHS({H_DIV, H_M}), .DMAX(19)) u_l1 (
+                .clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_v), .sel({p_div, !p_div}), .d({p_b, p_c, p_d, p_o, p_par}),''',
+            f'''            wire [2*{NS}-1:0] l1_sel;
+            for (genvar c = 0; c < {NS}; c = c + 1) begin : g_l1s
+                wire dv = (cp_m1_c[3*c +: 3] == M1_DIVB) || (cp_m1_c[3*c +: 3] == M1_DIVIMM);
+                assign l1_sel[2*c +: 2] = {{dv, !dv}};
+            end
+            ot_hdc_v41x_ins_k8 #(.W(T1W), .K(2), .DEPTHS({{H_DIV, H_M}}), .DMAX(19)) u_l1 (
+                .clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_vc), .sel(l1_sel), .d({{p_b, p_c, p_d, p_o, p_par}}),''')
+    s = sub(s, '''    wire v3 = v3l[ALAT];''', f'''    wire v3 = v3l[ALAT];
+    wire [{NS}-1:0] v3c;                              // HBM-KIND8: kept copies of v3 for the S insertion line slices
+    for (genvar c = 0; c < {NS}; c = c + 1) begin : g_v3c
+        ot_su_kffr_k8 u_k (.clk(clk_stage[3]), .rst_n(rst_stage_n[3]), .d(v3l[ALAT-1]), .q(v3c[c]));
+    end''')
+    s = sub(s, '''            if (FULL != 0) begin : g_full
+                ot_hbm_su_static_ins #(''', f'''            wire [7*{NS}-1:0] l4_sel;
+            for (genvar c = 0; c < {NS}; c = c + 1) begin : g_l4s
+                wire [2:0] cf = ci_sfu_c[3*c +: 3];
+                assign l4_sel[7*c +: 7] = {{cf == SFU_EGATE, cf == SFU_SPSQRT, cf == SFU_SQRT, cf == SFU_RSQRT,
+                                           cf == SFU_SIGM || cf == SFU_SILU, cf == SFU_EXP, cf == SFU_NONE}};
+            end
+            wire [3*{NS}-1:0] l4_sel3;
+            for (genvar c = 0; c < {NS}; c = c + 1) begin : g_l4t
+                assign l4_sel3[3*c +: 3] = l4_sel[7*c +: 3];
+            end
+            if (FULL != 0) begin : g_full
+                ot_hbm_su_static_ins_k8 #(''')
+    s = sub(s, '''                    .v(v3), .sel(sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());''',
+            '''                    .v(v3c), .sel(l4_sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());''')
+    s = sub(s, '''                ot_hbm_su_static_ins #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (''',
+            '''                ot_hbm_su_static_ins_k8 #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (''')
+    s = sub(s, '''                    .v(v3), .sel(sel[2:0]), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),''',
+            '''                    .v(v3c), .sel(l4_sel3), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),''')
     # ---- multipliers / exp: the k8 units
     s = sub(s, 'ot_hdc_qmul_lat #(MLAT)', 'ot_hdc_qmul_lat_k8 #(MLAT)', 5)
     s = sub(s, 'ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp', 'ot_hdc_v41x_exp_k8 #(.LM(MLAT), .LA(ALAT)) u_exp')
@@ -259,4 +340,13 @@ if __name__ == '__main__':
     (A / 'k8').mkdir(exist_ok=True)
     (A / 'k8/ot_hbm_su_static_lane_k8.sv').write_text(lane())
     (A / 'k8/ot_hbm_su_static_lane_pinreg_k8.sv').write_text(pinreg())
+    (A / 'k8/ot_hbm_su_static_ins_k8.sv').write_text(
+        '// GENERATED by tools/hbm_static/su_lane_k8_gen.py from ot_hbm_su_static_ins.sv (HBM-KIND8: sliced v / sel copies); do not edit.\n'
+        + ins((A / 'ot_hbm_su_static_ins.sv').read_text(), 'ot_hbm_su_static_ins', 'ot_hbm_su_static_ins_k8'))
+    v41 = (ROOT / 'rtl/hdc/v41x/ot_hdc_v41x_sfu.sv').read_text()
+    hdr = v41[:v41.index('// ---------------------------------------------------------------------------')]
+    body = v41[v41.index('module ot_hdc_v41x_ins #('):]
+    (A / 'k8/ot_hdc_v41x_ins_k8.sv').write_text(
+        hdr + '// GENERATED by tools/hbm_static/su_lane_k8_gen.py from ot_hdc_v41x_ins (rtl/hdc/v41x/ot_hdc_v41x_sfu.sv; HBM-KIND8 sliced v / sel copies); do not edit.\n'
+        + ins(body, 'ot_hdc_v41x_ins', 'ot_hdc_v41x_ins_k8'))
     print('su_lane_k8_gen: wrote k8/ot_hbm_su_static_lane_k8.sv, k8/ot_hbm_su_static_lane_pinreg_k8.sv')
