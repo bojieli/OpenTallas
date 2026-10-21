@@ -1291,5 +1291,33 @@
     }
   },
   "failure": "SMB66 operations65PASS1FAIL: SVG issuer fault cycle46800, head missing21 of43 outputs. Wrapperreportedexit0 despite JOB_RC1, raw JSON/log authoritative. HBM lead notified.",
-  "scope": "DS matvec components L0/L2/L14/head PASS on bound SM master. sm0 is representative production partition, all sweep proves arithmetic for every fixture output; neither is whole layer/full token."
+  "scope": "DS matvec components L0/L2/L14/head PASS on bound SM master. sm0 is representative production partition, all sweep proves arithmetic for every fixture output; neither is whole layer/full token.",
+  "tools_source": "90784f0a17aceb4b0f46d720770dc0c431d6b4e0",
+  "fault_classification": {
+    "type": "missed static go slot; capacity overflow not demonstrated",
+    "trace": {
+      "issuer_rc": 6849,
+      "go_head_at": 6780,
+      "sq_n": 3,
+      "gq_n": 1,
+      "go_busy": 0,
+      "cache_ready": "00",
+      "block_ready": "0000"
+    },
+    "bench_parameters": {
+      "SMB_PACE_NUM": 200,
+      "SMB_PACE_DEN": 64,
+      "SMB_PACE_ADD": 4,
+      "DD": 256,
+      "ID_COHORT": 0,
+      "XSLOT": 0,
+      "OPEN_IL": 0
+    },
+    "issuer_identical_r14_r15": true,
+    "issuer_sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+    "release_scope": "production cohort1 differs from bench0; identical issuer defect remains open until successor schedule demonstrates pass",
+    "owner": "/root/hbm_lead/collect_pu_svg_smh",
+    "raw_tail": "smb_fault_tail.log",
+    "full_raw_log": "ot-gold2:/srv/opentallas-scratch/claude/tok-func-hbm/sm14/work_smb/run_smb_pos/run.log"
+  }
 }
