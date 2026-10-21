@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.status.obs.v1.codec_causal_receipt",
+ "status": "PASS",
+ "source_commit": "09397aff0af9074a2a6b0708b971808c5e59dfe2",
+ "fleet": {
+  "host": "ot-gold1",
+  "unit": "oth-ubuntu-1968488-1792606415",
+  "exit": 0,
+  "verilator": "5.050"
+ },
+ "source_manifest_matched": true,
+ "positive_summary": [
+  "STATUS_OBS_V1 PASS MUT=0 checks=44"
+ ],
+ "mutant_summary": [
+  "STATUS_OBS_V1 FAIL MUT=1 checks=44 bad=2"
+ ],
+ "mutant": "Inject latest ctx tag instead of actual completed-operation tag. Both legal identities; independent operation scoreboard must reject wrongowner.",
+ "cases": [
+  "legacy header and DATA155:0 equal original sf7 codec",
+  "canonicalzero before firstvalid identity",
+  "sameedge events included in existing STATUS slot",
+  "heldcontext/RESULT identities",
+  "actualnativeoperation owner/epoch distinct from receiptwindow",
+  "cumulative TXdoesnotclear",
+  "link epochreset withunchanged STATUSepoch doesnotclear",
+  "STATUSepoch change clears; sameedgecompletion counts1",
+  "unknownversion/reservedgap/reservedextension reject",
+  "production32bit saturation/overflow via testbench register seed atFFFFFFFE",
+  "overflow codec fault and nextreceipt epochclear"
+ ],
+ "legacy_default_source_sha256": {
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv": "8ab23d2f1afdca998d16d5ed4cc220dc451929d5d71c3ae4b21c84b803d6ff96",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv": "d60d50cc5bdc8495ccb001beb89b20ad6960dfadc6457d8cd3b2afa31fa71db0",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf7.sv": "1ec8cf5e1f353718097e6868238a1b3122fac210e1f01c92ca31a7807f15b0ba"
+ },
+ "scope": "Minimum actualsf7 STATUS TX and native newSFM3 RX codec only. ActualQcallback, KLLR/core, HOSTCSR reader, GEN and physical closure are separate pending qualifications.",
+ "hashes": {
+  "source_manifest.json": "ea796580f3e5c0e5a5d133878090599ffe3dd18543c533747df1d063efccf40a",
+  "otrun.log": "0ca8b61be2ab50f687bde78bf118ce8f6d9182a8e4f48b6d7ebea95c612debb5",
+  "run1.log": "b40a3d40568db5158279a5b9dab66d52014e1990fcd3530b06a1369e992194cb",
+  "run0.log": "d3dcc240479645e20fc2f81ee48e861ea14f1d694b4798017e048aeaa9bd63a3",
+  "build1.log": "67481b482063de6111cd40e818935b047486cc301ddd6be7b707f2a34bab591d",
+  "build0.log": "e721cbcd0c66347fbb0d4758b17db85f15fb902a4470407e02129c77c099ef97"
+ }
+}

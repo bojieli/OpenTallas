@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits   771 GB (avail 653, growth 113, headroom 0, waiters 0/0 GB) load 62/128 running 35 disk 2173 GB 
+ot-run: ot-epyc7       admits   113 GB (avail 175, growth 96, headroom 0, waiters 0/0 GB) load 110/96 running 19 disk 4682 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/q-status-codec-v1-1021
+ot-run: ot-gold2       admits   522 GB (avail 497, growth 132, headroom 0, waiters 0/0 GB) load 81/112 running 24 disk 2979 GB 
+ot-run: ot-gold1       admits   758 GB (avail 696, growth 165, headroom 0, waiters 0/0 GB) load 60/112 running 23 disk 2562 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/q-status-codec-v1-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/q-status-codec-v1-1021
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1968488-1792606415 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+STATUS_OBS_V1 PASS MUT=0 checks=44
+- rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43ns; walltime 0.001 s; speed 42.763 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+OBS_BAD actual completed owner not latest context
+OBS_BAD new-window true completion identity
+STATUS_OBS_V1 FAIL MUT=1 checks=44 bad=2
+- rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43ns; walltime 0.001 s; speed 35.415 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+STATUS_OBS_V1_SUITE PASS positive mutant_caught
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1968488-1792606415): exit 0

@@ -87,5 +87,5 @@
  "extra_codec_capture_edges": 0,
  "new_callback_top_PR_edges": 1,
  "legacy_defaults": "Original source modules byte-identical, explicit obs1 source ABI only; no old view aliases.",
- "verification": "PENDING causal positive/mutant + callback/KV/HOST tests + physical/native qualification"
+ "verification": "Codec causalpositive andwrongowner mutant PASS; exactQcallback/KVcore/HOSTreader andGEN/physical stillPENDING."
 }
