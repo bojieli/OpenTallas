@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.ve.post-retirement-plan.v1",
+  "status": "PREPARATION_ONLY_NO_LAUNCH",
+  "parent_job": "s81sl_ve_r5-s81sl_ve_r5-f51f4ec42",
+  "parent_status": "CANCELLED",
+  "parent_source_commit": "f51f4ec42ca6f555ae0bb93558d1c485cee732c2",
+  "cancelled_state_sha256": "ccfc1eb8aa32ea6b603047bf3628f0454564a56438f26635e4ee35a6e43d72fe",
+  "infrastructure_reason": "cancelled by a human (EPYC6-RETIRE deadline 14:15 (owner 10-21): KILLED at epyc6 retire, relaunch elsewhere)",
+  "prohibited": "Do not mutate CANCELLED eligibility/history; do not call migrate/retry-eco on cancelled job; no duplicate route or bench; no assumed interrupted ECO ODB.",
+  "durable_source": "Original fully routed ODB in metrics.orfs_dir/results/.../base; final C3 archive+hash receipt PENDING from Disk",
+  "interrupted_ECO": "No ODB/checkpoint produced in cl/eco/pass1; logs/SDCs only, per Disk actual filesystem inspection",
+  "original_metrics": {
+    "setup_corner": "TT",
+    "setup_ps": 82.85,
+    "ff_hold_ps": -15.07,
+    "drc": 0
+  },
+  "continuation_scope": [
+    "New linked record preserving original source/lib/SDC hashes",
+    "Stage exact original durable routed ODB and all originally consumed libs/SDCs from final verified C3 archive",
+    "Only lost postroute ECO, then existing postECO corner/DRC/clock/native/reach/collection qualification",
+    "Any original corner/edge/reference contracts unchanged; no closure claim before terminal valid verdict"
+  ],
+  "resource_model": {
+    "actual_log_peak_MB": 36812,
+    "note": "Use measured peak plus actual fleet headroom; initial32GB record is below observed peak. No arbitrary runtime or memory cap."
+  },
+  "support_owner": "ROOT integration inspecting supported new linked continuation; await prescription before action",
+  "receipts_owed": [
+    "Disk finalC3 path/hash manifest",
+    "Exact original route ODB/lib/SDC/source hashes",
+    "New linked supported continuation identity and actual fleet unit",
+    "PostECO exact qualification and final verdict"
+  ]
+}
