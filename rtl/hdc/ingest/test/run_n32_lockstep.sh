@@ -8,7 +8,7 @@ O=$1; SEEDS=${2:-"1 2 3"}; M=${3:-}; mkdir -p "$O"
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 D=""; [ -n "$M" ] && D="-DOT_N32_MUT_$M"
 $V --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --top-module tb_s81_ing_n32_lockstep \
-  -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D $D -Mdir "$O/obj" --build-jobs 8 \
+  -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D $D ${N32_EXTRA:-} -Mdir "$O/obj" --build-jobs 8 \
   $R/rtl/hdc/ingest/test/tb_s81_ing_n32_lockstep.sv $R/rtl/hdc/ingest/ot_hdc_kv_ingest.sv $R/rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv \
   $R/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv \
   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1.v > "$O/build.log" 2>&1 \
