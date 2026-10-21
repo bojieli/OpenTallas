@@ -1,0 +1,70 @@
+{
+  "selected_top": "ot_hbm_su_static_pgslice_rg_safe3",
+  "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_rg_safe3.sv",
+  "actual_consumed_instance": "u_stream",
+  "actual_consumed_master": "ot_hbm_su_static_pg_stream_split_safe3",
+  "view": "physical/ref_tile/hbm_su_pg_stream_b_safe3_1019/views/ot_hbm_su_static_pg_stream_split_safe3",
+  "closed_job": "hbm_su_pg_stream_b_safe3_1019-s3-a160833f0",
+  "closed_source": "a160833f0",
+  "frozen_child_parameters": {
+    "QID": 1,
+    "G": 2,
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "STRAP": 1,
+    "FAULT_REG": 1
+  },
+  "parent_parameters": {
+    "QID": "0..3 nominal; pos[3:2] is actual runtime identity",
+    "G": "0..3 nominal; pos[1:0] is actual runtime identity",
+    "PRETREE": 1
+  },
+  "clocks": {
+    "clk_ctl": "serial root",
+    "pg_clk": "stream root,4:3 versus serial; existing closed leaf seam windows retained",
+    "ck_r0..3": "unchanged regional parent roots"
+  },
+  "resets": [
+    "rst_n",
+    "bridge_rst_n"
+  ],
+  "slot_um": [
+    216,
+    259.2
+  ],
+  "identity_source": {
+    "source_commit": "a160833f0",
+    "file": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_stream_safe3.sv",
+    "lines": "452-469: registered pos_c selects q_id/g_id/gi and quadrant-zero B39bi under frozenSTRAP1; no new validation run"
+  },
+  "price": {
+    "read_return_old_new": [
+      10,
+      18
+    ],
+    "write_return_old_new": [
+      7,
+      15
+    ],
+    "read_write_delta_stream_edges": 8,
+    "safe2_inject_delta_stream_edges": 1,
+    "safe3_su_request_delta_serial_edges": 1,
+    "safe3_sticky_lg_fault_delta_stream_edges": 1,
+    "ij_outputs_delta_edges": 0,
+    "existing_price_record": "lanes/LH-REPRICE3.md 10 and41-46",
+    "activation": "Next die/compiler snapshot must consume RR18/WR15 and SAFE3requestcapture; current0f4 remainsfrozen"
+  },
+  "parent_holds": [
+    "Regional PGLG8 region child/parent physical closure still owed",
+    "PRETREE1 assembly source and schedule must compose with actual r14 selected qcore; no new throughput or die qualification claimed",
+    "No parent outline or child placement approved here; reserve real216x259.2stream sibling at S-band E face as existingregionalplan",
+    "No new checks/tests/audits/gates run for this binding"
+  ],
+  "view_files": {
+    "ot_hbm_su_static_pg_stream_split_safe3.lef": "8006ffbc21c3d6bc0458d40f6a828aff5ffaa7232f87aee22cdcf490f686fb6f",
+    "ot_hbm_su_static_pg_stream_split_safe3_ss.lib": "c0041155bea6995f4c25f1bf0db5a538885529edca11f43fcbff9a3a70238101",
+    "ot_hbm_su_static_pg_stream_split_safe3_tt.lib": "348b054d354c941f8920ca130028c177612c97f05d43953a278cbc201bf804c8",
+    "insertion.json": "2fe902ed10c5e404e7cba38e9a9cb457703bb83e15de19853d89bf25ff882cac",
+    "ot_hbm_su_static_pg_stream_split_safe3_ff.lib": "17a8bfd489e0baaba6384eff86b48b79dd3748355122dfdf7ca50c3c1604bd49"
+  }
+}
