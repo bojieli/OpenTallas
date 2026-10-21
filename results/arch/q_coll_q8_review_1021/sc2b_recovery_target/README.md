@@ -1,0 +1,7 @@
+# SC2b exact recovery target, source availability unverified
+
+Original route job source dc13647fb2442206175f91f1adc0be812df5702a contains tracked gate_result.json blob93353c17829f30ffa5fd15d6c13062a1a7bf6b2d. RECOVERY_TARGET.json retains all7104 per-file gate SHA256/blob IDs, complete657-path consumed manifest, original route-commit blob IDs and actual50-file frozen route overlay plan/hash. Original gate snapshot started840685653 and archiveSHA3aa1a3ec/manifestcdc1d2f5; it must not be silently called sourcedc136.
+
+A static metadata join finds all7104 effective original-commit+actual-frozen-overlay blob IDs equal the recorded gate blob IDs. The only unoverlaid original-commit difference is tools/orfs_hold_mm.tcl, exactly covered by actual frozen overlay blob66e94dd7004247342685c7493bf6f0c8bd69a719 / SHAe4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290. Full records are authoritative.
+
+This is a recovery TARGET and metadata identity proof, not proof all bytes exist or have been restored. EP6 reaper removed source15:00:52; earlier328-file archive excludesSRC. ROOT integration owns immutable original Git blob closure preservation and exact per-file recovery verification; Disk owns deletion holds and partialarchive. No currentHEAD, unrelated verified source, oldtar or other-sourceSC2 ECO substitution. ExistingSC2gold1 source29922 remains independent. No globalrecovery checks or jobretry performed here.
