@@ -1,7 +1,7 @@
 {
   "reviewer": "codex takeover coordinator",
   "time": "2026-10-21T15:33:54.997123-07:00",
-  "gate_commit": null,
+  "gate_commit": "2026-10-21T15:16:35-0700",
   "verdict": "APPROVED",
   "geometry_sha256": "92e4b45385db7b4c60f0636c567f990b148225726f6c4f0b683bfb0ca897aca3",
   "geometry": {
@@ -17,7 +17,7 @@
   "source_content_manifest_sha256": "fd36e4c2b8187b2c4c71ccd14986974b5148875055e67aea0ba05f2339c65dc3",
   "source_archive_sha256": "4259ad745b8befd925b7a09af026aca3a696aa44d6666760c8482f3332be8c49",
   "source_identity": "exact_content_snapshot; commit=null retained; start369c54773295db39a0e75f3000ae6a9796155215",
-  "approval_provenance": "ROOT personally viewed all four original PNGs and complete packet, approved exact pfxa/pfxb geometry; parent /root/qk_lead relayed explicit approval and authorized this bound record. ROOTintegration alone submits.",
+  "approval_provenance": "ROOT personally viewed all four original PNGs and complete packet, approved exact pfxa/pfxb geometry; parent /root/qk_lead relayed explicit approval and authorized this bound record. ROOTintegration alone submits. Canonical gate_commit uses actual generated timestamp because exact content snapshot intentionally has commit=null; geometry/content hashes unchanged.",
   "checklist": {
     "lattice": "Five real SRAMs, 20.304um horizontal and21.6um vertical channels; continuous rows/PG. Exact frozen floorplan approved.",
     "std_cell_band": "Broad green logic bands; no red strip. Fallback43.8percent synthfill accepted by ROOT.",
