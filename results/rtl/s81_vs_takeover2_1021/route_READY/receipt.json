@@ -1,0 +1,29 @@
+{
+  "job": "s81sl_vs_n32f-n32f-71ac7943d",
+  "status": "READY",
+  "source_commit": "71ac7943dc6d6797e384122d893f1b9060aa08fc",
+  "RTL_source": "8f57521dc",
+  "all12_benches_ok": true,
+  "benches": 12,
+  "TT_setup_ps": 12.98,
+  "FF_hold_ps": 12.28,
+  "SS_setup_sensitivity_ps": -293.27,
+  "DRC_errors": 0,
+  "ODB_sha256": "022f6fac8dad8c53179b562645af92fe364f82697b47fb6b364bab440134430d",
+  "SPEF_sha256": "ccafc12e51a97166c17c223d90943b614909a5ca7ece990040f307ddba779331",
+  "viewed_actual_routed_png": [
+    "floorplan.png",
+    "density.png",
+    "congestion.png"
+  ],
+  "visual_observations": "216x237.6;8macros two columns/fourrows with open standard-cell streets, distributed boundarypins; density mostlygreen/blue withlocalorange patches, zero GRTcongestedgcells; no redcongestion",
+  "policy": "actualsignoffTTsetup/FFhold833.333ps60/25uncertainty, SSsensitivityonly; raw770psnominalphysicalacceptance notsignoff",
+  "not_CLOSED_yet": true,
+  "no_merge_by_collector": true,
+  "files_sha256": {
+    "density.png": "ce7bbbedb2a321b4baa6a4b2a65547cc55c4999f95358b46b757a382f8a2b7a7",
+    "congestion.png": "67c005552d3b3d1f9714fc77c1605423d33793d897b88f7fecd33b64e5ad7cbf",
+    "floorplan.png": "a8451694fe04288798a96c0d672e1291d555f0e33254260d7df013cd3ac8db63",
+    "corner_sta.json": "ab9fc2d006a0051edeadde542afdb4561b5a7b0f5013c621afda82a69be12468"
+  }
+}
