@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/pl-smt/pq
+ot-run: ot-epyc5       admits    34 GB (avail 448, growth 424, headroom 0, waiters 1/48 GB) load 57/128 running 21 disk 2479 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pl-smt/pq
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pl-smt/pq
+ot-run: -> ot-epyc5 (will queue: admits 34 GB < 72 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 72 = 50 GB, admissible 34 GB: available 447 GB, growth charged 423 GB (x0.5), young 365 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-762086-1792330288 after 20 s
+ 0 warm-up (router gate shape)    bf16 K 5120 R  1 dep 1 load0    397 post   1438 first_line   1447 last_line   1568 done   1713 exact True
+ 1 s bf16 K5120 R1 (G10)          bf16 K 5120 R  1 dep 0 load0   2014 post   3055 first_line   3063 last_line   3184 done   3329 exact True
+ 2 s fp4 K2304 R2 (G2)            fp4  K 2304 R  2 dep 0 load0   3630 post   3839 first_line   3847 last_line   3906 done   4019 exact True
+ 3 s bf16 K512 R32 (G1)           bf16 K  512 R 32 dep 0 load0   4320 post   4425 first_line   4439 last_line   4694 done   4811 exact True
+ 4 s fp8 K8192 R2 (G8)            fp8  K 8192 R  2 dep 0 load0   5112 post   5945 first_line   5959 last_line   6086 done   6213 exact True
+ 5 s fp4 K5120 R1 (G3)            fp4  K 5120 R  1 dep 0 load0   6514 post   6827 first_line   6839 last_line   6897 done   7017 exact True
+ 6 s bf16 K5120 R3 (G10)          bf16 K 5120 R  3 dep 0 load0   7318 post   8359 first_line   8367 last_line   8620 done   8765 exact True
+ 7 s fp8 K1280 R16 (G2)           fp8  K 1280 R 16 dep 0 load0   9066 post   9275 first_line   9287 last_line   9542 done   9655 exact True
+ 8 s fp8 K1280 R2 reuse           fp8  K 1280 R  2 dep 0 load0   9956 post   9956 first_line   9967 last_line  10026 done  10139 exact True
+ 9 s bf16 K5120 R1 (G10) b        bf16 K 5120 R  1 dep 0 load0  10440 post  11481 first_line  11495 last_line  11616 done  11761 exact True
+10 s fp8 K2304 R2 (G3)            fp8  K 2304 R  2 dep 0 load0  12062 post  12375 first_line  12383 last_line  12444 done  12564 exact True
+11 s fp4 K2304 R2 (G2) b          fp4  K 2304 R  2 dep 0 load0  12865 post  13074 first_line  13087 last_line  13146 done  13259 exact True
+12 s bf16 K512 R32 (G1) b         bf16 K  512 R 32 dep 0 load0  13560 post  13665 first_line  13679 last_line  13934 done  14051 exact True
+PASS total_cycles 14059 /srv/opentallas-scratch/claude/pl-smt/pq/flat.json
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-762086-1792330288): exit 0

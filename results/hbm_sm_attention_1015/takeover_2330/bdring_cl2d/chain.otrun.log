@@ -1,0 +1,25 @@
+ot-run: ot-epyc1tb     admits   484 GB (avail 710, growth 104, headroom 64, waiters 0/0 GB) load 105/128 running 13 disk 448 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hbm-sm-2330/bdring_cl2d_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hbm-sm-2330/bdring_cl2d_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/hbm-sm-2330/bdring_cl2d_diag
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1917571-1792133776 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_L_1x_220121a already seen in asap7sc7p5t_28_R_1x_220121a
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_L_1x_220121a.lef, created 212 library cells
+CHAIN 0 bq_d[420]1405 output1405 BUFx2_ASAP7_75t_R 165780 126090
+CHAIN 1 ot_outhold_p01404 ot_ohdrv_01404_2 BUFx4f_ASAP7_75t_R 168966 125820
+CHAIN 2 ot_outhold_n01404_1 ot_outhold_01404_1 HB2xp67_ASAP7_75t_R 168372 125280
+CHAIN 3 ot_outhold_n01404_0 ot_ohdrv_01404_0 BUFx4f_ASAP7_75t_R 169236 127170
+CHAIN 4 net22415 wire22415 BUFx16f_ASAP7_75t_R 98712 195210
+CHAIN 5 net22416 wire22416 BUFx16f_ASAP7_75t_R 30510 259200
+CHAIN 6 bq_d[420] _135173_ INVx8_ASAP7_75t_R 8262 279990
+CHAIN 7 net22480 wire22480 BUFx16f_ASAP7_75t_R 69930 219240
+CHAIN 8 net22481 wire22481 BUFx16f_ASAP7_75t_R 131166 157950
+CHAIN 9 _011612_ bq_d\[420\]$_DFF_P_ DFFHQNx3_ASAP7_75t_R 161406 125280
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1917571-1792133776): exit 0

@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.rp4d_refloor.v1",
+  "outline": {
+    "w": 406.08,
+    "h": 1529.28
+  },
+  "geometry": {
+    "outline_um": [
+      406.08,
+      1529.28
+    ],
+    "area_mm2": 0.621,
+    "child_outline_mm2": 0.2577,
+    "child_coverage": 0.415,
+    "overlaps": 0,
+    "slivers_um": [],
+    "min_gap_um": 21.576
+  },
+  "moved": [
+    "u.u_ptw.u_land_s",
+    "u.u_ptw.u_row1",
+    "u.u_ptw.u_beat_t",
+    "u.u_ptw.u_row0",
+    "u.u_ptw.u_land_n"
+  ],
+  "w_column_x": 56.16,
+  "w_strip_um": {
+    "rp4c": 25.92,
+    "rp4d": 56.16
+  },
+  "entry_wire_um": {
+    "u.u_ptw.u_land_s": 56.26,
+    "u.u_ptw.u_row1": 57.18,
+    "u.u_ptw.u_beat_t": 57.18,
+    "u.u_ptw.u_row0": 57.18,
+    "u.u_ptw.u_land_n": 56.26
+  },
+  "leaf1_strap_pins_S": {
+    "xs_a1[9]": 140.988,
+    "xs_a1[10]": 141.468,
+    "xs_a1[11]": 141.948,
+    "xs_a1[12]": 142.428,
+    "xs_a1[13]": 142.908,
+    "xs_a1[14]": 143.388,
+    "xs_a1[15]": 143.868,
+    "xs_a1[16]": 144.348,
+    "xs_a1[17]": 144.828,
+    "xs_a2[7]": 145.308,
+    "xs_a2[8]": 145.788,
+    "xs_a2[9]": 146.268,
+    "xs_a2[10]": 146.748,
+    "xs_a2[11]": 147.228,
+    "xs_a2[12]": 147.708,
+    "xs_a2[13]": 148.188,
+    "xs_g1[5]": 148.668,
+    "xs_g1[6]": 149.148,
+    "xs_g1[7]": 149.628,
+    "xs_g1[8]": 150.108,
+    "xs_g1[9]": 150.588,
+    "xs_g2[5]": 151.068,
+    "xs_g2[6]": 151.548,
+    "xs_g2[7]": 152.028,
+    "xs_g2[8]": 152.508,
+    "xs_g2[9]": 152.988
+  },
+  "scope": "Geometry/pin candidate. Actual CTS / trial GRT / route OPEN."
+}

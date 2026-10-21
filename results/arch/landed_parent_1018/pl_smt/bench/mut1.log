@@ -1,0 +1,10 @@
+LP_MISMATCH port=gout cycle=801 flat=93c1597d0b3b7fce6c3a10a815927210011b07e406dbc05e82 landed=93c1597d0b3b7fce6c3a10a815927210011b07eb95783e5e82
+LP_MISMATCH port=gout cycle=802 flat=2930bedb5769c980cc3333ff87e6c3d3ba6f55dc816d400e31 landed=2930bedb5769c980cc3333ff87e6c3d3ba6f55eb87939b0e31
+LP_MISMATCH port=gout cycle=803 flat=6f469b52b257977fe678ca0af7eb39cc0022ed000000002e74 landed=6f469b52b257977fe678ca0af7eb39cc0022ed7f4e4b402e74
+LP_MISMATCH port=gout cycle=804 flat=61754d3220c3a1ba7005cd25c400000000e839fdb3b27349af landed=61754d3220c3a1ba7005cd25c400000000e83979994b7a49af
+LP_MISMATCH port=gout cycle=805 flat=2cb2da538e4b752ef9d112c6c400000003c0a700000000c410 landed=2cb2da538e4b752ef9d112c6c400000003c0a75f8ce7dfc410
+LP_LOCKSTEP FAIL MUT=1 mismatches=2843 of 12796
+- rtl/hbm_accel/sm/repack/lp/tb_ot_hbm_smh_rp4_flat_lp.sv:95: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 1.442 s; speed 2.775 us/s
+- Verilator: cpu 1.442 s on 1 threads; alloced 1022 MB

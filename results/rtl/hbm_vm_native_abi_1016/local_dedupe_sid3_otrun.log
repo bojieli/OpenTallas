@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   425 GB (avail 671, growth 199, headroom 48, waiters 0/0 GB) load 63/128 running 34 disk 851 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hsm-native-8302
+ot-run: ot-agidock128  admits    46 GB (avail 100, growth 49, headroom 24, waiters 0/0 GB) load 28/64 running 12 disk 362 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1339438-1792147010 after 0 s
+VM_LOCAL_LITERAL PASS RG=5 WG=3 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv:144: $finish called at 8140000 (1ps)
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv:78: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_local_literal.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv:72: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_local_literal.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv:72: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_local_literal.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv:80: actual SRAM readback mismatch
+       Time: 1487000  Scope: tb_hbm_vm_local_literal.tick
+VM_LOCAL_LITERAL_ALL_PASS 4 actual shapes x8 banks x24SRAMs; read permutation/bank identity/slice identity mutants rejected
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1339438-1792147010): exit 0
