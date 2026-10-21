@@ -3,7 +3,7 @@
 // Random D2D RX traffic: context slots (1 in 6 edges) carrying canonical kind-12 records of users 0..3 (user 0 = the
 // latency user's own context: loads nothing), random non-slot words, random unread payload bits.  Reference model in
 // the bench: on the edge after a good filler slot ctx_x[128] = 1, ctx_x[127:0] = the mu_opcal.ctx_words record
-// (4D43 | mask 1<<(u-1) | {tok18, pos18} at 36(u-1), other fields 0) and ctx_user = u; ctx_x[128] = 0 on every other edge
+// (4D43 | mask 1<<(u-1) | {tok18, pos18} copied into all 3 filler slots) and ctx_user = u; ctx_x[128] = 0 on every other edge
 // (record bits are don't-care then); mu_fault stays 0.
 // +bad=N: the N-th context slot carries a bad record (kind 11): PASS = mu_fault rises on the next edge and stays.
 // -GMUT=1 (record loaded into the wrong user): TB_CTXRX FAIL (the mutant witness).
@@ -39,7 +39,7 @@ module tb_ctxrx;
                 r = 128'd0;
                 if (u != 0) begin
                     r[127:112] = 16'h4D43; r[108 + u - 1] = 1'b1;
-                    r[36 * (u - 1) + 18 +: 18] = tok; r[36 * (u - 1) +: 18] = {5'd0, pos};
+                    r[107:0] = {3{tok, 5'd0, pos}};          // every filler slot carries the field; mask names the user
                 end
                 e_ld = !e_bad && u != 0; e_rec = r; e_u = u;
                 nslot = nslot + 1;
