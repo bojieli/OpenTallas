@@ -29,6 +29,7 @@ module tb_hgi_sfu_vm_static_bridge;
  wire [2047:0] sd;wire [63:0] sm;
  wire [255:0] stage_lo_replicas;
  wire [3:0] sl;wire [95:0] sla;wire [127:0] sld;
+ wire [31:0] sl_leaves;
  wire fault,sfault,t0f,t1f;
  reg [63:0] rd_re=0;reg [1535:0] rd_addr=0;
  wire [2047:0] rd_q;
@@ -40,9 +41,9 @@ module tb_hgi_sfu_vm_static_bridge;
  ot_hgi_sfu_vm_static_bridge #(.NATIVE32(NATIVE32)) dut(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
  .prefetch_local_addr(pf_addr),.prefetch_scalar(pf_scalar),.prefetch_word(24'd0),.scalar_addr(96'd0),
  .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_lo_replicas(stage_lo_replicas),.stage_data(sd),.stage_mask(sm),
- .scalar_load(sl),.scalar_load_addr(sla),.scalar_data(sld),
+ .scalar_load(sl),.scalar_load_leaves(sl_leaves),.scalar_load_addr(sla),.scalar_data(sld),
  .drain_round_bf16(2'd0),.drain_v(dv),.drain_vm_sector(dsec),.drain_result_v(drv),.drain_data(dd),.local_wq(wq),.local_w_done(done),.fault(fault));
- ot_hgi_sfu_static_operand_store #(.NATIVE32(NATIVE32),.WPIPE(NATIVE32),.WROT(NATIVE32)) store(.clk(clk),.rst_n(rst_n),.scalar_load(sl),.scalar_enable(4'd0),.scalar_addr(sla),.scalar_data(sld),
+ ot_hgi_sfu_static_operand_store #(.NATIVE32(NATIVE32),.WPIPE(NATIVE32),.WROT(NATIVE32)) store(.clk(clk),.rst_n(rst_n),.scalar_load(sl),.scalar_enable(4'd0),.scalar_load_leaves(sl_leaves),.scalar_enable_leaves(32'd0),.scalar_addr(sla),.scalar_data(sld),
  .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
  .stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_lo_replicas(stage_lo_replicas),.stage_mask(sm),.stage_data(sd),
  .drain_v(dv),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(da),.drain_data(dd),.drain_result_v(drv),.fault(sfault));
@@ -67,6 +68,8 @@ module tb_hgi_sfu_vm_static_bridge;
   for(integer sec=0;sec<8;sec=sec+1)if(sv[sec])
    for(integer cp=0;cp<8;cp=cp+1)
     if(stage_lo_replicas[4*(sec*8+cp)+:4]!==sa[15*sec+:4])$fatal(1,"BRIDGE_STAGE_COPY sector=%0d copy=%0d",sec,cp);
+  for(integer g=0;g<4;g=g+1)for(integer cp=0;cp<8;cp=cp+1)
+   if(sl_leaves[8*g+cp]!==sl[g])$fatal(1,"BRIDGE_SCALAR_LOAD_COPY group=%0d copy=%0d",g,cp);
  end
  integer checks=0;
  initial begin

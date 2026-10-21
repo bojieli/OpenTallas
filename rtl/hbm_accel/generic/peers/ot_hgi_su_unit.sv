@@ -616,10 +616,19 @@ module ot_hgi_su_lgroup2 #(
     // LH-SU (10-19): WROT=1 (N=16 only): the stage sectors arrive bank-aligned (swr_*, rotated once by the parent and
     // shared by its groups); bank b takes the highest sector s with sw_v[s] && swr_m[s*N+b] (same last-wins order and
     // collision fault as the per-word loop below). WROT=0: swr_* unused (bit-identical).
-    parameter integer WROT = 0, NATIVE32 = 0
+    parameter integer WROT = 0, NATIVE32 = 0,
+    // s8 (10-21): PRESEL=1 takes every bank's write enable, one-hot source selects (one kept copy per destination
+    // slice: data[15:0] / data[31:16] / row) and the collision fault from registers the parent captured on its
+    // existing bank-write landing edge; PNC candidate sources per bank. PRESEL=0: pw_* unused (bit-identical).
+    parameter integer PRESEL = 0, PNC = 1
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire [N-1:0]      pw_we,
+    input  wire              pw_coll,
+    input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+    input  wire [N*PNC*32-1:0] pw_d,
+    input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
     input  wire [N-1:0]      rq,                    // qualified lane reads (used port, vector-memory source)
     input  wire [N-1:0]      rr,                    // raw lane read enables
     input  wire [N*AW-1:0]   ra,
@@ -796,7 +805,21 @@ module ot_hgi_su_lgroup2 #(
     // ---- write side: stage (8 words) > lane writes > the single-word STREAM landing (its own group in practice)
     reg  [N-1:0] b_we; reg [RB-1:0] b_wa [0:N-1]; reg [31:0] b_wd [0:N-1];
     reg  wcoll;
-    generate if(NATIVE32 && NLW>0)begin:g_native_wsel
+    generate if(PRESEL)begin:g_presel_wsel
+        always @* begin:wsel
+            integer bb,cc;
+            wcoll=pw_coll;
+            for(bb=0;bb<N;bb=bb+1)begin
+                b_we[bb]=pw_we[bb];b_wa[bb]=0;b_wd[bb]=0;
+                for(cc=0;cc<PNC;cc=cc+1)begin
+                    b_wd[bb]=b_wd[bb]|{({16{pw_sd1[bb*PNC+cc]}}&pw_d[32*(bb*PNC+cc)+16+:16]),
+                                       ({16{pw_sd0[bb*PNC+cc]}}&pw_d[32*(bb*PNC+cc)+:16])};
+                    b_wa[bb]=b_wa[bb]|({RB{pw_sa0[bb*PNC+cc]}}&pw_r0[RB*(bb*PNC+cc)+:RB])
+                                     |({RB{pw_sa1[bb*PNC+cc]}}&pw_r1[RB*(bb*PNC+cc)+:RB]);
+                end
+            end
+        end
+    end else if(NATIVE32 && NLW>0)begin:g_native_wsel
         // Decode each destination bank explicitly. This preserves the exact
         // ordered last-writer/collision semantics without dynamic writes into
         // a bank array (which created a broad data/address mux per raw enable).

@@ -51,6 +51,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  output wire [2047:0] stage_data,
  output wire [63:0] stage_mask,
  output reg [3:0] scalar_load,
+ output wire [31:0] scalar_load_leaves,     // NATIVE32 s8: 8 same-edge copies per group (8*g+k); else scalar_load
  output wire [95:0] scalar_load_addr,
  output reg [127:0] scalar_data,
  input wire [1:0] drain_v,drain_round_bf16,
@@ -134,6 +135,28 @@ module ot_hgi_sfu_vm_static_bridge #(
  // request checks, write output flops and fixed completion observers.
  // The programme and operand store remain on clk. Their related-clock
  // crossings require the die clock/pin plan; this is not a reach waiver.
+ localparam integer SLC=(NATIVE32 && BRING==0 && READ_RETURN>0)?1:0;
+ wire [255:0] sl_copies;
+ if(SLC)begin:g_sl_leaves
+  // leaf 8*G+k = OR over the eight sectors of copy k: expect_v && scalar && group==G (the scalar_load loop below)
+  for(genvar G=0;G<4;G=G+1)begin:g_G
+   for(genvar k=0;k<8;k=k+1)begin:g_k
+    wire [7:0] t;
+    for(genvar p=0;p<4;p=p+1)begin:g_p
+     for(genvar sl=0;sl<2;sl=sl+1)begin:g_sl
+      wire [7:0] c=sl_copies[64*p+8*k+:8];
+      assign t[2*p+sl]=c[6+sl] && c[sl] && c[2+2*sl+:2]==G;
+     end
+    end
+    assign scalar_load_leaves[8*G+k]=|t;
+   end
+  end
+ end else begin:g_sl_original
+  assign sl_copies=0;
+  for(genvar G=0;G<4;G=G+1)begin:g_G
+   assign scalar_load_leaves[8*G+:8]={8{scalar_load[G]}};
+  end
+ end
  for(genvar g=0;g<4;g=g+1)begin:g_lg
   wire [META-1:0] meta_in={prefetch_v[2*g+:2],prefetch_group[4*g+:4],prefetch_local_addr[2*LWB*g+:2*LWB],
               prefetch_scalar[2*g+:2],prefetch_word[6*g+:6]};
@@ -161,6 +184,13 @@ module ot_hgi_sfu_vm_static_bridge #(
       assign stage_lo_replicas[4*((2*g+sl)*8+cp)+:4]=low_q[4*(sl*8+cp)+:4];
      end
     end
+    // s8: eight same-edge copies of this pair's scalar-load metadata {expect_v[1:0],group[3:0],scalar[1:0]}
+    (* keep=1,dont_touch=1 *) reg [63:0] sl_q;
+    for(genvar cp=0;cp<8;cp=cp+1)begin:g_sl
+     always @(posedge clk_lg[g])sl_q[8*cp+:8]<={meta[READ_RETURN-1][12+2*LWB+:2],meta[READ_RETURN-1][8+2*LWB+:4],
+                                              meta[READ_RETURN-1][6+:2]};
+    end
+    assign sl_copies[64*g+:64]=sl_q;
    end
 
   end

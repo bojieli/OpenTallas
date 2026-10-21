@@ -184,6 +184,22 @@ module ot_hgi_sfu_core_split2 #(
   end
  end
 
+ // s8 (NATIVE32): eight same-edge copies of each scalar_enable bit (io_r edge, like the drain leaves), each serving
+ // two lanes of the operand store; the bridge supplies the matching scalar_load copies.
+ wire [31:0] scalar_enable_leaves,scalar_load_leaves;
+ if(NATIVE32)begin:g_se_copies
+  (* keep=1,dont_touch=1 *) reg [31:0] se_q;
+  for(genvar g=0;g<4;g=g+1)begin:g_g
+   for(genvar k=0;k<8;k=k+1)begin:g_k
+    always @(posedge clk_pe)se_q[8*g+k]<=io_word[400+g];
+   end
+  end
+  assign scalar_enable_leaves=se_q;
+ end else begin:g_se_original
+  for(genvar g=0;g<4;g=g+1)begin:g_g
+   assign scalar_enable_leaves[8*g+:8]={8{scalar_enable[g]}};
+  end
+ end
  wire [29:0] drain_addr;
  wire [31:0] drain_vm_sector;
  wire arithmetic_start_unused;
@@ -231,11 +247,11 @@ module ot_hgi_sfu_core_split2 #(
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(b_rq),.local_rr(b_rr),.local_wq(b_wq),.local_w_done(b_wd),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(stage_mask),.stage_data(stage_data),
- .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
+ .scalar_load(scalar_load),.scalar_load_leaves(scalar_load_leaves),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
  .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
  ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32),.PASS_OHREP(PASS_OHREP),.BTREE(BTREE)) u_engine(
   .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_t),.rst_map_n(rst_map_t),
-  .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
+  .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_load_leaves(scalar_load_leaves),.scalar_enable_leaves(scalar_enable_leaves),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
   .vi_re({vi_re_e,vi_re_w}),.vi_addr({vi_addr_e,vi_addr_w}),.vi_q({vi_q_e,vi_q_w}),.ro_v(e_rov),.ro_x(e_rox),
