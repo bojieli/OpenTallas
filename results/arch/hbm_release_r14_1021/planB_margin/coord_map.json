@@ -1,0 +1,255 @@
+{
+ "schema": "opentallas.hbm.d4g_coord_map.v1",
+ "spec": {
+  "plan": "B",
+  "why": "HBM-DIE9 plan B (fallback, different layout): fewer WIDER channels -- both sides of each xq/xl stack (+345.6 each) and a centre spine (+432); no channel at the 100 um single gaps or the stripes; y channels as plan A (reticle-bound: H +691.2 max) | Owner10-21 add real stations and margins after B340469failedrows/547missinghops; receiver IDX landing bays plus SFUS and VMB-COLL middle-band room; fixed child outlines; no Y growth",
+  "bands": [
+   {
+    "name": "stripe_S",
+    "y0": -1000000000.0,
+    "y1": 2050.0,
+    "shift": 1598.4,
+    "cuts": [
+     [
+      5541.6,
+      864.0
+     ],
+     [
+      14601.6,
+      864.0
+     ]
+    ]
+   },
+   {
+    "name": "sm_S",
+    "y0": 2050.0,
+    "y1": 9020.0,
+    "cuts": [
+     [
+      2916,
+      345.6
+     ],
+     [
+      3427,
+      345.6
+     ],
+     [
+      7436,
+      345.6
+     ],
+     [
+      7946,
+      345.6
+     ],
+     [
+      10110,
+      432.0
+     ],
+     [
+      12254,
+      345.6
+     ],
+     [
+      12764,
+      345.6
+     ],
+     [
+      16771,
+      345.6
+     ],
+     [
+      17283,
+      345.6
+     ]
+    ],
+    "shift": 864.0
+   },
+   {
+    "name": "mid",
+    "y0": 9020.0,
+    "y1": 22762.0,
+    "cuts": [
+     [
+      1700.0,
+      432.0
+     ],
+     [
+      3050,
+      691.2
+     ],
+     [
+      7408.8,
+      648.0
+     ],
+     [
+      7700,
+      691.2
+     ],
+     [
+      10110,
+      432.0
+     ],
+     [
+      12500,
+      691.2
+     ],
+     [
+      12894.4,
+      648.0
+     ],
+     [
+      17148,
+      691.2
+     ]
+    ],
+    "shift": 0.0
+   },
+   {
+    "name": "sm_N",
+    "y0": 22762.0,
+    "y1": 29719.0,
+    "cuts": [
+     [
+      2916,
+      345.6
+     ],
+     [
+      3427,
+      345.6
+     ],
+     [
+      7436,
+      345.6
+     ],
+     [
+      7946,
+      345.6
+     ],
+     [
+      10110,
+      432.0
+     ],
+     [
+      12254,
+      345.6
+     ],
+     [
+      12764,
+      345.6
+     ],
+     [
+      16771,
+      345.6
+     ],
+     [
+      17283,
+      345.6
+     ]
+    ],
+    "shift": 864.0
+   },
+   {
+    "name": "stripe_N",
+    "y0": 29719.0,
+    "y1": 1000000000.0,
+    "shift": 1598.4,
+    "cuts": [
+     [
+      5541.6,
+      864.0
+     ],
+     [
+      14601.6,
+      864.0
+     ]
+    ]
+   }
+  ],
+  "ycuts": [
+   [
+    2050.0,
+    86.4
+   ],
+   [
+    9020.0,
+    259.2
+   ],
+   [
+    22762.0,
+    259.2
+   ],
+   [
+    29719.0,
+    86.4
+   ]
+  ]
+ },
+ "extension": {
+  "plan": "R14_RELEASE_B_MARGIN",
+  "why": "Owner10-21 add real stations and margins after B340469failedrows/547missinghops; receiver IDX landing bays plus SFUS and VMB-COLL middle-band room; fixed child outlines; no Y growth",
+  "bands": [
+   {
+    "name": "stripe_S",
+    "y0": -1000000000.0,
+    "y1": 2136.4,
+    "cuts": [
+     [
+      7140,
+      864
+     ],
+     [
+      16200,
+      864
+     ]
+    ]
+   },
+   {
+    "name": "sm_S",
+    "y0": 2136.4,
+    "y1": 9365.6,
+    "shift": 864
+   },
+   {
+    "name": "mid",
+    "y0": 9365.6,
+    "y1": 23366.8,
+    "cuts": [
+     [
+      1700,
+      432
+     ],
+     [
+      8100,
+      648
+     ],
+     [
+      15400,
+      648
+     ]
+    ]
+   },
+   {
+    "name": "sm_N",
+    "y0": 23366.8,
+    "y1": 30410.2,
+    "shift": 864
+   },
+   {
+    "name": "stripe_N",
+    "y0": 30410.2,
+    "y1": 1000000000.0,
+    "cuts": [
+     [
+      7140,
+      864
+     ],
+     [
+      16200,
+      864
+     ]
+    ]
+   }
+  ],
+  "ycuts": []
+ }
+}
