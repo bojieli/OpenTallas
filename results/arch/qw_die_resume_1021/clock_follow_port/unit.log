@@ -1,0 +1,15 @@
+test_actual_generator_default_preserves_legacy_instance_root (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_actual_generator_port_override_runs_after_legacy_follow (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_default_rejects_requested_map (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_default_without_map_is_exact_identity (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_duplicate_clock_assignment_rejected (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_missing_follower_rejected (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_missing_owner_port_rejected (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_multiclock_follower_uses_exact_hr_port (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_owner_follower_rejected (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+test_wrong_instance_owner_rejected (tools.qwen_split.test_clock_follow_port.ClockFollowPort) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.141s
+
+OK

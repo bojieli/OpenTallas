@@ -1,0 +1,13 @@
+{
+ "status":"SOURCE_API_FOCUSED_UNIT_PASS_NOT_GEN_OR_CLOCK_QUALIFICATION",
+ "flag":"OT_SPLIT_CK_FOLLOW_PORT=1; disabled by default",
+ "model_contract":"ck_follow_port maps follower(instance,clockport) tuple to exact actual owner(instance,clockport) tuple. Existing ck_follow string owner must match that instance and is unchanged.",
+ "semantics":"After legacy following and column/hard-region splitting, select existing owner endpoint's unique final region. Every owner/follower must exist exactly once. No generated clock, register or data edge.",
+ "command":"PYTHONPATH=tools python3 -m unittest tools.qwen_split.test_clock_follow_port -v",
+ "result":"10 tests PASS, including actual production _gen16_clock_refile default and explicit override",
+ "selected_TT_source":"codex/q-ctlm-safe13-1021@3a690d96c; RRloc RTL SHA cf82d273a9ccd40c7236a76f929d7595db3b1aa90e4cf73901b4dd7e412d3de2",
+ "actual_cf_clock":"assign cf=n2991; u9136 dff_pn0 C=n3140; assign n3140=ck_hr; source proof includes identical clock/reset dc51/52 FFs",
+ "core_to_hr_contract":"existing LP LANDING20 dcs core->hr writer ck_core / reader ck_hr; u_go.dcs=dcs__l_hr, source cf_q capture on ck_hr. This is component source law, not an actual new die GEN transport age.",
+ "consumer_scope":"System face samples seq_dc51|52 into result_fault at ev_res only; separate cf->root monitor could inhibit admission sooner. No complete duplicate-face contract or prune claim.",
+ "remaining":["actual source-stage population of exact per-port followers", "actual selected coherent73 TT source binding", "whole final fault tree/real crossings/root-clock receipts", "paired shared-tool publication review", "new physical views and actual GEN/GRT/STA/CLK"]
+}

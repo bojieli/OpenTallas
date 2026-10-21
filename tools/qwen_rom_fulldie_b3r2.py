@@ -7399,6 +7399,11 @@ def _gen16_clock_refile(m, regs, by, per):
                 per[nk] = mv
                 r2.append(dict(region=r0['name'], kept=hs[0], moved=h, new_root=f'pll_r{nk}', pins=len(mv)))
 
+    # Explicit actual owner-port followers refine the legacy instance owner
+    # only after every clock pin has a regional assignment. Default is inert.
+    if m.get('ck_follow_port'):
+        from qwen_split.clock_follow_port import apply as follow_port_apply
+        follow_port_apply(m, per, rec)
     # Ownership is checked against FINAL roots, after both column and hard splits.
     if os.environ.get('OT_SPLIT_RST_REGION_LAND', '0') == '1':
         from qwen_split.reset_region_capture import finalize as _final_reset_capture

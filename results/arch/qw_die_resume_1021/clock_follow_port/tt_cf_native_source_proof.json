@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.source_fault_coverage.v1",
+  "source": "rtl/qwen_dv/lp9f_rrloc/qfd_tt_ctlm_dv_np_lp.sv",
+  "sha256": "cf82d273a9ccd40c7236a76f929d7595db3b1aa90e4cf73901b4dd7e412d3de2",
+  "output_nets": {
+    "cf": "n_2991",
+    "dc52": "n_719",
+    "dc51": "n_718"
+  },
+  "final_register_law": {
+    "clock": "n_3140",
+    "reset": "n_88691",
+    "kind": "qfd_bmath_dff_pn0",
+    "cf_D": "n_19868 | n_48313",
+    "dc52_D": "n_19868",
+    "dc51_D": "(n_48313 | n_48316) | n_48315"
+  },
+  "rows": {
+    "10598": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_pn0 #(.ID(0)) u_9131(.C(n_3140),.D(n_19867),.Q(n_718),.R(n_88691));",
+    "10599": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_pn0 #(.ID(0)) u_9132(.C(n_3140),.D(n_19868),.Q(n_719),.R(n_88691));",
+    "10603": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_pn0 #(.ID(0)) u_9136(.C(n_3140),.D(n_19871),.Q(n_2991),.R(n_88691));",
+    "31705": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_or #(.ID(0)) u_30237(.A(n_19868),.B(n_48313),.Y(n_19871));",
+    "31706": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_or #(.ID(0)) u_30238(.A(n_48314),.B(n_48315),.Y(n_19867));",
+    "31707": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_or #(.ID(0)) u_30239(.A(n_48313),.B(n_48316),.Y(n_48314));"
+  },
+  "conclusion": "At each actual landed output edge, including reset0, cf implies (dc[52]|dc[51]). cf is not byte-identical to that OR; it adds no Boolean fault coverage if the actual downstream fault consumer consumes both dc bits.",
+  "consumer_proof": "NOT_EVALUATED; q_die owns exact seq_dc/sysface source path before contract/adoption",
+  "scope": "Source-native actual landed output proof; not old-flat timing inference, binder permission, or source-port pruning."
+}
