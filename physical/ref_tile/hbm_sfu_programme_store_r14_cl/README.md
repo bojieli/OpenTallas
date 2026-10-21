@@ -3,7 +3,7 @@
 Prior failed r13_cl is preserved: TT -60.21 ps / FF hold -102.73 ps / DRC0.
 1 Pins: PASS existing registered host inputs/outputs; reset two-stage landing.
 2 Reach: PASS unchanged fixed relay plan, longest register leg <=405 um; new comparison partials remain at the status combine point.
-3 Fanout: PENDING mapped native census (must <=32 before layout); comparison data bits drive <=7 comparisons.
+3 Fanout: PASS mapped native census max18, zero violations, exact source92294601d (native_summary.json); comparison data bits drive <=7 comparisons.
 4 Depth: FIXED ordinal agreement split into registered 8-bit comparison partials and sticky-update stage.
 5 Storage: PASS unchanged 11 closed SRAM leaf children; no runtime-indexed new storage.
 6 Floorplan: PASS unchanged 43.2-lattice hard children, continuous std-cell channels, aspect1080/950.4=1.14, full-face pins.
