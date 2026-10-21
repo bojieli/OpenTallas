@@ -344,7 +344,7 @@ module ot_s81sl_vs #(
     reg [31:0]  gate [0:3];
     wire eng_r = arr && op == OP_ENG && !ph, eng_a = arr && op == OP_ENG && ph;
     wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r
-    reg  [255:0] kst; reg [127:0] wst; reg epend;    // K pair stash, W upper half, second quad pending
+    reg  [255:0] kst; reg [127:0] wst; (* keep *) reg epend;    // K pair stash, W upper half, second quad pending
     wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
     wire [5:0] eq = epend ? eqp : eq0;              // quad 16 j + i (W arrival: even quad; next cycle: odd)
     reg [255:0] hrow, hra, hrb, xwsel; reg [31:0] gsel;
@@ -360,19 +360,27 @@ module ot_s81sl_vs #(
     wire hph_n = acc_cmd ? c_ph : ph;
     wire [2:0] haddr_n = hfl_on_n ? hfl_n[3:1] :
                                hph_n ? hka_n[2:0] : hep_n ? ka[3:1] : hka_n[3:1];
+    wire hbusy_n = rs_c && (acc_cmd || (busy && !done));
+    wire [3:0] hop_n = acc_cmd ? c_op : op;
+    (* keep="true" *) reg [15:0] hfl_parity;
+    (* keep="true" *) reg [15:0] hpend_data;
+    always @(posedge clk) begin hfl_parity <= {16{hfl_n[0]}}; hpend_data <= {16{hep_n}}; end
     wire [63:0] hbank [0:7];
     (* keep="true" *) reg [15:0] hep_s;
     always @(posedge clk) hep_s <= {16{hep_n}};
     genvar hj,hp,hs;
     generate for(hj=0;hj<4;hj=hj+1) begin:g_hcopy
       for(hp=0;hp<2;hp=hp+1) begin:g_parity
-        wire fill = eng_r && ka < 8'd16 && ka[0] == hp;
-        wire addw = vov_c && op == OP_ENG && ph && voc_c == hj;
-        wire we = fill || addw;
-        wire [2:0] wa = fill ? ka[3:1] : ko_e[2:0];
+        (* keep="true" *) reg [7:0] fill_b, add_b;
+        always @(posedge clk) begin
+          fill_b <= {8{rs_c && x_qv && hbusy_n && hop_n == OP_ENG && !hph_n && hka_n < 8'd16 && hka_n[0] == hp}};
+          add_b <= {8{rs_c && ve_ov && hop_n == OP_ENG && hph_n && ve_oc == hj}};
+        end
+        wire we = fill_b[0] || add_b[0];
+        wire [2:0] wa = fill_b[0] ? ka[3:1] : ko_e[2:0];
         wire [63:0] wd;
-        for(hs=0;hs<4;hs=hs+1) begin:g_word
-          assign wd[16*hs+:16] = fill ? xq_c[64*hj+16*hs+:16] : voy_c[32*(4*hp+hs)+16+:16];
+        for(hs=0;hs<8;hs=hs+1) begin:g_word
+          assign wd[8*hs+:8] = fill_b[hs] ? xq_c[64*hj+8*hs+:8] : voy_c[32*(4*hp+hs/2)+16+8*(hs%2)+:8];
         end
         wire [127:0] raw;
         ot_sram_1r1w_32x128_m1 u_hst(.clk(clk),.r_ce_in(1'b1),.r_addr_in({2'd0,haddr_n}),.rd_out(raw),
@@ -390,7 +398,7 @@ module ot_s81sl_vs #(
           hrow[64*hj+16*hs+:16] = hep_s[4*hj+hs] ? hbank[2*hj+1][16*hs+:16] : hbank[2*hj][16*hs+:16];
           hra[64*hj+16*hs+:16] = hbank[2*hj][16*hs+:16];
           hrb[64*hj+16*hs+:16] = hbank[2*hj+1][16*hs+:16];
-          xwsel[64*hj+16*hs+:16] = fl_e[0] ? hbank[2*hj+1][16*hs+:16] : hbank[2*hj][16*hs+:16];
+          xwsel[64*hj+16*hs+:16] = hfl_parity[4*hj+hs] ? hbank[2*hj+1][16*hs+:16] : hbank[2*hj][16*hs+:16];
         end
       end
     end endgenerate
@@ -432,8 +440,16 @@ module ot_s81sl_vs #(
         if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
         eqp <= eq0 | 6'd1;
         for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
+`ifdef OT_S81SL_VS_SRAM
+        for(i=0;i<16;i=i+1) begin
+          ve_rk[8*i+:8] <= hpend_data[i] ? kst[128+8*i+:8] : kst[8*i+:8];
+          ve_rw[8*i+:8] <= (MUT == 8) ? (hpend_data[i] ? kst[128+8*i+:8] : kst[8*i+:8]) :
+                                             (hpend_data[i] ? wst[8*i+:8] : xq_c[8*i+:8]);
+        end
+`else
         ve_rk <= epend ? kst[255:128] : kst[127:0];
         ve_rw <= (MUT == 8) ? (epend ? kst[255:128] : kst[127:0]) : (epend ? wst : xq_c[127:0]);
+`endif
         // ADD: arrival s (copy j = ka[4:3], elements 8 s' .. 8 s' + 7, s' = ka[2:0]) = V row pair; h from half rows 2 s', 2 s' + 1
         ve_ac <= ka[4:3];
         for (i = 0; i < 4; i = i + 1) begin
