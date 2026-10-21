@@ -1,0 +1,115 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+CLOCK_SPLIT_KM: cluster 0 882 sinks x 3.2..75.1 y 43.2..321.3 buffer at (45.4, 301.6)
+CLOCK_SPLIT_KM: cluster 1 65 sinks x 132.8..284.1 y 43.2..238.1 buffer at (198.6, 186.5)
+CLOCK_SPLIT_KM: cluster 2 723 sinks x 245.3..292.6 y 297.9..321.0 buffer at (270.4, 310.2)
+CLOCK_SPLIT_KM: cluster 3 562 sinks x 324.7..384.3 y 137.4..321.0 buffer at (347.9, 300.0)
+CLOCK_SPLIT_KM: cluster 4 914 sinks x 290.4..336.4 y 297.6..321.6 buffer at (315.0, 312.7)
+CLOCK_SPLIT_KM: cluster 5 560 sinks x 190.7..248.8 y 263.6..321.3 buffer at (225.2, 306.2)
+CLOCK_SPLIT_KM: cluster 6 890 sinks x 120.7..190.4 y 242.4..321.6 buffer at (148.5, 314.5)
+CLOCK_SPLIT_KM: cluster 7 964 sinks x 65.8..123.7 y 297.8..321.3 buffer at (95.9, 311.4)
+[INFO DPL-0006] Core area: 122910.57 um^2
+[INFO DPL-0007] Movable instances area: 3639.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 47171.94 um^2
+[INFO DPL-0009] Utilization: 41.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 40969 cells
+[INFO DPL-0393]   height 373 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1523 |       153 |      1346
+        1 |        778 |        66 |       706
+        2 |        515 |        33 |       482
+        3 |        150 |         8 |       142
+        4 |        112 |         8 |       104
+        5 |         22 |         2 |        20
+        6 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 6.
+[INFO DPL-0500] Runtime: 1.83s
+Placement Analysis
+---------------------------------
+total displacement      10475.6 u
+average displacement        0.3 u
+max displacement           31.1 u
+original HPWL          595315.7 u
+legalized HPWL         601308.5 u
+delta HPWL                    1 %
+
+HCLK_SPLIT_KM: cluster 0 255 sinks x 2.3..34.2 y 2.2..133.4 buffer at (15.0, 13.8)
+HCLK_SPLIT_KM: cluster 1 396 sinks x 30.8..82.7 y 3.0..43.2 buffer at (53.7, 6.6)
+HCLK_SPLIT_KM: cluster 2 259 sinks x 83.0..151.4 y 3.0..8.6 buffer at (114.8, 3.9)
+HCLK_SPLIT_KM: cluster 3 264 sinks x 152.0..202.0 y 2.2..96.9 buffer at (181.0, 11.5)
+HCLK_SPLIT_KM: cluster 4 457 sinks x 202.3..256.9 y 3.0..94.0 buffer at (226.5, 8.7)
+HCLK_SPLIT_KM: cluster 5 271 sinks x 257.3..329.0 y 3.0..8.4 buffer at (292.6, 3.9)
+HCLK_SPLIT_KM: cluster 6 201 sinks x 329.3..384.3 y 3.2..123.9 buffer at (354.6, 15.3)
+HCLK_SPLIT_KM: cluster 7 125 sinks x 9.9..302.5 y 129.6..300.5 buffer at (154.7, 202.2)
+[INFO DPL-0006] Core area: 122910.57 um^2
+[INFO DPL-0007] Movable instances area: 3642.81 um^2
+[INFO DPL-0008] Fixed instances area within core: 47171.94 um^2
+[INFO DPL-0009] Utilization: 41.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 40977 cells
+[INFO DPL-0393]   height 373 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.60s
+Placement Analysis
+---------------------------------
+total displacement          9.0 u
+average displacement        0.0 u
+max displacement            5.4 u
+original HPWL          602800.8 u
+legalized HPWL         602800.9 u
+delta HPWL                    0 %
+
+CTRL_RESET_COHORT: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ old=ot_hckkm_0_clk proposed=ot_hckkm_7_clk votes=ot_hckkm_7_clk 8 ot_hckkm_0_clk 3 ot_hckkm_2_clk 3 apply=1
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.pend$_DFF_PN0_} ot_hckkm_7_clk 52.434
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sgray\[2\]$_DFF_PN0_} ot_hckkm_7_clk 262.548
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sgray\[1\]$_DFF_PN0_} ot_hckkm_7_clk 262.116
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sgray\[0\]$_DFF_PN0_} ot_hckkm_7_clk 262.98
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sbin\[3\]$_DFF_PN0_} ot_hckkm_7_clk 262.332
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sbin\[2\]$_DFF_PN0_} ot_hckkm_7_clk 260.064
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sbin\[1\]$_DFF_PN0_} ot_hckkm_7_clk 259.47
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.u_wd.sbin\[0\]$_DFF_PN0_} ot_hckkm_7_clk 260.28
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load=ot_prs_00102_ff ot_hckkm_0_clk 158.706
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.krq$_DFF_PN0_} ot_hckkm_0_clk 159.138
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.k_v$_DFF_PN0_} ot_hckkm_0_clk 107.622
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.wd_q$_DFF_PN0_} ot_hckkm_2_clk 204.066
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.kr_vq$_DFF_PN0_} ot_hckkm_2_clk 203.58
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[0\].u_pc.kr_rq$_DFF_PN0_} ot_hckkm_2_clk 203.958
+CTRL_RESET_COHORT: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ old=ot_hckkm_7_clk proposed=ot_hckkm_7_clk votes=ot_hckkm_7_clk 9 ot_hckkm_3_clk 2 ot_hckkm_5_clk 3 apply=1
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.k_v$_DFF_PN0_} ot_hckkm_7_clk 15.174
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.pend$_DFF_PN0_} ot_hckkm_7_clk 21.816
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load=ot_prs_00103_ff ot_hckkm_3_clk 165.348
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.krq$_DFF_PN0_} ot_hckkm_3_clk 167.292
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sgray\[2\]$_DFF_PN0_} ot_hckkm_7_clk 241.272
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sgray\[1\]$_DFF_PN0_} ot_hckkm_7_clk 240.03
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sgray\[0\]$_DFF_PN0_} ot_hckkm_7_clk 240.192
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sbin\[3\]$_DFF_PN0_} ot_hckkm_7_clk 240.732
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sbin\[2\]$_DFF_PN0_} ot_hckkm_7_clk 238.896
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sbin\[1\]$_DFF_PN0_} ot_hckkm_7_clk 236.358
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.u_wd.sbin\[0\]$_DFF_PN0_} ot_hckkm_7_clk 235.278
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.wd_q$_DFF_PN0_} ot_hckkm_5_clk 268.92
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.kr_vq$_DFF_PN0_} ot_hckkm_5_clk 269.46
+CTRL_RESET_COHORT_LOAD: source=u_ot_pr_core.g_pc\[1\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_ load={u_ot_pr_core.g_pc\[1\].u_pc.kr_rq$_DFF_PN0_} ot_hckkm_5_clk 273.51
+CTRL_RESET_COHORT_AUDIT: PASS connections=173217 changed=1 pin={u_ot_pr_core.g_pc\[0\].u_pc.u_hrbank.q\[0\]$_DFF_PN0_} CLK old=ot_hckkm_0_clk new=ot_hckkm_7_clk insts=40981 nets=33159
+CTRL_RESET_COHORT: PREPARED sources=2 added_flops=0 added_roots=0 nominal_added_edges=0 apply=1; physical timing pending
