@@ -1,7 +1,7 @@
 # DRIVE-S81-IDX4-KITS 10-20: s81ctrl_rg3 pin plans from the n32s plan (dsfd_ctrl_rg2_n32s_pins.tcl).
 #  mode n: N face re-pinned per PC half: PC0 rq[0:340] rd[0:279] rrq[0:45] rrd[0:271] | clk ck_o | PC1 rq[341:681] rd[280:561]
 #          rrq[46:91] rrd[272:543]; alternating M3/M5 on their tracks; S / W faces = n32s exactly.
-#  mode s: every n32s pin unchanged; rrq/rrd PC0 on the W face, PC1 on the E face (M4 tracks, rst_n kept at W y 162).
+#  mode s: every n32s pin unchanged; rrq (92) on the W face, rrd (544) on the E face (M4 tracks, rst_n kept at W y 162).
 import re, sys
 src, mode, out = sys.argv[1], sys.argv[2], sys.argv[3]
 W, H = 388.8, 324.0
@@ -34,8 +34,7 @@ if mode == 'n':
     res += keep
 else:
     res += pins
-    for face, xx, lo, hi in (('W', 0.0, 0, 46), ('E', W, 46, 92)):
-        seq = [f'rrq[{i}]' for i in range(lo, hi)] + [f'rrd[{i}]' for i in range(lo * 272 // 46, hi * 272 // 46)]
+    for face, xx, seq in (('W', 0.0, [f'rrq[{i}]' for i in range(92)]), ('E', W, [f'rrd[{i}]' for i in range(544)])):
         y0, y1 = 6.0, H - 6.0
         st = (y1 - y0) / (len(seq) - 1)
         prev = -1.0

@@ -8,8 +8,8 @@ sources and the pin plan is the n32s kit (outline 388.8 x 324 = the die ctrl-vie
 split + hclk split hooks, reset landing 2 stages).
 - main s81ctrl_rg3: N face re-pinned per PC half (PC0 rq rd rrq rrd | clk ck_o | PC1 rq rd rrq rrd), 1,884 pins on
   4.5-384.3 um = 4.96 pins/um alternating M3/M5 tracks (dsfd_ctrl_rg3_n_pins.tcl, gen_pins.py mode n). S / W = n32s.
-- fallback s81ctrl_rg3s: every n32s pin unchanged; rrq/rrd of PC0 on the W face, PC1 on the E face (M4, 318 pins a face,
-  ~1/um; dsfd_ctrl_rg3_s_pins.tcl, gen_pins.py mode s).
+- fallback s81ctrl_rg3s: every n32s pin unchanged; rrq (92) on the W face, rrd (544) on the E face (M4, <= 1.7 pins/um;
+  dsfd_ctrl_rg3_s_pins.tcl, gen_pins.py mode s).
 
 SAFE checklist (pre-gate):
 1 Pins PASS: rrq lands in flops at the pin, rrd leaves flops (RTL); svc rq / rd / PHY faces = n32s; reset_landing 2 stages.

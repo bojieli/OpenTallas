@@ -85,11 +85,9 @@
   ],
   "W": [
    "rst_n",
-   "rrq",
-   "rrd"
+   "rrq"
   ],
   "E": [
-   "rrq",
    "rrd"
   ]
  },
@@ -116,7 +114,7 @@
   "macro_halo_um": 5.4,
   "io_hold_margin_ns": 0.03
  },
- "structural_change": "DRIVE-S81-IDX4-KITS 10-20 (MU.BAL.SX.3, mu7i4 die): dsfd_ctrl_rg3 = dsfd_ctrl_rg2 (same 2 x ot_s81ph_ctrl_pcr, n32s defines SRAM p192 FIFOs + native32, same 388.8 x 324 outline, same 2x2 SRAM macro origins) PLUS the static-slot client face of the non-inline index reader dsdv_idx_rg3: rrq 92 b in / rrd 544 b out (landing FIFO 24 x 44 b a PC in flops, return demux by reader tag, registered slot select). +3.6k FF (6583 vs 2956), census 0 drivers > 32 (reset landing by the flow). Pin plan: n32s pins unchanged; rrq/rrd of PC0 on the W face, PC1 on the E face (M4, ~1 pin/um).",
+ "structural_change": "DRIVE-S81-IDX4-KITS 10-20 (MU.BAL.SX.3, mu7i4 die): dsfd_ctrl_rg3 = dsfd_ctrl_rg2 (same 2 x ot_s81ph_ctrl_pcr, n32s defines SRAM p192 FIFOs + native32, same 388.8 x 324 outline, same 2x2 SRAM macro origins) PLUS the static-slot client face of the non-inline index reader dsdv_idx_rg3: rrq 92 b in / rrd 544 b out (landing FIFO 24 x 44 b a PC in flops, return demux by reader tag, registered slot select). +3.6k FF (6583 vs 2956), census 0 drivers > 32 (reset landing by the flow). Pin plan: n32s pins unchanged; rrq (92) on the W face, rrd (544) on the E face (M4, <= 1.7 pins/um).",
  "job": {
   "owner": "Claude:DRIVE-S81-IDX4-KITS",
   "branch": "claude/s81-idx4kits-1020",
@@ -241,5 +239,6 @@
  "pre_cts_extra": [
   "physical/common_flow/clock_split_km.tcl",
   "physical/s81_ctrl_rg3/clock_split_hclk.tcl"
- ]
+ ],
+ "std_area_um2": 3000
 }
