@@ -84,7 +84,7 @@ endmodule
 
 // Codec with a separate PHY pin-register region (phy_ck): same ports as ot_qwen_static_slot_link plus phy_ck.
 module ot_qwen_static_slot_link_pl #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, BWREG=1
 )(
     input wire [4:0] ck,
     input wire phy_ck,
@@ -112,14 +112,31 @@ module ot_qwen_static_slot_link_pl #(
     wire [4*BW-1:0] rd;
     wire c_abort;
     wire issue_write=wr_v && !c_abort && !epoch_begin;
+    // QW2-COLL 10-21 BWREG: the bank write port is captured by bank-entry registers (ck[b+1]) before the SRAM.  The
+    // r_plg gate failed cross_clock SETUP (210 ps inter-entry uncertainty) on direct crossings with logic into the bank
+    // macro pins: epoch_begin (cal_lck) / c_abort (codec0) -> we, u_tx o_data (tx_rck macro) -> din.  Now every
+    // crossing ends at a flop in the bank's own entry and the flop -> SRAM path is single-entry.  Write lands 1 edge
+    // later (static calendar: the replay read of a slot is far behind its write).
     for(genvar b=0;b<4;b=b+1)begin:g_bank
+        wire bwe;
+        wire [5:0] bwa;
+        wire [BW-1:0] bdin;
+        if (BWREG) begin : g_wreg
+            reg we_q;
+            reg [5:0] wa_q;
+            reg [BW-1:0] din_q;
+            always @(posedge ck[b+1]) begin we_q <= issue_write; wa_q <= wr_slot; din_q <= wd[b*BW+:BW]; end
+            assign bwe = we_q; assign bwa = wa_q; assign bdin = din_q;
+        end else begin : g_wdir
+            assign bwe = issue_write; assign bwa = wr_slot; assign bdin = wd[b*BW+:BW];
+        end
 `ifdef OT_QFD_FACE_HARD
         ot_qkvd_llr_replay_sram_leaf u_store(
 `else
         ot_qkvd_llr_replay_sram_leaf #(.W(BW),.MUT(MUT==3 && b==0)) u_store(
 `endif
-            .ck(ck[b+1]),.we(issue_write),.wa(wr_slot),.ra(rd_slot),
-            .din(wd[b*BW+:BW]),.dout(rd[b*BW+:BW]));
+            .ck(ck[b+1]),.we(bwe),.wa(bwa),.ra(rd_slot),
+            .din(bdin),.dout(rd[b*BW+:BW]));
     end
     // region resets: one 2-edge synchroniser per clock, kept copies per ring side
     wire [2:0] rs_c;
