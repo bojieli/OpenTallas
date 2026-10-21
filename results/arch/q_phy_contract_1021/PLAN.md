@@ -53,3 +53,7 @@ The initial wide-eb7bba geometry analysis remains true for that source, but is n
 ## Exact modeled Q UCIe phase law
 
 The source nface model drives lclk from its own free-running `always #(LCLK_HALF_NS)` oscillator (default1GHz), with no identity assignment from clk. Its latency pipe and tx_up update on input clk; the lclk/clk relationship is not a physical insertion arc. TTlib supplies no lclk timing arcs. Captured clock_contract.json explicitly states clock_generation OPEN for real common-PLL/divider implementation and physical delivery, qualification=false. Preserve these distinctions; a modeled oscillator does not establish source insertion R or a checked phase relationship.
+
+## Bounded K SerDes companion clock debt
+
+Exact current92 K binder kv_native_phy.py covers BOTH K UCIe and base-master ot_qfd_serdes_112g_x12_phy. Its libraries() only copies ETMs; neither path exports native insertion metadata. Current92 base SerDes source JSON (FDI1043,223cycles,2320.056x1563.570) has no native/insertion entries and is a DIFFERENT master/interface from Q staticS597. Exact preserved legacy c216 dieclk/targets.json contains neither UCIe nor SerDes master entries. The actual failure encountered UCIe first; no later SerDes result is claimed. Both source clock contracts should be resolved together to avoid substituting an unsupported second unknown after the first. Files k_c216_targets.json, k_serdes_profile92.json and kv_native_phy92.py seal this existing readset; no execution/repair was run.
