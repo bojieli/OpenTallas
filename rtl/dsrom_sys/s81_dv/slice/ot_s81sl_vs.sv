@@ -131,8 +131,13 @@ module ot_s81sl_vs #(
 );
     localparam [3:0] OP_SW = 4'd8, OP_QB = 4'd9, OP_RA = 4'd10, OP_RB = 4'd11, OP_QR = 4'd12, OP_MOE = 4'd13, OP_ENG = 4'd14;
 `ifdef OT_S81SL_VS_SRAM
+`ifdef OT_S81SL_VS_FP_N32
+    wire [127:0] rsv;
+    ot_rst_relay_tree3 #(.REGIONS(128),.LEAVES(8)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rsv));
+`else
     wire [55:0] rsv;
     ot_rst_relay_tree3 #(.REGIONS(56),.LEAVES(8)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rsv));
+`endif
 `else
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
@@ -188,25 +193,32 @@ module ot_s81sl_vs #(
         else if (acc_cmd) begin busy <= 1'b1; op <= c_op; end
         else if (done) busy <= 1'b0;
 `ifdef OT_S81SL_VS_SRAM
-    wire [9:0] region_bad;
-    genvar bdr;
-    generate for(bdr=0;bdr<10;bdr=bdr+1) begin:g_bad_region
-      ot_s81sl_vs_bad_region u_bad(.clk(clk),.packet(s_d),.gmask(gmask),.bad(region_bad[bdr]));
+    // Predict the command acceptance at the input-capture edge. This is the
+    // same edge already used for sd_c/sv_c, with busy/gmask after that edge.
+    wire busy_after=rs_c && (acc_cmd || (busy && !done));
+    wire [3:0] gmask_after=!rs_eng?4'd0:(acc_cmd && c_op==OP_ENG && !c_ph)?4'd0:gv_c?(gmask | (4'b1<<gc_c)):gmask;
+    wire [127:0] cmd_accept;
+    genvar acr;
+    generate for(acr=0;acr<4;acr=acr+1) begin:g_accept_region
+      ot_s81sl_vs_accept32 u_accept(.clk(clk),.rst_n(rsv[30+acr]),.packet(s_d),.sv(s_v),.busy_after(busy_after),.gmask_after(gmask_after),.q(cmd_accept[32*acr+:32]));
     end endgenerate
+    (* keep="true" *) reg [3:0] regional_packet_op[0:6];
+    integer cpr;
+    always @(posedge clk) for(cpr=0;cpr<7;cpr=cpr+1) regional_packet_op[cpr]<=s_d[3:0];
+`ifndef SYNTHESIS
+    always @(posedge clk) if(rs_c && cmd_accept!=={128{acc_cmd}}) $fatal(1,"VS predicted command acceptance differs from original control");
+`endif
     wire [23:0] region_busy;
-    (* keep="true" *) reg [23:0] region_sv;
     genvar bg;
     generate for(bg=0;bg<4;bg=bg+1) begin:g_busy_region
       ot_s81sl_vs_busy6 u_busy(.clk(clk),.rst_n(rsv[35]),.sv(sv_c),.busy(busy),.bad(c_bad),.done(done),.q(region_busy[6*bg+:6]));
     end endgenerate
-    always @(posedge clk or negedge rsv[36])
-      if(!rsv[36]) region_sv<=0;else region_sv<={24{s_v}};
     wire [79:0] cmd_payload={c_a0,c_a1,c_ph,c_n,c_imm[9:0],c_imm[10],c_uq,c_j0,c_imm[63:32],c_wr,c_imm[28:26]};
     wire [79:0] cmd_latched;
     assign {a0,a1,ph,n,ob,wb,uq,j0,lim,wr,wsel}=cmd_latched;
     genvar cb;
     generate for(cb=0;cb<10;cb=cb+1) begin:g_cmd_byte
-      ot_s81sl_vs_cmd8 u_cmd(.clk(clk),.sv(region_sv[20+cb%4]),.busy(region_busy[20+cb%4]),.bad(region_bad[cb%10]),.d(cmd_payload[8*cb+:8]),.q(cmd_latched[8*cb+:8]));
+      ot_s81sl_vs_cmd8 u_cmd(.clk(clk),.accept(cmd_accept[80+cb]),.d(cmd_payload[8*cb+:8]),.q(cmd_latched[8*cb+:8]));
     end endgenerate
 `else
     always @(posedge clk)
@@ -223,7 +235,7 @@ module ot_s81sl_vs #(
       wire [7:0] wi;
       if(wb0<4) assign w0[8*wb0+:8]=wi;
       else assign w1[8*(wb0-4)+:8]=wi;
-      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.sv(region_sv[20+wb0%4]),.busy(region_busy[20+wb0%4]),.bad(region_bad[wb0]),.sel(c_imm[28:26]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(w_arr),.row(xq_c),.w(wi));
+      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.accept(cmd_accept[90+wb0]),.sel(c_imm[28:26]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(w_arr),.row(xq_c),.w(wi));
     end endgenerate
 `else
     always @(posedge clk)
@@ -285,7 +297,7 @@ module ot_s81sl_vs #(
     wire [31:0] region_op_c[0:19],region_ka_c[0:19];
     genvar cr;
     generate for(cr=0;cr<20;cr=cr+1) begin:g_data_region
-      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[cr<16?40+cr:26+cr-16]),.rst_v(rsv[39]),.sv(region_sv[cr]),.busy(region_busy[cr]),.bad(region_bad[cr%10]),.cop(s_d[3:0]),.xqv(x_qv),.op(region_op[cr]),.ka(region_ka[cr]),.op_copy(region_op_c[cr]),.ka_copy(region_ka_c[cr]));
+      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[cr<16?40+cr:26+cr-16]),.rst_v(rsv[39]),.accept(cmd_accept[4*cr+:4]),.busy(region_busy[cr]),.cop(regional_packet_op[cr/3]),.xqv(x_qv),.op(region_op[cr]),.ka(region_ka[cr]),.op_copy(region_op_c[cr]),.ka_copy(region_ka_c[cr]));
     end endgenerate
 `endif
     // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
@@ -345,7 +357,11 @@ module ot_s81sl_vs #(
         wire [31:0] mine = gl ? qm1 : qm0, pair = gl ? qm0 : qm1;
         wire [31:0] sg = ((gl != 0) ^ (MUT == 3)) ? qs : {~qs[31], qs[30:0]};
 `ifdef OT_S81SL_VS_SRAM
+`ifdef OT_S81SL_VS_FP_N32
+        wire [5:0] qm_rst0=rsv[56+12*gl+:6],qm_rst1=rsv[62+12*gl+:6];
+`else
         wire qm_rst0=rsv[8+2*gl],qm_rst1=rsv[9+2*gl];
+`endif
 `else
         wire qm_rst0=rs_x,qm_rst1=rs_x;
 `endif
@@ -401,7 +417,11 @@ module ot_s81sl_vs #(
     ot_hdc_vline #(.D(XL)) u_vx (.clk(clk), .rst_n(rs_x), .v(x_iv), .vd(vx));
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_xa
 `ifdef OT_S81SL_VS_SRAM
+`ifdef OT_S81SL_VS_FP_N32
+        wire [5:0] xa_rst=rsv[80+6*gl+:6];
+`else
         wire xa_rst=rsv[16+gl];
+`endif
 `else
         wire xa_rst=rs_x;
 `endif
@@ -825,28 +845,25 @@ endmodule
 // Regional state and nibble operators remain separate synthesis hierarchies:
 // equivalent source decodes must not merge into a single 512-bit mux select.
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_lane_ctl(input wire clk,rst_n,rst_v,sv,busy,bad,xqv,input wire[3:0]cop,output wire[3:0]op,output wire[7:0]ka,output wire[31:0]op_copy,ka_copy);
+module ot_s81sl_vs_lane_ctl(input wire clk,rst_n,rst_v,busy,xqv,input wire[3:0]accept,cop,output wire[3:0]op,output wire[7:0]ka,output wire[31:0]op_copy,ka_copy);
   // Payload op captures and arrival counters own their decode in kept scopes.
   reg packet_xqv;
   always @(posedge clk or negedge rst_v) if(!rst_v) packet_xqv<=0;else packet_xqv<=xqv;
-  reg [3:0] packet_op;
-  always @(posedge clk) packet_op<=cop;
   genvar c;
   generate for(c=0;c<8;c=c+1) begin:g_op
-    ot_s81sl_vs_op4 u_op(.clk(clk),.sv(sv),.busy(busy),.bad(bad),.cop(packet_op),.q(op_copy[4*c+:4]));
+    ot_s81sl_vs_op4 u_op(.clk(clk),.accept(accept[c/2]),.cop(cop),.q(op_copy[4*c+:4]));
   end
   for(c=0;c<4;c=c+1) begin:g_ka
-    ot_s81sl_vs_ka8 u_ka(.clk(clk),.rst_n(rst_n),.sv(sv),.busy(busy),.bad(bad),.xqv(packet_xqv),.q(ka_copy[8*c+:8]));
+    ot_s81sl_vs_ka8 u_ka(.clk(clk),.rst_n(rst_n),.accept(accept[c]),.busy(busy),.xqv(packet_xqv),.q(ka_copy[8*c+:8]));
   end endgenerate
   assign op=op_copy[3:0];assign ka=ka_copy[7:0];
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_op4(input wire clk,sv,busy,bad,input wire[3:0]cop,output reg[3:0]q);
-  always @(posedge clk) if(sv && !busy && !bad) q<=cop;
+module ot_s81sl_vs_op4(input wire clk,accept,input wire[3:0]cop,output reg[3:0]q);
+  always @(posedge clk) if(accept) q<=cop;
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_ka8(input wire clk,rst_n,sv,busy,bad,xqv,output reg[7:0]q);
-  wire accept=sv && !busy && !bad;
+module ot_s81sl_vs_ka8(input wire clk,rst_n,accept,busy,xqv,output reg[7:0]q);
   always @(posedge clk or negedge rst_n)
     if(!rst_n) q<=0;
     else if(accept) q<=0;
@@ -882,9 +899,8 @@ module ot_s81sl_vs_output8(input wire clk,input wire[3:0]op,input wire[7:0]sw,us
     endcase
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_weight8 #(parameter integer BYTE=0,SECOND=0,MUT=0)(input wire clk,sv,busy,bad,input wire[2:0]sel,input wire[7:0]imm,input wire arr,input wire[255:0]row,output reg[7:0]w);
+module ot_s81sl_vs_weight8 #(parameter integer BYTE=0,SECOND=0,MUT=0)(input wire clk,accept,input wire[2:0]sel,input wire[7:0]imm,input wire arr,input wire[255:0]row,output reg[7:0]w);
   (* keep="true" *) reg [2:0] ws[0:1];
-  wire accept=sv && !busy && !bad;
   always @(posedge clk) begin
     if(accept) begin ws[0]<=sel;ws[1]<=sel;w<=imm;end
     else if(arr) begin
@@ -898,13 +914,19 @@ module ot_s81sl_vs_xresult8 #(parameter integer LOW=0)(input wire clk,input wire
   always @(posedge clk) y<=(LOW && op==4'd12)?qr:(op==4'd11)?full:bf;
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_cmd8(input wire clk,sv,busy,bad,input wire[7:0]d,output reg[7:0]q);
-  always @(posedge clk) if(sv && !busy && !bad) q<=d;
+module ot_s81sl_vs_cmd8(input wire clk,accept,input wire[7:0]d,output reg[7:0]q);
+  always @(posedge clk) if(accept) q<=d;
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_bad_region(input wire clk,input wire[159:0]packet,input wire[3:0]gmask,output wire bad);
-    reg [159:0] sd_c;
-    always @(posedge clk) sd_c<=packet;
+module ot_s81sl_vs_accept32(input wire clk,rst_n,sv,busy_after,input wire[159:0]packet,input wire[3:0]gmask_after,output wire[31:0]q);
+    wire [159:0] sd_c=packet;
+    wire [3:0] gmask=gmask_after;
+    wire bad;
+    (* keep="true" *) reg [31:0] accepted;
+    assign q=accepted;
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n) accepted<=0;
+      else accepted<={32{sv && !busy_after && !bad}};
     localparam [3:0] OP_SW=8,OP_QB=9,OP_RA=10,OP_RB=11,OP_QR=12,OP_MOE=13,OP_ENG=14;
     wire [3:0] c_op=sd_c[3:0];
     wire [7:0] c_n=sd_c[31:24];
