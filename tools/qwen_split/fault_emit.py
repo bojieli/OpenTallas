@@ -358,7 +358,52 @@ def pre(v, m, G):
         follow[(nm, 'ck')] = o
         roots[o] = dict(inst=nm, xy=_ctr(it), clock=m['buses'][cj][0], reset=m['buses'][rj][0], children=[],
                         zone=zn.of_box((it.x, it.y, it.x + W, it.y + H)),
-                        array=by[o].master.startswith(ARRAY_MASTERS))
+                        array=by[o].master.startswith(ARRAY_MASTERS), owner=o, cj=cj, rj=rj)
+    # QW-G5FROOT 10-20: ONE region root per (owner, zone) of its landings.  dv2f20g5f11: 68 leaves (the dv slices' and the
+    # clusters' landings in the OTHER row gap / the W|E seam, clock clk_r0) had no free route to any node of their clock root
+    # (all of them in the owner's median gap; 0.4-2.8 mm), so dvs_E0's root ended with no input.  Each landing group in a
+    # field zone other than the primary root's gets its own root on the owner's clock + reset, placed in that zone at the
+    # group median before _relays (sites still free); its MST edge is a relayed lane that lands on the parent (same
+    # static, observation-only edge as every tree edge).  Plan field owners[o].pts = the g5 landing sites (mkplan.py).
+    nz = 0
+    if os.environ.get('OT_SPLIT_FAULT_ZONE_ROOTS', '1') == '1':
+        for o, r in sorted(owners.items()):
+            pts = r.get('pts') or []
+            if not pts or o not in roots:
+                continue
+            grp = collections.defaultdict(list)
+            for px, py in pts:
+                z = zn.of_box((px - W / 2, py - H / 2, px + W / 2, py + H / 2))
+                if z is None:                       # inside a block: its nearest row gap (x in the owner's field)
+                    tx_, ty_ = zn.target(px, py, owner=by[o])
+                    z = zn.of_box((tx_ - W / 2, ty_ - H / 2, tx_ + W / 2, ty_ + H / 2)) or 'blk'
+                    px, py = tx_, ty_
+                if z in ('out', 'blk'):
+                    continue
+                grp[z].append((px, py))
+            for k, (z, ps) in enumerate(sorted(grp.items())):
+                if z == roots[o]['zone']:
+                    continue
+                gx = sorted(q_[0] for q_ in ps)[len(ps) // 2]
+                gy = sorted(q_[1] for q_ in ps)[len(ps) // 2]
+                if any(rr['cj'] == roots[o]['cj'] and rr['zone'] == z and _man(rr['xy'], (gx, gy)) <= REACH_UM
+                       for rr in roots.values()):
+                    continue                        # a root of the same clock already serves this group
+                okz2 = lambda b, z=z: zn.of_box(b) == z
+                s = occ.site(v, gx, gy, ok=okz2) or occ.site(v, gx, gy, rmax=1200.0, step=8.64, ok=okz2)
+                if s is None:
+                    raise ValueError(f'fault emit: no free site in {z} for the zone root of {o} near ({gx:.0f}, {gy:.0f})')
+                key = f'{o}_z{z}'
+                nm = f'flt_root_{key}'
+                it = v.Inst(nm, q.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[o].region, domain='stream_1p2')
+                m['insts'].append(it)
+                by[nm] = it
+                cj, rj = roots[o]['cj'], roots[o]['rj']
+                _join(m, cj, (nm, 'ck'))
+                _join(m, rj, (nm, 'rs'))
+                follow[(nm, 'ck')] = o
+                roots[key] = dict(roots[o], inst=nm, xy=_ctr(it), children=[], zone=z, landings_in_zone=len(ps))
+                nz += 1
     # degree-capped Prim MST from the sys_face root
     done, parent = {ROOT_OWNER}, {}
     left = set(roots) - done
@@ -387,14 +432,17 @@ def pre(v, m, G):
             m['buses'].append((bid, CLS, 1, [(roots[c]['inst'], 'o'), (r['inst'], f'f{j}')]))
             rec['edges'].append(dict(bid=bid, child=c, parent=p, um=round(_man(roots[c]['xy'], r['xy']), 1),
                                      src_ck=roots[c]['clock'], dst_ck=r['clock']))
-    rec['roots'] = {o: dict(r, xy=[round(r['xy'][0], 3), round(r['xy'][1], 3)]) for o, r in roots.items()}
+    rec['roots'] = {o: dict({k_: v_ for k_, v_ in r.items() if k_ not in ('cj', 'rj')},
+                            xy=[round(r['xy'][0], 3), round(r['xy'][1], 3)]) for o, r in roots.items()}
+    rec['zone_roots'] = nz
     rec['root_owner'] = ROOT_OWNER
     rec['zones'] = dict(collections.Counter(r['zone'] for r in roots.values()))
     M_ = dict(M)
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
     rec['wide_end_keepclear'] = dict(bits=WIDE_BITS, um=KEEP_UM, boxes=kc)
     print(f'FAULT_EMIT pre: {kc} wide-bus end keep-clear boxes; {len(roots)} region roots, {len(rec["edges"])} tree edges, '
-          f'max edge {max((e["um"] for e in rec["edges"]), default=0):.0f} um', flush=True)
+          f'max edge {max((e["um"] for e in rec["edges"]), default=0):.0f} um; {nz} of the roots are per-zone landing-group roots',
+          flush=True)
     return rec
 
 
@@ -460,10 +508,10 @@ def post(v, m, G):
     nodes = {}
     for o, it in roots.items():
         nodes[it.name] = dict(it=it, n=len(rec['roots'][o]['children']), ck=ckx[(it.name, 'ck')],
-                              rs=rsx[(it.name, 'rs')], owner=o, root=True, up=None)
+                              rs=rsx[(it.name, 'rs')], owner=rec['roots'][o].get('owner', o), root=True, up=None)
     q16 = make_master(v, FANIN)
     new_buses, nn = [], [0]
-    owner_of_root = {it.name: o for o, it in roots.items()}
+    owner_of_root = {it.name: rec['roots'][o].get('owner', o) for o, it in roots.items()}
 
     def new_node(kind, cx, cy, cj, rj, owner, ok=None, at=None):
         if at is not None:
