@@ -1,0 +1,731 @@
+[
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_add_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 112,
+    "roots_examined": 3133,
+    "netlist": {
+      "path": "out_fpadd/mapped.v",
+      "sha256": "ef55f8d942232e4243f20227aabb32c5d68a7d075b839cebb954be4a8c403fd6"
+    },
+    "liberty": [
+      {
+        "path": "out_fpadd/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "out_fpadd/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "out_fpadd/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "out_fpadd/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "out_fpadd/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "rst_n",
+        "driver_role": "input_port",
+        "net": "rst_n",
+        "loads": 40
+      },
+      {
+        "driver": "_3266_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_1270_",
+        "loads": 53
+      },
+      {
+        "driver": "_3915_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_1469_",
+        "loads": 34
+      },
+      {
+        "driver": "_3931_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_1484_",
+        "loads": 34
+      },
+      {
+        "driver": "_4075_/QN",
+        "driver_role": "sequential",
+        "net": "_0196_",
+        "loads": 36
+      },
+      {
+        "driver": "_4173_/QN",
+        "driver_role": "sequential",
+        "net": "_0607_",
+        "loads": 66
+      },
+      {
+        "driver": "_4271_/QN",
+        "driver_role": "sequential",
+        "net": "_0469_",
+        "loads": 58
+      },
+      {
+        "driver": "_4272_/QN",
+        "driver_role": "sequential",
+        "net": "_0468_",
+        "loads": 54
+      },
+      {
+        "driver": "_4275_/QN",
+        "driver_role": "sequential",
+        "net": "_0462_",
+        "loads": 112
+      },
+      {
+        "driver": "_4276_/QN",
+        "driver_role": "sequential",
+        "net": "_0461_",
+        "loads": 63
+      },
+      {
+        "driver": "_4277_/QN",
+        "driver_role": "sequential",
+        "net": "_0460_",
+        "loads": 53
+      },
+      {
+        "driver": "_4541_/QN",
+        "driver_role": "sequential",
+        "net": "_0535_",
+        "loads": 59
+      },
+      {
+        "driver": "_4542_/QN",
+        "driver_role": "sequential",
+        "net": "_0536_",
+        "loads": 36
+      },
+      {
+        "driver": "_4546_/QN",
+        "driver_role": "sequential",
+        "net": "_0539_",
+        "loads": 63
+      },
+      {
+        "driver": "_4551_/QN",
+        "driver_role": "sequential",
+        "net": "_0543_",
+        "loads": 45
+      },
+      {
+        "driver": "_4556_/QN",
+        "driver_role": "sequential",
+        "net": "_0548_",
+        "loads": 37
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "9f2be227b",
+    "report_sha256": "5df00920665307793835a7b9710682bd3cd905bb6ea18d119b1d067f4e611664",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/out_fpadd/native_census_r2.json",
+    "source_file_sha256": "40b2c73964b8dae1c49c1a5e6fef5c325b39a0d705a13a9dfadec882f4eecf05"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_mul_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 117,
+    "roots_examined": 7235,
+    "netlist": {
+      "path": "out_fpmul/mapped.v",
+      "sha256": "ac8db0309a10da68e5aebf4f4b0cd3f30f6fdf65dc4321768a14fbb640eda210"
+    },
+    "liberty": [
+      {
+        "path": "out_fpmul/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "out_fpmul/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "out_fpmul/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "out_fpmul/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "out_fpmul/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "rst_n",
+        "driver_role": "input_port",
+        "net": "rst_n",
+        "loads": 40
+      },
+      {
+        "driver": "_6765_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_2909_",
+        "loads": 50
+      },
+      {
+        "driver": "_9025_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_4174_",
+        "loads": 36
+      },
+      {
+        "driver": "_9243_/QN",
+        "driver_role": "sequential",
+        "net": "_0634_",
+        "loads": 48
+      },
+      {
+        "driver": "_9244_/QN",
+        "driver_role": "sequential",
+        "net": "_0633_",
+        "loads": 49
+      },
+      {
+        "driver": "_9245_/QN",
+        "driver_role": "sequential",
+        "net": "_0632_",
+        "loads": 47
+      },
+      {
+        "driver": "_9246_/QN",
+        "driver_role": "sequential",
+        "net": "_0631_",
+        "loads": 50
+      },
+      {
+        "driver": "_9247_/QN",
+        "driver_role": "sequential",
+        "net": "_0630_",
+        "loads": 49
+      },
+      {
+        "driver": "_9248_/QN",
+        "driver_role": "sequential",
+        "net": "_0629_",
+        "loads": 47
+      },
+      {
+        "driver": "_9315_/QN",
+        "driver_role": "sequential",
+        "net": "_0635_",
+        "loads": 34
+      },
+      {
+        "driver": "_9797_/QN",
+        "driver_role": "sequential",
+        "net": "_0495_",
+        "loads": 92
+      },
+      {
+        "driver": "_9849_/QN",
+        "driver_role": "sequential",
+        "net": "_0513_",
+        "loads": 63
+      },
+      {
+        "driver": "_9855_/QN",
+        "driver_role": "sequential",
+        "net": "_0523_",
+        "loads": 78
+      },
+      {
+        "driver": "_9856_/QN",
+        "driver_role": "sequential",
+        "net": "_0525_",
+        "loads": 36
+      },
+      {
+        "driver": "_9861_/QN",
+        "driver_role": "sequential",
+        "net": "_0533_",
+        "loads": 87
+      },
+      {
+        "driver": "_9862_/QN",
+        "driver_role": "sequential",
+        "net": "_0535_",
+        "loads": 41
+      },
+      {
+        "driver": "_9864_/QN",
+        "driver_role": "sequential",
+        "net": "_0539_",
+        "loads": 34
+      },
+      {
+        "driver": "_9867_/QN",
+        "driver_role": "sequential",
+        "net": "_0543_",
+        "loads": 99
+      },
+      {
+        "driver": "_9868_/QN",
+        "driver_role": "sequential",
+        "net": "_0545_",
+        "loads": 43
+      },
+      {
+        "driver": "_9873_/QN",
+        "driver_role": "sequential",
+        "net": "_0553_",
+        "loads": 91
+      },
+      {
+        "driver": "_9874_/QN",
+        "driver_role": "sequential",
+        "net": "_0555_",
+        "loads": 37
+      },
+      {
+        "driver": "_9879_/QN",
+        "driver_role": "sequential",
+        "net": "_0563_",
+        "loads": 117
+      },
+      {
+        "driver": "_9880_/QN",
+        "driver_role": "sequential",
+        "net": "_0565_",
+        "loads": 51
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "9f2be227b",
+    "report_sha256": "3b24632889676f465891c97f42efdb5b18a59935c0c21e4a92e5a8c8ff7525f7",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/out_fpmul/native_census_r2.json",
+    "source_file_sha256": "40b2c73964b8dae1c49c1a5e6fef5c325b39a0d705a13a9dfadec882f4eecf05"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_add_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 66,
+    "roots_examined": 3187,
+    "netlist": {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/mapped.v",
+      "sha256": "3652899a9479798f94d78ba5cc13281501705adaae9bcb22e988822acffe3a87"
+    },
+    "liberty": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/ram.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "rst_n",
+        "driver_role": "input_port",
+        "net": "rst_n",
+        "loads": 40
+      },
+      {
+        "driver": "_2506_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_0920_",
+        "loads": 53
+      },
+      {
+        "driver": "_3213_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_1138_",
+        "loads": 34
+      },
+      {
+        "driver": "_3222_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_1146_",
+        "loads": 34
+      },
+      {
+        "driver": "_3374_/QN",
+        "driver_role": "sequential",
+        "net": "_0339_",
+        "loads": 36
+      },
+      {
+        "driver": "_3472_/QN",
+        "driver_role": "sequential",
+        "net": "_0160_",
+        "loads": 66
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "5ad9f240a",
+    "report_sha256": "21e09229e986da2ab42a2b472ea6391470da1a25cb3552bb75d4ba9809ccbec5",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpadd/native_census.json",
+    "source_file_sha256": "e25092339559b0cb0bfbf8afc7cd4cc1b021572db1d301e6641e3aa0b250fcba"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_mul_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 76,
+    "roots_examined": 6980,
+    "netlist": {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/mapped.v",
+      "sha256": "5e8c36095b21ff70ba97a466165035aaa8806e05ef6b08ced5b5b84ed0600cf9"
+    },
+    "liberty": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/ram.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "rst_n",
+        "driver_role": "input_port",
+        "net": "rst_n",
+        "loads": 40
+      },
+      {
+        "driver": "_6508_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_2925_",
+        "loads": 50
+      },
+      {
+        "driver": "_8407_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "_3865_",
+        "loads": 46
+      },
+      {
+        "driver": "_8793_/QN",
+        "driver_role": "sequential",
+        "net": "_0074_",
+        "loads": 76
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "5ad9f240a",
+    "report_sha256": "3ac1b0641c7ccc36a26e8b6ab875141b9c7a6caeebad1481ce75c755a44f1de7",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r2/out_fpmul/native_census.json",
+    "source_file_sha256": "e25092339559b0cb0bfbf8afc7cd4cc1b021572db1d301e6641e3aa0b250fcba"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_add_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 33,
+    "roots_examined": 3715,
+    "netlist": {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/mapped.v",
+      "sha256": "e1f3f2afd5ef24dbca16c379d0a6b0fb3f80e080801f28fbea556b40ab1bed8b"
+    },
+    "liberty": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/ram.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "_2885_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "over",
+        "loads": 33
+      },
+      {
+        "driver": "_3025_/QN",
+        "driver_role": "sequential",
+        "net": "_0311_",
+        "loads": 33
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "07080c4df",
+    "report_sha256": "894ce074378b73c341403324ed1a71ff2212b9ee9880b456cf1620879a8dfad6",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpadd/native_census.json",
+    "source_file_sha256": "8a569d5ef31cf3fcbd566b831f9ac37c909f557ff8374770012ad90513fe42bc"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_mul_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 71,
+    "roots_examined": 7115,
+    "netlist": {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/mapped.v",
+      "sha256": "a644d62d5003ee15b7988e1078ca78dad774fb86f2bae22dfa9f418dc8b621e4"
+    },
+    "liberty": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/ram.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "_6688_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "q4[100]",
+        "loads": 46
+      },
+      {
+        "driver": "_6689_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "q4[99]",
+        "loads": 52
+      },
+      {
+        "driver": "_6690_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "q4[98]",
+        "loads": 59
+      },
+      {
+        "driver": "_6691_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "q4[97]",
+        "loads": 69
+      },
+      {
+        "driver": "_6692_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "q4[96]",
+        "loads": 71
+      },
+      {
+        "driver": "_7974_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "over",
+        "loads": 33
+      },
+      {
+        "driver": "_8102_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "q4[101]",
+        "loads": 47
+      },
+      {
+        "driver": "_8180_/QN",
+        "driver_role": "sequential",
+        "net": "_0234_",
+        "loads": 34
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "07080c4df",
+    "report_sha256": "0a7f756b44d033d55e672f532e17f2c03571f1230d5d033f08ecb701eb1f0402",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r3/out_fpmul/native_census.json",
+    "source_file_sha256": "8a569d5ef31cf3fcbd566b831f9ac37c909f557ff8374770012ad90513fe42bc"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_add_n32",
+    "status": "PASS",
+    "limit": 32,
+    "max_dynamic_loads": 28,
+    "roots_examined": 3691,
+    "netlist": {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/mapped.v",
+      "sha256": "10b85a9066f3500f708962d6445ff78918a2ffee960130f33e180b0ab38aa693"
+    },
+    "liberty": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/ram.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [],
+    "role_errors": [],
+    "source_commit": "2f554833a",
+    "report_sha256": "d890b6beac78f5fdd3a367b5e3fb1110def54b298dfa770380a4b16a5eec01be",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpadd/native_census.json",
+    "source_file_sha256": "576f94b3cab99e3ebfae98d5d662cf13a6e4d1a337d94210fab50930324bb5bf"
+  },
+  {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "top": "ot_s81sl_fp_mul_n32",
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 75,
+    "roots_examined": 7267,
+    "netlist": {
+      "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/mapped.v",
+      "sha256": "9b67b045e6e15b6d3f24516898ecac79d5ef7524f3c7216eaedb111aa92ea1a3"
+    },
+    "liberty": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/ao.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/invbuf.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/oa.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/ram.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/seq.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/simple.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+      }
+    ],
+    "violations": [
+      {
+        "driver": "_8591_/QN",
+        "driver_role": "sequential",
+        "net": "_0031_",
+        "loads": 55
+      },
+      {
+        "driver": "_8592_/QN",
+        "driver_role": "sequential",
+        "net": "_0030_",
+        "loads": 49
+      },
+      {
+        "driver": "_8593_/QN",
+        "driver_role": "sequential",
+        "net": "_0029_",
+        "loads": 75
+      },
+      {
+        "driver": "_8594_/QN",
+        "driver_role": "sequential",
+        "net": "_0028_",
+        "loads": 41
+      }
+    ],
+    "role_errors": [],
+    "source_commit": "2f554833a",
+    "report_sha256": "76bb2b99a5d627356a4c03c78aed699ec6563d14046801416be1db7c43c58a37",
+    "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r4/out_fpmul/native_census.json",
+    "source_file_sha256": "576f94b3cab99e3ebfae98d5d662cf13a6e4d1a337d94210fab50930324bb5bf"
+  }
+]

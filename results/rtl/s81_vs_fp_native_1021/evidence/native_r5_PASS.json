@@ -1,0 +1,98 @@
+{
+  "source_commit": "2a94f398f",
+  "latency_edges": 6,
+  "reset_profile": "six independent identical-depth tree3 leaves; pipelinevalid0/outputbytes1..4/errvalid5",
+  "source_sha256": "b02a76d546f2e638bb1f0370ceec00a0e3a907555f9e7e427b05b03d8d72ef2e",
+  "native_runner_sha256": "68a844fefbae9f226fc6b1d8840e2c5e66c68552b8c7a491c2947c6cfb078719",
+  "tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "units": {
+    "fpadd": {
+      "schema": "opentallas.pre_gate_native_census.v1",
+      "top": "ot_s81sl_fp_add_n32",
+      "status": "PASS",
+      "limit": 32,
+      "max_dynamic_loads": 28,
+      "roots_examined": 3691,
+      "netlist": {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/mapped.v",
+        "sha256": "bee08b3391d440f589d3c84206e77a8f636beb7414fb2fd3995637e8138271b2"
+      },
+      "liberty": [
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/ao.lib",
+          "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/invbuf.lib",
+          "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/oa.lib",
+          "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/ram.lib",
+          "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/seq.lib",
+          "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/simple.lib",
+          "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+        }
+      ],
+      "violations": [],
+      "role_errors": [],
+      "report_sha256": "35116678901a9095c014a4c6ad7809ed7b1e13a79c5311349c962fff6bbc3d1f",
+      "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpadd/native_census.json",
+      "std_area_um2": 532.12626,
+      "seq_area_um2": 0.0
+    },
+    "fpmul": {
+      "schema": "opentallas.pre_gate_native_census.v1",
+      "top": "ot_s81sl_fp_mul_n32",
+      "status": "PASS",
+      "limit": 32,
+      "max_dynamic_loads": 28,
+      "roots_examined": 7342,
+      "netlist": {
+        "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/mapped.v",
+        "sha256": "2285d24c455778a4a505dc1e8a796d8c6e3a201e3e3a7dbfeda6725e9c7c9877"
+      },
+      "liberty": [
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/ao.lib",
+          "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/invbuf.lib",
+          "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/oa.lib",
+          "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/ram.lib",
+          "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/seq.lib",
+          "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+        },
+        {
+          "path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/simple.lib",
+          "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+        }
+      ],
+      "violations": [],
+      "role_errors": [],
+      "report_sha256": "c7643c3fcdb49d33c78d14a2b18ffd15d8457a13466ad590df8f296968be5d66",
+      "fleet_report_path": "/srv/opentallas-scratch/claude/codex-s81-vs-fp-native-1021/r5/out_fpmul/native_census.json",
+      "std_area_um2": 1007.15724,
+      "seq_area_um2": 0.0
+    }
+  }
+}
