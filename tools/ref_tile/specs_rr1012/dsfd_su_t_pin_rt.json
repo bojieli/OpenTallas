@@ -60,7 +60,7 @@
   "benches": [
    {
     "name": "exact_full_hier",
-    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/su --shape full --hier",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/su --shape full --hier",
     "expect": "pass",
     "pass_regex": "RUN full_dpi_m0_a0_h pass",
     "threads": 8,
@@ -68,7 +68,7 @@
    },
    {
     "name": "neg_stale_den",
-    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/su5 --shape full --hier --mut 5",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/su5 --shape full --hier --mut 5",
     "expect": "fail",
     "fail_regex": "RUN full_dpi_m5_a0_h fail",
     "threads": 8,
@@ -76,7 +76,8 @@
    }
   ],
   "extra_paths": [
-   "results/rtl/hbm_su_fused_compiler_20261005"
+   "results/rtl/hbm_su_fused_compiler_20261005",
+   "tools/s81_suhc/fixtures"
   ],
   "views_to": "physical/ref_tile/dsfd_su_t_pin_rt/views",
   "record_to": "results/rtl/ref_tile/dsfd_su_t_pin_rt"

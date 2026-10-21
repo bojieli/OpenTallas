@@ -1,0 +1,469 @@
+{
+ "name": "hbm_su_static_kind2_rg_1020",
+ "top": "ot_hbm_su_static_kind2_lat4_leaf1_rg_physical",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_sync_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind2_lat4_leaf1_rg_physical.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "S": [
+   "rst_n",
+   "lane_id",
+   "ld",
+   "ld_bank",
+   "emit",
+   "bank",
+   "o_v",
+   "i_v",
+   "no",
+   "ni",
+   "ls",
+   "lvw",
+   "vb",
+   "krow",
+   "obase",
+   "aibase",
+   "aind",
+   "gsh",
+   "cpair",
+   "dst",
+   "srcs",
+   "cx_srcs",
+   "cx_arnd",
+   "cx_arelu",
+   "cx_amin",
+   "cx_cclip",
+   "cx_imm3",
+   "cp_m1",
+   "cp_imm1",
+   "cm_m1",
+   "cm_m2",
+   "cm_qm",
+   "cm_imm1",
+   "ca_ad",
+   "ca_imm2",
+   "ci_sfu",
+   "cs_sfu",
+   "cs_e1",
+   "cs_imm2",
+   "ce_e2",
+   "ce_imm1",
+   "co_rnd",
+   "co_dst"
+  ],
+  "W": [
+   "ck",
+   "ld_c",
+   "rd_q",
+   "vi_q"
+  ],
+  "E": [
+   "coll",
+   "fault",
+   "kv_waddr",
+   "kv_wdata",
+   "kv_we",
+   "rd_addr",
+   "rd_re",
+   "rd_src",
+   "ro_v",
+   "ro_x",
+   "vi_addr",
+   "vi_re",
+   "vm_waddr",
+   "vm_wdata",
+   "vm_we"
+  ]
+ },
+ "layer_cap": "M5",
+ "signal_max_layer": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 96,
+  "period_ps": 1111.111111,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:HBM-KIND8",
+  "branch": "claude/hbm-kind8-1020",
+  "tag": "rg",
+  "purpose": "HBM-KIND8 10-20 rg: REGION-FORM single clock ck (pgrg region pattern: every lane clock = the region root; no cross-root seams inside the lane), io_hold_margin 0.03; pre-gate native census + safe-design checklist in README. Base: r4: pin registers share the lane root (r3 gate with a separate pin root: 3,303 pin->lane hops under the cross-root hold reserve, FF hold -111.7 ps, repair stuck at -89.4 on x_b). Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measure",
+  "extra_paths": [],
+  "benches": [
+   {
+    "name": "lane_exact",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane ot_hbm_su_static_kind2_lat4_leaf1_rg_physical 4 3 1 0",
+    "expect": "pass",
+    "pass_regex": "SU_LANE PASS",
+    "min_count_regex": "outputs=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_addr",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut ot_hbm_su_static_kind2_lat4_leaf1_rg_physical 4 3 1 0 ADDR",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_data",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_data ot_hbm_su_static_kind2_lat4_leaf1_rg_physical 4 3 1 0 DATA",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_phase",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_phase ot_hbm_su_static_kind2_lat4_leaf1_rg_physical 4 3 1 0 PHASE",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_reset",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/reset_mut ot_hbm_su_static_kind2_lat4_leaf1_rg_physical 4 3 1 0 RESET",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "auto_merge": false
+ },
+ "recipe": 4,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
+ },
+ "structural_change": "HBM-KIND8 10-20 rg: REGION-FORM single clock ck (pgrg region pattern: every lane clock = the region root; no cross-root seams inside the lane), io_hold_margin 0.03; pre-gate native census + safe-design checklist in README. Base: r4: pin registers share the lane root (r3 gate with a separate pin root: 3,303 pin->lane hops under the cross-root hold reserve, FF hold -111.7 ps, repair stuck at -89.4 on x_b). Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measure",
+ "outline": {
+  "w": 280.8,
+  "h": 453.6
+ },
+ "defines": [
+  "OT_QMUL4_INCUT",
+  "OT_SU_SYNC_RST"
+ ],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_ranges": {
+  "rst_n": [
+   4.32,
+   4.804
+  ],
+  "lane_id": [
+   4.804,
+   10.131
+  ],
+  "ld": [
+   10.131,
+   10.616
+  ],
+  "ld_bank": [
+   10.616,
+   11.1
+  ],
+  "emit": [
+   11.1,
+   11.584
+  ],
+  "bank": [
+   11.584,
+   12.068
+  ],
+  "o_v": [
+   12.068,
+   23.691
+  ],
+  "i_v": [
+   23.691,
+   35.313
+  ],
+  "no": [
+   35.313,
+   46.936
+  ],
+  "ni": [
+   46.936,
+   58.558
+  ],
+  "ls": [
+   58.558,
+   60.495
+  ],
+  "lvw": [
+   60.495,
+   62.432
+  ],
+  "vb": [
+   62.432,
+   120.545
+  ],
+  "krow": [
+   120.545,
+   132.167
+  ],
+  "obase": [
+   132.167,
+   143.79
+  ],
+  "aibase": [
+   143.79,
+   155.412
+  ],
+  "aind": [
+   155.412,
+   156.381
+  ],
+  "gsh": [
+   156.381,
+   158.802
+  ],
+  "cpair": [
+   158.802,
+   159.287
+  ],
+  "dst": [
+   159.287,
+   160.255
+  ],
+  "srcs": [
+   160.255,
+   164.129
+  ],
+  "cx_srcs": [
+   164.129,
+   168.003
+  ],
+  "cx_arnd": [
+   168.003,
+   168.488
+  ],
+  "cx_arelu": [
+   168.488,
+   168.972
+  ],
+  "cx_amin": [
+   168.972,
+   169.456
+  ],
+  "cx_cclip": [
+   169.456,
+   169.94
+  ],
+  "cx_imm3": [
+   169.94,
+   185.437
+  ],
+  "cp_m1": [
+   185.437,
+   186.89
+  ],
+  "cp_imm1": [
+   186.89,
+   202.387
+  ],
+  "cm_m1": [
+   202.387,
+   203.839
+  ],
+  "cm_m2": [
+   203.839,
+   204.808
+  ],
+  "cm_qm": [
+   204.808,
+   206.261
+  ],
+  "cm_imm1": [
+   206.261,
+   221.757
+  ],
+  "ca_ad": [
+   221.757,
+   223.21
+  ],
+  "ca_imm2": [
+   223.21,
+   238.707
+  ],
+  "ci_sfu": [
+   238.707,
+   240.16
+  ],
+  "cs_sfu": [
+   240.16,
+   241.613
+  ],
+  "cs_e1": [
+   241.613,
+   243.065
+  ],
+  "cs_imm2": [
+   243.065,
+   258.562
+  ],
+  "ce_e2": [
+   258.562,
+   259.531
+  ],
+  "ce_imm1": [
+   259.531,
+   275.027
+  ],
+  "co_rnd": [
+   275.027,
+   275.511
+  ],
+  "co_dst": [
+   275.511,
+   276.48
+  ],
+  "ld_c": [
+   4.32,
+   220.32
+  ],
+  "rd_q": [
+   233.28,
+   406.08
+  ],
+  "vi_q": [
+   406.08,
+   449.28
+  ],
+  "coll": [
+   4.32,
+   5.898
+  ],
+  "fault": [
+   5.898,
+   7.476
+  ],
+  "kv_waddr": [
+   7.476,
+   45.345
+  ],
+  "kv_wdata": [
+   45.345,
+   95.837
+  ],
+  "kv_we": [
+   95.837,
+   97.414
+  ],
+  "rd_addr": [
+   97.414,
+   248.89
+  ],
+  "rd_re": [
+   248.89,
+   255.202
+  ],
+  "rd_src": [
+   255.202,
+   267.825
+  ],
+  "ro_v": [
+   267.825,
+   269.403
+  ],
+  "ro_x": [
+   269.403,
+   319.894
+  ],
+  "vi_addr": [
+   319.894,
+   357.763
+  ],
+  "vi_re": [
+   357.763,
+   359.341
+  ],
+  "vm_waddr": [
+   359.341,
+   397.21
+  ],
+  "vm_wdata": [
+   397.21,
+   447.702
+  ],
+  "vm_we": [
+   447.702,
+   449.28
+  ],
+  "ck": [
+   222.48,
+   222.576
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

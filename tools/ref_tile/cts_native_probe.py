@@ -8,11 +8,33 @@ pin-flop arrival against the parent compensation / neighbour boundary C
 tile's own R; --from-dir re-scores a finished probe dir without STA.  The FF
 pin-flop spread (ck.json ff.boundary) is reported and judged beside TT.
 """
-import argparse,hashlib,json,shlex,subprocess,sys
+import argparse,hashlib,json,re,shlex,subprocess,sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent;sys.path.insert(0,str(HERE.parent/'hier_contract'))
 import pinreg_audit as PA
 
+# path_classes.tcl sources its helpers relative to [info script].  The probe runs as /probe.tcl inside the container, so
+# that resolves to /<helper>.tcl, which is not mounted (S81-CAPRT / HKV-ERTAP 10-19: ORD error on cross_clock_paths.tcl),
+# and older gate dirs may not stage the helper under /src at all.  Inline every such helper from this tools tree (the
+# prelude itself is read from here too), and refuse a prelude that still depends on [info script].
+SCRIPT_REL_SOURCE=re.compile(r'^[ \t]*source[ \t]+\[file join \[file dirname \[file normalize \[info script\]\]\] ([A-Za-z0-9_.-]+\.tcl)\][ \t]*$',re.M)
+def inline_script_relative(tcl,base=HERE):
+ def sub(m):
+  f=Path(base)/m.group(1)
+  if not f.is_file():raise FileNotFoundError(f'probe prelude sources {m.group(1)} next to path_classes.tcl, missing: {f}')
+  return f'# --- inlined {m.group(1)} (cts_native_probe: the probe runs as /probe.tcl in the container)\n'+f.read_text().rstrip('\n')+f'\n# --- end {m.group(1)}'
+ out=SCRIPT_REL_SOURCE.sub(sub,tcl)
+ if 'info script' in out:raise RuntimeError('probe prelude still depends on [info script]: unsupported source form in path_classes.tcl')
+ return out
+def probe_tcl(base=HERE):
+ prelude=(Path(base)/'path_classes.tcl').read_text().split('proc kind')[0]
+ return inline_script_relative(prelude,base)+'\nwrite_timing_model -library_name native_cts_probe_tt /work/native_probe_tt.lib\n'
+
+# Measured references: the CTS boundary mean, or (NATIVE-REF 10-18, pinreg_audit.clock_refs) the ck_insertion child_flop
+# boundary mean, which ck_insertion records for every view with macro / hard-child clock pins (s81sl_cap_rt 10-19: one
+# SRAM, child_flop boundary == boundary, and the probe called it unmeasured).  Lib midrange / neighbour refs are not.
+MEASURED_SRCS=('insertion.json boundary mean','insertion.json child_flop boundary mean')
+def measured_coverage(refs):return bool(refs)and all(v.get('src')in MEASURED_SRCS for v in refs.values())
 def run(argv,**kw):return subprocess.run(argv,check=True,**kw)
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('kit',type=Path);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--mem',type=int,default=4);ap.add_argument('--relative-to');ap.add_argument('--from-dir',action='store_true',help='reuse probe_tt.lib + insertion.json already in --out');a=ap.parse_args()
@@ -20,8 +42,7 @@ def main():
  gate=json.loads((a.kit/'gate_result.json').read_text());binding=gate['source_binding'];host=binding['remote_host'];remote=binding['remote_run'];kit=gate['kit'] if '/'in gate['kit'] else 'physical/ref_tile/'+gate['kit'];out=a.out;out.mkdir(parents=True,exist_ok=True)
  # The original gate's exact archived signoff SDC remains authoritative. This
  # prelude only reads its CTS ODB, propagated clocks, TT cells and placement RC.
- prelude=(HERE/'path_classes.tcl').read_text().split('proc kind')[0]
- tcl=prelude+'\nwrite_timing_model -library_name native_cts_probe_tt /work/native_probe_tt.lib\n';(out/'probe.tcl').write_text(tcl)
+ tcl=probe_tcl();(out/'probe.tcl').write_text(tcl)
  script=remote+'/native_probe.tcl'
  cmd=['ot-run','--mem',str(a.mem),'--threads','1','--hosts',host,'--dir',remote,'--','docker','run','--rm','-e','OT_GATE_SIGNOFF_SDC=/src/'+kit+'/signoff.sdc','-v',remote+'/src:/src:ro','-v',remote+'/routes/gate/work/orfs:/work','-v',script+':/probe.tcl:ro','openroad/orfs:latest','/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/probe.tcl']
  if not a.from_dir:
@@ -36,7 +57,7 @@ def main():
  launch=[(m['out'],n)for n,m in metrics.items()if m['dir']=='output'and m['out']is not None];capture=[(m['inp'],n)for n,m in metrics.items()if m['dir']=='input'and m['inp']is not None];comb=[n for n,m in metrics.items()if m['comb']and m['dir']in ('input','output')]
  result=dict(schema='opentallas.ref-tile.cts-native-probe.v1',scope='CTS placement RC diagnostic; NOT a routed native qualification',kit=kit,remote_host=host,remote_run=remote,gate_source_commit=binding.get('commit')or binding.get('start_commit'),gate_result_sha256=hashlib.sha256((a.kit/'gate_result.json').read_bytes()).hexdigest(),library_sha256=hashlib.sha256((out/'probe_tt.lib').read_bytes()).hexdigest(),insertion_sha256=hashlib.sha256((out/'insertion.json').read_bytes()).hexdigest(),probe_tcl_sha256=hashlib.sha256(tcl.encode()).hexdigest(),launch=dict(ps=max(launch)[0],pin=max(launch)[1])if launch else None,capture=dict(ps=max(capture)[0],pin=max(capture)[1])if capture else None,launch_over=sum(v>220 for v,n in launch),capture_over=sum(v>190 for v,n in capture),comb_pins=comb,clock_refs=refs)
  result['spread_ps']={k:v['bmax']-v['bmin']for k,v in refs.items()}
- result['measured_reference_coverage']=bool(refs)and all(v['src'].startswith('insertion.json boundary mean')for v in refs.values())
+ result['measured_reference_coverage']=measured_coverage(refs)
  fb=[r.get('ff',{}).get('boundary')for r in[ins,*(ins.get('clock_measurements')or{}).values()]];fb=[b for b in fb if isinstance(b,dict)and b.get('min')is not None and b.get('max')is not None]
  result['ff_spread_ps']=round(max(float(b['max'])-float(b['min'])for b in fb),1)if fb else None
  if rel:

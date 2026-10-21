@@ -103,9 +103,12 @@ def gate_file_ok(root, path):
 
 def dirty(root, commit, paths):
     """(uncommitted, differs-from-commit) consumed paths"""
-    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit
+    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit.
+    # An untracked lint_receipt.json (tools/ref_tile/lint_receipt.py) is a cache of the kit CDC lint written by the
+    # gate's regeneration: the daemon re-derives (or re-runs on the fleet) the same lint at the commit, so it is not dirt.
     unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines()
-           if ln.strip() and not (ln.startswith("??") and "/gate_layout/" in "/" + ln.split(None, 1)[1])]
+           if ln.strip() and not (ln.startswith("??") and ("/gate_layout/" in "/" + ln.split(None, 1)[1]
+                                                          or ln.split(None, 1)[1].endswith("/lint_receipt.json")))]
     head = git(root, "rev-parse", "HEAD")
     diff = git(root, "diff", "--name-only", commit, head, "--", *paths).splitlines() if not head.startswith(commit) else []
     return unc, [d for d in diff if d]
@@ -329,9 +332,12 @@ def _h(x):
     return hashlib.sha256(json.dumps(x, sort_keys=True, separators=(",", ":"), default=str).encode()).hexdigest()
 
 
-def geometry_record(rd, kit):
+def geometry_record(rd, kit, legacy=False):
     """{schema, sha256, components{outline, macros, pins, clock_entry}} of the kit geometry, rd(path) -> text or None;
-    None when the kit has neither floorplan.json nor spec.json."""
+    None when the kit has neither floorplan.json nor spec.json.
+    ROOT 10-19 (HKV-D2D18): the pin / clock-entry files are keyed by their BASENAME (their role), not their path, which
+    carries the kit name: a byte-identical layout under a new kit name (qkd_d2d_static_r7u -> r7v) hashes the same.
+    legacy=True gives the pre-10-19 path-keyed hash, still accepted in REVIEW.json during the transition."""
     def js(p):
         try:
             t = rd(p)
@@ -350,7 +356,7 @@ def geometry_record(rd, kit):
             for cand in (ref, f"{kit}/{ref}"):
                 t = rd(cand)
                 if t is not None:
-                    files[ref] = _h(t)
+                    files[ref if legacy else ref.rsplit("/", 1)[-1]] = _h(t)
                     break
     comp = dict(outline=_h([{k: fp.get(k) for k in _FP_OUTLINE}, {k: sp.get(k) for k in _SPEC_OUTLINE if k != "macros"}]),
                 macros=_h([blocks, sp.get("macros")]),
@@ -391,9 +397,10 @@ def review_check(root, commit, kit, show=None, show_at=None):
     ids = [str(x) for x in ((gate or {}).get("commit"), ((gate or {}).get("source_binding") or {}).get("commit"),
                             (gate or {}).get("generated")) if x]
     now = geometry_record(rd, kit)
+    now_legacy = geometry_record(rd, kit, legacy=True)      # transition: receipts hashed with path-keyed files
     tail = (f" -- geometry_sha256 now {now['sha256']}" if now else "") + tail
     if rev.get("geometry_sha256"):
-        if not now or rev["geometry_sha256"] != now["sha256"]:
+        if not now or rev["geometry_sha256"] not in (now["sha256"], (now_legacy or {}).get("sha256")):
             was = (rev.get("geometry") or {}).get("components") or {}
             moved = [k for k, v in (now or {}).get("components", {}).items() if was and was.get(k) != v]
             return (f"REVIEW_REQUIRED: the kit geometry changed since the review (geometry_sha256 "

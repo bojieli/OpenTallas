@@ -77,7 +77,6 @@
  "pins": {
   "S": [
    "vi_s",
-   "clk",
    "rst_n",
    "vo_s"
   ],
@@ -92,7 +91,8 @@
    "ek",
    "uid",
    "eg_n",
-   "fault"
+   "fault",
+   "clk"
   ]
  },
  "pin_ranges": {
@@ -101,8 +101,8 @@
    514
   ],
   "clk": [
-   514,
-   517
+   322,
+   325
   ],
   "rst_n": [
    517,
@@ -127,14 +127,54 @@
   "threads": 16,
   "peak_ram_gb": 64
  },
- "structural_change": "S81U-BK3 vertical cut (coordinator 0cj (b)): wires-only cluster of re-pinned square-ish leaves stacked in the 680-um column; plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json. NOT GENERATED YET: the child views (views_to of the leaf kits) exist only after the leaves close.",
+ "structural_change": "S81U-BK3 vertical cut (coordinator 0cj (b)): wires-only cluster of re-pinned square-ish CLOSED leaves stacked in the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json). PL-BK 10-18 (PARENTS-LANDED): ONE clock region, no landings, by the landed-regions standard's own threshold: 673.92 x 648 (< 1 mm) and the closed children's boundary insertion means agree within 4.5 ps (TT cm 264.8 / cl 269.3 / g2 265.1; FF 219.9 / 225.7 / 219.0); every internal crossing is in the lane <-> merger credit loop or the glue -> lanes -> merger -> glue (vd) path, one strongly connected set that lp.py cannot land without a compiler re-schedule. Children: closed s81dvbk_cl-l1-cc118de88, s81dvbk_cm-m1-8c2850345, s81dvbk_g2-g2-3f5182cd2.",
  "job": {
-  "owner": "Claude:S81U-BK3",
-  "branch": "claude/s81u2-bk-1017",
-  "tag": "v1",
-  "purpose": "S81-DV dsdv_bk_col vertical-cut cluster (lane S81U-BK3): closure after its leaves close.",
-  "benched_by": "the leaf jobs (dsdv_bk_col / dsdv_bk_sel exact + mutant benches)",
+  "owner": "Claude:PL-BK",
+  "branch": "claude/pl-bk-1018",
+  "tag": "pl1",
+  "purpose": "S81-DV dsdv_bk_col vertical-cut cluster (PL-BK, PARENTS-LANDED 10-18): single-region cluster of closed leaves.",
+  "bench_note": "run_bk_bench.sh col (exact PASS; mutant 3 FAIL witness bk_units_bk3/col_mut3.txt): the cluster's own RTL",
   "views_to": "physical/ref_tile/s81dvbk_colv/views",
-  "record_to": "results/rtl/ref_tile/s81dvbk_colv"
- }
+  "record_to": "results/rtl/ref_tile/s81dvbk_colv",
+  "benches": [
+   {
+    "name": "dsdv_bk_col_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/col 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^DSDV_BK_COL PASS mut=0$",
+    "min_count_regex": "egress words (\\d+)"
+   },
+   {
+    "name": "dsdv_bk_col_mut_lateodd",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/colm3 3 gold5_odd",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk3/col_mut3.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link",
+   "results/rtl/s81_dv_1016/bk_units_bk3"
+  ]
+ },
+ "hard_define": "OT_DSDV_BK_HARD",
+ "clock_entry_note": "PL-BK 10-18: clk on the E face at y 322-325, the cluster's mid-height beside the glue (E) and merger: the gate-1 S-face entry gave a 745-ps parent trunk to the N lanes (TT 1009.7 total)"
 }

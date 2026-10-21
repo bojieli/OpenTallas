@@ -60,14 +60,65 @@
     "pin_min_tracks": 1
   },
   "aspect": 1.0,
-  "job": {"benched_by": "s81su_full", 
-    "owner": "Codex:s81_su_closure",
-    "branch": "codex/s81su-physical-20261013",
+  "job": {
+    "benched_by": "s81su_full",
+    "owner": "Claude:S81-QNTKEEP",
+    "branch": "claude/s81-qntkeep-1018",
     "tag": "v6-cb32",
-    "purpose": "QNT production opt-in CB32 copied data-offset controls per bit bank, max select fanout32; defaultCB256 kept, zero added stages/cycles/ports and unchanged slot/clocks/IO. Actual b8 routed control\u2192barrel setup-92.88 triggered this structural fix; minimum production immutable69 reference exact+MUT6 gate runs alongside route.",
+    "purpose": "S81-QNTKEEP re-route of the CLOSED CB32 QNT tile with (* keep_hierarchy *) on ot_s81_su_qn_keep_ff (ROOT-KEEP gate rule); no logic change, zero added cycles/ports, unchanged slot/clocks/IO.",
     "no_bench_reason": "New CB32/CB16 control-bank mechanism qualifies on minimal full N256/S_RD16/NFI33 component against immutable69c124e5d QNT reference, all outputs/cycles; MUT6 copied-offset mutant must fail. Default SU composition full m0/m1/m5 evidence69c124e5d is preserved; no new latency or arithmetic order. Exact/mutant/source-matched price gates must pass before adoption.",
     "views_to": "physical/ref_tile/s81su_qnt_cb32_ref/views",
-    "record_to": "results/rtl/ref_tile/s81su_qnt_cb32_ref"
+    "record_to": "results/rtl/ref_tile/s81su_qnt_cb32_ref",
+    "extra_paths": [
+      "tests/rtl/s81su_qnt_cb",
+      "tools/s81_suhc/fixtures"
+    ],
+    "benches": [
+      {
+        "name": "qnt_cb_exact",
+        "cmd": "bash tests/rtl/s81su_qnt_cb/run_direct.sh {RUN}/bench/qnt_cb_exact 0",
+        "expect": "pass",
+        "pass_regex": "PASS QNT_CB N=256 S_RD=16 NFI=33 MUT=0",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "qnt_cb_mut6_copied_offset",
+        "cmd": "bash tests/rtl/s81su_qnt_cb/run_direct.sh {RUN}/bench/qnt_cb_mut6 6",
+        "expect": "fail",
+        "fail_regex": "FAIL QNT_CB active_data=1 cycle=\\d+ MUT=6",
+        "fail_witness": "results/rtl/s81su_qnt_keep_b7358a8b8_20261018/m6/run.log",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "s81su_full_exact",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "pass_regex": "RUN full_dpi_m0_a0_h pass",
+        "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su --shape full --hier"
+      },
+      {
+        "name": "s81su_full_mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "fail_regex": "RUN full_dpi_m5_a0_h fail",
+        "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5",
+        "fail_witness": "results/rtl/s81su_qnt3_fixture_20261018/m5/run.log"
+      }
+    ],
+    "reroute_reason": {
+      "kind": "rtl_change",
+      "why_route": "ROOT-KEEP (main f3c8ca0d1): ot_s81_su_qn_keep_ff is instantiated #(.W(KW)), so yosys named it $paramod and SYNTH_KEEP_MODULES matched nothing (hierarchy flattened). S81-QNTKEEP b7358a8b8 adds (* keep_hierarchy *) on the module (synthesis attribute only; QNT_CB lockstep m0 PASS / m6 FAIL vs immutable 69c124e5d). The CLOSED ae9b5d603 netlist (closed_archive) still holds all 576 copy flops; re-route makes the closed view source-current with the kept hierarchy and lets the routed native audit be compared to the closed one (R 293.3, launch 212.2 e_eps[10], capture 138.6, spread 26.7/26.4). RESUBMIT after flow_failure (S81-QNT3 10-18): s81su_qnt_cb32_ref-v6-cb32-8757b43d0 went NEEDS_RTL only because bench_s81su_full_exact read the host-local /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl (on no host); the s81su_full benches are now pinned here on the committed tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl (sha 8c18c0655ccf), Verilator 5.050 m0 PASS / m5 FAIL (results/rtl/s81su_qnt3_fixture_20261018)."
+    }
   },
   "orfs_vars": {
     "SYNTH_KEEP_MODULES": "ot_s81_su_qn_keep_ff"
@@ -75,5 +126,9 @@
   "io_tcl": "physical/s81su_physical/s81su_qnt_b8_ref_io.tcl",
   "params": {
     "CB": 32
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "RTL-registered pins (CLOSED tile re-route, owner rule 19:50 opt-out): ot_s81_su_qnt registers every input at its pin (dq_st/dq_kind/dq_gsel/dq_jid/dq_v/dq_d, fq pin flops; rst through the rr0/rr1 synchroniser) and drives every output from a register (output reg e_*/o_*); the closed ae9b5d603 view audits 0 combinational pins, launch 212.2 / capture 138.6 ps. A flow pin register would add a cycle per port the SU calendar does not price."
   }
 }

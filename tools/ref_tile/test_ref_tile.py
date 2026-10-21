@@ -421,6 +421,24 @@ class Recipe(unittest.TestCase):
         with self.assertRaises(RT.SpecError):
             RT.io_hold_relief_ps({"route": {"hold_margin_ns": 0.01, "io_hold_margin_ns": 0.02}})
 
+    def test_io_flop_through_frac(self):
+        # RLYH0-FIN 2026-10-19: pass-through pin flops on the a -> b L path (lane stations with perpendicular faces)
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="thru_a", inhold=False, outhold=False, io_flop_at_pins={"cols": 4, "through_frac": 0.5})
+            env = k["kit.env"]
+            self.assertIn("PRE_GLOBAL_PLACE=physical/qwen_fwd_lane/lane_flop_thru.tcl", env)
+            self.assertIn("PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl", env)
+            self.assertEqual(env.count("PRE_GLOBAL_PLACE="), 1)
+            self.assertIn("OT_IOFLOP_THRU_FRAC=0.5", extra_argv(env))
+            ref = json.loads(k["floorplan.json"])["referenced"]
+            self.assertIn("physical/qwen_fwd_lane/lane_flop_thru.tcl", ref)
+            self.assertIn("physical/qwen_die_masters/io_flop_at_pins.tcl", ref)
+            self.assertTrue((RT.ROOT / "physical/qwen_fwd_lane/lane_flop_thru.tcl").is_file())
+            plain = self.kit(a, name="thru_b", inhold=False, outhold=False, io_flop_at_pins={"cols": 4})
+            self.assertNotIn("lane_flop_thru", plain["kit.env"] + plain["floorplan.json"])
+            with self.assertRaises(RT.SpecError):
+                self.kit(a, name="thru_c", inhold=False, outhold=False, io_flop_at_pins={"cols": 4, "through_frac": 1.5})
+
     def test_recipe_2_spec_overrides(self):
         with tempfile.TemporaryDirectory() as a:
             k = self.kit(a, name="rcp_a", inhold=False, outhold=False, route={"hold_margin_ns": 0.02, "macro_halo_um": 3.24})
@@ -554,7 +572,8 @@ class PinRegs(unittest.TestCase):
         self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK='clk'", "--orfs-var OT_PIN_REGS_RESET_PORTS=''"])
         self.assertIsNone(RT.pin_regs_plan({"kind": "tile", "clock_port": "clk"}))
         with self.assertRaises(RT.SpecError):
-            RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False}})       # no reason
+            RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False},       # no reason,
+                              "pin_regs_rule": "every_pin"})                                             # strict form
         self.assertEqual(RT.pin_regs_vars({"kind": "tile", "clock_port": "clk",
                                            "pin_regs": {"enable": False, "reason": "PHY timing owned by the parent"}}), [])
         with self.assertRaises(RT.SpecError):
@@ -588,8 +607,9 @@ class PinRegsGate(unittest.TestCase):
             (kd / "kit.env").write_text("EXTRA=(--orfs-var OT_KEEP_PIN_REGS=1)\n")
             early = dt.datetime.fromisoformat("2026-10-16T10:00:00-07:00")
             late = dt.datetime.fromisoformat("2026-10-17T10:00:00-07:00")
-            for now, spec, want in ((early, {}, "WARN"), (late, {}, "FAIL"), (late, {"auto_react_parent": "p"}, "WARN"),
-                                    (late, {"pin_regs": {"enable": False, "reason": "parent owns the boundary"}}, "INFO"),
+            S = {"pin_regs_rule": "every_pin"}       # the strict 10-15 form (owner 10-20 default: test_pin_rule_1020.py)
+            for now, spec, want in ((early, S, "WARN"), (late, S, "FAIL"), (late, dict(S, auto_react_parent="p"), "WARN"),
+                                    (late, dict(S, pin_regs={"enable": False, "reason": "parent owns the boundary"}), "INFO"),
                                     (late, {"kind": "cluster"}, None)):
                 g = PG.Gate()
                 PG.check_pin_regs(g, kd, spec, now=now)

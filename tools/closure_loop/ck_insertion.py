@@ -29,42 +29,22 @@ from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 
-# FLOW-FIX-0410 2026-10-09: the arrival of the sink's ACTIVE transition (from-transition of its clock->output arc),
-# measured from the source edge that produces it, on the rise-edge time base (an arrival from the source FALL edge has
-# the half period removed).  Same rule as physical/common_flow/io_ref_routed.sdc: behind an odd clock inversion
-# (ot_fwd_link_stage, fck = ~ck) arrival_max_rise is T/2 + tree (dsfd_hstnh_515: 603 vs ~190 ps).
-ACTIVE_TCL = r"""
-set ::ot_ck_act [dict create]
-proc ot_ck_active {p} {
-  set c [get_cells -quiet -of_objects $p]
-  if {![llength $c]} { return "" }
-  set k "[get_property $c ref_name]/[get_property $p lib_pin_name]"
-  if {[dict exists $::ot_ck_act $k]} { return [dict get $::ot_ck_act $k] }
-  sta::redirect_string_begin
-  catch {report_edges -from $p}
-  set r [sta::redirect_string_end]
-  set on 0; set fr {}
-  foreach l [split $r "\n"] {
-    if {[regexp {^\S} $l]} { set on [regexp {(Clk|En) to Q} $l]; continue }
-    if {$on && [regexp {^\s+([\^v])\s+->} $l -> e]} { if {[lsearch -exact $fr $e] < 0} { lappend fr $e } }
-  }
-  set a [expr {[llength $fr] == 1 ? ([lindex $fr 0] eq "^" ? "r" : "f") : ""}]
-  dict set ::ot_ck_act $k $a
-  return $a
-}
+# Shared physical clock tags: remove the actual source waveform phase,
+# including generated bank phases, rather than guessing from data arrivals.
+# Routes ship helpers flat under cl/; source-tree invocation uses common_flow.
+_family_paths = (Path(__file__).resolve().with_name("clock_family.tcl"),
+                 Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl")
+_family_path = next((p for p in _family_paths if p.is_file()), None)
+if _family_path is None:
+    raise FileNotFoundError("clock_family.tcl missing from source tree / shipped helper plan")
+CLOCK_FAMILY_TCL = _family_path.read_text()
+ACTIVE_TCL = CLOCK_FAMILY_TCL + r"""
 proc ot_ck_arr {p clk} {
-  set half 0.0
-  if {![catch {list [$clk waveform] [$clk period] [get_property $clk period]} w]} {
-    lassign $w wf ps pu
-    if {[llength $wf] >= 2 && $ps > 0} { set half [expr {([lindex $wf 1] - [lindex $wf 0]) * $pu / $ps}] } }
-  set ar [get_property $p arrival_max_rise]; set af [get_property $p arrival_max_fall]
-  set okr [string is double -strict $ar]; set okf [string is double -strict $af]
-  if {!($okr && $okf)} { return [expr {$okr ? $ar : ($okf ? $af : "")}] }
-  set t [ot_ck_active $p]
-  set lo [expr {$ar <= $af ? "r" : "f"}]
-  if {$t eq ""} { set t $lo }
-  set v [expr {$t eq "r" ? $ar : $af}]
-  return [expr {$t eq $lo ? $v : $v - $half}]
+  set owners [get_property $p clocks]
+  if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [get_full_name $clk]} {
+    error "CK_INSERTION: wrong/ambiguous clock ownership [get_full_name $p]"
+  }
+  return [ot_cf_wire $p $owners]
 }
 """
 
@@ -131,11 +111,74 @@ proc ot_ck_macro_owned {p selected} {
   set owners {}
   foreach c [get_property $p clocks] { lappend owners [get_full_name $c] }
   set owners [lsort -unique $owners]
+  # CLOCK-ROOT (ELEM-GAPS/HBMN2 2026-10-18, hfd_ckgen): the unclocked reference input of a macro that is itself a clock
+  # SOURCE (the PLL refclk: the SDC creates the domain clocks on the PLL OUTPUT pins) is no sink of any measured clock --
+  # skipped and recorded.  Any other unclocked macro clock pin stays an error.
+  if {![llength $owners]} {
+    set ot_mc_inst [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[catch {all_clocks} ot_mc_all]} { set ot_mc_all {} }
+    foreach c $ot_mc_all { foreach s [get_property $c sources] {
+      if {[string first "$ot_mc_inst/" [get_full_name $s]] == 0} { puts "OT_MC_UNCLOCKED [get_full_name $p] (clock source [get_full_name $s])"; return 0 }
+    } }
+  }
   if {[llength $owners] != 1} {
     error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
   }
   puts "OT_MC_SOURCE [get_full_name $p] [lindex $owners 0]"
-  return [expr {[lindex $owners 0] eq [get_full_name $selected]}]
+  # QW-CTLM5 10-19: a hard child's RAW clock entry (landed_raw: e.g. h16c ck_pm0/ck_pm1, the leaf's SRAM clock pins that
+  # its ETM exports with NO timing arcs at all -- no clock-to-Q, no setup/hold check) has no active edge to measure, so
+  # ot_cf_active (609270c0a) aborted the whole measurement on it (qfd_tt_ctlm_dv_safe3/4: 'missing unique active clock
+  # edge u_hr/ck_pm0', no GATE_CK_DOMAIN, clock_rule coverage FAIL).  Such a pin is judged by the landed body
+  # (OT_LANDED RAW_PIN: co-timed with its CTS-root pin per the leaf's closed record, fail-closed post-CTS), not here:
+  # recorded and skipped.  A pin with ANY arc, or a non-block cell, still goes through ot_cf_active (fails closed).
+  set ot_mc_master NULL
+  if {[llength [info commands ord::get_db]]} {
+    set ot_mc_master [[ord::get_db] findMaster [get_property [get_cells -of_objects $p] ref_name]]
+  }
+  if {$ot_mc_master ne "NULL" && [$ot_mc_master isBlock]} {
+    sta::redirect_string_begin
+    set ot_mc_failed [catch {report_edges -from $p} ot_mc_msg]
+    set ot_mc_rep [sta::redirect_string_end]
+    if {!$ot_mc_failed && ![regexp {\s[\^v]\s+->} $ot_mc_rep]} {
+      puts "OT_MC_RAW_NOARC [get_full_name $p] [lindex $owners 0]"
+      return 0
+    }
+  }
+  set owner [lindex $owners 0]
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {set owner [ot_cf_root $owner]}
+  return [expr {$owner eq [get_full_name $selected]}]
+}
+"""
+
+
+# Boundary membership is physical connectivity, including disabled/false-path
+# arcs. Timing-path enumeration omits precisely the paths an exception hides.
+# OpenSTA includes asynchronous controls in -data_pins, so remove those before
+# intersecting the structural input fanout with the selected clock's registers.
+BOUNDARY_TCL = r"""
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
 }
 """
 
@@ -154,12 +197,15 @@ read_sdc /base/{sdc}
 set_propagated_clock [all_clocks]
 {RAW_SOURCE_TCL if raw_source else ''}
 {CLOCK_SETUP_TCL.replace('CLOCK_REQUEST', clock)}
+{CLOCK_FAMILY_TCL}
+ot_cf_refresh
+lassign [ot_cf_pins $ot_ck_selected] ot_ck_family_pins ot_ck_family_owners
+set ot_ck_family_counts {{}}
+dict for {{pin owner}} $ot_ck_family_owners {{dict incr ot_ck_family_counts [get_full_name $owner]}}
+dict for {{owner count}} $ot_ck_family_counts {{puts "OT_CK_FAMILY $owner $count"}}
 set regs {{}}
-foreach p [all_registers -clock_pins -clock $ot_ck_selected] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
-set bnd {{}}
-set din [all_inputs -no_clocks]
-if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
-foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
+foreach p $ot_ck_family_pins {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
+{BOUNDARY_TCL}
 {ACTIVE_TCL}
 {MACRO_CLOCK_SCOPE_TCL}
 set ot_ck_clk [lindex $ot_ck_selected 0]
@@ -275,6 +321,20 @@ def child_refs(root, mlibs, corner):
     return out
 
 
+def pin_sourced_clocks(sdc_text):
+    """CLOCK-ROOT (ELEM-GAPS/HBMN2 2026-10-18, hfd_ckgen): a clock-root view (PLL hard core) creates its domain clocks on
+    the PLL OUTPUT pins and forwards each to an output port as a divide_by 1 generated clock.  Its measured clock is the
+    pin clock; the Liberty pin it maps to is the forwarded port.  [(master clock name, port)] for each such pair; a pin
+    clock forwarded to no port, or to several, is not mapped (no record rather than a guessed one)."""
+    pins = {m[1]: m[0] for m in re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_pins\s+\{([^}]+)\}\]", sdc_text, re.M)}
+    fwd = {}
+    for m in re.finditer(r"^create_generated_clock\s+[^\n]*-source\s+\[get_pins\s+\{([^}]+)\}\][^\n]*-divide_by\s+1\b[^\n]*"
+                         r"\[get_ports\s+\{([^}]+)\}\]\s*$", sdc_text, re.M):
+        if m[1] in pins:
+            fwd.setdefault(pins[m[1]], []).append(m[2])
+    return [(name, ports[0]) for name, ports in fwd.items() if len(ports) == 1]
+
+
 def stats(v):
     return dict(n=len(v), mean=round(sum(v) / len(v), 1), min=round(min(v), 1), max=round(max(v), 1)) if v else None
 
@@ -313,11 +373,14 @@ def main():
         sdc = "6_final.sdc" if a.routed else next((s for s in ("4_cts.sdc", "3_place.sdc", "2_floorplan.sdc", "1_synth.sdc") if (base / s).exists()), None)
         if sdc is None:
             raise SystemExit(f"no CTS SDC under {base}")
-        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", (base / sdc).read_text(), re.M)
+        stext = (base / sdc).read_text()
+        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", stext, re.M)
+        clocks += pin_sourced_clocks(stext)
         if not clocks or any(len(pin.split()) != 1 for name, pin in clocks):
             raise SystemExit("write_sdc must identify each external clock's single source port")
         if len({pin for name, pin in clocks}) != len(clocks):
             raise SystemExit("multiple external clocks on one pin: select their references explicitly")
+        pin_src = {m[0]: m[1] for m in re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_pins\s+\{([^}]+)\}\]", stext, re.M)}
         records = {}
         with tempfile.TemporaryDirectory() as td:
             for index, (name, pin) in enumerate(clocks):
@@ -331,7 +394,9 @@ def main():
                 subprocess.run(cmd, check=True)
                 rec = json.loads(out.read_text())
                 rec["lib_clock_pin"] = pin
-                rec["clock_mapping_basis"] = f"{sdc} create_clock -name {name} [get_ports {{{pin}}}]"
+                rec["clock_mapping_basis"] = (f"{sdc} create_clock -name {name} [get_ports {{{pin}}}]" if name not in pin_src
+                                              else f"{sdc} create_clock -name {name} [get_pins {{{pin_src[name]}}}] -> "
+                                                   f"create_generated_clock -divide_by 1 [get_ports {{{pin}}}] (clock root)")
                 records[pin] = rec
         rec = dict(next(iter(records.values())))
         rec["clock_measurements"] = records
@@ -361,7 +426,7 @@ def main():
             out = result.stdout
             if result.returncode:
                 raise SystemExit(f"{corner}: clock insertion replay failed ({result.returncode})\n{out[-1500:]}\n{result.stderr[-1500:]}")
-        b, al, cb, cal, craw = [], [], [], [], {}
+        b, al, cb, cal, craw, sb, sal = [], [], [], [], {}, [], []
         refs = child_refs(sroot, mlibs, corner) if sroot else {}
         for m in re.finditer(r"^OT_CK (\d) (\S+)(?: (\S+))?[ \t]*$", out, re.M):
             x = float(m[2])
@@ -372,18 +437,24 @@ def main():
                 r = refs.get(m[3])
                 craw.setdefault(m[3], [r[1] if r else "no reference: raw pin arrival", r[0] if r else 0.0, 0])[2] += 1
                 x = x + (r[0] if r else 0.0)
+            else:                            # a soft (glue) register of this root
+                sal.append(x)
+                if m[1] == "1":
+                    sb.append(x)
             cal.append(x)
             if m[1] == "1":
                 cb.append(x)
         mrows = [(m[1], float(m[2]), float(m[3]), m[4])
                  for m in re.finditer(r"^OT_MC (\S+) (\S+) (\S+) (\S+)", out, re.M)]
-        rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
+        rec[corner] = dict(clock_family={name: int(n) for name, n in re.findall(r"^OT_CK_FAMILY (\S+) (\d+)$", out, re.M)},
+                           boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                            macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
                            macro_libs=len(mlibs))
         if craw:
             rec[corner]["child_flop"] = dict(boundary=stats(cb), all=stats(cal),
                                              refs={k: dict(basis=v[0], ref_ps=round(v[1], 1), pins=v[2])
-                                                   for k, v in sorted(craw.items())})
+                                                   for k, v in sorted(craw.items())},
+                                             soft=dict(boundary=stats(sb), all=stats(sal)))   # PL-GATE: per-root glue
         if not al and corner == "tt" and not need_tt:
             continue                     # TT is informational for an SS-corner route
         if not al:

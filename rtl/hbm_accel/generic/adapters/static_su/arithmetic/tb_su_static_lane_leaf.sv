@@ -25,6 +25,7 @@ module tb_su_static_lane_leaf;
  wire clk_stage_0=clk,clk_stage_1=clk,clk_stage_2=clk,clk_stage_3=clk,clk_stage_4=clk,clk_stage_5=clk,clk_stage_6=clk,clk_stage_7=clk;
  wire clk_insert_0=clk,clk_insert_1=clk,clk_insert_2=clk,clk_insert_3=clk;
  wire clk_pin=clk,clk_sfu=clk,clk_ins=clk,clk_ins2=clk;  // regional-root (r1 / r3) leaves
+ wire ck=clk;  // region-form (rg) leaves: one region clock
  wire [5:0] clk_side={6{clk}};
  wire [10:0] lane_id=11'(LOCAL);
  wire ld,ld_bank,emit,bank,cpair,cx_arnd,cx_arelu,cx_amin,cx_cclip,co_rnd;

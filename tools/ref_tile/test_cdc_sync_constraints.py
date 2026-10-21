@@ -79,6 +79,43 @@ class Fixture(unittest.TestCase):
         self.tmp.cleanup()
 
 
+HIER = r'''
+module cdc_hier_stage (input ck, input d, output reg q);
+  always @(posedge ck) q <= d;
+endmodule
+module cdc_hier (input ck_a, input ck_b, input rst_n, input d_in, output reg q_out);
+  reg rc; reg [1:0] rs;
+  always @(posedge ck_b) rc <= rst_n;
+  always @(posedge ck_a) rs <= {rs[0], rc};
+  wire pd;
+  cdc_hier_stage u_s (.ck(ck_a), .d(d_in), .q(pd));   // a submodule: flatten leaves a $scopeinfo cell
+  always @(posedge ck_a or negedge rs[1]) if (!rs[1]) q_out <= 0; else q_out <= pd;
+endmodule
+'''
+
+
+class Hierarchy(unittest.TestCase):
+    def test_flattened_submodule_admitted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'cdc_hier.sv').write_text(HIER)
+            s = dict(name='cdc_hier', top='cdc_hier', kind='tile', sources=['cdc_hier.sv'], params={},
+                     clock='multiple_cts_roots', clock_port='ck_a', clock_ports=['ck_a', 'ck_b'],
+                     clock_data_paths='related_pll_ratio',
+                     clock_relationship=dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0),
+                     clock_entry_domains=dict(
+                         core=dict(ratio=[1, 1], ports=['ck_a'], inputs=['d_in'], outputs=['q_out']),
+                         serial=dict(ratio=[4, 3], ports=['ck_b'], inputs=['rst_n'], outputs=[])),
+                     cdc_synchronizers=[dict(name='reset', src_domain='serial', dst_domain='core', source='rc',
+                                             chain=['rs[0]', 'rs[1]'], sync_max_delay_ps=250)])
+            for keep in (False, True):
+                with self.subTest(keep_hierarchy=keep):
+                    source = HIER.replace('module cdc_hier_stage', '(* keep_hierarchy = 1 *) module cdc_hier_stage') if keep else HIER
+                    (root / 'cdc_hier.sv').write_text(source)
+                    record = S.lint(s, root)
+                    self.assertEqual(record['counts'], dict(source=1, sync1=1, payload=0, capture=0))
+
+
 class Lint(Fixture):
     def test_admitted_and_bounded_only(self):
         record = S.lint(spec(), self.root)
@@ -175,17 +212,26 @@ class AsyncPair(Fixture):
             C.generate(s, self.root)
 
 
-def sta_case(root, out, name, make_spec=None):
+def sta_case(root, out, name, make_spec=None, extra_tcl='', lib_delay_ps=None, mutate_module=None, graph_source=None):
     make_spec = make_spec or spec
     dst = 'hbm' if make_spec is async_spec else 'serial'
-    synth = (f'read_verilog -sv -DSYNTHESIS {root / "cdc_fix.sv"}; hierarchy -top cdc_fix; '
+    source = root / 'cdc_fix.sv'
+    if graph_source is not None:
+        source = out / f'{name}_source.sv'
+        source.write_text(graph_source)
+    synth = (f'read_verilog -sv -DSYNTHESIS {source}; hierarchy -top cdc_fix; '
              f'synth -top cdc_fix -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
     p = subprocess.run([YOSYS, '-Q', '-T', '-p', synth], text=True, capture_output=True)
     if p.returncode:
         raise AssertionError(p.stdout + p.stderr)
     data = json.loads((out / 'fix.json').read_text())
     m = data['modules']['cdc_fix']
-    (out / 'probe.lib').write_text(fixture_lib(m))
+    if mutate_module:
+        mutate_module(m)
+    lib = fixture_lib(m)
+    if lib_delay_ps is not None:
+        lib = lib.replace('values("3")', f'values("{lib_delay_ps}")')
+    (out / 'probe.lib').write_text(lib)
     if name == 'stage1_on_source_clock':     # x1 re-clocked by ck_a: its tag now sits on a same-domain path
         q = m['netnames']['x1']['bits'][0]
         cell = next(c for c in m['cells'].values() if c['type'].startswith('$_DFF') and c['connections']['Q'] == [q])
@@ -206,8 +252,8 @@ def sta_case(root, out, name, make_spec=None):
             + f'\nset ins [dict create ev_in core {{d_in[0]}} core {{d_in[1]}} core {{d_in[2]}} core {{d_in[3]}} core rst_n {dst}]\n'
             + f'set outs [dict create {{d_out[0]}} {dst} {{d_out[1]}} {dst} {{d_out[2]}} {dst} {{d_out[3]}} {dst} '
             + f'v_out {dst} s_out {dst}]\n'
-            + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message; exit 1}\n'
-            + 'puts ACTUAL_CDC_GRAPH_PASS\nexit 0\n')
+            + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $::errorInfo; exit 1}\n'
+            + extra_tcl + '\nputs ACTUAL_CDC_GRAPH_PASS\nexit 0\n')
     tp = out / f'{name}.tcl'
     tp.write_text(body)
     p = subprocess.run([STA, '-exit', str(tp)], text=True, capture_output=True)

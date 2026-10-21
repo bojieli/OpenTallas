@@ -16,15 +16,53 @@ proc ot_ce_raw_memory_sink {inst pin source} {
   set master [[$inst getMaster] getName]
   if {[info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts $master]} {return 0}
   set name [string map {\\ {}} [$inst getName]]
-  if {![info exists ::ot_ce_raw_memory_bindings] || ![dict exists $::ot_ce_raw_memory_bindings $name]} {return 0}
+  if {![info exists ::ot_ce_raw_memory_bindings]} {return 0}
+  # KV-HOST6 10-20: a pin-register wrapper (ref_tile pin_regs) prefixes the core as u_ot_pr_core; the spec binding names
+  # the core instance exactly as place.tcl's ot_ref_wrapped_match does
+  if {![dict exists $::ot_ce_raw_memory_bindings $name]} {
+    if {![regsub {^u_ot_pr_core[./]} $name {} core] || ![dict exists $::ot_ce_raw_memory_bindings $core]} {return 0}
+    set name $core
+  }
   set b [dict get $::ot_ce_raw_memory_bindings $name]
   set leaf [lindex [split [get_full_name $pin] /] end]
-  if {$master ne [dict get $b master] || $leaf ne [dict get $b clock_pin] || $source ne [dict get $b root]} {
-    error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+  if {[dict exists $b clock_pins]} {
+    # dual-clock raw memory: each actual Liberty clock pin is a sink of exactly its own bound region root
+    set cps [dict get $b clock_pins]
+    if {$master ne [dict get $b master] || ![dict exists $cps $leaf] || $source ne [dict get $cps $leaf]} {
+      error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+    }
+    set key "$name/$leaf"
+  } else {
+    if {$master ne [dict get $b master] || $leaf ne [dict get $b clock_pin] || $source ne [dict get $b root]} {
+      error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+    }
+    set key $name
   }
-  if {[dict exists $::ot_ce_raw_memory_seen $name]} {error "OT_HYBRID: duplicate raw memory clock sink $name"}
-  dict set ::ot_ce_raw_memory_seen $name 1
+  if {[dict exists $::ot_ce_raw_memory_seen $key]} {error "OT_HYBRID: duplicate raw memory clock sink $key"}
+  dict set ::ot_ce_raw_memory_seen $key 1
   return 1
+}
+proc ot_ce_raw_memory_expected {} {
+  set keys {}
+  dict for {name b} $::ot_ce_raw_memory_bindings {
+    if {[dict exists $b clock_pins]} {
+      foreach leaf [dict keys [dict get $b clock_pins]] {lappend keys "$name/$leaf"}
+    } else {lappend keys $name}
+  }
+  return [lsort $keys]
+}
+# TW-HBM-COLLP 10-19: a landed hard child's clock pin may carry only timing checks (a capture domain with no clk->Q arc
+# in the ETM, e.g. the COLL writer's clk_rgx_data* landing captures).  OpenSTA does not list it in all_registers
+# -clock_pins, but it is a Liberty clock pin and an ordinary sink of its region root (the post-CTS SDC measures it and
+# fails closed on unbound or uncounted pins).  Liberty attribute only: no mode-dependent timing-graph query.
+proc ot_ce_check_only_clock_pin {pin} {
+  set lc [get_lib_cells -quiet -of_objects [get_cells -quiet -of_objects $pin]]
+  if {[llength $lc] != 1} {return 0}
+  set name [get_property $pin lib_pin_name]
+  foreach lp [get_lib_pins -quiet -of_objects $lc] {
+    if {[get_property $lp name] eq $name} {return [expr {[get_property $lp is_clock] == 1}]}
+  }
+  return 0
 }
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_ce_cts_orig
@@ -34,6 +72,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set dbu [expr {double([$block getDbUnitsPerMicron])}]
     set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}; set entry_nets {}
     set ::ot_ce_raw_memory_seen [dict create]
+    set ot_ce_unused_hits 0
     set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
     foreach clk [all_clocks] {
       foreach src [get_property $clk sources] {
@@ -56,6 +95,28 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             # Convert the actual instance object rather than reparsing its name.
             set inst [sta::sta_to_db_inst [lindex $cell 0]]
             if {[ot_ce_raw_memory_sink $inst $pin $pname]} {continue}
+            # PL-KIT 10-18 landed cluster (ref_tile clock_entry_constraints.landed_cluster): a bound hard child's clock
+            # pin is an ordinary sink of its region root (the post-CTS SDC measures it at the child's flops); HF-4d 10-19:
+            # so is a bound RAW SRAM clock pin of that child (::ot_ce_landed_raw, leaf closed record; no ETM arcs, judged
+            # post-CTS against its co-timed CTS-root pin)
+            # TW-HBM-COLLP 10-19: so is a CHECK-ONLY Liberty clock pin of that child (setup/hold arcs, no clk->Q, so not in
+            # all_registers), e.g. the COLL writer's clk_rgx_data* landing captures
+            if {[info exists ::ot_ce_landed_cluster] && $::ot_ce_landed_cluster && $inst ne "NULL" && [[$inst getMaster] isBlock]
+                && [info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]]
+                && ([get_full_name $pin] in $regnames
+                    || [ot_ce_check_only_clock_pin $pin]
+                    || ([info exists ::ot_ce_landed_raw]
+                        && [dict exists $::ot_ce_landed_raw "[[$inst getMaster] getName]/[get_property $pin lib_pin_name]"]))} {continue}
+            # HBM-PGLG2 10-19: an UNLOADED input pin of a bound landed hard child (::ot_ce_landed_unused, from the
+            # child's closed-route ROUTED NETLIST via ref_tile clock_entry_constraints.landed_unused_pins: no load, no
+            # arc, never by name) may hang on its region root: not a sink, nothing to time (KIND0 clk_insert_0..3)
+            if {[info exists ::ot_ce_landed_cluster] && $::ot_ce_landed_cluster && $inst ne "NULL" && [[$inst getMaster] isBlock]
+                && [info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]]
+                && [info exists ::ot_ce_landed_unused]
+                && [dict exists $::ot_ce_landed_unused "[[$inst getMaster] getName]/[get_property $pin lib_pin_name]"]} {
+              incr ot_ce_unused_hits
+              continue
+            }
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }
@@ -86,9 +147,10 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
       }
     }
     if {[info exists ::ot_ce_raw_memory_bindings]
-        && [lsort [dict keys $::ot_ce_raw_memory_bindings]] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
+        && [ot_ce_raw_memory_expected] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
       error "OT_HYBRID: declared raw-memory clock sinks were not all reached from their granted source roots"
     }
+    if {$ot_ce_unused_hits} { puts "OT_LANDED UNUSED_PINS $ot_ce_unused_hits unloaded hard-child input pins on region roots (routed-netlist proven; not sinks)" }
     if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
     if {[lsort $cts_seen] ne [lsort $roots]} { error "OT_HYBRID: declared CTS root coverage mismatch" }
     if {[llength $cts_nets]} {

@@ -27,8 +27,15 @@ bit i (bounded ``sync_max_delay_ps``) or payload -> capture register (bounded ``
 ``set_min_delay 0`` and ``-ignore_clock_latency``, from the actual launch register to the actual D pin only, with a
 finite-path proof. No false path, clock group or same-domain exception is generated; every tagged register is checked
 to sit in its declared domain and every declared bit must be seen crossing. Not a physical-closure claim.
+
+With the existing ``seam_windows`` schema, a related 3:4 leaf may also have static bank crossings. The lint admits
+each remaining dependence only from one literal bank source on the declared launch/capture domains. CDC-tagged
+registers cannot use that fallback. Mapped ownership applies both exact CDC bounds and the existing seam bounds,
+requires every group/window to be seen, and leaves negative setup/hold slack visible to signoff. A window declaration
+does not prove its calendar: the tile's behavioural minimum-age and overwrite tests remain required.
 """
 import hashlib
+import fnmatch
 import itertools
 import json
 import os
@@ -181,6 +188,7 @@ def elaborate(root, top, sources, params, yosys):
     with tempfile.TemporaryDirectory(prefix='ot-cdc-sync-') as tmp:
         out = Path(tmp) / 'netlist.json'
         cmd = (f'read_verilog -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+               f'setattr -mod -unset keep_hierarchy; '
                f'proc; flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
@@ -189,10 +197,16 @@ def elaborate(root, top, sources, params, yosys):
 
 
 class Netlist:
-    def __init__(self, document, top, spec):
+    def __init__(self, document, top, spec, macros=None, extended=False):
+        """``extended`` (opt-in, gray_fifo_cdc_constraints extensions only): literal bus-bit clock roots, ``macros``
+        {master: clock pin} of declared hard-macro cells whose outputs become leaves (driver 'macro'), and an iterative
+        cone walk for deep cones. Without it every unmapped cell / non-scalar clock port is refused as before."""
+        self.extended = extended
         m = document['modules'][top]
         self.driver, self.flops, self.consumers = {}, {}, {}
         self.clock_domain = {}
+        self.macros = {}
+        macros = macros or {}
         port_bits = {}
         for name, p in m['ports'].items():
             for b in p['bits']:
@@ -203,6 +217,11 @@ class Netlist:
         for name, d in spec['clock_entry_domains'].items():
             for port in d['ports']:
                 bits = m['ports'].get(port, {}).get('bits', [])
+                bus = re.fullmatch(r'([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]', port)
+                if not bits and extended and bus and bus.group(1) in m['ports'] and not m['ports'][bus.group(1)].get('upto'):
+                    # literal bus-bit root (extension mode only): bit i of an actual input bus port
+                    p, i = m['ports'][bus.group(1)], int(bus.group(2)) - m['ports'][bus.group(1)].get('offset', 0)
+                    bits = [p['bits'][i]] if p['direction'] == 'input' and 0 <= i < len(p['bits']) else []
                 if len(bits) != 1:
                     raise CdcError(f'cdc_synchronizers clock port {port} is not one actual scalar input')
                 self.clock_domain[bits[0]] = name
@@ -219,7 +238,7 @@ class Netlist:
             if f:
                 q = conn['Q'][0]
                 self.flops[q] = dict(cell=cname, d=conn['D'][0], c=conn['C'][0], pos=f.group(1) == 'P',
-                                     r=conn.get('R', [None])[0])
+                                     r=conn.get('R', [None])[0], t=t)
                 self.driver[q] = ('flop', cname)
             elif t in COMB:
                 self.driver[conn['Y'][0]] = ('comb', cname, t, {k: v[0] for k, v in conn.items() if k != 'Y'})
@@ -228,6 +247,16 @@ class Netlist:
                     if c.get('port_directions', {}).get(pin) == 'output':
                         for b in bits:
                             self.driver[b] = ('unsupported', cname, t)
+            elif t in macros:
+                dirs = c.get('port_directions', {})
+                if set(dirs) != set(conn) or any(v not in ('input', 'output') for v in dirs.values()):
+                    raise CdcError(f'cdc_synchronizers macro {cname} ({t}) lacks actual port directions')
+                self.macros[cname] = dict(type=t, clock=macros[t], conn=conn, dirs=dirs)
+                for pin, bits in conn.items():
+                    if dirs[pin] == 'output':
+                        for b in bits:
+                            if isinstance(b, int):
+                                self.driver[b] = ('macro', cname)
             else:
                 raise CdcError(f'cdc_synchronizers unexpected unmapped cell {t}')
         for b, name in port_bits.items():
@@ -277,8 +306,10 @@ class Netlist:
             return frozenset()
         if bit in self._cone:
             return self._cone[bit]
+        if self.extended:
+            return self._cone_iterative(bit)
         drv = self.driver.get(bit)
-        if drv is None or drv[0] in ('flop', 'port'):
+        if drv is None or drv[0] in ('flop', 'port', 'macro'):
             res = frozenset([bit]) if drv else frozenset()
         elif drv[0] == 'unsupported':
             raise CdcError(f'cdc_synchronizers unsupported cell {drv[2]} in a crossing cone')
@@ -287,6 +318,33 @@ class Netlist:
             res = frozenset().union(*(self.cone(b) for b in drv[3].values()))
         self._cone[bit] = res
         return res
+
+    def _cone_iterative(self, bit):
+        """cone() without recursion (deep real cones); a combinational loop contributes nothing, as the guard above."""
+        stack, active = [bit], set()
+        while stack:
+            b = stack[-1]
+            if b in self._cone:
+                stack.pop()
+                continue
+            drv = self.driver.get(b)
+            if drv is None or drv[0] in ('flop', 'port', 'macro'):
+                self._cone[b] = frozenset([b]) if drv else frozenset()
+                stack.pop()
+                continue
+            if drv[0] == 'unsupported':
+                raise CdcError(f'cdc_synchronizers unsupported cell {drv[2]} in a crossing cone')
+            ins = [x for x in drv[3].values() if isinstance(x, int)]
+            if b not in active:
+                active.add(b)
+                todo = [x for x in ins if x not in self._cone and x not in active]
+                if todo:
+                    stack.extend(todo)
+                    continue
+            active.discard(b)
+            self._cone[b] = frozenset().union(*(self._cone.get(x, frozenset()) for x in ins))
+            stack.pop()
+        return self._cone[bit]
 
     def evaluate(self, bit, env, memo):
         if not isinstance(bit, int):
@@ -320,6 +378,12 @@ def lint(spec, root):
     net = Netlist(document, spec['top'], spec)
     role = {}      # flop Q bit -> (group, role, index)
     record = dict(groups={}, roles={}, source_sha256=dict(hashes))
+    # Mixed mode admits only the existing related-clock bank windows alongside exact CDC groups.
+    # It never falls back to the general related-clock exemption for an unclassified dependence.
+    import clock_entry_constraints as C
+    windows = C.seam_windows(spec) or []
+    port_domain = {p: n for n, d in spec['clock_entry_domains'].items() for p in d['ports']}
+    seam_role, seam_seen = {}, set()
     resolved = []
     for g in groups:
         n, sd, dd = g['name'], g['src_domain'], g['dst_domain']
@@ -405,6 +469,21 @@ def lint(spec, root):
                         raise CdcError(f'{lr[0]}: payload {net.key(leaf)} captured on {dom}, not {g[0]["dst_domain"]}')
                     captures.setdefault(q, set()).add(lr[0])
                     continue
+                if windows and not lr and not qr:
+                    names = net.names.get(leaf, []) + [net.flops[leaf]['cell'].lstrip('\\')]
+                    matches = [w for w in windows
+                               if port_domain[w['launch']] == net.domain(leaf)
+                               and port_domain[w['capture']] == dom
+                               and any(fnmatch.fnmatchcase(n, pat) for n in names for pat in w['from'])]
+                    if len(matches) != 1:
+                        raise CdcError(f'cdc_synchronizers seam crossing {net.key(leaf)} -> {net.key(q)} '
+                                       f'matches {len(matches)} windows; exactly one required')
+                    w = matches[0]
+                    if leaf in seam_role and seam_role[leaf] != w['name']:
+                        raise CdcError(f'cdc_synchronizers seam source {net.key(leaf)} belongs to several windows')
+                    seam_role[leaf] = w['name']
+                    seam_seen.add(w['name'])
+                    continue
                 raise CdcError(f'cdc_synchronizers undeclared crossing {net.key(leaf)} ({net.domain(leaf)}) -> '
                                f'{net.key(q)} ({dom})')
     # Gated capture: no source / stage-1 bit, >= one stage >= 2, and payload-independent while no event is in flight.
@@ -446,6 +525,17 @@ def lint(spec, root):
         if not cell.startswith('$'):
             record['roles'].setdefault(cell, list(r))
     record['counts'] = {r: sum(1 for x in role.values() if x[1] == r) for r in ('source', 'sync1', 'payload', 'capture')}
+    if windows:
+        if seam_seen != {w['name'] for w in windows}:
+            raise CdcError('cdc_synchronizers seam windows without actual crossings: '
+                           + str(sorted({w['name'] for w in windows} - seam_seen)))
+        record['seam_roles'] = {}
+        for q, name in seam_role.items():
+            for key in net.names.get(q, []) + [net.flops[q]['cell'].lstrip('\\')]:
+                if not key.startswith('$'):
+                    record['seam_roles'][key] = [name, 'seam', 0]
+        record['seam_windows'] = {w['name']: dict(src=port_domain[w['launch']], dst=port_domain[w['capture']],
+                                                setup=w['setup_q'], hold=w['hold_q']) for w in windows}
     return record
 
 
@@ -469,13 +559,118 @@ MARKER = '  puts "OT_MULTI_ROOT OWNERSHIP PASS roots='
 
 
 def extend(body, spec, root):
-    record = lint(spec, root)
+    # kit generation binds a receipt-cached lint (lint_receipt.py): never re-elaborated on localhost per gen/gate/submit
+    import lint_receipt
+    record = lint_receipt.record(KEY, lint, CdcError, spec, root, _yosys())
     if body.count(CROSSING) != 1 or body.count(MARKER) != 1:
         raise CdcError('cdc_synchronizers multi-root crossing gate changed; revalidate extension')
     body = body.replace(CROSSING, '          ot_cdc_crossing $start $pin $source $cell $source_domain $expected\n'
                                   '          continue\n')
     body = body.replace(MARKER, '  ot_cdc_complete $cells\n' + MARKER)
-    return bindings(record) + TCL + '\n' + body
+    extra = ''
+    tcl = TCL
+    if spec.get('seam_windows') is not None:
+        if not record.get('seam_windows'):
+            raise CdcError('mixed seam/CDC requires a fresh structurally linted seam receipt')
+        roles = ' '.join(_word(k) + ' {' + ' '.join(map(str, r)) + '}'
+                         for k, r in sorted(record['seam_roles'].items()))
+        windows = ' '.join('{' + n + '} {' + ' '.join(f'{k} {v}' for k, v in w.items()) + '}'
+                           for n, w in sorted(record['seam_windows'].items()))
+        extra = f'set ::ot_cdc_seam_roles [dict create {roles}]\nset ::ot_cdc_seams [dict create {windows}]\n'
+        # Use exactly the same mapped-register identity resolver as CDC; keep the namespaces disjoint.
+        resolver = TCL[TCL.index('proc ot_cdc_role '):TCL.index('proc ot_cdc_bound ')]
+        extra += resolver.replace('ot_cdc_role', 'ot_cdc_seam_role').replace('::ot_cdc_roles', '::ot_cdc_seam_roles')
+        extra += MIXED_TCL
+        tcl = tcl.replace('  if {$sg eq "" || $sg ne $tg}',
+                          '  if {$sg eq "" && $tg eq ""} {\n'
+                          '    ot_cdc_seam_crossing $start $pin $source $target $source_domain $target_domain\n'
+                          '    return\n  }\n  if {$sg eq "" || $sg ne $tg}')
+        body = body.replace('  ot_cdc_complete $cells\n', '  ot_cdc_complete $cells\n  ot_cdc_seam_complete\n')
+    # The flow's sole top wrapper (ref_tile.pin_wrapper / ot_pin_regs.tcl) adds this exact namespace once.
+    # The original RTL lint has no wrapper, so admit its identities after stripping ONLY that known prefix.
+    wrapped = any(isinstance(spec.get(k), dict) and spec[k].get('enable') is True
+                  for k in ('pin_regs', 'reset_landing'))
+    if wrapped:
+        for key in ('pin_regs', 'reset_landing'):
+            if isinstance(spec.get(key), dict) and spec[key].get('enable') not in (True, False, None):
+                raise CdcError('CDC flow wrapper enable must be a boolean')
+        def normalize(text):
+            text = text.replace('  set names [list $full]\n',
+                                '  set names [ot_cdc_flow_names $full]\n')
+            text = text.replace('        if {[dict exists $::ot_cdc_roles $n]} {dict set roles [dict get $::ot_cdc_roles $n] 1}',
+                                '        foreach name [ot_cdc_flow_names $n] {\n'
+                                '          if {[dict exists $::ot_cdc_roles $name]} {dict set roles [dict get $::ot_cdc_roles $name] 1}\n        }')
+            text = text.replace('        if {[dict exists $::ot_cdc_seam_roles $n]} {dict set roles [dict get $::ot_cdc_seam_roles $n] 1}',
+                                '        foreach name [ot_cdc_flow_names $n] {\n'
+                                '          if {[dict exists $::ot_cdc_seam_roles $name]} {dict set roles [dict get $::ot_cdc_seam_roles $name] 1}\n        }')
+            return text
+        extra = FLOW_WRAPPER_TCL + normalize(extra)
+        tcl = normalize(tcl)
+    return bindings(record) + extra + tcl + '\n' + body
+
+
+FLOW_WRAPPER_TCL = r'''
+proc ot_cdc_flow_names {name} {
+  set names [list $name]
+  if {[regsub {^u_ot_pr_core[./]} $name {} core]} {
+    lappend names $core
+    if {[regexp {^([^$]+)\$} $core -> base]} {lappend names $base}
+  }
+  # Logical lint flattens module hierarchy with dots; mapped kept cells use slashes.
+  foreach n $names {if {[string first / $n] >= 0} {lappend names [string map {/ .} $n]}}
+  return $names
+}
+'''
+
+
+MIXED_TCL = r'''
+# Every non-CDC dependence is an exact linted bank-source / domain pair; ordinary related data is not exempted.
+set ::ot_cdc_seam_seen {}
+set ::ot_cdc_seam_pending {}
+proc ot_cdc_seam_crossing {start pin source target source_domain target_domain} {
+  lassign [ot_cdc_seam_role $source] name role index
+  if {$name eq "" || ![dict exists $::ot_cdc_seams $name]} {
+    error "OT_CDC_SEAM: undeclared crossing $source -> $target"
+  }
+  set w [dict get $::ot_cdc_seams $name]
+  if {$source_domain ne [dict get $w src] || $target_domain ne [dict get $w dst]} {
+    error "OT_CDC_SEAM: wrong clock domains $source -> $target"
+  }
+  set launch [get_cells -quiet -of_objects $start]
+  if {[llength $launch] != 1} {error "OT_CDC_SEAM: missing unique bank register"}
+  set q [expr {[get_property [get_clocks core_clk] period] / 3.0}]
+  # Same latency-inclusive semantics as seam_window_sdc, narrowed to this actual launch and capture D pin.
+  set max_bound [expr {[dict get $w setup] * $q}]
+  set min_bound [expr {-[dict get $w hold] * $q}]
+  set_max_delay $max_bound -from $launch -to $pin
+  set_min_delay $min_bound -from $launch -to $pin
+  # Install every exact constraint before timing verification: changing constraints per
+  # query invalidates the full timing graph (SAFE3: >4 hours in CDC_SEAM enumeration).
+  lappend ::ot_cdc_seam_pending [list $launch $pin $source $target]
+  dict incr ::ot_cdc_seam_seen $name
+  puts "OT_CDC_SEAM BOUNDED $name $source -> $target"
+}
+proc ot_cdc_seam_verify {} {
+  foreach item $::ot_cdc_seam_pending {
+    lassign $item launch pin source target
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} continue
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_CDC_SEAM: missing finite bounded $kind path $source -> $target"
+      }
+    }
+  }
+  set ::ot_cdc_seam_pending {}
+}
+proc ot_cdc_seam_complete {} {
+  ot_cdc_seam_verify
+  dict for {name window} $::ot_cdc_seams {
+    if {![dict exists $::ot_cdc_seam_seen $name]} {error "OT_CDC_SEAM: missing actual bank window $name"}
+  }
+  puts "OT_CDC_SEAM STRUCTURAL_PASS $::ot_cdc_seam_seen (finite bounded paths, physical slack checked at signoff)"
+}
+'''
 
 
 TCL = r'''
@@ -483,6 +678,7 @@ TCL = r'''
 # sources (Gray source, >= 2-stage destination chain, payload published with the count, capture gated by the
 # synchronised count). Every actual crossing must match a tagged pair; no other path receives an exception.
 set ::ot_cdc_seen {}
+set ::ot_cdc_pending {}
 proc ot_cdc_role {cell} {
   set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
   set names [list $full]
@@ -507,16 +703,23 @@ proc ot_cdc_bound {start target bound} {
   if {[llength $launch] != 1} {error "OT_CDC: missing unique launch register"}
   set_max_delay -ignore_clock_latency $bound -from $launch -to $target
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_CDC PATH_DEFERRED [get_full_name $start] -> [get_full_name $target] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_CDC: missing finite bounded $kind path [get_full_name $start] -> [get_full_name $target]"
+  lappend ::ot_cdc_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+}
+proc ot_cdc_verify {} {
+  foreach item $::ot_cdc_pending {
+    lassign $item launch target sname tname
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_CDC PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_CDC: missing finite bounded $kind path $sname -> $tname"
+      }
     }
   }
+  set ::ot_cdc_pending {}
 }
 proc ot_cdc_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
@@ -540,6 +743,7 @@ proc ot_cdc_crossing {start pin source target source_domain target_domain} {
   puts "OT_CDC BOUNDED $sg $sr -> $tr $source -> $target"
 }
 proc ot_cdc_complete {cells} {
+  ot_cdc_verify
   # Every tagged register sits in its declared domain (a tag on a same-domain path is refused here).
   dict for {cell domain} $cells {
     lassign [ot_cdc_role $cell] g r i

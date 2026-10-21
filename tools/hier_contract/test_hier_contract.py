@@ -219,6 +219,65 @@ class ThinTileRowSpan(unittest.TestCase):
         self.assertIn("b", {f[1] for f in r["fails"]})
 
 
+class PinStubIndex(unittest.TestCase):
+    """PINSTUB-INDEX (DAEMON-FIX2 2026-10-19): move_stubs uses a binned pin index; same result as the all-pairs scan,
+    and a 46-MB-class view (1.1 M OBS rects x 5,288 pins timed out the daemon's 600-s pin_stub_fix) runs in seconds"""
+
+    @staticmethod
+    def brute(head, obs, pins):
+        import abstract_pin_stub as APS
+        class Every(dict):              # every cell holds every pin = the old all-pairs scan
+            def get(self, _k, _d=None):
+                return set(range(len(pins)))
+        orig = APS.pin_index
+        APS.pin_index = lambda ps: {l: Every({0: 0}) for rs in ps.values() for l, *_ in rs}
+        try:
+            return APS.move_stubs(head, obs, pins)
+        finally:
+            APS.pin_index = orig
+
+    def case(self, rnd, npins, nobs):
+        pins = {}
+        for k in range(npins):
+            rs = []
+            for _ in range(rnd.randint(1, 3)):
+                x, y = round(rnd.uniform(-3, 20), 3), round(rnd.uniform(-3, 20), 3)
+                rs.append((rnd.choice(["M4", "M5", "M6"]), x, y, round(x + rnd.uniform(.01, 3), 3), round(y + rnd.uniform(.01, 3), 3)))
+            pins[f"p{k}"] = rs
+        head = "MACRO t\n" + "".join(f"  PIN {p}\n    PORT\n    END\n  END {p}\n" for p in pins)
+        lines = ["  OBS"]
+        for lay in ["M1", "M4", "M5", "M6"]:
+            lines.append(f"    LAYER {lay} ;")
+            for _ in range(rnd.randint(0, nobs)):
+                x, y = round(rnd.uniform(-3, 22), 3), round(rnd.uniform(-3, 22), 3)
+                lines.append(f"      RECT  {x} {y} {round(x + rnd.uniform(.01, 6), 3)} {round(y + rnd.uniform(.01, 6), 3)} ;")
+        return head, "\n" + "\n".join(lines + ["  END"]), pins
+
+    def test_index_equals_all_pairs(self):
+        import random
+        import abstract_pin_stub as APS
+        rnd, moved = random.Random(7), 0
+        for _ in range(200):
+            head, obs, pins = self.case(rnd, rnd.randint(1, 30), 40)
+            got = APS.move_stubs(head, obs, pins)
+            self.assertEqual(got, self.brute(head, obs, pins))
+            moved += len(got[2])
+        self.assertGreater(moved, 100)
+
+    def test_large_view_is_fast(self):
+        import time
+        import abstract_pin_stub as APS
+        pins = {f"p{k}": [("M5", k * 0.1, 0.0, k * 0.1 + 0.02, 0.5)] for k in range(5000)}
+        head = "MACRO t\n" + "".join(f"  PIN {p}\n    PORT\n    END\n  END {p}\n" for p in pins)
+        obs = "\n  OBS\n    LAYER M1 ;\n" + "".join(f"      RECT  {i % 500} {i // 500} {i % 500 + .5} {i // 500 + .5} ;\n"
+                                                    for i in range(200000)) \
+            + "    LAYER M5 ;\n" + "".join(f"      RECT  {i * 0.1} 0.4 {i * 0.1 + 0.01} 0.6 ;\n" for i in range(20000)) + "  END"
+        t0 = time.time()
+        _h, _o, moved = APS.move_stubs(head, obs, pins)
+        self.assertEqual(len(moved), 5000)
+        self.assertLess(time.time() - t0, 60)
+
+
 class Pockets(unittest.TestCase):
     """abstract_pin_stub pocket closing + child_lint (h)"""
     # two M5 blocks 0.5 um apart (pocket), M5 pin 'p' on the west face inside a 0.3-um slot, PG on M7 (not an obstacle)
@@ -263,6 +322,22 @@ class Pockets(unittest.TestCase):
         # the 0.3-um slot between the two west bars IS closed away from the pin
         self.assertTrue(any(r[1] >= 4.4 - 1e-9 and r[3] <= 4.7 + 1e-9 and r[2] > 2 for r in added), added)
         self.assertEqual(self.close(out), out)  # idempotent
+
+    def test_pin_keepout_is_wide_spacing(self):
+        """KV-ECTL5 (DRT-0073 u_a/req_t[10]): the fill keeps >= the wide-metal spacing (2 M5 pitches = 0.096) free beside
+        a pin, so no fill rect sits closer than 0.072 um to it; the old one-pitch (0.048) keep-out did"""
+        import abstract_pin_stub as APS
+        self.assertEqual(APS.keep_um("M5"), 0.096)
+        self.assertEqual(APS.keep_um("M6"), 0.128)
+        self.assertEqual(APS.keep_um("M3"), 0.036)
+        out = self.close(self.text())
+        self.assertEqual(APS.pin_spacing_violations(out), [])
+        added = [r for r in self.m5(out) if r not in [o[1:] for o in self.OBS]]
+        keep = (0 - 0.096, 4.5 - 0.096, 0.192 + 0.096, 4.524 + 0.096)
+        self.assertFalse([r for r in added if APS._ov(r, keep)])
+        # a wide M5 OBS one pitch beside the M5 pin (vertical layer: side by side in x) is reported
+        bad = APS.pin_spacing_violations(self.text(obs=self.OBS + [("M5", 0.24, 4.0, 1.0, 5.0)]))
+        self.assertTrue(any(v[0] == "p" and v[1] == "M5" for v in bad), bad)
 
     def test_wide_gap_and_single_obstacle_untouched(self):
         import abstract_pin_stub as APS

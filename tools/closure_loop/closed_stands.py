@@ -80,7 +80,7 @@ def receipt_metrics(src, cell, show, commit):
     def walk(x):
         if isinstance(x, dict):
             if cell in (x.get("cell"), x.get("lib_cell")):
-                for k in ("capture_ps", "launch_ps", "spread_ps"):
+                for k in ("capture_ps", "launch_ps", "spread_ps", "ff_spread_ps"):
                     if _num(x.get(k)):
                         best[k] = max(best.get(k, float("-inf")), float(x[k]))
             for v in x.values():
@@ -91,6 +91,110 @@ def receipt_metrics(src, cell, show, commit):
     walk(doc)
     return best
 
+
+
+def committed_native_fail(rr, show, commit):
+    """(ROOT-0745 2026-10-18) the native-audit FAIL a COMMITTED receipt records for rr["cell"]: a list of the metrics
+    over budget (capture at the pin + R, launch at phi - R, TT / FF pin-flop spread), or [] when the receipt is not a
+    committed file (an absolute path is a local file, not evidence), has no record of the cell, or records a PASS."""
+    src, cell = str(rr.get("source") or "").strip(), str(rr.get("cell") or "").strip()
+    if not src or not cell or src.startswith("/"):
+        return []
+    met = receipt_metrics(src, cell, show, commit)
+    return [f"{k} {met[k]} ps > {lim:.0f}" for k, lim in (("capture_ps", TL.PIN_CAPTURE_MAX_PS),
+                                                          ("launch_ps", TL.PIN_LAUNCH_MAX_PS),
+                                                          ("spread_ps", TL.CLK_SPREAD_MAX_PS),
+                                                          ("ff_spread_ps", TL.CLK_SPREAD_MAX_PS))
+            if k in met and met[k] > lim]
+
+
+
+def native_reach_evidence(rr, show, commit, closed_job, block):
+    """Read only committed exact-job evidence; admission does not qualify the new route."""
+    import hashlib
+    import json
+    import math
+
+    def read(path):
+        if not isinstance(path, str) or not path or path.startswith("/") or "\\" in path or any(
+                p in ("", ".", "..") for p in path.split("/")):
+            raise ValueError("receipt paths must be relative committed paths without traversal")
+        text = show(commit, path)
+        if not isinstance(text, str):
+            raise ValueError("receipt is not committed at the submitted source")
+        return text, json.loads(text)
+
+    try:
+        _, proof = read(rr.get("source"))
+        if not isinstance(proof, dict) or proof.get("schema") != "opentallas.native_reach_reroute.v1":
+            raise ValueError("expected native_reach_reroute.v1 provenance wrapper")
+        source = proof.get("closed_source_commit")
+        if (proof.get("closed_job") != closed_job.get("name") or proof.get("block") != block or
+                not isinstance(source, str) or not re.fullmatch(r"[0-9a-f]{40}", source) or
+                not _commit(closed_job) or not source.startswith(_commit(closed_job))):
+            raise ValueError("receipt closed job / source / block differs from the exact closed view")
+        text, audit = read(proof.get("native_receipt"))
+        if hashlib.sha256(text.encode()).hexdigest() != proof.get("native_receipt_sha256"):
+            raise ValueError("native receipt SHA256 differs from provenance wrapper")
+        odb = proof.get("odb_sha256")
+        if (not isinstance(audit, dict) or audit.get("schema") != "opentallas.native_all_driver_endpoint_audit.v5" or
+                not isinstance(odb, str) or not re.fullmatch(r"[0-9a-f]{64}", odb) or audit.get("odb_sha256") != odb):
+            raise ValueError("native receipt schema / exact ODB SHA256 differs")
+        if (not isinstance(audit.get("drivers"), int) or isinstance(audit.get("drivers"), bool) or audit["drivers"] <= 0 or
+                not isinstance(audit.get("native_cells"), int) or isinstance(audit.get("native_cells"), bool) or audit["native_cells"] <= 0 or
+                audit.get("missing_or_unknown") != [] or audit.get("unknown_std_masters") != []):
+            raise ValueError("native_reach requires complete all-driver native census, without missing/unknown endpoints or masters")
+        for key in ("max_L1_pin_centers_um", "max_L1_pin_bbox_upper_um"):
+            if not _num(audit.get(key)) or not math.isfinite(audit[key]):
+                raise ValueError("native_reach requires finite all-path summary metrics")
+        rows = audit.get("reach_over405")
+        if not isinstance(rows, list) or not rows:
+            raise ValueError("native receipt records no reach violation: closed view stands")
+        for row in rows:
+            if not isinstance(row, dict):
+                raise ValueError("malformed native path row")
+            distance = row.get("max_L1_pin_centers_um")
+            if (not _num(distance) or not math.isfinite(distance) or distance <= 405 or
+                    not isinstance(row.get("driver"), str) or not row["driver"].strip() or
+                    not isinstance(row.get("worst_sink"), str) or not row["worst_sink"].strip() or
+                    not isinstance(row.get("endpoints"), list) or row["worst_sink"] not in row["endpoints"]):
+                raise ValueError("native path needs named driver/sink and finite measured reach >405 um")
+        return len(rows), None
+    except (ValueError, TypeError, KeyError, OSError) as exc:
+        return 0, str(exc)
+
+
+def native_reach_geometry(spec, old_spec, show, commit, old_commit):
+    """Compare literal source-pinned pin coordinate ranges on the actual two route kits."""
+    import json
+    import math
+    try:
+        plans = []
+        for sp, ref in ((spec, commit), (old_spec, old_commit)):
+            cmd = sp["stages"]["route"]["cmd"]
+            match = KIT_RE.search(cmd)
+            if not match:
+                raise ValueError("native_reach needs source-pinned ref_tile kits")
+            path = match.group(1) + "/spec.json"
+            plan = json.loads(show(ref, path) or "null")
+            if not isinstance(plan, dict) or plan.get("top") != spec.get("block"):
+                raise ValueError("route kit spec.json missing or top differs")
+            ranges = plan.get("pin_ranges")
+            if not isinstance(ranges, dict) or not ranges:
+                raise ValueError("source-pinned pin coordinate ranges missing")
+            for pair in ranges.values():
+                if (not isinstance(pair, list) or len(pair) != 2 or
+                        not all(_num(v) and math.isfinite(v) for v in pair) or not 0 <= pair[0] < pair[1]):
+                    raise ValueError("pin coordinate ranges must be finite ordered nonnegative pairs")
+            plans.append(plan)
+        new, old = plans
+        if new.get("outline") != old.get("outline") or new.get("pins") != old.get("pins"):
+            raise ValueError("native_reach preserves outline and pin faces; use slot_change for changed slots")
+        if set(new["pin_ranges"]) != set(old["pin_ranges"]) or new["pin_ranges"] == old["pin_ranges"]:
+            raise ValueError("no verified change of existing pin coordinates in source-pinned route kits")
+        return sorted(k for k in new["pin_ranges"] if new["pin_ranges"][k] != old["pin_ranges"][k]), None
+    except (ValueError, TypeError, KeyError, OSError) as exc:
+        return [], str(exc)
 
 
 def pin_wrapper_args(text):
@@ -140,6 +244,9 @@ def route_recipe(spec, show):
         return dict(r, geom={}) if r else None
     except Exception:  # noqa: BLE001
         return None
+
+
+ACTIVE_STATES = ("READY", "RUNNING", "SYNC", "MIGRATING", "QUEUED", "PENDING")  # a job still in the loop has not failed
 
 
 def published(j):
@@ -350,7 +457,11 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             if old_custom["status"] == "verified" and old_regions["faces"]:
                 return refuse("slot_change closed custom IO plus nonempty pin-region rules are ambiguous")
             if custom["status"] != "absent" or old_custom["status"] != "absent":
-                comparison = custom_io_faces.compare(custom, old_custom)
+                # (RESUB-2 2026-10-19) a literal custom IO kit against a pin-region kit: the pin regions are the
+                # other side's literal face map (qfd_d2d_static r9j custom IO vs closed r8c regions)
+                comparison = custom_io_faces.compare(
+                    custom if custom["status"] != "absent" else custom_io_faces.regions_as_map(regions),
+                    old_custom if old_custom["status"] != "absent" else custom_io_faces.regions_as_map(old_regions))
                 face_evidence[closed_name] = comparison
                 facts["custom_io_face_comparisons"] = face_evidence
                 if comparison["status"] == "unverified":
@@ -430,9 +541,17 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
         if not _num(lw) or lw <= TL.PIN_LAUNCH_MAX_PS:
             return refuse(f"native_launch needs the view's measured worst \"launch_ps\" > {TL.PIN_LAUNCH_MAX_PS} "
                           f"(got {lw!r}); a capture-only miss is pin_register")
+        rtl_note = f"same RTL ({rtl[last['name']][0]})"
         if rtl[last["name"]][0] == "differs":
-            return refuse("native_launch is a re-kit of the closed RTL, but " + rtl[last["name"]][1]
-                          + " (a changed block is rtl_change)")
+            # (ROOT-0745 2026-10-18, relaxing) a closed view that FAILS its committed native audit cannot bind into the
+            # die whatever else changed: the RTL difference (often a default-off parameter of a shared wrapper) does not
+            # make the re-route a repeat.  Without a committed FAIL receipt the old refusal stands.
+            fail = committed_native_fail(rr, show, new_commit)
+            if not fail:
+                return refuse("native_launch is a re-kit of the closed RTL, but " + rtl[last["name"]][1]
+                              + " (a changed block is rtl_change; or cite a COMMITTED native audit receipt that "
+                              "records the closed view's FAIL)")
+            rtl_note = f"RTL differs ({rtl[last['name']][1]}) but committed receipt FAIL {'; '.join(fail)}"
         g_new = (new_rec or {}).get("geom") or {}
         g_old = (recs[last["name"]] or {}).get("geom") or {}
         moved = sorted(k for k in ("FW", "FH", "PINS") if g_new.get(k) != g_old.get(k))
@@ -457,9 +576,11 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             if "pin_reg_split.tcl" in old_gpl and ("leaf_iohold.tcl" in old_gpl or "leaf_iohold.tcl" not in gpl):
                 return refuse(f"native_launch: closed {last['name']} already had the recipe-2 output stage; the launch "
                               f"miss has another cause (pin_register with the measured fix)")
-        return admit(f"{rr['cell']} TT launch {lw} ps > {TL.PIN_LAUNCH_MAX_PS} at phi - R ({rr['source']}); same RTL "
-                     f"({rtl[last['name']][0]}), same outline / pins, kit re-generated with the recipe-2 output stage")
-    if kind == "native_capture":
+        return admit(f"{rr['cell']} TT launch {lw} ps > {TL.PIN_LAUNCH_MAX_PS} at phi - R ({rr['source']}); {rtl_note}, "
+                     f"same outline / pins, kit re-generated with the recipe-2 output stage")
+    if kind in ("native_capture", "native_spread"):
+        # native_spread (ROOT-0745 2026-10-18): the same check for a view whose native audit fails on the TT / FF
+        # pin-flop spread (clock rule 0dq); it must cite a receipt whose spread is over budget.
         # (coordinator 2026-10-16, S81 ctrnown_e a5/a6) a CLOSED view over the native CAPTURE budget (TT setup at the
         # pin + R > 190 ps) with the same RTL / outline / pin faces.  native_launch covers launch only and pin_register
         # needs a large o + s; this kind mirrors native_launch and reads the committed audit receipt itself.
@@ -482,15 +603,26 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
         # the pin + R, launch at phi - R, or boundary clock spread over budget -- any one is a defect of the VIEW
         over = [f"{k} {met[k]} ps > {lim:.0f}" for k, lim in (("capture_ps", TL.PIN_CAPTURE_MAX_PS),
                                                               ("launch_ps", TL.PIN_LAUNCH_MAX_PS),
-                                                              ("spread_ps", TL.CLK_SPREAD_MAX_PS))
+                                                              ("spread_ps", TL.CLK_SPREAD_MAX_PS),
+                                                              ("ff_spread_ps", TL.CLK_SPREAD_MAX_PS))
                 if k in met and met[k] > lim]
+        if kind == "native_spread" and not any(o.startswith(("spread_ps", "ff_spread_ps")) for o in over):
+            return refuse(f"native_spread: the receipt records {', '.join(f'{k} {v}' for k, v in sorted(met.items()))} "
+                          f"for {rr['cell']}: no TT / FF pin-flop spread over {TL.CLK_SPREAD_MAX_PS:.0f} "
+                          f"(a capture / launch miss is native_capture / native_launch)")
         if not over:
-            return refuse(f"native_capture: the receipt records {', '.join(f'{k} {v}' for k, v in sorted(met.items()))} "
+            return refuse(f"{kind}: the receipt records {', '.join(f'{k} {v}' for k, v in sorted(met.items()))} "
                           f"for {rr['cell']}, within capture {TL.PIN_CAPTURE_MAX_PS:.0f} / launch "
                           f"{TL.PIN_LAUNCH_MAX_PS:.0f} / spread {TL.CLK_SPREAD_MAX_PS:.0f}: the closed view stands")
+        rtl_note = f"same RTL ({rtl[last['name']][0]})"
         if rtl[last["name"]][0] == "differs":
-            return refuse("native_capture is a re-kit of the closed RTL, but " + rtl[last["name"]][1]
-                          + " (a changed block is rtl_change)")
+            # (ROOT-0745 2026-10-18, relaxing; hsm_smvm_wrq_t4_r1 q5) the FAIL above comes from a COMMITTED receipt ->
+            # the closed view cannot bind into the die, and an RTL difference does not make the re-route a repeat.
+            if not committed_native_fail(rr, show, new_commit):
+                return refuse(f"{kind} is a re-kit of the closed RTL, but " + rtl[last["name"]][1]
+                              + " (a changed block is rtl_change; or cite a COMMITTED native audit receipt that "
+                              "records the closed view's FAIL)")
+            rtl_note = f"RTL differs ({rtl[last['name']][1]}), committed receipt"
         g_new = (new_rec or {}).get("geom") or {}
         g_old = (recs[last["name"]] or {}).get("geom") or {}
         moved = sorted(k for k in ("FW", "FH") if g_new.get(k) != g_old.get(k))
@@ -509,10 +641,162 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             else:
                 pins_note = "pin positions moved on the same faces"
         if g_new and g_old and moved:
-            return refuse(f"native_capture keeps the closed outline and pin faces, but {', '.join(moved)} differ from "
+            return refuse(f"{kind} keeps the closed outline and pin faces, but {', '.join(moved)} differ from "
                           f"closed {last['name']} (a moved outline / pin face is slot_change)")
-        return admit(f"{rr['cell']} native audit FAIL: {'; '.join(over)} (receipt {rr['source']}); same RTL "
-                     f"({rtl[last['name']][0]}), same outline, {pins_note}; fix: {rr['fix'].strip()[:200]}")
+        return admit(f"{rr['cell']} native audit FAIL: {'; '.join(over)} (receipt {rr['source']}); {rtl_note}, "
+                     f"same outline, {pins_note}; fix: {rr['fix'].strip()[:200]}")
+    if kind == "native_reach":
+        # A physical-only repair of a measured native reach miss. Admission is
+        # scoped to exact committed closed-view evidence and changed coordinates;
+        # fresh gate, native census, source binding and route qualification still run.
+        if not txt("fix", 8):
+            return refuse("native_reach needs fix: the physical repair, with its schedule cost")
+        if rtl[last["name"]][0] != "same" or _same_params(new_rec, recs[last["name"]]) is not True:
+            return refuse("native_reach requires verified identical RTL and parameters; use rtl_change for logic changes")
+        count, error = native_reach_evidence(rr, show, new_commit, last, blk)
+        if error:
+            return refuse("native_reach: " + error)
+        changed, error = native_reach_geometry(spec, last.get("spec_submitted") or last["spec"],
+                                                show, new_commit, _commit(last))
+        if error:
+            return refuse("native_reach: " + error)
+        before, after = (recs[last["name"]] or {}).get("geom") or {}, (new_rec or {}).get("geom") or {}
+        if not before or not after or any(before.get(k) != after.get(k) for k in ("FW", "FH", "PIN_H", "PIN_V")):
+            return refuse("native_reach requires the same source-pinned outline and pin layers")
+        if before.get("PINS") != after.get("PINS"):
+            faces = [custom_io_faces.regions(g.get("PINS", "()")) for g in (before, after)]
+            if any(f.get("status") != "verified" for f in faces) or faces[0]["faces"] != faces[1]["faces"]:
+                return refuse("native_reach requires independently verified unchanged route pin faces")
+        return admit(f"{count} native driver/endpoint paths exceed 405 um in exact closed-view receipt {rr['source']}; "
+                     f"same RTL/parameters/outline/faces, changed pin coordinates {', '.join(changed)}; "
+                     f"fix: {rr['fix'][:200]}; admission only, fresh gate/native qualification required")
+    if kind == "pg_binding":
+        # (ROOT3 2026-10-19, KV-HOST2 / KV-CLOSED-PG-AUDIT; Gate-Rule: relaxing, submit-time only) a CLOSED view whose
+        # final ODB carries native VDD/VSS terminals with no net (hold_eco / vtswap_eco wrote it without global_connect
+        # before b670c1b4f): a COMMITTED native PG-binding audit records the unbound terminals, and the same RTL / outline
+        # is re-closed with the fixed flow.  The timing verdict stands; the re-route only re-makes a view that can bind.
+        if not txt("source", 3) or rr["source"].strip().startswith("/"):
+            return refuse("pg_binding needs \"source\": the COMMITTED native PG-binding audit summary JSON of the closed "
+                          "view (e.g. results/arch/kv_closed_pg_audit_1019/<leaf>/summary.json)")
+        src = rr["source"].strip()
+
+        def read(path):
+            for ref in (new_commit, "origin/main"):
+                try:
+                    t = show(ref, path) if ref else None
+                except Exception:  # noqa: BLE001
+                    t = None
+                if t:
+                    return t
+            return None
+        text = read(src)
+        if not text:
+            return refuse(f"pg_binding source {src!r} is not readable at the job's commit or origin/main")
+        try:
+            import json as _json
+            doc = _json.loads(text)
+        except ValueError:
+            return refuse(f"pg_binding source {src!r} is not a JSON audit summary")
+        st = doc.get("statuses") if isinstance(doc, dict) else None
+        unbound = 0
+        if isinstance(st, dict):
+            unbound = sum(int(v) for k, v in st.items() if k != "PASS" and _num(v))
+        for k in ("unbound", "missing_bindings", "unbound_pg_terminals"):
+            if isinstance(doc, dict) and _num(doc.get(k)):
+                unbound = max(unbound, int(doc[k]))
+        if unbound <= 0:
+            return refuse(f"pg_binding: the audit {src!r} records no unbound native PG terminal: the closed view stands")
+        names = text + (read(src.rsplit("/", 1)[0] + "/committed_verdict.json") or "" if "/" in src else "")
+        if not any(re.search(r"(?<![A-Za-z0-9_])" + re.escape(str(n)) + r"(?![A-Za-z0-9_])", names)
+                   for n in (last["name"], blk) if n):
+            return refuse(f"pg_binding: the audit {src!r} (and its committed_verdict.json) names neither closed "
+                          f"{last['name']} nor {blk}")
+        if not txt("fix", 20):
+            return refuse("pg_binding needs \"fix\": the flow change that binds every native PG terminal before the "
+                          "final artifacts (e.g. hold/vtswap ECO global_connect b670c1b4f)")
+        if rtl[last["name"]][0] == "differs":
+            return refuse(f"pg_binding re-closes the closed design, but the RTL differs from closed {last['name']} "
+                          f"({rtl[last['name']][1]}): that is rtl_change")
+        g_new, g_old = (new_rec or {}).get("geom") or {}, (recs[last["name"]] or {}).get("geom") or {}
+        moved = [k for k in ("FW", "FH") if g_new.get(k) != g_old.get(k)]
+        if g_new and g_old and moved:
+            return refuse(f"pg_binding keeps the closed outline, but {', '.join(moved)} differ from closed "
+                          f"{last['name']} (a moved outline is slot_change)")
+        return admit(f"closed {last['name']} has {unbound} unbound native PG terminals (audit {src}); "
+                     f"{rtl[last['name']][1]}, same outline; fix: {rr['fix'].strip()[:200]}")
+    if kind == "pin_order":
+        # (REFILL-0400/PO-LINK 2026-10-19, pin_order rule c81a8f458; Gate-Rule: relaxing, submit-time only) a CLOSED
+        # view whose own bus bit order is chunk-scrambled on an abutted joint (PPL ordered groups do not keep chunk
+        # order): the abutted-joint audit (tools/hier_contract/abutted_joint_audit.py) names it, and the same RTL /
+        # outline / pin faces are re-kitted with an ordered bit layout (route.pin_balance or an exact io_tcl).
+        if not txt("source", 3) or rr["source"].strip().startswith("/"):
+            return refuse("pin_order needs \"source\": the COMMITTED abutted-joint audit hand-off / JSON that names the "
+                          "view (results/arch/abutted_joints_<date>/handoff_<die>.md)")
+        src = rr["source"].strip()
+        text = None
+        for ref in (new_commit, "origin/main"):
+            try:
+                text = show(ref, src) if ref else None
+            except Exception:  # noqa: BLE001
+                text = None
+            if text:
+                break
+        if not text:
+            return refuse(f"pin_order source {src!r} is not readable at the job's commit or origin/main")
+        if not re.search(r"(?<![A-Za-z0-9_])" + re.escape(str(blk)) + r"(?![A-Za-z0-9_])", text):
+            return refuse(f"pin_order: the audit {src!r} does not name {blk}")
+        if not txt("fix", 20):
+            return refuse("pin_order needs \"fix\": the ordered layout the new kit uses (route.pin_balance + per-port "
+                          "pin_ranges, mirrored range / pin_order_desc, or an exact io_tcl)")
+        if rtl[last["name"]][0] == "differs":
+            return refuse(f"pin_order is a pin-layout re-kit, but the RTL differs from closed {last['name']} "
+                          f"({rtl[last['name']][1]}): that is rtl_change")
+
+        def kit_env(sp):
+            m = KIT_RE.search(((sp.get("stages") or {}).get("route") or {}).get("cmd") or "")
+            c = str((sp.get("source") or {}).get("commit") or "")
+            try:
+                return show(c, f"{m.group(1)}/kit.env") if m else None
+            except Exception:  # noqa: BLE001
+                return None
+        ordered = lambda e: bool(e) and ("OT_PIN_BALANCE_H=" in e or re.search(r"^PINEX=0\s*$", e, re.M))  # noqa: E731
+        new_env, old_env = kit_env(spec), kit_env(last.get("spec_submitted") or last["spec"])
+        if not ordered(new_env):
+            return refuse("pin_order: the new kit.env has no ordered bit layout (OT_PIN_BALANCE_H from route.pin_balance, "
+                          "or PINEX=0 from an exact io_tcl)")
+        if ordered(old_env):
+            return refuse(f"pin_order: closed {last['name']} already had an ordered bit layout; a re-route repeats it "
+                          f"(fix the neighbour's range / pin_order_desc, or the die netlist's bit mapping)")
+        g_new, g_old = (new_rec or {}).get("geom") or {}, (recs[last["name"]] or {}).get("geom") or {}
+        f_new = ((new_rec or {}).get("pin_regions") or {}).get("faces")
+        f_old = ((recs[last["name"]] or {}).get("pin_regions") or {}).get("faces")
+        moved = [k for k in ("FW", "FH") if g_new.get(k) != g_old.get(k)] + (["pin faces"] if f_new != f_old else [])
+        if moved:
+            return refuse(f"pin_order keeps the closed outline and pin faces, but {', '.join(moved)} differ from "
+                          f"closed {last['name']} (a moved outline / pin face is slot_change)")
+        return admit(f"abutted-joint audit {src} names {blk}: closed bit order undefined; {rtl[last['name']][1]}, same "
+                     f"outline and pin faces; fix: {rr['fix'].strip()[:200]}")
+    if kind == "flow_failure":
+        # (ROOT-0945 2026-10-18, relaxing, submit-time) the retry of an ADMITTED re-route that failed in the harness /
+        # flow (earlyoom kill, crash): it inherits the failed job's admission, so the failed job must be on record.
+        fj = rr.get("failed_job")
+        if not txt("failed_job", 3):
+            return refuse("flow_failure needs \"failed_job\": the id of the failed job this re-route retries")
+        fj = fj.strip()
+        prev = by_name.get(fj)
+        if prev is None:
+            return refuse(f"flow_failure: failed_job {fj!r} is not a job of {blk} in the loop's history")
+        st = str(prev.get("status") or "")
+        if st == "CLOSED":
+            return refuse(f"flow_failure: failed_job {fj} is CLOSED, not failed")
+        if st in ACTIVE_STATES:
+            return refuse(f"flow_failure: failed_job {fj} is still {st}; retry it only after it has failed")
+        prr = (prev.get("spec_submitted") or prev.get("spec") or {}).get("reroute_reason")
+        if not isinstance(prr, dict) or prr.get("kind") not in TL.CLOSED_STANDS_KINDS:
+            return refuse(f"flow_failure: failed_job {fj} carried no valid \"reroute_reason\" (it was never admitted "
+                          f"as a re-route of the closed view, so its failure admits none)")
+        what = rr["failure"].strip()[:200] if txt("failure", 3) else st
+        return admit(f"retry of {fj} ({st}; admitted as {prr['kind']}) after a flow failure: {what}")
     # evidence_gap
     if not txt("why_route", 20):
         return refuse("evidence_gap needs \"why_route\": why a ROUTE is needed (a missing bench is bound to the closed "

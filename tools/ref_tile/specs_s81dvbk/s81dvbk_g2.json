@@ -14,7 +14,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 172.8,
+  "w": 216.0,
   "h": 172.8
  },
  "pins": {
@@ -47,32 +47,32 @@
  },
  "pin_ranges": {
   "vi_s": [
-   4,
-   82
+   4.0,
+   102.45
   ],
   "clk": [
-   82,
-   86
+   102.45,
+   107.5
   ],
   "rst_n": [
-   86,
-   90
+   107.5,
+   112.54
   ],
   "vo_s": [
-   90,
-   168.8
+   112.54,
+   212.0
   ],
   "vd": [
-   4,
-   87
+   4.0,
+   108.76
   ],
   "vi_n": [
-   87,
-   128
+   108.76,
+   160.5
   ],
   "vo_n": [
-   128,
-   168.8
+   160.5,
+   212.0
   ],
   "ln0": [
    4,
@@ -122,7 +122,20 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 2
+   "count": 1,
+   "at": [
+    60.48,
+    45.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    60.48,
+    86.448
+   ],
+   "at_exact": true
   }
  ],
  "layer_cap": "M5",
@@ -142,13 +155,18 @@
    "group_max": 1,
    "h": "M4",
    "v": "M3 M5"
-  }
+  },
+  "io_hold_margin_ns": 0.025,
+  "synth_keep_modules": [
+   "dsdv_bk_live"
+  ],
+  "macro_halo_x_um": 10.8
  },
- "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Glue (square 172.8): rung on S / N (clock centred on S), vd on the W part of the N face (from the merger / control W of it), W face ln0 / ln2, E face ln1 / straps / ln3. The 172.8 x 259.2 trial (g2 gate 1) measured TT insertion 370.6 / spread 125.3 ps at 11% util. The S81U-BK2 kit s81dvbk_g (259.2 x 216, clock pin in the SW corner) measured TT insertion 457.3 / spread 128.2 ps.",
+ "structural_change": "S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Glue (square 172.8): rung on S / N (clock centred on S), vd on the W part of the N face (from the merger / control W of it), W face ln0 / ln2, E face ln1 / straps / ln3. The 172.8 x 259.2 trial (g2 gate 1) measured TT insertion 370.6 / spread 125.3 ps at 11% util. The S81U-BK2 kit s81dvbk_g (259.2 x 216, clock pin in the SW corner) measured TT insertion 457.3 / spread 128.2 ps. G2 ROUTE 1 (s81dvbk_g2-g2-d73a4b8db) EARLY_FAIL_CONGESTION GRT-0116 (M4 248 / total 274 overflow, max 2): hotspot = the 21.6-um inter-macro channel at both macro pin faces (x 30-45 / 120-135, y 75-95: capacity 17-20 over by 1; plus cap-0 M4 pin-access gcells on the macro edges next to it): each SRAM face carries ~400 M4 pins on 41 um and the W/E lane traffic crosses through the same 11-um usable gap. Not diffuse, not PDN, not the tile pin faces. Fix: macros moved apart (y 25.92 / 105.84): inter-macro channel 21.6 -> 38.9 um, N/S channels 34.6 -> 25.9 um (>= 20). ELEM-GAPS/S81N 10-18: native launch FAIL of CLOSED s81dvbk_g2-g2-3f5182cd2 (ln3[513] 247.0, 2 pins) -> pin_reg_split (0 cycles); vstop from main (JREG default identical). S81-SVCBK 10-18: pin_reg_split gate (pd 0.45) trial GRT overflow 14 (M4, 1-over gcells at the two SRAM pin-face corners x~36 / ~133 um): macro halo 5.4 -> 8.64 um keeps the pin-split clone flops off the macro pin-access edges; io_hold_margin 0.0 -> 0.025 (KITS 10-18 rule). S81-BKG 10-18: pin_reg_split regate FAILED trial GRT overflow 125 (M4 101: clone flops crowd the SRAM W/E pin-access edges; halo 8.64 made it worse than 14 at 5.4). Dispatcher option (a): RTL fix instead -- dsdv_bk_vin gives each lane its own dsdv_bk_live 2-flop live flag (same 2-edge reset-release timing; unparameterised, kept as hierarchy via route.synth_keep_modules so synthesis cannot merge the 4 copies); pin_reg_split dropped; halo back to 5.4, pd 0.5 (closed view's geometry); io_hold_margin 0.025 kept (KITS 10-18). TW-S81/BK 10-19: the per-lane live RTL gate (8fe4ebceb) FAILED trial GRT overflow 304 (M4 240; hotspots = M4 pin-access columns at the SRAM W/E pin faces x~38 / ~134, y 48-120, cap 17 use 19) + pin-flop spread TT/FF 111/106. Cause: io_hold_margin 0.025 (KITS 10-18 rule; route relief 30 -> 5 ps) makes the die hold budget repair ~1.1k boundary inputs with 7,114 + 884 hold buffers, which pile into the 38.9-um W/E channels that also take the 412 / 409 M4 macro pin escapes and the ln0-ln3 lane flops (closed geometry had relief 30; pin_reg_split at halo 8.64 got worse: narrower channels). Fix (option (a) of S81-SVCBK): widen the tile 172.8 -> 216 (5 x 43.2; height kept, W/E lane pin ranges unchanged), macros centred at x 60.48: W/E macro channels 38.9 -> 60.5 / 60.7 um (+56%); N/S pin ranges stretched to the 216 face (clock stays S-centre 104.9-109.9). Parents: colv u_g x 432..648 fits 673.92; selv / selvl u_g must move x 475.2 -> 453.6 (ends 669.6). S81-BKG2 10-19: widened 216 x 172.8 gate (34d937e57) FAILED trial GRT overflow 87 (M4 66, max 2 over cap 16) at the inter-macro channel ENDS beside the SRAM W/E pin faces (x 57-64 / 152-158, y 53-114; spread TT/FF 36/34 PASS): each channel end took the escapes of TWO 41-um faces at ~10.4 M4 pins/um (W rd_out 256 + wd 137 + addr; E w_mask 256 tie + wd 119 + rr/cr tie) funnelled into the 38.9-um channel (the logic common to both arrays sat there). Spreading to the 20-um edge limit gives only 43.2 um (+11%). Fix: the two arrays become ONE abutted N-S stack (abutted_stack: N/S faces bare; pitch 41.088 = h + 0.024, at_exact; y 45.36 / 86.448, centred), so the funnelling channel is gone: each face escapes straight W/E over its own 41 um into the 60-um W/E channels (the shared logic lands at the seam there), and the N/S channels grow 25.9 -> 43.2 um for the rung -> lane datapath; plus W/E macro halo 5.4 -> 10.8 um (route.macro_halo_x_um, same pin-escape zone as S81-BKSEL sq q3 2de7390a9). Outline, pins, RTL unchanged.",
  "job": {
-  "owner": "Claude:S81U-BK3",
-  "branch": "claude/s81u2-bk-1017",
-  "tag": "g2",
+  "owner": "Claude:TW-S81/BK",
+  "branch": "claude/s81-svcbk-1018",
+  "tag": "g2lv",
   "purpose": "S81-DV bk glue leaf, vertical cut (shared by dsdv_bk_sel / dsdv_bk_col; lane S81U-BK3): closure (TT setup / FF hold / DRC 0 + native audit).",
   "benches": [
    {
@@ -207,11 +225,25 @@
    "results/rtl/s81_dv_1016/bk_units_bk2",
    "rtl/common",
    "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
    "rtl/dsrom_sys/s81_ph",
    "rtl/hdc",
    "rtl/link"
   ],
   "views_to": "physical/ref_tile/s81dvbk_g2/views",
-  "record_to": "results/rtl/ref_tile/s81dvbk_g2"
- }
+  "record_to": "results/rtl/ref_tile/s81dvbk_g2",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "fix": "native launch FAIL of CLOSED s81dvbk_g2-g2-3f5182cd2 (ln3[513] 247.0 / ln1[513] 239.9 > 220: the 4 lanes' live bit merged into ONE flop driving W + E face pins). RTL fix: dsdv_bk_vin per-lane live flag (dsdv_bk_live x4, kept hierarchy), 0 cycles. Geometry: outline 172.8 -> 216 x 172.8 (macros centred x 60.48, W/E channels 38.9 -> 60.5 um) because the io_hold_margin 0.025 hold repair (~8k buffers) overflowed the 38.9-um channels (gate 8fe4ebceb trial GRT 304). Receipt results/arch/s81_svcbk_1018/native_dsdv_bk_g.json"
+  }
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
 }
