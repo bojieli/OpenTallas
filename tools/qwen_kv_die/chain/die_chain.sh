@@ -163,14 +163,14 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
   python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
   python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
-    --std-corner TT --legalize snap --signal-top-layer ${OT_DIE_SIGNAL_TOP_LAYER:-M9} "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+    --std-corner TT --legalize snap --signal-top-layer ${OT_DIE_SIGNAL_TOP_LAYER:-M8} "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
   # Q-RLYFCLK 10-19: forwarded-lane capture payload contract (a[] + ea; landing K straps from own ties are not payload)
   if [ "${RD%_fwd}" != "$RD" ] && [ -f $SRC/tools/qwen_split/fclk_data_ports.py ]; then
     { python3 $SRC/tools/qwen_split/fclk_data_ports.py $C/die.v && cat $G/die_rep_call.tcl; } > $G/die_rep_call.tcl.new && \
       mv $G/die_rep_call.tcl.new $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: fclk data-port contract"; exit 1; }
   fi
 fi
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0}
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0} OT_DIE_SIGNAL_TOP_LAYER=${OT_DIE_SIGNAL_TOP_LAYER:-M8}
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   say "$(python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json)" || true
   python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json > /dev/null || { say "DIE_REPAIR FAIL: no GRT result is a die result"; exit 1; }
