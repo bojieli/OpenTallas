@@ -1,0 +1,90 @@
+{
+  "status": "EXACT_COMPONENT_SOURCE_READY_PARENT_CLOCK_CALENDAR_BIND_OPEN",
+  "closed_record": "ca4620637",
+  "published_main": "7e13df2b1fa7c9b414f6f2c70aac7dc87373497f",
+  "source": "3e3ded5d0",
+  "source_manifest": [
+    {
+      "path": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv",
+      "sha256": "f6265e49b6900adfbaf596a34ad2724c9015ff9971ab2904e5e57e996057b76a"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv",
+      "sha256": "00eb22807d706dc05f623f1092d13f219290062b0e42d98d7254c56b9bf7abc0"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+      "sha256": "b363663bcdd97d0f5b1ae3ecc6b4d7e7bfc7c19f2c087001706c8c462f3d869b"
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land.sv",
+      "sha256": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_link/ucie/ot_ucie_rate_match_pf.sv",
+      "sha256": "d8d3de9d03d03e0e938b0b8602e499f9e364e225d531f6cf672586210295f62f"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+      "sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_bb.v",
+      "sha256": "761357a80bed7fe33716721887312479f29e5d59429a914ead1776dcd8bef3b9"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_bb.v",
+      "sha256": "0df7ee8ae50b86295330b6b4bf49f3341de390086cea84dd484d6d4ec55c0afd"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+      "sha256": "f1b736ff2a12823300b4b079c8e8eaf21a2d4a2d2a0c5dbcecb47169d39a4d73"
+    }
+  ],
+  "view": "physical/ref_tile/hbm_pdie_ucie_colm/views/ot_pdie_ucie_col",
+  "top": "ot_pdie_ucie_col",
+  "params": {
+    "MUT": 0
+  },
+  "defines": [],
+  "outline_um": [
+    259.2,
+    1771.2
+  ],
+  "actual_selected_instance": "host_N",
+  "old_master": "ot_pdie_ucie",
+  "old_source_sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+  "old_params": {},
+  "old_effective_PMA_LAT": 2,
+  "port_mapping": {
+    "tx": "tx",
+    "rx": "rx",
+    "st": "st",
+    "pma_tx": "pma_tx",
+    "pma_rx": "pma_rx",
+    "pma_tck": "pma_tck",
+    "clk": [
+      "ck_tx",
+      "ck_rx"
+    ],
+    "rst": [
+      "rst_tx",
+      "rst_rx",
+      "rst_rck"
+    ],
+    "pma_rck": "ck_rck"
+  },
+  "clock_contract": {
+    "ck_tx": "distinctstreamPLLentry",
+    "ck_rx": "distinctstreamPLLentry",
+    "ck_rck": "externalforwardedclock; neverstreamPLLalias",
+    "status": "externalentrymodel/resetdelivery/STA binding required"
+  },
+  "static_latency": {
+    "elastic_flag_delta_relative_priorcolf": 1,
+    "relative_actual_selected_oldbody": "cumulativeledgerownedHBMlead; +1 alone insufficient",
+    "new_rx_st_output_pad_edges": 2
+  },
+  "shared_helper_update": "Frozen ot_pl_land includes4 additive unused modules; existingpad body unchanged; no selected75S2source_file consumer. Exact wholefile imported for componentidentity.",
+  "actions": "No hardview alias or currentjob mutation; nextsourcecontract layer + actualnativeclock/source/port/params/calendarcheck required"
+}
