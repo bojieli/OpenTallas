@@ -1,0 +1,136 @@
+{
+  "scope": "Actual existingwbq_e stressbench, all3sourcespositivePASS. Fences fill_start\u2192actualcompletion. Stress/RNGtiming canchange withhardware; not productionrate or identicalreadycalendar proof. Registeredcredit adds exactly1feedbackedge; actualperblockfences below.",
+  "sources": {
+    "e886": "e886cd0b8 pooledPP diagnostic, AND1",
+    "9ee": "9ee9be093 perPP unregistered diagnostic, AND1",
+    "e0": "e0bfd10e5 perPPregistered min+dynamicready finalcandidate"
+  },
+  "actual": {
+    "e886": [
+      {
+        "block": 0,
+        "sectors": 640,
+        "fence_stream_edges": 701
+      },
+      {
+        "block": 1,
+        "sectors": 1,
+        "fence_stream_edges": 1772
+      },
+      {
+        "block": 2,
+        "sectors": 13,
+        "fence_stream_edges": 1825
+      },
+      {
+        "block": 3,
+        "sectors": 1984,
+        "fence_stream_edges": 4354
+      },
+      {
+        "block": 4,
+        "sectors": 1984,
+        "fence_stream_edges": 5703
+      },
+      {
+        "block": 5,
+        "sectors": 640,
+        "fence_stream_edges": 4812
+      },
+      {
+        "block": 6,
+        "sectors": 300,
+        "fence_stream_edges": 4844
+      },
+      {
+        "block": 7,
+        "sectors": 1,
+        "fence_stream_edges": 2322
+      }
+    ],
+    "9ee": [
+      {
+        "block": 0,
+        "sectors": 640,
+        "fence_stream_edges": 701
+      },
+      {
+        "block": 1,
+        "sectors": 1,
+        "fence_stream_edges": 1772
+      },
+      {
+        "block": 2,
+        "sectors": 13,
+        "fence_stream_edges": 1825
+      },
+      {
+        "block": 3,
+        "sectors": 1984,
+        "fence_stream_edges": 4354
+      },
+      {
+        "block": 4,
+        "sectors": 1984,
+        "fence_stream_edges": 5703
+      },
+      {
+        "block": 5,
+        "sectors": 640,
+        "fence_stream_edges": 4812
+      },
+      {
+        "block": 6,
+        "sectors": 300,
+        "fence_stream_edges": 4844
+      },
+      {
+        "block": 7,
+        "sectors": 1,
+        "fence_stream_edges": 2322
+      }
+    ],
+    "e0": [
+      {
+        "block": 0,
+        "sectors": 640,
+        "fence_stream_edges": 701
+      },
+      {
+        "block": 1,
+        "sectors": 1,
+        "fence_stream_edges": 2060
+      },
+      {
+        "block": 2,
+        "sectors": 13,
+        "fence_stream_edges": 1896
+      },
+      {
+        "block": 3,
+        "sectors": 1984,
+        "fence_stream_edges": 4068
+      },
+      {
+        "block": 4,
+        "sectors": 1984,
+        "fence_stream_edges": 5810
+      },
+      {
+        "block": 5,
+        "sectors": 640,
+        "fence_stream_edges": 5718
+      },
+      {
+        "block": 6,
+        "sectors": 300,
+        "fence_stream_edges": 6697
+      },
+      {
+        "block": 7,
+        "sectors": 1,
+        "fence_stream_edges": 3189
+      }
+    ]
+  }
+}
