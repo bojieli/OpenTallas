@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-epyc7       admits   114 GB (avail 175, growth 95, headroom 0, waiters 0/0 GB) load 110/96 running 18 disk 4682 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2521569-1792606517 after 0 s
+MINIMUM_HIERARCHY_PASS lp PV_IDENTITY1 productionNTP1/SRAM1/PMEM1/TEXT1 actualLP/currentcore, hard arithmeticinterfaces; no numerical/physical/token claim
+MINIMUM_HIERARCHY_PASS entry PV_IDENTITY1 productionNTP1/SRAM1/PMEM1/TEXT1 actualLP/currentcore, hard arithmeticinterfaces; no numerical/physical/token claim
+MINIMUM_HIERARCHY_PASS nonentry PV_IDENTITY1 productionNTP1/SRAM1/PMEM1/TEXT1 actualLP/currentcore, hard arithmeticinterfaces; no numerical/physical/token claim
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2521569-1792606517): exit 0

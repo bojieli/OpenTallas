@@ -1,0 +1,19 @@
+2026-10-21T11:15:51-07:00
+● oth-ubuntu-1946376-1792606198.scope loaded failed failed [systemd-run] /usr/bin/bash lint_r3.sh
+2026-10-21T11:09:58-07:00 oth-ubuntu-1946376-1792606198 mem 32G avail 698G grow 148G: bash lint_r3.sh
+Oct 21 11:15:51 ot-gold1 sudo[1983011]: ubuntu :  PWD=/home/ubuntu ; USER=root ; COMMAND=/usr/bin/journalctl --since 2026-10-21 10:30:00 --no-pager --grep 1946376|Memory cgroup out of memory|sending SIGTERM -n 65
+Oct 21 11:13:04 ot-gold1 systemd[12300]: oth-ubuntu-1946376-1792606198.scope: Consumed 3min 6.160s CPU time over 3min 6.172s wall clock time, 32G memory peak.
+Oct 21 11:13:04 ot-gold1 systemd[12300]: oth-ubuntu-1946376-1792606198.scope: Failed with result 'oom-kill'.
+Oct 21 11:13:01 ot-gold1 systemd[12300]: oth-ubuntu-1946376-1792606198.scope: The kernel OOM killer killed some processes in this unit.
+Oct 21 11:13:01 ot-gold1 kernel: Memory cgroup out of memory: Killed process 1946398 (verilator_bin) total-vm:33603032kB, anon-rss:33474856kB, file-rss:13884kB, shmem-rss:0kB, UID:1000 pgtables:65636kB oom_score_adj:0
+Oct 21 11:13:01 ot-gold1 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0-1,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1946376-1792606198.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1946376-1792606198.scope,task=verilator_bin,pid=1946398,uid=1000
+Oct 21 11:13:01 ot-gold1 kernel: [1946376]  1000 1946376     1986      966       76      890         0    53248        0             0 bash
+Oct 21 11:13:01 ot-gold1 kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1946376-1792606198.scope:
+Oct 21 11:09:58 ot-gold1 systemd[12300]: Started oth-ubuntu-1946376-1792606198.scope - [systemd-run] /usr/bin/bash lint_r3.sh.
+Oct 21 10:37:33 ot-gold1 kernel: Memory cgroup out of memory: Killed process 1518508 (verilator_bin) total-vm:313916328kB, anon-rss:313679232kB, file-rss:15132kB, shmem-rss:0kB, UID:1000 pgtables:614352kB oom_score_adj:0
+ActiveState=failed
+Result=oom-kill
+RuntimeMaxUSec=infinity
+OOMPolicy=stop
+MemoryPeak=34359738368
+MemoryMax=34359738368

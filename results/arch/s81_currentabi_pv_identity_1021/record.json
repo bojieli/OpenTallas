@@ -8,11 +8,40 @@
  "all16_producers_forwarded": true,
  "current_core_source": "0b50e2106 SRAM/currentABI restoration;6legal actualframe comparisons96a0cd3ad",
  "actual_lp_retarget": "attw1 historicaldsdv_svc_att_nt1 -> currentdsdv_svc_att thinwrapper/core; no stalecontroller NTP formal tofixedG4 LP",
- "native_hierarchy": "LIVE gold1unit1946376-1792606198, NTP1PV_IDENTITY1/SRAM1/TEXT1/NOFG3,64hgrp8 hard-arithmeticinterfaces; notfunctional/numerical/layoutproof",
+ "native_hierarchy": "Minimum actualLP, generatedcontrollerENTRY1 andENTRY0 all productionNOFG3/PV_IDENTITY1/SRAM1/PMEM1/TEXT1 elaborate PASS, ep7unit2521569-1792606517 terminal0; hard arithmetic interfaces only, actualCSR/LP/currentSRAMcore/SMcontrol/neighborlanding RTL. Whole16 is not an elaboration PASS.",
  "outstanding": [
-  "terminalactualgroup16elaboration",
   "actualgroupPVSOconsumer+compilercontext/sourceintegration",
   "nativefanout/reset/geometry/CTS/GRT/SSFF",
-  "all16role/fullnumericaltoken"
- ]
+  "all16role/fullnumericaltoken",
+  "LP/controller/all16caller functional+calendar integration, including true externaltile landing ages"
+ ],
+ "minimum_cases": {
+  "lp": {
+   "status": "PASS",
+   "allocated_MB": 3314.129,
+   "walltime_s": 54.844
+  },
+  "entry": {
+   "status": "PASS",
+   "allocated_MB": 8304.5,
+   "walltime_s": 143.788
+  },
+  "nonentry": {
+   "status": "PASS",
+   "allocated_MB": 8303.484,
+   "walltime_s": 167.694
+  }
+ },
+ "full16_attempt": {
+  "status": "RESOURCE_OOM",
+  "unit": "gold1 oth-ubuntu-1946376-1792606198",
+  "time": "2026-10-21T11:13:01-07:00",
+  "cap_bytes": 34359738368,
+  "anon_rss_kb": 33474856,
+  "signal_result": 143,
+  "causal_source": "kernelCONSTRAINT_MEMCG, systemdResultoom-kill/MemoryPeak=MemoryMax32GiB/OOMPolicyStop/RuntimeMaxInfinity; disk_fleet read-onlyaudit journal retained",
+  "rtl_diagnostic": false,
+  "rerun": false
+ },
+ "lint_warning_scope": "Rawwarnings retained. Most MULTIDRIVEN names are disjoint valid/payload slices with sameposedgeclock but different reset-event lists; no blanketphysicalqualification. ot_s81_svc_job.nend latch-warning is inherited localcombinational loop scratch assignedbeforeeachread insideendv branch; no source edit/waiver; native stillowed."
 }

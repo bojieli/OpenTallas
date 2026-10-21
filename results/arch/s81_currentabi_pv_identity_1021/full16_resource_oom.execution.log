@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-epyc7       admits   152 GB (avail 207, growth 101, headroom 0, waiters 0/0 GB) load 128/96 running 19 disk 4685 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021/src
+ot-run: LOAD SPILL: ot-epyc7 would run at 1.38 x cores; moving to ot-gold1
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-currentabi-pv-identity-1021 (0.0 GB) ot-epyc7 -> ot-gold1 (no host with --dir admits 32 GB now)
+ot-run: SPILL: copied 874 changed entries in 3 s; running on ot-gold1; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1946376-1792606198 after 0 s
+Terminated                 /usr/local/bin/ot-heavy --mem 32 --tag otrun-ubuntu-198483-606197894 -- bash lint_r3.sh
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1946376-1792606198): exit 143
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc7; RAN on ot-gold1: exit 143

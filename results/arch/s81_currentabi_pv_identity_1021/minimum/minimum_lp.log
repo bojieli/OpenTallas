@@ -1,0 +1,605 @@
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:202:120: Instance has missing pin: 'tx_i'
+  202 |     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NTP(NTP), .PV_IDENTITY(PV_IDENTITY)) u_att (
+      |                                                                                                                        ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:888:32: ... Location of port declaration
+  888 |     output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
+      |                                ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:202:120: Instance has missing pin: 'tx_o'
+  202 |     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NTP(NTP), .PV_IDENTITY(PV_IDENTITY)) u_att (
+      |                                                                                                                        ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:888:63: ... Location of port declaration
+  888 |     output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
+      |                                                               ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'jd'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'hc'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'fault'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'st_rg'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'pv_v'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'pv_d'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:68:139: Instance has missing pin: 'pv_x'
+   68 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[0]), .PV_IDENTITY(PV_IDENTITY)) u_s0 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'jd'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'hc'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'fault'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'st_rg'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'pv_v'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'pv_d'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:104:139: Instance has missing pin: 'pv_x'
+  104 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[1]), .PV_IDENTITY(PV_IDENTITY)) u_s1 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'jd'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'hc'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'fault'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'st_rg'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'pv_v'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'pv_d'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:140:139: Instance has missing pin: 'pv_x'
+  140 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[2]), .PV_IDENTITY(PV_IDENTITY)) u_s2 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'jd'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'hc'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'fault'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'st_rg'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'pv_v'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'pv_d'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:176:139: Instance has missing pin: 'pv_x'
+  176 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[3]), .PV_IDENTITY(PV_IDENTITY)) u_s3 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'jd'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'hc'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'fault'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'st_rg'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'pv_v'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'pv_d'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:212:139: Instance has missing pin: 'pv_x'
+  212 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[4]), .PV_IDENTITY(PV_IDENTITY)) u_s4 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'jd'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'hc'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'fault'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'st_rg'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'pv_v'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'pv_d'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:284:139: Instance has missing pin: 'pv_x'
+  284 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[6]), .PV_IDENTITY(PV_IDENTITY)) u_s6 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'jd'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'hc'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'fault'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'st_rg'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'pv_v'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'pv_d'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:320:139: Instance has missing pin: 'pv_x'
+  320 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[7]), .PV_IDENTITY(PV_IDENTITY)) u_s7 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'jd'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'hc'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'fault'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'st_rg'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'pv_v'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'pv_d'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:356:139: Instance has missing pin: 'pv_x'
+  356 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[8]), .PV_IDENTITY(PV_IDENTITY)) u_s8 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'jd'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'hc'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'fault'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'st_rg'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'pv_v'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'pv_d'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:392:139: Instance has missing pin: 'pv_x'
+  392 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[9]), .PV_IDENTITY(PV_IDENTITY)) u_s9 (
+      |                                                                                                                                           ^~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'jd'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'hc'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'fault'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'st_rg'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'pv_v'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'pv_d'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:428:140: Instance has missing pin: 'pv_x'
+  428 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[10]), .PV_IDENTITY(PV_IDENTITY)) u_s10 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'jd'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'hc'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'fault'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'st_rg'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'pv_v'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'pv_d'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:500:140: Instance has missing pin: 'pv_x'
+  500 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[12]), .PV_IDENTITY(PV_IDENTITY)) u_s12 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'jd'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'hc'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'fault'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'st_rg'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'pv_v'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'pv_d'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:536:140: Instance has missing pin: 'pv_x'
+  536 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[13]), .PV_IDENTITY(PV_IDENTITY)) u_s13 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'jd'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'hc'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'fault'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'st_rg'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'pv_v'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'pv_d'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:572:140: Instance has missing pin: 'pv_x'
+  572 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[14]), .PV_IDENTITY(PV_IDENTITY)) u_s14 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'jd'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:17:30: ... Location of port declaration
+   17 |     output wire [1:0]        jd,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'hc'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:20:30: ... Location of port declaration
+   20 |     output reg  [8:0]        hc,
+      |                              ^~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'fault'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:21:30: ... Location of port declaration
+   21 |     output wire              fault,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'st_rg'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:22:30: ... Location of port declaration
+   22 |     output reg  [1:0]        st_rg,         
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'pv_v'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:48:30: ... Location of port declaration
+   48 |     output reg               pv_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'pv_d'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:49:30: ... Location of port declaration
+   49 |     output reg  [512:0]      pv_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_group72.sv:608:140: Instance has missing pin: 'pv_x'
+  608 |     dsdv_svc_rs_c_group72 #(.ENTRY(0), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[15]), .PV_IDENTITY(PV_IDENTITY)) u_s15 (
+      |                                                                                                                                            ^~~~~
+                     rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_rs_c_group72.sv:50:30: ... Location of port declaration
+   50 |     output wire [47:0]       pv_x,          
+      |                              ^~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 19.360 MB sources in 209 modules, into 122.165 MB in 136 C++ files needing 0.000 MB
+- Verilator: Walltime 54.844 s (elab=1.171, cvt=49.335, bld=0.000); cpu 54.552 s on 1 threads; allocated 3314.129 MB
