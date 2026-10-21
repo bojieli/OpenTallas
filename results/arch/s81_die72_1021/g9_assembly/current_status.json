@@ -1,0 +1,25 @@
+{
+  "sampled_at_local": "2026-10-21T16:26:01",
+  "branch": "codex/s81-g9-assembly-1021",
+  "G9_failed_route_bind_unit": "3311561-1792624541",
+  "failed_scope": "819nominalroutesPASS/19813stations, strictFAIL16:19:25 onlyKV HBpublicparameter+faultOUTPUT_OPEN; noGEN",
+  "table_correction_ref": "d602169f7",
+  "exact_changes": [
+    "removeKVrowhb_param",
+    "addKVlogicalkeytostatus_fault_masters realfaultwiring"
+  ],
+  "successor_unit": "3336872-1792625005",
+  "successor_host": "ot-epyc5",
+  "successor_root": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix",
+  "successor_stage": "STRICT_BIND_ACTIVE; GEN/GRT/STA notrunyet",
+  "successor_runner": "b87d24f86ee8e548a5decfce49da87c2bbf36711",
+  "reused_inputs": "ExactsourcechecksumPASS, route/landhashesmatch,819links/no reroute; oldfailure/objectsretained",
+  "source_proofs": {
+    "0N": "09038a9e9 syntax/elabEXIT0,191source446 inventory/54warnings",
+    "KV": "5fb1806f0 syntax/elabEXIT0,195sourceff9 inventory/37warnings; failedmissingdependencywitnesspreserved",
+    "full0N_fastfp": "00b1dcc190 onlychangedqadd/qmulunreachable; original0Nnotrerun/nofalseff9executionclaim",
+    "source_ack": "7fb376c69 uniqueparameterfreeKVtop/fixedparams/transparentclocks"
+  },
+  "other_live": "OriginalG8gold2unit2876832/PID2897687 andCTRLMAIN29fEP5GRTpreserved",
+  "scope": "DiagnosticavailableCLOSEDviews only; no runtime/coherence/calendar/wholeparent/diephysicalclaim"
+}
