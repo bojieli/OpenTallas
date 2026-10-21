@@ -4,6 +4,7 @@
 #                                          2 = CDC read pipe 1 short (OT_STATIC_MUT_LATENCY), 3 = PHY 1 link cycle long (XS=1),
 #                                          4 = codec bank write-through hit select corrupted (OT_QKD_REPLAY_HIT_MUT)
 # env PLAND/PLD/PLK/PPH (QW-COLLIO2): PHY landing-ring region (PPH = PHY-region clock phase, eighths of T); MUT 7 = ring read 1 early
+# env FACE_FW/FACE_PHY/FACE_R/FACE_PR (QW-COLLIO3, defaults 546/339/0/0 = S1) select the face profile
 # env TOK_REG (default 1) = the face TOK_REG parameter; HARD=1 adds +define OT_QFD_FACE_HARD (closed bank leaf form)
 # Prints "MUT=<m> PHI=<p> ..." per case and a final "COLL_STATIC_FACE_BENCH PASS|FAIL MUT=<m>".
 set -u
@@ -35,11 +36,11 @@ for PHI in $PHIS; do
   if [ "${SIM:-iverilog}" = verilator ]; then
   exe="$OUT/obj_m${MUT}_phi${PHI}/sim"
   (cd "$ROOT" && "${VERILATOR:-verilator}" --binary --timing -O1 -j 8 -Wno-fatal -Wno-lint -Wno-style --top-module tb_coll_static_face \
-      -GL=${FACE_L:-376} -GXS=$XS -GPHI=$PHI -GTOK_REG=$TOK -GSAFE=${SAFE:-0} -GPLAND=${PLAND:-0} -GPLD=${PLD:-2} -GPLK=${PLK:-1} -GPPH=${PPH:-0} -Mdir "$OUT/obj_m${MUT}_phi${PHI}" -o sim \
+      -GL=${FACE_L:-376} -GFW=${FACE_FW:-546} -GPHY=${FACE_PHY:-339} -GR=${FACE_R:-0} -GPEER_R=${FACE_PR:-0} -GXS=$XS -GPHI=$PHI -GTOK_REG=$TOK -GSAFE=${SAFE:-0} -GPLAND=${PLAND:-0} -GPLD=${PLD:-2} -GPLK=${PLK:-1} -GPPH=${PPH:-0} -Mdir "$OUT/obj_m${MUT}_phi${PHI}" -o sim \
       "${DEF[@]}" "${SRC[@]}") > "$OUT/build_m${MUT}_phi${PHI}.log" 2>&1 || { tail -40 "$OUT/build_m${MUT}_phi${PHI}.log"; echo "MUT=$MUT PHI=$PHI BUILD FAIL"; ok=0; continue; }
   "$exe" > "$OUT/run_m${MUT}_phi${PHI}.log" 2>&1
   else
-  (cd "$ROOT" && iverilog -g2012 -s tb_coll_static_face -P tb_coll_static_face.L=${FACE_L:-376} -P tb_coll_static_face.XS=$XS -P tb_coll_static_face.PHI=$PHI -P tb_coll_static_face.TOK_REG=$TOK -P tb_coll_static_face.SAFE=${SAFE:-0} -P tb_coll_static_face.PLAND=${PLAND:-0} -P tb_coll_static_face.PLD=${PLD:-2} -P tb_coll_static_face.PLK=${PLK:-1} -P tb_coll_static_face.PPH=${PPH:-0} \
+  (cd "$ROOT" && iverilog -g2012 -s tb_coll_static_face -P tb_coll_static_face.L=${FACE_L:-376} -P tb_coll_static_face.FW=${FACE_FW:-546} -P tb_coll_static_face.PHY=${FACE_PHY:-339} -P tb_coll_static_face.R=${FACE_R:-0} -P tb_coll_static_face.PEER_R=${FACE_PR:-0} -P tb_coll_static_face.XS=$XS -P tb_coll_static_face.PHI=$PHI -P tb_coll_static_face.TOK_REG=$TOK -P tb_coll_static_face.SAFE=${SAFE:-0} -P tb_coll_static_face.PLAND=${PLAND:-0} -P tb_coll_static_face.PLD=${PLD:-2} -P tb_coll_static_face.PLK=${PLK:-1} -P tb_coll_static_face.PPH=${PPH:-0} \
       "${DEF[@]}" -o "$exe" "${SRC[@]}") > "$OUT/build_m${MUT}_phi${PHI}.log" 2>&1 || { cat "$OUT/build_m${MUT}_phi${PHI}.log"; echo "MUT=$MUT PHI=$PHI BUILD FAIL"; ok=0; continue; }
   vvp -n "$exe" > "$OUT/run_m${MUT}_phi${PHI}.log" 2>&1
   fi
