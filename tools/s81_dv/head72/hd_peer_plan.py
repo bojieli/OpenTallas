@@ -14,6 +14,11 @@ def build(src,out):
     t=(e[2]-old['x'])/old['w'];e[2]=round(c['x']+t*c['w'],4);e[3]=round(c['y']+(c['h'] if face=='N' else 0),4)
    else:
     t=(e[3]-old['y'])/old['h'];e[2]=round(c['x']+(c['w'] if face=='E' else 0),4);e[3]=round(c['y']+t*c['h'],4)
+ # Preserve canonical relay sites after reprojection: two face seeds otherwise leave408um grid gaps.
+ for link in p['links']:
+  if link['i'] in ('c_ln_host0_r_l0','c_ln_mesh0_t_l1'):
+   for e in link['e']:
+    if e[0]==ci:e[3]=round(e[3]+21.6,4)
  seq=dict(name='mtp_seq',master='dsfd_mtp_seq',kind='ctl_peer',group='clctl',x=round(c['x']+c['w']+108,4),y=round(c['y']+c['h']/2-75.6,4),w=151.2,h=151.2,reg=False,orient='R0')
  assert seq['x']+seq['w']<=old['x']+old['w'] and seq['y']>=old['y'] and seq['y']+seq['h']<=old['y']+old['h']
  si=len(B);B.append(seq);cy=round(c['y']+c['h']/2,4);sy=round(seq['y']+seq['h']/2,4)
