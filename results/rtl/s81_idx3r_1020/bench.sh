@@ -1,6 +1,6 @@
 #!/bin/bash
 # S81-IDX3R bench builds (run from $S/src on the fleet host): $1 = build name.  Verilator 5.050.
-S=/srv/opentallas-scratch/claude/s81-idx3r-1020; cd $S/${IDX3R_SRC:-src} || exit 3
+S=${IDX3R_S:-/srv/opentallas-scratch/claude/s81-idx3r-1020}; cd $S/${IDX3R_SRC:-src} || exit 3
 C=rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh; O=$S/${IDX3R_OUT:-out}; K=results/rtl/s81_idx3r_1020/run_ctrl3.sh
 case $1 in
 lint) VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
@@ -26,6 +26,23 @@ b3) bash $C $O b3 "-GMUT=0 -GSRAM_MACRO=1" 16 \
  "pass_g2048s3|+GATHER=1 +N=2048 +T0=1500 +P=4 +SEED=3" \
  "closed_g2048p3|+GATHER=1 +N=2048 +T0=1500 +P=3" \
  "closed_g2048p3s2|+GATHER=1 +N=2048 +T0=1500 +P=3 +SEED=2" \
+ "pass_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6" \
+ "pass_l2|+N=43691 +B=13 +T0=400 +P=3" \
+ "pass_l20|+N=87382 +B=13 +T0=400 +P=3" \
+ "pass_l20s2|+N=87382 +B=13 +T0=400 +P=3 +SEED=2" \
+ "closed_late|+N=4096 +B=13 +T0=60 +P=3" \
+ "closed_glate|+GATHER=1 +N=2048 +T0=60 +P=4" \
+ "fail_slothit|+N=4096 +B=13 +T0=400 +P=3 +SLOTHIT=1" \
+ "x_t0s200|+N=4096 +B=13 +T0=200 +P=3" \
+ "x_gt0s900|+GATHER=1 +N=2048 +T0=900 +P=4" ;;
+# DRIVE-S81-IDX4-KITS 10-20: mu7i4 die plan has 23 W->E crossing stations (iq_03_04_l0/l1, is_03_04), b3 used XD 21.
+xd23) bash $C $O xd23 "-GMUT=0 -GSRAM_MACRO=1 -GXD=23" 16 \
+ "pass_small|+N=4096 +B=13 +T0=400 +P=3" \
+ "pass_gs|+GATHER=1 +N=256 +T0=1500 +P=3" \
+ "pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4" \
+ "pass_g2048s2|+GATHER=1 +N=2048 +T0=1500 +P=4 +SEED=2" \
+ "pass_g2048s3|+GATHER=1 +N=2048 +T0=1500 +P=4 +SEED=3" \
+ "closed_g2048p3|+GATHER=1 +N=2048 +T0=1500 +P=3" \
  "pass_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6" \
  "pass_l2|+N=43691 +B=13 +T0=400 +P=3" \
  "pass_l20|+N=87382 +B=13 +T0=400 +P=3" \
