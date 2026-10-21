@@ -1378,7 +1378,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .u_rank__qm_t_v(u_rank__qm_t_v),
     .u_rank__qm_v(u_rank__u_bridge__qm_v)
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_0___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_0___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_0___u_slice (
+`endif
     .c_cr(u_rank__u_phy__phy_tx_cr),
     .c_d(u_rank__u_phy__tx_d[127:0]),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1394,7 +1398,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(phy_tx_v)
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_1___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_1___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_1___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[1]),
     .c_d(u_rank__u_phy__tx_d[255:128]),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1410,7 +1418,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[1])
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_2___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_2___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_2___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[2]),
     .c_d(u_rank__u_phy__tx_d[383:256]),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1426,7 +1438,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[2])
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_3___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_3___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_3___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[3]),
     .c_d(u_rank__u_phy__tx_d[511:384]),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1442,7 +1458,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[3])
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_4___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_4___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_4___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[4]),
     .c_d({ 94'h000000000000000000000000, u_rank__u_phy__tx_d[545:512] }),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1458,7 +1478,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[4])
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_5___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_5___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_5___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[5]),
     .c_d(128'h00000000000000000000000000000000),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1474,7 +1498,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[5])
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_6___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_6___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_6___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[6]),
     .c_d(128'h00000000000000000000000000000000),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1490,7 +1518,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[6])
   );
-  qfd_link_adp128 #(.MUT(0))  u_rank__u_adapter__g_slice_7___u_slice  (
+`ifdef OT_HR_CLUSTER_HARD
+  qfd_link_adp128 u_rank__u_adapter__g_slice_7___u_slice (
+`else
+  qfd_link_adp128 #(.MUT(0)) u_rank__u_adapter__g_slice_7___u_slice (
+`endif
     .c_cr(u_rank__u_adapter__cc[7]),
     .c_d(128'h00000000000000000000000000000000),
     .c_v(u_rank__u_phy__phy_tx_v),
@@ -1506,7 +1538,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .tx_up(phy_up),
     .tx_v(u_rank__u_adapter__tv[7])
   );
-  qkd_host_rx_class_admission_rr #(.IR_REPL(1), .STRAPPED(1))  u_rank__u_control__u_packet__u_rx  (
+`ifdef OT_HR_CLUSTER_HARD
+  qkd_host_rx_class_admission_rr u_rank__u_control__u_packet__u_rx (
+`else
+  qkd_host_rx_class_admission_rr #(.IR_REPL(1), .STRAPPED(1)) u_rank__u_control__u_packet__u_rx (
+`endif
     .admission_open(host_admission_open),
     .ck(ck_core__control_packet_u_rx),
     .credit_return(u_rank__u_control__u_packet__credit_return),
@@ -1532,7 +1568,11 @@ module qkd_hr_cluster_e(ck_core__cdc_host, ck_host__cdc_host, ck_core__cdc_pc, c
     .rx_d(u_rank__u_control__u_packet__rx_d),
     .rx_v(u_rank__u_control__u_packet__rx_v)
   );
-  qkd_host_rx_pad5 #(.MUT(0))  u_rank__u_phy__u_pad  (
+`ifdef OT_HR_CLUSTER_HARD
+  qkd_host_rx_pad5 u_rank__u_phy__u_pad (
+`else
+  qkd_host_rx_pad5 #(.MUT(0)) u_rank__u_phy__u_pad (
+`endif
     .clk(ck_phy_fam__phy_pad),
     .fault(service_faults[1]),
     .in_cr(u_rank__u_phy__phy_rx_cr),

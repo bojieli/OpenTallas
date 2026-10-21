@@ -69,6 +69,13 @@ UCIE = ('ot_qkvd_ucie_x64_phy', 777.6, 777.6)
 SERDES = ('ot_qfd_serdes_112g_x12_phy', 2320.056, 1563.57)  # actual native host RXD512 / FDI1043 profile
 FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
+# KV-HROOT10 10-20 (OT_KV_HOST_CLUSTER=1, default off): the HOST root slot sized for the hardened host-cluster parent
+# qkd_hr_cluster_p10a/p10b (physical/ref_tile, 1382.4 x 1382.4: peer 518.4 sq slot + 8 adp128 + 9 core/CDC leaves; the
+# 777.6 x 518.4 frame was pin-bound at 5.90 pins/um on E and cannot hold the peer).  FDI on E, D2D record ports on N,
+# slice chains on W (parent pin plan, tools/ref_tile/specs_qhost_cluster/qkd_hr_cluster_p10a.json).  The die plan around it
+# (seq / CTL / attention W-HOST home / D2D apron) must be re-solved by the die owner before a strict chain uses it.
+if __import__('os').environ.get('OT_KV_HOST_CLUSTER', '0') == '1':
+    FRAMES['qkd_host'] = (1382.4, 1382.4)
 RELAY_PITCH = 430.56
 TREE_LAST = 200.0               # v1.4.2: a reset / boot tree chain ends <= this from its cluster leader
 RST_REGION_IGNORE = 255          # v1.4.3 qkd_rst_region IGNORE: a region's chain depth limit (the host holds reset >= this + 4)

@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  1339.2,
-  1339.2
+  1382.4,
+  1382.4
  ],
  "core": [
   2.16,
   2.16,
-  1337.04,
-  1337.04
+  1380.24,
+  1380.24
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -185,9 +185,7 @@
    "ck_host__ingest_qm",
    "ck_ingest__ingest_qm"
   ],
-  "S": [
-   "ck_phy"
-  ]
+  "S": []
  },
  "clock_port": "ck_core__core_peer",
  "clock_ports": [
@@ -520,18 +518,6 @@
    "build the child on the common lattice"
   ],
   [
-   "FAIL",
-   "macro_edge",
-   "qfd_link_adp128#0 19.4 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "qfd_link_adp128#0 19.4 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
    "WARN",
    "macro_grid",
    "qfd_link_adp128#0: origin (820.8, 345.624) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
@@ -544,22 +530,10 @@
    "build the child on the common lattice"
   ],
   [
-   "FAIL",
-   "macro_edge",
-   "qfd_link_adp128#0 19.4 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
    "WARN",
    "macro_grid",
    "qfd_link_adp128#0: origin (1080.0, 216.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "qfd_link_adp128#0 19.4 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
   ],
   [
    "WARN",

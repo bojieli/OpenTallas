@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  1339.2,
-  1339.2
+  1382.4,
+  1382.4
  ],
  "core": [
   2.16,
   2.16,
-  1337.04,
-  1337.04
+  1380.24,
+  1380.24
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -185,7 +185,6 @@
    "ck_phy_fam__cdc_pc"
   ],
   "S": [
-   "ck_phy",
    "ck_phy_fam__phy_pad"
   ]
  },
@@ -494,18 +493,6 @@
    "macro_grid",
    "qkd_hr_ingest_qm#0: origin (43.224, 259.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "qfd_link_adp128#0 19.4 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "qfd_link_adp128#0 19.4 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
   ],
   [
    "WARN",

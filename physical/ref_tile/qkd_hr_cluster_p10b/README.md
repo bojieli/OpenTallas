@@ -1,6 +1,6 @@
 # qkd_hr_cluster_p10b — KV host root parent REPACK (CRITICAL qkd_host_root; DIAGNOSTIC pathfinding gate, no REVIEW.json / submit)
 KV-HROOT10 10-20. Parent of qkd_host_root_admission (die frame qkd_host_rt). PARALLEL FALLBACK (different topology: peer die buses on N face).
-- Outline 1339.2 x 1339.2 um (1.79 mm2, child fill 51 %, aspect 1.0) — replaces the 777.6 x 518.4 frame (0.40 mm2, E face 5.90 pins/um PINBOUND).
+- Outline 1382.4 x 1382.4 um (1.91 mm2; 1339.2 placement + 43.2 E/N margin, child fill 51 %, aspect 1.0) — replaces the 777.6 x 518.4 frame (0.40 mm2, E face 5.90 pins/um PINBOUND).
 - Children: 16 CLOSED views (adp128 x8, rx_rr, pad5, cdc_pc, tx, guard, order, queue, cdc_host; rx_rr + queue LEFs re-stubbed by the current
   abstract_pin_stub.py under childfix/, libs unchanged) + 3 DIAGNOSTIC stand-ins under standin/ (STANDIN_NOT_A_VIEW): peer 518.4 sq (the slot
   KV-HOST9A needs), prompt 475.2 x 432 (m33a/mu4p3a geometry), ingest_qm 345.6 sq. Stand-in pins are PARENT-ASSIGNED (standin/*/pins.json):

@@ -38,8 +38,8 @@
  "clock_note": "entries cluster (ref_tile contract): one parent clock entry port per hard-child clock pin (RTL qkd_hr_cluster_e = exact text transform of qkd_hr_cluster; tying each family's entries gives the original, wrapper qkd_hr_cluster_e_tied); the die/region clock delivers every entry; no parent clock cells. Families asynchronous: see clock_domain_note.",
  "reset_ports": [],
  "outline": {
-  "w": 1339.2,
-  "h": 1339.2,
+  "w": 1382.4,
+  "h": 1382.4,
   "exact": true
  },
  "child_lattice_um": 43.2,
@@ -421,7 +421,6 @@
    "ck_phy_fam__cdc_pc"
   ],
   "S": [
-   "ck_phy",
    "ck_phy_fam__phy_pad"
   ]
  },
@@ -1324,6 +1323,11 @@
   }
  },
  "clock_domain_note": "DIAGNOSTIC: the four clock families are asynchronous (core 833.333 / host 1000 / phy 1043 / ingest 1666.667 ps); ref_tile has no async-family CLUSTER mode (reviewed_gray_fifos / cdc_synchronizers_async are leaf-only), so this gate times every family at 833.333 ps related phase 0: conservative for host/phy/ingest; the parent has no cross-family nets except resets (each leaf lands its reset) -- every crossing is inside the hard CDC leaves cdc_pc / cdc_host / ingest_qm. ROOT item: async-family cluster clock mode before the real parent route.",
+ "defines": [
+  "OT_HR_CLUSTER_HARD"
+ ],
+ "hard_define": "OT_HR_CLUSTER_HARD",
+ "outline_note": "1382.4 sq: 1339.2 placement + 43.2 E/N margin (macro_edge: adp128 19.4 um from the E pin face at 1339.2)",
  "params": {},
  "io_flop_at_pins": {
   "cols": 4,
