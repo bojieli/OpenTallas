@@ -1,0 +1,37 @@
+{
+  "source_commit": "0618133cbc",
+  "tool": "Verilator5.050",
+  "norm": {
+    "receipt": "results/rtl/rtl_build_s81_1018/xfin/norm_regression.log",
+    "first_rstd_after_last_partial": 234,
+    "rstd_spread": 13,
+    "vectors": 80,
+    "rstd_count": 16,
+    "rstd_hex": "3fbf858b"
+  },
+  "eng_ord0_gap0_seed1": {
+    "receipt": "results/rtl/rtl_build_s81_1018/xfin/eng_base_ord0_gap0_seed1.log",
+    "go_to_last_e": [
+      526,
+      526
+    ],
+    "last_partial_to_last_e": [
+      464,
+      464
+    ],
+    "results": 128
+  },
+  "eng_ord1_gap2_seed7": {
+    "receipt": "results/rtl/rtl_build_s81_1018/xfin/eng_base_ord1_gap2_seed7.log",
+    "go_to_last_e": [
+      542,
+      542
+    ],
+    "last_partial_to_last_e": [
+      362,
+      362
+    ],
+    "results": 128
+  },
+  "added_edges": "PROPOSED_ZERO_UNCLAIMED_UNTIL_EXISTING_PROOF"
+}
