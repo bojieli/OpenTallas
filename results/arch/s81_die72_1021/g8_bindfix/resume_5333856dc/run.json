@@ -1,5 +1,5 @@
 {
-  "state": "LIVE_GEN_RESUME_NOT_PHYSICAL_CLOSURE",
+  "state": "GEN_PASS_GRT_LIVE_NOT_A_DIE_RESULT",
   "unit": "oth-ubuntu-2876832-1792608006",
   "host": "ot-gold2",
   "run": "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq",
@@ -17,5 +17,23 @@
   },
   "authorization": "parent via ROOT after exclusive tool review, paired checks, exact runtime publication/sync and actual failed-case checker PASS",
   "original_failed_case_preserved": "/srv/opentallas-scratch/claude/codex-s81-g8-iqready-1021/die72-g8iq",
-  "sequence": "GEN only then unchanged automatic GRT/TTFFSS/clock/IR; no rebind or new physical variant"
+  "sequence": "GEN only then unchanged automatic GRT/TTFFSS/clock/IR; no rebind or new physical variant",
+  "GEN_pass_edge": "2026-10-21 11:47:13 PDT",
+  "GRT_container": "dvrv-2897464",
+  "initial_place": {
+    "die_um": [
+      33000,
+      26000
+    ],
+    "core_area_um2": 857869768.852,
+    "total_instance_area_um2": 703309220.502,
+    "effective_utilization": 0.82,
+    "physical_instances": 45494,
+    "snap_std_cells": 15944,
+    "snap_still_on_macro": 0,
+    "tie_placed": 15324,
+    "tie_unplaced": 0,
+    "scope": "initial placement, not final GRT/legality/timing verdict"
+  },
+  "case_census_scope": "159 plan-block stand-ins remain explicitly NOT_A_DIE_RESULT; closed relays/landings/bk_col/PHY, no whole-array closure"
 }
