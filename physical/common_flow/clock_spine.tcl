@@ -588,10 +588,22 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     set ::ot_sp_root_xy [list $gx $gy]
     puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] cells moved beside the clock pin ([llength $::ot_sp_icg_port] port-net cells FIRM + dont_touch, enable cone movable)"
   }
+  # Default-off explicit reset cohorts are atomic leaves. All other sinks use
+  # the original spatial binning and LEAF_N slicing unchanged.
+  set cohorts [dict create]
+  if {[info exists ::ot_sp_cohorts] && [llength $::ot_sp_cohorts]} {
+    source /src/physical/common_flow/clock_spine_cohorts.tcl
+    set cohorts [ot_sp_cohort_bins $blk $net0 $u $lmax]
+  }
+  set cohort_members [dict create]
+  dict for {key entries} $cohorts {
+    foreach entry $entries {dict set cohort_members [lindex $entry 0] 1}
+  }
   # sinks -> bins -> leaves
-  set bins [dict create]; set ns 0
+  set bins $cohorts; set ns 0
   foreach it [$net0 getITerms] {
     if {[$it getIoType] ne "INPUT"} continue
+    if {[dict exists $cohort_members $it]} {incr ns; continue}
     lassign [$it getAvgXY] ok x y
     if {!$ok} { set l [[$it getInst] getLocation]; lassign $l x y }
     # OT_SPINE_MACRO_LEAF=1 (el1011-q-coll): a hard-macro clock pin is its own leaf, so a child-insertion target never
