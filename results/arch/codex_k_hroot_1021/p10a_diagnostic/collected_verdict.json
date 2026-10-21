@@ -1,0 +1,1709 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_cdc_host#0: origin (475.224, 518.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_cdc_pc#0: origin (907.224, 604.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_core_guard#0: origin (648.024, 1166.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_core_order#0: origin (43.224, 648.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_core_peer#0: origin (777.624, 777.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_core_prompt#0: origin (129.624, 864.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_core_queue#0: origin (388.8, 691.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_core_tx#0: origin (648.024, 864.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_hr_ingest_qm#0: origin (86.4, 259.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_link_adp128#0: origin (820.8, 345.624) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_link_adp128#0: origin (820.8, 216.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_link_adp128#0: origin (1080.0, 216.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_link_adp128#0: origin (1080.0, 86.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_link_adp128#0: origin (820.8, 86.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_host_rx_class_admission_rr#0: origin (561.624, 691.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_host_rx_pad5#0: origin (1080.024, 345.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qkd_hr_cdc_host': 'M5', 'qkd_hr_cdc_pc': 'M5', 'qkd_hr_core_guard': 'M5', 'qkd_hr_core_order': 'M5', 'qkd_hr_core_peer': 'M5', 'qkd_hr_core_prompt': 'M5', 'qkd_hr_core_queue': 'M5', 'qkd_hr_core_tx': 'M5', 'qkd_hr_ingest_qm': 'M5', 'qfd_link_adp128': 'M5', 'qkd_host_rx_class_admission_rr': 'M5', 'qkd_host_rx_pad5': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pin_order",
+   "message": "bit order not judged for 139 abutted port(s) with an unresolved width (abort_drained, accepted_ranks, cohort_gen, cohort_tag); the route places them in chunks of 32",
+   "fix": "add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in pin_order_waiver {port: reason}"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qkd_hr_core_peer: (h) pockets: 280 open own-layer pocket rects on M5 (12694.6 um2; gaps < 1.536 um between the child's own obstacles; largest (137.772,10.8)-(137.872,507.6), (142.76,10.8)-(142.86,507.6), (164.772,10.8)-(164.872,507.6)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qkd_hr_core_prompt: (h) pockets: 256 open own-layer pocket rects on M5 (9604.61 um2; gaps < 1.536 um between the child's own obstacles; largest (137.772,10.8)-(137.872,421.2), (142.76,10.8)-(142.86,421.2), (164.772,10.8)-(164.872,421.2)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qkd_hr_ingest_qm: (h) pockets: 184 open own-layer pocket rects on M5 (5460.7 um2; gaps < 1.536 um between the child's own obstacles; largest (137.772,10.8)-(137.872,334.8), (142.76,10.8)-(142.86,334.8), (164.772,10.8)-(164.872,334.8)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_link_adp128: (f) face-pin access: 557 of 560 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cr M5 (0.432,0.016), c_d[0] M5 (0.432,0.016), c_d[100] M5 (0.432,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "collected orphaned remote run ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cluster_p10a-20261021-053831 execution.log (local handle lost)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=19",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc9 in 263 s (gate total 0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 7474, 'pin_rectangles': 7474, 'pin_track_checked': 7474, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2b555272dc58902471cc1600b2b84ad29a3a6401fc4f7bb4a4985d2720cf0d78",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 6 um2 + macros 911425 in core 1899104: util 0% (std-cell density 0.0% of placeable 905098 um2; total fill 48.0%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "REFUSE qkd_hr_cluster_e cells 103 flops 0 depth 0.0 ps util 0.4799 reach 1404.0 um (1.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "405 stage(s) beyond 500 um reach: insert relay flops",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin die_id[2] -> u_rank__u_control__u_packet__u_rx/die_id[2]: up to 1404 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin die_id[1] -> u_rank__u_control__u_packet__u_rx/die_id[1]: up to 1402 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin die_id[0] -> u_rank__u_control__u_packet__u_rx/die_id[0]: up to 1401 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=0 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qkd_hr_cluster_p10a/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg     2865 paths, worst slack -1149.3 ps (e.g. u_core_guard/service_faults[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      482 paths, worst slack -1043.5 ps (e.g. service_faults[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg      1650 paths, worst slack -748.1 ps (e.g. u_rank__u_control__u_packet__u_rx/die_id[1])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    600 paths, worst slack -500.1 ps (e.g. u_rank__u_adapter__g_slice_5___u_slice/rst_n)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->out    118 paths, worst slack -343.7 ps (e.g. hc[128])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->macro     269 paths, worst slack -114.5 ps (e.g. u_core_prompt/die_id[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro     31 paths, worst slack 22.1 ps (e.g. u_core_prompt/u_rank__u_control__por_n)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -1.1493290763553432e-9 hold WNS 4.002864706365017e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_2 max: 530 undeclared timed path(s), worst 268.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_2 min: 530 undeclared timed path(s), worst 75.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_3 max: 1 undeclared timed path(s), worst 414.2 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_3 min: 1 undeclared timed path(s), worst 76.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 max: 309 undeclared timed path(s), worst 215.7 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 min: 309 undeclared timed path(s), worst 69.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_6 max: 1537 undeclared timed path(s), worst 22.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_6 min: 1537 undeclared timed path(s), worst 83.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_7 max: 1 undeclared timed path(s), worst 162.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_7 min: 1 undeclared timed path(s), worst 321.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_8 max: 514 undeclared timed path(s), worst 299.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_8 min: 514 undeclared timed path(s), worst 56.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_13 max: 530 undeclared timed path(s), worst 268.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_13 min: 530 undeclared timed path(s), worst 75.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "71 undeclared ot_entry_1->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -296.9 ps u_cdc_host/u_rank__done_d[62] -> u_core_guard/u_rank__done_d[62]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_4 min: 71 undeclared timed path(s), worst 555.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_7 max: 1 undeclared timed path(s), worst 180.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_7 min: 1 undeclared timed path(s), worst 310.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "32 undeclared ot_entry_1->ot_entry_8 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -145.6 ps u_cdc_host/u_rank__done_d[62] -> u_core_tx/u_rank__done_d[62]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_8 min: 65 undeclared timed path(s), worst 427.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_9 max: 516 undeclared timed path(s), worst 306.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_9 min: 516 undeclared timed path(s), worst 110.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_11 max: 516 undeclared timed path(s), worst 306.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_11 min: 516 undeclared timed path(s), worst 110.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_0 max: 530 undeclared timed path(s), worst 306.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_0 min: 530 undeclared timed path(s), worst 109.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "4 undeclared ot_entry_2->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -680.1 ps u_cdc_pc/service_faults_core[0] -> u_core_guard/service_faults[3]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_4 min: 4 undeclared timed path(s), worst 1088.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_14 max: 1 undeclared timed path(s), worst 203.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_14 min: 1 undeclared timed path(s), worst 285.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_15 max: 129 undeclared timed path(s), worst 8.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_15 min: 129 undeclared timed path(s), worst 238.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_2->ot_entry_16 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -69.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_1___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_16 min: 129 undeclared timed path(s), worst 312.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_17 max: 129 undeclared timed path(s), worst 79.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_17 min: 129 undeclared timed path(s), worst 267.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_18 max: 129 undeclared timed path(s), worst 44.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_18 min: 129 undeclared timed path(s), worst 301.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "6 undeclared ot_entry_2->ot_entry_19 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -6.8 ps u_cdc_pc/u_rank__d_cd[513] -> u_rank__u_adapter__g_slice_4___u_slice/c_d[1]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_19 min: 17 undeclared timed path(s), worst 460.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_2->ot_entry_20 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -151.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_5___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_20 min: 1 undeclared timed path(s), worst 622.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_2->ot_entry_21 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -254.1 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_6___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_21 min: 1 undeclared timed path(s), worst 721.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_2->ot_entry_22 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -78.1 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_7___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_22 min: 1 undeclared timed path(s), worst 562.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_0 max: 513 undeclared timed path(s), worst 322.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_0 min: 513 undeclared timed path(s), worst 70.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_4 max: 20 undeclared timed path(s), worst 66.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_4 min: 20 undeclared timed path(s), worst 266.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_6 max: 514 undeclared timed path(s), worst 228.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_6 min: 514 undeclared timed path(s), worst 78.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_7 max: 515 undeclared timed path(s), worst 224.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_7 min: 515 undeclared timed path(s), worst 73.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_8 max: 31 undeclared timed path(s), worst 253.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_8 min: 31 undeclared timed path(s), worst 184.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_0 max: 227 undeclared timed path(s), worst 116.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_0 min: 227 undeclared timed path(s), worst 75.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_6 max: 156 undeclared timed path(s), worst 143.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_6 min: 156 undeclared timed path(s), worst 91.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_5->ot_entry_1 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -36.4 ps u_core_order/u_rank__global_prefix_v -> u_cdc_host/u_rank__global_prefix_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_1 min: 1 undeclared timed path(s), worst 502.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "7 undeclared ot_entry_5->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -381.2 ps u_core_order/service_faults[4] -> u_core_guard/service_faults[18]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_4 min: 7 undeclared timed path(s), worst 619.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_7 max: 132 undeclared timed path(s), worst 31.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_7 min: 132 undeclared timed path(s), worst 239.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_9 max: 1 undeclared timed path(s), worst 236.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_9 min: 1 undeclared timed path(s), worst 226.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_5->ot_entry_10 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -36.4 ps u_core_order/u_rank__global_prefix_v -> u_cdc_host/u_rank__global_prefix_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_10 min: 1 undeclared timed path(s), worst 502.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_11 max: 1 undeclared timed path(s), worst 236.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_11 min: 1 undeclared timed path(s), worst 226.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_0 max: 451 undeclared timed path(s), worst 63.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_0 min: 451 undeclared timed path(s), worst 96.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_1 max: 1 undeclared timed path(s), worst 237.2 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_1 min: 1 undeclared timed path(s), worst 247.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_2 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -158.5 ps u_core_prompt/host_rst_n -> u_cdc_pc/host_rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_2 min: 1 undeclared timed path(s), worst 612.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_3 max: 531 undeclared timed path(s), worst 244.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_3 min: 531 undeclared timed path(s), worst 75.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_4 max: 153 undeclared timed path(s), worst 33.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_4 min: 153 undeclared timed path(s), worst 83.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_5 max: 1 undeclared timed path(s), worst 59.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_5 min: 1 undeclared timed path(s), worst 412.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_7 max: 2 undeclared timed path(s), worst 215.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_7 min: 2 undeclared timed path(s), worst 90.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_8 max: 515 undeclared timed path(s), worst 110.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_8 min: 515 undeclared timed path(s), worst 56.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_9 max: 1 undeclared timed path(s), worst 238.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_9 min: 1 undeclared timed path(s), worst 210.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_10 max: 1 undeclared timed path(s), worst 237.2 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_10 min: 1 undeclared timed path(s), worst 247.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_11 max: 1 undeclared timed path(s), worst 238.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_11 min: 1 undeclared timed path(s), worst 210.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_13 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -158.5 ps u_core_prompt/host_rst_n -> u_cdc_pc/host_rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_13 min: 1 undeclared timed path(s), worst 612.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_14 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -377.5 ps u_core_prompt/host_rst_n -> u_rank__u_phy__u_pad/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_14 min: 1 undeclared timed path(s), worst 834.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_15 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -60.9 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_0___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_15 min: 1 undeclared timed path(s), worst 543.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_16 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -136.6 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_1___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_16 min: 1 undeclared timed path(s), worst 618.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_17 max: 1 undeclared timed path(s), worst 23.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_17 min: 1 undeclared timed path(s), worst 462.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_18 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -89.9 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_3___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_18 min: 1 undeclared timed path(s), worst 573.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_19 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -167.3 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_4___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_19 min: 1 undeclared timed path(s), worst 647.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_20 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -500.1 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_5___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_20 min: 1 undeclared timed path(s), worst 973.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_21 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -495.3 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_6___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_21 min: 1 undeclared timed path(s), worst 968.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_6->ot_entry_22 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -274.9 ps u_core_prompt/host_rst_n -> u_rank__u_adapter__g_slice_7___u_slice/rst_n",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_22 min: 1 undeclared timed path(s), worst 753.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "32 undeclared ot_entry_7->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -223.6 ps u_core_queue/certificate_prefix[27] -> u_core_peer/certificate_prefix[27]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_0 min: 99 undeclared timed path(s), worst 234.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_1 max: 515 undeclared timed path(s), worst 131.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_1 min: 515 undeclared timed path(s), worst 212.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_3 max: 1 undeclared timed path(s), worst 336.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_3 min: 1 undeclared timed path(s), worst 156.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "33 undeclared ot_entry_7->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -195.4 ps u_core_queue/certificate_prefix[27] -> u_core_guard/certificate_prefix[27]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_4 min: 36 undeclared timed path(s), worst 375.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_5 max: 1 undeclared timed path(s), worst 188.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_5 min: 1 undeclared timed path(s), worst 297.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_10 max: 515 undeclared timed path(s), worst 131.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_10 min: 515 undeclared timed path(s), worst 212.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_0 max: 517 undeclared timed path(s), worst 262.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_0 min: 517 undeclared timed path(s), worst 80.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_1 max: 1 undeclared timed path(s), worst 68.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_1 min: 1 undeclared timed path(s), worst 408.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_4 max: 1 undeclared timed path(s), worst 236.2 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_4 min: 1 undeclared timed path(s), worst 252.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_6 max: 1 undeclared timed path(s), worst 310.2 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_6 min: 1 undeclared timed path(s), worst 146.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_10 max: 1 undeclared timed path(s), worst 68.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_10 min: 1 undeclared timed path(s), worst 408.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_1 max: 70 undeclared timed path(s), worst 358.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_1 min: 70 undeclared timed path(s), worst 77.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_9->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -218.1 ps u_ingest_qm/service_faults -> u_core_guard/service_faults[12]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_4 min: 1 undeclared timed path(s), worst 663.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_5 max: 290 undeclared timed path(s), worst 285.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_5 min: 290 undeclared timed path(s), worst 77.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_10 max: 70 undeclared timed path(s), worst 358.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_10 min: 70 undeclared timed path(s), worst 77.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "71 undeclared ot_entry_10->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -296.9 ps u_cdc_host/u_rank__done_d[62] -> u_core_guard/u_rank__done_d[62]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_4 min: 71 undeclared timed path(s), worst 555.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_7 max: 1 undeclared timed path(s), worst 180.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_7 min: 1 undeclared timed path(s), worst 310.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "32 undeclared ot_entry_10->ot_entry_8 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -145.6 ps u_cdc_host/u_rank__done_d[62] -> u_core_tx/u_rank__done_d[62]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_8 min: 65 undeclared timed path(s), worst 427.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_9 max: 516 undeclared timed path(s), worst 306.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_9 min: 516 undeclared timed path(s), worst 110.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_11 max: 516 undeclared timed path(s), worst 306.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_11 min: 516 undeclared timed path(s), worst 110.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_1 max: 70 undeclared timed path(s), worst 358.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_1 min: 70 undeclared timed path(s), worst 77.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_11->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -218.1 ps u_ingest_qm/service_faults -> u_core_guard/service_faults[12]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_4 min: 1 undeclared timed path(s), worst 663.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_5 max: 290 undeclared timed path(s), worst 285.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_5 min: 290 undeclared timed path(s), worst 77.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_10 max: 70 undeclared timed path(s), worst 358.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_10 min: 70 undeclared timed path(s), worst 77.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_0 max: 530 undeclared timed path(s), worst 306.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_0 min: 530 undeclared timed path(s), worst 109.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "4 undeclared ot_entry_13->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -680.1 ps u_cdc_pc/service_faults_core[0] -> u_core_guard/service_faults[3]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_4 min: 4 undeclared timed path(s), worst 1088.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_14 max: 1 undeclared timed path(s), worst 203.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_14 min: 1 undeclared timed path(s), worst 285.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_15 max: 129 undeclared timed path(s), worst 8.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_15 min: 129 undeclared timed path(s), worst 238.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_13->ot_entry_16 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -69.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_1___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_16 min: 129 undeclared timed path(s), worst 312.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_17 max: 129 undeclared timed path(s), worst 79.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_17 min: 129 undeclared timed path(s), worst 267.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_18 max: 129 undeclared timed path(s), worst 44.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_18 min: 129 undeclared timed path(s), worst 301.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "6 undeclared ot_entry_13->ot_entry_19 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -6.8 ps u_cdc_pc/u_rank__d_cd[513] -> u_rank__u_adapter__g_slice_4___u_slice/c_d[1]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_19 min: 17 undeclared timed path(s), worst 460.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_13->ot_entry_20 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -151.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_5___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_20 min: 1 undeclared timed path(s), worst 622.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_13->ot_entry_21 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -254.1 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_6___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_21 min: 1 undeclared timed path(s), worst 721.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_13->ot_entry_22 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -78.1 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_7___u_slice/c_v",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_22 min: 1 undeclared timed path(s), worst 562.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_2 max: 529 undeclared timed path(s), worst 69.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_2 min: 529 undeclared timed path(s), worst 278.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_14->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -721.7 ps u_rank__u_phy__u_pad/fault -> u_core_guard/service_faults[1]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_4 min: 1 undeclared timed path(s), worst 1133.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_13 max: 529 undeclared timed path(s), worst 69.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_13 min: 529 undeclared timed path(s), worst 278.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_15 max: 1 undeclared timed path(s), worst 43.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_15 min: 1 undeclared timed path(s), worst 354.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_16 max: 1 undeclared timed path(s), worst 110.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_16 min: 1 undeclared timed path(s), worst 292.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_17 max: 1 undeclared timed path(s), worst 75.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_17 min: 1 undeclared timed path(s), worst 328.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_18 max: 1 undeclared timed path(s), worst 81.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_18 min: 1 undeclared timed path(s), worst 322.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_19 max: 1 undeclared timed path(s), worst 146.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_19 min: 1 undeclared timed path(s), worst 254.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_20 max: 1 undeclared timed path(s), worst 187.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_20 min: 1 undeclared timed path(s), worst 213.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_21 max: 1 undeclared timed path(s), worst 153.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_21 min: 1 undeclared timed path(s), worst 247.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_22 max: 1 undeclared timed path(s), worst 112.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_22 min: 1 undeclared timed path(s), worst 287.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_2 max: 1 undeclared timed path(s), worst 278.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_2 min: 1 undeclared timed path(s), worst 201.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cross_clock",
+   "message": "1 undeclared ot_entry_15->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -1149.3 ps u_rank__u_adapter__g_slice_0___u_slice/fault -> u_core_guard/service_faults[0]",
+   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_4 min: 1 undeclared timed path(s), worst 1546.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_13 max: 1 undeclared timed path(s), worst 278.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_13 min: 1 undeclared timed path(s), worst 201.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_14 max: 129 undeclared timed path(s), worst 128.7 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_14 min: 129 undeclared timed path(s), worst 272.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_16->ot_entry_14 max: 128 undeclared timed path(s), worst 195.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_16->ot_entry_14 min: 128 undeclared timed path(s), worst 177.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_17->ot_entry_14 max: 128 undeclared timed path(s), worst 68.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_17->ot_entry_14 min: 128 undeclared timed path(s), worst 256.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_18->ot_entry_14 max: 128 undeclared timed path(s), worst 115.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_18->ot_entry_14 min: 128 undeclared timed path(s), worst 214.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_14 max: 128 undeclared timed path(s), worst 196.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_14 min: 128 undeclared timed path(s), worst 183.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_14 max: 128 undeclared timed path(s), worst 204.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_14 min: 128 undeclared timed path(s), worst 174.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_14 max: 128 undeclared timed path(s), worst 109.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_14 min: 128 undeclared timed path(s), worst 262.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_22->ot_entry_14 max: 128 undeclared timed path(s), worst 103.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_22->ot_entry_14 min: 128 undeclared timed path(s), worst 218.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck_core__cdc_host: 1 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-k-hroot-p10a-collect-1021/physical/ref_tile/qkd_hr_cluster_p10a/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-k-hroot-p10a-collect-1021/physical/ref_tile/qkd_hr_cluster_p10a/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 48% = (hard macros 911425.0 + synthesized std cells 27.0) / outline 1911029.8 um2; pin demand per face: S 0 pins over 0.0/1382.4 um (0%), N 2319 pins over 1185.3/1382.4 um (86%), W 2131 pins over 670.8/1382.4 um (48%), E 3280 pins over 1166.2/1382.4 um (84%) (< 50%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 6.65% used; GRT 16931 s",
+   "fix": ""
+  }
+ ]
+}

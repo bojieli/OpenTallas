@@ -1,0 +1,62 @@
+[
+ {
+  "severity": "FAIL",
+  "check": "textbook.wire_reach",
+  "message": "405 stage(s) beyond 500 um reach: insert relay flops",
+  "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+ },
+ {
+  "severity": "FAIL",
+  "check": "textbook.wire_reach",
+  "message": "combinational path pin die_id[2] -> u_rank__u_control__u_packet__u_rx/die_id[2]: up to 1404 um with no register (> 500 um)",
+  "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+ },
+ {
+  "severity": "FAIL",
+  "check": "textbook.wire_reach",
+  "message": "combinational path pin die_id[1] -> u_rank__u_control__u_packet__u_rx/die_id[1]: up to 1402 um with no register (> 500 um)",
+  "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+ },
+ {
+  "severity": "FAIL",
+  "check": "textbook.wire_reach",
+  "message": "combinational path pin die_id[0] -> u_rank__u_control__u_packet__u_rx/die_id[0]: up to 1401 um with no register (> 500 um)",
+  "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+ },
+ {
+  "severity": "FAIL",
+  "check": "cross_clock",
+  "message": "71 undeclared ot_entry_1->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -296.9 ps u_cdc_host/u_rank__done_d[62] -> u_core_guard/u_rank__done_d[62]",
+  "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+ },
+ {
+  "severity": "FAIL",
+  "check": "cross_clock",
+  "message": "32 undeclared ot_entry_1->ot_entry_8 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -145.6 ps u_cdc_host/u_rank__done_d[62] -> u_core_tx/u_rank__done_d[62]",
+  "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+ },
+ {
+  "severity": "FAIL",
+  "check": "cross_clock",
+  "message": "4 undeclared ot_entry_2->ot_entry_4 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -680.1 ps u_cdc_pc/service_faults_core[0] -> u_core_guard/service_faults[3]",
+  "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+ },
+ {
+  "severity": "FAIL",
+  "check": "cross_clock",
+  "message": "1 undeclared ot_entry_2->ot_entry_16 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -69.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_1___u_slice/c_v",
+  "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+ },
+ {
+  "severity": "FAIL",
+  "check": "cross_clock",
+  "message": "6 undeclared ot_entry_2->ot_entry_19 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -6.8 ps u_cdc_pc/u_rank__d_cd[513] -> u_rank__u_adapter__g_slice_4___u_slice/c_d[1]",
+  "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+ },
+ {
+  "severity": "FAIL",
+  "check": "cross_clock",
+  "message": "1 undeclared ot_entry_2->ot_entry_20 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -151.9 ps u_cdc_pc/u_rank__d_cv -> u_rank__u_adapter__g_slice_5___u_slice/c_v",
+  "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
+ }
+]
