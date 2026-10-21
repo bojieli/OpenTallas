@@ -1,0 +1,18 @@
+{
+ "state": "PROPOSAL_ONLY_ROOT_SHARED_FLOW_OWNER_NO_EXECUTION",
+ "scope": "ONEsame-source R1 finalconstant distribution repair usingexistingcanonicalOpenROADrepair_tie_fanout; noRTL/clock/SDC/thresholdchange/no exemption",
+ "target": "actual _29601_/L TIELOx1_ASAP7_75t_R actualLibertyfunction0 net_15892_ raw188 terminals",
+ "proposed_mechanism": "execute existingrepair_tie_fanout -separation0 actualRVT_TT TIELO/L afternativehierarchyexpansion andfinalholdECO in supportednormalpostrouteflow; realphysicaltiecell replication andnewnets, not partitioned identities/renamedaliases. Ifcanonicalcommandcannotdistributebecauseprotection/hierarchy, reportunsupported ratherthanforce/waive.",
+ "functional_identity": "newcells mustsameactual loadedTIELOmaster/Lfunction0; connectcurrentimmediate loadpins preservingexistingunary/inversiontree (neverreattachdownstreaminvertedterminalsto0). OriginalfunctionalRTL/inputvalues andlatencies unchanged.",
+ "bounded_budget": {
+  "original_direct_sink_pins": 172,
+  "maximum_additional_real_TIELO_cells": 172,
+  "area_formula": "<=172 * actualpinnedLibertyTIELOcellarea (lookupexactarea in ownerrepairpreflight, valueunmeasuredhere)",
+  "new_registers": 0,
+  "new_clocks": 0,
+  "new_pipeline_edges": 0,
+  "outline_change": 0
+ },
+ "physical_execution": "ROOTtoownboundednormalincrementallegalization/routing/signoff forchangedphysicalnets; no fullroute/benchduplicate. Newlinkedrepairreceipt/sourcebinding preservesoldnormaltimingCLOSED+actualnativeFAIL; no oldmanifest overwrite.",
+ "qualification_required": "actualnewODB/source/function/cell/netidentity+strictall-driver<=32 includingconstants, reach<=405, completeactualroutedTTFFclockfamilies, TTsetup/FFhold/DRCnormalcriteria andbeforeafter provenance. No clock/timing waiver."
+}

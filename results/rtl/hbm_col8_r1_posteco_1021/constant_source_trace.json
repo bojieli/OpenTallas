@@ -1,0 +1,22 @@
+{
+ "source_constant": "1_2_yosys.v _29601_ TIELOx1_ASAP7_75t_R/L drives_15892_; 16constant0padbits on .b of eachof2nativeadder instances (u_pair.g_h[0/1].g_sum.u_a)",
+ "synth_netlist_sha256": "b6cc76db86d08b966e4cb22ec2bb1f0fed1972cb3707713a6be5a424bccfc9e0",
+ "pre_eco_netlist_sha256": "daf852fa21ac18f065e7a62746d3549c599cbfa1e0b28a3b7396342304e03e27",
+ "final_netlist_sha256": "793f66ae42f6ae147cc081fb4e75f08929335f8ef668be66987f47959f57285f",
+ "pre_and_post_eco_constant_net_direct_instance_pin_pairs": 173,
+ "same_exact_direct_connection_set": true,
+ "direct_connection_set_sha256": "4c4ae5de8a8ba7d4a7658bc00678242df6b281b9ff8ed327beb79672f9f37181",
+ "actual_final_transitive_data_terminal_count": 188,
+ "actual_function": "native loadedRVT_TTLiberty TIELOx1_ASAP7_75t_R L function0",
+ "saved_floorplan_log": "routes/.../work/orfs/logs/asap7/opentallas_ot_hidx_score_pair8_r1_asap7_ref_hidx_score_pair8_r1_r1_005325591/base/2_1_floorplan.log",
+ "existing_commands": [
+  "repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L",
+  "repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIEHIx1_ASAP7_75t_R/H"
+ ],
+ "actual_floorplan_insertions": "logreports13TIEHI instances inserted; noTIELO insertion reported",
+ "last_change_bounds": "constantfunction/paddedinput presentat synthesis. Exactdirectnetconnections alreadyidenticalin saved preECO and final; ECO didnot change that directconnectionset. Exact firstphysicalexpansionstage not recorded in availabletext; no earlier188rawcensus invented.",
+ "saved_ECO_helper_sha256": {
+  "hold_eco.tcl": "54124948665b04ce8e8b4aef076eeeabe7e8415ba5cfc1b81450f6654fa91e5b",
+  "vtswap_eco.tcl": "469555a67f57f6dafa6529012e94414de6a70b9eab89a93748f4d5f80176a284"
+ }
+}
