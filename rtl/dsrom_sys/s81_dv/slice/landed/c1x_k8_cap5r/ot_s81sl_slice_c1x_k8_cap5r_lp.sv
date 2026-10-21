@@ -1,3 +1,4 @@
+// S81 DIE72 G8 (10-21): u_xg -> ot_s81sl_xgt_xo (S81-FIX2/XG 6aac44322) supersedes the G7 xg_xo note below.
 // S81-FIX2/XG (10-21): u_xg master -> ot_s81sl_xgt_xo (ONE combined master: RG-HEAD head XB egress + RG-FFN safe rstopt +
 // xg5-lineage native xs4; same ports).  Cycle delta vs xg_xo / xgt: ring +0, xw_v / xw_d +1 edge, fault +1 (MU.S81.CAL).
 // S81-LINK5B G7 (10-21): u_xr -> ot_s81sl_xrt1 (S81-RTLGAP/ffn 59a8155d3, FFN row-pair V transport); u_xg stays ot_s81sl_xg_xo
