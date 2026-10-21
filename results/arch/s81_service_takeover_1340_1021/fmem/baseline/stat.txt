@@ -1,0 +1,34 @@
+
+21. Printing statistics.
+
+=== fmem_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     8506        - wires
+    21356        - wire bits
+       15        - public wires
+    12865        - public wire bits
+        7        - ports
+     4261        - port bits
+    10629 1.18E+03 cells
+        1        -   $scopeinfo
+        1    0.087   AND3x1_ASAP7_75t_R
+        1    0.087   AOI211xp5_ASAP7_75t_R
+        1    0.087   AOI22xp33_ASAP7_75t_R
+     2121  618.484   DFFHQNx1_ASAP7_75t_R
+        3    0.131   INVx1_ASAP7_75t_R
+     4240  247.277   NAND2xp33_ASAP7_75t_R
+        1    0.087   OAI211xp5_ASAP7_75t_R
+     4240  309.096   OAI21xp33_ASAP7_75t_R
+        1    0.087   OAI22xp33_ASAP7_75t_R
+        2    0.262   XNOR2xp5_ASAP7_75t_R
+       17        -   ot_sram_1r1w_32x128_m1
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_32x128_m1 is unknown!
+
+   Chip area for module '\fmem_gate': 1175.687460
+     of which used for sequential elements: 618.483600 (52.61%)
+

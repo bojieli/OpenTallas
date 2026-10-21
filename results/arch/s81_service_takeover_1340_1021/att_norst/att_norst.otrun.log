@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/elemsvc-g4-1021/src_norst
+ot-run: ot-epyc7       admits   259 GB (avail 449, growth 268, headroom 0, waiters 0/0 GB) load 54/96 running 19 disk 4702 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/elemsvc-g4-1021/src_norst
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/elemsvc-g4-1021/src_norst
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/elemsvc-g4-1021/src_norst
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/elemsvc-g4-1021/src_norst
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/elemsvc-g4-1021/src_norst
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3473503-1792609964 after 0 s
+CURRENT_ATT T=1 SRAM=1 NTP=0/1 scores=1/1 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+CURRENT_ATT T=33 SRAM=1 NTP=0/1 scores=9/9 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+CURRENT_ATT T=46 SRAM=1 NTP=0/1 scores=12/12 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3473503-1792609964): exit 0

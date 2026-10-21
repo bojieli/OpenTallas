@@ -1,0 +1,264 @@
+{
+  "source_base": "187ef5309",
+  "actual_att": {
+    "att_m96": {
+      "status": "PASS",
+      "T": [
+        1,
+        33,
+        46
+      ],
+      "unit": "3359470-1792609610",
+      "scope": "real currentABI ATT SRAM/NTP0vs1 legalWINmetadataHBMfixture; notall16/fullhead/LP/resetprofile"
+    },
+    "att_norst": {
+      "status": "PASS",
+      "T": [
+        1,
+        33,
+        46
+      ],
+      "unit": "3473503-1792609964",
+      "scope": "real currentABI ATT SRAM/NTP0vs1 legalWINmetadataHBMfixture; notall16/fullhead/LP/resetprofile"
+    }
+  },
+  "native": {
+    "sram": {
+      "status": "FAIL",
+      "max": 19040,
+      "violations": 8974,
+      "role_errors": 0,
+      "top": [
+        {
+          "driver": "rst_n",
+          "net": "rst_n",
+          "loads": 19040
+        },
+        {
+          "driver": "_2016262_/QN",
+          "net": "_0176910_",
+          "loads": 4268
+        },
+        {
+          "driver": "_2011846_/QN",
+          "net": "_0177925_",
+          "loads": 3517
+        },
+        {
+          "driver": "_2000628_/QN",
+          "net": "_0063842_",
+          "loads": 2208
+        },
+        {
+          "driver": "_2004052_/QN",
+          "net": "_0176914_",
+          "loads": 2049
+        },
+        {
+          "driver": "_1817341_/Y",
+          "net": "_0608715_",
+          "loads": 2048
+        },
+        {
+          "driver": "_1821440_/Y",
+          "net": "_0611789_",
+          "loads": 2048
+        },
+        {
+          "driver": "_1878680_/QN",
+          "net": "_0094089_",
+          "loads": 2048
+        },
+        {
+          "driver": "_0915396_/Y",
+          "net": "_0684364_",
+          "loads": 1861
+        },
+        {
+          "driver": "_2016699_/QN",
+          "net": "_0176901_",
+          "loads": 1540
+        },
+        {
+          "driver": "qr_tag[10]",
+          "net": "qr_tag[10]",
+          "loads": 1086
+        },
+        {
+          "driver": "qr_tag[27]",
+          "net": "qr_tag[27]",
+          "loads": 1075
+        },
+        {
+          "driver": "_2000781_/QN",
+          "net": "_0030817_",
+          "loads": 1073
+        },
+        {
+          "driver": "_1681927_/Y",
+          "net": "_0562413_",
+          "loads": 1047
+        },
+        {
+          "driver": "_1794716_/Y",
+          "net": "_0596906_",
+          "loads": 1033
+        },
+        {
+          "driver": "_1999612_/QN",
+          "net": "_0064633_",
+          "loads": 1011
+        },
+        {
+          "driver": "qr_tag[28]",
+          "net": "qr_tag[28]",
+          "loads": 991
+        },
+        {
+          "driver": "qr_tag[11]",
+          "net": "qr_tag[11]",
+          "loads": 976
+        },
+        {
+          "driver": "_1682524_/Y",
+          "net": "_0562553_",
+          "loads": 960
+        },
+        {
+          "driver": "qr_tag[29]",
+          "net": "qr_tag[29]",
+          "loads": 806
+        }
+      ]
+    },
+    "norst": {
+      "status": "FAIL",
+      "max": 8173,
+      "violations": 8983,
+      "role_errors": 0,
+      "top": [
+        {
+          "driver": "rst_n",
+          "net": "rst_n",
+          "loads": 8173
+        },
+        {
+          "driver": "_2013271_/QN",
+          "net": "_0177611_",
+          "loads": 4268
+        },
+        {
+          "driver": "_1996173_/QN",
+          "net": "_0069834_",
+          "loads": 2290
+        },
+        {
+          "driver": "_2008855_/QN",
+          "net": "_0015063_",
+          "loads": 2260
+        },
+        {
+          "driver": "_1999695_/QN",
+          "net": "_0177615_",
+          "loads": 2049
+        },
+        {
+          "driver": "_1815439_/Y",
+          "net": "_0610420_",
+          "loads": 2048
+        },
+        {
+          "driver": "_1819541_/Y",
+          "net": "_0613494_",
+          "loads": 2048
+        },
+        {
+          "driver": "_1874006_/QN",
+          "net": "_0094992_",
+          "loads": 2048
+        },
+        {
+          "driver": "_0913430_/Y",
+          "net": "_0682974_",
+          "loads": 1966
+        },
+        {
+          "driver": "_2013708_/QN",
+          "net": "_0177602_",
+          "loads": 1540
+        },
+        {
+          "driver": "_1996326_/QN",
+          "net": "_0030056_",
+          "loads": 1149
+        },
+        {
+          "driver": "_2008825_/QN",
+          "net": "_0062455_",
+          "loads": 1060
+        },
+        {
+          "driver": "_2008841_/QN",
+          "net": "_0062438_",
+          "loads": 1060
+        },
+        {
+          "driver": "_1345524_/Y",
+          "net": "_0340317_",
+          "loads": 1048
+        },
+        {
+          "driver": "_1792141_/Y",
+          "net": "_0598619_",
+          "loads": 1030
+        },
+        {
+          "driver": "_2008826_/QN",
+          "net": "_0062454_",
+          "loads": 1019
+        },
+        {
+          "driver": "_2008842_/QN",
+          "net": "_0062437_",
+          "loads": 992
+        },
+        {
+          "driver": "_1680492_/Y",
+          "net": "_0564523_",
+          "loads": 948
+        },
+        {
+          "driver": "_2008827_/QN",
+          "net": "_0062453_",
+          "loads": 806
+        },
+        {
+          "driver": "_2008843_/QN",
+          "net": "_0062436_",
+          "loads": 803
+        }
+      ]
+    }
+  },
+  "fmem": {
+    "default_define": "OT_SVC_FMEM_N32 absent by default",
+    "cycles": 2160,
+    "collisions": 540,
+    "mismatches": 0,
+    "no_bypass_negative_mismatches": 1620,
+    "native_baseline": {
+      "status": "FAIL",
+      "max_dynamic_loads": 4258,
+      "violations": 2
+    },
+    "native_candidate": {
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "violations": 0,
+      "role_errors": 0
+    },
+    "behaviour_unit": "932046-1792616074",
+    "native_unit": "943966-1792616188",
+    "scope": "actual memory+kept flags component, engine same-edge replicas source-modeled; wholeATT integration next, no fullcore/LP/native/physical/calendar adoption"
+  }
+}

@@ -289,7 +289,11 @@ module dsdv_svc_att_core #(
 `ifdef OT_SVC_ATT_SRAM
     wire [5:0] sw_rn = sw_r + 6'(sw_step && (sw_i == 5'd15 || sw_i + 1'b1 >= sw_hn));   // sw_r of the next cycle
     dsdv_svc_fmem #(.W(527), .BYP((MUT == 7) ? 0 : 1)) u_swm (.clk(clk), .we(sel_pay), .wa(sw_w[4:0]),
-        .wd({sw_wn, sw_wb, q_d}), .ra(sw_rn[4:0]), .rd(sw_h));
+        .wd({sw_wn, sw_wb, q_d}), .ra(sw_rn[4:0]), .rd(sw_h)
+`ifdef OT_SVC_FMEM_N32
+        ,.we_reps({3{sel_pay}})
+`endif
+        );
 `else
     always @(posedge clk) if (sel_pay) begin
         sw[sw_w[4:0]] <= q_d; sw_base[sw_w[4:0]] <= sw_wb;
@@ -345,7 +349,11 @@ module dsdv_svc_att_core #(
                 wire [285:0] rd;
                 dsdv_svc_fmem #(.W(286), .BYP((MUT == 7) ? 0 : 1)) u_wqm (.clk(clk),
                     .we(wpush[wc] && wpush_pc[wc] == 3'(wp)), .wa({2'd0, wq_w[wc][wp][2:0]}),
-                    .wd({wpush_d[wc][340:85], wpush_d[wc][31:2]}), .ra({2'd0, rn[2:0]}), .rd(rd));
+                    .wd({wpush_d[wc][340:85], wpush_d[wc][31:2]}), .ra({2'd0, rn[2:0]}), .rd(rd)
+`ifdef OT_SVC_FMEM_N32
+                    ,.we_reps({2{wpush[wc] && wpush_pc[wc] == 3'(wp)}})
+`endif
+                    );
                 assign whead[wc][wp] = {rd[285:30], 32'hffffffff, (wc == 2) ? 17'h1ffff : 17'h1fffe, 4'd1, rd[29:0], 2'b11};
             end
 `else
@@ -519,7 +527,11 @@ module dsdv_svc_att_core #(
     // SVC2 (10-19): q store 16 x 512 in a dsdv_svc_fmem (4 x 32x128), read at rc - 1 on the edge (read-old == the legacy
     // registered eq_w_q read; no write-through, as legacy): 0 cycles
     dsdv_svc_fmem #(.W(512), .BYP(0)) u_qmm (.clk(clk), .we(q_word), .wa({1'b0, f_hdr[448], f_idx[6:4]}), .wd(q_d),
-        .ra({1'b0, 4'(rc - 10'd1)}), .rd(eq_w));
+        .ra({1'b0, 4'(rc - 10'd1)}), .rd(eq_w)
+`ifdef OT_SVC_FMEM_N32
+        ,.we_reps(2'b00)
+`endif
+        );
 `else
     generate if (QMEM_SRAM) begin : g_qmem_sram
         dsdv_svc_qmem8 u_qmem (.clk(clk), .wr_v(q_word),
@@ -577,6 +589,9 @@ module dsdv_svc_att_core #(
 
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
+`ifdef OT_SVC_FMEM_N32
+    wire [((NT*H*33+8)+255)/256-1:0] pv_v_reps;
+`endif
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
 `ifdef SVCQ_ENG_FG3
     localparam integer E_FPL = 3, E_FML = 3, E_TS = 0, E_NAR = 0, E_MF = 0, E_TRX = 0, E_F12 = 0, E_FX = 0;
@@ -593,6 +608,9 @@ module dsdv_svc_att_core #(
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),
         .p_v(ep_v), .p_w(ep_w), .p_ready(ep_ready),
         .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(1'b0),
+`ifdef OT_SVC_FMEM_N32
+        .pv_v_reps(pv_v_reps),
+`endif
         .qk_iss(), .pv_iss(), .tx_i(tx_i), .tx_o(tx_o));
     assign l_v = sc_v;
     assign l_d = {sc_row, sc_m, sc_y, sc_f};
@@ -613,7 +631,11 @@ module dsdv_svc_att_core #(
     wire [PA:0] pvr_n = pvr + (PA+1)'(pvown && dr_on && p_i == 3'd4);
     generate if (PMEM != 0) begin : g_pvq
         dsdv_svc_fmem #(.W(PVB), .BYP((MUT == 7) ? 0 : 1)) u_pvm (.clk(clk), .we(pv_v), .wa(5'(pvw[PA-1:0])),
-            .wd({pv_c, pv_y, pv_f}), .ra(5'(pvr_n[PA-1:0])), .rd(pb));
+            .wd({pv_c, pv_y, pv_f}), .ra(5'(pvr_n[PA-1:0])), .rd(pb)
+`ifdef OT_SVC_FMEM_N32
+            ,.we_reps(pv_v_reps)
+`endif
+            );
     end else begin : g_nopvq
         assign pb = '0;
     end endgenerate
@@ -847,6 +869,9 @@ module dsdv_svc_fmem #(parameter integer W = 128, parameter integer BYP = 1) (
     input  wire [W-1:0] wd,
     input  wire [4:0]   ra,
     output wire [W-1:0] rd
+`ifdef OT_SVC_FMEM_N32
+    , input wire [(W+255)/256-1:0] we_reps
+`endif
 );
     localparam integer NM = (W + 127) / 128;
     wire [NM*128-1:0] q;
@@ -857,9 +882,22 @@ module dsdv_svc_fmem #(parameter integer W = 128, parameter integer BYP = 1) (
             .w_ce_in(we), .w_addr_in(wa), .wd_in(wdp[128*b +: 128]), .w_mask_in({128{1'b1}}));
     end
     if (BYP != 0) begin : g_byp
+`ifdef OT_SVC_FMEM_N32
+        reg [W-1:0] bd;
+        always @(posedge clk) bd <= wd; // observable only under the same-edge bypass flag
+        wire eq_addr = wa == ra;
+        for (genvar c = 0; c < (W+7)/8; c = c+1) begin : g_chunk
+            localparam integer CW = (W-8*c < 8) ? W-8*c : 8;
+            wire byp;
+            ot_hdc_v41x_kreg #(.W(1),.R(0)) u_flag (.clk(clk),.rst_n(1'b1),
+                .d(we_reps[c/32] && eq_addr),.q(byp));
+            assign rd[8*c +: CW] = byp ? bd[8*c +: CW] : q[8*c +: CW];
+        end
+`else
         reg byp; reg [W-1:0] bd;
         always @(posedge clk) begin byp <= we && wa == ra; if (we) bd <= wd; end
         assign rd = byp ? bd : q[W-1:0];
+`endif
     end else begin : g_nobyp
         assign rd = q[W-1:0];
     end endgenerate

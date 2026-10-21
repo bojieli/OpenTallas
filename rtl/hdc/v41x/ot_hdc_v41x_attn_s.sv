@@ -288,6 +288,9 @@ module ot_hdc_v41x_attn_s #(
     input  wire [PWORDS*TD*16-1:0] p_w,
     output wire                   p_ready,
     // pv
+`ifdef OT_SVC_FMEM_N32
+    output wire [((NL*(D/TD)*H*33+8)+255)/256-1:0] pv_v_reps,
+`endif
     output reg                    pv_v,
     output reg  [7:0]             pv_c,
     output reg  [NL*(D/TD)*H*32-1:0] pv_y,
@@ -1152,6 +1155,11 @@ module ot_hdc_v41x_attn_s #(
         if (!rst_n) pv_v <= 1'b0;
         else pv_v <= m_ov[0];
     end
+`ifdef OT_SVC_FMEM_N32
+    for (genvar pr=0; pr<((NT*H*33+8)+255)/256; pr=pr+1) begin : g_pv_valid_copy
+        ot_hdc_v41x_kreg #(.W(1),.R(1)) u_v (.clk(clk),.rst_n(rst_n),.d(m_ov[0]),.q(pv_v_reps[pr]));
+    end
+`endif
     always @(posedge clk) begin
         pv_c <= m_c; pv_y <= m_y; pv_f <= m_f;
     end

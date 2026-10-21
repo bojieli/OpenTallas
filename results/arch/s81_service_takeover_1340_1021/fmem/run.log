@@ -1,0 +1,5 @@
+FMEM_RESULT checks=2160 collisions=540 errors=0 no_bypass_mismatches=1620
+- tools/s81_dv/svc_rs/fmem_n32/tb_fmem.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 0.142 s; speed 155.402 us/s
+- Verilator: cpu 0.142 s on 1 threads; allocated 7 MB

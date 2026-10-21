@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_att
+ot-run: ot-epyc7       admits   539 GB (avail 471, growth 93, headroom 0, waiters 0/0 GB) load 35/96 running 19 disk 4722 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_att
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_att
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_att
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_att
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_att
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3359470-1792609610 after 1 s
+CURRENT_ATT T=1 SRAM=1 NTP=0/1 scores=1/1 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+CURRENT_ATT T=33 SRAM=1 NTP=0/1 scores=9/9 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+CURRENT_ATT T=46 SRAM=1 NTP=0/1 scores=12/12 pv_words=40/40 go=1/1 done=11 faults=00000000/00000000 mismatch=0 pio=123/123 st=0/0
+CURRENT_ATT PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3359470-1792609610): exit 0

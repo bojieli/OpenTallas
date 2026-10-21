@@ -1,0 +1,18 @@
+read_verilog -lib /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v
+read_verilog -defer -sv -DSYNTHESIS -DOT_SVC_FMEM_N32  /src/tools/s81_dv/svc_rs/fmem_n32/fmem_actual.sv /src/tools/s81_dv/svc_rs/fmem_n32/fmem_ref.sv /src/tools/s81_dv/svc_rs/fmem_n32/fmem_gate.sv /src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv
+hierarchy -check -top fmem_gate
+read_liberty -lib /techlib/SEQ.lib
+read_liberty -lib /techlib/SIMPLE.lib
+read_liberty -lib /techlib/AO.lib
+read_liberty -lib /techlib/OA.lib
+read_liberty -lib /techlib/INVBUF.lib
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top fmem_gate -flatten -noshare
+dfflibmap -liberty /techlib/SEQ.lib
+abc -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+opt_clean
+setattr -mod -unset keep_hierarchy
+flatten
+opt_clean
+tee -o /out/stat.txt stat -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+write_verilog -noattr /out/flat.v
