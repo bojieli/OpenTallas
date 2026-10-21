@@ -57,6 +57,9 @@ if [ "${STORE10:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r10.sv $
 if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
 # CORE3=1 (k9, opt-in): ot_hgi_sfu_core_split3 = split2 re-sliced into W/N/E/S lane face groups (pure port wrapper)
 if [ "${CORE3:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv $P/ot_hgi_sfu_core_split3.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_kept_tree.sv); defs+=(-DSFU_CORE_SPLIT3); fi
+# CORE3L=1 (k9z, HBM-COLLECT10/SFUC 10-21, with CORE3=1): the core under test is ot_hgi_sfu_core_split3l (split3 with
+# per-lane scalar clock / reset entry ports; pure port wrapper)
+if [ "${CORE3L:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split3l.sv); defs+=(-DSFU_CORE_SPLIT3L); fi
 # CORE3 runs split3 with DRAIN_PIPE=1 (SFU-K9 10-18: registered drain interface, local_wq +1 edge); EQ_MUT=nodrainpipe:
 # drain data bypasses that stage while its valids keep it (must fail)
 # HBM-SAFE-K9 (10-19): CORE3 also runs WPIPE=1 (bank-write landing stage) + GCLK=1 (store group roots clk_st[4:0]);

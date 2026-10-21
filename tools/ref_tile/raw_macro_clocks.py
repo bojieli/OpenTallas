@@ -32,7 +32,7 @@ def groups(text):
             raise ValueError('raw memory Liberty has an unterminated group')
 
 
-def memory_clock(path, master):
+def memory_clock(path, master, dual=False, interface=False):
     libs = list(groups(path.read_text()))
     if len(libs) != 1 or libs[0][0] != 'library':
         raise ValueError(f'raw memory needs one actual Liberty library: {path}')
@@ -41,20 +41,34 @@ def memory_clock(path, master):
         raise ValueError(f'raw memory Liberty cell differs from declared master {master}')
     children = list(groups(cells[0][1]))
     memories = [body for kind, _, body in children if kind == 'memory']
-    if len(memories) != 1 or any(kind in ('ff', 'latch') for kind, _, _ in children):
+    if any(kind in ('ff', 'latch') for kind, _, _ in children):
         raise ValueError(f'{master}: not a raw Liberty memory cell')
-    memory = memories[0]
-    if not re.search(r'\btype\s*:\s*(rom|ram)\s*;', memory):
-        raise ValueError(f'{master}: raw memory type must be rom or ram')
-    for field in ('address_width', 'word_width'):
-        if not re.search(rf'\b{field}\s*:\s*[1-9]\d*\s*;', memory):
-            raise ValueError(f'{master}: missing positive memory {field}')
+    if interface:
+        # LEAD2-S81/LINK 10-19 (spec soft_root_macro_interface_masters, opt-in): a registered-boundary IP abstract
+        # (S81 SerDes PMA: interface_timing black box with setup/hold + clk->Q arcs on one clock, no memory group) is
+        # a raw clock sink exactly like an SRAM; never a hardened child (no insertion/abstract/export views).
+        if memories or not re.search(r'\binterface_timing\s*:\s*true\s*;', cells[0][1]):
+            raise ValueError(f'{master}: interface raw sink must be an interface_timing cell without a memory group')
+    else:
+        if len(memories) != 1:
+            raise ValueError(f'{master}: not a raw Liberty memory cell')
+        memory = memories[0]
+        if not re.search(r'\btype\s*:\s*(rom|ram)\s*;', memory):
+            raise ValueError(f'{master}: raw memory type must be rom or ram')
+        for field in ('address_width', 'word_width'):
+            if not re.search(rf'\b{field}\s*:\s*[1-9]\d*\s*;', memory):
+                raise ValueError(f'{master}: missing positive memory {field}')
     clocks = [name for kind, name, body in children if kind == 'pin'
               and re.search(r'\bclock\s*:\s*true\s*;', body)
               and re.search(r'\bdirection\s*:\s*input\s*;', body)]
-    if len(clocks) != 1 or not SAFE.fullmatch(clocks[0]):
-        raise ValueError(f'{master}: raw-memory opt-in requires one scalar input clock')
-    return clocks[0]
+    if not dual:
+        if len(clocks) != 1 or not SAFE.fullmatch(clocks[0]):
+            raise ValueError(f'{master}: raw-memory opt-in requires one scalar input clock')
+        return clocks[0]
+    # KV-HOST6 10-20: a dual-clock raw memory (1r1w2c: read and write clocks) has exactly two scalar input clocks
+    if len(clocks) != 2 or len(set(clocks)) != 2 or not all(SAFE.fullmatch(c) for c in clocks):
+        raise ValueError(f'{master}: dual-clock raw-memory opt-in requires exactly two scalar input clocks')
+    return tuple(sorted(clocks))
 
 
 def contract(spec, root):
@@ -68,7 +82,10 @@ def contract(spec, root):
     # 2 x 64x512 on ck_core) is an ordinary sink of that root exactly as in a hybrid_entries leaf.  Same exact
     # instance/master/pin/root contract; the root must be one of the region roots.
     multi = spec.get('clock') == 'multiple_cts_roots'
-    if (spec.get('kind') != 'cluster' or spec.get('clock') not in ('hybrid_entries', 'multiple_cts_roots')
+    # KV-HOST6 10-20: a multiple_cts_roots LEAF tile (independent related/CDC roots, e.g. qkd_hr_cdc_pc_sram1) builds one
+    # CTS tree per clock_ports root exactly as a landed cluster; its raw SRAMs are ordinary sinks of their exact root(s)
+    kind_ok = spec.get('kind') == 'cluster' or (spec.get('kind') == 'tile' and multi)
+    if (not kind_ok or spec.get('clock') not in ('hybrid_entries', 'multiple_cts_roots')
             or not isinstance(masters, list) or not masters
             or any(not isinstance(m, str) or not SAFE.fullmatch(m) for m in masters) or len(masters) != len(set(masters))
             or not isinstance(bindings, dict) or not bindings):
@@ -95,25 +112,42 @@ def contract(spec, root):
         declared[inst] = (master, view)
     if set(bindings) != set(declared) or {m for m, _ in declared.values()} != set(masters):
         raise ValueError('raw memory bindings must cover exactly the declared named macro instances')
+    iface = spec.get('soft_root_macro_interface_masters', [])
+    if not isinstance(iface, list) or not set(iface) <= set(masters):
+        raise ValueError('soft_root_macro_interface_masters must be a subset of soft_root_macro_masters')
+    iface = set(iface)
     result = {}; paths = []; validated = {}
     for inst, b in bindings.items():
         master, view = declared[inst]
-        if (not isinstance(b, dict) or set(b) != {'master', 'clock_pin', 'root'} or b['master'] != master
+        dual = isinstance(b, dict) and 'clock_pins' in b
+        if dual:
+            # dual-clock form: {"master", "clock_pins": {<each actual Liberty clock pin>: <its exact region root>}}
+            pins = b.get('clock_pins')
+            if (set(b) != {'master', 'clock_pins'} or b['master'] != master or not isinstance(pins, dict)
+                    or len(pins) != 2 or any(not isinstance(k, str) or not SAFE.fullmatch(k) or not isinstance(v, str)
+                                             or v not in roots for k, v in pins.items())):
+                raise ValueError(f'raw memory binding is not one exact master/clock-pin/source-root map: {inst}')
+        elif (not isinstance(b, dict) or set(b) != {'master', 'clock_pin', 'root'} or b['master'] != master
                 or any(not isinstance(b[k], str) or not (ROOTNAME if k == 'root' else SAFE).fullmatch(b[k]) for k in b)
                 or b['root'] not in roots):
             raise ValueError(f'raw memory binding is not one exact master/clock/source root: {inst}')
         directory = root / view
         if any((directory / name).exists() for name in ('insertion.json', 'abstract.json', 'export.json')):
             raise ValueError(f'{master}: hardened timing views are not raw memory')
-        if master not in validated:
+        if (master, dual) not in validated:
             clocks = []
             for corner in ('tt', 'ff'):
                 rel = view / f'{master}_{corner}.lib'
-                clocks.append(memory_clock(root / rel, master)); paths.append(str(rel))
+                clocks.append(memory_clock(root / rel, master, dual, master in iface)); paths.append(str(rel))
             if len(set(clocks)) != 1:
                 raise ValueError(f'{master}: raw TT/FF memory clock interface differs')
-            validated[master] = clocks[0]
-        if b['clock_pin'] != validated[master]:
+            validated[(master, dual)] = clocks[0]
+        if dual:
+            if tuple(sorted(b['clock_pins'])) != validated[(master, dual)]:
+                raise ValueError(f'{master}: binding is not the actual TT/FF Liberty clock pin pair')
+            result[inst] = {'master': master, 'clock_pins': dict(sorted(b['clock_pins'].items()))}
+            continue
+        if b['clock_pin'] != validated[(master, dual)]:
             raise ValueError(f'{master}: binding is not the actual TT/FF Liberty clock pin')
         result[inst] = dict(b)
     return result, sorted(set(paths))
@@ -122,6 +156,9 @@ def contract(spec, root):
 def tcl(bindings):
     if not bindings:
         return []
-    entries = ' '.join('{%s} {master %s clock_pin %s root %s}' %
-                       (inst, b['master'], b['clock_pin'], b['root']) for inst, b in sorted(bindings.items()))
+    entries = ' '.join(('{%s} {master %s clock_pins {%s}}' %
+                        (inst, b['master'], ' '.join(f'{p} {r}' for p, r in sorted(b['clock_pins'].items()))))
+                       if 'clock_pins' in b else
+                       ('{%s} {master %s clock_pin %s root %s}' % (inst, b['master'], b['clock_pin'], b['root']))
+                       for inst, b in sorted(bindings.items()))
     return ['set ::ot_ce_raw_memory_bindings [dict create ' + entries + ']']
