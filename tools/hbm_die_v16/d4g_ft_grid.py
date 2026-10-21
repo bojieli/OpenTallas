@@ -57,7 +57,11 @@ def main():
     ap.add_argument('--reach', type=float, default=405.0)
     ap.add_argument('--width', type=float, default=43.2, help='channel width um (lattice; relay rows are 10.8-25 um)')
     ap.add_argument('--lattice', type=float, default=0.216)
+    ap.add_argument('--select', default=None,
+                    help='HBM-OWN/DIE 10-21 r16: regex on the slot cell; only matching slots are (re)carved at --width, every '
+                         'other slot keeps its reserved_channels unchanged (widen the grid only in the capacity-hot SYNTH blocks)')
     a = ap.parse_args()
+    import re as _re
     G = json.loads((a.plan_dir / 'grants_d4g.json').read_text())
     a.out.mkdir(parents=True, exist_ok=True)
     for f in ('compact.P.json', 'lanes.json', 'd4g_region_map.json', 'coord_map.json', 'spread_report.json'):
@@ -74,6 +78,8 @@ def main():
         if min(w, h) <= a.reach:
             continue
         cell = s.get('cell') or s['name']
+        if a.select and not _re.search(a.select, str(cell)):
+            continue
         if any(str(cell).startswith(p) for p in EDGE_EXCLUDE):
             rep['excluded'].append(dict(slot=s['name'], cell=cell, why='die-edge hard macro (no pass-through wire)'))
             continue
@@ -95,9 +101,14 @@ def main():
                                        seg_y_um=round(seg_y, 1), carved_frac=round(carved / (w * h), 3))
         b = rep['by_master'][cell]
         b.update(slots=b['slots'] + 1, w=w, h=h, columns=len(cx), rows=len(cy), carved_frac=round(carved / (w * h), 3))
-    G['floorplan']['ft_grid'] = dict(tool='tools/hbm_die_v16/d4g_ft_grid.py', reach_um=a.reach, width_um=a.width,
-                                     slots=len(rep['slots']), carved_mm2=round(tot_carved / 1e6, 2),
-                                     rule='owner 10-20 21:40: relay channels at <= 405 um; feedthrough over/through blocks > reach')
+    rec = dict(tool='tools/hbm_die_v16/d4g_ft_grid.py', reach_um=a.reach, width_um=a.width,
+               slots=len(rep['slots']), carved_mm2=round(tot_carved / 1e6, 2),
+               rule='owner 10-20 21:40: relay channels at <= 405 um; feedthrough over/through blocks > reach')
+    if a.select:
+        rec['select'] = a.select
+        G['floorplan'].setdefault('ft_grid_select', []).append(rec)
+    else:
+        G['floorplan']['ft_grid'] = rec
     rep['by_master'] = dict(rep['by_master'])
     rep['totals'] = dict(slots=len(rep['slots']), block_mm2=round(tot_area / 1e6, 2), carved_mm2=round(tot_carved / 1e6, 2),
                          die_um=G['floorplan']['die_um'], die_area_change_mm2=0.0)

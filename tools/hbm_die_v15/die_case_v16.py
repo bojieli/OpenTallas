@@ -695,7 +695,11 @@ def main():
             b = P[s]; reg = (b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h'])
         else:
             continue
-        put_near(n, (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2, f'region {s}', region=reg, halo=0.0)
+        # HBM-OWN/DIE 10-21 r16: plan-declared region halo (grants floorplan.region_halo {regex: um}); r15 S4 64/92 hop
+        # violations = vmh_* hub members abutted at halo 0 (no free relay cell inside the VM hub) -> halo h opens >= 2h
+        # um station channels between the members.  Default (no record) = 0.0 as before.
+        rh = next((float(v) for k_, v in (G['floorplan'].get('region_halo') or {}).items() if re.search(k_, s)), 0.0)
+        put_near(n, (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2, f'region {s}', region=reg, halo=rh)
     # 2b DIE-HBM-LEAD 10-19: prior homes (the relay layer's planning basis) before lane rows
     prior_kept, prior_lost = [], []
     if a.prior_place:
