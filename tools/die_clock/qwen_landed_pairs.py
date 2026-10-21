@@ -15,6 +15,17 @@ Classes per directed pair (launch A -> capture B, one net):
   RESET_SYNC qfd_ckbump rs -> qfd_rstsync (async-assert / synchronised-release landing of the package reset)
   BUMP       qfd_sigbump (off-die, forwarded with pll_fwd) -> a die-root capture: owes hop-0 on the feed clock + landing
   NO_ROOT    an endpoint has a clock pin with no die root (undriven trunk): a GEN gap, not a clocking verdict
+QW-G5NOROOT 10-20 (forwarded-clock domains, static straps):
+  FWD_ROOT   a FORWARDED package clock (qfd_ckbump not feeding qfd_clkrx: ckb_rom pll_ck = n_pll_fwd, the ROM/KV link clock
+             forwarded with its signal bumps) -> its sinks: a declared root 'fwd:<bump>' (its own domain), not a data pair
+  FWD        also: a signal bump (qfd_sigbump) captured on a forwarded root = the source-synchronous hop-0 capture
+  RESET_SYNC also: a die-root reset repeater -> a qfd_rst_rep on a forwarded root (the 2-flop synchroniser of the
+             release in that domain: reset_sync_contract.fwd_clocks re-clocks the last tree hop, d pin false-pathed)
+  RESET_XDOM a die-root reset level captured by any OTHER sink on a forwarded root (unsynchronised foreign-clock release:
+             the g5 rstt_rst_d2d -> rly_lnk_fwd_epoch en, die STA -9 ns): a GEN defect, must be 0
+  STATIC     a package strap bump (--static-net prefixes; default n_sf_strap_: the TP8 rank straps pkg_s / die_ps of
+             sys_face_bind.STRAPS, tied by the package substrate per package position, constant from power-up; the
+             collective samples them in free-running pin flops, ot_coll_tp8_static pkg_q/die_q): no clock relation owed
 With measured arrivals (build.py arrivals_<c>.tsv) it also reports, per landed lane, the CLOCK part of the landing lag:
   dck_c = arrival(landing ck, dst root) - arrival(hop-0 ck / ck_s, src root) at TT and FF, and its corner drift; the
   L5 window (lanes/LANDING-CONTRACT.md) holds one E per bundle only while the total dL drift stays inside ~D*T - margins.
@@ -27,6 +38,23 @@ from pathlib import Path
 STATION = ('qfd_rlyh_', 'qfd_rlyr_')          # forwarded mid-lane stations: clocked by ckf only
 LANDING = ('qfd_landh_', 'qfd_landh0_', 'qfd_rlyrl_')
 BUMP = ('qfd_sigbump',)                        # off-die signal bumps (forwarded with the package clock pll_fwd)
+CKBUMP, CLKRX, RSTSYNC, RSTREP = 'qfd_ckbump', 'qfd_clkrx', 'qfd_rstsync', 'qfd_rst_rep'
+STATIC_NETS = ('n_sf_strap_',)                 # package rank straps (sys_face_bind.STRAPS)
+
+
+def fwd_roots(pair_rows, master):
+    """forwarded package-clock roots from the pair rows: (bump, net) for every qfd_ckbump net that reaches no qfd_clkrx
+    and no qfd_rstsync (its reset output), with the sinks it clocks -> {bump: {net: set(sinks)}}"""
+    nets = {}
+    for A, B, net in pair_rows:
+        if master.get(A, '').startswith(CKBUMP):
+            nets.setdefault((A, net), set()).add(B)
+    out = {}
+    for (A, net), sinks in nets.items():
+        if any(master.get(b, '').startswith((CLKRX, RSTSYNC)) for b in sinks):
+            continue
+        out.setdefault(A, {})[net] = sinks
+    return out
 
 
 def arrivals(p):
@@ -48,8 +76,11 @@ def main():
     ap.add_argument('--lanes', required=True)
     ap.add_argument('--arr-tt'); ap.add_argument('--arr-ff')
     ap.add_argument('--period', type=float, default=833.333)
+    ap.add_argument('--static-net', action='append', default=None,
+                    help='net-name prefix of a declared static package strap (default n_sf_strap_)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
+    static_nets = tuple(a.static_net) if a.static_net else STATIC_NETS
     roots, pinroot = collections.defaultdict(set), {}
     for ln in open(a.geom / 'clknets.tsv'):
         r, ld, m, x, y = ln.rstrip('\n').split('\t')
@@ -60,14 +91,33 @@ def main():
     cnt, ex = collections.Counter(), collections.defaultdict(list)
     gap_rp, gap_bus = collections.Counter(), collections.Counter()
     owed = {}
+    rows = []
     for ln in open(a.geom / 'pairs.tsv'):
         f = ln.rstrip('\n').split('\t')
-        if f[0] != 'P':
-            continue
-        A, B, net = f[1], f[2], f[3]
+        if f[0] == 'P':
+            rows.append((f[1], f[2], f[3]))
+    fr = fwd_roots(rows, master)
+    fwd_clk = {(A, net) for A, d in fr.items() for net in d}
+    for A, d in fr.items():
+        for net, sinks in d.items():
+            for b in sinks:
+                roots[b].add(f'fwd:{A}')
+                for pin in ('ck', 'ck_s', 'clk'):     # the lane table's hop-0 clock pin (src_root of the lag record)
+                    pinroot.setdefault(f'{b}/{pin}', f'fwd:{A}')
+    is_fwd = lambda R: bool(R) and all(r.startswith('fwd:') for r in R)
+    for A, B, net in rows:
         mA, mB = master.get(A, ''), master.get(B, '')
         RA, RB = roots.get(A, set()), roots.get(B, set())
-        if RA & RB:
+        rst_ = net.startswith('n_rst') or 'rst' in net
+        if (A, net) in fwd_clk:
+            c = 'FWD_ROOT'    # the forwarded clock itself -> its sinks (clock distribution, not a data pair)
+        elif mA.startswith(BUMP) and net.startswith(static_nets):
+            c = 'STATIC'      # package strap: constant from power-up, no launch clock (declared, see docstring)
+        elif mA.startswith(BUMP) and not RA and is_fwd(RB):
+            c = 'FWD'         # source-synchronous: the bump arrives with the forwarded clock that captures it
+        elif rst_ and RA and not is_fwd(RA) and is_fwd(RB):
+            c = 'RESET_SYNC' if mB.startswith(RSTREP) else 'RESET_XDOM'
+        elif RA & RB:
             c = 'INTRA'
         elif mA.startswith(STATION) or mB.startswith(STATION) or mA.startswith('qfd_rlyh0_') and not RB:
             c = 'FWD'
@@ -90,7 +140,7 @@ def main():
         else:
             c = 'GAP'
         cnt[c] += 1
-        if c in ('GAP', 'NEIGHBOUR', 'BUMP'):
+        if c in ('GAP', 'NEIGHBOUR', 'BUMP', 'RESET_XDOM'):
             for ra in RA:
                 for rb in RB:
                     gap_rp[(ra, rb)] += 1
@@ -127,7 +177,9 @@ def main():
         lag.append(rec)
     meas = [r for r in lag if 'drift' in r]
     worst = sorted(meas, key=lambda r: -abs(r['drift']))[:15]
-    summ = dict(pairs=dict(cnt), gap=cnt['GAP'], no_root=cnt['NO_ROOT'], landed_lanes=len(lag), measured_lanes=len(meas),
+    summ = dict(pairs=dict(cnt), gap=cnt['GAP'], no_root=cnt['NO_ROOT'], bump=cnt['BUMP'], reset_xdom=cnt['RESET_XDOM'],
+                static=cnt['STATIC'], fwd_roots={A: {net: len(s) for net, s in d.items()} for A, d in fr.items()},
+                landed_lanes=len(lag), measured_lanes=len(meas),
                 lanes_no_root=sum(1 for r in lag if not r['src_root'] or not r['dst_root']),
                 max_abs_drift_ps=max((abs(r['drift']) for r in meas), default=None),
                 drift_over_T=sum(abs(r['drift']) > a.period for r in meas),

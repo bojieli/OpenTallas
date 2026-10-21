@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: ot-epyc6       admits   237 GB (avail 279, growth 113, headroom 0, waiters 0/0 GB) load 69/128 running 37 disk 2210 GB 
+ot-run: ot-epyc7       admits  1105 GB (avail 831, growth 58, headroom 0, waiters 0/0 GB) load 55/96 running 18 disk 5025 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2989071-1792559908 after 1 s
+RSTGEN7 PASS: 3 untreated reset releases before (mutant: d2d_rom, sys_face, io_ucie), 0 after; io_ucie last hop re-clocked onto clk_ucie; 3 synchroniser endpoints; RTL / repeater / shared-hop mutants refused
+TEST_RESET_SYNC_FWD PASS
+TEST_LANDED_PAIRS_FWD PASS
+RSTGEN7 PASS: 3 untreated reset releases before (mutant: d2d_rom, sys_face, io_ucie), 0 after; io_ucie last hop re-clocked onto clk_ucie; 3 synchroniser endpoints; RTL / repeater / shared-hop mutants refused
+RSTGEN7 PASS: 3 untreated reset releases before (mutant: d2d_rom, sys_face, io_ucie), 0 after; io_ucie last hop re-clocked onto clk_ucie; 3 synchroniser endpoints; RTL / repeater / shared-hop mutants refused
+.......                                                                  [100%]
+7 passed in 1.06s
+
+
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2989071-1792559908): exit 0

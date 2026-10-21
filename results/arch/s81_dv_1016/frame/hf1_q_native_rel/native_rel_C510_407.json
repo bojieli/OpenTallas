@@ -1,0 +1,45 @@
+{
+ "cell": "ot_v41_rom_elem_q_qxpq_w10",
+ "view": "physical/s81_die_views/q_elem_qs5f_rstp",
+ "lib_cell": "ot_v41_rom_elem_q_qxpq_w10",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean -> relative C 510.3"
+ ],
+ "R_ps": 489.4,
+ "spread_ps": 38.4,
+ "relative_to": "given tt=510.3,ff=407.2",
+ "outputs": 131,
+ "inputs": 587,
+ "launch_ps": 238.0,
+ "launch_pin": "prow[26]",
+ "capture_ps": 148.7,
+ "capture_pin": "go",
+ "launch_over": 1,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 30.5,
+ "ff_launch_min_ps": 66.7,
+ "ff_hold_need_ps": -34.9,
+ "relative": {
+  "tt": {
+   "clock_pin": "clk",
+   "rel_min_ps": -47.7,
+   "rel_max_ps": -9.3,
+   "mismatch_ps": 47.7,
+   "offset_ps": -20.9,
+   "comp_ps": 510.3
+  },
+  "ff": {
+   "clock_pin": "clk",
+   "rel_min_ps": -40.8,
+   "rel_max_ps": -10.3,
+   "mismatch_ps": 40.8,
+   "offset_ps": -19.7,
+   "comp_ps": 407.2
+  }
+ },
+ "pass": false,
+ "fail_why": "launch 237.9533 > 220 (1 pins)"
+}

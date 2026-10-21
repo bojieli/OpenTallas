@@ -37,9 +37,11 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
+from clock_roles import contract_clock_nets
 from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
+from die_safety import corners as DSC, gen_check as DSG, kit_pins as DSK, m8 as DSM   # noqa: E402  (ROOT14 10-20)
 
 GITDIR = DC.GITDIR
 PITCH = DC.PIN_PITCH
@@ -130,6 +132,47 @@ def closed_views(refs):
             if m and m.group(2) not in out:
                 out[m.group(2)] = (ref, m.group(1))
     return out
+
+
+def _natkey(s):
+    return [int(t) if t.isdigit() else t for t in re.split(r'(\d+)', s)]
+
+
+def kit_dirs(refs, masters, explicit=None, table=None):
+    """ROOT14 stand-in fidelity: master -> (ref, kit dir) of the OPEN tile's kit, for its real pin plan.
+    Order: --kit-pins MASTER=[REF:]KITDIR > bind table "kits" {master: {ref, kit}} > physical/ref_tile/<master>/ >
+    the kit whose spec.json top == master (natural-sort last name = newest revision; alternatives recorded)."""
+    out, alts = {}, {}
+    for m, v in (explicit or {}).items():
+        out[m] = v
+    for m, v in ((table or {}).get('kits') or {}).items():
+        if m in masters and m not in out:
+            out[m] = (v.get('commit') or v.get('ref') or refs[0], v['kit'])
+    left = set(masters) - set(out)
+    for ref in refs:
+        if not left:
+            break
+        r = subprocess.run(['git', '-C', GITDIR, 'ls-tree', '-r', '--name-only', ref, 'physical/ref_tile/'],
+                           capture_output=True, text=True)
+        specs = [p for p in r.stdout.split() if re.fullmatch(r'physical/ref_tile/[^/]+/spec\.json', p)]
+        for m in sorted(left):
+            if f'physical/ref_tile/{m}/spec.json' in specs:
+                out[m] = (ref, f'physical/ref_tile/{m}')
+        left = set(masters) - set(out)
+        if not left or not specs:
+            continue
+        q = subprocess.run(['git', '-C', GITDIR, 'cat-file', '--batch'], input=''.join(f'{ref}:{p}\n' for p in specs),
+                           capture_output=True, text=True)
+        tops = collections.defaultdict(list)
+        for p, body in zip(specs, re.split(r'^[0-9a-f]{40} blob \d+\n', q.stdout, flags=re.M)[1:]):
+            mt = re.search(r'"top"\s*:\s*"([^"]+)"', body)
+            if mt and mt.group(1) in left:
+                tops[mt.group(1)].append(p.rsplit('/', 1)[0])
+        for m, ks in tops.items():
+            ks.sort(key=_natkey)
+            out[m] = (ref, ks[-1]); alts[m] = ks[:-1]
+        left = set(masters) - set(out)
+    return out, alts
 
 
 MACRO_DIR = 'physical/asap7_memory_macros_v2'
@@ -362,6 +405,41 @@ def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0):
     return moves
 
 
+def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, reach):
+    """ROOT14 10-20: GEN safety facts (opentallas.die_gen_safety_facts.v1) of a real-view S81 die case"""
+    region = {}
+    roots = {}
+    for mst, nm, _, _ in insts:
+        if not nm.startswith('u_'):
+            continue
+        clk = T['masters'].get(mod2master.get(mst, ''), {}).get('clk')
+        nets_ = [n_ for n_, _ in ibits[nm].get(clk, [])] if clk else []
+        n_ = next((x for x in nets_ if x not in ('CONST', 'Z', 'UNDECL')), None)
+        r_ = n_ or f'?{nm}'
+        region[nm[2:]] = r_
+        roots[r_] = n_ if (n_ in top and n_.startswith('ck_')) else None
+    lp = {r['link']: r for r in LP['links']}
+    crossings, wires = [], []
+    for ln, L in sorted(links.items()):
+        wires.append(dict(id=ln, kind=L['cls'], pts=[list(L['sxy'])] + [list(p) for p in L['pts']] + [list(L['dxy'])]))
+        rs, rd = region.get(L['src'], f"?{L['src']}"), region.get(L['dst'], f"?{L['dst']}")
+        roots.setdefault(rs, None); roots.setdefault(rd, None)
+        if rs == rd:
+            continue
+        li = f'ld_{ln}'
+        landing = None
+        if li in loc:
+            landing = li
+            ck = [n_ for n_, _ in ibits.get(li, {}).get('ck', [])]
+            if not any(x in top and x.startswith('ck_') for x in ck):
+                rd = f'{li}.ck'; roots[rd] = None              # landing ring read on no region root
+        elif ln in lp and blocks.get(L['dst'], {}).get('kind') == 'frame':
+            landing = f"frame:{L['dst']}"                       # crs4 ring inside the receiving frame
+        crossings.append(dict(id=ln, src_region=rs, dst_region=rd, landing=landing, bits=L['bits']))
+    return dict(schema=DSG.SCHEMA_FACTS, design='s81', reach_um=reach, regions={k: dict(root=v) for k, v in roots.items()},
+                crossings=crossings, wires=wires)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--plan', required=True, type=Path)
@@ -379,7 +457,21 @@ def main():
     ap.add_argument('--congestion-iterations', type=int, default=30)
     ap.add_argument('--macro-views', action='store_true',
                     help=f'bind die-level macros with a real view under {MACRO_DIR}/<m>/ (HBM PHY _k, SRAMs) instead of a stand-in')
+    ap.add_argument('--standin-pins', choices=('kit', 'centroid'), default='kit',
+                    help='ROOT14 10-20: an OPEN tile stand-in takes its pins from the tile kit pin plan (face/order/layer: '
+                         'io_tcl / assigned_pins.json / spec pins faces); bits the kit does not place (or centroid = old '
+                         'behaviour, diagnostic) fall back to the plan link end points / neighbour-centroid projection')
+    ap.add_argument('--kit-pins', nargs='*', default=[], metavar='MASTER=[REF:]KITDIR',
+                    help='explicit kit for an open master (default: bind table kits, physical/ref_tile/<master>, spec top match)')
+    ap.add_argument('--gen-safety-diag', metavar='REASON',
+                    help='ROOT14: run past a GEN safety FAIL (crossing without landing/root, wire hop > 405 um) as a '
+                         'labelled diagnostic (NOT_A_DIE_RESULT); default = the GEN fails')
+    ap.add_argument('--reach-um', type=float, default=DSG.REACH_UM, help='GEN safety planning reach (owner 405 um)')
+    ap.add_argument('--no-ir', metavar='REASON', help='skip the die IR-drop step in run_all.sh (labelled NOT_A_DIE_RESULT)')
     a = ap.parse_args()
+    # ROOT14 10-20 (COORD 21:29 (a)): TT setup + FF hold on every die build, diagnostic ones included
+    a.corners = DSC.required(a.corners)
+    M8 = DSM.model(a.signal_top_layer)
     out = a.out
     for d in ('views/sta', 'out', 'sta', 'dcc/tools/hbm_die_v15'):
         (out / d).mkdir(parents=True, exist_ok=True)
@@ -446,6 +538,12 @@ def main():
         for p in cps:
             if p and p in ibits[nm]:
                 clocknets |= {n_ for n_, _ in ibits[nm][p] if n_ not in ('CONST', 'Z', 'UNDECL')}
+
+    # Bind-table clock roles cover direct source->frame lanes too. Such lanes
+    # have no fwd_ gate or relay to seed clocknets (e.g. slice ck_xc -> xk).
+    clocknets, contract_clock_inputs = contract_clock_nets(
+        insts, ibits, T['masters'], mod2master,
+        {m: {p: r[0] for p, r in module.ports.items()} for m, module in idx.items()}, clocknets)
 
     # ------------------------------------------------------------------ positions of every instance (centre) + sizes
     vsize = {}
@@ -530,6 +628,28 @@ def main():
     # ------------------------------------------------------------------ stand-in abstracts + libs
     census = collections.Counter(); scell = {}
     lane_bits_mcp = collections.defaultdict(list)     # link -> [pin names] (frame lanes: model on the frame pins)
+    # ROOT14 10-20 stand-in fidelity: the OPEN tile's kit pin plan (face / order / layer) places its stand-in pins
+    open_masters = sorted({mst for mst, nm, _, _ in insts if kind[nm] == 'standin'})
+    kitpin = {}; kit_alts = {}; pin_src = collections.Counter(); kit_rows = {}
+    if a.standin_pins == 'kit':
+        expl = {}
+        for e in a.kit_pins:
+            m_, _, v_ = e.partition('=')
+            r_, _, k_ = v_.rpartition(':')
+            expl[m_] = (r_ or a.view_refs[0], k_)
+        kdirs, kit_alts = kit_dirs(a.view_refs, open_masters, expl, T)
+        for m_, (r_, k_) in sorted(kdirs.items()):
+            md = idx.get(m_)
+            pw = {}
+            for mst_, nm_, _, _ in insts:
+                if mst_ == m_:
+                    pw = {pp: (len(bb), bool(md.ports[pp][1]) if md and pp in md.ports else len(bb) > 1) for pp, bb in ibits[nm_].items()}
+                    break
+            plan_ = DSK.load_plan(lambda rel, r_=r_: git(r_, rel), k_, pw)
+            if plan_:
+                kitpin[m_] = plan_
+            kit_rows[m_] = dict(ref=r_, kit=k_, source=plan_['source'] if plan_ else None, pins=len(plan_['pins']) if plan_ else 0,
+                                alternatives=kit_alts.get(m_, [])[-5:])
     for mst, nm, _, cm in insts:
         if kind[nm] != 'standin':
             census[f'{kind[nm]}:{mst}'] += 1
@@ -559,6 +679,19 @@ def main():
                 f = t = None
                 if n_ in ('CONST', 'Z', 'UNDECL') or (n_ not in top and touch.get(n_, set()) <= {nm}):
                     inner.append(pn); continue
+                kp = DSK.place(kitpin[mst], pn, w, h) if mst in kitpin and not (n_ in top and not bname) else None
+                if kp is not None:
+                    f, t, klay = kp
+                    kinds.add('clock' if (n_ in clocknets or n_.startswith('ck_')) and d != 'output' else
+                              'fclk_out' if n_ in clocknets and d == 'output' else 'data')
+                    lm = LINK_RE.match(n_)
+                    if lm and bname:
+                        L = links.get(lm.group(1))
+                        if L and lm.group(2) == 'dst' and d == 'input' and L['dst'] == bname:
+                            lane_bits_mcp[lm.group(1)].append(f'{nm}/{pn}')
+                    lay, rect = DSK.pin_rect(f, t, w, h, klay)
+                    lefp.append((pn, d, lay, rect)); sig.append((pn, lay, rect)); pin_src['kit'] += 1
+                    continue
                 if n_ in top:
                     kinds.add('clock' if n_.startswith('ck_') else 'data')
                     if bname:
@@ -598,6 +731,7 @@ def main():
                     t = t + PITCH * (slot[key] - (wdt / 2 if wdt > 1 else 0)); slot[key] += 1
                 lay, rect = pin_rect(f, t, w, h)
                 lefp.append((pn, d, lay, rect)); sig.append((pn, lay, rect))
+                pin_src['heuristic_no_kit' if mst not in kitpin else 'heuristic_bit_not_in_kit'] += 1
             if p == clk:
                 pk = 'clock'
             elif d == 'output':
@@ -708,8 +842,25 @@ def main():
     (out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
+    # ------------------------------------------------------------------ ROOT14 GEN safety (tools/die_safety/gen_check.py)
+    # region of a block = the die clock net on its clock pin (ck_<region> top port = the region root); a link between
+    # two regions is a crossing and needs a landing ring (ld_<link> landing tile, or the crs4 ring inside a frame) whose
+    # receiver clock is a region root; every link hop (source pin -> stations -> destination pin) <= the 405-um reach
+    gs_facts = gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, a.reach_um)
+    gs = DSG.check_facts(gs_facts, a.reach_um)
+    if a.gen_safety_diag:
+        gs['diagnostic'] = a.gen_safety_diag
+    (out / 'gen_safety_facts.json').write_text(json.dumps(gs_facts) + '\n')
+    (out / 'gen_safety.json').write_text(json.dumps(gs, indent=1) + '\n')
+    print(DSG.status_line(gs), flush=True)
+    if gs['verdict'] != 'PASS':
+        if not a.gen_safety_diag:
+            raise SystemExit(f"dv_rvcase: GEN SAFETY FAIL ({out / 'gen_safety.json'}): " + ' | '.join(gs['fails'])
+                             + ' -- fix the plan (landings / roots / relay sites), or --gen-safety-diag REASON for a labelled diagnostic')
+        (out / 'NOT_A_DIE_RESULT').write_text(f'GEN_SAFETY_FAIL_DIAGNOSTIC_ONLY: {a.gen_safety_diag}\n')
+
     # ------------------------------------------------------------------ GRT run
-    repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4', skip=()) if a.die_repair else '# no die repair\n'
+    repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer=M8['repeater_rc_layer'], skip=()) if a.die_repair else '# no die repair\n'
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
     # synchronous reset tree, not payload. Declare the width as well as the port
     # so a missing/disconnected payload bit fails the structural audit.
@@ -781,7 +932,7 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
 {tie_step}write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
+set_wire_rc -signal -layer {M8['sta_wire_rc_layer']}
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
@@ -836,14 +987,14 @@ foreach f [glob /work/views/sta/*_{c}.lib] {{ read_liberty $f }}
 foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
 read_db /work/out/grt.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
+set_wire_rc -signal -layer {M8['sta_wire_rc_layer']}
 {clocks_sdc}
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_false_path -from [get_ports rst_n]
 source /work/landing.sdc
-if {{[catch {{estimate_parasitics -global_routing}} e]}} {{ puts "OT_STA_PARA placement ($e)"; estimate_parasitics -placement }} else {{ puts "OT_STA_PARA global_routing" }}
+if {{[catch {{estimate_parasitics -global_routing}} e]}} {{ puts "OT_STA_PARA placement ($e){' NOT_A_DIE_RESULT (M8 die: GRT per-layer RC required)' if M8['m8_signals'] else ''}"; estimate_parasitics -placement }} else {{ puts "OT_STA_PARA global_routing" }}
 puts "OT_STA_WNS_SETUP"; report_worst_slack -max -digits 1
 puts "OT_STA_WNS_HOLD"; report_worst_slack -min -digits 1
 puts "OT_STA_TNS_SETUP"; report_tns -digits 1
@@ -896,6 +1047,14 @@ rc=$?
 python3 $D/classify.py $D {' '.join(a.corners)} > $D/sta/classes.txt 2>&1
 echo $rc > $D/sta/run.exit; exit $rc
 ''')
+    # ROOT14 10-20: die IR-drop check with the M8 signal routes present (tools/die_safety/ir_step.sh, copied into the case);
+    # FAIL / NOT_RUN = chain exit 1 + OWNER_REPORT line in run_all.log (the coordinator tells the owner)
+    shutil.copytree(ROOT / 'tools/die_safety', out / 'die_safety', dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns('__pycache__', 'test_*'))
+    ir_block = ('echo "ir: SKIPPED (' + a.no_ir.replace('"', "'") + ') NOT_A_DIE_RESULT" >> $D/run_all.log; echo IR_DROP_SKIPPED >> $D/NOT_A_DIE_RESULT\n'
+                if a.no_ir else
+                'OT_IR_DESIGN=s81 bash $D/die_safety/ir_step.sh $D/out/grt.odb $D/ir_drop $D/out/run.log > $D/ir_drop.log 2>&1; ir_rc=$?\n'
+                'grep -E "^(DIE_IR_DROP|OWNER_REPORT) " $D/ir_drop.log >> $D/run_all.log; echo "ir rc $ir_rc" >> $D/run_all.log\n')
     (out / 'run_all.sh').write_text('''#!/bin/bash
 # S81-DIE7 real-view die chain: GRT (+ die repeaters) -> die STA TT/FF -> die_clock_check -> classes / pair judge
 set -u; D=$(cd $(dirname $0) && pwd); date > $D/run_all.start
@@ -903,7 +1062,7 @@ CPUS=${CPUS:-16} MEMG=${MEMG_GRT:-96} bash $D/run.sh; grt_rc=$?; echo "grt rc $g
 [ $grt_rc -eq 0 ] || { date > $D/run_all.done; exit $grt_rc; }
 [ -f $D/out/grt.odb ] || { echo "NO grt.odb" >> $D/run_all.log; date > $D/run_all.done; exit 3; }
 CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $sta_rc" >> $D/run_all.log
-date > $D/run_all.done; exit $sta_rc
+''' + ir_block + '''date > $D/run_all.done; [ $sta_rc -eq 0 ] || exit $sta_rc; exit ${ir_rc:-0}
 ''')
     for f in ('run.sh', 'sta.sh', 'run_all.sh'):
         (out / f).chmod(0o755)
@@ -932,7 +1091,12 @@ date > $D/run_all.done; exit $sta_rc
                 label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
                        + ' (no closed view yet); closed = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('closed:')}))),
                 memory_note='case_p4l_r (stand-in die netlist) GRT 38.6 GB / 24 min, STA 24 GB / 3.3 min per corner (s81die6, ot-epyc5)',
-                chains=chains, landings=lrows)
+                chains=chains, landings=lrows,
+                gen_safety={k: gs[k] for k in ('verdict', 'reach_um', 'counts', 'max_hop_um', 'fails', 'diagnostic') if k in gs},
+                standin_pins=dict(mode=a.standin_pins, bits_by_source=dict(pin_src), kits=kit_rows,
+                                  open_masters_without_kit_plan=[m_ for m_ in open_masters if m_ not in kitpin]),
+                m8_model=M8, sta_corners=a.corners,
+                ir_drop='SKIPPED: ' + a.no_ir if a.no_ir else 'run_all.sh -> ir_drop/ir_drop.json (tools/die_safety/ir_step.sh)')
     (out / 'case.json').write_text(json.dumps(info, indent=1))
     print(json.dumps({k: v for k, v in info.items() if k not in ('chains', 'landings')}, indent=1))
 

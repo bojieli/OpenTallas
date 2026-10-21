@@ -6,7 +6,8 @@ PASS needs ALL of:
   landed   no cross-region data crossing left unlanded (landed_pairs NEIGHBOUR + GAP = 0; else the GEN owes landings);
   drift    every landed lane's clock lag drift |dck_FF - dck_TT| <= T/2 (the 4-slot ring window keeps one E per lane);
   spine    the forwarded spine carries no pads (balance false) -- a padded spine is the rejected global-balance shape.
-NO_ROOT pairs are reported (GEN gap), never a clocking pass."""
+NO_ROOT pairs are reported (GEN gap), never a clocking pass; so are BUMP (unlanded off-die input) and RESET_XDOM
+(unsynchronised reset release into a forwarded-clock domain); STATIC = declared package straps (QW-G5NOROOT 10-20)."""
 import argparse
 import json
 
@@ -32,6 +33,7 @@ def main():
     lp = json.load(open(a.pairs))
     s = lp['summary']; pc = s.get('pairs', {})
     owed = dict(neighbour_bits=pc.get('NEIGHBOUR', 0), gap_bits=pc.get('GAP', 0), no_root=pc.get('NO_ROOT', 0),
+                bump=pc.get('BUMP', 0), reset_xdom=pc.get('RESET_XDOM', 0), static=pc.get('STATIC', 0),
                 links=len(lp.get('land_owed', [])))
     meas = [r for r in lp.get('lanes', []) if 'drift' in r]
     drift = dict(lanes=len(lp.get('lanes', [])), measured=len(meas),
@@ -43,7 +45,7 @@ def main():
     spine = dict(present=bool(sp), balance=sp.get('balance'), cells=sp.get('cells'), levels=sp.get('levels'),
                  pads=(sp.get('model') or {}).get('pads'), model_insertion_ps=(sp.get('model') or {}).get('model_insertion_ps'))
     ok = dict(intra=intra['classes'] > 0 and intra['over'] == 0 and bool(nc.get('ff_measured')),
-              landed=owed['neighbour_bits'] == 0 and owed['gap_bits'] == 0,
+              landed=all(owed[k] == 0 for k in ('neighbour_bits', 'gap_bits', 'no_root', 'bump', 'reset_xdom')),
               drift=drift['measured'] > 0 and drift['over_half_T'] == 0,
               spine=(not spine['present']) or (spine['balance'] is False and not spine['pads']))
     eligible = m.get('physical_qualification_eligible') is not False and check.get('physical_qualification_eligible') is not False
@@ -55,7 +57,7 @@ def main():
         json.dump(res, open(a.out, 'w'), indent=1)
     print('QCLK_REGIONAL', v, ' '.join(f'{k}={"ok" if x else "FAIL"}' for k, x in ok.items()),
           f"| intra over {intra['over']}/{intra['classes']} worst", ' '.join(f'{w[0]} TT {w[2]} FF {w[3]}' for w in intra['worst'][:4]),
-          f"| land owed links {owed['links']} bits N{owed['neighbour_bits']}+G{owed['gap_bits']} noroot {owed['no_root']}",
+          f"| land owed links {owed['links']} bits N{owed['neighbour_bits']}+G{owed['gap_bits']} noroot {owed['no_root']} bump {owed['bump']} xdom {owed['reset_xdom']} static {owed['static']}",
           f"| lane drift max {drift['max_abs']} >T/2 {drift['over_half_T']}/{drift['measured']}",
           f"| spine cells {spine['cells']} levels {spine['levels']} pads {spine['pads']} model {spine['model_insertion_ps']}")
 

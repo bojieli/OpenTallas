@@ -1,0 +1,11 @@
+{
+  "base": "pinned g5r2b +8cd snapshot codex-qw-facts2210-noroot",
+  "reset_fix": "ed5b5c214",
+  "facts": "6926a4cc8",
+  "files": {
+    "tools/qwen_rom_fulldie_b3r2.py": "45b7454593ae0e4e58c6a9336aa0a82d3f4bba2f64e3fb9bf5c9a8f867a03f2c",
+    "tools/qwen_split/reset_sync_contract.py": "b158e843c4b8ba964b853d1d0a55a453a7f9808562996421802a2ec04f2dd378",
+    "tools/qwen_split/gen_safety_facts.py": "4faccb8989f1dc44c2d22471732e0047a7313b44ef41206ddf6d314398367cf3",
+    "tools/die_clock/qwen_landed_pairs.py": "9425b1b0138f86d0605b2f3d4722d71c84330a4763ed079a95fcae6706dd8572"
+  }
+}

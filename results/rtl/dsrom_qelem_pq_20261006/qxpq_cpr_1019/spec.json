@@ -1,0 +1,191 @@
+{
+ "name": "dsrom-qelem-qs5f-cpr-tc-hm25-cl",
+ "block": "ot_v41_rom_elem_q_qxpq_w10",
+ "owner": "Claude:S81-PINREG4",
+ "purpose": "S81.STA.LEAF.3 (S81-PINREG4 10-19, SAFE item 1): successor of the CLOSED ob2 view dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb, whose native audit (physical/s81_die_views/q_elem_qs5f_ob2/native_receipt.json) failed only the control pins busy 230.2 / fault 227.1 (launch) and go 216.7 (capture). CPR=1: kept pin registers for go/go_tag (input) and busy/fault (output); dsrom_q_pinflop_band_cpr.tcl = the closed out-flop band + the go/go_tag input pin flops placed at their pins. Everything else = the closed ob2 recipe (RSTP=1, ck-N, HM 0.025, outline 510.84x221.4, macros, pins).",
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "route_hold_margin_ns": 0.025,
+ "source": {
+  "branch": "claude/s81-pinreg4-1019",
+  "commit": "HEAD",
+  "extra_paths": [
+   "results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "tb_qxpq_cpr_pass",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_cpr_bench.sh . {RUN}/bench_cpr_pass pass",
+    "threads": 16,
+    "peak_ram_gb": 12,
+    "expect": "pass",
+    "pass_regex": "^BENCH_RC 0$",
+    "min_count_regex": "^QXPQ_CPR cycles=.*\\bwindows=(\\d+)"
+   },
+   {
+    "name": "tb_qxpq_cpr_mut_go",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_cpr_bench.sh . {RUN}/bench_cpr_mut_go mut_go",
+    "threads": 16,
+    "peak_ram_gb": 12,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED mut_go$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/bench_5050/fail_witness/mut_go.otrun.log",
+    "mutant": "go pin register bypassed"
+   },
+   {
+    "name": "tb_qxpq_cpr_mut_busy",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_cpr_bench.sh . {RUN}/bench_cpr_mut_busy mut_busy",
+    "threads": 16,
+    "peak_ram_gb": 12,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED mut_busy$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/bench_5050/fail_witness/mut_busy.otrun.log",
+    "mutant": "busy pin register bypassed"
+   },
+   {
+    "name": "tb_qxpq_cpr_mut_late",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_cpr_bench.sh . {RUN}/bench_cpr_mut_late mut_late",
+    "threads": 16,
+    "peak_ram_gb": 12,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED mut_late$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/bench_5050/fail_witness/mut_late.otrun.log",
+    "mutant": "die schedule not updated (go at the ref time)"
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_NATIVE_Q_H1_INPUT=1; export OT_NATIVE_Q_H1_RST=1; export OT_Q_EF_SOUTH=1; export RSTP=1; export OT_Q_CK_NORTH=1; export CPR=1; export OT_Q_PDH=physical/abi3/dsrom_q_pinflop_band_cpr.tcl; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1r_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
+   "base": "{RUN}/routes/jobs/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "bash tools/dsrom_qelem_cl/cl_signoff_sdc.sh",
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "route": {
+   "cmd": "export OT_HOLD_STOP='cts:10204 grt:0'; export OT_NATIVE_Q_H1_INPUT=1; export OT_NATIVE_Q_H1_RST=1; export OT_Q_EF_SOUTH=1; export RSTP=1; export OT_Q_CK_NORTH=1; export CPR=1; export OT_Q_PDH=physical/abi3/dsrom_q_pinflop_band_cpr.tcl; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1r_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL} {RUN}/routes",
+   "ok": "grep -q '^rc=0' {RUN}/routes/jobs/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/jobs/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/jobs/{LABEL}/launch.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/record/view; cp {RUN}/routes/jobs/{LABEL}/corner_sta.json {RUN}/routes/jobs/{LABEL}/exit {RUN}/routes/jobs/{LABEL}/receipt.json physical/abi3/gen/dsrom_q_cl_signoff.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json && cp $(ls {RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json) {RUN}/record/ && rm -f {RUN}/record/view/pa/pa.v"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/jobs/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "pin_access",
+    "cmd": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/abi3/gen/dsrom_q_cl_signoff.sdc",
+   "tools/dsrom_qelem_cl/native_q_h1r_input.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "reexport": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/closed"
+  }
+ ],
+ "cycles_added": "+1 go-command edge (go + go_tag captured by pin registers: the die issues the go command one cycle earlier, or the op starts one cycle later), +1 busy and +1 fault visibility cycle (private pin flops); 0 data cycles, every other output cycle-identical (tb_qxpq_cpr, Verilator 5.050). Handed to LEAD2-S81 INBOX (compiler / die schedule).",
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "sheet ot_v41_rom_elem_q_qx_w10 names the die abstract's ports (cfg, go, r0 ...), not the element RTL's (cfg_v, xs_q0 ...): make_block_sdc.py would leave the RTL ports unconstrained; IO = the q-element's agreed derivation (launcher delays, physical/abi3/dsrom_qy_elem_io.sdc, outputs at the calibrated insertion via cl_signoff_sdc.sh); successor preserves all existing max windows and corrects only data-input minimum reference to actual measured H1 sender+50; reset excluded"
+ },
+ "route_hold_corners": "mm",
+ "route_corner": "TC",
+ "notes": "S81-PINREG4 10-19: not a critical prefix. Bench tb_qxpq_cpr PASS x3 seeds + 3 DIFF mutants on Verilator 5.050 (ot-epyc6), witnesses results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/bench_5050. Frames binding this view must set .CPR(1) on the q instance and move the go command one cycle earlier.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "closed_job": "dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb",
+  "source": "physical/s81_die_views/q_elem_qs5f_ob2/native_receipt.json",
+  "cell": "ot_v41_rom_elem_q_qxpq_w10",
+  "launch_ps": 230.2,
+  "capture_ps": 216.7,
+  "failing_pins": [
+   "busy 230.2",
+   "fault 227.1",
+   "go 216.7"
+  ],
+  "fix": "CPR=1: go/go_tag input pin registers and busy/fault output pin registers (kept), placed at their pins by dsrom_q_pinflop_band_cpr.tcl"
+ },
+ "structural_change": "CPR=1 control pin registers (go, go_tag, busy, fault) + input pin-flop band for go/go_tag; out-flop band unchanged",
+ "rtl_boundary": {
+  "top": "ot_v41_rom_elem_q_qxpq_w10",
+  "sources": [
+   "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+   "rtl/v41rom/ot_v41_kreg.sv",
+   "rtl/v41rom/ot_v41_chain3.sv",
+   "rtl/v41rom/ot_v41_chain4.sv",
+   "rtl/v41rom/ot_v41_fadd2.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "rtl/v41rom/ot_v41_bterm.sv",
+   "rtl/v41rom/ot_v41_chain.sv",
+   "rtl/v41rom/ot_v41_segtree.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+   "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/common/ot_prefix.sv",
+   "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_segtree2.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "rtl/v41rom/ot_v41_bterm3_w10.sv",
+   "rtl/v41rom/ot_v41_bterm4_w10.sv",
+   "rtl/v41rom/ot_v41_bterm5_w10.sv",
+   "rtl/v41rom/ot_v41_segtree3.sv",
+   "rtl/v41rom/ot_v41_segtree4.sv",
+   "rtl/v41rom/ot_v41_segtree5.sv",
+   "rtl/v41rom/ot_v41_segtree6.sv",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v"
+  ],
+  "params": {
+   "MTP": 1,
+   "EARLY": 1,
+   "NB": 2,
+   "FAST": 1,
+   "PP": 1,
+   "QTIMING_FIX": 1,
+   "QPIPE": 1,
+   "QP_XS": 1,
+   "QP_CAP": 0,
+   "QP_P1": 1,
+   "QP_CSAM": 10,
+   "QZ": 1,
+   "QZ_NS": 8,
+   "QZ_NE": 4,
+   "QY": 1,
+   "QX": 5,
+   "PQ": 1,
+   "QW": 0,
+   "QM": 1,
+   "QS": 5,
+   "RSTP": 1
+  }
+ }
+}
