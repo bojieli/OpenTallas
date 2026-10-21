@@ -57646,8 +57646,18 @@
   "q_launch_advance_edges": 1,
   "bf_launch_advance_edges": 0,
   "source_ref": "68e867c0e",
-  "export": null,
-  "physical_export_status": "PENDING",
+  "export": {
+   "ref": "1588a44a2",
+   "directory": "physical/s81_die_views/q_elem_qs5f_cpr",
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "source_binding": "source_binding.json",
+   "lef": "ot_v41_rom_elem_q_qxpq_w10.lef",
+   "mapped_netlist": "mapped.v.gz",
+   "insertion": "insertion_existing_verdict_boundary.json",
+   "insertion_scope": "Existing closing verdict boundary sample only; 718 TT/FF arrivals, no all-register/per-pin census",
+   "liberty": null
+  },
+  "physical_export_status": "LIBERTY_EXPORT_IN_PROGRESS_NOT_BIND_READY",
   "inherited_non_cpr_parent_closure": false
  }
 }
