@@ -640,13 +640,23 @@ module dsdv_eng_rr_c #(
     input  wire [275:0]  vi_n, output wire [275:0] vo_n,
     output reg  [3:0]    st
 );
-    wire [1:0] rl;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+    wire[15:0] rl;
+`ifdef OT_S81ENG_RR_N32
+    ot_rst_relay_bounded32 #(.REGIONS(16)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl));
+`else
+    ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl[1:0]));
+    assign rl[15:2]=0;
+`endif
     reg [52:0] ks; reg en_q, ly_q; reg [1:0] rk_q;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
     always @(posedge ck) begin ks[51:0] <= f_ks[51:0]; en_q <= cfg_en; ly_q <= cfg_layer; rk_q <= cfg_rank; end
     wire win_v, wf; wire [2:0] win_slot; wire [67:0] win_ids;
-    ot_s81eng_win u_win (.ck(ck), .rst_n(rl[0]), .en(en_q), .ks_v(ks[52]), .ks_user(ks[51:42]), .ks_tok(ks[41:21]),
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_win_n32 u_win (.ck(ck),.rst_n(rl[2]),
+`else
+    ot_s81eng_win u_win (.ck(ck), .rst_n(rl[0]),
+`endif
+        .en(en_q), .ks_v(ks[52]), .ks_user(ks[51:42]), .ks_tok(ks[41:21]),
         .ks_pos(ks[20:0]), .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids), .fault(wf));
     wire hq_v, hr_v, o_v, st_v, st_bad, lf; wire [30:0] hq_atom; wire [2:0] hq_tag, hr_slot, hr_tag, o_beat, o_slot, st_slot;
     wire [3:0] hr_idx; wire [255:0] hr_d; wire [4:0] o_col; wire [263:0] o_d;
@@ -668,11 +678,33 @@ module dsdv_eng_rr_c #(
         .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_slot(o_slot), .o_d(o_d),
         .st_v(st_v), .st_slot(st_slot), .st_bad(st_bad), .fault(lf));
     wire hf;
-    ot_s81eng_head #(.PCBASE(PCBASE)) u_head (.ck(ck), .rst_n(rl[0]), .win_v(win_v), .win_slot(win_slot), .hq_v(hq_v),
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_head_n32 #(.PCBASE(PCBASE)) u_head
+`else
+    ot_s81eng_head #(.PCBASE(PCBASE)) u_head
+`endif
+        (.ck(ck), .rst_n(
+`ifdef OT_S81ENG_RR_N32
+        rl[3]
+`else
+        rl[0]
+`endif
+        ), .win_v(win_v), .win_slot(win_slot), .hq_v(hq_v),
         .hq_atom(hq_atom), .hq_tag(hq_tag), .rco(rco), .pci(pci), .hr_v(hr_v), .hr_slot(hr_slot), .hr_tag(hr_tag),
         .hr_idx(hr_idx), .hr_d(hr_d), .fault(hf));
     wire xf;
-    ot_s81eng_xq #(.MUT(XQ_MUT)) u_xq (.ck(ck), .rst_n(rl[1]), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_xq_n32 #(.MUT(XQ_MUT)) u_xq
+`else
+    ot_s81eng_xq #(.MUT(XQ_MUT)) u_xq
+`endif
+      (.ck(ck), .rst_n(
+`ifdef OT_S81ENG_RR_N32
+        rl[4]
+`else
+        rl[1]
+`endif
+        ), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
         .vi_a(vi_s), .vo_a(vo_s), .vi_b(vi_n), .vo_b(vo_n), .fault(xf));
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) st <= 4'd0;

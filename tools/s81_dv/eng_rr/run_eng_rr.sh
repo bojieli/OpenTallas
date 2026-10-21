@@ -29,7 +29,7 @@ F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_has
    rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_prefix.sv
    rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv
    rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
-   rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv rtl/dsrom_sys/s81_dv/eng/test/tb_dsdv_eng_rr.sv)
+   rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv rtl/dsrom_sys/s81_dv/eng/ot_s81eng_aq_n32.sv rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv rtl/dsrom_sys/s81_dv/eng/test/tb_dsdv_eng_rr.sv)
 git --git-dir=$G archive "$REF" "${F[@]}" tools/hdc_golden.py tools/hdc_golden_v41.py tools/s81_dv/eng_rr | tar -xf - -C $W/src
 cd $W/src; git --git-dir=$G rev-parse "$REF" > $W/ref.txt; sha256sum "${F[@]}" > $W/sources.sha256
 $VL --version > $W/verilator.version
@@ -37,7 +37,7 @@ python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom
 build() {  # name, -G params
   local n=$1; shift
   /usr/bin/time -v -o $W/$n.build.time $VL --binary --timing -j ${J:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH \
-    -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 ${TAP_N32R2:+ +define+OT_S81ENG_TAP_N32R2} +define+OT_ENGRAM_CRCMAT \
+    -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 ${TAP_N32R2:+ +define+OT_S81ENG_TAP_N32R2} ${RR_N32:+ +define+OT_S81ENG_RR_N32} +define+OT_ENGRAM_CRCMAT \
     --top-module tb_dsdv_eng_rr "$@" "${F[@]}" --Mdir $W/obj_$n -o sim > $W/$n.build.log 2>&1
   echo "$n build rc $?" >> $W/status
 }
