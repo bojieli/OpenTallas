@@ -1660,6 +1660,7 @@ def rope_context_tiles(tiles):
     if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
         raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
     emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
+    emb['ports'].pop('d2d__svc', None)
     emb['ports']['i_host_record'] = dict(dir='input', width=549, cls='special', src=None)
     emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
                      '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
