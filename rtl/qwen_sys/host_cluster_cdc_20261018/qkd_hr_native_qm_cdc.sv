@@ -4,6 +4,17 @@
 // register f_any_q (+1 clk_i), not the f_code != 0 compare; (2) quiet_h reads the fault through a clk_i -> clk_h
 // two-flop synchroniser (fh_s) of a registered sticky copy f_any_h instead of the ck-domain fault_c.
 // (3) HKV-HROOT 10-18: CSR0 hold/acknowledge (CSR_HOLD_ACK, below).
+// (4) SQK-INGEST 10-21 (SAFE item 5, results/arch/safe_audit_1019/kv.md): the payload
+//     storage of the host receive FIFO u_hx (16 x 514 b) and of the request FIFO u_ox (16 x 289 b) moves out of flops into
+//     dual-clock 1R1W SRAM macros u_hxm / u_oxm (ot_sram_1r1w2c_32x546_m1_p192_mir, the reviewed HOST-SRAM master; 16 of 32 rows
+//     used, address MSB 0). The Gray pointers, synchronisers, full/empty/freed/count and ovf stay the reviewed
+//     ot_link_afifo instances, now 1 bit wide (no payload). Shadow binary pointers (same reset, same push / pop) give
+//     the macro addresses; the read address is the NEXT read pointer, so the registered macro read returns the head
+//     on the same edge the flop FIFO's combinational mem[rbin] did: first-word fall-through, cycle-exact (0 schedule
+//     cycles; witness rtl/test/qwen_host/qm_sram_1021). A slot is written >= 1 reader edge before its pointer is
+//     visible (2-flop Gray synchroniser), and the writer never writes the slot under the head (full is conservative).
+//     RMW_EN 0: the read-return FIFO u_rx is absent (it was never written: irv_q is 0), rx_empty 1.
+//     Data-only registers (o_we / o_addr / o_d, t_d, cx_w, e_rdd) are no longer reset: reset reaches control/valid only.
 
 // Production native6-entry clock variant; allfour ingest entries are one
 // compensated600MHz synchronous phasefamily. h/core crossings stay originalCDC.
@@ -112,10 +123,21 @@ module qkd_hr_native_qm_cdc #(
     always @(posedge ck or negedge rn_c)
      if(!rn_c)quiet_c<=0;
      else quiet_c<=ox_empty&&!ox_pop&&!o_v&&ocr==OCRED&&!o_cr&&!ocr_q&&!i_rv&&!irv_q&&!fault;
+    // SQK-INGEST 10-21 (SAFE items 3 / 8): each domain's 2-stage reset synchroniser is the reviewed reset bank
+    // (rtl/physical/ot_host_die_cdc_sram.sv ot_host_reset_bank: 1 landing flop -> RB_* KEPT identical leaves, same
+    // 2-edge release as ot_reset_sync). The RTL uses leaf 0; synthesis (kit reset_relay_split, ot_rst_copies) spreads the
+    // reset loads over the leaves at <= 32 each (the native census limit). Release edges unchanged.
+    localparam integer RB_H = 4, RB_I = 16, RB_C = 4;
     wire rn_h, rn_i, rn_c;
-    ot_reset_sync u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
-    ot_reset_sync u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
-    ot_reset_sync u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
+    wire [RB_H-1:0] rb_h;
+    wire [RB_I-1:0] rb_i;
+    wire [RB_C-1:0] rb_c;
+    ot_host_reset_bank #(.N(RB_H)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rb_h));
+    ot_host_reset_bank #(.N(RB_I)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rb_i));
+    ot_host_reset_bank #(.N(RB_C)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rb_c));
+    assign rn_h = rb_h[0];
+    assign rn_i = rb_i[0];
+    assign rn_c = rb_c[0];
     // cross-domain nets (declared ahead of use)
     wire         hx_ovf_i, rx_ovf_i, ox_pop, cx_pop;
     reg          irv_q;
@@ -133,9 +155,28 @@ module qkd_hr_native_qm_cdc #(
     wire [HFA:0] hx_freed, hx_cnt;
     wire [513:0] hx_head;
     reg          hx_pop;
-    ot_link_afifo #(.W(514), .AW(HFA)) u_hx (
-        .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
-        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));
+    initial if (HFA > 5 || OFA > 5 || AW + 257 > 546)
+        $fatal(1, "qkd_hr_native_qm_cdc SRAM FIFOs: the 32 x 546 macro holds <= 32 entries of <= 546 b");
+    wire         hx_nd;
+    ot_link_afifo #(.W(1), .AW(HFA)) u_hx (
+        .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata(1'b0), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
+        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_nd), .rcount(hx_cnt));
+    // shadow binary pointers = u_hx wbin / rbin (same resets, push = wr && !wfull, pop = rd && !rempty)
+    reg  [HFA:0] hx_wp, hx_rp;
+    wire         hx_push = hv_q && !hx_full;
+    wire [HFA:0] hx_rp_i = hx_rp + ((hx_pop && !hx_empty) ? 1'b1 : 1'b0);
+`ifdef QKD_HR_QM_SRAM_MUT
+    wire [HFA:0] hx_rp_n = hx_rp;                               // bench mutant: the macro reads the current pointer
+`else
+    wire [HFA:0] hx_rp_n = hx_rp_i;
+`endif
+    always @(posedge clk_h or negedge rn_h) if (!rn_h) hx_wp <= 0; else if (hx_push) hx_wp <= hx_wp + 1'b1;
+    always @(posedge clk_i or negedge rn_i) if (!rn_i) hx_rp <= 0; else hx_rp <= hx_rp_i;
+    wire [545:0] hx_q;
+    ot_sram_1r1w2c_32x546_m1_p192_mir u_hxm (.wclk(clk_h), .rclk(clk_i), .r_ce_in(1'b1),
+        .r_addr_in(5'(hx_rp_n[HFA-1:0])), .rd_out(hx_q), .w_ce_in(hx_push), .w_addr_in(5'(hx_wp[HFA-1:0])),
+        .wd_in({32'd0, hc_q, hd_q}), .w_mask_in({546{1'b1}}));
+    assign hx_head = hx_q[513:0];
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;
 
     // =============================================================================================================
@@ -234,7 +275,7 @@ module qkd_hr_native_qm_cdc #(
     always @(posedge clk_i or negedge rn_i) begin
         if (!rn_i) begin
             f_code <= 0; share_i <= 0; csr_tgl <= 1'b0; all_done <= 1'b0; pcnt <= 0; outst <= 0;
-            e_rdv <= 1'b0; e_rdd <= 0; cx_wr <= 1'b0; cx_w <= 0; f_sent <= 1'b0;
+            e_rdv <= 1'b0; cx_wr <= 1'b0; f_sent <= 1'b0;
         end else begin
             if (hv_i && !f_any && hcl == 2'd0) begin
                 if (hx_head[7:0] == 8'd0 && (CSR_HOLD_ACK == 0 || csr_ready)) begin
@@ -255,17 +296,21 @@ module qkd_hr_native_qm_cdc #(
             end
             // read return: registered into the engine (it always accepts)
             e_rdv <= rx_pop;
-            e_rdd <= rx_head;
             outst <= outst + ((e_rv && e_rrdy) ? 1 : 0) - (rx_pop ? 1 : 0);
             // completions: done words, then the fault word once
             cx_wr <= 1'b0;
             if (e_done) begin
                 cx_wr <= 1'b1;
-                cx_w <= {8'h01, 8'd0, (MUT == 2) ? e_tag + 8'd1 : e_tag, 8'd0, e_nsec};
             end else if (f_any && !f_sent) begin
-                cx_wr <= 1'b1; cx_w <= {8'hFF, 48'd0, f_code}; f_sent <= 1'b1;
+                cx_wr <= 1'b1; f_sent <= 1'b1;
             end
         end
+    end
+    // data-only registers (SQK-INGEST 10-21): no reset; their valids (e_rdv, cx_wr) are reset above
+    always @(posedge clk_i) begin
+        e_rdd <= rx_head;
+        if (e_done) cx_w <= {8'h01, 8'd0, (MUT == 2) ? e_tag + 8'd1 : e_tag, 8'd0, e_nsec};
+        else if (f_any && !f_sent) cx_w <= {8'hFF, 48'd0, f_code};
     end
     // overflow flags from the other domains, synchronised (sticky at their source)
     (* async_reg = "true" *) reg [1:0] hov_s, rov_s;
@@ -285,12 +330,29 @@ module qkd_hr_native_qm_cdc #(
         if (!rn_i) begin hov_s <= 0; rov_s <= 0; end
         else begin hov_s <= {hov_s[0], hx_ovf}; rov_s <= {rov_s[0], rx_ovf}; end
 
-    ot_link_afifo #(.W(AW + 257), .AW(OFA)) u_ox (
-        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
-        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
-    ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
-        .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),
-        .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));
+    wire         ox_nd;
+    ot_link_afifo #(.W(1), .AW(OFA)) u_ox (
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(1'b0), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_nd), .rcount(ox_cnt));
+    reg  [OFA:0] ox_wp, ox_rp;
+    wire         ox_push = ox_wr && !ox_full;
+    wire [OFA:0] ox_rp_n = ox_rp + ((ox_pop && !ox_empty) ? 1'b1 : 1'b0);
+    always @(posedge clk_i or negedge rn_i) if (!rn_i) ox_wp <= 0; else if (ox_push) ox_wp <= ox_wp + 1'b1;
+    always @(posedge ck or negedge rn_c) if (!rn_c) ox_rp <= 0; else ox_rp <= ox_rp_n;
+    wire [545:0] ox_q;
+    ot_sram_1r1w2c_32x546_m1_p192_mir u_oxm (.wclk(clk_i), .rclk(ck), .r_ce_in(1'b1),
+        .r_addr_in(5'(ox_rp_n[OFA-1:0])), .rd_out(ox_q), .w_ce_in(ox_push), .w_addr_in(5'(ox_wp[OFA-1:0])),
+        .wd_in({{(546 - (AW + 257)){1'b0}}, ox_w}), .w_mask_in({546{1'b1}}));
+    assign ox_head = ox_q[AW+256:0];
+    generate if (RMW_EN != 0) begin : g_rx
+        ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
+            .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),
+            .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));
+    end else begin : g_norx
+        // RMW_EN 0: irv_q is constant 0, so the read-return FIFO is never written (empty, no overflow)
+        assign rx_full = 1'b0; assign rx_empty = 1'b1; assign rx_ovf = 1'b0; assign rx_freed = 0; assign rx_cnt = 0;
+        assign rx_head = 256'd0;
+    end endgenerate
     ot_link_afifo #(.W(64), .AW(CFA)) u_cx (
         .wclk(clk_i), .wrst_n(rn_i), .wr(cx_wr), .wdata(cx_w), .wfull(cx_full), .wfreed(cx_freed), .ovf(cx_ovf),
         .rclk(clk_h), .rrst_n(rn_h), .rd(cx_pop), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt));
@@ -302,14 +364,14 @@ module qkd_hr_native_qm_cdc #(
     reg        tcr_q;
     assign     cx_pop = !cx_empty && tcr != 0;
     always @(posedge clk_h or negedge rn_h) begin
-        if (!rn_h) begin t_v <= 1'b0; t_d <= 0; tcr <= TCRED; tcr_q <= 1'b0; end
+        if (!rn_h) begin t_v <= 1'b0; tcr <= TCRED; tcr_q <= 1'b0; end
         else begin
             tcr_q <= t_cr;
             tcr <= tcr + (tcr_q ? 8'd1 : 8'd0) - (cx_pop ? 8'd1 : 8'd0);
             t_v <= cx_pop;
-            if (cx_pop) t_d <= cx_head;
         end
     end
+    always @(posedge clk_h) if (cx_pop) t_d <= cx_head;     // data only, no reset (t_v is the valid)
 
     // =============================================================================================================
     // die face (ck): share CSR (toggle-qualified), pacer, credits, pin flops
@@ -333,16 +395,17 @@ module qkd_hr_native_qm_cdc #(
     assign        ox_pop = !ox_empty && ocr != 0 && pace_ok;
     always @(posedge ck or negedge rn_c) begin
         if (!rn_c) begin
-            o_v <= 1'b0; o_we <= 1'b0; o_addr <= 0; o_d <= 0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
+            o_v <= 1'b0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
         end else begin
             ocr_q <= o_cr;
             ocr <= ocr + (ocr_q ? 8'd1 : 8'd0) - (ox_pop ? 8'd1 : 8'd0);
             if (share_c == 9'd0) tok <= 0;
             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
             o_v <= ox_pop;
-            if (ox_pop) begin o_we <= ox_head[AW+256]; o_addr <= ox_head[AW+255:256]; o_d <= ox_head[255:0]; end
         end
     end
+    // data only, no reset (o_v is the valid)
+    always @(posedge ck) if (ox_pop) begin o_we <= ox_head[AW+256]; o_addr <= ox_head[AW+255:256]; o_d <= ox_head[255:0]; end
     always @(posedge ck) ird_q <= i_rd;
     always @(posedge ck or negedge rn_c) if (!rn_c) irv_q <= 1'b0; else irv_q <= i_rv && (RMW_EN != 0);
     // sticky fault, seen in the die domain
