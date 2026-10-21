@@ -1976,6 +1976,36 @@ FWD_NO_ROOT_SRC = ('qfd_sigbump',)
 FWD_LANE_E_STA = 2
 
 
+def _clkrx_slot_xy(w, h, j):
+    """QW2-DIEFIX 10-21: qfd_clkrx pin slot of root pll_r<j>.  The rom_r22k slot (3.2-um grid, 16 per row about the
+    centre) for every j whose row lies inside the master (byte-identical to the g5r2b GEN); past the last row the slot
+    used to CLAMP to the top edge -> pll_r pins stacked on 16 points (PIN_OVERLAP) and the non-pll relocation loop never
+    ended once those 16 were taken (dv2f21g5r3e/e2: roots up to pll_r1317 > 1167 on the 412.5-um master; GEN hung
+    3 h in case_pdn).  Overflow slots fill 3.2-um columns outside the 16-wide centre band, alternating W/E, bottom-up."""
+    x = w / 2 + ((j % 16) - 8) * 3.2
+    y = h / 2 + (j // 16 - 8) * 3.2
+    if 1.0 <= x <= w - 1.0 and 1.0 <= y <= h - 1.0:
+        return x, y
+    rows_in = int((h / 2 - 1.0) // 3.2) + 8 + 1          # rows j // 16 whose y fits (row 0 is below the centre)
+    o = j - 16 * rows_in
+    if o < 0:
+        return min(w - 1.0, max(1.0, x)), min(h - 1.0, max(1.0, y))
+    nrow = int((h - 2.0) // 3.2) + 1
+    c, r = divmod(o, nrow)
+    k, side = divmod(c, 2)
+    x = w / 2 - 25.6 - 3.2 * (k + 1) if side == 0 else w / 2 + 22.4 + 3.2 * (k + 1)
+    if not 1.0 <= x <= w - 1.0:
+        raise SystemExit(f'qfd_clkrx: root pll_r{j} has no pin slot in the {w}x{h} master (overflow slot {o})')
+    return x, 1.0 + r * 3.2
+
+
+def _clkrx_slot_cap(w, h):
+    """highest legal slot index of the qfd_clkrx master (centre band rows + overflow columns)"""
+    rows_in = int((h / 2 - 1.0) // 3.2) + 8 + 1
+    ncol = 2 * int((w / 2 - 25.6 - 1.0) // 3.2)
+    return 16 * rows_in + ncol * (int((h - 2.0) // 3.2) + 1) - 1
+
+
 def fwd_e_est(n):
     """handoff E of an n-frame forwarded half-cycle lane before the die STA: the S81 p4j half-cycle pilot measured
     E = ceil(N/2) + 1 for N stations ahead of the landed pin (results/arch/s81_dv_1016/landing/p4j_land2/land_plan.json:
@@ -4314,6 +4344,43 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                    landed_with_bundle=sorted(_rbadd) if isinstance(_rbadd, list) else _rbadd)
         print(f'RECORD_BUNDLES {len(set(_rbm.values()))} bundles / {len(_rbm)} members: '
               f'{len(_rbadd)} members padded or landed with their bundle', flush=True)
+    # QW2-DIEFIX 10-21 (dv2f21g5r3s1/s2 'serdes2_tx: group E 7 -> landing MCP 5: hold window ff -18.8 < 0'): the
+    # Q-COLLCAL valid-name bus groups (lane_groups.group_of: serdes2_tx + serdes2_txv, ...) reached their one E by ring
+    # wait only; on the taller slice-row-gap die the 1-b valid re-routed to 10 frames vs 8 for its 597-b data, and the
+    # data's landing would have to wait 3 slots (E_sta 5 > D - 1).  Like the record bundles (frame_pads above), a group
+    # member too far behind gets sink-end stations (half-cycle hops; same group E, no cycle added) so the ring wait stays
+    # within E_sta <= D - 1.  One latency per bus, carried by registered stages instead of a stretched ring window.
+    if _os.environ.get('OT_SPLIT_FWD_LANES', '0') == '1' and _os.environ.get('OT_SPLIT_FWD_GROUP_PADS', '1') == '1':
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import record_bundles as _RB2
+        import lane_groups as _LG2
+        _rbm2 = _rbm or {}
+        _gix = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        _grows, _gfr = [], {}
+        for idx, (bid, cl, bits, eps) in buses:
+            if bid in _rbm2 or len(eps) != 2 or cl in ('link_spine', 'link_channel', 'clock_trunk', 'reset', 'constant'):
+                continue
+            if re.match(r'(a?rst|rs_)', bid) or '_rst' in bid or 'lrst' in bid or str(bid).startswith('flt_'):
+                continue
+            n_ = (len(plans[idx]['frames']) if idx in plans else 0) + int(tpads.get(bid, 0))
+            if n_ <= 0:
+                continue
+            _gfr[bid] = n_
+            _grows.append(dict(bid=bid, src=eps[0][0], dst=eps[1][0]))
+        _ggid = _LG2.group_of(_grows)
+        _gmap = {}
+        for b_, g_ in _ggid.items():
+            _gmap.setdefault(g_, []).append(b_)
+        _gmap = {b_: g_ for g_, bs_ in _gmap.items() if len(bs_) > 1 for b_ in bs_}
+        _lpg = json.loads(Path(_os.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os.environ.get('OT_SPLIT_LAND_PLAN') else {}
+        _esg = {r_['bid']: int(r_['E']) for r_ in _lpg.get('links', []) if r_.get('E') is not None}
+        _gp = _RB2.frame_pads(_gmap, _gfr, _esg, 4) if _gmap else {}
+        for b_, p_ in _gp.items():
+            tpads[b_] = int(tpads.get(b_, 0)) + p_
+        m['fwd_group_pads'] = dict(groups=sorted(set(_gmap.values())), pads=_gp,
+                                   frames={b_: _gfr[b_] for b_ in sorted(_gmap)})
+        print(f'FWD_GROUP_PADS {len(set(_gmap.values()))} bus groups / {len(_gmap)} members: '
+              f'{len(_gp)} members padded {sorted(_gp.items())}', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -7937,16 +8004,14 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
             if not mk_:
                 raise SystemExit(f'qfd_clkrx: die.v connects clk_rx.{p} but the master has no such pin (not a pll_r root)')
             j = int(mk_.group(1))
-            cxm.area(p, 1, min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
-                     min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)), 1)
+            cxm.area(p, 1, *_clkrx_slot_xy(cxm.w, cxm.h, j), 1)
             pw.setdefault(('qfd_clkrx', p), 1)
             added.append(p)
         # GEN16 10-19 (dv2f16 first GEN: PIN_OVERLAP FAIL qfd_clkrx 8 pairs): rom_r22k puts the non-pll ports at slots
         # 200+, which collide with pll_r200.. once the die has > 200 region roots (48 c_b16 x 16 regional clocks); move
         # every non-pll area pin that sits on a pll_r slot to the first free slot past the highest pll_r index
         def _slot_xy(j):
-            return (min(cxm.w - 1.0, max(1.0, cxm.w / 2 + ((j % 16) - 8) * 3.2)),
-                    min(cxm.h - 1.0, max(1.0, cxm.h / 2 + (j // 16 - 8) * 3.2)))
+            return _clkrx_slot_xy(cxm.w, cxm.h, j)
         pll_k = [int(q.group(1)) for q in (re.fullmatch(r'pll_r(\d+)', p) for p in cxm.ports) if q]
         taken = {tuple(round(c, 3) for c in _slot_xy(j)) for j in pll_k}
         nxt, relocated = max(pll_k, default=199) + 1, []
@@ -7958,6 +8023,8 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
                 continue
             while tuple(round(c, 3) for c in _slot_xy(nxt)) in taken:
                 nxt += 1
+                if nxt > _clkrx_slot_cap(cxm.w, cxm.h):
+                    raise SystemExit(f'qfd_clkrx: no free pin slot for {p} in the {cxm.w}x{cxm.h} master (slot {nxt})')
             x_, y_ = _slot_xy(nxt)
             cxm.ports[p] = ('area', sp_[1], x_, y_, sp_[4])
             taken.add((round(x_, 3), round(y_, 3)))
