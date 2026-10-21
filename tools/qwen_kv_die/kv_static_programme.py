@@ -320,6 +320,9 @@ def profile(kind, ages=None):
     from tools.qwen_kv_die import kv_static_die as KSD
     ofs = KSD.ahub_ofs_bound()
     hl = hroot_landing(KSD)
+    if hl['chain']:
+        raise ValueError('HROOT LAND absolute calendar ages unqualified: C3 ROOT=2 predates the extra stack root; '
+                         'require final-pin down/fan/return ages and all boot/ownership observation deadlines before compile')
     return dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
                 face_land=fl, hroot_landing=hl,
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],

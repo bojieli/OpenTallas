@@ -1,0 +1,4 @@
+HROOT_OBSERVATION FAIL checks=245 bad=102
+[529000] %Fatal: tb.sv:42: Assertion failed in tb
+%Error: /srv/opentallas-scratch/claude/qwen-kvsys/hroot-observe-ada6262cb/missing_gather_landing/tb.sv:42: Verilog $stop
+Aborting...

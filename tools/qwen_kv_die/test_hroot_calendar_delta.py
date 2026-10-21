@@ -1,7 +1,9 @@
 """Executable HROOT calendar delta checks; absolute die qualification is separate."""
 import ast
 from pathlib import Path
-from types import SimpleNamespace
+from types import SimpleNamespace, ModuleType
+from unittest.mock import patch
+import sys
 import unittest
 import kvjc3_pc_chain as C
 from kv_hroot_calendar import observation_intervals
@@ -11,13 +13,26 @@ def programme_functions():
     # Load the production image functions without unrelated link-image imports.
     tree = ast.parse(Path(__file__).with_name('kv_static_programme.py').read_text())
     tree.body = [n for n in tree.body if isinstance(n, ast.FunctionDef) and
-                 n.name in ('es_cfg_words', 'hroot_landing')]
+                 n.name in ('es_cfg_words', 'hroot_landing', 'profile')]
     ns = dict(ES_CFG_CTRL_LAT=92, ES_CFG_WORDS=(1024, 8))
     exec(compile(tree, 'kv_static_programme.py', 'exec'), ns)
     return ns
 
 
 class HrootDelta(unittest.TestCase):
+    def test_production_compile_refuses_unpriced_absolute_root(self):
+        ns = programme_functions()
+        ns['_face_land'] = lambda: {}
+        ksd = SimpleNamespace(HROOT_LAND=True, HROOT_S32=False,
+                              HROOT_ESH_MOD='qkd_kv_es_fan_stack_bl',
+                              HROOT_RLY_MOD='qkd_kv_stack_relays_l',
+                              ahub_ofs_bound=lambda: None)
+        pkg = ModuleType('tools.qwen_kv_die')
+        pkg.kv_static_die = ksd
+        with patch.dict(sys.modules, {'tools': ModuleType('tools'), 'tools.qwen_kv_die': pkg}):
+            with self.assertRaisesRegex(ValueError, 'absolute calendar ages unqualified'):
+                ns['profile']('die', dict(link={}))
+
     def test_full_gather_interval_and_causal_early_use(self):
         rows = [dict(stack=st, group=g, phase=ph, last_change=100,
                      first_use=104, hold_through=104, transport_edges=0)
