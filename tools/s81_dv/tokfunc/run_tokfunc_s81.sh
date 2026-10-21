@@ -5,6 +5,7 @@ set -euo pipefail
 H=$(cd "$(dirname "$0")" && pwd)
 REF=; WORK=; FIX=; DIE=; PB=; PLAN=; LAND=; REPORT=0; ASM=; SRC=
 HEAD_PREP=; HEAD_FIX=; MU_STAGE=; HEAD_JSON=; MU_JSON=; LAYERS_JSON=
+CAL_AR=; CAL_MTP=
 while (($#)); do
   case "$1" in
     --ref) REF=$2; shift 2;; --work) WORK=$2; shift 2;;
@@ -15,6 +16,7 @@ while (($#)); do
     --head-fixtures) HEAD_FIX=$2; shift 2;; --mu-stage) MU_STAGE=$2; shift 2;;
     --head-json) HEAD_JSON=$2; shift 2;; --mu-json) MU_JSON=$2; shift 2;;
     --layers-json) LAYERS_JSON=$2; shift 2;; --report-only) REPORT=1; shift;;
+    --calendar-ar) CAL_AR=$2; shift 2;; --calendar-mtp) CAL_MTP=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
 done
@@ -68,7 +70,9 @@ if [ "$REPORT" = 0 ]; then
         (cd "$MU_STAGE"; bash "$H/mu_fleet.sh" run "$c") > "$WORK/mu_$c.log" 2>&1 || true
       done
     fi
-    python3 "$H/mu_collect.py" --out-dir "$MU_STAGE/out" --plans "$MU_STAGE/plans" --sources "$MU_STAGE/SOURCES.txt" --json "$WORK/mu.json"
+    CA=(); [ -z "$CAL_AR" ] || CA+=(--calendar-ar "$CAL_AR")
+    [ -z "$CAL_MTP" ] || CA+=(--calendar-mtp "$CAL_MTP")
+    python3 "$H/mu_collect.py" --out-dir "$MU_STAGE/out" --plans "$MU_STAGE/plans" --sources "$MU_STAGE/SOURCES.txt" --json "$WORK/mu.json" "${CA[@]}"
     MU_JSON=$WORK/mu.json
   fi
 fi
