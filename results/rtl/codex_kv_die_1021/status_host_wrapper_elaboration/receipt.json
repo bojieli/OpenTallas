@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "top": "qkd_host_root_admission_status_obs1",
+  "parameters": {
+    "ENABLE_SERVICE": 1,
+    "ENABLE_NATIVE": 1,
+    "ENABLE_TOKEN": 1,
+    "NL": 2,
+    "MU": 1
+  },
+  "scope": "full source hierarchy elaboration85files/101modules, actual reader at g_mu.u_rank.g_mu.u_control.g_mu.u_status_reader; no physical or final programme source binding claim",
+  "canonical_mu": "rtl/qwen_sys/mu_qwen_20261018, alternate host_peer_mu_sram implementations deliberately not selected",
+  "memory_models": "actual checked-in physical blackboxes; no memory simulation claim",
+  "input_bits": 225,
+  "calendar_delta": 0,
+  "physical": "NOTRUN",
+  "backend_native": "4193103ae max32",
+  "source_sha256": "ba0c21ae738e1c5fd4e22672bb0e09a944d9b761e59610c63c7527c6414d4fe2"
+}
