@@ -111,6 +111,7 @@ CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_
 # KV-BIND12 10-20 (OT_KV_RLY_FINE=1, default off): a relay chain that finds no spot on the G-lattice offsets retries the same
 # path points with sub-cell y / x offsets (RLY_FINE_STEPS) before refusing (kv_die._relays chain_)
 RLY_FINE = __import__('os').environ.get('OT_KV_RLY_FINE', '0') == '1'
+RLY_FINE_XY = __import__('os').environ.get('OT_KV_RLY_FINE_XY', '0') == '1'
 RLY_FINE_STEPS = (10.8, -10.8, 21.6, -21.6, 32.4, -32.4)
 RLY_D2D_FIRST = __import__('os').environ.get('OT_KV_RLY_D2D_FIRST', '0') == '1'   # KV-BIND12: wide D2D words placed first
 REACH_W = sorted((int(k), float(v)) for k, v in (t.split(':') for t in
@@ -3716,6 +3717,16 @@ def _relays(m):
                     # a 0-overlap spot 259-321 um from every D2D pin exists).  Only chains that would raise reach here, so
                     # every plan that built is unchanged.
                     fine_ = [(dx_, dy_ + f_) for dx_, dy_ in offl_ for f_ in RLY_FINE_STEPS]
+                    if RLY_FINE_XY:
+                        # codexcpA actual endpoint failure: legal slots at
+                        # x6627..6633 between two HOST record relay frames,
+                        # but the path-relative X grid offered6619/6641.
+                        # Y-only refinement cannot enter that real cell row.
+                        # Cover both axes; _spot still snaps GX/GY and checks
+                        # actual keepouts, previous reach and farthest bit.
+                        phases = (0.0, 10.8, -10.8, 21.6)
+                        fine_ += [(dx_ + fx_, dy_ + fy_) for dx_, dy_ in offl_
+                                  for fx_ in phases[1:] for fy_ in phases]
                     got = _spot(idxs, fine_, prev_pt_, rch, pad_, at_end or term_)
                     if got is not None:
                         m.setdefault('rly_fine', []).append((bid, st_['k'], round(got[0], 3), round(got[1], 3)))
