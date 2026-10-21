@@ -1,0 +1,559 @@
+{
+ "top": "ot_hbm_accel_smh_attn_rp4a",
+ "top_lp": "ot_hbm_accel_smh_attn_rp4a_lp_main",
+ "why": "HBM-DIEGAP/SMHPARENT 10-21 (H.STA.BLK.14): smh_attn x16 parent with the rp4a hardened halves, form MAIN (per-half regions, n->s crossing LANDED). Halves r3a (691.2 wide); SM outline estimate 7257.6 x 6004.8 um.",
+ "sources": [
+  "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv"
+ ],
+ "child_sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_front.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_pstore.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_desc_static.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_tile.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
+  "rtl/lib/ot_hdly.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+  "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv",
+  "rtl/hbm_accel/sm/attn/flat/ot_hbm_sm_attn_front_split.sv"
+ ],
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "defines_note": "the rp4 kit define set of the halves kits (smh_rp4ah{n,s}_r3*/spec.json minus OT_RP4A_HARD) = sm_elem_bench --rp4a",
+ "params": {
+  "KVMUT": 0,
+  "BE_DELAY": 28,
+  "HOPD": 5,
+  "GPAD": 10
+ },
+ "synthesis_hard_instances": [
+  "u_t00_n",
+  "u_t00_s",
+  "u_t01_n",
+  "u_t01_s",
+  "u_t10_n",
+  "u_t10_s",
+  "u_t11_n",
+  "u_t11_s",
+  "u_t20_n",
+  "u_t20_s",
+  "u_t21_n",
+  "u_t21_s",
+  "u_t30_n",
+  "u_t30_s",
+  "u_t31_n",
+  "u_t31_s",
+  "u_t40_n",
+  "u_t40_s",
+  "u_t41_n",
+  "u_t41_s",
+  "u_t50_n",
+  "u_t50_s",
+  "u_t51_n",
+  "u_t51_s",
+  "u_t60_n",
+  "u_t60_s",
+  "u_t61_n",
+  "u_t61_s",
+  "u_t70_n",
+  "u_t70_s",
+  "u_t71_n",
+  "u_t71_s"
+ ],
+ "out_dir": "rtl/hbm_accel/sm/attn/flat/lp_rp4a_main",
+ "record_dir": "results/arch/smh_attn_parent_1021/main",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n",
+  "rst_a"
+ ],
+ "regions": [
+  {
+   "name": "f",
+   "insts": [
+    "u_fl",
+    "u_bc"
+   ],
+   "centre": [
+    3628.8,
+    3002.4
+   ],
+   "why": "front launch (rows / beat for both row pairs of columns 3 / 4, request) + be_cmd glue: front column mid-height"
+  },
+  {
+   "name": "fr",
+   "insts": [
+    "u_fr"
+   ],
+   "centre": [
+    3628.8,
+    151.2
+   ],
+   "why": "front result (ql/qr deskew -> rv/rrow/rdata/fault) at the bottom of the front column beside BEs 3 / 4"
+  },
+  {
+   "name": "t00n",
+   "insts": [
+    "u_t00_n"
+   ],
+   "centre": [
+    388.8,
+    5248.8
+   ],
+   "why": "rp4a n half column 0 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t00s",
+   "insts": [
+    "u_t00_s"
+   ],
+   "centre": [
+    388.8,
+    3866.4
+   ],
+   "why": "rp4a s half column 0 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t01n",
+   "insts": [
+    "u_t01_n"
+   ],
+   "centre": [
+    388.8,
+    2397.6
+   ],
+   "why": "rp4a n half column 0 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t01s",
+   "insts": [
+    "u_t01_s",
+    "u_gp0",
+    "u_be0"
+   ],
+   "centre": [
+    388.8,
+    583.2
+   ],
+   "why": "rp4a s half column 0 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t10n",
+   "insts": [
+    "u_t10_n"
+   ],
+   "centre": [
+    1166.4,
+    5248.8
+   ],
+   "why": "rp4a n half column 1 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t10s",
+   "insts": [
+    "u_t10_s"
+   ],
+   "centre": [
+    1166.4,
+    3866.4
+   ],
+   "why": "rp4a s half column 1 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t11n",
+   "insts": [
+    "u_t11_n"
+   ],
+   "centre": [
+    1166.4,
+    2397.6
+   ],
+   "why": "rp4a n half column 1 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t11s",
+   "insts": [
+    "u_t11_s",
+    "u_gp1",
+    "u_be1"
+   ],
+   "centre": [
+    1166.4,
+    583.2
+   ],
+   "why": "rp4a s half column 1 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t20n",
+   "insts": [
+    "u_t20_n"
+   ],
+   "centre": [
+    1944.0,
+    5248.8
+   ],
+   "why": "rp4a n half column 2 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t20s",
+   "insts": [
+    "u_t20_s"
+   ],
+   "centre": [
+    1944.0,
+    3866.4
+   ],
+   "why": "rp4a s half column 2 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t21n",
+   "insts": [
+    "u_t21_n"
+   ],
+   "centre": [
+    1944.0,
+    2397.6
+   ],
+   "why": "rp4a n half column 2 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t21s",
+   "insts": [
+    "u_t21_s",
+    "u_gp2",
+    "u_be2"
+   ],
+   "centre": [
+    1944.0,
+    583.2
+   ],
+   "why": "rp4a s half column 2 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t30n",
+   "insts": [
+    "u_t30_n"
+   ],
+   "centre": [
+    2721.6,
+    5248.8
+   ],
+   "why": "rp4a n half column 3 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t30s",
+   "insts": [
+    "u_t30_s"
+   ],
+   "centre": [
+    2721.6,
+    3866.4
+   ],
+   "why": "rp4a s half column 3 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t31n",
+   "insts": [
+    "u_t31_n"
+   ],
+   "centre": [
+    2721.6,
+    2397.6
+   ],
+   "why": "rp4a n half column 3 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t31s",
+   "insts": [
+    "u_t31_s",
+    "u_gp3",
+    "u_be3"
+   ],
+   "centre": [
+    2721.6,
+    583.2
+   ],
+   "why": "rp4a s half column 3 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t40n",
+   "insts": [
+    "u_t40_n"
+   ],
+   "centre": [
+    4536.0,
+    5248.8
+   ],
+   "why": "rp4a n half column 4 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t40s",
+   "insts": [
+    "u_t40_s"
+   ],
+   "centre": [
+    4536.0,
+    3866.4
+   ],
+   "why": "rp4a s half column 4 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t41n",
+   "insts": [
+    "u_t41_n"
+   ],
+   "centre": [
+    4536.0,
+    2397.6
+   ],
+   "why": "rp4a n half column 4 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t41s",
+   "insts": [
+    "u_t41_s",
+    "u_gp4",
+    "u_be4"
+   ],
+   "centre": [
+    4536.0,
+    583.2
+   ],
+   "why": "rp4a s half column 4 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t50n",
+   "insts": [
+    "u_t50_n"
+   ],
+   "centre": [
+    5313.6,
+    5248.8
+   ],
+   "why": "rp4a n half column 5 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t50s",
+   "insts": [
+    "u_t50_s"
+   ],
+   "centre": [
+    5313.6,
+    3866.4
+   ],
+   "why": "rp4a s half column 5 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t51n",
+   "insts": [
+    "u_t51_n"
+   ],
+   "centre": [
+    5313.6,
+    2397.6
+   ],
+   "why": "rp4a n half column 5 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t51s",
+   "insts": [
+    "u_t51_s",
+    "u_gp5",
+    "u_be5"
+   ],
+   "centre": [
+    5313.6,
+    583.2
+   ],
+   "why": "rp4a s half column 5 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t60n",
+   "insts": [
+    "u_t60_n"
+   ],
+   "centre": [
+    6091.2,
+    5248.8
+   ],
+   "why": "rp4a n half column 6 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t60s",
+   "insts": [
+    "u_t60_s"
+   ],
+   "centre": [
+    6091.2,
+    3866.4
+   ],
+   "why": "rp4a s half column 6 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t61n",
+   "insts": [
+    "u_t61_n"
+   ],
+   "centre": [
+    6091.2,
+    2397.6
+   ],
+   "why": "rp4a n half column 6 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t61s",
+   "insts": [
+    "u_t61_s",
+    "u_gp6",
+    "u_be6"
+   ],
+   "centre": [
+    6091.2,
+    583.2
+   ],
+   "why": "rp4a s half column 6 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  },
+  {
+   "name": "t70n",
+   "insts": [
+    "u_t70_n"
+   ],
+   "centre": [
+    6868.8,
+    5248.8
+   ],
+   "why": "rp4a n half column 7 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t70s",
+   "insts": [
+    "u_t70_s"
+   ],
+   "centre": [
+    6868.8,
+    3866.4
+   ],
+   "why": "rp4a s half column 7 row pair 0 (691.2 x 1252.8)"
+  },
+  {
+   "name": "t71n",
+   "insts": [
+    "u_t71_n"
+   ],
+   "centre": [
+    6868.8,
+    2397.6
+   ],
+   "why": "rp4a n half column 7 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
+  },
+  {
+   "name": "t71s",
+   "insts": [
+    "u_t71_s",
+    "u_gp7",
+    "u_be7"
+   ],
+   "centre": [
+    6868.8,
+    583.2
+   ],
+   "why": "rp4a s half column 7 row pair 1 (691.2 x 1252.8) + own-lane pad + column BE (gather -> BE in-region)"
+  }
+ ],
+ "D": 4,
+ "E": 2,
+ "landing_chunk_bits": 24,
+ "landing_writer": "n32",
+ "regional_reset_copies": true,
+ "reset_region": "f",
+ "mut_child": "u_bc",
+ "bench": {
+  "cycles": 4000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "quiet_reset": true,
+  "warm": 1500,
+  "warm_note": "as HF-5c: tcl/bdc accumulators (no-reset data cuts) need a flush window before the compare",
+  "mut_waivers": {
+   "4": "as HF-5c lp_mut4 (10-18): with quiet_reset every child's reset clears only valid / sticky flags that stay 0 under zero inputs, so a 1-stage reset slip is invisible to random lockstep; landing reset alignment is covered by MUT 2 (read K+1)"
+  }
+ },
+ "compiler_note": {
+  "rp4a_delta": "vs ot_hbm_accel_smh_attn (soft tiles): every gout lane +G=10 per rp4a tile (2+GN+GS+LR+2*OS, r3 kits); p1 own lanes padded +G in the parent (u_gp<c>) so every BE lane is +20; BE_DELAY 8 -> 28; HOPD 4 -> 5 (rp4 pin register per hop). QK/PV calendar in command time unchanged; results +20 (flat) plus the landed-parent result offset of this record.",
+  "loop_resolution": "front split u_fl / u_fr as HF-5c (ot_smh_static_front result path reads only ql/qr)"
+ }
+}

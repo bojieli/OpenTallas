@@ -33,6 +33,29 @@ RBW, BBW, GLW, QLW, TRW, TGI = F.RBW, F.BBW, F.GLW, F.QLW, F.TRW, F.TGI
 GN, GS, XB, LR, OS = 2, 2, 2, 2, 1
 G = 2 + GN + GS + LR + 2 * OS          # 10: gout lane delta of one rp4a tile vs the soft tile
 TOP = "ot_hbm_accel_smh_attn_rp4a"
+SLICE = 720                            # lp.py regional_reset_copies: <= 30 chunks of 24 b per landed net -> slice wide buses
+
+
+def parts(width):
+    n = -(-width // SLICE)
+    base, rem = divmod(width, n)
+    return [base + (1 if k < rem else 0) for k in range(n)]
+
+
+def decl(name, width):
+    """slice wires of one bus (<= SLICE bits each); returns the declaration text."""
+    ps = parts(width)
+    if len(ps) == 1:
+        return f"wire [{width - 1}:0] {name};"
+    return " ".join(f"wire [{w - 1}:0] {name}_{k};" for k, w in enumerate(ps))
+
+
+def cat(name, width):
+    """the bus as a concatenation of its slices (MSB slice first)."""
+    ps = parts(width)
+    if len(ps) == 1:
+        return name
+    return "{" + ", ".join(f"{name}_{k}" for k in reversed(range(len(ps)))) + "}"
 
 
 def gen() -> str:
@@ -68,14 +91,14 @@ def gen() -> str:
     w(");")
     for s in ("l", "r"):
         for p in range(NP):
-            w(f"    wire [{RBW - 1}:0] f_r{s}_p{p}n, f_r{s}_p{p}s;")
-            w(f"    wire [{BBW - 1}:0] f_b{s}_p{p};")
+            w(f"    {decl(f'f_r{s}_p{p}n', RBW)} {decl(f'f_r{s}_p{p}s', RBW)}")
+            w(f"    {decl(f'f_b{s}_p{p}', BBW)}")
     w("    wire [28:0] be_cmd;")
     for c in range(NC):
         for p in range(NP):
             t = f"t{c}{p}"
-            w(f"    wire [{RBW - 1}:0] {t}n_ro, {t}s_ro;  wire [{BBW - 1}:0] {t}_bo, {t}_xb;  wire [49:0] {t}_xg0;  "
-              f"wire [99:0] {t}_xgp;  wire [{SUB * GLW - 1}:0] {t}_go;")
+            w(f"    {decl(f'{t}n_ro', RBW)} {decl(f'{t}s_ro', RBW)} {decl(f'{t}_bo', BBW)} {decl(f'{t}_xb', BBW)}  "
+              f"wire [49:0] {t}_xg0;  wire [99:0] {t}_xgp;  wire [{SUB * GLW - 1}:0] {t}_go;")
         w(f"    wire [{TGI - 1}:0] t{c}0_gol = t{c}0_go[{TGI - 1}:0];")
         w(f"    wire [{TGI - 1}:0] t{c}1_gown = t{c}1_go[{TGI - 1}:0];")
         w(f"    wire [{TGI - 1}:0] t{c}1_gpass = t{c}1_go[{SUB * GLW - 1}:{TGI}];")
@@ -84,8 +107,10 @@ def gen() -> str:
         w(f"    wire [{(NH - 1) * QLW - 1}:0] e{c}_qol = e{c}_qo[{(NH - 1) * QLW - 1}:0];")
     w("    ot_hbm_sm_attn_front_launch #(.KVMUT(KVMUT)) u_fl (.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), "
       ".packet(packet), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .request(request), "
-      ".rl({f_rl_p1s, f_rl_p1n, f_rl_p0s, f_rl_p0n}), .rr({f_rr_p1s, f_rr_p1n, f_rr_p0s, f_rr_p0n}), "
-      ".bl({f_bl_p1, f_bl_p0}), .br({f_br_p1, f_br_p0}), .schedule_fault(schedule_fault));")
+      f".rl({{{cat('f_rl_p1s', RBW)}, {cat('f_rl_p1n', RBW)}, {cat('f_rl_p0s', RBW)}, {cat('f_rl_p0n', RBW)}}}), "
+      f".rr({{{cat('f_rr_p1s', RBW)}, {cat('f_rr_p1n', RBW)}, {cat('f_rr_p0s', RBW)}, {cat('f_rr_p0n', RBW)}}}), "
+      f".bl({{{cat('f_bl_p1', BBW)}, {cat('f_bl_p0', BBW)}}}), .br({{{cat('f_br_p1', BBW)}, {cat('f_br_p0', BBW)}}}), "
+      ".schedule_fault(schedule_fault));")
     w(f"    ot_smh_static_front_result u_fr (.clk(clk), .rst_n(rst_n), .ql(e{NL - 1}_qo), .qr(e{NL}_qo), .rv(rv), .rrow(rrow), "
       ".rdata(rdata), .fault(fault));")
     w("    ot_hbm_sm_attn_becmd u_bc (.clk(clk), .rst_n(rst_n), .d(command[111:83]), .q(be_cmd));")
@@ -102,6 +127,8 @@ def gen() -> str:
                 rn, rs, bi = f"f_rr_p{p}n", f"f_rr_p{p}s", f"f_br_p{p}"
             else:
                 rn, rs, bi = f"t{c - 1}{p}n_ro", f"t{c - 1}{p}s_ro", f"t{c - 1}{p}_bo"
+            rn, rs, bi = cat(rn, RBW), cat(rs, RBW), cat(bi, BBW)
+            ron, ros, bo, xb = cat(f"{t}n_ro", RBW), cat(f"{t}s_ro", RBW), cat(f"{t}_bo", BBW), cat(f"{t}_xb", BBW)
             gi = f"{TGI}'d0" if p == 0 else f"t{c}{p - 1}_gol"
             a1, g1, a2, g2 = F.straps(c, p)
             v = lambda s: int(s.split("'h")[1], 16)  # noqa: E731
@@ -109,11 +136,11 @@ def gen() -> str:
             attn = (p * RPT) << 3 | c
             w(f"    ot_hbm_smh_rp4ah_n {hp} u_{t}_n (.clk(clk), .rst_n(rst_n), .xs_a1(9'h{a1v & 0x1ff:x}), "
               f".xs_g1(5'h{g1v & 0x1f:x}), .xs_a2(7'h{a2v & 0x7f:x}), .xs_g2(5'h{g2v & 0x1f:x}), .attn(5'h{attn:x}), "
-              f".rin_n({rn}), .bin({bi}), .gin({gi}), .rout_n({t}n_ro), .bout({t}_bo), .xo_b({t}_xb), .xo_g0({t}_xg0), "
+              f".rin_n({rn}), .bin({bi}), .gin({gi}), .rout_n({ron}), .bout({bo}), .xo_b({xb}), .xo_g0({t}_xg0), "
               f".xo_gp({t}_xgp));")
             w(f"    ot_hbm_smh_rp4ah_s {sp} u_{t}_s (.clk(clk), .rst_n(rst_n), .xss_a1(9'h{a1v >> 9:x}), "
               f".xss_g1(5'h{g1v >> 5:x}), .xss_a2(7'h{a2v >> 7:x}), .xss_g2(5'h{g2v >> 5:x}), .attn(5'h{attn:x}), "
-              f".rin_s({rs}), .rout_s({t}s_ro), .xi_b({t}_xb), .xi_g0({t}_xg0), .xi_gp({t}_xgp), .gout({t}_go));")
+              f".rin_s({rs}), .rout_s({ros}), .xi_b({xb}), .xi_g0({t}_xg0), .xi_gp({t}_xgp), .gout({t}_go));")
         w(f"    ot_rp4a_relay #(.W(100), .N(GPAD), .VMASK({{2'b11, 48'b0, 2'b11, 48'b0}})) u_gp{c} (.clk(clk), .rst_n(rst_n), "
           f".d(t{c}1_gown), .q(g{c}_own));")
         if c < NL:

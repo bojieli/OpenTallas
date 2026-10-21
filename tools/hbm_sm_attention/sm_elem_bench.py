@@ -393,7 +393,7 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
 RP4A = None                       # --rp4a (HBM-DIEGAP/SMHPARENT 10-21): bench ot_hbm_accel_smh_attn_rp4a (rp4a halves parent)
-RP4A_DEF = ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER",
+RP4A_DEF = ["OT_SMH_FC_HIER", "OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER",
             "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_XREL", "OT_SMH_PRODUCTION_SHAPE", "OT_SMH_COMPACT_PT", "OT_SMH_GROUP_TRANSPORT",
             "OT_SMH_WEST_SPLIT", "OT_SMH_TRANSPORT_KEEP", "OT_SMH_RP4_SRST"]
 RP4A_SRC = ["rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_tc_col.sv", "rtl/gpu/ot_gpu_bd_col.sv",
