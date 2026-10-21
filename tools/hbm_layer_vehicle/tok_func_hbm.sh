@@ -133,8 +133,9 @@ for LL in 00 02 14; do l=$((10#$LL))
   [ "$CX" = 1 ] && CXR="$CXR ds_l$l"
 done
 for st in L0 chain; do
+  QSAFE_ARGS=(); [ "${QW_SAFE_CALENDAR:-$CONNECTED_LOWERING}" != 1 ] || QSAFE_ARGS=(--safe-calendar)
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/qwen_layer_images.py emit --stage $st --ranks 0,5 --boundary "$B" --operands "$QOP/operands_$st.npz" \
-     --native-read-return $RR --native-write-return $WR "${QSM_ARGS[@]}" --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
+     --native-read-return $RR --native-write-return $WR "${QSAFE_ARGS[@]}" "${QSM_ARGS[@]}" --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
   for r in 0 5; do [ -f "$OUT/qemit/$st/r$r/replay.json" ] && cp "$OUT/qemit/$st/r$r/replay.json" "$RJ/qw_${st,,}_r$r.json"; done
   say "EMIT qw_$st $(grep -o '"counts": {[^}]*}' "$L/emit_qw_$st.log" | head -1)"
 done
