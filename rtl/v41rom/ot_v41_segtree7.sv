@@ -60,6 +60,7 @@ module ot_v41_segtree7 #(
     // regional resets (k): 0 control, 1-3 have, 4-5 in-flight counts, 6 queue flags, 7-8 queue pointers, 9 adder
     // valid / err, 10 adder sum, 11 output / tree-copy control
     wire r_c = rst_n[0], r_q = rst_n[6], r_p0 = rst_n[7], r_p1 = rst_n[8], r_av = rst_n[9], r_ay = rst_n[10], r_o = rst_n[11];
+    wire r_p2 = rst_n[NR > 12 ? 12 : 8];          // q4_d4: second read-pointer leaf (NR = 13; = r_p1 at NR = 12)
 
     // ---------------- adder result, registered once (as segtree6) ----------------
     wire [31:0] sum_a;
@@ -108,7 +109,7 @@ module ot_v41_segtree7 #(
     wire [QD-1:0] rpk [0:NQ-1];
     wire [QD-1:0] nxs [0:NQ-1];
     for (genvar g = 0; g < NQ; g = g + 1) begin : g_rp
-        ot_v41_kreg #(.W(QD), .AR(1), .RV({{(QD-1){1'b0}}, 1'b1})) u_r (.clk(clk), .arst_n(r_p1), .d(uq[g] ? rotl(rpk[g]) : rpk[g]), .q(rpk[g]));
+        ot_v41_kreg #(.W(QD), .AR(1), .RV({{(QD-1){1'b0}}, 1'b1})) u_r (.clk(clk), .arst_n(g >= 3 ? r_p2 : r_p1), .d(uq[g] ? rotl(rpk[g]) : rpk[g]), .q(rpk[g]));
 `ifdef OT_NP_TREE_MUT_Q
         assign nxs[g] = rpk[g];                                                // negative control: the pop's advance ignored
 `else

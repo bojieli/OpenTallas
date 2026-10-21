@@ -346,7 +346,7 @@ module ot_v41_bterm5_w10 #(
     // formed ONLY from copy s (its own zero detects and shift selects: one select drove 33 - 65 cells).  The S7 sign
     // p4a_s[41] (42 loads: the 41-bit sign-magnitude select) is kept in two copies, one per half of the select.
     // The leading-zero counts come from slice 0.  Same values, same cycles as NP = 0.
-    localparam integer C8 = 2, C9 = 3, C10 = 2;
+    localparam integer C8 = 2, C9 = 4, C10 = 2;   // q4_d4: C9 3 -> 4 (S10 slice-0 shift select 33 - 34 loads)
     function automatic [46:0] npl_n32(input [40:0] m);
         reg [40:0] x; reg [5:0] z;
         begin
