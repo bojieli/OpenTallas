@@ -52,8 +52,17 @@ module ot_hbm_svc_static_sm_packed136_h (
  end
  wire row_write=row_slot&&!sticky;
  wire open_ok=open_v&&!running&&!owned[open_bank]&&open_count!=0&&open_count<=64&&!sticky&&!(retire_v&&retire_bank==open_bank);
- wire [9:0] exp_tag=tagb[read_bank]+{4'd0,read_row};
- wire read_ok=read_v&&ready[read_bank]&&read_epoch==epoch[read_bank]&&{1'b0,read_row}<count[read_bank]&&
+ wire rbe0,rbe1,rbc,rbt,tbe0,tbe1;
+ ot_hbm_svc_local_and2 u_rbe0(.a(read_bank),.b(1'b1),.y(rbe0));
+ ot_hbm_svc_local_and2 u_rbe1(.a(read_bank),.b(1'b1),.y(rbe1));
+ ot_hbm_svc_local_and2 u_rbc(.a(read_bank),.b(1'b1),.y(rbc));
+ ot_hbm_svc_local_and2 u_rbt(.a(read_bank),.b(1'b1),.y(rbt));
+ ot_hbm_svc_local_and2 u_tbe0(.a(retire_bank),.b(1'b1),.y(tbe0));
+ ot_hbm_svc_local_and2 u_tbe1(.a(retire_bank),.b(1'b1),.y(tbe1));
+ wire [15:0]read_epoch_ref={epoch[rbe1][15:8],epoch[rbe0][7:0]};
+ wire [15:0]retire_epoch_ref={epoch[tbe1][15:8],epoch[tbe0][7:0]};
+ wire [9:0] exp_tag=tagb[rbt]+{4'd0,read_row};
+ wire read_ok=read_v&&ready[rbc]&&read_epoch==read_epoch_ref&&{1'b0,read_row}<count[rbc]&&
    read_tag==exp_tag&&!sticky&&!(retire_v&&retire_bank==read_bank);
  always @*begin
   expected_sectors=0;
@@ -68,7 +77,7 @@ module ot_hbm_svc_static_sm_packed136_h (
  // next record phase (registered one-hot copies)
  wire [1:0] rph_n=open_ok?2'd0:((running&&!sticky&&row_slot)?record_phase+2'd1:record_phase);
  // next running / owned (registered + KEPT copies that enable the datapath captures)
- wire retire_ok=retire_v&&!(!owned[retire_bank]||retire_epoch!=epoch[retire_bank]||(running&&load_bank==retire_bank)||
+ wire retire_ok=retire_v&&!(!owned[retire_bank]||retire_epoch!=retire_epoch_ref||(running&&load_bank==retire_bank)||
       (read_v&&read_bank==retire_bank)||(open_v&&open_bank==retire_bank));
  wire run_end=running&&!sticky&&emitted==load_rows&&received==total_sectors;
  wire running_n=open_ok?1'b1:(run_end?1'b0:running);
@@ -78,15 +87,25 @@ module ot_hbm_svc_static_sm_packed136_h (
   if(open_ok)owned_n[open_bank]=1;
   if(retire_ok)owned_n[retire_bank]=0;
  end
- (* keep="true",dont_touch="true" *) reg [1:0] nrun_k;   // = !running: the fill registers load while idle (61 flops)
- (* keep="true",dont_touch="true" *) reg [3:0] nown_k;   // [b*2+c] = !owned[b]: bank fields load while unowned (33 flops)
+ (* keep="true",dont_touch="true" *) reg [6:0] nrun_k;   // = !running: the fill registers load while idle (61 flops)
+ (* keep="true",dont_touch="true" *) reg [7:0] nown_k;   // [b*2+c] = !owned[b]: bank fields load while unowned (33 flops)
+ wire [7:0]rph_local;
+ for(genvar pg=0;pg<2;pg=pg+1)begin:g_phase_tree
+  for(genvar ph=0;ph<4;ph=ph+1)begin:g_phase
+   ot_hbm_svc_local_and2 u_c(.a(rph_n==((HM==1)?2'(ph+1):2'(ph))),.b(1'b1),.y(rph_local[pg*4+ph]));
+  end
+ end
+ wire [2:0]run_local;
+ for(genvar rg=0;rg<3;rg=rg+1)begin:g_run_tree
+  ot_hbm_svc_local_and2 u_c(.a(running),.b(!sticky),.y(run_local[rg]));
+ end
  // control
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   owned<=0;filled<=0;running<=0;sticky<=0;out_valid<=0;nrun_k<=2'b11;nown_k<=4'hf;
+   owned<=0;filled<=0;running<=0;sticky<=0;out_valid<=0;nrun_k<=7'h7f;nown_k<=8'hff;
   end else begin
    out_valid<=read_ok;running<=running_n;owned<=owned_n;
-   nrun_k<={2{!running_n}};nown_k<={{2{!owned_n[1]}},{2{!owned_n[0]}}};
+   nrun_k<={7{!running_n}};nown_k<={{4{!owned_n[1]}},{4{!owned_n[0]}}};
    if(open_v&&!open_ok)sticky<=1;
    if(open_ok)filled[open_bank]<=0;
    if(read_v&&!read_ok)sticky<=1;
@@ -103,20 +122,25 @@ module ot_hbm_svc_static_sm_packed136_h (
  // datapath (no reset): bank fields while the bank is unowned, fill registers while idle, counters while running
  always @(posedge clk)begin
   d1<=sector_data;d2<=d1;
-  for(i=0;i<NPS;i=i+1)for(j=0;j<4;j=j+1)rph_k[i*4+j]<=rph_n==((HM==1)?2'(j+1):2'(j));
+  for(i=0;i<NPS;i=i+1)for(j=0;j<4;j=j+1)rph_k[i*4+j]<=rph_local[(i/17)*4+j];
   record_phase<=rph_n;
   if(read_ok)out_tag<=read_tag;
   for(b=0;b<2;b=b+1)begin
-   if(nown_k[b*2])begin epoch[b]<=open_epoch;count[b]<=open_count;end
-   if(nown_k[b*2+1])tagb[b]<=open_tag_base;
+   if(nown_k[b*4])epoch[b][7:0]<=open_epoch[7:0];
+   if(nown_k[b*4+1])epoch[b][15:8]<=open_epoch[15:8];
+   if(nown_k[b*4+2])count[b]<=open_count;
+   if(nown_k[b*4+3])tagb[b]<=open_tag_base;
   end
-  if(nrun_k[0])begin load_bank<=open_bank;load_epoch<=open_epoch;load_rows<=open_count;emitted<=0;end
-  if(nrun_k[1])begin received<=0;total_sectors<=9'(((open_count*136+127)/128)*4);slot_phase<=0;elapsed<=0;end
-  if(running&&!sticky)begin
-   slot_phase<=slot_phase==4?0:slot_phase+1'b1;elapsed<=elapsed+1'b1;
-   received<=received+expected_sectors;
-   if(row_slot)emitted<=emitted+1'b1;
-  end
+  if(nrun_k[0])begin load_bank<=open_bank;load_rows<=open_count;end
+  if(nrun_k[1])load_epoch[7:0]<=open_epoch[7:0];
+  if(nrun_k[2])load_epoch[15:8]<=open_epoch[15:8];
+  if(nrun_k[3])emitted<=0;
+  if(nrun_k[4])received<=0;
+  if(nrun_k[5])total_sectors<=9'(((open_count*136+127)/128)*4);
+  if(nrun_k[6])begin slot_phase<=0;elapsed<=0;end
+  if(run_local[0])begin slot_phase<=slot_phase==4?0:slot_phase+1'b1;elapsed<=elapsed+1'b1;end
+  if(run_local[1])received<=received+expected_sectors;
+  if(run_local[2]&&row_slot)emitted<=emitted+1'b1;
  end
  genvar p;for(p=0;p<5;p=p+1)begin:g_cache
   wire [1279:0] padded_row={192'b0,row_data};
