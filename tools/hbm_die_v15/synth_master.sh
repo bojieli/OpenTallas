@@ -15,7 +15,8 @@ mkdir -p $2; SRC=$(readlink -f $1); OUT=$(readlink -f $2); NAME=$3; TOP=$4; PRM=
 PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
-HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
+FILELIST_TOOL=${FILELIST_TOOL:-$SRC/tools/hbm_die_v15/master_filelist.py}
+HDIE_ALLOW_AMBIGUOUS=1 python3 "$FILELIST_TOOL" $TOP --root $SRC --json $PREF $BBARG --extra-top "${EXTRA_TOPS:-}" > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
 python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" "${LIBCELLS:-0}" "${WTOP:-}" "${DROP:-}" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)

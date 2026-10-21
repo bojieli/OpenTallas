@@ -120,10 +120,24 @@ if __name__ == "__main__":
     ap.add_argument("--root", default=".")
     ap.add_argument("--bb", default="")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--extra-top", default="", help="explicit additional selected graph roots hidden by preprocessor type selection")
     ap.add_argument("--prefer", default="", help="file with preferred definition files (one per line)")
     a = ap.parse_args()
     pref = [l.strip() for l in open(a.prefer)] if a.prefer else []
     r = resolve(Path(a.root).resolve(), a.top, tuple(x for x in a.bb.split(",") if x), pref)
+    r['extra_tops'] = [x for x in a.extra_top.split(',') if x]
+    for top in r['extra_tops']:
+        extra = resolve(Path(a.root).resolve(), top, tuple(x for x in a.bb.split(',' ) if x), pref)
+        r['files'] = list(dict.fromkeys(r['files'] + extra['files']))
+        macros = {m['module']: m for m in r['macros']}
+        for m in extra['macros']:
+            if m['module'] in macros and macros[m['module']] != m:
+                raise ValueError(('macro declaration differs across selected roots',m))
+            macros[m['module']] = m
+        r['macros'] = list(macros.values())
+        for key in ('blackboxes', 'unresolved'):
+            r[key] = sorted(set(r[key]) | set(extra[key]))
+        r['ambiguous'].update(extra['ambiguous'])
     if a.json:
         print(json.dumps(r, indent=1))
     else:
