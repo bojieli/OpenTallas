@@ -1,0 +1,11 @@
+Verilator 5.050 2026-07-01 rev v5.050
+XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1 :: XS4_EQUIV cycles=1710 events=331 legal=1 expfault=0 inj=0 injt=0 rstat=0 valid=411 bf=84 qnz=320 ref_fault_at=-1 mismatches=320 fault_mismatches=0 post_fault_mismatches=0 first_bad=456
+MISMATCH xw cyc=456 bits: b2=0/1 b4=0/1 b6=0/1 b8=0/1 b9=0/1 b10=1/0 b15=1/0 b17=0/1 b19=1/0 b20=0/1
+MISMATCH xw cyc=458 bits: b1=1/0 b2=1/0 b3=1/0 b4=0/1 b5=0/1 b7=1/0 b8=1/0 b10=1/0 b11=0/1 b13=0/1
+MISMATCH xw cyc=460 bits: b2=0/1 b5=1/0 b7=0/1 b8=1/0 b9=0/1 b10=1/0 b16=0/1 b19=0/1 b20=0/1 b21=0/1
+XS4_CASE L2_near_s9 FAIL expected=FAIL ok=1 :: XS4_EQUIV cycles=1710 events=331 legal=1 expfault=0 inj=0 injt=0 rstat=0 valid=411 bf=84 qnz=320 ref_fault_at=-1 mismatches=320 fault_mismatches=0 post_fault_mismatches=0 first_bad=456
+MISMATCH xw cyc=456 bits: b2=0/1 b4=0/1 b6=0/1 b8=0/1 b9=0/1 b10=1/0 b15=1/0 b17=0/1 b19=1/0 b20=0/1
+MISMATCH xw cyc=458 bits: b1=1/0 b2=1/0 b3=1/0 b4=0/1 b5=0/1 b7=1/0 b8=1/0 b10=1/0 b11=0/1 b13=0/1
+MISMATCH xw cyc=460 bits: b2=0/1 b5=1/0 b7=0/1 b8=1/0 b9=0/1 b10=1/0 b16=0/1 b19=0/1 b20=0/1 b21=0/1
+XS4_EQUIV_BENCH PASS
+rc 0

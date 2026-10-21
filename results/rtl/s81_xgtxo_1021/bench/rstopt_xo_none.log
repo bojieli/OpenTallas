@@ -1,0 +1,6 @@
+PASS rstop_sid 16 stops 144 checks
+RSTOP_XO R1 egress 80 (bad 0) gather min 80 other_out 0
+RSTOP_XO R2 egress 0 gather min 80 other_out 0
+PASS rstop_xo 138 checks
+BENCH_PASS rstopt_xo (sid + xo)
+rc 0
