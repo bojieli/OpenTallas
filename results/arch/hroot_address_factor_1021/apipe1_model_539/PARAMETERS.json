@@ -1,0 +1,17 @@
+{
+  "scope": "ONE existing registered-architecture MODEL only; not production/native/cold/gate adoption",
+  "origin_commit": "539e8df61",
+  "source_sha256": "b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63",
+  "parameters": {
+    "AW": 32,
+    "HDMAX": 128,
+    "KVHMAX": 2,
+    "QKV": 1,
+    "APIPE": 1,
+    "QPIPE": 2,
+    "NATIVE_ROWS": 1,
+    "QMUT": 0
+  },
+  "old_parameter_recipe": "same except APIPE0",
+  "late_ring_source": "536ba55c8/2019e74d specialized APIPE0; explicitly NOT used in this model"
+}
