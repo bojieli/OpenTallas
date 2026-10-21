@@ -43,21 +43,31 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  initial if(RSN*RSW!=IW)$fatal(1,"landing_bank_h: IW must be RSN x RSW");
  wire packet_v,packet_take,underflow;wire [IW-1:0] packet;
  wire [RSN-1:0] rs_wr_ready,rs_rd_valid,rs_ov,rs_un;
+ // Eight slices per reset leaf: one FIFO reset comb pin and one qualifier reset
+ // per slice. Both-side reset still asserts asynchronously through every leaf.
+ localparam integer RRG=(RSN+7)/8;
+ wire [RRG-1:0] wr_leaf,rd_leaf;
+ ot_rst_fanout #(.N(RRG)) u_wr_leaf(.clk(hbm_clk),.rst_n_in(hbm_rst_n),.rst_n(wr_leaf));
+ ot_rst_fanout #(.N(RRG)) u_rd_leaf(.clk(stream_clk),.rst_n_in(sr[1]),.rst_n(rd_leaf));
  (* keep="true",dont_touch="true" *) reg [RSN-1:0] wq_k;   // hbm-side per-slice push qualifiers (1 after reset)
- always @(posedge hbm_clk or negedge hbm_rst_n)if(!hbm_rst_n)wq_k<=0;else wq_k<={RSN{1'b1}};
+
  assign in_ready=&rs_wr_ready;assign packet_v=&rs_rd_valid;
  assign overflow=|rs_ov;assign underflow=|rs_un;
  // stream-side per-slice qualifiers: cq_k[i] gates slice i's head capture (with ITS OWN rd_valid, so each h bit reads
  // only its own instance's storage under that instance's rd_valid) and slice i's pop (with the AND-reduced packet_take)
  (* keep="true",dont_touch="true" *) reg[RSN-1:0]cq_k;
- always @(posedge stream_clk or negedge sr[1])if(!sr[1])cq_k<=0;else cq_k<={RSN{1'b1}};
+
  wire[RSN-1:0]cap_en=cq_k&rs_rd_valid;
  genvar rs;
  generate for(rs=0;rs<RSN;rs=rs+1)begin:rsl
+  always @(posedge hbm_clk or negedge wr_leaf[rs/8])
+   if(!wr_leaf[rs/8])wq_k[rs]<=0;else wq_k[rs]<=1'b1;
+  always @(posedge stream_clk or negedge rd_leaf[rs/8])
+   if(!rd_leaf[rs/8])cq_k[rs]<=0;else cq_k[rs]<=1'b1;
   ot_hbm_svc_async_fifo #(.WIDTH(RSW),.DEPTH(RESPONSE_DEPTH)) u_response(
-   .wr_clk(hbm_clk),.wr_rst_n(hbm_rst_n),.wr_valid(in_v&&in_ready&&wq_k[rs]),.wr_ready(rs_wr_ready[rs]),
+   .wr_clk(hbm_clk),.wr_rst_n(wr_leaf[rs/8]),.wr_valid(in_v&&in_ready&&wq_k[rs]),.wr_ready(rs_wr_ready[rs]),
    .wr_data(in_data[rs*RSW+:RSW]),.wr_overflow(rs_ov[rs]),
-   .rd_clk(stream_clk),.rd_rst_n(stream_rst_n),.rd_valid(rs_rd_valid[rs]),.rd_ready(packet_take&&cq_k[rs]),
+   .rd_clk(stream_clk),.rd_rst_n(rd_leaf[rs/8]),.rd_valid(rs_rd_valid[rs]),.rd_ready(packet_take&&cq_k[rs]),
    .rd_data(packet[rs*RSW+:RSW]),.rd_underflow(rs_un[rs]));
  end endgenerate
  // HBM-COLLECT10 2026-10-21 (rel8c): REGISTERED FIFO HEAD.  r2 decoded the identity check / seen / received / sticky
