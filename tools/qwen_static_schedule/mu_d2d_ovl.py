@@ -166,6 +166,9 @@ def build(stages=STAGES, frame=16, kv_prog=False, starts=None, kv_codec=1, pair_
     for sg in ("tok_tx", "tok_rx"):
         for c, d in im[sg].items():
             head.setdefault(RES[c], []).append((o + d["occ"][0], o + d["occ"][1]))
+    if pair:
+        head.setdefault("kv.prog",[]).append((o,o+pair["program"]["embed"]["cycles"]))
+        head.setdefault("emb.row",[]).append((o,o+pair["program"]["embed"]["cycles"]))
     p = dict(attn_extra=X, att_windows=att, seg_windows={"head": head}, **pair_price)
     if pair:
         for r,iv in att.items():p["seg_windows"].setdefault("layer",{})[r]=[(a+sum(pair["program"]["windows"]["L1_35"][k] for k in ("rmsnorm1","qkv","qknorm_rope")),b+sum(pair["program"]["windows"]["L1_35"][k] for k in ("rmsnorm1","qkv","qknorm_rope"))) for a,b in iv]
@@ -326,7 +329,8 @@ def main():
                exchanges_per_frame=ex, tokens_per_frame=tok,
                rate=dict(aggregate_tok_s=round(cal["aggregate_tok_s"], 1),
                          per_user=[round(u["tok_s"], 1) for u in cal["users"]],
-                         single_playhead_tok_s=round(single_playhead_rate(a.frame), 1)))
+                         single_playhead_tok_s=None if a.pair_calendar else round(single_playhead_rate(a.frame), 1)))
+    (out / "frame_schedule.json").write_text(json.dumps(cal,indent=1)+"\n")
     (out / "ovl.json").write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(H=H, X=b["X"], rate=rec["rate"], images=rec["images"], lists=enc["lists"],
                           tokens=tok, mutant=a.mut)))
