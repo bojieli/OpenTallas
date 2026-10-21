@@ -1,190 +1,219 @@
 {
-  "schema": "opentallas.s81.g9_source_assembly.v1",
-  "observed_at": "2026-10-21T13:47:16.844510-07:00",
-  "status": "PREPARED_SOURCE_NOT_SELECTED_G9",
-  "base": "d7fc45b6725c4ba9365d24721afcd51754e892f9",
-  "source_candidate_commit": "c779add25d63590fc1ad67ee564a1deb39575be5",
-  "normal_slice": {
-    "module": "ot_s81sl_slice",
-    "source_pins": {
-      "ot_s81sl_slice.sv": {
-        "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
-        "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
-        "git_blob": "de5afda250630444d05233d5d39469debfc66ef8",
-        "sha256": "4187b6a2d0e317f2b7d059c173fb43f8f09ade4638566d89946ba1f913a7ec7a"
-      },
-      "ot_s81sl_xgt.sv": {
-        "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
-        "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv",
-        "git_blob": "14474f560432bffefa2b748c90c0c5ec6cc3e366",
-        "sha256": "39a6c4f2fdfd2f0a4a023352c970891124a3e9c5836eae05e5018e255ef82b08"
-      },
-      "ot_s81sl_rstopt.sv": {
-        "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
-        "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv",
-        "git_blob": "d1917afdffecf892e691c5ab060f627c9aa9213e",
-        "sha256": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8"
-      },
-      "ot_s81sl_xrt.sv": {
-        "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
-        "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
-        "git_blob": "57d8518e367b0fa5bef5f8edc5c1c75bf8f2f890",
-        "sha256": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64"
-      }
-    },
-    "delta": "Only three child-master names; byte-identical source after exact substitutions above",
-    "required_GEN_sources": [
-      "ot_s81sl_slice.sv",
-      "ot_s81sl_xgt.sv",
-      "ot_s81sl_rstopt.sv",
-      "ot_s81sl_xrt.sv"
-    ],
-    "qualification": "existing source action6893686b3; not whole slice CLOSED",
-    "source_pins_scope": "Baseline689 transport replacement; current materialized slice incorporates KV fold hashes below"
+ "schema": "opentallas.s81.g9_source_assembly.v1",
+ "observed_at": "2026-10-21T14:34:22.829179-07:00",
+ "status": "PREPARED_SOURCE_NOT_SELECTED_G9",
+ "base": "d7fc45b6725c4ba9365d24721afcd51754e892f9",
+ "source_candidate_commit": "c779add25d63590fc1ad67ee564a1deb39575be5",
+ "normal_slice": {
+  "module": "ot_s81sl_slice",
+  "source_pins": {
+   "ot_s81sl_slice.sv": {
+    "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "git_blob": "de5afda250630444d05233d5d39469debfc66ef8",
+    "sha256": "4187b6a2d0e317f2b7d059c173fb43f8f09ade4638566d89946ba1f913a7ec7a"
+   },
+   "ot_s81sl_xgt.sv": {
+    "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv",
+    "git_blob": "14474f560432bffefa2b748c90c0c5ec6cc3e366",
+    "sha256": "39a6c4f2fdfd2f0a4a023352c970891124a3e9c5836eae05e5018e255ef82b08"
+   },
+   "ot_s81sl_rstopt.sv": {
+    "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv",
+    "git_blob": "d1917afdffecf892e691c5ab060f627c9aa9213e",
+    "sha256": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8"
+   },
+   "ot_s81sl_xrt.sv": {
+    "commit": "6893686b3a6c8b4d5400b9845052b97c6046be75",
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "git_blob": "57d8518e367b0fa5bef5f8edc5c1c75bf8f2f890",
+    "sha256": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64"
+   }
   },
-  "endcap_xgt": {
-    "module": "ot_s81sl_xgt_xo",
-    "source_commit": "f5f35855dfa58d4a8b6d5f9f221650bc84663cdb",
-    "source_files_sha256": {
-      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
-      "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
-      "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
-      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
-      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
-      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv": "53832356d7401d9c7af6fbcb7da5349548537c5c7771467d4cb740e053f74214",
-      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
-      "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
-      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v": "fa0158fc9b3bd261501646c89b8732603e9818a15251506f28a32daf2bade93b",
-      "tools/s81_slice/xgtxo_bench.sh": "00adebdd6417bf1100d6156d67ef45df3bd57ca5a726e5891f3886df716d64d6",
-      "tools/s81_slice/xs4_equiv.sh": "b77da77e427c2db95954e0d5e3d84f42771623a9628206465bc598bdacf21a11"
-    },
-    "receipt": {
-      "commit": "09d05be9ccee1bd678ef593527f14dfbf1848318",
-      "path": "results/rtl/s81_xg_takeover2_1021/source_binding.json",
-      "git_blob": "33e9dfed6bb07e00e732af594b45e0398341240e",
-      "sha256": "3ae8469a4272d6e881ceb76559685aab3855b7a5ace73685cc13a56837267b86"
-    },
-    "mechanism": "EXISTING_MECHANISMS_PASS unit402396; native/physical PENDING",
-    "adopted": false
+  "delta": "Only three child-master names; byte-identical source after exact substitutions above",
+  "required_GEN_sources": [
+   "ot_s81sl_slice.sv",
+   "ot_s81sl_xgt.sv",
+   "ot_s81sl_rstopt.sv",
+   "ot_s81sl_xrt.sv"
+  ],
+  "qualification": "existing source action6893686b3; not whole slice CLOSED",
+  "source_pins_scope": "Baseline689 transport replacement; current materialized slice incorporates KV fold hashes below"
+ },
+ "endcap_xgt": {
+  "module": "ot_s81sl_xgt_xo",
+  "source_commit": "f5f35855dfa58d4a8b6d5f9f221650bc84663cdb",
+  "source_files_sha256": {
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+   "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv": "53832356d7401d9c7af6fbcb7da5349548537c5c7771467d4cb740e053f74214",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v": "fa0158fc9b3bd261501646c89b8732603e9818a15251506f28a32daf2bade93b",
+   "tools/s81_slice/xgtxo_bench.sh": "00adebdd6417bf1100d6156d67ef45df3bd57ca5a726e5891f3886df716d64d6",
+   "tools/s81_slice/xs4_equiv.sh": "b77da77e427c2db95954e0d5e3d84f42771623a9628206465bc598bdacf21a11"
   },
-  "successors": {
-    "idx_rg3": {
-      "commit": "7bd692ad25771a414a60c3878c811ee62dc7ef51",
-      "params": {
-        "OH": 2,
-        "RH": 2
-      },
-      "calendar": "q/s +2 edges per reader; response +2; no old-source alias"
-    },
-    "gunit": {
-      "commit": "312cb42b6731906db69760364cb781b46caac0e6",
-      "master": "dsdv_gunit",
-      "qualification": "PARENT pending; closed dsdv_gunit_l5_n32 cannot substitute"
-    },
-    "seq": {
-      "master": "dsdv_seq_host_mux_h",
-      "qualification": "No implemented qualified mux_h yet",
-      "calendar": "APIPE8->10 host +2; ACKP host_ack_n only +1; do not add3 to allpaths",
-      "slot": "~1080x994 model only, no qualified geometry",
-      "HWIN_candidate": {
-        "source": "adf49d4f8",
-        "params": {
-          "NSLOT": 47,
-          "NEV": 16,
-          "NEP": 4,
-          "NRT": 2,
-          "HEAD_STAGE": 1,
-          "COMPACT_PTR": 1,
-          "CHECK_STAGE": 1,
-          "LIVE_COUNT": 1,
-          "RAW_SELECT": 1,
-          "LOCAL_BOOT": 1,
-          "EARLY_HEAD_CAPTURE": 1,
-          "CFG_RELAY": 1,
-          "DUE_COPIES": 2,
-          "SAFE_NATIVE": 1,
-          "LOCAL_RECORD": 1
-        },
-        "scope": "Unqualified HWINsuccessor child; notG8NEV8 ages/configcodec",
-        "calendar": "CFG_RELAY config+1 only; LOCAL_RECORD no additional edge vs failedc21r reference; no oldG8latency alias"
-      }
-    },
-    "kv": {
-      "commit": "286841a838132f393f3b387f2ecce0e20111c73b",
-      "master": "ot_s81sl_kv_leaf",
-      "qualification": "functional real VP/SRAM component PASS; not bound/physical",
-      "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open",
-      "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist"
-    },
-    "eng_taps": {
-      "source": "f6e939df7",
-      "gate_candidate": "92080c424",
-      "masters": [
-        "dsdv_eng_tap",
-        "dsdv_eng_tap_w"
-      ],
-      "defines": [
-        "SYNTHESIS",
-        "OT_S81ENG_TAP_N32R2"
-      ],
-      "native": "all4actualPASSmax32/0violations/0roles",
-      "functional": "existingbase+seed2/3+6mutantsPASS perowner",
-      "scope": "Native/functional source candidate only; four physicalgates live, no CLOSED/wholeRRalias",
-      "boot": "staticSID settles2clocks while reset; original3 resetreleaseedges; no protocolagechange",
-      "handover": "owner /root/s81_lead/lepab_struct14:05; exactsource receipt supplied by owner before selection"
-    },
-    "ctrl": {
-      "master": "dsfd_ctrl_rg3",
-      "sources": "same8RTL files as original kitd040 and G8source553, exact hashes in CTRL65ed receipt",
-      "source_candidate": "65ed752dbd6877b74f6ed41a961398fb349e6060",
-      "defines": [
-        "S81CTRL_SRAM_FIFO",
-        "S81CTRL_SRAM_P192",
-        "S81CTRL_NATIVE32"
-      ],
-      "configured_successor": true,
-      "G8_strict_table_defines": [
-        "DSFD_PQ_STATIC_X2"
-      ],
-      "scope": "File identity does not establish configured G8 equivalence. First CLOSED must bind native configured implementation explicitly.",
-      "reset_contract": "NATIVE32 enables kept G12 groups + srbank/hrbank; each leafbank adds one reset-distribution edge in its own clk/ckh domain versus defaultG8. Composite die reset/boot dates must be derived; no blanket runtime+1.",
-      "physical_change": "Cohort candidate reassigns exact PC0 hrbank.q0 CLK within existing positiveckh source; no D/reset/port/FF/root count change; nominal runtime edge delta0 vs original configured kit, timing pending",
-      "native": "Both new candidate gates actualPASSmax32/zero viol/roles at14:17; physical not CLOSED",
-      "original_MAIN": "NEEDS_RTL3RESETNremovals FF\u221213.28",
-      "original_FB": "postrouteECO live; preECO FF\u221234.49 I2R/SRAMdata class, noRESETNviolations"
-    },
-    "h10wide": {
-      "source": "91dcb1c93",
-      "branch": "codex/s81-frameh10w-1340-1021",
-      "master": "col_h10_l4_lp",
-      "outline_um": [
-        1782.432,
-        3672
-      ],
-      "original_outline_um": [
-        1436.832,
-        3672
-      ],
-      "added_mm2_each": 1.2690432,
-      "added_mm2_12": 15.2285184,
-      "scope": "NEW_UNBOUND_FIT_OPEN source/model only; not launched, not selected",
-      "physical_hold": "Requires actual33x26 packing preserving72frames; no cumulative8column assumption. FRAME95+aa helper pair must publish before gate perowner"
-    }
+  "receipt": {
+   "commit": "09d05be9ccee1bd678ef593527f14dfbf1848318",
+   "path": "results/rtl/s81_xg_takeover2_1021/source_binding.json",
+   "git_blob": "33e9dfed6bb07e00e732af594b45e0398341240e",
+   "sha256": "3ae8469a4272d6e881ceb76559685aab3855b7a5ace73685cc13a56837267b86"
   },
-  "selection": "Only actual CLOSED exactmaster/source/params/defines views may be added; source repair and available-view progression continue independently; no old-master aliases",
-  "physical_scope": "G8 original case remains diagnostic159standins21masters; no selected G9 launched",
-  "kv_source_fold": {
-    "source": "286841a838132f393f3b387f2ecce0e20111c73b",
-    "materialized_sha256": {
-      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "9f37084c7bfb27fc3c7b1a658b035c518544517f5f3b98d598228356b2daffa8",
-      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
-      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81"
+  "mechanism": "EXISTING_MECHANISMS_PASS unit402396; native/physical PENDING",
+  "adopted": false
+ },
+ "successors": {
+  "idx_rg3": {
+   "commit": "7bd692ad25771a414a60c3878c811ee62dc7ef51",
+   "params": {
+    "OH": 2,
+    "RH": 2
+   },
+   "calendar": "q/s +2 edges per reader; response +2; no old-source alias"
+  },
+  "gunit": {
+   "commit": "312cb42b6731906db69760364cb781b46caac0e6",
+   "master": "dsdv_gunit",
+   "qualification": "PARENT pending; closed dsdv_gunit_l5_n32 cannot substitute"
+  },
+  "seq": {
+   "master": "dsdv_seq_host_mux_h",
+   "qualification": "Actual all-child hierarchy lint PASS; idle-HOST graph proof4797edges x1567bits zero mismatches,missing-rung causal4613 mismatches/3resetepochs. No qualified native/physical view; legalHOST/fullmux/codeccalendar separate.",
+   "calendar": "APIPE8->10 host +2; ACKP host_ack_n only +1; do not add3 to allpaths",
+   "slot": "~1080x994 model only, no qualified geometry",
+   "HWIN_candidate": {
+    "source": "adf49d4f8",
+    "params": {
+     "NSLOT": 47,
+     "NEV": 16,
+     "NEP": 4,
+     "NRT": 2,
+     "HEAD_STAGE": 1,
+     "COMPACT_PTR": 1,
+     "CHECK_STAGE": 1,
+     "LIVE_COUNT": 1,
+     "RAW_SELECT": 1,
+     "LOCAL_BOOT": 1,
+     "EARLY_HEAD_CAPTURE": 1,
+     "CFG_RELAY": 1,
+     "DUE_COPIES": 2,
+     "SAFE_NATIVE": 1,
+     "LOCAL_RECORD": 1
     },
-    "slice_delta": "Existing286 KV_ENABLE bridge plus689 always-xgt/xrt; legacy conditional transport removed",
-    "overlay": "tools/s81_dv/release72/apply_kv_g9.py",
-    "production_inventory_same_as_real_VP_component": 64,
-    "inventory_receipt": "kv_real_vp_component.json",
-    "overlay_smoke": "PASS on actual G8 plan/table copies; only s3N changed, existing rows unchanged; wrongmaster/activeview/duplicate rejected",
-    "qualification": "SOURCE_ONLY; KV_ENABLE1 actual hardware has no inherited native/physical qualification; producer/programme still OPEN"
+    "scope": "Unqualified HWINsuccessor child; notG8NEV8 ages/configcodec",
+    "calendar": "CFG_RELAY config+1 only; LOCAL_RECORD no additional edge vs failedc21r reference; no oldG8latency alias"
+   },
+   "source_candidate": "00aa1e7d8",
+   "receipt": "results/arch/s81_seqmux_source_1340_1021/record.json"
+  },
+  "kv": {
+   "commit": "286841a838132f393f3b387f2ecce0e20111c73b",
+   "master": "ot_s81sl_kv_leaf",
+   "qualification": "functional real VP/SRAM component PASS; not bound/physical",
+   "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open",
+   "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist"
+  },
+  "eng_taps": {
+   "source": "f6e939df7",
+   "gate_candidate": "92080c424",
+   "masters": [
+    "dsdv_eng_tap",
+    "dsdv_eng_tap_w"
+   ],
+   "defines": [
+    "SYNTHESIS",
+    "OT_S81ENG_TAP_N32R2"
+   ],
+   "native": "all4actualPASSmax32/0violations/0roles",
+   "functional": "existingbase+seed2/3+6mutantsPASS perowner",
+   "scope": "Native/functional source candidate only; four physicalgates live, no CLOSED/wholeRRalias",
+   "boot": "staticSID settles2clocks while reset; original3 resetreleaseedges; no protocolagechange",
+   "handover": "owner /root/s81_lead/lepab_struct14:05; exactsource receipt supplied by owner before selection"
+  },
+  "ctrl": {
+   "master": "dsfd_ctrl_rg3",
+   "sources": "same8RTL files as original kitd040 and G8source553, exact hashes in CTRL65ed receipt",
+   "source_candidate": "29f9898bf",
+   "defines": [
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32"
+   ],
+   "configured_successor": true,
+   "G8_strict_table_defines": [
+    "DSFD_PQ_STATIC_X2"
+   ],
+   "scope": "File identity does not establish configured G8 equivalence. First CLOSED must bind native configured implementation explicitly.",
+   "reset_contract": "NATIVE32 enables kept G12 groups + srbank/hrbank; each leafbank adds one reset-distribution edge in its own clk/ckh domain versus defaultG8. Composite die reset/boot dates must be derived; no blanket runtime+1.",
+   "physical_change": "Cohort candidate reassigns exact PC0 hrbank.q0 CLK within existing positiveckh source; no D/reset/port/FF/root count change; nominal runtime edge delta0 vs original configured kit, timing pending",
+   "native": "Both new candidate gates actualPASSmax32/zero viol/roles at14:17; physical not CLOSED",
+   "original_MAIN": "NEEDS_RTL3RESETNremovals FF\u221213.28",
+   "original_FB": "postrouteECO live; preECO FF\u221234.49 I2R/SRAMdata class, noRESETNviolations",
+   "physical_status": "Original65ed two gates nativePASS then pre-CTS Tclscopefailure; corrected29f procargument pair143225 preflight. No CTS/timing/closure verdict."
+  },
+  "h10wide": {
+   "source": "91dcb1c93",
+   "branch": "codex/s81-frameh10w-1340-1021",
+   "master": "col_h10_l4_lp",
+   "outline_um": [
+    1782.432,
+    3672
+   ],
+   "original_outline_um": [
+    1436.832,
+    3672
+   ],
+   "added_mm2_each": 1.2690432,
+   "added_mm2_12": 15.2285184,
+   "scope": "NEW_UNBOUND_FIT_OPEN source/model only; not launched, not selected",
+   "physical_hold": "Requires actual33x26 packing preserving72frames; no cumulative8column assumption. FRAME95+aa helper pair must publish before gate perowner",
+   "packing_observed": "Actual fixed-coordinate substitution creates14overlap pairs and rightseal overrun345.6um; area+15.2285184mm2 alone does not establish fit. Required constructive independentpacking search live; no source/view adoption."
+  },
+  "qf": {
+   "master": "dsdv_idx_qf",
+   "source_candidate": "922908afa",
+   "receipt": "5d1b061c1",
+   "qualification": "Owner reports existingmechanism+MUT1/2+6seedG8equivPASS; changed-sourceMAIN/FB nativepending; no CLOSED"
+  },
+  "idx_nq": {
+   "master": "dsdv_idx_rg3_nq",
+   "inner_master": "dsdv_idx_rg3_nq_native",
+   "source_candidate": "84b937029",
+   "model": "03794f8c1",
+   "params": {
+    "SRAM_MACRO": 1,
+    "OH": 2,
+    "RH": 2
+   },
+   "delta": "One same-edge controlFF, no extra edge; ordinaryrg3 unchanged",
+   "qualification": "Existing8reader7case proof live before native; prior52b97 failed1root/max33; no CLOSED"
+  },
+  "vmtx": {
+   "source_candidate": "519b78855",
+   "assembly_model": "6fba87c69:results/rtl/codex_idxtx_local_1021/ASSEMBLY_MODEL.md",
+   "actual_topk": "cb73b3e99:rtl/dsrom_sys/s81_dv/bk/plana/n32/dsdv_bk_sel_pa_n32_lp.sv",
+   "scope": "Actual n32TOPK39regionalclock/resetregions224seams distinct from olddefaultdsdv_bk_sel_vmtx. Explicitconnectedvmtx profile not built. No aliases. VMUXsoftsource/no footprint; TX candidate596.16x540 MAIN/691.2x583.2 FB, unqualified. 907.2x3369.6 TOPK arithmetic only, notlegalcomposedparent. Original4190.4band cannot be assumedfree."
   }
+ },
+ "selection": "Only actual CLOSED exactmaster/source/params/defines views may be added; source repair and available-view progression continue independently; no old-master aliases",
+ "physical_scope": "G8 original case remains diagnostic159standins21masters; no selected G9 launched",
+ "kv_source_fold": {
+  "source": "286841a838132f393f3b387f2ecce0e20111c73b",
+  "materialized_sha256": {
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "9f37084c7bfb27fc3c7b1a658b035c518544517f5f3b98d598228356b2daffa8",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81"
+  },
+  "slice_delta": "Existing286 KV_ENABLE bridge plus689 always-xgt/xrt; legacy conditional transport removed",
+  "overlay": "tools/s81_dv/release72/apply_kv_g9.py",
+  "production_inventory_same_as_real_VP_component": 64,
+  "inventory_receipt": "kv_real_vp_component.json",
+  "overlay_smoke": "PASS on actual G8 plan/table copies; only s3N changed, existing rows unchanged; wrongmaster/activeview/duplicate rejected",
+  "qualification": "SOURCE_ONLY; KV_ENABLE1 actual hardware has no inherited native/physical qualification; producer/programme still OPEN"
+ }
 }
