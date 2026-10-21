@@ -89,9 +89,9 @@
      "top": "qkd_hr_cdc_pc"
     },
     "tool": {
-     "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
-     "clock_entry_constraints.py": "d782579180eda6d032dc25cec1ceba9a56da00d0b28825468ce459a9e37d5464",
-     "gray_fifo_cdc_constraints.py": "e281f191526d4ffdcb9ab927607fe878679d04a5659b1e39d98f9166fe0a62d3",
+     "cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+     "clock_entry_constraints.py": "bbc5a97b5f80fb2b46526b2ff90dcd4b765c84346fad0292f3ed38bfb8f8096f",
+     "gray_fifo_cdc_constraints.py": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
      "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
     },
     "tool_data": {
@@ -99,9 +99,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T22:09:19-0700",
-   "host": "ot-epyc5",
-   "key": "45dc54b280b0209617468f08979b9863a64eee261131806a5badca580c948d50",
+   "created": "2026-10-20T21:31:35-0700",
+   "host": "ot-epyc9",
+   "key": "f608720be2f4d0886998881dd3b49dd9e1e0f63ec94e1f01af18bbaa37b0d620",
    "record": {
     "counts": {
      "consumer": 0,
@@ -66314,7 +66314,7 @@
      "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc.v": "0a8ab591ce02a7348ba8f2db5d710d931ddeb1bb150fc7091b78e5ce7280cb9b"
     }
    },
-   "seconds": 50
+   "seconds": 11
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
