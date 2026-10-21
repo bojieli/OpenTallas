@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.hbm_scalar_lower_binding_candidate.v1",
+  "source_base": "52d16da5cb8dbb9570e37c5ce340e3044c821219",
+  "selected_contract": "/home/ubuntu/scratch/tok-func-hbm/r15phaseall/contract_func.json",
+  "scope": "i10 scalar broadcast + i42 runtime-address interface; sourcecandidate only",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "existing_path": [
+    "hb_coll_SW.rr_v/tag/d",
+    "cxrc_SW_s.rr_v/tag/d",
+    "cxrc_SW_s.rb0/rb1",
+    "cxrc_SW_q.rb0/rb1",
+    "cxrc_SW_q.rr_wv/wa/wd",
+    "sucore_SW.rr_wv/wa/wd"
+  ],
+  "new_master": "ot_hbm_vm_scalar_coll_1021",
+  "ports": {
+    "vm_rq": "8x17 {valid,physical_sector16}; static-exclusive mux with hb_coll_SW.vm_rq BEFORE existing COLL station",
+    "vm_rr": "existing COLL station 8x257 {return_valid,data256}; fan to adapter during its exclusive slot",
+    "vm_kq": "8x281 {valid,sector16,mask8,data256}; mux with hb_coll_SW.vm_kq BEFORE existing COLL station",
+    "rr_v/tag/d": "static-exclusive mux with hb_coll_SW rr outputs BEFORE cxrc_SW_s, preserving existing 3:4 crossing and tag->RFsector logic",
+    "clk": "stream-domain source clock; existing cxrc_s and bank interface clock contract required",
+    "cmd_*": "NEW programme-sideband command ports; needs real CP/programme endpoint; not externally replayed internal registers"
+  },
+  "calendar": {
+    "read_client": 3,
+    "write_owner_code": 2,
+    "basis": "existing tools/hbm_layer_vehicle/coll_images.py COLL_RG/COLL_WCODE",
+    "runtime_index_banks": "reserve ALL8 banks on each runtime request slot; bank unknown until live I",
+    "no_backpressure": true
+  },
+  "timing": {
+    "READ_RETURN": "REQUIRED actual request-sample-to-return-sample stream age; default0 rejects unspecified",
+    "broadcast": "cmd E; read E+1; rr output E+1+R; cxrc_s samples E+2+R; actual phase-specific existing crossing then qcore capture+commit required",
+    "gather": "cmd E; indexread E+1; live index capture E+1+R; multiply E+2+R; add E+3+R; dataread E+4+R; capture E+4+2R; VMwrite sample E+5+2R; bank write commit further actual write-return"
+  },
+  "placement": {
+    "addresses": "physical word addresses; no logical->physical reinterpretation",
+    "indexed_source": "contiguous affine physical A region preserving base+U32(I)*dyn_mul; source native logicalbase87552, NOT fixture-resolved87613",
+    "index": "live IDX.TOPK destination logical88704; wait actual producer commit",
+    "output": "logical88768 static mapped destination; expected-only fixture O"
+  },
+  "rf": {
+    "sector": "reserve all8 words; adapter replicates actual VMscalar across sector",
+    "tag_registration": "real red_tag[23] arms table, returntag red_tag[16:14], RFsector red_tag[22:18]; not driven internal rrwa",
+    "selected_RF_LOCAL": 1
+  },
+  "remaining": [
+    "functional contract source adoption and exact programme endpoint",
+    "actual stream VMreturn age after station mux/relay",
+    "existing cxrc return/tag phase schedule",
+    "runtime physical placement and real IDXproducer dependency",
+    "connected native SU arithmetic witness"
+  ],
+  "current_scope": "partial19sets/RUN0 unchanged"
+}

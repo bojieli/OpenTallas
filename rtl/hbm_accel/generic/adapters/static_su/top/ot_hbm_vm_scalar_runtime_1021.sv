@@ -11,7 +11,7 @@
 // Broadcast mode reads A directly; rr_wd broadcasts the live selected word
 // into the reserved eight-word RF sector. Gather writes ONE masked VM word.
 module ot_hbm_vm_scalar_runtime_1021 #(
- parameter integer READ_RETURN=18,
+ parameter integer READ_RETURN=0,
  parameter [31:0] INDEX_MUL=32'd1
 )(
  input wire clk,rst_n,
@@ -26,6 +26,7 @@ module ot_hbm_vm_scalar_runtime_1021 #(
  output reg rr_wv,output reg [4:0] rr_wa,output reg [255:0] rr_wd,
  output reg done,output reg fault
 );
+ initial begin if(READ_RETURN<1)$fatal(1,"bind actual VM request-to-return age");end
  localparam IDLE=0,INDEX_REQ=1,INDEX_WAIT=2,ADDRESS_MUL=3,
             ADDRESS_ADD=4,DATA_REQ=5,DATA_WAIT=6;
  reg [2:0] state;
@@ -79,5 +80,50 @@ module ot_hbm_vm_scalar_runtime_1021 #(
    endcase
   end
  end
+endmodule
+// Stream-domain wrapper uses the existing COLL 8-bank VM bus ABI.
+// Binding reserves COLL owner3/read and owner2/write for the complete slot.
+// cmd addresses MUST already be physical VM words; indexed A must occupy a
+// contiguous affine region. Output rr_* joins hb_coll rr_* BEFORE cxrc_s;
+// programme must register the tag->RFsector mapping through real red_tag.
+module ot_hbm_vm_scalar_coll_1021 #(
+ parameter integer READ_RETURN=0,parameter [31:0] INDEX_MUL=32'd1
+)(
+ input wire clk,rst_n,cmd_v,cmd_indexed,cmd_to_rf,
+ input wire [23:0] cmd_base_word,cmd_index_word,cmd_destination_word,
+ input wire [2:0] cmd_return_tag,
+ output wire [135:0] vm_rq,input wire [2055:0] vm_rr,
+ output wire [2247:0] vm_kq,
+ output wire rr_v,output wire [2:0] rr_tag,output wire [255:0] rr_d,
+ output wire busy,done,output wire fault
+);
+ wire rqv,wv,rv,core_fault;
+ wire [20:0] rqs,ws;
+ wire [7:0] wm;wire [255:0] wd;
+ wire [4:0] unused_wa;
+ reg [2:0] return_bank,tag;
+ reg address_fault;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)address_fault<=0;
+  else begin
+   if(rqv)begin return_bank<=rqs[2:0];if(|rqs[20:16])address_fault<=1;end
+   if(wv&&(|ws[20:16]))address_fault<=1;
+   if(cmd_v&&!busy)tag<=cmd_return_tag;
+  end
+ end
+ for(genvar b=0;b<8;b=b+1)begin:g_bus
+  assign vm_rq[b*17+:17]={rqv&&(rqs[2:0]==b)&&!(|rqs[20:16]),rqs[15:0]};
+  assign vm_kq[b*281+:281]={wv&&(ws[2:0]==b)&&!(|ws[20:16]),ws[15:0],wm,wd};
+ end
+ assign rv=vm_rr[return_bank*257+256];
+ assign rr_tag=tag;
+ assign fault=address_fault|core_fault;
+ ot_hbm_vm_scalar_runtime_1021 #(.READ_RETURN(READ_RETURN),.INDEX_MUL(INDEX_MUL))u_scalar(
+  .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_indexed(cmd_indexed),.cmd_to_rf(cmd_to_rf),
+  .cmd_base_word(cmd_base_word),.cmd_index_word(cmd_index_word),.cmd_destination_word(cmd_destination_word),
+  .cmd_rf_sector(5'd0),.busy(busy),.vm_read_v(rqv),.vm_read_sector(rqs),
+  .vm_return_v(rv),.vm_return_data(vm_rr[return_bank*257+:256]),
+  .vm_write_v(wv),.vm_write_sector(ws),.vm_write_mask(wm),.vm_write_data(wd),
+  .rr_wv(rr_v),.rr_wa(unused_wa),.rr_wd(rr_d),.done(done),.fault(core_fault));
 endmodule
 `default_nettype wire
