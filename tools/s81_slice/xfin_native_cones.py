@@ -11,7 +11,7 @@ for i,(master,name,pins) in enumerate(g.cells):
   for n in nets:
    if role['pins'].get(pn,{}).get('direction')=='output':driver[n]=i;outs[i].append(n)
    else:load[n].add(i);ins[i].append(n)
-def label(i):return re.sub(r'\[\d+\]','[*]',g.cells[i][1]).rsplit('.',1)[0]
+def label(i):return re.sub(r'\$.*','',re.sub(r'\[\d+\]','[*]',g.cells[i][1]))
 def walk(start,forward):
  todo=[(start,0)];seen=set();hits=collections.Counter()
  while todo:
