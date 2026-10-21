@@ -1,0 +1,11 @@
+{
+  "scope": "read-only native16 actual tool installation identity; no process mutation or rebuild",
+  "python_version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+  "binary_sha256": {
+    "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+    "/usr/bin/python3.14": "52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41",
+    "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+  },
+  "active_script": "run_native16_published.sh"
+}
