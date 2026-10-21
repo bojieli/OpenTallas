@@ -112,8 +112,16 @@ def validate_resources(spec, cycles, loops, lg_pad=None):
         numeric.append(values)
     # A maximum six-edge tap transport can only overlap this many neighboring
     # loop iterations. Checking their real absolute times avoids modulo aliases.
-    lg_pad = lg_pad or {}
-    pad = {'read': int(lg_pad.get('read', 0)), 'write': int(lg_pad.get('write', 0))}
+    if lg_pad is None:
+        lg_pad = {}
+    if type(lg_pad) is not dict:
+        raise ValueError('lg_pad must be an object with read/write integer depths')
+    unknown = set(lg_pad) - {'read', 'write'}
+    if unknown:
+        raise ValueError(f'Unknown lg_pad keys: {sorted(map(repr, unknown))}')
+    pad = {kind: lg_pad.get(kind, 0) for kind in ('read', 'write')}
+    if any(type(depth) is not int or depth < 0 for depth in pad.values()):
+        raise ValueError('lg_pad read/write depths must be nonnegative integers')
     representative_loops = min(loops, 2 + (6 + max(pad.values()))//len(cycles))
     arrivals = {}
     for iteration in range(representative_loops):
