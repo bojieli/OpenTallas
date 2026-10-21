@@ -1,0 +1,1095 @@
+{
+  "scope": "CTS checkpoint only; original GRT still active, no finalgate/submission",
+  "source": "1da987d16e17f072c92766446244fb870a70ae95",
+  "regional_clocks": [
+    {
+      "root": "ck_h",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 138,
+            "mean": 251.0,
+            "min": 211.7,
+            "max": 286.8
+          },
+          "spread_ps": 75.1,
+          "soft": {
+            "n": 137,
+            "mean": 251.3,
+            "min": 243.0,
+            "max": 286.8
+          },
+          "refs": {
+            "ot_hbm_su_programme_pghead": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 112.8,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_h/clk",
+              "arr": 98.9,
+              "slew": 12.2,
+              "late": -151.1,
+              "net": "clknet_1_0__leaf_ck_h"
+            }
+          ],
+          "all": {
+            "n": 3413,
+            "mean": 250.0,
+            "min": 211.7,
+            "max": 286.8
+          },
+          "all_spread_ps": 75.1,
+          "actual_child_boundary_range": [
+            199.0,
+            222.10000000000002
+          ],
+          "soft_all_range": [
+            240.0,
+            286.8
+          ],
+          "child_soft_pair_span_ps": 87.8
+        },
+        "ff": {
+          "boundary": {
+            "n": 138,
+            "mean": 206.7,
+            "min": 170.8,
+            "max": 241.6
+          },
+          "spread_ps": 70.8,
+          "soft": {
+            "n": 137,
+            "mean": 207.0,
+            "min": 199.4,
+            "max": 241.6
+          },
+          "refs": {
+            "ot_hbm_su_programme_pghead": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 93.6,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_h/clk",
+              "arr": 77.2,
+              "slew": 9.8,
+              "late": -128.5,
+              "net": "clknet_1_0__leaf_ck_h"
+            }
+          ],
+          "all": {
+            "n": 3413,
+            "mean": 205.8,
+            "min": 170.8,
+            "max": 241.6
+          },
+          "all_spread_ps": 70.8,
+          "actual_child_boundary_range": [
+            158.10000000000002,
+            181.2
+          ],
+          "soft_all_range": [
+            196.0,
+            241.6
+          ],
+          "child_soft_pair_span_ps": 83.5
+        }
+      }
+    },
+    {
+      "root": "ck_c0",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 383.9,
+            "min": 361.8,
+            "max": 406.1
+          },
+          "spread_ps": 44.3,
+          "soft": {
+            "n": 1,
+            "mean": 406.1,
+            "min": 406.1,
+            "max": 406.1
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c0/clk",
+              "arr": 68.9,
+              "slew": 19.1,
+              "late": -309.8,
+              "net": "clknet_1_0__leaf_ck_c0"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 379.0,
+            "min": 348.4,
+            "max": 406.2
+          },
+          "all_spread_ps": 57.8,
+          "actual_child_boundary_range": [
+            347.0,
+            383.1
+          ],
+          "soft_all_range": [
+            348.4,
+            406.2
+          ],
+          "child_soft_pair_span_ps": 59.2
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 311.5,
+            "min": 296.5,
+            "max": 326.4
+          },
+          "spread_ps": 29.9,
+          "soft": {
+            "n": 1,
+            "mean": 326.4,
+            "min": 326.4,
+            "max": 326.4
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c0/clk",
+              "arr": 57.2,
+              "slew": 16.0,
+              "late": -242.3,
+              "net": "clknet_1_0__leaf_ck_c0"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 299.7,
+            "min": 269.7,
+            "max": 326.4
+          },
+          "all_spread_ps": 56.7,
+          "actual_child_boundary_range": [
+            282.4,
+            315.8
+          ],
+          "soft_all_range": [
+            269.7,
+            326.4
+          ],
+          "child_soft_pair_span_ps": 46.1
+        }
+      }
+    },
+    {
+      "root": "ck_c1",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 539.9,
+            "min": 508.6,
+            "max": 571.2
+          },
+          "spread_ps": 62.6,
+          "soft": {
+            "n": 1,
+            "mean": 571.2,
+            "min": 571.2,
+            "max": 571.2
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_l": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 442.4,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c1/clk",
+              "arr": 66.2,
+              "slew": 13.5,
+              "late": -475.9,
+              "net": "clknet_1_0__leaf_ck_c1"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 542.6,
+            "min": 508.6,
+            "max": 571.2
+          },
+          "all_spread_ps": 62.6,
+          "actual_child_boundary_range": [
+            491.8,
+            554.4
+          ],
+          "soft_all_range": [
+            520.0,
+            571.2
+          ],
+          "child_soft_pair_span_ps": 79.4
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 433.0,
+            "min": 415.8,
+            "max": 450.2
+          },
+          "spread_ps": 34.4,
+          "soft": {
+            "n": 1,
+            "mean": 450.2,
+            "min": 450.2,
+            "max": 450.2
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_l": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 360.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c1/clk",
+              "arr": 54.9,
+              "slew": 10.8,
+              "late": -366.8,
+              "net": "clknet_1_0__leaf_ck_c1"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 422.1,
+            "min": 400.6,
+            "max": 450.2
+          },
+          "all_spread_ps": 49.6,
+          "actual_child_boundary_range": [
+            399.79999999999995,
+            453.09999999999997
+          ],
+          "soft_all_range": [
+            400.6,
+            450.2
+          ],
+          "child_soft_pair_span_ps": 52.5
+        }
+      }
+    },
+    {
+      "root": "ck_c2",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 547.1,
+            "min": 508.5,
+            "max": 585.8
+          },
+          "spread_ps": 77.3,
+          "soft": {
+            "n": 1,
+            "mean": 585.8,
+            "min": 585.8,
+            "max": 585.8
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_l": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 442.4,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c2/clk",
+              "arr": 66.1,
+              "slew": 13.2,
+              "late": -487.2,
+              "net": "clknet_1_0__leaf_ck_c2"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 553.8,
+            "min": 508.5,
+            "max": 585.8
+          },
+          "all_spread_ps": 77.3,
+          "actual_child_boundary_range": [
+            491.70000000000005,
+            554.3
+          ],
+          "soft_all_range": [
+            522.8,
+            585.8
+          ],
+          "child_soft_pair_span_ps": 94.1
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 439.6,
+            "min": 415.7,
+            "max": 463.5
+          },
+          "spread_ps": 47.8,
+          "soft": {
+            "n": 1,
+            "mean": 463.5,
+            "min": 463.5,
+            "max": 463.5
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_l": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 360.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c2/clk",
+              "arr": 54.8,
+              "slew": 10.6,
+              "late": -376.7,
+              "net": "clknet_1_0__leaf_ck_c2"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 431.9,
+            "min": 401.4,
+            "max": 463.5
+          },
+          "all_spread_ps": 62.1,
+          "actual_child_boundary_range": [
+            399.7,
+            453.0
+          ],
+          "soft_all_range": [
+            401.4,
+            463.5
+          ],
+          "child_soft_pair_span_ps": 63.8
+        }
+      }
+    },
+    {
+      "root": "ck_c3",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 537.2,
+            "min": 508.5,
+            "max": 565.8
+          },
+          "spread_ps": 57.3,
+          "soft": {
+            "n": 1,
+            "mean": 565.8,
+            "min": 565.8,
+            "max": 565.8
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_l": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 442.4,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c3/clk",
+              "arr": 66.1,
+              "slew": 14.5,
+              "late": -488.7,
+              "net": "clknet_1_0__leaf_ck_c3"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 555.3,
+            "min": 508.5,
+            "max": 580.0
+          },
+          "all_spread_ps": 71.5,
+          "actual_child_boundary_range": [
+            491.70000000000005,
+            554.3
+          ],
+          "soft_all_range": [
+            529.8,
+            580.0
+          ],
+          "child_soft_pair_span_ps": 88.3
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 429.8,
+            "min": 415.8,
+            "max": 443.9
+          },
+          "spread_ps": 28.1,
+          "soft": {
+            "n": 1,
+            "mean": 443.9,
+            "min": 443.9,
+            "max": 443.9
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_l": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 360.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c3/clk",
+              "arr": 54.9,
+              "slew": 11.9,
+              "late": -378.2,
+              "net": "clknet_1_0__leaf_ck_c3"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 433.5,
+            "min": 409.1,
+            "max": 457.2
+          },
+          "all_spread_ps": 48.1,
+          "actual_child_boundary_range": [
+            399.79999999999995,
+            453.09999999999997
+          ],
+          "soft_all_range": [
+            409.1,
+            457.2
+          ],
+          "child_soft_pair_span_ps": 57.4
+        }
+      }
+    },
+    {
+      "root": "ck_c4",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 386.9,
+            "min": 361.6,
+            "max": 412.2
+          },
+          "spread_ps": 50.6,
+          "soft": {
+            "n": 1,
+            "mean": 412.2,
+            "min": 412.2,
+            "max": 412.2
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c4/clk",
+              "arr": 68.7,
+              "slew": 17.9,
+              "late": -293.9,
+              "net": "clknet_1_0__leaf_ck_c4"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 362.9,
+            "min": 343.1,
+            "max": 412.2
+          },
+          "all_spread_ps": 69.1,
+          "actual_child_boundary_range": [
+            346.8,
+            382.9
+          ],
+          "soft_all_range": [
+            343.1,
+            412.2
+          ],
+          "child_soft_pair_span_ps": 65.4
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 314.5,
+            "min": 296.3,
+            "max": 332.7
+          },
+          "spread_ps": 36.4,
+          "soft": {
+            "n": 1,
+            "mean": 332.7,
+            "min": 332.7,
+            "max": 332.7
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c4/clk",
+              "arr": 57.0,
+              "slew": 14.7,
+              "late": -227.5,
+              "net": "clknet_1_0__leaf_ck_c4"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 284.8,
+            "min": 265.1,
+            "max": 332.7
+          },
+          "all_spread_ps": 67.6,
+          "actual_child_boundary_range": [
+            282.2,
+            315.6
+          ],
+          "soft_all_range": [
+            265.1,
+            332.7
+          ],
+          "child_soft_pair_span_ps": 50.5
+        }
+      }
+    },
+    {
+      "root": "ck_c5",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 379.6,
+            "min": 361.0,
+            "max": 398.1
+          },
+          "spread_ps": 37.1,
+          "soft": {
+            "n": 1,
+            "mean": 398.1,
+            "min": 398.1,
+            "max": 398.1
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c5/clk",
+              "arr": 68.1,
+              "slew": 17.5,
+              "late": -311.1,
+              "net": "clknet_1_0__leaf_ck_c5"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 379.5,
+            "min": 361.0,
+            "max": 400.3
+          },
+          "all_spread_ps": 39.3,
+          "actual_child_boundary_range": [
+            346.20000000000005,
+            382.29999999999995
+          ],
+          "soft_all_range": [
+            363.6,
+            400.3
+          ],
+          "child_soft_pair_span_ps": 54.1
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 304.8,
+            "min": 295.8,
+            "max": 313.9
+          },
+          "spread_ps": 18.1,
+          "soft": {
+            "n": 1,
+            "mean": 313.9,
+            "min": 313.9,
+            "max": 313.9
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c5/clk",
+              "arr": 56.5,
+              "slew": 14.3,
+              "late": -239.8,
+              "net": "clknet_1_0__leaf_ck_c5"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 296.6,
+            "min": 280.4,
+            "max": 317.1
+          },
+          "all_spread_ps": 36.7,
+          "actual_child_boundary_range": [
+            281.7,
+            315.1
+          ],
+          "soft_all_range": [
+            280.4,
+            317.1
+          ],
+          "child_soft_pair_span_ps": 35.4
+        }
+      }
+    },
+    {
+      "root": "ck_c6",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 375.8,
+            "min": 361.3,
+            "max": 390.2
+          },
+          "spread_ps": 28.9,
+          "soft": {
+            "n": 1,
+            "mean": 390.2,
+            "min": 390.2,
+            "max": 390.2
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c6/clk",
+              "arr": 68.4,
+              "slew": 17.7,
+              "late": -302.4,
+              "net": "clknet_1_0__leaf_ck_c6"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 371.1,
+            "min": 350.4,
+            "max": 390.2
+          },
+          "all_spread_ps": 39.8,
+          "actual_child_boundary_range": [
+            346.5,
+            382.6
+          ],
+          "soft_all_range": [
+            350.4,
+            390.2
+          ],
+          "child_soft_pair_span_ps": 43.7
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 303.4,
+            "min": 296.1,
+            "max": 310.6
+          },
+          "spread_ps": 14.5,
+          "soft": {
+            "n": 1,
+            "mean": 310.6,
+            "min": 310.6,
+            "max": 310.6
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c6/clk",
+              "arr": 56.8,
+              "slew": 14.5,
+              "late": -234.8,
+              "net": "clknet_1_0__leaf_ck_c6"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 291.9,
+            "min": 272.0,
+            "max": 310.6
+          },
+          "all_spread_ps": 38.6,
+          "actual_child_boundary_range": [
+            282.0,
+            315.40000000000003
+          ],
+          "soft_all_range": [
+            272.0,
+            310.6
+          ],
+          "child_soft_pair_span_ps": 43.4
+        }
+      }
+    },
+    {
+      "root": "ck_c7",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 381.2,
+            "min": 361.5,
+            "max": 400.9
+          },
+          "spread_ps": 39.4,
+          "soft": {
+            "n": 1,
+            "mean": 400.9,
+            "min": 400.9,
+            "max": 400.9
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c7/clk",
+              "arr": 68.6,
+              "slew": 18.4,
+              "late": -301.6,
+              "net": "clknet_1_0__leaf_ck_c7"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 370.5,
+            "min": 353.5,
+            "max": 400.9
+          },
+          "all_spread_ps": 47.4,
+          "actual_child_boundary_range": [
+            346.70000000000005,
+            382.79999999999995
+          ],
+          "soft_all_range": [
+            353.5,
+            400.9
+          ],
+          "child_soft_pair_span_ps": 54.2
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 308.2,
+            "min": 296.2,
+            "max": 320.2
+          },
+          "spread_ps": 24.0,
+          "soft": {
+            "n": 1,
+            "mean": 320.2,
+            "min": 320.2,
+            "max": 320.2
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c7/clk",
+              "arr": 56.9,
+              "slew": 15.3,
+              "late": -233.6,
+              "net": "clknet_1_0__leaf_ck_c7"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 290.7,
+            "min": 273.4,
+            "max": 320.2
+          },
+          "all_spread_ps": 46.8,
+          "actual_child_boundary_range": [
+            282.09999999999997,
+            315.5
+          ],
+          "soft_all_range": [
+            273.4,
+            320.2
+          ],
+          "child_soft_pair_span_ps": 42.1
+        }
+      }
+    },
+    {
+      "root": "ck_c8",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 370.3,
+            "min": 361.5,
+            "max": 379.1
+          },
+          "spread_ps": 17.6,
+          "soft": {
+            "n": 1,
+            "mean": 379.1,
+            "min": 379.1,
+            "max": 379.1
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c8/clk",
+              "arr": 68.6,
+              "slew": 18.4,
+              "late": -304.5,
+              "net": "clknet_1_0__leaf_ck_c8"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 373.4,
+            "min": 347.8,
+            "max": 397.1
+          },
+          "all_spread_ps": 49.3,
+          "actual_child_boundary_range": [
+            346.70000000000005,
+            382.79999999999995
+          ],
+          "soft_all_range": [
+            347.8,
+            397.1
+          ],
+          "child_soft_pair_span_ps": 50.4
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 297.2,
+            "min": 296.2,
+            "max": 298.3
+          },
+          "spread_ps": 2.1,
+          "soft": {
+            "n": 1,
+            "mean": 298.3,
+            "min": 298.3,
+            "max": 298.3
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c8/clk",
+              "arr": 56.9,
+              "slew": 15.3,
+              "late": -236.6,
+              "net": "clknet_1_0__leaf_ck_c8"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 293.8,
+            "min": 269.0,
+            "max": 316.8
+          },
+          "all_spread_ps": 47.8,
+          "actual_child_boundary_range": [
+            282.09999999999997,
+            315.5
+          ],
+          "soft_all_range": [
+            269.0,
+            316.8
+          ],
+          "child_soft_pair_span_ps": 46.5
+        }
+      }
+    },
+    {
+      "root": "ck_c9",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2,
+            "mean": 371.3,
+            "min": 361.5,
+            "max": 381.2
+          },
+          "spread_ps": 19.7,
+          "soft": {
+            "n": 1,
+            "mean": 381.2,
+            "min": 381.2,
+            "max": 381.2
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 292.9,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c9/clk",
+              "arr": 68.6,
+              "slew": 18.8,
+              "late": -294.8,
+              "net": "clknet_1_0__leaf_ck_c9"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 363.8,
+            "min": 344.6,
+            "max": 385.1
+          },
+          "all_spread_ps": 40.5,
+          "actual_child_boundary_range": [
+            346.70000000000005,
+            382.79999999999995
+          ],
+          "soft_all_range": [
+            344.6,
+            385.1
+          ],
+          "child_soft_pair_span_ps": 38.4
+        },
+        "ff": {
+          "boundary": {
+            "n": 2,
+            "mean": 299.3,
+            "min": 296.2,
+            "max": 302.4
+          },
+          "spread_ps": 6.2,
+          "soft": {
+            "n": 1,
+            "mean": 302.4,
+            "min": 302.4,
+            "max": 302.4
+          },
+          "refs": {
+            "ot_hbm_su_programme_pgcol_s": {
+              "basis": "insertion.json boundary mean",
+              "ref_ps": 239.3,
+              "pins": 1
+            }
+          },
+          "hard_clock_pins": [
+            {
+              "pin": "u_c9/clk",
+              "arr": 56.9,
+              "slew": 15.6,
+              "late": -228.3,
+              "net": "clknet_1_0__leaf_ck_c9"
+            }
+          ],
+          "all": {
+            "n": 933,
+            "mean": 285.5,
+            "min": 266.8,
+            "max": 306.4
+          },
+          "all_spread_ps": 39.6,
+          "actual_child_boundary_range": [
+            282.09999999999997,
+            315.5
+          ],
+          "soft_all_range": [
+            266.8,
+            306.4
+          ],
+          "child_soft_pair_span_ps": 48.7
+        }
+      }
+    }
+  ]
+}
