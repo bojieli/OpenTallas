@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""Hard OOM exemption for provenance-identified die jobs; never sends a signal.
+Root service inventories native process trees and matching Docker process trees.
+-1000 is a hard exclusion in earlyoom 1.9.0 kill.c (including --prefer).
+"""
+import argparse, glob, json, os, re, subprocess, time
+from pathlib import Path
+DIE = re.compile(r'(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|/(die-evidence[^/ ]*|kv-die)/)')
+CONTAINER = re.compile(r'^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)')
+
+def rd(path):
+    try: return Path(path).read_text()
+    except (OSError, UnicodeError): return ''
+
+def cmd(*args):
+    try: return subprocess.run(args, capture_output=True, text=True, timeout=25).stdout
+    except (OSError, subprocess.TimeoutExpired): return ''
+
+def inventory():
+    rows = {}
+    for path in glob.glob('/proc/[0-9]*'):
+        pid = int(path.rsplit('/', 1)[1]); stat = rd(path+'/stat')
+        if not stat: continue
+        try:
+            parts = stat.rsplit(')',1)[1].split(); ppid = int(parts[1]); start = parts[19]
+            cwd = os.readlink(path+'/cwd')
+        except (OSError, IndexError, ValueError): continue
+        argv = rd(path+'/cmdline').split('\0')[:-1]
+        if not argv: continue
+        env = rd(path+'/environ').split('\0')
+        rows[pid] = dict(pid=pid, ppid=ppid, start=start, argv=argv, cwd=cwd,
+                         adj=rd(path+'/oom_score_adj').strip(), comm=rd(path+'/comm').strip(),
+                         explicit='OT_HEAVY_PRIO=die' in env)
+    return rows
+
+def select(rows, containers):
+    selected = {}
+    for pid, r in rows.items():
+        # Do not classify our own monitoring/installation command's embedded source text.
+        if any('ot-protect-die' in a for a in r['argv'][:2]): continue
+        if r['explicit']: selected[pid] = 'OT_HEAVY_PRIO=die'
+        elif DIE.search(' '.join(r['argv'][:3])+' '+r['cwd']): selected[pid] = 'die launch command/workdir'
+    # A selected docker CLI and exact image + container command + bind mapping establish ownership.
+    for c in containers:
+        conf = c.get('Config', {}); binds = c.get('HostConfig', {}).get('Binds') or []
+        args = (conf.get('Entrypoint') or []) + (conf.get('Cmd') or [])
+        reason = None
+        if 'opentallas.priority=die' in [k+'='+v for k,v in (conf.get('Labels') or {}).items()] or CONTAINER.search(c.get('Name','')): reason = 'die container name'
+        elif any(DIE.search(m.get('Source','')+'/') for m in c.get('Mounts', [])): reason = 'die mount'
+        else:
+            for pid in list(selected):
+                a = rows[pid]['argv']
+                if args and len(a) >= len(args) and a[-len(args):] == args and conf.get('Image') in a and all(b in a for b in binds):
+                    reason = 'die scope Docker CLI'; break
+        if reason and c.get('State',{}).get('Pid') in rows:
+            selected[c['State']['Pid']] = reason + ' ' + c['Id'][:12]
+    while True:
+        more = {pid: 'descendant of '+str(r['ppid']) for pid,r in rows.items() if pid not in selected and r['ppid'] in selected}
+        if not more: break
+        selected.update(more)
+    # A shell in a die's oth scope may itself have no die path; protect all processes in THAT scope,
+    # not the shared user session, so wrappers cannot be killed and cancel the job.
+    groups = {rd(f'/proc/{pid}/cgroup').strip() for pid in selected}
+    groups = {g for g in groups if re.search(r'/oth-[^/]+\.scope(?:\n|$)', g)}
+    for pid in rows:
+        if rd(f'/proc/{pid}/cgroup').strip() in groups: selected.setdefault(pid, 'die job scope')
+    return selected
+
+def sweep(apply=False):
+    rows = inventory(); ids = cmd('/usr/bin/docker','ps','-q','--no-trunc').split()
+    try: containers = json.loads(cmd('/usr/bin/docker','inspect',*ids)) if ids else []
+    except ValueError: containers = []
+    selected = select(rows, containers); changed=[]; failed=[]
+    for pid,reason in selected.items():
+        r=rows[pid]
+        if apply and r['adj'] != '-1000':
+            try:
+                # Reject PID reuse before mutation.
+                if rd(f'/proc/{pid}/stat').rsplit(')',1)[1].split()[19] != r['start']: continue
+                Path(f'/proc/{pid}/oom_score_adj').write_text('-1000\n'); changed.append(pid)
+            except (OSError, IndexError) as e:
+                if Path(f'/proc/{pid}').exists(): failed.append(dict(pid=pid,error=str(e)))
+        r['reason']=reason; r['after']=rd(f'/proc/{pid}/oom_score_adj').strip()
+        r.pop('explicit',None)
+    return dict(time=time.time(),host=os.uname().nodename,apply=apply,selected=[rows[p] for p in sorted(selected)],changed=changed,failed=failed,
+                unprotected=[p for p in selected if Path(f'/proc/{p}').exists() and rd(f'/proc/{p}/oom_score_adj').strip()!='-1000'],
+                non_die_count=len(rows)-len(selected))
+
+def main():
+    p=argparse.ArgumentParser(); p.add_argument('--apply',action='store_true'); p.add_argument('--watch',action='store_true'); p.add_argument('--pid',type=int)
+    a=p.parse_args()
+    if a.pid:
+        # Launch hook: process invoking sudo belongs to admitted die job; descendants inherit.
+        if os.geteuid()!=0: p.error('root required')
+        Path(f'/proc/{a.pid}/oom_score_adj').write_text('-1000\n'); return
+    while True:
+        result=sweep(a.apply)
+        if not a.watch: print(json.dumps(result,sort_keys=True)); return int(bool(result['unprotected']) and a.apply)
+        Path('/var/tmp/ot-heavy/die-protection.json').write_text(json.dumps(result,sort_keys=True))
+        time.sleep(10)
+if __name__=='__main__': raise SystemExit(main())
