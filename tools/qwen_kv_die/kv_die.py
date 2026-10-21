@@ -1993,7 +1993,17 @@ def build(*args, **kwargs):
     # at their sink end, after the pin repair (the last pass that adds stages) and before the landing slots
     import kv_bundle_eq
     if KSD.ON and kv_bundle_eq.on() and kwargs.get('split', len(args) > 7 and args[7]):
-        m = kv_bundle_eq.equalize(sys.modules[__name__], m)
+        if kv_bundle_eq.seam_pin_on():
+            _tg = kv_bundle_eq.seam_targets()
+            _pf, _over = kv_bundle_eq.seam_pin_plan(_tg)
+            m = kv_bundle_eq.equalize(sys.modules[__name__], m, plan_fn=_pf)
+            m['bundle_eq']['seam_pin'] = dict(targets=_tg, over=_over)
+            print(f'kv die SEAM_PIN: image targets {_tg}; over {_over or "none"}', file=sys.stderr)
+            if _over:
+                raise ValueError(f'kv die SEAM_PIN FAIL: {_over} (OT_KV_SEAM_PIN: the K seam exceeds the bound pair image; '
+                                 'move kvs_attn (OT_KV_ATTN_DXY) / the d2d pins, or recompile the pair image + views)')
+        else:
+            m = kv_bundle_eq.equalize(sys.modules[__name__], m)
         # HKV-DIE 10-19: the seq KVN-arrival check, aligned after the record bundles (it composes K.rx_record)
         if os.environ.get('OT_KV_SEQ_KVN_ALIGN', '1') == '1':
             _sb = kv_bundle_eq.seq_kvn_bundle(m, {i.name: i for i in m['insts']}, KSD.ATTN_LAND)
