@@ -58,7 +58,7 @@
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
 VAR=${1:?plan M|F}; PL=B; PLAN_UM=300; HOST=ot-epyc5
-W=/home/ubuntu/wt/hbm-r16-1021; AR=/home/ubuntu/artifacts/hdie-d4/hbm_own_r16_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
+W=${R16_WT:-/home/ubuntu/wt/hbm-r16-1021}; AR=/home/ubuntu/artifacts/hdie-d4/hbm_own_r16_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
@@ -66,7 +66,7 @@ AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
 B=/srv/opentallas-scratch/claude/hbm-own-r16-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r16_1021/plan$VAR; BR=claude/hbm-r16-1021
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r16_1021/plan$VAR; BR=${R16_BR:-claude/hbm-r16-1021}
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
 # Local transport override only in this successor process: ep6 public route loses packets.
