@@ -31,7 +31,9 @@ Old single-user dies (S81 p4l-SU, dv2f14*, kvs14c, GEN2) are diagnostic only. Ru
 ## 3. Goldens of record (pin a hash for each)
 - [ ] DS ROM: per-layer DV fixtures and goldens for L0 / L2 / L14 / L20 / head / MTP draft, from the LEAD2-S81/TOK2
       DV layer-programme compiler. Plus the TP4 calendar golden beats (xdie_s81). Plus the selected 50-user AR / 10-user MTP
-      241-stage G4 calendar 6f8bbf5c4. Earlier 81-stage and 46-user calendars are historical.
+      241-stage G4 calendar 6f8bbf5c4, pending correction of the reported same-user LINK5 occupancy
+      overlap. Its prior checker skips same-user collisions; do not promote its MODEL or rates as
+      functionally qualified before the concrete circuit occupancy repair. Earlier 81-stage and 46-user calendars are historical.
       The compiled aggregate model figures are AR 47,642 (50 users, rounded per-user 952.8) and
       MTP 29,634 (10 users, per-user 2,963.4); these are not measured token rates. Retain exact
       unrounded compiler values in the final record.
