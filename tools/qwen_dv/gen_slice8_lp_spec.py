@@ -58,6 +58,18 @@ def base_spec(name,D,E):
 def kept_fdn_selectors(path,D,E):
     """Private selector copies capture exactly the existing landing0 publication edge."""
     text=path.read_text()
+    # Actual hard/soft child reset terminals exceed the old one-pin bin estimate:
+    # census c4=45. Split its32 callers16/16 at the SAME final reset edge.
+    import re
+    pat=re.compile(r'(u_lprc_\w+ \(.ck\(ck_r_su\), .d\()lpr_r_su_c4(\))')
+    matches=list(pat.finditer(text))
+    assert len(matches)==32,len(matches)
+    seen=[0]
+    def reset_half(m):
+        seen[0]+=1
+        return m[1]+('lpr_r_su_c4' if seen[0]<=16 else 'lpr_r_su_c4b')+m[2]
+    text=pat.sub(reset_half,text)
+    text=text.replace('    // ---- LANDING 0:', '    wire lpr_r_su_c4b; ot_pl_land_rst_copy #(.ID(9002)) u_lpr_r_su_c4b(.ck(ck_r_su),.d(lpr_r_su_p),.q(lpr_r_su_c4b));\n    // ---- LANDING 0:',1)
     assert 'LANDING 0: chu_q r_fe -> r_fw' in text
     assert 'ot_pl_land_field_copies' not in text
     code='    // Same landing0 read edge; <=12 data bits (~24 mapped mux loads) per kept selector.\n'

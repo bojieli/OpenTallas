@@ -774,6 +774,7 @@ module qfd_dv_s8_lp #(
     wire lpr_r_hc3_c1;  ot_pl_land_rst_copy #(.ID(82)) u_lpr_r_hc3_c1 (.ck(ck_r_hc3), .d(lpr_r_hc3_p), .q(lpr_r_hc3_c1));   // regional_reset_copies: 32 loads
     wire lpr_r_hc3_c2;  ot_pl_land_rst_copy #(.ID(83)) u_lpr_r_hc3_c2 (.ck(ck_r_hc3), .d(lpr_r_hc3_p), .q(lpr_r_hc3_c2));   // regional_reset_copies: 32 loads
     wire lpr_r_hc3_c3;  ot_pl_land_rst_copy #(.ID(84)) u_lpr_r_hc3_c3 (.ck(ck_r_hc3), .d(lpr_r_hc3_p), .q(lpr_r_hc3_c3));   // regional_reset_copies: 5 loads
+    wire lpr_r_su_c4b; ot_pl_land_rst_copy #(.ID(9002)) u_lpr_r_su_c4b(.ck(ck_r_su),.d(lpr_r_su_p),.q(lpr_r_su_c4b));
     // ---- LANDING 0: chu_q r_fe -> r_fw, 1095 b (u_fdn.chu_q)
     wire [4*((1094) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((1094) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [1094:0] chu_q__l_r_fw, lpl_0_o;
     ot_pl_land_n32_split_w #(.W(((1094) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_r_fe), .rsi({lpr_r_fe_c5, lpr_r_fe_c0}), .i(chu_q), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
@@ -1701,22 +1702,22 @@ module qfd_dv_s8_lp #(
     wire lpr_c_u_head2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head2 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_head2));   // t(u_head2) = 0
     wire lpr_c_u_exp2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp2 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_exp2));   // t(u_exp2) = 0
     wire lpr_c_u_rcp2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp2 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rcp2));   // t(u_rcp2) = 0
-    wire lpr_c_u_rsq2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq2 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rsq2));   // t(u_rsq2) = 0
-    wire lpr_c_u_lrly3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly3 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_lrly3));   // t(u_lrly3) = 0
-    wire lpr_c_u_head3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head3 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_head3));   // t(u_head3) = 0
-    wire lpr_c_u_exp3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp3 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_exp3));   // t(u_exp3) = 0
-    wire lpr_c_u_rcp3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp3 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rcp3));   // t(u_rcp3) = 0
-    wire lpr_c_u_rsq3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq3 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rsq3));   // t(u_rsq3) = 0
-    wire lpr_c_u_lrly4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly4 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_lrly4));   // t(u_lrly4) = 0
-    wire lpr_c_u_head4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head4 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_head4));   // t(u_head4) = 0
-    wire lpr_c_u_exp4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp4 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_exp4));   // t(u_exp4) = 0
-    wire lpr_c_u_rcp4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp4 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rcp4));   // t(u_rcp4) = 0
-    wire lpr_c_u_rsq4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq4 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rsq4));   // t(u_rsq4) = 0
-    wire lpr_c_u_lrly5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly5 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_lrly5));   // t(u_lrly5) = 0
-    wire lpr_c_u_head5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head5 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_head5));   // t(u_head5) = 0
-    wire lpr_c_u_exp5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp5 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_exp5));   // t(u_exp5) = 0
-    wire lpr_c_u_rcp5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp5 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rcp5));   // t(u_rcp5) = 0
-    wire lpr_c_u_rsq5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq5 (.ck(ck_r_su), .d(lpr_r_su_c4), .q(lpr_c_u_rsq5));   // t(u_rsq5) = 0
+    wire lpr_c_u_rsq2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq2 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rsq2));   // t(u_rsq2) = 0
+    wire lpr_c_u_lrly3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly3 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_lrly3));   // t(u_lrly3) = 0
+    wire lpr_c_u_head3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head3 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_head3));   // t(u_head3) = 0
+    wire lpr_c_u_exp3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp3 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_exp3));   // t(u_exp3) = 0
+    wire lpr_c_u_rcp3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp3 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rcp3));   // t(u_rcp3) = 0
+    wire lpr_c_u_rsq3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq3 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rsq3));   // t(u_rsq3) = 0
+    wire lpr_c_u_lrly4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly4 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_lrly4));   // t(u_lrly4) = 0
+    wire lpr_c_u_head4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head4 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_head4));   // t(u_head4) = 0
+    wire lpr_c_u_exp4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp4 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_exp4));   // t(u_exp4) = 0
+    wire lpr_c_u_rcp4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp4 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rcp4));   // t(u_rcp4) = 0
+    wire lpr_c_u_rsq4;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq4 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rsq4));   // t(u_rsq4) = 0
+    wire lpr_c_u_lrly5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly5 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_lrly5));   // t(u_lrly5) = 0
+    wire lpr_c_u_head5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head5 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_head5));   // t(u_head5) = 0
+    wire lpr_c_u_exp5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp5 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_exp5));   // t(u_exp5) = 0
+    wire lpr_c_u_rcp5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rcp5 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rcp5));   // t(u_rcp5) = 0
+    wire lpr_c_u_rsq5;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rsq5 (.ck(ck_r_su), .d(lpr_r_su_c4b), .q(lpr_c_u_rsq5));   // t(u_rsq5) = 0
     wire lpr_c_u_lrly6;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lrly6 (.ck(ck_r_su), .d(lpr_r_su_c5), .q(lpr_c_u_lrly6));   // t(u_lrly6) = 0
     wire lpr_c_u_head6;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_head6 (.ck(ck_r_su), .d(lpr_r_su_c5), .q(lpr_c_u_head6));   // t(u_head6) = 0
     wire lpr_c_u_exp6;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_exp6 (.ck(ck_r_su), .d(lpr_r_su_c5), .q(lpr_c_u_exp6));   // t(u_exp6) = 0
