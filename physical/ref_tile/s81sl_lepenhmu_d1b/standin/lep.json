@@ -1,0 +1,105 @@
+{
+ "name": "standin_ot_s81sl_lep_mu_a",
+ "top": "ot_s81sl_lep_mu_a",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 475.2,
+  "h": 561.6
+ },
+ "pins": {
+  "W": [
+   "ro",
+   "ri"
+  ],
+  "E": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f",
+   "clk",
+   "rst_n",
+   "mu_c",
+   "mu_rt"
+  ],
+  "N": [
+   "ml_wd",
+   "ml_rd",
+   "ml_wv",
+   "ml_rv",
+   "ml_f"
+  ],
+  "S": [
+   "sl_f",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "ro": [
+   4.0,
+   280.0
+  ],
+  "ri": [
+   282.0,
+   557.6
+  ],
+  "clk": [
+   272.8,
+   280.8
+  ],
+  "rst_n": [
+   280.8,
+   288.8
+  ],
+  "mu_c": [
+   520.0,
+   538.0
+  ],
+  "mu_rt": [
+   539.0,
+   556.0
+  ],
+  "ml_f": [
+   1.4,
+   2.0
+  ],
+  "ml_rv": [
+   2.4,
+   3.0
+  ],
+  "ml_wv": [
+   3.4,
+   3.9
+  ],
+  "ml_rd": [
+   4.4,
+   238.4
+  ],
+  "ml_wd": [
+   239.4,
+   473.6
+  ],
+  "sl_f": [
+   3.0,
+   10.0
+  ],
+  "fault": [
+   455.0,
+   472.0
+  ]
+ },
+ "_note": "DRIVE-S81-LEPENHMU stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) of lep_mu_a at the lepmua_n32 outline 475.2 x 561.6, E-end (MY) orientation. Pin REQUEST for the real view: ro/ri W bit-aligned across the 172.8-um channel, ml_* N under the dsdv_mu_land S-face pins, lane pins E toward the two lane_e_safe8_ntf tiles, sl_f at the S channel corner."
+}
