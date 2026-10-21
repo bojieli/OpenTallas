@@ -19,7 +19,7 @@ def main(out):
     lep['master']='ot_s81hd_lep_regional'
     p['facts']['lep_regional']=dict(source='4447aecf8',module='ot_s81hd_lep_regional',
         endpoint='ot_s81sl_lep_mu_ab_regional_r3r',reserve=lep,
-        clocks={'ck':'C','ck_A':'A','ck_B':'B'},parent_reset_stages=2,
+        clocks={'ck':'C','ck_A':'A','ck_B':'B'},parent_reset_stages=3,
         reset_roots='Independent same-age C/A/B parent forest leaves; no C root aliases A/B',
         cycle_delta={'C_to_pair':4,'pair_to_C':5,'lane_payload_valid':2,'reverse_credit':2,'credit_RTT':4},
         closed_view=None,packing_status='OWED actual lane/core/ML packing and <=405um segment proof; no closed LEP view claimed')

@@ -2,7 +2,7 @@
 // HEAD regional successor: three explicit same-frequency roots. tx/rx0/1 use
 // ck_A, tx/rx2/3 use ck_B, and the ctl/ML interface uses ck. The original
 // ot_s81hd_lep and its legacy views remain separate. Each pair has its own
-// two-stage parent reset release; the regional child owns its internal forests.
+// three-stage parent reset release; the regional child owns its internal forests.
 // CORE_CRED=12 matches the regional fixed-latency credit flight. No legacy CRED8
 // lane or single-root LEP physical view may bind to this master.
 // Regional child cost: C->pair +4, pair->C +5, outer lane payload/valid +2,
