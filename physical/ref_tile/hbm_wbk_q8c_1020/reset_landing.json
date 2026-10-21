@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_wb_kport_q",
+ "enable": false,
+ "reason": "RTL lands each reset at its face in 2 plain registered stages ON ITS OWN CLOCK (ot_hbm_svc_wb_kport_q srst_l0->srst_l1 on stream_clk, hrst_l0->hrst_l1 on hbm_clk); the kit landing supports one clock only and put hbm_rst_n on stream_clk (OT_MULTI_ROOT, gate 10-19 16:41)"
+}
