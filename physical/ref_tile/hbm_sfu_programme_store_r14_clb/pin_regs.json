@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sfu_programme_store_r11",
+ "enable": false,
+ "reason": "the r11 head registers every host input at the pin (p_* pin flops, 2-flop reset sync) and every output is a relay-fed pin register (o_io / o_ctl / status pad); a kit flop stage would add an unpriced edge (the r11 relays are priced in the RTL header: D=10, status 8)"
+}
