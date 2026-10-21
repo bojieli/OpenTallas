@@ -498,6 +498,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         if not ab or not mm.get('module'):
             continue
         insts = sorted((b for b in blocks if b['master'] == mname), key=lambda b: b['x'])
+        if not insts:
+            continue        # S81-IDX3M: a table master this plan does not place (e.g. dsfd_ctrl_rg2 under --idxrd 4)
         peers = [b for b in blocks if b['master'] == ab['peer']]
         assert len(peers) == 1, (mname, ab['peer'])
         pn = peers[0]['name']
