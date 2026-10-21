@@ -1,0 +1,215 @@
+{
+ "status": "GEOMETRY_MODEL_ONLY",
+ "base": "09649a7bd/planhM",
+ "outline_um": [
+  25988.8,
+  32983.12
+ ],
+ "reason": "Actual E1.880 worst window15400/1100 PHY+SVG6+XC6+PCctl; secondary1.059 SVG5window",
+ "placement_checks": [
+  {
+   "name": "svg_SW5",
+   "before": {
+    "m": "ot_hbm_svc_sm_group_rel_id",
+    "x": 14484.312,
+    "y": 1420.76,
+    "o": "R0",
+    "w": 430.704,
+    "h": 430.92,
+    "rule": "PC band box (d2)"
+   },
+   "target": {
+    "m": "ot_hbm_svc_sm_group_rel_id",
+    "x": 14484.312,
+    "y": 1615.16,
+    "o": "R0",
+    "w": 430.704,
+    "h": 430.92,
+    "rule": "PC band box (d2)"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xc_SW5",
+   "before": {
+    "m": "ot_hbm_svc_sm_xcal_rel_t",
+    "x": 14272.2,
+    "y": 1614.6,
+    "o": "R0",
+    "w": 209.952,
+    "h": 210.6,
+    "rule": "region pc_SW5"
+   },
+   "target": {
+    "m": "ot_hbm_svc_sm_xcal_rel_t",
+    "x": 14272.2,
+    "y": 1809.0,
+    "o": "R0",
+    "w": 209.952,
+    "h": 210.6,
+    "rule": "region pc_SW5"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "cp_svg_SW5",
+   "before": {
+    "m": "ot_static_run_target",
+    "x": 14670.72,
+    "y": 1874.88,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "grant slot cp_svg_SW5"
+   },
+   "target": {
+    "m": "ot_static_run_target",
+    "x": 14670.72,
+    "y": 2069.28,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "grant slot cp_svg_SW5"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "svg_SW6",
+   "before": {
+    "m": "ot_hbm_svc_sm_group_rel_id",
+    "x": 15621.12,
+    "y": 1420.76,
+    "o": "R0",
+    "w": 430.704,
+    "h": 430.92,
+    "rule": "PC band box (d2)"
+   },
+   "target": {
+    "m": "ot_hbm_svc_sm_group_rel_id",
+    "x": 15621.12,
+    "y": 1615.16,
+    "o": "R0",
+    "w": 430.704,
+    "h": 430.92,
+    "rule": "PC band box (d2)"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xc_SW6",
+   "before": {
+    "m": "ot_hbm_svc_sm_xcal_rel_t",
+    "x": 15406.2,
+    "y": 1431.0,
+    "o": "R0",
+    "w": 209.952,
+    "h": 210.6,
+    "rule": "region pc_SW6"
+   },
+   "target": {
+    "m": "ot_hbm_svc_sm_xcal_rel_t",
+    "x": 15406.2,
+    "y": 1625.4,
+    "o": "R0",
+    "w": 209.952,
+    "h": 210.6,
+    "rule": "region pc_SW6"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "cp_svg_SW6",
+   "before": {
+    "m": "ot_static_run_target",
+    "x": 15810.12,
+    "y": 1874.88,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "grant slot cp_svg_SW6"
+   },
+   "target": {
+    "m": "ot_static_run_target",
+    "x": 15810.12,
+    "y": 2069.28,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "grant slot cp_svg_SW6"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "wbk_SE",
+   "before": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 15728.04,
+    "y": 1964.088,
+    "o": "R0",
+    "w": 475.2,
+    "h": 475.2,
+    "rule": "grant slot wbk_SE"
+   },
+   "target": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 15728.04,
+    "y": 2396.088,
+    "o": "R0",
+    "w": 475.2,
+    "h": 475.2,
+    "rule": "grant slot wbk_SE"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "fs_SE",
+   "before": {
+    "m": "ot_hbm_fault_leaf_n8_s0",
+    "x": 14817.6,
+    "y": 1998.0,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "grant slot fs_SE"
+   },
+   "target": {
+    "m": "ot_hbm_fault_leaf_n8_s0",
+    "x": 14947.2,
+    "y": 1998.0,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "grant slot fs_SE"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "sfault_SE",
+   "before": {
+    "m": "ot_hbm_svc_stack_fault",
+    "x": 14785.2,
+    "y": 1879.2,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "grant slot sfault_SE"
+   },
+   "target": {
+    "m": "ot_hbm_svc_stack_fault",
+    "x": 14947.2,
+    "y": 1879.2,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "grant slot sfault_SE"
+   },
+   "overlaps": []
+  }
+ ],
+ "pc_region_dy_um": 194.4,
+ "writeback_dy_um": 432.0,
+ "dynamic": "XC remains normal first-fit inside moved PC region; actualGEN must confirm final boxes",
+ "rtl_source": "unchanged",
+ "cycle_credit": 0,
+ "remaining": "Actual GEN/PINS/S4 required; no failedcapacity route"
+}
