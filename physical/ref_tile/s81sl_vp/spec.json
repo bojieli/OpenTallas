@@ -254,12 +254,12 @@
   },
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit). 10-18: vp op 7 NORMR (hc_pre = leaf row a0, one-step sequencer read) + POST coefficient rows in the G-unit's order (post a0, comb a0+1..a0+4).",
+ "structural_change": "S81-SLICE/VP SAFE 10-21 (after c318a2024 NEEDS_RTL TT -102 / FF -7.8): fault sources registered where they arise (per-lane fault/valid flops, per-row reduce, fold; sticky fault +2..3 edges, diagnostic only); kept copies (<=~40 loads) for every wide select (NORM load decode, bank write-port selects per 32-bit word group, dswp/dodd/xsw2 read muxes, wvl hw_d mux, cf capture one-hot); lr/ly kept per lane (Yosys had merged 4 column copies + hs_d); 33-deep write-back lines -> ring + burst counters. Ports and all data latencies unchanged. Earlier: S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit). 10-18: vp op 7 NORMR (hc_pre = leaf row a0, one-step sequencer read) + POST coefficient rows in the G-unit's order (post a0, comb a0+1..a0+4).",
  "job": {
-  "owner": "Claude:DRIVE-S81-SLICEP",
-  "branch": "claude/drive-s81-slicep-vp-1020",
-  "tag": "s81sl_vp",
-  "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit). 10-18 S81-SLICE vp NORMR (op 7: hc_pre from the G-unit's leaf row R) + POST row order = the G-unit's (post R+1, comb R+2..R+5).",
+  "owner": "Claude:S81-SLICE/VP",
+  "branch": "claude/s81sl-vp-safe-1021",
+  "tag": "s81sl_vp_s1",
+  "purpose": "S81-SLICE/VP SAFE redesign of ot_s81sl_vp (beat leaf store + hc_post, x5 per slice) after c318a2024 NEEDS_RTL TT -102 / FF -7.8: MAIN (spine, same outline/pins).",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -298,7 +298,7 @@
     "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
-    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/vp_1021/g_mt/run.log",
     "threads": 4,
     "peak_ram_gb": 6
    },
@@ -307,7 +307,7 @@
     "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
-    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/vp_1021/g_mc/run.log",
     "threads": 4,
     "peak_ram_gb": 6
    },
@@ -316,7 +316,7 @@
     "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutpostlast mutpostlast 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
-    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mpl/run.log",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/vp_1021/g_mpl/run.log",
     "threads": 4,
     "peak_ram_gb": 6
    },
@@ -325,7 +325,7 @@
     "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutnormimm mutnormimm 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
-    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mni/run.log",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/vp_1021/g_mni/run.log",
     "threads": 4,
     "peak_ram_gb": 6
    }
