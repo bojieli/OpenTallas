@@ -16,7 +16,7 @@
   581.0400000000001
  ],
  "why": "spec outline",
- "std_area_um2": 9489.0,
+ "std_area_um2": 9780.1182,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -774,7 +774,7 @@
   [
    "WARN",
    "fill",
-   "fill 17% = (macros/children 62002 + std 9489) / outline 423263 um2 (pin-bound: lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). s8 (as s7) keeps the s6c row set (all core rows; the s5 band hook is NOT sourced -- s6c place.tcl never sourced it, so cells sit in the channels beside their macros); the low overall fill is channel area)",
+   "fill 17% = (macros/children 62002 + std 9780) / outline 423263 um2 (pin-bound: lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). s8 (as s7) keeps the s6c row set (all core rows; the s5 band hook is NOT sourced -- s6c place.tcl never sourced it, so cells sit in the channels beside their macros); the low overall fill is channel area)",
    ""
   ]
  ],
