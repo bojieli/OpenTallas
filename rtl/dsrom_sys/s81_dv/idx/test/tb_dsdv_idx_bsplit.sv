@@ -60,7 +60,7 @@ module tb_dsdv_idx_bsplit;
         end
         if (n_i < 1000 || n_s < 1000) begin nerr = nerr + 1; $display("TB_BS too few frames i %0d s %0d", n_i, n_s); end
         $display("TB_BS words idx %0d svc %0d errors %0d", n_i, n_s, nerr);
-        $display(nerr == 0 ? "TB_BS PASS" : "TB_BS FAIL");
+        if (nerr == 0) $display("TB_BS PASS"); else $display("TB_BS FAIL");
         $finish;
     end
 endmodule

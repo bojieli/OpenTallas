@@ -688,8 +688,10 @@ def main():
 
     # ------------------------------------------------------------------ placement
     pl = []
+    _rm = a.bind_dir / 'relay_mirror.json'     # DRIVE-S81-IDX4: mirrored vertical relay stations (dv_bind relay_mirror_vertical)
+    rmir = json.loads(_rm.read_text()) if _rm.exists() else {}
     for i, (x, y, w_, h_, st) in sorted(loc.items()):
-        pl.append(f'place_inst -name {i} -location {{{x:.3f} {y:.3f}}} -orientation R0 -status {st}')
+        pl.append(f'place_inst -name {i} -location {{{x:.3f} {y:.3f}}} -orientation {rmir[i]["orient"] if i in rmir else "R0"} -status {st}')
     (out / 'place.tcl').write_text('\n'.join(pl) + '\n')
 
     # ------------------------------------------------------------------ landing / frame-lane window model (land plan)
