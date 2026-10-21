@@ -37,6 +37,122 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "pair_lockstep",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m0 0 1200 1",
+    "expect": "pass",
+    "pass_regex": "PGSLICE_RG PASS checks=",
+    "pass_witness": "results/rtl/hbm_pglg8_1020/b2/m0/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pair_mut1",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m1 1 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m1/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "fill registered early"
+   },
+   {
+    "name": "pair_mut2",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m2 2 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m2/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "drain group select flipped"
+   },
+   {
+    "name": "pair_mut4",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m4 4 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m4/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "RF select early (pair lane glue)"
+   },
+   {
+    "name": "pair_mut20",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m20 20 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m20/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "outer-region relay 2 stages"
+   },
+   {
+    "name": "pair_mut21",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m21 21 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m21/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "drain delay line one short"
+   },
+   {
+    "name": "pair_mut23",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m23 23 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m23/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "E-face relay bypassed"
+   },
+   {
+    "name": "pair_mut101",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m101 101 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m101/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "lp landing 0 bypassed (unlanded)"
+   },
+   {
+    "name": "pair_mut103",
+    "cmd": "bash tools/hbm_static/su_pgslice_rg_vl_run.sh {RUN}/bench/m103 103 300 1",
+    "expect": "fail",
+    "fail_regex": "PGSLICE_RG FAIL errors=",
+    "fail_witness": "results/rtl/hbm_pglg8_1020/b2/m103/bench.log",
+    "threads": 8,
+    "peak_ram_gb": 56,
+    "needs": [
+     "verilator"
+    ],
+    "why": "lp pad 0 one stage short"
    }
   ],
   "calibrate": {
