@@ -15,7 +15,7 @@ module tb_hc_gather_f32;
         .npos(npos), .base_sector(base), .position_stride_sector(stride), .bounds_i(bnd), .local_rq(rq0), .local_read(rd0),
         .local_rr(rr), .gathered_mix_v(v0), .gathered_mix_row(r0), .gathered_mix_pos(p0), .gathered_mix_data(g0), .done(d0), .fault(f0));
     ot_hgi_hc_gathered_mix_reader_f32_static #(.RESP_PHASE(23), .MUT(`MUT)) dut (.clk(clk), .rst_n(rst_n), .launch(launch),
-        .launch_c({15{launch}}), .npos(npos), .base_sector(base), .position_stride_sector(stride), .bounds_i(bnd), .local_rq(rq1),
+        .launch_c({31{launch}}), .npos(npos), .base_sector(base), .position_stride_sector(stride), .bounds_i(bnd), .local_rq(rq1),
         .local_read(rd1), .local_rr(rr), .gathered_mix_v(v1), .gathered_mix_row(r1), .gathered_mix_pos(p1), .gathered_mix_data(g1),
         .done(d1), .fault(f1));
     integer cyc = 0, bad = 0, nv = 0, nd = 0, nf = 0;
