@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.s81.static_ks6.model.v1",
+  "base_source": "0aab02169",
+  "calendar_source": "f08abfb120a0c20414649ce242775945d7d7d5ff",
+  "calendar_receipt": "218d375df78b1feed4d4f42c1005351660b80bfe",
+  "checker_sha256": "8fde842fb6f61fb31d6024c300dcbcd27538836d63f50f1faa90454f9d98ddc5",
+  "span": 1259408,
+  "six_offsets": [
+    0,
+    1259408,
+    2518816,
+    3778224,
+    5037632,
+    6297040
+  ],
+  "step_model": 7598864,
+  "actual_programme_anchor": "NOT derived from owner_start reservation. Observe actual boot PW row0 issueage and seal phase; ARM must give actual first command = firstKS+4+issueage. Full configured stage programme wiring remains open.",
+  "connected_host_source": "f_ks53 from HOST_EN1 endpoint, valid52/user51:42/token41:21/position20:0; f_host515 {class2,data512,valid}. No descriptor token/position manufacture.",
+  "authority": "Explicit SYNC0x19 with graph-tagged actual capture-edge globaltimestamp; free-running48b counter thereafter. ARM0x17 epoch must match live counter. Real HOST producer must account for measured transport to this capture edge; no default globalzero.",
+  "fixed_schedule": "Six actual full53b descriptors after ARM; queue order preserved, launch dates immutableSPAN; missing/late/wrongowner/epoch/phase/config races stickyfault, no completionwait/reschedule. Beforeselect and defaultparameter0 working HOST source unchanged.",
+  "storage_bits": {
+    "six_payloads": 312,
+    "six_valid": 6,
+    "global_time": 48,
+    "countdown": 24,
+    "program_metadata_approx": 48,
+    "control_and_indices_approx": 32
+  },
+  "area": "Control-only candidate ~470FF upper inventory before mapped synthesis; no >2kbit RAM, no arithmetic engine. Actual cell/native measurement pending.",
+  "bandwidth": {
+    "descriptor_input_bits_per_edge": 53,
+    "launch_output_bits_per_edge": 53,
+    "sustained_launches": 6,
+    "minimum_gap": 1259408,
+    "crossings": "Inside existing seqhost region, source registered. No new die wires or clock ports."
+  },
+  "latency": "No extra original seqhost pipeline edges: registered timedKS sampled at declared original f_ks pin edge; original source +3 issuer sample/+4+issueage command stays. Boot seal guardNOPS+16 only.",
+  "physical_status": "No gate/adoption. New parent source params cannot alias old closed source. Whole barrier/token claim requires actual host timestamp producer and correct current stage programme anchors."
+}
