@@ -29,6 +29,37 @@ OUT=${OUT:?OUT}; SRC_REV=${SRC_REV:?SRC_REV}; CONTRACT=${CONTRACT:?CONTRACT}
 FIX_DS=${FIX_DS:?FIX_DS (dir with L00 L02 L14 fixtures: records.json operands.npz images/)}
 QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_images snap)}
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
+CONNECTED_LOWERING=${CONNECTED_LOWERING:-0}
+CONNECTED_ARGS=(); HC_ARGS=(); CUT_ARGS=()
+# SM_LOWERING=1 (TOK-FUNC2-HBM-SM 10-21, opt-in): SM.MATVEC records drive the slice's real SM chain (sm_slice_lower.py);
+#   SMW=<ds_sm_weights root with L00 L02 L14>, SM_KV=<qwen_sm_mv_kv root with L0/ chain/> (Qwen rank 0).  Each lowered
+#   record set is its own component replay (ds_l<L>_sm, qw_<stage>_r0_sm_L<L>_<tag>) with its own calendar reservation.
+SM_LOWERING=${SM_LOWERING:-0}; SM_ARGS=(); QSM_ARGS=()
+if [ "$SM_LOWERING" = 1 ]; then
+  SM_ARGS=(--sm-lowering --smw "${SMW:?SMW (ds_sm_weights root)}")
+  [ -n "${SM_KV:-}" ] && QSM_ARGS=(--sm-kv "$SM_KV")
+fi
+# TOK-FUNC2-HBM-SU: production SU lowerings by record profile (layer_images --su-lower2). Token runs (CONNECTED_LOWERING=1)
+# use it by default: every su_record-based record gets the safe-calendar reader/drain contract (absent roles read A's
+# own bank -- pgslice.sv:303 -- and the drain samples one edge after the lane write). Plain --safe-calendar refuses
+# every record outside its single tested A->O profile (ValueError), so it cannot be the layer emission.
+SU_LOWER2=${SU_LOWER2:-$CONNECTED_LOWERING}
+if [ "$CONNECTED_LOWERING" = 1 ]; then
+  CONNECTED_ARGS=(--connected-lowering --side-source "$OUT/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv")
+  HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}")
+  CUT_ARGS=(--include "^(hc_eng|hleaf_SE|sucore_(SW|SE|NW|NE)|stl_(SW|SE|NW|NE)|stu_(SW|SE|NW|NE)_[0-9]{2}|std_(SW|SE|NW|NE)_[0-9]{2}[ab]|str_C)$")
+fi
+# TOK-FUNC2-HBM-CX: CX=1 (default with CONNECTED_LOWERING=1) emits the DS layers with the COLL/HC components CONNECTED
+# inside the layer compile (layer_images --cx, cx_layer_1021.py): shared VM placement, SU programmes split at every
+# component, alternating finite SU owner-0 calendar epochs / component CP epochs, producer-cone parts.  Those replays
+# carry their own calendar epochs (no reserve-component) and replace the relocated PAY probes (RUN_PAY defaults to 0).
+# CX_IDX=1 also connects IDX.TOPK (route.top6) -- that needs hb_idx__ctl INSIDE the cut: new slice.v / TB build.
+CX=${CX:-$CONNECTED_LOWERING}; CX_IDX=${CX_IDX:-0}
+[ "$CX" = 1 ] && TB_NEV_MIN=${TB_NEV_MIN:-${PAY_NEV:-11651}}
+CX_L14=${CX_L14:-"--cx-chapters 75 --cx-skip 64"}   # L14: quarter VM capacity (engram) -> VM chapter + eg_kv standalone
+if [ "$CX_IDX" = 1 ] && [ "$CONNECTED_LOWERING" = 1 ]; then
+  CUT_ARGS=(--include "^(hc_eng|hleaf_SE|sucore_(SW|SE|NW|NE)|stl_(SW|SE|NW|NE)|stu_(SW|SE|NW|NE)_[0-9]{2}|std_(SW|SE|NW|NE)_[0-9]{2}[ab]|str_C|hb_idx__ctl)$")
+fi
 STAGE_HOSTS=${STAGE_HOSTS:-"ot-gold1 ot-gold2"}
 OVERLAY=${OVERLAY-} # current coherent source defaults to no moving-main overlays
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -82,40 +113,56 @@ cp "$T/check_slice_run.py" "$OUT/bundle/"
 
 # 2. SW quadrant slice (input pads/relays pulled in: the die's own lane latency in front of the slice) --------------
 RLX=${RELAY_RE:-'^(l12p_|rf\d+_)'}
-python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays "$RLX" --out "$OUT/bundle/slice" > "$L/cut.log" 2>&1 || { say CUT_FAIL; exit 3; }
+python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays "$RLX" "${CUT_ARGS[@]}" --out "$OUT/bundle/slice" > "$L/cut.log" 2>&1 || { say CUT_FAIL; exit 3; }
 say "$(grep -m1 '^SLICE' "$L/cut.log")"
 
 # 3. replays (compiler of record on the die's own SU timing) ----------------------------------------------------------
-read RR WR < <(python3 -c "import json,sys; p=json.load(open(sys.argv[1]))['instances']['su_SW0']['params']; print(p['READ_RETURN'], p['WRITE_RETURN'])" "$FC")
+read RR WR RFL < <(python3 -c "import json,sys; p=json.load(open(sys.argv[1]))['instances']['su_SW0']['params']; print(p['READ_RETURN'], p['WRITE_RETURN'], p.get('RF_LOCAL', 0))" "$FC")
+SU2_ARGS=(); [ "$SU_LOWER2" = 1 ] && SU2_ARGS=(--su-lower2 --rf-local "$RFL" --nev "${PAY_NEV:-11651}")
 say "SU native timing READ_RETURN=$RR WRITE_RETURN=$WR (contract su_SW0)"
 B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
+CXR=""
 for LL in 00 02 14; do l=$((10#$LL))
+  CXA=(); if [ "$CX" = 1 ]; then CXA=(--cx --cx-contract "$FC" --cx-l12 "$OUT/l12.json" --cx-checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}" --cx-ops "COLL,HC$([ "$CX_IDX" = 1 ] && echo ,IDX)"); [ "$l" = 14 ] && CXA+=($CX_L14); fi
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
-     --fixtures "$FIX_DS/L$LL" --boundary "$B" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
+     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR "${CXA[@]}" "${SM_ARGS[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
+  for xp in "$OUT/emit/ds_l$l/replay_x"[0-9]*.json; do [ -f "$xp" ] || continue   # SU_LOWER2 independent parts (NEV fit)
+    xn=$(basename "$xp" .json); cp "$xp" "$RJ/ds_l${l}_${xn#replay_}.json"; SU2_EXTRA="${SU2_EXTRA:-} ds_l${l}_${xn#replay_}"
+    [ "$CX" = 1 ] && CXR="$CXR ds_l${l}_${xn#replay_}"; done
+  [ "$CX" = 1 ] && CXR="$CXR ds_l$l"
 done
 for st in L0 chain; do
+  QSAFE_ARGS=(); [ "${QW_SAFE_CALENDAR:-$CONNECTED_LOWERING}" != 1 ] || QSAFE_ARGS=(--safe-calendar)
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/qwen_layer_images.py emit --stage $st --ranks 0,5 --boundary "$B" --operands "$QOP/operands_$st.npz" \
-     --native-read-return $RR --native-write-return $WR --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
+     --native-read-return $RR --native-write-return $WR "${QSAFE_ARGS[@]}" "${QSM_ARGS[@]}" --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
   for r in 0 5; do [ -f "$OUT/qemit/$st/r$r/replay.json" ] && cp "$OUT/qemit/$st/r$r/replay.json" "$RJ/qw_${st,,}_r$r.json"; done
   say "EMIT qw_$st $(grep -o '"counts": {[^}]*}' "$L/emit_qw_$st.log" | head -1)"
 done
-REPLAYS=${REPLAYS:-"ds_l0 ds_l2 ds_l14 qw_l0_r0 qw_l0_r5 qw_chain_r0 qw_chain_r5"}
+REPLAYS=${REPLAYS:-"ds_l0 ds_l2 ds_l14 qw_l0_r0 qw_l0_r5 qw_chain_r0 qw_chain_r5${SU2_EXTRA:-}"}
 # The isolated SU probe must own the bank on every request/write-return edge.
 # This explicit reservation is component-only; it does not qualify a production layer calendar.
 for n in $REPLAYS; do
+  case " $CXR " in *" $n "*) continue;; esac          # CX parts carry their own SU/component calendar epochs
   python3 "$T/native_su_calendar.py" reserve-component "$RJ/$n.json" "$B" "$RJ/$n.calendar.json" > "$L/calendar_$n.log" 2>&1 \
     || { say "CALENDAR_FAIL $n"; exit 3; }
   mv "$RJ/$n.calendar.json" "$RJ/$n.json"
 done
+if [ "$SM_LOWERING" = 1 ]; then
+  for l in 0 2 14; do cp "$OUT/emit/ds_l$l/sm/replay.json" "$RJ/ds_l${l}_sm.json"; REPLAYS="$REPLAYS ds_l${l}_sm"; done
+  for st in L0 chain; do for d in "$OUT/qemit/$st/r0"/sm_L*; do [ -f "$d/replay.json" ] || continue
+    n="qw_${st,,}_r0_$(basename "$d")"; cp "$d/replay.json" "$RJ/$n.json"; REPLAYS="$REPLAYS $n"; done; done
+  say "SM_LOWERING replays: $(echo $REPLAYS | tr ' ' '\n' | grep -c _sm)"
+fi
 # Existing real HC/COLL payloads share the same source contract and static VM
 # ownership epochs. These remain relocated component probes: HC far-end root
 # results and COLL peer inputs retain explicit fixture provenance.
-if [ "${RUN_PAY:-1}" = 1 ]; then
+RUN_PAY=${RUN_PAY:-$([ "$CX" = 1 ] && echo 0 || echo 1)}
+if [ "$RUN_PAY" = 1 ]; then
   PAY_L12_ARGS=(); [ ! -f "${PAY_L12:-$OUT/l12.json}" ] || PAY_L12_ARGS=(--l12 "${PAY_L12:-$OUT/l12.json}")
   for LL in 00 02 14; do
     l=$((10#$LL))
-    python3 "$T/merge_layer_replay.py" --shared-calendar \
+    python3 "$T/merge_layer_replay.py" --shared-calendar "${HC_ARGS[@]}" \
       --su "$OUT/emit/ds_l$l/replay.json" --su-manifest "$OUT/emit/ds_l$l/manifest.json" \
       --fixtures "$FIX_DS/L$LL" --contract "$FC" "${PAY_L12_ARGS[@]}" \
       --boundary "$B" --nev "${PAY_NEV:-11651}" --out "$OUT/pay" --name "ds_l${l}_pay" \
@@ -127,7 +174,7 @@ if [ "${RUN_PAY:-1}" = 1 ]; then
     say "PAY ds_l$l $(tail -1 "$L/pay_ds_l$l.log") shared_static_epochs=1 connected_data=0"
   done
 fi
-NEV=$(python3 -c "import json,sys; print(max(16, 1 + max(sum(e['k']!='M' for e in json.load(open(f))['events']) for f in sys.argv[1:])))" $(for n in $REPLAYS; do echo "$RJ/$n.json"; done))
+NEV=$(python3 -c "import json,sys; print(max(16, ${TB_NEV_MIN:-0}, 1 + max(sum(e['k']!='M' for e in json.load(open(f))['events']) for f in sys.argv[1:])))" $(for n in $REPLAYS; do echo "$RJ/$n.json"; done))
 python3 "$T/gen_slice_tb.py" --boundary "$B" --out "$OUT/bundle/slice" --nev "$NEV" $(for n in $REPLAYS; do echo --replay "$RJ/$n.json"; done) > "$L/tb.log" 2>&1 || { say TB_FAIL; cat "$L/tb.log"; exit 3; }
 say "$(tail -1 "$L/tb.log")"
 [ "$RUN" = 1 ] || { say "ASSEMBLED (RUN=0)"; exit 0; }

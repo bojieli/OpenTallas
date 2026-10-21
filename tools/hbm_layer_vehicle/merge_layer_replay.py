@@ -50,7 +50,7 @@ def sectors(evs):
     return s
 
 
-def components(meta, z, recs, tim, vm_rt, R=2, t_start=40):
+def components(meta, z, recs, tim, vm_rt, R=2, t_start=40, *, connected_boundary=None, checkpoint=None):
     """[(i, op, kind, builder(base) -> generator dict, n_sectors)] for the layer's emitted component records."""
     out = []
     pri_hc = HI.priced_hc(meta, recs)
@@ -63,8 +63,19 @@ def components(meta, z, recs, tim, vm_rt, R=2, t_start=40):
                 continue
             A = z[x["inputs"]["A"]["array"]]
             O = z[x["outputs"]["O"]["array"]]
-            out.append(dict(i=i, op="HC.HC_MIX", kind="hc", tag=x["tag"], nsec=16,
-                            build=lambda b, A=A, O=O, i=i: HI.mix_post_record(A, O, i, a_idx=b, o_idx=b + 8, tim=tim)))
+            if connected_boundary is not None:
+                from hbm_layer_vehicle import hc_layer_lower_1021 as HL
+                parameters, provenance = HL.checkpoint_parameters(checkpoint, int(meta['layer']), 'attn' if 'attn' in x['tag'] else 'ffn')
+                def build(b, A=A, O=O, i=i, parameters=parameters, provenance=provenance):
+                    real = HL.lower_mix_post(A, O, parameters, tim, a_sector=b, o_sector=b+8,
+                                             component_allocation=True, record=i, boundary=connected_boundary)
+                    return dict(real['qhub_timing'], events=[e for e in real['events'] if e['k'] != 'C'],
+                                chk=[e for e in real['events'] if e['k'] == 'C'],
+                                actual_root_provenance=provenance, root_schedule=real['root_schedule'],
+                                execution_qualified=False)
+            else:
+                build=lambda b, A=A, O=O, i=i: HI.mix_post_record(A, O, i, a_idx=b, o_idx=b + 8, tim=tim)
+            out.append(dict(i=i, op="HC.HC_MIX", kind="hc", tag=x["tag"], nsec=16, build=build))
         elif op in ("COLL.ALL_GATHER", "COLL.GROUP_REDUCE_MCAST"):
             pr = x.get("priced") or []
             if not pr:
@@ -90,6 +101,8 @@ def comp_events(g, kind):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--connected-hc", action="store_true")
+    ap.add_argument("--checkpoint", type=Path, help="SHA-pinned released HC input tensors")
     ap.add_argument("--shared-calendar", action="store_true", help="compile finite SU owner epoch then nonoverlapping CP client epochs; component-only, no connected-data claim")
     ap.add_argument("--su", type=Path, required=True, help="SU layer replay (layer_images replay.json)")
     ap.add_argument("--su-manifest", type=Path, required=True)
@@ -121,12 +134,32 @@ def main():
     su_C = [e for e in sev if e["k"] == "C"]
     used_su = sectors(sev)
     base0 = a.sector_base if a.sector_base is not None else ((max(used_su) // 64) + 1) * 64
-    comps = components(meta, z, recs, tim, vm_rt)
+    comps = components(meta, z, recs, tim, vm_rt, connected_boundary=bnd if a.connected_hc else None, checkpoint=a.checkpoint)
     # ---- absolute timeline (sequential CP placement, priced order); sector-independent
     phase0 = su.get("su_owner_calendar", {}).get("end_reservation_stream", 0) + GAP if a.shared_calendar else 0
     t = phase0
+
+    def free_base(nsec, taken=()):
+        """lowest 64-aligned window of nsec sectors clear of every SU sector (fallback only: used when the default
+        above-the-SU base leaves no room, e.g. a large SU_LOWER2 layer)"""
+        busy = set(used_su) | set(taken)
+        for b in range(0, NSEC - nsec + 1, 64):
+            if not any(x in busy for x in range(b, b + nsec)):
+                return b
+        raise ValueError(f"no free {nsec}-sector VM window beside the SU replay")
+
+    def build_ok(c, b):
+        g = c["build"](b)
+        if "events" not in g or (sectors(comp_events(g, c["kind"])) & used_su):
+            return None
+        return g
     for c in comps:
-        g = c["build"](base0)
+        g = build_ok(c, base0) if base0 + c["nsec"] <= NSEC else None
+        if g is None:
+            try:
+                g = c["build"](free_base(c["nsec"]))
+            except ValueError:
+                g = c["build"](0)              # timing only: it will run in a standalone part (no SU events)
         evs = comp_events(g, c["kind"])
         nm = [e["cyc"] for e in evs if e["k"] != "M"]
         c["shift"] = t - 0
@@ -148,12 +181,21 @@ def main():
             parts.append(cur)
             if not fits(cur):
                 cur.update(events=[], n=0, standalone=True)
+                if cur["cur"] + c["nsec"] > NSEC:
+                    cur["cur"] = 0                 # no SU events in a standalone part: the whole quadrant VM is free
         if cur["n"] + c["n_events"] > cap:
             raise ValueError(f"component r{c['i']} alone exceeds NEV {a.nev}: {c['n_events']}")
         b = cur["cur"]
-        g = c["build"](b)
+        if cur["standalone"]:
+            g = c["build"](b)
+        else:
+            g = build_ok(c, b) if b + c["nsec"] <= NSEC else None
+            if g is None:
+                b = free_base(c["nsec"], taken=cur.setdefault("taken", set()))
+                g = c["build"](b)
+        cur.setdefault("taken", set()).update(range(b, b + c["nsec"]))
         evs = comp_events(g, c["kind"])
-        assert not (sectors(evs) & used_su), ("component sector clash with SU", c["i"])
+        assert cur["standalone"] or not (sectors(evs) & used_su), ("component sector clash with SU", c["i"])
         for e in evs:
             e = dict(e)
             if e["k"] != "M":
@@ -173,7 +215,8 @@ def main():
                                                      gather_row0_at=g.get("gather_row0_at"))))
     a.out.mkdir(parents=True, exist_ok=True)
     pr_all = [r for r in sman["records"] if r.get("i") is not None]
-    su_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted")
+    su_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted" and r.get("op", "SU.").startswith("SU."))
+    sm_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted" and r.get("lowering") == "sm_slice_v1")
     comp_i = sorted({c["i"] for c in comps})
     man_parts = []
     for k, p in enumerate(parts):
@@ -199,8 +242,9 @@ def main():
     doc = dict(schema="opentallas.hbm_merged_layer_replay.v1", lane="TOK-FUNC-HBM-PAY", layer=su.get("layer"),
                su_replay=str(a.su), fixtures=str(a.fixtures), contract=str(a.contract), nev=a.nev,
                priced_records=len(pr_all), su_emitted=su_em, component_emitted=comp_i,
-               emitted_fraction=round((len(set(su_em) | set(comp_i))) / max(1, len(pr_all)), 4),
-               timeline_stream_edges=t, shared_calendar_epochs=a.shared_calendar, qualifies_native_layer=False, qualifies_native_chain=False, scope="component_probe", parts=man_parts)
+               emitted_fraction=round((len(set(su_em) | set(comp_i) | set(sm_em))) / max(1, len(pr_all)), 4),
+               **({"sm_emitted_separate_replay": sm_em} if sm_em else {}),
+               timeline_stream_edges=t, real_hc_root=a.connected_hc, execution_qualified=False, shared_calendar_epochs=a.shared_calendar, qualifies_native_layer=False, qualifies_native_chain=False, scope="component_probe", parts=man_parts)
     (a.out / f"{a.name}_parts.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps(dict(layer=doc["layer"], priced=len(pr_all), su=len(su_em), comps=len(comp_i),
                           fraction=doc["emitted_fraction"], parts=[(m["name"], m["events"]) for m in man_parts])))
