@@ -36,3 +36,16 @@ bind-first kernel dont_touch for good at PRE_CTS (r9/pvm9_release_all.tcl: every
 listed, never restored), then CTS/GRT/route/finish run as a normal tile. r9a = kit CTS (main); r9b = fallback with tighter sink
 clustering (size 16, max diameter 30 um) to cut the 82 ps local kernel skew. Both from r6c 3_place.odb in copies bf9a/bf9b.
 Audits (PG after global_connect, fanout, seq reach, TT/FF STA, insertion) at 5_1_grt and 6_final. Then equivalence of the final netlist.
+
+## r9 verdict + r10 (HBM-PVM11, 10-21)
+- r9a / r9b: 4_1_cts + 4_cts PASS, 5_1_grt FAIL GRT-0116 after 30 extra iterations: overflow 11111 (a) / 9266 (b),
+  average usage 28.4% / 28.2%, wirelength 1.87M / 1.85M um vs r8 0.94M (r8 GRT overflow 0, usage 14.9%).
+- Classification: placement legality, not routing capacity. Releasing every kernel net lets 4_1_cts hold repair insert
+  17,147 buffers (r8 11,858, 10,642 hold endpoints at margin 30) on intra-kernel paths; the 16 EXCLUSIVE lane fences admit
+  only group members, so those buffers are legalised outside their kernel: DPL negotiation stuck at 23,540 violations
+  (r8 11,707), HPWL 838k vs 716k, congestion at the fence edges / SRAM E+W faces (x 240-280 and 80-100 um, 3,616 g-cells
+  over capacity-0 macro area), sources mostly resizer nets (net*) and u_native kernel nets. Tight clustering (r9b) only -17%.
+- r10 (structural): r9 + the lane fences dropped at PRE_CTS (r10/pvm11_drop_fences.tcl, after the kernel release).
+  The fences only serve global placement (kernel-pin nets local); after 3_place the kernels stay where placed and DPL can
+  legalise CTS/hold buffers beside their sinks. Dry run on the r6c 3_place.odb: groups=16 regions=16 members=58160.
+  r10a = kit CTS (main), r10b = r9b tight sink clustering (fallback), both from r6c 3_place.odb (bf10a/bf10b, ep6).

@@ -1,0 +1,30 @@
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[WARNING GRT-0297] Disabling NDR for 1 congested nets
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: clknet_0_clk_regs
+[INFO GRT-0197] Via related to pin nodes: 623998
+[INFO GRT-0198] Via related Steiner nodes: 11883
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1185538
+[INFO GRT-0112] Final usage 3D: 6194288
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2268074        744059           32.81%             6 /  1 / 1156
+M3             2720155        960856           35.32%             1 /  5 / 1040
+M4             2091810        445879           21.32%            13 /  1 / 6068
+M5             2288923        486880           21.27%             1 /  4 / 1002
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          9368962       2637674           28.15%            21 / 11 / 9266
+
+[INFO GRT-0018] Total wirelength: 1848475 um
+[INFO GRT-0014] Routed nets: 101838
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+write_db /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/5_1_grt-failed.odb
+Error: global_route.tcl, 175 GRT-0116
+Elapsed time: 2:54:46.22[h:]min:sec. CPU time: user 12136.90 sys 155.51 (117%). Peak memory: 2821200KB.
+make: *** [Makefile:585: do-5_1_grt] Error 1
