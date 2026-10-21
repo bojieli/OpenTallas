@@ -31,6 +31,7 @@ kv_static_params.py runs check() on the die chain's die_bound.v when RUN/tile_vi
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -120,7 +121,18 @@ def wrapper_edges(text):
     return buses, int(r.group(1)) if r else 0
 
 
+VIEW_ENV = {'qkd_kvs_grp_s6c': 'OT_KV_GRP_VIEW', 'qkd_kvs_grp_h_s6c': 'OT_KV_GRP_H_VIEW'}
+
+
 def candidates(master, vm):
+    """QKC-GRP 10-21: OT_KV_GRP_VIEW / OT_KV_GRP_H_VIEW = auto (default: every kit view by top) | 0 (frame) |
+    physical/ref_tile/<kit>/views/<vm> (explicit view; still judged)"""
+    sel = os.environ.get(VIEW_ENV.get(master, ''), 'auto') if master in VIEW_ENV else 'auto'
+    if sel == '0':
+        return []
+    if sel != 'auto':
+        vdir = ROOT / sel
+        return [(vdir.parent.parent.name, vdir)] if (vdir / f'{vm}.lef').exists() else []
     out = []
     for kd in sorted((ROOT / REF).glob('qkd_kvs_*')):
         vdir = kd / 'views' / vm
@@ -153,7 +165,9 @@ def judge(master, vm, kit, vdir, die_rtl, die_text, charge, KSD):
     if not spec_txt:
         return dict(r, verdict='REFUSE', why=f'kit spec absent at the view source {src[:9]}')
     spec = json.loads(spec_txt)
-    tfile = [s for s in spec.get('sources', []) if re.search(r'/qkd_kvs_tiles\w*\.sv$', s)]
+    # QKC-GRP 10-21: a master the die binds from its own standalone file (OT_KV_GRP_S6C: qkd_kvs_grp{,_h}_s6c.sv) is
+    # judged against that file: the kit's tile file is the spec source equal to the die binding file
+    tfile = [s for s in spec.get('sources', []) if re.search(r'/qkd_kvs_tiles\w*\.sv$', s) or s == die_rtl]
     if not tfile and vm.endswith('_fl'):
         return whole_tile(r, master, vm, kit, src, spec, charge, KSD)
     if len(tfile) != 1:
@@ -252,7 +266,12 @@ def select():
         if landed:
             t = KSD.FACE_LAND_TILES[fk]
             charge = dict(land={k: v for k, v in t.items() if k not in ('master', 'kit', 'rst_release')})
-        rows = [judge(mst, vm, k, v, die_rtl, die_text, charge, KSD) for k, v in candidates(mst, vm)]
+        b_ = KSD.bindings().get(mst) or {}
+        d_rtl, d_text = die_rtl, die_text
+        if b_.get('module') == mst and b_.get('file') and b_['file'] not in (die_rtl, getattr(KSD, 'PUBLIC_RTL_FILE', die_rtl)):
+            d_rtl = b_['file']
+            d_text = (ROOT / d_rtl).read_text(errors='replace') if (ROOT / d_rtl).exists() else show('HEAD', d_rtl)
+        rows = [judge(mst, vm, k, v, d_rtl, d_text, charge, KSD) for k, v in candidates(mst, vm)]
         ok = [x for x in rows if x['verdict'] == 'PASS']
         if ok:
             def when(x):
