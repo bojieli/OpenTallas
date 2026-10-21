@@ -1,0 +1,7 @@
+# Four-state exact multiply prefix candidate
+
+The routed critical path feeds the output synchronous-reset predicate. Its carry cone includes n_4761, an AND prefix over 32 registered bits (odd n_107..n_169) and n_7148=~n_181. This candidate reassociates exactly these 33 leaves into 13 kept AND4 helpers, three levels. Existing intermediate expressions remain available to their other users. No arithmetic identity requiring known bits, mask, validity assumption or reset change is used. AND associativity and padding with 1 preserve 0/1/X/Z reduction behavior.
+
+The generator applies the transformation after existing flop and gate duplication. Every sequential instance line, including copies and C/D/Q/R connections, is byte-identical to base40fcc3473. The shared baseline station-math source remains unchanged. Generated private math and generator are changed together. MODEL.json records static structure/source hashes; this is not an equivalence, native or timing qualification receipt. cb16 owns the required actual-source/reset positive and causal fixtures, native qualification and integration.
+
+Rejected candidate: XOR cancellation of shared n_3764 in n_3758 is binary-equivalent but can change X propagation. Arithmetic flops are unreset, raw y/err are exposed without a validity mask, and procedural synchronous-reset decisions can consume that predicate during warmup. This candidate therefore retains the original XOR network.
