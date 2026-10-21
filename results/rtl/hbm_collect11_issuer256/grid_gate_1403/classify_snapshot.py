@@ -35,7 +35,7 @@ for k in ('grid','gridb'):
   data=subprocess.check_output(['git','-C',str(repo),'cat-file','blob',entries[p]['git_blob']]); assert sha(data)==entries[p]['sha256']; files[p]=data
  original_physical={p:sha(v) for p,v in files.items() if not p.startswith('tools/')}
  for p in tracked:
-  if p.endswith('.py') and (repo/p).is_file(): files[p]=(repo/p).read_bytes()
+  if (repo/p).is_file(): files[p]=(repo/p).read_bytes()
  for p in [f'physical/ref_tile/hcoll_issuer_r256v8_{k}/spec.json',str(rel/'classify_snapshot.py'),str(rel/(k+'.original_spec.json'))]: files[p]=(repo/p).read_bytes()
  for p in (repo/rel/'classification_inputs'/k).iterdir(): files[str(p.relative_to(repo))]=p.read_bytes()
  changed=[p for p,h in original_physical.items() if sha(files[p])!=h]
