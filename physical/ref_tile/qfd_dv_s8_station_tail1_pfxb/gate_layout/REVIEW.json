@@ -1,0 +1,60 @@
+{
+  "reviewer": "codex takeover coordinator",
+  "time": "2026-10-21T15:33:54.997123-07:00",
+  "gate_commit": null,
+  "verdict": "APPROVED",
+  "geometry_sha256": "ac18d6503b9d96697c99f4b07cff6960a27cf30116c5c818da9a31cdcafe87c3",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "ac18d6503b9d96697c99f4b07cff6960a27cf30116c5c818da9a31cdcafe87c3",
+    "components": {
+      "outline": "a2257cfb84f44d020ed7cef4a2728e94da23b75b3bd0581d4bd8822acae9945c",
+      "macros": "df26120e092e06bab0c86934759162cd235783a04e7a05b372c791e91c76d854",
+      "pins": "a09269459492fda589649a043559b51e048cd8ff5e598f360699c2a21a3e84c8",
+      "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+    }
+  },
+  "source_content_manifest_sha256": "e5ac14ac61e8713be52cc6a43c7ce1abfa44ca87eee17c6fc0c9e76c46b1166e",
+  "source_archive_sha256": "2dac6458b1e0d5d9aa978c0b1f7a19e426c2e603c6182321b6fd7848d93eb480",
+  "source_identity": "exact_content_snapshot; commit=null retained; start369c54773295db39a0e75f3000ae6a9796155215",
+  "approval_provenance": "ROOT personally viewed all four original PNGs and complete packet, approved exact pfxa/pfxb geometry; parent /root/qk_lead relayed explicit approval and authorized this bound record. ROOTintegration alone submits.",
+  "checklist": {
+    "lattice": "Five real SRAMs, 20.304um horizontal and21.6um vertical channels; continuous rows/PG. Exact frozen floorplan approved.",
+    "std_cell_band": "Broad green logic bands; no red strip. Fallback43.8percent synthfill accepted by ROOT.",
+    "pin_spread": "All560 actual pins checked, no geometry errors; native32/zero violations.",
+    "clock_entry": "Registered boundary TT/FF73.4/70.8ps PASS. All-register spread separately retained, no new80ps rule.",
+    "shape": "Original151.2square MAIN/162square fallback, no geometry edits."
+  },
+  "image_sha256": {
+    "density.png": "a04877fdb01e9267ac20188f6befd2df75369fbbfcf5e86b1affe8a5b389af45",
+    "floorplan.png": "11841e51e8b09774708139edb327bb8bf1509ea87e8e07baeeb963bb0f4b1c47"
+  },
+  "frozen_floorplan_sha256": "71e36815a183190d94bcdc6a83c2020599ff295164911da5619144b5fe7432b0",
+  "risks": [
+    "Pre-route WARN only; not CLOSED or routed setup/hold/DRC signoff.",
+    "TT placement-RC diagnostic WNS-89.7ps; approximately879ps depth remains.",
+    "No old5de view alias, no parent hardbind/wholeprogramme ages qualification."
+  ],
+  "source_bound_functional_receipts": {
+    "prefix_reset_4d9": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/prefix_reset_4d9/receipt.json",
+      "sha256": "8dce3e724889b0c72f8ccdd3349508dead09cb51057b5cb6cbc00eadf7d2e020",
+      "verdict": "PASS bounded executed four-state multiplier startup/reset equivalence"
+    },
+    "prefix_tail_363": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/prefix_tail_363/receipt.json",
+      "sha256": "c24741125d6529cc8737d14431baa2f396aaa314f0bffa5c15cbabb8c62ec7ef",
+      "verdict": "PASS selected48FP32 + original-lateCFG causal negative"
+    },
+    "fixedjb8_40fcc": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/fixedjb8_40fcc/receipt.json",
+      "sha256": "86e9861fccb2d7e6992f6c5c25f6ca20b9797c3b611745777657b26e224eb236",
+      "verdict": "PASS causal negative"
+    },
+    "prefix_child_native": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/prefix_child_native/receipt.json",
+      "sha256": "cfdeb0721286cf5b16eb03315c18e6a1d166572922847912c222a1c93270d419",
+      "verdict": "PASS"
+    }
+  }
+}

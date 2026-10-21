@@ -1,0 +1,29 @@
+{
+  "observed_at": "2026-10-21T15:33:54.997123-07:00",
+  "source_math_sha256": "cb43b22f2a48a1af0eb175981266441df8b2d236b9127774a2a94a34e3cb557a",
+  "source_start_commit": "369c54773295db39a0e75f3000ae6a9796155215",
+  "functional_receipts": {
+    "prefix_reset_4d9": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/prefix_reset_4d9/receipt.json",
+      "sha256": "8dce3e724889b0c72f8ccdd3349508dead09cb51057b5cb6cbc00eadf7d2e020",
+      "verdict": "PASS bounded executed four-state multiplier startup/reset equivalence"
+    },
+    "prefix_tail_363": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/prefix_tail_363/receipt.json",
+      "sha256": "c24741125d6529cc8737d14431baa2f396aaa314f0bffa5c15cbabb8c62ec7ef",
+      "verdict": "PASS selected48FP32 + original-lateCFG causal negative"
+    },
+    "fixedjb8_40fcc": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/fixedjb8_40fcc/receipt.json",
+      "sha256": "86e9861fccb2d7e6992f6c5c25f6ca20b9797c3b611745777657b26e224eb236",
+      "verdict": "PASS causal negative"
+    },
+    "prefix_child_native": {
+      "path": "results/arch/codex_slice2_native_1021/resume1340/prefix_child_native/receipt.json",
+      "sha256": "cfdeb0721286cf5b16eb03315c18e6a1d166572922847912c222a1c93270d419",
+      "verdict": "PASS"
+    }
+  },
+  "adoption": "Use executed source-bound four-state startup/reset comparison and selected real48FP32 plus same-binary original-lateCFG causal negative; fixedJB8 causal negative is exact original5de mechanism with unchanged counter logic, not a newprefix mutant rerun. Empty benches metadata alone is not qualification.",
+  "scope": "Component source receipts only, no fullprogramme/parent closure."
+}
