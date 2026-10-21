@@ -1,0 +1,121 @@
+{
+  "selected_die_source": "017b32285/N (HC RTL unchanged from K5e0/M7350)",
+  "contract": "/home/ubuntu/artifacts/hdie-d4/codex_ucie_colh_bind_1021/pre_relay_colm.json",
+  "contract_sha256": "75721c31df7bbcafd2cccdf45279a6b829ff82a5e9137b04075cf13b9ae7906c",
+  "instances": {
+    "hc_SW": {
+      "master": "ot_hbm_hc_qhub_static",
+      "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+      "params": {
+        "DRLY": 2,
+        "CHX": 11
+      },
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ]
+    },
+    "hc_SE": {
+      "master": "ot_hbm_hc_qhub_static",
+      "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+      "params": {
+        "DRLY": 2,
+        "CHX": 11
+      },
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ]
+    },
+    "hc_NW": {
+      "master": "ot_hbm_hc_qhub_static",
+      "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+      "params": {
+        "DRLY": 2,
+        "CHX": 11
+      },
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ]
+    },
+    "hc_NE": {
+      "master": "ot_hbm_hc_qhub_static",
+      "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+      "params": {
+        "DRLY": 2,
+        "CHX": 11
+      },
+      "rtl_deps": [
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+        "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+        "rtl/lib/ot_rst_relay.sv"
+      ]
+    },
+    "hc_eng": {
+      "master": "ot_hbm_hc_root_static",
+      "source": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+      "params": {
+        "QDRLY": 2,
+        "QCHX": 11
+      },
+      "rtl_deps": []
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv": "7a64c3c9e5200841c58cdecafd7117e56b22a3a80778f08b19e9f5ce2254379f",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "f68a556f4caa32eba68932ddb1efdfeb5be695be74e157d8eaaa494c9a373814",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv": "047edbb9331d5638eab999cfc9a28be2496b8f04d66887a20f5d948c8fe5eca9",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv": "9d8a49c4ab08d1fd79423f1fca6c389f6dc1b110abf28e98aa22d177385a4753",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "f8e19a5cf9de239481c78e0cc8e61c8053b5a52af2aa307177ffa931b46b0a0d",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv": "8da48b3e10760e87b620cb281bc0e640fbd3efff3e8368845885891c705b4ecf",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv": "7baf37a97f136e3e847430baea1cdd50667c495cdf3fcd032afa2a89c12c574b",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "effective_hub_params": {
+    "K": 20480,
+    "DRLY": 2,
+    "TLA": 7,
+    "CHX": 11,
+    "RD_CAPTURE": 23,
+    "GATHER_PHASE": 23,
+    "DONE_LAT": 19
+  },
+  "programme_contract": {
+    "hub_word_bits": 79,
+    "F20_targets": "108+QID",
+    "gather_period_edges": 24,
+    "actual_gather_response_phase": 23,
+    "programme_image_binding": "No programme image/39-phase calendar binding carried by current die graph",
+    "phase39_period40": "TOKEN ee6ddb944 functional source candidate ONLY, not selected N source; no current39 calendar alias",
+    "current_root_cadence": "ot_hbm_hc_root_static ends line358; explicit gv/gr/gp/gd row-position programme and gm_open, no fixed24 cadence",
+    "nested_hcp_arithmetic_ph24": "Separate ot_hdc_v41x_hcp_sys1_static__d4g_hc module from line496: 5-bit ph24 wraps23=>0 and F_GRP=ph24/3 for8 arithmetic groups. This is not gather cadence and MUST NOT widen to40."
+  },
+  "qualification": "Read-only selected graph/source inspection; no RTL/parameter/image edit, no new simulation/build; C6 physical source/ports must compare exact hashes separately",
+  "scope_correction": "HC source audit: original root_ph24 label was wrong; only nested HCP arithmetic uses ph24. Gatherreader currentN is independently fixed24."
+}
