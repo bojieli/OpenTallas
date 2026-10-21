@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.s81.lepa_clock_cohort_contract.v1",
+  "status": "SOURCE_CANDIDATE_NOT_ADOPTED",
+  "observed_at": "2026-10-21 11:57 PT",
+  "route_job": "s81sl_lepmua_r6v-d2763da53",
+  "source_commit": "d2763da53",
+  "route_def_path": "ot-epyc5:/srv/opentallas-scratch/claude/closure-loop/s81sl_lepmua_r6v-s81sl_lepmua_r6v-d2763da53/routes/s81sl_lepmua_r6v_s81sl_lepmua_r6v_d2763da53/work/orfs/results/asap7/opentallas_ot_s81sl_lep_mu_a_asap7_ref_s81sl_lepmua_r6v_s81sl_lepmua_r6v_d2763da53/base/6_final.def",
+  "def_excerpt_sha256": "a15189b0c40c4682e9b9d4c5e3af6303ef2b7ea8277958276d155ed8950d7308",
+  "whole_def_sha256": null,
+  "retention_note": "Actual two component lines read directly from routed DEF at11:57. Daemon released original DEF before12:01 wholefile hashing; excerpt preserved verbatim, no wholeDEF hash claimed.",
+  "master": "DFFASRHQNx1_ASAP7_75t_R",
+  "db_units_per_um": 1000,
+  "source_xy_um": [
+    455.544,
+    254.34
+  ],
+  "receiver_xy_um": [
+    456.192,
+    253.26
+  ],
+  "manhattan_um": 1.728,
+  "measured_ff_clock_launch_ps": 505.42,
+  "measured_ff_clock_capture_ps": 556.41,
+  "measured_ff_removal_slack_ps": -34.22,
+  "liberty_contract": {
+    "path": "ot-epyc5:/srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021/out_vssram19/seq.lib",
+    "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "source": "ORFS ASAP7 SEQ_RVT_TT_nldm_220123",
+    "clocked_on": "CLK",
+    "next_state": "!D",
+    "output": "QN",
+    "preset": "!RESETN",
+    "clear": "!SETN",
+    "accepted_receiver_pin": "RESETN",
+    "unsupported_receiver_pin": "SETN (explicit refusal)"
+  },
+  "tests": {
+    "focused_production_resolver_and_bin_merge_cases": 24,
+    "dependency_actual_lepa_spine_spec": "PASS",
+    "full_openroad_paired": "PENDING_ROOT_INTEGRATION"
+  },
+  "physical_consumer_census": "PENDING exact newkit placement and connectivity audit"
+}

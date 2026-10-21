@@ -65,4 +65,5 @@ expect grouping PASS {
 }
 expect duplicate_spatial_sink "appears 2 times" {ot_sp_cohort_merge_bins [dict create b {{sc 0 0} {sc 0 0} {dc 100 100}}] [ot_sp_cohort_bins blk clknet 1 16]}
 expect missing_spatial_sink "appears 0 times" {ot_sp_cohort_merge_bins [dict create b {{sc 0 0}}] [ot_sp_cohort_bins blk clknet 1 16]}
-puts "PASS cohort cases=23; physical/clock paired signoff remains integration-owned"
+expect unsupported_setn "async SETN" {object setpin [dict create getName SETN];dict set ::objects dr getMTerm setpin;ot_sp_cohort_bins blk clknet 1 16}
+puts "PASS cohort cases=24; physical/clock paired signoff remains integration-owned"

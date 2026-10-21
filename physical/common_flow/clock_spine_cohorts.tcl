@@ -71,6 +71,9 @@ proc ot_sp_cohort_bins {blk net0 u lmax} {
       foreach it [$net getITerms] {
         if {[$it getIoType] ne "INPUT"} continue
         incr loads
+        if {[[$it getMTerm] getName] eq "SETN"} {
+          error "OT_SPINE cohort $label: unsupported source QN to async SETN consumer"
+        }
         if {[[$it getMTerm] getName] eq "RESETN" &&
             [lsearch -exact $declared [[$it getInst] getName]] < 0} {
           error "OT_SPINE cohort $label: undeclared immediate reset receiver [[$it getInst] getName]"
