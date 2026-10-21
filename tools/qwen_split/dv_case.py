@@ -68,11 +68,16 @@ WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59
             'sys_face': ('qfd_sys_face', 'rtl/qwen_split/qfd_sys_face.sv')}
 # Source-complete recurring RoPE authority integration. Historical 595 masters remain default.
 HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
+if STATUS_OBS and not HEAD_PREP:
+    raise ValueError('STATUS observer v1 requires the coherent head-prepare source')
 if HEAD_PREP:
     if os.environ.get('OT_QWEN_ROPE', '0') != '1':
         raise ValueError('OT_QWEN_HEAD_PREP requires the sole 73-item RoPE programme')
     WCOL_RTL['native59'] = ('qfd_native59_dv_headprep', 'rtl/qwen_split/qfd_native59_dv_headprep.sv')
     WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl', 'rtl/qwen_split/qfd_sys_face_ovl.sv')
+    if STATUS_OBS:
+        WCOL_RTL['native59'] = ('qfd_native59_dv_headprep_obs1', 'rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv')
 # the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
 # QW-GRT4 10-20 (Q.GRT, rN die_repeaters over_reach 544 > 425 um, 391 of them on sys_face nets): the die binds the CLOSED
@@ -109,6 +114,9 @@ DHOBS_DX = 259.2
 # prog_rx_v, rx_payload) as one more endpoint on the face's clock / reset, and drives qfd_tt_ctlm_dv.ctx_x (129 b, the
 # boot-record layout; the ctlm takes it with CTX_SRC 1, die_params).  ctx_user / mu_fault stay open observability outputs.
 CTXRX = ('mu_ctxrx', 'qfd_mu_ctx_rx_die', 'rtl/qwen_split/mu/qfd_mu_ctx_rx.sv')
+if STATUS_OBS:
+    DHOBS = ('mu_dhobs', 'qfd_sys_face_mu_dhobs_obs1', 'rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv')
+    CTXRX = ('mu_ctxrx', 'qfd_mu_ctx_rx_die_obs1', 'rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv')
 CTXRX_WH = (43.2, 97.2)          # outline (um): ~135 flops; 550 RX inputs on its faces (<= 6 / um)
 CTXRX_GAP = 4.32                 # above sys_face's N face
 CTXRX_IN = ('prog_context_slot', 'prog_rx_v', 'rx_payload')
@@ -840,6 +848,14 @@ def apply_dv(v, m):
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
         if HEAD_PREP:
+            if STATUS_OBS:
+                for si_, p_, bits_ in [('mu_ctxrx', 'obs_ctx', 62), ('mu_dhobs', 'obs_res', 47),
+                                       ('native59', 'obs_native', 60)]:
+                    if not (has(si_, p_) and has('d2d_rom', p_)):
+                        raise ValueError(f'STATUS observer lacks actual source endpoint {si_}.{p_}')
+                    if any(M[by[i_].master].ports[p_][1] != bits_ for i_ in (si_, 'd2d_rom')):
+                        raise ValueError(f'STATUS observer source width mismatch {p_}')
+                    out.append((f'status_{p_}', 'spine_local', bits_, [(si_, p_), ('d2d_rom', p_)]))
             for p_ in ('tx_user', 'rx_user'):
                 if not (has('d2d_rom', p_) and has('native59', p_)):
                     raise ValueError(f'head user requires actual d2d_rom.{p_}->native59.{p_}')

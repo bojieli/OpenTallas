@@ -20,6 +20,11 @@ SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
 if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
     MASTER = 'qfd_d2d_static_ovl_sf7'
     SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf7.sv'
+if os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1':
+    if os.environ.get('OT_QWEN_HEAD_PREP', '0') != '1':
+        raise ValueError('STATUS observer v1 requires coherent head-prepare source')
+    MASTER = 'qfd_d2d_static_ovl_sf7_obs1'
+    SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv'
 BUMP = 'qfd_sigbump'
 BUMP_WH = 43.176
 
@@ -32,6 +37,9 @@ def apply(model):
     d2d.master = MASTER
     ports = rtl_ports(ROOT / SOURCE, MASTER)
     vf = view_frame(MASTER) if view_enabled() else None
+    if os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1':
+        # Candidate frame only: no historical abstract/source identity is inherited.
+        vf = (388.8, 172.8)
     frame = None
     if vf is not None:
         # Q-VIEWFRAME 10-16: the slot takes the CLOSED view's outline (r5 475.2 x 280.8, bind_view_select.json) instead

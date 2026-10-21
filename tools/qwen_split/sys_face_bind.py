@@ -116,6 +116,8 @@ def apply(model):
         if need not in by:
             raise ValueError(f'sys face bind: die instance {need} missing')
     expected_link = 'qfd_d2d_static_ovl_sf7' if HEAD_PREP else 'qfd_d2d_static'
+    if os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1':
+        expected_link = 'qfd_d2d_static_ovl_sf7_obs1'
     if by['d2d_rom'].master != expected_link:
         raise ValueError(f'sys face bind needs the selected static D2D end {expected_link} (static_link_bind)')
     sf = rtl_ports(ROOT / SOURCE, MASTER)
