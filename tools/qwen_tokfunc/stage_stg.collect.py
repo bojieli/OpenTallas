@@ -22,9 +22,12 @@ def parse(out):
             info = json.loads(first[first.find('{'):])
         except ValueError:
             pass
-    sp = re.search(r'span_cycles[=:"\s]+(\d+)', first)
+    sp = re.search(r'(?<![A-Za-z0-9_])span_cycles[=:"\s]+(\d+)', first)
     r['span_cycles'] = info.get('span_cycles', int(sp.group(1)) if sp else None)
     r['delivery_span_cycles'] = info.get('delivery_span_cycles')
+    r['legacy_schedule_anchor_span_cycles'] = info.get('legacy_schedule_anchor_span_cycles')
+    for key in ('first_vm_write_edge', 'last_vm_write_edge'):
+        r[key] = info.get(key)
     ig = re.search(r'isa_gold_words=(\d+)/(\d+)', first)
     r['isa_gold_words'] = f'{ig.group(1)}/{ig.group(2)}' if ig else None
     if r['verdict'] != 'PASS':
@@ -110,8 +113,16 @@ def main():
         bad.append('mut build failed')
     if missing_fx:
         bad.append(f'fixtures missing for layers {missing_fx}')
+    # Numeric checks at the cluster-output cut do not observe the internal VM
+    # write timestamps. Keep this timing obligation separate from functional PASS.
+    unknown_delivery = [f'{c}/{name}' for c, cfg in cfgs.items() for name, row in cfg['stages'].items()
+                        if re.match(r'^L\d+_(qkv|gu)$', name)
+                        and any(type(row.get(k)) is not int for k in
+                                ('first_vm_write_edge', 'last_vm_write_edge'))]
     verdict = 'PASS' if not bad else 'FAIL'
-    res = dict(
+    res = dict(delivery_timing_qualified=not unknown_delivery,
+               unknown_delivery_cases=unknown_delivery,
+               delivery_timing_scope='actual VM-write edges required; legacy schedule anchors are not delivery measurements',
         stage=ST, grade='RTL-functional (source assembly)', src_commit=src_commit, verdict=verdict,
         golden=(f'per layer L0..L35 (TP4 36-layer ISA golden at P8191 re-executed per layer, reproduction-checked, '
                 f'cut to TP8 compute die 0): bench hdc_golden expectation bit-exact on the RTL outputs AND == ISA gold '
@@ -133,7 +144,9 @@ def main():
         ],
         notes='rel params per brief (-GMU_NU=4 -GSU_LT=1); physical/ref_tile/qfd_dv_slice2_w/kit.env at c0f8097f3 has PARAMS=()',
         logs=[f'{ST}/runs.log', f'{ST}/fixtures.log', f'{ST}/timing.txt', f'{ST}/runlist.txt'] +
-             [f'{ST}/{c}/runs/<name>/bench.out' for c in cfgs] + [f'{ST}/build_{c}.log' for c in cfgs],
+             [f'{ST}/{c}/runs/<name>/bench.out' for c in cfgs] + [f'{ST}/build_{c}.log' for c in cfgs] +
+             [f'{ST}/{c}/{name}' for c in cfgs for name in ('vtb.sha256', 'vflags.txt')] +
+             [f'{ST}/mat_contract_sources.sha256'],
         configs=cfgs)
     (S / 'result.json').write_text(json.dumps(res, indent=1) + '\n')
     print('STG', verdict, 'gold', f'{gold_ok}/{gold_n}', 'bad', len(bad), bad[:8])

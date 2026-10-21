@@ -93,7 +93,11 @@ def apply(inp, res, tree, results_dir, grade_label):
             return False
         return True
 
-    if ok('stg'):
+    stg_functional = ok('stg')
+    stg_timing = res.get('stg', {}).get('delivery_timing_qualified') is True
+    if 'stg' in res and not stg_timing:
+        problems.append('stg: current MAT delivery age UNKNOWN; functional cut checks and legacy schedule anchors do not qualify current token pricing; baseline DV remains historical/DIAG')
+    if stg_functional and stg_timing:
         c = res['stg']; ages = c.get('ages') or c.get('cycles', {}).get('ages') or {}
         dst = tree / 'results/token_pass/tokfunc_qw/stg'; dst.mkdir(parents=True, exist_ok=True)
         new = {}
@@ -216,9 +220,16 @@ def main():
                       stage_sources={s: dict(src_commit=v.get('src_commit'), grade=v.get('grade'),
                                             source_note=v.get('source_note')) for s, v in res.items()}, applied=applied, problems=problems,
                       token=r, gaps=full['1u'].get('gaps'),
-                      u1=dict(cycles=r['cycles'], tok_s=r['tok_s'], vs_model_pct=round(100 * (r['tok_s'] / 4403.2 - 1), 2)),
-                      u4=dict(tok_s=r['u4'], vs_model_pct=round(100 * (r['u4'] / 11750.6 - 1), 2)),
+                      u1=dict(qualified_full_token=token_pass, scope='stage composition' if token_pass else 'historical model diagnostic; current token price held', cycles=r['cycles'], tok_s=r['tok_s'], vs_model_pct=round(100 * (r['tok_s'] / 4403.2 - 1), 2)),
+                      u4=dict(qualified_full_token=token_pass, scope='stage composition' if token_pass else 'historical model diagnostic; isolated OVL transport is not full-token throughput', tok_s=r['u4'], vs_model_pct=round(100 * (r['u4'] / 11750.6 - 1), 2)),
                       verdict='TOKEN PASS (all stages PASS)' if token_pass else 'INCOMPLETE/FAIL (see stages/problems)')
+    if not a.base_only:
+        report['current_token_price'] = dict(status='QUALIFIED_STAGE_COMPOSITION' if token_pass else 'HELD',
+            reasons=problems + [f'missing stage: {s}' for s in missing] + [f'diagnostic stage: {s}' for s in diagnostic])
+        if 'ovl4u' in res:
+            report['isolated_ovl_transport'] = dict(verdict=res['ovl4u'].get('verdict'),
+                scope='compiled fixture exchanges at release master pins; no full-token throughput claim',
+                cycles=res['ovl4u'].get('cycles', {}))
     (a.out / 'report.json').write_text(json.dumps(report, indent=1))
     print(json.dumps({k: report.get(k) for k in ('verdict', 'u1', 'u4', 'stages', 'missing_stages', 'problems')}
                      if not a.base_only else base))

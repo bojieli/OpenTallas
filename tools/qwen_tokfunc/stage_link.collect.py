@@ -124,7 +124,11 @@ def ovl4u(root, S, a):
                                "SRAM links are assembly RTL",
                                "macro view ot_sram_1r1w_64x137_m1_r2c2_p192 from 545cdd4bc (the closed sf7w kit's view; not "
                                "in the assembly's asap7_memory_macros_v2)"],
-                    logs=logs, runs=out)
+                    logs=logs + [f"runs/codec{c}/{name}/run.log" for c in (1, 2)
+                                  for name in ("pass", "asbuilt_one_playhead", "mut_collide", "mut_slot", "mut_user")]
+                              + [f"runs/codec{c}/{name}" for c in (1, 2)
+                                 for name in ("source.sha256", "verilator.txt")]
+                              + ["release_masters.txt"], runs=out)
     return dict(verdict="PASS" if ok_all else "FAIL",
                 golden="every C->K and K->C D2D frame of the 4-user F16 frame bit-exact against the compiled producer words "
                        "(tb_d2d_ovl_mu checks), per-user exchanges/tokens = compiled counts",

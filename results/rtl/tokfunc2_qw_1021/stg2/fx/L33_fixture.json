@@ -1,0 +1,181 @@
+{
+ "schema": "opentallas.qwen.dv-layer-fixture.v1",
+ "tool": "tools/qwen_layerbench/dv_layer_fixture.py",
+ "layer": 33,
+ "position": 8191,
+ "token": 24,
+ "tp_gold": 4,
+ "tp8_die": 0,
+ "golden": "TP4 ISA golden (fx/realmem, qwen_rom_position_oracle_w12 machines) re-executed for layer N at P from the recorded X and kv_pre; reproduction checked bit-exact on every die",
+ "reproduction": {
+  "die0": {
+   "layer_x": true,
+   "k_row": true,
+   "v_row": true
+  },
+  "die1": {
+   "layer_x": true,
+   "k_row": true,
+   "v_row": true
+  },
+  "die2": {
+   "layer_x": true,
+   "k_row": true,
+   "v_row": true
+  },
+  "die3": {
+   "layer_x": true,
+   "k_row": true,
+   "v_row": true
+  }
+ },
+ "inputs": {
+  "die0": {
+   "x_in": "L32_die0_x.hex 6d94ae3cc0aecd80460fdbeb6a596f08a3aff06d75701964c54034f936201322",
+   "kv_pre": "L33_die0.npy 668dbf9f458f900d6609a31415c0a4c7beccd0904f46655cb52bc1603c629055"
+  },
+  "die1": {
+   "x_in": "L32_die1_x.hex 6d94ae3cc0aecd80460fdbeb6a596f08a3aff06d75701964c54034f936201322",
+   "kv_pre": "L33_die1.npy 0040bbc39e2b7887e84270c5df95c317986466d08afa5ade734f58b15b8430d8"
+  },
+  "die2": {
+   "x_in": "L32_die2_x.hex 6d94ae3cc0aecd80460fdbeb6a596f08a3aff06d75701964c54034f936201322",
+   "kv_pre": "L33_die2.npy 7729f53dc860db22b5012350ece0d459ac2339079531482bed24698e3f045d25"
+  },
+  "die3": {
+   "x_in": "L32_die3_x.hex 6d94ae3cc0aecd80460fdbeb6a596f08a3aff06d75701964c54034f936201322",
+   "kv_pre": "L33_die3.npy f3094f4277074382d47c166213462d563f25a57053bc7d87ec2099321eaf186d"
+  }
+ },
+ "image_sha256": {
+  "die0": {
+   "program.hex": "fe9aebed4f4dccbfe980237a5b4b9d6207909746fb9fd2a0f961d7fbc2582de0",
+   "segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+   "crom.hex": "76deff1af701e6049e714deb101e28bcbf3ecda73c9f4f1d446440149320f59f",
+   "matrix_scale_bf16.hex": "2d89f0aed458b284e31029aaa562b35597ee204a56a0add3b77eeff0684edfa5",
+   "layer33_rom.json": "57c63773dbb590a872c56720877af924330d1ec2ba851491cb6ba3159b15a9f6"
+  },
+  "die1": {
+   "program.hex": "fe9aebed4f4dccbfe980237a5b4b9d6207909746fb9fd2a0f961d7fbc2582de0",
+   "segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+   "crom.hex": "76deff1af701e6049e714deb101e28bcbf3ecda73c9f4f1d446440149320f59f",
+   "matrix_scale_bf16.hex": "39edeeadbee656ee781a5c5fad54937fa117dac1a3e5c0728dbe1b7d13b56f1f",
+   "layer33_rom.json": "0d5fc300c851c0d7d47aee73f11060d5cae4fe97331e0e7214b336250114ae65"
+  },
+  "die2": {
+   "program.hex": "fe9aebed4f4dccbfe980237a5b4b9d6207909746fb9fd2a0f961d7fbc2582de0",
+   "segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+   "crom.hex": "76deff1af701e6049e714deb101e28bcbf3ecda73c9f4f1d446440149320f59f",
+   "matrix_scale_bf16.hex": "f6a6430e4c6fe9c33119fb74ced558230cc60b4aeafe626f59f35cbcf618f6bc",
+   "layer33_rom.json": "72cbb8ee37eb5fa4b61413a1c6a57abaec156dcd5be41599ce5f747cdfc4af77"
+  },
+  "die3": {
+   "program.hex": "fe9aebed4f4dccbfe980237a5b4b9d6207909746fb9fd2a0f961d7fbc2582de0",
+   "segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+   "crom.hex": "76deff1af701e6049e714deb101e28bcbf3ecda73c9f4f1d446440149320f59f",
+   "matrix_scale_bf16.hex": "08746fd74bf836a52a215052971079a00b8624a8f650a9ebf9cd4f90fb0d0aa7",
+   "layer33_rom.json": "71cfcf6c02fa14e9840457bca5257e7da42689d747d27806254b802013c6c161"
+  }
+ },
+ "gold_source_sha256": {
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+  "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+  "tools/hdc_qwen_fullshape_isa_w12.py": "83350ecc688d25b3fa7eea276156f2def5a8a402944a422f826b4d5705d15e6b",
+  "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+  "tools/qwen_rom_position_oracle_w12.py": "73dc5b2907743c304678703bd8dacd6509bc264679a996c592cbdbd4f200670c",
+  "tools/qwen_o4_layer0_oracle_w12.py": "3161f4836d4729e8a1e2213fc8859381474b017b339a3fef96b2e8fa66b7efb1",
+  "tools/qwen_layerbench/dv_layer_fixture.py": "5ef298b4de308c5ad1c50ae92ba0c43251d72cdb703a9d3561210f59324b9534"
+ },
+ "cut": {
+  "qkv_rows": "0..511, 1024..1151, 1280..1407",
+  "gu_rows": "0..3071",
+  "o_cols": "0..511",
+  "down_cols": "0..1535"
+ },
+ "tp_dependence": "t (all-reduce return) is TP4-folded; x'/r of both residuals, gu and act carry it; the od partial sums are TP8-only (no TP4 value)",
+ "stages": {
+  "resid1": {
+   "file": "L33_resid1.npz",
+   "sha256": "3f88b24dda79b83886964af4067f6e9bb8e8fae574026bb8f6625dc34eb07cd4",
+   "keys": [
+    "gold_r",
+    "gold_x",
+    "pos",
+    "ps1",
+    "t",
+    "x"
+   ]
+  },
+  "resid2": {
+   "file": "L33_resid2.npz",
+   "sha256": "6ef08b821f493414ddd57141db1d8e4be1aab94da9f3b82169aeb5f19e5f8101",
+   "keys": [
+    "gold_r",
+    "gold_x",
+    "pos",
+    "ps1",
+    "t",
+    "x"
+   ]
+  },
+  "qk": {
+   "file": "L33_qk.npz",
+   "sha256": "c8a474eb21e6aa7a17eed66e5a972f8c27f4366e495b9af6b4160c6fb8a42eca",
+   "keys": [
+    "gold_k",
+    "gold_q",
+    "gold_v",
+    "k_norm",
+    "pos",
+    "q_norm",
+    "qkv",
+    "r"
+   ]
+  },
+  "silu": {
+   "file": "L33_silu.npz",
+   "sha256": "d2289f7ac100dc4275ec2e8bea4fb3ba75dcb6e259f4c9e0663f274a8d2d3a5c",
+   "keys": [
+    "gold_act",
+    "gu",
+    "gu_r",
+    "r"
+   ]
+  },
+  "mat_qkv": {
+   "file": "L33_mat_qkv.npz",
+   "sha256": "5d27cfaee7a3bc96f5ca4265ad60682cbbc8485bc9b688dbe5b2483d8a8a62e3",
+   "keys": [
+    "gold_y",
+    "s",
+    "split",
+    "w",
+    "x"
+   ]
+  },
+  "mat_gu": {
+   "file": "L33_mat_gu.npz",
+   "sha256": "0eba1537f6b689371a4215fb0db0dae401c815df1bfd5f556d27cea808ab6a14",
+   "keys": [
+    "gold_y",
+    "s",
+    "split",
+    "w",
+    "x"
+   ]
+  },
+  "mat_od": {
+   "file": "L33_mat_od.npz",
+   "sha256": "7d1621f570b89b8a524cb70cdeff09ba97309ea2fae04830637b630f9d5964f6",
+   "keys": [
+    "down_s",
+    "down_w",
+    "down_x",
+    "o_s",
+    "o_w",
+    "o_x"
+   ]
+  }
+ }
+}
