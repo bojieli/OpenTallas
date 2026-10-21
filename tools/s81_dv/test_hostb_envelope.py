@@ -72,6 +72,29 @@ class EnvelopeTest(unittest.TestCase):
             ks53=encode_ks(user=c.user,token=c.token,position=c.position),
             ks_slots=dict(head_edge=2000,receiver_edge=2020,deadline=2020,slot=0))
 
+    def test_nonlocal_body_slots_use_each_adapter_counter(self):
+        c=self.context()
+        route=[dict(adapter_id='test-transit-A',receiver_clock_identity='test-clock-A',
+                    source_sha256='a'*64,configured=True,expected_header_stage=c.stage_id)]
+        book=dict(adapter_id='test-transit-A',receiver_header_edge=900,header_slot=900,transit_body_edge=905)
+        slots=[dict(head_header_edge=1,head_body_edge=2,receiver_header_edge=20,
+                    receiver_body_capture_edge=25,transit=[book])]
+        ks=dict(head_edge=3,receiver_edge=26,deadline=26,slot=0,
+                transit=[dict(adapter_id='test-transit-A',receiver_header_edge=906,header_slot=906)])
+        records=encode_boot([0x123],c,slots,ks53=encode_ks(user=c.user,token=c.token,position=c.position),
+                            ks_slots=ks,transit_route=route)
+        self.assertEqual(decode_header(int(records[0]['payload512'],16))['date48'],25)
+        self.assertEqual(records[0]['transit_slot_books'][0]['slots']['transit_body_edge'],905)
+        # These are different counters; no900->20 phase/latency is inferred.
+        for broken in [[],[dict(book,transit_body_edge=899)],
+                       [dict(book,header_slot=901)],[dict(book,adapter_id='wrong')]]:
+            with self.assertRaises(ValueError):
+                encode_boot([0x123],c,[dict(slots[0],transit=broken)],
+                    ks53=encode_ks(user=c.user,token=c.token,position=c.position),ks_slots=ks,transit_route=route)
+        with self.assertRaises(ValueError):
+            encode_boot([0x123],c,slots,ks53=encode_ks(user=c.user,token=c.token,position=c.position),
+                        ks_slots=ks,transit_route=[dict(route[0],configured=False)])
+
     def test_full_sync_arm_payloads_do_not_collapse_into_inline_mask(self):
         c=self.context();words=[0x123]
         slots=[dict(head_header_edge=1,head_body_edge=2,receiver_header_edge=11,receiver_body_capture_edge=12)]
