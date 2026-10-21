@@ -1,0 +1,70 @@
+{
+  "observed_at": "2026-10-21T14:41:19.942782-07:00",
+  "verdict": "PASS selected48FP32 + original-lateCFG causal negative",
+  "source_ref": "363295685",
+  "math_sha256": "cb43b22f2a48a1af0eb175981266441df8b2d236b9127774a2a94a34e3cb557a",
+  "host": "ot-epyc9",
+  "unit": "oth-ubuntu-1840008-1792618136",
+  "ot_run_rc": 0,
+  "positive": {
+    "actual_fp32_words": 48,
+    "sender_nb_words": 3,
+    "receiver_words": 3,
+    "idx": [
+      0,
+      1,
+      2
+    ],
+    "last": [
+      0,
+      0,
+      1
+    ],
+    "valid_halfwords": 192,
+    "sender_busy": 0,
+    "receiver_busy": 0,
+    "fault": 0,
+    "cfg_raw": 3266,
+    "cfg_parent": 3267,
+    "cfg_ready": 3270,
+    "first_near_raw": 3290,
+    "first_near_parent": 3291,
+    "sender_nb_cycles": [
+      3376,
+      3377,
+      3378
+    ],
+    "receiver_cycles": [
+      3396,
+      3397,
+      3398
+    ],
+    "isolated_cfg_advance": 32
+  },
+  "negative": {
+    "same_binary": true,
+    "only_runtime_change": "CFGSHIFT=0",
+    "original_cfg_raw": 3298,
+    "cfg_parent": 3299,
+    "actual_failure": "SELECTED_TAIL_FAULT side0 cycle3300",
+    "expected_sim_rc": 1
+  },
+  "exact_params": {
+    "PIN_IN": 1,
+    "BT_LAT": 1,
+    "MUT": 0,
+    "ADD_LAT": 7,
+    "SKEW": 14,
+    "SCALE_LAT": 6,
+    "JB": 8
+  },
+  "scope": "one real two-station48row KC8/J3 case; no fullprogramme ages/throughput/physical qualification",
+  "files_sha256": {
+    "sources.sha256": "9b02ca70fc46bb14cd1094bdd2ecbfd3a623a64d9f2a8807b0517a5219ebb3c4",
+    "late_cfg.log": "56f1ad81a29dbc00290fa169245b7e2249edba9b648ee3c735a3a1af3ffdd24e",
+    "build.log.gz": "9844ecbdec24ec031fb01af15db86e55e0050c1782993d6f4354a831ded37ee7",
+    "primary.log": "0fff089005cd0b64cbf732b5a3772c4942b4b788913a145908199fa80fc4b410",
+    "version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "binary.sha256": "4924026fe5323b05abe90ce0df96b6b9fc94c9f90af44fff67421d941f093496"
+  }
+}

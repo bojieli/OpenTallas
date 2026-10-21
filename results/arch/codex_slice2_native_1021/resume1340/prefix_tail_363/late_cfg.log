@@ -1,0 +1,12 @@
+FIRST_NEAR_PARENT side1 cycle3291
+FIRST_NEAR_PARENT side0 cycle3291
+FIRST_NEAR_PARENT side1 cycle3292
+FIRST_NEAR_PARENT side0 cycle3292
+FIRST_NEAR_PARENT side1 cycle3293
+FIRST_NEAR_PARENT side0 cycle3293
+CFG_INPUT cycle3298 original_local3298 advance0
+CFG_PARENT side1 cycle3299 mode3 nwords3 kc8
+CFG_PARENT side0 cycle3299 mode2 nwords3 kc8
+[33017000] %Fatal: tb_selected_tail_pair.sv:71: Assertion failed in tb_selected_tail_pair.unnamedblk3: SELECTED_TAIL_FAULT side0 cycle3300
+%Error: rtl/test/qwen_dv/s8/tb_selected_tail_pair.sv:71: Verilog $stop
+Aborting...
