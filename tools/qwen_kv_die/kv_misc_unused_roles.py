@@ -119,7 +119,7 @@ def derive(die_v, record, root, existing, pins=None):
         fp = Path(rec['masters']['qkd_kvs_attn_fl']['rtl']); fp = fp if fp.is_absolute() else Path(root) / fp
         ft = P.strip_comments(fp.read_text(errors='replace'))
         body = re.search(r'\bmodule\s+qkd_kvs_attn_fl\b(.*?)\bendmodule\b', ft, re.S)
-        core = body and re.search(r'\bqkd_kvs_attn(?:_r16)?\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*u_core\s*\((.*?)\);', body.group(1), re.S)
+        core = body and re.search(r'\bqkd_kvs_attn(?:_r1[67])?\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*u_core\s*\((.*?)\);', body.group(1), re.S)
         ok = bool(core)
         for prt, w in (('ahs', 165), ('acal_WS', 48), ('acal_WN', 48), ('acal_ES', 48), ('acal_EN', 48)):
             ok = ok and re.search(rf'\.{prt}\s*\(\s*{prt}\s*\)', core.group(1)) is not None and \

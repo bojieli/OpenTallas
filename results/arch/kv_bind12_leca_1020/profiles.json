@@ -575,6 +575,43 @@
    "MUT": 0
   }
  },
+ "qkd_kvs_attn_fl": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_attn7_1020/receipts/qkd_kvs_attn_fl.json",
+   "sha256": "c6e25b45f4bb1598f75ff68f0c1907fd2915378fcf5a2bf6152f0c686eebd909"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "8f46bf9a5e8f348b3d241df362ddb58be483244799b35d7d1672989fcf16f10b",
+    "child_lint.json": "94c388387931ed09a1822dfc9cab7bba2bba8ab1b8828838f8ce60f4ffefa86e",
+    "export_exact_abstract.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+    "export_exact_abstract.tcl": "7d35cc5538eb637699dfb6216f741ca25713fda2af5b5917390d7025cc3c370f",
+    "export_ff.log": "4530e0b2dfc80c2ff3a6a64cb8ae1aced43effa8dd83cac24d1dbc36077755f1",
+    "export_ff.tcl": "1ed842ee9db6ebf5b550a7327e73b8b8f601fd09df11ca76963bb27fa35cbafe",
+    "export_ss.log": "629891eaad528187abaaa2cf81e0aa2ea80a603973f949c34c4714182514b07a",
+    "export_ss.tcl": "80e70adbc4e5b2b2c3cd9c1568a7ae4a61a88084542597fb2ecfc5b2deebd2cb",
+    "export_tt.log": "20abe25c56bf9556de3a9e8f98c5c52336e1c39c4850e988b4bad650ac696e44",
+    "export_tt.tcl": "cc39146c61c7be6ae8160be31245974e635ba17e917427e34719ef431a628a19",
+    "insertion.json": "f9c79621d26023ceeaeb93fe0fe6968cdb32e40d717d4819e595f5232d3d748c",
+    "provenance/abstract_pin_stub.json": "0e0ca68517206d222b88e9cb2b59bb6e8395b59cc90997253c63c48a628d2f21",
+    "provenance/raw/qkd_kvs_attn_fl.lef": "901af0e2c10eaae488631accb74580a6466685b0bf5d7b665e03af477cd18456",
+    "provenance/view_export.abstract.json": "12b540062be350e1851ef811a86d7454de9800e34680990b9fc823cb32a875b7",
+    "qkd_kvs_attn_fl.lef": "79f945227bc6b87be8d82e648e4e3f8f58ecdf06370d617f4986e9074ffb6881",
+    "qkd_kvs_attn_fl_ff.lib": "1536a08f604e7a5ed4ce50da125cfb95f002bc53a6ddc654e8d1041f04da7005",
+    "qkd_kvs_attn_fl_ss.lib": "994386cad437c75aace5e0f30cd65e810e3ea25ee2e8b810050fa261b0ec3a76",
+    "qkd_kvs_attn_fl_tt.lib": "badab9e7016ebb0cecb7bec4eb7a36b43c5adc3c1ccfb0c949ef7f86f7bccad8"
+   },
+   "rtl": {
+    "path": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+    "sha256": "077f3d4250af98238c17fc7a3b042e109e089b68276b68faae2359b430b532b5"
+   },
+   "view": "physical/ref_tile/qkd_kvs_attn_rv5/views/qkd_kvs_attn_fl"
+  },
+  "parameters": {
+   "RETIRE_STATIC": 1,
+   "STATUS_DELAY": 213
+  }
+ },
  "qkd_pv_rs_hd_f": {
   "frozen_receipt": {
    "path": "results/arch/kv_bind3_1019/receipts/receipts/qkd_pv_rs_hd_f.json",
