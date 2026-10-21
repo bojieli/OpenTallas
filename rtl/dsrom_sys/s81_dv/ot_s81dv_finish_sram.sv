@@ -224,7 +224,15 @@ module ot_s81dv_norm_finish_sram #(
       begin mem_group_index=0;for(j=0;j<q;j=j+1)mem_group_index=mem_group_index+mem_group_live(j);end
     endfunction
     localparam integer MLG=mem_group_index(NVP/8), MREAD=(P*K+2+2)/3;
-    wire[7:0] read_fire;wire[71:0] read_tags;
+    // Only retain one-hot captures with a real macro-field consumer.
+    // Group validity still captures ALL ready nodes before this filter, so
+    // dropping a zero-output node cannot select a different priority winner.
+`ifdef OT_S81DV_MUT_LEAF
+    localparam [MREAD*NVP-1:0] MEM_NODE_USED=768'h000000fffffffffd000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000fffffffffd000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36;
+`else
+    localparam [MREAD*NVP-1:0] MEM_NODE_USED=768'h000000fffffffffd000fffff03ff1f36000000fffffffffe000fffff03ff1f36000000fffffffffd000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36;
+`endif
+    wire[8*NVP-1:0] read_nodes;
     wire[MREAD*MLG*1-1:0] mem_reset;
     ot_s81dv_finish_reset2 #(.LEAVES(MREAD*MLG*1)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
     (* keep *) reg[MLG-1:0] mem_go;
@@ -244,7 +252,7 @@ module ot_s81dv_norm_finish_sram #(
           always @(posedge clk or negedge mem_reset[RI])
             if(!mem_reset[RI])g<=0;else g<=(|mr) && !mem_go[GI];
           for(genvar mb=0;mb<8;mb=mb+1)begin:g_bit
-            if(Q*8+mb>=1 && isadd(Q*8+mb))begin:g_node
+            if(Q*8+mb>=1 && isadd(Q*8+mb) && MEM_NODE_USED[mc*NVP+mq*8+mb])begin:g_node
               (* keep *) reg o;
               always @(posedge clk or negedge mem_reset[RI])if(!mem_reset[RI])o<=0;else o<=oh[mb];
               assign mo[mq*8+mb]=o;
@@ -257,20 +265,17 @@ module ot_s81dv_norm_finish_sram #(
       end
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
       wire[NVP-1:0] mw;
-      wire[8:0] mt[0:NVP];assign mt[0]=0;
       for(genvar mn=0;mn<NVP;mn=mn+1)begin:g_node
         assign mw[mn]=mo[mn] && ms[mn/8] && !iss_v[mn];
-        assign mt[mn+1]=mt[mn] | ({9{mw[mn]}} & 9'(mn));
       end
-      assign read_fire[mc]=|mw;
-      assign read_tags[mc*9+:9]=mt[NVP];
+      assign read_nodes[mc*NVP+:NVP]=mw;
     end
     for(genvar mc=MREAD;mc<8;mc=mc+1)begin:g_unused_command
-      assign read_fire[mc]=1'b0;assign read_tags[mc*9+:9]=9'd0;
+      assign read_nodes[mc*NVP+:NVP]='0;
     end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(1)) u_values(
       .clk(clk),.ivb(ivb),.itb({(NBK*P*2){1'b0}}),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
-      .read_fire(read_fire),.read_tags(read_tags),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
+      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
     wire [LAV:0] av;
     wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rc[5]), .v(f_q), .vd(av));
@@ -514,7 +519,15 @@ module ot_s81dv_eng_finish_sram #(
       begin mem_group_index=0;for(j=0;j<q;j=j+1)mem_group_index=mem_group_index+mem_group_live(j);end
     endfunction
     localparam integer MLG=mem_group_index(NVP/8), MREAD=(P*K+4+2)/3;
-    wire[7:0] read_fire;wire[71:0] read_tags;
+    // Only retain one-hot captures with a real macro-field consumer.
+    // Group validity still captures ALL ready nodes before this filter, so
+    // dropping a zero-output node cannot select a different priority winner.
+`ifdef OT_S81DV_MUT_EASSOC
+    localparam [MREAD*NC-1:0] MEM_NODE_USED=2688'h000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000fffffffffe000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000fffffffffe000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000fffffffffd000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000ffffffffff000fffff03ff1f36;
+`else
+    localparam [MREAD*NC-1:0] MEM_NODE_USED=2688'h000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000fffffffffe000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000fffffffffe000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000fffffffffd000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffff03ff1f36000000ffffffffff000fffbf03ff1f36000000ffffffffff000fffff03ff1f36;
+`endif
+    wire[8*NC-1:0] read_nodes;
     wire[MREAD*MLG*3-1:0] mem_reset;
     ot_s81dv_finish_reset2 #(.LEAVES(MREAD*MLG*3)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
     (* keep *) reg[MLG-1:0] mem_go;
@@ -534,7 +547,7 @@ module ot_s81dv_eng_finish_sram #(
           always @(posedge clk or negedge mem_reset[RI])
             if(!mem_reset[RI])g<=0;else g<=(|mr) && !mem_go[GI];
           for(genvar mb=0;mb<8;mb=mb+1)begin:g_bit
-            if(Q*8+mb>=1 && isadd(Q*8+mb))begin:g_node
+            if(Q*8+mb>=1 && isadd(Q*8+mb) && MEM_NODE_USED[mc*NC+mq*8+mb])begin:g_node
               (* keep *) reg o;
               always @(posedge clk or negedge mem_reset[RI])if(!mem_reset[RI])o<=0;else o<=oh[mb];
               assign mo[mq*8+mb]=o;
@@ -547,20 +560,17 @@ module ot_s81dv_eng_finish_sram #(
       end
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
       wire[NC-1:0] mw;
-      wire[8:0] mt[0:NC];assign mt[0]=0;
       for(genvar mn=0;mn<NC;mn=mn+1)begin:g_node
         assign mw[mn]=mo[mn] && ms[mn/8] && !iss_v[mn];
-        assign mt[mn+1]=mt[mn] | ({9{mw[mn]}} & 9'(mn));
       end
-      assign read_fire[mc]=|mw;
-      assign read_tags[mc*9+:9]=mt[NC];
+      assign read_nodes[mc*NC+:NC]=mw;
     end
     for(genvar mc=MREAD;mc<8;mc=mc+1)begin:g_unused_command
-      assign read_fire[mc]=1'b0;assign read_tags[mc*9+:9]=9'd0;
+      assign read_nodes[mc*NC+:NC]='0;
     end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3)) u_values(
       .clk(clk),.ivb(ivb),.itb(itb),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag(ot[NC]),
-      .read_fire(read_fire),.read_tags(read_tags),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
+      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
     wire [LAV:0] av; wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rc[5]), .v(f_q), .vd(av));
     ot_s81dv_qadd_n32 #(.LAT(LAV)) u_a (clk, rst_n, f_q, a_q, b_q, wr_d, f_add);
@@ -599,12 +609,12 @@ module ot_s81dv_eng_finish_sram #(
     end
     assign fault = flt;
 endmodule
-module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
+module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1,NVP=(1<<$clog2(NV)))(
  // r2 (NATIVE32): per-leaf-bank KEPT copies of the flit control (ivb/itb/ibb, copy c = bank c) and the finish's
  // per-port leaf hits ph (owner update) replace the shared iv/it/ib decode (census r1: 235-265-load enables)
  input wire clk,input wire[P*K*P-1:0] ivb,input wire[P*K*P*2-1:0] itb,input wire[P*K*P*8-1:0] ibb,
  input wire[TREES*NV*P-1:0] ph,input wire[P*K*32-1:0] id,
- input wire fire,input wire[8:0] issue_tag,input wire[7:0] read_fire,input wire[71:0] read_tags,input wire rd_active,output reg[31:0] a_q,b_q,
+ input wire fire,input wire[8:0] issue_tag,input wire[8*TREES*NVP-1:0] read_nodes,input wire rd_active,output reg[31:0] a_q,b_q,
  input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
 );
  localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM,NREAD=(NB+2)/3,NOWNER=(P*K+8)/9;
@@ -1336,12 +1346,12 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  wire[63:0] rd[0:NB-1];
  wire[NB-1:0] read_ren,read_sa,read_sb,read_ha,read_hb;
  wire[NB*5-1:0] read_ra;
- // One bounded descriptor per three actual banks, rather than a full
- // descriptor copy per bank. Its real outputs remain below32 consumers.
+ // One one-hot descriptor per three actual banks. The already captured
+ // command identity drives constant owner indices, avoiding the measured201-load variable-index mux.
  for(genvar rg=0;rg<(NB+2)/3;rg=rg+1)begin:g_read_group
    localparam integer CNT=(NB-rg*3>=3)?3:NB-rg*3;
-   ot_s81dv_finish_readgroup #(.NV(NV),.K(K),.P(P),.TREES(TREES),.FIRST(rg*3),.CNT(CNT)) u_read(
-     .fire(read_fire[rg]),.tag(read_tags[rg*9+:9]),.owner(owner_bits[((rg/3<NOWNER)?rg/3:NOWNER-1)*TREES*NV*2+:TREES*NV*2]),
+   ot_s81dv_finish_readgroup_oh #(.NV(NV),.K(K),.P(P),.TREES(TREES),.FIRST(rg*3),.CNT(CNT)) u_read(
+     .nodes(read_nodes[rg*TREES*NVP+:TREES*NVP]),.owner(owner_bits[((rg/3<NOWNER)?rg/3:NOWNER-1)*TREES*NV*2+:TREES*NV*2]),
      .ren(read_ren[rg*3+:CNT]),.ra(read_ra[rg*15+:CNT*5]),.sa(read_sa[rg*3+:CNT]),.sb(read_sb[rg*3+:CNT]),.ha(read_ha[rg*3+:CNT]),.hb(read_hb[rg*3+:CNT]));
  end
  for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank

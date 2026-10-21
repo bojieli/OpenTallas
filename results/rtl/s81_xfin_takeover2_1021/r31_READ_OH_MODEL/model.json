@@ -1,0 +1,40 @@
+{
+  "updated": "2026-10-21T16:37:47.143615-07:00",
+  "base_model": "18f13c8ce 93 actual SRAM model unchanged",
+  "purpose": "repair measuredR23 FAIL201/1518/0roles groupedread variableownerindex mux",
+  "source_sha256": "38194cca636a3c01ffcb68cc66effb932824ae8d0668eed343df7814daeafb35",
+  "mechanism": "samecaptured onehotmw forwarded; constantoperandnode/tree ownerlookup; exactsame ca/cb/rank/role/slot/half tables",
+  "new_storage_bits": 0,
+  "removed_capture_bits": 35,
+  "removed_breakdown": "4ENGfinish*8 +1NORMfinish*3 baselineprofile; groupvalid captures fullpriority beforezero-output-nodefilter",
+  "added_protocol_edges": 0,
+  "SRAMs": 93,
+  "macro_read_capture_edges": "unchanged",
+  "FP_LAT_reset": "unchanged; FPporttyping7ebe+8f11 separatelyequivproved295a",
+  "physical_local_control_fields": {
+    "norm": {
+      "old_encoded_bits": 54,
+      "new_active_onehot_bits": 471
+    },
+    "each_ENG": {
+      "old_encoded_bits": 63,
+      "new_active_onehot_bits": 1651
+    },
+    "delta_total_active_bits": 6769,
+    "boundary": "privatewithin existingXFIN hardenedtile, noexternalport/ratechange",
+    "routing_area_whole_pending": true
+  },
+  "representative_component": {
+    "source": "780d41220 unbalancedOR",
+    "old_max": 194,
+    "old_violations": 11,
+    "old_area_um2": 114.6717,
+    "new_max": 6,
+    "new_violations": 0,
+    "new_area_um2": 34.65666,
+    "not_whole_qualification": true
+  },
+  "current_component": "aa3f08729 balancedOR, exact4profiletruth/nativepending; firstnorm1264PASS",
+  "status": "SOURCE_MODEL_CANDIDATE nonadopted, fullsourceproof/native/area/physicalpending",
+  "no_new_layout_gate": true
+}
