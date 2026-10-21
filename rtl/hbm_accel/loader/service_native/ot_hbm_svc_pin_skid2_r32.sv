@@ -20,9 +20,11 @@ module ot_hbm_svc_pin_skid2_r32 #(parameter integer WIDTH=1)(
   (* keep="true",dont_touch="true" *) reg wp,rp;
   (* keep="true",dont_touch="true" *) reg [1:0]count;
   reg [B-1:0]d0,d1;
-  wire push,pop;
+  wire push,pop,write0,write1;
   ot_hbm_svc_local_and2 u_push(.a(in_v),.b(!full[s]),.y(push));
   ot_hbm_svc_local_and2 u_pop(.a(out_r),.b(!empty[s]),.y(pop));
+  ot_hbm_svc_local_and2 u_write0(.a(push),.b(!wp),.y(write0));
+  ot_hbm_svc_local_and2 u_write1(.a(push),.b(wp),.y(write1));
   assign full[s]=(count==2);assign empty[s]=(count==0);
   assign out_data[s*SW+:B]=rp?d1:d0;
   always @(posedge clk or negedge rn[s/4])begin
@@ -38,8 +40,8 @@ module ot_hbm_svc_pin_skid2_r32 #(parameter integer WIDTH=1)(
    end
   end
   always @(posedge clk)begin
-   if(push&&!wp)d0<=in_data[s*SW+:B];
-   if(push&&wp)d1<=in_data[s*SW+:B];
+   if(write0)d0<=in_data[s*SW+:B];
+   if(write1)d1<=in_data[s*SW+:B];
   end
  end
 endmodule
