@@ -5227,11 +5227,10 @@ def _reset_tree(v, m):
     import os as _os
     by = {i.name: i for i in m['insts']}
     pos = _pin_pos(v, m)
-    ckof = {}
-    for bid, cl, bits, eps in m['buses']:
-        if cl == 'clock_trunk':
-            for i, p in eps:
-                ckof.setdefault(i, []).append((bid, p))
+    # A forwarded hop also DRIVES ck_o; it remains a single-clock reset
+    # receiver. Counting that driver output suppressed foreign reset landing.
+    from qwen_split.reset_sync_contract import clock_inputs
+    ckof = clock_inputs(m)
     nets, ck_of_bus, idx_of = [], {}, {}
     for idx, (bid, cl, bits, eps) in enumerate(m['buses']):
         if cl != 'reset' or len(eps) < 2:
