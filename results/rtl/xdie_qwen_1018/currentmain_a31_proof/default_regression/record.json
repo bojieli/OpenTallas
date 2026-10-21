@@ -1,0 +1,112 @@
+{
+  "status": "PASS",
+  "baseline": "f4c1582ab",
+  "candidate": "a31d2150824f072066a080c4cb35771013c18baf",
+  "scope": "zero-default new flags:5historicalconfigurations, exact4memh+txdp equality and every preexistingparams equal; newmetadata allowed",
+  "cases": [
+    {
+      "case": "default",
+      "args": [],
+      "files": {
+        "cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+        "cal_C_rx.memh": "bdc23c871dcb166f00042da7f75a137614f081d3c30206188fdee7d9f270075b",
+        "cal_K_tx.memh": "83156922acad455546216cf792c28c1bc67c6e5ba82ce541e3540507fed47aaa",
+        "cal_K_rx.memh": "aa899c5f41ec081bde5f4146faa7244f4b15ce2125e8a269f0f7dfc5b7c20e24",
+        "txdp.svh": "c74f0c79674e700f094abd61ca5b01b9daba7ac04b285747f410d0db62954e17"
+      },
+      "legacy_params_equal": true,
+      "additive_parameters": {
+        "localparam integer P_STATUS_DELAY": "0;",
+        "localparam integer P_ATTN_TX_SHIFT": "0;"
+      }
+    },
+    {
+      "case": "pair",
+      "args": [
+        "--c-real",
+        "1",
+        "--k-real",
+        "3",
+        "--stages",
+        "2,2,2,3,2,2/11,11,9,9,9,9,9"
+      ],
+      "files": {
+        "cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+        "cal_C_rx.memh": "b98acde93c19fd0b2bba77675aff5ba616242a8d628970bcf4b6e7419b0802c1",
+        "cal_K_tx.memh": "83156922acad455546216cf792c28c1bc67c6e5ba82ce541e3540507fed47aaa",
+        "cal_K_rx.memh": "594ac07db05340aa7ba4b8811e0a0b3fe8466ba2838efc05d46f1bddc92f489f",
+        "txdp.svh": "af8f8cd8c044030e433169f5b4f5cb4c6a83cf071fe74ea90f57c8e0b9cb3fc6"
+      },
+      "legacy_params_equal": true,
+      "additive_parameters": {
+        "localparam integer P_STATUS_DELAY": "0;",
+        "localparam integer P_ATTN_TX_SHIFT": "0;"
+      }
+    },
+    {
+      "case": "pair_phy9",
+      "args": [
+        "--c-real",
+        "1",
+        "--k-real",
+        "3",
+        "--phy",
+        "9"
+      ],
+      "files": {
+        "cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+        "cal_C_rx.memh": "4fdabdb7180920e9bd39fdc0ce05e7f2d6dc05d4a1b82e9baef9b6762902d2c7",
+        "cal_K_tx.memh": "474657ff6c4003239cd53a4402f9a5e2cf7bdf5436e7cee1d0dc9e56bdcd80c1",
+        "cal_K_rx.memh": "ab1a069e1a1caff49892b4f5c1cf5efd651a61455a7dee651c69ae5146a330a8",
+        "txdp.svh": "9b31433611554a65de152795f987abeec20c9e91759da33e61a89f448c5a12bc"
+      },
+      "legacy_params_equal": true,
+      "additive_parameters": {
+        "localparam integer P_STATUS_DELAY": "0;",
+        "localparam integer P_ATTN_TX_SHIFT": "0;"
+      }
+    },
+    {
+      "case": "pair_l0",
+      "args": [
+        "--c-real",
+        "1",
+        "--k-real",
+        "3",
+        "--layer",
+        "L0"
+      ],
+      "files": {
+        "cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+        "cal_C_rx.memh": "bdc23c871dcb166f00042da7f75a137614f081d3c30206188fdee7d9f270075b",
+        "cal_K_tx.memh": "83156922acad455546216cf792c28c1bc67c6e5ba82ce541e3540507fed47aaa",
+        "cal_K_rx.memh": "aa899c5f41ec081bde5f4146faa7244f4b15ce2125e8a269f0f7dfc5b7c20e24",
+        "txdp.svh": "9b31433611554a65de152795f987abeec20c9e91759da33e61a89f448c5a12bc"
+      },
+      "legacy_params_equal": true,
+      "additive_parameters": {
+        "localparam integer P_STATUS_DELAY": "0;",
+        "localparam integer P_ATTN_TX_SHIFT": "0;"
+      }
+    },
+    {
+      "case": "abut",
+      "args": [
+        "--stages",
+        "0,0,0,0,0,0/0,0,0,0,0,0,0"
+      ],
+      "files": {
+        "cal_C_tx.memh": "8efa54119c9070b546dfbaa558075ec1c28e77e5f8ce5aca3ad0158b1aedb150",
+        "cal_C_rx.memh": "2fb99089a1ed264bd2962822447d0bdf812fd69ad2aee7759506420e06f0284a",
+        "cal_K_tx.memh": "30333bfc73a7436b85cb19f962e975f5e50a6e9d6f0af2eade13d0959daaf083",
+        "cal_K_rx.memh": "a8bb6b73a864c491f7bc9f084c15360b50c7857e840ad453fa2c0aa39dccb7d2",
+        "txdp.svh": "0f7a58d851ce2bbe9bbe7397f0fe5fdca9bf2600561c6850c613a2aaee2d40db"
+      },
+      "legacy_params_equal": true,
+      "additive_parameters": {
+        "localparam integer P_STATUS_DELAY": "0;",
+        "localparam integer P_ATTN_TX_SHIFT": "0;"
+      }
+    }
+  ]
+}
