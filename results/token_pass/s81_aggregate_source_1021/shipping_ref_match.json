@@ -19,8 +19,12 @@
  "build_launched": false,
  "qualified": false,
  "qualification": "CONDITIONAL_EXACT_42_FILE_FIXTURE_ONLY",
- "source_continuity": "UNVERIFIED",
+ "source_continuity": "UNVERIFIED_FULL_SHIPPING_ASSEMBLY",
  "source_equality_scope": "Historical selected nine-file core/wrapper comparison only; not proof of configured full closure or shipping instance continuity",
  "aggregate_selection_correction": "Original executed port_bind_cmd explicit RTL files must override index-discovered modules; failed aggregate closure selected wrong mem1r1w",
- "pending_active_cone_witness": true
+ "pending_active_cone_witness": false,
+ "memory_selection_dispute": "EXCLUDED_FROM_BOTH_ACTUAL_42_FILE_COMPILES_AND_GENERATED_INSTANCE_STATE",
+ "memory_exclusion_witness_sha256": "1cd15383a8e590133bb64e67d0e077942db18460892d5ef56be137e512600477",
+ "memory_exclusion_witness_source_commit": "3566cb19892459554b0977a081b18d82eab081d2",
+ "shipping_equivalence": false
 }
