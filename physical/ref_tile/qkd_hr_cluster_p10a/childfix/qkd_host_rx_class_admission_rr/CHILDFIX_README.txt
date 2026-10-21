@@ -1,0 +1,1 @@
+KV-HROOT10 10-20: copy of the CLOSED view physical/ref_tile/qkd_hr_core_rx/views/qkd_host_rx_class_admission_rr with the LEF re-processed by the CURRENT tools/hier_contract/abstract_pin_stub.py (committed LEF: 6 pins without a DRC-clean access point); libs/insertion unchanged. Parent-gate use only; owner should re-stub the main view.

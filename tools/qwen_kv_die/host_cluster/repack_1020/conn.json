@@ -1,0 +1,957 @@
+{
+ "pairs": {
+  "u_cdc_host|u_cdc_pc": 2,
+  "u_cdc_host|u_core_guard": 73,
+  "u_cdc_host|u_core_order": 3,
+  "u_cdc_host|u_core_peer": 2,
+  "u_cdc_host|u_core_prompt": 2,
+  "u_cdc_host|u_core_queue": 550,
+  "u_cdc_host|u_core_tx": 68,
+  "u_cdc_host|u_ingest_qm": 589,
+  "u_cdc_host|u_rank__u_control__u_packet__u_rx": 2,
+  "u_cdc_pc|u_core_guard": 6,
+  "u_cdc_pc|u_core_order": 2,
+  "u_cdc_pc|u_core_peer": 1062,
+  "u_cdc_pc|u_core_prompt": 2,
+  "u_cdc_pc|u_core_queue": 2,
+  "u_cdc_pc|u_core_tx": 2,
+  "u_cdc_pc|u_ingest_qm": 2,
+  "u_cdc_pc|u_rank__u_control__u_packet__u_rx": 2,
+  "u_core_guard|u_core_order": 9,
+  "u_core_guard|u_core_peer": 598,
+  "u_core_guard|u_core_prompt": 349,
+  "u_core_guard|u_core_queue": 59,
+  "u_core_guard|u_core_tx": 68,
+  "u_core_guard|u_ingest_qm": 3,
+  "u_core_guard|u_rank__u_control__u_packet__u_rx": 25,
+  "u_core_order|u_core_peer": 2,
+  "u_core_order|u_core_prompt": 2,
+  "u_core_order|u_core_queue": 135,
+  "u_core_order|u_core_tx": 2,
+  "u_core_order|u_ingest_qm": 293,
+  "u_core_order|u_rank__u_control__u_packet__u_rx": 2,
+  "u_core_peer|u_core_prompt": 2092,
+  "u_core_peer|u_core_queue": 102,
+  "u_core_peer|u_core_tx": 1046,
+  "u_core_peer|u_ingest_qm": 2,
+  "u_core_peer|u_rank__u_control__u_packet__u_rx": 519,
+  "u_core_prompt|u_core_queue": 4,
+  "u_core_prompt|u_core_tx": 517,
+  "u_core_prompt|u_ingest_qm": 2,
+  "u_core_prompt|u_rank__u_control__u_packet__u_rx": 1049,
+  "u_core_queue|u_core_tx": 2,
+  "u_core_queue|u_ingest_qm": 2,
+  "u_core_queue|u_rank__u_control__u_packet__u_rx": 522,
+  "u_core_tx|u_ingest_qm": 2,
+  "u_core_tx|u_rank__u_control__u_packet__u_rx": 50,
+  "u_ingest_qm|u_rank__u_control__u_packet__u_rx": 2,
+  "u_cdc_host|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_cdc_host|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_cdc_host|u_rank__u_phy__u_pad": 1,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_0___u_slice": 131,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_1___u_slice": 130,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_2___u_slice": 130,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_3___u_slice": 130,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_4___u_slice": 36,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_5___u_slice": 2,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_6___u_slice": 2,
+  "u_cdc_pc|u_rank__u_adapter__g_slice_7___u_slice": 2,
+  "u_cdc_pc|u_rank__u_phy__u_pad": 550,
+  "u_core_guard|u_rank__u_adapter__g_slice_0___u_slice": 2,
+  "u_core_guard|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_core_guard|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_core_guard|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_core_guard|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_core_guard|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_core_guard|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_core_guard|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_core_guard|u_rank__u_phy__u_pad": 2,
+  "u_core_order|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_core_order|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_core_order|u_rank__u_phy__u_pad": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_core_peer|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_core_peer|u_rank__u_phy__u_pad": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_core_prompt|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_core_prompt|u_rank__u_phy__u_pad": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_core_queue|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_core_queue|u_rank__u_phy__u_pad": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_core_tx|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_core_tx|u_rank__u_phy__u_pad": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_0___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_1___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_2___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_3___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_4___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_5___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_6___u_slice": 1,
+  "u_ingest_qm|u_rank__u_adapter__g_slice_7___u_slice": 1,
+  "u_ingest_qm|u_rank__u_phy__u_pad": 1,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_1___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_2___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_3___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_4___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_5___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_6___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_0___u_slice|u_rank__u_phy__u_pad": 131,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_adapter__g_slice_2___u_slice": 24,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_adapter__g_slice_3___u_slice": 24,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_adapter__g_slice_4___u_slice": 24,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_adapter__g_slice_5___u_slice": 24,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_adapter__g_slice_6___u_slice": 24,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_1___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_adapter__g_slice_3___u_slice": 24,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_adapter__g_slice_4___u_slice": 24,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_adapter__g_slice_5___u_slice": 24,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_adapter__g_slice_6___u_slice": 24,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_2___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_adapter__g_slice_3___u_slice|u_rank__u_adapter__g_slice_4___u_slice": 24,
+  "u_rank__u_adapter__g_slice_3___u_slice|u_rank__u_adapter__g_slice_5___u_slice": 24,
+  "u_rank__u_adapter__g_slice_3___u_slice|u_rank__u_adapter__g_slice_6___u_slice": 24,
+  "u_rank__u_adapter__g_slice_3___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_3___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_3___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_adapter__g_slice_4___u_slice|u_rank__u_adapter__g_slice_5___u_slice": 24,
+  "u_rank__u_adapter__g_slice_4___u_slice|u_rank__u_adapter__g_slice_6___u_slice": 24,
+  "u_rank__u_adapter__g_slice_4___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_4___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_4___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_adapter__g_slice_5___u_slice|u_rank__u_adapter__g_slice_6___u_slice": 24,
+  "u_rank__u_adapter__g_slice_5___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_5___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_5___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_adapter__g_slice_6___u_slice|u_rank__u_adapter__g_slice_7___u_slice": 24,
+  "u_rank__u_adapter__g_slice_6___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_6___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_adapter__g_slice_7___u_slice|u_rank__u_control__u_packet__u_rx": 1,
+  "u_rank__u_adapter__g_slice_7___u_slice|u_rank__u_phy__u_pad": 130,
+  "u_rank__u_control__u_packet__u_rx|u_rank__u_phy__u_pad": 1
+ },
+ "ports": {
+  "ck_core": {
+   "u_cdc_host": 1,
+   "u_cdc_pc": 1,
+   "u_core_guard": 1,
+   "u_core_order": 1,
+   "u_core_peer": 1,
+   "u_core_prompt": 1,
+   "u_core_queue": 1,
+   "u_core_tx": 1,
+   "u_ingest_qm": 1,
+   "u_rank__u_control__u_packet__u_rx": 1
+  },
+  "ck_host": {
+   "u_cdc_host": 1,
+   "u_ingest_qm": 1
+  },
+  "host_rst_n": {
+   "u_cdc_host": 1,
+   "u_cdc_pc": 1,
+   "u_core_guard": 1,
+   "u_core_order": 1,
+   "u_core_peer": 1,
+   "u_core_prompt": 1,
+   "u_core_queue": 1,
+   "u_core_tx": 1,
+   "u_ingest_qm": 1,
+   "u_rank__u_adapter__g_slice_0___u_slice": 1,
+   "u_rank__u_adapter__g_slice_1___u_slice": 1,
+   "u_rank__u_adapter__g_slice_2___u_slice": 1,
+   "u_rank__u_adapter__g_slice_3___u_slice": 1,
+   "u_rank__u_adapter__g_slice_4___u_slice": 1,
+   "u_rank__u_adapter__g_slice_5___u_slice": 1,
+   "u_rank__u_adapter__g_slice_6___u_slice": 1,
+   "u_rank__u_adapter__g_slice_7___u_slice": 1,
+   "u_rank__u_control__u_packet__u_rx": 1,
+   "u_rank__u_phy__u_pad": 1
+  },
+  "service_faults": {
+   "u_cdc_host": 6,
+   "u_core_guard": 25,
+   "u_cdc_pc": 4,
+   "u_core_order": 6,
+   "u_rank__u_control__u_packet__u_rx": 1,
+   "u_core_tx": 1,
+   "u_core_peer": 1,
+   "u_core_prompt": 1,
+   "u_ingest_qm": 1,
+   "u_rank__u_phy__u_pad": 1,
+   "u_core_queue": 1,
+   "u_rank__u_adapter__g_slice_0___u_slice": 1
+  },
+  "ck_phy_fam": {
+   "u_cdc_pc": 1,
+   "u_rank__u_phy__u_pad": 1
+  },
+  "coordinator_fault": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "ctrl_completion_fault": {
+   "u_core_guard": 1
+  },
+  "die_id": {
+   "u_core_guard": 3,
+   "u_core_peer": 3,
+   "u_core_prompt": 3,
+   "u_rank__u_control__u_packet__u_rx": 3
+  },
+  "est": {
+   "u_core_guard": 1,
+   "u_core_queue": 13
+  },
+  "hc": {
+   "u_core_guard": 182,
+   "u_core_peer": 39,
+   "u_core_prompt": 143
+  },
+  "host_recovery_clear": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "link_physical_fault": {
+   "u_core_guard": 1
+  },
+  "local_service_epoch": {
+   "u_core_guard": 16,
+   "u_core_peer": 16
+  },
+  "local_tk": {
+   "u_core_guard": 93
+  },
+  "native_collective_busy": {
+   "u_core_guard": 1
+  },
+  "native_collective_drained": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "native_host_drained": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "native_kv_drained": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "native_kv_flush": {
+   "u_core_guard": 1
+  },
+  "native_pr": {
+   "u_core_guard": 143
+  },
+  "native_vm_drained": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "peer_protocol_fault": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "pll_locked": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "por_n": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "program_ready": {
+   "u_core_guard": 1,
+   "u_core_peer": 1,
+   "u_core_prompt": 1
+  },
+  "record_fault": {
+   "u_core_guard": 1,
+   "u_core_prompt": 1
+  },
+  "service_abort": {
+   "u_core_guard": 1,
+   "u_core_prompt": 1
+  },
+  "service_diag_raw": {
+   "u_core_guard": 26,
+   "u_core_prompt": 26
+  },
+  "service_ready": {
+   "u_core_guard": 1,
+   "u_core_peer": 1
+  },
+  "service_status": {
+   "u_core_guard": 32,
+   "u_core_prompt": 32
+  },
+  "slice_boot_fault": {
+   "u_core_guard": 128
+  },
+  "token_epoch": {
+   "u_core_guard": 16,
+   "u_core_peer": 16,
+   "u_core_prompt": 16
+  },
+  "token_epoch_valid": {
+   "u_core_guard": 1,
+   "u_core_peer": 1,
+   "u_core_prompt": 1
+  },
+  "transport_fault": {
+   "u_core_guard": 8
+  },
+  "chain_a": {
+   "u_core_order": 128
+  },
+  "chain_c": {
+   "u_core_order": 128
+  },
+  "chain_f": {
+   "u_core_order": 1164
+  },
+  "chain_fault_i": {
+   "u_core_order": 4
+  },
+  "hb": {
+   "u_core_order": 283
+  },
+  "hb_cr": {
+   "u_core_order": 1
+  },
+  "host_upstream_quiet": {
+   "u_core_order": 2,
+   "u_core_queue": 1,
+   "u_ingest_qm": 3
+  },
+  "issued": {
+   "u_core_order": 32,
+   "u_core_queue": 32
+  },
+  "landed": {
+   "u_core_order": 32,
+   "u_core_queue": 32
+  },
+  "physical_ack_n": {
+   "u_core_order": 8
+  },
+  "slice_ack": {
+   "u_core_order": 128
+  },
+  "abort_drained": {
+   "u_core_peer": 4
+  },
+  "accepted_ranks": {
+   "u_core_peer": 8
+  },
+  "cohort_gen": {
+   "u_core_peer": 2
+  },
+  "cohort_tag": {
+   "u_core_peer": 59
+  },
+  "dispatch_valid": {
+   "u_core_peer": 1
+  },
+  "dispatched": {
+   "u_core_peer": 1
+  },
+  "engine_result_cause": {
+   "u_core_peer": 4
+  },
+  "engine_result_cr": {
+   "u_core_peer": 1
+  },
+  "engine_result_cycles": {
+   "u_core_peer": 32
+  },
+  "engine_result_done": {
+   "u_core_peer": 1
+  },
+  "engine_result_fault": {
+   "u_core_peer": 1
+  },
+  "engine_result_gen": {
+   "u_core_peer": 2
+  },
+  "engine_result_tag": {
+   "u_core_peer": 59
+  },
+  "engine_result_token": {
+   "u_core_peer": 18
+  },
+  "engine_result_v": {
+   "u_core_peer": 1
+  },
+  "engine_result_value": {
+   "u_core_peer": 32
+  },
+  "host_link_reset_req": {
+   "u_core_peer": 1,
+   "u_core_prompt": 1
+  },
+  "ingest_permission": {
+   "u_core_peer": 1,
+   "u_core_prompt": 1,
+   "u_core_queue": 1
+  },
+  "local_kst": {
+   "u_core_peer": 10
+  },
+  "native_admit_ready": {
+   "u_core_peer": 1
+  },
+  "native_link_reset_seen": {
+   "u_core_peer": 1
+  },
+  "native_links_drained": {
+   "u_core_peer": 1
+  },
+  "native_retrained": {
+   "u_core_peer": 1
+  },
+  "package_abort": {
+   "u_core_peer": 1,
+   "u_core_prompt": 1
+  },
+  "participant_pos": {
+   "u_core_peer": 144
+  },
+  "participant_token": {
+   "u_core_peer": 144
+  },
+  "participant_trace": {
+   "u_core_peer": 256
+  },
+  "program_consensus": {
+   "u_core_peer": 1
+  },
+  "boot_image_digest": {
+   "u_core_peer": 64,
+   "u_core_prompt": 64
+  },
+  "program_digest": {
+   "u_core_peer": 64,
+   "u_core_prompt": 64
+  },
+  "program_epoch": {
+   "u_core_peer": 16,
+   "u_core_prompt": 16
+  },
+  "boot_image_epoch": {
+   "u_core_peer": 16,
+   "u_core_prompt": 16
+  },
+  "recovery_complete": {
+   "u_core_peer": 1
+  },
+  "seen": {
+   "u_core_peer": 8
+  },
+  "slice_boot_done": {
+   "u_core_peer": 128
+  },
+  "slice_boot_ok": {
+   "u_core_peer": 128
+  },
+  "available": {
+   "u_core_prompt": 1
+  },
+  "boot_go": {
+   "u_core_prompt": 1
+  },
+  "boot_image_fault": {
+   "u_core_prompt": 1
+  },
+  "boot_image_ready": {
+   "u_core_prompt": 1
+  },
+  "boot_image_target": {
+   "u_core_prompt": 4
+  },
+  "boot_pr": {
+   "u_core_prompt": 143
+  },
+  "crom_fault": {
+   "u_core_prompt": 1
+  },
+  "die_rst_n": {
+   "u_core_prompt": 1
+  },
+  "execution_active": {
+   "u_core_prompt": 1
+  },
+  "fault_src": {
+   "u_core_prompt": 32
+  },
+  "hbm_rst_n": {
+   "u_core_prompt": 1
+  },
+  "host_interface_idle": {
+   "u_core_prompt": 1
+  },
+  "irq": {
+   "u_core_prompt": 1,
+   "u_core_tx": 1
+  },
+  "link_rst_n": {
+   "u_core_prompt": 1
+  },
+  "link_up": {
+   "u_core_prompt": 2
+  },
+  "program_auth_digest": {
+   "u_core_prompt": 64
+  },
+  "program_auth_epoch": {
+   "u_core_prompt": 16
+  },
+  "program_auth_v": {
+   "u_core_prompt": 1
+  },
+  "program_authorized_footer64": {
+   "u_core_prompt": 64
+  },
+  "program_authorized_footer_v": {
+   "u_core_prompt": 1
+  },
+  "program_begin_v": {
+   "u_core_prompt": 1
+  },
+  "program_expected_dw": {
+   "u_core_prompt": 4
+  },
+  "program_expected_pw": {
+   "u_core_prompt": 11
+  },
+  "record_rx": {
+   "u_core_prompt": 548
+  },
+  "record_rx_v": {
+   "u_core_prompt": 1
+  },
+  "record_send_kind": {
+   "u_core_prompt": 2
+  },
+  "record_tx": {
+   "u_core_prompt": 548
+  },
+  "record_tx_observed_v": {
+   "u_core_prompt": 1
+  },
+  "record_tx_v": {
+   "u_core_prompt": 1
+  },
+  "record_witness_slot": {
+   "u_core_prompt": 1
+  },
+  "source_cr": {
+   "u_core_prompt": 1
+  },
+  "static_setup_ready": {
+   "u_core_prompt": 1
+  },
+  "sys_ready": {
+   "u_core_prompt": 1
+  },
+  "marker": {
+   "u_core_queue": 66
+  },
+  "marker_v": {
+   "u_core_queue": 1
+  },
+  "ck_ingest": {
+   "u_ingest_qm": 1
+  },
+  "ck_phy": {
+   "u_rank__u_adapter__g_slice_0___u_slice": 1,
+   "u_rank__u_adapter__g_slice_1___u_slice": 1,
+   "u_rank__u_adapter__g_slice_2___u_slice": 1,
+   "u_rank__u_adapter__g_slice_3___u_slice": 1,
+   "u_rank__u_adapter__g_slice_4___u_slice": 1,
+   "u_rank__u_adapter__g_slice_5___u_slice": 1,
+   "u_rank__u_adapter__g_slice_6___u_slice": 1,
+   "u_rank__u_adapter__g_slice_7___u_slice": 1
+  },
+  "phy_rx_flit": {
+   "u_rank__u_adapter__g_slice_0___u_slice": 147,
+   "u_rank__u_adapter__g_slice_1___u_slice": 147,
+   "u_rank__u_adapter__g_slice_2___u_slice": 147,
+   "u_rank__u_adapter__g_slice_3___u_slice": 147,
+   "u_rank__u_adapter__g_slice_4___u_slice": 147,
+   "u_rank__u_adapter__g_slice_5___u_slice": 147,
+   "u_rank__u_adapter__g_slice_6___u_slice": 147,
+   "u_rank__u_adapter__g_slice_7___u_slice": 147
+  },
+  "phy_rx_v": {
+   "u_rank__u_adapter__g_slice_0___u_slice": 1,
+   "u_rank__u_adapter__g_slice_1___u_slice": 1,
+   "u_rank__u_adapter__g_slice_2___u_slice": 1,
+   "u_rank__u_adapter__g_slice_3___u_slice": 1,
+   "u_rank__u_adapter__g_slice_4___u_slice": 1,
+   "u_rank__u_adapter__g_slice_5___u_slice": 1,
+   "u_rank__u_adapter__g_slice_6___u_slice": 1,
+   "u_rank__u_adapter__g_slice_7___u_slice": 1
+  },
+  "phy_tx_flit": {
+   "u_rank__u_adapter__g_slice_0___u_slice": 147,
+   "u_rank__u_adapter__g_slice_1___u_slice": 128,
+   "u_rank__u_adapter__g_slice_2___u_slice": 128,
+   "u_rank__u_adapter__g_slice_3___u_slice": 128,
+   "u_rank__u_adapter__g_slice_4___u_slice": 128,
+   "u_rank__u_adapter__g_slice_5___u_slice": 128,
+   "u_rank__u_adapter__g_slice_6___u_slice": 128,
+   "u_rank__u_adapter__g_slice_7___u_slice": 128
+  },
+  "phy_up": {
+   "u_rank__u_adapter__g_slice_0___u_slice": 1,
+   "u_rank__u_adapter__g_slice_1___u_slice": 1,
+   "u_rank__u_adapter__g_slice_2___u_slice": 1,
+   "u_rank__u_adapter__g_slice_3___u_slice": 1,
+   "u_rank__u_adapter__g_slice_4___u_slice": 1,
+   "u_rank__u_adapter__g_slice_5___u_slice": 1,
+   "u_rank__u_adapter__g_slice_6___u_slice": 1,
+   "u_rank__u_adapter__g_slice_7___u_slice": 1
+  },
+  "phy_tx_v": {
+   "u_rank__u_adapter__g_slice_0___u_slice": 1
+  },
+  "host_admission_open": {
+   "u_rank__u_control__u_packet__u_rx": 1
+  },
+  "host_deferred": {
+   "u_rank__u_control__u_packet__u_rx": 1
+  },
+  "host_launch_quiet": {
+   "u_rank__u_control__u_packet__u_rx": 1
+  },
+  "native_reserved": {
+   "u_rank__u_control__u_packet__u_rx": 1
+  },
+  "ownership_valid": {
+   "u_rank__u_control__u_packet__u_rx": 1
+  }
+ },
+ "widths": {
+  "ck_core": 1,
+  "ck_host": 1,
+  "ck_ingest": 1,
+  "ck_phy_fam": 1,
+  "ck_phy": 8,
+  "host_upstream_quiet": 6,
+  "static_setup_ready": 1,
+  "boot_pr": 143,
+  "boot_image_target": 4,
+  "boot_image_ready": 1,
+  "boot_image_fault": 1,
+  "boot_image_epoch": 16,
+  "boot_image_digest": 64,
+  "native_reserved": 1,
+  "ownership_valid": 1,
+  "host_admission_open": 1,
+  "host_launch_quiet": 1,
+  "host_deferred": 1,
+  "package_abort": 1,
+  "abort_drained": 4,
+  "token_epoch_valid": 1,
+  "token_epoch": 16,
+  "native_pr": 143,
+  "native_kv_drained": 1,
+  "native_vm_drained": 1,
+  "native_collective_drained": 1,
+  "native_host_drained": 1,
+  "native_collective_busy": 1,
+  "native_kv_flush": 1,
+  "service_ready": 1,
+  "service_abort": 1,
+  "ingest_permission": 1,
+  "local_service_epoch": 16,
+  "service_diag_raw": 26,
+  "service_status": 32,
+  "die_id": 3,
+  "por_n": 1,
+  "pll_locked": 1,
+  "phy_up": 1,
+  "phy_rx_v": 1,
+  "phy_rx_flit": 1043,
+  "phy_tx_v": 1,
+  "phy_tx_flit": 1043,
+  "link_up": 2,
+  "transport_fault": 8,
+  "link_physical_fault": 1,
+  "crom_fault": 1,
+  "local_tk": 93,
+  "local_kst": 10,
+  "record_send_kind": 2,
+  "record_witness_slot": 1,
+  "record_rx_v": 1,
+  "record_rx": 548,
+  "record_tx_v": 1,
+  "record_tx_observed_v": 1,
+  "record_tx": 548,
+  "record_fault": 1,
+  "execution_active": 1,
+  "program_ready": 1,
+  "program_epoch": 16,
+  "program_digest": 64,
+  "program_authorized_footer_v": 1,
+  "program_authorized_footer64": 64,
+  "program_begin_v": 1,
+  "program_auth_v": 1,
+  "program_expected_pw": 11,
+  "program_expected_dw": 4,
+  "program_auth_epoch": 16,
+  "program_auth_digest": 64,
+  "hc": 182,
+  "seen": 8,
+  "irq": 1,
+  "host_rst_n": 1,
+  "link_rst_n": 1,
+  "hbm_rst_n": 1,
+  "boot_go": 1,
+  "die_rst_n": 1,
+  "sys_ready": 1,
+  "fault_src": 32,
+  "source_cr": 1,
+  "available": 1,
+  "hb": 283,
+  "hb_cr": 1,
+  "est": 13,
+  "chain_f": 1164,
+  "chain_c": 128,
+  "chain_a": 128,
+  "chain_fault_i": 4,
+  "slice_ack": 128,
+  "slice_boot_done": 128,
+  "slice_boot_ok": 128,
+  "slice_boot_fault": 128,
+  "ctrl_completion_fault": 1,
+  "marker_v": 1,
+  "marker": 66,
+  "issued": 32,
+  "landed": 32,
+  "physical_ack_n": 8,
+  "service_faults": 25,
+  "native_admit_ready": 1,
+  "native_links_drained": 1,
+  "native_link_reset_seen": 1,
+  "native_retrained": 1,
+  "peer_protocol_fault": 1,
+  "dispatch_valid": 1,
+  "dispatched": 1,
+  "cohort_tag": 59,
+  "cohort_gen": 2,
+  "accepted_ranks": 8,
+  "participant_trace": 256,
+  "participant_token": 144,
+  "participant_pos": 144,
+  "engine_result_v": 1,
+  "engine_result_tag": 59,
+  "engine_result_gen": 2,
+  "engine_result_done": 1,
+  "engine_result_fault": 1,
+  "engine_result_cause": 4,
+  "engine_result_token": 18,
+  "engine_result_value": 32,
+  "engine_result_cycles": 32,
+  "engine_result_cr": 1,
+  "program_consensus": 1,
+  "coordinator_fault": 1,
+  "recovery_complete": 1,
+  "host_link_reset_req": 1,
+  "host_recovery_clear": 1,
+  "host_interface_idle": 1
+ },
+ "dirs": {
+  "ck_core": "input",
+  "ck_host": "input",
+  "ck_ingest": "input",
+  "ck_phy_fam": "input",
+  "ck_phy": "input",
+  "host_upstream_quiet": "output",
+  "static_setup_ready": "input",
+  "boot_pr": "output",
+  "boot_image_target": "output",
+  "boot_image_ready": "output",
+  "boot_image_fault": "output",
+  "boot_image_epoch": "output",
+  "boot_image_digest": "output",
+  "native_reserved": "input",
+  "ownership_valid": "input",
+  "host_admission_open": "output",
+  "host_launch_quiet": "output",
+  "host_deferred": "output",
+  "package_abort": "output",
+  "abort_drained": "input",
+  "token_epoch_valid": "output",
+  "token_epoch": "output",
+  "native_pr": "output",
+  "native_kv_drained": "input",
+  "native_vm_drained": "input",
+  "native_collective_drained": "input",
+  "native_host_drained": "input",
+  "native_collective_busy": "input",
+  "native_kv_flush": "input",
+  "service_ready": "output",
+  "service_abort": "output",
+  "ingest_permission": "output",
+  "local_service_epoch": "output",
+  "service_diag_raw": "output",
+  "service_status": "output",
+  "die_id": "input",
+  "por_n": "input",
+  "pll_locked": "input",
+  "phy_up": "input",
+  "phy_rx_v": "input",
+  "phy_rx_flit": "input",
+  "phy_tx_v": "output",
+  "phy_tx_flit": "output",
+  "link_up": "input",
+  "transport_fault": "input",
+  "link_physical_fault": "input",
+  "crom_fault": "input",
+  "local_tk": "input",
+  "local_kst": "input",
+  "record_send_kind": "input",
+  "record_witness_slot": "input",
+  "record_rx_v": "input",
+  "record_rx": "input",
+  "record_tx_v": "output",
+  "record_tx_observed_v": "output",
+  "record_tx": "output",
+  "record_fault": "output",
+  "execution_active": "input",
+  "program_ready": "output",
+  "program_epoch": "output",
+  "program_digest": "output",
+  "program_authorized_footer_v": "output",
+  "program_authorized_footer64": "output",
+  "program_begin_v": "output",
+  "program_auth_v": "output",
+  "program_expected_pw": "output",
+  "program_expected_dw": "output",
+  "program_auth_epoch": "output",
+  "program_auth_digest": "output",
+  "hc": "output",
+  "seen": "output",
+  "irq": "output",
+  "host_rst_n": "output",
+  "link_rst_n": "output",
+  "hbm_rst_n": "output",
+  "boot_go": "output",
+  "die_rst_n": "output",
+  "sys_ready": "output",
+  "fault_src": "output",
+  "source_cr": "output",
+  "available": "output",
+  "hb": "output",
+  "hb_cr": "input",
+  "est": "input",
+  "chain_f": "output",
+  "chain_c": "input",
+  "chain_a": "input",
+  "chain_fault_i": "input",
+  "slice_ack": "input",
+  "slice_boot_done": "input",
+  "slice_boot_ok": "input",
+  "slice_boot_fault": "input",
+  "ctrl_completion_fault": "input",
+  "marker_v": "output",
+  "marker": "output",
+  "issued": "output",
+  "landed": "output",
+  "physical_ack_n": "output",
+  "service_faults": "output",
+  "native_admit_ready": "input",
+  "native_links_drained": "input",
+  "native_link_reset_seen": "input",
+  "native_retrained": "input",
+  "peer_protocol_fault": "output",
+  "dispatch_valid": "output",
+  "dispatched": "output",
+  "cohort_tag": "output",
+  "cohort_gen": "output",
+  "accepted_ranks": "output",
+  "participant_trace": "output",
+  "participant_token": "output",
+  "participant_pos": "output",
+  "engine_result_v": "input",
+  "engine_result_tag": "input",
+  "engine_result_gen": "input",
+  "engine_result_done": "input",
+  "engine_result_fault": "input",
+  "engine_result_cause": "input",
+  "engine_result_token": "input",
+  "engine_result_value": "input",
+  "engine_result_cycles": "input",
+  "engine_result_cr": "output",
+  "program_consensus": "output",
+  "coordinator_fault": "output",
+  "recovery_complete": "output",
+  "host_link_reset_req": "output",
+  "host_recovery_clear": "output",
+  "host_interface_idle": "output"
+ },
+ "types": {
+  "u_cdc_host": "qkd_hr_cdc_host",
+  "u_cdc_pc": "qkd_hr_cdc_pc",
+  "u_core_guard": "qkd_hr_core_guard",
+  "u_core_order": "qkd_hr_core_order",
+  "u_core_peer": "qkd_hr_core_peer",
+  "u_core_prompt": "qkd_hr_core_prompt",
+  "u_core_queue": "qkd_hr_core_queue",
+  "u_core_tx": "qkd_hr_core_tx",
+  "u_ingest_qm": "qkd_hr_ingest_qm",
+  "u_rank__u_adapter__g_slice_0___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_1___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_2___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_3___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_4___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_5___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_6___u_slice": "qfd_link_adp128",
+  "u_rank__u_adapter__g_slice_7___u_slice": "qfd_link_adp128",
+  "u_rank__u_control__u_packet__u_rx": "qkd_host_rx_class_admission_rr",
+  "u_rank__u_phy__u_pad": "qkd_host_rx_pad5"
+ }
+}

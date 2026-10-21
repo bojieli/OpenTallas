@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_hr_cluster_e",
+ "enable": false,
+ "reason": "wires-only parent: every child registers its own pins; owner 10-20 09:05 pin regs only at region crossings (the CDC leaves) and wires > 405 um"
+}

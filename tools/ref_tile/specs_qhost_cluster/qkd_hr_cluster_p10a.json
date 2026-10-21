@@ -1,0 +1,1327 @@
+{
+ "_status": "KV-HROOT10 10-20: CRITICAL parent qkd_host_root (qkd_hr_cluster) REPACK, DIAGNOSTIC pathfinding gate on closed + stand-in leaf views (peer 518.4 sq slot, prompt 475.2x432, ingest_qm 345.6 sq); NO REVIEW.json / NO submit (critical prefix) -> lanes/COORD-REVIEW-QUEUE.md",
+ "name": "qkd_hr_cluster_p10a",
+ "top": "qkd_hr_cluster_e",
+ "kind": "cluster",
+ "diagnostic": true,
+ "recipe": 4,
+ "sources": [
+  "rtl/qwen_sys/host_cluster_hroot10_1020/qkd_hr_cluster_e.v"
+ ],
+ "clock": "entries",
+ "clock_port": "ck_core__core_peer",
+ "clock_ports": [
+  "ck_core__core_peer",
+  "ck_core__cdc_host",
+  "ck_core__cdc_pc",
+  "ck_core__control_packet_u_rx",
+  "ck_core__core_guard",
+  "ck_core__core_order",
+  "ck_core__core_prompt",
+  "ck_core__core_queue",
+  "ck_core__core_tx",
+  "ck_core__ingest_qm",
+  "ck_host__cdc_host",
+  "ck_host__ingest_qm",
+  "ck_ingest__ingest_qm",
+  "ck_phy_fam__cdc_pc",
+  "ck_phy_fam__phy_pad",
+  "ck_phy[0]",
+  "ck_phy[1]",
+  "ck_phy[2]",
+  "ck_phy[3]",
+  "ck_phy[4]",
+  "ck_phy[5]",
+  "ck_phy[6]",
+  "ck_phy[7]"
+ ],
+ "clock_note": "entries cluster (ref_tile contract): one parent clock entry port per hard-child clock pin (RTL qkd_hr_cluster_e = exact text transform of qkd_hr_cluster; tying each family's entries gives the original, wrapper qkd_hr_cluster_e_tied); the die/region clock delivers every entry; no parent clock cells. Families asynchronous: see clock_domain_note.",
+ "reset_ports": [],
+ "outline": {
+  "w": 1339.2,
+  "h": 1339.2,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_hr_cdc_host/views/qkd_hr_cdc_host",
+   "count": 1,
+   "inst": "u_cdc_host",
+   "at": [
+    475.2,
+    518.4
+   ],
+   "orient": "R180",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc",
+   "count": 1,
+   "inst": "u_cdc_pc",
+   "at": [
+    907.2,
+    604.8
+   ],
+   "orient": "MY",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard",
+   "count": 1,
+   "inst": "u_core_guard",
+   "at": [
+    648.0,
+    1166.4
+   ],
+   "orient": "R180",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order",
+   "count": 1,
+   "inst": "u_core_order",
+   "at": [
+    43.2,
+    648.0
+   ],
+   "orient": "R180",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_cluster_p10a/standin/qkd_hr_core_peer",
+   "count": 1,
+   "inst": "u_core_peer",
+   "at": [
+    777.6,
+    777.6
+   ],
+   "orient": "MY",
+   "at_exact": true,
+   "state": "STAND-IN (no closed view)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_cluster_p10a/standin/qkd_hr_core_prompt",
+   "count": 1,
+   "inst": "u_core_prompt",
+   "at": [
+    129.6,
+    864.0
+   ],
+   "orient": "MY",
+   "at_exact": true,
+   "state": "STAND-IN (no closed view)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_cluster_p10a/childfix/qkd_hr_core_queue",
+   "count": 1,
+   "inst": "u_core_queue",
+   "at": [
+    388.8,
+    691.2
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx",
+   "count": 1,
+   "inst": "u_core_tx",
+   "at": [
+    648.0,
+    864.0
+   ],
+   "orient": "MY",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_cluster_p10a/standin/qkd_hr_ingest_qm",
+   "count": 1,
+   "inst": "u_ingest_qm",
+   "at": [
+    86.4,
+    259.2
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "STAND-IN (no closed view)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_0___u_slice",
+   "at": [
+    1080.0,
+    604.8
+   ],
+   "orient": "R0",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_1___u_slice",
+   "at": [
+    1080.0,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_2___u_slice",
+   "at": [
+    820.8,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_3___u_slice",
+   "at": [
+    820.8,
+    345.6
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_4___u_slice",
+   "at": [
+    820.8,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_5___u_slice",
+   "at": [
+    1080.0,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_6___u_slice",
+   "at": [
+    1080.0,
+    86.4
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "count": 1,
+   "inst": "u_rank__u_adapter__g_slice_7___u_slice",
+   "at": [
+    820.8,
+    86.4
+   ],
+   "orient": "MX",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_cluster_p10a/childfix/qkd_host_rx_class_admission_rr",
+   "count": 1,
+   "inst": "u_rank__u_control__u_packet__u_rx",
+   "at": [
+    561.6,
+    691.2
+   ],
+   "orient": "MY",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  },
+  {
+   "view": "physical/ref_tile/qkd_hr_phy_pad/views/qkd_host_rx_pad5",
+   "count": 1,
+   "inst": "u_rank__u_phy__u_pad",
+   "at": [
+    1080.0,
+    345.6
+   ],
+   "orient": "MY",
+   "at_exact": true,
+   "state": "CLOSED view (origin/main)"
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "E": [
+   "abort_drained",
+   "accepted_ranks",
+   "cohort_gen",
+   "cohort_tag",
+   "dispatch_valid",
+   "dispatched",
+   "engine_result_cause",
+   "engine_result_cr",
+   "engine_result_cycles",
+   "engine_result_done",
+   "engine_result_fault",
+   "engine_result_gen",
+   "engine_result_tag",
+   "engine_result_token",
+   "engine_result_v",
+   "engine_result_value",
+   "ingest_permission",
+   "local_kst",
+   "native_admit_ready",
+   "native_link_reset_seen",
+   "native_links_drained",
+   "native_retrained",
+   "participant_pos",
+   "participant_token",
+   "participant_trace",
+   "phy_rx_flit",
+   "phy_rx_v",
+   "phy_tx_flit",
+   "phy_tx_v",
+   "phy_up",
+   "program_consensus",
+   "recovery_complete",
+   "seen",
+   "slice_boot_done",
+   "slice_boot_ok",
+   "ck_core__cdc_pc",
+   "ck_core__core_peer",
+   "ck_phy",
+   "ck_phy_fam__cdc_pc",
+   "ck_phy_fam__phy_pad"
+  ],
+  "N": [
+   "available",
+   "boot_go",
+   "boot_image_digest",
+   "boot_image_epoch",
+   "boot_image_fault",
+   "boot_image_ready",
+   "boot_image_target",
+   "boot_pr",
+   "coordinator_fault",
+   "crom_fault",
+   "ctrl_completion_fault",
+   "die_id",
+   "die_rst_n",
+   "execution_active",
+   "fault_src",
+   "hbm_rst_n",
+   "hc",
+   "host_admission_open",
+   "host_deferred",
+   "host_interface_idle",
+   "host_launch_quiet",
+   "host_link_reset_req",
+   "host_recovery_clear",
+   "irq",
+   "link_physical_fault",
+   "link_rst_n",
+   "link_up",
+   "local_service_epoch",
+   "local_tk",
+   "native_collective_busy",
+   "native_collective_drained",
+   "native_host_drained",
+   "native_kv_drained",
+   "native_kv_flush",
+   "native_pr",
+   "native_reserved",
+   "native_vm_drained",
+   "ownership_valid",
+   "package_abort",
+   "peer_protocol_fault",
+   "pll_locked",
+   "por_n",
+   "program_auth_digest",
+   "program_auth_epoch",
+   "program_auth_v",
+   "program_authorized_footer64",
+   "program_authorized_footer_v",
+   "program_begin_v",
+   "program_digest",
+   "program_epoch",
+   "program_expected_dw",
+   "program_expected_pw",
+   "program_ready",
+   "record_fault",
+   "record_rx",
+   "record_rx_v",
+   "record_send_kind",
+   "record_tx",
+   "record_tx_observed_v",
+   "record_tx_v",
+   "record_witness_slot",
+   "service_abort",
+   "service_diag_raw",
+   "service_faults",
+   "service_ready",
+   "service_status",
+   "slice_boot_fault",
+   "source_cr",
+   "static_setup_ready",
+   "sys_ready",
+   "token_epoch",
+   "token_epoch_valid",
+   "transport_fault",
+   "ck_core__control_packet_u_rx",
+   "ck_core__core_guard",
+   "ck_core__core_tx"
+  ],
+  "W": [
+   "chain_a",
+   "chain_c",
+   "chain_f",
+   "chain_fault_i",
+   "est",
+   "hb",
+   "hb_cr",
+   "host_rst_n",
+   "host_upstream_quiet",
+   "issued",
+   "landed",
+   "marker",
+   "marker_v",
+   "physical_ack_n",
+   "slice_ack",
+   "ck_core__cdc_host",
+   "ck_core__core_order",
+   "ck_core__core_prompt",
+   "ck_core__core_queue",
+   "ck_core__ingest_qm",
+   "ck_host__cdc_host",
+   "ck_host__ingest_qm",
+   "ck_ingest__ingest_qm"
+  ],
+  "S": [
+   "ck_phy"
+  ]
+ },
+ "pin_ranges": {
+  "abort_drained": [
+   1073.3,
+   1074.3
+  ],
+  "accepted_ranks": [
+   1073.8,
+   1075.8
+  ],
+  "available": [
+   203.33,
+   203.58
+  ],
+  "boot_go": [
+   203.16,
+   203.41
+  ],
+  "boot_image_digest": [
+   1007.2,
+   1023.2
+  ],
+  "boot_image_epoch": [
+   1006.53,
+   1010.53
+  ],
+  "boot_image_fault": [
+   202.99,
+   203.24
+  ],
+  "boot_image_ready": [
+   202.83,
+   203.08
+  ],
+  "boot_image_target": [
+   202.03,
+   203.03
+  ],
+  "boot_pr": [
+   163.91,
+   199.66
+  ],
+  "chain_a": [
+   793.24,
+   825.24
+  ],
+  "chain_c": [
+   772.15,
+   804.15
+  ],
+  "chain_f": [
+   502.54,
+   793.54
+  ],
+  "chain_fault_i": [
+   700.26,
+   802.74
+  ],
+  "cohort_gen": [
+   1075.38,
+   1075.88
+  ],
+  "cohort_tag": [
+   1125.67,
+   1140.42
+  ],
+  "coordinator_fault": [
+   751.11,
+   751.36
+  ],
+  "crom_fault": [
+   201.99,
+   202.24
+  ],
+  "ctrl_completion_fault": [
+   647.92,
+   648.17
+  ],
+  "die_id": [
+   755.58,
+   756.33
+  ],
+  "die_rst_n": [
+   201.83,
+   202.08
+  ],
+  "dispatch_valid": [
+   1075.76,
+   1076.01
+  ],
+  "dispatched": [
+   1075.92,
+   1076.17
+  ],
+  "engine_result_cause": [
+   1075.97,
+   1076.97
+  ],
+  "engine_result_cr": [
+   1076.76,
+   1077.01
+  ],
+  "engine_result_cycles": [
+   1056.8,
+   1064.8
+  ],
+  "engine_result_done": [
+   1076.92,
+   1077.17
+  ],
+  "engine_result_fault": [
+   1077.09,
+   1077.34
+  ],
+  "engine_result_gen": [
+   1077.22,
+   1077.72
+  ],
+  "engine_result_tag": [
+   1135.51,
+   1150.26
+  ],
+  "engine_result_token": [
+   1068.05,
+   1072.55
+  ],
+  "engine_result_v": [
+   1077.59,
+   1077.84
+  ],
+  "engine_result_value": [
+   1062.13,
+   1070.13
+  ],
+  "est": [
+   809.52,
+   812.77
+  ],
+  "execution_active": [
+   201.66,
+   201.91
+  ],
+  "fault_src": [
+   202.2,
+   210.2
+  ],
+  "hb": [
+   718.88,
+   789.63
+  ],
+  "hb_cr": [
+   665.96,
+   666.21
+  ],
+  "hbm_rst_n": [
+   201.49,
+   201.74
+  ],
+  "hc": [
+   733.21,
+   778.71
+  ],
+  "host_admission_open": [
+   576.15,
+   576.4
+  ],
+  "host_deferred": [
+   572.17,
+   572.42
+  ],
+  "host_interface_idle": [
+   201.33,
+   201.58
+  ],
+  "host_launch_quiet": [
+   574.18,
+   574.43
+  ],
+  "host_link_reset_req": [
+   907.29,
+   907.54
+  ],
+  "host_recovery_clear": [
+   749.05,
+   749.3
+  ],
+  "host_rst_n": [
+   669.43,
+   669.68
+  ],
+  "host_upstream_quiet": [
+   431.67,
+   820.76
+  ],
+  "ingest_permission": [
+   777.48,
+   777.73
+  ],
+  "irq": [
+   544.75,
+   545.0
+  ],
+  "issued": [
+   724.12,
+   732.12
+  ],
+  "landed": [
+   816.76,
+   824.76
+  ],
+  "link_physical_fault": [
+   647.92,
+   648.17
+  ],
+  "link_rst_n": [
+   201.16,
+   201.41
+  ],
+  "link_up": [
+   200.78,
+   201.28
+  ],
+  "local_kst": [
+   1071.38,
+   1073.88
+  ],
+  "local_service_epoch": [
+   738.13,
+   748.45
+  ],
+  "local_tk": [
+   636.42,
+   659.67
+  ],
+  "marker": [
+   682.99,
+   699.49
+  ],
+  "marker_v": [
+   691.12,
+   691.37
+  ],
+  "native_admit_ready": [
+   1077.76,
+   1078.01
+  ],
+  "native_collective_busy": [
+   647.92,
+   648.17
+  ],
+  "native_collective_drained": [
+   737.34,
+   737.59
+  ],
+  "native_host_drained": [
+   735.94,
+   736.19
+  ],
+  "native_kv_drained": [
+   735.27,
+   735.52
+  ],
+  "native_kv_flush": [
+   647.92,
+   648.17
+  ],
+  "native_link_reset_seen": [
+   1077.92,
+   1078.17
+  ],
+  "native_links_drained": [
+   1078.09,
+   1078.34
+  ],
+  "native_pr": [
+   630.17,
+   665.92
+  ],
+  "native_reserved": [
+   602.17,
+   602.42
+  ],
+  "native_retrained": [
+   1078.26,
+   1078.51
+  ],
+  "native_vm_drained": [
+   727.69,
+   727.94
+  ],
+  "ownership_valid": [
+   600.15,
+   600.4
+  ],
+  "package_abort": [
+   907.13,
+   907.38
+  ],
+  "participant_pos": [
+   1074.13,
+   1110.13
+  ],
+  "participant_token": [
+   1098.13,
+   1134.13
+  ],
+  "participant_trace": [
+   1004.8,
+   1068.8
+  ],
+  "peer_protocol_fault": [
+   727.01,
+   727.26
+  ],
+  "phy_rx_flit": [
+   135.4,
+   647.44
+  ],
+  "phy_rx_v": [
+   647.6,
+   647.85
+  ],
+  "phy_tx_flit": [
+   87.4,
+   690.49
+  ],
+  "phy_tx_v": [
+   690.94,
+   691.19
+  ],
+  "phy_up": [
+   690.65,
+   690.9
+  ],
+  "physical_ack_n": [
+   723.84,
+   725.84
+  ],
+  "pll_locked": [
+   726.29,
+   726.54
+  ],
+  "por_n": [
+   725.62,
+   725.87
+  ],
+  "program_auth_digest": [
+   216.87,
+   232.87
+  ],
+  "program_auth_epoch": [
+   194.87,
+   198.87
+  ],
+  "program_auth_v": [
+   200.66,
+   200.91
+  ],
+  "program_authorized_footer64": [
+   206.2,
+   222.2
+  ],
+  "program_authorized_footer_v": [
+   200.49,
+   200.74
+  ],
+  "program_begin_v": [
+   200.33,
+   200.58
+  ],
+  "program_consensus": [
+   1078.42,
+   1078.67
+  ],
+  "program_digest": [
+   1007.2,
+   1023.2
+  ],
+  "program_epoch": [
+   1006.53,
+   1010.53
+  ],
+  "program_expected_dw": [
+   199.53,
+   200.53
+  ],
+  "program_expected_pw": [
+   193.24,
+   195.99
+  ],
+  "program_ready": [
+   724.95,
+   725.2
+  ],
+  "record_fault": [
+   724.23,
+   724.48
+  ],
+  "record_rx": [
+   298.7,
+   435.7
+  ],
+  "record_rx_v": [
+   199.49,
+   199.74
+  ],
+  "record_send_kind": [
+   199.12,
+   199.62
+  ],
+  "record_tx": [
+   207.37,
+   344.37
+  ],
+  "record_tx_observed_v": [
+   198.99,
+   199.24
+  ],
+  "record_tx_v": [
+   198.83,
+   199.08
+  ],
+  "record_witness_slot": [
+   198.66,
+   198.91
+  ],
+  "recovery_complete": [
+   1078.59,
+   1078.84
+  ],
+  "seen": [
+   1078.47,
+   1080.47
+  ],
+  "service_abort": [
+   722.89,
+   723.14
+  ],
+  "service_diag_raw": [
+   705.11,
+   722.29
+  ],
+  "service_faults": [
+   701.99,
+   755.96
+  ],
+  "service_ready": [
+   704.26,
+   704.51
+  ],
+  "service_status": [
+   682.4,
+   703.72
+  ],
+  "slice_ack": [
+   696.64,
+   728.64
+  ],
+  "slice_boot_done": [
+   1142.47,
+   1174.47
+  ],
+  "slice_boot_fault": [
+   632.04,
+   664.04
+  ],
+  "slice_boot_ok": [
+   1163.8,
+   1195.8
+  ],
+  "source_cr": [
+   198.49,
+   198.74
+  ],
+  "static_setup_ready": [
+   198.33,
+   198.58
+  ],
+  "sys_ready": [
+   198.16,
+   198.41
+  ],
+  "token_epoch": [
+   753.96,
+   757.96
+  ],
+  "token_epoch_valid": [
+   681.56,
+   681.81
+  ],
+  "transport_fault": [
+   647.04,
+   649.04
+  ],
+  "ck_core__cdc_host": [
+   665.48,
+   671.48
+  ],
+  "ck_core__cdc_pc": [
+   602.92,
+   608.92
+  ],
+  "ck_core__control_packet_u_rx": [
+   605.82,
+   611.82
+  ],
+  "ck_core__core_guard": [
+   752.96,
+   758.96
+  ],
+  "ck_core__core_order": [
+   645.04,
+   651.04
+  ],
+  "ck_core__core_peer": [
+   774.7,
+   780.7
+  ],
+  "ck_core__core_prompt": [
+   861.1,
+   867.1
+  ],
+  "ck_core__core_queue": [
+   809.63,
+   815.63
+  ],
+  "ck_core__core_tx": [
+   752.96,
+   758.96
+  ],
+  "ck_core__ingest_qm": [
+   601.7,
+   607.7
+  ],
+  "ck_host__cdc_host": [
+   665.2,
+   671.2
+  ],
+  "ck_host__ingest_qm": [
+   601.7,
+   607.7
+  ],
+  "ck_ingest__ingest_qm": [
+   601.7,
+   607.7
+  ],
+  "ck_phy": [
+   284.99,
+   1083.04
+  ],
+  "ck_phy_fam__cdc_pc": [
+   603.2,
+   609.2
+  ],
+  "ck_phy_fam__phy_pad": [
+   385.62,
+   391.62
+  ]
+ },
+ "pin_density_per_um": {
+  "E": 2.35,
+  "N": 1.73,
+  "W": 1.49
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only parent: every child registers its own pins; owner 10-20 09:05 pin regs only at region crossings (the CDC leaves) and wires > 405 um"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 96,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "region_plan": "results/arch/qwen_split_1014/host_root_cluster/landed/region_plan.json",
+ "plan": {
+  "tool": "tools/qwen_kv_die/host_cluster/repack_1020 (hr_anneal + hr_refine + hr_parent)",
+  "lanes_over_405_bits": 759,
+  "longest": [
+   {
+    "pair": [
+     "u_core_guard",
+     "u_rank__u_phy__u_pad"
+    ],
+    "max_um": 1301.6,
+    "mean_um": 1301.6,
+    "bits": 1
+   },
+   {
+    "pair": [
+     "u_core_guard",
+     "u_core_order"
+    ],
+    "max_um": 1197.3,
+    "mean_um": 1152.6,
+    "bits": 7
+   },
+   {
+    "pair": [
+     "u_core_guard",
+     "u_ingest_qm"
+    ],
+    "max_um": 979.3,
+    "mean_um": 979.3,
+    "bits": 1
+   },
+   {
+    "pair": [
+     "u_core_guard",
+     "u_rank__u_adapter__g_slice_0___u_slice"
+    ],
+    "max_um": 880.0,
+    "mean_um": 880.0,
+    "bits": 1
+   },
+   {
+    "pair": [
+     "u_cdc_host",
+     "u_core_guard"
+    ],
+    "max_um": 826.7,
+    "mean_um": 733.9,
+    "bits": 71
+   },
+   {
+    "pair": [
+     "u_core_peer",
+     "u_core_queue"
+    ],
+    "max_um": 817.0,
+    "mean_um": 566.0,
+    "bits": 100
+   },
+   {
+    "pair": [
+     "u_cdc_pc",
+     "u_core_guard"
+    ],
+    "max_um": 750.9,
+    "mean_um": 750.4,
+    "bits": 4
+   },
+   {
+    "pair": [
+     "u_core_guard",
+     "u_core_queue"
+    ],
+    "max_um": 735.6,
+    "mean_um": 686.7,
+    "bits": 57
+   },
+   {
+    "pair": [
+     "u_core_peer",
+     "u_core_prompt"
+    ],
+    "max_um": 688.5,
+    "mean_um": 257.6,
+    "bits": 2087
+   },
+   {
+    "pair": [
+     "u_cdc_host",
+     "u_core_order"
+    ],
+    "max_um": 645.6,
+    "mean_um": 645.6,
+    "bits": 1
+   },
+   {
+    "pair": [
+     "u_cdc_host",
+     "PORT:W"
+    ],
+    "max_um": 624.4,
+    "mean_um": 618.2,
+    "bits": 7
+   },
+   {
+    "pair": [
+     "u_cdc_host",
+     "u_core_tx"
+    ],
+    "max_um": 568.0,
+    "mean_um": 507.5,
+    "bits": 66
+   }
+  ]
+ },
+ "job": {
+  "owner": "Claude:KV-HROOT10",
+  "branch": "claude/kv-hroot10-1020",
+  "tag": "p10a",
+  "purpose": "KV host root parent repack (qkd_host_root CRITICAL): coordinator review before any route",
+  "submit": false
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core__core_peer",
+    "ck_core__cdc_host",
+    "ck_core__cdc_pc",
+    "ck_core__control_packet_u_rx",
+    "ck_core__core_guard",
+    "ck_core__core_order",
+    "ck_core__core_prompt",
+    "ck_core__core_queue",
+    "ck_core__core_tx",
+    "ck_core__ingest_qm"
+   ],
+   "inputs": [
+    "abort_drained",
+    "chain_a",
+    "chain_c",
+    "chain_fault_i",
+    "crom_fault",
+    "ctrl_completion_fault",
+    "die_id",
+    "engine_result_cause",
+    "engine_result_cycles",
+    "engine_result_done",
+    "engine_result_fault",
+    "engine_result_gen",
+    "engine_result_tag",
+    "engine_result_token",
+    "engine_result_v",
+    "engine_result_value",
+    "est",
+    "execution_active",
+    "hb_cr",
+    "link_physical_fault",
+    "link_up",
+    "local_kst",
+    "local_tk",
+    "native_admit_ready",
+    "native_collective_busy",
+    "native_collective_drained",
+    "native_host_drained",
+    "native_kv_drained",
+    "native_kv_flush",
+    "native_link_reset_seen",
+    "native_links_drained",
+    "native_reserved",
+    "native_retrained",
+    "native_vm_drained",
+    "ownership_valid",
+    "pll_locked",
+    "por_n",
+    "record_rx",
+    "record_rx_v",
+    "record_send_kind",
+    "record_witness_slot",
+    "slice_ack",
+    "slice_boot_done",
+    "slice_boot_fault",
+    "slice_boot_ok",
+    "static_setup_ready",
+    "transport_fault"
+   ],
+   "outputs": [
+    "accepted_ranks",
+    "available",
+    "boot_go",
+    "boot_image_digest",
+    "boot_image_epoch",
+    "boot_image_fault",
+    "boot_image_ready",
+    "boot_image_target",
+    "boot_pr",
+    "chain_f",
+    "cohort_gen",
+    "cohort_tag",
+    "coordinator_fault",
+    "die_rst_n",
+    "dispatch_valid",
+    "dispatched",
+    "engine_result_cr",
+    "fault_src",
+    "hb",
+    "hbm_rst_n",
+    "hc",
+    "host_admission_open",
+    "host_deferred",
+    "host_interface_idle",
+    "host_launch_quiet",
+    "host_link_reset_req",
+    "host_recovery_clear",
+    "host_rst_n",
+    "host_upstream_quiet",
+    "ingest_permission",
+    "irq",
+    "issued",
+    "landed",
+    "link_rst_n",
+    "local_service_epoch",
+    "marker",
+    "marker_v",
+    "native_pr",
+    "package_abort",
+    "participant_pos",
+    "participant_token",
+    "participant_trace",
+    "peer_protocol_fault",
+    "physical_ack_n",
+    "program_auth_digest",
+    "program_auth_epoch",
+    "program_auth_v",
+    "program_authorized_footer64",
+    "program_authorized_footer_v",
+    "program_begin_v",
+    "program_consensus",
+    "program_digest",
+    "program_epoch",
+    "program_expected_dw",
+    "program_expected_pw",
+    "program_ready",
+    "record_fault",
+    "record_tx",
+    "record_tx_observed_v",
+    "record_tx_v",
+    "recovery_complete",
+    "seen",
+    "service_abort",
+    "service_diag_raw",
+    "service_faults",
+    "service_ready",
+    "service_status",
+    "source_cr",
+    "sys_ready",
+    "token_epoch",
+    "token_epoch_valid"
+   ]
+  },
+  "host": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_host__cdc_host",
+    "ck_host__ingest_qm"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ingest": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ingest__ingest_qm"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "phy": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_phy_fam__cdc_pc",
+    "ck_phy_fam__phy_pad",
+    "ck_phy[0]",
+    "ck_phy[1]",
+    "ck_phy[2]",
+    "ck_phy[3]",
+    "ck_phy[4]",
+    "ck_phy[5]",
+    "ck_phy[6]",
+    "ck_phy[7]"
+   ],
+   "inputs": [
+    "phy_rx_flit",
+    "phy_rx_v",
+    "phy_up"
+   ],
+   "outputs": [
+    "phy_tx_flit",
+    "phy_tx_v"
+   ]
+  }
+ },
+ "clock_domain_note": "DIAGNOSTIC: the four clock families are asynchronous (core 833.333 / host 1000 / phy 1043 / ingest 1666.667 ps); ref_tile has no async-family CLUSTER mode (reviewed_gray_fifos / cdc_synchronizers_async are leaf-only), so this gate times every family at 833.333 ps related phase 0: conservative for host/phy/ingest; the parent has no cross-family nets except resets (each leaf lands its reset) -- every crossing is inside the hard CDC leaves cdc_pc / cdc_host / ingest_qm. ROOT item: async-family cluster clock mode before the real parent route."
+}

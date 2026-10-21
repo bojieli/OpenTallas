@@ -1,0 +1,119 @@
+{
+ "outline": [
+  1339.2,
+  1339.2
+ ],
+ "cost": 2974497.527826922,
+ "port_face": {
+  "phy_rx_flit": "E",
+  "phy_tx_flit": "E",
+  "phy_rx_v": "E",
+  "phy_tx_v": "E",
+  "phy_up": "E",
+  "record_rx": "N",
+  "record_tx": "N",
+  "record_rx_v": "N",
+  "record_tx_v": "N"
+ },
+ "over405_bits": 311,
+ "place": {
+  "u_rank__u_adapter__g_slice_0___u_slice": [
+   1080.0,
+   604.8,
+   "R0"
+  ],
+  "u_rank__u_adapter__g_slice_1___u_slice": [
+   1080.0,
+   475.2,
+   "R0"
+  ],
+  "u_rank__u_adapter__g_slice_2___u_slice": [
+   820.8,
+   475.2,
+   "R0"
+  ],
+  "u_rank__u_adapter__g_slice_3___u_slice": [
+   820.8,
+   345.6,
+   "MX"
+  ],
+  "u_rank__u_adapter__g_slice_4___u_slice": [
+   820.8,
+   216.0,
+   "MX"
+  ],
+  "u_rank__u_adapter__g_slice_5___u_slice": [
+   1080.0,
+   216.0,
+   "MX"
+  ],
+  "u_rank__u_adapter__g_slice_6___u_slice": [
+   1080.0,
+   86.4,
+   "MX"
+  ],
+  "u_rank__u_adapter__g_slice_7___u_slice": [
+   820.8,
+   86.4,
+   "MX"
+  ],
+  "u_rank__u_control__u_packet__u_rx": [
+   561.6,
+   691.2,
+   "MY"
+  ],
+  "u_rank__u_phy__u_pad": [
+   1080.0,
+   345.6,
+   "MY"
+  ],
+  "u_cdc_pc": [
+   907.2,
+   604.8,
+   "MY"
+  ],
+  "u_core_tx": [
+   648.0,
+   864.0,
+   "MY"
+  ],
+  "u_core_guard": [
+   648.0,
+   1166.4,
+   "R180"
+  ],
+  "u_core_order": [
+   43.2,
+   648.0,
+   "R180"
+  ],
+  "u_core_queue": [
+   388.8,
+   691.2,
+   "MX"
+  ],
+  "u_cdc_host": [
+   475.2,
+   518.4,
+   "R180"
+  ],
+  "u_core_peer": [
+   777.6,
+   777.6,
+   "MY"
+  ],
+  "u_core_prompt": [
+   129.6,
+   864.0,
+   "MY"
+  ],
+  "u_ingest_qm": [
+   86.4,
+   259.2,
+   "MX"
+  ]
+ },
+ "name": "qkd_hr_cluster_p10a",
+ "peer_pins": "parent",
+ "standin_pins_per_um": 6.0
+}

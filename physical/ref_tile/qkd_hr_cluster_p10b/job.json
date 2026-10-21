@@ -1,0 +1,96 @@
+{
+ "name": "qkd_hr_cluster_p10b-p10b-COMMIT",
+ "block": "qkd_hr_cluster_e",
+ "ref_tile": true,
+ "owner": "Claude:KV-HROOT10",
+ "purpose": "KV host root parent repack (qkd_host_root CRITICAL): coordinator review before any route",
+ "threads": 32,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/kv-hroot10-1020",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_cluster_e u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_cluster_hroot10_1020/qkd_hr_cluster_e.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_hr_cluster_p10b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_hr_cluster_p10b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_hr_cluster_p10b --out {RUN}/record/views/qkd_hr_cluster_e --macro-view physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128 --macro-view physical/ref_tile/qkd_hr_cdc_host/views/qkd_hr_cdc_host --macro-view physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc --macro-view physical/ref_tile/qkd_hr_cluster_p10a/childfix/qkd_host_rx_class_admission_rr --macro-view physical/ref_tile/qkd_hr_cluster_p10a/childfix/qkd_hr_core_queue --macro-view physical/ref_tile/qkd_hr_cluster_p10b/standin/qkd_hr_core_peer --macro-view physical/ref_tile/qkd_hr_cluster_p10b/standin/qkd_hr_core_prompt --macro-view physical/ref_tile/qkd_hr_cluster_p10b/standin/qkd_hr_ingest_qm --macro-view physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard --macro-view physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order --macro-view physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx --macro-view physical/ref_tile/qkd_hr_phy_pad/views/qkd_host_rx_pad5 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_hr_cluster_p10b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_link_adp128/views/qfd_link_adp128",
+   "physical/ref_tile/qkd_hr_cdc_host/views/qkd_hr_cdc_host",
+   "physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc",
+   "physical/ref_tile/qkd_hr_cluster_p10a/childfix/qkd_host_rx_class_admission_rr",
+   "physical/ref_tile/qkd_hr_cluster_p10a/childfix/qkd_hr_core_queue",
+   "physical/ref_tile/qkd_hr_cluster_p10b/standin/qkd_hr_core_peer",
+   "physical/ref_tile/qkd_hr_cluster_p10b/standin/qkd_hr_core_prompt",
+   "physical/ref_tile/qkd_hr_cluster_p10b/standin/qkd_hr_ingest_qm",
+   "physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard",
+   "physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order",
+   "physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx",
+   "physical/ref_tile/qkd_hr_phy_pad/views/qkd_host_rx_pad5"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_hr_cluster_p10b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_hr_cluster_p10b/qkd_hr_cluster_p10b-p10b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
