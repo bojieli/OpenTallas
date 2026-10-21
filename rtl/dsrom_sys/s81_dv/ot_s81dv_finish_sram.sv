@@ -50,11 +50,21 @@ module ot_s81dv_norm_finish_sram #(
     wire rstn = rs[1];
     wire [NRS-1:0] rsr;
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
-    reg go_t;
-    always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
+    // NATIVE32 (ELEM-XFV/XFIN 10-21): go_t and the leaf-match inputs are KEPT same-edge copies (census r1: go_t 4965,
+    // iv 653, ib 177 loads); every copy is a function-identical register of the original, so no edge moves.
+    localparam integer NGO = 12, NLC = 24;
+    (* keep *) reg [NGO-1:0] go_t;
+    always @(posedge clk or negedge rstn) if (!rstn) go_t <= {NGO{1'b0}}; else go_t <= {NGO{go}};
     reg [P-1:0] iv; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
-    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t[0] ? {P{1'b0}} : f_v;
     always @(posedge clk) begin ib <= f_base; id <= f_d; eps_c <= eps; end
+    (* keep *) reg [NLC*P-1:0] ivl; (* keep *) reg [NLC*P*8-1:0] ibl;   // leaf-match copies, one per IX region
+    genvar cl;
+    generate for (cl = 0; cl < NLC; cl = cl + 1) begin : g_lc
+        always @(posedge clk or negedge rsr[cl % NRS]) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
+            else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
+        always @(posedge clk) ibl[cl*P*8 +: P*8] <= f_base;
+    end endgenerate
     // ---------------------------------------------------------------- node values: leaves (beats) and add nodes
     wire        VD [1:2*NVP-1];
     wire [NVP-1:0] dup;
@@ -80,7 +90,7 @@ module ot_s81dv_norm_finish_sram #(
                         localparam integer IXM = IX;
 `endif
                         if (IXM - k >= 0) begin : g_m
-                            assign m[p * K + k] = iv[p] && (ib[p * 8 +: 8] == IXM - k);
+                            assign m[p * K + k] = ivl[(IX * NLC / NV) * P + p] && (ibl[(IX * NLC / NV) * P * 8 + p * 8 +: 8] == IXM - k);
                         end else begin : g_n
                             assign m[p * K + k] = 1'b0;
                         end
@@ -90,7 +100,7 @@ module ot_s81dv_norm_finish_sram #(
                 wire hit = |m;
                 reg vld;
                 always @(posedge clk or negedge rsr[IX % NRS])
-                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[IX % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
 
                 assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
                  assign VD[n] = vld;
@@ -103,7 +113,7 @@ module ot_s81dv_norm_finish_sram #(
             if (isadd(n)) begin : g_add
                 reg vld;
                 always @(posedge clk or negedge rsr[n % NRS])
-                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
+                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t[(n + 5) % NGO]) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
 
                  assign VD[n] = vld;
             end else begin : g_pass
@@ -126,9 +136,11 @@ module ot_s81dv_norm_finish_sram #(
             if (n >= 1 && isadd(n)) begin : g_a
                 reg iss;
                 always @(posedge clk or negedge rsr[(n + 3) % NRS])
-                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t) iss <= 1'b0; else if (win[n]) iss <= 1'b1;
+                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t[(n + 9) % NGO]) iss <= 1'b0; else if (win[n]) iss <= 1'b1;
                 assign iss_v[n] = iss;
-                assign rdy[n] = VD[2 * n] && VD[2 * n + 1] && !iss && !go_t;
+                // !go_t moved to the group flag g_r (same cycle): a stale o_r is never selected because its group's
+                // ga1 is 0 in the cycle after go_t, and win is gated by go_t at the group (ga1g) below
+                assign rdy[n] = VD[2 * n] && VD[2 * n + 1] && !iss;
             end else begin : g_n
                 assign iss_v[n] = 1'b1; assign rdy[n] = 1'b0;
             end
@@ -139,15 +151,15 @@ module ot_s81dv_norm_finish_sram #(
             reg [7:0] o_r; reg g_r;
             always @(posedge clk or negedge rsr[q % NRS])
                 if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
-                else begin o_r <= o8; g_r <= |r8; end
-            assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
+                else begin o_r <= o8; g_r <= (|r8) && !go_t[(q + 2) % NGO]; end
+            assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r && !go_t[(q + 7) % NGO];
         end
     endgenerate
     wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});   // lowest non-empty group (16-bit)
     wire [NVP-1:0] win;
     generate
         for (n = 0; n < NVP; n = n + 1) begin : g_win
-            assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
+            assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n];
         end
     endgenerate
     wire fire = |win;
@@ -178,7 +190,7 @@ module ot_s81dv_norm_finish_sram #(
     assign wr_v = av[LAV];
     // ---------------------------------------------------------------- tail: / D, + eps, rsqrt (ot_dsrom_su_norm)
     reg ssr_v; reg [31:0] ssr;
-    always @(posedge clk or negedge rstn) if (!rstn) ssr_v <= 1'b0; else ssr_v <= wr_v && wr_n == 8'd1 && !go_t;
+    always @(posedge clk or negedge rstn) if (!rstn) ssr_v <= 1'b0; else ssr_v <= wr_v && wr_n == 8'd1 && !go_t[1 % NGO];
     always @(posedge clk) ssr <= wr_d;
     wire [31:0] mq, me, rr;
     wire        mq_v, me_v, rr_v, f_div, f_eps, f_rsq;
@@ -193,7 +205,7 @@ module ot_s81dv_norm_finish_sram #(
         if (!rstn) begin r_v_o <= 1'b0; flt <= 1'b0; end
         else begin
             r_v_o <= rr_v;
-            if (go_t) flt <= 1'b0;
+            if (go_t[2 % NGO]) flt <= 1'b0;
             else if (f_add || f_div || f_eps || f_rsq || (|dup)) flt <= 1'b1;
         end
     always @(posedge clk) r_o <= rr;
@@ -254,11 +266,21 @@ module ot_s81dv_eng_finish_sram #(
     wire rstn = rs[1];
     wire [NRS-1:0] rsr;
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
-    reg go_t;
-    always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
+    // NATIVE32 (ELEM-XFV/XFIN 10-21): kept same-edge copies of go_t (census r1 4965 loads) and of the leaf-match
+    // inputs iv/it/ib (59/92/120); function-identical registers, no edge moves.
+    localparam integer NGO = 32, NLC = 6;
+    (* keep *) reg [NGO-1:0] go_t;
+    always @(posedge clk or negedge rstn) if (!rstn) go_t <= {NGO{1'b0}}; else go_t <= {NGO{go}};
     reg [P-1:0] iv; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
-    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t[0] ? {P{1'b0}} : f_v;
     always @(posedge clk) begin it <= f_t; ib <= f_base; id <= f_d; end
+    (* keep *) reg [NLC*P-1:0] ivl; (* keep *) reg [NLC*P*2-1:0] itl; (* keep *) reg [NLC*P*8-1:0] ibl;
+    genvar cl;
+    generate for (cl = 0; cl < NLC; cl = cl + 1) begin : g_lc
+        always @(posedge clk or negedge rsr[cl % NRS]) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
+            else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
+        always @(posedge clk) begin itl[cl*P*2 +: P*2] <= f_t; ibl[cl*P*8 +: P*8] <= f_base; end
+    end endgenerate
     wire        wr_v;
     wire [CW-1:0] wr_n;
     wire [31:0] wr_d;
@@ -278,7 +300,9 @@ module ot_s81dv_eng_finish_sram #(
                         // ENG flit bases are sid * K by construction (xfin fb), so leaf IX is only ever slot IX % K:
                         // the other slots are not wired (3:1 leaf mux instead of 15:1)
                         if (k == IX % K) begin : g_m
-                            assign m[p * K + k] = iv[p] && it[p * 2 +: 2] == t && (ib[p * 8 +: 8] == IX - k);
+                            localparam integer CL = (t * NV + IX) * NLC / (T * NV);
+                            assign m[p * K + k] = ivl[CL * P + p] && itl[CL * P * 2 + p * 2 +: 2] == t
+                                                  && (ibl[CL * P * 8 + p * 8 +: 8] == IX - k);
                         end else begin : g_n
                             assign m[p * K + k] = 1'b0;
                         end
@@ -288,7 +312,7 @@ module ot_s81dv_eng_finish_sram #(
                 wire hit = |m;
                 reg vld;
                 always @(posedge clk or negedge rsr[IX % NRS])
-                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + IX) % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
 
                 assign dup[t * NVP + IX] = hit && (vld || ((m & (m - 1)) != 0));
                  assign VD[t][n] = vld;
@@ -301,7 +325,7 @@ module ot_s81dv_eng_finish_sram #(
             if (isadd(n)) begin : g_add
                 reg vld;
                 always @(posedge clk or negedge rsr[n % NRS])
-                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0;
+                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + n + 11) % NGO]) vld <= 1'b0;
                     else if (wr_v && wr_n == t * NVP + n) vld <= 1'b1;
 
                  assign VD[t][n] = vld;
@@ -313,9 +337,10 @@ module ot_s81dv_eng_finish_sram #(
             if (n >= 1 && isadd(n)) begin : g_a
                 reg iss;
                 always @(posedge clk or negedge rsr[(n + 3) % NRS])
-                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t) iss <= 1'b0; else if (win[t * NVP + n]) iss <= 1'b1;
+                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t[(t * NVP + n + 21) % NGO]) iss <= 1'b0;
+                    else if (win[t * NVP + n]) iss <= 1'b1;
                 assign iss_v[t * NVP + n] = iss;
-                assign rdy[t * NVP + n] = VD[t][ca(n)] && VD[t][cb(n)] && !iss && !go_t;
+                assign rdy[t * NVP + n] = VD[t][ca(n)] && VD[t][cb(n)] && !iss;   // !go_t at the group (g_r / ga1)
             end else begin : g_n
                 assign iss_v[t * NVP + n] = 1'b1; assign rdy[t * NVP + n] = 1'b0;
             end
@@ -331,12 +356,12 @@ module ot_s81dv_eng_finish_sram #(
         reg [7:0] o_r; reg g_r;
         always @(posedge clk or negedge rsr[q % NRS])
             if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
-            else begin o_r <= o8; g_r <= |r8; end
-        assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
+            else begin o_r <= o8; g_r <= (|r8) && !go_t[(q + 3) % NGO]; end
+        assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r && !go_t[(q + 17) % NGO];
     end endgenerate
     wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});
     generate for (n = 0; n < NC; n = n + 1) begin : g_win
-        assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
+        assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n];
     end endgenerate
     wire fire = |win;
     wire [CW-1:0] ot [0:NC];
@@ -370,7 +395,7 @@ module ot_s81dv_eng_finish_sram #(
         if (!rstn) begin dn <= {T{1'b0}}; r_v <= 1'b0; flt <= 1'b0; end
         else begin
             r_v <= 1'b0;
-            if (go_t) begin dn <= {T{1'b0}}; flt <= 1'b0; end
+            if (go_t[1]) begin dn <= {T{1'b0}}; flt <= 1'b0; end
             else begin
                 if (wr_v && wr_n == 1 * 1)           dn[0] <= 1'b1;
                 if (wr_v && wr_n == NVP + 1)         dn[1] <= 1'b1;
@@ -1113,11 +1138,15 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  wire[10:0] da=descriptor(ca_node({1'b0,issue_tag[6:0]}),issue_tag[8:7]);
  wire[10:0] db=descriptor(cb_node({1'b0,issue_tag[6:0]}),issue_tag[8:7]);
  wire[10:0] dw=descriptor({1'b0,wr_tag[6:0]},wr_tag[8:7]);
- reg[NB-1:0] asel,bsel;reg ah,bh;
+ reg[NB-1:0] asel,bsel;
+ // NATIVE32 (ELEM-XFV/XFIN 10-21): census r1 ah/bh 988-1068 loads -> one KEPT half-select register per bank (same
+ // edge, same value for every bank that can be selected); asel/bsel are fire-gated one-hots, so the a_q/b_q
+ // rd_active (= registered fire) gate was redundant and is dropped (f_q drove 71-73 loads).
+ (* keep *) reg[NB-1:0] ahc,bhc;
  always @(posedge clk)begin
   asel<=fire?({{(NB-1){1'b0}},1'b1}<<da[10:6]):{NB{1'b0}};
   bsel<=fire?({{(NB-1){1'b0}},1'b1}<<db[10:6]):{NB{1'b0}};
-  ah<=da[0];bh<=db[0];
+  ahc<={NB{da[0]}};bhc<={NB{db[0]}};
  end
  function automatic [31:0] merged(input integer target_tree,input integer target_ix);
   integer pp,kk;
@@ -1165,9 +1194,9 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  integer b;
  always @*begin
   a_q=0;b_q=0;
-  if(rd_active)for(b=0;b<NB;b=b+1)begin
-   if(asel[b])a_q=a_q|(ah?rd[b][63:32]:rd[b][31:0]);
-   if(bsel[b])b_q=b_q|(bh?rd[b][63:32]:rd[b][31:0]);
+  for(b=0;b<NB;b=b+1)begin
+   if(asel[b])a_q=a_q|(ahc[b]?rd[b][63:32]:rd[b][31:0]);
+   if(bsel[b])b_q=b_q|(bhc[b]?rd[b][63:32]:rd[b][31:0]);
   end
  end
 endmodule

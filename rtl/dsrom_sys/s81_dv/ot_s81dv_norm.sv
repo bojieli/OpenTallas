@@ -528,6 +528,16 @@ module ot_s81dv_xfin #(
     reg go_c; reg mode_c; reg [31:0] eps_c; reg sv_c; reg [7:0] si_c; reg [31:0] s_c;
     always @(posedge clk) begin go_c <= go; mode_c <= mode; eps_c <= eps; si_c <= s_i; s_c <= s; end
     always @(posedge clk or negedge rstn) if (!rstn) sv_c <= 1'b0; else sv_c <= s_v;
+    // finish go: one KEPT same-edge copy of go_c per finish instance under the SRAM build (NATIVE32, ELEM-XFV/XFIN
+    // 10-21: each SRAM finish fans its go into <=32 go_t copies; go_c itself drove 82 loads); default build = go_c
+    wire [4:0] go_f;
+`ifdef OT_S81DV_XFIN_SRAM
+    (* keep *) reg [4:0] go_fr;
+    always @(posedge clk) go_fr <= {5{go}};
+    assign go_f = go_fr;
+`else
+    assign go_f = {5{go_c}};
+`endif
     reg md;                                        // mode of the current go
     always @(posedge clk or negedge rstn) if (!rstn) md <= 1'b0; else if (go_c) md <= mode_c;
     // ---------------------------------------------------------------- NORM collector (closed x5 logic, gated by !md)
@@ -600,7 +610,7 @@ module ot_s81dv_xfin #(
     ot_s81dv_norm_finish #(.NV(NS * NVL)
 `endif
       , .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
-        .rst_n(rstn), .go(go_c), .f_v(dl_v & {3{!md}}), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
+        .rst_n(rstn), .go(go_f[4]), .f_v(dl_v & {3{!md}}), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
     always @(posedge clk or negedge rstn) if (!rstn) rb_v <= 1'b0; else rb_v <= fr_v;
     always @(posedge clk) rb_d <= fr;
     // ---------------------------------------------------------------- ENG finish: one per copy
@@ -623,7 +633,7 @@ module ot_s81dv_xfin #(
 `else
             ot_s81dv_eng_finish #(.NV(NS * NVL)
 `endif
-      , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_c),
+      , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_f[cc]),
                 .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
                 .fault(cf[cc]));
         end
