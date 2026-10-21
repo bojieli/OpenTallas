@@ -529,8 +529,8 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
   ot_s81dv_finish_SRAM_requires_NV80_K5_P3_T1or3 u_bad();
  end
  reg[1:0] owner[0:TREES*NV-1];
- (* keep *) reg[1:0] owner_read[0:8*TREES*NV-1];
- // Each three-bank read region owns a same-edge copy of the selected flit
+ (* keep *) reg[1:0] owner_read[0:3*TREES*NV-1];
+ // Each bounded seven-bank owner region owns a same-edge copy of the selected flit
  // owner, so retaining bank-local decode cannot move load onto owner flops.
  for(genvar t=0;t<TREES;t=t+1)begin:g_ot
   for(genvar ix=0;ix<NV;ix=ix+1)begin:g_ox
@@ -538,7 +538,7 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
    always @(posedge clk)begin
     if(e[0])owner[t*NV+ix]<=2'd0; else if(e[1])owner[t*NV+ix]<=2'd1; else if(e[2])owner[t*NV+ix]<=2'd2;
    end
-   for(genvar c=0;c<8;c=c+1)begin:g_copy
+   for(genvar c=0;c<3;c=c+1)begin:g_copy
     always @(posedge clk)begin
       if(e[0])owner_read[(c*TREES+t)*NV+ix]<=2'd0;
       else if(e[1])owner_read[(c*TREES+t)*NV+ix]<=2'd1;
@@ -1245,15 +1245,15 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  wire[10:0] dw=descriptor({1'b0,wr_tag[6:0]},wr_tag[8:7]);
  reg[NB-1:0] asel,bsel;
  (* keep *) reg[NB-1:0] ahc,bhc;
- wire[8*TREES*NV*2-1:0] owner_bits;
- for(genvar oi=0;oi<8*TREES*NV;oi=oi+1)begin:g_owner_bits
+ wire[3*TREES*NV*2-1:0] owner_bits;
+ for(genvar oi=0;oi<3*TREES*NV;oi=oi+1)begin:g_owner_bits
    assign owner_bits[oi*2+:2]=owner_read[oi];
  end
  wire[63:0] rd[0:NB-1];
  for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank
   wire ren,sa,sb,ha,hb;wire[4:0] ra;
   ot_s81dv_finish_readbank #(.NV(NV),.K(K),.P(P),.TREES(TREES),.BANK(bank)) u_read(
-    .fire(read_fire[bank/3]),.tag(read_tags[(bank/3)*9+:9]),.owner(owner_bits[(bank/3)*TREES*NV*2+:TREES*NV*2]),.ren(ren),.ra(ra),.sa(sa),.sb(sb),.ha(ha),.hb(hb));
+    .fire(read_fire[bank/3]),.tag(read_tags[(bank/3)*9+:9]),.owner(owner_bits[(bank/7)*TREES*NV*2+:TREES*NV*2]),.ren(ren),.ra(ra),.sa(sa),.sb(sb),.ha(ha),.hb(hb));
   always @(posedge clk)begin
     asel[bank]<=sa;bsel[bank]<=sb;ahc[bank]<=ha;bhc[bank]<=hb;
   end
