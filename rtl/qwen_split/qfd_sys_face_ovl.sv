@@ -116,7 +116,6 @@ module qfd_sys_face_ovl #(
     output wire          prog_tx_observed_v,
     output wire [547:0]  prog_tx_record,
     input wire prog_head_context_slot,input wire[1:0]prog_head_context_user,
-    input wire[1:0]prog_rx_user,
     input wire head_descriptor_v,input wire[58:0]head_descriptor_tag,input wire[1:0]head_descriptor_generation,
     input  wire          emb_rx_v,
     input  wire          emb_rx_slot,
@@ -347,10 +346,7 @@ module qfd_sys_face_ovl #(
     wire        rp_program_ready, rp_fault;
     wire rp_tx_observed_v;wire[547:0]rp_tx_record;
     wire head_tx_v,head_tx_fault;wire[547:0]head_tx_record;
-    reg head_mux_fault; reg head_rx_user_fault;
-    always @(posedge ck or negedge rst_rec[0])
-      if(!rst_rec[0])head_rx_user_fault<=0;
-      else if(prog_rx_v&&prog_context_slot&&rx_payload[44:43]!=prog_rx_user)head_rx_user_fault<=1;
+    reg head_mux_fault;
     always @(posedge ck or negedge rst_rec[0])
       if(!rst_rec[0])head_mux_fault<=0;
       else if(head_tx_v&&rp_tx_observed_v)head_mux_fault<=1;
@@ -598,6 +594,6 @@ module qfd_sys_face_ovl #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | head_tx_fault | head_mux_fault | head_rx_user_fault | armed_fault | go_fault | mu_hc_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | head_tx_fault | head_mux_fault | armed_fault | go_fault | mu_hc_fault;
     assign fault = face_fault;
 endmodule

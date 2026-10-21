@@ -87,7 +87,7 @@ EDGES = [
 
 if HEAD_PREP:
     EDGES += [(p, 'd2d_rom', p) for p in ('cal_start_rx','cal_seg_rx','cal_user_tx','cal_user_rx','prog_head_context_slot')]
-    EDGES += [('prog_head_context_user','d2d_rom','tx_user'), ('prog_rx_user','d2d_rom','rx_user')]
+    EDGES += [('prog_head_context_user','d2d_rom','tx_user')]
 
 
 # Q-CTLM G8 (claude/qctlm-1017 d8f159727): the DV sys_face drops these inputs (their producers, the qfd_crom_g groups and

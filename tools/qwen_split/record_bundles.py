@@ -89,7 +89,6 @@ if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
     BUNDLES['C.rx_record'] += [(D2D,'rx_user',N59,'rx_user')]
     BUNDLES['SF.head_slot'] = [(D2D,'prog_head_context_slot',SF,'prog_head_context_slot'),
                                (D2D,'tx_user',SF,'prog_head_context_user')]
-    BUNDLES['SF.rx_record'] += [(D2D,'rx_user',SF,'prog_rx_user')]
     BUNDLES['SF.cal'] += _same(SF,D2D,('cal_start_rx','cal_seg_rx','cal_user_tx','cal_user_rx'))
 # the compiler's own bundle names (layer_compile.py BUNDLES, compute side): every one of them is a bundle here
 COMPILER_BUNDLES = ('C.tx_slot', 'C.rx_record', 'C.tx_record', 'C.x3_record')
