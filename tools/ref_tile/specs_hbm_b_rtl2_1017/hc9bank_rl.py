@@ -14,7 +14,7 @@ Structural change (RTL tops ot_hbm_hc_bankq*_rl_static / _rm_static, 0 added edg
     (io_flop_at_pins knobs already in the flow):
       macro_out_pins rd_out -> wd / xd read-capture flops beside each SRAM's rd_out edge   (clk_w<r> / clk_x<r>)
       macro_out_pins y      -> CPO sum flops beside each leaf's y face                       (clk_q<r>)
-      macro_pins lv_i,ss_i  -> lane-enable flops beside each leaf's lv_i / ss_i pins          (clk_e<r>)
+      lane enables row-local (unanchored: OT_MPFLOP matches scalar pins only)      (clk_e<r>)
       sum_in port anchor    -> cb CPI sum flops at the in face                               (clk_i<r>)
       clk_a (cb, b0_rl)     -> write mass (hold / asm_q / lb_q / wd_q) off the in-face pin root clk
   * _rm (parallel fallback): wd + xd capture of one SRAM row on one root clk_r<r>; b0_rm keeps the write mass on clk
@@ -105,7 +105,9 @@ def make(src, name, var, b0):
     s["clock_ports"] = rs + ent
     io = dict(s.get("io_flop_at_pins") or {})
     io["macro_out_pins"] = ["rd_out", "y"]
-    io["macro_pins"] = ["lv_i", "ss_i"]
+    # lane enables are NOT anchored: OT_MPFLOP_PINS matches scalar master pins only (lv_i / ss_i are buses: b0_rl / cb_rl
+    # gate 10-20 23:17 "OT_MPFLOP matched no flop-driven macro pin"); they are 32 flops per row, row-local by connectivity
+    io.pop("macro_pins", None)
     s["io_flop_at_pins"] = io
     if not b0:
         ov = dict(s.get("orfs_vars", {}))
@@ -120,7 +122,7 @@ def make(src, name, var, b0):
         "cb_rw clk 136.5 ps TT with the 2.8 k write mass 300-770 um from its W-face pin flops).  One glue root per "
         "compact register mass, the mass anchored beside the pins it serves: SRAM read capture beside rd_out "
         "(clk_w/clk_x" + ("" if var == "rl" else " -> clk_r per SRAM row") + "), CPO sums beside the leaf y face "
-        "(clk_q), lane enables beside lv_i / ss_i (clk_e)" + ("" if b0 else ", CPI sums at the in face (clk_i)") +
+        "(clk_q), row-local lane enables (clk_e)" + ("" if b0 else ", CPI sums at the in face (clk_i)") +
         (", write mass on clk_a" if "clk_a" in rs else ", write mass on clk (b0_rp clk boundary 43.9 PASS)") +
         ".  0 added edges.")
     s["reroute_reason"] = {"kind": "structural", "failed_job": f"ref_gate {src} 10-20 (CTS pin-flop spread > 80 TT)",

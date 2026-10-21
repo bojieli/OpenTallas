@@ -65,7 +65,9 @@ def make(var):
     pr["clk_c"] = rng(450.0)
     io = dict(s.get("io_flop_at_pins") or {"cols": 4, "allow_none": True})
     io["macro_out_pins"] = ["rd_out"]
-    io["macro_pins"] = ["lv_i", "ss_i"]
+    # lane enables are NOT anchored: OT_MPFLOP_PINS matches scalar master pins only (lv_i / ss_i are buses: b0_rl / cb_rl
+    # gate 10-20 23:17 "OT_MPFLOP matched no flop-driven macro pin"); they are 32 flops per row, row-local by connectivity
+    io.pop("macro_pins", None)
     s["io_flop_at_pins"] = io
     s["route"]["peak_ram_gb"] = 128
     s["reset_landing"] = {"enable": True, "stages": 2, "clock": "clk", "why": "rst_n lands at the S face in 2 clk stages, then the RTL ot_rst_relay copies (bankrc u_rst / u_rst_b, feed u_rst)"}

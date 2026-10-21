@@ -6,7 +6,7 @@ Evidence: 3_place.odb sink dump per root (b0_rp: wd x361-429 / xd x235-425 / lan
 clk, clk_a, clk_c, clk_o, clk_w0, clk_w1, clk_w2, clk_w3, clk_x0, clk_x1, clk_x2, clk_x3, clk_e0, clk_e1, clk_e2, clk_e3, clk_q0, clk_q1, clk_q2, clk_q3, clk_s0, clk_s1.
 clk = in-face pin flops + reset relays; clk_a = write mass (hold / asm_q / lb_q / wd_q); clk_c = stage control; clk_o = CPO scalars;
 clk_w<r> = wd capture of weight SRAMs 2r/2r+1, clk_x<r> = xd capture of x SRAM r, anchored beside rd_out (io_flop_at_pins macro_out_pins rd_out);
-clk_e<r> = lane enables beside the leaf lv_i / ss_i pins (macro_pins); clk_q<r> = CPO sums beside the leaf y face (macro_out_pins y); clk_s0 / clk_s1 = exit relay.
+clk_e<r> = lane enables (row-local, not anchored: OT_MPFLOP matches scalar pins only); clk_q<r> = CPO sums beside the leaf y face (macro_out_pins y); clk_s0 / clk_s1 = exit relay.
 Cross-root paths: same-source in-tile entries (die delivers phi - R), STA-timed, as the _rr kits. 0 added edges.
 ## SAFE-DESIGN checklist
 1 Pins: every input lands in an RTL flop, every output is a flop; scalar pin flops anchored at their faces; reset lands in 2 clk stages, then RTL ot_rst_relay copies. PASS

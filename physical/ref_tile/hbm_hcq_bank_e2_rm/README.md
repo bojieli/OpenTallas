@@ -3,7 +3,7 @@ Top ot_hbm_hc_bankq_ft_rm_static (rtl/hbm_accel/generic/peers/static_hc/ot_hbm_h
 Base hbm_hcq_bank_e2_1017 (single clk; its route ring1-47247cc08 was cancelled in a GRT hang 10-19). Pattern = b0/cb _rm (hc9bank_rl.py: one clock root per compact pin-anchored register mass).
 ## Clock partition (11 glue CTS roots + 20 hard entries ck_l / ck_w / ck_x)
 clk, clk_a, clk_c, clk_r0, clk_r1, clk_r2, clk_r3, clk_e0, clk_e1, clk_e2, clk_e3. clk = S-face landing / write scalars / feed registers / reset relays; clk_a = write mass; clk_c = stage control;
-clk_r<r> = SRAM read capture anchored beside rd_out; clk_e<r> = lane enables beside lv_i / ss_i. No CPI / CPO on the edge bank (unchanged).
+clk_r<r> = SRAM read capture anchored beside rd_out; clk_e<r> = lane enables (row-local, unanchored). No CPI / CPO on the edge bank (unchanged).
 Weight SRAMs MY (rd_out faces the lanes at x 259.2; e2_1017 R0 faced the W tile edge); x SRAMs R0 (rd_out faces W, toward the lanes). Root pins N face.
 ## SAFE-DESIGN checklist
 1 Pins: as e2_1017 (RTL landing / feed / write flops; chain pins unregistered on the edge bank, die-schedule unchanged); reset 2 clk stages at the S face. PASS (unchanged)

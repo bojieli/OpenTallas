@@ -387,10 +387,6 @@
   "macro_out_pins": [
    "rd_out",
    "y"
-  ],
-  "macro_pins": [
-   "lv_i",
-   "ss_i"
   ]
  },
  "inhold": false,
@@ -400,7 +396,7 @@
   "enable": false,
   "reason": "every bank-tile input lands in an RTL flop and every output is a flop: the chain pins in the CPI/CPO face registers (HH-9), the write/beat pins in the landing/write-port flops; a kit flop stage would shift the compiled systolic schedule"
  },
- "structural_change": "HBM-HCBANK9 10-20 successor of hbm_hcq_bank_cb_rw (--cts gate FAILED: b0_rp clk_r0 150.2 ps TT over 3 separated clusters; cb_rw clk 136.5 ps TT with the 2.8 k write mass 300-770 um from its W-face pin flops).  One glue root per compact register mass, the mass anchored beside the pins it serves: SRAM read capture beside rd_out (clk_w/clk_x), CPO sums beside the leaf y face (clk_q), lane enables beside lv_i / ss_i (clk_e), CPI sums at the in face (clk_i), write mass on clk_a.  0 added edges.",
+ "structural_change": "HBM-HCBANK9 10-20 successor of hbm_hcq_bank_cb_rw (--cts gate FAILED: b0_rp clk_r0 150.2 ps TT over 3 separated clusters; cb_rw clk 136.5 ps TT with the 2.8 k write mass 300-770 um from its W-face pin flops).  One glue root per compact register mass, the mass anchored beside the pins it serves: SRAM read capture beside rd_out (clk_w/clk_x), CPO sums beside the leaf y face (clk_q), row-local lane enables (clk_e), CPI sums at the in face (clk_i), write mass on clk_a.  0 added edges.",
  "job": {
   "owner": "Claude:DRIVE-HBM/HBM-HCBANK9",
   "branch": "claude/hcbank9-1020",
