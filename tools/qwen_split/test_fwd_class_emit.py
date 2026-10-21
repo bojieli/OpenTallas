@@ -90,6 +90,24 @@ class Composition(unittest.TestCase):
         self.assertTrue(m['fwd_lanes']['class_emission']['packing']['moves'])
         self.assertTrue(all(r['worst_data_um']<=405 for r in m['fwd_lanes']['class_emission']['packing']['moves']))
 
+    def test_reset_lane_data_and_wide_gate_enable_share_scalar_net(self):
+        v,m=self.vehicle(1088)
+        reset=V.Inst('rly_enable_0','qfd_rlyrl_1_WE_65x30',700,100,64.776,30.216)
+        m['insts'].append(reset)
+        m['buses']=[b for b in m['buses'] if b[0]!='en']
+        m['buses'] += [('enable_in','reset',1,[('src','en'),(reset.name,'a')]),
+                       ('enable','reset',1,[(reset.name,'b'),('rly_payload_0','en')]),
+                       ('enable_clock','clock_trunk',1,[('src','ck'),(reset.name,'ck')])]
+        m['fwd_lanes']['lanes'].append(dict(bid='enable',bits=1,n=1,E=None,K=None,
+                                          lane='reset',stations=[],landing=reset.name))
+        F.install(v,m)
+        net=next(b for b in m['buses'] if b[0]=='enable')
+        self.assertEqual(net[2],1)
+        self.assertEqual(set(net[3]),{('rly_enable_0','b'),('rly_payload__s0_0','en'),('rly_payload__s1_0','en')})
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/'die.v';v.write_netlist(m,1,path)
+            self.assertEqual(path.read_text().count('.en(n_enable)'),2)
+
     def test_missing_reservation_refused(self):
         v,m=self.vehicle();m['insts'][2].h=30
         with self.assertRaisesRegex(ValueError,'reservation missing'): F.install(v,m)

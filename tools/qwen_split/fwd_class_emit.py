@@ -86,13 +86,16 @@ def install(v, m):
             for part,(lo,hi) in enumerate(parts):
                 ne = []
                 for i,p in eps:
-                    if i in mapping:
+                    if i in mapping and p.lstrip('*') in ('a','b'):
                         ni, il, ih, row = mapping[i][part]
                         if (il,ih) != (lo,hi):
                             raise ValueError(f'{bid}: source width mismatch')
-                        ne.append((ni.name, f'{p}[{hi-lo-1}:0]'))
+                        ne.append((ni.name, p if bits==1 else f'{p}[{hi-lo-1}:0]'))
+                    elif i in mapping:
+                        if bits!=1:raise ValueError(f'{bid}: scalar class endpoint on a wide data net')
+                        ne.extend((ni.name,p) for ni,*_ in mapping[i])
                     else:
-                        ne.append((i, f'{p}[{hi-1}:{lo}]'))
+                        ne.append((i, p if bits==1 else f'{p}[{hi-1}:{lo}]'))
                 newb.append((bid if len(parts)==1 else f'{bid}__s{part}',cl,hi-lo,ne))
         else:
             # Scalar clocks/epoch/reset fan out; forwarded clock outputs are
