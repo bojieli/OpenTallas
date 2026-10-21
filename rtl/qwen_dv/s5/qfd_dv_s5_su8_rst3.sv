@@ -203,10 +203,11 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     // 33-52 loads, and ABC pushed the mux selects into the multipliers, 93-112 loads per select replica).  Structure now:
     // xs_l[gl] = K*stride is an ENABLE register per lane: on accept it loads K * (the lane's OWN kept copy of the stride
     // pin bits, registered at the pin in the same edge as c_si), else it holds (= K * the held asi..dsi, since the
-    // stride fields only change on accept).  Each lane has its own 8 chunk select replicas.  0 edges, same values.
+    // stride fields only change on accept).  Each lane has its own 16 select replicas (6-bit chunks; r3 gate: 8 x 12-bit
+    // chunks still 35-40 loads on lanes 3/5/6 after ABC).  0 edges, same values.
     wire [4*AW-1:0] xs_raw = {si[109:86], si[182:159], si[255:232], si[341:318]};   // = xs_in one edge earlier
-    wire [2:0] sg1;
-    generate for (gi = 0; gi < 3; gi = gi + 1) begin : g_sg1
+    wire [5:0] sg1;
+    generate for (gi = 0; gi < 6; gi = gi + 1) begin : g_sg1
         qfd_dv_su8_kffr #(.W(1), .ID(210 + gi)) u (.ck(ck), .rn(rst_k[1]), .d(c_su), .q(sg1[gi]));
     end endgenerate
     wire [4*AW-1:0] cur_l [0:3];
@@ -216,10 +217,10 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     end
     for (gc = 0; gc < 8; gc = gc + 1) begin : g_xsl
         wire [4*AW-1:0] xs_pin;
-        wire [7:0] xsel;
+        wire [15:0] xsel;
         qfd_dv_su8_kff #(.W(4*AW), .ID(670 + gc)) u_pin (.ck(ck), .d(xs_raw), .q(xs_pin));
-        for (genvar c = 0; c < 8; c = c + 1) begin : g_sel
-            qfd_dv_su8_kff #(.W(1), .ID(800 + 8 * gc + c)) u (.ck(ck), .d(sg1[(8 * gc + c) % 3]), .q(xsel[c]));
+        for (genvar c = 0; c < 16; c = c + 1) begin : g_sel
+            qfd_dv_su8_kff #(.W(1), .ID(800 + 16 * gc + c)) u (.ck(ck), .d(sg1[(16 * gc + c) % 6]), .q(xsel[c]));
         end
         qfd_dv_su8_xlane #(.K(gc)) u (.ck(ck), .sel(xsel), .xin(xs_pin), .q(xs_l[gc]));
     end endgenerate
@@ -307,10 +308,10 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
 qfd_dv_su8_kff #(.W(1058),.ID(9010)) u_output_pins (.ck(ck),.d({c_gb,c_gv,c_lv1,c_pd1,c_su_nr,c_su_idle,c_su_fault,c_su_prog,c_su_rows}),.q({gb,gv,lv1,pd1,su_nr,su_idle,su_fault,su_prog,su_rows}));
 endmodule
 
-// QW-SU8 r3: one lane's stride offset register: q chunk c <= sel[c] ? (K * xin) chunk c : q chunk c (K*stride, mod 2^24).
+// QW-SU8 r3/r4: one lane's stride offset register: q 6-bit chunk c <= sel[c] ? (K * xin) chunk c : hold (K*stride, mod 2^24).
 // Kept so the per-lane copies (and their own select replicas) are never merged back.
 (* keep_hierarchy = "yes" *) module qfd_dv_su8_xlane #(parameter integer K = 0) (
-    input wire ck, input wire [7:0] sel, input wire [95:0] xin, output reg [95:0] q);
+    input wire ck, input wire [15:0] sel, input wire [95:0] xin, output reg [95:0] q);
     wire [95:0] m;
     genvar f;
     generate for (f = 0; f < 4; f = f + 1) begin : g_f
@@ -318,5 +319,5 @@ endmodule
     end endgenerate
     integer c;
     always @(posedge ck)
-        for (c = 0; c < 8; c = c + 1) if (sel[c]) q[12*c +: 12] <= m[12*c +: 12];
+        for (c = 0; c < 16; c = c + 1) if (sel[c]) q[6*c +: 6] <= m[6*c +: 6];
 endmodule
