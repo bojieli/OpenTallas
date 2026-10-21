@@ -1,5 +1,5 @@
 {
- "scope": "existing detailed CTS report, not new STA; TT signoff summary retained separately",
+ "scope": "existing TT-overlay detailed CTS report at1540ps, scene labels ss/WC; no new STA; TT real-period1666.667 summary retained separately",
  "startpoint": "u_eng.u80525_c0/u_cell",
  "launch_clock": "ot_entry_0",
  "launch_root": "ck_ingest",
@@ -317,5 +317,10 @@
   "hold_worst_ps": 49.6,
   "full_startpoint_recorded": false
  },
- "mapping_limit": "singleton original cell80525 absent from copied_cells; no exact RTL register identity asserted"
+ "mapping_limit": "singleton original cell80525 absent from copied_cells; no exact RTL register identity asserted",
+ "report_mode_label": "ss",
+ "report_corner_label": "WC",
+ "actual_setup_libraries": "TT: runtime_config.mk WC_NLDM_LIB_FILES overridden to TC_NLDM_LIB_FILES and macro_tt.lib",
+ "actual_hold_libraries": "FF BC libraries",
+ "SS_qualification": false
 }
