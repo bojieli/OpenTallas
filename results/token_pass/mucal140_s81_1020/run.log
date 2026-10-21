@@ -1,0 +1,29 @@
+ar: 36 users x 815.5 = 29357 agg; period 1471552; bound {'cycles': 38804, 'stage': 'R003'}; checker PASS (14580 windows, 0 coll); N+1 FAULT; inject FAULT
+mtp: 8 users x 2509.4 = 20075 agg; period 1988820; bound {'cycles': 232821, 'stage': 'R003'}; checker PASS (3240 windows, 0 coll); N+1 FAULT; inject FAULT
+{
+ "composer": "tools/toksim_s81_compose.py release-partial (results/token_pass/measured_s81_1019/cycles.json)",
+ "ar": {
+  "T_composer": 1438802.6,
+  "tok_s_composer": 834.0,
+  "pct_measured": 80.25,
+  "cal2_structural": 2418,
+  "added_hops": 20160,
+  "forward_x_chain_delta": 10168.0,
+  "T": 1471548.6,
+  "tok_s": 815.5
+ },
+ "mtp": {
+  "T_composer": 1883938.8,
+  "tok_s_composer": 2649.1,
+  "pct_measured": 71.64,
+  "cal2_structural": 2556,
+  "added_hops": 20160,
+  "forward_x_chain_delta": 10168.0,
+  "wave_composer": 235450.0,
+  "wave_physical": 307445.0,
+  "T": 1988817.8,
+  "tok_s": 2509.4
+ },
+ "partial_add_cycles": 82.0,
+ "partial_add_grade": "priced (= measured eng.add SU add instance)"
+}
