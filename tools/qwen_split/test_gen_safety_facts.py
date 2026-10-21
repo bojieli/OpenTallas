@@ -102,3 +102,15 @@ def test_foreign_reset_into_forwarded_lane_is_still_checked():
     bad = [c for c in f['crossings'] if c['id'] == 'foreign_rst']
     assert len(bad) == 1 and bad[0]['landing'] is None
     assert check_facts(f)['counts']['no_landing'] == 1
+
+
+def test_port_clock_identity_beats_unrelated_shared_macro_clock():
+    m, pos = fixture()
+    m['buses'].append(('extra_b', 'clock_trunk', 1, [('pll', 'cc'), ('a', 'ck_other'), ('b', 'ck_other')]))
+    m['dv_cluster_clocks'] = dict(master='block', related_pins=dict(q=['ck']*8, d=['ck']*8))
+    m['buses'].append(('direct', 'data', 8, [('a', 'q'), ('b', 'd')]))
+    cs = [c for c in export_model(m, pos)['crossings'] if c['id'] == 'direct']
+    assert len(cs) == 1 and cs[0]['src_region'] == 'clk_a' and cs[0]['dst_region'] == 'clk_b'
+    m['buses'] = [b for b in m['buses'] if b[0] != 'clk_b']
+    cs = [c for c in export_model(m, pos)['crossings'] if c['id'] == 'direct']
+    assert cs[0]['dst_region'] == 'UNDRIVEN:b/ck'

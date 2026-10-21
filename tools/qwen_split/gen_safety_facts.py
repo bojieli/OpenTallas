@@ -12,6 +12,7 @@ invented. Detailed occupancy remains the relay allocator's responsibility.
 """
 import json
 import os
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -56,7 +57,12 @@ def channels(model):
 
 def export_model(model, pin_pos):
     by = {i.name: i for i in model['insts']}
-    roots, clock = {}, defaultdict(set)
+    roots, clock, pin_clock = {}, defaultdict(set), {}
+    related = {}
+    for key in ("dv_cluster_clocks", "native_static_io_bind"):
+        spec = model.get(key) or {}
+        if spec.get("master") and spec.get("related_pins"):
+            related[spec["master"]] = spec["related_pins"]
     for bid, cls, bits, eps in model['buses']:
         if cls != 'clock_trunk':
             continue
@@ -65,26 +71,46 @@ def export_model(model, pin_pos):
         roots[bid] = dict(root=root)
         for inst, port in eps[1:]:
             clock[inst].add(bid)
+            pin_clock[(inst, port.lstrip("*"))] = bid
     unknown = lambda i: 'UNDRIVEN:' + i
-    def region(i):
+    def region(i, port=None):
+        base = re.sub(r'\[.*\]$', '', (port or '').lstrip('*'))
+        refs = related.get(by[i].master, {}).get(base)
+        if refs:
+            sliced = re.search(r'\[(\d+)(?::(\d+))?\]$', port or '')
+            if sliced:
+                hi, lo = int(sliced[1]), int(sliced[2] or sliced[1])
+                refs = refs[min(hi, lo):max(hi, lo)+1]
+            rs = set()
+            for cp in set(refs):
+                r = pin_clock.get((i, cp))
+                if r is None:
+                    r = unknown(i + '/' + cp)
+                    roots.setdefault(r, dict(root=None))
+                rs.add(r)
+            return rs
+        # Forwarded frames' reset/control pins are synchronous to local ck,
+        # while ckf is their data write clock; lane data is checked end-to-end.
+        if by[i].kind == 'relay':
+            for cp in ('ck', 'ck_s'):
+                if (i, cp) in pin_clock:
+                    return {pin_clock[i, cp]}
         rs = clock.get(i, set())
-        # Keep all clock identities when a block has several clock pins. The
-        # communicating-pair intersection below avoids declaring intra-block CDC.
         if not rs:
             roots.setdefault(unknown(i), dict(root=None))
             return {unknown(i)}
         return rs
     wires, crossings = [], []
-    def cross(bid, si, di, bits, landing=None, src=None, dst=None):
-        ra, rb = region(si), region(di)
+    def cross(bid, si, di, bits, landing=None, src=None, dst=None, sp=None, dp=None):
+        ra, rb = region(si, sp), region(di, dp)
         if src is not None:
             ra = {src}; roots.setdefault(src, dict(root=None))
         if dst is not None:
             rb = {dst}; roots.setdefault(dst, dict(root=None))
-        if ra & rb:
-            return
         for a in sorted(ra):
             for b in sorted(rb):
+                if a == b:
+                    continue
                 crossings.append(dict(id=bid, src_region=a, dst_region=b,
                                       landing=landing, bits=bits, src=si, dst=di))
     lane_segments = set()
@@ -114,7 +140,7 @@ def export_model(model, pin_pos):
             if bid in lane_segments:
                 continue
             ring = di if by[di].master.startswith(RING) else None
-            cross(bid, si, di, bits, ring)
+            cross(bid, si, di, bits, ring, sp=sp, dp=dp)
     return dict(schema=SCHEMA, design='qwen_compute', reach_um=405.,
                 regions=roots, crossings=crossings, wires=wires, channels=channels(model),
                 provenance=dict(generator='tools/qwen_rom_fulldie_b3r2.py:selected final model',
