@@ -1,0 +1,1724 @@
+{
+  "status": "ONE_ROOT_AWARE_LOCAL_SOURCE_MODEL_ONLY_NOT_SELECTED_NO_ADMISSION",
+  "basis_O": "83d057be0 actual67 preserved",
+  "supersedes_local_northstack": "d0164d2b2 OPEN proposal retained, not executed",
+  "clock_root_source_sha256": "4a05244a5bb13fadc50ef10ae3131455a6de746ab8ffa25f84b82e7d0cf1302e",
+  "roots_moved_or_relabelled": 0,
+  "changed_bodies": [
+    {
+      "instance": "svg_NW1",
+      "before": {
+        "m": "ot_hbm_svc_sm_group_rel_id",
+        "x": 9764.28,
+        "y": 30937.04,
+        "o": "MX",
+        "w": 776.304,
+        "h": 646.92,
+        "rule": "PC band box (d2)"
+      },
+      "after": {
+        "m": "ot_hbm_svc_sm_group_rel_id",
+        "x": 9721.08,
+        "y": 30937.04,
+        "o": "MX",
+        "w": 776.304,
+        "h": 646.92,
+        "rule": "PC band box (d2)"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "xc_NW1",
+      "before": {
+        "m": "ot_hbm_svc_sm_xcal_rel_t",
+        "x": 9541.152,
+        "y": 31045.04,
+        "o": "R0",
+        "w": 209.952,
+        "h": 210.6,
+        "rule": "grant slot side_xc_NW1"
+      },
+      "after": {
+        "m": "ot_hbm_svc_sm_xcal_rel_t",
+        "x": 9497.952,
+        "y": 31045.04,
+        "o": "R0",
+        "w": 209.952,
+        "h": 210.6,
+        "rule": "grant slot side_xc_NW1"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "xc_NW2",
+      "before": {
+        "m": "ot_hbm_svc_sm_xcal_rel_t",
+        "x": 10677.96,
+        "y": 31045.04,
+        "o": "R0",
+        "w": 209.952,
+        "h": 210.6,
+        "rule": "grant slot side_xc_NW2"
+      },
+      "after": {
+        "m": "ot_hbm_svc_sm_xcal_rel_t",
+        "x": 10677.96,
+        "y": 31194.3,
+        "o": "R0",
+        "w": 209.952,
+        "h": 210.6,
+        "rule": "grant slot side_xc_NW2"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "vmks_NW1",
+      "before": {
+        "m": "ot_hbm_svc_vm_kshare_splitstrap",
+        "x": 10572.984,
+        "y": 31390.64,
+        "o": "R0",
+        "w": 146.88,
+        "h": 146.88,
+        "rule": "grant slot side_vmks_NW1"
+      },
+      "after": {
+        "m": "ot_hbm_svc_vm_kshare_splitstrap",
+        "x": 10518.984,
+        "y": 31390.64,
+        "o": "R0",
+        "w": 146.88,
+        "h": 146.88,
+        "rule": "grant slot side_vmks_NW1"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "wbc_NW",
+      "before": {
+        "m": "ot_hbm_svc_wbw_copy",
+        "x": 10702.8,
+        "y": 31320.0,
+        "o": "R0",
+        "w": 21.6,
+        "h": 21.6,
+        "rule": "grant slot wbc_NW"
+      },
+      "after": {
+        "m": "ot_hbm_svc_wbw_copy",
+        "x": 10630.4,
+        "y": 31320.0,
+        "o": "R0",
+        "w": 21.6,
+        "h": 21.6,
+        "rule": "grant slot wbc_NW"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "refcfg_SW",
+      "before": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 8985.6,
+        "y": 1593.0,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_SW0"
+      },
+      "after": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 9200.4,
+        "y": 2073.6,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_SW0"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "refcfg_NW",
+      "before": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 8985.6,
+        "y": 31309.2,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_NW0"
+      },
+      "after": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 9200.4,
+        "y": 30866.4,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_NW0"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "cij_SW",
+      "before": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7732.8,
+        "y": 15006.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SW"
+      },
+      "after": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7646.4,
+        "y": 15006.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SW"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "cij_SE",
+      "before": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18424.8,
+        "y": 15055.2,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SE"
+      },
+      "after": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18511.2,
+        "y": 15055.2,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SE"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "cij_NW",
+      "before": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7965.0,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NW"
+      },
+      "after": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7878.6,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NW"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    },
+    {
+      "instance": "cij_NE",
+      "before": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18424.8,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NE"
+      },
+      "after": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18511.2,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NE"
+      },
+      "body_overlap_contacts": [],
+      "fixed_root_keepout_contacts": [],
+      "source_params_ports_clock_reset_change": false
+    }
+  ],
+  "all_45_root_contacts": [
+    {
+      "region": "band_NE0",
+      "root": [
+        24722.2,
+        20959.4
+      ],
+      "keepout": [
+        24692.2,
+        20929.4,
+        24752.2,
+        20989.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "su_NE0",
+      "all_body_keepout_contacts": [
+        "su_NE0"
+      ],
+      "center_inside_bodies": [
+        "su_NE0"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "su_NE0",
+          "box": [
+            22949.352,
+            20967.552,
+            24746.471999999998,
+            21010.752
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 2070.585344,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_NE1",
+      "root": [
+        20474.8,
+        20719.1
+      ],
+      "keepout": [
+        20444.8,
+        20689.1,
+        20504.8,
+        20749.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "su_NE1",
+      "all_body_keepout_contacts": [
+        "su_NE1"
+      ],
+      "center_inside_bodies": [
+        "su_NE1"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_NE2",
+      "root": [
+        15426.8,
+        22151.4
+      ],
+      "keepout": [
+        15396.8,
+        22121.4,
+        15456.8,
+        22181.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_NW0",
+      "root": [
+        911.5,
+        21082.6
+      ],
+      "keepout": [
+        881.5,
+        21052.6,
+        941.5,
+        21112.6
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_NW1",
+      "root": [
+        5435.6,
+        21082.6
+      ],
+      "keepout": [
+        5405.6,
+        21052.6,
+        5465.6,
+        21112.6
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_NW2",
+      "root": [
+        10917.7,
+        21741.2
+      ],
+      "keepout": [
+        10887.7,
+        21711.2,
+        10947.7,
+        21771.2
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_SE0",
+      "root": [
+        24728.3,
+        12058.3
+      ],
+      "keepout": [
+        24698.3,
+        12028.3,
+        24758.3,
+        12088.3
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "su_SE0",
+      "all_body_keepout_contacts": [
+        "su_SE0"
+      ],
+      "center_inside_bodies": [
+        "su_SE0"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 2890.32,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_SE1",
+      "root": [
+        20482.2,
+        12284.7
+      ],
+      "keepout": [
+        20452.2,
+        12254.7,
+        20512.2,
+        12314.7
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "su_SE1",
+      "all_body_keepout_contacts": [
+        "su_SE1"
+      ],
+      "center_inside_bodies": [
+        "su_SE1"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_SE2",
+      "root": [
+        15426.8,
+        10831.7
+      ],
+      "keepout": [
+        15396.8,
+        10801.7,
+        15456.8,
+        10861.7
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_SW0",
+      "root": [
+        1260.5,
+        12058.3
+      ],
+      "keepout": [
+        1230.5,
+        12028.3,
+        1290.5,
+        12088.3
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_SW1",
+      "root": [
+        5938.6,
+        12280.2
+      ],
+      "keepout": [
+        5908.6,
+        12250.2,
+        5968.6,
+        12310.2
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "su_SW1",
+      "all_body_keepout_contacts": [
+        "su_SW1"
+      ],
+      "center_inside_bodies": [
+        "su_SW1"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "band_SW2",
+      "root": [
+        10982.0,
+        10775.7
+      ],
+      "keepout": [
+        10952.0,
+        10745.7,
+        11012.0,
+        10805.7
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "idx_NE",
+      "root": [
+        19765.7,
+        31974.3
+      ],
+      "keepout": [
+        19735.7,
+        31944.3,
+        19795.7,
+        32004.3
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "hb_idx__s_NE",
+      "all_body_keepout_contacts": [
+        "hb_idx__s_NE"
+      ],
+      "center_inside_bodies": [
+        "hb_idx__s_NE"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "hb_idx__s_NE",
+          "box": [
+            19706.112,
+            31246.344,
+            19770.912,
+            32758.344
+          ],
+          "source_kind": "feedthrough_relay_column",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        },
+        {
+          "instance": "hb_idx__s_NE",
+          "box": [
+            18588.312,
+            31969.944,
+            20100.312,
+            32034.744000000002
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 635.663472,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "idx_NW",
+      "root": [
+        6221.1,
+        31974.3
+      ],
+      "keepout": [
+        6191.1,
+        31944.3,
+        6251.1,
+        32004.3
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "hb_idx__s_NW",
+      "all_body_keepout_contacts": [
+        "hb_idx__s_NW"
+      ],
+      "center_inside_bodies": [
+        "hb_idx__s_NW"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "hb_idx__s_NW",
+          "box": [
+            6215.831999999999,
+            31246.344,
+            6280.632,
+            32758.344
+          ],
+          "source_kind": "feedthrough_relay_column",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        },
+        {
+          "instance": "hb_idx__s_NW",
+          "box": [
+            5886.432,
+            31969.944,
+            7398.432,
+            32034.744000000002
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 634.227408,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "idx_SE",
+      "root": [
+        19765.7,
+        1008.8
+      ],
+      "keepout": [
+        19735.7,
+        978.8,
+        19795.7,
+        1038.8
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "hb_idx__s_SE",
+      "all_body_keepout_contacts": [
+        "hb_idx__s_SE"
+      ],
+      "center_inside_bodies": [
+        "hb_idx__s_SE"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "hb_idx__s_SE",
+          "box": [
+            19706.112,
+            484.056,
+            19770.912,
+            1996.056
+          ],
+          "source_kind": "feedthrough_relay_column",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1487.28,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "idx_SW",
+      "root": [
+        6221.1,
+        1008.8
+      ],
+      "keepout": [
+        6191.1,
+        978.8,
+        6251.1,
+        1038.8
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "hb_idx__s_SW",
+      "all_body_keepout_contacts": [
+        "hb_idx__s_SW"
+      ],
+      "center_inside_bodies": [
+        "hb_idx__s_SW"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "hb_idx__s_SW",
+          "box": [
+            6215.831999999999,
+            484.056,
+            6280.632,
+            1996.056
+          ],
+          "source_kind": "feedthrough_relay_column",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1483.92,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "pc_NE",
+      "root": [
+        15268.0,
+        31445.7
+      ],
+      "keepout": [
+        15238.0,
+        31415.7,
+        15298.0,
+        31475.7
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [
+        "vmks_NW5"
+      ],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 1745.76,
+      "disposition": "CENTER_CLEAR_RESERVATION_BODY_CONTACT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "pc_NW",
+      "root": [
+        10720.8,
+        31445.7
+      ],
+      "keepout": [
+        10690.8,
+        31415.7,
+        10750.8,
+        31475.7
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "pc_SE",
+      "root": [
+        15268.0,
+        1537.4
+      ],
+      "keepout": [
+        15238.0,
+        1507.4,
+        15298.0,
+        1567.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "xc_SW6",
+      "all_body_keepout_contacts": [
+        "xc_SW6"
+      ],
+      "center_inside_bodies": [
+        "xc_SW6"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "pc_SW",
+      "root": [
+        10720.8,
+        1537.4
+      ],
+      "keepout": [
+        10690.8,
+        1507.4,
+        10750.8,
+        1567.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "xc_SW2",
+      "all_body_keepout_contacts": [
+        "xc_SW2"
+      ],
+      "center_inside_bodies": [
+        "xc_SW2"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "phy_NW",
+      "root": [
+        12745.2,
+        32372.9
+      ],
+      "keepout": [
+        12715.2,
+        32342.9,
+        12775.2,
+        32402.9
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "phy_NW",
+      "all_body_keepout_contacts": [
+        "phy_NW"
+      ],
+      "center_inside_bodies": [
+        "phy_NW"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "phy_SW",
+      "root": [
+        12745.2,
+        610.2
+      ],
+      "keepout": [
+        12715.2,
+        580.2,
+        12775.2,
+        640.2
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "phy_SW",
+      "all_body_keepout_contacts": [
+        "phy_SW"
+      ],
+      "center_inside_bodies": [
+        "phy_SW"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW0",
+      "root": [
+        2795.1,
+        27363.1
+      ],
+      "keepout": [
+        2765.1,
+        27333.1,
+        2825.1,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW0",
+      "all_body_keepout_contacts": [
+        "sm_NW0"
+      ],
+      "center_inside_bodies": [
+        "sm_NW0"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW0",
+          "box": [
+            1825.2,
+            27341.496,
+            3764.88,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW1",
+      "root": [
+        6225.2,
+        27363.1
+      ],
+      "keepout": [
+        6195.2,
+        27333.1,
+        6255.2,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW1",
+      "all_body_keepout_contacts": [
+        "sm_NW1"
+      ],
+      "center_inside_bodies": [
+        "sm_NW1"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW1",
+          "box": [
+            5255.28,
+            27341.496,
+            7194.96,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW2",
+      "root": [
+        8437.7,
+        27363.1
+      ],
+      "keepout": [
+        8407.7,
+        27333.1,
+        8467.7,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW2",
+      "all_body_keepout_contacts": [
+        "sm_NW2"
+      ],
+      "center_inside_bodies": [
+        "sm_NW2"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW2",
+          "box": [
+            7467.768,
+            27341.496,
+            9407.448,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW3",
+      "root": [
+        11608.6,
+        27363.1
+      ],
+      "keepout": [
+        11578.6,
+        27333.1,
+        11638.6,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW3",
+      "all_body_keepout_contacts": [
+        "sm_NW3"
+      ],
+      "center_inside_bodies": [
+        "sm_NW3"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW3",
+          "box": [
+            10638.648,
+            27341.496,
+            12578.328,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW4",
+      "root": [
+        14380.2,
+        27363.1
+      ],
+      "keepout": [
+        14350.2,
+        27333.1,
+        14410.2,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW4",
+      "all_body_keepout_contacts": [
+        "sm_NW4"
+      ],
+      "center_inside_bodies": [
+        "sm_NW4"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW4",
+          "box": [
+            13410.36,
+            27341.496,
+            15350.04,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW5",
+      "root": [
+        17551.1,
+        27363.1
+      ],
+      "keepout": [
+        17521.1,
+        27333.1,
+        17581.1,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW5",
+      "all_body_keepout_contacts": [
+        "sm_NW5"
+      ],
+      "center_inside_bodies": [
+        "sm_NW5"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW5",
+          "box": [
+            16581.24,
+            27341.496,
+            18520.920000000002,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW6",
+      "root": [
+        19763.6,
+        27363.1
+      ],
+      "keepout": [
+        19733.6,
+        27333.1,
+        19793.6,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW6",
+      "all_body_keepout_contacts": [
+        "sm_NW6"
+      ],
+      "center_inside_bodies": [
+        "sm_NW6"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW6",
+          "box": [
+            18793.728,
+            27341.496,
+            20733.408,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_NW7",
+      "root": [
+        23193.7,
+        27363.1
+      ],
+      "keepout": [
+        23163.7,
+        27333.1,
+        23223.7,
+        27393.1
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_NW7",
+      "all_body_keepout_contacts": [
+        "sm_NW7"
+      ],
+      "center_inside_bodies": [
+        "sm_NW7"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_NW7",
+          "box": [
+            22223.808,
+            27341.496,
+            24163.488,
+            27384.696
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW0",
+      "root": [
+        2795.1,
+        5620.0
+      ],
+      "keepout": [
+        2765.1,
+        5590.0,
+        2825.1,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW0",
+      "all_body_keepout_contacts": [
+        "sm_SW0"
+      ],
+      "center_inside_bodies": [
+        "sm_SW0"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW0",
+          "box": [
+            1825.2,
+            5598.504,
+            3764.88,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW1",
+      "root": [
+        6225.2,
+        5620.0
+      ],
+      "keepout": [
+        6195.2,
+        5590.0,
+        6255.2,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW1",
+      "all_body_keepout_contacts": [
+        "sm_SW1"
+      ],
+      "center_inside_bodies": [
+        "sm_SW1"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW1",
+          "box": [
+            5255.28,
+            5598.504,
+            7194.96,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW2",
+      "root": [
+        8437.7,
+        5620.0
+      ],
+      "keepout": [
+        8407.7,
+        5590.0,
+        8467.7,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW2",
+      "all_body_keepout_contacts": [
+        "sm_SW2"
+      ],
+      "center_inside_bodies": [
+        "sm_SW2"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW2",
+          "box": [
+            7467.768,
+            5598.504,
+            9407.448,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW3",
+      "root": [
+        11608.6,
+        5620.0
+      ],
+      "keepout": [
+        11578.6,
+        5590.0,
+        11638.6,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW3",
+      "all_body_keepout_contacts": [
+        "sm_SW3"
+      ],
+      "center_inside_bodies": [
+        "sm_SW3"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW3",
+          "box": [
+            10638.648,
+            5598.504,
+            12578.328,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW4",
+      "root": [
+        14380.2,
+        5620.0
+      ],
+      "keepout": [
+        14350.2,
+        5590.0,
+        14410.2,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW4",
+      "all_body_keepout_contacts": [
+        "sm_SW4"
+      ],
+      "center_inside_bodies": [
+        "sm_SW4"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW4",
+          "box": [
+            13410.36,
+            5598.504,
+            15350.04,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW5",
+      "root": [
+        17551.1,
+        5620.0
+      ],
+      "keepout": [
+        17521.1,
+        5590.0,
+        17581.1,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW5",
+      "all_body_keepout_contacts": [
+        "sm_SW5"
+      ],
+      "center_inside_bodies": [
+        "sm_SW5"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW5",
+          "box": [
+            16581.24,
+            5598.504,
+            18520.920000000002,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW6",
+      "root": [
+        19763.6,
+        5620.0
+      ],
+      "keepout": [
+        19733.6,
+        5590.0,
+        19793.6,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW6",
+      "all_body_keepout_contacts": [
+        "sm_SW6"
+      ],
+      "center_inside_bodies": [
+        "sm_SW6"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW6",
+          "box": [
+            18793.728,
+            5598.504,
+            20733.408,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "sm_SW7",
+      "root": [
+        23193.7,
+        5620.0
+      ],
+      "keepout": [
+        23163.7,
+        5590.0,
+        23223.7,
+        5650.0
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "sm_SW7",
+      "all_body_keepout_contacts": [
+        "sm_SW7"
+      ],
+      "center_inside_bodies": [
+        "sm_SW7"
+      ],
+      "planned_channel_contacts": [
+        {
+          "instance": "sm_SW7",
+          "box": [
+            22223.808,
+            5598.504,
+            24163.488,
+            5641.704
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": true,
+      "solid_body_area_in_keepout_um2": 1008.0,
+      "disposition": "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "strip_C",
+      "root": [
+        14006.8,
+        16431.4
+      ],
+      "keepout": [
+        13976.8,
+        16401.4,
+        14036.8,
+        16461.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [
+        "tkm_SW"
+      ],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [
+        {
+          "instance": "tkm_SW",
+          "box": [
+            11994.48,
+            16426.368000000002,
+            13994.48,
+            16469.568
+          ],
+          "source_kind": "feedthrough_relay_row",
+          "owner": "die (relay stations, HBM-DIE13 ft grid)",
+          "keepout_rule": "hard placement + M5/M6 route"
+        }
+      ],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 451.03424,
+      "disposition": "CENTER_CLEAR_RESERVATION_BODY_CONTACT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "strip_E",
+      "root": [
+        24745.1,
+        16095.4
+      ],
+      "keepout": [
+        24715.1,
+        16065.4,
+        24775.1,
+        16125.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "lk_N2",
+      "all_body_keepout_contacts": [
+        "lk_N2"
+      ],
+      "center_inside_bodies": [
+        "lk_N2"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 2318.16,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "strip_W",
+      "root": [
+        2193.1,
+        16095.4
+      ],
+      "keepout": [
+        2163.1,
+        16065.4,
+        2223.1,
+        16125.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": "ep_S1",
+      "all_body_keepout_contacts": [
+        "ep_S1"
+      ],
+      "center_inside_bodies": [
+        "ep_S1"
+      ],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 3600.0,
+      "disposition": "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "xq_NE",
+      "root": [
+        18756.2,
+        24626.8
+      ],
+      "keepout": [
+        18726.2,
+        24596.8,
+        18786.2,
+        24656.8
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "xq_NW",
+      "root": [
+        7257.5,
+        24626.8
+      ],
+      "keepout": [
+        7227.5,
+        24596.8,
+        7287.5,
+        24656.8
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "xq_SE",
+      "root": [
+        18756.2,
+        8356.4
+      ],
+      "keepout": [
+        18726.2,
+        8326.4,
+        18786.2,
+        8386.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    },
+    {
+      "region": "xq_SW",
+      "root": [
+        7257.5,
+        8356.4
+      ],
+      "keepout": [
+        7227.5,
+        8326.4,
+        7287.5,
+        8386.4
+      ],
+      "root_ownership_unchanged": true,
+      "original_first_bbox_report": null,
+      "all_body_keepout_contacts": [],
+      "center_inside_bodies": [],
+      "planned_channel_contacts": [],
+      "center_in_model_carve": false,
+      "solid_body_area_in_keepout_um2": 0,
+      "disposition": "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN",
+      "rule": "d4g_root_sites says roots must sit in channels; failed=[] is reporting-only, not a waiver. Geometric carve is a source planning promise, not independent physical clock-cell permission."
+    }
+  ],
+  "all_31_original_inside_block_reports_retained": 31,
+  "root_status_counts": {
+    "CENTER_IN_FIXED_SOLID_BODY_PHYSICAL_CONFLICT_OPEN": 11,
+    "MODEL_BODY_CLEAR_REAL_CLOCK_PROOF_OPEN": 12,
+    "SOURCE_CENTER_IN_PLANNED_CHANNEL_RESERVATION_OVERLAP_PHYSICAL_OPEN": 20,
+    "CENTER_CLEAR_RESERVATION_BODY_CONTACT_OPEN": 2
+  },
+  "reserved_reset_areas": {
+    "src": null,
+    "kept": [],
+    "slid": [],
+    "lost": [],
+    "released": [],
+    "sites": [],
+    "note": "L2H-GEN2D-FP2: empty reserved areas = free reset-stage homes for reset_forest_layer"
+  },
+  "reservation_scope": "All45 original clock root keepouts + all emitted non-relay bodies + emitted reserved reset sites(empty). No new physical reserved/contact witness inferred. Generated relay/forest homes must be replanned by ordinary authorized GEN; none admitted.",
+  "GLOBAL_FIT_QUALIFIED": false,
+  "global_open_constraints": "Remaining unchanged root/body conflicts require explicit source/physical disposition; local11-body clearance is not a global root-clear claim. PHY and other hard-body center collisions cannot be waived or silently carved.",
+  "demand_improvement_measured": false,
+  "new_GEN_S2_physical_probe_route": 0
+}
