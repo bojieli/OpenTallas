@@ -1,0 +1,61 @@
+{
+  "observed": "2026-10-21 14:01 PDT",
+  "kind": "READ_ONLY_EXISTING_SELECTED_MODULE_INDEX_QUERY",
+  "root": "ot-gold2:/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq",
+  "source": "553741303923ab6bab36d67d17f914b1f11896c5",
+  "die_sha256": "8ef3b748e5b14da4446d29576702d2828a056943481c650a65b5f5b18bf84838",
+  "method": "existing materialized src/tools/die_port_bind.rtl_index(original rtl_roots, explicit rtl_files, defines); no competing definitions for any target, so explicit frame-prefer priority is irrelevant to these seven modules",
+  "defines": [
+    "DSFD_PQ_STATIC_X2"
+  ],
+  "selected": {
+    "ot_s81sl_slice_c1x_k8_cap5r_lp": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+      "sha256": "fbbd94f494642f645e924f1f97df2bcdfbeff4170848da7c5616cca17dd71fa2",
+      "ambiguous": false,
+      "variant": false
+    },
+    "ot_s81sl_xgt_xo": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv",
+      "sha256": "53832356d7401d9c7af6fbcb7da5349548537c5c7771467d4cb740e053f74214",
+      "ambiguous": false,
+      "variant": false
+    },
+    "ot_s81sl_rstopt_xo": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+      "sha256": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+      "ambiguous": false,
+      "variant": false
+    },
+    "ot_s81sl_xs4": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "sha256": "974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9",
+      "ambiguous": false,
+      "variant": false
+    },
+    "ot_s81sl_slice": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+      "sha256": "96b62fa2bff6b4255100f20ca80506e493bab24ea95810f3811872ed06563ee9",
+      "ambiguous": false,
+      "variant": false
+    },
+    "ot_s81sl_xg": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+      "sha256": "39e4531d95bb3365571e455665217213960611451126b1d4a1db957de46cdc67",
+      "ambiguous": false,
+      "variant": false
+    },
+    "ot_s81sl_xs": {
+      "path": "src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+      "sha256": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+      "ambiguous": false,
+      "variant": false
+    }
+  },
+  "actual_hierarchy": {
+    "normal12": "slice -> xg(rstop + XS), capc2; candidate689 changes xg/xr to xgt/xrt but retains XS/capc2",
+    "end4": "MU72 -> cap5r_lp -> xgt_xo(rstopt_xo + XS4known974ec6f3), xrt1, capc5r",
+    "clock_reset": "xgt_xo clk=ck_C; reset=lpr_c_u_xg, actual seven-stage reset pad from lpr_C; MU72 u_sl ck_C=ck_S"
+  },
+  "scope": "Module selection/source ABI only; no new functional, native or physical qualification. Canonical068 differs; latestf5 XS4 candidate SHA50485a59 is not the shipping974ec6f3 source."
+}
