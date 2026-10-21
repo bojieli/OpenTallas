@@ -5595,6 +5595,15 @@ def _reset_tree(v, m):
             o[mn] = M
         return o
     v.masters = masters
+    if _os.environ.get('OT_SPLIT_FWD_RST_SYNC', '0') == '1':
+        if not RST_CLOSED:
+            raise ValueError('forwarded reset capture requires the real closed reset-repeater view')
+        from qwen_split.reset_region_capture import land_forwarded_reset
+        _capture_rects = [(i.x, i.y, i.x+i.w, i.y+i.h) for i in m['insts']]
+        _capture_rects += [tuple(k['rect']) for k in m.get('relay_keepouts', [])]
+        _capture_occ = _RstOcc(_capture_rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
+        land_forwarded_reset(v, m, _capture_occ, _pin_pos(v, m), RST_W, RST_H,
+                             RELAY_REACH_UM, ROOT)
     # the release rule on the emitted pins (the audit's measure), every reset-class net of the die
     pos = _pin_pos(v, m)
     over, mx = [], 0.0

@@ -144,3 +144,79 @@ def sink_capture_groups(model, sinks, clock_inputs):
             owner, cp = inst, 'isolated:'+p
         groups[inst, port] = ('receiving_owner', owner, cp)
     return groups
+
+
+def land_forwarded_reset(v, model, occ, pin_pos, width, height, reach, source_root):
+    """Append a real closed two-stage receiving capture to lnk_fwd_lrst.
+
+    The original forwarded relay lane remains intact. New placement uses the
+    existing occupancy allocator in a conservative feasible box for BOTH actual
+    pin hops. Failure asks for real channel/endcap space; there is no overlap or
+    reach bypass. Added latency is two cold-reset edges and zero per-token edges.
+    """
+    lane = next((x for x in model.get('fwd_lanes', {}).get('lanes', [])
+                 if x['bid'] == 'lnk_fwd_lrst' and x.get('lane') == 'reset'), None)
+    if lane is None or lane.get('reset_capture'):
+        return None
+    by = {i.name: i for i in model['insts']}
+    last, dst = lane['landing'], lane['dst']
+    matches = [(j, b, e) for j, b in enumerate(model['buses']) for e in b[3][1:]
+               if b[0].startswith(lane['bid']+'__r') and b[3][0][0] == last and e[0] == dst]
+    if len(matches) != 1:
+        raise ValueError('forwarded reset capture: no unique actual final relay-to-receiver wire')
+    j, bus, endpoint = matches[0]
+    roots = [(b[0], p) for b in model['buses'] if b[1] == 'clock_trunk'
+             for i, p in b[3][1:] if i == dst and p in ('ck', 'clk')]
+    if len(roots) != 1:
+        raise ValueError('forwarded reset capture: receiver has no unique actual clock root')
+    clock = roots[0][0]
+    name = 'rstcap_lnk_fwd_lrst'
+    if name in by:
+        raise ValueError('forwarded reset capture: duplicate capture instance')
+    # Get actual closed master pin coordinates, rather than assuming centres.
+    master = v.masters(model, 1)['qfd_rst_rep']
+    pins = {}
+    for p, layer, rect in v.pin_rects(master, 1, {q: 1 for q in master.order}):
+        if p.split('[')[0] in ('d', 'q0'):
+            pins[p.split('[')[0]] = ((rect[0]+rect[2])/2, (rect[1]+rect[3])/2)
+    dxy, qxy = pins['d'], pins['q0']
+    a, b = pin_pos(*bus[3][0]), pin_pos(*endpoint)
+    # Allowable lower-left corners are intersecting Manhattan balls. Their
+    # midpoint and this inscribed square are entirely inside both reach balls.
+    ca, cb = (a[0]-dxy[0], a[1]-dxy[1]), (b[0]-qxy[0], b[1]-qxy[1])
+    distance = abs(ca[0]-cb[0])+abs(ca[1]-cb[1])
+    radius = reach-distance/2
+    if radius <= 0:
+        raise ValueError('forwarded reset capture: actual terminal pins require another relay/channel')
+    cx, cy = (ca[0]+cb[0])/2+width/2, (ca[1]+cb[1])/2+height/2
+    box = (cx-radius/2, cy-radius/2, cx+radius/2, cy+radius/2)
+    site = occ.site(cx, cy, box=box, lim=reach, w=width, h=height)
+    if site is None:
+        raise ValueError('forwarded reset capture: no legal cell-row site; enlarge real receiving endcap/channel/outline')
+    occ.add((site[0], site[1], site[0]+width, site[1]+height))
+    cap = v.Inst(name, 'qfd_rst_rep', site[0], site[1], width, height,
+                 kind='reset_rep', region='reset_tree', domain=by[dst].domain)
+    model['insts'].append(cap)
+    eps = [e for e in bus[3] if e != endpoint] + [(name, 'd')]
+    model['buses'][j] = (bus[0], bus[1], bus[2], eps)
+    output = bus[0]+'_sync'
+    model['buses'].append((output, 'reset', 1, [(name, 'q0'), endpoint]))
+    for k, old in enumerate(model['buses']):
+        if old[0] == clock and old[1] == 'clock_trunk':
+            model['buses'][k] = (old[0], old[1], old[2], old[3]+[(name, 'clk')])
+            break
+    model.setdefault('ck_follow', {})[name, 'clk'] = dst
+    rec = dict(inst=name, master='qfd_rst_rep', input_net=bus[0], output_net=output,
+               source=[last, bus[3][0][1]], receiver=list(endpoint), clock=clock,
+               cold_reset_edges=2, cycles_per_token=0, site_um=list(site),
+               calendar='HOLD: compile added two-edge reset release into boot/epoch calendar')
+    lane['reset_capture'] = rec
+    sync = model.setdefault('reset_sync', dict(endpoints=[]))
+    # This is an observed, physically instantiated two-stage d input. Its
+    # existence does not qualify the boot/calendar relationship or feed timing.
+    sync.setdefault('endpoints', []).append(dict(pin=name+'/d', inst=name, master='qfd_rst_rep',
+        net=bus[0], driver=last, clock=clock, cls='forwarded_reset_synchroniser',
+        why='actual closed qfd_rst_rep d->s[0]->r0; two receiving-root edges, calendar HOLD',
+        calendar=rec['calendar']))
+    model.setdefault('tp8_reset_tree', {})['forwarded_reset_capture'] = rec
+    return rec
