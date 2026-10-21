@@ -166,6 +166,8 @@ LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages',
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
              '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--rope'] if LINK_ROPE else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
 #            + --token-path (decompressed in link_calendar)
+if os.environ.get('OT_KV_HEAD_PREPARE_EDGES'):
+    LINK_ARGS += ['--head-prepare-edges',os.environ['OT_KV_HEAD_PREPARE_EDGES']]
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it
