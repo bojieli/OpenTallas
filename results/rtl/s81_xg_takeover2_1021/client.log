@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021/r4
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021/r4
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021/r4
+ot-run: ot-gold2       admits  -189 GB (avail 167, growth 300, headroom 0, waiters 0/0 GB) load 64/112 running 38 disk 2852 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021/r4
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021/r4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021/r4
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-xg-cap0fix-1021 (4.8 GB) ot-gold2 -> ot-epyc7 (no host with --dir admits 48 GB now)
+ot-run: SPILL: copied 17324 changed entries in 10 s; running on ot-epyc7; written files go back to ot-gold2 after the run
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-402396-1792614780 after 0 s
+EXISTING_MECHANISMS_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-402396-1792614780): exit 0
+ot-run: SPILL: outputs copied back ot-epyc7 -> ot-gold2; RAN on ot-epyc7: exit 0
