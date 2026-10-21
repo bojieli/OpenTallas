@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_sm_group_rel_h",
+ "enable": false,
+ "reason": "the RTL lands it: stream_rst_n -> ot_rst_relay (2 sync + KEPT relay leaves); the either-port producer reset -> ONE reviewed ot_reset_sync per family -> KEPT ot_rst_fanout leaves (<= 32 reset pins each); a kit landing has one clock and would cross the hbm reset into the stream family"
+}
