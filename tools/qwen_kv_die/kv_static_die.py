@@ -476,7 +476,8 @@ NATIVE_SLOTS = os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'
 # faces): OT_KV_CTL_PORTRAIT=1 takes ONLY the 345.6 x 475.2 portrait ctl slot (5.3 pins/um), not NATIVE_SLOTS' group
 # squares; the hroot words keep their planned control-channel corridors (_hroot_waypoints) as the feedthrough channel.
 CTL_PORTRAIT = os.environ.get('OT_KV_CTL_PORTRAIT', '0') == '1'
-CTL_PORTRAIT_LATE = os.environ.get('OT_KV_CTL_PORTRAIT_LATE', '0') == '1'   # KV-CTL11: place the portrait after attn/emb
+CTL_PORTRAIT_LATE = os.environ.get('OT_KV_CTL_PORTRAIT_LATE', '0') == '1'
+CTL_PORTRAIT_DX = float(os.environ.get('OT_KV_CTL_PORTRAIT_DX', '0'))   # KV-CTL11: portrait anchor x shift (um)   # KV-CTL11: place the portrait after attn/emb
 if NATIVE_SLOTS:
     FRAME['ctl'] = (345.6, 475.2)
 if CTL_PORTRAIT:
@@ -2398,6 +2399,13 @@ def place(m, K, geo, F):
         anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), ey_)
         emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
         m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
+    if CTL_PORTRAIT and CTL_PORTRAIT_DX:
+        # KV-CTL11 10-20 (OT_KV_CTL_PORTRAIT_DX=um, default 0): the 475.2-um portrait fills the seq-top / HOST-bottom gap at the
+        # HOST centre and blocks the HOST -> embgw hb lane (ctl11pB10 @b2a689861: 'no spot for hb stage 0' at (6793, 26449),
+        # 1242 um); shift the portrait off that column so the hb / centre-column words keep a relay channel beside it.
+        ax_, ay_ = anchors['kvs_ctl']
+        anchors['kvs_ctl'] = (ax_ + CTL_PORTRAIT_DX, ay_)
+        m.setdefault('geo', {})['ctl_portrait_dx'] = dict(dx=CTL_PORTRAIT_DX, anchor=list(anchors['kvs_ctl']))
     if CTL_PORTRAIT and CTL_PORTRAIT_LATE:
         # KV-CTL11 10-20 (OT_KV_CTL_PORTRAIT_LATE=1, default off): the 475.2-um portrait ctl takes its free spot AFTER the
         # attention / embedding tiles, so it never displaces their D2D / HOST corridor homes (ctl11pB1: portrait first
