@@ -4,13 +4,9 @@
 set ::ot_ref_pre_cts 0
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 create_clock -name core_clk -period 1666.667000000
-create_clock -name ot_io_bank0 -period 1666.667000000
-create_clock -name ot_io_bank1 -period 1666.667000000
-create_clock -name ot_io_out -period 1666.667000000
+create_clock -name ot_io_rl -period 1666.667000000
 create_clock -name ot_entry_0 -period 1666.667000000 [get_ports {ck_ingest}]
-create_clock -name ot_entry_1 -period 1666.667000000 [get_ports {ck_bank0}]
-create_clock -name ot_entry_2 -period 1666.667000000 [get_ports {ck_bank1}]
-create_clock -name ot_entry_3 -period 1666.667000000 [get_ports {ck_out}]
+create_clock -name ot_entry_1 -period 1666.667000000 [get_ports {ck_rl}]
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
@@ -30,11 +26,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 333.333 inputs {{eng_rst_n} {eng_dv} {eng_ddata} {eng_inv_a} {eng_inv_b} {eng_indata} {eng_wrdy}} outputs {{eng_drdy} {eng_inrdy} {eng_wv} {eng_wv_c} {eng_waddr} {eng_wdata} {eng_rv} {eng_raddr} {eng_done} {eng_done_a} {eng_done_b} {eng_done_c} {eng_tag} {eng_busy} {eng_nsec}}} {bank0} {clock ot_io_bank0 io_budget_ps 333.333 inputs {} outputs {}} {bank1} {clock ot_io_bank1 io_budget_ps 333.333 inputs {} outputs {}} {out} {clock ot_io_out io_budget_ps 333.333 inputs {} outputs {}}]
-set ::ot_ce_source_domains [dict create {ck_ingest} {core} {ck_bank0} {bank0} {ck_bank1} {bank1} {ck_out} {out}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 333.333 inputs {{eng_rst_n} {eng_dv} {eng_ddata} {eng_inv_a} {eng_inv_b} {eng_indata} {eng_wrdy}} outputs {{eng_drdy} {eng_inrdy} {eng_wv} {eng_wv_c} {eng_waddr} {eng_wdata} {eng_rv} {eng_raddr} {eng_done} {eng_done_a} {eng_done_b} {eng_done_c} {eng_tag} {eng_busy} {eng_nsec}}} {rl} {clock ot_io_rl io_budget_ps 333.333 inputs {} outputs {}}]
+set ::ot_ce_source_domains [dict create {ck_ingest} {core} {ck_rl} {rl}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck_ingest} {ck_bank0} {ck_bank1} {ck_out}}
-set ::ot_ce_ports {{ck_ingest} {ck_bank0} {ck_bank1} {ck_out}}
+set ::ot_ce_cts_roots {{ck_ingest} {ck_rl}}
+set ::ot_ce_ports {{ck_ingest} {ck_rl}}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in

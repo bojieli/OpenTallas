@@ -14,7 +14,7 @@
      "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
      "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
      "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v": "f25c44385d7e6a7aa5f5585fb08b96e0e0ccf8a03899ac6f08eb1c2d70018b2a",
-     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": "229efbf438b4a3098c504fd42a7f8043614ac449298c740e0c4d9cb5292c7da4"
+     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": "6a295b47916004bd6fcb7b59cb075c46367a448301acec3dac34254084f0f337"
     },
     "policy": "reviewed_gray_fifos",
     "spec": {
@@ -259,9 +259,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-21T12:54:07-0700",
-   "host": "ot-epyc5",
-   "key": "4981222b62f7c9e9722e28a7c3128f5ebdc265f6935d3db1b8a103a9d6340699",
+   "created": "2026-10-21T13:02:17-0700",
+   "host": "ot-epyc9",
+   "key": "fa941c4a234675bc000839fc0477524ee0c6d640f76a7cb6e4e2b9c2021af263",
    "record": {
     "counts": {
      "consumer": 0,
@@ -274,7 +274,7 @@
      "lsrc": 0,
      "macro": 3,
      "mem": 0,
-     "rst": 33,
+     "rst": 31,
      "rstage": 0,
      "src": 30,
      "stage": 30,
@@ -471,7 +471,7 @@
      },
      {
       "domain": "ingest",
-      "leaves": 22,
+      "leaves": 20,
       "scope": "u_rank__u_qm.u_rsi",
       "stages": 2
      }
@@ -706,18 +706,6 @@
       1
      ],
      "u_rank__u_qm.rb_i[1]": [
-      "rst",
-      "r2",
-      "pipe",
-      1
-     ],
-     "u_rank__u_qm.rb_i[20]": [
-      "rst",
-      "r2",
-      "pipe",
-      1
-     ],
-     "u_rank__u_qm.rb_i[21]": [
       "rst",
       "r2",
       "pipe",
@@ -2097,18 +2085,6 @@
       "pipe",
       1
      ],
-     "u_rank__u_qm.u_rsi.last[20]": [
-      "rst",
-      "r2",
-      "pipe",
-      1
-     ],
-     "u_rank__u_qm.u_rsi.last[21]": [
-      "rst",
-      "r2",
-      "pipe",
-      1
-     ],
      "u_rank__u_qm.u_rsi.last[2]": [
       "rst",
       "r2",
@@ -2229,18 +2205,6 @@
       "pipe",
       1
      ],
-     "u_rank__u_qm.u_rsi.sync_rst_n[20]": [
-      "rst",
-      "r2",
-      "pipe",
-      1
-     ],
-     "u_rank__u_qm.u_rsi.sync_rst_n[21]": [
-      "rst",
-      "r2",
-      "pipe",
-      1
-     ],
      "u_rank__u_qm.u_rsi.sync_rst_n[2]": [
       "rst",
       "r2",
@@ -2296,7 +2260,7 @@
      "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
      "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
      "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v": "f25c44385d7e6a7aa5f5585fb08b96e0e0ccf8a03899ac6f08eb1c2d70018b2a",
-     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": "229efbf438b4a3098c504fd42a7f8043614ac449298c740e0c4d9cb5292c7da4"
+     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": "6a295b47916004bd6fcb7b59cb075c46367a448301acec3dac34254084f0f337"
     },
     "strap_crossings": [],
     "straps": [],

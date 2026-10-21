@@ -1,8 +1,7 @@
 // QKO-HROOT2 10-21: single-clock (ck_ingest, 1.667 ns) engine tile of the split qkd_hr_ingest_qm. u_eng = the native32
 // primitive copy qkd_host_native_engine_n32 (Codex codex/k-hroot-integrated-1021, generated sha256 38376238..., census
 // max 32, 32 bank SRAMs). RMW_EN 0 configuration
-// of the shell (the engine's clk / clk_bank / clk_out entries are separate tile clock roots ck_ingest / ck_bank0 / ck_bank1 / ck_out
-// of one synchronous ingest family, tied together by the cluster exactly as qkd_hr_ingest_qm ties them): r_rdy / rd_v / rd_data are the constants 0 exactly as in qkd_hr_native_qm_cdc (e_rrdy = 0, rx_pop = 0).
+// of the shell (the engine's clk / clk_bank / clk_out entries are all ck_ingest, exactly as qkd_hr_ingest_qm ties them): r_rdy / rd_v / rd_data are the constants 0 exactly as in qkd_hr_native_qm_cdc (e_rrdy = 0, rx_pop = 0).
 // Fan-out of the boundary nets (<= 32 loads per driver):
 //   reset: eng_rst_n[1:0] (two shell u_rsi leaves, 17 loads each) -> the engine-region landing bank u_rst: 34 kept
 //          flops (async assert with the leaf, release on the next ck_ingest edge) -> the 34 engine reset ports
@@ -15,8 +14,8 @@
 `timescale 1ns/1ps
 module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   input  wire         ck_ingest,
-  input  wire         ck_bank0, ck_bank1, // engine bank-SRAM clock entries (same 600 MHz ingest family; the cluster ties them to ck_ingest)
-  input  wire         ck_out,      // engine output clock entry (same family)
+  input  wire         ck_rl,       // engine-region reset landing clock (same 600 MHz ingest family, own small CTS root;
+                                   // the cluster ties it to ck_ingest): clocks only the 34 reset leaves
   input  wire [1:0]   eng_rst_n,
   input  wire         eng_dv,
   input  wire [255:0] eng_ddata,
@@ -38,11 +37,11 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   wire [33:0] rst_c;
   genvar r;
   for (r = 0; r < 34; r = r + 1) begin : g_rst
-    qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_ingest), .rn(eng_rst_n[r / 17]), .q(rst_c[r]));
+    qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(eng_rst_n[r / 17]), .q(rst_c[r]));
   end
 `ifdef QKD_HR_ENG_RTL
   qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
-    .clk(ck_ingest), .clk_bank({ck_bank1, ck_bank0}), .clk_out(ck_out), .rst_n(rst_c[0]),
+    .clk(ck_ingest), .clk_bank({ck_ingest, ck_ingest}), .clk_out(ck_ingest), .rst_n(rst_c[0]),
     .d_v(eng_dv), .d_rdy(eng_drdy), .d_data(eng_ddata), .in_v(eng_inv_a), .in_rdy(eng_inrdy), .in_data(eng_indata),
     .w_v(eng_wv), .w_rdy(eng_wrdy), .w_addr(eng_waddr), .w_data(eng_wdata),
     .r_v(eng_rv), .r_rdy(1'b0), .r_addr(eng_raddr), .rd_v(1'b0), .rd_data(256'd0),
@@ -60,7 +59,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
     (* keep, dont_touch = "true" *) BUFx2_ASAP7_75t_R u_buf (.A(wv_stem), .Y(eng_wv_c[k]));
   end
   qkd_host_native_engine_n32 u_eng (
-    .clk(ck_ingest), .clk_bank({ck_bank1, ck_bank0}), .clk_out(ck_out), .rst_n(rst_c[0]),
+    .clk(ck_ingest), .clk_bank({ck_ingest, ck_ingest}), .clk_out(ck_ingest), .rst_n(rst_c[0]),
     .rst_n__c1(rst_c[1]), .rst_n__c2(rst_c[2]), .rst_n__c3(rst_c[3]), .rst_n__c4(rst_c[4]), .rst_n__c5(rst_c[5]),
     .rst_n__c6(rst_c[6]), .rst_n__c7(rst_c[7]), .rst_n__c8(rst_c[8]), .rst_n__c9(rst_c[9]), .rst_n__c10(rst_c[10]),
     .rst_n__c11(rst_c[11]), .rst_n__c12(rst_c[12]), .rst_n__c13(rst_c[13]), .rst_n__c14(rst_c[14]), .rst_n__c15(rst_c[15]),

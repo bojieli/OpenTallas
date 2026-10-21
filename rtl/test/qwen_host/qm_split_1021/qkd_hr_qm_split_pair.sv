@@ -17,7 +17,7 @@ module qkd_hr_qm_split_pair #(parameter integer AW=32, HDMAX=128, KVHMAX=2, RMW_
         .e_rv(e_rv), .e_raddr(e_raddr), .e_done(e_done), .e_done_a(e_done_a), .e_done_b(e_done_b), .e_done_c(e_done_c), .e_tag(e_tag), .e_busy(e_busy),
         .e_nsec(e_nsec), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr), .i_rv(i_rv), .i_rd(i_rd),
         .fault(fault), .quiet_h(quiet_h), .quiet_i(quiet_i), .quiet_c(quiet_c));
-    qkd_hr_ingest_eng #(.KW(KW)) u_eng (.ck_ingest(clk_i), .ck_bank0(clk_i_bank[0]), .ck_bank1(clk_i_bank[1]), .ck_out(clk_i_out), .eng_rst_n(e_rst_n), .eng_dv(e_dv), .eng_ddata(e_ddata),
+    qkd_hr_ingest_eng #(.KW(KW)) u_eng (.ck_ingest(clk_i), .ck_rl(clk_i), .eng_rst_n(e_rst_n), .eng_dv(e_dv), .eng_ddata(e_ddata),
         .eng_inv_a(e_inv_a), .eng_inv_b(e_inv_b), .eng_indata(e_indata), .eng_wrdy(e_wrdy), .eng_drdy(e_drdy), .eng_inrdy(e_inrdy),
         .eng_wv(e_wv), .eng_wv_c(e_wv_c), .eng_waddr(e_waddr), .eng_wdata(e_wdata), .eng_rv(e_rv), .eng_raddr(e_raddr),
         .eng_done(e_done), .eng_done_a(e_done_a), .eng_done_b(e_done_b), .eng_done_c(e_done_c), .eng_tag(e_tag), .eng_busy(e_busy), .eng_nsec(e_nsec));

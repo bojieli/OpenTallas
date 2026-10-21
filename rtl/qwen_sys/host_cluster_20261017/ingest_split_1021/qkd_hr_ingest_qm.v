@@ -38,7 +38,7 @@ module qkd_hr_ingest_qm(ck_core, ck_host, ck_ingest, host_rst_n, service_faults,
     .eng_waddr(eng_waddr), .eng_wdata(eng_wdata), .eng_rv(eng_rv), .eng_raddr(eng_raddr), .eng_done(eng_done),
     .eng_done_a(eng_done_a), .eng_done_b(eng_done_b), .eng_done_c(eng_done_c), .eng_tag(eng_tag), .eng_busy(eng_busy), .eng_nsec(eng_nsec));
   qkd_hr_ingest_eng #(.KW(KW)) u_eng (
-    .ck_ingest(ck_ingest), .ck_bank0(ck_ingest), .ck_bank1(ck_ingest), .ck_out(ck_ingest),
+    .ck_ingest(ck_ingest), .ck_rl(ck_ingest),
     .eng_rst_n(eng_rst_n), .eng_dv(eng_dv), .eng_ddata(eng_ddata), .eng_inv_a(eng_inv_a), .eng_inv_b(eng_inv_b),
     .eng_indata(eng_indata), .eng_wrdy(eng_wrdy), .eng_drdy(eng_drdy), .eng_inrdy(eng_inrdy), .eng_wv(eng_wv), .eng_wv_c(eng_wv_c),
     .eng_waddr(eng_waddr), .eng_wdata(eng_wdata), .eng_rv(eng_rv), .eng_raddr(eng_raddr), .eng_done(eng_done),

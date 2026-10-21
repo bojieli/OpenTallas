@@ -34,9 +34,7 @@
   "E": [],
   "W": [
    "ck_ingest",
-   "ck_bank0",
-   "ck_bank1",
-   "ck_out",
+   "ck_rl",
    "eng_rst_n",
    "eng_dv",
    "eng_ddata",
@@ -64,9 +62,7 @@
  "clock_port": "ck_ingest",
  "clock_ports": [
   "ck_ingest",
-  "ck_bank0",
-  "ck_bank1",
-  "ck_out"
+  "ck_rl"
  ],
  "blocks": [
   {

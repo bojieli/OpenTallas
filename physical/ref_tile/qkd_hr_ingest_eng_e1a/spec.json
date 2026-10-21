@@ -31,9 +31,7 @@
  "clock": "multiple_cts_roots",
  "clock_ports": [
   "ck_ingest",
-  "ck_bank0",
-  "ck_bank1",
-  "ck_out"
+  "ck_rl"
  ],
  "clock_relationship": {
   "kind": "same_pll_fixed_phase",
@@ -79,35 +77,13 @@
     "eng_nsec"
    ]
   },
-  "bank0": {
+  "rl": {
    "ratio": [
     1,
     1
    ],
    "ports": [
-    "ck_bank0"
-   ],
-   "inputs": [],
-   "outputs": []
-  },
-  "bank1": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_bank1"
-   ],
-   "inputs": [],
-   "outputs": []
-  },
-  "out": {
-   "ratio": [
-    1,
-    1
-   ],
-   "ports": [
-    "ck_out"
+    "ck_rl"
    ],
    "inputs": [],
    "outputs": []
@@ -455,9 +431,7 @@
   "E": [],
   "W": [
    "ck_ingest",
-   "ck_bank0",
-   "ck_bank1",
-   "ck_out",
+   "ck_rl",
    "eng_rst_n",
    "eng_dv",
    "eng_ddata",
@@ -499,7 +473,7 @@
   "4_depth": "native engine at 1.667 ns (ingest clock)",
   "5_storage": "32 bank SRAMs ot_sram_1r1w_32x128_m1 on a 4x8 grid with std channels",
   "6_floorplan": "util ~40-50 %%; FALLBACK enlarges",
-  "7_clock": "four CTS roots (engine clk / clk_bank[1:0] / clk_out entries) of one synchronous ingest family, related same-frequency STA, local to the tile",
+  "7_clock": "two CTS roots of one synchronous ingest family (related same-frequency): ck_ingest = every engine sink (clk/clk_bank/clk_out tied as in the unsplit block), ck_rl = the 34 reset landing leaves only",
   "8_reset": "34 kept engine-region reset leaves, control only"
  },
  "job": {

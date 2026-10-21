@@ -100,7 +100,7 @@
    "ck_ingest"
   ]
  },
- "structural_change": "QKO-HROOT2 10-21 (INGEST split, scratch/qko-hroot/INGEST_PLAN.txt): CDC shell leaf of the split qkd_hr_ingest_qm. The define-hybrid (n32 engine inside the CDC leaf) is refused by the reviewed_gray_fifos checker and s1a census FAILs (max 8512, engine fan-out), so the engine moves to its own single-clock tile qkd_hr_ingest_eng (native32 netlist) and this shell carries only the 3-family CDC: u_hx / u_ox / u_cx payload in three reviewed dual-clock SRAMs (u_cx back from the 64-slice form to ONE 1-bit afifo + shadow pointers + u_cxm), kept select copies (<=15 b chunks) for ox_w / die-face capture / t_d, 3-part cx_w on engine done copies, engine reset = 2 dedicated u_rsi leaves. Cycle-exact vs the frozen flop fork with the engine split out: rtl/test/qwen_host/qm_split_1021 8/8 PASS, hx + cx pointer mutants FAIL 0/8. FALLBACK 475.2x691.2 (11x16): wider W/E bands (130/168 um) and 56 um macro channels.",
+ "structural_change": "QKO-HROOT2 10-21 (INGEST split, scratch/qko-hroot/INGEST_PLAN.txt): CDC shell leaf of the split qkd_hr_ingest_qm. The define-hybrid (n32 engine inside the CDC leaf) is refused by the reviewed_gray_fifos checker and s1a census FAILs (max 8512, engine fan-out), so the engine moves to its own single-clock tile qkd_hr_ingest_eng (native32 netlist) and this shell carries only the 3-family CDC: u_hx / u_ox / u_cx payload in three reviewed dual-clock SRAMs (u_cx back from the 64-slice form to ONE 1-bit afifo + shadow pointers + u_cxm), kept select copies (<=15 b chunks) for ox_w / die-face capture / t_d, 3-part cx_w on engine done copies, engine reset = 2 dedicated u_rsi leaves (18/19). Cycle-exact vs the frozen flop fork with the engine split out: rtl/test/qwen_host/qm_split_1021 8/8 PASS, hx + cx pointer mutants FAIL 0/8. FALLBACK 475.2x691.2 (11x16): wider W/E bands (130/168 um) and 56 um macro channels.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "tile",
@@ -374,11 +374,11 @@
  "safe_design_checklist": {
   "1_pins": "host/die faces W as s1a (core pins registered; host/ingest CDC faces are the reviewed FIFO channels); E = engine face direct to the touching engine tile (same ck_ingest region, 1.667 ns)",
   "2_reach": "outline 475.2x691.2: every macro pin <= ~345 um from its face; shell<->engine is a touching-tile direct hop at 1.667 ns",
-  "3_fanout": "raw census: only u_rs[hic].last reset leaves > 32 (spread by reset_relay_split over 4/22/4 leaves); every select <= 32 via kept copies",
+  "3_fanout": "raw census: only u_rs[hic].last reset leaves > 32 (spread by reset_relay_split over 4/20/4 leaves); every select <= 32 via kept copies",
   "4_depth": "same logic as s1a minus the engine; ox_w / capture muxes 1-2 levels",
   "5_storage": "all FIFO payloads in 3 reviewed dual-clock SRAMs on the 43.2 lattice in one column, std bands W (host/die) and E (engine face)",
   "6_floorplan": "3 x 177.8x160.4 macros in a column, >= 34 um vertical channels; util ~40%",
   "7_clock": "three CTS roots (core/host/ingest) as s1a; engine face on ck_ingest only",
-  "8_reset": "reviewed ot_host_reset_bank per domain (4/22/4 kept leaves), control/valid only; engine reset = 2 dedicated ingest leaves"
+  "8_reset": "reviewed ot_host_reset_bank per domain (4/20/4 kept leaves), control/valid only; engine reset = 2 dedicated ingest leaves"
  }
 }

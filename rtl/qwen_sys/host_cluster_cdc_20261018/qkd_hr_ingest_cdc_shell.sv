@@ -164,7 +164,7 @@ module qkd_hr_ingest_cdc_shell #(
     // (rtl/physical/ot_host_die_cdc_sram.sv ot_host_reset_bank: 1 landing flop -> RB_* KEPT identical leaves, same
     // 2-edge release as ot_reset_sync). The RTL uses leaf 0; synthesis (kit reset_relay_split, ot_rst_copies) spreads the
     // reset loads over the leaves at <= 32 each (the native census limit). Release edges unchanged.
-    localparam integer RB_H = 4, RB_I = 22, RB_C = 4;   // u_rsi leaves 20 / 21 = engine reset (e_rst_n)
+    localparam integer RB_H = 4, RB_I = 20, RB_C = 4;   // u_rsi leaves 18 / 19 = engine reset (e_rst_n); the async host_rst_n landing drives 1+4+1+20+1+4 = 31 pins
     wire rn_h, rn_i, rn_c;
     wire [RB_H-1:0] rb_h;
     wire [RB_I-1:0] rb_i;
@@ -175,7 +175,7 @@ module qkd_hr_ingest_cdc_shell #(
     assign rn_h = rb_h[0];
     assign rn_i = rb_i[0];
     assign rn_c = rb_c[0];
-    assign e_rst_n = rb_i[21:20];
+    assign e_rst_n = rb_i[19:18];
     // cross-domain nets (declared ahead of use)
     wire         hx_ovf_i, rx_ovf_i, ox_pop, cx_pop;
     reg          irv_q;
