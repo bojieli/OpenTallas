@@ -1,0 +1,66 @@
+{
+  "status": "MECHANISM_PASS",
+  "default_enabled": false,
+  "unit": "oth-ubuntu-2924516-1792608262",
+  "host": "ot-epyc7",
+  "macro": "actual ot_sram_1r1w_32x128_m1 behavioral macro read-old model",
+  "cases": [
+    {
+      "depth": 2,
+      "mutation": 0,
+      "checks": 3596,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "depth": 2,
+      "mutation": 1,
+      "checks": 3596,
+      "errors": 3596,
+      "status": "CAUGHT"
+    },
+    {
+      "depth": 2,
+      "mutation": 2,
+      "checks": 3596,
+      "errors": 1526,
+      "status": "CAUGHT"
+    },
+    {
+      "depth": 2,
+      "mutation": 3,
+      "checks": 3596,
+      "errors": 2799,
+      "status": "CAUGHT"
+    },
+    {
+      "depth": 8,
+      "mutation": 0,
+      "checks": 3578,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "depth": 8,
+      "mutation": 1,
+      "checks": 3578,
+      "errors": 3572,
+      "status": "CAUGHT"
+    },
+    {
+      "depth": 8,
+      "mutation": 2,
+      "checks": 3578,
+      "errors": 3515,
+      "status": "CAUGHT"
+    },
+    {
+      "depth": 8,
+      "mutation": 3,
+      "checks": 3578,
+      "errors": 2784,
+      "status": "CAUGHT"
+    }
+  ],
+  "scope": "528-bit ring, depth2/8,3reset/refill epochs,validbubbles,store/nonstore,repeatpayload; actual merge association/FP/ages proof still live; no native/physical/calendar claim"
+}

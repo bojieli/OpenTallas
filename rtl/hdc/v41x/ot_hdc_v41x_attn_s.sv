@@ -141,6 +141,16 @@ module ot_hdc_v41x_attn_merge_x #(
             ot_hdc_v41x_vdly #(.D(FPL - 1)) u_dv (.clk(clk), .rst_n(rst_n), .d(v0), .q(dv));
             ot_hdc_v41x_dly #(.W(2 + MLEV), .D(FPL - 1)) u_dt (.clk(clk), .d({fin0, live0 && (blk0[gl] || fin0), blk0}),
                 .q(dt));
+`ifdef OT_SVC_MERGE_SRAM
+            // All head control copies have identical arrival ages by construction.
+            wire [H*33-1:0] ring_head, ring_data;
+            for (genvar mh=0; mh<H; mh=mh+1) begin : g_ring_data
+                assign ring_data[33*mh +:33] = {lf[gl*H+mh], lx[(gl*H+mh)*32 +:32]};
+            end
+            ot_hdc_v41x_merge_ring_sram #(.W(H*33), .DPT(DPT)) u_ring (
+                .clk(clk), .rst_n(rst_n), .v(v0), .store(v0 && live0 && !fin0 && !blk0[gl]),
+                .data(ring_data), .head(ring_head));
+`endif
             for (gh = 0; gh < H; gh = gh + 1) begin : g_h
                 wire v = cv[gl*H+gh];
                 wire fin = cfin[gl*H+gh];
@@ -148,6 +158,9 @@ module ot_hdc_v41x_attn_merge_x #(
                 wire [MLEV-1:0] blk = cblk[(gl*H+gh)*MLEV +: MLEV];
                 wire use_ = blk[gl];
                 wire store = v && live && !fin && !use_;
+`ifdef OT_SVC_MERGE_SRAM
+                wire [32:0] head = ring_head[33*gh +:33];
+`else
                 reg [32:0] ring [0:DPT-1];
                 wire [32:0] head = ring[0];
                 integer i;
@@ -156,6 +169,7 @@ module ot_hdc_v41x_attn_merge_x #(
                         for (i = 0; i < DPT - 1; i = i + 1) ring[i] <= ring[i+1];
                         ring[DPT-1] <= store ? {lf[gl*H+gh], lx[(gl*H+gh)*32 +: 32]} : head;
                     end
+`endif
                 wire [31:0] a = use_ ? head[31:0] : 32'd0;
                 wire [31:0] y;
                 wire af;

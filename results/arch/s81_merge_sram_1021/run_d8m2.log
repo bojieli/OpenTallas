@@ -1,0 +1,8 @@
+MISMATCH dpt=8 mut=2 check=3
+MISMATCH dpt=8 mut=2 check=4
+MISMATCH dpt=8 mut=2 check=5
+RING_RESULT DPT=8 MUT=2 checks=3578 errors=3515
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.050 s; speed 717.629 us/s
+- Verilator: cpu 0.024 s on 1 threads; allocated 7 MB

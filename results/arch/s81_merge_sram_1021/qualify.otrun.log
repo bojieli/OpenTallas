@@ -1,0 +1,68 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src
+ot-run: ot-epyc7       admits   148 GB (avail 177, growth 74, headroom 0, waiters 0/0 GB) load 99/96 running 15 disk 4688 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2924516-1792608262 after 0 s
+RING_RESULT DPT=2 MUT=0 checks=3596 errors=0
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.020 s; speed 1.776 ms/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB
+MISMATCH dpt=2 mut=1 check=1
+MISMATCH dpt=2 mut=1 check=2
+MISMATCH dpt=2 mut=1 check=3
+RING_RESULT DPT=2 MUT=1 checks=3596 errors=3596
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.015 s; speed 2.365 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+MISMATCH dpt=2 mut=2 check=2
+MISMATCH dpt=2 mut=2 check=9
+MISMATCH dpt=2 mut=2 check=10
+RING_RESULT DPT=2 MUT=2 checks=3596 errors=1526
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.016 s; speed 2.307 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+MISMATCH dpt=2 mut=3 check=1
+MISMATCH dpt=2 mut=3 check=4
+MISMATCH dpt=2 mut=3 check=5
+RING_RESULT DPT=2 MUT=3 checks=3596 errors=2799
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.024 s; speed 1.513 ms/s
+- Verilator: cpu 0.024 s on 1 threads; allocated 7 MB
+RING_RESULT DPT=8 MUT=0 checks=3578 errors=0
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.026 s; speed 1.369 ms/s
+- Verilator: cpu 0.023 s on 1 threads; allocated 7 MB
+MISMATCH dpt=8 mut=1 check=1
+MISMATCH dpt=8 mut=1 check=2
+MISMATCH dpt=8 mut=1 check=3
+RING_RESULT DPT=8 MUT=1 checks=3578 errors=3572
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.018 s; speed 1.988 ms/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 7 MB
+MISMATCH dpt=8 mut=2 check=3
+MISMATCH dpt=8 mut=2 check=4
+MISMATCH dpt=8 mut=2 check=5
+RING_RESULT DPT=8 MUT=2 checks=3578 errors=3515
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.050 s; speed 717.629 us/s
+- Verilator: cpu 0.024 s on 1 threads; allocated 7 MB
+MISMATCH dpt=8 mut=3 check=1
+MISMATCH dpt=8 mut=3 check=2
+MISMATCH dpt=8 mut=3 check=4
+RING_RESULT DPT=8 MUT=3 checks=3578 errors=2784
+- tools/s81_dv/svc_rs/merge_sram/tb_ring.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.023 s; speed 1.552 ms/s
+- Verilator: cpu 0.023 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2924516-1792608262): exit 0
