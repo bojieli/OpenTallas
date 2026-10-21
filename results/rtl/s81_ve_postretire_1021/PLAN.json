@@ -1,13 +1,13 @@
 {
   "schema": "opentallas.ve.post-retirement-plan.v1",
-  "status": "PREPARATION_ONLY_NO_LAUNCH",
+  "status": "EXACT_SOURCE_AND_ARCHIVE_RECOVERED_NO_ECO_LAUNCH",
   "parent_job": "s81sl_ve_r5-s81sl_ve_r5-f51f4ec42",
   "parent_status": "CANCELLED",
   "parent_source_commit": "f51f4ec42ca6f555ae0bb93558d1c485cee732c2",
   "cancelled_state_sha256": "ccfc1eb8aa32ea6b603047bf3628f0454564a56438f26635e4ee35a6e43d72fe",
   "infrastructure_reason": "cancelled by a human (EPYC6-RETIRE deadline 14:15 (owner 10-21): KILLED at epyc6 retire, relaunch elsewhere)",
   "prohibited": "Do not mutate CANCELLED eligibility/history; do not call migrate/retry-eco on cancelled job; no duplicate route or bench; no assumed interrupted ECO ODB.",
-  "durable_source": "VERIFIED C3 2026-10-21 14:47:51 PT, 289files 8.766GB, no missing/size/hash mismatches; input_hashes.json records original actual5_2routeODB+6final SPEF/SDC and cl helpers",
+  "durable_source": "C3 original289routefiles verified14:47:51 plus recovered_exact_sources/s81sl_ve_r5-20261020-212201 source13971files verified15:23:52. Bothreceipts preserved.",
   "interrupted_ECO": "No ODB/checkpoint produced in cl/eco/pass1; logs/SDCs only, per Disk actual filesystem inspection",
   "original_metrics": {
     "setup_corner": "TT",
@@ -28,9 +28,10 @@
   },
   "support_owner": "ROOT integration inspecting supported new linked continuation; await prescription before action",
   "receipts_owed": [
-    "New linked supported continuation identity and actual fleet unit",
-    "PostECO exact qualification and final verdict"
+    "ROOT supported NEWlinked ECO-only record and exact archived runtime path rebasing receipt",
+    "Actual fleet admission; existing postECO checks and terminal verdict"
   ],
   "original_ECO_input": "5_2_route.odb (52d46d106551b1e076859a132ae3764bbb7861099b86e128aa4bcb9756a17ddf), with6_final.spef and6_final.sdc, per exact cl/hold_eco.a3.sh",
-  "source_restore": "Archive policy excludes src. Exactf51f Git27RTL/signoff +50frozenoverlay files verified by Gitblob SHA; source_and_overlay.json."
+  "source_restore": "ALL13971gateconsumedSHA verified originalEP9SRC and Gitblobs; C3independentfsyncdurable15:23:52. f51base13970/13971 exact, soleholdMMdiff exactfrozen50. Offlinef51+50+oldTTtransform OK with6explicitpath/toolchanges. RESTORED_SOURCE.json.",
+  "tool_binding": "ProposednewECO pins originalGATE immutableimage16470cea and25RVTlibSHAs. OldinterruptedECO didnotrecordseparateimageID; no fabricatedoriginalECOimageidentity."
 }
