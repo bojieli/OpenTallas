@@ -1,0 +1,1331 @@
+{
+ "schema": "opentallas.s81.0n_fastfp_binding_audit.v1",
+ "status": "ALL_CHANGED_FASTFP_BODIES_UNREACHABLE_IN_0N_SUPERSET",
+ "selected_ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+ "frozen_file": "src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+ "frozen_file_sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+ "production_file": "rtl/hdc/ot_hdc_fastfp.sv",
+ "production_file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32"
+ ],
+ "graph_receipt_sha256": "e7dd9e62ce1dcf92090c0a34d596d40c6b54a3b706f96401ae249c26b518d443",
+ "frozen_archive_sha256": "227bfd46662faafebb6e8b2c1768751bec1653898c93b16eca3cf2c325c3b8dd",
+ "preprocessor_source_sha256": "fde4bc51ea83730ae97636bc05da47696ffa31ba83d00a894417f3d221cbd3b0",
+ "conservative_root": "s0N_aggregate",
+ "conservative_reachable_module_count": 300,
+ "all_branch_edges": {
+  "ICGx4_ASAP7_75t_R": [],
+  "col_h9_l4_lp": [
+   "dsfd_bf_col",
+   "dsfd_bf_front_roots",
+   "dsfd_cfifo_crs4",
+   "dsfd_dvrly_276_NS",
+   "dsfd_node_LLd",
+   "dsfd_node_LLfd",
+   "dsfd_node_LLfu",
+   "dsfd_node_NNfd",
+   "dsfd_node_NNfu",
+   "dsfd_qbank_N",
+   "dsfd_qbank_S",
+   "dsfd_rly_15_EN",
+   "dsfd_rly_15_NS",
+   "dsfd_rly_15_SN",
+   "dsfd_rly_1_EW",
+   "dsfd_rly_1_WN",
+   "dsfd_rly_266_EW",
+   "dsfd_rly_283_EW",
+   "dsfd_rly_2_ES",
+   "dsfd_rly_2_NE",
+   "dsfd_rly_2_NS",
+   "dsfd_rly_2_NW",
+   "dsfd_rly_2_WE",
+   "dsfd_rly_2_WS",
+   "dsfd_rly_38_WN",
+   "dsfd_rly_536_EN",
+   "dsfd_rly_536_SN",
+   "dsfd_rly_536_SW",
+   "dsfd_rly_54_WN",
+   "dsfd_rly_63_ES",
+   "dsfd_rly_63_NE",
+   "dsfd_rly_63_NS",
+   "dsfd_rly_63_SE",
+   "dsfd_rly_63_WE",
+   "dsfd_rly_63_WN",
+   "dsfd_rly_63_WS",
+   "dsfd_rly_66_EN",
+   "dsfd_rly_66_ES",
+   "dsfd_rly_66_NE",
+   "dsfd_rly_66_NS",
+   "dsfd_rly_66_SN",
+   "dsfd_rly_66_SW",
+   "dsfd_rstg",
+   "ot_pl_land_reset_forest3",
+   "ot_pl_land_vector_reset_r",
+   "ot_pl_land_vector_reset_w",
+   "ot_pl_pad",
+   "ot_reset_sync",
+   "ot_rom_4096x72_m8",
+   "ot_s81_cfg7_seq",
+   "ot_s81_cfg7_seq_bfp",
+   "ot_s81_sstn_base566",
+   "ot_s81_sstn_payload536",
+   "ot_v41_rom_elem_q_qxpq_w10"
+  ],
+  "dsdv_mu_land": [
+   "ot_rst_relay",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "dsfd_bf_col": [
+   "ot_v41_bf_col"
+  ],
+  "dsfd_bf_front_roots": [
+   "ot_s81_bf_front_roots"
+  ],
+  "dsfd_cfifo_crs4": [
+   "ot_s81_land"
+  ],
+  "dsfd_coll_lane_w_safe8_ntf": [
+   "ot_s81ph_coll_lane_safe4"
+  ],
+  "dsfd_dvland_276": [
+   "ot_s81_land"
+  ],
+  "dsfd_dvland_512": [
+   "ot_s81_land"
+  ],
+  "dsfd_dvland_562": [
+   "ot_s81_land"
+  ],
+  "dsfd_dvland_70": [
+   "ot_s81_land"
+  ],
+  "dsfd_dvrly_276_NS": [
+   "ot_dvrly_ckinv",
+   "ot_s81_rly"
+  ],
+  "dsfd_dvrlyh_276_EW": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_276_NS": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_276_SN": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_276_WE": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_512_EW": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_562_SN": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_562_WE": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_70_NS": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_dvrlyh_70_SN": [
+   "ot_dvrly_st"
+  ],
+  "dsfd_node_LLd": [
+   "ot_s81_retn_static"
+  ],
+  "dsfd_node_LLfd": [
+   "ot_s81_retn_static"
+  ],
+  "dsfd_node_LLfu": [
+   "ot_s81_retn_static"
+  ],
+  "dsfd_node_NNfd": [
+   "ot_s81_retn_static"
+  ],
+  "dsfd_node_NNfu": [
+   "ot_s81_retn_static"
+  ],
+  "dsfd_qbank_N": [],
+  "dsfd_qbank_S": [],
+  "dsfd_rly_15_EN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_15_NS": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_15_SN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_1_EW": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_1_WN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_266_EW": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_283_EW": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_2_ES": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_2_NE": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_2_NS": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_2_NW": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_2_WE": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_2_WS": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_38_WN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_536_EN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_536_SN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_536_SW": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_54_WN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_ES": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_NE": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_NS": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_SE": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_WE": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_WN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_63_WS": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_66_EN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_66_ES": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_66_NE": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_66_NS": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_66_SN": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rly_66_SW": [
+   "ot_s81_rly"
+  ],
+  "dsfd_rstg": [],
+  "dsfd_su_t_rxsb": [
+   "ot_s81_su_rxsb"
+  ],
+  "dsfd_su_t_rxsf": [
+   "ot_s81_su_rxsf"
+  ],
+  "dv_flight_sim": [],
+  "ot_bf_hdly": [],
+  "ot_dsrom_add_f12_l6": [
+   "ot_hdc_fp32_add_f12_l6x"
+  ],
+  "ot_dsrom_aq12": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_divc": [
+   "ot_hdc_kinc",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_exp_f12": [
+   "ot_dsrom_add_f12_l6",
+   "ot_hdc_delay",
+   "ot_hdc_kadd",
+   "ot_hdc_qadd_lat",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_fdiv_f12": [
+   "ot_hdc_kadd",
+   "ot_hdc_kinc",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_fp32_add_f12_l6": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_dsrom_qadd": [
+   "ot_dsrom_fp32_add_f12_l6",
+   "ot_hdc_qadd_lat"
+  ],
+  "ot_dsrom_rsqrt": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_kadd",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_su_bf16rnd": [
+   "ot_hdc_kinc"
+  ],
+  "ot_dsrom_su_hcpost_lane": [
+   "ot_hdc_delay",
+   "ot_hdc_fp32_add_f12_l4",
+   "ot_hdc_fp32_add_f12_l5x",
+   "ot_hdc_fp32_add_f12_l6x",
+   "ot_hdc_fp32_mul_f12_l5",
+   "ot_hdc_fp32_mul_f12_l6",
+   "ot_hdc_fp32_mul_f12_l6r",
+   "ot_hdc_fp32_mul_f12_l7",
+   "ot_hdc_inc_k"
+  ],
+  "ot_dsrom_su_hcpost_lane_pr": [
+   "ot_dsrom_su_hcpost_lane"
+  ],
+  "ot_dsrom_su_norm_mix": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dvrly_ckinv": [],
+  "ot_dvrly_st": [
+   "ot_dvrly_ckinv",
+   "ot_s81_rly"
+  ],
+  "ot_fp32_add_rne_pipe": [],
+  "ot_hbm_norm_grp": [
+   "ot_dsrom_qadd",
+   "ot_dsrom_su_norm_mix",
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_hdc_addpos2": [
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k"
+  ],
+  "ot_hdc_bmul": [],
+  "ot_hdc_cg": [],
+  "ot_hdc_delay": [],
+  "ot_hdc_delay_rf": [],
+  "ot_hdc_f12_cut": [],
+  "ot_hdc_fp32_add_f12": [
+   "ot_hdc_f12_cut",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32"
+  ],
+  "ot_hdc_fp32_add_f12_l4": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_f12_l5s": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_f12_l5x": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_f12_l6x": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_fast": [
+   "ot_hdc_ksa",
+   "ot_hdc_lzc32"
+  ],
+  "ot_hdc_fp32_add_lat": [
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_w11_cut"
+  ],
+  "ot_hdc_fp32_add_lat3": [
+   "ot_hdc_fp32_add_lat"
+  ],
+  "ot_hdc_fp32_mul_f12": [
+   "ot_hdc_f12_cut",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_rows"
+  ],
+  "ot_hdc_fp32_mul_f12_l5": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_f12_l6": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_f12_l6r": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_f12_l7": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_fast": [
+   "ot_hdc_ksa",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_sum"
+  ],
+  "ot_hdc_fp32_mul_lat": [
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_rows_k",
+   "ot_hdc_mul_kcp48",
+   "ot_hdc_w11_cut"
+  ],
+  "ot_hdc_fp32_mul_lat4": [
+   "ot_hdc_fp32_mul_lat"
+  ],
+  "ot_hdc_fp32_mul_x2": [
+   "ot_hdc_delay",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_csa",
+   "ot_hdc_mul24_csa11",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_rows11"
+  ],
+  "ot_hdc_fsqrt": [
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_fsqrt4": [
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_hstep": [
+   "ot_hdc_delay",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_csa",
+   "ot_hdc_mul24_csa11",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_rows11",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_inc_k": [],
+  "ot_hdc_kadd": [
+   "ot_hdc_ksadd_k"
+  ],
+  "ot_hdc_kge": [
+   "ot_hdc_ksadd_k"
+  ],
+  "ot_hdc_kinc": [
+   "ot_hdc_inc_k"
+  ],
+  "ot_hdc_ksa": [],
+  "ot_hdc_ksadd_k": [],
+  "ot_hdc_lzc32": [],
+  "ot_hdc_mul24_csa": [],
+  "ot_hdc_mul24_csa11": [
+   "ot_hdc_mul24_csa"
+  ],
+  "ot_hdc_mul24_rows": [],
+  "ot_hdc_mul24_rows11": [],
+  "ot_hdc_mul24_rows_k": [],
+  "ot_hdc_mul24_sum": [
+   "ot_hdc_ksa"
+  ],
+  "ot_hdc_mul_kcp48": [],
+  "ot_hdc_qadd_lat": [
+   "ot_hdc_fp32_add_f12_l4",
+   "ot_hdc_fp32_add_f12_l5s",
+   "ot_hdc_fp32_add_f12_l5x",
+   "ot_hdc_fp32_add_fast",
+   "ot_hdc_fp32_add_lat",
+   "ot_hdc_fp32_add_lat3"
+  ],
+  "ot_hdc_qmul_lat": [
+   "ot_hdc_fp32_mul_f12_l5",
+   "ot_hdc_fp32_mul_f12_l6",
+   "ot_hdc_fp32_mul_fast",
+   "ot_hdc_fp32_mul_lat",
+   "ot_hdc_fp32_mul_lat4"
+  ],
+  "ot_hdc_v41x_exp": [
+   "ot_hdc_delay",
+   "ot_hdc_kadd",
+   "ot_hdc_qadd_lat",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_v41x_exp_s": [
+   "ot_hdc_delay",
+   "ot_hdc_fp32_mul_x2",
+   "ot_hdc_hstep",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_v41x_fdiv": [
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_v41x_spdiv": [
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_vline": [],
+  "ot_hdc_w11_cut": [],
+  "ot_link_crc32": [],
+  "ot_link_credit_rx_b64": [
+   "ot_sram_showahead_b64"
+  ],
+  "ot_link_credit_tx_rc": [],
+  "ot_pl_land_chunk_r": [
+   "ot_pl_land_local_r"
+  ],
+  "ot_pl_land_field_copy_bit": [],
+  "ot_pl_land_local_kw": [],
+  "ot_pl_land_local_r": [],
+  "ot_pl_land_local_w": [],
+  "ot_pl_land_n32_chunk_w": [
+   "ot_pl_land_n32_local_w"
+  ],
+  "ot_pl_land_n32_local_w": [
+   "ot_pl_land_n32_oh"
+  ],
+  "ot_pl_land_n32_oh": [],
+  "ot_pl_land_reset_forest": [
+   "ot_pl_land_field_copy_bit"
+  ],
+  "ot_pl_land_reset_forest3": [
+   "ot_pl_land_field_copy_bit"
+  ],
+  "ot_pl_land_rst_copy": [],
+  "ot_pl_land_vector_reset_kw_w": [
+   "ot_pl_land_local_kw"
+  ],
+  "ot_pl_land_vector_reset_r": [
+   "ot_pl_land_local_r"
+  ],
+  "ot_pl_land_vector_reset_w": [
+   "ot_pl_land_local_w"
+  ],
+  "ot_pl_pad": [],
+  "ot_reset_sync": [],
+  "ot_rom_4096x274_m8": [],
+  "ot_rom_4096x72_m8": [],
+  "ot_rom_8192x274_m8": [],
+  "ot_rst_relay": [],
+  "ot_rst_relay_tree3": [],
+  "ot_s81_bf_front_roots": [
+   "ot_hdc_cg",
+   "ot_s81_bf_seam_roots",
+   "ot_v41_bf_front_core_roots",
+   "ot_v41_kreg",
+   "ot_v41_rom_elem_qx_w10",
+   "ot_v41_rom_elem_w10"
+  ],
+  "ot_s81_bf_prog_seq": [],
+  "ot_s81_bf_seam_roots": [],
+  "ot_s81_cfg7_seq": [
+   "ot_rst_relay"
+  ],
+  "ot_s81_cfg7_seq_bf": [
+   "ot_s81_cfg7_seq"
+  ],
+  "ot_s81_cfg7_seq_bfp": [
+   "ot_rst_relay",
+   "ot_s81_bf_prog_seq",
+   "ot_s81_cfg7_seq_bf"
+  ],
+  "ot_s81_engram_add8": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_chunk8": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_gate": [
+   "ot_s81_engram_sigmoid",
+   "ot_s81_engram_signed_sqrt"
+  ],
+  "ot_s81_engram_mul4": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_norm": [
+   "ot_dsrom_divc",
+   "ot_dsrom_qadd",
+   "ot_dsrom_rsqrt",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_reset": [],
+  "ot_s81_engram_sigmoid": [
+   "ot_hdc_qadd_lat",
+   "ot_hdc_v41x_exp",
+   "ot_hdc_v41x_fdiv",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_signed_sqrt": [
+   "ot_hdc_fsqrt",
+   "ot_hdc_kge",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_fadd_pipe": [],
+  "ot_s81_land": [],
+  "ot_s81_mu72_land": [
+   "ot_pl_land_reset_forest",
+   "ot_pl_land_vector_reset_kw_w",
+   "ot_pl_land_vector_reset_r"
+  ],
+  "ot_s81_retn_static": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_delay",
+   "ot_hdc_delay_rf"
+  ],
+  "ot_s81_rly": [],
+  "ot_s81_sstn_base566": [],
+  "ot_s81_sstn_payload536": [],
+  "ot_s81_su_dl128": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81_su_rxsb": [
+   "ot_hdc_addpos2",
+   "ot_hdc_delay",
+   "ot_hdc_fp32_mul_x2",
+   "ot_hdc_fsqrt4",
+   "ot_hdc_hstep",
+   "ot_hdc_vline"
+  ],
+  "ot_s81_su_rxsf": [
+   "ot_hdc_delay",
+   "ot_hdc_fp32_mul_x2",
+   "ot_hdc_v41x_exp_s",
+   "ot_hdc_v41x_spdiv",
+   "ot_hdc_vline"
+  ],
+  "ot_s81_su_swl": [
+   "ot_dsrom_exp_f12",
+   "ot_dsrom_fdiv_f12",
+   "ot_hdc_delay",
+   "ot_hdc_kge",
+   "ot_hdc_qadd_lat",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_su_dl128"
+  ],
+  "ot_s81dv_eng_finish": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_vline"
+  ],
+  "ot_s81dv_norm_finish": [
+   "ot_dsrom_divc",
+   "ot_dsrom_qadd",
+   "ot_dsrom_rsqrt",
+   "ot_hdc_delay",
+   "ot_hdc_vline"
+  ],
+  "ot_s81dv_xfin": [
+   "ot_s81dv_eng_finish",
+   "ot_s81dv_norm_finish",
+   "ot_s81dv_xstop"
+  ],
+  "ot_s81dv_xstop": [],
+  "ot_s81ph_ckbuf": [],
+  "ot_s81ph_coll_lane_safe4": [
+   "ot_link_credit_rx_b64",
+   "ot_link_credit_tx_rc",
+   "ot_rst_relay_tree3",
+   "ot_s81ph_ckbuf",
+   "ot_s81ph_link_ep_safe4",
+   "ot_s81ph_link_gbx_safe3"
+  ],
+  "ot_s81ph_kff4_1": [],
+  "ot_s81ph_kff4_10": [],
+  "ot_s81ph_kp4_20": [],
+  "ot_s81ph_link_ep_safe4": [
+   "ot_link_crc32",
+   "ot_s81ph_kff4_1",
+   "ot_s81ph_kff4_10",
+   "ot_s81ph_kp4_20",
+   "ot_s81ph_mem1r1w",
+   "ot_s81ph_rewind4",
+   "ot_sram_oldread_b64"
+  ],
+  "ot_s81ph_link_gbx_safe3": [
+   "ot_sram_showahead_b64"
+  ],
+  "ot_s81ph_mem1r1w": [
+   "ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "ot_s81ph_rewind4": [],
+  "ot_s81sl_aq12x": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_s81sl_cap_ed": [
+   "ot_hdc_delay_rf",
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_cap_grp": [],
+  "ot_s81sl_cap_ld": [
+   "ot_hdc_delay_rf",
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_cap_rt": [
+   "ot_hdc_delay",
+   "ot_rst_relay",
+   "ot_s81_fadd_pipe",
+   "ot_s81sl_cap_grp",
+   "ot_s81sl_cap_rt_retn",
+   "ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "ot_s81sl_cap_rt_retn": [
+   "ot_hdc_delay",
+   "ot_hdc_delay_rf",
+   "ot_s81_fadd_pipe"
+  ],
+  "ot_s81sl_cap_tr": [
+   "ot_rst_relay",
+   "ot_s81_retn_static"
+  ],
+  "ot_s81sl_capc5r": [
+   "ot_pl_land_chunk_r",
+   "ot_pl_land_n32_chunk_w",
+   "ot_pl_land_rst_copy",
+   "ot_pl_pad",
+   "ot_s81sl_cap_ed",
+   "ot_s81sl_cap_ld",
+   "ot_s81sl_cap_rt",
+   "ot_s81sl_cap_tr"
+  ],
+  "ot_s81sl_ckf": [],
+  "ot_s81sl_eg": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_engram_gate",
+   "ot_s81_engram_norm",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81sl_kv_bank": [
+   "ot_hdc_delay"
+  ],
+  "ot_s81sl_kv_leaf": [
+   "ot_s81sl_kv_bank",
+   "ot_sram_1r1w2c_32x64_m1"
+  ],
+  "ot_s81sl_leaf": [
+   "dsfd_su_t_rxsb",
+   "dsfd_su_t_rxsf",
+   "ot_s81sl_kv_leaf",
+   "ot_s81sl_ve",
+   "ot_s81sl_vn",
+   "ot_s81sl_vp",
+   "ot_s81sl_vq",
+   "ot_s81sl_vs",
+   "ot_s81sl_vsw"
+  ],
+  "ot_s81sl_lep_bsel_next": [],
+  "ot_s81sl_lep_core": [
+   "ot_rst_relay",
+   "ot_rst_relay_tree3",
+   "ot_s81ph_mem1r1w",
+   "ot_s81sl_lep_bsel_next",
+   "ot_s81sl_lep_host_enable",
+   "ot_s81sl_lep_host_event",
+   "ot_s81sl_lep_host_hold8",
+   "ot_s81sl_lep_key_hold8",
+   "ot_s81sl_lep_pair_ready",
+   "ot_s81sl_lep_return8",
+   "ot_s81sl_lep_rx_control",
+   "ot_s81sl_lep_stamp",
+   "ot_s81sl_lep_status_region",
+   "ot_s81sl_lep_std_enable",
+   "ot_s81sl_lep_tx_push",
+   "ot_s81sl_lep_vcopy",
+   "ot_s81sl_std_tx_qualify",
+   "ot_sram_oldread_wreg",
+   "ot_sram_showahead_1r1w",
+   "ot_sram_showahead_readptr"
+  ],
+  "ot_s81sl_lep_host_enable": [],
+  "ot_s81sl_lep_host_event": [],
+  "ot_s81sl_lep_host_hold8": [
+   "ot_s81sl_lep_host_preserve"
+  ],
+  "ot_s81sl_lep_host_preserve": [],
+  "ot_s81sl_lep_key_hold8": [
+   "ot_s81sl_lep_host_enable"
+  ],
+  "ot_s81sl_lep_mu_ab": [
+   "ot_s81sl_lep_core"
+  ],
+  "ot_s81sl_lep_pair_ready": [],
+  "ot_s81sl_lep_return8": [],
+  "ot_s81sl_lep_rx_control": [],
+  "ot_s81sl_lep_stamp": [],
+  "ot_s81sl_lep_status_region": [],
+  "ot_s81sl_lep_std_enable": [],
+  "ot_s81sl_lep_tx_push": [],
+  "ot_s81sl_lep_vcopy": [],
+  "ot_s81sl_mk": [],
+  "ot_s81sl_rly": [],
+  "ot_s81sl_rstopt_xo": [
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_sflt": [],
+  "ot_s81sl_slice_c1x_k8_cap5r_lp": [
+   "ot_pl_land_chunk_r",
+   "ot_pl_land_n32_chunk_w",
+   "ot_pl_land_reset_forest",
+   "ot_pl_land_vector_reset_kw_w",
+   "ot_pl_land_vector_reset_r",
+   "ot_pl_pad",
+   "ot_s81dv_xfin",
+   "ot_s81sl_capc5r",
+   "ot_s81sl_ckf",
+   "ot_s81sl_eg",
+   "ot_s81sl_leaf",
+   "ot_s81sl_mk",
+   "ot_s81sl_rly",
+   "ot_s81sl_sflt",
+   "ot_s81sl_xgt_xo",
+   "ot_s81sl_xrt1"
+  ],
+  "ot_s81sl_slice_lepw_mab_mu_72": [
+   "dsdv_mu_land",
+   "dsfd_coll_lane_w_safe8_ntf",
+   "ot_pl_land_reset_forest",
+   "ot_pl_land_vector_reset_kw_w",
+   "ot_pl_land_vector_reset_r",
+   "ot_pl_pad",
+   "ot_s81_mu72_land",
+   "ot_s81sl_lep_mu_ab",
+   "ot_s81sl_slice_c1x_k8_cap5r_lp"
+  ],
+  "ot_s81sl_std_tx_qualify": [],
+  "ot_s81sl_ve": [
+   "ot_s81_engram_add8",
+   "ot_s81_engram_chunk8",
+   "ot_s81_engram_mul4",
+   "ot_s81_engram_reset",
+   "ot_s81sl_ve_tree"
+  ],
+  "ot_s81sl_ve_tree": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81sl_vn": [
+   "ot_dsrom_qadd",
+   "ot_hbm_norm_grp",
+   "ot_hdc_delay",
+   "ot_hdc_vline",
+   "ot_rst_relay",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81sl_vp": [
+   "ot_dsrom_su_hcpost_lane_pr",
+   "ot_hdc_delay",
+   "ot_rst_relay",
+   "ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "ot_s81sl_vq": [
+   "ot_dsrom_aq12",
+   "ot_hdc_delay",
+   "ot_rst_relay",
+   "ot_s81sl_aq12x",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81sl_vs": [
+   "ot_dsrom_qadd",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_vsw": [
+   "ot_dsrom_su_bf16rnd",
+   "ot_rst_relay",
+   "ot_s81_su_swl"
+  ],
+  "ot_s81sl_xgt_xo": [
+   "ot_s81sl_rstopt_xo",
+   "ot_s81sl_xs4"
+  ],
+  "ot_s81sl_xrt": [
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_xrt1": [
+   "ot_s81sl_xrt"
+  ],
+  "ot_s81sl_xs4": [
+   "ot_s81sl_xs4_bdec",
+   "ot_s81sl_xs4_cal",
+   "ot_s81sl_xs4_ctl",
+   "ot_s81sl_xs4_pdec",
+   "ot_s81sl_xs4_rst",
+   "ot_sram_1r1w2c_128x64_m1",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81sl_xs4_bad": [],
+  "ot_s81sl_xs4_bdec": [],
+  "ot_s81sl_xs4_cal": [
+   "ot_s81sl_xs4_bad",
+   "ot_s81sl_xs4_due",
+   "ot_s81sl_xs4_fetch",
+   "ot_s81sl_xs4_rng"
+  ],
+  "ot_s81sl_xs4_ctl": [
+   "ot_v41_inc"
+  ],
+  "ot_s81sl_xs4_due": [],
+  "ot_s81sl_xs4_fetch": [],
+  "ot_s81sl_xs4_pdec": [],
+  "ot_s81sl_xs4_rng": [],
+  "ot_s81sl_xs4_rst": [],
+  "ot_sram_1r1w2c_128x64_m1": [],
+  "ot_sram_1r1w2c_256x64_m1": [],
+  "ot_sram_1r1w2c_32x64_m1": [],
+  "ot_sram_1r1w_128x256_m1_r2c2": [],
+  "ot_sram_1r1w_256x256_m2_r2c2": [],
+  "ot_sram_1r1w_32x128_m1": [],
+  "ot_sram_1r1w_512x128_m4_r2c2": [],
+  "ot_sram_oldread_b64": [
+   "ot_sram_1r1w2c_256x64_m1"
+  ],
+  "ot_sram_oldread_wreg": [
+   "ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "ot_sram_showahead_1r1w": [
+   "ot_sram_1r1w_32x128_m1",
+   "ot_sram_showahead_hit5",
+   "ot_sram_showahead_readptr",
+   "ot_sram_showahead_writedata",
+   "ot_sram_showahead_writepins"
+  ],
+  "ot_sram_showahead_b64": [
+   "ot_sram_1r1w2c_32x64_m1",
+   "ot_sram_showahead_b64_hit5"
+  ],
+  "ot_sram_showahead_b64_hit5": [],
+  "ot_sram_showahead_hit5": [],
+  "ot_sram_showahead_readptr": [],
+  "ot_sram_showahead_writedata": [],
+  "ot_sram_showahead_writepins": [],
+  "ot_v41_bf16_lanes": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_bmul",
+   "ot_hdc_delay",
+   "ot_v41_chain"
+  ],
+  "ot_v41_bf16_lanes2": [
+   "ot_hdc_delay",
+   "ot_v41_bmul2_rne_prepare",
+   "ot_v41_chain2",
+   "ot_v41_chain2u2",
+   "ot_v41_chain4",
+   "ot_v41_fadd"
+  ],
+  "ot_v41_bf16_lanes3": [
+   "ot_hdc_delay",
+   "ot_v41_bmul2_rne_prepare",
+   "ot_v41_chain2",
+   "ot_v41_chain2u2",
+   "ot_v41_chain4",
+   "ot_v41_fadd",
+   "ot_v41_tile_clk"
+  ],
+  "ot_v41_bf_col": [
+   "ot_bf_hdly",
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_bmul",
+   "ot_hdc_delay",
+   "ot_rom_4096x274_m8",
+   "ot_rom_8192x274_m8",
+   "ot_v41_bf16_lanes",
+   "ot_v41_bf16_lanes2",
+   "ot_v41_bf16_lanes3",
+   "ot_v41_bterm",
+   "ot_v41_bterm2_w10",
+   "ot_v41_bterm4_w10",
+   "ot_v41_chain",
+   "ot_v41_chain2",
+   "ot_v41_chain4",
+   "ot_v41_fadd",
+   "ot_v41_kreg",
+   "ot_v41_segtree",
+   "ot_v41_segtree2",
+   "ot_v41_segtree4",
+   "ot_v41_segtree5",
+   "ot_v41_tile_clk"
+  ],
+  "ot_v41_bf_front_core_roots": [
+   "ot_hdc_cg",
+   "ot_v41_first_w10",
+   "ot_v41_kreg",
+   "ot_v41_ksadd",
+   "ot_v41_walk2_w10",
+   "ot_v41_walk_w10"
+  ],
+  "ot_v41_bmul2_rne_prepare": [
+   "ot_v41_bmul_subnormal_rne_prepare",
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_bmul_subnormal_rne_prepare": [
+   "ot_v41_inc"
+  ],
+  "ot_v41_bterm": [
+   "ot_hdc_delay",
+   "ot_v41_csa"
+  ],
+  "ot_v41_bterm2_w10": [
+   "ot_hdc_delay",
+   "ot_v41_csa",
+   "ot_v41_inc",
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_bterm4_w10": [
+   "ot_hdc_delay",
+   "ot_v41_csa",
+   "ot_v41_inc",
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_bterm5_w10": [
+   "ot_hdc_delay",
+   "ot_v41_csa",
+   "ot_v41_inc",
+   "ot_v41_kreg",
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_chain": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_delay"
+  ],
+  "ot_v41_chain2": [
+   "ot_hdc_delay",
+   "ot_v41_fadd"
+  ],
+  "ot_v41_chain2u2": [
+   "ot_hdc_cg",
+   "ot_hdc_delay",
+   "ot_v41_fadd"
+  ],
+  "ot_v41_chain4": [
+   "ot_hdc_delay",
+   "ot_v41_fadd2",
+   "ot_v41_fadd_s0",
+   "ot_v41_kreg"
+  ],
+  "ot_v41_csa": [],
+  "ot_v41_cut": [],
+  "ot_v41_elem_pq_tags": [],
+  "ot_v41_fadd": [
+   "ot_v41_cut",
+   "ot_v41_inc",
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_fadd2": [
+   "ot_v41_cut",
+   "ot_v41_inc",
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_fadd_s0": [
+   "ot_v41_ksadd"
+  ],
+  "ot_v41_first_w10": [],
+  "ot_v41_inc": [],
+  "ot_v41_kreg": [],
+  "ot_v41_ksadd": [],
+  "ot_v41_rom_elem_q_qxpq_w10": [
+   "ot_v41_rom_elem_qx_pq_w10"
+  ],
+  "ot_v41_rom_elem_qx_pq_w10": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_bmul",
+   "ot_hdc_cg",
+   "ot_hdc_delay",
+   "ot_rom_4096x274_m8",
+   "ot_rom_8192x274_m8",
+   "ot_v41_bf16_lanes",
+   "ot_v41_bf16_lanes2",
+   "ot_v41_bterm",
+   "ot_v41_bterm2_w10",
+   "ot_v41_bterm4_w10",
+   "ot_v41_bterm5_w10",
+   "ot_v41_chain",
+   "ot_v41_chain2",
+   "ot_v41_chain4",
+   "ot_v41_elem_pq_tags",
+   "ot_v41_fadd",
+   "ot_v41_first_w10",
+   "ot_v41_kreg",
+   "ot_v41_ksadd",
+   "ot_v41_segtree",
+   "ot_v41_segtree2",
+   "ot_v41_segtree4",
+   "ot_v41_segtree5",
+   "ot_v41_segtree6",
+   "ot_v41_walk2_w10",
+   "ot_v41_walk_w10"
+  ],
+  "ot_v41_rom_elem_qx_w10": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_bmul",
+   "ot_hdc_cg",
+   "ot_hdc_delay",
+   "ot_rom_4096x274_m8",
+   "ot_rom_8192x274_m8",
+   "ot_v41_bf16_lanes",
+   "ot_v41_bf16_lanes2",
+   "ot_v41_bf16_lanes3",
+   "ot_v41_bterm",
+   "ot_v41_bterm2_w10",
+   "ot_v41_bterm4_w10",
+   "ot_v41_chain",
+   "ot_v41_chain2",
+   "ot_v41_chain4",
+   "ot_v41_fadd",
+   "ot_v41_first_w10",
+   "ot_v41_kreg",
+   "ot_v41_ksadd",
+   "ot_v41_segtree",
+   "ot_v41_segtree2",
+   "ot_v41_segtree4",
+   "ot_v41_segtree5",
+   "ot_v41_tile_clk",
+   "ot_v41_walk2_w10",
+   "ot_v41_walk_w10"
+  ],
+  "ot_v41_rom_elem_w10": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_bmul",
+   "ot_hdc_cg",
+   "ot_hdc_delay",
+   "ot_rom_4096x274_m8",
+   "ot_rom_8192x274_m8",
+   "ot_v41_bf16_lanes",
+   "ot_v41_bf16_lanes2",
+   "ot_v41_bterm",
+   "ot_v41_bterm2_w10",
+   "ot_v41_chain",
+   "ot_v41_chain2",
+   "ot_v41_fadd",
+   "ot_v41_first_w10",
+   "ot_v41_segtree",
+   "ot_v41_segtree2",
+   "ot_v41_walk2_w10",
+   "ot_v41_walk_w10"
+  ],
+  "ot_v41_segtree": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_delay"
+  ],
+  "ot_v41_segtree2": [
+   "ot_hdc_delay",
+   "ot_v41_fadd"
+  ],
+  "ot_v41_segtree4": [
+   "ot_hdc_delay",
+   "ot_v41_fadd",
+   "ot_v41_kreg"
+  ],
+  "ot_v41_segtree5": [
+   "ot_hdc_delay",
+   "ot_v41_fadd",
+   "ot_v41_kreg"
+  ],
+  "ot_v41_segtree6": [
+   "ot_hdc_delay",
+   "ot_v41_fadd",
+   "ot_v41_kreg"
+  ],
+  "ot_v41_tile_clk": [
+   "ot_hdc_cg",
+   "ot_v41_kreg"
+  ],
+  "ot_v41_walk2_w10": [],
+  "ot_v41_walk_w10": [],
+  "s0N_aggregate": [
+   "ICGx4_ASAP7_75t_R",
+   "col_h9_l4_lp",
+   "dsfd_dvland_276",
+   "dsfd_dvland_512",
+   "dsfd_dvland_562",
+   "dsfd_dvland_70",
+   "dsfd_dvrlyh_276_EW",
+   "dsfd_dvrlyh_276_NS",
+   "dsfd_dvrlyh_276_SN",
+   "dsfd_dvrlyh_276_WE",
+   "dsfd_dvrlyh_512_EW",
+   "dsfd_dvrlyh_562_SN",
+   "dsfd_dvrlyh_562_WE",
+   "dsfd_dvrlyh_70_NS",
+   "dsfd_dvrlyh_70_SN",
+   "dsfd_rly_1_WN",
+   "dv_flight_sim",
+   "ot_s81sl_slice_lepw_mab_mu_72"
+  ]
+ },
+ "module_comparisons": {
+  "ot_hdc_fp32_add_fast": {
+   "frozen_full_module_sha256": "d3095a0188e4d98e5e0e1968543e9b2de910d66b9a006a3cece23d8df3d797b4",
+   "production_full_module_sha256": "d3095a0188e4d98e5e0e1968543e9b2de910d66b9a006a3cece23d8df3d797b4",
+   "full_body_ports_default_params_equal": true,
+   "reachable_in_all_branch_0N_graph": true,
+   "conservative_path": [
+    "s0N_aggregate",
+    "ot_s81sl_slice_lepw_mab_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp",
+    "ot_s81sl_leaf",
+    "ot_s81sl_vsw",
+    "ot_s81_su_swl",
+    "ot_hdc_qadd_lat",
+    "ot_hdc_fp32_add_fast"
+   ]
+  },
+  "ot_hdc_fp32_mul_fast": {
+   "frozen_full_module_sha256": "6c3c0bd6000cae4025eba8182700d13a606b5a2a295263738b01ec549592302a",
+   "production_full_module_sha256": "6c3c0bd6000cae4025eba8182700d13a606b5a2a295263738b01ec549592302a",
+   "full_body_ports_default_params_equal": true,
+   "reachable_in_all_branch_0N_graph": true,
+   "conservative_path": [
+    "s0N_aggregate",
+    "ot_s81sl_slice_lepw_mab_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp",
+    "ot_s81sl_leaf",
+    "ot_s81sl_vsw",
+    "ot_s81_su_swl",
+    "ot_hdc_qmul_lat",
+    "ot_hdc_fp32_mul_fast"
+   ]
+  },
+  "ot_hdc_ksa": {
+   "frozen_full_module_sha256": "eea9a4c6346f0c8e959e398ec982ac56b66b10307b7ad403a97cb6d2ccfdb07a",
+   "production_full_module_sha256": "eea9a4c6346f0c8e959e398ec982ac56b66b10307b7ad403a97cb6d2ccfdb07a",
+   "full_body_ports_default_params_equal": true,
+   "reachable_in_all_branch_0N_graph": true,
+   "conservative_path": [
+    "s0N_aggregate",
+    "ot_s81sl_slice_lepw_mab_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp",
+    "ot_s81sl_leaf",
+    "ot_s81sl_vsw",
+    "ot_s81_su_swl",
+    "ot_hdc_qmul_lat",
+    "ot_hdc_fp32_mul_fast",
+    "ot_hdc_ksa"
+   ]
+  },
+  "ot_hdc_lzc32": {
+   "frozen_full_module_sha256": "d4b7b9e2defc62e0c942cfe17a6cfd1e5e732f87b92c7b2d777fcad7c4c5a4b8",
+   "production_full_module_sha256": "d4b7b9e2defc62e0c942cfe17a6cfd1e5e732f87b92c7b2d777fcad7c4c5a4b8",
+   "full_body_ports_default_params_equal": true,
+   "reachable_in_all_branch_0N_graph": true,
+   "conservative_path": [
+    "s0N_aggregate",
+    "ot_s81sl_slice_lepw_mab_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp",
+    "ot_s81sl_leaf",
+    "ot_s81sl_vsw",
+    "ot_s81_su_swl",
+    "ot_hdc_qmul_lat",
+    "ot_hdc_fp32_mul_lat",
+    "ot_hdc_lzc32"
+   ]
+  },
+  "ot_hdc_mul24_rows": {
+   "frozen_full_module_sha256": "a4f6b8333d96495e48df2af1325528a16741f98337a048ca25bf0eb98b6d7ba2",
+   "production_full_module_sha256": "a4f6b8333d96495e48df2af1325528a16741f98337a048ca25bf0eb98b6d7ba2",
+   "full_body_ports_default_params_equal": true,
+   "reachable_in_all_branch_0N_graph": true,
+   "conservative_path": [
+    "s0N_aggregate",
+    "ot_s81sl_slice_lepw_mab_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp",
+    "ot_s81sl_leaf",
+    "ot_s81sl_vsw",
+    "ot_s81_su_swl",
+    "ot_hdc_qmul_lat",
+    "ot_hdc_fp32_mul_lat",
+    "ot_hdc_mul24_rows"
+   ]
+  },
+  "ot_hdc_mul24_sum": {
+   "frozen_full_module_sha256": "65aedead81818454227ee97f1d321b33174ec345e85dd6b4a44803e5b6281028",
+   "production_full_module_sha256": "65aedead81818454227ee97f1d321b33174ec345e85dd6b4a44803e5b6281028",
+   "full_body_ports_default_params_equal": true,
+   "reachable_in_all_branch_0N_graph": true,
+   "conservative_path": [
+    "s0N_aggregate",
+    "ot_s81sl_slice_lepw_mab_mu_72",
+    "ot_s81sl_slice_c1x_k8_cap5r_lp",
+    "ot_s81sl_leaf",
+    "ot_s81sl_vsw",
+    "ot_s81_su_swl",
+    "ot_hdc_qmul_lat",
+    "ot_hdc_fp32_mul_fast",
+    "ot_hdc_mul24_sum"
+   ]
+  },
+  "ot_hdc_qadd": {
+   "frozen_full_module_sha256": "4cd9c8a10efe8bfd532a2a896e1f36f8a87395dc279cc2c40e8f35d84bd2051c",
+   "production_full_module_sha256": "4550c5757a01f6c93a40c73d82a1c9952b44587b000237dafcb2b6e8d874d60b",
+   "full_body_ports_default_params_equal": false,
+   "reachable_in_all_branch_0N_graph": false,
+   "conservative_path": []
+  },
+  "ot_hdc_qmul": {
+   "frozen_full_module_sha256": "953a5cf27569acbea104dbf40052713708c18293f6496545510948ba3b6fdc0c",
+   "production_full_module_sha256": "c5be5249068a50e6c73b2353dfc00980de86775b1262b173ab474319e08b6f52",
+   "full_body_ports_default_params_equal": false,
+   "reachable_in_all_branch_0N_graph": false,
+   "conservative_path": []
+  }
+ },
+ "changed_modules": [
+  "ot_hdc_qadd",
+  "ot_hdc_qmul"
+ ],
+ "changed_reachable_modules": [],
+ "qualification": "Pure full preprocessed module-body comparison including ports/default parameters and all known parameter branches. Missing KV-only definitions are outside successful 0N active elaboration; this does not prove KV or whole-die closure. Frozen0N446 inventory remains unchanged; productionff9 was NOT executed in 0N. No compiler, simulator, body replacement, or rerun."
+}
