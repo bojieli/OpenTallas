@@ -59,9 +59,13 @@ module ot_vms_bank_q0_faces_body #(
     output reg [17:0] status
 );
     // Pipeline identity fields retain the closed B2 4-bit encoding.
+    // Simulation-only bound check: Yosys read_verilog elaborates every module at its DEFAULT parameters (RG=2), where a
+    // constant-true $fatal in an initial block is an unresolvable task; the only instantiation (q0_faces_core) is RG=5/WG=2.
+`ifndef SYNTHESIS
     initial begin
         if (RG != 5 || WG != 2) $fatal(1, "static bank lane bounds");
     end
+`endif
     // ------------------------------------------------------------------ SECDED (39,32), same code as ot_hgi_vm_core
     function automatic [6:0] colv(input integer i);
         integer a, b, c, n; reg [6:0] v;
