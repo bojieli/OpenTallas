@@ -15,13 +15,14 @@ module tb_s81hd_mini #(parameter integer SK = 7);
     // Actual successor reset path versus old kit's two-stage landing model.
     reg [2:0] reset_age_ref=3'b000;
     reg [1:0] reset_old_ref=2'b00;
-    integer reset_edges=0, reset_age_errors=0, reset_reassertions=0;
+    integer reset_edges=0, reset_age_errors=0, reset_reassertions=0, reset_delta_windows=0;
     always @(posedge ck) begin
         reset_age_ref <= {reset_age_ref[1:0],rst_n};
         reset_old_ref <= {reset_old_ref[0],rst_n};
         reset_edges <= reset_edges+1;
     end
     always @(negedge ck) if (reset_edges>=3) begin
+        if(reset_old_ref[1] != reset_age_ref[2]) reset_delta_windows=reset_delta_windows+1;
         if (u_t0.tile_r2[0] !== reset_age_ref[2] ||
             u_t1.tile_r2[0] !== reset_age_ref[2]) begin
             reset_age_errors=reset_age_errors+1;
@@ -129,8 +130,9 @@ module tb_s81hd_mini #(parameter integer SK = 7);
         repeat(5) @(negedge ck);
         #0.2; rst_n=1'b1;
         repeat(8) @(negedge ck);
-        $display("RESET_AGE checked_edges=%0d old_stages=2 selected_stages=3 reassertions=%0d mismatches=%0d traffic_delta=0",reset_edges,reset_reassertions,reset_age_errors);
+        $display("RESET_AGE checked_edges=%0d old_stages=2 selected_stages=3 reassertions=%0d mismatches=%0d delta_windows=%0d traffic_delta=0",reset_edges,reset_reassertions,reset_age_errors,reset_delta_windows);
         if(reset_age_errors!=0) bad=bad+reset_age_errors;
+        if(reset_delta_windows!=3) begin $display("TB_FAIL RESET_DELTA expected3 got%0d",reset_delta_windows);bad=bad+1;end
         if (bad == 0) $display("TB_PASS positions %0d", npos); else $display("TB_FAIL %0d mismatches", bad);
         $finish;
     end
