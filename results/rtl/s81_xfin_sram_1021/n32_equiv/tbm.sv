@@ -15,13 +15,13 @@ module tbm;
   endfunction
   always #1 clk=~clk;
   initial begin
-    #5 rst_n=1;
+    #5 rst_n=1; repeat (4) @(negedge clk);
     for(i=0;i<2000000;i=i+1) begin
       @(negedge clk);
       v=$random; r=$random; a=pick($random, r[3:0]); b=pick($random, r[7:4]);
       if (r[8]) a[31]=0;
       if (y0!==y1 || f0!==f1) begin bad=bad+1; if (bad<5) $display("MUL MISMATCH %h %h", y0,y1); end
-      if (r0!==r1 || g0!==g1 || vo0!==vo1) begin badr=badr+1; if (badr<5) $display("RSQ MISMATCH %h %h", r0,r1); end
+      if (r0!==r1 || g0!==g1 || vo0!==vo1) begin badr=badr+1; if (badr<5) $display("RSQ MISMATCH %h %h t=%0d vo %b %b", r0,r1,i,vo0,vo1); end
     end
     $display("EQ_MUL done bad=%0d badr=%0d", bad, badr); $finish;
   end

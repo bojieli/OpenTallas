@@ -7,7 +7,7 @@ module tbd;
   integer i, bad=0; reg [31:0] r;
   always #1 clk=~clk;
   initial begin
-    #5 rst_n=1;
+    #5 rst_n=1; repeat (4) @(negedge clk);
     for(i=0;i<2000000;i=i+1) begin
       @(negedge clk);
       v=$random; r=$random; x=$random;

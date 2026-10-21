@@ -12,7 +12,7 @@ module tb;
   endfunction
   always #1 clk=~clk;
   initial begin
-    #5 rst_n=1;
+    #5 rst_n=1; repeat (4) @(negedge clk);
     for(i=0;i<2000000;i=i+1) begin
       @(negedge clk);
       v=$random; r=$random; a=pick($random, r[3:0]); b=pick($random, r[7:4]);

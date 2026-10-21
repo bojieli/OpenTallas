@@ -2,3 +2,7 @@ EQ_ADD 2M random cycles (specials, cancellation, near-exponent): bad=0 (ot_s81dv
 EQ_MUL 2M: bad=0 (ot_s81dv_qmul_n32 vs ot_hdc_qmul_lat 5); EQ_RSQ 2M: badr=0 (ot_s81dv_rsqrt_n32 vs ot_dsrom_rsqrt LM5 LA6)
 EQ_DIV 2M: bad=0 (ot_s81dv_divc_n32 vs ot_dsrom_divc F5 K10)
 Verilator 5.050, localhost, 2026-10-21 ELEM-XFV/XFIN
+r7 (local 2-edge reset forests inside the n32 units; tb holds v=0 for 4 cycles after release): EQ_ADD bad=0, EQ_MUL bad=0, EQ_DIV bad=0;
+EQ_RSQ badr=4: all 4 at t=17..39 with vo=0 on BOTH (pre-valid garbage of the y register): the n32 units release reset 2 edges after
+their raw input, the originals at their input; in the finish the n32 units take the finish rst_n (= the originals' rs[1] - 2 edges), so
+in situ the release edge is identical. Every valid output equal.

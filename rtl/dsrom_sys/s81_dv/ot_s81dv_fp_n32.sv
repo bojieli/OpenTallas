@@ -24,10 +24,14 @@ module ot_s81dv_fp32_add_f12_n32 #(
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [31:0] b,
-    output reg  [31:0] y,
+    output wire [31:0] y,
     output reg  [1:0]  err,
     output reg         valid_out
 );
+    // N32 reset: rst_n is the RAW reset of the original unit's reset; a local 2-edge forest (prefix + leaf, the same
+    // release edge as the caller's former rs[1]) gives [0] y[15:0], [1] y[31:16] / err / valid_out, [2] cut valids
+    wire [2:0] rl;
+    ot_s81dv_finish_reset2 #(.LEAVES(3)) u_rl (.clk(clk), .rst_n(rst_n), .q(rl));
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
     localparam integer K0 = CUTS % 2, K1 = (CUTS / 2) % 2, K2 = (CUTS / 4) % 2, K3 = (CUTS / 8) % 2,
                        K4 = (CUTS / 16) % 2, K5 = (CUTS / 32) % 2, K6 = (CUTS / 64) % 2;
@@ -49,11 +53,11 @@ module ot_s81dv_fp32_add_f12_n32 #(
     ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
     wire [5:0] g6, g0;                         // {valid, f_eq, f_lt, -, dab >= 28, dba >= 28}
-    ot_hdc_f12_cut #(.W(6), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(6), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rl[2]),
         .d({valid_in, a_field == b_field, a_field < b_field, 1'b0, dab >= 8'd28, dba >= 8'd28}), .q(g6));
     localparam integer WA6 = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8 + 31 + 31;
     wire [WA6-1:0] q6;
-    ot_hdc_f12_cut #(.W(WA6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(WA6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rl[2]),
         .d({valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
             a_exp, b_exp, a_man, b_man, dab, dba, a[30:0], b[30:0]}), .q(q6));
     wire [30:0] c_a = q6[61:31], c_b = q6[30:0];
@@ -66,7 +70,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
     wire cmp_c = g6[4] ? frac_c : !g6[3];          // a >= b
     localparam integer WA = 1 + 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
     wire [WA-1:0] qa;
-    ot_hdc_f12_cut #(.W(WA), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(WA), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rl[2]),
         .d({q6[WA6-1], !cmp_c, q6[WA6-2:62]}), .q(qa));
     wire        x_v, x_swap, x_byp, x_sub, x_as, x_bs;
     wire [1:0]  x_err;
@@ -105,7 +109,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
             end
         end
     endfunction
-    ot_hdc_f12_cut #(.W(6), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rst_n), .d(g6), .q(g0));
+    ot_hdc_f12_cut #(.W(6), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rl[2]), .d(g6), .q(g0));
     // N32: KEPT same-edge copies of the k0 fan-out fields (swap 4, shift amounts 2+2, far flags 2+2); each consumer
     // group reads its own copy, the alignment shifters are built twice and sliced (low / high half)
     wire [3:0] swc;
@@ -119,7 +123,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
     wire [27:0] small_b = {sb1[27:14], sb0[13:0]};
     localparam integer W1 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 28;
     wire [W1-1:0] q1;
-    ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rl[2]),
         .d({x_v, x_byp, x_sub, swc[0] ? x_bs : x_as, x_err, x_code, swc[0] ? x_bexp : x_aexp,
             swc[1] ? x_bman : x_aman, swc[3] ? small_a[27:14] : small_b[27:14], swc[2] ? small_a[13:0] : small_b[13:0]}),
         .q(q1));
@@ -138,7 +142,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
     ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
     localparam integer W2 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
     wire [W2-1:0] q2;
-    ot_hdc_f12_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rl[2]),
         .d({s1_v, s1_byp, s1_sub, s1_sign, s1_err, s1_code, s1_exp, sum_w, dif_w}), .q(q2));
     wire        t_v, t_byp, t_sub, t_sign;
     wire [1:0]  t_err;
@@ -155,7 +159,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
     ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
     localparam integer W3 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
     wire [W3-1:0] q3;
-    ot_hdc_f12_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rl[2]),
         .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(q3));
     wire        w_v, w_byp, w_sub, w_sign, w_carry;
     wire [1:0]  w_err;
@@ -177,7 +181,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
     ot_hdc_inc_k #(.W(8)) u_eadd (.a(w_exp), .inc(w_carry), .y(exp_add), .co(exp_add_c));
     localparam integer W4 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27;
     wire [W4-1:0] q4;
-    ot_hdc_f12_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rl[2]),
         .d({w_v, w_byp, w_sign, w_sub && (w_dif == 28'd0), w_err, w_code, sbc0 ? exp_sub : exp_add,
             sbc1 ? sub_val[26:13] : w_add[26:13], sbc0 ? sub_val[12:0] : w_add[12:0]}), .q(q4));
     wire        s2_v, s2_byp, s2_sign, s2_zero;
@@ -193,7 +197,7 @@ module ot_s81dv_fp32_add_f12_n32 #(
     ot_hdc_inc_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .inc(inc), .y(rnd_w), .co(rnd_cw));
     localparam integer W5 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
     wire [W5-1:0] q5;
-    ot_hdc_f12_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rl[2]),
         .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err, s2_code, s2_exp, rnd_w, rnd_cw}), .q(q5));
     wire        u_v, u_byp, u_zero, u_sign, rnd_c;
     wire [1:0]  u_err;
@@ -221,11 +225,14 @@ module ot_s81dv_fp32_add_f12_n32 #(
             else begin yh[h] = (code[30:0] == 31'd0) ? 32'd0 : code; eh[h] = E_NONE; end
         end
     end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+    reg [15:0] y_lo, y_hi;
+    assign y = {y_hi, y_lo};
+    always @(posedge clk or negedge rl[0]) if (!rl[0]) y_lo <= 16'd0; else y_lo <= yh[0][15:0];
+    always @(posedge clk or negedge rl[1]) begin
+        if (!rl[1]) begin y_hi <= 16'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= u_v;
-            y <= {yh[1][31:16], yh[0][15:0]}; err <= eh[1];
+            y_hi <= yh[1][31:16]; err <= eh[1];
         end
     end
 endmodule
@@ -260,7 +267,14 @@ module ot_s81dv_rsqrt_n32 #(
     localparam integer IT = 3 * LM + LA;
     localparam integer DEPTH = 1 + 3 * IT;      // 37 (LM 3), 46 (LM 4)
     wire [DEPTH:0] vd;
-    ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+    // N32: raw rst_n; the DEPTH-flop valid line is two chained halves, each on its own 2-edge leaf (same edge)
+    localparam integer DA = DEPTH / 2, DB = DEPTH - DA;
+    wire [1:0] rl;
+    ot_s81dv_finish_reset2 #(.LEAVES(2)) u_rl (.clk(clk), .rst_n(rst_n), .q(rl));
+    wire [DA:0] vda; wire [DB:0] vdb;
+    ot_hdc_vline #(.D(DA)) u_va (.clk(clk), .rst_n(rl[0]), .v(v), .vd(vda));
+    ot_hdc_vline #(.D(DB)) u_vb (.clk(clk), .rst_n(rl[1]), .v(vda[DA]), .vd(vdb));
+    assign vd = {vdb[DB:1], vda};
     assign vo = vd[DEPTH];
 
     reg [31:0] y0;
@@ -307,10 +321,14 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [31:0] b,
-    output reg  [31:0] y,
+    output wire [31:0] y,
     output reg  [1:0]  err,
     output reg         valid_out
 );
+    // N32 reset: rst_n is the RAW reset of the original unit's reset; a local 2-edge forest (prefix + leaf, the same
+    // release edge as the caller's former rs[1]) gives [0] y[15:0], [1] y[31:16] / err / valid_out, [2] cut valids
+    wire [2:0] rl;
+    ot_s81dv_finish_reset2 #(.LEAVES(3)) u_rl (.clk(clk), .rst_n(rst_n), .q(rl));
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
     localparam integer K0 = CUTS % 2, K1 = (CUTS / 2) % 2, K2 = (CUTS / 4) % 2, K3 = (CUTS / 8) % 2,
                        K4 = (CUTS / 16) % 2, K5 = (CUTS / 32) % 2, K6 = (CUTS / 64) % 2, K7 = (CUTS / 128) % 2;
@@ -340,7 +358,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     ot_hdc_lzc32 u_lb (.x({b[22:0], 9'h1ff}), .n(b_cz));
     localparam integer W0 = 1 + 1 + 2 + 1 + 23 + 23 + 8 + 8 + 5 + 5;
     wire [W0-1:0] q0;
-    ot_hdc_f12_cut #(.W(W0), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W0), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rl[2]),
         .d({valid_in, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), a[31] ^ b[31], a[22:0], b[22:0],
             a_field, b_field, a_cz[4:0], b_cz[4:0]}), .q(q0));
     wire        o0_v, o0_byp, o0_sign;
@@ -357,7 +375,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     wire signed [11:0] b_power = b_s ? (-12'sd150 - {7'd0, o0_bcz}) : ($signed({4'd0, o0_be}) - 12'sd150);
     localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
     wire [W1-1:0] q1;
-    ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rl[2]),
         .d({o0_v, o0_byp, o0_err, o0_sign, a_n, b_n, a_power, b_power}), .q(q1));
     wire        p_v, p_byp, p_sign;
     wire [1:0]  p_err;
@@ -376,7 +394,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     ot_s81dv_mul24_rows_n32 u_rows (.a0(pa0), .a1(pa1), .b0(pb0), .b1(pb1), .rows(rows));
     localparam integer W2 = 1 + 1 + 2 + 1 + 48 * 8 + 12;
     wire [W2-1:0] q2;
-    ot_hdc_f12_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rl[2]),
         .d({p_v, p_byp, p_err, p_sign, rows, power}), .q(q2));
     wire        s1_v, s1_byp, s1_sign;
     wire [1:0]  s1_err;
@@ -398,7 +416,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     endgenerate
     localparam integer W3 = 1 + 1 + 2 + 1 + 48 * 4 + 12;
     wire [W3-1:0] q3;
-    ot_hdc_f12_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rl[2]),
         .d({s1_v, s1_byp, s1_err, s1_sign, l5, s1_power}), .q(q3));
     wire        r3_v, r3_byp, r3_sign;
     wire [1:0]  r3_err;
@@ -428,7 +446,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     end
     localparam integer W4 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W4-1:0] q4;
-    ot_hdc_f12_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rl[2]),
         .d({r3_v, r3_byp, r3_err, r3_sign, l7, fl47 < -12'sd126, fl46 < -12'sd126, fl47, fl46, shc, m_round, m_sticky}),
         .q(q4));
     wire        q_v, q_byp, q_sign, q_s47, q_s46;
@@ -444,7 +462,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
     localparam integer W5 = 1 + 1 + 2 + 1 + 48 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W5-1:0] q5;
-    ot_hdc_f12_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rl[2]),
         .d({q_v, q_byp, q_err, q_sign, prod, q_s47, q_s46, q_fl47, q_fl46, q_sh, q_mr, q_ms}), .q(q5));
     wire        s2_v, s2_byp, s2_sign, s2_sub47, s2_sub46;
     wire [1:0]  s2_err;
@@ -480,7 +498,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     wire        oa = tpc[1] ? oa47 : oa46, ob = tpc[2] ? ob47 : ob46;
     localparam integer W6 = 1 + 1 + 2 + 1 + 1 + 24 + 1 + 8 + 8 + 1 + 1;
     wire [W6-1:0] q6;
-    ot_hdc_f12_cut #(.W(W6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rl[2]),
         .d({s2_v, s2_byp, s2_err, s2_sign, is_sub, main, rb && (st || main[0]), fa, fb, oa, ob}), .q(q6));
     wire        r_v, r_byp, r_sign, r_sub, r_inc, r_oa, r_ob;
     wire [1:0]  r_err;
@@ -493,7 +511,7 @@ module ot_s81dv_fp32_mul_f12_n32 #(
     ot_hdc_inc_k #(.W(24)) u_rnd (.a(r_main), .inc(r_inc), .y(rnd_w), .co(rnd_cw));
     localparam integer W7 = 1 + 1 + 2 + 1 + 1 + 24 + 1 + 8 + 8 + 1 + 1;
     wire [W7-1:0] q7;
-    ot_hdc_f12_cut #(.W(W7), .CUT(K7)) u_k7 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_f12_cut #(.W(W7), .CUT(K7)) u_k7 (.clk(clk), .rst_n(rl[2]),
         .d({r_v, r_byp, r_err, r_sign, r_sub, rnd_w, rnd_cw, r_fa, r_fb, r_oa, r_ob}), .q(q7));
     wire        o_v, o_byp, o_sign, o_sub, rnd_c, o_oa, o_ob;
     wire [1:0]  o_err;
@@ -527,11 +545,14 @@ module ot_s81dv_fp32_mul_f12_n32 #(
             else begin yh[h] = (code[30:0] == 31'd0) ? 32'd0 : code; eh[h] = E_NONE; end
         end
     end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+    reg [15:0] y_lo, y_hi;
+    assign y = {y_hi, y_lo};
+    always @(posedge clk or negedge rl[0]) if (!rl[0]) y_lo <= 16'd0; else y_lo <= yh[0][15:0];
+    always @(posedge clk or negedge rl[1]) begin
+        if (!rl[1]) begin y_hi <= 16'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= o_v;
-            y <= {yh[1][31:16], yh[0][15:0]}; err <= eh[1];
+            y_hi <= yh[1][31:16]; err <= eh[1];
         end
     end
 endmodule
@@ -604,7 +625,9 @@ module ot_s81dv_divc_n32 #(
     localparam integer LATENCY = 9;
     initial if (F != 1 && F != 5) $error("ot_s81dv_divc_n32: F must be 1 or 5");
     wire [LATENCY:0] vl;
-    ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vl));
+    wire [0:0] rl;                            // N32: raw rst_n -> local 2-edge leaf (same release edge)
+    ot_s81dv_finish_reset2 #(.LEAVES(1)) u_rl (.clk(clk), .rst_n(rst_n), .q(rl));
+    ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rl[0]), .v(v), .vd(vl));
     assign vo = vl[LATENCY];
 
     // -- S1: decode, leading-zero count of the significand ---------------------------------
