@@ -1,0 +1,15 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T10:37:00-07:00",
+  "geometry_sha256": "fa2511357695b624b850c1e477e34734e5fd3f099201ad1d56d5862be73fab9d",
+  "verdict": "APPROVED",
+  "approval_source": "Explicit ROOT coordinator approval10:37 relayed by hbm_lead: ROOT viewed both PNGs and actual WARN49.6/49.4; write exact-bound REVIEW and submit without regate. Recorded by delegated collector; no clock waiver.",
+  "checklist": {
+    "lattice": "No macros; not applicable. Outline648x1555.2 retained.",
+    "std_cell_band": "Continuous standard-cell area; sparse4.2% with green lowercentre/E; no hotspots.",
+    "pin_spread": "TT49.6ps/FF49.4ps PASS;21,396actualpins accessible; fullfacepins.",
+    "clock_entry": "E-centre near activeband; insertion976.9/813.2ps and107,776sinks disclosed guidance.",
+    "shape": "Exact approved geometry; GRT0/native32, no geometry changes."
+  },
+  "obligations": "Source/witnesses, route timing and parent boundary obligations remain. No clock-rule waiver."
+}
