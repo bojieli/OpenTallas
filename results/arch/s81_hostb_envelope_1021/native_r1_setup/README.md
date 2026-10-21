@@ -1,0 +1,1 @@
+EP7unit1774793 admitted16GiB/4threads, immutableORFSimage16470; SETUP_FAIL beforeanyYosys/native synthesis because actualASAP7 Libertyfiles live lib/NLDM, not lib/. Source RTL unchanged, no nativeverdict. Correct exact observed container path and require actualfileexistence before nextnecessary native build. Originalsetupfailure preserved.

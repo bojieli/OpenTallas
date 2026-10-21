@@ -6,8 +6,8 @@ printf '%s\n' "$IMAGE" >"$O/image_id.txt"
 docker run --rm -v "$LIB:/techlib" "$IMAGE" bash -lc '
  set -euo pipefail
  for c in SEQ SIMPLE AO OA INVBUF;do
-  src=(/OpenROAD-flow-scripts/flow/platforms/asap7/lib/asap7sc7p5t_${c}_RVT_TT_nldm*.lib*)
-  test "${#src[@]}" = 1
+  src=(/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_${c}_RVT_TT_nldm*.lib*)
+  test "${#src[@]}" = 1 && test -f "${src[0]}"
   if [[ ${src[0]} = *.gz ]];then gzip -dc "${src[0]}" >"/techlib/$c.lib";else cp "${src[0]}" "/techlib/$c.lib";fi
  done'
 sha256sum "$LIB"/*.lib >"$O/lib_sha256.txt"
