@@ -43,10 +43,18 @@ TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
 TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
 HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
+if STATUS_OBS and not HEAD_PREP:
+    raise ValueError('STATUS observer v1 requires coherent head-prepare source')
+NATIVE_MASTER = 'qfd_native59_dv_headprep_obs1' if STATUS_OBS else 'qfd_native59_dv_headprep'
 D2D_MASTER = 'qfd_d2d_static_ovl_sf7' if HEAD_PREP else 'qfd_d2d_static'
 DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
 DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
 CTXRX_MASTER = 'qfd_mu_ctx_rx_die'               # MU-DQ-BOOTCTX: filler runtime context leaf (dv_case.CTXRX) -> tt_ctlm.ctx_x
+if STATUS_OBS:
+    D2D_MASTER = 'qfd_d2d_static_ovl_sf7_obs1'
+    DHOBS_MASTER = 'qfd_sys_face_mu_dhobs_obs1'
+    CTXRX_MASTER = 'qfd_mu_ctx_rx_die_obs1'
 # QW-GENPREP 10-21: OT_QWEN_D2D_IMAGE selects the ONE shared compute<->KV pair image (KV-PROG17
 # d2d_cal_image_mu_ew595_r16.svh; TXDP_C/K identical to d2d_cal_image.svh, so qfd_d2d_static.TXDP is unchanged)
 DEFAULT_IMAGE = ('rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew1627_r16_rope.svh'
@@ -158,16 +166,16 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
         rec['fctx'] = 1
     if os.environ.get('OT_QWEN_ROPE', '0') == '1':
-        for master in ('qfd_sys_face', 'qfd_sys_face_ovl', 'qfd_embedding_word_provider', 'qfd_native59_dv_service', 'qfd_native59_dv_headprep'):
+        for master in ('qfd_sys_face', 'qfd_sys_face_ovl', 'qfd_embedding_word_provider', 'qfd_native59_dv_service', NATIVE_MASTER):
             if master in masters:
                 out.setdefault(master, {}).update(ROPE=1)
         rec['rope'] = dict(words=8, payload_flag=512, expected_args=list(range(65, 73)),
                            read_bank='embed_code_addr = 9723904 + token*8 + beat',
                            scope='requires the shared 73-item pair image and matching source-complete views')
     if HEAD_PREP:
-        if 'qfd_native59_dv_headprep' not in masters or 'qfd_sys_face_ovl' not in masters:
+        if NATIVE_MASTER not in masters or 'qfd_sys_face_ovl' not in masters:
             raise ValueError('head prepare requires the actual source-complete native and OVL face masters')
-        out.setdefault('qfd_native59_dv_headprep', {}).update(HEAD_PREP=1, NU=nu)
+        out.setdefault(NATIVE_MASTER, {}).update(HEAD_PREP=1, NU=nu)
         out.setdefault('qfd_sys_face_ovl', {}).update(MU=int(nu>1), MU_HEAD=int(nu>1), ROPE=1)
         rec['head_prepare'] = dict(source='c_emb stored token/position/user, never RESULT',
                                   transport='derive both bundle ages from actual GEN; no zero default')

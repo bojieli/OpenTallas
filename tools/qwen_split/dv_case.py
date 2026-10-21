@@ -247,7 +247,8 @@ def _dhobs_buses(m, out, dh_crt, has):
     out[j] = (b0, c0, n0, list(e0) + [(n_, 'seq_dh')])
     out.append((f'dvw_{n_}_dh_user', 'spine_local', 2, [(n_, 'dh_user'), ('tt_ctlm', 'dh_user')]))
     m['q3h']['dv_dhobs'].update(seq_dh_bus=b0, dh_user_bus=f'dvw_{n_}_dh_user', clock_reset=dict(
-        (f'{k[1]}', v_) for k, v_ in sorted(dh_crt.items())), open_outputs=['res_user', 'mu_fault'])
+        (f'{k[1]}', v_) for k, v_ in sorted(dh_crt.items())),
+        open_outputs=['mu_fault'] if STATUS_OBS else ['res_user', 'mu_fault'])
 
 
 def _ctxrx_inst(v, m, keep):
@@ -309,7 +310,7 @@ def _ctxrx_buses(m, out, cx_crt, has):
     out.append((f'dvw_{n_}_ctx_x', 'spine_local', 129, [(n_, 'ctx_x'), ('tt_ctlm', 'ctx_x')]))
     m['q3h']['dv_ctxrx'].update(rx_buses={p: out[j][0] for p, j in js.items()}, ctx_x_bus=f'dvw_{n_}_ctx_x',
                                 clock_reset=dict((f'{k[1]}', v_) for k, v_ in sorted(cx_crt.items())),
-                                open_outputs=['ctx_user', 'mu_fault'])
+                                open_outputs=['mu_fault'] if STATUS_OBS else ['ctx_user', 'mu_fault'])
 
 
 def apply_dv(v, m):

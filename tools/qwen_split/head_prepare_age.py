@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import sys
 os.environ['OT_QWEN_HEAD_PREP']='1'
@@ -17,9 +18,12 @@ def measure(case):
     die=case/'die.v'
     lanes=case/'fwd_lanes.json'
     text=die.read_text()
-    required=('qfd_native59_dv_headprep','qfd_sys_face_ovl','qfd_d2d_static_ovl_sf7')
-    missing=[m for m in required if m not in text]
-    if missing: raise ValueError('selected GEN lacks actual head-prepare masters: '+str(missing))
+    selected=[]
+    for base in ('qfd_native59_dv_headprep','qfd_sys_face_ovl','qfd_d2d_static_ovl_sf7'):
+        names=set(re.findall(r'\b'+base+r'(?:_obs1)?\b',text))
+        if len(names)!=1:
+            raise ValueError('selected GEN must have one exact head-prepare master for '+base+': '+str(sorted(names)))
+        selected.append(next(iter(names)))
     if not lanes.is_file(): raise ValueError('actual GEN fwd_lanes.json required; K-only reconstruction prohibited')
     audit=RB.audit_netlist(die,lanes)
     if audit['verdict']!='PASS': raise ValueError('record bundle audit fails: '+str(audit['fails']))
@@ -33,6 +37,7 @@ def measure(case):
     return dict(schema='opentallas.qwen.head_prepare_age.v1',
       source='actual CTLM c_emb stored token/position/user; source epoch from per-user prepare or matching HOST',
       die_sha256=hashlib.sha256(die.read_bytes()).hexdigest(),
+      selected_masters=selected,
       lanes_sha256=hashlib.sha256(lanes.read_bytes()).hexdigest(),
       source_intrinsic_edges=dict(ct_lm_sample=1,native_prepare_descriptor=3,face_held_bank=1),
       actual_transport_edges=ages,head_prepare_edges=total,
