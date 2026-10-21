@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021/reset_r3r/src
+ot-run: ot-epyc7       admits   342 GB (avail 340, growth 101, headroom 0, waiters 0/0 GB) load 104/96 running 19 disk 4658 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021/reset_r3r/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021/reset_r3r/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021/reset_r3r/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021/reset_r3r/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021/reset_r3r/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2208865-1792605293 after 1 s
+RESET_SUCCESSOR_MUTANTS 4 /4 ['TAGDROP', 'WRONGCOPY', 'LANDCUT', 'STALEHD']
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2208865-1792605293): exit 0
