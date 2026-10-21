@@ -1,0 +1,121 @@
+{
+ "status": "UNSELECTED_R17_FIT_PROPOSAL",
+ "bind_source": "075646f0b",
+ "basis_manifest_sha256": "22eca4bb6f73dda0bf780762e306717fbab7799c4614f3cc6c389b551081649b",
+ "pairs": [
+  {
+   "instance": "cxij_SW",
+   "old_xy": [
+    5940.0,
+    12409.2
+   ],
+   "pair_xy": [
+    5940.0,
+    12409.2
+   ],
+   "pair_outline_um": [
+    324,
+    388.8
+   ],
+   "q_outline_um": [
+    216,
+    388.8
+   ],
+   "s_reserved_outline_um": [
+    108,
+    388.8
+   ],
+   "move_um": [
+    0,
+    0.0
+   ],
+   "static_overlaps": []
+  },
+  {
+   "instance": "cxij_SE",
+   "old_xy": [
+    20498.4,
+    12409.2
+   ],
+   "pair_xy": [
+    20498.4,
+    12409.2
+   ],
+   "pair_outline_um": [
+    324,
+    388.8
+   ],
+   "q_outline_um": [
+    216,
+    388.8
+   ],
+   "s_reserved_outline_um": [
+    108,
+    388.8
+   ],
+   "move_um": [
+    0,
+    0.0
+   ],
+   "static_overlaps": []
+  },
+  {
+   "instance": "cxij_NW",
+   "old_xy": [
+    5983.2,
+    20466.0
+   ],
+   "pair_xy": [
+    5983.2,
+    20152.8
+   ],
+   "pair_outline_um": [
+    324,
+    388.8
+   ],
+   "q_outline_um": [
+    216,
+    388.8
+   ],
+   "s_reserved_outline_um": [
+    108,
+    388.8
+   ],
+   "move_um": [
+    0,
+    -313.2
+   ],
+   "static_overlaps": []
+  },
+  {
+   "instance": "cxij_NE",
+   "old_xy": [
+    20498.4,
+    20466.0
+   ],
+   "pair_xy": [
+    20498.4,
+    20152.8
+   ],
+   "pair_outline_um": [
+    324,
+    388.8
+   ],
+   "q_outline_um": [
+    216,
+    388.8
+   ],
+   "s_reserved_outline_um": [
+    108,
+    388.8
+   ],
+   "move_um": [
+    0,
+    -313.2
+   ],
+   "static_overlaps": []
+  }
+ ],
+ "scope": "Rectangle reservation only. ij_q exact CLOSED source/params; ij_s remains soft at changedQID/INJ_RET9/B391/OBR0, requires actualS2 size. No existing ij_s view alias.",
+ "remaining": "Apply source split in isolated successor; strict port/functional bind,4newS2 receipts, actual GEN/S4 repricing and STA. Current E and75reuse unchanged. QDQ stillunbound pending actualpostL12calendar/param netmap."
+}
