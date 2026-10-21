@@ -26,15 +26,17 @@ module dsdv_hbc1_loader #(
   assign fault=f;assign context_valid=valid&&f==0;
   wire hv=ring_i[0]&&ring_i[3:1]==6;
   wire[511:0] p=ring_i[532:21];
-  wire command=hv&&p[31:0]==32'h31434248;
+  wire command=hv&&p[31:0]==32'h31434248&&!(|pending); // Never inspect raw-body magic.
   wire addressed=p[47:40]==LOCAL_STAGE&&p[49:48]==LOCAL_RANK;
   wire claimed=command&&addressed || hv&&(|pending);
   assign local_ring={ring_i[1103:1],ring_i[0]&&!claimed};
   wire header_shape=p[35:32]==1&&p[177:114]==CLOCK_RESET_ID&&!(|p[511:290]);
   wire load_header=command&&addressed&&p[39:36]==0;
   wire commit_header=command&&addressed&&p[39:36]==1;
-  wire load_good=load_header&&header_shape&&p[65:50]==0&&p[81:66]==512&&p[289:242]==BODY_EDGE&&
-   boot_edge==BOOT_HEADER_EDGE&&!valid&&!job_active&&f==0&&VALID_PROFILE;
+  wire load_format=header_shape&&p[65:50]==0&&p[81:66]==512&&p[289:242]==BODY_EDGE;
+  wire load_slot=boot_edge==BOOT_HEADER_EDGE;
+  wire load_permit=!valid&&!job_active&&f==0&&VALID_PROFILE;
+  wire load_good=load_header&&load_format&&load_slot&&load_permit;
   wire[95:0] expected;wire[31:0] expected_crc=expected[31:0];wire[63:0] expected_programme=expected[95:32];
   wire[31:0] actual_crc;dsdv_hostb_crc512 u_crc(.d(shadow),.q(actual_crc));
   // Body schema from bootstrap_actual417_demand.json, all constant slices.
@@ -50,9 +52,10 @@ module dsdv_hbc1_loader #(
    prev_input>ks_capture&&status_sample<return_send&&return_send<prev_input;
   wire body_check=boot_edge==BODY_EDGE+1&&body_seen;
   wire body_good=body_check&&actual_crc==expected_crc&&body_shape&&f==0;
-  wire commit_good=commit_header&&header_shape&&p[65:50]==1&&p[81:66]==0&&
+  wire commit_permit=header_shape&&p[65:50]==1&&p[81:66]==0&&
    p[289:242]==BOOT_COMMIT_EDGE&&boot_edge==BOOT_COMMIT_EDGE&&p[113:82]==expected_crc&&
    p[241:178]==expected_programme&&(&ready)&&!valid&&!job_active&&f==0&&VALID_PROFILE;
+  wire commit_good=commit_header&&commit_permit;
   always @(posedge ck or negedge rn)begin
    if(!rn)begin valid<=0;f<=0;body_seen<=0;end
    else begin
@@ -77,7 +80,7 @@ module dsdv_hbc1_loader #(
    else begin:g_carry assign carry_boot=&boot_edge[k*12-1:0];assign carry_epoch=&receiver_edge[k*12-1:0];end
    (* keep_hierarchy="yes" *)dsdv_hbc_boot12 #(.ID(k)) u_boot(.ck(ck),.rst_n(rst_n),.carry(carry_boot),.q(boot_edge[12*k+:12]));
    wire[47:0] epoch_at_next=seed+COMMIT_DELTA+1;
-   (* keep_hierarchy="yes" *)dsdv_hbc_epoch12 #(.ID(k)) u_epoch(.ck(ck),.load(commit_good),.run(context_valid),.carry(carry_epoch),
+   (* keep_hierarchy="yes" *)dsdv_hbc_epoch12 #(.ID(k)) u_epoch(.ck(ck),.commit_request(commit_header),.commit_permit(commit_permit),.valid(valid),.fault_clear(f==0),.carry(carry_epoch),
     .d(epoch_at_next[12*k+:12]),.q(receiver_edge[12*k+:12]));
    (* keep_hierarchy="yes" *)dsdv_hbc_owner #(.ID(k),.BODY_EDGE(BODY_EDGE),.COMMIT_EDGE(BOOT_COMMIT_EDGE)) u_owner(
     .ck(ck),.rst_n(rst_n),.load_header(load_good),.body_good(body_good),.edge_now(boot_edge),.pending(pending[k]),.ready(ready[k]));
@@ -88,7 +91,9 @@ module dsdv_hbc1_loader #(
   end
   for(k=0;k<8;k=k+1)begin:g_header
    wire[95:0] d={p[241:178],p[113:82]};
-   (* keep_hierarchy="yes" *)dsdv_hostb_hold_bits #(.ID(k),.W(12)) u_bank(.ck(ck),.en(load_good),.d(d[12*k+:12]),.q(expected[12*k+:12]));
+   wire header_en;
+   (* keep_hierarchy="yes" *)dsdv_hbc_header_enable #(.ID(k)) u_en(.request(load_header),.format_ok(load_format),.slot(load_slot),.permit(load_permit),.en(header_en));
+   (* keep_hierarchy="yes" *)dsdv_hostb_hold_bits #(.ID(k),.W(12)) u_bank(.ck(ck),.en(header_en),.d(d[12*k+:12]),.q(expected[12*k+:12]));
   end
   for(k=0;k<43;k=k+1)begin:g_field
    localparam integer LO=12*k,W=(512-LO<12)?512-LO:12;
@@ -103,8 +108,16 @@ module dsdv_hbc_boot12 #(parameter integer ID=0)(input wire ck,rst_n,carry,outpu
  wire rn;(* keep_hierarchy="yes" *)ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  always @(posedge ck or negedge rn)if(!rn)q<=0;else q<=q+carry;
 endmodule
-module dsdv_hbc_epoch12 #(parameter integer ID=0)(input wire ck,load,run,carry,input wire[11:0]d,output reg[11:0]q);
+module dsdv_hbc_epoch12 #(parameter integer ID=0)(input wire ck,commit_request,commit_permit,valid,fault_clear,carry,input wire[11:0]d,output reg[11:0]q);
+ wire load,run;
+ (* keep_hierarchy="yes" *)dsdv_hbc_epoch_enable #(.ID(ID)) u_en(.request(commit_request),.permit(commit_permit),.valid(valid),.fault_clear(fault_clear),.load(load),.run(run));
  always @(posedge ck)if(load)q<=d;else if(run)q<=q+carry;
+endmodule
+module dsdv_hbc_epoch_enable #(parameter integer ID=0)(input wire request,permit,valid,fault_clear,output wire load,run);
+ assign load=request&&permit;assign run=valid&&fault_clear;
+endmodule
+module dsdv_hbc_header_enable #(parameter integer ID=0)(input wire request,format_ok,slot,permit,output wire en);
+ assign en=request&&format_ok&&slot&&permit;
 endmodule
 module dsdv_hbc_owner #(parameter integer ID=0,parameter[47:0]BODY_EDGE=0,COMMIT_EDGE=0)(
  input wire ck,rst_n,load_header,body_good,input wire[47:0]edge_now,output reg pending,ready);
