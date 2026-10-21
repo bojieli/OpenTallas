@@ -559,7 +559,14 @@ def cmd_cap(a):
     rec['env'] = XO.describe()
     rec['pairing_slot_collisions'] = slotc
     bad = rec['faults']
-    if XP.GU_MERGE:
+    if XP.GU_PROP:     # DRIVE-S81-GUPROP: SW row-pair capture layout; the consumer check is the gather map (gu_gather)
+        import gu_gather as GG
+        gg = GG.check(amap, fx.meta['experts'])[0]
+        gsl = [c for c in slotc if c['op'] in ('ffn.experts_gu', 'ffn.shared_gu')]
+        rec['gu_gather_check'] = dict(gg, gu_slot_collisions=len(gsl), PASS=gg['PASS'] and not gsl)
+        bad += 0 if rec['gu_gather_check']['PASS'] else 1
+        print('XS_CAP_GU_GATHER', json.dumps({k: v for k, v in rec['gu_gather_check'].items() if k != 'refusals_first'}))
+    elif XP.GU_MERGE:
         XP.GU_MERGE = False
         try:
             _r0, ref, _s0 = cap_emit(XP, fx, ops, ff)

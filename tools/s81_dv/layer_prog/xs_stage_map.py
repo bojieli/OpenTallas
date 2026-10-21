@@ -165,8 +165,135 @@ def build(nst, c, plan):
                 header_sha256=shas, stages=stages)
 
 
-def spec_id(dl, n):
+def spec_id(dl, n, half=None):
+    if half is not None:                              # DENSE2 split map: A / B halves, X = expert-only stage
+        return f'{"exp" if dl is None else "L%d" % dl}{"" if half == "X" else half}_n{n}'
     return f'{"exp" if dl is None else "L%d" % dl}_n{n}'
+
+
+# ------------------------------------------------------------------------------------------------ DENSE2 split map
+def probe_costs_split(probe, rows=None):
+    """DENSE2 costs from ONE actual-allocator probe run on the target inventory: per-expert slope / phases from the
+    expert-only probes (largest N; linearity of the q worst pair checked over every N probed: identical layouts), dense
+    intercepts per class for the A half (a_proj rows [0, R)) and the B half (rows [R, 448) + every other dense op)"""
+    s = {x['id']: x for x in json.loads(Path(probe).read_text())['specs']}
+    bad = [k for k, v in s.items() if not v['pass'] and v['dense_layer'] is not None]
+    assert not bad, ('dense probe specs fail', bad)
+    refused = [dict(n=v['experts'], q=v['q_max_fill'], fault=(v['first_fault'] or {}).get('fault'))
+               for v in s.values() if v['dense_layer'] is None and not v['pass']]
+    ex = sorted((v for v in s.values() if v['dense_layer'] is None and v['experts'] and v['pass']), key=lambda v: v['experts'])
+    assert len(ex) >= 2, 'need >= 2 expert-only probes'
+    big = ex[-1]
+    slope = big['q_max_fill'] / big['experts']
+    ph = big['cfg7_phases'] / big['experts']
+    lin = [dict(n=v['experts'], q=v['q_max_fill'], q_per_expert=round(v['q_max_fill'] / v['experts'], 3)) for v in ex]
+    assert all(v['q_max_fill'] <= slope * v['experts'] + 1e-9 for v in ex), ('expert q not linear-bounded', lin)
+    dense = {}
+    for half in ('A', 'B'):
+        dense[half] = {c: dict(q=s[f'dense_L{L}{half}_n0']['q_max_fill'], bf=s[f'dense_L{L}{half}_n0']['bf_max_fill'],
+                               phases=s[f'dense_L{L}{half}_n0']['cfg7_phases'])
+                       for c, L in (('L0', 0), ('L1', 1), ('L2', 2), ('L14', 14), ('L20', 20), ('L24', 24))}
+    return dict(slope=slope, phases_per_expert=ph, dense_split2=dense, dense_split2_rows=rows, expert_probes=lin,
+                expert_probes_refused=refused,
+                frames=big['frames'], source=str(probe))
+
+
+def build_split(nst, c, plan, level=None):
+    """the build() rule with every dense layer split over two consecutive stages: per layer L the chain items are
+    A(L) (a_proj rows [0, R)), B(L) (a_proj rows [R, 448) + every other dense op), then experts (L, 0..383); a stage
+    holds at most ONE dense item (never two halves / attentions on one stage); stage load = sum of item loads
+    (dense intercept + N x slope); boundaries by bisection on the common load level (or a fixed `level`).
+    Causality: A(L) needs only x_L (complete on A or upstream: experts (L-1, *) end on A or before), B(L) receives
+    A's a_proj outputs on the stage link; every op downstream of a_proj sits on B or later."""
+    layers, shas = census()
+    total = sum(l['experts'] for l in layers)
+    items = []
+    for L in range(NL):
+        items += [('A', L, None), ('B', L, None)] + [('e', L, e) for e in range(NE)]
+
+    def add_of(it):
+        k, L, _ = it
+        return c['slope'] if k == 'e' else c['dense_split2'][k][cls_of(L)]['q']
+
+    def ph_of(it):
+        k, L, _ = it
+        return c['phases_per_expert'] if k == 'e' else c['dense_split2'][k][cls_of(L)]['phases']
+
+    def deal(lv):
+        st, i = [], 0
+        while i < len(items):
+            dense, n0, load, phs, ne = None, i, 0.0, 0.0, 0
+            while i < len(items):
+                it = items[i]
+                add = add_of(it)
+                if it[0] != 'e' and dense is not None:
+                    break
+                if i > n0 and (load + add > lv or phs + ph_of(it) > XC.CFG7_PHASES):
+                    break
+                if it[0] != 'e':
+                    dense = (it[0], it[1])
+                else:
+                    ne += 1
+                load += add
+                phs += ph_of(it)
+                i += 1
+            st.append(dict(lo=n0, hi=i, dense=dense, load=load, phases=phs, n=ne))
+        return st
+    if level is None:
+        lo, hi = c['slope'], XC.DEPTH * 4.0
+        for _ in range(60):
+            mid = (lo + hi) / 2
+            if len(deal(mid)) > nst:
+                lo = mid
+            else:
+                hi = mid
+        level = hi
+    st = deal(level)
+    stages = []
+    for k, s_ in enumerate(st):
+        its = items[s_['lo']:s_['hi']]
+        runs = []
+        for kind, L, e in its:
+            if kind != 'e':
+                continue
+            if runs and runs[-1][0] == L and runs[-1][2] == e - 1:
+                runs[-1][2] = e
+            else:
+                runs.append([L, e, e])
+        half, dl = s_['dense'] if s_['dense'] else ('X', None)
+        lay = sorted({r[0] for r in runs} | ({dl} if dl is not None else set()))
+        cal = sum(layers[L]['calendar_rows'] for L in lay)
+        dense = None
+        if dl is not None:
+            dense = dict(half=half, a_proj_rows=(c.get('dense_split2_rows'), 'of 448 rank rows', 'A owns [0,R)' if half == 'A' else 'B owns [R,448)'))
+            if half == 'B':
+                dense.update(q_pairs=sorted(layers[dl]['q_tensors']), bf_pairs=sorted(layers[dl]['bf_tensors']),
+                             xs_ops=layers[dl]['xs_ops'], bf_ops=layers[dl]['bf_ops'])
+            else:
+                dense.update(q_pairs=['attn.wq_a.weight (rows [0,R))'], bf_pairs=[], xs_ops=['attn.a_proj (rows [0,R))'], bf_ops=[])
+        stages.append(dict(stage=f'R{k:03d}', dies=[f'R{k:03d}.r{r}' for r in range(TP)], layers=lay, dense_layer=dl,
+                           dense_split2=half, dense=dense, experts=runs, n_experts=s_['n'], model_load=round(s_['load'], 1),
+                           model_fill_pct=round(100 * s_['load'] / XC.DEPTH, 2), model_phases=round(s_['phases'], 1),
+                           calendar_rows=cal, copy_b=bool(dl in DUP_LAYERS and half == 'B'),
+                           spec=spec_id(dl, s_['n'], half)))
+    assert sum(s_['n_experts'] for s_ in stages) == total
+    halves = collections_counter((s_['dense_layer'], s_['dense_split2']) for s_ in stages if s_['dense_layer'] is not None)
+    assert sorted(halves) == sorted((L, h) for L in range(NL) for h in 'AB') and set(halves.values()) == {1}, halves
+    return dict(schema='opentallas.s81_dv.stage_map.v1', plan=plan, dense_split2=True, stages_count=len(stages),
+                requested_stages=nst, rank_dies_per_stage=TP, layer_dies=TP * len(stages), experts=total, costs=c,
+                model_level=level, header_sha256=shas, stages=stages)
+
+
+def collections_counter(it):
+    import collections
+    return collections.Counter(it)
+
+
+def min_stages_split(c):
+    """fewest stages whose every model load < DEPTH and cfg7 phases <= 1,024 (greedy deal at the largest legal level)"""
+    m = build_split(0, c, 'min', level=XC.DEPTH - 1)
+    assert all(s_['model_load'] < XC.DEPTH and s_['model_phases'] <= XC.CFG7_PHASES for s_ in m['stages'])
+    return m['stages_count']
 
 
 def specs_of(m):
@@ -174,11 +301,27 @@ def specs_of(m):
     for s in m['stages']:
         seen.setdefault(s['spec'], dict(id=s['spec'], dense_layer=s['dense_layer'], experts=s['n_experts'],
                                         calendar_rows=s['calendar_rows']))
+        if 'dense_split2' in s:
+            seen[s['spec']].update(dense_split2=s['dense_split2'], dense_split2_rows=m['costs'].get('dense_split2_rows'))
         seen[s['spec']]['calendar_rows'] = max(seen[s['spec']]['calendar_rows'], s['calendar_rows'])
     return list(seen.values())
 
 
 def cmd_build(a):
+    if a.dense_split2:
+        c = probe_costs_split(a.probe, a.split_rows)
+        nst = a.stages or min_stages_split(c)
+        m = build_split(nst, c, a.plan or f'{nst}-stage DENSE2 split (a_proj rows over 2 stages), balanced on probe load')
+        Path(a.out).write_text(json.dumps(m, indent=1) + '\n')
+        sp = specs_of(m)
+        if a.specs:
+            Path(a.specs).write_text(json.dumps(sp, indent=1) + '\n')
+        w = max(m['stages'], key=lambda s: s['model_load'])
+        print(f'STAGE_MAP_SPLIT {m["plan"]}: {m["stages_count"]} stages ({TP * m["stages_count"]} layer dies), {len(sp)} specs, '
+              f'worst model fill {w["model_fill_pct"]} % ({w["stage"]} N {w["n_experts"]} dense {w["dense_layer"]}{w["dense_split2"]}), '
+              f'min stages {min_stages_split(c)}')
+        return 0
+    assert a.stages, '--stages required (one-stage map)'
     c = probe_costs(a.probe)
     m = build(a.stages, c, a.plan or f'{a.stages}-stage contiguous, balanced on probe worst-pair load')
     Path(a.out).write_text(json.dumps(m, indent=1) + '\n')
@@ -267,7 +410,7 @@ def cmd_table(a):
         else:
             q = f'~{s["model_load"]:.0f} | ~{s["model_fill_pct"]} | ~{XC.DEPTH - s["model_load"]:.0f} | - | -'
             v = 'model only (exact run pending)'
-        print(f'| {s["stage"]} | {",".join(map(str, s["layers"]))} | {"-" if s["dense_layer"] is None else "L%d" % s["dense_layer"]} | '
+        print(f'| {s["stage"]} | {",".join(map(str, s["layers"]))} | {"-" if s["dense_layer"] is None else "L%d" % s["dense_layer"] + s.get("dense_split2", "")} | '
               f'{ex} | {s["n_experts"]} | {q} | {s["calendar_rows"]} ({XC.CAL_ROWS - s["calendar_rows"]}) | {v} |')
     return 0
 
@@ -276,7 +419,10 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest='cmd', required=True)
     b = sp.add_parser('build')
-    b.add_argument('--stages', type=int, required=True)
+    b.add_argument('--stages', type=int, required=False)
+    b.add_argument('--dense-split2', action='store_true', help='DENSE2: every dense layer split over 2 stages (probe '
+                   'must carry dense_L<L>A_n0 / dense_L<L>B_n0 and expert-only specs)')
+    b.add_argument('--split-rows', type=int, help='DENSE2 rows R of A (recorded; the probe run sets it)')
     b.add_argument('--probe', required=True)
     b.add_argument('--out', required=True)
     b.add_argument('--specs')

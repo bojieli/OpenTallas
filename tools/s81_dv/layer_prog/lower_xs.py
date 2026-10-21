@@ -166,9 +166,36 @@ def rank_plan(plan, rank_rows):
     return out
 
 
+def dense_split2():
+    """DENSE2 (10-20, opt-in; unset = the one-stage layout, byte-identical): a dense layer's a_proj rows split over the
+    TWO consecutive stage die-groups of a split stage map.  OT_XS_DENSE_SPLIT2 = A (the upstream stage: it owns
+    rank-local a_proj rows [0, R)) | B (the downstream stage: rows [R, 448) + every other dense op of the layer) |
+    X (an expert-only stage of a split map: no a_proj phase at all).  R = OT_XS_DENSE_SPLIT2_ROWS (default half).
+    Output-row split: every a_proj output is ONE complete dot product on one die (same rows, same K order, same
+    arithmetic as the one-stage layout), so no partial sum crosses the die link; B lands A's outputs in rank-row
+    order (A rows ++ B rows = the one-stage order) before q_norm / kv_norm."""
+    v = os.environ.get('OT_XS_DENSE_SPLIT2', '')
+    assert v in ('', 'A', 'B', 'X'), ('OT_XS_DENSE_SPLIT2', v)
+    assert not v or aproj_topology_enabled(), 'DENSE2 split requires the actual topology owner map (OT_XS_APROJ_TOPO=1)'
+    assert not (v and aproj_rank_tags_enabled()), 'DENSE2 split: rank-tag CAP contract not extended to split halves'
+    return v or None
+
+
+def dense_split2_rows(total):
+    """(lo, hi) rank-local a_proj rows this stage owns, or None (one-stage layout)"""
+    v = dense_split2()
+    if v is None:
+        return None
+    r = int(os.environ.get('OT_XS_DENSE_SPLIT2_ROWS', total // 2))
+    assert 0 < r < total, ('DENSE2 split rows', r, total)
+    return {'A': (0, r), 'B': (r, total), 'X': (0, 0)}[v]
+
+
 def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
+    if dense_split2() == 'X':
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=[]) for f in frames]
     if aproj_topology_enabled():
         # One real phase on EVERY real frame: preserve tensor row order, keep
         # wq_a/wkv in separate frames, and never exceed the measured four rows.
@@ -177,14 +204,31 @@ def placement(die, sl, fx=None):
         slices = sorted(die.slices(), key=lambda s: slice_index(die, s))
         all_frames = [f for s in slices for f in die.frames_of(s)]
         tensors = [('wq_a', fx['w']['wq_a'][0].shape[0]), ('wkv', fx['w']['wkv'][0].shape[0])]
+        own = dense_split2_rows(sum(n for _, n in tensors))
+        if own is None:
+            starts = [0, tensors[0][1]]
+        else:
+            # DENSE2: this stage owns the contiguous rank-local rows [lo, hi) of wq_a ++ wkv; each tensor keeps its
+            # owned contiguous sub-range (tensor row order kept), tensors with no owned rows get no frames.
+            lo, hi = own
+            t0, rng = 0, []
+            for name, n in tensors:
+                a, b = max(lo, t0), min(hi, t0 + n)
+                if b > a:
+                    rng.append((name, a, b - a))
+                t0 += n
+            starts = [a for _, a, _ in rng]
+            tensors = [(name, n) for name, _, n in rng]
         total = sum(n for _, n in tensors)
         numer = [n * len(all_frames) for _, n in tensors]
         counts = [n // total for n in numer]
         for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
             counts[i] += 1
         assigned, row0, fi = {}, 0, 0
-        for (name, nrows), nf in zip(tensors, counts):
+        for (name, nrows), nf, start in zip(tensors, counts, starts):
             assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
+            assert start == (row0 if own is None else start)
+            row0 = start
             q, rem = divmod(nrows, nf)
             off = row0
             for j in range(nf):
@@ -194,7 +238,7 @@ def placement(die, sl, fx=None):
                 fi += 1
             assert off == row0 + nrows
             row0 += nrows
-        assert fi == len(all_frames) and row0 == total
+        assert fi == len(all_frames) and row0 == (total if own is None else own[1])
         return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
