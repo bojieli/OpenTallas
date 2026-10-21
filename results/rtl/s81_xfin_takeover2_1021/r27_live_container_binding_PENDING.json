@@ -1,0 +1,43 @@
+{
+  "Id": "ad60cc9ced9e8d648b291619ada2ce6a8009c9a1f2336fb5fb47b7cf4304d86a",
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 3231505,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-21T22:55:25.332503115Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch/claude/codex-xfin-r27-1021/src",
+      "Destination": "/src",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch/claude/codex-xfin-r27-1021/native",
+      "Destination": "/work",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Memory": 68719476736,
+  "Labels": {
+    "org.opencontainers.image.version": "22.04",
+    "ot.owner": "CODEX-S81-XFV-1021",
+    "ot.source": "6881b49a7"
+  },
+  "actual_host": "ot-epyc5",
+  "unit": "oth-ubuntu-3231441-1792623325"
+}

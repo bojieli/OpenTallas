@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T15:54:20.451448-07:00",
+  "updated": "2026-10-21T15:56:08.244823-07:00",
   "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
   "qualified_FP": {
     "source": "560abe5d2",
@@ -90,5 +90,18 @@
       "state": "LIVE existing base xfin compile"
     },
     "actual_MemoryMax": 34359738368
+  },
+  "current_exact_native": {
+    "source": "6881b49a7",
+    "control": "b00440f56",
+    "FP": "731be030b",
+    "unit": "oth-ubuntu-3231441-1792623325",
+    "host": "ot-epyc5",
+    "client": 4060903,
+    "mem_gib": 64,
+    "DockerMemory": 68719476736,
+    "actual_all18_sources_match_git": true,
+    "cid": "ad60cc9ced9e8d648b291619ada2ce6a8009c9a1f2336fb5fb47b7cf4304d86a",
+    "state": "LIVE synth normaladmission autoSPILL ep7\u2192ep5; originalconfig/93SRAMs unchanged"
   }
 }
