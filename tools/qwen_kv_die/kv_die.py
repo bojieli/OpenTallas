@@ -2003,7 +2003,7 @@ def build(*args, **kwargs):
         if kv_bundle_eq.ahub_pad_on():
             _ho = KSD.ahub_ofs_bound()
             if not _ho:
-                raise ValueError('kv_die: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view's hardened offsets)')
+                raise ValueError('kv_die: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view hardened offsets)')
             for _f in (kv_bundle_eq.ahub_ap_bundle, kv_bundle_eq.ahub_fr_bundle):
                 _ab = _f(m, {i.name: i for i in m['insts']}, _ho)
                 if _ab:
