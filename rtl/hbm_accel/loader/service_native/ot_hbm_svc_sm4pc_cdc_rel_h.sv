@@ -147,6 +147,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
   wire[3:0]pr;
   wire local_start,local_active;
+  wire[1:0] local_row_low;
+  ot_hbm_svc_local_and2 u_row0(.a(h_row_base[0]),.b(1'b1),.y(local_row_low[0]));
+  ot_hbm_svc_local_and2 u_row1(.a(h_row_base[1]),.b(1'b1),.y(local_row_low[1]));
   ot_hbm_svc_local_and2 u_startbuf(.a(h_fresh),.b(1'b1),.y(local_start));
   ot_hbm_svc_local_and2 u_activebuf(.a(h_active),.b(1'b1),.y(local_active));
   ot_hbm_svc_local_and2 u_stopbuf(.a(hbm_fault),.b(1'b1),.y(owner_stop[pc]));
@@ -157,7 +160,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_rst_fanout #(.N(4)) u_pr(.clk(hbm_clk),.rst_n_in(h_rst[2+pc]),.rst_n(pr));
   ot_hbm_svc_prefetch_owner_rel_h #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
    .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[2:0]),.blk_start(local_start),
-   .block_active(local_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
+   .block_active(local_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base({h_row_base[14:2],local_row_low}),.block_total(h_total),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(owner_stop[pc]),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
    .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_owner[pc]),
@@ -236,9 +239,15 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  // every edge (the original captured read_ordinal_q only while draining; out_data is only consumed with out_v, i.e.
  // the edge after a draining edge, where both agree)
  (* keep="true",dont_touch="true" *) reg [255:0] osel_k;
+ wire[2:0] select_ordinal[0:3];
+ for(genvar so=0;so<4;so=so+1)begin:g_select_ordinal
+  for(genvar sbt=0;sbt<3;sbt=sbt+1)begin:g_bit
+   ot_hbm_svc_local_and2 u_buf(.a(drain_ordinal[sbt]),.b(1'b1),.y(select_ordinal[so][sbt]));
+  end
+ end
  integer ol,os,ok;
  always @(posedge stream_clk)for(ol=0;ol<4;ol=ol+1)for(os=0;os<8;os=os+1)for(ok=0;ok<8;ok=ok+1)
-  osel_k[(ol*8+os)*8+ok]<=((drain_ordinal[2:0]+3'(ol)+((HM==2)?3'd1:3'd0))==3'(ok));
+  osel_k[(ol*8+os)*8+ok]<=((select_ordinal[ol]+3'(ol)+((HM==2)?3'd1:3'd0))==3'(ok));
  generate for(g=0;g<4;g=g+1)begin:out_lane
   for(genvar s=0;s<8;s=s+1)begin:sl
    reg[31:0]o;integer k;

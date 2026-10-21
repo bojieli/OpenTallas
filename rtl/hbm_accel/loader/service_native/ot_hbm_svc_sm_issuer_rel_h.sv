@@ -45,7 +45,9 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  reg desc_we_q;reg[DAW-1:0]desc_addr_q;reg[255:0]desc_data_q;
  always @(posedge clk)begin desc_addr_q<=desc_addr;desc_data_q<=desc_data;end
  reg rd_q;reg[DAW-1:0]rp,rp_q;wire[255:0]rd;
- wire rd_go;
+ wire rd_go,rd_pointer_capture,rd_count_capture;
+ ot_hbm_svc_local_and2 u_rpc(.a(rd_go),.b(1'b1),.y(rd_pointer_capture));
+ ot_hbm_svc_local_and2 u_rcc(.a(rd_go),.b(1'b1),.y(rd_count_capture));
  localparam integer SS=12,NRS=(256+SS-1)/SS;                                  // rd mux bank-select copies (32 b each)
  (* keep="true",dont_touch="true" *) reg[NRS-1:0]rsel_k;    // = rp_q[7] (unreset, as rp_q)
  generate if(DD==128)begin:g_t1
@@ -229,7 +231,8 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
   for(ab=0;ab<8;ab=ab+1)if(ids_capture[(IDW*NID+ab)/SS])ids_layer_q[ab]<=ids_layer[ab];
   rp_q<=rp;rsel_k<={NRS{rp[DAW-1]}};
   if(running&&!run_v)rc<=rc+24'd1;
-  if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
+  if(rd_pointer_capture)rp<=rp+1'b1;
+  if(rd_count_capture)n_rd<=n_rd-1'b1;
   if(program_done)n_go<=n_go-1'b1;
   // stage registers: load while the stage is empty (the KEPT copy of its valid gates each <= 32-bit slice)
   for(ab=0;ab<200;ab=ab+1)begin
