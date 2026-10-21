@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-21T15:59:18.645322-07:00",
+  "observed_at": "2026-10-21T16:00:11.306733-07:00",
   "status": "HOLD native until actual exact new pfx CLOSED hardbind",
   "source_ref": "83bbc1da3",
   "source_manifest": {
@@ -16,8 +16,9 @@
     "tools/qwen_dv/gen_slice8_rp_source.py": "3e92cec54a681fd3bf9cc86afe70b249314e21bcd1820c2e8f1833db4a3307c8",
     "tools/qwen_dv/build_s8_tap_bounded.sh": "ecd54b56baa1ca6900f314f79db0e8b21d9e3d93c57cd9cf4e9405a3822d93d3",
     "tools/qwen_dv/s8_tap_alias_copies.py": "bfa9e3ab2b9a6461b7cc23ee0be4e5f89a23c3ea4af592242a41f7e149d45507",
-    "tools/qwen_dv/s8_landing_masks.py": "02f2f706eda3c23f174294f81ffa655d6bde7b6a9f6e4df5d0e3b9086cebfda3",
-    "rtl/common/landed_parent/ot_pl_land_n32.sv": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5"
+    "tools/qwen_dv/s8_landing_masks.py": "c6706562054e5a9ca5f683cc625b243695ab2662c79f096d8aa2f8528d641887",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5",
+    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036"
   },
   "covered_roots": {
     "RP": [
@@ -45,5 +46,8 @@
     "tap_copy_grace/body_d93/receipt.json",
     "control_cut/pass_83bbc/receipt.json"
   ],
-  "limits": "Known source-model predictions are not native PASS. Full selected LP/programme ages and wholeparent functional qualification remain separate debt."
+  "limits": "Known source-model predictions are not native PASS. Full selected LP/programme ages and wholeparent functional qualification remain separate debt.",
+  "source_parent_ref": "9abf02a61",
+  "static_alias_followup": "ceba436ff folded9abf02a61: persistent generator now checks exact24aliases; production RTL bytes unchanged vs executed83bbc1da3 cut, no replay needed.",
+  "FDN_generator_byte_identity_sha256": "7473ca01737c663fd00746bbc01a3a185158fcc276b6d5fe69b9ddc83bf71fdd"
 }
