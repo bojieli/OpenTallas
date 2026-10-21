@@ -65,6 +65,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import os
 import math
 import re
 import sys
@@ -116,8 +117,14 @@ def split_conns(body):
 class DieBuild:
     """die.v of a die build: instances, wire widths, relay / landing links with their ages, port bit maps"""
 
-    def __init__(self, die_v):
+    def __init__(self, die_v, plan=None):
         self.path = str(die_v)
+        # TOK-FUNC-S81 (10-21): the 72-frame die abuts neighbour slices (0-station plan links): their direction comes
+        # from the plan (sibling ../p4l/plan.json of a dv_layer_compile die tree, or OT_DV_DIE_PLAN); none -> as before
+        if plan is None:
+            sib = Path(die_v).resolve().parent.parent / 'p4l/plan.json'
+            plan = os.environ.get('OT_DV_DIE_PLAN') or (str(sib) if sib.exists() else None)
+        self.plan_path = plan
         raw = read_text(die_v)
         self.sha256 = hashlib.sha256(raw.encode()).hexdigest()
         self.inst, self.width = {}, {}
@@ -206,7 +213,21 @@ class DieBuild:
                                   src=sorted(users.get((lk, 'src'), [])),
                                   dst=sorted(users.get((lk, 'lnd'), []) + users.get((lk, 'dst'), [])),
                                   src_bits=src_bits)
-        self.by_out = {L['out_net']: lk for lk, L in self.links.items()}
+        if self.plan_path:
+            plan = json.loads(Path(self.plan_path).read_text())
+            B = plan['blocks']
+            for pl in plan['links']:
+                lk = pl['i'].replace('-', '_')
+                if lk in self.links or pl.get('s', 0) > 0:
+                    continue
+                a, b = 'u_' + B[pl['e'][0][0]]['name'], 'u_' + B[pl['e'][1][0]]['name']
+                us = users.get((lk, 'src'), []) + users.get((lk, 'dst'), []) + users.get((lk, 'lnd'), [])
+                src = sorted(u for u in us if u[0] == a)
+                dst = sorted(u for u in us if u[0] == b)
+                if src and dst:
+                    self.links[lk] = dict(stations=0, landing=None, internal_landing=None, K=None, age=0,
+                                          out_net=f'w_{lk}_src', src=src, dst=dst, src_bits=[], abutted=True)
+        self.by_out = {L['out_net']: lk for lk, L in self.links.items() if not L.get('abutted')}
 
     def sid(self, inst):
         return self.strap(inst, 'sid')

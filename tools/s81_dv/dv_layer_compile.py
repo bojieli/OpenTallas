@@ -180,6 +180,20 @@ class Die:
             self.links[lk] = dict(stations=n, landing=ld.get(lk), internal_landing=internal, K=k, E=e,
                                   src=src, dst=dst, age_edges=age,
                                   land_master=self.inst[ld[lk]]['master'] if lk in ld else None)
+        # TOK-FUNC-S81 (10-21): the 72-frame die abuts neighbour slices (plan links with 0 stations, no landing): the
+        # sink port names the source wire w_<link>_src directly -> age 0 edges; endpoints from the plan's block pair.
+        B = self.plan['blocks']
+        for pl in self.plan['links']:
+            lk = pl['i'].replace('-', '_')
+            if lk in self.links or pl.get('s', 0) > 0:
+                continue
+            a, b = 'u_' + B[pl['e'][0][0]]['name'], 'u_' + B[pl['e'][1][0]]['name']
+            us = users.get((lk, 'src'), []) + users.get((lk, 'dst'), []) + users.get((lk, 'lnd'), [])
+            src = [u for u in us if u[0] == a]
+            dst = [u for u in us if u[0] == b]
+            if src and dst:
+                self.links[lk] = dict(stations=0, landing=None, internal_landing=None, K=None, E=None, src=src, dst=dst,
+                                      age_edges=0, land_master=None, abutted=True)
 
     def unlanded(self):
         """land-plan lanes (an E is planned) that bind9 die.v leaves WITHOUT a landing tile; x_frame lanes land inside

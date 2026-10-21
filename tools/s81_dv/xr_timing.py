@@ -7,7 +7,10 @@ import hashlib
 from pathlib import Path
 
 XR_PATH = "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv"
-QUALIFIED = {"cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3": 7}
+QUALIFIED = {"cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3": 7,
+             # TOK-FUNC-S81 (10-21): main 039ab4cbc xr.sv = cc31c2 (c977ce092) + XR5/XR6/XR7/SMWIRE/S81MERGE/S81POST/XR1F-PIN,
+             # every one "0 data cycles" (XR6 adds +1 FAULT visibility only); the token-pass replays assert the 7 edges
+             "e51bcf9e2cd5178ac5524865eecb9a8089cf20a7da919cbb49f342193181a9d2": 7}
 
 def source_contract(tree, fallback):
     p = Path(tree) / XR_PATH
