@@ -276,7 +276,7 @@ def aproj_capture_contract(die, sl, fx, flags):
 
 
 def base_master(m):
-    return re.sub(r'(_MX)?_l4$', '', m)
+    return re.sub(r'(_MX)?_l4(_lp)?$', '', m)   # TOK-FUNC-S81: 72-frame die binds the landed-parent wrappers col_h*_l4_lp
 
 
 def land_e(lk):

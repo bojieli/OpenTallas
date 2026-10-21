@@ -56,7 +56,12 @@ def main():
     for l in plan['links']:
         nm = l['i'].replace('-', '_')
         if l['s'] > 0 and nm not in have:
-            land['links'].append(dict(link=nm, cls='unlanded_relay', dst=None, E=0, K=None, source='no_landing_in_die_v'))
+            # x_f_<frame>_l<k>: lands INSIDE the receiving frame (_l4 / _lp crs4, lk strap 3 b per lane) -> cls x_frame (the
+            # compiler then reads the receiver's lk strap, as dv_cut_replay does); anything else is an unlanded relay lane
+            xf = re.fullmatch(r'x_f_.+_l\d+', nm) is not None
+            dst = plan['blocks'][l['e'][1][0]]['name']
+            land['links'].append(dict(link=nm, cls='x_frame' if xf else 'unlanded_relay', dst=dst, E=0, K=None,
+                                      source='frame_internal_landing' if xf else 'no_landing_in_die_v'))
             unlanded.append(nm)
             have.add(nm)
     (base / 'landing/p4l/land_plan.json').write_text(json.dumps(land))
