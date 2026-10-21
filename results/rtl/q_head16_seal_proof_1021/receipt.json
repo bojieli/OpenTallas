@@ -1,0 +1,29 @@
+{
+  "scope": "bounded programming/seal behavior only; no full head, timing or PPA qualification",
+  "base": "8f3115533",
+  "branch": "codex/q-head16-seal-proof-1021",
+  "unit": "oth-ubuntu-2681371-1792607194",
+  "host": "ot-epyc7",
+  "memory_gb": 8,
+  "threads": 2,
+  "verilator": "5.050",
+  "positive": {
+    "rc": 0,
+    "cases": 19,
+    "edges": 605,
+    "comparison": "H16X2 versus H16X3 all module outputs every edge",
+    "builtin_assertions_enabled": true
+  },
+  "mutant": {
+    "rc": 1,
+    "change": "row_bad_q uses prior count instead of exact count_n",
+    "causal": "legal metadata-after-rows reload; built-in H16V seal_bad 1 != reference 0"
+  },
+  "sha256": {
+    "candidate.sv": "1dca4fca4f67ef988deebc3d56624b590c63c0c49cf821831e56d4e23816a075",
+    "mutant.sv": "cccc3bfe72996e5f1fe39c0debff3ca482a9cfa72bf7eed26e49513b38cf7142",
+    "helpers.sv": "f46c4ff9d0f713ad2c0da8a8460b79dbd65dc51c4a20c6a41f50871009f4052a",
+    "tb.sv": "c0d201ae9321a5912f425af44ff5da7b317c1b9836da2740031959bebd09e4ed",
+    "run.sh": "b2089ea0046b6e4e368bafc2cb9b93df780e5636208def37b36d1a348bb3f52c"
+  }
+}
