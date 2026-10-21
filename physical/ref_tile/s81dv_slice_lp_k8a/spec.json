@@ -1,9 +1,9 @@
 {
  "name": "s81dv_slice_lp_k8a",
- "top": "ot_s81sl_slice_c1x_k8_lp",
+ "top": "ot_s81sl_slice_c1x_k8_cap5_lp",
  "kind": "cluster",
  "sources": [
-  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1x_k8_lp.sv",
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
@@ -13,7 +13,9 @@
   "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
   "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v",
   "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v",
-  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v"
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv"
  ],
  "params": {
   "DLK0": 1,
@@ -39,7 +41,12 @@
   "ck_L0",
   "ck_L1",
   "ck_L3",
-  "ck_L4"
+  "ck_L4",
+  "ck_CAP_RT",
+  "ck_CAP_CW",
+  "ck_CAP_CE",
+  "ck_CAP_RN",
+  "ck_CAP_RS"
  ],
  "clock_data_paths": "related_same_frequency",
  "clock_relationship": {
@@ -121,6 +128,61 @@
    ],
    "ports": [
     "ck_L4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_rt": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_RT"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_cw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_CW"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_ce": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_CE"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_rn": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_RN"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_rs": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_RS"
    ],
    "inputs": [],
    "outputs": []
@@ -366,7 +428,7 @@
    ]
   },
   {
-   "view": "physical/ref_tile/s81sl_capc2/views/ot_s81sl_capc2",
+   "view": "physical/ref_tile/s81sl_capc5k/views/ot_s81sl_capc5c",
    "count": 1,
    "inst": "u_cap",
    "at": [
@@ -558,6 +620,11 @@
    "ri_e",
    "ro_e",
    "vi",
+   "ck_CAP_RT",
+   "ck_CAP_CW",
+   "ck_CAP_CE",
+   "ck_CAP_RN",
+   "ck_CAP_RS",
    "vo",
    "bi",
    "bo",
@@ -602,52 +669,52 @@
    3387.295
   ],
   "vo": [
-   3387.295,
-   3507.039
+   3459.295,
+   3579.039
   ],
   "bi": [
-   3507.039,
-   3986.015
+   3579.039,
+   4058.015
   ],
   "bo": [
-   3986.015,
-   4208.582
+   4058.015,
+   4280.582
   ],
   "rt": [
-   4208.582,
-   4451.541
+   4280.582,
+   4523.541
   ],
   "ck_line": [
-   4451.541,
-   4458.483
+   4523.541,
+   4530.483
   ],
   "ck_v": [
-   4458.483,
-   4462.483
+   4530.483,
+   4534.483
   ],
   "ck_xc": [
-   4462.483,
-   4469.424
+   4534.483,
+   4541.424
   ],
   "ck_rt": [
-   4469.424,
-   4473.424
+   4541.424,
+   4545.424
   ],
   "sid": [
-   4473.424,
-   4477.424
+   4545.424,
+   4549.424
   ],
   "rst_n": [
-   4477.424,
-   4481.424
+   4549.424,
+   4553.424
   ],
   "ck_C": [
-   4481.424,
-   4485.424
+   4553.424,
+   4557.424
   ],
   "fault": [
-   4485.424,
-   4489.424
+   4557.424,
+   4561.424
   ],
   "ck_L0": [
    6171.6,
@@ -664,6 +731,26 @@
   "ck_L4": [
    577.2,
    589.2
+  ],
+  "ck_CAP_RT": [
+   3387.295,
+   3399.295
+  ],
+  "ck_CAP_CW": [
+   3399.295,
+   3411.295
+  ],
+  "ck_CAP_CE": [
+   3411.295,
+   3423.295
+  ],
+  "ck_CAP_RN": [
+   3423.295,
+   3435.295
+  ],
+  "ck_CAP_RS": [
+   3435.295,
+   3447.295
   ]
  },
  "route": {
@@ -685,7 +772,7 @@
  "io_flop_at_pins": {
   "cols": 21
  },
- "structural_change": "DRIVE-S81-SLICEP 10-20 s81dv_slice_lp_k8a: first gate of the landed slice parent ot_s81sl_slice (PL-SLICE c1x regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg); outline 1252.8 x 6739.2 (8.44 mm2, hard children 5.84 mm2) vs die slot 950 x 4600 (4.37 mm2). a: compact 43.2 channels.",
+ "structural_change": "Selected normal parent now binds exact CLOSED CAPC5k (503dcae1b/e450c42b2), full five-clock child. Existing C->CAP and CAP->C D4/K2 landings add6 edges around child+6: compiler OT_S81_CAP5_C=1 charges12 vs capc2. Existing normal-parent geometry and reviewer HARD declarations retained. CAP internal plain regional reset remains held; no parent closure claim.",
  "job": {
   "owner": "Claude:DRIVE-S81-SLICEP",
   "branch": "codex/s81-slicep-repair-1021",
@@ -712,5 +799,14 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "hard_define": "OT_S81SL_HARD"
+ "hard_define": "OT_S81SL_HARD",
+ "source_binding": {
+  "closed_cap_record": "503dcae1b",
+  "closed_cap_source": "e450c42b2",
+  "compiler_env": {
+   "OT_S81_CAP5_C": "1"
+  },
+  "capture_extra_edges": 12,
+  "cap_reset_status": "internal plain regional reset source fix owed; no waiver"
+ }
 }
