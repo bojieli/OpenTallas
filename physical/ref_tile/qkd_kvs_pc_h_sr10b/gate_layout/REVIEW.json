@@ -1,0 +1,15 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T09:37:00-07:00",
+  "gate_commit": "30c060fed6b727feea58a764c43532566771f689",
+  "geometry_sha256": "8f824d0c1d86205dd4064b5a207105e906412e18df2096b0d2f18a6a09e38f57",
+  "verdict": "APPROVED",
+  "approval_provenance": "Coordinator /root personally viewed floorplan+density 09:37 and approved exact geometry; relayed by /root/qk_lead to /root/qk_lead/k_close.",
+  "checklist": {
+    "lattice": "23 SRAMs on 43.2 um lattice; >=21um column channels.",
+    "std_cell_band": "Continuous standard-cell field; no macro blocks W-E corridor; density <=0.7 except N pin strip. Fill32% pin-bound waiver.",
+    "pin_spread": "Full faces92-98%; accepted pin-bound frame267.84x300.24.",
+    "clock_entry": "ck TT/FF pin-flop63.5/62.6ps; hck45.4/41.8ps. GRT overflow0; placement TT setup93.6 hold45.0ps.",
+    "shape": "267.84x300.24 compact outline, two columns plus tq stack."
+  }
+}
