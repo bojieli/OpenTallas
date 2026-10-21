@@ -118,8 +118,9 @@ module ot_s81sl_fp_add_n32 #(
       localparam integer W=(g==3)?4:8;
       ot_s81sl_fp_mux #(.W(W)) u_pick(.s(swap_cp[4+g]),.a(small_a[8*g+:W]),.b(small_b[8*g+:W]),.y(pick_small[8*g+:W]));
     end
-    wire [27:0] small_a = jam28f(x_aman, x_dba[4:0], g0[0]);
-    wire [27:0] small_b = jam28f(x_bman, x_dab[4:0], g0[1]);
+    wire [27:0] small_a,small_b;
+    ot_s81sl_fp_jam28 u_ja(.clk(clk),.man(x_aman),.raw_count(q6[66:62]),.raw_far(g6[0]),.y(small_a));
+    ot_s81sl_fp_jam28 u_jb(.clk(clk),.man(x_bman),.raw_count(q6[74:70]),.raw_far(g6[1]),.y(small_b));
     localparam integer W1 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 28;
     wire [W1-1:0] q1;
     ot_s81sl_fp_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
@@ -168,13 +169,9 @@ module ot_s81sl_fp_add_n32 #(
     wire [5:0]  lz;
     assign {w_v, w_byp, w_sub, w_sign, w_err, w_code, w_exp, w_add, w_dif, lz, w_carry} = q3;
     // ---- the cancellation shift, the exponent adjust ------------------------------------------------------
-    wire [5*7-1:0] lz_cp;
-    ot_s81sl_fp_copy #(.W(5),.N(7),.CUT(K3)) u_lz_cp(.clk(clk),.d(lz_w[4:0]),.q(lz_cp));
     wire [26:0] sub_val;
-    for(genvar g=0;g<7;g=g+1)begin:g_sub_shift
-      localparam integer W=(g==6)?3:4;
-      ot_s81sl_fp_shift #(.IW(27),.OW(W),.LO(4*g),.LEFT(1),.CW(5)) u_sh(.x(w_dif[26:0]),.sh(lz_cp[5*g+:5]),.y(sub_val[4*g+:W]));
-    end
+    ot_s81sl_fp_shift_chain #(.IW(27),.CW(5),.LEFT(1),.CUT(K3)) u_sub_shift(
+      .clk(clk),.x(w_dif[26:0]),.raw_count(lz_w[4:0]),.y(sub_val));
     wire [7:0]  exp_sub, exp_add;
     wire exp_sub_c, exp_add_c;
     ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
@@ -272,8 +269,14 @@ module ot_s81sl_fp_mul_n32 #(
     assign {o0_v, o0_byp, o0_err, o0_sign, o0_af, o0_bf, o0_ae, o0_be, o0_acz, o0_bcz} = q0;
     // ---- normalise (a subnormal's significand {frac, 0} << clz23; mul_lat's a_raw << (1 + clz23)), powers ---
     wire a_s = (o0_ae == 8'd0), b_s = (o0_be == 8'd0);
-    wire [23:0] a_n = a_s ? ({o0_af, 1'b0} << o0_acz) : {1'b1, o0_af};
-    wire [23:0] b_n = b_s ? ({o0_bf, 1'b0} << o0_bcz) : {1'b1, o0_bf};
+    wire [23:0] a_n,b_n,a_shift,b_shift;
+    ot_s81sl_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_na(.clk(clk),.x({o0_af,1'b0}),.raw_count(a_cz[4:0]),.y(a_shift));
+    ot_s81sl_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_nb(.clk(clk),.x({o0_bf,1'b0}),.raw_count(b_cz[4:0]),.y(b_shift));
+    wire[23:0] a_normal={1'b1,o0_af},b_normal={1'b1,o0_bf};
+    for(genvar g=0;g<6;g=g+1)begin:g_norm
+      ot_s81sl_fp_norm_pick u_a(.e(o0_ae),.s(a_shift[4*g+:4]),.n(a_normal[4*g+:4]),.y(a_n[4*g+:4]));
+      ot_s81sl_fp_norm_pick u_b(.e(o0_be),.s(b_shift[4*g+:4]),.n(b_normal[4*g+:4]),.y(b_n[4*g+:4]));
+    end
     wire signed [11:0] a_power = a_s ? (-12'sd150 - {7'd0, o0_acz}) : ($signed({4'd0, o0_ae}) - 12'sd150);
     wire signed [11:0] b_power = b_s ? (-12'sd150 - {7'd0, o0_bcz}) : ($signed({4'd0, o0_be}) - 12'sd150);
     localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
@@ -384,12 +387,9 @@ module ot_s81sl_fp_mul_n32 #(
     wire [23:0] n_main = top ? s2_prod[47:24] : s2_prod[46:23];
     wire n_rb = top ? s2_prod[23] : s2_prod[22];
     wire n_st = top ? (|s2_prod[22:0]) : (|s2_prod[21:0]);
-    wire [6*6-1:0] sh_cp;
-    ot_s81sl_fp_copy #(.W(6),.N(6),.CUT(K5)) u_sh_cp(.clk(clk),.d(q_sh),.q(sh_cp));
-    wire [23:0] sub_shifted;
-    for(genvar g=0;g<6;g=g+1)begin:g_sub_shift
-      ot_s81sl_fp_shift #(.IW(48),.OW(4),.LO(4*g),.CW(6)) u_sh(.x(s2_prod),.sh(sh_cp[6*g+:6]),.y(sub_shifted[4*g+:4]));
-    end
+    wire [47:0] sub_shifted;
+    ot_s81sl_fp_shift_chain #(.IW(48),.CW(6),.CUT(K5)) u_sub_shift(
+      .clk(clk),.x(s2_prod),.raw_count(q_sh),.y(sub_shifted));
     wire [23:0] s_main = sub_shifted[23:0];
     wire s_rb = |(s2_prod & s2_mr);
     wire s_st = |(s2_prod & s2_ms);
@@ -494,4 +494,37 @@ endmodule
 //24 AND consumers instead of ABC duplicating its predicate into CSA gates.
 (* keep_hierarchy=1 *) module ot_s81sl_fp_pp6(input wire[5:0] a,input wire b,output wire[5:0] y);
  assign y=a&{6{b}};
+endmodule
+
+// Each count bit controls one four-output constant-distance mux group at ONE
+// shift level. Kept level boundaries prevent ABC expanding it across levels.
+module ot_s81sl_fp_shift_chain #(parameter integer IW=27,CW=5,LEFT=0,CUT=1,JAM=0)(input wire clk,input wire[IW-1:0] x,input wire[CW-1:0] raw_count,output wire[IW-1:0] y);
+ localparam integer NG=(IW+3)/4;
+ wire[CW*NG-1:0] count;
+ ot_s81sl_fp_copy #(.W(CW),.N(NG),.CUT(CUT)) u_cp(.clk(clk),.d(raw_count),.q(count));
+ wire[IW-1:0] stage[0:CW];assign stage[0]=x;assign y=stage[CW];
+ for(genvar st=0;st<CW;st=st+1)begin:g_st
+  for(genvar g=0;g<NG;g=g+1)begin:g_gr
+   localparam integer W=(IW-4*g<4)?IW-4*g:4;
+   ot_s81sl_fp_shift_step #(.IW(IW),.OW(W),.LO(4*g),.DIST(1<<st),.LEFT(LEFT),.JAM(JAM)) u_step(.x(stage[st]),.sh(count[CW*g+st]),.y(stage[st+1][4*g+:W]));
+  end
+ end
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_shift_step #(parameter integer IW=27,OW=4,LO=0,DIST=1,LEFT=0,JAM=0)(input wire[IW-1:0] x,input wire sh,output wire[OW-1:0] y);
+ wire[IW-1:0] shifted=LEFT?(x<<DIST):(x>>DIST);
+ wire sticky=JAM?((DIST>=IW)?(|x):(|(x&({IW{1'b1}}>>(IW-DIST))))):1'b0;
+ wire[IW-1:0] sj=shifted|{{(IW-1){1'b0}},sticky};
+ assign y=sh?sj[LO+:OW]:x[LO+:OW];
+endmodule
+module ot_s81sl_fp_jam28(input wire clk,input wire[23:0] man,input wire[4:0] raw_count,input wire raw_far,output wire[27:0] y);
+ wire[27:0] x={1'b0,man,3'b000},v;wire[6:0] far;
+ ot_s81sl_fp_shift_chain #(.IW(28),.CW(5),.CUT(1),.JAM(1)) u_sh(.clk(clk),.x(x),.raw_count(raw_count),.y(v));
+ ot_s81sl_fp_copy #(.W(1),.N(7),.CUT(1)) u_far(.clk(clk),.d(raw_far),.q(far));
+ wire[27:0] f={27'd0,|x};
+ for(genvar g=0;g<7;g=g+1)begin:g_far
+  ot_s81sl_fp_mux #(.W(4)) u_m(.s(far[g]),.a(f[4*g+:4]),.b(v[4*g+:4]),.y(y[4*g+:4]));
+ end
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_norm_pick(input wire[7:0] e,input wire[3:0] s,n,output wire[3:0] y);
+ assign y=(e==0)?s:n;
 endmodule
