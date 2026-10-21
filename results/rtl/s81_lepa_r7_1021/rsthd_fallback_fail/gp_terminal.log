@@ -1,0 +1,30 @@
+     8330 |   0.1485 |  4.698299e+06 |   +0.08% |  1.56e+28 |      
+     8340 |   0.1486 |  4.702131e+06 |   +0.08% |  2.29e+28 |      
+     8350 |   0.1486 |  4.705472e+06 |   +0.07% |  3.37e+28 |      
+     8360 |   0.1483 |  4.708326e+06 |   +0.06% |  4.97e+28 |      
+     8370 |   0.1487 |  4.711249e+06 |   +0.06% |  7.32e+28 |      
+     8380 |   0.1487 |  4.714318e+06 |   +0.07% |  1.08e+29 |      
+     8390 |   0.1483 |  4.717290e+06 |   +0.06% |  1.59e+29 |      
+     8400 |   0.1486 |  4.720524e+06 |   +0.07% |  2.34e+29 |      
+     8410 |   0.1483 |  4.723559e+06 |   +0.06% |  3.44e+29 |      
+     8420 |   0.1485 |  4.726759e+06 |   +0.07% |  5.07e+29 |      
+     8430 |   0.1485 |  4.730147e+06 |   +0.07% |  7.46e+29 |      
+     8440 |   0.1492 |  4.733617e+06 |   +0.07% |  1.10e+30 |      
+     8450 |   0.1481 |  4.736903e+06 |   +0.07% |  1.62e+30 |      
+     8460 |   0.1484 |  4.739995e+06 |   +0.07% |  2.38e+30 |      
+     8470 |   0.1486 |  4.743037e+06 |   +0.06% |  3.51e+30 |      
+     8480 |   0.1489 |  4.746230e+06 |   +0.07% |  5.17e+30 |      
+     8490 |   0.1489 |  4.749340e+06 |   +0.07% |  7.62e+30 |      
+     8500 |   0.1485 |  4.752654e+06 |   +0.07% |  1.12e+31 |      
+     8510 |   0.1476 |  4.756004e+06 |   +0.07% |  1.65e+31 |      
+     8520 |   0.1485 |  4.759236e+06 |   +0.07% |  2.43e+31 |      
+     8530 |   0.1480 |  4.762680e+06 |   +0.07% |  3.58e+31 |      
+     8540 |   0.1480 |  4.766519e+06 |   +0.08% |  5.28e+31 |      
+[INFO GPL-1011] Original area (um^2): 8103.51
+[INFO GPL-1012] Total routability artificial inflation: 14109.22 (+174.11%)
+[INFO GPL-1013] Total timing-driven delta area: -1704.56 (-21.03%)
+[INFO GPL-1014] Final placement area: 20508.16 (+153.08%)
+[ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.
+write_db /work/results/asap7/opentallas_ot_s81sl_lep_mu_a_asap7_ref_gate/base/3_3_place_gp-failed.odb
+Error: global_place.tcl, 69 GPL-0305
+Elapsed time: 1:07:17.25[h:]min:sec. CPU time: user 8999.47 sys 37.49 (223%). Peak memory: 2661292KB.
