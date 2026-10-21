@@ -236,6 +236,15 @@
     "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/mut_ohcopy_fail.log",
     "threads": 16,
     "peak_ram_gb": 32
+   },
+   {
+    "name": "aq_s2top_mut_mx4",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS=-DOT_GQ_MUT_MX4 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut_mx4 0",
+    "expect": "fail",
+    "fail_regex": "MISMATCH|FAIL",
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/mut_mx4_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
    }
   ],
   "extra_paths": [

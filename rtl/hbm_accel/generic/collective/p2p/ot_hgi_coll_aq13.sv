@@ -104,6 +104,20 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     reg        s1_v, s1_fp4, s1_nf;
     reg [30:0] s1_m [0:7];
     reg [30:0] t16 [0:15];
+`ifdef OT_GQ_N32
+    // R9 (HBM-GQ8 10-20, native census k9 r3: one mx4 winner select drove 33 loads): two kept winner-decode copies per
+    // 4:1 max, each selecting one half of the 31-bit magnitude. Same function (identical tie rule), same edge.
+    wire [30:0] s1_m_d [0:7];
+    generate for (genvar gi = 0; gi < 8; gi = gi + 1) begin : g_mx4
+        wire [3:0] w_lo, w_hi;
+        (* keep = "true" *) ot_hgi_coll_aq_mx4_win u_wlo(.a(s0_x[128*gi+:31]), .b(s0_x[128*gi+32+:31]), .c(s0_x[128*gi+64+:31]), .d(s0_x[128*gi+96+:31]), .w(w_lo));
+        (* keep = "true" *) ot_hgi_coll_aq_mx4_win u_whi(.a(s0_x[128*gi+:31]), .b(s0_x[128*gi+32+:31]), .c(s0_x[128*gi+64+:31]), .d(s0_x[128*gi+96+:31]), .w(w_hi));
+        for (genvar bi = 0; bi < 31; bi = bi + 1) begin : g_bit
+            wire [3:0] w = (bi < 16) ? w_lo : w_hi;
+            assign s1_m_d[gi][bi] = (w[0] & s0_x[128*gi+bi]) | (w[1] & s0_x[128*gi+32+bi]) | (w[2] & s0_x[128*gi+64+bi]) | (w[3] & s0_x[128*gi+96+bi]);
+        end
+    end endgenerate
+`endif
     reg        nf0;
     always @(*) begin
         nf0 = 1'b0;
@@ -116,7 +130,11 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     end
     always @(posedge clk) begin
         s1_fp4 <= s0_fp4; s1_nf <= nf0;
+`ifdef OT_GQ_N32
+        for (i = 0; i < 8; i = i + 1) s1_m[i] <= s1_m_d[i];
+`else
         for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx4(s0_x[128*i+:31],s0_x[128*i+32+:31],s0_x[128*i+64+:31],s0_x[128*i+96+:31]);
+`endif
     end
 
     // -- S2: 8 -> 2 ------------------------------------------------------------------------
@@ -453,3 +471,15 @@ endmodule
 module ot_hgi_coll_aq_shift_mux #(parameter integer W=16)(input wire sel,input wire[W-1:0]a,b,output wire[W-1:0]q);
     assign q=sel?b:a;
 endmodule
+`ifdef OT_GQ_N32
+// R9: winner one-hot of the unsigned 4:1 maximum (same tie rule as mx4); kept per consumer half.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_aq_mx4_win(input wire [30:0] a, b, c, d, output wire [3:0] w);
+    wire ab = a >= b, ac = a >= c, ad = a >= d, bc = b >= c, bd = b >= d, cd = c >= d;
+`ifdef OT_GQ_MUT_MX4
+    assign w = {!ad && !bd && !cd, !ac && !bc && cd, !ab && bc && bd, ab && ac};
+`else
+    assign w = {!ad && !bd && !cd, !ac && !bc && cd, !ab && bc && bd, ab && ac && ad};
+`endif
+endmodule
+`endif
