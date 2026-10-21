@@ -324,7 +324,7 @@ module ot_hgi_coll_gq_issue #(
     wire[15:0]per_rd;
     wire tl_last_d=p_start_bank[13]?(per_rd==16'd1):
 `ifdef OT_GQ_MUT_TLLAST
-                   run_copy[8]?(tl_last_c[11]?1'b0:(tl+16'd2==per)):tl_last_c[11];
+                   run_copy[8]?(tl_last_c[11]?(lps_gt1_c[11]?(per==16'd1):1'b1):(tl+16'd1==per)):tl_last_c[11];   // one edge early
 `else
                    run_copy[8]?(tl_last_c[11]?(lps_gt1_c[11]?(per==16'd1):1'b1):(tl+16'd2==per)):tl_last_c[11];
 `endif

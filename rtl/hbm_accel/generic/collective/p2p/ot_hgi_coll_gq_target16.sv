@@ -141,7 +141,7 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     generate for(genvar g=0;g<5;g=g+1)begin:g_oh_copy
       (* keep="true" *)ot_gq_t16_oh_copy u_copy(.clk(clk),.en(launch_c[8+g]),
 `ifdef OT_GQ_MUT_OH_COPY
-        .d((g==0)?{stored_oh[14:0],stored_oh[15]}:stored_oh),
+        .d((g==4)?{stored_oh[14:0],stored_oh[15]}:stored_oh),   // cur_oh copy one row late
 `else
         .d(stored_oh),
 `endif
