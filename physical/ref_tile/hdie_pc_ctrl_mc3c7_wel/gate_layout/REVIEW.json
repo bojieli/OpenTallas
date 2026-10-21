@@ -1,17 +1,40 @@
 {
- "schema": "opentallas.tile_visual_review.v1",
- "tile": "hdie_pc_ctrl_mc3c7_wel",
- "reviewer": "coordinator",
- "verdict": "APPROVED",
- "time": "2026-10-20T21:23:00-07:00",
- "gate_commit": "0040206a0",
- "checklist": {
-  "lattice": "23 SRAM 128x64 macros in a regular 4-column grid (2 rows), on lattice",
-  "std_cell_band": "logic in one central band between the macro rows, even green density, no red",
-  "pin_spread": "1317 pins on N/S faces in 4 groups each",
-  "clock_entry": "clock W mid-edge; spread 63.0/58.9 TT/FF, insertion 366 (guidance)",
-  "shape": "241.9x272.2, fill 42%, trial GRT0; census 51 under scoped waiver"
- },
- "notes": "COORD 10-20 21:50: APPROVED wel (lower insertion than cts); route decides; die keeps h9c until this closes",
- "geometry_sha256": "b75d2540f735f0dd590a4f79bdebb962c5e774b12187554720e716d053c6d2d8"
+  "reviewer": "codex coordinator takeover 2026-10-20",
+  "time": "2026-10-20T22:15:38.131928-07:00",
+  "gate_commit": "40481d965a8f1ce9b9205e9057eabdb54fedcec8",
+  "verdict": "APPROVED",
+  "geometry_sha256": "b75d2540f735f0dd590a4f79bdebb962c5e774b12187554720e716d053c6d2d8",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "b75d2540f735f0dd590a4f79bdebb962c5e774b12187554720e716d053c6d2d8",
+    "components": {
+      "outline": "bda649904b666df58d6d9e1fe0383a87dad507328697469eeb8cbd89182ce0e1",
+      "macros": "84222355b582aabfc70e7caf07e347abbb308e3637cd09114b5248abd5906cf9",
+      "pins": "554df20b6d96f444b360a48dc76fdf55aa263927fdb69a378e4f84a98c290aeb",
+      "clock_entry": "381dd5a2cf2e4e1517738908634ab761f33513b671ba28568d3f2f7e85156d5c"
+    }
+  },
+  "checklist": {
+    "macros": "23 real macros in 4 abutted columns;15zero gaps inherited reviewed stacks; lattice guidance waived per MC3 release decision",
+    "std_cell_band": "Connected central full-width band plus N/S bands; density logic mass west of centre; empty E below short NE column",
+    "pins": "N/S full grouped demand585/627 over186.4um(77%,3.14/3.36pins/um); W/E compact52/53 over1.6/1.8um warn retained, routed GRT0 decides per rulefreeze.",
+    "clock": "W-mid entry beside central logic mass; wel spread63.0/58.9ps ins365.9/305.2ps; cts spread64.9/59.7ps ins382.1/320.4ps",
+    "shape": "241.92x272.16um, aspect1.125, fill42%",
+    "native": "Raw wel51/cts55, exact scoped waiver <=56 on main e7358eb66; not max32 claim",
+    "route": "GRT0 both; all final route/DRC/physical qualification remains owed",
+    "abutment": "PASS: all23 R0; actual LEF has no signal rectangles on N/S edges; signal pins on W/E faces (105/104, <=3.813 pins/um). Vertical near-abutment safe; actual gap0.012um from y51.312-(23.76+27.54); no signal face sealed."
+  },
+  "evidence": {
+    "kit": "physical/ref_tile/hdie_pc_ctrl_mc3c7_wel",
+    "recommendation": "wel preferred: lower insertion and lower raw census excess",
+    "gate_generated": "2026-10-20T21:22:47-0700",
+    "source_start_commit": "c65ac2b18639d63e1b6776c9a888637de1937615",
+    "source_manifest_sha256": "655e3cb979a990b06592caced02c53f1bfcf2cdbf23d639ab450e3a191a9aa17",
+    "gate_result_sha256": "aeafced0f1f2a7d8cc4d894475624445f1fa2bdce7d307326f2ac8049e5b7b98",
+    "images": {
+      "/home/ubuntu/wt/hbm-mc3d-1020/physical/ref_tile/hdie_pc_ctrl_mc3c7_wel/gate_layout/floorplan.png": "4453eeb26cbee19a0ada3f00cc9fbe6968370d65be7044e0382e0f312e29d3be",
+      "/home/ubuntu/wt/hbm-mc3d-1020/physical/ref_tile/hdie_pc_ctrl_mc3c7_wel/gate_layout/density.png": "25107313e274ca1edda37ec9184e792402dc60eccc88448e70e625908aab0f19"
+    }
+  },
+  "scope": "ROOT signed off exact geometry after viewing originals and LEF W/E-only209pin check. Existing kit-scoped census waiver <=56 only; final route DRC/timing/function decides closure. No new blanket waiver."
 }
