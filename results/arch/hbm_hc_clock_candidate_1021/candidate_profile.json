@@ -1,0 +1,131 @@
+{
+  "status": "SOURCE_CANDIDATE_NOT_ADOPTED",
+  "base_commit": "f64490c0e",
+  "selected_N_unchanged": true,
+  "functional_legacy_p40_commit": "ee6ddb9448f8f6e7dfe8035b9c2ae6db5fdacdd6",
+  "hubs": {
+    "hc_SW": {
+      "master": "ot_hbm_hc_qhub_static",
+      "params": {
+        "K": 20480,
+        "DRLY": 2,
+        "TLA": 7,
+        "CHX": 11,
+        "SAFE": 2,
+        "RD_CAPTURE": 39,
+        "GATHER_PHASE": 39,
+        "GATHER_PERIOD": 40,
+        "DONE_LAT": 35
+      }
+    },
+    "hc_SE": {
+      "master": "ot_hbm_hc_qhub_static",
+      "params": {
+        "K": 20480,
+        "DRLY": 2,
+        "TLA": 7,
+        "CHX": 11,
+        "SAFE": 2,
+        "RD_CAPTURE": 39,
+        "GATHER_PHASE": 39,
+        "GATHER_PERIOD": 40,
+        "DONE_LAT": 35
+      }
+    },
+    "hc_NW": {
+      "master": "ot_hbm_hc_qhub_static",
+      "params": {
+        "K": 20480,
+        "DRLY": 2,
+        "TLA": 7,
+        "CHX": 11,
+        "SAFE": 2,
+        "RD_CAPTURE": 39,
+        "GATHER_PHASE": 39,
+        "GATHER_PERIOD": 40,
+        "DONE_LAT": 35
+      }
+    },
+    "hc_NE": {
+      "master": "ot_hbm_hc_qhub_static",
+      "params": {
+        "K": 20480,
+        "DRLY": 2,
+        "TLA": 7,
+        "CHX": 11,
+        "SAFE": 2,
+        "RD_CAPTURE": 39,
+        "GATHER_PHASE": 39,
+        "GATHER_PERIOD": 40,
+        "DONE_LAT": 35
+      }
+    }
+  },
+  "root": {
+    "master": "ot_hbm_hc_root_static",
+    "source": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+    "sha256": "7a64c3c9e5200841c58cdecafd7117e56b22a3a80778f08b19e9f5ce2254379f",
+    "params": {
+      "QDRLY": 2,
+      "QCHX": 12
+    },
+    "gather_input": "valid,row,position,data event-driven mix store; no fixed 24-edge transport counter",
+    "HCP_internal_ph24": "UNCHANGED arithmetic 8 groups x 3 phases; not gather transport"
+  },
+  "calendar_model": {
+    "gather_period_edges": 40,
+    "response_phase": 39,
+    "counter_width": 6,
+    "stream_words_per_position": 24,
+    "additional_edges_per_position_after_first_vs_legacy24": 16,
+    "safe2_qcen_input_landing_edges_vs_SAFE0": 1,
+    "root_QCHX_delta_vs_functional_legacy_p40": 1,
+    "root_RAW0_delta_vs_legacy_p40": 1,
+    "programme_image_status": "NOT_GENERATED_OR_QUALIFIED",
+    "gather_legacy_p40_k31": {
+      "G0": "L+51",
+      "tail": "L+83",
+      "result_prediction": "L+583",
+      "qualification": "TOK owned original SAFE0 QCHX11 pending; not reusable for SAFE2 QCHX12"
+    },
+    "root_quarter_SYS_LAT0_legacy": 100,
+    "root_quarter_SYS_LAT0_candidate": 101,
+    "root_quarter_SYS_LAT_legacy": 146,
+    "root_quarter_SYS_LAT_candidate": 147,
+    "ring_RAW0_legacy": 178,
+    "ring_RAW0_candidate": 179,
+    "G22_MIX_POST_quarter_reduction_active": false,
+    "G22_gather_calendar_delta_vs_legacy11": 0,
+    "profile_helper": "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py",
+    "scope": "rank0 k31 HC.HC_MIX_POST, priced record30 hc_attn (mixes + Sinkhorn), K20480, npos1, explicit relocated component VM A64/O72; not native L0",
+    "multi_position_root_calendar": "NOT_GENERATED_OR_QUALIFIED; reader40 cadence adds16 edges per additional position, gm_open/tail windows require actual npos price"
+  },
+  "clock_entries": {
+    "glue": [
+      "clk"
+    ],
+    "hard_children": [
+      "clk_t[0]",
+      "clk_t[1]",
+      "clk_t[2]",
+      "clk_t[3]"
+    ]
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "006b61b85bc16fa88b628154e20007558aec5f312f23404d5a3f73ebaa995e9f",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv": "d11b0800ec3380025c8ce9feb3d912a325dcbff9e90ac8c6404e0f96ff8f86ce",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv": "a289c3bcbe5b521e0442ccce40ab2ad33204bd3d3694152d493ce2cb134a9523",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv": "9dca5d61c83cc13138b31811abce517321c8a9a16170693b24f4def48abf5271",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qeng_static.sv": "5ca1bb8827fe60b9902aa2c0d6bfcf3eaa4d465bd015c7ddd14e1aeb65735e98",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv": "8c59d793ae6364df6dab1602ff73e8c2d8796d23a09d72aeca3d07e90f2bb303",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "506ed43169aa43f3221e4c2997fa3e5177bfd850d0f2b7bc2930d85609d4672e",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv": "c4d12d0f19a77fe836d4c7e8959ef3eb3cff4938e6ab650cc1ee10f9395e1031"
+  },
+  "qualification": {
+    "source_witness": "SCOPED_READERS_PASS24/23_AND40/39_MUTANT1_FAIL; GL16 matches SAFE2 GLC16",
+    "native_census": "NOTRUN",
+    "clock_model": "NOTRUN",
+    "physical_gate": "NOTRUN",
+    "selected_die_adoption": false
+  }
+}

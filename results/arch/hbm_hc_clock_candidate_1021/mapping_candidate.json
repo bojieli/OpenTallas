@@ -1,0 +1,991 @@
+{
+  "status": "UNADOPTED_CLOCK_RESET_MAPPING_CANDIDATE",
+  "preserved_die_source": "017b32285/N",
+  "candidate_HC_source": "5bdf1a9c5",
+  "candidate_profile": {
+    "status": "SOURCE_CANDIDATE_NOT_ADOPTED",
+    "base_commit": "f64490c0e",
+    "selected_N_unchanged": true,
+    "functional_legacy_p40_commit": "ee6ddb9448f8f6e7dfe8035b9c2ae6db5fdacdd6",
+    "hubs": {
+      "hc_SW": {
+        "master": "ot_hbm_hc_qhub_static",
+        "params": {
+          "K": 20480,
+          "DRLY": 2,
+          "TLA": 7,
+          "CHX": 11,
+          "SAFE": 2,
+          "RD_CAPTURE": 39,
+          "GATHER_PHASE": 39,
+          "GATHER_PERIOD": 40,
+          "DONE_LAT": 35
+        }
+      },
+      "hc_SE": {
+        "master": "ot_hbm_hc_qhub_static",
+        "params": {
+          "K": 20480,
+          "DRLY": 2,
+          "TLA": 7,
+          "CHX": 11,
+          "SAFE": 2,
+          "RD_CAPTURE": 39,
+          "GATHER_PHASE": 39,
+          "GATHER_PERIOD": 40,
+          "DONE_LAT": 35
+        }
+      },
+      "hc_NW": {
+        "master": "ot_hbm_hc_qhub_static",
+        "params": {
+          "K": 20480,
+          "DRLY": 2,
+          "TLA": 7,
+          "CHX": 11,
+          "SAFE": 2,
+          "RD_CAPTURE": 39,
+          "GATHER_PHASE": 39,
+          "GATHER_PERIOD": 40,
+          "DONE_LAT": 35
+        }
+      },
+      "hc_NE": {
+        "master": "ot_hbm_hc_qhub_static",
+        "params": {
+          "K": 20480,
+          "DRLY": 2,
+          "TLA": 7,
+          "CHX": 11,
+          "SAFE": 2,
+          "RD_CAPTURE": 39,
+          "GATHER_PHASE": 39,
+          "GATHER_PERIOD": 40,
+          "DONE_LAT": 35
+        }
+      }
+    },
+    "root": {
+      "master": "ot_hbm_hc_root_static",
+      "source": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+      "sha256": "7a64c3c9e5200841c58cdecafd7117e56b22a3a80778f08b19e9f5ce2254379f",
+      "params": {
+        "QDRLY": 2,
+        "QCHX": 12
+      },
+      "gather_input": "valid,row,position,data event-driven mix store; no fixed 24-edge transport counter",
+      "HCP_internal_ph24": "UNCHANGED arithmetic 8 groups x 3 phases; not gather transport"
+    },
+    "calendar_model": {
+      "gather_period_edges": 40,
+      "response_phase": 39,
+      "counter_width": 6,
+      "stream_words_per_position": 24,
+      "additional_edges_per_position_after_first_vs_legacy24": 16,
+      "safe2_qcen_input_landing_edges_vs_SAFE0": 1,
+      "root_QCHX_delta_vs_functional_legacy_p40": 1,
+      "root_RAW0_delta_vs_legacy_p40": 1,
+      "programme_image_status": "NOT_GENERATED_OR_QUALIFIED",
+      "gather_legacy_p40_k31": {
+        "G0": "L+51",
+        "tail": "L+83",
+        "result_prediction": "L+583",
+        "qualification": "TOK owned original SAFE0 QCHX11 pending; not reusable for SAFE2 QCHX12"
+      },
+      "root_quarter_SYS_LAT0_legacy": 100,
+      "root_quarter_SYS_LAT0_candidate": 101,
+      "root_quarter_SYS_LAT_legacy": 146,
+      "root_quarter_SYS_LAT_candidate": 147,
+      "ring_RAW0_legacy": 178,
+      "ring_RAW0_candidate": 179,
+      "G22_MIX_POST_quarter_reduction_active": false,
+      "G22_gather_calendar_delta_vs_legacy11": 0,
+      "profile_helper": "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py",
+      "scope": "rank0 k31 HC.HC_MIX_POST, priced record30 hc_attn (mixes + Sinkhorn), K20480, npos1, explicit relocated component VM A64/O72; not native L0",
+      "multi_position_root_calendar": "NOT_GENERATED_OR_QUALIFIED; reader40 cadence adds16 edges per additional position, gm_open/tail windows require actual npos price"
+    },
+    "clock_entries": {
+      "glue": [
+        "clk"
+      ],
+      "hard_children": [
+        "clk_t[0]",
+        "clk_t[1]",
+        "clk_t[2]",
+        "clk_t[3]"
+      ]
+    },
+    "source_sha256": {
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "006b61b85bc16fa88b628154e20007558aec5f312f23404d5a3f73ebaa995e9f",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv": "d11b0800ec3380025c8ce9feb3d912a325dcbff9e90ac8c6404e0f96ff8f86ce",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv": "a289c3bcbe5b521e0442ccce40ab2ad33204bd3d3694152d493ce2cb134a9523",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv": "9dca5d61c83cc13138b31811abce517321c8a9a16170693b24f4def48abf5271",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qeng_static.sv": "5ca1bb8827fe60b9902aa2c0d6bfcf3eaa4d465bd015c7ddd14e1aeb65735e98",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv": "8c59d793ae6364df6dab1602ff73e8c2d8796d23a09d72aeca3d07e90f2bb303",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "506ed43169aa43f3221e4c2997fa3e5177bfd850d0f2b7bc2930d85609d4672e",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv": "c4d12d0f19a77fe836d4c7e8959ef3eb3cff4938e6ab650cc1ee10f9395e1031"
+    },
+    "qualification": {
+      "source_witness": "SCOPED_READERS_PASS24/23_AND40/39_MUTANT1_FAIL; GL16 matches SAFE2 GLC16",
+      "native_census": "NOTRUN",
+      "clock_model": "NOTRUN",
+      "physical_gate": "NOTRUN",
+      "selected_die_adoption": false
+    }
+  },
+  "clock_resets_add": [
+    {
+      "instance": "hc_SW",
+      "port": "clk_t",
+      "bits": 4,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "hc_SE",
+      "port": "clk_t",
+      "bits": 4,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "hc_NW",
+      "port": "clk_t",
+      "bits": 4,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    },
+    {
+      "instance": "hc_NE",
+      "port": "clk_t",
+      "bits": 4,
+      "domain": "stream",
+      "kind": "clock",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ]
+    }
+  ],
+  "literal_entries": [
+    {
+      "instance": "hc_SW",
+      "port": "clk",
+      "generator_entry": "hc_SW",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "glue CTS root",
+      "child": null
+    },
+    {
+      "instance": "hc_SW",
+      "port": "clk_t[0]",
+      "generator_entry": "hc_SW__ckp001",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[0].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SW",
+      "port": "clk_t[1]",
+      "generator_entry": "hc_SW__ckp002",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[1].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SW",
+      "port": "clk_t[2]",
+      "generator_entry": "hc_SW__ckp003",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[2].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SW",
+      "port": "clk_t[3]",
+      "generator_entry": "hc_SW__ckp004",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[3].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SE",
+      "port": "clk",
+      "generator_entry": "hc_SE",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "glue CTS root",
+      "child": null
+    },
+    {
+      "instance": "hc_SE",
+      "port": "clk_t[0]",
+      "generator_entry": "hc_SE__ckp001",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[0].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SE",
+      "port": "clk_t[1]",
+      "generator_entry": "hc_SE__ckp002",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[1].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SE",
+      "port": "clk_t[2]",
+      "generator_entry": "hc_SE__ckp003",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[2].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_SE",
+      "port": "clk_t[3]",
+      "generator_entry": "hc_SE__ckp004",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[3].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NW",
+      "port": "clk",
+      "generator_entry": "hc_NW",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "glue CTS root",
+      "child": null
+    },
+    {
+      "instance": "hc_NW",
+      "port": "clk_t[0]",
+      "generator_entry": "hc_NW__ckp001",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[0].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NW",
+      "port": "clk_t[1]",
+      "generator_entry": "hc_NW__ckp002",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[1].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NW",
+      "port": "clk_t[2]",
+      "generator_entry": "hc_NW__ckp003",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[2].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NW",
+      "port": "clk_t[3]",
+      "generator_entry": "hc_NW__ckp004",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[3].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NE",
+      "port": "clk",
+      "generator_entry": "hc_NE",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "glue CTS root",
+      "child": null
+    },
+    {
+      "instance": "hc_NE",
+      "port": "clk_t[0]",
+      "generator_entry": "hc_NE__ckp001",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[0].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NE",
+      "port": "clk_t[1]",
+      "generator_entry": "hc_NE__ckp002",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[1].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NE",
+      "port": "clk_t[2]",
+      "generator_entry": "hc_NE__ckp003",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[2].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    },
+    {
+      "instance": "hc_NE",
+      "port": "clk_t[3]",
+      "generator_entry": "hc_NE__ckp004",
+      "domain": "stream",
+      "source": [
+        "hb_ckgen",
+        "pll_stream"
+      ],
+      "delivery": "DISTINCT_LITERAL_PIN_AND_DIE_TREE_BRANCH",
+      "role": "hard tree child entry",
+      "child": {
+        "instance": "u_cen.g_hard.g_qt[3].u_t",
+        "master": "ot_hbm_hc_qtree16_static",
+        "clock_pin": "clk",
+        "reference": {
+          "tt": {
+            "min": 186.6,
+            "mean": 194.5,
+            "max": 199.6
+          },
+          "ff": {
+            "min": 152.7,
+            "mean": 160.9,
+            "max": 166.5
+          },
+          "ss": {
+            "min": 242.8,
+            "mean": 250.3,
+            "max": 254.9
+          }
+        }
+      }
+    }
+  ],
+  "reset_ledger": [
+    {
+      "instance": "hc_SW",
+      "retained_graph_row": {
+        "instance": "hc_SW",
+        "port": "rst_n",
+        "bits": 1,
+        "domain": "stream",
+        "kind": "reset",
+        "source": [
+          "hb_ckgen",
+          "por_stream"
+        ]
+      },
+      "external_reset_ports_added": 0,
+      "physical_parent_landing": {
+        "schema": "opentallas.ref_tile.reset_landing.v1",
+        "top": "ot_hbm_hc_qhub_static",
+        "enable": true,
+        "stages": 2,
+        "clock": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+        "reset_release_cycles": 2,
+        "first_copies": {
+          "rst_n": 2
+        },
+        "copies": {
+          "rst_n": 8
+        }
+      },
+      "internal_tree_reset": {
+        "source": "u_cen.g_rc.g_rt.u_rst_t",
+        "clock": "clk",
+        "copies": 4,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "output": "rcn_t[c] -> u_cen.g_hard.g_qt[c].u_t.rst_n"
+      },
+      "child_reset": "Existing CLOSED tree16 reset face landing2 then ot_rst_relay local release; keep actual per-region phases, no invented universal sum",
+      "qualification": "Parent clock delivery/assert/release/startup remains OPEN; no stopped-clock reset guarantee"
+    },
+    {
+      "instance": "hc_SE",
+      "retained_graph_row": {
+        "instance": "hc_SE",
+        "port": "rst_n",
+        "bits": 1,
+        "domain": "stream",
+        "kind": "reset",
+        "source": [
+          "hb_ckgen",
+          "por_stream"
+        ]
+      },
+      "external_reset_ports_added": 0,
+      "physical_parent_landing": {
+        "schema": "opentallas.ref_tile.reset_landing.v1",
+        "top": "ot_hbm_hc_qhub_static",
+        "enable": true,
+        "stages": 2,
+        "clock": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+        "reset_release_cycles": 2,
+        "first_copies": {
+          "rst_n": 2
+        },
+        "copies": {
+          "rst_n": 8
+        }
+      },
+      "internal_tree_reset": {
+        "source": "u_cen.g_rc.g_rt.u_rst_t",
+        "clock": "clk",
+        "copies": 4,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "output": "rcn_t[c] -> u_cen.g_hard.g_qt[c].u_t.rst_n"
+      },
+      "child_reset": "Existing CLOSED tree16 reset face landing2 then ot_rst_relay local release; keep actual per-region phases, no invented universal sum",
+      "qualification": "Parent clock delivery/assert/release/startup remains OPEN; no stopped-clock reset guarantee"
+    },
+    {
+      "instance": "hc_NW",
+      "retained_graph_row": {
+        "instance": "hc_NW",
+        "port": "rst_n",
+        "bits": 1,
+        "domain": "stream",
+        "kind": "reset",
+        "source": [
+          "hb_ckgen",
+          "por_stream"
+        ]
+      },
+      "external_reset_ports_added": 0,
+      "physical_parent_landing": {
+        "schema": "opentallas.ref_tile.reset_landing.v1",
+        "top": "ot_hbm_hc_qhub_static",
+        "enable": true,
+        "stages": 2,
+        "clock": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+        "reset_release_cycles": 2,
+        "first_copies": {
+          "rst_n": 2
+        },
+        "copies": {
+          "rst_n": 8
+        }
+      },
+      "internal_tree_reset": {
+        "source": "u_cen.g_rc.g_rt.u_rst_t",
+        "clock": "clk",
+        "copies": 4,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "output": "rcn_t[c] -> u_cen.g_hard.g_qt[c].u_t.rst_n"
+      },
+      "child_reset": "Existing CLOSED tree16 reset face landing2 then ot_rst_relay local release; keep actual per-region phases, no invented universal sum",
+      "qualification": "Parent clock delivery/assert/release/startup remains OPEN; no stopped-clock reset guarantee"
+    },
+    {
+      "instance": "hc_NE",
+      "retained_graph_row": {
+        "instance": "hc_NE",
+        "port": "rst_n",
+        "bits": 1,
+        "domain": "stream",
+        "kind": "reset",
+        "source": [
+          "hb_ckgen",
+          "por_stream"
+        ]
+      },
+      "external_reset_ports_added": 0,
+      "physical_parent_landing": {
+        "schema": "opentallas.ref_tile.reset_landing.v1",
+        "top": "ot_hbm_hc_qhub_static",
+        "enable": true,
+        "stages": 2,
+        "clock": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+        "reset_release_cycles": 2,
+        "first_copies": {
+          "rst_n": 2
+        },
+        "copies": {
+          "rst_n": 8
+        }
+      },
+      "internal_tree_reset": {
+        "source": "u_cen.g_rc.g_rt.u_rst_t",
+        "clock": "clk",
+        "copies": 4,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "output": "rcn_t[c] -> u_cen.g_hard.g_qt[c].u_t.rst_n"
+      },
+      "child_reset": "Existing CLOSED tree16 reset face landing2 then ot_rst_relay local release; keep actual per-region phases, no invented universal sum",
+      "qualification": "Parent clock delivery/assert/release/startup remains OPEN; no stopped-clock reset guarantee"
+    }
+  ],
+  "port_delta": {
+    "added": {
+      "clk_t": {
+        "direction": "input",
+        "bits": 4
+      }
+    },
+    "removed": [],
+    "unchanged": "All existing ports and face fanout edges retained exactly; no new target/PLL/domain"
+  },
+  "generator_rule": {
+    "source": "tools/hbm_die_v15/die_case_v16.py:clock_entries",
+    "same_hub_entry_pairs": 10,
+    "total_intra_hub_pairs": 40,
+    "communicating_tile_pairs": "Conservative all-entry combinations from existing generator",
+    "missing_physical_pin": "Existing generator raises; never substitute centre",
+    "physical_parent_pin_coordinates": "OPEN until actual candidate GEN/view; no C6 parent closure alias"
+  },
+  "timing_scope": "Each of4 child entries binds same master/clk min/mean/max envelope, not individual-entry values or mean-only refs. Per-entry route delivery must be measured.",
+  "adoption_requirements": [
+    "HC exact source/full graph+params+calendar positive/causal proof",
+    "Actual native32 and geometry/model before parent physical",
+    "Source-hash S2 invalidations/reuse, actual GEN20pins/reset/STA and mandatory S11 IR",
+    "New parent physical body/source-qualified view only; old C6 FAIL and old phase23 view never aliased"
+  ],
+  "current_die_mutation": false,
+  "new_jobs": 0,
+  "input_sha256": {
+    "pre_relay_colm.json": "75721c31df7bbcafd2cccdf45279a6b829ff82a5e9137b04075cf13b9ae7906c",
+    "candidate_profile.json": "49bf7010003c3aa0e0fb36700bd9d65b5710dd1a1df5b20353658ae80f964db2",
+    "c6_reference_spec.json": "05dbc83212e50c1b6776227a15102a8a06afb18a7e5156e957066b16cfd5d5e8",
+    "c6_reset_landing.json": "fb8a571eca819d6e395678c1e783e0f900bf5f3373742c8991563a05a3343ad6",
+    "tree16_insertion.json": "64f51a3f9ddf75d9eb3f95d4b0a6c468d5e38049391923d2a96767a3c34269fe",
+    "actual_interface_delta.json": "2d62f0854574be98cc47b192466000826d56705d6da2df9b1afb0526a30c6474"
+  },
+  "HC_interface_delta_ref": "f96d23c9b; all79 existing ports and incident dataedges retained, only clk_t4 additive",
+  "programme_scope": "HC helper fail-closed npos!=1: scoped rank0k31 HC.HC_MIX_POST/pricedrecord30 hc_attn K20480 relocatedA64/O72 only. G0+51/tail+83/emit+583 onlythisscope; multi-position rootwindow NOT_GENERATED_OR_QUALIFIED. Mapping does not qualify programme."
+}
