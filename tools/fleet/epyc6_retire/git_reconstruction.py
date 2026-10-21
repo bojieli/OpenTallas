@@ -81,16 +81,19 @@ def capture(root, output):
     records, errors = {}, {}
     # Registered nested worktrees are enumerated without traversing millions of checkout files.
     for p in list(candidates):
-        common = run(['git', '-C', str(p), 'rev-parse', '--git-common-dir'], env=env).decode().strip()
-        common = str((p/common).resolve())
-        if common not in stores:
-            stores[common] = None
-            listing = run(['git', '--git-dir='+common, 'worktree', 'list', '--porcelain'], env=env).decode()
-            for line in listing.splitlines():
-                if line.startswith('worktree '):
-                    q = pathlib.Path(line[9:]).resolve()
-                    if q.is_relative_to(root) and (q/'.git').exists() and q not in candidates:
-                        candidates.append(q)
+        try:
+            common = run(['git', '-C', str(p), 'rev-parse', '--git-common-dir'], env=env).decode().strip()
+            common = str((p/common).resolve())
+            if common not in stores:
+                stores[common] = None
+                listing = run(['git', '--git-dir='+common, 'worktree', 'list', '--porcelain'], env=env).decode()
+                for line in listing.splitlines():
+                    if line.startswith('worktree '):
+                        q = pathlib.Path(line[9:]).resolve()
+                        if q.is_relative_to(root) and (q/'.git').exists() and q not in candidates:
+                            candidates.append(q)
+        except Exception as e:
+            errors[str(p)] = 'Git discovery failed; preserve full copy: ' + str(e)
     for i, common in enumerate(stores):
         temp = output/('objects-'+str(i))
         run(['git', 'init', '--bare', str(temp)])
