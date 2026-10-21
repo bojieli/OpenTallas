@@ -1,0 +1,20 @@
+{
+ "job": "hidx_score_pair8_r1-r1-005325591",
+ "source_commit": "005325591",
+ "audit_state": "OPEN",
+ "method": "unchanged published TLOAD RVT+LVT v5 all-driver audit2528bb5fc7f6384ae4abe540e7d0ccebe4a1c2c3a722b502e44bf087b42d290c plus frozen job canonical ck_insertion --routed --all-clocks --raw-source TT/FF; no exemptions/CTS fallback/newchecker/reroute",
+ "precedent_commit": "ee29336f2",
+ "resource_class": "same published normal48GiB1thread sequential nativeOpenROAD+ck_insertion; Docker48g; unpinned ot-run/data onGold1",
+ "actual_original_route_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "image_provenance": "actual route physical.json /place_and_route/toolchain/image_id; image_id_matches_archived_asap7_lockFalse preserved, not claimed lock identity",
+ "expected_final_odb_sha256": "b9b9937880113dfad2db4abaab62340c00d31975460afc7ade6035cc682393ec",
+ "selected_pass_export_join": "actual installed6_final.odb SHA ==actual cl/eco/pass2/orfs/.../base/6_final.odb SHA==exported abstract.json verdict.files6_final.odb SHA",
+ "normal_result": {
+  "TT_setup_ps": 88.26,
+  "FF_hold_ps": 20.69,
+  "DRC": 0,
+  "SS_sensitivity_ps": -287.57,
+  "cells_added": 12756
+ },
+ "parent_binding": "RESET_F320/ONL_LAG2 only; no currentlegacyquarter alias; no binding beforeactualfinal audit results"
+}
