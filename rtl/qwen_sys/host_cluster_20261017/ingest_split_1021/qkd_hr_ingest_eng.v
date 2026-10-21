@@ -1,11 +1,11 @@
 // QKO-HROOT2 10-21: single-clock (ck_ingest, 1.667 ns) engine tile of the split qkd_hr_ingest_qm. u_eng = the native32
-// primitive copy qkd_host_native_engine_n32 (Codex codex/k-hroot-integrated-1021, generated sha256 38376238..., census
+// primitive copy qkd_host_native_engine_n32 (Codex codex/hroot-address-factor-1021, address-factor successor generated sha256 14e2316d..., census
 // max 32, 32 bank SRAMs). RMW_EN 0 configuration
 // of the shell (the engine's clk / clk_bank / clk_out entries are all ck_ingest, exactly as qkd_hr_ingest_qm ties them): r_rdy / rd_v / rd_data are the constants 0 exactly as in qkd_hr_native_qm_cdc (e_rrdy = 0, rx_pop = 0).
 // Fan-out of the boundary nets (<= 32 loads per driver):
-//   reset: eng_rst_n[1:0] (two shell u_rsi leaves) -> 2-stage face landing (u_l0 per pin, then 17 kept leaves each;
-//          async assert with the pin, release 2 ck_ingest edges later) -> the 34 engine reset ports (rst_n,
-//          rst_n__c1..33, <= 32 loads each). The engine leaves its reset state 2 edges after the shell's rn_i, before
+//   reset: eng_rst_n[1:0] (two shell u_rsi leaves) -> 2-stage face landing (u_l0 per pin, then 18/17 kept leaves;
+//          async assert with the pin, release 2 ck_ingest edges later) -> the 35 engine reset ports (rst_n,
+//          rst_n__c1..34, <= 32 loads each). The engine leaves its reset state 2 edges after the shell's rn_i, before
 //          the first possible host word (u_hx Gray synchroniser + head), so behaviour is unchanged
 //          (cycle-exact miter rtl/test/qwen_host/qm_split_1021 runs this same bank);
 //   in_v / in_v__c1 <- eng_inv_a / eng_inv_b (the shell's two kept copies); done_v / __c1 / __c2 -> eng_done / _a / _b, eng_done_c = kept BUF of __c1;
@@ -15,7 +15,7 @@
 module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   input  wire         ck_ingest,
   input  wire         ck_rl,       // engine-region reset landing clock (same 600 MHz ingest family, own small CTS root;
-                                   // the cluster ties it to ck_ingest): clocks only the 34 reset leaves
+                                   // the cluster ties it to ck_ingest): clocks only the 35 reset leaves
   input  wire [1:0]   eng_rst_n,
   input  wire         eng_dv,
   input  wire [255:0] eng_ddata,
@@ -34,16 +34,16 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   output wire [31:0]  eng_nsec
 );
   wire [31:0] nbeat_unused;
-  // 2-stage face landing: eng_rst_n[j] -> landing flop u_l0[j] (the ONLY sink of the pin) -> 17 kept leaves async-reset by
+  // 2-stage face landing: eng_rst_n[j] -> landing flop u_l0[j] (the ONLY sink of the pin) -> 18/17 kept leaves async-reset by
   // rst_l0[j] (assert = pin assert through u_l0 clear-to-Q, release 1 edge after u_l0 = 2 edges after the pin: same cycles)
   wire [1:0] rst_l0;
-  wire [33:0] rst_c;
+  wire [34:0] rst_c;
   genvar r;
   for (r = 0; r < 2; r = r + 1) begin : g_l0
     qkd_hr_eng_rst_leaf #(.ID(100 + r)) u_l0 (.ck(ck_rl), .rn(eng_rst_n[r]), .d(1'b1), .q(rst_l0[r]));
   end
-  for (r = 0; r < 34; r = r + 1) begin : g_rst
-    qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(rst_l0[r / 17]), .d(1'b1), .q(rst_c[r]));
+  for (r = 0; r < 35; r = r + 1) begin : g_rst
+    qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(rst_l0[r / 18]), .d(1'b1), .q(rst_c[r]));
   end
 `ifdef QKD_HR_ENG_RTL
   qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
@@ -72,7 +72,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
     .rst_n__c16(rst_c[16]), .rst_n__c17(rst_c[17]), .rst_n__c18(rst_c[18]), .rst_n__c19(rst_c[19]), .rst_n__c20(rst_c[20]),
     .rst_n__c21(rst_c[21]), .rst_n__c22(rst_c[22]), .rst_n__c23(rst_c[23]), .rst_n__c24(rst_c[24]), .rst_n__c25(rst_c[25]),
     .rst_n__c26(rst_c[26]), .rst_n__c27(rst_c[27]), .rst_n__c28(rst_c[28]), .rst_n__c29(rst_c[29]), .rst_n__c30(rst_c[30]),
-    .rst_n__c31(rst_c[31]), .rst_n__c32(rst_c[32]), .rst_n__c33(rst_c[33]),
+    .rst_n__c31(rst_c[31]), .rst_n__c32(rst_c[32]), .rst_n__c33(rst_c[33]), .rst_n__c34(rst_c[34]),
     .d_v(eng_dv), .d_rdy(eng_drdy), .d_data(eng_ddata),
     .in_v(eng_inv_a), .in_v__c1(eng_inv_b), .in_rdy(eng_inrdy), .in_data(eng_indata),
     .w_v(eng_wv), .w_rdy(eng_wrdy), .w_addr(eng_waddr), .w_data(eng_wdata),
@@ -83,7 +83,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
 endmodule
 
 // Engine-region reset landing leaf: async assert with rn, release on the next ck edge. Distinct ID per copy = separate
-// kept hierarchies, so synthesis never merges the 34 copies back (same scheme as ot_pl_land_rst_copy).
+// kept hierarchies, so synthesis never merges the 35 copies back (same scheme as ot_pl_land_rst_copy).
 (* keep_hierarchy = "yes" *)
 module qkd_hr_eng_rst_leaf #(parameter integer ID = 0) (input wire ck, rn, d, output wire q);
   (* keep *) reg r;
