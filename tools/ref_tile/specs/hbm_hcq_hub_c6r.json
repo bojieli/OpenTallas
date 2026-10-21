@@ -715,9 +715,9 @@
   "child_lattice_um": 43.2,
   "slot_change_request": "W-face pin move (FAM-HBM-C/C-QHUB 10-21): s_i 368.7..727.126 -> 324.0..727.126, clk_t 366.0..368.4 -> 321.0..323.4, xb_v/xb_beat -> 321.2..323.2, xb_d0 41.222..365.7 -> 41.222..320.9 (256 b, 0.92/um); outline and every other die-contract pin range unchanged. Why: hbm_hcq_hub_c1b FLOORPLAN_MARGIN bank_distance (qt[0]/qt[1] 244/163 um from their 513-pin centroid) and c1 would fail too (qt[0] 109 um): 4 x 97.2 slices at the 129.6 lattice pitch cannot centre on a 358 um s_i span inside the 734.4 outline. With s_i spread over 403 um the slice-pin centroids are y 374/475/576/677 -> distances 75/54/43/43 um (<= 100); s_i density 5.7 -> 5.1 pins/um.",
   "reroute_reason": {
-    "kind": "structural",
-    "failed_job": "ref_gate hbm_hcq_hub_c4r 0460a864c native census FAIL one load-control33",
-    "why": "split is_c1 launch accept into independent eight-bit halves (GL16 copies), retains hidden predecode rung, no interface or output edge change"
+    "kind": "structural_clock_binding",
+    "failed_job": "C5r source e6c44aa64 CTS OT_HYBRID rejected actual programme SRAM clk omitted from soft_root_macro_bindings",
+    "why": "Declare exact actual u_q.g_qcal.programme.u_program/master ot_sram_1r1w_1024x256_m2_r2c2/clk/root clk using existing strict raw-memory contract with TT/FF Liberty validation; zero RTL/phase/geometry/data-edge change"
   },
   "description": " Native32 structural rebuild: registered one-hot gather selects, capture-time npos masks, independent scan-load launch copies, zero schedule change.",
   "soft_root_macro_masters": [
@@ -729,5 +729,10 @@
       "clock_pin": "clk",
       "root": "clk"
     }
+  },
+  "prior_reroute_reason": {
+    "kind": "structural",
+    "failed_job": "ref_gate hbm_hcq_hub_c4r 0460a864c native census FAIL one load-control33",
+    "why": "split is_c1 launch accept into independent eight-bit halves (GL16 copies), retains hidden predecode rung, no interface or output edge change"
   }
 }
