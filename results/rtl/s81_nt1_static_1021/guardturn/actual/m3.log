@@ -1,0 +1,10 @@
+ATTN1 cfg seed=1 njob=2 bub=0 static=0 t=640 nq=32 nk=2 np=2 NTP=1 NMUT=3
+GUARD_TURN e=0 qload_rc=46 first_last_issue=17 delta=29
+GUARD_TURN e=1 qload_rc=46 first_last_issue=17 delta=29
+MISMATCH sc beat 0 row 0/0 rc 72
+ATTN1_COMPLETE expected_sc=2 expected_pv=16 incomplete=0 inputs0=2/32/2/2 inputs1=2/32/2/2
+ATTN1LOCK cycles=3182 sc=2/2 pv=16/16 mismatches=1 sc_mis=1 pv_mis=0 FAIL
+- tools/s81_dv/svc_rs/tb_attn1_guardturn.sv:234: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 58.378 s; speed 54.686 ns/s
+- Verilator: cpu 58.377 s on 1 threads; allocated 154 MB

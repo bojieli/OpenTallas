@@ -7,12 +7,17 @@ module tb_attn1_current_att;
  wire [1:0] lv,pv,done,fault,go; wire[2131:0]ld[0:1]; wire[512:0]pd[0:1];
  wire[31:0]fc[0:1]; wire[15:0]pio[0:1],pvo[0:1],jc[0:1];wire[1:0]st[0:1];wire[681:0]rq[0:1];
  integer T=46,seed=1,ns[0:1],np[0:1],ng[0:1],mism=0,cycles=0;
+ reg [1:0] qrk_reply[0:1],qrv_reply[0:1]; reg [33:0] tag_reply[0:1];
+ integer scale_reads[0:1];
+ // WIN_LOAD fetches two scale metadata sectors on each PC even for zero window rows.
+ // The fixture's HBM image has WB0 sectors64/65 filled with UE8M0 scale127.
+ // Return exactly one credit and one tagged read response per real request.
  reg [2131:0]scores[0:159];reg[512:0]words[0:39];
  for(genvar e=0;e<2;e++)begin:E
  dsdv_svc_att #(.SRAM_MACRO(1),.DIE_ID(0),.ST(1),.NTP(e==0?0:1)) u(
  .clk(clk),.rst_n(rst_n),.sid(4'd0),.tile(4'd0),.gd(8'd4),.pvs(8'd0),.root(1'b0),
- .q_v(qv),.q_d(qd[e]),.hw_v(1'b0),.hw_d(291'd0),.qrq(rq[e]),.qrk(2'b11),.qwd(2'd0),.qrv(2'd0),
- .qr_data(512'd0),.qr_tag(34'd0),.qr_beat(8'd0),.l_v(lv[e]),.l_d(ld[e]),.pv_ov(pv[e]),.pv_od(pd[e]),
+ .q_v(qv),.q_d(qd[e]),.hw_v(1'b0),.hw_d(291'd0),.qrq(rq[e]),.qrk(qrk_reply[e]),.qwd(2'd0),.qrv(qrv_reply[e]),
+ .qr_data({64{8'd127}}),.qr_tag(tag_reply[e]),.qr_beat(8'd0),.l_v(lv[e]),.l_d(ld[e]),.pv_ov(pv[e]),.pv_od(pd[e]),
  .sm_st(),.sm_kind(),.sm_jid(),.sm_rv(),.sm_rp(),.sm_rj(),.sm_rd(),.go_o(go[e]),.tjob_o(),.done(done[e]),.tagj(),
  .hcr(),.hack(),.fault(fault[e]),.fault_code(fc[e]),.pio_o(pio[e]),.pvo_o(pvo[e]),.jc_o(jc[e]),.st_o(st[e]));
  end
@@ -23,6 +28,7 @@ module tb_attn1_current_att;
  reg[448:0]sp;reg[511:0]word_,a,b;integer i,j,k;
  initial begin
  ns[0]=0;ns[1]=0;np[0]=0;np[1]=0;ng[0]=0;ng[1]=0;
+ for(integer e=0;e<2;e++)begin qrk_reply[e]=0;qrv_reply[e]=0;tag_reply[e]=0;scale_reads[e]=0;end
  void'($value$plusargs("t=%d",T));void'($value$plusargs("seed=%d",seed));void'($urandom(seed));
  if(T<1 || T>512)$fatal(1,"selected-row test supports1..512");
  repeat(6)@(negedge clk);rst_n=1;repeat(6)@(negedge clk);
@@ -44,7 +50,7 @@ module tb_attn1_current_att;
  sp[15:0]=800;sp[31:16]=2600;b=hdr(13,0,sp);send(a,b);@(negedge clk);qv=0;
  repeat(4000)@(negedge clk);
  $display("CURRENT_ATT T=%0d SRAM=1 NTP=0/1 scores=%0d/%0d pv_words=%0d/%0d go=%0d/%0d done=%b faults=%h/%h mismatch=%0d pio=%0d/%0d st=%0d/%0d",T,ns[0],ns[1],np[0],np[1],ng[0],ng[1],done,fc[0],fc[1],mism,pio[0],pio[1],st[0],st[1]);
- if(mism || ns[0]!=(T+3)/4 || ns[1]!=ns[0] || np[0]!=40 || np[1]!=40 || ng[0]!=1 || ng[1]!=1 || done!=3 || fault!=0 || pio[0]!=123 || pio[1]!=123 || st[0]!=0 || st[1]!=0)$fatal(1,"CURRENT_ATT FAIL");
+ if(mism || ns[0]!=(T+3)/4 || ns[1]!=ns[0] || np[0]!=40 || np[1]!=40 || ng[0]!=1 || ng[1]!=1 || done!=3 || fault!=0 || pio[0]!=123 || pio[1]!=123 || st[0]!=0 || st[1]!=0 || scale_reads[0]!=4 || scale_reads[1]!=4)$fatal(1,"CURRENT_ATT FAIL");
  $display("CURRENT_ATT PASS");$finish;
  end
  always@(posedge clk)if(rst_n)begin
@@ -52,6 +58,15 @@ module tb_attn1_current_att;
  if(go[e])ng[e]++;
  if(lv[e])begin if(e==0)scores[ns[0]]=ld[0];else if(ns[1]>=ns[0] || ld[1]!==scores[ns[1]])mism++;ns[e]++;end
  if(pv[e])begin if(e==0)words[np[0]]=pd[0];else if(np[1]>=np[0] || pd[1]!==words[np[1]])mism++;np[e]++;end
- if(rq[e][0] || rq[e][341])$fatal(1,"unexpected HBM request");
+ for(integer pc=0;pc<2;pc++)begin
+   qrk_reply[e][pc]<=rq[e][341*pc]; qrv_reply[e][pc]<=rq[e][341*pc];
+   tag_reply[e][17*pc+:17]<=rq[e][341*pc+36+:17];
+   if(rq[e][341*pc])begin
+     if(rq[e][341*pc+1] || rq[e][341*pc+32+:4]!=1 ||
+        !(rq[e][341*pc+2+:30] inside {30'd64,30'd65}) || rq[e][341*pc+51+:2]!=1)
+       $fatal(1,"unexpected HBM request e=%0d pc=%0d req=%h",e,pc,rq[e][341*pc+:341]);
+     scale_reads[e]++;
+   end
+ end
  end end
 endmodule
