@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits   437 GB (avail 419, growth 113, headroom 0, waiters 0/0 GB) load 156/128 running 31 disk 140 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-slice2w3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-slice2w3
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-slice2w3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-slice2w3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice2w3
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc5 at 1.28 x cores
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-77299-1792579159 after 0 s
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-77299-1792579159): exit 0

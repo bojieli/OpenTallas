@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=71544 cycles=6000 warm=37 (vm8q offsets VM1/BTAB-PROG2/CROM4)
+- rtl/qwen_dv/s5/p3/tb_qfd_dv_s5_vm8q.sv:185: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.044 s; speed 134.863 us/s
+- Verilator: cpu 0.045 s on 1 threads; allocated 8 MB
