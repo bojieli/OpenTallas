@@ -1651,16 +1651,17 @@ def kit_clocks(tiles):
 
 
 def rope_context_tiles(tiles):
-    """Use actual accepted HOST CONTEXT records for both embedding HBM sweeps.
+    """Start from each actual compute-native per-head CONTEXT descriptor.
 
-    HOST rec_tx is {record_tx[547:0], record_tx_observed_v}. The exported
-    observed pulse already qualifies send_slot with the real context owner;
-    use that accepted pulse for both ctx_start qualifiers, never a RESULT.
+    hrec_rx packs {record_rx[547:0], record_rx_v, witness_slot,
+    record_send_kind[1:0]}. The compiled C->K kind12 carries the actual
+    native stage1 descriptor, with stage normalized to zero by its producer.
+    The original RESULT service retains its terminal-owner meaning.
     """
     if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
         raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
     emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
-    emb['ports']['i_host_record'] = dict(dir='input', width=549, cls='special', src=None)
+    emb['ports']['i_head_record'] = dict(dir='input', width=552, cls='special', src=None)
     emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
                      '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
     native = int(os.environ.get('OT_KV_EMB_N32', '0'))
@@ -1670,8 +1671,8 @@ def rope_context_tiles(tiles):
         raise ValueError('KV RoPE EW1627 image requires the actual 1024-edge second HBM sweep separation')
     emb['body'] = [
         f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay})) u_context ('
-        '.ck(ck), .rst_n(rst_n), .i_result_record(d2d__svc), '
-        '.i_ctx({i_host_record[0],i_host_record[0],i_host_record[548:513],i_host_record[61:1]}), '
+        '.ck(ck), .rst_n(rst_n), '
+        '.i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), '
         '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
         + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
         + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
@@ -1976,8 +1977,8 @@ def inject(m, K):
     seen_buses = {b_[0] for b_ in B}
     fk = m.setdefault('forks', {})
     if ROPE:
-        fk.setdefault('hrec_tx', []).append(('kvs_emb', 'i_host_record'))
-        rec['rope_context'] = dict(source='HOST rec_tx observed accepted CONTEXT', width=549,
+        fk.setdefault('hrec_rx', []).append(('kvs_emb', 'i_head_record'))
+        rec['rope_context'] = dict(source='compute native stage1 descriptor C->K kind12', width=552,
             owner='record[60:0]', position='owner[18:6]', start='kvs_emb.o_ctx_svc -> kvs_ctl.d2d__svc', bundle=174)
     for (dinst, dport), loads in nets.items():
         if dport == 'rsp':
