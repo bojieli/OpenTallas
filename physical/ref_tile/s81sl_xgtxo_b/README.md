@@ -41,6 +41,10 @@ Replaces: s81sl_xgxo / s81sl_xgxo_b (FAILED: control net 4,050 loads, reset 2,51
 3 Fanout: PASS -- mapped native census (tools/ref_tile/native_census.py origin/main, ORFS keep-regs hook, TT RVT) of the whole
   top: full-top census running at gate time (pre_route_gate refuses the floorplan on any driver > 32) and in results/rtl/s81_xgtxo_1021/scripts/census.sh (ot-epyc5, pending_results); parents: rstopt_xo PASS below, xs4 PASS in the xg5 lineage after XG5d.  rstopt_xo alone: PASS max 32, 0 drivers > 32, rst_n 10 loads, 6,899 um2 (rstopt 6,848).  Kept copies survive (keep regs hook; xs4 helper modules
   non-parameterised and in SYNTH_KEEP_MODULES so no paramod rename).
+  Full-top census round 1 (@6aac44322, ep5 c_xgtxo.log): FAIL max 72, 5 drivers > 32 (4 x 72 = shared AND3 BF arrival-line
+  decode par/bu per group; 1 x 39 = calendar act driving the 24-b age update), rst_n 12.  FIXED (S81-SLICE/XG 10-21): 2 kept
+  non-parameterised ot_s81sl_xs4_bdec 2-level predecode instances per group (one per ln copy, in SYNTH_KEEP_MODULES) + kept
+  act_g copy for the age update.  Value-preserving, 0 cycles.  The --cts gate re-runs the full-top census (refuses on > 32).
 4 Depth: rstopt AND-OR of one-hot kept selects (egress adds 3 terms to the W line OR); xs4 cones unchanged.  PASS.
 5 Storage: 24 x 128x256 x-buffer SRAMs, 7 ROMs, 6 exponent SRAMs (xs4); rstopt 4-slot fragment buffers (4 x 276 b, written per
   slot, read as a word: not runtime-indexed).  PASS.

@@ -57,7 +57,10 @@ STRUCT = (
     "ab6b3f7b4 incl. XG5d rng/bad fix).  Replaces the failed s81sl_xgxo/_b gates (main ot_s81sl_xs ctl net 4,050 loads, "
     "rstop rst_n 2,517 loads vs census 32).  Cycle delta vs ot_s81sl_xg_xo: ring +0 (ro/vo/nx/dl/egress), slice x path "
     "+1 (xs4 capture, uniform for issuer and gather), fault +1.  Floorplan = the xg5 structural successor map "
-    "(split macro stacks, full-width macro-free centre band) because xs4 has the same 37 macros / instance paths.")
+    "(split macro stacks, full-width macro-free centre band) because xs4 has the same 37 macros / instance paths.  "
+    "Census fixes in xs4 (xgt_xo mapped census max 72): BF arrival-line one-hot from 2 kept ot_s81sl_xs4_bdec predecode "
+    "instances per group (was a shared AND3 decode, 72 loads x 4 groups); kept act_g copy of each calendar due act for the "
+    "24-b age update (act mapped 39).  Value-preserving, 0 cycles.")
 
 
 def make(base, name, tag, purpose):
@@ -69,6 +72,9 @@ def make(base, name, tag, purpose):
                     f"{SRAM}/ot_sram_1r1w_128x256_m1_r2c2_bb.v", f"{ROM}/ot_rom_4096x72_m8_bb.v",
                     f"{EXP}/ot_sram_1r1w2c_128x64_m1_bb.v"]
     s["pin_regs"] = PIN_REGS
+    km = s["route"].setdefault("synth_keep_modules", [])
+    if "ot_s81sl_xs4_bdec" not in km:
+        km.append("ot_s81sl_xs4_bdec")
     s["structural_change"] = STRUCT + "\n\nBase floorplan (" + Path(base).parent.name + "):\n" + s.get("structural_change", "")
     j = s["job"]
     j["benches"] = benches()

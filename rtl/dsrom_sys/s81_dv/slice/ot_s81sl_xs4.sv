@@ -100,6 +100,21 @@ endmodule
         assign lo[j] = k[3:0] == 4'(j);
     end endgenerate
 endmodule
+// S81-FIX2/XG: BF arrival-line one-hot (80 = parity x 40 units) through a kept 2-level predecode, one instance per lookup
+// copy (the shared AND3 decode of par / bu mapped to 72 loads in the xgt_xo census)
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_bdec (input wire par, input wire [5:0] bu, output wire [79:0] ln);
+    wire [9:0] hi; wire [7:0] lo;
+    genvar j;
+    generate for (j = 0; j < 10; j = j + 1) begin : g_hi
+        assign hi[j] = (par == (j >= 5)) && bu[5:3] == 3'(j % 5);
+    end
+    for (j = 0; j < 8; j = j + 1) begin : g_lo
+        assign lo[j] = bu[2:0] == 3'(j);
+    end
+    for (j = 0; j < 80; j = j + 1) begin : g_ln
+        assign ln[j] = hi[(j / 40) * 5 + (j % 40) / 8] && lo[(j % 40) % 8];
+    end endgenerate
+endmodule
 // calendar reader due term (one instance per consumer group: same function, own gates)
 (* keep_hierarchy = 1 *) module ot_s81sl_xs4_due (input wire act, input wire cnz, input wire [23:0] t, input wire [23:0] age, output wire due);
     assign due = act && cnz && t == age;
@@ -185,6 +200,7 @@ module ot_s81sl_xs4_cal (
         (* keep = "true" *) reg [3:0] rpa;   // action pointer (used by k < 4)
         (* keep = "true" *) reg [23:0] age;
         (* keep = "true" *) reg act;
+        (* keep = "true" *) reg act_g;   // S81-FIX2/XG: kept copy of act for the 24-b age update (act mapped 39 loads)
         wire pk = gk < 3 ? pok[0] : pok[1];
         reg [23:0] t; reg en;
         integer e;
@@ -196,10 +212,11 @@ module ot_s81sl_xs4_cal (
         // XG5: due from a kept term instance; the action-chunk copy (k < 4) takes its own instance below
         ot_s81sl_xs4_due u_due (.act(act), .cnz(cnz), .t(t), .age(age), .due(due[gk]));
         always @(posedge ck or negedge rg[5 + gk]) begin
-            if (!rg[5 + gk]) begin age <= 24'd0; act <= 1'b0; end
+            if (!rg[5 + gk]) begin age <= 24'd0; act <= 1'b0; act_g <= 1'b0; end
             else begin
-                age <= act ? age + 24'd1 : (sq[gk] ? 24'd0 : age);
+                age <= act_g ? age + 24'd1 : (sq[gk] ? 24'd0 : age);
                 act <= (due[gk] && (en || cons_last)) ? 1'b0 : (sq[gk] ? 1'b1 : act);
+                act_g <= (due[gk] && (en || cons_last)) ? 1'b0 : (sq[gk] ? 1'b1 : act);
             end
         end
         always @(posedge ck or negedge rg[11 + gk / 3]) begin
@@ -967,14 +984,14 @@ module ot_s81sl_xs4 (
         wire [2:0] mac = 3'(hwm + 3'(bu));
         wire gate = hwb[gc] && bcs;
         (* keep = "true" *) reg [79:0] ln0, ln1;   // [40 parity + bu]
+        wire [79:0] ld0, ld1;                       // S81-FIX2/XG: one kept predecode per copy
+        ot_s81sl_xs4_bdec u_bd0 (.par(par), .bu(bu), .ln(ld0));
+        ot_s81sl_xs4_bdec u_bd1 (.par(par), .bu(bu), .ln(ld1));
         (* keep = "true" *) reg [7:0] ms0, ms1, mr;
         reg [6:0] rw; reg bb, gf;
         integer x;
         always @(posedge clk) begin
-            for (x = 0; x < 80; x = x + 1) begin
-                ln0[x] <= (par == (x >= 40)) && bu == 6'(x % 40);
-                ln1[x] <= (par == (x >= 40)) && bu == 6'(x % 40);
-            end
+            ln0 <= ld0; ln1 <= ld1;
             for (x = 0; x < 8; x = x + 1) begin
                 ms0[x] <= gate && mac == 3'(x); ms1[x] <= gate && mac == 3'(x); mr[x] <= gate && mac == 3'(x);
             end
