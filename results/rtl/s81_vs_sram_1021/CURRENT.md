@@ -21,3 +21,5 @@ committed summary contains its full violating-driver list and raw report hash.
 No constraint waiver, false path, multicycle or native-check change was used.
 
 Source2f0cb6f94 operand-nibble hierarchy: existing ENG159/73 PASS, VS allops PASS, MUT4 catches22MOE errors; native5 FAIL654/307 (231seq), rst1, roles0. All raw logs committed. Next candidate adds regional arrival counters for ENG halfword selects and byte captures for RA/K/W; no added edges and no layout gate.
+
+Source91891ec62 native6 max433/320violations (246seq), rst1/roles0. ENG159/73 PASS/MUT8caught4, VSallopsPASS. Regional ENG arrival and RA/K/W capture removes prior654/512/451 controls; broad result mux is next repair, no layout.

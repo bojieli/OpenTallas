@@ -647,6 +647,41 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
                 default: ;
             endcase
         end
+`ifdef OT_S81SL_VS_SRAM
+    wire [255:0] out_sw={128'd0,sw_w32};
+    wire [255:0] out_usw={sw_w32,sw_prev};
+    wire [255:0] out_qb=(MUT==5)?{xq_c[127:0],xq_c[255:128]}:xq_c;
+    wire [255:0] out_rb={128'd0,xo_d[127:0]};
+    genvar oby;
+    generate for(oby=0;oby<32;oby=oby+1) begin:g_output_byte
+      wire [7:0] ra_byte;
+      if(oby<12) assign ra_byte=(k_ra[1:0]==oby/4)?rar_c[8*(oby%4)+:8]:rad[8*oby+:8];
+      else if(oby<16) assign ra_byte=rar_c[8*(oby%4)+:8];
+      else assign ra_byte=8'd0;
+      ot_s81sl_vs_output8 u_byte(.clk(clk),.op(region_op[oby/2]),.sw(out_sw[8*oby+:8]),.usw(out_usw[8*oby+:8]),.qb(out_qb[8*oby+:8]),.ra(ra_byte),.rb(out_rb[8*oby+:8]),.eng(xwsel[8*oby+:8]),.moe(xo_d[8*oby+:8]),.wd(x_wd[8*oby+:8]),.u(u[8*oby+:8]));
+    end endgenerate
+    always @(posedge clk) begin
+        if (acc_cmd) begin um_q <= c_imm[12]; um_b <= c_imm[13]; um_i <= c_imm[21:14]; end
+        if (swv_c) sw_prev <= sw_w32;
+        case (op)
+            OP_SW: begin
+                x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F;
+ u_i <= j0 + k_out[3:1];
+            end
+            OP_QB: begin
+ u_i <= j0 + k_out[2:0];
+            end
+            OP_RA: begin
+                x_wa <= ob + {4'd0, k_ra[7:2]} + ((MUT == 6) ? 10'd1 : 10'd0);
+                x_wm <= (k_ra[1:0] == 2'd3) ? 8'h0F : (k_ra[1:0] == 2'd2) ? 8'h07 : (k_ra[1:0] == 2'd1) ? 8'h03 : 8'h01;
+            end
+            OP_RB, OP_QR: begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F; end
+            OP_ENG: begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wm <= 8'hFF; end
+            default: begin x_wa <= ob + {1'b0, k_out[7:0], 1'b0}; x_wm <= 8'hFF; end   // MOE
+        endcase
+    end
+
+`else
     always @(posedge clk) begin
         if (acc_cmd) begin um_q <= c_imm[12]; um_b <= c_imm[13]; um_i <= c_imm[21:14]; end
         if (swv_c) sw_prev <= sw_w32;
@@ -669,6 +704,8 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
             default: begin x_wa <= ob + {1'b0, k_out[7:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xo_d; end   // MOE
         endcase
     end
+
+`endif
 
     // ---------------------------------------------------------------- faults (sticky)
     reg f_cmd, f_unit;
@@ -708,5 +745,17 @@ module ot_s81sl_vs_operand4 #(parameter [3:0]NEG=0,parameter integer MUT=0)(inpu
     if(op==4'd11) begin a<=ra;b<=(MUT==2)?4'd0:rb;end
     else if(op==4'd12) begin a<=m0;b<=m1;end
     else begin a<=expert==0?x:acc;b<=expert==0?NEG:x;end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_output8(input wire clk,input wire[3:0]op,input wire[7:0]sw,usw,qb,ra,rb,eng,moe,output reg[7:0]wd,u);
+  always @(posedge clk)
+    case(op)
+      4'd8:begin wd<=sw;u<=usw;end
+      4'd9:u<=qb;
+      4'd10:wd<=ra;
+      4'd11,4'd12:wd<=rb;
+      4'd14:wd<=eng;
+      default:wd<=moe;
+    endcase
 endmodule
 `endif
