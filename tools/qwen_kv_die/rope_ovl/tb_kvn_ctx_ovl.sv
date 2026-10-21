@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
 module tb_kvn_ctx_ovl;
- parameter integer MUT_USER=0,MUT_STALE=0;
+ parameter integer MUT_USER=0,MUT_STALE=0,MUT_BOOT=0;
  reg ck=0;always #5 ck=~ck;
  reg rst_n=0,reseed=0,adm_done=1;
  reg [551:0] head_record=0;
  reg [3:0] ovl_users=0,calrx=0;
  wire [58:0] identity;wire [1:0] generation;wire fault;
- qkd_kvn_ctx_ovl_rope #(.MUT_USER(MUT_USER),.MUT_STALE(MUT_STALE)) d
+ qkd_kvn_ctx_ovl_rope #(.MUT_USER(MUT_USER),.MUT_STALE(MUT_STALE),.MUT_BOOT(MUT_BOOT)) d
  (.ck(ck),.rst_n(rst_n),.head_record(head_record),.ovl_users(ovl_users),.calrx(calrx),.adm_done(adm_done),.reseed(reseed),
  .compiled_identity(identity),.compiled_generation(generation),.fault(fault));
  function automatic [60:0] own(input[15:0]ep,input[17:0]tok,input[12:0]pos);
@@ -28,7 +28,10 @@ module tb_kvn_ctx_ovl;
  endtask
  integer u;reg[60:0]o;
  initial begin
- reset();
+ adm_done=0;reset();send(0,own(16'd65,18'd10,13'd100));
+ if(fault)$fatal(1,"BOOT_CONTEXT_NOT_IGNORED");
+ start(0,1);if(identity[42:37]!==0)$fatal(1,"BOOT_STARTED_KVN_STAGE");
+ adm_done=1;reset();
  for(u=0;u<4;u=u+1)begin o=own(16'(64+u),18'(10+u),13'(100+u));send(2'(u),o);start(2'(u),1);expect_owner(o,1);end
  for(u=0;u<4;u=u+1)begin o=own(16'(64+u),18'(10+u),13'(100+u));start(2'(u),0);expect_owner(o,2);end
  o=own(16'd68,18'd20,13'd101);send(0,o);start(0,1);expect_owner(o,1);

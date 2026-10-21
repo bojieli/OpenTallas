@@ -1,12 +1,11 @@
 {
   "schema": "opentallas.kv.rope.consumer_edges.v1",
-  "source_commit": "1b48ac49b",
   "clock": "K local ck per selected region; physical crossings/phase not yet GEN measured",
   "source_sha256": {
     "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv": "bee876907f161315740a28d7643c28284ccd359d3b6d883cbc5634b4e6002b2d",
-    "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv": "c159ed9f6c91f78a1b1726324c97e8d80f998b9b3c9cccefd8d8772e81ef39f7",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv": "dd07c5a54416ba67fef0a49d33b19915861b6938cdcb7f70fc3b259a4c211dac",
     "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_rope.sv": "a0b1db8bf5035478b0f9f6eea387d973a30e21bd2cd24e84d55900360d1615c7",
-    "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": "19e590cef6129070a76516580cab9e1d7d27686224e257b9f081cc4e43036614"
+    "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": "1ad2dd720ee91a9a8344996ae6ef7bc39de0272d52f47bf26f21ede4c2831f46"
   },
   "boundary_definition": "Input valid/owner stable before edge0; observe registered outputs after the listed edge. These are local source edges, not endpoint-to-endpoint transport ages.",
   "ctx_N32": {
@@ -36,5 +35,7 @@
     "K_hbm_sweep_and_return_GEN_age": null,
     "kv_descriptor_to_header_edges": null
   },
-  "adoption": "HOLD until selected final GEN composes equal-edge raw/user/slot/return paths and sole image/fullMU playback"
+  "adoption": "HOLD until selected final GEN composes equal-edge raw/user/slot/return paths and sole image/fullMU playback",
+  "source_base_commit": "b4677dad9",
+  "phase": "Only actual adm_done recurring phase qualifies Ckind12; boot/admission filler user labels are not owner-equality evidence."
 }

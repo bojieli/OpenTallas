@@ -1721,6 +1721,7 @@ def rope_context_tiles(tiles):
     if ovl:
         emb['ports']['i_ovl_users']=dict(dir='input',width=4,cls='special',src=None)
         emb['ports']['i_kvn_fault']=dict(dir='input',width=1,cls='special',src=None)
+        emb['ports']['i_ovl_adm']=dict(dir='input',width=1,cls='special',src=None)
     emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
                      '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
     native = int(os.environ.get('OT_KV_EMB_N32', '0'))
@@ -1732,7 +1733,7 @@ def rope_context_tiles(tiles):
         f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay}), .OVL({int(ovl)})) u_context ('
         '.ck(ck), .rst_n(rst_n), '
         '.i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), '
-        + ('.head_rx_user(i_ovl_users[3:2]), .emb_tx_user(i_ovl_users[1:0]), .kvn_ctx_fault(i_kvn_fault), ' if ovl else '.head_rx_user(2\'d0), .emb_tx_user(2\'d0), .kvn_ctx_fault(1\'b0), ')
+        + ('.head_rx_user(i_ovl_users[3:2]), .emb_tx_user(i_ovl_users[1:0]), .kvn_ctx_fault(i_kvn_fault), .ovl_adm_done(i_ovl_adm), ' if ovl else '.head_rx_user(2\'d0), .emb_tx_user(2\'d0), .kvn_ctx_fault(1\'b0), .ovl_adm_done(1\'b0), ')
         + '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
         + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
         + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
@@ -2045,6 +2046,7 @@ def inject(m, K):
         fk.setdefault('hrec_rx', []).append(('kvs_emb', 'i_head_record'))
         if os.environ.get('OT_KV_ROPE_OVL','0')=='1':
             fk['hrec_rx'].append(('kvnc','head'))
+            fk.setdefault('kvnc_adm',[]).append(('kvs_emb','i_ovl_adm'))
             add(('rope_ovl_users','kv_oneway',4,[('d2d_kv','ovu'),('kvs_emb','i_ovl_users')]))
             fk.setdefault('rope_ovl_users',[]).append(('kvnc','ovu'))
             add(('rope_kvn_fault','kv_oneway',1,[('kvnc','flt'),('kvs_emb','i_kvn_fault')]))

@@ -2,7 +2,7 @@
 // Exact recurring Ckind12 authority, independent from received KVN data.
 // Four small owner banks; no queues, credits, stalls or calendar adjustment.
 module qkd_kvn_ctx_ovl_rope #(
- parameter integer MUT_USER=0, parameter integer MUT_STALE=0
+ parameter integer MUT_USER=0, parameter integer MUT_STALE=0, parameter integer MUT_BOOT=0
 )(
  input wire ck,rst_n,
  input wire [551:0] head_record,
@@ -18,17 +18,20 @@ module qkd_kvn_ctx_ovl_rope #(
  wire cal_start_rx=calrx[0],cal_seg_rx=calrx[1];
  reg [551:0] hq;
  reg [1:0] uq,cuser_q;
- reg cstart_q,cseg_q,adm_q;
+ reg cstart_q,cseg_q,adm_q,hq_valid;
  always @(posedge ck)begin
    hq<=head_record;uq<=rx_user;cuser_q<=cal_user_rx;
-   cstart_q<=cal_start_rx;cseg_q<=cal_seg_rx;adm_q<=adm_done;
+   cseg_q<=cal_seg_rx;
  end
+ always @(posedge ck or negedge reset_last)
+   if(!reset_last)begin cstart_q<=0;adm_q<=0;hq_valid<=0;end
+   else begin cstart_q<=cal_start_rx;adm_q<=adm_done;hq_valid<=head_record[3];end
  reg [60:0] owners[0:3];
  reg [3:0] have;
  reg [5:0] stage[0:3];
  wire [60:0] owner=hq[64:4];
  wire [35:0] header=hq[551:516];
- wire take=hq[3]&&header[30:27]==4'd12;
+ wire take=hq_valid&&(adm_q||MUT_BOOT!=0)&&header[30:27]==4'd12;
  wire legal=header[35:31]==0&&header[26:21]==63&&header[4:0]==0&&
    header[20:5]==owner[58:43]&&owner[42:37]==0&&owner[5:0]==0&&owner[36:19]<151936&&
    (MUT_USER!=0||owner[44:43]==uq);

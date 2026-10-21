@@ -1396,7 +1396,7 @@ BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, paramete
                               sliced={}, classed={}))
 if ROPE_OVL:
     KVNC_FILE='rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv'
-    BINDINGS['qkd_kvnc']=dict(module='qkd_kvn_ctx_ovl_rope',file=KVNC_FILE,parameters=dict(MUT_USER=0,MUT_STALE=0),
+    BINDINGS['qkd_kvnc']=dict(module='qkd_kvn_ctx_ovl_rope',file=KVNC_FILE,parameters=dict(MUT_USER=0,MUT_STALE=0,MUT_BOOT=0),
         ports=dict(ck=['ck'],rst_n=['rst_n'],head=['head_record'],ovu=['ovl_users'],calrx=['calrx'],kad=['adm_done'],
           kvi=['compiled_identity','compiled_generation'],flt=['fault'],rld=['reseed']),sliced={},classed={})
     KVNC_WH=(86.4,86.4)

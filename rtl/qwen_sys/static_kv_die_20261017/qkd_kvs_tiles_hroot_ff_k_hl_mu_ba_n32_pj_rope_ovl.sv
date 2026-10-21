@@ -1656,6 +1656,7 @@ module qkd_kvs_emb_rope_ovl (
     input wire [551:0] i_head_record,
     input wire [3:0] i_ovl_users,
     input wire [0:0] i_kvn_fault,
+    input wire [0:0] i_ovl_adm,
     output wire [173:0] o_ctx_svc,
     output wire [0:0] emb_fault
 );
@@ -1680,7 +1681,7 @@ module qkd_kvs_emb_rope_ovl (
     wire w_rope_start, w_rope_fault;
     wire [17:0] w_rope_token;
     wire [15:0] w_rope_epoch;
-    qkd_kvs_emb_ctx #(.NATIVE32(1), .PIPE_JOIN(1), .ROPE(1), .ROPE_DELAY(1024), .OVL(1)) u_context (.ck(ck), .rst_n(rst_n), .i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), .head_rx_user(i_ovl_users[3:2]), .emb_tx_user(i_ovl_users[1:0]), .kvn_ctx_fault(i_kvn_fault), .d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), .i_hroot_WS(i_hroot_WS), .i_hroot_WN(i_hroot_WN), .i_hroot_ES(i_hroot_ES), .i_hroot_EN(i_hroot_EN), .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), .px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));
+    qkd_kvs_emb_ctx #(.NATIVE32(1), .PIPE_JOIN(1), .ROPE(1), .ROPE_DELAY(1024), .OVL(1)) u_context (.ck(ck), .rst_n(rst_n), .i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), .head_rx_user(i_ovl_users[3:2]), .emb_tx_user(i_ovl_users[1:0]), .kvn_ctx_fault(i_kvn_fault), .ovl_adm_done(i_ovl_adm), .d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), .i_hroot_WS(i_hroot_WS), .i_hroot_WN(i_hroot_WN), .i_hroot_ES(i_hroot_ES), .i_hroot_EN(i_hroot_EN), .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), .px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));
     assign rowtx__emb_tx_v = w_rowtx__emb_tx_v;
     assign rowtx__emb_tx_payload = w_rowtx__emb_tx_payload;
     assign px_tok = w_rope_token;
