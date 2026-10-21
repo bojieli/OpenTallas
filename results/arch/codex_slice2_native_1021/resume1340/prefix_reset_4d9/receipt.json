@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-21T14:37:04.734914-07:00",
+  "verdict": "PASS bounded executed four-state multiplier startup/reset equivalence",
+  "source_ref": "4d9c837d4",
+  "old_math_sha256": "84e9d3a9d5e8499d7b1e7295c51945d769c889eefe0b825d3d7a8af2b4fbb0fc",
+  "new_math_sha256": "cb43b22f2a48a1af0eb175981266441df8b2d236b9127774a2a94a34e3cb557a",
+  "comparison_namespace_only_test_copies": true,
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-4105017-1792618547",
+  "ot_run_exit": 0,
+  "simulator": "Icarus Verilog 4-state",
+  "cycles": 160,
+  "observed_unknown_start_cycles": 4,
+  "observed_known_output_cycles": 142,
+  "compared_scalar_mul_Qs": 883,
+  "compared_raw_outputs": [
+    "y[31:0]",
+    "err[1:0]"
+  ],
+  "stimulus": "X/Z startup, reset release,48realfixture operands,reset reassert and release",
+  "coverage_qualification": "883 scalar Q outputs are multiplier-only;1356 sequential instance certificate spans add+mul source. Ring/reset helpers are exact source copies, no stage changes; not an unbounded formal equivalence proof.",
+  "guard_diagnosis": "Icarus $isunknown concatenation reported unknown for final known yc2b2ff41 err0; replaced by reduction XOR case equality. Prior logs retained.",
+  "mechanism_certificate": "results/arch/q_station_prefix_1021/FOUR_STATE_CERTIFICATE.json",
+  "scope": "source/reset arithmetic equivalence only; selectedtail/native/physical remain separate",
+  "source_files_sha256": {
+    "rtl/test/qwen_dv/s8/prefix_reset_new_deps.sv": "b24f15f6258dcd97cb56a1b06844fa445ae143d2723d7138766a561bdfb63acb",
+    "rtl/test/qwen_dv/s8/prefix_reset_new.sv": "5d803ca28676f68deb210913825eb4371f2a763eff29c188dab0fded1d77ccc4",
+    "rtl/test/qwen_dv/s8/prefix_reset_old.sv": "ec4a97fb97fa14afcf88483a922f75c16cb8f4182ed189d6471b88a7d2842c7e",
+    "rtl/test/qwen_dv/s8/prefix_reset_old_deps.sv": "9bcb6da8d6bc1dc2d4fb6363557d8ae1d50057dc2c9e52771977b73bced7fe4b",
+    "rtl/test/qwen_dv/s8/tb_prefix_reset.sv": "f1efb36865f4e6775172bcd6e0701240cb7d2af78656ce06fa6eb2e25b0d7b5c",
+    "tools/qwen_dv/run_s8_prefix_reset.sh": "2731ca465e0f1975c40f40e7db7e7f0327cf54fcd661ef75ab216861732ebbc8",
+    "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+    "rtl/common/landed_parent/ot_pl_land_physical.sv": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5"
+  }
+}

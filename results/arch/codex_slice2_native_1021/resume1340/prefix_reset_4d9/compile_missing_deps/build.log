@@ -1,0 +1,9 @@
+rtl/test/qwen_dv/s8/prefix_reset_old.sv:11351: error: Unknown module type: old_qfd_dv_s8s_ring_delay
+rtl/test/qwen_dv/s8/prefix_reset_old.sv:11352: error: Unknown module type: old_qfd_dv_s8s_ring_delay
+rtl/test/qwen_dv/s8/prefix_reset_new.sv:11365: error: Unknown module type: new_qfd_dv_s8s_ring_delay
+rtl/test/qwen_dv/s8/prefix_reset_new.sv:11366: error: Unknown module type: new_qfd_dv_s8s_ring_delay
+5 error(s) during elaboration.
+*** These modules were missing:
+        new_qfd_dv_s8s_ring_delay referenced 2 times.
+        old_qfd_dv_s8s_ring_delay referenced 2 times.
+***
