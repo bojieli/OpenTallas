@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Fixed calendar successor. No ready, reservation, queue occupancy or survivor
 // predicate changes a production edge. Historical dynamic engines stay separate.
-module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_W=(TP<=1?1:$clog2(TP)))(
+module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, FAN32=0, RANK_W=(TP<=1?1:$clog2(TP)))(
  input wire clk,rst_n,start,
  input wire[31:0]tile_clk,input wire buffer_clk,
  input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
@@ -11,7 +11,9 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
  output reg w_v,output reg[39:0]w_addr,output reg[15:0]w_mask,output reg[511:0]w_data,
  output reg busy,done,fault,output reg[31:0]stat_cycles
 );
- localparam integer EW=78+RANK_W,KW=EW-2,VB=EW-2,RB=EW-1,ID_LO=12+RANK_W,ID_HI=43+RANK_W,VAL_LO=44+RANK_W,VAL_HI=75+RANK_W,NT=(KMAX+63)/64,SETTLE=3*NT+8;
+ localparam integer EW=78+RANK_W,KW=EW-2,VB=EW-2,RB=EW-1,ID_LO=12+RANK_W,ID_HI=43+RANK_W,VAL_LO=44+RANK_W,VAL_HI=75+RANK_W,NT=(KMAX+63)/64,
+  // TLAT: tile input-to-output edges a chain hop. HH-4 10-18: the e86 shape (tile_rg PRE=1) has one more input stage.
+  TLAT=(EW==86&&KMAX>=64)?4:3,SETTLE=TLAT*NT+8;
     function automatic [31:0] okey(input [31:0] x);
         reg [31:0] c;
         begin
@@ -75,6 +77,9 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
  wire[9:0]read_addr=10'(tick-read2);
  wire[4*EW-1:0]buf_data;wire buf_valid;
  reg[2:0]conv_pipe;
+ // up-chain capture tap: the conv'd tile-0 up_out word is read TLAT-2 edges after conv (3-edge tile: [1]; 4-edge e86: [2]).
+ // MUT=3 (e86 calendar negative): the 3-edge tap on the 4-edge tile.
+ wire cap_tap=conv_pipe[(TLAT==4&&MUT!=3)?2:1];
  reg[31:0]cap1,cap2;
  reg[4*EW-1:0]buf_wdata;reg buf_wv;reg[9:0]buf_wa;
  ot_hgi_coll_tkm_buffer #(.DW(4*EW)) u_buffer(.clk(buffer_clk),.rst_n(rst_n),
@@ -108,7 +113,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
   // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
   if(EW==86 && KMAX>=64)begin:e86
   // TKM 10-18: the e86 shape has no tau probe / tid ports (this calendar reads the result through the up chain only).
-  ot_hgi_coll_tkm_tile_e86 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
+  ot_hgi_coll_tkm_tile_e86 #(.FAN32(FAN32)) u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
    .ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
    .up_in(up[t+1]),.up_out(up[t]),.busy());
   end else begin:gen
@@ -146,7 +151,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
      end
      if(!del_flit[545*l+544]||del_flit[545*l+528+:8]<gb||del_flit[545*l+528+:8]>=gb+g)fault<=1;
     end
-    if(conv_pipe[1]&&tick<clear2)begin
+    if(cap_tap&&tick<clear2)begin
      buf_wv<=1;buf_wa<=10'(cap1);cap1<=cap1+1;
      for(integer s=0;s<4;s=s+1)begin:tag
       reg[EW-1:0]e;e=tinv(up[0][EW*s+:EW]);
@@ -155,7 +160,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
     end
     if(pending_o)begin w_v<=1;w_data<=oline_q;w_addr<=oaddr_q;w_mask<=omask_q;pending_o<=0;pending_r<=r_after_o;r_after_o<=0;end
     else if(pending_r)begin w_v<=1;w_data<=rline;w_addr<=raddr;w_mask<=rmask;pending_r<=0;end
-    if(conv_pipe[1]&&tick>=second)begin:output_cell
+    if(cap_tap&&tick>=second)begin:output_cell
      reg[EW-1:0]e;reg[511:0]oline,rl;reg[15:0]mask_;integer ix;integer count_;
      cap2<=cap2+1;oline=0;rl=0;
      for(integer i=0;i<16;i=i+1)begin oline[32*i+:32]=ids[i];rl[32*i+:32]=values[i];end
@@ -203,12 +208,12 @@ endmodule
 // tau_o open, yet the hardened tile kept the 85-bit 64:1 tau_o select spanning all four row groups -- the worst
 // placed reg->reg path of the rg gate (-141.5 ps at u.tau_o[71]). The shape drops the three ports and tid (its only
 // use is the tau_o match; tkm_static strapped it to the tile index); tau_o is not a port, so synthesis removes the select. ot_hgi_coll_tkm_tile_rg itself (and its lockstep bench) is unchanged.
-module ot_hgi_coll_tkm_tile_e86(
+module ot_hgi_coll_tkm_tile_e86 #(parameter integer FAN32 = 0, parameter integer SEAM = 0)(
  input wire clk,clk_r0,clk_r1,clk_r2,clk_r3,input wire clr,conv,
  input wire ins_v,input wire [343:0] ins_b,output wire ovf_v,output wire [343:0] ovf_b,
  input wire [343:0] up_in,output wire [343:0] up_out,output wire busy);
  wire [84:0] tau_unused;
- ot_hgi_coll_tkm_tile_rg #(.EW(86),.PT(64)) u(.clk(clk),.clk_r0(clk_r0),.clk_r1(clk_r1),.clk_r2(clk_r2),.clk_r3(clk_r3),
+ ot_hgi_coll_tkm_tile_rg #(.EW(86),.PT(64),.PRE(1),.CREP(1),.FAN32(FAN32),.SEAM(SEAM)) u(.clk(clk),.clk_r0(clk_r0),.clk_r1(clk_r1),.clk_r2(clk_r2),.clk_r3(clk_r3),
   .tid(6'd0),.clr(clr),.conv(conv),.tau_t(6'd0),.tau_l(7'd0),.ins_v(ins_v),.ins_b(ins_b),.ovf_v(ovf_v),.ovf_b(ovf_b),
   .up_in(up_in),.up_out(up_out),.tau_o(tau_unused),.busy(busy));
 endmodule
