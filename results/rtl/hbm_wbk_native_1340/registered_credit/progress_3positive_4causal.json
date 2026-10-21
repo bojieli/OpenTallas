@@ -1,0 +1,26 @@
+{
+  "time_utc": "2026-10-21T22:45:08.695177+00:00",
+  "source": "e0bfd10e5",
+  "actual_positives": [
+    "wbq_e",
+    "wbq_w",
+    "wbq_e_wopen"
+  ],
+  "actual_causal_rejections": [
+    "wbq_mut_quad",
+    "wbq_mut_span",
+    "wbq_mut_premature",
+    "wbq_mut_ksaddr"
+  ],
+  "new_raw_files": {
+    "wbq_mut_premature": {
+      "source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+      "wbq_mut_premature.log": "cd32f9bbf3d41040f694cad08aa6f1253300d7cb5075dbd3c18a07d9854b2c36"
+    },
+    "wbq_mut_ksaddr": {
+      "wbq_mut_ksaddr.log": "eee4a05c928ffe22a31075fb831b355a63fd26dac05737982b0a74a0cbf85622",
+      "source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6"
+    }
+  },
+  "remaining": "Five causal witnesses live; final native not launched while diagnostic native remains active. No final CDC/native/physical qualification."
+}
