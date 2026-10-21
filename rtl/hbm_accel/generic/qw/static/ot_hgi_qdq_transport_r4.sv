@@ -16,7 +16,7 @@
 //                                 SRAM content is qualified by a reset edge counter (entries older than reset release
 //                                 read as r3's reset zeros), so power-up content never matters.  Bank packing uses kept
 //                                 per-bank copies of the 3-bit bank bases (census: src/dst low bits 33-70 loads); four
-//                                 ot_rst_relay leaves (census: one relay flop drove 475 resets).  Cycle-for-cycle the r3
+//                                 kept reset leaves behind a 2-flop face landing (census: one relay flop drove 475 resets).  Cycle-for-cycle the r3
 //                                 controller for every strap both accept; range RLI 2..126 (NP 4..128), WCI 2..63.
 //   ot_hgi_qdq_transport_ctl_r4   ctl_r3's pin capture registers (every cmd_* and strap bit) + local reset relay.
 //   ot_hgi_qdq_static_transport_split_r4  wires-only parent of ctl_r4 + the closed rslice / wslice masters.
@@ -175,9 +175,15 @@ module ot_hgi_qdq_transport_ctl_r4 #(
     output wire [127:0] dec_header,
     input wire vo, qfault, decode_fault
 );
-    // local reset relay: the port drives only the relay; 4 kept regional leaves (release 3 edges, as ctl_r3)
-    wire [3:0] rn;
-    ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
+    // reset landing: the port clears only the 2 face landing flops (gate 2 textbook.reset_landing: ot_rst_relay put 6
+    // flops on the port); 4 kept regional leaves are cleared by the second landing flop.  Assert stays asynchronous,
+    // release takes 3 edges (as ctl_r3 / ot_rst_relay #(2,1)).
+    (* async_reg = "true" *) reg rst_l0, rst_l1;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin rst_l0<=1'b0; rst_l1<=1'b0; end else begin rst_l0<=1'b1; rst_l1<=rst_l0; end
+    (* keep="true", dont_touch="true" *) reg [3:0] rn;
+    always @(posedge clk or negedge rst_l1)
+        if(!rst_l1) rn<=4'b0; else rn<=4'hf;
     // pin capture registers (the only load of each cmd / strap pin, plus the per-bank cmd_src[2:0] copies)
     reg cv_q;
     reg [5:0] op_q; reg [7:0] blk_q; reg [15:0] src_q, dst_q; reg last_q;

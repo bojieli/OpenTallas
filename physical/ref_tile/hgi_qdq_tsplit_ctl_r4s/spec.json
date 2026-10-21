@@ -4,7 +4,6 @@
  "kind": "tile",
  "sources": [
   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv",
-  "rtl/lib/ot_rst_relay.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
  ],
@@ -167,7 +166,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "ctl r4: ctl_r3 (strap latency, pin capture registers, reset relay, closed TT +127.80 / FF +14.92) with the 46-bit command metadata pipeline sp/dp/hp moved from a 48-deep flop shift register into a 128-entry ring in one ot_sram_1r1w_128x64_m1_p192 (write every edge at wp, read at wp+1-RLI; rd = tap NP-3, two flop stages = tap NP-1); vp/lp stay reset flops. Gate 1 native census FAIL (strap tap muxes 167-220 loads per strap flop, reset 475, bank bases 33-70) -> r4b: NO taps: vp/lp also in ring A, commit pipeline donep/lastp in ring B (ot_sram_1r1w_64x16_m1), reset-edge counter masks pre-release entries, kept per-bank 3-bit base copies, 4 ot_rst_relay leaves. RLI 2..126 covers the GEN2e4 need RL 54 (RLI 58 + 2*XR).",
+ "structural_change": "ctl r4: ctl_r3 (strap latency, pin capture registers, reset relay, closed TT +127.80 / FF +14.92) with the 46-bit command metadata pipeline sp/dp/hp moved from a 48-deep flop shift register into a 128-entry ring in one ot_sram_1r1w_128x64_m1_p192 (write every edge at wp, read at wp+1-RLI; rd = tap NP-3, two flop stages = tap NP-1); vp/lp stay reset flops. Gate 1 native census FAIL (strap tap muxes 167-220 loads per strap flop, reset 475, bank bases 33-70) -> r4b: NO taps: vp/lp also in ring A, commit pipeline donep/lastp in ring B (ot_sram_1r1w_64x16_m1), reset-edge counter masks pre-release entries, kept per-bank 3-bit base copies, 4 ot_rst_relay leaves. RLI 2..126 covers the GEN2e4 need RL 54 (RLI 58 + 2*XR). Gate 2 (spine): census PASS max 27, spread 34.9/29.8; reset_landing FAIL (relay put 6 flops on rst_n) -> 2-flop face landing + 4 kept leaves.",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every pin already (ctl_r4 captures (as ctl_r3) every cmd_* and strap bit at its pin, rr_v/vo/qfault/decode_fault enter flops, every output is a register, rst_n drives only the 3-flop relay): ctl_r2 with the same boundary is native PASS (launch 181.2, capture 138.1, 0 comb). Extra tool pin registers would add edges the split r2 lockstep does not price."
