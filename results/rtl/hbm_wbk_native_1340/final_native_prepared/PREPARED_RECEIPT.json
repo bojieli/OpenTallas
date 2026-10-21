@@ -1,0 +1,25 @@
+{
+  "time_utc": "2026-10-21T23:27:55.558262+00:00",
+  "status": "PREPARED_ONLY_NO_LAUNCH",
+  "root": "/srv/opentallas-scratch/claude/codex-hbm-wbk-finalnative-1625-1021/run",
+  "eligible_staged_hosts": [
+    "ot-gold1",
+    "ot-epyc9"
+  ],
+  "source_commit_file": "0441f9958",
+  "source_commit_resolved": "0441f995889a589cca99d836e3f3df7d748f9d2a",
+  "production_sha256": "8c416020aaaca60604ac97e0fa42b831cf6716729ed26b166da2fa69611ffb2d",
+  "helper_commit": "45386657d47b3997fd1c019b85cd60bb98a01ea0",
+  "census_tool_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+  "manifest_files": 14947,
+  "manifest_sha256": "6f2ab8b244d2fb2ca4cb7bc10c8a8fdcd3f8773c94ba85b2500549aa1147e121",
+  "key_tool_data_hashes_unchanged_from_active_gen": {
+    "tools/ref_tile/gray_fifo_cdc_constraints.py": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
+    "tools/ref_tile/cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+    "tools/ref_tile/clock_entry_constraints.py": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c",
+    "tools/ref_tile/single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52",
+    "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
+  },
+  "reuse_verdict": "NOT_EVALUATED; active prior GEN must finish first. Later copy only unaltered actual receipt, then ordinary GEN verifies every canonical input/tool/Yosys key. No forced cache hit/key change/reconstruction.",
+  "preservation": "run and family .keep verified, SRC contained. Active GEN and all prior jobs unchanged."
+}
