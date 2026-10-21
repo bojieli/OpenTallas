@@ -1,0 +1,703 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib
+read_db /work/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/4_cts.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/4_cts.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_grt_ot_grt183.tcl
+QDM PINFLOP reference: 5724 input pin flops (0 hard-child clock pins at +insertion), median arrival 474.314484 (range 412.381927 .. 526.124084)
+QDM reference pin u_c.oq[463]$_DFF_P_/CLK clock arrival max 474.314484 min 373.097626 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 373.097626 C 25 U 25 relief 30
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_PIN_KEEPOUT created 6: {M5 0 21816 42 280560} {M6 1176 302358 387792 302400} {M6 1176 0 387792 42} {M5 388758 43224 388800 129600} {M4 1008 302381 387630 302400} {M4 1008 0 387630 19}
+OT_GRT_TOP_SHADOW: 12 macros; GRT layers M2-M6 with M6 at zero capacity (detailed route stays <= M5)
+OT_SRAM_EDGE_GUARD hook invoked caller=pre_global_route_pre_grt.tcl
+OT_MACRO_EDGE_GUARD: created 24 on M5 (depth 1.2 um, pin stub 0.024 um free, outside 0.0 um)
+Took 28 seconds: source /work/hooks/pre_grt_ot_grt183.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       16
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   dsdv_bksel_c_pa_n32
+Die area:                 ( 0 0 ) ( 388800 302400 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     183353
+Number of terminals:      6074
+Number of snets:          2
+Number of nets:           177492
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+[INFO DRT-0164] Number of unique instances = 335.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 3324897.
+[INFO DRT-0033] V1 shape region query size = 8640489.
+[INFO DRT-0033] M2 shape region query size = 180453.
+[INFO DRT-0033] V2 shape region query size = 168264.
+[INFO DRT-0033] M3 shape region query size = 170849.
+[INFO DRT-0033] V3 shape region query size = 112176.
+[INFO DRT-0033] M4 shape region query size = 130241.
+[INFO DRT-0033] V4 shape region query size = 134424.
+[INFO DRT-0033] M5 shape region query size = 70098.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 2.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0078]   Complete 2244 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0079]   Complete 300 unique inst patterns.
+[INFO DRT-0081]   Complete 334 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 119436 groups.
+#scanned instances     = 183353
+#unique  instances     = 335
+#stdCellGenAp          = 9466
+#stdCellValidPlanarAp  = 46
+#stdCellValidViaAp     = 7785
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 469044
+#instTermValidViaApCnt = 0
+#macroGenAp            = 397
+#macroValidPlanarAp    = 397
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:46:18, elapsed time = 00:02:55, memory = 2465.36 (MB), peak = 2737.25 (MB)
+Took 180 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M6
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 12
+[INFO GRT-0004] Blockages: 106092
+[INFO GRT-0019] Found 1690 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 32
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3791787       2699648          28.80%
+M3         Vertical      4354672       3237795          25.65%
+M4         Horizontal    3337284       2487677          25.46%
+M5         Vertical      3594342       2637209          26.63%
+M6         Horizontal    3217047             0          100.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0197] Via related to pin nodes: 925214
+[INFO GRT-0198] Via related Steiner nodes: 16234
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1269202
+[INFO GRT-0112] Final usage 3D: 7387777
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2699648       1179428           43.69%             0 /  0 /  0
+M3             3237795       1180978           36.47%             0 /  0 /  0
+M4             2487677        660014           26.53%             0 /  0 /  0
+M5             2637209        559751           21.23%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         11062329       3580171           32.36%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 2291004 um
+[INFO GRT-0014] Routed nets: 177363
+[INFO GRT-0303] Global routing runtime = 00:17:48
+Took 1069 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+estimate_parasitics -global_routing
+Took 12 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    178881
+     1000 |     +0.0% |       0 |       2 |             1 |    177881
+     2000 |     +0.0% |       1 |      10 |             9 |    176881
+     3000 |     +0.0% |       2 |      36 |            27 |    175881
+     4000 |     +0.0% |       2 |      88 |            70 |    174881
+     5000 |     +0.1% |       3 |      92 |            74 |    173881
+     6000 |     +0.1% |       3 |     162 |           134 |    172881
+     7000 |     +0.1% |       3 |     168 |           139 |    171881
+     8000 |     +0.1% |       3 |     169 |           140 |    170881
+     9000 |     +0.1% |       3 |     177 |           148 |    169881
+    10000 |     +0.1% |      11 |     203 |           170 |    168881
+    11000 |     +0.1% |      14 |     243 |           204 |    167881
+    12000 |     +0.1% |      16 |     248 |           208 |    166881
+    13000 |     +0.1% |      16 |     248 |           208 |    165881
+    14000 |     +0.1% |      16 |     249 |           209 |    164881
+    15000 |     +0.1% |      16 |     249 |           209 |    163881
+    16000 |     +0.1% |      16 |     264 |           221 |    162881
+    17000 |     +0.2% |      32 |     324 |           275 |    161881
+    18000 |     +0.3% |      57 |     468 |           389 |    160881
+    19000 |     +0.3% |      57 |     469 |           390 |    159881
+    20000 |     +0.3% |      57 |     469 |           390 |    158881
+    21000 |     +0.3% |      57 |     469 |           390 |    157881
+    22000 |     +0.3% |      57 |     469 |           390 |    156881
+    23000 |     +0.3% |      57 |     470 |           391 |    155881
+    24000 |     +0.3% |      57 |     473 |           394 |    154881
+    25000 |     +0.3% |      57 |     480 |           399 |    153881
+    26000 |     +0.3% |      57 |     488 |           407 |    152881
+    27000 |     +0.3% |     106 |     544 |           457 |    151881
+    28000 |     +0.3% |     133 |     610 |           519 |    150881
+    29000 |     +0.3% |     133 |     610 |           519 |    149881
+    30000 |     +0.3% |     133 |     610 |           519 |    148881
+    31000 |     +0.3% |     133 |     610 |           519 |    147881
+    32000 |     +0.3% |     133 |     610 |           519 |    146881
+    33000 |     +0.3% |     133 |     610 |           519 |    145881
+    34000 |     +0.3% |     133 |     610 |           519 |    144881
+    35000 |     +0.3% |     133 |     610 |           519 |    143881
+    36000 |     +0.3% |     133 |     610 |           519 |    142881
+    37000 |     +0.3% |     133 |     610 |           519 |    141881
+    38000 |     +0.3% |     133 |     610 |           519 |    140881
+    39000 |     +0.3% |     133 |     610 |           519 |    139881
+    40000 |     +0.3% |     133 |     610 |           519 |    138881
+    41000 |     +0.3% |     133 |     614 |           522 |    137881
+    42000 |     +0.3% |     134 |     621 |           529 |    136881
+    43000 |     +0.3% |     134 |     623 |           531 |    135881
+    44000 |     +0.3% |     135 |     630 |           538 |    134881
+    45000 |     +0.4% |     135 |     653 |           561 |    133881
+    46000 |     +0.4% |     135 |     662 |           569 |    132881
+    47000 |     +0.4% |     135 |     682 |           590 |    131881
+    48000 |     +0.4% |     135 |     682 |           590 |    130881
+    49000 |     +0.4% |     135 |     683 |           591 |    129881
+    50000 |     +0.4% |     135 |     683 |           591 |    128881
+    51000 |     +0.4% |     135 |     684 |           592 |    127881
+    52000 |     +0.4% |     135 |     684 |           592 |    126881
+    53000 |     +0.4% |     135 |     684 |           592 |    125881
+    54000 |     +0.4% |     135 |     684 |           592 |    124881
+    55000 |     +0.4% |     135 |     684 |           592 |    123881
+    56000 |     +0.4% |     135 |     684 |           592 |    122881
+    57000 |     +0.4% |     135 |     684 |           592 |    121881
+    58000 |     +0.4% |     135 |     684 |           592 |    120881
+    59000 |     +0.4% |     135 |     684 |           592 |    119881
+    60000 |     +0.4% |     135 |     688 |           595 |    118881
+    61000 |     +0.4% |     135 |     688 |           595 |    117881
+    62000 |     +0.4% |     135 |     688 |           595 |    116881
+    63000 |     +0.4% |     135 |     688 |           595 |    115881
+    64000 |     +0.4% |     135 |     688 |           595 |    114881
+    65000 |     +0.4% |     137 |     712 |           619 |    113881
+    66000 |     +0.4% |     137 |     712 |           619 |    112881
+    67000 |     +0.4% |     137 |     713 |           620 |    111881
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[383\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[382\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[381\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[380\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[379\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[378\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[377\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[376\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[375\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[374\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[373\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[372\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[371\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[370\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[369\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[368\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[367\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[366\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[365\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[364\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[363\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[362\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[361\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[360\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[359\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[3\].u_q/u_mem.raw\[358\] only has one pin. Check if it is intended to be dangling.
+    68000 |     +0.4% |     137 |     751 |           658 |    110881
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[383\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[382\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[381\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[380\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[379\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[378\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[377\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[376\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[375\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[374\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[373\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[372\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[371\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[370\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[369\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[368\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[367\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[366\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[365\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[364\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[363\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[362\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[361\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[360\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[359\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[2\].u_q/u_mem.raw\[358\] only has one pin. Check if it is intended to be dangling.
+    69000 |     +0.5% |     137 |     835 |           726 |    109881
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[383\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[382\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[381\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[380\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[379\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[378\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[377\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[376\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[375\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[374\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[373\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[372\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[371\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[370\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[369\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[368\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[367\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[366\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[365\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[364\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[363\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[362\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[361\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[360\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[359\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[1\].u_q/u_mem.raw\[358\] only has one pin. Check if it is intended to be dangling.
+    70000 |     +0.5% |     137 |     859 |           749 |    108881
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[383\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[382\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[381\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[380\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[379\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[378\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[377\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[376\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[375\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[374\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[373\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[372\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[371\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[370\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[369\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[368\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[367\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[366\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[365\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[364\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[363\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[362\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[361\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[360\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[359\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u_c.g_l\[0\].u_q/u_mem.raw\[358\] only has one pin. Check if it is intended to be dangling.
+    71000 |     +0.5% |     137 |     887 |           777 |    107881
+    72000 |     +0.5% |     137 |     924 |           812 |    106881
+    73000 |     +0.6% |     137 |    1041 |          1086 |    105881
+    74000 |     +0.6% |     137 |    1041 |          1086 |    104881
+    75000 |     +0.6% |     137 |    1041 |          1086 |    103881
+    76000 |     +0.6% |     137 |    1041 |          1086 |    102881
+    77000 |     +0.6% |     137 |    1041 |          1086 |    101881
+    78000 |     +0.6% |     137 |    1041 |          1086 |    100881
+    79000 |     +0.6% |     137 |    1043 |          1087 |     99881
+    80000 |     +0.6% |     137 |    1043 |          1087 |     98881
+    81000 |     +0.6% |     137 |    1043 |          1087 |     97881
+    82000 |     +0.6% |     137 |    1043 |          1087 |     96881
+    83000 |     +0.6% |     137 |    1043 |          1087 |     95881
+    84000 |     +0.6% |     137 |    1043 |          1087 |     94881
+    85000 |     +0.6% |     137 |    1043 |          1087 |     93881
+    86000 |     +0.6% |     137 |    1043 |          1087 |     92881
+    87000 |     +0.6% |     137 |    1043 |          1087 |     91881
+    88000 |     +0.6% |     137 |    1044 |          1088 |     90881
+    89000 |     +0.6% |     137 |    1044 |          1088 |     89881
+    90000 |     +0.6% |     137 |    1044 |          1088 |     88881
+    91000 |     +0.6% |     137 |    1049 |          1091 |     87881
+    92000 |     +0.6% |     137 |    1053 |          1093 |     86881
+    93000 |     +0.6% |     138 |    1058 |          1096 |     85881
+    94000 |     +0.6% |     138 |    1059 |          1097 |     84881
+    95000 |     +0.6% |     138 |    1061 |          1099 |     83881
+    96000 |     +0.6% |     138 |    1061 |          1099 |     82881
+    97000 |     +0.6% |     138 |    1064 |          1102 |     81881
+    98000 |     +0.6% |     138 |    1099 |          1135 |     80881
+    99000 |     +0.7% |     193 |    1221 |          1232 |     79881
+   100000 |     +0.7% |     199 |    1270 |          1266 |     78881
+   101000 |     +0.7% |     199 |    1331 |          1317 |     77881
+   102000 |     +0.7% |     199 |    1364 |          1348 |     76881
+   103000 |     +0.7% |     199 |    1364 |          1348 |     75881
+   104000 |     +0.7% |     199 |    1364 |          1348 |     74881
+   105000 |     +0.7% |     199 |    1364 |          1348 |     73881
+   106000 |     +0.7% |     199 |    1364 |          1348 |     72881
+   107000 |     +0.7% |     199 |    1364 |          1348 |     71881
+   108000 |     +0.7% |     199 |    1364 |          1348 |     70881
+   109000 |     +0.7% |     199 |    1364 |          1348 |     69881
+   110000 |     +0.7% |     201 |    1368 |          1352 |     68881
+   111000 |     +0.7% |     202 |    1369 |          1353 |     67881
+   112000 |     +0.7% |     202 |    1369 |          1353 |     66881
+   113000 |     +0.7% |     202 |    1369 |          1353 |     65881
+   114000 |     +0.7% |     202 |    1369 |          1353 |     64881
+   115000 |     +0.7% |     202 |    1369 |          1353 |     63881
+   116000 |     +0.7% |     202 |    1373 |          1355 |     62881
+   117000 |     +0.7% |     202 |    1373 |          1355 |     61881
+   118000 |     +0.7% |     202 |    1373 |          1355 |     60881
+   119000 |     +0.7% |     202 |    1383 |          1361 |     59881
+   120000 |     +0.8% |     202 |    1385 |          1362 |     58881
+   121000 |     +0.8% |     202 |    1388 |          1365 |     57881
+   122000 |     +0.8% |     202 |    1388 |          1365 |     56881
+   123000 |     +0.8% |     202 |    1388 |          1365 |     55881
+   124000 |     +0.8% |     202 |    1388 |          1365 |     54881
+   125000 |     +0.8% |     208 |    1413 |          1385 |     53881
+   126000 |     +0.8% |     229 |    1474 |          1434 |     52881
+   127000 |     +0.8% |     232 |    1483 |          1443 |     51881
+   128000 |     +0.8% |     232 |    1483 |          1443 |     50881
+   129000 |     +0.8% |     233 |    1492 |          1448 |     49881
+   130000 |     +0.8% |     233 |    1495 |          1450 |     48881
+   131000 |     +0.8% |     233 |    1495 |          1450 |     47881
+   132000 |     +0.8% |     233 |    1495 |          1450 |     46881
+   133000 |     +0.8% |     233 |    1495 |          1450 |     45881
+   134000 |     +0.8% |     233 |    1495 |          1450 |     44881
+   135000 |     +0.8% |     234 |    1497 |          1451 |     43881
+   136000 |     +0.8% |     237 |    1528 |          1471 |     42881
+   137000 |     +0.8% |     237 |    1528 |          1471 |     41881
+   138000 |     +0.8% |     237 |    1530 |          1472 |     40881
+   139000 |     +0.8% |     238 |    1532 |          1473 |     39881
+   140000 |     +0.8% |     238 |    1532 |          1473 |     38881
+   141000 |     +0.8% |     238 |    1532 |          1473 |     37881
+   142000 |     +0.8% |     238 |    1533 |          1474 |     36881
+   143000 |     +0.8% |     252 |    1570 |          1507 |     35881
+   144000 |     +0.8% |     255 |    1586 |          1517 |     34881
+   145000 |     +0.8% |     257 |    1591 |          1520 |     33881
+   146000 |     +0.8% |     257 |    1606 |          1535 |     32881
+   147000 |     +0.8% |     257 |    1611 |          1539 |     31881
+   148000 |     +0.9% |     257 |    1658 |          1572 |     30881
+   149000 |     +0.9% |     257 |    1663 |          1575 |     29881
+   150000 |     +0.9% |     257 |    1739 |          1616 |     28881
+   151000 |     +0.9% |     257 |    1740 |          1617 |     27881
+   152000 |     +0.9% |     257 |    1742 |          1618 |     26881
+   153000 |     +0.9% |     257 |    1760 |          1627 |     25881
+   154000 |     +0.9% |     257 |    1762 |          1628 |     24881
+   155000 |     +0.9% |     257 |    1763 |          1629 |     23881
+   156000 |     +0.9% |     257 |    1770 |          1634 |     22881
+   157000 |     +0.9% |     257 |    1770 |          1634 |     21881
+   158000 |     +0.9% |     257 |    1770 |          1634 |     20881
+   159000 |     +0.9% |     257 |    1771 |          1635 |     19881
+   160000 |     +0.9% |     257 |    1778 |          1642 |     18881
+   161000 |     +0.9% |     257 |    1788 |          1652 |     17881
+   162000 |     +0.9% |     257 |    1788 |          1652 |     16881
+   163000 |     +0.9% |     257 |    1788 |          1652 |     15881
+   164000 |     +0.9% |     257 |    1788 |          1652 |     14881
+   165000 |     +0.9% |     257 |    1788 |          1652 |     13881
+   166000 |     +0.9% |     257 |    1788 |          1652 |     12881
+   167000 |     +0.9% |     257 |    1788 |          1652 |     11881
+   168000 |     +0.9% |     257 |    1788 |          1652 |     10881
+   169000 |     +0.9% |     257 |    1788 |          1652 |      9881
+   170000 |     +0.9% |     257 |    1788 |          1652 |      8881
+   171000 |     +0.9% |     257 |    1788 |          1652 |      7881
+   172000 |     +0.9% |     257 |    1788 |          1652 |      6881
+   173000 |     +0.9% |     257 |    1788 |          1652 |      5881
+[WARNING RSZ-0104] Net rst_profile[402] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[401] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[400] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[399] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[398] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[397] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[396] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[395] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[394] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[393] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[392] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[391] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[390] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[389] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[388] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[387] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[386] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[385] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[384] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[383] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[382] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[381] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[380] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[379] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net rst_profile[378] only has one pin. Check if it is intended to be dangling.
+   174000 |     +0.9% |     257 |    1789 |          1886 |      4881
+   175000 |     +0.9% |     257 |    1789 |          1891 |      3881
+   176000 |     +0.9% |     257 |    1789 |          1891 |      2881
+   177000 |     +0.9% |     257 |    1789 |          1891 |      1881
+   178000 |     +0.9% |     257 |    1789 |          1891 |       881
+    final |     +0.9% |     257 |    1789 |          1891 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 2054 slew violations.
+[INFO RSZ-0036] Found 4 capacitance violations.
+[INFO RSZ-0039] Resized 257 instances.
+[INFO RSZ-0038] Inserted 1789 buffers in 1891 nets.
+[INFO RSZ-0504] Runtime: 269.56s
+Took 270 seconds: repair_design -verbose -slew_margin 30
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 114605.80 um^2
+[INFO DPL-0007] Movable instances area: 22606.04 um^2
+[INFO DPL-0008] Fixed instances area within core: 24980.26 um^2
+[INFO DPL-0009] Utilization: 41.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 185130 cells
+[INFO DPL-0393]   height 148 row(s): 12 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1138 |       175 |       963
+        1 |       1037 |       122 |       915
+        2 |        923 |        97 |       826
+        3 |        847 |        81 |       766
+        4 |        714 |        66 |       648
+        5 |        558 |        63 |       495
+        6 |        449 |        50 |       399
+        7 |        360 |        43 |       317
+        8 |        372 |        38 |       334
+        9 |        322 |        37 |       285
+       10 |        284 |        26 |       258
+       20 |        138 |        16 |       122
+       30 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 30.
+[INFO DPL-0500] Runtime: 9.38s
+Placement Analysis
+---------------------------------
+total displacement       1804.5 u
+average displacement        0.0 u
+max displacement            7.7 u
+original HPWL         1890879.0 u
+legalized HPWL        1891857.6 u
+delta HPWL                    0 %
+
+Took 9 seconds: detailed_placement
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/congestion_post_repair_design.rpt
+[WARNING GRT-0297] Disabling NDR for 1 congested nets
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: clknet_1_0_0_ck
+Took 165 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+Took 13 seconds: estimate_parasitics -global_routing
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81dvbk_selcpn_c/signoff_ffrepair.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 5724 input pin flops (0 hard-child clock pins at +insertion), median arrival 410.9414 (range 352.0751 .. 468.4605)
+QDM reference pin u_c.oq[496]$_DFF_P_/CLK clock arrival max 410.9414 min 391.2987 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 391.2987 C 25 U 25 relief 30
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -16.50 / FF hold ws -8.30 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 29 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 29 out of 29 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -16.499 |   -18308.2 |     -201.3 |     29 | u_c.g_l\[2\].u_q/u_mem.g_bank\[0\].u_m/r_addr_in[1]
+      10* |       0 |       3 |        1 |      0 |     5 |    +0.0% |   -8.015 |   -18280.2 |      -93.9 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      11* |       0 |       3 |        1 |      0 |     2 |    +0.0% |   -5.703 |   -18280.2 |      -63.2 |     29 | u_c.g_l\[0\].u_q/u_mem.g_slice\[22\].prev_q$_DFF_PN0_/D
+      13* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      14* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      15* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      16* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      17* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      18* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      19* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      20* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      20* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      21* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      22* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      23* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      24* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      25* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      26* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      28* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      29* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      30* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      31* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      32* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      33* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      34* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      35* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      36* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      37* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      38* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      39* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      40* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      40* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      41* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      42* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      42* |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |     29 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      43+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.6 |      -27.4 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      44+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      45+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      46+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      47+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      48+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      49+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      50+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+      50+ |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+    final |       0 |       4 |        1 |      0 |     2 |    +0.0% |   -5.243 |   -18279.5 |      -27.3 |      8 | u_c.g_packet\[1\].u/done$_DFF_PN1_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0040] Inserted 1 buffers.
+[INFO RSZ-0051] Resized 4 instances: 4 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 2 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 34.92s
+Took 35 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_RC_CAL hold: -global_routing layers M6 M7 R 0.014 C 0.105 (RCX-calibrated upper-layer RC; platform setRC restored after)
+OT_HOLD_MM after repair: SS setup ws -5.24 / FF hold ws -8.30 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81dvbk_selcpn_c/signoff_ffrepair.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 5724 input pin flops (0 hard-child clock pins at +insertion), median arrival 410.9414 (range 352.0751 .. 468.4605)
+QDM reference pin u_c.oq[496]$_DFF_P_/CLK clock arrival max 410.9414 min 391.2987 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 391.2987 C 25 U 25 relief 30
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -5.24 / FF hold ws -8.30 ps
+OT_HM_GUARD: margin 30 kept: 2319 endpoints in margin, ~2388 buffers, +0.2 util pts (within limits)
+OT_HOLD_GUARD start: hold ws -8.30 tns -29.7 viol 9 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 2319 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |  -8.304 | -29.743 | u_c.g_l[3].u_q/u_mem.prevdata[93]$_DFF_P_/D
+       10 |       0 |      24 |            0 |    +0.0% |   0.535 |   0.000 | u_c.g_l[2].u_q/u_mem.prevdata[106]$_DFF_P_/D
+       20 |       0 |      54 |            0 |    +0.0% |   4.375 |   0.000 | u_c.g_l[2].u_q/u_mem.prevdata[323]$_DFF_P_/D
+[ERROR GRT-0183] Net u_c.g_l\[2\].u_q/net29865: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages.
+OT_RC_CAL restored platform setRC.tcl
+OT_HOLD_MM after repair: SS setup ws -5.24 / FF hold ws 5.28 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81dvbk_selcpn_c/signoff_ffrepair.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 5724 input pin flops (0 hard-child clock pins at +insertion), median arrival 410.9414 (range 352.0751 .. 468.4605)
+QDM reference pin u_c.oq[496]$_DFF_P_/CLK clock arrival max 410.9414 min 391.2987 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 391.2987 C 25 U 25 relief 30
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM virtual period: ot_lb_v_core_clk 770.000000 -> 833.333008 (reference core_clk)
+OT_HOLD_MM sync: SS setup ws -5.24 / FF hold ws 5.28 ps
+OT_HOLD_MM after repair: SS setup ws -5.24 / FF hold ws 5.28 ps
+OT_GRT183_RESUME_SAVED helper=repair_timing_helper odb=/work/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/5_1_grt.grt183_resume.odb hook_shapes_dropped=30: incremental GRT-0183 inside repair_timing_helper; the runner re-runs 5_1_grt once in a fresh process from this resized design
+Error: global_route.tcl, 175 GRT-0183
+Elapsed time: 34:34.25[h:]min:sec. CPU time: user 5293.01 sys 236.92 (266%). Peak memory: 4377432KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/5_1_grt.odb] Error 2
