@@ -1,0 +1,293 @@
+{
+ "kind": "cluster",
+ "pg_layer": "M7",
+ "refglob": "*",
+ "recipe": 1,
+ "inhold": false,
+ "outhold": false,
+ "name": "hbm_su_pgrg_region_d4g_fb",
+ "top": "ot_hbm_su_pgrg_region",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_region.sv"
+ ],
+ "params": {
+  "QID": 1,
+  "G": 2,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1235.52,
+  "h": 756.0,
+  "exact": true
+ },
+ "slot_change_request": "HBM-PGLG8 10-20 -> H-D4G: LIGHT pgslice regions as 4 hardened tiles 1235.52 x 756.0 (one view, rpos strap); parent = S band + landings",
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_0",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_1",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_1",
+   "at": [
+    820.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_2",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_2",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_3",
+   "at": [
+    648.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_3",
+   "at": [
+    820.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_4",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_4",
+   "at": [
+    216.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_5",
+   "at": [
+    648.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_5",
+   "at": [
+    820.8,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_6",
+   "at": [
+    43.2,
+    561.6000000000001
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_6",
+   "at": [
+    216.0,
+    561.6000000000001
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+   "count": 1,
+   "inst": "u_ln_7",
+   "at": [
+    648.0,
+    561.6000000000001
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+   "count": 1,
+   "inst": "u_bk_7",
+   "at": [
+    820.8,
+    561.6000000000001
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "control",
+   "rf_u",
+   "di",
+   "fwc",
+   "dwnc",
+   "posc",
+   "rposc",
+   "rst_n"
+  ],
+  "E": [
+   "ret"
+  ],
+  "N": [
+   "ck"
+  ]
+ },
+ "pin_ranges": {
+  "control": [
+   43.2,
+   494.8
+  ],
+  "rf_u": [
+   495.8,
+   538.3
+  ],
+  "di": [
+   539.3,
+   679.8
+  ],
+  "fwc": [
+   680.8,
+   691.2
+  ],
+  "dwnc": [
+   692.2,
+   702.6
+  ],
+  "posc": [
+   703.6,
+   707.7
+  ],
+  "rposc": [
+   708.7,
+   710.8
+  ],
+  "ret": [
+   248.0,
+   508.0
+  ],
+  "ck": [
+   617.76,
+   617.96
+  ],
+  "rst_n": [
+   713.8,
+   714.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 1111.111,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "job": {
+  "owner": "Claude:HBM-PGLG8",
+  "branch": "claude/hbm-pglg8-1020",
+  "tag": "r1f",
+  "purpose": "HBM d4g LIGHT SU pgslice REGION tile (u_rg glue + 8 KIND0 lanes + 8 bank6_clock banks, one clock root, rpos strap); lg4 fix: regions hardened with their own tree",
+  "record_to": "results/rtl/ref_tile/hbm_su_pgrg_region_d4g_fb",
+  "views_to": "physical/ref_tile/hbm_su_pgrg_region_d4g_fb/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "tools/hbm_static/su_pgslice_rg_vl_run.sh",
+   "tools/hbm_static/su_pgrg_region_gen.py",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hdc",
+   "rtl/proto",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015",
+   "physical/ref_tile/hbm_su_static_bank6_clock7_1015",
+   "results/rtl/hbm_pglg8_1020"
+  ]
+ },
+ "inter": []
+}

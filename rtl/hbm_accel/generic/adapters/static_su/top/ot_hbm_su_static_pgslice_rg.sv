@@ -19,7 +19,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_pgslice_rg #(
  parameter integer QID=1,G=2,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=4,ALAT=3,LEAF=1,MUT=0,MULTIRATE=1,
- parameter integer PIN_REG=1,COLLPORT=1,B39_NOOP=(QID==0),RF_LOCAL=1,RSYNC=1,RSYNC_MUT=0,STRAP=1,PRETREE=0
+ parameter integer PIN_REG=1,COLLPORT=1,B39_NOOP=(QID==0),RF_LOCAL=1,RSYNC=1,RSYNC_MUT=0,STRAP=1,PRETREE=0,
+ parameter integer HREG=0   // HBM-PGLG8 10-20: 1 = core with the 4 regions as hardened tiles (rgf_lph), behaviour identical
 )(
  input wire clk_ctl, ck_r0, ck_r1, ck_r2, ck_r3, pg_clk,
  input wire rst_n,
@@ -56,6 +57,15 @@ module ot_hbm_su_static_pgslice_rg #(
  output wire lg_fault
 );
  wire [561:0] su_wq; wire [513:0] su_rr; wire [3:0] ij_v; wire [35:0] ij_row; wire ij_bad, pg_fault;
+ if(HREG!=0)begin:g_hreg
+ ot_hbm_su_static_pgslice_rgf_lph #(.QID(QID),.G(G),.STRAP(STRAP),.PRETREE(PRETREE),.GMUT((MUT<100)?MUT:0),
+  .MUT((MUT>100)?MUT-100:0)) u_core(
+  .ck_s(clk_ctl),.ck_r0(ck_r0),.ck_r1(ck_r1),.ck_r2(ck_r2),.ck_r3(ck_r3),.rst_n(rst_n),.pos(pos),.pos_r0(pos),.pos_r1(pos),.pos_r2(pos),.pos_r3(pos),.control(control),
+  .vmr_cmd(vmr_cmd),.vmw_cmd(vmw_cmd),.rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),.red_sel(red_sel),
+  .slice_x(slice_x),.tree_cmd(tree_cmd),.tree_o(tree_o),.pt_ro_x(pt_ro_x),.pt_ro_v(pt_ro_v),.inj_q(inj_q),.dw_v(dw_v),
+  .dw_row(dw_row),.dw_d(dw_d),.fault(fault),.su_wq(su_wq),.su_rr(su_rr),.ij_v(ij_v),.ij_row(ij_row),.ij_bad(ij_bad),
+  .pg_fault(pg_fault));
+ end else begin:g_flat
  ot_hbm_su_static_pgslice_rgf_lp #(.QID(QID),.G(G),.STRAP(STRAP),.PRETREE(PRETREE),.GMUT((MUT<100)?MUT:0),
   .MUT((MUT>100)?MUT-100:0)) u_core(
   .ck_s(clk_ctl),.ck_r0(ck_r0),.ck_r1(ck_r1),.ck_r2(ck_r2),.ck_r3(ck_r3),.rst_n(rst_n),.pos(pos),.pos_r0(pos),.pos_r1(pos),.pos_r2(pos),.pos_r3(pos),.control(control),
@@ -63,6 +73,7 @@ module ot_hbm_su_static_pgslice_rg #(
   .slice_x(slice_x),.tree_cmd(tree_cmd),.tree_o(tree_o),.pt_ro_x(pt_ro_x),.pt_ro_v(pt_ro_v),.inj_q(inj_q),.dw_v(dw_v),
   .dw_row(dw_row),.dw_d(dw_d),.fault(fault),.su_wq(su_wq),.su_rr(su_rr),.ij_v(ij_v),.ij_row(ij_row),.ij_bad(ij_bad),
   .pg_fault(pg_fault));
+ end
  ot_hbm_su_static_pg_stream #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT((MUT<100)?MUT:0),
   .MULTIRATE(MULTIRATE),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RSYNC(RSYNC),.RSYNC_MUT(RSYNC_MUT),.STRAP(STRAP)) u_stream(
   .clk_ctl(clk_ctl),.pg_clk(pg_clk),.rst_n(rst_n),.bridge_rst_n(bridge_rst_n),.pos(pos),.vmr_cmd(vmr_cmd),.su_wq(su_wq),

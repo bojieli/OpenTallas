@@ -20,7 +20,7 @@
 // MUT (DUT only, must FAIL): 1 fill early; 2 drain group flip; 4 RF select early; 10 delivery order; 11 strap g ignored;
 //  20 outer chain relay missing; 21 drain delay line short; 22 R2 inbound unlanded; 23 E-face relay bypassed (HBM-PGLG2).
 module tb_hbm_su_pgslice_rg;
- parameter integer MUT=0, NRST=2, EDGES=1200, LK=1;
+ parameter integer MUT=0, NRST=2, EDGES=1200, LK=1, HREG=0;
  localparam integer A=LK+1, RT=(2*A+1)+2*A+1, SWQ=((RT+2)/3)*4;    // RT 10, VM write 12 serial = 16 stream edges
  // HBM-PGLG2 10-19: IR = face relay edges (u_wrly / u_erly / u_sout FRLY: +1 on every S-bound input). Serial outputs
  // (slice_x, inj_q, tree_o) compare at +RT+IR, fault at +RT+IR+1; the VM write stays at +SWQ (u_sout WQ_PAD 2 -> 1);
@@ -83,7 +83,7 @@ module tb_hbm_su_pgslice_rg;
  wire [31:0] NAME``_sx; wire [66:0] NAME``_to; wire [1023:0] NAME``_iq; wire NAME``_f, NAME``_lf; wire [33:0] NAME``_rq; \
  wire [561:0] NAME``_wq; wire [513:0] NAME``_frr; wire [1:0] NAME``_fwd; \
  ot_hbm_su_static_pgslice_rg #(.QID(1),.G(2),.MLAT(4),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2),.MULTIRATE(1),.COLLPORT(1), \
-  .RF_LOCAL(1),.PIN_REG(1),.RSYNC(1),.STRAP(1),.PRETREE(PT),.MUT(MM)) NAME( \
+  .RF_LOCAL(1),.PIN_REG(1),.RSYNC(1),.STRAP(1),.PRETREE(PT),.MUT(MM),.HREG(HREG)) NAME( \
   .clk_ctl(sclk),.ck_r0(sclk),.ck_r1(sclk),.ck_r2(sclk),.ck_r3(sclk),.pg_clk(pclk), \
   .rst_n(por),.pos(PS),.bridge_rst_n(brst),.control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_bword(rfw),.rf_bcmd(rfc), \
   .rf_dsec(rfd_d),.red_sel(rsel_d),.slice_x(NAME``_sx),.tree_cmd(tcmd_d),.tree_o(NAME``_to),.inj_rd(injrd),.inj_addr(inja), \
@@ -171,7 +171,7 @@ module tb_hbm_su_pgslice_rg;
  integer r, k, class_ok=0;
  initial begin
   if(!$value$plusargs("NRST=%d", r)) r=NRST;
-  $display("PGSLICE_RG bench MUT=%0d LK=%0d RT=%0d IR=%0d SWQ=%0d EDGES=%0d", MUT, LK, RT, IR, SWQ, EDGES);
+  $display("PGSLICE_RG bench HREG=%0d MUT=%0d LK=%0d RT=%0d IR=%0d SWQ=%0d EDGES=%0d", HREG, MUT, LK, RT, IR, SWQ, EDGES);
   repeat(5) @(negedge sclk);
   por=1; repeat(3) @(negedge sclk); por=0;
   for(k=0;k<r;k=k+1) begin
