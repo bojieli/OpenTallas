@@ -1,0 +1,40 @@
+{
+  "grade": "MODEL only; six-position real link replay pending; stage/head/draft execution incomplete",
+  "source": "efa4071b9",
+  "map_sha256": "3b9962aa7afdf7e851ce9d0e032a97ed721392a42ea80699095383e2c852dbf9",
+  "calendar_sha256": "eb1ecde5ca85d7589f13dc70987faf754d27c229233c7d9fa75da4ac7364cafe",
+  "users": 1,
+  "period": 7598864,
+  "expected_accepted_tok_s": 656.8,
+  "checker": {
+    "result": "PASS",
+    "collisions": 0,
+    "resources": 485,
+    "windows": 4112,
+    "negative_n_plus_1": {
+      "users": 2,
+      "result": "FAULT",
+      "collisions": 6
+    },
+    "negative_injected_shift": {
+      "collisions": null,
+      "result": "NOT_APPLICABLE: fewer than two admitted users"
+    }
+  },
+  "position_span": 1259408,
+  "draft_start": 7556448,
+  "draft_end": 7598728,
+  "host_tail_end": 7598862,
+  "integer_causality": "ceil segment durations before stage/compute/send/arrival propagation",
+  "actual_replay": {
+    "unit": "oth-ubuntu-1612454-1792601690",
+    "host": "ot-gold1",
+    "directory": "/srv/opentallas-scratch/claude/codex-tok-s81-calendar-causal-1021/out_full",
+    "state": "BUILDING",
+    "scope": "isolated real stage-link RTL, all six positions and exact idle gaps",
+    "messages": 12,
+    "beats": 15360,
+    "max_cycles": 6315716
+  },
+  "old_calendar": "6f8bbf5c4 MTP FAILED same-user overlap424; historical AR model remains separate"
+}
