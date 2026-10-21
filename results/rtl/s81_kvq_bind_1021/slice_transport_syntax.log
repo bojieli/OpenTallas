@@ -1,0 +1,10 @@
+
+-- Running command `read_verilog -sv -D OT_S81SL_KV_TRANSPORT /srv/opentallas-scratch/claude/codex-s81-kvq-bind-1021/syntax_f33994055/slice.sv' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/codex-s81-kvq-bind-1021/syntax_f33994055/slice.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/codex-s81-kvq-bind-1021/syntax_f33994055/slice.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_rly'.
+Warning: Replacing memory \gd.r with list of registers. See /srv/opentallas-scratch/claude/codex-s81-kvq-bind-1021/syntax_f33994055/slice.sv:24
+Generating RTLIL representation for module `\ot_s81sl_leaf'.
+Generating RTLIL representation for module `\ot_s81sl_slice'.
+Successfully finished Verilog frontend.

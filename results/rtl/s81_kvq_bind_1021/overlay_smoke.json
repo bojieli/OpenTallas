@@ -1,0 +1,42 @@
+{
+  "source_ref": "f339940551266902408a94d40f567f005b9cb515",
+  "input": "actualG8R4 plan/table source d74894719 remote codex-s81-g8-bindfix-1021/die72-g8r4",
+  "enabled_slices": [
+    "s_3N"
+  ],
+  "bank_master": "ot_s81sl_slice",
+  "params": {
+    "KV_ENABLE": 1
+  },
+  "view": null,
+  "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "OT_S81SL_KV_TRANSPORT"
+  ],
+  "binding": {
+    "instance": "s_3N.lf[0].u_lf.g_kv.u_kv",
+    "master": "ot_s81sl_kv_leaf",
+    "source_ref": "f339940551266902408a94d40f567f005b9cb515",
+    "parameter": "KV_ENABLE=1",
+    "status": "SOURCE_ONLY_NOT_PHYSICALLY_QUALIFIED",
+    "producer": "existing leaf VM RD writes; lowering/producer transport must establish actual a_proj rows",
+    "row_region": [
+      672,
+      991
+    ],
+    "transport": {
+      "normal_slices": "OT_S81SL_KV_TRANSPORT selects xrt1/xrt3; end parents already xrt",
+      "source_ref": "59a8155d3 / 00f45f497",
+      "typed_V_RD": "partner only, even row, one256b pair",
+      "local_copy": "body44=1,dir0,kind4,ownmask",
+      "measured_component_edges": {
+        "ctl_to_cv": 5,
+        "lo_to_V": 5,
+        "V_to_sw": 6,
+        "local_CI_to_sw": 3
+      },
+      "data_cycles_delta_from_transport_successor": 0
+    }
+  },
+  "status": "PASS"
+}
