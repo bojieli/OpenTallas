@@ -42,7 +42,7 @@ module dsdv_static_ks6 #(
     wire prog_write = csr && (hd[7:0] == 8'h10 || hd[7:0] == 8'h11 ||
                                       hd[7:0] == 8'h13 || hd[7:0] == 8'h14);
     wire [23:0] first_issue;
-    reg first_seen, sealed;
+    reg first_seen, sealed, prog_len_seen;
     reg [7:0] prog_len, settle;
     reg [1:0] seal_phase;
     reg epoch_valid;
@@ -59,7 +59,8 @@ module dsdv_static_ks6 #(
         // local to their actual narrow storage bank, with no added edge.
         (* keep_hierarchy = "yes" *) dsdv_static_ks6_bank13 u_data (
             .ck(ck), .we(descriptor_write), .active(running),
-            .wait_one(wait_edges==1), .rd_ok(rd<6), .valid_rd(valid[rd]), .wr(wr), .rd(rd),
+            .wait_one(wait_edges==1), .rd_ok(rd<6), .valid_rd(valid[rd]), .arm_good(arm_good),
+            .advance(descriptor_emit && rd!=5), .wr(wr),
             .d(f_ks[13*bank+:13]), .q(timed_ks[13*bank+:13]));
     end endgenerate
     reg [5:0] valid;
@@ -94,7 +95,7 @@ module dsdv_static_ks6 #(
     generate for(rg=0;rg<4;rg=rg+1) begin:g_epoch
         (* keep_hierarchy="yes" *) dsdv_static_ks6_epoch12 u_epoch(
             .ck(ck),.sync(sync_epoch),.selected_armed(selected && armed),
-            .tag_ok(hd[39:8]==GRAPH_TAG),.inc(epoch_valid),
+            .tag_ok(hd[39:8]==GRAPH_TAG),.rst_n(rst_n),
             .carry(&(global_edge | (48'hffffffffffff << (12*rg)))),
             .d(sync_value[12*rg+:12]),.q(global_edge[12*rg+:12]));
     end
@@ -108,6 +109,7 @@ module dsdv_static_ks6 #(
             .d(initial_wait[12*rg+:12]),.q(wait_edges[12*rg+:12]));
     end endgenerate
     always @(posedge ck) begin
+        if (csr && hd[7:0]==8'h11) prog_len<=hd[39:32];
         if (arm_good) begin owner <= hd[193:184]; wr<=0; rd<=0; end
         else if (running) begin
             if(f_ks[52]) wr<=wr+1'b1;
@@ -125,7 +127,7 @@ module dsdv_static_ks6 #(
         if (!rst_n) begin
             timed_valid <= 0; selected <= 0; armed <= 0; done <= 0; fault <= 0;
             valid <= 0;
-            first_seen <= 0; sealed <= 0; prog_len <= 0;
+            first_seen <= 0; sealed <= 0; prog_len_seen <= 0;
             seal_phase <= 0;
             epoch_valid <= 0;
         end else begin
@@ -138,7 +140,7 @@ module dsdv_static_ks6 #(
                     // SYNC, hence the +1 on the synchronizing edge itself.
                 end
             end
-            if (csr && hd[7:0] == 8'h11) prog_len <= hd[39:32];
+            if (csr && hd[7:0] == 8'h11) prog_len_seen <= 1;
             if (pw && pd[27:26] == 3 && !pd[25]) begin
                 first_seen <= 0; sealed <= 0;
             end
@@ -146,7 +148,7 @@ module dsdv_static_ks6 #(
                 first_seen <= 1;
             end
             if (pw && pd[27:26] == 3 && pd[25]) begin
-                sealed <= first_seen && prog_len != 0 && prog_len == pd[16:9];
+                sealed <= first_seen && prog_len_seen && prog_len != 0 && prog_len == pd[16:9];
                 seal_phase <= pd[8:7];
                 // The real walker performs a one-row/edge seal scan. This
                 // conservative fixed BOOT guard covers its staging; it does
@@ -192,11 +194,13 @@ endmodule
 // explicit onehot read selection replace variable wide part-select barrels.
 (* keep_hierarchy = "yes" *)
 module dsdv_static_ks6_bank13 (
-    input wire ck,we,active,wait_one,rd_ok,valid_rd,
-    input wire [2:0] wr,rd,
+    input wire ck,we,active,wait_one,rd_ok,valid_rd,arm_good,advance,
+    input wire [2:0] wr,
     input wire [12:0] d,
     output reg [12:0] q
 );
+    reg [2:0] rd;
+    always @(posedge ck) if(arm_good) rd<=0; else if(advance) rd<=rd+1'b1;
     wire emit=active && wait_one && rd_ok && valid_rd;
     reg [12:0] word0,word1,word2,word3,word4,word5;
     always @(posedge ck) begin
@@ -213,7 +217,10 @@ module dsdv_static_ks6_bank13 (
     always @(posedge ck) q <= emit ? chosen : 13'd0;
 endmodule
 (* keep_hierarchy="yes" *)
-module dsdv_static_ks6_epoch12(input wire ck,sync,selected_armed,tag_ok,inc,carry,input wire[11:0] d,output reg[11:0] q);
+module dsdv_static_ks6_epoch12(input wire ck,sync,selected_armed,tag_ok,rst_n,carry,input wire[11:0] d,output reg[11:0] q);
+    reg inc;
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) inc<=0; else if(sync && !selected_armed) inc<=tag_ok;
     wire load=sync && !selected_armed && tag_ok;
     always @(posedge ck) if(load) q<=d; else if(inc) q<=q+carry;
 endmodule
