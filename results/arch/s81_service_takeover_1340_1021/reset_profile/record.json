@@ -1,0 +1,41 @@
+{
+  "status": "COMPONENT_SOURCE_PASS_NOT_WHOLECORE",
+  "static_trace_unit": "oth-ubuntu-1424085-1792620108",
+  "prior_trace_raw_contacts": 8175,
+  "transparent_INV_contacts_excluded": 2,
+  "canonical_prior_native_reset_contacts": 8173,
+  "dominant_true_state": {
+    "transpose_write_enable": 2048,
+    "transpose_forward_enable": 2048,
+    "transpose_select": 128,
+    "sm_rd_payload": 512,
+    "other_or_unattributed_DFF": 2912
+  },
+  "forest_unit": "oth-ubuntu-1514923-1792620722",
+  "forest_edges": 9,
+  "forest_leaves": 512,
+  "forest_register_bits": 730,
+  "pulse_checks": 3991,
+  "pulse_errors": 0,
+  "shortpath_mutant_mismatches": 1927,
+  "paired_mapped_load_fixture": {
+    "baseline": {
+      "max": 16384,
+      "status": "FAIL",
+      "violations": 1,
+      "roles": 0
+    },
+    "candidate": {
+      "max": 32,
+      "status": "PASS",
+      "violations": 0,
+      "roles": 0
+    }
+  },
+  "integration_plan": "Replace nine existing same-clock plain-pad edges. LP C current1+3+7=11; use existing Croot1 +local1 +forest9=11. T0 keeps actual1C+10T0 sequence using Croot1+local1T0+forest9T0. Both assertion/release ages preserved, no async-shortcut relay. Landing resets stay on original region3 path.",
+  "open": [
+    "Actual internal child/caller early9 routing and per-state leaf use",
+    "Remaining core reset/control/tag distribution",
+    "Wholecore native32/LP/function/clock/geometry/calendar; no source adoption"
+  ]
+}

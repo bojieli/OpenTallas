@@ -1,0 +1,1250 @@
+{
+  "scope": "Immutable prior NORST map attribution only; not native qualification or permission to remove resets.",
+  "netlist_sha256": "ff3257bc08915bb88aee87533a04fdc8e9a2dd89b034babd0f38a0f9b203683b",
+  "mapped_top": "dsdv_svc_att",
+  "cells": 1240160,
+  "reset_contacts": 8175,
+  "expected_prior_census_reset_loads": 8173,
+  "head_counts": [
+    [
+      "u_core.u_eng.g_tr",
+      4225
+    ],
+    [
+      "u_core.sm_rd",
+      512
+    ],
+    [
+      "u_core.u_eng.g_m",
+      153
+    ],
+    [
+      "u_core.u_eng.g_tv",
+      50
+    ],
+    [
+      "u_core.u_eng.g_vm",
+      32
+    ],
+    [
+      "u_core.fault_code",
+      23
+    ],
+    [
+      "u_core.u_eng.g_stage2",
+      19
+    ],
+    [
+      "u_core.jc_o",
+      16
+    ],
+    [
+      "u_core.pio_o",
+      16
+    ],
+    [
+      "u_core.pvo_o",
+      16
+    ],
+    [
+      "u_core.g_wqh.g_p",
+      12
+    ],
+    [
+      "u_core.pw",
+      10
+    ],
+    [
+      "u_core.u_pv_identity.tag_id",
+      8
+    ],
+    [
+      "u_core.sm_jid",
+      8
+    ],
+    [
+      "u_core.u_eng.iss_c",
+      8
+    ],
+    [
+      "u_core.u_eng.fl_blk",
+      6
+    ],
+    [
+      "u_core.u_swm.wa",
+      5
+    ],
+    [
+      "u_core.u_eng.fl_cnt",
+      5
+    ],
+    [
+      "u_core.u_eng.iss_blk",
+      5
+    ],
+    [
+      "u_core.g_pvq.u_pvm",
+      4
+    ],
+    [
+      "u_core.sm_kind",
+      4
+    ],
+    [
+      "u_core.u_qmm.wa",
+      3
+    ],
+    [
+      "u_core.sm_rj",
+      3
+    ],
+    [
+      "u_core.u_eng.q_bank",
+      3
+    ],
+    [
+      "u_core.hack",
+      2
+    ],
+    [
+      "u_core.hcr",
+      2
+    ],
+    [
+      "u_core.u_pv_identity.quarter",
+      2
+    ],
+    [
+      "u_core.u_eng.g_t",
+      2
+    ],
+    [
+      "u_core.u_eng.row_qk_c",
+      1
+    ],
+    [
+      "u_core.u_pv_identity.launch",
+      1
+    ],
+    [
+      "u_core.done",
+      1
+    ],
+    [
+      "u_core.sm_rv",
+      1
+    ],
+    [
+      "u_core.sm_st",
+      1
+    ],
+    [
+      "u_core.pv_ov",
+      1
+    ],
+    [
+      "u_core.sm_rp",
+      1
+    ],
+    [
+      "u_core.u_eng.bbuf",
+      1
+    ],
+    [
+      "u_core.u_eng.fbuf",
+      1
+    ],
+    [
+      "u_core.u_eng.sc_v",
+      1
+    ],
+    [
+      "u_core.u_eng.u_tag",
+      1
+    ],
+    [
+      "u_core.u_eng.rd_qk",
+      1
+    ],
+    [
+      "u_core.u_eng.pv_go_dd",
+      1
+    ],
+    [
+      "u_core.u_eng.u_lnv",
+      1
+    ]
+  ],
+  "field_counts": [
+    [
+      "UNATTRIBUTED:DFFASRHQNx1_ASAP7_75t_R",
+      2912
+    ],
+    [
+      "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_dim.g_row.u_fe.q",
+      2048
+    ],
+    [
+      "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_dim.g_row.u_we.q",
+      2048
+    ],
+    [
+      "u_core.sm_rd",
+      512
+    ],
+    [
+      "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_c.u_sl.q",
+      128
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.u_ring.ptr",
+      60
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.u_dv.r",
+      51
+    ],
+    [
+      "u_core.u_eng.g_tv.u_tv.r",
+      49
+    ],
+    [
+      "UNATTRIBUTED:AND2x2_ASAP7_75t_R",
+      40
+    ],
+    [
+      "u_core.u_eng.g_vm.g_p.g_e.u_ld.q",
+      32
+    ],
+    [
+      "UNATTRIBUTED:NOR3xp33_ASAP7_75t_R",
+      24
+    ],
+    [
+      "u_core.fault_code",
+      23
+    ],
+    [
+      "UNATTRIBUTED:NAND3xp33_ASAP7_75t_R",
+      17
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_nv.d",
+      17
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_nv.q",
+      17
+    ],
+    [
+      "u_core.jc_o",
+      16
+    ],
+    [
+      "u_core.pio_o",
+      16
+    ],
+    [
+      "u_core.pvo_o",
+      16
+    ],
+    [
+      "u_core.g_wqh.g_p.g_m.u_wqm.wa",
+      12
+    ],
+    [
+      "u_core.pw",
+      10
+    ],
+    [
+      "u_core.u_eng.g_stage2.qa_c",
+      8
+    ],
+    [
+      "u_core.u_pv_identity.tag_id",
+      8
+    ],
+    [
+      "u_core.sm_jid",
+      8
+    ],
+    [
+      "u_core.u_eng.g_stage2.u_stage1.wr_addr",
+      8
+    ],
+    [
+      "u_core.u_eng.iss_c",
+      8
+    ],
+    [
+      "u_core.u_eng.fl_blk",
+      6
+    ],
+    [
+      "u_core.u_swm.wa",
+      5
+    ],
+    [
+      "u_core.u_eng.fl_cnt",
+      5
+    ],
+    [
+      "u_core.u_eng.iss_blk",
+      5
+    ],
+    [
+      "u_core.sm_kind",
+      4
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.u_ring.advance",
+      4
+    ],
+    [
+      "UNATTRIBUTED:ot_s81svc8_hgrp_s81_bounded",
+      4
+    ],
+    [
+      "UNATTRIBUTED:NOR5xp2_ASAP7_75t_R",
+      3
+    ],
+    [
+      "UNATTRIBUTED:NAND2xp33_ASAP7_75t_R",
+      3
+    ],
+    [
+      "u_core.g_pvq.u_pvm.wa",
+      3
+    ],
+    [
+      "u_core.u_qmm.wa",
+      3
+    ],
+    [
+      "u_core.sm_rj",
+      3
+    ],
+    [
+      "u_core.u_eng.g_stage2.fa_c",
+      3
+    ],
+    [
+      "u_core.u_eng.q_bank",
+      3
+    ],
+    [
+      "UNATTRIBUTED:INVx1_ASAP7_75t_R",
+      2
+    ],
+    [
+      "u_core.hack",
+      2
+    ],
+    [
+      "u_core.hcr",
+      2
+    ],
+    [
+      "u_core.u_pv_identity.quarter",
+      2
+    ],
+    [
+      "UNATTRIBUTED:AND3x1_ASAP7_75t_R",
+      1
+    ],
+    [
+      "UNATTRIBUTED:A2O1A1Ixp33_ASAP7_75t_R",
+      1
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k5.g_r.v",
+      1
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k3.g_r.v",
+      1
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k1.g_r.v",
+      1
+    ],
+    [
+      "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k6.g_r.v",
+      1
+    ],
+    [
+      "u_core.u_eng.row_qk_c",
+      1
+    ],
+    [
+      "u_core.u_pv_identity.launch",
+      1
+    ],
+    [
+      "u_core.done",
+      1
+    ],
+    [
+      "u_core.sm_rv",
+      1
+    ],
+    [
+      "u_core.sm_st",
+      1
+    ],
+    [
+      "u_core.pv_ov",
+      1
+    ],
+    [
+      "u_core.sm_rp",
+      1
+    ],
+    [
+      "u_core.u_eng.bbuf",
+      1
+    ],
+    [
+      "u_core.u_eng.fbuf",
+      1
+    ],
+    [
+      "u_core.u_eng.g_t.genblk1.g_ts.u_t.iv",
+      1
+    ],
+    [
+      "u_core.g_pvq.u_pvm.we",
+      1
+    ],
+    [
+      "u_core.u_eng.sc_v",
+      1
+    ],
+    [
+      "u_core.u_eng.g_t.genblk1.g_ts.u_t.ld_v",
+      1
+    ],
+    [
+      "u_core.u_eng.g_tv.u_tv.d",
+      1
+    ],
+    [
+      "u_core.u_eng.u_tag.d",
+      1
+    ],
+    [
+      "u_core.u_eng.rd_qk",
+      1
+    ],
+    [
+      "u_core.u_eng.pv_go_dd",
+      1
+    ],
+    [
+      "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_c.u_sl.d",
+      1
+    ],
+    [
+      "u_core.u_eng.u_lnv.r",
+      1
+    ]
+  ],
+  "examples": {
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.u_ring.ptr": [
+      {
+        "cell": "_1865936_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[2].u_ring.ptr[0]"
+      },
+      {
+        "cell": "_1865937_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[2].u_ring.ptr[1]"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.u_dv.r": [
+      {
+        "cell": "_1865955_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[2].u_dv.r[1]"
+      },
+      {
+        "cell": "_1865956_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[2].u_dv.r[2]"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_nv.d": [
+      {
+        "cell": "_1865958_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[2].g_h[0].u_nv.d[0]"
+      },
+      {
+        "cell": "_1866577_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[1].g_h[0].u_nv.d[0]"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k5.g_r.v": [
+      {
+        "cell": "_1870018_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[4].g_h[14].u_a.genblk1.g_f5.u.u.u_k5.g_r.v"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k3.g_r.v": [
+      {
+        "cell": "_1870270_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[3].g_real.g_x.u_m.g[3].g_h[10].u_a.genblk1.g_f5.u.u.u_k3.g_r.v"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k1.g_r.v": [
+      {
+        "cell": "_1871005_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[2].g_real.g_x.u_m.g[0].g_h[14].u_a.genblk1.g_f5.u.u.u_k1.g_r.v"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_a.genblk1.g_f5.u.u.u_k6.g_r.v": [
+      {
+        "cell": "_1872073_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[3].g_real.g_x.u_m.g[0].g_h[14].u_a.genblk1.g_f5.u.u.u_k6.g_r.v"
+      }
+    ],
+    "u_core.g_wqh.g_p.g_m.u_wqm.wa": [
+      {
+        "cell": "_1872111_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.g_wqh[0].g_p[1].g_m.u_wqm.wa[0]"
+      },
+      {
+        "cell": "_1872112_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.g_wqh[0].g_p[1].g_m.u_wqm.wa[1]"
+      }
+    ],
+    "u_core.u_eng.g_stage2.qa_c": [
+      {
+        "cell": "_1872146_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_stage2.qa_c[0]"
+      },
+      {
+        "cell": "_1872147_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_stage2.qa_c[1]"
+      }
+    ],
+    "u_core.u_eng.row_qk_c": [
+      {
+        "cell": "_1872154_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.row_qk_c[10]"
+      }
+    ],
+    "u_core.u_pv_identity.launch": [
+      {
+        "cell": "_1873348_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_pv_identity.launch"
+      }
+    ],
+    "u_core.hack": [
+      {
+        "cell": "_1873998_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.hack[0]"
+      },
+      {
+        "cell": "_1873999_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.hack[1]"
+      }
+    ],
+    "u_core.hcr": [
+      {
+        "cell": "_1874000_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.hcr[0]"
+      },
+      {
+        "cell": "_1874001_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.hcr[1]"
+      }
+    ],
+    "u_core.done": [
+      {
+        "cell": "_1874002_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.done"
+      }
+    ],
+    "u_core.sm_rv": [
+      {
+        "cell": "_1874003_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_rv"
+      }
+    ],
+    "u_core.sm_st": [
+      {
+        "cell": "_1874004_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_st"
+      }
+    ],
+    "u_core.pv_ov": [
+      {
+        "cell": "_1874005_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pv_ov"
+      }
+    ],
+    "u_core.u_pv_identity.tag_id": [
+      {
+        "cell": "_1992380_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_pv_identity.tag_id[0]"
+      },
+      {
+        "cell": "_1992381_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_pv_identity.tag_id[1]"
+      }
+    ],
+    "u_core.g_pvq.u_pvm.wa": [
+      {
+        "cell": "_1995184_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.g_pvq.u_pvm.wa[0]"
+      },
+      {
+        "cell": "_1995185_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.g_pvq.u_pvm.wa[1]"
+      }
+    ],
+    "u_core.pw": [
+      {
+        "cell": "_1995222_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pw[0]"
+      },
+      {
+        "cell": "_1995223_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pw[1]"
+      }
+    ],
+    "u_core.jc_o": [
+      {
+        "cell": "_1996180_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.jc_o[0]"
+      },
+      {
+        "cell": "_1996181_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.jc_o[1]"
+      }
+    ],
+    "u_core.pio_o": [
+      {
+        "cell": "_1996212_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pio_o[0]"
+      },
+      {
+        "cell": "_1996213_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pio_o[1]"
+      }
+    ],
+    "u_core.pvo_o": [
+      {
+        "cell": "_1996228_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pvo_o[0]"
+      },
+      {
+        "cell": "_1996229_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.pvo_o[1]"
+      }
+    ],
+    "u_core.u_swm.wa": [
+      {
+        "cell": "_1996320_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_swm.wa[0]"
+      },
+      {
+        "cell": "_1996321_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_swm.wa[1]"
+      }
+    ],
+    "u_core.fault_code": [
+      {
+        "cell": "_1996334_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.fault_code[0]"
+      },
+      {
+        "cell": "_1996335_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.fault_code[1]"
+      }
+    ],
+    "u_core.u_qmm.wa": [
+      {
+        "cell": "_1996911_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_qmm.wa[0]"
+      },
+      {
+        "cell": "_1996912_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_qmm.wa[1]"
+      }
+    ],
+    "u_core.sm_rd": [
+      {
+        "cell": "_1996923_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_rd[0]"
+      },
+      {
+        "cell": "_1996924_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_rd[1]"
+      }
+    ],
+    "u_core.sm_rj": [
+      {
+        "cell": "_1997435_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_rj[0]"
+      },
+      {
+        "cell": "_1997436_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_rj[1]"
+      }
+    ],
+    "u_core.sm_rp": [
+      {
+        "cell": "_1997438_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_rp"
+      }
+    ],
+    "u_core.sm_jid": [
+      {
+        "cell": "_1997439_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_jid[0]"
+      },
+      {
+        "cell": "_1997440_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_jid[1]"
+      }
+    ],
+    "u_core.sm_kind": [
+      {
+        "cell": "_1997447_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_kind[0]"
+      },
+      {
+        "cell": "_1997448_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.sm_kind[1]"
+      }
+    ],
+    "u_core.u_pv_identity.quarter": [
+      {
+        "cell": "_1997485_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_pv_identity.quarter[0]"
+      },
+      {
+        "cell": "_1997486_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_pv_identity.quarter[1]"
+      }
+    ],
+    "u_core.u_eng.g_stage2.fa_c": [
+      {
+        "cell": "_1999638_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_stage2.fa_c[0]"
+      },
+      {
+        "cell": "_1999639_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_stage2.fa_c[1]"
+      }
+    ],
+    "u_core.u_eng.fl_cnt": [
+      {
+        "cell": "_1999641_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.fl_cnt[3]"
+      },
+      {
+        "cell": "_1999642_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.fl_cnt[4]"
+      }
+    ],
+    "u_core.u_eng.q_bank": [
+      {
+        "cell": "_1999652_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.q_bank[0]"
+      },
+      {
+        "cell": "_1999653_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.q_bank[1]"
+      }
+    ],
+    "u_core.u_eng.g_stage2.u_stage1.wr_addr": [
+      {
+        "cell": "_1999665_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_stage2.u_stage1.wr_addr[0]"
+      },
+      {
+        "cell": "_1999666_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_stage2.u_stage1.wr_addr[1]"
+      }
+    ],
+    "u_core.u_eng.bbuf": [
+      {
+        "cell": "_1999683_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.bbuf"
+      }
+    ],
+    "u_core.u_eng.fbuf": [
+      {
+        "cell": "_1999684_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.fbuf"
+      }
+    ],
+    "u_core.u_eng.iss_c": [
+      {
+        "cell": "_2002358_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.iss_c[0]"
+      },
+      {
+        "cell": "_2002359_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.iss_c[1]"
+      }
+    ],
+    "u_core.u_eng.g_t.genblk1.g_ts.u_t.iv": [
+      {
+        "cell": "_2011133_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_t[0].genblk1.g_ts.u_t.iv"
+      }
+    ],
+    "u_core.g_pvq.u_pvm.we": [
+      {
+        "cell": "_2013271_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.g_pvq.u_pvm.we"
+      }
+    ],
+    "u_core.u_eng.sc_v": [
+      {
+        "cell": "_2013701_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.sc_v"
+      }
+    ],
+    "u_core.u_eng.g_t.genblk1.g_ts.u_t.ld_v": [
+      {
+        "cell": "_2015288_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_t[0].genblk1.g_ts.u_t.ld_v"
+      }
+    ],
+    "u_core.u_eng.g_tv.u_tv.d": [
+      {
+        "cell": "_2015289_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tv.u_tv.d"
+      }
+    ],
+    "u_core.u_eng.u_tag.d": [
+      {
+        "cell": "_2015290_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.u_tag.d[14]"
+      }
+    ],
+    "u_core.u_eng.rd_qk": [
+      {
+        "cell": "_2015348_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.rd_qk"
+      }
+    ],
+    "u_core.u_eng.pv_go_dd": [
+      {
+        "cell": "_2015373_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.pv_go_dd"
+      }
+    ],
+    "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_c.u_sl.d": [
+      {
+        "cell": "_2015391_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[3].g_x.u_tr.u_sram.g_c[31].u_sl.d[0]"
+      }
+    ],
+    "u_core.u_eng.fl_blk": [
+      {
+        "cell": "_2015413_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.fl_blk[0]"
+      },
+      {
+        "cell": "_2015414_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.fl_blk[1]"
+      }
+    ],
+    "u_core.u_eng.iss_blk": [
+      {
+        "cell": "_2015419_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.iss_blk[0]"
+      },
+      {
+        "cell": "_2015420_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.iss_blk[1]"
+      }
+    ],
+    "u_core.u_eng.u_lnv.r": [
+      {
+        "cell": "_2016825_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.u_lnv.r[1]"
+      }
+    ],
+    "u_core.u_eng.g_tv.u_tv.r": [
+      {
+        "cell": "_2020527_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tv.u_tv.r[1]"
+      },
+      {
+        "cell": "_2020528_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tv.u_tv.r[2]"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.g_h.u_nv.q": [
+      {
+        "cell": "_2029097_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[0].g_real.g_x.u_m.g[0].g_h[0].u_nv.q[0]"
+      },
+      {
+        "cell": "_2029139_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[0].g_real.g_x.u_m.g[1].g_h[0].u_nv.q[0]"
+      }
+    ],
+    "u_core.u_eng.g_m.g_real.g_x.u_m.g.u_ring.advance": [
+      {
+        "cell": "_2029267_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[0].g_real.g_x.u_m.g[0].u_ring.advance"
+      },
+      {
+        "cell": "_2029475_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_m[1].g_real.g_x.u_m.g[0].u_ring.advance"
+      }
+    ],
+    "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_c.u_sl.q": [
+      {
+        "cell": "_2029959_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[0].g_x.u_tr.u_sram.g_c[0].u_sl.q[0]"
+      },
+      {
+        "cell": "_2029993_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[0].g_x.u_tr.u_sram.g_c[10].u_sl.q[0]"
+      }
+    ],
+    "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_dim.g_row.u_fe.q": [
+      {
+        "cell": "_2031015_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[0].g_x.u_tr.u_sram.g_dim[0].g_row[0].u_fe.q[0]"
+      },
+      {
+        "cell": "_2031019_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[0].g_x.u_tr.u_sram.g_dim[0].g_row[10].u_fe.q[0]"
+      }
+    ],
+    "u_core.u_eng.g_tr.g_x.u_tr.u_sram.g_dim.g_row.u_we.q": [
+      {
+        "cell": "_2031017_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[0].g_x.u_tr.u_sram.g_dim[0].g_row[0].u_we.q[0]"
+      },
+      {
+        "cell": "_2031021_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_tr[0].g_x.u_tr.u_sram.g_dim[0].g_row[10].u_we.q[0]"
+      }
+    ],
+    "u_core.u_eng.g_vm.g_p.g_e.u_ld.q": [
+      {
+        "cell": "_2042483_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_vm.g_p[0].g_e[0].u_ld.q[0]"
+      },
+      {
+        "cell": "_2042485_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "alias": "u_core.u_eng.g_vm.g_p[0].g_e[10].u_ld.q[0]"
+      }
+    ]
+  },
+  "unattributed_examples": [
+    {
+      "cell": "_0818723_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_0818723_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "outputs": []
+    },
+    {
+      "cell": "_0929265_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_0929268_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_0964005_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_0964008_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_0996796_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_0996799_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1028952_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1028955_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1061383_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1061386_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1096290_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1096293_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1130768_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1130771_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1163161_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1163164_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1195482_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    },
+    {
+      "cell": "_1195485_",
+      "master": "NOR3xp33_ASAP7_75t_R",
+      "pin": "A",
+      "outputs": []
+    }
+  ]
+}

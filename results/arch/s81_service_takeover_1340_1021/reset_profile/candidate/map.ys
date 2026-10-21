@@ -1,0 +1,16 @@
+read_verilog -sv -DSYNTHESIS  /src/rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset9_n32.sv /src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv /src/tools/s81_dv/svc_rs/reset_profile/reset_gate.sv
+hierarchy -check -top reset_gate
+read_liberty -lib /techlib/SEQ.lib
+read_liberty -lib /techlib/SIMPLE.lib
+read_liberty -lib /techlib/AO.lib
+read_liberty -lib /techlib/OA.lib
+read_liberty -lib /techlib/INVBUF.lib
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top reset_gate -flatten -noshare
+dfflibmap -liberty /techlib/SEQ.lib
+abc -liberty /techlib/SEQ.lib -liberty /techlib/SIMPLE.lib -liberty /techlib/AO.lib -liberty /techlib/OA.lib -liberty /techlib/INVBUF.lib
+setattr -mod -unset keep_hierarchy
+flatten
+opt_clean
+tee -o /out/stat.txt stat -liberty /techlib/SEQ.lib
+write_verilog -noattr /out/flat.v

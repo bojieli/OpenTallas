@@ -1,0 +1,24 @@
+
+17. Printing statistics.
+
+=== reset_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    16911        - wires
+    66068        - wire bits
+      518        - public wires
+    49675        - public wire bits
+        4        - ports
+    32770        - port bits
+    32786 6.21E+03 cells
+    16384 6.21E+03   DFFASRHQNx1_ASAP7_75t_R
+        9    2.624   DFFHQNx1_ASAP7_75t_R
+    16393        -   INVx1_ASAP7_75t_R
+
+   Area for cell type \INVx1_ASAP7_75t_R is unknown!
+
+   Chip area for module '\reset_gate': 6213.471120
+     of which used for sequential elements: 6213.471120 (100.00%)
+
