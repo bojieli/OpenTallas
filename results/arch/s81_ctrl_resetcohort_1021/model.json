@@ -1,0 +1,28 @@
+{
+  "status": "MODEL_BEFORE_PHYSICAL_PREP",
+  "source": "d040f8ae6871ece50ef299d07387777beaec1e77",
+  "source_pcr_sha256": "59e47d7bc797ab9468c95a623bf0685ba2e9d104f7357f87c488834d21d5b1fd",
+  "observed_at": "2026-10-21T13:54:00.221189-07:00",
+  "baseline": "s81ctrl_rg3-rg3x-d040f8ae6 NEEDS_RTL FF removal\u221213.28 three RESETN paths; 0D violations",
+  "scope": "Two exact PC u_hrbank.q[0] source flops only; no generic clock helper change",
+  "candidate": "Reassign each exact reset source clock to the existing HBM regional root of its RESETN consumer majority, preserving actual same-domain clock source; no data/reset net rewiring, added flop or cycle",
+  "gates": [
+    "exact source SHA and source instance count2",
+    "source and every RESETN consumer clock on actual ot_hckkm regional roots from ckh",
+    "actual direct load fanout<=32",
+    "source-to-each-consumer Manhattan distance<=405um",
+    "report every minority consumer/root and remaining removal risk; does not claim all-reset co-location"
+  ],
+  "cost": {
+    "added_FF": 0,
+    "added_root": 0,
+    "added_runtime_cycles": 0,
+    "qualification": "UNMEASURED planned structural effect; actual gate/correctness proof still required"
+  },
+  "live_fallback_preserved": "s81ctrl_rg3s-rg3sx-22595e899",
+  "not_done": [
+    "No new route",
+    "No source adoption",
+    "No whole CTRL closure claim"
+  ]
+}
