@@ -20,14 +20,6 @@
 // 510.84-wide frame); every data pin passed.  Cost: 0 data cycles; reset assertion and release reach the element one
 // clk edge later (die reset timing: the die releases this element's rst_n one cycle earlier, or the first
 // configuration / go after release moves one cycle later).  Bench: tb_qxpq_rstp (lock-step vs RSTP = 0).
-// CPR (S81-PINREG4 2026-10-19, SAFE item 1, default 0 = the closed element unchanged): control pin registers.  Native audit of
-// the CLOSED ob2 view (physical/s81_die_views/q_elem_qs5f_ob2/native_receipt.json, dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb)
-// failed ONLY on three control pins: launch busy 230.2 / fault 227.1 ps (their drivers busy_d / fq2 are internal state
-// registers ~185 um from the N-face pins, fault an async-clear flop the out-flop band cannot claim) and capture go 216.7 ps
-// (go fans combinationally into the bank_free / clock-gate lookahead logic).  CPR = 1 adds one dedicated, kept register per
-// pin: go and go_tag captured at the face (the go command enters u_e one cycle later, so the die issues go + go_tag ONE
-// cycle earlier: +1 command edge), busy and fault re-registered by a private pin flop (+1 visibility cycle each; the
-// out-flop band then places them at their pins).  Every other output is cycle-identical.  Bench: tb_qxpq_cpr.
 module ot_v41_rom_elem_q_qxpq_w10 #(
     parameter integer NB = 1,
     parameter integer MTP = 0,
@@ -51,7 +43,6 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     parameter integer QM = 0,
     parameter integer QS = 0,          // SAFE knobs (owner fail-fast 2026-10-06): 1 = bterm5 S1b decode stage (+1 lane cycle)
     parameter integer RSTP = 0,        // 1 = synchronous reset relay flop at the rst_n pin (+1 reset edge, 0 data cycles)
-    parameter integer CPR = 0,         // 1 = go / go_tag / busy / fault pin registers (+1 go command edge, +1 busy / fault cycle)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -95,32 +86,10 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     end else begin : g_nrstp
         assign rst_n_e = rst_n;
     end
-    wire go_e; wire [1:0] go_tag_e;    // the go command into the element: the pins (CPR = 0) or the pin registers (CPR = 1)
-    wire busy_e, fault_e;              // the element's busy / fault: to the pins (CPR = 0) or through the pin registers
-    if (CPR != 0) begin : g_cpr
-        (* keep, dont_touch = "true" *) reg go_pf;
-        (* keep, dont_touch = "true" *) reg [1:0] go_tag_pf;
-        (* keep, dont_touch = "true" *) reg busy_pf, fault_pf;
-        always @(posedge clk) begin go_pf <= go; go_tag_pf <= go_tag; busy_pf <= busy_e; fault_pf <= fault_e; end
-`ifdef OT_QXPQ_CPR_MUT_GO
-        assign go_e = go;              // MUTANT: go pin register bypassed (the go command enters one cycle early)
-`else
-        assign go_e = go_pf;
-`endif
-        assign go_tag_e = go_tag_pf;
-`ifdef OT_QXPQ_CPR_MUT_BUSY
-        assign busy = busy_e;          // MUTANT: busy pin register bypassed (busy one cycle early)
-`else
-        assign busy = busy_pf;
-`endif
-        assign fault = fault_pf;
-    end else begin : g_ncpr
-        assign go_e = go; assign go_tag_e = go_tag; assign busy = busy_e; assign fault = fault_e;
-    end
     ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
-        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go_e), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
+        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go), .go_bf_pin(1'b0), .go_tag_pin(go_tag), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
         .xs_v_pin(xs_v), .xs_p_pin(xs_p), .xs_b_pin(xs_b), .xs_sv_pin(xs_sv), .xs_q0_pin(xs_q0), .xs_e0_pin(xs_e0), .xs_q1_pin(xs_q1),
         .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
         .xb_u_pin(32'd0), .xb_d_pin(1024'd0),
-        .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .busy(busy_e), .fault(fault_e));
+        .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .busy(busy), .fault(fault));
 endmodule

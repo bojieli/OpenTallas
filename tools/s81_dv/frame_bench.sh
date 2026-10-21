@@ -31,6 +31,12 @@ if [ "${FRAME_LP:-0}" = 1 ]; then
   case "$MUT" in 0) LM=0;; unland) LM=1;; landread) LM=2;; reset) LM=4;; *) echo "Unknown landed mutant $MUT"; exit 3;; esac
   DFR=${MASTER}_l4_lp_b; SFX=_l4_lp
   TOPF="$FR/${MASTER}_l4_lp_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv rtl/common/landed_parent/ot_pl_land.sv"
+  # S81-FRAME4 10-19: an LP spec with landing_reset_forest instantiates the kept-copy forest primitives
+  grep -q ot_pl_land_reset_forest $FR/${MASTER}_l4_lp.sv && TOPF="$TOPF rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+  # FRRST 10-20: FRAME_LP_SV = a kit-variant bench twin of the LP RTL (tools/s81_dv/frame_kit.py variant --xk-land) in
+  # place of <MASTER>_l4_lp.sv (same module name); its xk reset synchronisers need ot_reset_sync
+  LPSV=${FRAME_LP_SV:-$FR/${MASTER}_l4_lp.sv}
+  grep -q ot_reset_sync $LPSV && TOPF="$TOPF rtl/lib/ot_reset_sync.sv"
   VFLAGS="${VFLAGS:-} -DLP_MUT=$LM -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"
   LANDE="--land-e ${LK:-2} --frame-schedule results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json"
 elif [ "${L4:-0}" = 1 ]; then
@@ -50,7 +56,7 @@ elif [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame; else
 if [ ! -x $O/obj/Vtb_s81dv_frame ]; then
   /usr/bin/time -v -o $O/time_build.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style \
     -Wno-MULTIDRIVEN ${VFLAGS:-} -DFRAME=$DFR -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 --top-module tb_s81dv_frame -Mdir $O/obj \
-    -f $FL $FR/$MASTER${SFX:-}.sv $TOPF rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv \
+    -f $FL ${LPSV:-$FR/$MASTER${SFX:-}.sv} $TOPF rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv \
     --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 \
     || { echo "BUILD_FAILED"; grep -m8 -E "%Error" $O/build.log; tail -n 4 $O/build.log; exit 3; }
 fi

@@ -16,6 +16,42 @@ module ot_s81_rly #(
     input  wire [W-1:0] i,
     output wire [W-1:0] o
 );
+`ifdef OT_S81_RLY_RSSLICE
+    // S81-TILES-A 10-20 (FRAME5 rf2, opt-in, default OFF): the frame native census (h10 rffwd gate, 203 violations, all
+    // RESETN) found the single reset pin register rq clearing W data flops (536/283/266/63/38 loads) and, for RSREG = 0
+    // relays wider than 32, the forest leaf clearing W flops directly (54/63/66).  Sliced form: NS = ceil(W/32) kept rq
+    // copies (rs -> NS <= 32 loads), copy s clears data bits [32s, 32s+31] only (<= 32 loads).  RSREG != 0: cycle-identical
+    // to the single rq (same asynchronous assert, same one-edge-later release).  RSREG = 0 with W > 32 takes the same
+    // sliced rq (release one ck edge later; initialization only -- requalified by the frame benches).  W <= 32 with
+    // RSREG = 0 is unchanged (rs direct).
+    localparam int NS = (W + 31) / 32;
+    reg [W-1:0] r;
+    wire [NS-1:0] rsv;
+    generate if (RSREG != 0 || W > 32) begin : g_rsslice
+        for (genvar s = 0; s < NS; s = s + 1) begin : g_s
+            wire q;
+            (* keep_hierarchy = "yes" *) ot_s81_rly_rq #(.ID(s)) u_rq (.ck(ck), .rs(rs), .q(q));
+`ifdef OT_S81_RLY_RSMUT
+            assign rsv[s] = rs;             // bench mutant: reset pin registers bypassed
+`else
+            assign rsv[s] = q;
+`endif
+        end
+    end else begin : g_rs
+        assign rsv = {NS{rs}};
+    end endgenerate
+    generate for (genvar s = 0; s < NS; s = s + 1) begin : g_d
+        localparam int LO = 32 * s;
+        localparam int SW = (W - LO < 32) ? (W - LO) : 32;
+        always @(posedge ck or negedge rsv[s])
+            if (!rsv[s]) r[LO +: SW] <= {SW{1'b0}};
+`ifdef OT_S81_RLY_MUT
+            else r[LO +: SW] <= i[LO +: SW] ^ ((s == 0) ? {{(SW-1){1'b0}}, 1'b1} : {SW{1'b0}});   // bench mutant: bit 0 inverted
+`else
+            else r[LO +: SW] <= i[LO +: SW];
+`endif
+    end endgenerate
+`else
     reg [W-1:0] r;
     wire rsi;
     generate if (RSREG != 0) begin : g_rsreg
@@ -38,6 +74,24 @@ module ot_s81_rly #(
 `else
         else r <= i;
 `endif
+`endif
     assign o = r;
 endmodule
+
+`ifdef OT_S81_RLY_RSSLICE
+// One kept reset pin register copy of the sliced ot_s81_rly (distinct ID per copy so synthesis never merges copies).
+module ot_s81_rly_rq #(
+    parameter int ID = 0
+) (
+    input  wire ck,
+    input  wire rs,
+    output wire q
+);
+    (* keep *) reg rq;
+    always @(posedge ck or negedge rs)
+        if (!rs) rq <= 1'b0;
+        else rq <= 1'b1;
+    assign q = rq;
+endmodule
+`endif
 `default_nettype wire
