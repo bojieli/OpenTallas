@@ -127,7 +127,7 @@ module qkd_hr_native_qm_cdc #(
     // (rtl/physical/ot_host_die_cdc_sram.sv ot_host_reset_bank: 1 landing flop -> RB_* KEPT identical leaves, same
     // 2-edge release as ot_reset_sync). The RTL uses leaf 0; synthesis (kit reset_relay_split, ot_rst_copies) spreads the
     // reset loads over the leaves at <= 32 each (the native census limit). Release edges unchanged.
-    localparam integer RB_H = 4, RB_I = 16, RB_C = 4;
+    localparam integer RB_H = 4, RB_I = 20, RB_C = 4;
     wire rn_h, rn_i, rn_c;
     wire [RB_H-1:0] rb_h;
     wire [RB_I-1:0] rb_i;
