@@ -492,7 +492,8 @@ endmodule
 module ot_hgi_su_lbank #(
     parameter integer RB = 13,             // log2 words in the bank
     parameter integer MACRO = 1,           // 1: ot_sram_1r1w_1024x256 rows (RB = 13); 0: behavioural
-    parameter integer LAT = 0              // bench mutant (behavioural banks): 1 = read latency 2 edges, 2 = 0 edges
+    parameter integer LAT = 0,             // bench mutant (behavioural banks): 1 = read latency 2 edges, 2 = 0 edges
+    parameter integer NATIVE32 = 0
 ) (
     input  wire          clk,
     input  wire          re,
@@ -504,38 +505,79 @@ module ot_hgi_su_lbank #(
 );
     reg [2:0] ks;
     always @(posedge clk) if (re) ks <= ra[2:0];
+    wire [47:0] ks_leaf;
+    generate if(NATIVE32 && MACRO)begin:g_native_ks
+        // Identical D and capture edge; each selector controls only two output bits.
+        // Share the three-bit feedback mux rather than creating48 enable muxes.
+        wire [2:0] next_ks=re?ra[2:0]:ks;
+        (* keep=1,dont_touch=1 *) reg [47:0] copies;
+        always @(posedge clk)copies<={16{next_ks}};
+        assign ks_leaf=copies;
+    end else begin:g_original_ks
+        assign ks_leaf={16{ks}};
+    end endgenerate
     wire [255:0] wm = {224'd0, 32'hFFFF_FFFF} << {wa[2:0], 5'd0};
     generate if (MACRO && RB == 13) begin : g_m
         wire [255:0] ro;
         ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(re), .r_addr_in(ra[RB-1:3]), .rd_out(ro),
             .w_ce_in(we), .w_addr_in(wa[RB-1:3]), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00), .rr_addr(18'd0),
             .cr_en(2'b00), .cr_sel(16'd0));
-        assign rd = ro[{ks, 5'd0} +: 32];
+        if(NATIVE32)begin:g_native_read
+            for(genvar h=0;h<16;h=h+1)begin:g_read_halfbyte
+                assign rd[2*h+:2]=ro[({ks_leaf[3*h+:3],5'd0}+2*h)+:2];
+            end
+        end else begin:g_original_read
+            assign rd=ro[{ks,5'd0}+:32];
+        end
     end else if (MACRO && RB == 12) begin : g_m12       // 512 rows: the 1,024-row macro, upper half unused
         wire [255:0] ro;
         ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(re), .r_addr_in({1'b0, ra[RB-1:3]}), .rd_out(ro),
             .w_ce_in(we), .w_addr_in({1'b0, wa[RB-1:3]}), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00),
             .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        assign rd = ro[{ks, 5'd0} +: 32];
+        if(NATIVE32)begin:g_native_read
+            for(genvar h=0;h<16;h=h+1)begin:g_read_halfbyte
+                assign rd[2*h+:2]=ro[({ks_leaf[3*h+:3],5'd0}+2*h)+:2];
+            end
+        end else begin:g_original_read
+            assign rd=ro[{ks,5'd0}+:32];
+        end
     end else if (MACRO && RB == 11) begin : g_m11
         wire [255:0] ro;
         ot_sram_1r1w_256x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(re), .r_addr_in(ra[RB-1:3]), .rd_out(ro),
             .w_ce_in(we), .w_addr_in(wa[RB-1:3]), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00),
             .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        assign rd = ro[{ks, 5'd0} +: 32];
+        if(NATIVE32)begin:g_native_read
+            for(genvar h=0;h<16;h=h+1)begin:g_read_halfbyte
+                assign rd[2*h+:2]=ro[({ks_leaf[3*h+:3],5'd0}+2*h)+:2];
+            end
+        end else begin:g_original_read
+            assign rd=ro[{ks,5'd0}+:32];
+        end
     end else if (MACRO && RB == 10) begin : g_m10
         wire [255:0] ro;
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(re), .r_addr_in(ra[RB-1:3]), .rd_out(ro),
             .w_ce_in(we), .w_addr_in(wa[RB-1:3]), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00),
             .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        assign rd = ro[{ks, 5'd0} +: 32];
+        if(NATIVE32)begin:g_native_read
+            for(genvar h=0;h<16;h=h+1)begin:g_read_halfbyte
+                assign rd[2*h+:2]=ro[({ks_leaf[3*h+:3],5'd0}+2*h)+:2];
+            end
+        end else begin:g_original_read
+            assign rd=ro[{ks,5'd0}+:32];
+        end
     end else if (MACRO && RB == 9) begin : g_m9
         // 512 words occupy the lower 64 rows; the upper 64 physical rows are unused.
         wire [255:0] ro;
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(re), .r_addr_in({1'b0, ra[RB-1:3]}), .rd_out(ro),
             .w_ce_in(we), .w_addr_in({1'b0, wa[RB-1:3]}), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00),
             .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        assign rd = ro[{ks, 5'd0} +: 32];
+        if(NATIVE32)begin:g_native_read
+            for(genvar h=0;h<16;h=h+1)begin:g_read_halfbyte
+                assign rd[2*h+:2]=ro[({ks_leaf[3*h+:3],5'd0}+2*h)+:2];
+            end
+        end else begin:g_original_read
+            assign rd=ro[{ks,5'd0}+:32];
+        end
     end else if (MACRO) begin : g_unsupported_macro
         initial $fatal(1, "ot_hgi_su_lbank: unsupported MACRO=1 RB=%0d", RB);
         assign rd = 32'd0;
@@ -574,7 +616,7 @@ module ot_hgi_su_lgroup2 #(
     // LH-SU (10-19): WROT=1 (N=16 only): the stage sectors arrive bank-aligned (swr_*, rotated once by the parent and
     // shared by its groups); bank b takes the highest sector s with sw_v[s] && swr_m[s*N+b] (same last-wins order and
     // collision fault as the per-word loop below). WROT=0: swr_* unused (bit-identical).
-    parameter integer WROT = 0
+    parameter integer WROT = 0, NATIVE32 = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -749,7 +791,7 @@ module ot_hgi_su_lgroup2 #(
     end
     genvar gb;
     for (gb = 0; gb < N; gb = gb + 1) begin : g_bank
-        ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(b_re[gb]), .ra(b_ra[gb]), .rd(b_rd[gb]),
+        ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO), .LAT(LAT), .NATIVE32(NATIVE32)) u_b (.clk(clk), .re(b_re[gb]), .ra(b_ra[gb]), .rd(b_rd[gb]),
             .we(b_we[gb]), .wa(b_wa[gb]), .wd(b_wd[gb]));
     end
 endmodule

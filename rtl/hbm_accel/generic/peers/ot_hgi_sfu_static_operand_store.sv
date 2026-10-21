@@ -118,14 +118,36 @@ module ot_hgi_sfu_static_operand_store #(
  // ---- shared bank-aligned sector rotate (WROT)
  localparam integer RBS=LWB-4;
  wire [8*16*32-1:0] swr_d; wire [8*16-1:0] swr_m, swr_w; wire [8*RBS-1:0] swr_r0, swr_r1;
+ wire [8*16*2*4-1:0] rotate_lo;
+ generate if(NATIVE32 && WPIPE && WROT)begin:g_rotate_copies
+  // Capture on the existing WPIPE edge. Two select copies per bank keep
+  // each16-bit rotate slice local; no new stage or data storage is added.
+  (* keep=1,dont_touch=1 *) reg [8*16*2*4-1:0] lo_q;
+  for(genvar s=0;s<8;s=s+1)begin:g_s
+   for(genvar b=0;b<16;b=b+1)begin:g_b
+    for(genvar h=0;h<2;h=h+1)begin:g_h
+     always @(posedge clk)lo_q[4*((s*16+b)*2+h)+:4]<=stage_addr[LWB*s+:4];
+    end
+   end
+  end
+  assign rotate_lo=lo_q;
+ end else begin:g_rotate_original
+  for(genvar s=0;s<8;s=s+1)begin:g_s
+   for(genvar b=0;b<16;b=b+1)begin:g_b
+    for(genvar h=0;h<2;h=h+1)begin:g_h
+     assign rotate_lo[4*((s*16+b)*2+h)+:4]=w_stage_addr[LWB*s+:4];
+    end
+   end
+  end
+ end endgenerate
  generate if(WROT)begin:g_wrot
   for(genvar s=0;s<8;s=s+1)begin:g_s
-   wire [3:0] lo=w_stage_addr[LWB*s+:4];
    wire [RBS-1:0] hi=w_stage_addr[LWB*s+4+:RBS];
    assign swr_r0[RBS*s+:RBS]=hi;
    assign swr_r1[RBS*s+:RBS]=hi+1'b1;
    for(genvar b=0;b<16;b=b+1)begin:g_b
     localparam [3:0] B4=b;
+    wire [3:0] lo=rotate_lo[4*((s*16+b)*2)+:4];
 `ifdef OT_SFU_STORE_MUT_WROT
     // bench negative control: the rotate is off by one bank (every staged word lands in the neighbouring bank)
     wire [3:0] d=B4-lo-4'd1;
@@ -134,7 +156,14 @@ module ot_hgi_sfu_static_operand_store #(
 `endif
     assign swr_m[16*s+b]=!d[3] && w_stage_mask[8*s+d[2:0]];
     assign swr_w[16*s+b]=(B4<lo);
-    assign swr_d[32*(16*s+b)+:32]=w_stage_data[256*s+32*d[2:0]+:32];
+    for(genvar h=0;h<2;h=h+1)begin:g_half
+`ifdef OT_SFU_STORE_MUT_WROT
+     wire [3:0] dh=B4-rotate_lo[4*((s*16+b)*2+h)+:4]-4'd1;
+`else
+     wire [3:0] dh=B4-rotate_lo[4*((s*16+b)*2+h)+:4];
+`endif
+     assign swr_d[32*(16*s+b)+16*h+:16]=w_stage_data[256*s+32*dh[2:0]+16*h+:16];
+    end
    end
   end
  end else begin:g_nowrot
@@ -182,7 +211,7 @@ module ot_hgi_sfu_static_operand_store #(
    assign sw[b]=w_stage_v[b] && w_stage_group[2*b+:2]==g;
   end
   ot_hgi_su_lgroup2 #(.N(16),.M(16),.LWB(LWB),.AW(24),.NLW(0),
-   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT)) u_group(
+   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT),.NATIVE32(NATIVE32)) u_group(
    .clk(gck[g]),.rst_n(rst_n),.rq(req),.rr(req),.ra(addr),.rd(data),
    .sr_v(8'd0),.sr_addr({8*LWB{1'b0}}),.sr_d(),.sr_rv(),
    .sw_v(sw),.sw_addr(w_stage_addr),.sw_mask(w_stage_mask),.sw_d(w_stage_data),
@@ -191,7 +220,7 @@ module ot_hgi_sfu_static_operand_store #(
    .flt(group_fault[g]));
  end
  ot_hgi_su_lgroup2 #(.N(16),.M(16),.LWB(LWB),.AW(24),.NLW(16),
-  .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2)) u_output(
+  .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2),.NATIVE32(NATIVE32)) u_output(
   .clk(gck[4]),.rst_n(rst_n),.rq(16'd0),.rr(16'd0),.ra(384'd0),.rd(),
   .sr_v(drain_v),.sr_addr(drain_addr),.sr_d(drain_data),.sr_rv(drain_result_v),
   .sw_v(2'd0),.sw_addr({2*LWB{1'b0}}),.sw_mask(16'd0),.sw_d(512'd0),
