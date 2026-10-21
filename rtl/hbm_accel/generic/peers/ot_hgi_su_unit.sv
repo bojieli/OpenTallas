@@ -808,7 +808,7 @@ module ot_hgi_su_lgroup2 #(
     // the data network: a lane takes its bank among its candidates (lane 0: any bank)
     genvar gl, gj, gk;
     for (gl = 0; gl < N; gl = gl + 1) begin : g_rd
-        if (NATIVE32 && NLW>0 && LAT==0 && N==16) begin : g_native_read
+        if (NATIVE32 && NLW==0 && LAT==0 && N==16) begin : g_native_read
             // Same-edge selector capture, split across kept two-bit muxes.
             // A shared hold mux feeds sixteen copies; no added read edge.
             (* keep=1, dont_touch=1 *) reg [16*LN-1:0] pick_q;

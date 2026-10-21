@@ -5,3 +5,5 @@ Source11 native FAIL9/max37; source12 speculative bank-local writepreselector re
 Source13 immutable first attempt has constant helper function inside generate; Verilator rejected IEEE constant-function scope. Source14 moves identical constant helper to module scope. Source13 native job preserved, never qualifies selected source14. Native14 and exact existing default/native143360+three negative benchmark pending.
 
 Exact selected source14 existing default/native each143360 operand checks PASS, MUT_ADDR/MUT_RANGE/MUT_SCALAR_ADDR rejected. Native14 mapped census remains pending, no source11/12 census alias.
+
+KNOWN WRONG SELECTED GUARD: source14 used NLW>0, which activates only u_output with ordinary rd unused. Actualfouroperand groups useNLW0. The passing source14 bench therefore is not qualification of changed selectedread logic. Source15 corrects NLW==0 and requires fresh exactexistingbench/native; source13/14 immutable jobs/raw preserved, neither is selectedread repair.

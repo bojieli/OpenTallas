@@ -1,0 +1,23 @@
+{
+  "status": "PREBUILD_ANALYTICAL_ACTUAL_SELECTED_SOURCE",
+  "selection": "Four g_op[g].u_group N16/M16/NLW0 ordinary-read networks; output u_output NLW16 rd is unused and excluded. Source14 guard NLW>0 diagnostic wrongscope, no selectedfixqualification.",
+  "selector_state": {
+    "per_operand_group_old_bits": 64,
+    "per_operand_group_new_bits": 1024,
+    "groups": 4,
+    "net_delta_unreset_control_FF": 3840
+  },
+  "mux": "16 kept2bitmuxes per lane; 16lanes/group,4groups. Only candidate banks drive data2; noncandidatezero and MUT_XBAR bankmapping preserved. Existing bankrowselection/SRAMs unchanged.",
+  "fanout": "Input/hold fourbit mux shared feeds16 keptselector copies; eachcopy drivesone kept2bitmux; expected <=32 actualmapped census decides. No unbounded consumer replication.",
+  "ports": {
+    "VM_stage_bits_per_edge": 2048,
+    "operand_read_bits_per_edge": 2048,
+    "output_write_bits_per_edge": 512,
+    "output_drain_bits_per_edge": 512,
+    "new_SRAMs": 0,
+    "new_read_ports": 0
+  },
+  "latency": "Samecaptureedge andhold as lb_q; no extra data/control/reset edge, samefixedcalendar",
+  "area_fit": "3840 extra control FF plus local selectorcopywires; SRAM geometry unchanged; actual native/physical size pending, no fitclaim",
+  "qualification": "Existing actual80SRAM default/native143360checks+3negatives and actualmappednative15 required; no source14passalias"
+}

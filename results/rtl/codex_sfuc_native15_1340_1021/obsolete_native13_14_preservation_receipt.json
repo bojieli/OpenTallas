@@ -1,0 +1,56 @@
+{
+  "collected_at": "2026-10-21T15:41:08.751546-07:00",
+  "host": "ot-epyc9",
+  "keep_verified": true,
+  "root": "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021",
+  "jobs": [
+    {
+      "source": "src13",
+      "reason_obsolete": "IEEE constantfunction insidegenerate refused by actualVerilator",
+      "properties": {
+        "ActiveState": "active",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1446871-1792620731.scope",
+        "MemoryCurrent": "25223090176",
+        "MemoryPeak": "25674010624",
+        "MemoryMax": "42949672960"
+      },
+      "unit": "oth-ubuntu-1446871-1792620731.scope",
+      "pids": "    PID    PPID     ELAPSED   RSS COMMAND\n1446871 1446299       28:57  3776 bash run_native13.sh\n1447485 1446871       28:56 24612016 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -Q -T -s synth13.ys\n",
+      "source_sha256": "b0d805febd0e7e8b5119faa8b6bd5149aaa30306d3b248190dfe133968edecf2",
+      "output_paths": [
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/mapped13.v",
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/native13.json"
+      ],
+      "logs": [
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/synth13.log",
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/native13.log"
+      ],
+      "synthesis_script": "read_verilog -sv -defer -DSYNTHESIS src13/rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv\nread_verilog -sv -defer -DSYNTHESIS src13/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv\nread_verilog -lib src13/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\nread_verilog -lib src13/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v\nread_verilog -lib src13/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nchparam -set NATIVE32 1 -set WROT 1 -set WPIPE 1 -set GCLK 1 ot_hgi_sfu_static_operand_store\nhierarchy -check -top ot_hgi_sfu_static_operand_store\nproc\nselect -set ot_kw w:* a:keep %i\nselect -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i\ntechmap @ot_kc\nselect -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* t:$_*DFF* t:$_*LATCH* %u %u %u %i\nsetattr -set keep 1 @ot_kc\nselect -clear\nsynth -top ot_hgi_sfu_static_operand_store -flatten\ndfflibmap -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nabc -liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib \nopt_clean\nautoname\nwrite_verilog mapped13.v\n\n",
+      "source_read_guard": "if (NATIVE32 && NLW>0 && LAT==0 && N==16) begin : g_native_read"
+    },
+    {
+      "source": "src14",
+      "reason_obsolete": "ordinaryreadguard NLW>0 targetsunusedoutput; selected4operandgroups NLW0 unchanged",
+      "properties": {
+        "ActiveState": "active",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1564231-1792620811.scope",
+        "MemoryCurrent": "1867681792",
+        "MemoryPeak": "25431134208",
+        "MemoryMax": "42949672960"
+      },
+      "unit": "oth-ubuntu-1564231-1792620811.scope",
+      "pids": "    PID    PPID     ELAPSED   RSS COMMAND\n1564231 1563808       27:37  3788 bash run_native14.sh\n3886564 1564231       00:46 1108976 python3 src14/tools/ref_tile/native_census.py --netlist mapped14.v --top ot_hgi_sfu_static_operand_store --kit sfuc_operand_component --out native14.json --liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib --liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib --liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib --liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib --liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib --liberty src14/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib --liberty src14/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib --liberty src14/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib\n",
+      "source_sha256": "c6d84be353a01c6cbafcb449487964ab15e5612954766c3565a47b6e34e6c134",
+      "output_paths": [
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/mapped14.v",
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/native14.json"
+      ],
+      "logs": [
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/synth14.log",
+        "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021/native14.log"
+      ],
+      "synthesis_script": "read_verilog -sv -defer -DSYNTHESIS src14/rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv\nread_verilog -sv -defer -DSYNTHESIS src14/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv\nread_verilog -lib src14/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\nread_verilog -lib src14/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v\nread_verilog -lib src14/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nchparam -set NATIVE32 1 -set WROT 1 -set WPIPE 1 -set GCLK 1 ot_hgi_sfu_static_operand_store\nhierarchy -check -top ot_hgi_sfu_static_operand_store\nproc\nselect -set ot_kw w:* a:keep %i\nselect -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i\ntechmap @ot_kc\nselect -set ot_kc @ot_kw %ci1 t:$*dff* t:$*dlatch* t:$_*DFF* t:$_*LATCH* %u %u %u %i\nsetattr -set keep 1 @ot_kc\nselect -clear\nsynth -top ot_hgi_sfu_static_operand_store -flatten\ndfflibmap -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nabc -liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib \nopt_clean\nautoname\nwrite_verilog mapped14.v\n\n",
+      "source_read_guard": "if (NATIVE32 && NLW>0 && LAT==0 && N==16) begin : g_native_read"
+    }
+  ]
+}
