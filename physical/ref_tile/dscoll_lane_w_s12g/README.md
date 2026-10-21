@@ -59,9 +59,11 @@ Same outline, macro map, pins, PDN, layer contract as s7.
 SAFE review before first gate:
 1 PASS source-registered lane pins; reset_landing2+tree3.
 2 FIXED existing REACH2 relay/write-landing architecture, original guarded geometry.
-3 PENDING exact CORE_CRED12 mapped census; source change adds one RX pointer bit; no layout gate until <=32 including reset.
+3 PASS exact CORE_CRED12/LOCAL_POP mapped census W/E max32,0violations,0roleerrors; native std9780.1182um2. Original42-load pop cone split into kept count/address predicates, 0edges; LOCAL_POP default0/CORE_CRED default8 preserved.
 4 PASS same endpoint/gearbox pipeline; no wide combinational new mux.
 5 FIXED SRAM logical landing12 in existing32-deep macros; sender12 matched.
 6 PASS exact ffb9d6552 macro lattice/43.2pitch, face density<=6, full rows; outline725.76x583.2, area rechecked at native synth.
 7 PASS existing K24(g)/K32(h) trees; TT/FF<=80 measured at gate; io_hold .03.
 8 FIXED +4 outer credit RTT priced with two-edge payload/valid+reverse return relays. Finite offdie return pulses only.
+
+Existing full protocol bench (currentsource): 37313/36912words vsreference,0errors,all4causalrelay/write mutants caught. See peer_native_{w,e}.json and peer_m{0,5,6,7,8}.log.
