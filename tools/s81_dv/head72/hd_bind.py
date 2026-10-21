@@ -19,7 +19,7 @@ Head masters (RTL of record: rtl/dsrom_sys/s81_head on this branch; ports from r
   ot_pdie_serdes (13) / ot_pdie_serdes_l276 (4, the lep's lk_WN*: 2 x 276 lanes): module ot_pdie_serdes_col (G7 row)
 Bus B rides 682-b lanes where a station / region crossing exists: 'lanes' split rules, so the 117 spare top bits are
 declared lane-quantisation pads at station 0 (dv_bind), never 'plan bits dropped'.
-No CLOSED view is bound for any head master (none exists): all are declared source-view / UNBOUND (view null, view_note).
+Head masters retain source views unless a plan explicitly selects a CLOSED peer or SPR view; those selections carry exact source/record provenance.
 """
 import argparse
 import copy
@@ -212,7 +212,7 @@ def main():
                     receiver_region=cp,source_ref=facts['lep_regional']['source'])
     T['masters'] = M
     T['instance_orientations'] = dict(facts['instance_orientations'])
-    T['unbound'] = {k: v['view_note'] for k, v in M.items()}
+    T['unbound'] = {k: v['view_note'] for k, v in M.items() if not v.get('view')}
     used = {b['master'] for b in blocks}
     miss = used - set(M)
     assert not miss, miss
