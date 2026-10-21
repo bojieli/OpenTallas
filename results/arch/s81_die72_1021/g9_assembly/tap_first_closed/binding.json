@@ -1,0 +1,603 @@
+{
+  "owner_packet_ref": "869be1b5a",
+  "source": "27ffa71c6",
+  "source_selection": "MODULE_SPECIFIC16 frozen_tap_modules.sv only; NO wholeRRfilepreference; keepselectedRRbodyindependent",
+  "frozen_source_sha256": "d5c8c903a66a636a5ce9d1cc6ddd3b9c3fd9c93927b4d2d625326466e5d4e5d8",
+  "frozen_source_path": "results/arch/s81_die72_1021/g9_assembly/tap_first_closed/frozen_tap_modules.sv",
+  "defines": [
+    "OT_S81ENG_TAP_N32R2"
+  ],
+  "params": {},
+  "records": {
+    "dsdv_eng_tap": "1bf0c8aa0bd24289625226aebb57cb12d5f89715",
+    "dsdv_eng_tap_w": "f55a26b7ced5be9fcfa7e6cb4e1df99d06396afd"
+  },
+  "view_sha256": {
+    "dsdv_eng_tap_w": {
+      "dsdv_eng_tap_w_ff.lib": "c1e7b216dbc69eb190c67e6e51e237182a248ed627752612d6c3bdd8fecc28ae",
+      "abstract.json": "305f9e23484d07d637efbb503a5279e05941ff77168cfb0e6b70262db0cb8e67",
+      "dsdv_eng_tap_w_tt.lib": "2342db8d714ae779183a9164a471306bac1cfbaac4908df39e510de4e3d5b3b7",
+      "dsdv_eng_tap_w_ss.lib": "a4ceef8f82da91df8cf68effadf8166c3f77ed9fc910bc67effca947c0011bb9",
+      "insertion.json": "bfe1252ce3bbff127e4266f2a5a7bd1f0b132f2350e33111986bcd0debf7b2ad",
+      "dsdv_eng_tap_w.lef": "b80dcdc1147c508b02aa71b9c341513538f7296d56f5a58904e782cd52cda932",
+      "child_lint.json": "25c924cf26acbbff46cda9cbf429d0e16d17fb454c58c8c8a508827c7670360b"
+    },
+    "dsdv_eng_tap": {
+      "dsdv_eng_tap_tt.lib": "88a66b87b9111e5da50f7f32d2fb73c7fdeb64d268e6e6df6e2d0d836360b16d",
+      "dsdv_eng_tap_ss.lib": "eeba7f30604ad246af0091d353be00f90e88c17db3c5dd7029caf730770a4d81",
+      "abstract.json": "0f7048ab81f2cb7be44bf416e5bae4fe998bf134835d1db22c2d1cc14f34ee8b",
+      "dsdv_eng_tap.lef": "b407e35b7022135efb33ba5e33f0a5bf051f9b7cf6334f873fc40126159948c7",
+      "insertion.json": "88f29e18efc8b808e055e9febe2c58c60729d541fa665349262dd5bd3363b270",
+      "dsdv_eng_tap_ff.lib": "bed49f6b258f462aa4f03cca992a8e235f4be4b8cecdf26dd86dcbc74789cb78",
+      "child_lint.json": "17dc5cea6feebf22df7e15182845d4f1caf81eea0df696c4f27a77de5691efbb"
+    }
+  },
+  "placements": [
+    {
+      "instance": "etap_00",
+      "master": "dsdv_eng_tap_w",
+      "old_rect_um": [
+        11690.56,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        11690.592,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          11690592,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 313,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_01",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        11992.96,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        11992.992,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          11992992,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_02",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        12295.36,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        12295.392,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          12295392,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_03",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        12597.76,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        12597.792,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          12597792,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_04",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        12900.16,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        12900.192,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          12900192,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_05",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        13202.56,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        13202.592,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          13202592,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_06",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        13504.96,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        13504.992,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          13504992,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_07",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        13807.36,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        13807.392,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          13807392,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_08",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        18417.2,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        18417.216,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          18417216,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_09",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        18719.6,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        18719.616,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          18719616,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_10",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        19022.0,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        19022.016,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          19022016,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_11",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        19324.4,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        19324.416,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          19324416,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_12",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        19626.8,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        19626.816,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          19626816,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_13",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        19929.2,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        19929.216,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          19929216,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_14",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        20231.6,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        20231.616,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          20231616,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    },
+    {
+      "instance": "etap_15",
+      "master": "dsdv_eng_tap",
+      "old_rect_um": [
+        20534.0,
+        1989.8,
+        216.0,
+        648.0
+      ],
+      "new_rect_um": [
+        20534.016,
+        1989.84,
+        172.8,
+        108
+      ],
+      "fullpincheck": {
+        "orient": "R0",
+        "origin_nm": [
+          20534016,
+          1989840
+        ],
+        "layers": {
+          "M4": {
+            "pins": 624,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          },
+          "M5": {
+            "pins": 1277,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      }
+    }
+  ],
+  "wholeplan_bodies_plus_reserves": 163,
+  "minimum_separation_um": 86.39999999999714,
+  "seal_um": 100,
+  "scope": "ExactMAIN/WMAIN172.8x108/alltranslatedpins/bodymodelPASS; freshportprojection/paths/405/clock/reset/STAowed. NoWFBalias.",
+  "preserved_RR_ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+  "preserved_RR_file_sha256": "fd3c84d7090a3651d1ec94e9e33d5d9e99fd57d63d93bb20e09f3c2231646cd2"
+}
