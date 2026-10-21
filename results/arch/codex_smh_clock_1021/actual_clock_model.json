@@ -1,0 +1,411 @@
+{
+  "source_commit": "dab853bf3",
+  "root_authorization": "ROOT via hbm_lead: bounded SAMEroot insertion-aware symmetric-spine after actual model, no phase/SDC/region relabel waiver",
+  "source_invariant": "Same RTL, ports, parameter schedule, eight hard children, prior PVM s4a; single clock clk. Zero new cycles. No existing gate cancelled.",
+  "halves": {
+    "n": {
+      "outline_um": [
+        691.2,
+        1512.0
+      ],
+      "clock_pin_um": [
+        0,
+        756.0
+      ],
+      "observed_gate_clock_sinks": 35481
+    },
+    "s": {
+      "outline_um": [
+        691.2,
+        1252.8
+      ],
+      "clock_pin_um": [
+        0,
+        626.4
+      ],
+      "observed_gate_clock_sinks": 18873
+    }
+  },
+  "children": [
+    {
+      "instance_s": "u_lf1.g_lr.u_c.u_merge",
+      "view": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3",
+      "origin_um": [
+        302.4,
+        43.2
+      ],
+      "orientation": "R0",
+      "insertion_sha256": "485757d979e4f0504c2f100149f2da9262ba73e4804f1b8aed573fb1cf412a00",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 1127,
+            "mean": 294.1,
+            "min": 263.2,
+            "max": 313.2
+          },
+          "all": {
+            "n": 14243,
+            "mean": 289.6,
+            "min": 251.1,
+            "max": 362.7
+          },
+          "boundary_spread_ps": 50.0,
+          "all_spread_ps": 111.6
+        },
+        "ff": {
+          "boundary": {
+            "n": 1127,
+            "mean": 244.5,
+            "min": 215.4,
+            "max": 262.4
+          },
+          "all": {
+            "n": 14243,
+            "mean": 239.8,
+            "min": 198.9,
+            "max": 308.8
+          },
+          "boundary_spread_ps": 47.0,
+          "all_spread_ps": 109.9
+        }
+      }
+    },
+    {
+      "instance_s": "u_lf1.g_lr.u_c.u_qk",
+      "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+      "origin_um": [
+        345.6,
+        388.8
+      ],
+      "orientation": "R0",
+      "insertion_sha256": "b9aa38f094a1e7e853d04f2f60ecdaa54ed7f11deb4cc265c15f29381df36397",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 585,
+            "mean": 175.8,
+            "min": 170.4,
+            "max": 183.5
+          },
+          "all": {
+            "n": 10232,
+            "mean": 175.7,
+            "min": 164.2,
+            "max": 187.4
+          },
+          "boundary_spread_ps": 13.1,
+          "all_spread_ps": 23.2
+        },
+        "ff": {
+          "boundary": {
+            "n": 585,
+            "mean": 143.1,
+            "min": 137.8,
+            "max": 151.1
+          },
+          "all": {
+            "n": 10232,
+            "mean": 142.9,
+            "min": 132.6,
+            "max": 154.2
+          },
+          "boundary_spread_ps": 13.3,
+          "all_spread_ps": 21.6
+        }
+      }
+    },
+    {
+      "instance_s": "u_lf1.g_lr.u_c.u_bdc",
+      "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+      "origin_um": [
+        172.8,
+        518.4
+      ],
+      "orientation": "MX",
+      "insertion_sha256": "ec0ac4ce92e796ee1e5242f93ff9c27c7ec20ff5144da166085a36354b1838b2",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 1137,
+            "mean": 180.9,
+            "min": 172.0,
+            "max": 188.1
+          },
+          "all": {
+            "n": 10670,
+            "mean": 175.8,
+            "min": 165.5,
+            "max": 188.1
+          },
+          "boundary_spread_ps": 16.1,
+          "all_spread_ps": 22.6
+        },
+        "ff": {
+          "boundary": {
+            "n": 1137,
+            "mean": 148.0,
+            "min": 139.7,
+            "max": 154.9
+          },
+          "all": {
+            "n": 10670,
+            "mean": 143.5,
+            "min": 133.7,
+            "max": 154.9
+          },
+          "boundary_spread_ps": 15.2,
+          "all_spread_ps": 21.2
+        }
+      }
+    },
+    {
+      "instance_s": "u_lf1.g_lr.u_c.u_h0",
+      "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+      "origin_um": [
+        345.6,
+        518.4
+      ],
+      "orientation": "R0",
+      "insertion_sha256": "129cd9828532466049b7fc3a21eb7e0e14a2093b7cbb441238a2e5838b466df5",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 518,
+            "mean": 175.5,
+            "min": 168.8,
+            "max": 181.1
+          },
+          "all": {
+            "n": 8415,
+            "mean": 171.0,
+            "min": 160.5,
+            "max": 184.2
+          },
+          "boundary_spread_ps": 12.3,
+          "all_spread_ps": 23.7
+        },
+        "ff": {
+          "boundary": {
+            "n": 518,
+            "mean": 143.0,
+            "min": 136.7,
+            "max": 148.7
+          },
+          "all": {
+            "n": 8415,
+            "mean": 139.3,
+            "min": 129.6,
+            "max": 152.7
+          },
+          "boundary_spread_ps": 12.0,
+          "all_spread_ps": 23.1
+        }
+      }
+    },
+    {
+      "instance_s": "u_lf1.g_lr.u_c.u_h1",
+      "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+      "origin_um": [
+        475.20000000000005,
+        518.4
+      ],
+      "orientation": "R0",
+      "insertion_sha256": "129cd9828532466049b7fc3a21eb7e0e14a2093b7cbb441238a2e5838b466df5",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 518,
+            "mean": 175.5,
+            "min": 168.8,
+            "max": 181.1
+          },
+          "all": {
+            "n": 8415,
+            "mean": 171.0,
+            "min": 160.5,
+            "max": 184.2
+          },
+          "boundary_spread_ps": 12.3,
+          "all_spread_ps": 23.7
+        },
+        "ff": {
+          "boundary": {
+            "n": 518,
+            "mean": 143.0,
+            "min": 136.7,
+            "max": 148.7
+          },
+          "all": {
+            "n": 8415,
+            "mean": 139.3,
+            "min": 129.6,
+            "max": 152.7
+          },
+          "boundary_spread_ps": 12.0,
+          "all_spread_ps": 23.1
+        }
+      }
+    },
+    {
+      "instance_s": "u_lf1.g_lr.u_c.u_xs",
+      "view": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs",
+      "origin_um": [
+        172.8,
+        734.4
+      ],
+      "orientation": "MX",
+      "insertion_sha256": "e23811f61173d16f88dda66576dfddedfed46b9b01d1c6e4d28ff8536cc50b34",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 4528,
+            "mean": 485.5,
+            "min": 453.5,
+            "max": 528.9
+          },
+          "all": {
+            "n": 20578,
+            "mean": 495.9,
+            "min": 450.1,
+            "max": 573.1
+          },
+          "boundary_spread_ps": 75.4,
+          "all_spread_ps": 123.0
+        },
+        "ff": {
+          "boundary": {
+            "n": 4528,
+            "mean": 393.9,
+            "min": 366.8,
+            "max": 425.7
+          },
+          "all": {
+            "n": 20578,
+            "mean": 400.0,
+            "min": 363.0,
+            "max": 452.0
+          },
+          "boundary_spread_ps": 58.9,
+          "all_spread_ps": 89.0
+        }
+      }
+    },
+    {
+      "instance_s": "u_row1",
+      "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+      "origin_um": [
+        216.0,
+        388.8
+      ],
+      "orientation": "R0",
+      "insertion_sha256": "c610ed23a72b2848163326610cb71ef682c9ec121d275bd488331401ba32e47c",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 2458,
+            "mean": 150.8,
+            "min": 132.8,
+            "max": 171.7
+          },
+          "all": {
+            "n": 2458,
+            "mean": 150.8,
+            "min": 132.8,
+            "max": 171.7
+          },
+          "boundary_spread_ps": 38.9,
+          "all_spread_ps": 38.9
+        },
+        "ff": {
+          "boundary": {
+            "n": 2458,
+            "mean": 123.9,
+            "min": 107.1,
+            "max": 143.5
+          },
+          "all": {
+            "n": 2458,
+            "mean": 123.9,
+            "min": 107.1,
+            "max": 143.5
+          },
+          "boundary_spread_ps": 36.4,
+          "all_spread_ps": 36.4
+        }
+      }
+    },
+    {
+      "instance_s": "u_rowe1",
+      "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+      "origin_um": [
+        604.8,
+        388.8
+      ],
+      "orientation": "R0",
+      "insertion_sha256": "af979d223030a7af92c6eba64eff52529601736a9dc2416575c77fc1978a6aeb",
+      "corners": {
+        "tt": {
+          "boundary": {
+            "n": 1640,
+            "mean": 112.9,
+            "min": 104.3,
+            "max": 118.7
+          },
+          "all": {
+            "n": 1640,
+            "mean": 112.9,
+            "min": 104.3,
+            "max": 118.7
+          },
+          "boundary_spread_ps": 14.4,
+          "all_spread_ps": 14.4
+        },
+        "ff": {
+          "boundary": {
+            "n": 1640,
+            "mean": 94.0,
+            "min": 85.2,
+            "max": 100.0
+          },
+          "all": {
+            "n": 1640,
+            "mean": 94.0,
+            "min": 85.2,
+            "max": 100.0
+          },
+          "boundary_spread_ps": 14.8,
+          "all_spread_ps": 14.8
+        }
+      }
+    }
+  ],
+  "intrinsic_lower_bounds_ps": {
+    "tt": {
+      "boundary": 75.4,
+      "all": 123.0
+    },
+    "ff": {
+      "boundary": 58.9,
+      "all": 109.9
+    }
+  },
+  "causal_diagnosis": "K64 inserts physical clusters under one CTS root; does not model diverse child insertion targets or form landed independent regions. Existing s3a child-flop boundary aggregate244.8TT/218.3FF remains FAIL.",
+  "candidate_model": {
+    "root": "same clk, centre bbox symmetric bisection; explicit hard-child leaf taps based on immutable insertion references; segmented clock wiring150um; no generated clocks or relabeled regions",
+    "primary": {
+      "leaf_bin_um": 60,
+      "leaf_max_sinks": 8,
+      "min_leaf_count_n": 4435,
+      "min_leaf_count_s": 2359
+    },
+    "structural_fallback": {
+      "leaf_bin_um": 40,
+      "leaf_max_sinks": 4,
+      "purpose": "halve leaf fanout and local clock reach; distinct physical leaf partition with same domain/source contract"
+    },
+    "qualified_boundary_requirement": "Actual ALL root sinks including hard-child boundary references <=80ps TT and FF; no selected-subtree report",
+    "strict_all_internal_requirement": "Impossible with unchanged hardchildren: max intrinsic PVM/XS spans exceed80. Need explicit contract resolution or actual child/region rewrite before claiming pass.",
+    "model_limits": "Default45ps buffer and0.43ps/um estimates are topology estimates; cannot predict corner closure or replace actual placement-extracted timing. Child boundary75.4TT leaves4.6ps headroom, so bounded diagnostic only."
+  }
+}
