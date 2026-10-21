@@ -237,7 +237,8 @@ class Job:
             cw = sum(int(self.codes[T - 1, 32 * b + x]) << (8 * x) for x in range(32))
             ow.append(cw | int(self.e8[T - 1, b]) << 256)
         fr.append(('OWN_ROW', ow))
-        fr.append(('WIN_LOAD', [hdr(2, 0, tag, spec=SB | (T << 81) | (0 << 89) | (self.wfirst << 99))]))
+        fr.append(('WIN_LOAD', [hdr(2, 0, tag, spec=SB | (T << 81) | (0 << 89) | (self.wfirst << 99),
+                                      pos=self.pos if self.owner is not None else 777)]))
         qb = C.bf16_bits(self.q)                                                                       # [16, 512]
         for b in range(2):
             ws = [hdr(1, 128, tag, spec=b << 448)]

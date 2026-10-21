@@ -222,13 +222,17 @@ def placement(die, sl, fx=None):
             tensors = [(name, n) for name, _, n in rng]
         total = sum(n for _, n in tensors)
         align4 = os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1'
+        source_frames = all_frames
         if align4:
+            # RD transports whole 256-bit pairs: choose even active frame counts
+            # per slice, so every owner boundary is eight captured values aligned.
+            source_frames = [frame for sl_ in slices for frame in die.frames_of(sl_)[:2 * (len(die.frames_of(sl_)) // 2)]]
             # Whole native SRAM rows: four captured FP32/BF16-expanded values.
             # Real frames beyond this subset are idle, never phantom owners.
             assert own is not None, 'aligned a_proj map requires a selected DENSE2 stage'
-            assert all(n % 4 == 0 and start % 4 == 0 for (_, n), start in zip(tensors, starts))
+            assert all(n % 8 == 0 and start % 8 == 0 for (_, n), start in zip(tensors, starts))
             counts = [n // 4 for _, n in tensors]
-            assert sum(counts) <= len(all_frames), ('aligned a_proj actual capacity', counts, len(all_frames))
+            assert sum(counts) <= len(source_frames), ('aligned a_proj actual capacity', counts, len(source_frames))
         else:
             numer = [n * len(all_frames) for _, n in tensors]
             counts = [n // total for n in numer]
@@ -243,14 +247,14 @@ def placement(die, sl, fx=None):
             off = row0
             for j in range(nf):
                 n = q + (j < rem)
-                assigned[all_frames[fi]] = list(range(off, off + n))
+                assigned[source_frames[fi]] = list(range(off, off + n))
                 off += n
                 fi += 1
             assert off == row0 + nrows
             row0 += nrows
         assert fi == sum(counts) and row0 == (total if own is None else own[1])
-        for frame in all_frames[fi:]:
-            assigned[frame] = []
+        for frame in all_frames:
+            assigned.setdefault(frame, [])
         return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
