@@ -43,3 +43,15 @@ s_0N; every other block/street identical to G4 (overlap/street asserts pass). `g
 L5-RTL e93685328 (u_land #(SRAM 1) = CLOSED dsdv_mu_land 263e13fc3) and S81-RTLGAP/head 589110357 (end-slice
 u_xg -> ot_s81sl_xg_xo; assembly specs list ot_s81sl_xg_xo/rstop_xo sources, u_sl.u_xg UNBOUND until the xg_xo view gates).
 UNBOUND: s_0N u_lep ot_s81sl_lep_mu_ab (kit s81sl_lepmu; binds in G6), safe8_ntf lanes. Chain: `release72/run_die72_g5.sh`.
+
+## G7 (S81-LINK5B L5B-G7 10-21)
+
+`g7/placement_g7.json` = `tools/s81_dv/dv_floorplan72_g7.py` (G5 construction + moves/enlargements only): everything above the
+ctrl row +907.2, die 32648 x 25952.4 (reticle 26000). COORD 4.4: the 8 L2 index readers sit in the two south pockets beside
+the PHY (W: x >= 8307.36 = column B freed by G5; E: from the PHY right edge, E column-B copy-A/B reserves moved to rows 2/3),
+2 x 2 per side, far-controller readers in the column nearer the PHY; iqf in the W pocket. S81-RTLGAP/eng: 16 reader taps
+216 x 648 in the new ctrl/service strip (y 1976.2), eng 1296 x 1209.6 above s_6S. L20: bk_sel 907.2 x 4190.4.
+`g7/plan_unrouted_g7.json` = `tools/s81_dv/dv_plan72_g7.py` (161 blocks, 819 links): reader links through the taps, tap chains,
+s_7N f_ks second sink, column-6 rung via eng. Local route: 0 failures, 19684 stations (G5 20832), bit-mm 1.82 M (G5 2.02 M);
+reader <-> tap <= 11 stations, tap <-> ctrl <= 7 (G5 reader <-> ctrl 70-75); iq_qf 35 -> 6, iq_src 45 -> 59, is_tail 41 -> 95;
+svc hrq/hrd +3 stations (strip); eng <-> etap_15 chains 72 stations. Chain `release72/run_die72_g7.sh`.
