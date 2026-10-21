@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_hc_qhub_static",
+ "enable": false,
+ "reason": "ot_hbm_hc_qhub_static SAFE 1 = ot_hbm_hc_q_static (every pin registered in RTL) + ot_hbm_hc_qcen_static (descriptor/event/beat-control/wfault pin flops, s_i chunk-sum pin register SAFE 1; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register, xb_v*/xb_beat* their own per-face kept copy; a kit flop stage would shift the compiled schedule"
+}

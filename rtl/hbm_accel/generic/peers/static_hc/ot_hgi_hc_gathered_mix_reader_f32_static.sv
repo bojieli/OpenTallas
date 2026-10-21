@@ -78,10 +78,19 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     for(genvar j=0;j<3;j=j+1)begin:g_j
         for(genvar c=0;c<8;c=c+1)begin:g_c
             wire [2:0] rk=rs_c[(j*8+c)*3+:3]+3'(j);
+            // COL-HC 10-21 (gate native census, mapped: rs_c[] QN 139..217 loads -- ABC folded the rk == b decode into the
+            // 32-b AND-OR selects): the decode is a KEPT one-hot wire per copy (ABC boundary): a decode bit drives the 32
+            // select loads of its chunk, an rs_c bit one 3->8 decoder.  (Two identical half decoders would be merged by
+            // ABC structural hashing.)  Same function, same edge.
+            wire [7:0] oh;
+            for(genvar b=0;b<8;b=b+1)begin:g_oh
+                (* keep = "true" *) wire w=(rk==3'(b));
+                assign oh[b]=w;
+            end
             reg [31:0] v;
             always @*begin
                 v=32'd0;
-                for(integer b=0;b<8;b=b+1)v=v|({32{rk==3'(b)}}&local_rr[b*257+c*32+:32]);
+                for(integer b=0;b<8;b=b+1)v=v|({32{oh[b]}}&local_rr[b*257+c*32+:32]);
             end
             assign arr[j*256+c*32+:32]=v;
         end

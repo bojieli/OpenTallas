@@ -1,0 +1,721 @@
+{
+ "name": "hbm_hcq_hub_c1s",
+ "top": "ot_hbm_hc_qhub_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hc_rst_relay_k.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_f32_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "clk_t",
+   "rst_n",
+   "bd_v",
+   "bd_ss",
+   "bd_nv",
+   "bd_wa",
+   "bd_xa",
+   "s_i",
+   "xb_v",
+   "xb_beat",
+   "xb_d0",
+   "wc_w",
+   "rstb_w",
+   "wf_w"
+  ],
+  "N": [
+   "lg_rr",
+   "lg_w_done",
+   "xb_v_n",
+   "xb_beat_n",
+   "xb_d1",
+   "xb_d2",
+   "xb_d3",
+   "wc_n",
+   "rstb_n",
+   "wf_n"
+  ],
+  "E": [
+   "lg_wq",
+   "lg_rq",
+   "xb_v_e",
+   "xb_beat_e",
+   "xb_d4",
+   "wc_e",
+   "rstb_e",
+   "wf_e"
+  ],
+  "S": [
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "residual_done",
+   "gathered_mix_v",
+   "gathered_mix_row",
+   "gathered_mix_pos",
+   "gathered_mix_data",
+   "gather_done",
+   "result_v",
+   "result_position",
+   "result",
+   "program_active",
+   "program_done",
+   "hcq_fault",
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "i_v",
+   "i_kind",
+   "i_slot",
+   "i_lo",
+   "i_w",
+   "i_cnt",
+   "i_word",
+   "ps_v",
+   "ps",
+   "ps_f",
+   "eng_fault",
+   "xb_v_s",
+   "xb_beat_s",
+   "xb_d5",
+   "xb_d6",
+   "xb_d7",
+   "wc_s",
+   "rstb_s",
+   "wf_s"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    302.4
+   ],
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.55,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_hc_qhub_static SAFE 1 = ot_hbm_hc_q_static (every pin registered in RTL) + ot_hbm_hc_qcen_static (descriptor/event/beat-control/wfault pin flops, s_i chunk-sum pin register SAFE 1; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register, xb_v*/xb_beat* their own per-face kept copy; a kit flop stage would shift the compiled schedule"
+ },
+ "hard_define": "SYNTHESIS",
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?0?.u_t",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?1?.u_t",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?2?.u_t",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?3?.u_t",
+   "at": [
+    43.2,
+    604.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "inter": [],
+ "job": {
+  "owner": "Claude:HBM-COLLECT10/COL-HC",
+  "branch": "claude/colhc-qhub-c1r-1021",
+  "tag": "c1s",
+  "purpose": "HC quarter hub CLUSTER (H.STA.BLK.17.2): SAFE 2 glue (native32 FAN32 forms) + 4 hard tree slices with their own clock entries [fallback c1q: non-timing-driven global placement]",
+  "views_to": "physical/ref_tile/hbm_hcq_hub_c1s/views",
+  "record_to": "results/rtl/ref_tile/hbm_hcq_hub_c1s",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/test/tb_hbm_hc_q_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/test/full_sm_service/sram_models.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+   "physical/hbm_hc_hub",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hc_rst_relay_k.sv",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+   "rtl/test/tb_hc_gather_f32.sv",
+   "rtl/test/tb_static_program_target_fan32.sv",
+   "rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/run_gather_f32.sh"
+  ],
+  "benches": [
+   {
+    "name": "hc_ring_c1_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1 +define+HC_QSAFE=2' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_c1_mut6",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1 +define+HC_QSAFE=2' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m6 6",
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=6 rc=0",
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE 2 slices: leaf valid one edge early",
+    "fail_witness": "results/rtl/hbm_hcq_hub_c1/ring_q2_mut6.log"
+   },
+   {
+    "name": "hcq_c1_exact",
+    "cmd": "HCQ_SAFE=2 HCQ_GSTR=43 MUTS=0 OUT={RUN}/bench/all bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HC_Q_STATIC BENCH PASS",
+    "min_count_regex": "^TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=(\\d+)"
+   },
+   {
+    "name": "hcq_c1_mut7",
+    "cmd": "HCQ_SAFE=2 HCQ_GSTR=43 MUTS=7 OUT={RUN}/bench/m7 bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
+    "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=7 ",
+    "note": "gathered-reader bounds from the previous programme word",
+    "fail_witness": "results/rtl/hbm_hcq_hub_c1/hcq_s2_mut7.log"
+   },
+   {
+    "name": "gather_f32_exact",
+    "cmd": "bash rtl/hbm_accel/generic/peers/static_hc/run_gather_f32.sh {RUN}/bench/g0 0",
+    "expect": "pass",
+    "pass_regex": "^GATHER_F32 PASS MUT=0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_f32_mut1",
+    "cmd": "bash rtl/hbm_accel/generic/peers/static_hc/run_gather_f32.sh {RUN}/bench/g1 1",
+    "expect": "fail",
+    "pass_regex": "^GATHER_F32 PASS MUT=1",
+    "fail_regex": "GATHER_F32 FAIL MUT=1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "response prediction one edge late",
+    "fail_witness": "results/rtl/hbm_hcq_hub_c1/gather_f32_mut1.log"
+   },
+   {
+    "name": "ptgt_fan32_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p0 0",
+    "expect": "pass",
+    "pass_regex": "^PTGT_FAN32 PASS MUT=0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ptgt_fan32_mut1",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p1 1",
+    "expect": "fail",
+    "pass_regex": "^PTGT_FAN32 PASS MUT=1",
+    "fail_regex": "^MISMATCH cyc=[0-9]+ c |PTGT_FAN32 FAIL MUT=1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "scan without the pending-write bypass",
+    "fail_witness": "results/rtl/hbm_hcq_hub_c1/ptgt_fan32_mut1.log"
+   }
+  ]
+ },
+ "params": {
+  "DRLY": 2,
+  "CHX": 11,
+  "SAFE": 2
+ },
+ "structural_change": "HBM-COLLECT10/COL-HC 10-21 c1s: hbm_hcq_hub_c1q re-gate (10-21 08:30, ot-gold1) REFUSED by the in-gate mapped native census (PRE_GATE_NATIVE_CENSUS, limit 32): 75 drivers, max 217 -- gathered reader rs_c[] QN 139..217 (ABC folded the rk==b one-hot decode into the 32-b AND-OR selects), qcal programme captured[23..25] QN 76..80 (npos-1 folded into the 3 x 19-b gb masks), 3 decode nets 33/34. Fix: the decode / n1 on KEPT wires (ABC boundaries): decode bit -> 32 select loads, rs_c bit -> one 3->8 decoder, n1 bit -> one 19-b mask. Same function, same edges (0 added), port-identical. Prior: HBM-HCBANK6 10-20 (H.STA.BLK.17.2) structural successor of hbm_hcq_hub_s1/s1b/s2/s2b (all --cts gates FAILED: GATE_STALL rc137 in post-CTS repair_timing -hold, 28,269 hold endpoints at margin 30 with ONE 51,334-sink root whose arrival spread 566..849 ps; mapped native32 census 1,057 / 960 drivers > 32). (1) REGISTER MASS OUT OF THE GLUE: levels 1..4 of the quarter subtree (60 of 63 LAT-7 adders, ~37k flops) are 4 hard children ot_hbm_hc_qtree16_static (one master x4, kit hbm_hcq_tree16_c1) beside the W-face s_i pins, each with its own clock entry clk_t[c] (hybrid_entries: the die delivers phi ",
+ "pin_ranges": {
+  "clk": [
+   3,
+   3.5
+  ],
+  "rst_n": [
+   4.2,
+   5.0
+  ],
+  "bd_v": [
+   5.0,
+   6.0
+  ],
+  "bd_ss": [
+   6.0,
+   7.0
+  ],
+  "bd_nv": [
+   7.0,
+   15.872
+  ],
+  "bd_wa": [
+   15.872,
+   28.547
+  ],
+  "bd_xa": [
+   28.547,
+   41.222
+  ],
+  "xb_d0": [
+   41.222,
+   320.9
+  ],
+  "xb_v": [
+   321.2,
+   322.2
+  ],
+  "xb_beat": [
+   322.2,
+   323.2
+  ],
+  "s_i": [
+   324.0,
+   727.126
+  ],
+  "wc_w": [
+   727.126,
+   729.4
+  ],
+  "rstb_w": [
+   729.4,
+   730.4
+  ],
+  "wf_w": [
+   730.4,
+   731.4
+  ],
+  "lg_rr": [
+   3,
+   365.7
+  ],
+  "xb_v_n": [
+   366.2,
+   367.2
+  ],
+  "xb_beat_n": [
+   367.2,
+   368.2
+  ],
+  "lg_w_done": [
+   368.7,
+   372.35
+  ],
+  "xb_d1": [
+   372.35,
+   489.144
+  ],
+  "xb_d2": [
+   489.144,
+   605.938
+  ],
+  "xb_d3": [
+   605.938,
+   722.732
+  ],
+  "wc_n": [
+   722.732,
+   728.663
+  ],
+  "rstb_n": [
+   728.663,
+   730.031
+  ],
+  "wf_n": [
+   730.031,
+   731.4
+  ],
+  "lg_wq": [
+   3,
+   398.5
+  ],
+  "xb_v_e": [
+   399.0,
+   400.0
+  ],
+  "xb_beat_e": [
+   400.0,
+   401.0
+  ],
+  "lg_rq": [
+   401.5,
+   511.61
+  ],
+  "xb_d4": [
+   511.61,
+   718.875
+  ],
+  "wc_e": [
+   718.875,
+   729.4
+  ],
+  "rstb_e": [
+   729.4,
+   730.4
+  ],
+  "wf_e": [
+   730.4,
+   731.4
+  ],
+  "tgt": [
+   3,
+   5.498
+  ],
+  "cfg_v": [
+   5.498,
+   6.498
+  ],
+  "cfg_target": [
+   6.498,
+   8.996
+  ],
+  "cfg_addr": [
+   8.996,
+   12.743
+  ],
+  "cfg_data": [
+   12.743,
+   92.675
+  ],
+  "desc_v": [
+   92.675,
+   93.675
+  ],
+  "desc_base": [
+   93.675,
+   97.422
+  ],
+  "desc_limit": [
+   97.422,
+   101.481
+  ],
+  "desc_loops": [
+   101.481,
+   106.477
+  ],
+  "launch_v": [
+   106.477,
+   107.477
+  ],
+  "configured": [
+   107.477,
+   108.477
+  ],
+  "residual_done": [
+   108.477,
+   109.477
+  ],
+  "gathered_mix_v": [
+   109.477,
+   110.477
+  ],
+  "gathered_mix_row": [
+   110.477,
+   112.038
+  ],
+  "gathered_mix_pos": [
+   112.038,
+   112.975
+  ],
+  "gathered_mix_data": [
+   112.975,
+   122.966
+  ],
+  "gather_done": [
+   122.966,
+   123.966
+  ],
+  "result_v": [
+   123.966,
+   124.966
+  ],
+  "result_position": [
+   124.966,
+   125.903
+  ],
+  "result": [
+   125.903,
+   365.7
+  ],
+  "xb_v_s": [
+   366.2,
+   367.2
+  ],
+  "xb_beat_s": [
+   367.2,
+   368.2
+  ],
+  "program_active": [
+   368.7,
+   369.7
+  ],
+  "program_done": [
+   369.7,
+   370.7
+  ],
+  "hcq_fault": [
+   370.7,
+   371.7
+  ],
+  "d_v": [
+   371.7,
+   372.7
+  ],
+  "d_ss": [
+   372.7,
+   373.7
+  ],
+  "d_nv": [
+   373.7,
+   376.504
+  ],
+  "d_wa": [
+   376.504,
+   380.51
+  ],
+  "d_xa": [
+   380.51,
+   384.515
+  ],
+  "i_v": [
+   384.515,
+   385.515
+  ],
+  "i_kind": [
+   385.515,
+   386.515
+  ],
+  "i_slot": [
+   386.515,
+   387.515
+  ],
+  "i_lo": [
+   387.515,
+   389.518
+  ],
+  "i_w": [
+   389.518,
+   391.521
+  ],
+  "i_cnt": [
+   391.521,
+   396.328
+  ],
+  "i_word": [
+   396.328,
+   400.334
+  ],
+  "ps_v": [
+   400.334,
+   401.334
+  ],
+  "ps": [
+   401.334,
+   414.152
+  ],
+  "ps_f": [
+   414.152,
+   415.152
+  ],
+  "eng_fault": [
+   415.152,
+   416.152
+  ],
+  "xb_d5": [
+   416.152,
+   518.698
+  ],
+  "xb_d6": [
+   518.698,
+   621.243
+  ],
+  "xb_d7": [
+   621.243,
+   723.789
+  ],
+  "wc_s": [
+   723.789,
+   728.997
+  ],
+  "rstb_s": [
+   728.997,
+   730.198
+  ],
+  "wf_s": [
+   730.198,
+   731.4
+  ],
+  "clk_t": [
+   321.0,
+   323.4
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "clock": "clk",
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 2
+  },
+  "copies": {
+   "rst_n": 8
+  }
+ },
+ "io_flop_at_pins": false,
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)u_q\\.(g_rq2r\\.)?u_rst\\.rst_n$|(^|\\.)u_q\\.rr_n$|(^|\\.)u_q\\.rm_n$"
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_hc_hub/hc_hub_band_native_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_hc_hub/hc_hub_band_dpl.tcl",
+  "OT_HUB_BAND": "194.4,194.4,540.0,540.0",
+  "GPL_TIMING_DRIVEN": "0"
+ },
+ "fill_reason": {
+  "pin_bound": "9,903 literal face pins on the die slot = the 734.4 um hole of the 3x3 HC bank ring (pins abut the banks; W 2,335 b on 0..731 um); the ~50k um2 of logic + SRAM sit in ONE central standard-cell band (345.6 um at 194.4..540.0), the collar carries only pin wires + repeaters"
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_t[0]",
+  "clk_t[1]",
+  "clk_t[2]",
+  "clk_t[3]"
+ ],
+ "clock_cts_roots": [
+  "clk"
+ ],
+ "child_lattice_um": 43.2,
+ "slot_change_request": "W-face pin move (FAM-HBM-C/C-QHUB 10-21): s_i 368.7..727.126 -> 324.0..727.126, clk_t 366.0..368.4 -> 321.0..323.4, xb_v/xb_beat -> 321.2..323.2, xb_d0 41.222..365.7 -> 41.222..320.9 (256 b, 0.92/um); outline and every other die-contract pin range unchanged. Why: hbm_hcq_hub_c1b FLOORPLAN_MARGIN bank_distance (qt[0]/qt[1] 244/163 um from their 513-pin centroid) and c1 would fail too (qt[0] 109 um): 4 x 97.2 slices at the 129.6 lattice pitch cannot centre on a 358 um s_i span inside the 734.4 outline. With s_i spread over 403 um the slice-pin centroids are y 374/475/576/677 -> distances 75/54/43/43 um (<= 100); s_i density 5.7 -> 5.1 pins/um.",
+ "reroute_reason": {
+  "kind": "structural",
+  "failed_job": "ref_gate hbm_hcq_hub_c1q 549d8ffc6 (native census 75 drivers > 32, max 217)",
+  "why": "kept one-hot decode / n1 wires (ABC boundaries), 0 added edges, port-identical"
+ }
+}
