@@ -22,7 +22,11 @@
     "shape": "43.2x43.2um square, minimum slot",
     "depth": "same-region seq_dh[37]->mu_fault5levels, gate setup+281hold+57ps; final die/parent timing decides",
     "native": "gate max20<=32, GRT0 both",
-    "schedule": "DHREG1 adds1edge to2bitdh_user. ReleaseOPSEG1/USER_SEQ0 ignoresdh_user, so claimedno releasepriceeffect. No broader USER_SEQ1 timing/price adoption approved."
+    "schedule": "DHREG1 adds1edge to2bitdh_user. ReleaseOPSEG1/USER_SEQ0 ignoresdh_user, so claimedno releasepriceeffect. No broader USER_SEQ1 timing/price adoption approved.",
+    "lattice": "N/A no macros",
+    "std_cell_band": "Continuous full rows; sparse small logic mass near S centre plus isolated nine-flop placements; no macro islands. Low util0.9% retained as pin-bound minimum43.2 lattice die slot.",
+    "pin_spread": "GEN frame N/S pin placement; seq_dh10.4pins/um at2tracks retained as explicit exception/warning, NOT <=6 claim; drawing210totalpins vsqueue193signalface count. Need finalroute/pin-access qualification.",
+    "clock_entry": "N-centre entry;9sinks; gateTT/FF insertion49.7/38.0; spread2.3/1.8 primary,2.3/1.7 fallback"
   },
   "evidence": {
     "gate_generated": "2026-10-20T23:33:32-0700",
