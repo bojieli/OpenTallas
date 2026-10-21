@@ -106,6 +106,8 @@ class LinkedECOTests(unittest.TestCase):
         self.assertEqual(self.parent,before)
         self.assertEqual([x['kind'] for x in cl.stage_list(j['spec'])],['bench','route','verdict','collect','commit'])
         self.assertEqual(j['attempt'],4)
+        self.assertEqual(cl.hold_eco_resources(j),(8,64))
+        self.assertEqual(cl.stage_mem_cap(j,dict(kind='hold_eco',ram=64)),64)
         self.assertEqual(j['spec']['source'],before['spec']['source'])
         self.assertIn('/routes/old_parent',j['spec']['stages']['collect']['cmd'])
         self.assertEqual(j['benches']['bench:positive']['inherited_from'],'old-parent')

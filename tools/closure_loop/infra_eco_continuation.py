@@ -179,6 +179,7 @@ def build(parent, manifest, new_name):
     spec['hold_eco'] = dict(spec.get('hold_eco') or {}, enabled=True, allow_fresh_grt=False, vtswap=False, combo=False)
     spec['auto_react'] = False
     spec['peak_ram_gb'] = max(spec.get('peak_ram_gb',0), runtime['ram_gb'])
+    spec['mem_cap_gb'] = runtime['ram_gb']  # explicit new runtime cap; no generic factor-four expansion
     guard = str(run/'cl/linked_infra_eco/inputs.json')
     j = dict(name=new_name, spec=spec, origin='linked-infrastructure-continuation',
              status='READY', stage_key='verdict', attempt=parent['attempt']+1,
