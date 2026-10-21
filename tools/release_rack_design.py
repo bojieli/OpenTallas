@@ -217,15 +217,26 @@ def tray_cable_m(sa, sb):
 # S81 DeepSeek ROM array
 # ---------------------------------------------------------------------------------------------------------------
 S81_PAIRS = {
-    # lane pair -> (SerDes macros, role).  OWNER-approved 5th link: 5 pairs = TP4 full mesh (3) + prev/next stage (2)
-    "WS": ("lk_WS0+lk_WS1", "TP peer d-1 (S tier)"),
-    "ES": ("lk_ES0+lk_ES1", "TP peer d+1 (S tier)"),
-    "WN": ("lk_WN0+lk_WN1", "TP peer d+2 (N tier)"),
-    "EN": ("lk_EN0+lk_EN1", "next stage, same rank"),
-    "W5": ("lk_WN2+lk_WN3", "previous stage, same rank (5th pair, OWNER 10-21)"),
-    "E6": ("lk_EN2+lk_EN3", "copy-B fan-out (pre-group stage dies only)"),
-    "W6": ("lk_WS2+lk_WS3", "copy-B merge (post-group stage dies only)"),
+    # lane pair -> (SerDes macros, role).  5-circuit lane plan (lanes/S81-LINK5.md, OWNER 10-21 5th pair):
+    # slice s_0S = W column S, s_7S = E column S, s_7N = E column N, s_0N = W column N; pair A = macros 0/1, B = 2/3
+    "WS": ("lk_WS0+lk_WS1", "s_0S pair A: TP peer d-1"),
+    "ES": ("lk_ES0+lk_ES1", "s_7S pair A: TP peer d+1"),
+    "EN": ("lk_EN0+lk_EN1", "s_7N pair A: TP peer d+2 (one bidirectional circuit, EN<->EN)"),
+    "WN": ("lk_WN0+lk_WN1", "s_0N pair A: stage NEXT (TX data to next stage, same rank)"),
+    "W5": ("lk_WN2+lk_WN3", "s_0N pair B: stage PREV (RX data from previous stage, same rank; 5th pair, OWNER 10-21)"),
+    "E6": ("lk_EN2+lk_EN3", "E column B: copy-A/B reserve (blockage on the G4 rank die; wired only on pre-group dies)"),
+    "W6": ("lk_WS2+lk_WS3", "copy-A/B reserve: copy-B merge (post-group stage dies only)"),
+    "HX": ("lk_HOST0+lk_HOST1", "host SerDes pair on head-die trays only (S81.HOST, direct cabling)"),
 }
+S81_HOST = dict(
+    decision="S81.HOST (coordinator, 10-21, direct cabling): the host attaches only to the head dies (extra SerDes on "
+             "head-die trays). Host traffic to stage dies (config, KV ingest, token in/out) rides in-band on the "
+             "existing pipeline/stage circuits in calendar slots (20-30x bandwidth headroom). Stage dies have no host "
+             "link: the s_7N host-plane port maps to the in-band route. Every tray carries a low-rate management "
+             "sideband (boot/config: I2C/SMBus + 1GbE BMC class) to the rack management switch; it is not a SerDes.",
+    mgmt_medium="mgmt sideband (I2C/SMBus + 1GbE BMC)",
+    host_cable_m=1.5,
+    grade="spec (coordinator decision); host NIC position and sideband lengths MODEL")
 
 
 def s81_inputs():
@@ -279,23 +290,26 @@ def s81_edges(S):
     for u in S["units"]:
         for r in range(4):                                  # TP4 full mesh: d+1 on S tier, d+2 on N tier
             E.append(("tp_mesh", u["id"], r, "ES", u["id"], (r + 1) % 4, "WS"))
-        for r in range(2):
-            E.append(("tp_mesh", u["id"], r, "WN", u["id"], r + 2, "WN"))
+        for r in range(2):                                  # TP d+2: s_7N pair A <-> s_7N pair A, one circuit
+            E.append(("tp_mesh", u["id"], r, "EN", u["id"], r + 2, "EN"))
     chain = ["H%d" % h for h in range(S["head_dies"] // 4)] + ["S%03d" % s for s in range(S["stages"])]
     for i, a in enumerate(chain):
         b = chain[(i + 1) % len(chain)]
         kind = ("token_return" if a.startswith("H") and b == "S000" else "head_hop" if b.startswith("H")
                 else "stage_hop")
-        for r in range(4):
-            E.append((kind, a, r, "EN", b, r, "W5"))
+        for r in range(4):                                  # stage hop: s_0N pair A -> next stage s_0N pair B
+            E.append((kind, a, r, "WN", b, r, "W5"))
     for g in S["groups"]:
         bs = ["B%d.%d" % (g["layer"], k) for k in range(S["run"])]
         for r in range(4):
             E.append(("copyb_in", "S%03d" % g["pre"], r, "E6", bs[0], r, "W5"))
             for x, y in zip(bs, bs[1:]):
-                E.append(("copyb_hop", x, r, "EN", y, r, "W5"))
-            E.append(("copyb_out", bs[-1], r, "EN", "S%03d" % g["post"], r, "W6"))
-    assert all(e[1] in U and e[4] in U for e in E)
+                E.append(("copyb_hop", x, r, "WN", y, r, "W5"))
+            E.append(("copyb_out", bs[-1], r, "WN", "S%03d" % g["post"], r, "W6"))
+    for h in range(S["head_dies"] // 4):                    # S81.HOST: host links on head dies only
+        for r in range(4):
+            E.append(("host", "H%d" % h, r, "HX", "host", 0, "NIC"))
+    assert all(e[1] in U and (e[4] in U or e[4] == "host") for e in E)
     return E
 
 
@@ -337,6 +351,8 @@ def assemble(name, title, units, edges, pair_macros, die_w, stacks_per_die, traf
     pairs_per_die = {}
     for e in edges:
         for (u, r, p) in ((e[1], e[2], e[3]), (e[4], e[5], e[6])):
+            if u == "host":
+                continue
             pairs_per_die.setdefault((u, r), set()).add(p)
     tray_rows = []
     for t, q in enumerate(trays):
@@ -359,6 +375,12 @@ def assemble(name, title, units, edges, pair_macros, die_w, stacks_per_die, traf
     lanes = circuit_lanes()
     for i, (kind, ua, ra, pa, ub, rb, pb) in enumerate(edges):
         ta, qa = loc[ua]
+        if ub == "host":                                    # host NIC beside the head-die tray (MODEL length)
+            rows.append(dict(id="%s.%05d" % (name.lower(), i), system=name, cls=kind, a_unit=ua, a_die=U[ua]["dies"][ra],
+                             a_rank=ra, a_pair=pa, a_macros=pair_macros[pa][0], b_unit="host", b_die=-1, b_rank=0,
+                             b_pair=pb, b_macros="host NIC", a_tray=ta, b_tray=ta, lanes_per_dir=lanes,
+                             D=cable(S81_HOST["host_cable_m"]), traffic=traffic.get(kind)))
+            continue
         tb, qb = loc[ub]
         if ta == tb:
             D = trace(trace_mm(pkg_xy(qa, ra), pkg_xy(qb, rb)))
@@ -378,7 +400,7 @@ def build_s81():
     die_w = dict(stage=84.1, copyB=84.1, head=92.34)
     stacks = dict(stage=1, copyB=1, head=S["inp"]["head"]["hbm_stacks_per_die"])
     rows, tray_rows, slots, nracks, per, spare = assemble("S81", "S81", S["units"], E, S81_PAIRS, die_w, stacks, TRAFFIC)
-    return finish_system(
+    rec = finish_system(
         name="S81", title="S81 DeepSeek-V4.1 ROM array", S=S, rows=rows, tray_rows=tray_rows, slots=slots,
         nracks=nracks, per_rack=per, spare_per_rack=spare, die_w=die_w, users=S["inp"]["users_ar"],
         token_cycles=S["inp"]["token_cycles_ar"], phases=S["inp"]["collective_phases_per_token"],
@@ -392,7 +414,19 @@ def build_s81():
         die_links=dict(rank=N(10, "spec", "OWNER-approved 5th link (10-21): 5 lane pairs = TP4 full mesh 3 + prev/next stage 2 (reports/s81_links_1021.md s2 option A)"),
                        copy_ab=N(12, "spec", "pre-/post-group rank dies carry a 6th pair (chain_plan extra_circuits_on_existing_dies; lep_mu_ab)"),
                        copy_b=N(10, "MODEL", "copy-B dies use the rank die master (chain_plan: same masks fabricated twice)"),
-                       head=N(10, "MODEL", "head die as a rank-die master; its +5 draft fan-out SerDes are placeholders and not wired here")))
+                       head=N(12, "MODEL", "head die as a rank-die master + 1 host SerDes pair (S81.HOST); its +5 draft fan-out SerDes are placeholders and not wired here")),
+        extra=dict(host_plan=dict(S81_HOST, head_host_circuits=sum(1 for r in rows if r["cls"] == "host"),
+                                  stage_die_host_circuits=0, mgmt_rows=len(tray_rows))))
+    # per-tray management sideband (not a SerDes, not a circuit of the data plane): one row per tray to the rack mgmt switch
+    for t in tray_rows:
+        u0 = next(iter(t["quads"].values()))
+        D = dict(medium=S81_HOST["mgmt_medium"], length_m=None, loss_db=None, reach_ok=True,
+                 reach_limit="low-rate sideband, not a SerDes", latency_ns=None, cycles=None, cables=1, retimers=0)
+        rec["_rows"].append(dict(id="s81.mgmt.%03d" % t["tray"], system="S81", cls="mgmt", a_unit="tray%d" % t["tray"],
+                                 a_die=-1, a_rank=0, a_pair="MGMT", a_macros="tray BMC/I2C (all %d dies)" % t["dies"],
+                                 b_unit="rack mgmt switch", b_die=-1, b_rank=0, b_pair="MGMT", b_macros="mgmt switch port",
+                                 a_tray=t["tray"], b_tray=t["tray"], lanes_per_dir=0, D=D, S=dict(D), traffic=None))
+    return rec
 
 
 # ---------------------------------------------------------------------------------------------------------------

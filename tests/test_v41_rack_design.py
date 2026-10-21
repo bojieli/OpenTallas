@@ -216,7 +216,17 @@ def test_release_rack_design_smoke():
             pairs = {}
             for r in rows:
                 for die, pair in ((r["a_die"], r["a_pair"]), (r["b_die"], r["b_pair"])):
-                    pairs.setdefault(die, set()).add(pair)
+                    if die >= 0 and pair != "HX":           # host NIC / mgmt rows; HX = head-tray host SerDes
+                        pairs.setdefault(die, set()).add(pair)
+            # S81.HOST: host links only on head dies, none on stage dies; one mgmt sideband row per tray
+            host = [r for r in rows if r["cls"] == "host"]
+            assert len(host) == s["counts"]["head_dies"] and all(r["a_unit"].startswith("H") for r in host)
+            assert sum(r["cls"] == "mgmt" for r in rows) == s["trays"]["count"]
+            # 5-circuit lane plan: TP d+2 is s_7N A <-> s_7N A (EN<->EN); stage hop s_0N A (WN) -> s_0N B (W5)
+            assert all(r["a_pair"] == r["b_pair"] == "EN" for r in rows
+                       if r["cls"] == "tp_mesh" and "EN" in (r["a_pair"], r["b_pair"]))
+            assert all((r["a_pair"], r["b_pair"]) == ("WN", "W5") for r in rows
+                       if r["cls"] in ("stage_hop", "head_hop", "token_return", "copyb_hop"))
             assert max(len(p) for p in pairs.values()) == 6
             assert sum(len(p) == 6 for p in pairs.values()) == 2 * 4 * s["counts"]["copy_b_groups"]
             assert s["counts"]["layer_dies"] == 4 * s["counts"]["stages"]
