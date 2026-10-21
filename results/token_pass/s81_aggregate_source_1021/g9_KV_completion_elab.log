@@ -1,0 +1,192 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'
+  274 |     ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
+      |                       ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv:11:22: ... Location of port declaration
+   11 |     input wire [9:0] aq_p,  
+      |                      ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_v'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:143:30: ... Location of port declaration
+  143 |     output wire              ln_v,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_d'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:144:30: ... Location of port declaration
+  144 |     output wire [N*FW-1:0]   ln_d,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_y'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:145:30: ... Location of port declaration
+  145 |     input  wire [FW-1:0]     ln_y,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_yv'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:146:30: ... Location of port declaration
+  146 |     input  wire [LANES-1:0]  ln_yv,
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_ye'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:147:31: ... Location of port declaration
+  147 |     input  wire [2*LANES-1:0] ln_ye,
+      |                               ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_pe'
+  232 |         .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
+      |                                                                                                                   ^~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv:148:30: ... Location of port declaration
+  148 |     input  wire [LANES-1:0]  ln_pe
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv:12:24: ... Location of port declaration
+   12 |     output wire [14:0] cc,
+      |                        ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xo'
+11055 |   col_h9_l4_lp #(.INSTANCE("u_f_0L13")) u_f_0L13 (.ck_r0(ck_frame_f_0L13_r0), .ck_r1(ck_frame_f_0L13_r1), .ck_r2(ck_frame_f_0L13_r2), .xk({nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}), .rst_n(rs_2_44_2), .lk(12'h492), .x({w_x_f_0L13_l3_dst[275:0], w_x_f_0L13_l2_dst[275:0], w_x_f_0L13_l1_dst[275:0], w_x_f_0L13_l0_dst[275:0]}), .ret({w_r_f_0L13_src[69:0]}));
+      |                                         ^~~~~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xok'
+11055 |   col_h9_l4_lp #(.INSTANCE("u_f_0L13")) u_f_0L13 (.ck_r0(ck_frame_f_0L13_r0), .ck_r1(ck_frame_f_0L13_r1), .ck_r2(ck_frame_f_0L13_r2), .xk({nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}), .rst_n(rs_2_44_2), .lk(12'h492), .x({w_x_f_0L13_l3_dst[275:0], w_x_f_0L13_l2_dst[275:0], w_x_f_0L13_l1_dst[275:0], w_x_f_0L13_l0_dst[275:0]}), .ret({w_r_f_0L13_src[69:0]}));
+      |                                         ^~~~~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'bo'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv:25:25: ... Location of port declaration
+   25 |     output wire [512:0] bo,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'ck_rt'
+                     /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv:31:23: ... Location of port declaration
+   31 |     output wire [7:0] ck_rt,
+      |                       ^~~~~
+%Warning-ALWNEVER: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv:646:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                                                                                                                               : ... note: In instance 'ot_s81sl_slice_kv512.u_slice.g_c1.u_xr.u'
+                                                                                                                                                               : ... Suggest use 'always_comb'
+  646 |         always @(*) fcore = 1'b0;
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:177:16: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_kv512.u_slice.u_xg.u_s.tq_v'
+                      /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:369:61: ... Location of first driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:369:61: ... Location of other driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:178:16: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_kv512.u_slice.u_xg.u_s.tb_v'
+                      /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:377:60: ... Location of first driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+                      /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv:377:60: ... Location of other driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:290:17: Signal unoptimizable: Circular combinational logic: 'ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.V'
+  290 |     wire [31:0] V  [0:T-1][1:2*NVP-1];
+      |                 ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:290:17:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.V
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:333:32:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:290:17:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.V
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:291:17: Signal unoptimizable: Circular combinational logic: 'ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.VD'
+  291 |     wire        VD [0:T-1][1:2*NVP-1];
+      |                 ^~
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:291:17:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.VD
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:333:63:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:291:17:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.VD
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:17: Signal unoptimizable: Circular combinational logic: 'ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.oa'
+  366 |     wire [31:0] oa [0:NC], ob [0:NC];
+      |                 ^~
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:17:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.oa
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:373:34:      Example path: ALWAYS
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:17:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.oa
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:28: Signal unoptimizable: Circular combinational logic: 'ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.ob'
+  366 |     wire [31:0] oa [0:NC], ob [0:NC];
+      |                            ^~
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:28:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.ob
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:374:34:      Example path: ALWAYS
+                    /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:28:      Example path: ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e.ob
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 428.318 MB sources in 503 modules, into 1591.821 MB in 1411 C++ files needing 0.000 MB
+- Verilator: Walltime 376.816 s (elab=4.026, cvt=333.236, bld=0.000); cpu 376.805 s on 1 threads; allocated 28685.281 MB

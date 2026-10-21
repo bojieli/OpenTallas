@@ -1,0 +1,995 @@
+{
+ "schema": "opentallas.s81.kv_compile_terminal_collection.v1",
+ "status": "KV_ONLY_SYNTAX_ELAB_EXIT0_WITH_WARNINGS",
+ "unit": "ot-epyc5/oth-ubuntu-3285750-1792624109",
+ "exit_code": 0,
+ "top": "ot_s81sl_slice_kv512",
+ "params": {
+  "params": {},
+  "child_params": {
+   "HB": 0,
+   "DL": 4,
+   "DR": 6,
+   "DX": 6,
+   "VQ_XMEM": 2,
+   "KV_ENABLE": 1,
+   "VS_MUT": 0
+  },
+  "clock_reset": "clk/rst_n directsame-name18portpassthrough, 0wrapperstate/logic/edges"
+ },
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32"
+ ],
+ "source_ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+ "source_archive_verified_files": 196,
+ "source_file_count": 195,
+ "warnings": {
+  "PINMISSING": 30,
+  "ALWNEVER": 1,
+  "MULTIDRIVEN": 2,
+  "UNOPTFLAT": 4
+ },
+ "warning_total": 37,
+ "pinmissing": {
+  "classification": "ALL30_IN_UNREACHABLE_COMPANION_PARENTS_FOR_KV_TOP",
+  "inputs": 5,
+  "outputs": 25,
+  "entries": [
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'",
+    "parent_module": "ot_s81_pq_core_native",
+    "child_module": "ot_s81_pq_qb_sram",
+    "pin": "aq_p",
+    "direction": "input",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_v'",
+    "parent_module": "ot_s81ph_coll_core",
+    "child_module": "ot_w15_rom_oneshot_die_px_acceptedpop",
+    "pin": "ln_v",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_d'",
+    "parent_module": "ot_s81ph_coll_core",
+    "child_module": "ot_w15_rom_oneshot_die_px_acceptedpop",
+    "pin": "ln_d",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_y'",
+    "parent_module": "ot_s81ph_coll_core",
+    "child_module": "ot_w15_rom_oneshot_die_px_acceptedpop",
+    "pin": "ln_y",
+    "direction": "input",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_yv'",
+    "parent_module": "ot_s81ph_coll_core",
+    "child_module": "ot_w15_rom_oneshot_die_px_acceptedpop",
+    "pin": "ln_yv",
+    "direction": "input",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_ye'",
+    "parent_module": "ot_s81ph_coll_core",
+    "child_module": "ot_w15_rom_oneshot_die_px_acceptedpop",
+    "pin": "ln_ye",
+    "direction": "input",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_pe'",
+    "parent_module": "ot_s81ph_coll_core",
+    "child_module": "ot_w15_rom_oneshot_die_px_acceptedpop",
+    "pin": "ln_pe",
+    "direction": "input",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_v41_rom_elem_q_qxpq_w10",
+    "pin": "walking",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'",
+    "parent_module": "col_h9_l4_lp",
+    "child_module": "ot_s81_sstn_base566",
+    "pin": "cc",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xo'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xo",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xok'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xok",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xo'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xo",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xok'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xok",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xo'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xo",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xok'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xok",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xo'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xo",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xok'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "col_h9_l4_lp",
+    "pin": "xok",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'bo'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "ot_s81sl_slice_lepw_mab_mu_72",
+    "pin": "bo",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   },
+   {
+    "raw": "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_KV_completion_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'ck_rt'",
+    "parent_module": "s0N_aggregate",
+    "child_module": "ot_s81sl_slice_lepw_mab_mu_72",
+    "pin": "ck_rt",
+    "direction": "output",
+    "reachable_in_conservative_KV_cone": false
+   }
+  ]
+ },
+ "conservative_KV_graph": {
+  "dsfd_pq_lx": [],
+  "dsfd_su_t_rxsb": [
+   "ot_s81_su_rxsb"
+  ],
+  "dsfd_su_t_rxsf": [
+   "ot_s81_su_rxsf"
+  ],
+  "ot_dsrom_add_f12_l6": [
+   "ot_hdc_fp32_add_f12_l6x"
+  ],
+  "ot_dsrom_aq12": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_divc": [
+   "ot_hdc_kinc",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_exp_f12": [
+   "ot_dsrom_add_f12_l6",
+   "ot_hdc_delay",
+   "ot_hdc_kadd",
+   "ot_hdc_qadd_lat",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_fdiv_f12": [
+   "ot_hdc_kadd",
+   "ot_hdc_kinc",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_fp32_add_f12_l6": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_dsrom_qadd": [
+   "ot_dsrom_fp32_add_f12_l6",
+   "ot_hdc_qadd_lat"
+  ],
+  "ot_dsrom_rsqrt": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_kadd",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_dsrom_su_bf16rnd": [
+   "ot_hdc_kinc"
+  ],
+  "ot_dsrom_su_hcpost_lane": [
+   "ot_hdc_delay",
+   "ot_hdc_fp32_add_f12_l4",
+   "ot_hdc_fp32_add_f12_l5x",
+   "ot_hdc_fp32_add_f12_l6x",
+   "ot_hdc_fp32_mul_f12_l5",
+   "ot_hdc_fp32_mul_f12_l6",
+   "ot_hdc_fp32_mul_f12_l6r",
+   "ot_hdc_fp32_mul_f12_l7",
+   "ot_hdc_inc_k"
+  ],
+  "ot_dsrom_su_hcpost_lane_pr": [
+   "ot_dsrom_su_hcpost_lane"
+  ],
+  "ot_dsrom_su_norm_mix": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_fp32_add_rne_pipe": [],
+  "ot_hbm_norm_grp": [
+   "ot_dsrom_qadd",
+   "ot_dsrom_su_norm_mix",
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_hdc_addpos2": [
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k"
+  ],
+  "ot_hdc_delay": [],
+  "ot_hdc_delay_rf": [],
+  "ot_hdc_f12_cut": [],
+  "ot_hdc_fp32_add_f12": [
+   "ot_hdc_f12_cut",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32"
+  ],
+  "ot_hdc_fp32_add_f12_l4": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_f12_l5s": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_f12_l5x": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_f12_l6x": [
+   "ot_hdc_fp32_add_f12"
+  ],
+  "ot_hdc_fp32_add_fast": [
+   "ot_hdc_ksa",
+   "ot_hdc_lzc32"
+  ],
+  "ot_hdc_fp32_add_lat": [
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_w11_cut"
+  ],
+  "ot_hdc_fp32_add_lat3": [
+   "ot_hdc_fp32_add_lat"
+  ],
+  "ot_hdc_fp32_mul_f12": [
+   "ot_hdc_f12_cut",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_rows"
+  ],
+  "ot_hdc_fp32_mul_f12_l5": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_f12_l6": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_f12_l6r": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_f12_l7": [
+   "ot_hdc_fp32_mul_f12"
+  ],
+  "ot_hdc_fp32_mul_fast": [
+   "ot_hdc_ksa",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_sum"
+  ],
+  "ot_hdc_fp32_mul_lat": [
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_rows_k",
+   "ot_hdc_mul_kcp48",
+   "ot_hdc_w11_cut"
+  ],
+  "ot_hdc_fp32_mul_lat4": [
+   "ot_hdc_fp32_mul_lat"
+  ],
+  "ot_hdc_fp32_mul_x2": [
+   "ot_hdc_delay",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_csa",
+   "ot_hdc_mul24_csa11",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_rows11"
+  ],
+  "ot_hdc_fsqrt": [
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_fsqrt4": [
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_hstep": [
+   "ot_hdc_delay",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_mul24_csa",
+   "ot_hdc_mul24_csa11",
+   "ot_hdc_mul24_rows",
+   "ot_hdc_mul24_rows11",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_inc_k": [],
+  "ot_hdc_kadd": [
+   "ot_hdc_ksadd_k"
+  ],
+  "ot_hdc_kge": [
+   "ot_hdc_ksadd_k"
+  ],
+  "ot_hdc_kinc": [
+   "ot_hdc_inc_k"
+  ],
+  "ot_hdc_ksa": [],
+  "ot_hdc_ksadd_k": [],
+  "ot_hdc_lzc32": [],
+  "ot_hdc_mul24_csa": [],
+  "ot_hdc_mul24_csa11": [
+   "ot_hdc_mul24_csa"
+  ],
+  "ot_hdc_mul24_rows": [],
+  "ot_hdc_mul24_rows11": [],
+  "ot_hdc_mul24_rows_k": [],
+  "ot_hdc_mul24_sum": [
+   "ot_hdc_ksa"
+  ],
+  "ot_hdc_mul_kcp48": [],
+  "ot_hdc_qadd_lat": [
+   "ot_hdc_fp32_add_f12_l4",
+   "ot_hdc_fp32_add_f12_l5s",
+   "ot_hdc_fp32_add_f12_l5x",
+   "ot_hdc_fp32_add_fast",
+   "ot_hdc_fp32_add_lat",
+   "ot_hdc_fp32_add_lat3"
+  ],
+  "ot_hdc_qmul_lat": [
+   "ot_hdc_fp32_mul_f12_l5",
+   "ot_hdc_fp32_mul_f12_l6",
+   "ot_hdc_fp32_mul_fast",
+   "ot_hdc_fp32_mul_lat",
+   "ot_hdc_fp32_mul_lat4"
+  ],
+  "ot_hdc_v41x_exp": [
+   "ot_hdc_delay",
+   "ot_hdc_kadd",
+   "ot_hdc_qadd_lat",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_v41x_exp_s": [
+   "ot_hdc_delay",
+   "ot_hdc_fp32_mul_x2",
+   "ot_hdc_hstep",
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_lzc32",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_v41x_fdiv": [
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_v41x_spdiv": [
+   "ot_hdc_inc_k",
+   "ot_hdc_ksadd_k",
+   "ot_hdc_vline"
+  ],
+  "ot_hdc_vline": [],
+  "ot_hdc_w11_cut": [],
+  "ot_rst_relay": [],
+  "ot_s81_engram_add8": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_chunk8": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_gate": [
+   "ot_s81_engram_sigmoid",
+   "ot_s81_engram_signed_sqrt"
+  ],
+  "ot_s81_engram_mul4": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_norm": [
+   "ot_dsrom_divc",
+   "ot_dsrom_qadd",
+   "ot_dsrom_rsqrt",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_reset": [],
+  "ot_s81_engram_sigmoid": [
+   "ot_hdc_qadd_lat",
+   "ot_hdc_v41x_exp",
+   "ot_hdc_v41x_fdiv",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_engram_signed_sqrt": [
+   "ot_hdc_fsqrt",
+   "ot_hdc_kge",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81_fadd_pipe": [],
+  "ot_s81_pq_calendar_reader": [
+   "ot_rst_relay"
+  ],
+  "ot_s81_pq_stream_rom4_sel": [],
+  "ot_s81_retn_static": [
+   "ot_fp32_add_rne_pipe",
+   "ot_hdc_delay",
+   "ot_hdc_delay_rf"
+  ],
+  "ot_s81_su_dl128": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81_su_rxsb": [
+   "ot_hdc_addpos2",
+   "ot_hdc_delay",
+   "ot_hdc_fp32_mul_x2",
+   "ot_hdc_fsqrt4",
+   "ot_hdc_hstep",
+   "ot_hdc_vline"
+  ],
+  "ot_s81_su_rxsf": [
+   "ot_hdc_delay",
+   "ot_hdc_fp32_mul_x2",
+   "ot_hdc_v41x_exp_s",
+   "ot_hdc_v41x_spdiv",
+   "ot_hdc_vline"
+  ],
+  "ot_s81_su_swl": [
+   "ot_dsrom_exp_f12",
+   "ot_dsrom_fdiv_f12",
+   "ot_hdc_delay",
+   "ot_hdc_kge",
+   "ot_hdc_qadd_lat",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_su_dl128"
+  ],
+  "ot_s81dv_eng_finish": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_vline"
+  ],
+  "ot_s81dv_norm_finish": [
+   "ot_dsrom_divc",
+   "ot_dsrom_qadd",
+   "ot_dsrom_rsqrt",
+   "ot_hdc_delay",
+   "ot_hdc_vline"
+  ],
+  "ot_s81dv_xfin": [
+   "ot_s81dv_eng_finish",
+   "ot_s81dv_norm_finish",
+   "ot_s81dv_xstop"
+  ],
+  "ot_s81dv_xstop": [],
+  "ot_s81sl_aq12x": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline"
+  ],
+  "ot_s81sl_cap": [
+   "ot_s81sl_cap_ed",
+   "ot_s81sl_cap_ld",
+   "ot_s81sl_cap_rt",
+   "ot_s81sl_cap_tr"
+  ],
+  "ot_s81sl_cap_ed": [
+   "ot_hdc_delay_rf",
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_cap_grp": [],
+  "ot_s81sl_cap_ld": [
+   "ot_hdc_delay_rf",
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_cap_p1": [
+   "ot_s81sl_cap"
+  ],
+  "ot_s81sl_cap_rt": [
+   "ot_hdc_delay",
+   "ot_rst_relay",
+   "ot_s81_fadd_pipe",
+   "ot_s81sl_cap_grp",
+   "ot_s81sl_cap_rt_retn",
+   "ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "ot_s81sl_cap_rt_retn": [
+   "ot_hdc_delay",
+   "ot_hdc_delay_rf",
+   "ot_s81_fadd_pipe"
+  ],
+  "ot_s81sl_cap_tr": [
+   "ot_rst_relay",
+   "ot_s81_retn_static"
+  ],
+  "ot_s81sl_capc2": [
+   "ot_s81sl_cap_p1"
+  ],
+  "ot_s81sl_eg": [
+   "ot_hdc_delay",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_s81_engram_gate",
+   "ot_s81_engram_norm",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81sl_kv_bank": [
+   "ot_hdc_delay"
+  ],
+  "ot_s81sl_kv_leaf": [
+   "ot_s81sl_kv_bank",
+   "ot_sram_1r1w2c_32x64_m1"
+  ],
+  "ot_s81sl_leaf": [
+   "dsfd_su_t_rxsb",
+   "dsfd_su_t_rxsf",
+   "ot_s81sl_kv_leaf",
+   "ot_s81sl_ve",
+   "ot_s81sl_vn",
+   "ot_s81sl_vp",
+   "ot_s81sl_vq",
+   "ot_s81sl_vs",
+   "ot_s81sl_vsw"
+  ],
+  "ot_s81sl_rly": [],
+  "ot_s81sl_rstopt": [
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_slice": [
+   "ot_s81dv_xfin",
+   "ot_s81sl_capc2",
+   "ot_s81sl_eg",
+   "ot_s81sl_leaf",
+   "ot_s81sl_rly",
+   "ot_s81sl_xgt",
+   "ot_s81sl_xrt1",
+   "ot_s81sl_xrt3"
+  ],
+  "ot_s81sl_slice_kv512": [
+   "ot_s81sl_slice"
+  ],
+  "ot_s81sl_ve": [
+   "ot_s81_engram_add8",
+   "ot_s81_engram_chunk8",
+   "ot_s81_engram_mul4",
+   "ot_s81_engram_reset",
+   "ot_s81sl_ve_tree"
+  ],
+  "ot_s81sl_ve_tree": [
+   "ot_dsrom_qadd",
+   "ot_hdc_delay",
+   "ot_hdc_vline",
+   "ot_s81_engram_reset"
+  ],
+  "ot_s81sl_vn": [
+   "ot_dsrom_qadd",
+   "ot_hbm_norm_grp",
+   "ot_hdc_delay",
+   "ot_hdc_vline",
+   "ot_rst_relay",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81sl_vp": [
+   "ot_dsrom_su_hcpost_lane_pr",
+   "ot_hdc_delay",
+   "ot_rst_relay",
+   "ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "ot_s81sl_vq": [
+   "ot_dsrom_aq12",
+   "ot_hdc_delay",
+   "ot_rst_relay",
+   "ot_s81sl_aq12x",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "ot_s81sl_vs": [
+   "ot_dsrom_qadd",
+   "ot_hdc_qmul_lat",
+   "ot_hdc_vline",
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_vsw": [
+   "ot_dsrom_su_bf16rnd",
+   "ot_rst_relay",
+   "ot_s81_su_swl"
+  ],
+  "ot_s81sl_xgt": [
+   "ot_s81sl_rstopt",
+   "ot_s81sl_xs"
+  ],
+  "ot_s81sl_xrt": [
+   "ot_rst_relay"
+  ],
+  "ot_s81sl_xrt1": [
+   "ot_s81sl_xrt"
+  ],
+  "ot_s81sl_xrt3": [
+   "ot_s81sl_xrt"
+  ],
+  "ot_s81sl_xs": [
+   "dsfd_pq_lx",
+   "ot_rst_relay",
+   "ot_s81_pq_calendar_reader",
+   "ot_s81_pq_stream_rom4_sel",
+   "ot_s81sl_xs_ctl",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_v41_kreg"
+  ],
+  "ot_s81sl_xs_ctl": [
+   "ot_rst_relay",
+   "ot_v41_inc",
+   "ot_v41_kreg"
+  ],
+  "ot_sram_1r1w2c_32x64_m1": [],
+  "ot_sram_1r1w_128x256_m1_r2c2": [],
+  "ot_sram_1r1w_512x128_m4_r2c2": [],
+  "ot_v41_inc": [],
+  "ot_v41_kreg": []
+ },
+ "graph_provenance": "Unchanged original191source/6define graph plus owner-pinned020 manifest conservative16file closure. Fastfp projection only removes explicitly overridden bodies; full0N changed-body audit00b1 retained separately. No whole-die reachability claim.",
+ "active_multidriven": {
+  "count": 2,
+  "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "sha256": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+  "path": "ot_s81sl_slice_kv512.u_slice.u_xg.u_s",
+  "signals": [
+   "tq_v[0:1]",
+   "tb_v[0:1]"
+  ],
+  "classification": "DISJOINT_ARRAY_PARITY_ELEMENTS_WITH_DISTINCT_ASYNC_RESET_EVENTS",
+  "declaration_lines": [
+   177,
+   178
+  ],
+  "driver_lines": [
+   365,
+   366,
+   367,
+   369,
+   371,
+   374,
+   375,
+   377,
+   379
+  ],
+  "source_rule": "gp=0,1 generate each drives only tq_v[gp] and tb_v[gp] on posedge clk with own rs_t[gp]/rs_t[2+gp] async reset. No overlapping element drivers; global reset/phase semantics not qualified."
+ },
+ "active_unoptflat": {
+  "count": 4,
+  "source": "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "sha256": "9095cfd2553c96355713c205750fa0c285ec88dc3eafde06005c81b24d3d81cd",
+  "path": "ot_s81sl_slice_kv512.u_slice.u_xf.g_cp[3].u_e",
+  "signals": [
+   "V",
+   "VD",
+   "oa",
+   "ob"
+  ],
+  "classification": "ARRAY_AGGREGATE_DEPENDENCIES_WITH_STRICTLY_ORDERED_INDEX_GRAPH",
+  "source_rule": "V/VD combinational n reads2*n,1<=n<NVP until registered boundaries; oa/ob C+1 readsC from constantindex0. Same exact norm body/lines324,333,368,373,374,377 as sealed0N source obligation; no per-index cycle."
+ },
+ "active_alwnever": {
+  "count": 1,
+  "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+  "line": 646,
+  "path": "ot_s81sl_slice_kv512.u_slice.g_c1.u_xr.u",
+  "classification": "UNUSED_CONSTANT_FCORE_HELPER_IN_FOREG0_BRANCH",
+  "source_rule": "always@* fcore=0 in direct-fault path; source unchanged, no behavioral qualification."
+ },
+ "verilator_report": "5.050; wall376.816s cpu376.805s allocated28685.281MB bld0.000; no simulator",
+ "preserved_original_0N_case": {
+  "argv": [
+   "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+   "--lint-only",
+   "--timing",
+   "-Wno-fatal",
+   "-Wno-WIDTH",
+   "--top-module",
+   "s0N_aggregate",
+   "-Mdir",
+   "/srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/s0N_aggregate_obj",
+   "-f",
+   "/srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/compile.f"
+  ],
+  "exit_code": 0,
+  "rawlog_sha256": "4e84d37adf9c637b3664bd8468ead001dd9917c3d59bdbb85411e25e570c787b",
+  "errors": [],
+  "warnings": [
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_v'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_d'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_y'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_yv'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_ye'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_pe'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'bo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'ck_rt'",
+   "%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/link/ot_link_crc32.sv:29:26: Replication of more that --replication-limit 8192 is suspect: 18016",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:825:68: Selection index out of range: 4:4 outside 3:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:825:68: Selection index out of range: 5:5 outside 3:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:825:68: Selection index out of range: 6:6 outside 3:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:825:68: Selection index out of range: 7:7 outside 3:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:864:36: Selection index out of range: 87:80 outside 79:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:865:36: Selection index out of range: 87:80 outside 79:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:866:36: Selection index out of range: 87:80 outside 79:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:864:36: Selection index out of range: 95:88 outside 79:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:865:36: Selection index out of range: 95:88 outside 79:0",
+   "%Warning-SELRANGE: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:866:36: Selection index out of range: 95:88 outside 79:0",
+   "%Warning-ALWNEVER: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv:646:9: 'always @*' will never execute as expression list is empty (no variables read)",
+   "%Warning-COMBDLY: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/s81/ot_s81_bf_front_roots.sv:272:49: Non-blocking assignment '<=' in combinational logic process",
+   "%Warning-COMBDLY: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/s81/ot_s81_bf_front_roots.sv:272:68: Non-blocking assignment '<=' in combinational logic process",
+   "%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:486:36: Signal has multiple driving blocks with different clocking: 's0N_aggregate.u_s_0N.u_sl.u_xg.u_s.u_ctl.bv_c'",
+   "%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:314:16: Signal has multiple driving blocks with different clocking: 's0N_aggregate.u_s_0N.u_lep.u.g_mtx.mcq'",
+   "%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:10890:16: Signal has multiple driving blocks with different clocking: 's0N_aggregate.w_lt_lk_WN3_src'",
+   "%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:10886:16: Signal has multiple driving blocks with different clocking: 's0N_aggregate.w_lt_lk_WN2_src'",
+   "%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:10882:16: Signal has multiple driving blocks with different clocking: 's0N_aggregate.w_lt_lk_WN1_src'",
+   "%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:10878:16: Signal has multiple driving blocks with different clocking: 's0N_aggregate.w_lt_lk_WN0_src'",
+   "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:290:17: Signal unoptimizable: Circular combinational logic: 's0N_aggregate.u_s_0N.u_sl.u_xf.g_cp[3].u_e.V'",
+   "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:291:17: Signal unoptimizable: Circular combinational logic: 's0N_aggregate.u_s_0N.u_sl.u_xf.g_cp[3].u_e.VD'",
+   "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:17: Signal unoptimizable: Circular combinational logic: 's0N_aggregate.u_s_0N.u_sl.u_xf.g_cp[3].u_e.oa'",
+   "%Warning-UNOPTFLAT: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:366:28: Signal unoptimizable: Circular combinational logic: 's0N_aggregate.u_s_0N.u_sl.u_xf.g_cp[3].u_e.ob'"
+  ]
+ },
+ "original_0N_rerun": false,
+ "preserved_original_KV_failure": {
+  "argv": [
+   "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+   "--lint-only",
+   "--timing",
+   "-Wno-fatal",
+   "-Wno-WIDTH",
+   "--top-module",
+   "ot_s81sl_slice_kv512",
+   "-Mdir",
+   "/srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/ot_s81sl_slice_kv512_obj",
+   "-f",
+   "/srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/compile.f"
+  ],
+  "exit_code": 1,
+  "rawlog_sha256": "3daadf9720c564c3bc89909890bc13398936076c75dfff2b30085e2dce8f0ca5",
+  "errors": [
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:66:13: Cannot find file containing module: 'ot_s81_su_kve'",
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:62:13: Cannot find file containing module: 'ot_s81_su_kve'",
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:83:13: Cannot find file containing module: 'ot_s81_su_qnh'",
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:87:9: Cannot find file containing module: 'ot_s81_su_qnr'",
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:107:9: Cannot find file containing module: 'ot_s81_su_kvq'",
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv:131:17: Cannot find file containing module: 'ot_s81_su_kvt'",
+   "%Error: Exiting due to 6 error(s)"
+  ],
+  "warnings": [
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_v'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_d'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_y'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_yv'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_ye'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:232:115: Instance has missing pin: 'ln_pe'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xok'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'bo'",
+   "%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-g9-configured-compile-1021/g9_configured_compile_r1/src/top/s0N_aggregate.sv:11059:33: Instance has missing pin: 'ck_rt'"
+  ]
+ },
+ "preserved_G8_PQ_failure_commit": "f83d5919a9caed0f16bb80ed0e02a75bd36a401d",
+ "functional_qualified": false,
+ "coherent_source_qualified": false,
+ "global_programme_qualified": false,
+ "physical_qualified": false,
+ "simulation_performed": false,
+ "file_sha256": {
+  "g9_KV_completion_terminal.json": "7d82bf0ce9d1258ce588cb4c08c847d0c128cc0187c838dd769c2478747f6712",
+  "g9_KV_completion_elab.log": "9011e84d9ce021f3b6cdd31c1bc9134e51d40c4fb3a201188889dd1aecfd7478",
+  "g9_KV_completion_source_r1.tgz": "4e69d34f36912b7d76e3e7a049c0f4fcf3f72ea364b02fe47706d8071cb4ea09",
+  "g9_KV_dependency_manifest.json": "34a21a361f81ee48901acd25ca4beee7458e8b5c62ed7baafe1fd459669ec145",
+  "g9_KV_dependencies.tar": "0b48cfb08211ea50501fd1b4a0b8537d52282daefa6a5a08535803b47198d0f4",
+  "g9_KV_completion_recipe.json": "1a90fc510821cf2de4a61641eaa63add1f02971f78a965c695db32cc1f5183e6",
+  "g9_0N_fastfp_audit.json": "d15377552fbf1d75cf396c44beda0f864bb2f4d9d288184dc7ecbcf36265b73a",
+  "g9_warning_classification_interim.json": "e7dd9e62ce1dcf92090c0a34d596d40c6b54a3b706f96401ae249c26b518d443"
+ }
+}
