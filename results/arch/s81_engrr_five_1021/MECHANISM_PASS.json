@@ -1,0 +1,73 @@
+{
+  "source_ref": "80b6d5334",
+  "AQ_counter_rtl": "a39344432",
+  "FP_baseline": "560abe5d2",
+  "FP_only_cherry_picks": [
+    "7ebe3958e",
+    "8f11a8749"
+  ],
+  "FP_interface_proof": "295a0d626",
+  "positive_cases": {
+    "base.log": {
+      "tb_pass": true,
+      "python_pass": true,
+      "records": 578,
+      "all_records_cycle_byte_identical": true,
+      "records_sha256": "35f2d897913fbfa7fbf85ae657500af59c7b5137dba92fc822ee5028af2f9c1d",
+      "log_sha256": "e5f4fae29040c9e57e5cebacd734394dc9d0106856c544daeb02e2820fbe71e9"
+    },
+    "var__SEED_2__LAT_160.log": {
+      "tb_pass": true,
+      "python_pass": true,
+      "records": 578,
+      "all_records_cycle_byte_identical": true,
+      "records_sha256": "6de494dc3c9294a8c8f2902bb67fca44c4ee35a9e3e8bb5ce20077a7bba495d3",
+      "log_sha256": "c9ab1d5415304d27b9addaa0148595ecca617501d3d7af35eb45d3a8f27eedfc"
+    },
+    "var__SEED_3__LAT_60.log": {
+      "tb_pass": true,
+      "python_pass": true,
+      "records": 578,
+      "all_records_cycle_byte_identical": true,
+      "records_sha256": "26f07beb9e5da9266cdd3feeb28bf767cde6e6e5d5f8351105a3c559d05c68b0",
+      "log_sha256": "9b385ff3bf00cf963956e76c1c08f11d3d2d60a51fdde1492f887c32a0f1e10d"
+    }
+  },
+  "causals": [
+    {
+      "name": "xq1",
+      "failed": true,
+      "log": "xq1.log"
+    },
+    {
+      "name": "xq2",
+      "failed": true,
+      "log": "xq2.log"
+    },
+    {
+      "name": "tap1",
+      "failed": true,
+      "log": "tap1.log"
+    },
+    {
+      "name": "tap2",
+      "failed": true,
+      "log": "tap2.log"
+    },
+    {
+      "name": "rpar",
+      "failed": true,
+      "log": "rpar.log"
+    },
+    {
+      "name": "onesc",
+      "failed": true,
+      "log": "onesc.log"
+    }
+  ],
+  "baseline_r5_rtl": "33ec02b71",
+  "native": "LIVE EPYC9unit3295399-1792624802, noqualificationyet",
+  "physical": "NO_GATE_OR_VIEW",
+  "status": "PASS threeexistingfullpositivecases+6causals",
+  "measured_added_cycles": 0
+}
