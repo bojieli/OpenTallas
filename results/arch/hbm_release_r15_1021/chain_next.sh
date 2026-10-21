@@ -177,10 +177,7 @@ views_to() {      # $1 remote views dir  $2 vplan dir  $3 contract  (all earlier
 }
 views_up() { views_to $B/views "$@"; }
 # HBM-DIE13: GEN CHECK (ROOT14) = d4g_reach_check per bus (real pins) -> tools/die_safety/gen_check.py W1 -> GEN packet
-gen_check_# Local transport override only in this successor process: ep6 public route loses packets.
-ssh() { local host=; for host in "$@"; do [ "$host" = ot-epyc6 ] && { command ssh -C -J ot-epyc5 -S none "$@"; return $?; }; done; command ssh -C -o ControlPath=none "$@"; }
-scp() { local arg=; for arg in "$@"; do [[ "$arg" == ot-epyc6:* ]] && { command scp -C -o ProxyJump=ot-epyc5 -o ControlPath=none "$@"; return $?; }; done; command scp -C -o ControlPath=none "$@"; }
-step() {   # $1 remote case dir  $2 remote contract  $3 tag  $4 extra gen_check args (e.g. --diagnostic REASON)
+gen_check_step() {   # $1 remote case dir  $2 remote contract  $3 tag  $4 extra gen_check args (e.g. --diagnostic REASON)
   $OTRUN --mem 64 --threads 1 --disk 2 --priority die --dir $1 -- bash -c "cd $B/src && python3 tools/hbm_die_v16/d4g_reach_check.py $1 $2 \
     --out $1/reach_check.json > $1/reach_check.log 2>&1; tail -3 $1/reach_check.log; python3 tools/die_safety/gen_check.py --design hbm \
     --hbm-reach $1/reach_check.json --packet $1/GEN_PACKET.json --out $1/gen_safety.json $4" > $A/gen_check_$3.otrun 2>&1; local rc=$?
