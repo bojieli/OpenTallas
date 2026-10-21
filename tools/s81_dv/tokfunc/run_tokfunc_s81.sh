@@ -8,6 +8,7 @@ HEAD_PREP=; HEAD_FIX=; MU_STAGE=; HEAD_JSON=; MU_JSON=; LAYERS_JSON=
 CAL_AR=; CAL_MTP=; MU_LINK_JSON=
 FOLD_JSON=
 KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
+ENTRY_NORM_JSON=; AGGREGATE_SOURCE_JSON=; ENTRY_PRODUCER_JSON=
 while (($#)); do
   case "$1" in
     --ref) REF=$2; shift 2;; --work) WORK=$2; shift 2;;
@@ -23,6 +24,9 @@ while (($#)); do
     --owner-fold-json) FOLD_JSON=$2; shift 2;;
     --kv-baseline) KV_BASELINE=$2; shift 2;; --kv-json) KV_JSON=$2; shift 2;;
     --dense-source-vectors) DENSE_VECTORS=$2; shift 2;; --dense-source-json) DENSE_JSON=$2; shift 2;;
+    --entry-norm-json) ENTRY_NORM_JSON=$2; shift 2;;
+    --aggregate-source-json) AGGREGATE_SOURCE_JSON=$2; shift 2;;
+    --entry-producer-json) ENTRY_PRODUCER_JSON=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
 done
@@ -102,5 +106,8 @@ ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$FOLD_JSON" ] || ARGS+=(--owner-fold "$FOLD_JSON")
 [ -z "$KV_JSON" ] || ARGS+=(--kv-consumer "$KV_JSON")
 [ -z "$DENSE_JSON" ] || ARGS+=(--dense-source "$DENSE_JSON")
+[ -z "$ENTRY_NORM_JSON" ] || ARGS+=(--entry-norm "$ENTRY_NORM_JSON")
+[ -z "$AGGREGATE_SOURCE_JSON" ] || ARGS+=(--aggregate-source "$AGGREGATE_SOURCE_JSON")
+[ -z "$ENTRY_PRODUCER_JSON" ] || ARGS+=(--entry-producer "$ENTRY_PRODUCER_JSON")
 [ -z "$DIE" ] || ARGS+=(--die-v "$DIE")
 python3 "$H/token_report.py" "${ARGS[@]}"

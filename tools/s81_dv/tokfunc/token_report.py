@@ -19,10 +19,14 @@ def main():
     p.add_argument('--owner-fold')
     p.add_argument('--kv-consumer')
     p.add_argument('--dense-source')
+    p.add_argument('--entry-norm')
+    p.add_argument('--aggregate-source')
+    p.add_argument('--entry-producer')
     p.add_argument('--die-v')
     a = p.parse_args()
     evidence = {}
-    for name in ('head', 'mu', 'mu_link', 'layers', 'owner_fold', 'kv_consumer', 'dense_source'):
+    for name in ('head', 'mu', 'mu_link', 'layers', 'owner_fold', 'kv_consumer', 'dense_source',
+                 'entry_norm', 'aggregate_source', 'entry_producer'):
         path = getattr(a, name)
         f = Path(path) if path else None
         evidence[name] = dict(path=path, status='PENDING')
@@ -62,6 +66,12 @@ def main():
         grade='die-netlist' if a.grade == 'netlist' else 'RTL-functional (source assembly)',
         verdict='INCOMPLETE', full_token_pass=False,
         evidence=evidence, current_mu_link_qualification=current_link,
+        current_entry_producer=dict(status='INCOMPLETE',
+            norm_programme_status=(evidence['entry_norm'].get('receipt') or {}).get('status', 'PENDING'),
+            aggregate_source_status=(evidence['aggregate_source'].get('receipt') or {}).get('status', 'PENDING'),
+            producer_receipt_status=(evidence['entry_producer'].get('receipt') or {}).get('status', 'PENDING'),
+            qualification='Recorded source programmes/components retain their own fixture, die, clocks and scope; recording them does not seal entry HOST, NX/XQ, END or a whole stage',
+            full_stage=False, full_token=False),
         selected_calendar_model=selected_calendar or dict(status='PENDING_EXPLICIT_SELECTED_CALENDAR'),
         calendar_model=dict(grade='SUPERSEDED FAILED MODEL (same-user MTP circuit collision)', stages=241,
             attention='G4', source_ref='6f8bbf5c4',
