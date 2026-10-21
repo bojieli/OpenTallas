@@ -510,6 +510,10 @@ def pre(v, m, G):
                 if roots[c]['array'] and roots[p]['array'] and abs(roots[c]['xy'][1] - roots[p]['xy'][1]) > ROW_DY:
                     continue      # array blocks link along their row gap only (a cross-row lane has no relay sites)
                 d = _man(roots[c]['xy'], roots[p]['xy'])
+                if ROOT_MODE == 'cover':
+                    # rfs try 14: an edge that needs relays at a crowded face may find no site (flt_t_dvs_W0_g8 seam 390 um,
+                    # 8/124 end sites free): a direct (<= REACH_UM, wire only) parent wins over any relayed one
+                    d = d if d <= REACH_UM else d + 2000.0
                 if best is None or d < best[0]:
                     best = (d, c, p)
         if best is None:
@@ -659,17 +663,27 @@ def post(v, m, G):
     # rfs try 13 (orphan flt_leaf86: rly_q3h_col_5_1_0 on interim clk_r1, final n_clk_r9): match sources and nodes by their
     # ck_follow OWNER -- the region _gen16_clock_refile gives them after post -- not by the interim clock bus
     fol0 = m.setdefault('ck_follow', {})
-    # a fault-edge landing follows its receiving fault root, which itself follows an owner: the refile only resolves real
-    # owners, so such pins are pointed at the root's owner (same final region as the root)
+    # a fault-edge landing follows its receiving fault root, which follows an owner, which may itself follow another block
+    # (mu_dhobs.ck -> tt_ctlm co-root): the refile only resolves real owners, so every follow target is resolved to the end
+    # of its chain, and sources / nodes are keyed by that resolved owner (rfs try 14: 'flt_root_mu_dhobs has no input')
     inst_owner = {r['inst']: r.get('owner', o) for o, r in rec['roots'].items()}
+
+    def _res(x):
+        seen_ = set()
+        x = inst_owner.get(x, x)
+        while (x, 'ck') in fol0 and x not in seen_:
+            seen_.add(x)
+            x = inst_owner.get(fol0[(x, 'ck')], fol0[(x, 'ck')])
+        return x
     for k_, o_ in list(fol0.items()):
-        if o_ in inst_owner:
-            fol0[k_] = inst_owner[o_]
-    src = [(s_[0], s_[1], s_[2], s_[3], fol0.get((s_[0], 'ck')) or s_[0], s_[5], s_[6]) for s_ in src]
+        if o_ in inst_owner or (o_, 'ck') in fol0:
+            fol0[k_] = _res(o_)
+    src = [(s_[0], s_[1], s_[2], s_[3], _res(fol0[(s_[0], 'ck')]) if (s_[0], 'ck') in fol0 else _res(s_[0]), s_[5], s_[6])
+           for s_ in src]
     root_ck = collections.defaultdict(list)
     kcj, krs = {}, {}
     for o, it in roots.items():
-        k_ = rec['roots'][o].get('owner', o)
+        k_ = _res(rec['roots'][o].get('owner', o))
         root_ck[k_].append(it)
         kcj.setdefault(k_, ckx[(it.name, 'ck')])
         krs.setdefault(k_, rsx[(it.name, 'rs')])
@@ -678,11 +692,11 @@ def post(v, m, G):
     # node table: name -> dict(inst, n_in, ck, rs, owner)
     nodes = {}
     for o, it in roots.items():
-        nodes[it.name] = dict(it=it, n=len(rec['roots'][o]['children']), ck=rec['roots'][o].get('owner', o),
+        nodes[it.name] = dict(it=it, n=len(rec['roots'][o]['children']), ck=_res(rec['roots'][o].get('owner', o)),
                               rs=rsx[(it.name, 'rs')], owner=rec['roots'][o].get('owner', o), root=True, up=None)
     q16 = make_master(v, FANIN)
     new_buses, nn = [], [0]
-    owner_of_root = {it.name: rec['roots'][o].get('owner', o) for o, it in roots.items()}
+    owner_of_root = {it.name: _res(rec['roots'][o].get('owner', o)) for o, it in roots.items()}
 
     def new_node(kind, cx, cy, cj, rj, owner, ok=None, at=None):
         if at is not None:
