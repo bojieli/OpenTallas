@@ -1,0 +1,12 @@
+{
+  "status": "FAIL_BEFORE_FLOORPLAN",
+  "source": "c7f009153",
+  "same_both": true,
+  "native_limit": 32,
+  "actual_max": 34,
+  "violations": 1,
+  "role_errors": 0,
+  "actual_source_cone": "g_dom4 step predicate, existing st_left high16 next-state mux 32 contacts +2othercontacts. Root4 clones dl236+:59; not CSA sum.",
+  "physical_result": null,
+  "next_source": "Split high16 left update across two same-edge kept clone domains. No threshold waiver or unchanged gate."
+}
