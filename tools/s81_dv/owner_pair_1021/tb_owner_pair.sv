@@ -27,7 +27,9 @@ module tb_owner_pair;
   .cw_v(2'd0),.cw_a(24'd0),.cw_d(64'd0),.lo_v(lv),.lo_d(ld),.s_v(sv),.s_d(sd),
   .x_rv(xrv|read_v),.x_ra(read_v?read_a:xra),.x_qv(qv),.x_qd(qd),
   .x_wv(xwv),.x_wa(xwa),.x_wm(xwm),.x_wd(xwd),.hq_v(1'b0),.hq_d(256'd0),.fault(pf));
- ot_s81sl_vs s(.clk(clk),.rst_n(rst_n),.s_v(sv),.s_d(sd),.x_rv(xrv),.x_ra(xra),.x_qv(qv),.x_qd(qd),
+ // The final inspection request belongs to the bench reader, not the VS
+ // operand channel. Deliver every VS-requested response unchanged.
+ ot_s81sl_vs s(.clk(clk),.rst_n(rst_n),.s_v(sv),.s_d(sd),.x_rv(xrv),.x_ra(xra),.x_qv(qv && read_cycle==0),.x_qd(qd),
   .x_wv(xwv),.x_wa(xwa),.x_wm(xwm),.x_wd(xwd),.sw_vi(1'b0),.sw_ri(64'd0),.sw_fi(1'b0),
   .ra_vi(1'b0),.ra_ri(32'd0),.ra_fi(1'b0),.ve_pv(1'b0),.ve_pc(2'd0),.ve_phh(32'd0),.ve_pkk(32'd0),
   .ve_pdd(32'd0),.ve_ov(1'b0),.ve_oc(2'd0),.ve_oy(256'd0),.ve_fi(1'b0),.g_v(1'b0),.g_c(2'd0),.g_d(32'd0),.fault(sf));

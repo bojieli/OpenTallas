@@ -11,6 +11,7 @@ import numpy as np
 
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--out', type=Path, required=True)
+p.add_argument('--reuse-build', type=Path, help='copy prior objects; rerun frontend for changed bench, never overwrite prior run')
 a = p.parse_args()
 root = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(root/'tools/s81_dv'))
@@ -48,6 +49,12 @@ src += ['rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv',
         'tools/s81_dv/owner_pair_1021/tb_owner_pair.sv']
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 pins = {s:sha(root/s) for s in src}
+if a.reuse_build:
+    prior = json.loads((a.reuse_build/'result.json').read_text())
+    rtl = {s:d for s,d in pins.items() if s.startswith('rtl/') or s.startswith('physical/')}
+    assert rtl == {s:d for s,d in prior['source_sha256'].items()
+                   if s.startswith('rtl/') or s.startswith('physical/')}, 'changed RTL cannot reuse this component build'
+    subprocess.run(['cp','-a','--reflink=auto',str(a.reuse_build/'obj'),str(a.out/'obj')],check=True)
 v = Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
 cmd = [str(v),'--binary','--timing','-O1','-fno-dfg','--unroll-count','4',
        '-Wno-fatal','-Wno-WIDTH','--top-module','tb_owner_pair','-Mdir',str(a.out/'obj'),
@@ -56,7 +63,8 @@ record = dict(status='RUNNING', full_layer=False, full_token=False, admitted=Fal
               scope='Synthetic eight-element rank partials -> real native target5 staging -> XRT local RD/DL4/VP SRAM -> canonical VS11',
               source_sha256=pins, compiler_sha256={n:sha(root/n) for n in
                   ['tools/s81_dv/layer_prog/owner_fold.py','tools/s81_dv/layer_prog/lower_vpx.py']},
-              argv=cmd, vehicle=vehicle, fixed_stimulus_dates=[t for t,_ in stim],
+              argv=cmd, vehicle=vehicle, reused_build=str(a.reuse_build) if a.reuse_build else None,
+              driver_sha256=sha(Path(__file__)), fixed_stimulus_dates=[t for t,_ in stim],
               inputs_bits=rank.view(np.uint32).tolist(), expected_bits=expected.view(np.uint32).tolist(),
               open=['actual wo_b producer/capture','four-rank ingress','selected die row leases/routes','full tile/result calendar'])
 def save(): (a.out/'result.json').write_text(json.dumps(record,indent=2)+'\n')
