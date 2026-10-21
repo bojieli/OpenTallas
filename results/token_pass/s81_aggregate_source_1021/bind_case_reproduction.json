@@ -17,7 +17,7 @@
   "--top",
   "s0N_aggregate",
   "--out",
-  "REQUIRED_FRESH_OUTPUT_DIRECTORY",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_bind_r2",
   "--prefer-list",
   "tools/s81_dv/frame_bench.f",
   "--prefer-list",
@@ -55,5 +55,19 @@
  "file_sha256": {
   "pure_bind_guards_r2.json": "649aa773024dbff3b61ac4f494c91781bbfbff7ce2b498a30a5d4e4960fb1aae",
   "pure_bind_guards_raw.tgz": "d49e6edda624b438ca9089e7df57f6c57e4fb158ba9bdda0a223c4fce5476629"
- }
+ },
+ "safe_reproduction_policy": "Original output path is recorded verbatim for provenance. For reproduction replace only --out with a fresh directory; never overwrite preserved output.",
+ "original_submission_argv": [
+  "/home/ubuntu/bin/ot-run",
+  "--mem",
+  "64",
+  "--threads",
+  "2",
+  "--dir",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/source_resolver_bind_job_r2",
+  "--",
+  "bash",
+  "-lc",
+  "cd ..; python3 src/tools/s81_dv/dv_rtl_kit.py --repo ../codex-s81-aggregate-source-repo-1021.git --ref 553741303923ab6bab36d67d17f914b1f11896c5 --port-bind ../codex-s81-g8-resume-1021/die72-g8iq/bind/bind/port_bind.json --bind-case ../codex-s81-g8-resume-1021/die72-g8iq/bind/bind/bind_case.json --top-v local_cone_r1/cut/s0N_aggregate.sv --top s0N_aggregate --out functional_kit_bind_r2 --prefer-list tools/s81_dv/frame_bench.f --prefer-list tools/s81_dv/svc_rs/rs_files.sh"
+ ]
 }
