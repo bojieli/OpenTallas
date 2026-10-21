@@ -70,6 +70,11 @@ def main():
             norm_programme_status=(evidence['entry_norm'].get('receipt') or {}).get('status', 'PENDING'),
             aggregate_source_status=(evidence['aggregate_source'].get('receipt') or {}).get('status', 'PENDING'),
             producer_receipt_status=(evidence['entry_producer'].get('receipt') or {}).get('status', 'PENDING'),
+            producer_qualification=('CONDITIONAL_EXACT_42_FILE_FIXTURE_ONLY'
+                if len((evidence['entry_producer'].get('receipt') or {}).get('source_sha256', {})) == 42
+                else 'CONDITIONAL_EXACT_RECEIPT_SOURCE_ONLY'),
+            source_continuity='UNVERIFIED',
+            shipping_equivalence=False,
             qualification='Recorded source programmes/components retain their own fixture, die, clocks and scope; recording them does not seal entry HOST, NX/XQ, END or a whole stage',
             full_stage=False, full_token=False),
         selected_calendar_model=selected_calendar or dict(status='PENDING_EXPLICIT_SELECTED_CALENDAR'),
