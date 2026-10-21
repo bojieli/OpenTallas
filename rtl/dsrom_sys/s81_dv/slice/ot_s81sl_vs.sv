@@ -257,11 +257,11 @@ module ot_s81sl_vs #(
         else if (acc_cmd) ka <= 8'd0;
         else if (arr) ka <= ka + 8'd1;
 `ifdef OT_S81SL_VS_SRAM
-    wire [3:0] region_op[0:15];
-    wire [7:0] region_ka[0:15];
+    wire [3:0] region_op[0:19];
+    wire [7:0] region_ka[0:19];
     genvar cr;
-    generate for(cr=0;cr<16;cr=cr+1) begin:g_data_region
-      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[40+cr]),.sv(sv_c),.busy(busy),.bad(c_bad),.cop(c_op),.xqv(xqv_c),.op(region_op[cr]),.ka(region_ka[cr]));
+    generate for(cr=0;cr<20;cr=cr+1) begin:g_data_region
+      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[cr<16?40+cr:26+cr-16]),.sv(sv_c),.busy(busy),.bad(c_bad),.cop(c_op),.xqv(xqv_c),.op(region_op[cr]),.ka(region_ka[cr]));
     end endgenerate
 `endif
     // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
@@ -391,10 +391,20 @@ module ot_s81sl_vs #(
         else xo_v <= vx[XL] && (op == OP_RB || (op == OP_QR && k_xo[0]) || (op == OP_MOE && k_xo >= 8'd48));
     always @(posedge clk) begin
         if (vx[XL] && op == OP_QR && !k_xo[0]) qr_h <= {64'd0, bf16(ay[1]), bf16(ay[0])};
+`ifndef OT_S81SL_VS_SRAM
         for (i = 0; i < 8; i = i + 1) xo_d[32 * i +: 32] <= (op == OP_RB) ? ay[i] : bf16(ay[i]);
         if (op == OP_QR) xo_d[127:0] <= {bf16(ay[1]), bf16(ay[0]), qr_h[63:0]};
+`endif
     end
 
+`ifdef OT_S81SL_VS_SRAM
+    wire [127:0] xo_qr={bf16(ay[1]),bf16(ay[0]),qr_h[63:0]};
+    genvar xb0;
+    generate for(xb0=0;xb0<32;xb0=xb0+1) begin:g_xresult_byte
+      wire [31:0] bf=bf16(ay[xb0/4]);
+      ot_s81sl_vs_xresult8 #(.LOW(xb0<16)) u_byte(.clk(clk),.op(region_op[xb0/2]),.full(ay[xb0/4][8*(xb0%4)+:8]),.bf(bf[8*(xb0%4)+:8]),.qr(xo_qr[8*(xb0%16)+:8]),.y(xo_d[8*xb0+:8]));
+    end endgenerate
+`endif
     // ================================================================ RA: serialise to the lane pair, collect rows
     reg [223:0] ras; reg [3:0] rasn; reg [7:0] ra_left;
     wire ra_ld = arr && op == OP_RA;
@@ -515,6 +525,23 @@ module ot_s81sl_vs #(
         end
       end
     end endgenerate
+    (* keep="true" *) reg [15:0] gate_capture;
+    genvar gr;
+    generate for(gr=0;gr<16;gr=gr+1) begin:g_gate_byte
+      always @(posedge clk) begin
+        gate_capture[gr] <= rsv[34] && g_v && g_c==gr/4;
+        if(gate_capture[gr]) gate[gr/4][8*(gr%4)+:8] <= gd_c[8*(gr%4)+:8];
+      end
+    end
+    for(gr=0;gr<4;gr=gr+1) begin:g_reduce_select
+      wire [7:0] local_er=region_ka[16+gr]-8'd16;
+      (* keep="true" *) reg [1:0] prev_copy;
+      wire [1:0] copy_sel=hpend_data[gr]?prev_copy:local_er[5:4];
+      always @(posedge clk) begin
+        prev_copy<=local_er[5:4];
+        ve_rh[32*gr+:32]<=hw32(hrow,copy_sel,gr);
+      end
+    end endgenerate
     always @(*) gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
 `else
     always @(*) begin
@@ -550,13 +577,17 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
             else if (gv_c) gmask <= gmask | (4'd1 << gc_c);
         end
     always @(posedge clk) begin
+`ifndef OT_S81SL_VS_SRAM
         if (gv_c) gate[gc_c] <= gd_c;
+`endif
         // REDUCE: arrivals 0..15 = h half rows into the stash; 16..79 = K / W of quad q -> ve
 `ifndef OT_S81SL_VS_SRAM
         if (eng_r && ka < 8'd16) hst[ka[3:0]] <= xq_c;
 `endif
         ve_rc <= eq[5:4];
+`ifndef OT_S81SL_VS_SRAM
         for (i = 0; i < 4; i = i + 1) ve_rh[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
+`endif
 `ifdef OT_S81SL_VS_SRAM
         for(i=0;i<32;i=i+1) if(k_capture[i]) kst[8*i+:8] <= xq_c[8*i+:8];
         for(i=0;i<16;i=i+1) if(w_capture[i]) wst[8*i+:8] <= xq_c[128+8*i+:8];
@@ -789,5 +820,9 @@ module ot_s81sl_vs_weight8 #(parameter integer BYTE=0,SECOND=0,MUT=0)(input wire
     if(accept) begin ws<=sel;w<=imm;end
     else if(arr) w<=row[32*(ws ^ ((MUT==9 && SECOND)?3'd1:3'd0))+8*BYTE+:8];
   end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_xresult8 #(parameter integer LOW=0)(input wire clk,input wire[3:0]op,input wire[7:0]full,bf,qr,output reg[7:0]y);
+  always @(posedge clk) y<=(LOW && op==4'd12)?qr:(op==4'd11)?full:bf;
 endmodule
 `endif

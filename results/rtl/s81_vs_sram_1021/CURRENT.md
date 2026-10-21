@@ -25,3 +25,5 @@ Source2f0cb6f94 operand-nibble hierarchy: existing ENG159/73 PASS, VS allops PAS
 Source91891ec62 native6 max433/320violations (246seq), rst1/roles0. ENG159/73 PASS/MUT8caught4, VSallopsPASS. Regional ENG arrival and RA/K/W capture removes prior654/512/451 controls; broad result mux is next repair, no layout.
 
 Source58f946148 byte result mux native7 max257/338violations (276seq), rst1/roles0; existing VSallops and ENG159/73 PASS. Former433/364 resultmux controls removed. New257 root traces command wsel[0] into64bit eight-way weight mux, next201 RA result capture; next source byte-local weight selectors + predicted RA byte write enables. No layout.
+
+Sourcee8072e473 weights/returnedRA native8 max257/345violations(289seq), rst1/roles0; VSallopsPASS/MUT9caught33. Highweightselector257 and RAreturnedcapture201 removed; remaining257 traces ENG gate128b capture, next181 arithmeticresultmux. Next localgatebytes/reduce-copy selectors/resultbytes source partition; still not admissible.
