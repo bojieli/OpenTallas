@@ -1,0 +1,58 @@
+{
+ "selected_head_source_commit": "8916a1cb6284d60fdfdef138d1913643427edaba",
+ "selected_physical_controller_module": "ot_s81hd_ctl_glue in ot_s81hd_ctl_peer.sv + direct dsfd_mtp_seq peer (not obsolete outer alias)",
+ "functional_composed_controller_module": "ot_s81hd_ctl from same selected8916 source tree; real dsfd_mtp_seq implementation required for functional producer use",
+ "seq_reset_contract": "glue c_run gates seq_rst; no programme fabricated; parent must send real CSRW plen/glen/run",
+ "selected_seq_view": "physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq (CLOSED c67a71fe5-tc ancestry; physical BB is not functional RTL)",
+ "proof_scope": "source inventory only; no job/helper/physical/epoch qualification",
+ "files": {
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv": {
+   "sha256": "810fb6fc419566aaf8683b1f03cf18447ef21e9671b5ca943ea94e8290ad832c",
+   "git_blob": "8bff44b1900ea162f8d22ce0324b42fd641b35f1"
+  },
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv": {
+   "sha256": "05e730ee63a43318910614d7cdace925fc123c6275b71e325f427f77cc81dd9f",
+   "git_blob": "6d8062ebe9662184fd68cc6e4b3652812e2443cc"
+  },
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv": {
+   "sha256": "2c8c00e66db78fae2b5fab6d3752874155e80df221e14fec4744a54267abedf8",
+   "git_blob": "ea2e91189a7c2788fd040dcdd662e393a1a3e228"
+  },
+  "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv": {
+   "sha256": "620328daa27ef27c9193e1c5ce5395564b612415289dc26bc5c1b7ebf9f76da1",
+   "git_blob": "74c7a1cabf6d69e3ac927935d3ec5c7cebc06d15"
+  },
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": {
+   "sha256": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+   "git_blob": "6934ebee44601c2fb07b60a7248bc6b150ace3b9"
+  },
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": {
+   "sha256": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+   "git_blob": "131749278b70797e2f96100059ff33bdb1b14fc0"
+  },
+  "rtl/lib/ot_rst_relay_tree3.sv": {
+   "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+   "git_blob": "37e72d9c9d7857f6d99c2077deaa5166ffcc7627"
+  },
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": {
+   "sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+   "git_blob": "b2871fbdcf602fa42ec6519e623cdeef084dff24"
+  },
+  "tools/s81_head/split_ctl_peer.py": {
+   "sha256": "9ee6ab654d926b4338ad2d9afca77796737fe4be54821e8688a3c66aaf7cdfd8",
+   "git_blob": "0157fba96cbe2eb1355f41ba169e4092e20d69ea"
+  },
+  "tools/s81_dv/head72/hd_bind.py": {
+   "sha256": "f5cd0dfcac56cb8c7b52f3640175c1daebde406b3e2dd434e76c26cffc22b686",
+   "git_blob": "d3fd0960f094d6aa450d9d91baf6679e94cf7054"
+  },
+  "rtl/dsrom_sys/s81_head/test/run_hd_ctl_bench.sh": {
+   "sha256": "d1ad84f43a63b569533fb5bb99f27807a63be5069e9adca1688ad575ef863de2",
+   "git_blob": "f503189a98b357042029a2995bfce83edc199d05"
+  },
+  "rtl/dsrom_sys/s81_head/test/tb_s81hd_ctl.sv": {
+   "sha256": "3fe53d9f1c3e1e5b369a1e26600b304b5a8fc45aee9497ec9290b50e54ee1cb8",
+   "git_blob": "685891460cb26f93a8fff9e899c92be9982d2506"
+  }
+ }
+}
