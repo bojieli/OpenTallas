@@ -271,7 +271,7 @@
      "verilator"
     ],
     "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
-    "pass_witness": "results/rtl/qwen_coll_safe_1019/r3/m0.log",
+    "pass_witness": "results/rtl/qw_collio_1020/bench3/m0.log",
     "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
    },
    {
@@ -284,7 +284,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
-    "fail_witness": "results/rtl/qwen_coll_safe_1019/r3/m1.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m1.log"
    },
    {
     "name": "coll_face_mut_cdc_latency",
@@ -296,7 +296,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
-    "fail_witness": "results/rtl/qwen_coll_safe_1019/r3/m2.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m2.log"
    },
    {
     "name": "coll_face_mut_phy_long",
@@ -308,19 +308,43 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
-    "fail_witness": "results/rtl/qwen_coll_safe_1019/r3/m3.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m3.log"
    },
    {
     "name": "coll_face_mut_bank_hit",
     "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m4 4",
     "expect": "fail",
-    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
-    "fail_witness": "results/rtl/qwen_coll_safe_1019/r3/m4.log",
     "threads": 8,
     "peak_ram_gb": 48,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m4.log"
+   },
+   {
+    "name": "coll_face_mut_ring_early",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m5.log"
+   },
+   {
+    "name": "coll_face_mut_land_unlanded",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m6.log"
    }
   ],
   "extra_paths": [
@@ -333,7 +357,8 @@
    "rtl/test/tb_coll_static_face.sv",
    "rtl/physical/qwen_coll_safe_1019",
    "results/rtl/qwen_coll_safe_1019",
-   "tools/orfs_allcorner_spef.py"
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qw_collio_1020"
   ],
   "views_to": "physical/ref_tile/qfd_coll_face_s1_band/views",
   "record_to": "results/rtl/ref_tile/qfd_coll_face_s1_band"
