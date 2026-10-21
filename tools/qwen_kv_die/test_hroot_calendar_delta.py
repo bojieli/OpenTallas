@@ -4,6 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import unittest
 import kvjc3_pc_chain as C
+from kv_hroot_calendar import observation_intervals
 
 
 def programme_functions():
@@ -17,6 +18,21 @@ def programme_functions():
 
 
 class HrootDelta(unittest.TestCase):
+    def test_full_gather_interval_and_causal_early_use(self):
+        rows = [dict(stack=st, group=g, phase=ph, last_change=100,
+                     first_use=104, hold_through=104, transport_edges=0)
+                for st in C.STACKS for g in range(8) for ph in ('enter', 'leave')]
+        self.assertEqual(len(observation_intervals(rows)), 64)
+        for index in range(64):
+            early = [dict(r) for r in rows]
+            early[index]['first_use'] -= 1
+            with self.assertRaises(ValueError):
+                observation_intervals(early)
+        with self.assertRaises(ValueError):
+            observation_intervals(rows[:-1])
+        with self.assertRaises(ValueError):
+            observation_intervals(rows, root_edges=1)
+
     def test_selected_implementation(self):
         f = programme_functions()['hroot_landing']
         k = SimpleNamespace(HROOT_LAND=True, HROOT_S32=False,
