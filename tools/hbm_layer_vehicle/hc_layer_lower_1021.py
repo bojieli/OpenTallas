@@ -117,7 +117,7 @@ def validate_connected_boundary(boundary):
 
 
 def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
-                   component_allocation, record=30, t0=16, boundary=None):
+                   component_allocation, record=30, t0=16, boundary=None, source_profile=None, profile_contract=None):
     """Emit real root inputs/programme plus downstream expected checks.
 
     component_allocation=True is explicitly the bounded relocated probe.  Shared
@@ -129,7 +129,25 @@ def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
         raise ValueError("bounded SW compiler requires an explicit three-sector SW allocation")
     if set(range(a_sector,a_sector+3)) & set(range(o_sector,o_sector+3)):
         raise ValueError("bounded G22 allocation requires disjoint input/output spans")
-    table, programme, schedule = root_rows(parameters, timing["resp_phase"])
+    if source_profile is None:
+        table, programme, schedule = root_rows(parameters, timing["resp_phase"])
+    else:
+        from hbm_layer_vehicle import hc_safe2_phase40_1021 as HP
+        if source_profile != HP.SAFE2_P40:
+            raise ValueError("only explicit SAFE2 phase40 candidate profile is supported")
+        if record != 30 or (a_sector,o_sector)!=(64,72) or np.asarray(A).size!=24:
+            raise ValueError("SAFE2 profile only covers rank0k31/record30 relocated A64/O72 npos1")
+        if profile_contract is None:
+            raise ValueError("SAFE2 candidate requires actual matching source contract")
+        contract=json.loads(Path(profile_contract).read_text())["instances"]
+        model=HP.source_profile(source_profile)
+        for instance,params in [('hc_SW',model['hub']),('hc_eng',model['root'])]:
+            actual=contract[instance]['params']
+            for key,value in params.items():
+                if actual.get(key)!=value:
+                    raise ValueError(f"SAFE2 source contract mismatch {instance}.{key}: {actual.get(key)} != {value}")
+        table, programme, schedule = HP.root_rows_for_profile(root_rows, parameters, timing["resp_phase"],profile=source_profile,npos=1)
+        schedule['profile_contract_sha256']=hashlib.sha256(Path(profile_contract).read_bytes()).hexdigest()
     prefix = CpBus(t0, src="image:HC_REAL_TABLE")
     prefix.install(TABLE_TGT, table, rec=record)
     prefix.src = "image:HC_REAL_ROOT"
