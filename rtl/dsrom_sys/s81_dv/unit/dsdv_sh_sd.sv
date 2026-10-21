@@ -20,6 +20,17 @@
 //           for the host's visibility fence (dsfd_host_native ack_n).
 // MUT (negative controls): 1 KV stack from o_addr >> 6, 2 every 50th stack credit return dropped, 3 Engram -> stack 0.
 // ---------------------------------------------------------------------------------------------------------------
+// S81-SHLK-1021 (default off): OT_S81_SH_P192 selects the Codex p192 contact-pitch masters (accd38c70; 0.192-um pin
+// pitch = 5.2 pins/um on the side faces instead of ~10/um) under the same names' exact behaviour (body byte-equal).
+`ifndef OT_SH_M257
+`ifdef OT_S81_SH_P192
+`define OT_SH_M257 ot_sram_1r1w2c_16x257_m1_p192
+`define OT_SH_M289 ot_sram_1r1w2c_16x289_m1_p192
+`else
+`define OT_SH_M257 ot_sram_1r1w2c_16x257_m1
+`define OT_SH_M289 ot_sram_1r1w2c_16x289_m1
+`endif
+`endif
 module dsdv_sh_sd #(
     parameter integer NS = 2,
     parameter integer KVS = 1,          // bit s: stack s holds KV / RoPE
@@ -74,7 +85,7 @@ module dsdv_sh_sd #(
     wire [545:0] mem_q;
 `ifdef OT_S81_SH_RSZ
     // S81-SHLK s10: one right-sized 16x289 dual-clock master (both clocks ck), rows 8..15 unused, address zero-extended
-    ot_sram_1r1w2c_16x289_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q[288:0]),
+    `OT_SH_M289 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q[288:0]),
       .w_ce_in(rn&&iv),.w_addr_in({1'b0,wp}),.wd_in({iwe,ia,id}),.w_mask_in({289{1'b1}}));
     assign mem_q[545:289] = 257'd0;
 `elsif OT_S81_SH_BANK64

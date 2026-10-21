@@ -39,6 +39,17 @@
 // st_row hi), WIN (window one-hot copy 4 selects the wrong pair word), KIND (kind copy 5 never substitutes sc_acc),
 // FQS (write-pointer copy 7 never advances), CQR (completion replica C ignores the count).
 // ---------------------------------------------------------------------------------------------------------------------
+// S81-SHLK-1021 (default off): OT_S81_SH_P192 selects the Codex p192 contact-pitch masters (accd38c70; 0.192-um pin
+// pitch = 5.2 pins/um on the side faces instead of ~10/um) under the same names' exact behaviour (body byte-equal).
+`ifndef OT_SH_M257
+`ifdef OT_S81_SH_P192
+`define OT_SH_M257 ot_sram_1r1w2c_16x257_m1_p192
+`define OT_SH_M289 ot_sram_1r1w2c_16x289_m1_p192
+`else
+`define OT_SH_M257 ot_sram_1r1w2c_16x257_m1
+`define OT_SH_M289 ot_sram_1r1w2c_16x289_m1
+`endif
+`endif
 module ot_s81_ing_stream_n32 #(
     parameter integer AW = 32,
     parameter integer NWR = 18                      // w_rdy copies = output-FIFO slices
@@ -511,9 +522,9 @@ module ot_s81_ing_stream_n32 #(
     wire [2:0]   w0p1 = w0 + 3'd1;
     wire [1:0]   row_o = w0[2:1];
     wire [1:0]   row_e = w0p1[2:1];
-    ot_sram_1r1w2c_16x257_m1 u_rae (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in({2'b00, row_e}), .rd_out(rq_e),
+    `OT_SH_M257 u_rae (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in({2'b00, row_e}), .rd_out(rq_e),
         .w_ce_in(ra_push), .w_addr_in({2'b00, ra_wq}), .wd_in({1'b0, in_data[255:0]}), .w_mask_in({257{1'b1}}));
-    ot_sram_1r1w2c_16x257_m1 u_rao (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in({2'b00, row_o}), .rd_out(rq_o),
+    `OT_SH_M257 u_rao (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in({2'b00, row_o}), .rd_out(rq_o),
         .w_ce_in(ra_push), .w_addr_in({2'b00, ra_wq}), .wd_in({1'b0, in_data[511:256]}), .w_mask_in({257{1'b1}}));
 
     // =================================================================================================================

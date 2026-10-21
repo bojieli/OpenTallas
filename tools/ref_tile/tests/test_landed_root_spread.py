@@ -116,6 +116,21 @@ class LandedRoots(unittest.TestCase):
         self.assertIn(("*u0", "*u1", "u_lpl_0"), landed)
         self.assertIn(("*u1", "*u3", "u_lpl_2"), landed)
 
+    def test_wrapper_bound_child_keeps_landing_and_reset_identity(self):
+        self.spec["children"][0]["inst"] = "*u0.u_view"
+        g = G.parent_link_graph(self.spec)
+        self.assertIsNotNone(g)
+        self.assertEqual(g["insts"]["u0"]["kid"], "*u0.u_view")
+        self.assertIsNone(g["insts"]["u_lprc_u0"]["kid"])
+        issues, landed = G.cross_region_links(g)
+        self.assertEqual(issues, [])
+        self.assertIn(("*u0.u_view", "*u1", "u_lpl_0"), landed)
+        # A direct cross-region bypass stays a refusal after wrapper matching.
+        (self.root / "top.sv").write_text(LP_RTL.replace(".a(y0__l_rb)", ".a(y0)"))
+        self.assertTrue(G.cross_region_links(G.parent_link_graph(self.spec))[0])
+        self.spec["children"][0]["inst"] = "*missing.u_view"
+        self.assertIsNone(G.parent_link_graph(self.spec))
+
     def test_per_root_child_pairs_pass(self):
         rec = G.clock_record(gate_out(), True, self.spec)
         r = self.roots(rec)

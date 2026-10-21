@@ -3,6 +3,17 @@
 // Registered SRAM head requires one additional empty-to-nonempty read edge;
 // every nonempty pop still advances one word per read clock. Gray stage2 alone
 // authorizes reads. No first-stage synchronizer output enters functional logic.
+// S81-SHLK-1021 (default off): OT_S81_SH_P192 selects the Codex p192 contact-pitch masters (accd38c70; 0.192-um pin
+// pitch = 5.2 pins/um on the side faces instead of ~10/um) under the same names' exact behaviour (body byte-equal).
+`ifndef OT_SH_M257
+`ifdef OT_S81_SH_P192
+`define OT_SH_M257 ot_sram_1r1w2c_16x257_m1_p192
+`define OT_SH_M289 ot_sram_1r1w2c_16x289_m1_p192
+`else
+`define OT_SH_M257 ot_sram_1r1w2c_16x257_m1
+`define OT_SH_M289 ot_sram_1r1w2c_16x289_m1
+`endif
+`endif
 module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2, EC=1, HNR=1) (
  input wire wclk,wrst_n,wr,input wire [W-1:0] wdata,
  output wire wfull,output reg [AW:0] wfreed,output reg ovf,
@@ -85,16 +96,16 @@ module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2, EC=1, HN
  // contacts a face, write data split over both faces).  Same addresses, enables, Gray/credit law and edges.
  if(W==514) begin:g_rsz2
 `ifdef S81SH_RSZ_MUT_SWAP
-  ot_sram_1r1w2c_16x257_m1 u_mem0(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[256:0]),
+  `OT_SH_M257 u_mem0(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[256:0]),
    .w_ce_in(we),.w_addr_in(wa),.wd_in({wdata[256:1],wdata[0]^wdata[300]}),.w_mask_in({257{1'b1}}));   // mutant: one bit of the low half corrupted by the high half
 `else
-  ot_sram_1r1w2c_16x257_m1 u_mem0(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[256:0]),
+  `OT_SH_M257 u_mem0(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[256:0]),
    .w_ce_in(we),.w_addr_in(wa),.wd_in(wdata[256:0]),.w_mask_in({257{1'b1}}));
 `endif
-  ot_sram_1r1w2c_16x257_m1 u_mem1(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[513:257]),
+  `OT_SH_M257 u_mem1(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[513:257]),
    .w_ce_in(we),.w_addr_in(wa),.wd_in(wdata[513:257]),.w_mask_in({257{1'b1}}));
  end else if(W==289) begin:g_rsz1
-  ot_sram_1r1w2c_16x289_m1 u_mem(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata),
+  `OT_SH_M289 u_mem(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata),
    .w_ce_in(we),.w_addr_in(wa),.wd_in(wdata),.w_mask_in({289{1'b1}}));
  end else begin:g_rsz_bad
   initial $fatal(1,"OT_S81_SH_RSZ: no right-sized master for W=%0d",W);
