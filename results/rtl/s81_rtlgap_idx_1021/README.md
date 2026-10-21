@@ -57,3 +57,20 @@ landing window (tt = window top K-1, ff = bottom; output must not depend on it).
 Variants: rstfix_tt (record b3 cases + T0 sweep), rstfix_ff (subset), asis_tt (die.v verbatim; expected FAIL = defect
 A witness), m1_tt (reader MUT 1 on all 8 readers; expected FAIL).  Results: receipts/ (fleet ep7
 /srv/opentallas-scratch/claude/s81-rtlgap-idx-1021/out).
+
+## Results 10-21 ~06:50 (ep7, builds 16 min / 20 GB, run ~2.5 min a small case; receipts/out)
+- asis_tt (die.v verbatim): **no lane word at all** (fail_asis_small, nerr 0 / 0 words, hdr_to_last -1 path): readers
+  and qf held in reset -> defect A confirmed.
+- rstfix_tt / rstfix_ff (inverters removed): the transport runs end to end (query 45+3+36 stations -> 8 readers -> HBM
+  via 70-74-station lanes -> score chain -> is_tail landing at bk_sel): every lane-0 word carries the W readers' 8
+  scores bit-exact, but the E readers 4-7 contribute nothing (st bit 1 = rsp fault), ctrls 8-11 lose half their svc
+  responses (rv 13/26), and **landing faults on every IDX-cluster lane** (all hrrq_00-15, hrrd_00-15, iq_src, iq_qf,
+  iq_03_04_l1, is_03_04, is_tail + hrd_00/02/04/10/14).  pass_small / pass_open6 / pass_gs FAIL (nerr 257, nopen 257);
+  closed_late / fail_slothit / m1 FAIL as expected.  tt == ff (flight inside the window does not change it).
+- Defect C (die binding): those landings carry the dv_bind **K 1 placeholder** (`K_source: NO die STA E: K 1
+  placeholder (re-derive)`): the G3 land plan (results/arch/s81_dv_1016/landing/p4l3/land_plan.json) has no row for any
+  72-frame IDX lane (dv_slice_cut: "landing ld_hrd_02 has no land-plan row").  G4 needs land-plan rows (E/K from the die
+  STA pilot, dv_land_pilot.py plan/agebundle; long tile dsfd_dvland_<W>l where E > 7) for the 67 landings listed in
+  receipts/cut_idx72_tt/slice_insts.json, then this bench re-runs unchanged (prep.sh + launch.sh).
+Verdict: TOK.DS.BENCH.4.4 transport is BOUND in G3 but NOT functional: A (reset polarity) fix ready
+(apply_rst_fix.py), C (landing K) owed by the die flow, B (25 mm lanes) a G4 floorplan decision.
