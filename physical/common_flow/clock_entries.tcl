@@ -124,6 +124,31 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
           lappend cts_nets [$net getName]
           continue
         }
+        # A declared forwarded input remains physically source-synchronous. It is
+        # timed as a real clock for its exact soft sinks, but never balanced with
+        # the regional CTS roots. The clock-entry SDC already proves all exact
+        # soft cell memberships and structural source ancestry; check every
+        # endpoint here as well before CTS mutates any regional tree.
+        if {[info exists ::ot_ce_fwd_soft] && [dict exists $::ot_ce_fwd_soft $pname]} {
+          set info [dict get $::ot_ce_fwd_soft $pname]
+          if {[get_full_name $clk] ne [dict get $info clock]} {error "OT_FORWARDED_SOFT: wrong clock alias $pname"}
+          set actual {}
+          foreach p [all_registers -clock [get_full_name $clk] -clock_pins] {dict set actual [get_full_name $p] 1}
+          foreach pin [get_fanout -flat -endpoints_only -from $src] {
+            set cell [get_cells -quiet -of_objects $pin]
+            if {[llength $cell] != 1} {error "OT_FORWARDED_SOFT: non-cell endpoint $pname"}
+            set name [get_full_name $cell]
+            set key "[get_property $cell ref_name]/[get_property $pin lib_pin_name]"
+            if {[dict exists $::ot_ce_counts [get_property $cell ref_name]]
+                && ([dict exists $actual [get_full_name $pin]] ||
+                    ([info exists ::ot_ce_refs] && [dict exists $::ot_ce_refs $key]))} continue
+            if {$name ni [dict get $info cells] || ![dict exists $actual [get_full_name $pin]]} {
+              error "OT_FORWARDED_SOFT: undeclared or non-clock sink $pname -> [get_full_name $pin]"
+            }
+          }
+          puts "OT_FORWARDED_SOFT preserved $pname (separate from regional CTS)"
+          continue
+        }
         set sinks {}
         foreach it [$net getITerms] { if {[$it isInputSignal]} { lappend sinks $it } }
         if {[llength $sinks] != 1} {
