@@ -3,6 +3,8 @@
 #   L5-RTL e484cff47 (6 missing safe8_ntf lane sources @445e6c74c: the MU72 end-slice tops never elaborated on G2..G5)
 #   + CLOSED ot_s81sl_capc5r view (closure s81sl_capc5r-163d31541, record 4a4d275ee: physical/ref_tile/s81sl_capc5r on this
 #   branch -> u_sl.u_cap binds by master; source blobs identical; old capc5c view no longer carried in the assembly).
+#   + S81-RTLGAP/idx bfdb07fa7: native-fixed dsdv_idx_rg3.sv + apply_rst_fix.py (reader/qf rst active-low: the 9 rinv_*
+#   inverters vanish).  IDX L2 readers stay at the north edge (~25 mm hrrq/hrrd lanes, ~151 cycles priced; move = G7).
 #   UNBOUND: s_0N u_lep ot_s81sl_lep_mu_ab (lepmu, binds in G7), safe8_ntf lanes, u_sl.u_xg xg_xo.
 #   MAIN = SRC = claude/s81-die72-g6-1021.  G1..G5 untouched.  G5 header follows.
 # S81 DIE72 G5 (S81-LINK5B L5B-G4 10-21): run_die72_g4.sh on plan g5 (dv_floorplan72_g4.py --wb-rows 2 3: W column-B real
@@ -54,13 +56,15 @@ python3 tools/s81_dv/frame_bind.py --plan "$P" --table "$BASE/bind/bind_table_p4
 printf 'FRAME_TABLE_RC 0 %s\n' "$(date)" >> "$S"
 python3 tools/s81_dv/recovery_idx4_1021/apply_overlay.py "$T"
 printf 'IDX_OVERLAY_RC 0 %s\n' "$(date)" >> "$S"
+python3 tools/s81_dv/rtlgap_idx_1021/apply_rst_fix.py "$T" > "$W/idx_rst_fix.log" 2>&1
+printf 'IDX_RST_FIX_RC 0 %s\n' "$(date)" >> "$S"
 python3 tools/s81_dv/release72/apply_mu72_overlay.py "$T" > "$W/mu72_overlay.log" 2>&1
 printf 'MU72_OVERLAY_RC 0 %s\n' "$(date)" >> "$S"
 set +e
 python3 tools/s81_dv/dv_diecase.py --plan "$P" --out "$W/bind" --bind real --bind-table "$T" --land-plan "$LAND" > "$W/bind.log" 2>&1
 RC=$?; echo "BIND_RC $RC $(date)" >> "$S"
 [ $RC -eq 0 ] || exit "$RC"
-python3 tools/s81_dv/dv_rvcase.py --plan "$P" --bind-dir "$W/bind/bind" --bind-table "$T" --land-plan "$LAND" --out "$W/case" --view-refs "$CREF" "$MAIN" "$SRC" --die-repair --dieflow-ref "$MAIN" --dcc-ref "$MAIN" --corners tt ff ss --macro-views --signal-top-layer M8 --gen-safety-diag 'selected72 g6 diagnostic: G6 = G5 + L5-RTL e484cff47 safe8_ntf lane sources + CLOSED capc5r u_cap; G5 = G4 + W column-B real SerDes beside lk_WN0/1 + u_land CLOSED dsdv_mu_land SRAM1 + head XB egress u_xg xg_xo (6 real W SerDes, 2 E reserves, s_0N lepw_mab_mu_72 2851.2; svc 3801.6, lepe 2851.2, idx 1209.6, seqhost 475.2x993.6) + MU72 tops on capc5r slice successor; declared unclosed frame/MU/service parents and source-view scope; no production closure claim' > "$W/case_gen.log" 2>&1
+python3 tools/s81_dv/dv_rvcase.py --plan "$P" --bind-dir "$W/bind/bind" --bind-table "$T" --land-plan "$LAND" --out "$W/case" --view-refs "$CREF" "$MAIN" "$SRC" --die-repair --dieflow-ref "$MAIN" --dcc-ref "$MAIN" --corners tt ff ss --macro-views --signal-top-layer M8 --gen-safety-diag 'selected72 g6 diagnostic: G6 = G5 + L5-RTL e484cff47 safe8_ntf lane sources + CLOSED capc5r u_cap + IDX reader/qf reset polarity fix (rtlgap idx bfdb07fa7); G5 = G4 + W column-B real SerDes beside lk_WN0/1 + u_land CLOSED dsdv_mu_land SRAM1 + head XB egress u_xg xg_xo (6 real W SerDes, 2 E reserves, s_0N lepw_mab_mu_72 2851.2; svc 3801.6, lepe 2851.2, idx 1209.6, seqhost 475.2x993.6) + MU72 tops on capc5r slice successor; declared unclosed frame/MU/service parents and source-view scope; no production closure claim' > "$W/case_gen.log" 2>&1
 RC=$?; echo "CASE_RC $RC $(date)" >> "$S"
 [ $RC -eq 0 ] || exit "$RC"
 CPUS=16 MEMG_GRT=96 MEMG_STA=64 bash "$W/case/run_all.sh" > "$W/chain.log" 2>&1
