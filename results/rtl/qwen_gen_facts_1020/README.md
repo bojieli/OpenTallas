@@ -48,3 +48,8 @@ the parent Qwen lead owns the generator-hook repair and next GEN.
 unit_tests.log: 16 small Python tests pass, including actual helper orientation
 and sliced bit identity, undriven clocks, absent rings, foreign reset joins,
 continuous unsited chains, hard-macro/keepout exclusion and automatic case output.
+
+Follow-up: corrected2230/ records the corrected reset-input GEN (audit PASS for
+the two original foreign-clock hops), its remaining regional/data failures, and
+complete actual corresponding-bit/reset-site geometry analysis. That directory
+is the current diagnosis; the earlier failures above remain historical evidence.

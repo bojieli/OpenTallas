@@ -1,0 +1,331 @@
+{
+ "schema": "opentallas.die_gen_safety.v1",
+ "design": "qwen_compute",
+ "reach_um": 405.0,
+ "verdict": "FAIL",
+ "counts": {
+  "crossings": 1569,
+  "no_landing": 550,
+  "no_root": 8,
+  "wires": 16864,
+  "hops": 19024,
+  "hops_over": 0,
+  "wires_over": 0,
+  "wires_no_site": 0
+ },
+ "max_hop_um": 385.6,
+ "channels_declared": true,
+ "fails": [
+  "C1 550/1569 region crossings without a landing ring",
+  "C2 8/1569 region crossings without a clock root on a side"
+ ],
+ "examples": {
+  "no_landing": [
+   {
+    "id": "lnk_fwd_lrst",
+    "src": "pll_fwd",
+    "dst": "clk_d2d",
+    "bits": 1
+   },
+   {
+    "id": "ucie_rx",
+    "src": "clk_ucie",
+    "dst": "UNDRIVEN:io_collective/fdi_rx_ck",
+    "bits": 1043
+   },
+   {
+    "id": "ucie_up",
+    "src": "clk_ucie",
+    "dst": "UNDRIVEN:io_collective/face_ck[6]",
+    "bits": 1
+   },
+   {
+    "id": "serdes1_tx",
+    "src": "UNDRIVEN:io_collective/face_ck[39]",
+    "dst": "clk_serdes1",
+    "bits": 597
+   },
+   {
+    "id": "serdes1_txv",
+    "src": "UNDRIVEN:io_collective/face_ck[39]",
+    "dst": "clk_serdes1",
+    "bits": 1
+   },
+   {
+    "id": "serdes1_rx",
+    "src": "clk_serdes1",
+    "dst": "UNDRIVEN:io_collective/face_ck[39]",
+    "bits": 597
+   },
+   {
+    "id": "serdes1_rxv",
+    "src": "clk_serdes1",
+    "dst": "UNDRIVEN:io_collective/face_ck[39]",
+    "bits": 1
+   },
+   {
+    "id": "serdes1_up",
+    "src": "clk_serdes1",
+    "dst": "UNDRIVEN:io_collective/face_ck[39]",
+    "bits": 1
+   },
+   {
+    "id": "rst_fwd",
+    "src": "UNDRIVEN:ckb_rom",
+    "dst": "clk_d2d",
+    "bits": 1
+   },
+   {
+    "id": "dv_l9_E0",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 514
+   },
+   {
+    "id": "dv_st_E0_cmd_cmd",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 116
+   },
+   {
+    "id": "dv_st_E0_hr_hr",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 453
+   },
+   {
+    "id": "dv_st_E0_st_d_st",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1088
+   },
+   {
+    "id": "dv_st_E0_st_u_st",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1088
+   },
+   {
+    "id": "dv_st_E0_sc_d_sc",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 48
+   },
+   {
+    "id": "dv_st_E0_sc_u_sc",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 48
+   },
+   {
+    "id": "dv_ch_E0_ar_arv",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_ar_art",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 32
+   },
+   {
+    "id": "dv_ch_E0_ar_arm",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_ar_arl",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_ar_ard",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 512
+   },
+   {
+    "id": "dv_ch_E0_dd_dd",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 548
+   },
+   {
+    "id": "dv_ch_E0_rt_rv",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_rt_re",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_rt_rr",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 3
+   },
+   {
+    "id": "dv_ch_E0_rt_rl",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_rt_rd",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 512
+   },
+   {
+    "id": "dv_ch_E0_dr_dr",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 520
+   },
+   {
+    "id": "dv_ch_E0_ag_ag",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 10
+   },
+   {
+    "id": "rst_seq__t16",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t28",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t43",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t43",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t60",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t62",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t66",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t67",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t70",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t70",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t16",
+    "src": "clk_r659",
+    "dst": "clk_r54",
+    "bits": 1
+   }
+  ],
+  "no_root": [
+   {
+    "id": "ucie_rx",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/fdi_rx_ck"
+    ]
+   },
+   {
+    "id": "ucie_up",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/face_ck[6]"
+    ]
+   },
+   {
+    "id": "serdes1_tx",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/face_ck[39]"
+    ]
+   },
+   {
+    "id": "serdes1_txv",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/face_ck[39]"
+    ]
+   },
+   {
+    "id": "serdes1_rx",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/face_ck[39]"
+    ]
+   },
+   {
+    "id": "serdes1_rxv",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/face_ck[39]"
+    ]
+   },
+   {
+    "id": "serdes1_up",
+    "regions_without_root": [
+     "UNDRIVEN:io_collective/face_ck[39]"
+    ]
+   },
+   {
+    "id": "rst_fwd",
+    "regions_without_root": [
+     "UNDRIVEN:ckb_rom"
+    ]
+   }
+  ],
+  "hops_over": [],
+  "wires_no_site": []
+ },
+ "regions": 1595,
+ "regions_without_root": [
+  "UNDRIVEN:bump_die_ps",
+  "UNDRIVEN:bump_fwd_epoch",
+  "UNDRIVEN:bump_fwd_lrst",
+  "UNDRIVEN:bump_pkg_s0",
+  "UNDRIVEN:bump_pkg_s1",
+  "UNDRIVEN:ckb_rom",
+  "UNDRIVEN:io_collective/face_ck[39]",
+  "UNDRIVEN:io_collective/face_ck[6]",
+  "UNDRIVEN:io_collective/fdi_rx_ck"
+ ],
+ "summaries": []
+}
