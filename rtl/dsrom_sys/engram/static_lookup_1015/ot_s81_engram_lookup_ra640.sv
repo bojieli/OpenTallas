@@ -119,6 +119,11 @@ module ot_s81_engram_lookup_ra640 #(
     input  wire [2:0]               hr_tag,
     input  wire [2:0]               hr_tag_w,       // n32: second pin-flop copy of hr_tag (seen write decode, wbank)
     input  wire [3:0]               hr_idx,
+    // ELEM-ENG2 n32 (native census 10-21): kept pin-flop copies (same pins, same edges) for the per-bank / per-group
+    // acceptance and seen consumers: win_valid_c[4:0] -> accept_ids group g, [7:5] -> accept_seen banks 2k,2k+1;
+    // hr_idx_w[4b +: 4] -> accept_seen bank b (write decode + local read)
+    input  wire [7:0]               win_valid_c,
+    input  wire [4*CPR-1:0]         hr_idx_w,
     input  wire [255:0]             hr_data,
     // row beats to the all-gather and the local sink
     output wire                     o_valid,
@@ -166,9 +171,17 @@ module ot_s81_engram_lookup_ra640 #(
     reg [15:0] age;
     reg protocol_bad;
     wire [8:0] seen [0:CPR-1];
+    wire [CPR-1:0] seen_rd;              // seen[b][hr_idx], read inside bank b with its own hr_idx copy
+    wire [7:0] active_c;                 // kept copies of active (same D, reset, edge): one per acceptance group
     wire win_acc = win_valid && !active;
     wire response_ok = hr_valid && active && age < RETURN_AGE &&
-        hr_slot == slot && hr_tag < CPR && hr_idx < 9 && !seen[hr_tag][hr_idx];
+        hr_slot == slot && hr_tag < CPR && hr_idx < 9 && !(|(seen_rd & ({{(CPR-1){1'b0}}, 1'b1} << hr_tag)));
+    // next state of active (exactly the always block below), feeding the kept copies
+    wire active_nx = win_acc ? 1'b1 : (active && age==RETURN_AGE+63) ? 1'b0 : active;
+    genvar acc;
+    generate for (acc=0; acc<8; acc=acc+1) begin : g_active_c
+        (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_a (.clk(clk_ctl), .rst_n(rst_n), .d(active_nx), .q(active_c[acc]));
+    end endgenerate
     integer sr;
     always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) begin
@@ -194,13 +207,13 @@ module ot_s81_engram_lookup_ra640 #(
     genvar acb;
     generate for (acb=0; acb<(4*ENG_ID_W+15)/16; acb=acb+1) begin : g_accept_ids
         localparam integer B=((4*ENG_ID_W-16*acb)<16)?(4*ENG_ID_W-16*acb):16;
-        ot_s81eng_accept_ids #(.W(B)) u_ids (.clk(clk), .win_valid(win_valid), .active(active),
+        ot_s81eng_accept_ids #(.W(B)) u_ids (.clk(clk), .win_valid(win_valid_c[acb]), .active(active_c[acb]),
             .d(win_ids[16*acb +: B]), .q(ids[16*acb +: B]));
     end
     for (acb=0; acb<CPR; acb=acb+1) begin : g_accept_seen
-        ot_s81eng_accept_seen #(.BANK(acb)) u_seen (.clk(clk_ctl), .rst_n(rst_n),
-            .win_valid(win_valid), .active(active), .response_ok(response_ok),
-            .hr_tag_w(hr_tag_w), .hr_idx(hr_idx), .q(seen[acb]));
+        ot_s81eng_accept_seen #(.BANK(acb)) u_seen (.clk(clk_ctl),
+            .win_valid(win_valid_c[5 + acb/2]), .active(active_c[5 + acb/2]), .response_ok(response_ok),
+            .hr_tag_w(hr_tag_w), .hr_idx(hr_idx_w[4*acb +: 4]), .q(seen[acb]), .rd(seen_rd[acb]));
     end endgenerate
 
     // ---- hash -------------------------------------------------------------------------
@@ -718,12 +731,15 @@ endmodule
 );
     always @(posedge clk) if (win_valid && !active) q <= d;
 endmodule
+// ELEM-ENG2 10-21: seen carries no reset (SAFE 8: reset only control/valid).  Unobservable: every read of seen
+// (response_ok, the age==RETURN_AGE completeness check) requires active, and the only way to set active (win_acc) clears
+// seen on the same edge.  rd = q[hr_idx] read locally (the bank's own hr_idx copy), so response_ok selects 1 bit by tag.
 (* keep_hierarchy = "yes" *) module ot_s81eng_accept_seen #(parameter integer BANK=0) (
-    input wire clk, rst_n, win_valid, active, response_ok,
-    input wire [2:0] hr_tag_w, input wire [3:0] hr_idx, output reg [8:0] q
+    input wire clk, win_valid, active, response_ok,
+    input wire [2:0] hr_tag_w, input wire [3:0] hr_idx, output reg [8:0] q, output wire rd
 );
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) q <= 9'd0;
-        else if (win_valid && !active) q <= 9'd0;
+    always @(posedge clk)
+        if (win_valid && !active) q <= 9'd0;
         else if (response_ok && hr_tag_w == BANK) q[hr_idx] <= 1'b1;
+    assign rd = |(q & (9'd1 << hr_idx));
 endmodule
