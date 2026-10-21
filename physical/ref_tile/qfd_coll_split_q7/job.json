@@ -2,7 +2,7 @@
  "name": "qfd_coll_split_q7-q7-COMMIT",
  "block": "ot_coll_split_q_native32",
  "ref_tile": true,
- "owner": "QW-COLLQ6",
+ "owner": "QW-TREE-SAFE",
  "purpose": "QW-COLLQ6 Q leaf q7: q6w geometry (E stack 172.8, GRT0); native cells released (no net freeze) so hold repair can buffer native short paths; TIELO fanout re-split after release; r4 reset",
  "threads": 16,
  "peak_ram_gb": 48,
@@ -34,6 +34,102 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_gold_unit",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/unit",
+    "expect": "pass",
+    "pass_regex": "COLL_TP8S PASS cases=13",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "8-die split Q (FAN32/ADD_FAN32 native adder) unit set incl INJECT cases (every die flags out_err; errseen) on V5.050; witness results/rtl/coll_native32_1020/bench_r5/gold_tail.log"
+   },
+   {
+    "name": "coll_gold_prod",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/prod --production",
+    "expect": "pass",
+    "pass_regex": "COLL_TP8S PASS cases=4",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "production-shape Qwen layer 2x256w + argmax"
+   },
+   {
+    "name": "mut_ot_coll_split_mut_lead",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_LEAD --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_LEAD",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_LEAD",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_LEAD.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_coll_split_mut_ex",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_EX --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_EX",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_EX",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_EX.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_coll_split_mut_sbank",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_SBANK --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_SBANK",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_SBANK",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_SBANK.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_coll_split_mut_rerr",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_RERR --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_RERR",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_RERR",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_RERR.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_tp8s_mut_owner",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_TP8S_MUT_OWNER --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_TP8S_MUT_OWNER",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_TP8S_MUT_OWNER",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_TP8S_MUT_OWNER.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_tp8s_mut_gather",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_TP8S_MUT_GATHER --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_TP8S_MUT_GATHER",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_TP8S_MUT_GATHER",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_TP8S_MUT_GATHER.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
     "needs": [
      "verilator"
     ]

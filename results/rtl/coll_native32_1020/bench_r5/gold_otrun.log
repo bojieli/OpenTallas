@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src5
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src5
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src5
+ot-run: ot-epyc9       admits    11 GB (avail 350, growth 342, headroom 0, waiters 4/128 GB) load 357/128 running 72 disk 50 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src5
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/qw-orphans-coll-1020 (34.4 GB) ot-epyc9 -> ot-epyc7 (no host with --dir admits 96 GB now)
+ot-run: SPILL copy ot-epyc9 -> ot-epyc7 FAILED (OT_SPILL_REAL /srv/opentallas-scratch/claude/qw-orphans-coll-1020); NOT RUN there (the partial copy on ot-epyc7 is marked .ot-run-spill-copy, so no job is placed on it)
+ot-run: -> ot-epyc9 (will queue: admits 11 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 96 = 67 GB, admissible 19 GB: available 353 GB, growth charged 340 GB (x0.5), young 175 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3337432-1792566261 after 41 s
+Verilator 5.050 2026-07-01 rev v5.050
+unit rc=0
+prod rc=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3337432-1792566261): exit 0
