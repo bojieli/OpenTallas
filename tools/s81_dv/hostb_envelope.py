@@ -216,8 +216,40 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def transit_book(route, bookings, context, *, has_body):
+    """Bind each transit adapter's own counter slots, never destination dates.
+
+    A nonlocal HOST header latches transit_body_edge48 at that adapter. Its
+    wire date48 remains the destination-local body edge and is never rewritten.
+    """
+    if len(route) != len(bookings):
+        raise ValueError('every nonlocal adapter requires its own explicit slot book')
+    out=[]
+    for adapter,slots in zip(route,bookings):
+        for key in ('adapter_id','receiver_clock_identity','source_sha256'):
+            if not isinstance(adapter.get(key),str) or not adapter[key]:
+                raise ValueError('transit adapter identity/clock/source must be explicit')
+        digest=adapter['source_sha256']
+        if len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):
+            raise ValueError('transit adapter requires an exact source SHA256')
+        if adapter.get('configured') is not True or adapter.get('expected_header_stage') != context.stage_id:
+            raise ValueError('HOST/KS transit requires configured destination-stage contract')
+        if slots.get('adapter_id') != adapter['adapter_id']:
+            raise ValueError('transit slot book names the wrong adapter')
+        uint('transit receiver_header_edge',slots['receiver_header_edge'],48)
+        uint('transit header_slot',slots['header_slot'],48)
+        if slots['header_slot'] != slots['receiver_header_edge']:
+            raise ValueError('transit header must match its exact receiver-local header slot')
+        if has_body:
+            uint('transit_body_edge',slots['transit_body_edge'],48)
+            if slots['transit_body_edge'] <= slots['receiver_header_edge']:
+                raise ValueError('transit body must follow its header in the same adapter counter')
+        out.append(dict(adapter=adapter,slots=slots))
+    return out
+
+
 def encode_boot(boot_words, context, host_slots, *, ks53, ks_slots,
-                starter_words=None, starter_slots=None, arm_slots=None):
+                starter_words=None, starter_slots=None, arm_slots=None, transit_route=()):
     """Produce HFWD payloads with separately supplied head/receiver slot books.
 
     No latency or clock-origin offset is inferred between those two books.
@@ -243,25 +275,27 @@ def encode_boot(boot_words, context, host_slots, *, ks53, ks_slots,
             uint(name,slots[name],48)
         if slots['head_header_edge'] >= slots['head_body_edge'] or slots['receiver_header_edge'] >= slots['receiver_body_capture_edge']:
             raise ValueError('HOST pair must be atomic and ordered in both named counter domains')
+        transits=transit_book(transit_route,slots.get('transit',[]),context,has_body=True)
         pair=host_word(legacy,context,body_capture_edge=slots['receiver_body_capture_edge'])
         for part,(source,capture,payload) in enumerate(zip(
                 [slots['head_header_edge'],slots['head_body_edge']],
                 [slots['receiver_header_edge'],slots['receiver_body_capture_edge']],pair)):
             emitted.append(dict(head_edge=source,receiver_capture_edge=capture,
-                opcode='HOST_WORD',word_index=index,part=part,payload512=f'{payload:0128x}'))
+                opcode='HOST_WORD',word_index=index,part=part,expected_header_stage=context.stage_id,
+                destination_header_slot=slots['receiver_header_edge'],transit_slot_books=transits,payload512=f'{payload:0128x}'))
             arrivals.append((capture,payload))
     if arm_slots is not None:
         for name in ('head_edge','receiver_edge','deadline','mask6'):
             uint(name,arm_slots[name],6 if name=='mask6' else 48)
         payload=arm_word(arm_slots['mask6'],context,deadline=arm_slots['deadline'])
         emitted.append(dict(head_edge=arm_slots['head_edge'],receiver_capture_edge=arm_slots['receiver_edge'],
-                            opcode='ARM_SELECTION_ONLY',payload512=f'{payload:0128x}'))
+                            opcode='ARM_SELECTION_ONLY',expected_header_stage=context.stage_id,destination_header_slot=arm_slots['receiver_edge'],transit_slot_books=transit_book(transit_route,arm_slots.get('transit',[]),context,has_body=False),payload512=f'{payload:0128x}'))
         arrivals.append((arm_slots['receiver_edge'],payload))
     for name in ('head_edge','receiver_edge','deadline','slot'):
         uint(name,ks_slots[name],3 if name=='slot' else 48)
     payload=ks_word(ks53,ks_slots['slot'],context,deadline=ks_slots['deadline'])
     emitted.append(dict(head_edge=ks_slots['head_edge'],receiver_capture_edge=ks_slots['receiver_edge'],
-                        opcode='KS_DESCRIPTOR',payload512=f'{payload:0128x}'))
+                        opcode='KS_DESCRIPTOR',expected_header_stage=context.stage_id,destination_header_slot=ks_slots['receiver_edge'],transit_slot_books=transit_book(transit_route,ks_slots.get('transit',[]),context,has_body=False),payload512=f'{payload:0128x}'))
     arrivals.append((ks_slots['receiver_edge'],payload))
     if any(a['head_edge'] >= b['head_edge'] for a,b in zip(emitted,emitted[1:])):
         raise ValueError('head slots overlap/interleave or reorder a HOST pair')
@@ -291,9 +325,12 @@ def main():
     if 'version2' not in compact and 'version=2' not in compact:
         raise ValueError('requires the ROOT-selected HBE1 version2 plan, not the superseded v1 framing')
     meta=json.loads(a.metadata.read_text());slots=json.loads(a.slots.read_text())
-    for key in ('epoch_source','head_clock_identity','receiver_clock_identity','counter_units','programme_metadata'):
+    for key in ('epoch_source','head_clock_identity','receiver_clock_identity','counter_units','programme_metadata','route_metadata'):
         if key not in meta or not meta[key]:
             raise ValueError('required explicit metadata missing: '+key)
+    route=meta['route_metadata']
+    if not isinstance(route.get('transit_adapters'),list) or not route.get('source_model_qualification'):
+        raise ValueError('route requires explicit transit_adapters (empty only for local proof) and source MODEL qualification')
     programme=meta['programme_metadata']
     if 'first_command_anchor' not in programme or 'anchor_qualification' not in programme:
         raise ValueError('programme anchor/status must be explicit; null with OPEN is allowed, no anchor is synthesized')
@@ -302,6 +339,13 @@ def main():
     if programme['source_sha256'] != sha(a.boot_memh):
         raise ValueError('programme identity does not name this exact boot source')
     context=Context(**meta['context'])
+    destination=route.get('destination_adapter') or {}
+    if destination.get('receiver_clock_identity') != meta['receiver_clock_identity']:
+        raise ValueError('destination adapter must bind the named receiver clock')
+    first=slots['host_words'][0]
+    transit_book([destination],[dict(adapter_id=destination.get('adapter_id'),
+        receiver_header_edge=first['receiver_header_edge'],header_slot=first['receiver_header_edge'],
+        transit_body_edge=first['receiver_body_capture_edge'])],context,has_body=True)
     words=[int(s,16) for s in a.boot_memh.read_text().split()]
     if len(words)!=417:
         raise ValueError('bounded existing entry producer requires exactly417 legacy HOST words')
@@ -314,7 +358,8 @@ def main():
         if programme.get('starter_csr_source_sha256') != sha(a.starter_csr_memh):
             raise ValueError('real SYNC/ARM CSR source identity is required explicitly')
     records=encode_boot(words,context,slots['host_words'],ks53=rawks,ks_slots=slots['ks'],
-                        starter_words=starter,starter_slots=slots.get('starter_words'),arm_slots=slots.get('arm'))
+                        starter_words=starter,starter_slots=slots.get('starter_words'),arm_slots=slots.get('arm'),
+                        transit_route=route['transit_adapters'])
     a.out.mkdir(parents=True)
     (a.out/'hfwd512.memh').write_text(''.join(r['payload512']+'\n' for r in records))
     receipt=dict(schema='opentallas.s81.hbe1v2.boot_codec.v1',
@@ -325,7 +370,9 @@ def main():
                           fixture_meta=sha(a.fixture_meta),plan=sha(a.plan),codec=sha(__file__)),
         records=records,cost=wire_cost(len(records)),
         crc32c='poly82f63b78 reflected/initffffffff/finalxorffffffff;64 raw body bytes little-endian',
-        date48='HOST exact receiver-local body capture; inline opcodes explicit arrival deadline',
+        date48='HOST exact destination-receiver-local body capture; inline opcodes explicit arrival deadline',
+        transit_body_edge='Required separate per-adapter receiver-local HOST body capture; never inferred from destination date48',
+        route_pipeline_qualification='SOURCE MODEL only; explicit slot books do not prove phase, pacing or physical latency',
         reserved_inline='HOST CRC32C32, KS raw53+slot3, ARM selection6, RETURN raw t_host77+t_kd54',
         real_sync_arm_CSRs='Full class0 0x19/0x17 must be separately supplied HOST_WORDs; inlineARM cannot replace them',
         body_integrity='bounded CRC error detection, not universal collision/substitution proof',
