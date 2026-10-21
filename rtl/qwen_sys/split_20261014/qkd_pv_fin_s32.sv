@@ -72,7 +72,18 @@ module qkd_pv_fin_s32 #(
    else if(command_accept[8+mh])mul_header[8*mh+:8]<=command_mulage[8+mh][8*mh+:8];
  end endgenerate
  wire [15:0] n=age+16'd1;                                  // the edge that ends this cycle
- function automatic win(input [15:0] x,input [15:0] lo);win=(x>=lo)&&(x<lo+16'd32);endfunction
+ // Window of32 values: at most two adjacent32-value high words.
+ // Preserve16-bit upper-bound wrap exactly: lo>=65504 gives an empty window.
+ function automatic win(input [15:0] x,input [15:0] lo);
+  reg low_ge;
+  reg [10:0] next_hi;
+  begin
+   low_ge=(x[4:0]>=lo[4:0]);
+   next_hi=lo[15:5]+11'd1;
+   win=(lo[15:5]!=11'h7ff)&&
+       (((x[15:5]==lo[15:5])&&low_ge)||((x[15:5]==next_hi)&&!low_ge));
+  end
+ endfunction
  wire p0_slot=active&&win(n,P0),p1_slot=active&&win(n,P1),r_slot=active&&n==RA;
  wire add_slot=active&&win(ns,ADD_AGE),sum_slot=active&&win(ns,SUM_AGE);
  wire mul_slot=active&&win(ni,MUL_AGE),product_slot=active&&win(np,PRODUCT_AGE);
