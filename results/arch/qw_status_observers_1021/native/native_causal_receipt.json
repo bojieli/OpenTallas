@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.status.obs.v1.native_causal_receipt",
+  "status": "PASS",
+  "source_commit": "44f48aa01",
+  "source_sha256": "928ec8c3d5754daec2f06f0aa7572bcf6da69e1215dbeb8353fabc8821f99ecc",
+  "staged_manifest_matched": true,
+  "unchanged_v2_native_modules_sha256": {
+    "ot_qwen_status_obs_v1_valid": "92524518590019278b93170698c78a2d0bafb188fa6b92eacc6d9635c8c9e87c",
+    "ot_qwen_status_obs_full32": "0586598656affa0f85b29fbaba2b6e3a2192123cac23a881416277d2d138d00d",
+    "ot_qwen_status_obs_v1_state": "ed2d1fa52a4479a3fa65a8c3200376044fe3b89ed28eec4428ab7d89ec9b6d91",
+    "ot_qwen_d2d_status_tx_s7_obs1": "cc1c6588f80a490f8c15e32f0ca40d6f3eecf7597abcc74b10f2dd6dfe12e4ab",
+    "qfd_d2d_static_core_s7_obs1": "afbb9415c00d71e929f67f12fab1e1619af6d6afc3cd1f88e0a900c9a7482483",
+    "qfd_d2d_static_ovl_sf7_obs1": "e658fceccf0c32c0be904d15358c877b18c085c7810a36e39a2e1573c6e77035"
+  },
+  "reports": {
+    "ot_qwen_status_obs_v1_state": {
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "roots_examined": 740,
+      "netlist": {
+        "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/native/ot_qwen_status_obs_v1_state/mapped.v",
+        "sha256": "09e71ddc8d77375a6ef2bde5514856f9203119fb97f1386e3ecebe51b8fa0484"
+      },
+      "evidence_version": 2
+    },
+    "ot_qwen_d2d_status_tx_s7_obs1": {
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "roots_examined": 2483,
+      "netlist": {
+        "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/native/ot_qwen_d2d_status_tx_s7_obs1/mapped.v",
+        "sha256": "908c223f24358ed48624e9b20b168e47176a717df945be11f93d549533cde943"
+      },
+      "evidence_version": 2
+    },
+    "ot_qwen_d2d_status_rx_sfm3_obs1": {
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "roots_examined": 3840,
+      "netlist": {
+        "path": "/srv/opentallas-scratch/claude/q-status-native-v4-1021/native/ot_qwen_d2d_status_rx_sfm3_obs1/mapped.v",
+        "sha256": "6e55debafc8457ffec9d2f76037fb8b8266ed9dce7850edb7ef6e1e48037575a"
+      },
+      "evidence_version": 4
+    }
+  },
+  "fleet": {
+    "v2": {
+      "host": "ot-epyc5",
+      "unit": "938499-1792607053"
+    },
+    "v4": {
+      "host": "ot-gold2",
+      "unit": "2848355-1792607313",
+      "exit": 0
+    }
+  },
+  "causal": {
+    "positive": "STATUS_OBS_V1 PASS MUT=0 checks=44",
+    "mutant": "STATUS_OBS_V1 FAIL MUT=1 checks=44 bad=2",
+    "mutant_kind": "legal but wrong native operation tag substituted from latest context"
+  },
+  "reset_contract": "RX rst_k[NG+1:0] same-phase cold reset copies from actual K source forest; NGpayload chunks, faultcopy bank, metadata. Scalar rst_n gates actual faultoutput. No added normal data/event edge.",
+  "native_recipe": "Yosys0.68/actualfiveASAP7TTlibraries; actualot_keep_regs plus sf7 status_and localdecode keep. New RX chunk/body/capture_en/epoch16/1bitXNOR hierarchy source-kept.",
+  "prior_failures": [
+    {
+      "version": 1,
+      "state": 32,
+      "tx": 728,
+      "rx": 383,
+      "reason": "standalone omitted actualkeep setup; RXsharedreset/validation",
+      "archive": "evidence_native_v1.tgz"
+    },
+    {
+      "version": 2,
+      "state": 32,
+      "tx": 32,
+      "rx": 99,
+      "reason": "RX externalgrammar/epoch fanout",
+      "archive": "evidence_native_v2.tgz"
+    },
+    {
+      "version": 3,
+      "rx": 51,
+      "reason": "ABC absorbed capturedecision and duplicated epochinput logic",
+      "archive": "evidence_native_v3.tgz"
+    }
+  ],
+  "scope": "Native mapped state/TX/RX and causal codec only. Not assembled Q native2slot/GEN geometry, Kactualheader, HOSTCSR, physicalclosure or fulltoken. No oldviewalias. Actual new source must retain nativekeep controls at eventual layout.",
+  "hashes": {
+    "evidence_native_v3.tgz": "80b7137611bbece09ac24c839bf7c8169cb9c011d3462317a5549675a9614168",
+    "v4_run0.log": "5328b87df546bde2ae5fe7592bde5a08f44ba5b15ddd9fd4a9d3341c35952172",
+    "ot_qwen_status_obs_v1_state.json": "1ee27f7cebb0e273d71649efcbae90b741575a127456d3aaf7cd7523fa17b9c9",
+    "otrun_v4.log": "80e4cfc1e2ce9625c22a81b16b158537942f467b3339d28306f8f7b8935c86f9",
+    "v4_run1.log": "1ed402de418eae55b52a93f0e497d99122c2583428440ba1dfc2ee7d836e2594",
+    "ot_qwen_d2d_status_rx_sfm3_obs1.json": "ff7c5342d65f9d23367591c20e806740890ac3955c0de7f2db59db5abed65b38",
+    "v4_source_manifest.json": "794214a9620bbaa2bb67d795d8a213683c456818ac9c666298444c4c2efac51b",
+    "evidence_native_v1.tgz": "39edb4e27958cf15c237a2655b7a4124fe02ac2d07dd253843d208b9db498669",
+    "otrun_v3.log": "4606567135273caf0b0797e406dfa3a4588dd9d65dda3ba7ffde603aae538316",
+    "evidence_native_v2.tgz": "b40a44af88b22210f2b55b50526f3c705dbbe0e478dea38c9e9069136b8b474f",
+    "evidence_native_v4.tgz": "e327508640234a340ddc53acb9f155890f8420a3dc068eb281d07206d7c6c2cd",
+    "ot_qwen_d2d_status_tx_s7_obs1.json": "b2fbd8b0c915024b7eb00b80dfca40d79ee915dfd9e77b77d8ff6876f1551ed2",
+    "otrun_v2.log": "4028ebde1d1d4ad2350cf098fb7d3adcead5f5dff232b45b3423b3639f502e99"
+  }
+}

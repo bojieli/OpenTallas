@@ -1,0 +1,47 @@
+ot-run: ot-epyc5       admits   805 GB (avail 677, growth 113, headroom 0, waiters 0/0 GB) load 44/128 running 29 disk 2170 GB 
+ot-run: ot-epyc7       admits   148 GB (avail 185, growth 82, headroom 0, waiters 0/0 GB) load 88/96 running 16 disk 4680 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/q-status-native-v2-1021
+ot-run: ot-gold2       admits   498 GB (avail 478, growth 129, headroom 0, waiters 0/0 GB) load 104/112 running 23 disk 2973 GB 
+ot-run: ot-gold1       admits   775 GB (avail 654, growth 112, headroom 0, waiters 0/0 GB) load 63/112 running 20 disk 2531 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/q-status-native-v2-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/q-status-native-v2-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-938499-1792607053 after 0 s
+Warning: Selection "ot_d2d_status_and_s7" did not match any module.
+Warning: Selection "ot_d2d_kand_s7" did not match any module.
+Warning: Selection "ot_d2d_kandn_s7" did not match any module.
+Warning: Selection "ot_d2d_kor_s7" did not match any module.
+Warning: Selection "ot_d2d_useful_and_s7" did not match any module.
+OT_KEEP_REGS: keep set on 59 register cells driving keep wires
+NATIVE_CENSUS top=ot_qwen_status_obs_v1_state exit=0
+PRE_GATE_NATIVE_CENSUS PASS report=/srv/opentallas-scratch/claude/q-status-native-v2-1021/native/ot_qwen_status_obs_v1_state/census.json
+Warning: Selection "ot_d2d_kand_s7" did not match any module.
+Warning: Selection "ot_d2d_kandn_s7" did not match any module.
+Warning: Selection "ot_d2d_kor_s7" did not match any module.
+Warning: Selection "ot_d2d_useful_and_s7" did not match any module.
+OT_KEEP_REGS: keep set on 59 register cells driving keep wires
+NATIVE_CENSUS top=ot_qwen_d2d_status_tx_s7_obs1 exit=0
+PRE_GATE_NATIVE_CENSUS PASS report=/srv/opentallas-scratch/claude/q-status-native-v2-1021/native/ot_qwen_d2d_status_tx_s7_obs1/census.json
+Warning: Selection "ot_d2d_status_and_s7" did not match any module.
+Warning: Selection "ot_d2d_kand_s7" did not match any module.
+Warning: Selection "ot_d2d_kandn_s7" did not match any module.
+Warning: Selection "ot_d2d_kor_s7" did not match any module.
+Warning: Selection "ot_d2d_useful_and_s7" did not match any module.
+OT_KEEP_REGS: keep set on 25 register cells driving keep wires
+NATIVE_CENSUS top=ot_qwen_d2d_status_rx_sfm3_obs1 exit=1
+PRE_GATE_NATIVE_CENSUS FAIL report=/srv/opentallas-scratch/claude/q-status-native-v2-1021/native/ot_qwen_d2d_status_rx_sfm3_obs1/census.json
+Verilator 5.050 2026-07-01 rev v5.050
+STATUS_OBS_V1 PASS MUT=0 checks=44
+- rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43ns; walltime 0.000 s; speed 163.175 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+OBS_BAD actual completed owner not latest context
+OBS_BAD new-window true completion identity
+STATUS_OBS_V1 FAIL MUT=1 checks=44 bad=2
+- rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43ns; walltime 0.000 s; speed 130.195 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+STATUS_OBS_V1_SUITE PASS positive mutant_caught
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-938499-1792607053): exit 0

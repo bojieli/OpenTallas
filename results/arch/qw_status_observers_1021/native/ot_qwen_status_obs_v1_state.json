@@ -1,0 +1,4526 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "liberty": [
+    {
+      "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    }
+  ],
+  "netlist": {
+    "path": "/srv/opentallas-scratch/claude/q-status-native-v2-1021/native/ot_qwen_status_obs_v1_state/mapped.v",
+    "sha256": "09e71ddc8d77375a6ef2bde5514856f9203119fb97f1386e3ecebe51b8fa0484"
+  },
+  "top": "ot_qwen_status_obs_v1_state",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 740,
+  "max_dynamic_loads": 32,
+  "driver_counts": [
+    {
+      "driver": "rst_n[2]",
+      "driver_role": "input_port",
+      "net": "rst_n[2]",
+      "loads": 29
+    },
+    {
+      "driver": "rst_n[1]",
+      "driver_role": "input_port",
+      "net": "rst_n[1]",
+      "loads": 32
+    },
+    {
+      "driver": "rst_n[0]",
+      "driver_role": "input_port",
+      "net": "rst_n[0]",
+      "loads": 32
+    },
+    {
+      "driver": "epoch16[15]",
+      "driver_role": "input_port",
+      "net": "epoch16[15]",
+      "loads": 11
+    },
+    {
+      "driver": "epoch16[14]",
+      "driver_role": "input_port",
+      "net": "epoch16[14]",
+      "loads": 11
+    },
+    {
+      "driver": "epoch16[13]",
+      "driver_role": "input_port",
+      "net": "epoch16[13]",
+      "loads": 13
+    },
+    {
+      "driver": "epoch16[12]",
+      "driver_role": "input_port",
+      "net": "epoch16[12]",
+      "loads": 10
+    },
+    {
+      "driver": "epoch16[11]",
+      "driver_role": "input_port",
+      "net": "epoch16[11]",
+      "loads": 10
+    },
+    {
+      "driver": "epoch16[10]",
+      "driver_role": "input_port",
+      "net": "epoch16[10]",
+      "loads": 9
+    },
+    {
+      "driver": "epoch16[9]",
+      "driver_role": "input_port",
+      "net": "epoch16[9]",
+      "loads": 8
+    },
+    {
+      "driver": "epoch16[8]",
+      "driver_role": "input_port",
+      "net": "epoch16[8]",
+      "loads": 8
+    },
+    {
+      "driver": "epoch16[7]",
+      "driver_role": "input_port",
+      "net": "epoch16[7]",
+      "loads": 11
+    },
+    {
+      "driver": "epoch16[6]",
+      "driver_role": "input_port",
+      "net": "epoch16[6]",
+      "loads": 13
+    },
+    {
+      "driver": "epoch16[5]",
+      "driver_role": "input_port",
+      "net": "epoch16[5]",
+      "loads": 11
+    },
+    {
+      "driver": "epoch16[4]",
+      "driver_role": "input_port",
+      "net": "epoch16[4]",
+      "loads": 8
+    },
+    {
+      "driver": "epoch16[3]",
+      "driver_role": "input_port",
+      "net": "epoch16[3]",
+      "loads": 13
+    },
+    {
+      "driver": "epoch16[2]",
+      "driver_role": "input_port",
+      "net": "epoch16[2]",
+      "loads": 9
+    },
+    {
+      "driver": "epoch16[1]",
+      "driver_role": "input_port",
+      "net": "epoch16[1]",
+      "loads": 10
+    },
+    {
+      "driver": "epoch16[0]",
+      "driver_role": "input_port",
+      "net": "epoch16[0]",
+      "loads": 9
+    },
+    {
+      "driver": "obs_ctx[61]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[61]",
+      "loads": 6
+    },
+    {
+      "driver": "obs_ctx[60]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[60]",
+      "loads": 3
+    },
+    {
+      "driver": "obs_ctx[59]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[59]",
+      "loads": 2
+    },
+    {
+      "driver": "obs_ctx[58]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[58]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[57]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[57]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[56]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[56]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[55]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[55]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[54]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[54]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[53]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[53]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[52]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[52]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[51]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[51]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[50]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[50]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[49]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[49]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[48]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[48]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[47]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[47]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[46]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[46]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[45]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[45]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[44]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[44]",
+      "loads": 3
+    },
+    {
+      "driver": "obs_ctx[43]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[43]",
+      "loads": 3
+    },
+    {
+      "driver": "obs_ctx[42]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[42]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[41]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[41]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[40]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[40]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[39]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[39]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[38]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[38]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[37]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[37]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[36]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[36]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[35]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[35]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[34]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[34]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[33]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[33]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[32]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[32]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[31]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[31]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[30]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[30]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[29]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[29]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[28]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[28]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[27]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[27]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[26]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[26]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[25]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[25]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[24]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[24]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[23]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[23]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[22]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[22]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[21]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[21]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[20]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[20]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[19]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[19]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[18]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[18]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[17]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[17]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[16]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[16]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[15]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[15]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[14]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[14]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[13]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[13]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[12]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[12]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[11]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[11]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[10]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[10]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[9]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[9]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[8]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[8]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[7]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[7]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[6]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[6]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[5]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[5]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[4]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[4]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[3]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[3]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[2]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[2]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[1]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[1]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_ctx[0]",
+      "driver_role": "input_port",
+      "net": "obs_ctx[0]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[46]",
+      "driver_role": "input_port",
+      "net": "obs_res[46]",
+      "loads": 4
+    },
+    {
+      "driver": "obs_res[45]",
+      "driver_role": "input_port",
+      "net": "obs_res[45]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[44]",
+      "driver_role": "input_port",
+      "net": "obs_res[44]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[43]",
+      "driver_role": "input_port",
+      "net": "obs_res[43]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[42]",
+      "driver_role": "input_port",
+      "net": "obs_res[42]",
+      "loads": 2
+    },
+    {
+      "driver": "obs_res[41]",
+      "driver_role": "input_port",
+      "net": "obs_res[41]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[40]",
+      "driver_role": "input_port",
+      "net": "obs_res[40]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[39]",
+      "driver_role": "input_port",
+      "net": "obs_res[39]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[38]",
+      "driver_role": "input_port",
+      "net": "obs_res[38]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[37]",
+      "driver_role": "input_port",
+      "net": "obs_res[37]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[36]",
+      "driver_role": "input_port",
+      "net": "obs_res[36]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[35]",
+      "driver_role": "input_port",
+      "net": "obs_res[35]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[34]",
+      "driver_role": "input_port",
+      "net": "obs_res[34]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[33]",
+      "driver_role": "input_port",
+      "net": "obs_res[33]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[32]",
+      "driver_role": "input_port",
+      "net": "obs_res[32]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[31]",
+      "driver_role": "input_port",
+      "net": "obs_res[31]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[30]",
+      "driver_role": "input_port",
+      "net": "obs_res[30]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[29]",
+      "driver_role": "input_port",
+      "net": "obs_res[29]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[28]",
+      "driver_role": "input_port",
+      "net": "obs_res[28]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[27]",
+      "driver_role": "input_port",
+      "net": "obs_res[27]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[26]",
+      "driver_role": "input_port",
+      "net": "obs_res[26]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[25]",
+      "driver_role": "input_port",
+      "net": "obs_res[25]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[24]",
+      "driver_role": "input_port",
+      "net": "obs_res[24]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[23]",
+      "driver_role": "input_port",
+      "net": "obs_res[23]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[22]",
+      "driver_role": "input_port",
+      "net": "obs_res[22]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[21]",
+      "driver_role": "input_port",
+      "net": "obs_res[21]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[20]",
+      "driver_role": "input_port",
+      "net": "obs_res[20]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[19]",
+      "driver_role": "input_port",
+      "net": "obs_res[19]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[18]",
+      "driver_role": "input_port",
+      "net": "obs_res[18]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[17]",
+      "driver_role": "input_port",
+      "net": "obs_res[17]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[16]",
+      "driver_role": "input_port",
+      "net": "obs_res[16]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[15]",
+      "driver_role": "input_port",
+      "net": "obs_res[15]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[14]",
+      "driver_role": "input_port",
+      "net": "obs_res[14]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[13]",
+      "driver_role": "input_port",
+      "net": "obs_res[13]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[12]",
+      "driver_role": "input_port",
+      "net": "obs_res[12]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[11]",
+      "driver_role": "input_port",
+      "net": "obs_res[11]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[10]",
+      "driver_role": "input_port",
+      "net": "obs_res[10]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[9]",
+      "driver_role": "input_port",
+      "net": "obs_res[9]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[8]",
+      "driver_role": "input_port",
+      "net": "obs_res[8]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[7]",
+      "driver_role": "input_port",
+      "net": "obs_res[7]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[6]",
+      "driver_role": "input_port",
+      "net": "obs_res[6]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[5]",
+      "driver_role": "input_port",
+      "net": "obs_res[5]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[4]",
+      "driver_role": "input_port",
+      "net": "obs_res[4]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[3]",
+      "driver_role": "input_port",
+      "net": "obs_res[3]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[2]",
+      "driver_role": "input_port",
+      "net": "obs_res[2]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[1]",
+      "driver_role": "input_port",
+      "net": "obs_res[1]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_res[0]",
+      "driver_role": "input_port",
+      "net": "obs_res[0]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[59]",
+      "driver_role": "input_port",
+      "net": "obs_native[59]",
+      "loads": 12
+    },
+    {
+      "driver": "obs_native[58]",
+      "driver_role": "input_port",
+      "net": "obs_native[58]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[57]",
+      "driver_role": "input_port",
+      "net": "obs_native[57]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[56]",
+      "driver_role": "input_port",
+      "net": "obs_native[56]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[55]",
+      "driver_role": "input_port",
+      "net": "obs_native[55]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[54]",
+      "driver_role": "input_port",
+      "net": "obs_native[54]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[53]",
+      "driver_role": "input_port",
+      "net": "obs_native[53]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[52]",
+      "driver_role": "input_port",
+      "net": "obs_native[52]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[51]",
+      "driver_role": "input_port",
+      "net": "obs_native[51]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[50]",
+      "driver_role": "input_port",
+      "net": "obs_native[50]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[49]",
+      "driver_role": "input_port",
+      "net": "obs_native[49]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[48]",
+      "driver_role": "input_port",
+      "net": "obs_native[48]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[47]",
+      "driver_role": "input_port",
+      "net": "obs_native[47]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[46]",
+      "driver_role": "input_port",
+      "net": "obs_native[46]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[45]",
+      "driver_role": "input_port",
+      "net": "obs_native[45]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[44]",
+      "driver_role": "input_port",
+      "net": "obs_native[44]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[43]",
+      "driver_role": "input_port",
+      "net": "obs_native[43]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[42]",
+      "driver_role": "input_port",
+      "net": "obs_native[42]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[41]",
+      "driver_role": "input_port",
+      "net": "obs_native[41]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[40]",
+      "driver_role": "input_port",
+      "net": "obs_native[40]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[39]",
+      "driver_role": "input_port",
+      "net": "obs_native[39]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[38]",
+      "driver_role": "input_port",
+      "net": "obs_native[38]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[37]",
+      "driver_role": "input_port",
+      "net": "obs_native[37]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[36]",
+      "driver_role": "input_port",
+      "net": "obs_native[36]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[35]",
+      "driver_role": "input_port",
+      "net": "obs_native[35]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[34]",
+      "driver_role": "input_port",
+      "net": "obs_native[34]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[33]",
+      "driver_role": "input_port",
+      "net": "obs_native[33]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[32]",
+      "driver_role": "input_port",
+      "net": "obs_native[32]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[31]",
+      "driver_role": "input_port",
+      "net": "obs_native[31]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[30]",
+      "driver_role": "input_port",
+      "net": "obs_native[30]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[29]",
+      "driver_role": "input_port",
+      "net": "obs_native[29]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[28]",
+      "driver_role": "input_port",
+      "net": "obs_native[28]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[27]",
+      "driver_role": "input_port",
+      "net": "obs_native[27]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[26]",
+      "driver_role": "input_port",
+      "net": "obs_native[26]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[25]",
+      "driver_role": "input_port",
+      "net": "obs_native[25]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[24]",
+      "driver_role": "input_port",
+      "net": "obs_native[24]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[23]",
+      "driver_role": "input_port",
+      "net": "obs_native[23]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[22]",
+      "driver_role": "input_port",
+      "net": "obs_native[22]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[21]",
+      "driver_role": "input_port",
+      "net": "obs_native[21]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[20]",
+      "driver_role": "input_port",
+      "net": "obs_native[20]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[19]",
+      "driver_role": "input_port",
+      "net": "obs_native[19]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[18]",
+      "driver_role": "input_port",
+      "net": "obs_native[18]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[17]",
+      "driver_role": "input_port",
+      "net": "obs_native[17]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[16]",
+      "driver_role": "input_port",
+      "net": "obs_native[16]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[15]",
+      "driver_role": "input_port",
+      "net": "obs_native[15]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[14]",
+      "driver_role": "input_port",
+      "net": "obs_native[14]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[13]",
+      "driver_role": "input_port",
+      "net": "obs_native[13]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[12]",
+      "driver_role": "input_port",
+      "net": "obs_native[12]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[11]",
+      "driver_role": "input_port",
+      "net": "obs_native[11]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[10]",
+      "driver_role": "input_port",
+      "net": "obs_native[10]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[9]",
+      "driver_role": "input_port",
+      "net": "obs_native[9]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[8]",
+      "driver_role": "input_port",
+      "net": "obs_native[8]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[7]",
+      "driver_role": "input_port",
+      "net": "obs_native[7]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[6]",
+      "driver_role": "input_port",
+      "net": "obs_native[6]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[5]",
+      "driver_role": "input_port",
+      "net": "obs_native[5]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[4]",
+      "driver_role": "input_port",
+      "net": "obs_native[4]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[3]",
+      "driver_role": "input_port",
+      "net": "obs_native[3]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[2]",
+      "driver_role": "input_port",
+      "net": "obs_native[2]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[1]",
+      "driver_role": "input_port",
+      "net": "obs_native[1]",
+      "loads": 1
+    },
+    {
+      "driver": "obs_native[0]",
+      "driver_role": "input_port",
+      "net": "obs_native[0]",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_INVx1_ASAP7_75t_R_Y_1_A_NAND4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 5
+    },
+    {
+      "driver": "base_hi_INVx1_ASAP7_75t_R_Y_1_A_NAND4xp25_ASAP7_75t_R_Y_A_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_INVx1_ASAP7_75t_R_Y_1_A_NAND4xp25_ASAP7_75t_R_Y_A_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_INVx1_ASAP7_75t_R_Y_1_A_NOR5xp2_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_INVx1_ASAP7_75t_R_Y_1_A_NOR5xp2_ASAP7_75t_R_C_Y",
+      "loads": 5
+    },
+    {
+      "driver": "base_hi_INVx1_ASAP7_75t_R_Y_2_A_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 6
+    },
+    {
+      "driver": "base_hi_INVx1_ASAP7_75t_R_Y_2_A_OR2x2_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_INVx1_ASAP7_75t_R_Y_2_A_OR2x2_ASAP7_75t_R_Y_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[1]",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[3]",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_10/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[10]",
+      "loads": 5
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_10_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_10_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_11/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[7]",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_11_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_11_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_12/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[6]",
+      "loads": 4
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_12_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_12_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_1_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_2/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[9]",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_2_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[5]",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3_A_INVx1_ASAP7_75t_R_A_Y_AND5x1_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3_A_INVx1_ASAP7_75t_R_A_Y_AND5x1_ASAP7_75t_R_B_Y",
+      "loads": 5
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3_A_INVx1_ASAP7_75t_R_A_Y_NAND3xp33_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_3_A_INVx1_ASAP7_75t_R_A_Y_NAND3xp33_ASAP7_75t_R_A_Y",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_4/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[11]",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_4_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_4_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_4_A_INVx1_ASAP7_75t_R_A_Y_AND5x1_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_4_A_INVx1_ASAP7_75t_R_A_Y_AND5x1_ASAP7_75t_R_A_Y",
+      "loads": 6
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_5/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[15]",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_5_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_5_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_6/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[12]",
+      "loads": 7
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_6_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_6_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[4]",
+      "loads": 6
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_D_NOR3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_B_OR5x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_B_OR5x1_ASAP7_75t_R_Y_D_AO22x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_B_OR5x1_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_B_OR5x1_ASAP7_75t_R_Y_E_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_B_OR5x1_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_C_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_D_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_D_NAND4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_E_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_D_OR5x1_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_E_OR3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_E_NOR5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_C_OR3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_C",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_D_OR3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y_NAND5xp2_ASAP7_75t_R_E/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y_NAND5xp2_ASAP7_75t_R_E_Y",
+      "loads": 2
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y_NAND5xp2_ASAP7_75t_R_E_C_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y_NAND5xp2_ASAP7_75t_R_E_C",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y_NAND5xp2_ASAP7_75t_R_E_D_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_7_A_NOR3xp33_ASAP7_75t_R_A_Y_NAND5xp2_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_E_Y_NAND5xp2_ASAP7_75t_R_E_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_8/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[14]",
+      "loads": 4
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_8_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_8_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_9/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_hi[13]",
+      "loads": 3
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_9_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_9_A",
+      "loads": 6
+    },
+    {
+      "driver": "base_hi_NOR2xp33_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_hi_NOR2xp33_ASAP7_75t_R_Y_A",
+      "loads": 5
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[11]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[5]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_10/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[6]",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_10_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_10_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_11/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[12]",
+      "loads": 5
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_11_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_11_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_11_A_OR4x1_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_11_A_OR4x1_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_12/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[9]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_12_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_12_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_13/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[10]",
+      "loads": 6
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_13_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_13_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_14/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[14]",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_14_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_14_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_14_A_OR4x1_ASAP7_75t_R_D/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_14_A_OR4x1_ASAP7_75t_R_D_Y",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_15/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[4]",
+      "loads": 6
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_15_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_15_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_1_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_2/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[7]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_2_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_3/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[0]",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_3_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_4/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[1]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_4_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_4_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_5/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[2]",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_5_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_5_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_6/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[13]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_6_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_6_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_7/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[3]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_7_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_7_A",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_8/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[8]",
+      "loads": 4
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_8_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_8_A",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_8_A_NOR5xp2_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_8_A_NOR5xp2_ASAP7_75t_R_A_Y",
+      "loads": 5
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo[15]",
+      "loads": 3
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_OR4x1_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_OR4x1_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_OR4x1_ASAP7_75t_R_B_D_OR5x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_OR4x1_ASAP7_75t_R_B_D",
+      "loads": 1
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_OR4x1_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_9_A_OR4x1_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_C_Y",
+      "loads": 5
+    },
+    {
+      "driver": "base_lo_NOR2xp33_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "base_lo_NOR2xp33_ASAP7_75t_R_Y_A",
+      "loads": 4
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 1
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[1]",
+      "loads": 17
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[2]",
+      "loads": 16
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y_OAI21xp33_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[3]",
+      "loads": 14
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 2
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_3_A",
+      "loads": 1
+    },
+    {
+      "driver": "ctx_seen_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ctx_seen_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_10_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_10_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_11_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_11_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_12_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_12_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_13_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_13_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_14_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_14_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_15_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_15_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_A_AND2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_B_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_Y",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_B_AOI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_B_AOI221xp5_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_B_AOI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y_A_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y_C_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y_C",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y_D_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_C_AND4x1_ASAP7_75t_R_Y_D",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_B_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_AOI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_OA211x2_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_OA211x2_ASAP7_75t_R_B_Y",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_OA211x2_ASAP7_75t_R_B_C_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_OA211x2_ASAP7_75t_R_B_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_OA211x2_ASAP7_75t_R_B_Y_NAND4xp25_ASAP7_75t_R_D/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_D_OA211x2_ASAP7_75t_R_Y_C_OA211x2_ASAP7_75t_R_B_Y_NAND4xp25_ASAP7_75t_R_D_Y",
+      "loads": 6
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_Y_NAND3xp33_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_NOR3xp33_ASAP7_75t_R_C_Y_AND4x1_ASAP7_75t_R_A_Y_NAND3xp33_ASAP7_75t_R_C_Y",
+      "loads": 18
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_C_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_D_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_Y",
+      "loads": 6
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_B_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_Y",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_A_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_A_AOI21xp33_ASAP7_75t_R_Y_B_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_A_AOI21xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_B_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_B_AOI21xp33_ASAP7_75t_R_Y_B_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_AOI211xp5_ASAP7_75t_R_C_Y_AND3x1_ASAP7_75t_R_C_B_AOI21xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_B_AND2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_Y",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_A_AOI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_A_AOI221xp5_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_A_AOI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_B_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_B_Y_AND4x1_ASAP7_75t_R_D_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_C",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_E_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_B_OR5x1_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_C_OAI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_C_OAI221xp5_ASAP7_75t_R_Y_C_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_C_OAI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_A_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_B_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_C_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_C",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_D_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_E_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_2_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_A_Y_OR4x1_ASAP7_75t_R_A_D_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_3_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_4_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_4_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_5_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_5_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_6_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_6_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_7_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_7_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_8_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_8_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_9_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_9_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_hi_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_hi_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_10_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_10_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_11_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_11_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_11_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_11_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_12_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_12_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_12_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_12_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_13_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_13_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_13_A_XNOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_13_A_XNOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_14_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_14_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_15_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_15_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_3_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_4_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_4_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_Y",
+      "loads": 13
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_A_AOI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_B_AOI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_A_AND3x1_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_D_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_A_OAI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_A_OAI221xp5_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_A_OAI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_B_OAI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_B_OAI221xp5_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_B_OAI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_B_OAI221xp5_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_Y_B_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_B_OAI221xp5_ASAP7_75t_R_Y_C_AOI21xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_A_AOI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_A_AOI221xp5_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_A_AOI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_B_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y_NAND5xp2_ASAP7_75t_R_B_E_NOR3xp33_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_6_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_6_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_7_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_7_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_7_A_XNOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_7_A_XNOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_8_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_8_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_9_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_9_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_id_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_id_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 4
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_10_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_10_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_10_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_10_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_A_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_C_AND2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_C",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_D_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_D",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_E_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_E",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_Y",
+      "loads": 23
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_A_NAND4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_A_NAND4xp25_ASAP7_75t_R_Y_A_OA22x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_A_NAND4xp25_ASAP7_75t_R_Y_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y_A_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y_B_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y_B",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y_D_AOI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_C_NAND5xp2_ASAP7_75t_R_Y_D",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y_C_AOI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y_D_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y_E_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_11_A_XNOR2xp5_ASAP7_75t_R_B_Y_OR5x1_ASAP7_75t_R_B_Y_OR4x1_ASAP7_75t_R_B_D_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_12_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_12_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_13_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_13_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_14_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_14_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_14_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_14_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_15_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_15_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_3_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_3_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_3_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_4_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_4_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_5_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_5_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_5_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_6_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_6_A",
+      "loads": 3
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_7_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_7_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_7_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_7_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_8_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_8_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_8_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_8_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_9_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_9_A",
+      "loads": 2
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "ep_lo_INVx1_ASAP7_75t_R_Y_A_XOR2xp5_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "ep_lo_INVx1_ASAP7_75t_R_Y_A_XOR2xp5_ASAP7_75t_R_B_Y",
+      "loads": 2
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault",
+      "loads": 2
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "fault_NAND2xp33_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_NAND2xp33_ASAP7_75t_R_Y_B",
+      "loads": 2
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_B_A2O1A1O1Ixp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_B_A2O1A1O1Ixp25_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_B_A2O1A1O1Ixp25_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_B_A2O1A1O1Ixp25_ASAP7_75t_R_Y_C_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_B_A2O1A1O1Ixp25_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_C_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_NAND2xp33_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "fault_OA21x2_ASAP7_75t_R_A1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_OA21x2_ASAP7_75t_R_A1_Y",
+      "loads": 1
+    },
+    {
+      "driver": "fault_OA21x2_ASAP7_75t_R_A1_A2_OR3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_OA21x2_ASAP7_75t_R_A1_A2",
+      "loads": 1
+    },
+    {
+      "driver": "fault_OA21x2_ASAP7_75t_R_A1_B_NAND4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "fault_OA21x2_ASAP7_75t_R_A1_B",
+      "loads": 1
+    },
+    {
+      "driver": "full_hi_NAND2xp33_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "full_hi_NAND2xp33_ASAP7_75t_R_B_Y",
+      "loads": 15
+    },
+    {
+      "driver": "full_lo_NAND2xp33_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "full_lo_NAND2xp33_ASAP7_75t_R_B_Y",
+      "loads": 17
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 1
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[1]",
+      "loads": 17
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[2]",
+      "loads": 17
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y_OAI21xp33_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[3]",
+      "loads": 12
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 1
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_3_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_3_A",
+      "loads": 1
+    },
+    {
+      "driver": "nat_seen_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "nat_seen_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "overflow_now_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[93]",
+      "loads": 3
+    },
+    {
+      "driver": "overflow_now_OAI21xp33_ASAP7_75t_R_Y_A1_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "overflow_now_OAI21xp33_ASAP7_75t_R_Y_A1",
+      "loads": 1
+    },
+    {
+      "driver": "res_seen_INVx1_ASAP7_75t_R_Y_1_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "res_seen_INVx1_ASAP7_75t_R_Y_1_A",
+      "loads": 1
+    },
+    {
+      "driver": "res_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "res_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[1]",
+      "loads": 17
+    },
+    {
+      "driver": "res_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "res_seen_INVx1_ASAP7_75t_R_Y_1_A_OAI21xp33_ASAP7_75t_R_A1_Y[2]",
+      "loads": 15
+    },
+    {
+      "driver": "res_seen_INVx1_ASAP7_75t_R_Y_2_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "res_seen_INVx1_ASAP7_75t_R_Y_2_A",
+      "loads": 1
+    },
+    {
+      "driver": "res_seen_INVx1_ASAP7_75t_R_Y_A_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "res_seen_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_A2O1A1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[68]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_A2O1A1Ixp33_ASAP7_75t_R_Y_B_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_A2O1A1Ixp33_ASAP7_75t_R_Y_B",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[157]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[173]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_10/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[60]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_100/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[130]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_101/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[131]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_102/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[132]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_103/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[133]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_104/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[134]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_105/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[135]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_106/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[136]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_107/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[137]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_108/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[138]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_109/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[139]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_11/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[142]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_110/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[2]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_111/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[3]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_112/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[4]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_113/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[5]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_114/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[6]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_115/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[7]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_116/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[8]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_117/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[9]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_118/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[10]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_119/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[11]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_12/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[143]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_120/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[12]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_121/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[13]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_122/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[14]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_123/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[15]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_124/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[16]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_125/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[18]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_126/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[19]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_127/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[20]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_128/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[21]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_129/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[22]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_13/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[144]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_130/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[23]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_131/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[24]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_132/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[25]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_133/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[26]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_134/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[27]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_135/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[28]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_136/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[29]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_137/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[30]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_138/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[31]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_139/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[32]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_14/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[145]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_140/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[34]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_141/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[35]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_142/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[36]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_143/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[37]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_144/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[38]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_145/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[39]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_146/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[40]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_147/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[41]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_148/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[42]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_149/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[43]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_15/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[146]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_150/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[44]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_151/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[45]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_152/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[46]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_153/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[47]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_154/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[48]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_155/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[50]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_156/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[51]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_157/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[52]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_158/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[53]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_159/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[54]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_16/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[147]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_160/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[55]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_161/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[56]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_162/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[57]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_163/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[58]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_164/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[59]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_17/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[148]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_18/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[149]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_19/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[150]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_2/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[189]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_20/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[151]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_21/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[152]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_22/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[153]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_23/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[154]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_24/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[155]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_25/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[156]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_26/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[158]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_27/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[159]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_28/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[160]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_29/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[161]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_3/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[202]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_30/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[162]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_31/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[163]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_32/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[164]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_33/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[165]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_34/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[166]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_35/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[167]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_36/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[168]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_37/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[169]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_38/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[170]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_39/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[171]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_4/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[110]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_40/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[172]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_41/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[174]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_42/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[175]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_43/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[176]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_44/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[177]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_45/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[178]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_46/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[179]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_47/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[180]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_48/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[181]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_49/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[182]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_5/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[126]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_50/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[183]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_51/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[184]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_52/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[186]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_53/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[187]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_54/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[188]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_55/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[190]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_56/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[191]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_57/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[192]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_58/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[193]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_59/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[194]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_6/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[140]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_60/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[195]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_61/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[196]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_62/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[197]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_63/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[198]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_64/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[199]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_65/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[200]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_66/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[201]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_67/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[95]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_68/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[96]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_69/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[97]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_7/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[17]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_70/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[98]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_71/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[99]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_72/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[100]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_73/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[101]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_74/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[102]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_75/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[103]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_76/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[104]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_77/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[105]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_78/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[106]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_79/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[107]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_8/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[33]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_80/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[108]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_81/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[109]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_82/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[111]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_83/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[112]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_84/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[113]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_85/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[114]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_86/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[115]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_87/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[116]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_88/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[117]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_89/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[118]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_9/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[49]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_90/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[119]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_91/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[120]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_92/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[121]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_93/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[122]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_94/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[123]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_95/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[124]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_96/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[125]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_97/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[127]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_98/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[128]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AND2x2_ASAP7_75t_R_Y_99/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[129]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_AO21x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[85]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_AO21x1_ASAP7_75t_R_Y_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_AO21x1_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[76]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[61]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_10/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[79]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_10_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_10_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_11/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[81]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_11_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_11_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_12/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[82]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_12_B_A2O1A1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_12_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_13/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[83]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_13_B_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_13_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_14/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[87]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_14_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_14_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_15/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[89]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_15_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_15_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_1_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_1_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_2/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[62]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_2_B_A2O1A1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_2_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_3/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[65]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_3_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_3_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_4/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[67]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_4_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_4_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_5/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[69]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_5_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_5_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_6/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[71]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_6_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_6_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_7/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[73]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_7_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_7_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_8/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[75]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_8_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_8_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_9/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[77]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_9_B_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_9_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND2xp33_ASAP7_75t_R_Y_B_A2O1A1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND2xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[92]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_NAND3xp33_ASAP7_75t_R_Y_B_OAI311xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND3xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND3xp33_ASAP7_75t_R_Y_C_OR5x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND3xp33_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_NAND3xp33_ASAP7_75t_R_Y_C_OR5x1_ASAP7_75t_R_Y_D_OR2x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_NAND3xp33_ASAP7_75t_R_Y_C_OR5x1_ASAP7_75t_R_Y_D",
+      "loads": 4
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[185]",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_A_OAI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_C_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_D_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_D_OAI21xp33_ASAP7_75t_R_Y_B_AOI22xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_D_OAI21xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_B_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_C_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_C_NAND3xp33_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y_B_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y_B_OAI21xp33_ASAP7_75t_R_Y_B_XOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y_B_OAI21xp33_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y_C_XNOR2xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_B_AOI211xp5_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_C_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_O2A1O1Ixp33_ASAP7_75t_R_Y_A2_OR4x1_ASAP7_75t_R_Y_D_NAND3xp33_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_C",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[63]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_1/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[64]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_10/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[88]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_10_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_10_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_11/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[90]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_11_A1_AND3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_11_A1",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_11_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_11_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_12/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[91]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_12_A1_AOI31xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_12_A1",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_12_A2_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_12_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_13/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[203]",
+      "loads": 18
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_14/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[141]",
+      "loads": 18
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_15/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[94]",
+      "loads": 18
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_1_A2_NOR2xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_1_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[66]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A1_AND3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A1",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A1_AND3x1_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A1_AND3x1_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_A_Y",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A1_AND3x1_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_A_B_AND2x2_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A1_AND3x1_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_A_B_AND2x2_ASAP7_75t_R_A_Y",
+      "loads": 4
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_2_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_3/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[70]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_3_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_3_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_4/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[72]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_4_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_4_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[74]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5_A1_AND5x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5_A1",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5_A1_AND5x1_ASAP7_75t_R_Y_B_AND3x1_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5_A1_AND5x1_ASAP7_75t_R_Y_B_AND3x1_ASAP7_75t_R_A_Y",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_5_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[78]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A1_NOR3xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A1",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A2_INVx1_ASAP7_75t_R_Y_A_O2A1O1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A2_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A2_INVx1_ASAP7_75t_R_Y_A_O2A1O1Ixp33_ASAP7_75t_R_Y_A1_DFFASRHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A2_INVx1_ASAP7_75t_R_Y_A_O2A1O1Ixp33_ASAP7_75t_R_Y_A1",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A2_INVx1_ASAP7_75t_R_Y_A_O2A1O1Ixp33_ASAP7_75t_R_Y_A1_INVx1_ASAP7_75t_R_A_Y_NAND4xp25_ASAP7_75t_R_A/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_6_A2_INVx1_ASAP7_75t_R_Y_A_O2A1O1Ixp33_ASAP7_75t_R_Y_A1_INVx1_ASAP7_75t_R_A_Y_NAND4xp25_ASAP7_75t_R_A_Y",
+      "loads": 5
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_7/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[80]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_7_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_7_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_8/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[84]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_8_A2_INVx1_ASAP7_75t_R_Y_A_O2A1O1Ixp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_8_A2_INVx1_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_9/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot[86]",
+      "loads": 2
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_9_A1_AND3x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_9_A1",
+      "loads": 3
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_9_A2_AOI21xp33_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_9_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_A1_NOR5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_A1",
+      "loads": 4
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_A2_OA21x2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_A2",
+      "loads": 1
+    },
+    {
+      "driver": "snapshot_OAI21xp33_ASAP7_75t_R_Y_A2_OA21x2_ASAP7_75t_R_Y_B_OR4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "snapshot_OAI21xp33_ASAP7_75t_R_Y_A2_OA21x2_ASAP7_75t_R_Y_B",
+      "loads": 2
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "full_hi",
+      "loads": 2
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_B_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_B_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_B_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_D_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_D_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_hi.full_NOR4xp25_ASAP7_75t_R_Y_D_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "full_lo",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_A",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_A_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_B_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_B",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_B_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_B_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_C",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_C_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_D_NAND5xp2_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_D",
+      "loads": 1
+    },
+    {
+      "driver": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_D_NAND5xp2_ASAP7_75t_R_Y_E_AND4x1_ASAP7_75t_R_Y/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_full_lo.full_NOR4xp25_ASAP7_75t_R_Y_D_NAND5xp2_ASAP7_75t_R_Y_E",
+      "loads": 1
+    }
+  ],
+  "constant_output_bits": [
+    {
+      "port_bit": "snapshot[204]",
+      "source": {
+        "kind": "literal",
+        "net": "1'1"
+      },
+      "transparent_path": []
+    },
+    {
+      "port_bit": "snapshot[206]",
+      "source": {
+        "kind": "literal",
+        "net": "1'0"
+      },
+      "transparent_path": []
+    },
+    {
+      "port_bit": "snapshot[0]",
+      "source": {
+        "kind": "literal",
+        "net": "1'0"
+      },
+      "transparent_path": []
+    },
+    {
+      "port_bit": "snapshot[207]",
+      "source": {
+        "kind": "literal",
+        "net": "1'0"
+      },
+      "transparent_path": []
+    },
+    {
+      "port_bit": "snapshot[1]",
+      "source": {
+        "kind": "literal",
+        "net": "1'0"
+      },
+      "transparent_path": []
+    },
+    {
+      "port_bit": "snapshot[205]",
+      "source": {
+        "kind": "literal",
+        "net": "1'0"
+      },
+      "transparent_path": []
+    }
+  ],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violations": []
+}

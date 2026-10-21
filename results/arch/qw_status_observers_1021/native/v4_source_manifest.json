@@ -1,0 +1,20 @@
+{
+  "source_commit": "44f48aa01",
+  "recipe_narrowing": "RX only, TX/state unchanged and PASSv2",
+  "files": {
+    "run.sh": "61c6cd0f26603f9e6f5a3332e3106b25d49898f5b5fb79f122b74dfde697a4fa",
+    "libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+    "rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv": "d62e101567c299a8d669b2f6c606b01ee0da38919e41601eab20fc24127c5177",
+    "rtl/test/qwen_dv/status_obs_v1/run_native.sh": "db85800e00fcec6163fc54fa5c8954dd100d21f09360df76077fe5f0b77bdc3a",
+    "rtl/test/qwen_dv/status_obs_v1/run.sh": "827acf3f3c497994ebbc008833526d909c5cf215825f08018a6708da96e3b63e",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv": "8ab23d2f1afdca998d16d5ed4cc220dc451929d5d71c3ae4b21c84b803d6ff96",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "928ec8c3d5754daec2f06f0aa7572bcf6da69e1215dbeb8353fabc8821f99ecc",
+    "tools/textbook_lint.py": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
+    "tools/ref_tile/native_census.py": "b8be220bb5d08b82d1574a9b416fb1c788dcd4df99e92adca70183d7dad8c393"
+  }
+}

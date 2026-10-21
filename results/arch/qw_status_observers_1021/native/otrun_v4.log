@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       admits   811 GB (avail 681, growth 113, headroom 0, waiters 0/0 GB) load 44/128 running 30 disk 2168 GB 
+ot-run: ot-epyc7       admits   129 GB (avail 164, growth 74, headroom 0, waiters 0/0 GB) load 97/96 running 16 disk 4679 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/q-status-native-v4-1021
+ot-run: ot-gold2       admits   624 GB (avail 555, growth 118, headroom 0, waiters 0/0 GB) load 62/112 running 21 disk 2971 GB 
+ot-run: ot-gold1       admits   749 GB (avail 632, growth 108, headroom 0, waiters 0/0 GB) load 67/112 running 19 disk 2531 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/q-status-native-v4-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/q-status-native-v4-1021
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-2848355-1792607313 after 1 s
+Warning: Selection "ot_d2d_status_and_s7" did not match any module.
+Warning: Selection "ot_d2d_kand_s7" did not match any module.
+Warning: Selection "ot_d2d_kandn_s7" did not match any module.
+Warning: Selection "ot_d2d_kor_s7" did not match any module.
+Warning: Selection "ot_d2d_useful_and_s7" did not match any module.
+OT_KEEP_REGS: keep set on 25 register cells driving keep wires
+NATIVE_CENSUS top=ot_qwen_d2d_status_rx_sfm3_obs1 exit=0
+PRE_GATE_NATIVE_CENSUS PASS report=/srv/opentallas-scratch/claude/q-status-native-v4-1021/native/ot_qwen_d2d_status_rx_sfm3_obs1/census.json
+Verilator 5.050 2026-07-01 rev v5.050
+STATUS_OBS_V1 PASS MUT=0 checks=44
+- rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43ns; walltime 0.001 s; speed 65.366 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+OBS_BAD actual completed owner not latest context
+OBS_BAD new-window true completion identity
+STATUS_OBS_V1 FAIL MUT=1 checks=44 bad=2
+- rtl/test/qwen_dv/status_obs_v1/tb_status_obs_v1.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43ns; walltime 0.001 s; speed 43.300 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+STATUS_OBS_V1_SUITE PASS positive mutant_caught
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-2848355-1792607313): exit 0
