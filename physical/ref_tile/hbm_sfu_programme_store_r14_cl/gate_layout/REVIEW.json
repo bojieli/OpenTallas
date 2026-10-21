@@ -1,0 +1,24 @@
+{
+  "reviewer": "codex coordinator /root",
+  "time": "2026-10-21T13:49:04.467105-07:00",
+  "gate_commit": "2026-10-21T11:58:45-0700",
+  "geometry_sha256": "8d5f198b9f0af8958c60c53701bebf3aa968bb6366cf7de6e991bf1477e7ac14",
+  "verdict": "APPROVED",
+  "authority": "ROOT inspected two PNGs/README/gate; approval relayed by HBM lead13:40 takeover. Exactly MAIN only, candidate route; final TT/FF/DRC decides.",
+  "source_commit": "92294601d94c1b5ec99e654fd5d3301e133b5faa",
+  "archive_sha256": "5570833bb3321b70f926010c1e4c34c8f5e5e2e3e5a582302a6f32a3289f4165",
+  "manifest_sha256": "4589aa46d6a8ee0df2102e09b384e0e98277791a906a5568157175fc5c9b5c43",
+  "checklist": {
+    "lattice": "ROOT inspected exact frozen macro geometry; no geometry edits or old-source aliases.",
+    "std_cell_band": "Two frozen PNGs inspected by ROOT; exact outlined bank arrangement and contiguous std band accepted.",
+    "pin_spread": "Actual TT65.8ps/FF71.3ps <=80. Fallback89.8/85.7FAIL is not approved.",
+    "clock_entry": "Actual insertion1448/1219ps guidance retained, symmetric macro leaves and forwarded clock regions; boundary spread criterion as measured.",
+    "shape": "Exact frozen outline/geometry accepted; do not regate unchanged.",
+    "pins": "Existing registered/status interface and macroface halo retained as reviewed.",
+    "reach": "Existing registered relay reach382um below405; no extra hop or squeeze.",
+    "fanout": "Actual mapped native max18.",
+    "depth": "Placement setup+155ps; hold-46ps risk retained, final actual route qualification required.",
+    "storage": "Existing SRAM programme banks; no new storage implementation.",
+    "schedule": "FAULT_PIPE1 exact source, programmeD10/status8 unchanged, lockstep/mutants stand."
+  }
+}
