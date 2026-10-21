@@ -82,7 +82,13 @@ module ot_hfd_coll_q_hard_v8g_body #(
  // HBM-COLL256-KITS (10-19): ROWS 256 binds the safe 256-row issuer leaf ot_hgi_coll_issuer_m256 (v7 core: SRAM metadata
  // lookahead, 2 x 256x256 per bank); ROWS 64/128 keep ot_hgi_coll_issuer_m (v6). Same ports and edges.
  generate if(ROWS>128)begin:g_iss256
- ot_hgi_coll_issuer_m256 u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
+ // Default-off source variant: true 256-row native32 leaf; same cfg37 and edge contract.
+`ifdef OT_COLL_ISSUER256_NATIVE32
+ ot_hgi_coll_issuer_m256v8
+`else
+ ot_hgi_coll_issuer_m256
+`endif
+ u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
   .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
   .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));

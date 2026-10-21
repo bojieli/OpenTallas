@@ -25,9 +25,12 @@ def apply(contract):
         for key in ('physical_view', 'closed_record'):
             item.pop(key, None)
         item['rtl_deps'] = sorted(set(item.get('rtl_deps', [])) | {s['path'] for s in sources if s['kind'] == 'die' and Path(s['path']).suffix in ('.sv', '.v') and s['path'] != item['source']})
+        item['rtl_deps'] = sorted(set(item['rtl_deps']) | {'rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv'})
+        item['compile_defines'] = sorted(set(item.get('compile_defines', [])) | {'OT_COLL_ISSUER256_NATIVE32'})
         selected.append(name)
     return dict(selected=selected, params=dict(AR_ITER=1, ROWS=256),
-                evidence='claude/tok-func-hbm-xdie-1021 results/rtl/tok_func_hbm_1021/xdie',
+                evidence='602c75a8a results/rtl/ref_tile/hcoll_issuer_r256v8/production_ds_rs144/qualification.json',
+                issuer='ot_hgi_coll_issuer_m256v8', define='OT_COLL_ISSUER256_NATIVE32', source_commit='7754785b7',
                 outstanding=['r15 die synthesis and physical implementation at ROWS256; CLOSED128 issuer is not interchangeable'],
                 qualification='FUNCTIONAL_PARAMETER_SELECTION_ONLY; parent synthesis/physical implementation outstanding')
 

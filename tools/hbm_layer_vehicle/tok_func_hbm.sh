@@ -65,13 +65,18 @@ else
 fi
 python3 "$T/die_filelist.py" --contract "$FC" --repo "$REPO" --rev "$SRC_REV" --out "$OUT/fl" > "$L/filelist.log" 2>&1 || { say FILELIST_FAIL; exit 3; }; say "$(tail -1 "$L/filelist.log")"
 # Functional compilation consumes source configuration, not closed physical views.
-# The only define-bearing current master is unchanged from the r14 source configuration.
+# Contract source configuration includes explicit source-variant defines.
 VIEWS=${VIEWS:-}
 if [ -z "$VIEWS" ]; then
   VIEWS=$OUT/source_compile_defines.json
-  python3 - "$VIEWS" <<'PYDEFS'
+  python3 - "$VIEWS" "$FC" <<'PYDEFS'
 import json, sys
-json.dump({"ot_hbm_accel_smh_attn": {"env": "DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY"}}, open(sys.argv[1], "w"), indent=2)
+views={"ot_hbm_accel_smh_attn": {"env": "DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY"}}
+for item in json.load(open(sys.argv[2]))['instances'].values():
+    defines=item.get('compile_defines', [])
+    if defines:
+        views[item['master']]={'env': 'DEFINES='+','.join(sorted(set(defines)))}
+json.dump(views, open(sys.argv[1], "w"), indent=2)
 PYDEFS
 fi
 VA=(--views "$VIEWS")
