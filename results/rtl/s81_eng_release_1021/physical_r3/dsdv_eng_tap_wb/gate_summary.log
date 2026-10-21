@@ -1,0 +1,24 @@
+GATE INFO pin_regs: pin registers opted out: OWNER 10-20 09:05: pin registers only at region crossings / wires > 405 um. The tap abuts its controller (same region, beside ctrl_k N face); every output is a flop (rco, pco, rqo, rro, fault); the reader link and the 531-um chain hops get the die's landing / relay stations. A kit pin stage would ad
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (rqo, rri): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (rci, pco): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (rqi, rro): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc7 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsdv_eng_tap_wb_20261021-142127.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsdv_eng_tap_wb_20261021-142127.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/dsdv_eng_tap_wb-20261021-142127
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 151 s (gate total 1803 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1590, 'pin_rectangles': 1590, 'pin_track_checked': 1590, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2e23c98ba712e179282a276cf10fed22089738d175f28893a5122b05c516e84a
+GATE WARN util: synthesized std area 3186 um2 + macros 0 in core 35664: util 9%  -> FIX: set "std_area_um2": 3186 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsdv_eng_tap_w cells 21,759 flops 5,288 depth 356.7 ps util 0.0906 reach 116.9 um (0.6 s)
+GATE WARN textbook.boundary: 3887 input->register endpoint(s) > 3 levels (worst rci[5]->u_t.g_ln[0].u_c.on_[5]$_DFF_PN0_/D 8 lv, rci[5]->u_t.g_ln[0].u_c.on_[4]$_DFF_PN0_/D 8 lv, rci[5]->u_t.g_ln[0].u_c.on_[3]$_DFF_PN0_/D 8 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 9.1% outside 45%-65% (std 3232 + macro 0 um2 in 35664 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 256.1..297.4 ps (spread 41.3), boundary mean 270.9; tt insertion all 192.7..229.3 ps (spread 36.6), boundary mean 204.9; ff insertion all 153.7..188.6 ps (spread 34.9), boundary mean 165.4; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsdv_eng_tap_wb/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg       302 paths, worst slack 120.1 ps (e.g. u_t.g_hs[15].u_s/he0[2][4]$_DFFE_PP_/D)
+GATE INFO path_classes: reg->reg      298 paths, worst slack 551.2 ps (e.g. u_t.u_r.g_leaf[42].q$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 1.200765042952412e-10 hold WNS 5.024416993570924e-11
+GATE INFO clock_rule: root port:ck: 5,288 sinks on the largest root; measured TT insertion 229.3 ps, FF insertion 188.6 ps, TT pin-flop spread 36.6 ps, FF pin-flop spread 34.9 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-eng-release-1021/physical/ref_tile/dsdv_eng_tap_wb/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-s81-eng-release-1021/physical/ref_tile/dsdv_eng_tap_wb/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 16.50% used; GRT 141 s
