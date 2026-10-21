@@ -1,0 +1,28 @@
+ERR cyc 2933 POST before all 8 rank releases of its own terminal
+  u2 relmask 00000000
+ERR cyc 2934 coordinator fault
+  codec 1 post 0 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2935 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2936 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2937 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2938 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2939 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2940 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2941 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2942 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+ERR cyc 2943 coordinator fault
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+  codec 1 post 1 identity 0 lifecycle 0 alloc 0 cohort 0
+FAIL MU_PEER_E2E fails=12 (stopped)
+- rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv:243: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.010 s; speed 294.732 us/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 8 MB
