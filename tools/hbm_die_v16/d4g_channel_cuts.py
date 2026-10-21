@@ -21,8 +21,7 @@ Points (relay homes in contract notes, clock-region sites, lanes) map by the sam
 
     d4g_channel_cuts.py --spec SPEC.json --grants G.json --plan P.json --lanes L.json --region-map M.json --out DIR
 writes DIR/{grants_d4g.json, compact.P.json, lanes.json, d4g_region_map.json, coord_map.json, report.json, plan.png}.
-coord_map.json is the --coord-map input of die_case_v16.py (contract-note relay homes).  Reticle (26 x 33 mm,
->= 0.5 mm margin in W AND H) is enforced.
+coord_map.json is the --coord-map input of die_case_v16.py (contract-note relay homes).  Full reticle dimensions (26 x 33 mm, owner 10-21) are enforced in both axes.
 """
 import argparse, copy, json, math, sys
 from pathlib import Path

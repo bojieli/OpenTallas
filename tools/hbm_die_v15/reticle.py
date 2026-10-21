@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Reticle W AND H check for HBM die grants (OWNER 10-16 18:55: >800 mm2 fine under the reticle with >= 0.5 mm margin
-in BOTH directions).  The 26 x 33 mm reticle may be used either way round: the die's long side is checked against 33 mm
-and its short side against 26 mm; both margins must be >= MARGIN_UM.  An area-only check is NOT enough (the d4c grant
-of 10-16 was 33,197 um wide under the area limit).
+"""Reticle W AND H check for HBM die grants.
 
-    check_die(W, H) -> dict(long_margin_um, short_margin_um, ok)       (never raises)
-    require_die(W, H, who)                                              (SystemExit on failure)
-    require_contract(C, who)                                            (die slot of a grant contract)
+OWNER 10-21 ~08:45 supersedes the 10-16 half-mm margin: release dies may
+use the full 26 x 33 mm outline (858 mm2). The approximately0.1mm seal ring
+is inside that outline; it is not a further inferred reticle exclusion.
+Evidence: memory/owner-full-reticle-1021.md, confirmed by takeover owner.
+An area-only check remains insufficient: both physical dimensions must fit.
+Explicit callers can still request a larger margin for their own plan.
 """
 RETICLE_UM = (33000.0, 26000.0)
-MARGIN_UM = 500.0
+MARGIN_UM = 0.0
 
 
 def check_die(w, h, margin_um=MARGIN_UM):
