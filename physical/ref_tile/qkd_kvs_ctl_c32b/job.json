@@ -1,0 +1,377 @@
+{
+ "name": "qkd_kvs_ctl_c32b-c32b-COMMIT",
+ "block": "qkd_kvs_ctl",
+ "ref_tile": true,
+ "owner": "Claude:KV-CTL10",
+ "purpose": "STRUCTURAL qkd_kvs_ctl_c32b (KV-CTL10 10-20, K.STA.CTL exact successor): the die binds the boot-ages tile qkd_kvs_ctl (62 ports, kv_static_die OT_KV_MU=1 OT_KV_BOOT_AGES=1); mu2 / s32a/b were refused by kv_tile_views (tile RTL differs: 45 ports, no age outputs, o_attn 77 b). This kit = the die generator with OT_KV_CTL_C32=2 (tools/qwen_kv_die/kv_ctl_c32.py): SAME 62 ports / wiring / assigns, members = the KV-CTL3 native32 successors (b5d750822) + qkd_kv_die_cfg_a_c32 (boot-age words, census form) + qkd_kv_ownership_obs_c32; CTLSRAM 2. Pin registers OFF (die charges 0 tile pin edges; owner 10-20 09:05), reset landing 2 stages.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-ctl10-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_kits_b_1018",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_static_programme_1017/die/target2.hex",
+   "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
+   "results/rtl/mu_qwen_1018/kvboot",
+   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
+   "rtl",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+   "rtl/qwen_sys/mu_qwen_20261018",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_mu_kv_tiles.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_ctl_mu2_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_ctl_mu3_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_boot.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_pc_path_rows.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_writer_rows.f",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh",
+   "rtl/test/mu_qwen_1018/run_mu_kv.sh",
+   "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu2_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu3_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv",
+   "tools",
+   "tools/qwen_kv_die",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu4_safe.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_lprg_mu5_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_kv_wprg_mu5_lockstep.sv",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_lprg_mu5_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_wprg_mu5_lockstep.f",
+   "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192",
+   "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu6.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_fanr_mu6_lockstep.sv",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_fanr_mu6_lockstep.f",
+   "tools/mem_compiler/build_ctl_p192_1019.py",
+   "results/arch/kv_sram_ctl_1019",
+   "rtl/lib/ot_s32_cells.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_misc.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_boot.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_s32.sv",
+   "results/arch/kv_ctl3_1020",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_s32_a.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_s32_c.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh",
+   "rtl/test/mu_qwen_1018/lists",
+   "rtl/test/mu_qwen_1018",
+   "tools/qwen_kv_die/gen_kvs_ctl_s32.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/lib/ot_s32_cells.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_misc.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_boot.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32b.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s32_kb",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb kb",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^S32KB kb rc=0: PASS MU_KV_BOOT",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/kb_kb.stdout"
+   },
+   {
+    "name": "s32_kb_first",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb kb_first",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^S32KB kb_first rc=0: PASS MU_KV_BOOT",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/kb_kb_first.stdout"
+   },
+   {
+    "name": "s32_kb_m_tl",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb m_tl",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU_KV_BOOT: user 0 differs from MU 0",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/kb_m_tl.stdout"
+   },
+   {
+    "name": "s32_kb_m_cnt",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb m_cnt",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU_KV_BOOT: event kinds differ",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/kb_m_cnt.stdout"
+   },
+   {
+    "name": "s32_lprg",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_c.sh . {RUN}/bench/c c1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS KV_LPRG_MU5_LOCKSTEP mismatches0",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/c_c1.stdout"
+   },
+   {
+    "name": "s32_lprg_m_land",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_c.sh . {RUN}/bench/c m_land",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/c_m_land.stdout"
+   },
+   {
+    "name": "s32_wr",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_a.sh . {RUN}/bench/a lock",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS KV_S32_A_LOCKSTEP mismatches0",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/a_lock.stdout"
+   },
+   {
+    "name": "s32_wr_m_sl",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_a.sh . {RUN}/bench/a m_sl",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_S32_A_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/a_m_sl.stdout"
+   },
+   {
+    "name": "s32_fanr",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b fanr",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS KV_FANR_MU6_LOCKSTEP mismatches0",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/b_fanr.stdout"
+   },
+   {
+    "name": "s32_fanr_m_ub",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b m_ub",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_FANR_MU6_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/b_m_ub.stdout"
+   },
+   {
+    "name": "s32_dcfg",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b dcfg",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS KV_DCFG_S32_LOCKSTEP mismatches0",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/b_dcfg.stdout"
+   },
+   {
+    "name": "s32_dcfg_m_rc",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b m_rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_DCFG_S32_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/b_m_rc.stdout"
+   },
+   {
+    "name": "s32_own",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d.sh . {RUN}/bench/d own",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS KV_OWN_S32_LOCKSTEP mismatches0",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/d_own.stdout"
+   },
+   {
+    "name": "s32_own_m_os1",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d.sh . {RUN}/bench/d m_os1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_OWN_S32_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/d_m_os1.stdout"
+   },
+   {
+    "name": "s32_boot",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh . {RUN}/bench/d2 d2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS KV_S32_BOOT_LOCKSTEP mismatches0",
+    "pass_witness": "results/arch/kv_ctl3_1020/v3/d2_d2.stdout"
+   },
+   {
+    "name": "s32_boot_m_cw",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh . {RUN}/bench/d2 m_cw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_S32_BOOT_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl3_1020/v3/d2_m_cw.stdout"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_ctl_c32b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_ctl_c32b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_ctl_c32b --out {RUN}/record/views/qkd_kvs_ctl --macro-view physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_ctl_c32b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_ctl_s32/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_ctl_s32/qkd_kvs_ctl_c32b-c32b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "STRUCTURAL qkd_kvs_ctl_c32b (KV-CTL10 10-20, K.STA.CTL exact successor): the die binds the boot-ages tile qkd_kvs_ctl (62 ports, kv_static_die OT_KV_MU=1 OT_KV_BOOT_AGES=1); mu2 / s32a/b were refused by kv_tile_views (tile RTL differs: 45 ports, no age outputs, o_attn 77 b). This kit = the die generator with OT_KV_CTL_C32=2 (tools/qwen_kv_die/kv_ctl_c32.py): SAME 62 ports / wiring / assigns, members = the KV-CTL3 native32 successors (b5d750822) + qkd_kv_die_cfg_a_c32 (boot-age words, census form) + qkd_kv_ownership_obs_c32; CTLSRAM 2. Pin registers OFF (die charges 0 tile pin edges; owner 10-20 09:05), reset landing 2 stages."
+}

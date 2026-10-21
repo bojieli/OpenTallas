@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kvs_ctl",
+ "enable": false,
+ "reason": "OWNER RULE 10-20 09:05: pin registers only at region crossings (landing rings) and on wires over 405 um; same-region touching tiles may connect directly when the path meets timing"
+}
