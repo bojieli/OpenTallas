@@ -5,18 +5,24 @@
  "top": "ot_pdie_ucie_col",
  "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
  "regions": {
-  "core": {
-   "clock_port": "ck_core",
+  "tx": {
+   "clock_port": "ck_tx",
    "children": [
     "u_live_t",
     "u_ptx",
-    "u_sts",
     "u_txf"
+   ]
+  },
+  "rx": {
+   "clock_port": "ck_rx",
+   "children": [
+    "u_sts"
    ]
   },
   "rck": {
    "clock_port": "ck_rck",
    "children": [
+    "u_prr",
     "u_prx",
     "u_rm",
     "u_rmm"
@@ -41,34 +47,36 @@
   "root_region": null,
   "depth": 2,
   "hops": {
-   "core": 0,
+   "tx": 0,
+   "rx": 0,
    "rck": 0
   },
   "regional_ports": {
-   "core": "rst_core",
+   "tx": "rst_tx",
+   "rx": "rst_rx",
    "rck": "rst_rck"
   },
   "stages": 2,
-  "why": "HBM-UCIE8 10-20 (method of the S81 SerDes column lp6): the die delivers one clock per region (ck_core = core PLL stream clock, ck_rck = the far die's forwarded pma_rck) and that region's reset beside it (released on the same edge by its landed die reset distribution), landed 2 stages on the region clock (synchroniser on the forwarded clock). No reset root, no cross-region reset path.",
+  "why": "HBM-UCIE8 10-20 (method of the S81 SerDes column lp6): the die delivers one clock per region (ck_tx / ck_rx = two regional roots of the core PLL stream clock, ck_rck = the far die's forwarded pma_rck) and that region's reset beside it (released on the same edge by its landed die reset distribution), landed 2 stages on the region clock (synchroniser on the forwarded clock). No reset root, no cross-region reset path.",
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
   "landing": 0,
   "pads": 0,
-  "reset": 4,
+  "reset": 6,
   "out_regs": 1028
  },
  "out_regs": [
   {
    "port": "rx",
    "stages": 2,
-   "region": "core",
+   "region": "rx",
    "inst": "u_lpo_rx"
   },
   {
    "port": "st",
    "stages": 2,
-   "region": "core",
+   "region": "rx",
    "inst": "u_lpo_st"
   }
  ],
@@ -83,6 +91,7 @@
    "u_live_t": 0,
    "u_ptx": 0,
    "u_prx": 0,
+   "u_prr": 0,
    "u_rm": 0,
    "u_rmm": 0,
    "u_sts": 0
@@ -113,17 +122,17 @@
     "wrst_n": "rck",
     "w_v": "rck",
     "w_d": "rck",
-    "rclk": "core",
-    "rrst_n": "core",
-    "r_d": "core",
-    "fault": "core",
+    "rclk": "rx",
+    "rrst_n": "rx",
+    "r_d": "rx",
+    "fault": "rx",
     "m_wce": "rck",
     "m_waddr": "rck",
     "m_wd": "rck",
     "m_wmask": "rck",
-    "m_rce": "core",
-    "m_raddr": "core",
-    "m_rd": "core"
+    "m_rce": "rx",
+    "m_raddr": "rx",
+    "m_rd": "rx"
    }
   },
   {
@@ -132,10 +141,10 @@
    "base_region": "rck",
    "pin_regions": {
     "wclk": "rck",
-    "rclk": "core",
-    "r_ce_in": "core",
-    "r_addr_in": "core",
-    "rd_out": "core",
+    "rclk": "rx",
+    "r_ce_in": "rx",
+    "r_addr_in": "rx",
+    "rd_out": "rx",
     "w_ce_in": "rck",
     "w_addr_in": "rck",
     "wd_in": "rck",
@@ -145,15 +154,15 @@
   {
    "inst": "u_sts",
    "module": "ot_ucie_col_sts",
-   "base_region": "core",
+   "base_region": "rx",
    "pin_regions": {
     "ck_r": "rck",
     "rst_r_n": "rck",
     "r_v": "rck",
-    "ck_t": "core",
-    "rst_t_n": "core",
-    "rm_flt": "core",
-    "st": "core"
+    "ck_t": "rx",
+    "rst_t_n": "rx",
+    "rm_flt": "rx",
+    "st": "rx"
    }
   }
  ],
@@ -162,7 +171,7 @@
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
   "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
-  "regional reset ports rst_core, rst_rck: the die releases every one on the SAME edge (its own landed reset distribution, fixed depth), each timed on its region clock",
+  "regional reset ports rst_tx, rst_rx, rst_rck: the die releases every one on the SAME edge (its own landed reset distribution, fixed depth), each timed on its region clock",
   "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
  ],
  "audit": {

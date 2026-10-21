@@ -7,12 +7,15 @@
 // Function = ot_pdie_ucie (rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv), same pads, no FEC (UCIe adapter CRC/retry is the
 // link_ep above):
 //   TX (core clk):     tx face reg u_txf + live flag u_live_t -> analog PMA TX u_ptx: pads pma_tx[512:0] = {valid, beat}
-//   RX (pma_rck):      analog PMA RX u_prx -> rate matcher write side (u_rm wclk) + SRAM write port (u_rmm wclk)
+//   RX (pma_rck):      analog PMA RX u_prx -> output reg u_prr -> rate matcher write side (u_rm wclk) + SRAM write port (u_rmm wclk)
 //   CDC (pma_rck is the far die's forwarded clock, NOT the core PLL): the ONLY rck -> clk crossings are the gray-pointer
 //                      rate matcher u_rm (ot_s81_rate_match_sr, same function as the closed s81lk_rate_match tile; elastic:
 //                      deletes IDLE beats) with its dual-clock SRAM u_rmm, and the 2-flop status synchroniser u_sts.
-// Clock ports clk / pma_rck are replaced by lp.py with one port per region (ck_core on clk, ck_rck on pma_rck); rst is
-// landed per region by the lp regional reset ports (rst_core, rst_rck: 2 registered stages on the region clock).
+// Clock ports clk / pma_rck are replaced by lp.py with one port per region; rst is landed per region by the lp regional
+// reset ports (2 registered stages on the region clock).  HBM-UCIE9 10-21 (ucie2 gate: one ck_core root over the tx AND rx
+// pin groups, boundary spread 88.8 TT / 107.2 FF): clk is split into two regional roots that share NO net -- ck_tx (tx face
+// reg u_txf, live flag, PMA TX u_ptx) and ck_rx (rate-matcher read side, SRAM read port, status, rx/st out regs) -- so no
+// landing is needed between them; pma_rck -> ck_rck (PMA RX, its output register u_prr, rate-matcher write side).
 module ot_pdie_ucie_col_flat (
     input  wire          clk,
     input  wire          pma_rck,
@@ -30,8 +33,12 @@ module ot_pdie_ucie_col_flat (
     ot_s81_col_live u_live_t (.clk(clk), .rst_n(rst), .q(t_live));
     ot_ucie_pma_txm u_ptx (.ck(clk), .d({t_live, tx_f}), .pma_tx(pma_tx), .pma_tck(pma_tck));
     // ---- receive
-    wire [512:0] r_d;
-    ot_ucie_pma_rxm u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
+    wire [512:0] r_q, r_d;
+    ot_ucie_pma_rxm u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_q));
+    // HBM-UCIE9 10-21: PMA RX output register in the rck region (ucie2 gate: u_prx/q -> u_rm comb -> u_rmm/w_ce_in was a
+    // macro->macro single-cycle path, -306.7 ps): every rate-matcher / SRAM-write / status cone now starts at a flop beside
+    // the rxm q face.  +1 pma_rck edge on RX, ahead of the elastic rate matcher (priced: lp record / kit README).
+    ot_pl_pad #(.W(513), .N(1)) u_prr (.ck(pma_rck), .d(r_q), .q(r_d));
     // ---- CDC children (rck -> clk)
     wire rm_flt, m_wce, m_rce; wire [3:0] m_waddr, m_raddr; wire [545:0] m_wd, m_wmask, m_rd;
     ot_s81_rate_match_sr u_rm (.wclk(pma_rck), .wrst_n(rst), .w_v(r_d[512]), .w_d(r_d[511:0]), .rclk(clk), .rrst_n(rst),

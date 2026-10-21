@@ -21,7 +21,7 @@ module tb_ot_pdie_ucie_col;
     wire [0:0] fo_pma_tck, lo_pma_tck;  reg [0:0] dlo_pma_tck [0:0];
     always @(posedge clk) begin : g_dlo_pma_tck integer j; dlo_pma_tck[0] <= fo_pma_tck; for (j = 1; j <= 0; j = j + 1) dlo_pma_tck[j] <= dlo_pma_tck[j - 1]; end
     ot_pdie_ucie_col_flat u_flat (.clk(clk), .pma_rck(clk), .rst(rst_f), .tx(fi_tx), .pma_rx(fi_pma_rx), .rx(fo_rx), .st(fo_st), .pma_tx(fo_pma_tx), .pma_tck(fo_pma_tck));
-    ot_pdie_ucie_col #(.MUT(MUT)) u_lp (.ck_core(clk), .ck_rck(clk), .rst_core(rst), .rst_rck(rst), .tx(li_tx), .pma_rx(li_pma_rx), .rx(lo_rx), .st(lo_st), .pma_tx(lo_pma_tx), .pma_tck(lo_pma_tck));
+    ot_pdie_ucie_col #(.MUT(MUT)) u_lp (.ck_tx(clk), .ck_rx(clk), .ck_rck(clk), .rst_tx(rst), .rst_rx(rst), .rst_rck(rst), .tx(li_tx), .pma_rx(li_pma_rx), .rx(lo_rx), .st(lo_st), .pma_tx(lo_pma_tx), .pma_tck(lo_pma_tck));
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
     integer cyc, nc, bad;
     initial begin

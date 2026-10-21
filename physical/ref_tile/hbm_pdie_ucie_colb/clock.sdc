@@ -4,9 +4,11 @@
 set ::ot_ref_pre_cts 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 create_clock -name core_clk -period 833.333333000
+create_clock -name ot_io_rx -period 833.333333000
 create_clock -name ot_io_rck -period 833.333333000
-create_clock -name ot_entry_0 -period 833.333333000 [get_ports {ck_core}]
-create_clock -name ot_entry_1 -period 833.333333000 [get_ports {ck_rck}]
+create_clock -name ot_entry_0 -period 833.333333000 [get_ports {ck_tx}]
+create_clock -name ot_entry_1 -period 833.333333000 [get_ports {ck_rx}]
+create_clock -name ot_entry_2 -period 833.333333000 [get_ports {ck_rck}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -21,11 +23,11 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_core} {tx}} outputs {{rx} {st} {pma_tx} {pma_tck}}} {rck} {clock ot_io_rck io_budget_ps 166.667 inputs {{rst_rck} {pma_rx}} outputs {}}]
-set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_rck} {rck}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_tx} {tx}} outputs {{pma_tx} {pma_tck}}} {rx} {clock ot_io_rx io_budget_ps 166.667 inputs {{rst_rx}} outputs {{rx} {st}}} {rck} {clock ot_io_rck io_budget_ps 166.667 inputs {{rst_rck} {pma_rx}} outputs {}}]
+set ::ot_ce_source_domains [dict create {ck_tx} {core} {ck_rx} {rx} {ck_rck} {rck}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck_core} {ck_rck}}
-set ::ot_ce_ports {{ck_core} {ck_rck}}
+set ::ot_ce_cts_roots {{ck_tx} {ck_rx} {ck_rck}}
+set ::ot_ce_ports {{ck_tx} {ck_rx} {ck_rck}}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in

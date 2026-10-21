@@ -32,8 +32,10 @@
   "N": [
    "ck_rck",
    "rst_rck",
-   "ck_core",
-   "rst_core"
+   "ck_tx",
+   "rst_tx",
+   "ck_rx",
+   "rst_rx"
   ],
   "E": [
    "tx",
@@ -46,9 +48,10 @@
    "pma_tck"
   ]
  },
- "clock_port": "ck_core",
+ "clock_port": "ck_tx",
  "clock_ports": [
-  "ck_core",
+  "ck_tx",
+  "ck_rx",
   "ck_rck"
  ],
  "blocks": [
