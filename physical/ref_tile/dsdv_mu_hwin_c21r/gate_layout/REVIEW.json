@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "dsdv_mu_hwin_c21r",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T07:04:00-07:00",
+ "gate_commit": "3d41d2ba6",
+ "checklist": {
+  "lattice": "84 HWIN SRAMs on the 43.2 lattice, 12x7 grid, unchanged",
+  "std_cell_band": "one full-width central band, density ~0.4-0.6, full core rows",
+  "pin_spread": "source-registered pins, faces <=4.1/um",
+  "clock_entry": "single root, gate-measured spread within rule (gate WARN, 0 FAIL)",
+  "shape": "approved MU hwin slot"
+ },
+ "notes": "COORD 10-21 07:40 APPROVED hwin c21r (prior NEEDS_HUMAN = missing extra_paths, fixed ef446e912); first of c21q/c21r to close binds",
+ "geometry_sha256": "c594bd5e75b91a75fdce2ccdf08db570423534e2fcc61b25781436e7ab073192"
+}
