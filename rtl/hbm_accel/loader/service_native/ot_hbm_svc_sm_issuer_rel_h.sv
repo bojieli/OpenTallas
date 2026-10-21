@@ -46,7 +46,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  always @(posedge clk)begin desc_addr_q<=desc_addr;desc_data_q<=desc_data;end
  reg rd_q;reg[DAW-1:0]rp,rp_q;wire[255:0]rd;
  wire rd_go;
- localparam integer NRS=8;                                  // rd mux bank-select copies (32 b each)
+ localparam integer SS=12,NRS=(256+SS-1)/SS;                                  // rd mux bank-select copies (32 b each)
  (* keep="true",dont_touch="true" *) reg[NRS-1:0]rsel_k;    // = rp_q[7] (unreset, as rp_q)
  generate if(DD==128)begin:g_t1
   ot_sram_1r1w_128x256_m1_r2c2 u_desc(.clk(clk),.r_ce_in(rd_go),.r_addr_in(rp[6:0]),.rd_out(rd),
@@ -61,7 +61,8 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
    .w_ce_in(desc_we_q&&!running&&desc_addr_q[7]),.w_addr_in(desc_addr_q[6:0]),.wd_in(desc_data_q),.w_mask_in({256{1'b1}}),
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
   for(genvar s=0;s<NRS;s=s+1)begin:g_rs
-   assign rd[s*32+:32]=rsel_k[s]?rd_hi[s*32+:32]:rd_lo[s*32+:32];
+   localparam integer B=(256-s*SS<SS)?256-s*SS:SS;
+   assign rd[s*SS+:B]=rsel_k[s]?rd_hi[s*SS+:B]:rd_lo[s*SS+:B];
   end
  end endgenerate
  // ---------------- run / ids registers
@@ -69,7 +70,9 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  reg[15:0]run_cohort_q;
  // ---------------- reserve pipeline A -> P -> S
  reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[199:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;
- localparam integer NAK=7,NPK=9,NSK=9;                      // empty-stage load-enable copies (<= 32 data bits each)
+ localparam integer QW=7+12+10+24+16+12+11+16+LB;
+ localparam integer NS0=(143+SS-1)/SS;
+ localparam integer NAK=(200+SS-1)/SS,NPK=NAK+4,NSK=NS0+(QW+SS-1)/SS;                      // empty-stage load-enable copies (<= 32 data bits each)
  (* keep="true",dont_touch="true" *) reg[NAK-1:0]av_k;      // = a_v
  (* keep="true",dont_touch="true" *) reg[NPK-1:0]pv_k;      // = p_v
  (* keep="true",dont_touch="true" *) reg[NSK-1:0]sv_k;      // = st_v
@@ -86,8 +89,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  assign reserve_base=st[31:0];assign reserve_row_base=st[46:32];assign reserve_total=st_total[11:0];
  assign reserve_bank=st[47+:LB];assign reserve_epoch=st[64:49];assign reserve_rows=st_rows;assign reserve_tag_base=st[81:72];
  // ---------------- start / go queues: {fl1, mode2, lstep4, row_off12, tag10, go_at24, loops16, limit12, base11, epoch16, landing LB}
- localparam integer QW=7+12+10+24+16+12+11+16+LB;
- localparam integer NQS=(QW+31)/32;                         // 32-bit slices of a queue entry
+ localparam integer NQS=(QW+SS-1)/SS;                         // 32-bit slices of a queue entry
  reg[QW-1:0]sq[0:QD-1],gq[0:QD-1];reg[2:0]sq_n,gq_n;reg[1:0]sq_r,sq_w,gq_r,gq_w;
  reg[QW-1:0]s_ent;
  (* keep="true",dont_touch="true" *) reg[QD*NQS-1:0]sqw_k,sqr_k,gqw_k,gqr_k;   // [k*NQS+s]: slot k, slice s
@@ -95,8 +97,8 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  always @*begin
   sh=0;gh=0;
   for(qk=0;qk<QD;qk=qk+1)for(qb=0;qb<QW;qb=qb+1)begin
-   if(sqr_k[qk*NQS+qb/32])sh[qb]=sh[qb]|sq[qk][qb];
-   if(gqr_k[qk*NQS+qb/32])gh[qb]=gh[qb]|gq[qk][qb];
+   if(sqr_k[qk*NQS+qb/SS])sh[qb]=sh[qb]|sq[qk][qb];
+   if(gqr_k[qk*NQS+qb/SS])gh[qb]=gh[qb]|gq[qk][qb];
   end
  end
  wire[LB-1:0]sh_land=sh[LB-1:0];wire[LB-1:0]gh_land=gh[LB-1:0];
@@ -156,28 +158,41 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
    sq_n<=sq_n_n;gq_n<=gq_n_n;sq_r<=sq_r_n;sq_w<=sq_w_n;gq_r<=gq_r_n;gq_w<=gq_w_n;
   end
  end
- // rst_n[1]: cohort counter + a-stage copies (23 flops)
- always @(posedge clk or negedge rst_n[1])begin
-  if(!rst_n[1])begin run_cohort_q<=0;av_k<=0;end
-  else begin run_cohort_q<=cohort_n;av_k<={NAK{a_v_n}};end
- end
- // rst_n[2]: p / st stage copies (18 flops)
- always @(posedge clk or negedge rst_n[2])begin
-  if(!rst_n[2])begin pv_k<=0;sv_k<=0;end
-  else begin pv_k<={NPK{p_v_n}};sv_k<={NSK{st_v_n}};end
- end
- // rst_n[3] / rst_n[4]: queue slot one-hots (32 flops each).  Write slot k is enabled while it is the tail and free.
- integer wk;
- always @(posedge clk or negedge rst_n[3])begin
-  if(!rst_n[3])begin sqw_k<={{(QD-1)*NQS{1'b0}},{NQS{1'b1}}};sqr_k<={{(QD-1)*NQS{1'b0}},{NQS{1'b1}}};end
-  else for(wk=0;wk<QD;wk=wk+1)begin
-   sqw_k[wk*NQS+:NQS]<={NQS{sq_w_n==wk&&sq_n_n<QD}};sqr_k[wk*NQS+:NQS]<={NQS{sq_r_n==wk}};
+ // Regional copy resets: <=22 control bits per leaf (queue slots20).
+ // New reset landing adds one startup edge; descriptor/data transaction edges stay unchanged.
+ wire [0:0] ar;
+ wire [1:0] psr;
+ wire [QD-1:0] sqr,gqr;
+ ot_rst_fanout #(.N(1)) u_ar(.clk(clk),.rst_n_in(rst_n[1]),.rst_n(ar));
+ ot_rst_fanout #(.N(2)) u_psr(.clk(clk),.rst_n_in(rst_n[2]),.rst_n(psr));
+ ot_rst_fanout #(.N(QD)) u_sqr(.clk(clk),.rst_n_in(rst_n[3]),.rst_n(sqr));
+ ot_rst_fanout #(.N(QD)) u_gqr(.clk(clk),.rst_n_in(rst_n[4]),.rst_n(gqr));
+ always @(posedge clk or negedge rst_n[1])
+  if(!rst_n[1])run_cohort_q<=0;else run_cohort_q<=cohort_n;
+ always @(posedge clk or negedge ar[0])
+  if(!ar[0])av_k<=0;else av_k<={NAK{a_v_n}};
+ always @(posedge clk or negedge psr[0])
+  if(!psr[0])pv_k<=0;else pv_k<={NPK{p_v_n}};
+ always @(posedge clk or negedge psr[1])
+  if(!psr[1])sv_k<=0;else sv_k<={NSK{st_v_n}};
+ for(genvar wk=0;wk<QD;wk=wk+1)begin:g_qcopy
+  always @(posedge clk or negedge sqr[wk])begin
+   if(!sqr[wk])begin
+    sqw_k[wk*NQS+:NQS]<={NQS{wk==0}};
+    sqr_k[wk*NQS+:NQS]<={NQS{wk==0}};
+   end else begin
+    sqw_k[wk*NQS+:NQS]<={NQS{sq_w_n==wk&&sq_n_n<QD}};
+    sqr_k[wk*NQS+:NQS]<={NQS{sq_r_n==wk}};
+   end
   end
- end
- always @(posedge clk or negedge rst_n[4])begin
-  if(!rst_n[4])begin gqw_k<={{(QD-1)*NQS{1'b0}},{NQS{1'b1}}};gqr_k<={{(QD-1)*NQS{1'b0}},{NQS{1'b1}}};end
-  else for(wk=0;wk<QD;wk=wk+1)begin
-   gqw_k[wk*NQS+:NQS]<={NQS{gq_w_n==wk&&gq_n_n<QD}};gqr_k[wk*NQS+:NQS]<={NQS{((HM==3)?gq_r:gq_r_n)==wk}};
+  always @(posedge clk or negedge gqr[wk])begin
+   if(!gqr[wk])begin
+    gqw_k[wk*NQS+:NQS]<={NQS{wk==0}};
+    gqr_k[wk*NQS+:NQS]<={NQS{wk==0}};
+   end else begin
+    gqw_k[wk*NQS+:NQS]<={NQS{gq_w_n==wk&&gq_n_n<QD}};
+    gqr_k[wk*NQS+:NQS]<={NQS{((HM==3)?gq_r:gq_r_n)==wk}};
+   end
   end
  end
  // ---------------- datapath (no reset)
@@ -198,17 +213,19 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
   if(program_done)n_go<=n_go-1'b1;
   // stage registers: load while the stage is empty (the KEPT copy of its valid gates each <= 32-bit slice)
   for(ab=0;ab<200;ab=ab+1)begin
-   if(!av_k[ab/32])a[ab]<=rd[ab];
-   if(!pv_k[ab/32])p[ab]<=a[ab];
+   if(!av_k[ab/SS])a[ab]<=rd[ab];
+   if(!pv_k[ab/SS])p[ab]<=a[ab];
   end
-  if(!pv_k[7])p_lay<=p_lay_d;
-  if(!pv_k[8])p_id<=p_id_d;
-  for(ab=0;ab<143;ab=ab+1)if(!sv_k[ab/32])st[ab]<=st_d[ab];
-  for(ab=0;ab<QW;ab=ab+1)if(!sv_k[5+ab/32])s_ent[ab]<=s_ent_d[ab];
+  for(ab=0;ab<24;ab=ab+1)begin
+   if(!pv_k[NAK+ab/SS])p_lay[ab]<=p_lay_d[ab];
+   if(!pv_k[NAK+2+ab/SS])p_id[ab]<=p_id_d[ab];
+  end
+  for(ab=0;ab<143;ab=ab+1)if(!sv_k[ab/SS])st[ab]<=st_d[ab];
+  for(ab=0;ab<QW;ab=ab+1)if(!sv_k[NS0+ab/SS])s_ent[ab]<=s_ent_d[ab];
   // queues: the free tail slot follows its producer every edge
   for(qk=0;qk<QD;qk=qk+1)for(qb=0;qb<QW;qb=qb+1)begin
-   if(sqw_k[qk*NQS+qb/32])sq[qk][qb]<=s_ent[qb];
-   if(gqw_k[qk*NQS+qb/32])gq[qk][qb]<=sh[qb];
+   if(sqw_k[qk*NQS+qb/SS])sq[qk][qb]<=s_ent[qb];
+   if(gqw_k[qk*NQS+qb/SS])gq[qk][qb]<=sh[qb];
   end
  end
 endmodule
