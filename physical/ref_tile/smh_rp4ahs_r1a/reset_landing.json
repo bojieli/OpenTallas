@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_smh_rp4ah_s",
+ "enable": false,
+ "reason": "the RTL lands rst_n itself: ot_rp4h_rst u_rst = two KEPT face stages (l0, l1) then one KEPT copy per consumer (c[*], 1-12 loads each); the port net has ONE sink (u_rst.l0).  Depth 3 = the lp regional reset run, so the halves stay cycle-exact with ot_hbm_smh_rp4_flat_lp (bench H2_LOCKSTEP)."
+}
