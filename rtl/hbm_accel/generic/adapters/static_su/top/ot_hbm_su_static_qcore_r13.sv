@@ -71,7 +71,7 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1)(
  input wire clk,
  // r13b: one 1-bit reset port per reset flop (all = rst_n): the copy splitter moves 1-bit ports only (r13b census: 9-bit
  // same-net bus ports stuck 6 sectors on one copy, 54 loads)
- input wire rst_wv0,rst_wv1,rst_wv2,rst_wv3,rst_rv0,rst_rv1,rst_rv2,rst_rv3,rst_cf,
+ input wire rst_wv0,rst_wv1,rst_wv2,rst_wv3,rst_rv00,rst_rv01,rst_rv02,rst_rv03,rst_rv10,rst_rv11,rst_rv12,rst_rv13,rst_rv20,rst_rv21,rst_rv22,rst_rv23,rst_rv30,rst_rv31,rst_rv32,rst_rv33,rst_cf,
  input wire [5*32-1:0] rd_oh, input wire [3:0] r5_oh,
  input wire [39:0] rd_ve,rd_key, input wire [7:0] r5_ve,r5_key,
  input wire [3:0] wv, input wire [31:0] wa, input wire [127:0] wd,
@@ -90,10 +90,12 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1)(
  wire [7:0] row_c={wa_c[30+:2],wa_c[22+:2],wa_c[14+:2],wa_c[6+:2]};
  // r16 candidate: real collective sector/row decode BEFORE the existing raw-capture edge.
  // Each kept row bit serves only two banks / four half-word writers; commit remains k+1.
+ // Each row-hit flop has its own scalar reset port so native reset splitting counts actual loads.
  wire [3:0] rr_hit_g [0:3];
+ wire [15:0] rr_rst={rst_rv33,rst_rv32,rst_rv31,rst_rv30,rst_rv23,rst_rv22,rst_rv21,rst_rv20,rst_rv13,rst_rv12,rst_rv11,rst_rv10,rst_rv03,rst_rv02,rst_rv01,rst_rv00};
  for(genvar g=0;g<4;g=g+1)begin:g_rw
   for(genvar r=0;r<4;r=r+1)begin:g_row
-   ot_hbm_su_qcore_r13_kqr u_rh(.clk(clk),.rst_v(g==0?rst_rv0:g==1?rst_rv1:g==2?rst_rv2:rst_rv3),
+   ot_hbm_su_qcore_r13_kqr u_rh(.clk(clk),.rst_v(rr_rst[4*g+r]),
     .d((COLLPORT!=0)&&rrv&&(rra=={2'(r),3'(S)})),.q(rr_hit_g[g][r]));
   end
  end
@@ -211,7 +213,7 @@ module ot_hbm_su_static_qcore_r13 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=
    end
   end
   for(genvar n=0;n<4;n=n+1)begin:g_n5 assign local_5[n]=r5_all[n*8+s]; end
-  ot_hbm_su_qcore_r13_sec #(.S(s),.MUT(MUT),.COLLPORT(COLLPORT)) u_s(.clk(clk_ctl),.rst_wv0(rst_n),.rst_wv1(rst_n),.rst_wv2(rst_n),.rst_wv3(rst_n),.rst_rv0(rst_n),.rst_rv1(rst_n),.rst_rv2(rst_n),.rst_rv3(rst_n),.rst_cf(rst_n),.rd_oh(local_oh),.r5_oh(local_5),.rd_ve(rd_ve),.rd_key(rd_key),.r5_ve(r5_ve),.r5_key(r5_key),
+  ot_hbm_su_qcore_r13_sec #(.S(s),.MUT(MUT),.COLLPORT(COLLPORT)) u_s(.clk(clk_ctl),.rst_wv0(rst_n),.rst_wv1(rst_n),.rst_wv2(rst_n),.rst_wv3(rst_n),.rst_rv00(rst_n),.rst_rv01(rst_n),.rst_rv02(rst_n),.rst_rv03(rst_n),.rst_rv10(rst_n),.rst_rv11(rst_n),.rst_rv12(rst_n),.rst_rv13(rst_n),.rst_rv20(rst_n),.rst_rv21(rst_n),.rst_rv22(rst_n),.rst_rv23(rst_n),.rst_rv30(rst_n),.rst_rv31(rst_n),.rst_rv32(rst_n),.rst_rv33(rst_n),.rst_cf(rst_n),.rd_oh(local_oh),.r5_oh(local_5),.rd_ve(rd_ve),.rd_key(rd_key),.r5_ve(r5_ve),.r5_key(r5_key),
    .wv(rf_wv),.wa(rf_wa),.wd(rf_wd),.rrv(rr_wv),.rra(rr_wa),.rrd(rr_wd),.raw_o(raw_s[s]),.raw5_o(raw5_s[s]),.conf_o(conf_s[s]));
  end
  // ---------------------------------------------------------------- k+2: OR of the gated sector words

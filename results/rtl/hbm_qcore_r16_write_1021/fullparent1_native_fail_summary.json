@@ -1,0 +1,460 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "hbm_su_qcore_r16a_1021",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 119952,
+  "max_dynamic_loads": 39,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_ot_hbm_su_static_qcore_r13_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "03149cd6daed12c45aa5e6bff983302d1a41a395213dfea6c67071b4e4c46955"
+  },
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+      "sha256": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+    }
+  ],
+  "violations": [
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c20$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_00111_",
+      "loads": 36,
+      "endpoints": [
+        [
+          100215,
+          "RESETN",
+          0
+        ],
+        [
+          103066,
+          "RESETN",
+          0
+        ],
+        [
+          103069,
+          "RESETN",
+          0
+        ],
+        [
+          103072,
+          "RESETN",
+          0
+        ],
+        [
+          103075,
+          "RESETN",
+          0
+        ],
+        [
+          103078,
+          "RESETN",
+          0
+        ],
+        [
+          103081,
+          "RESETN",
+          0
+        ],
+        [
+          103084,
+          "RESETN",
+          0
+        ],
+        [
+          103087,
+          "RESETN",
+          0
+        ],
+        [
+          103090,
+          "RESETN",
+          0
+        ],
+        [
+          103093,
+          "RESETN",
+          0
+        ],
+        [
+          103096,
+          "RESETN",
+          0
+        ],
+        [
+          103099,
+          "RESETN",
+          0
+        ],
+        [
+          103102,
+          "RESETN",
+          0
+        ],
+        [
+          103105,
+          "RESETN",
+          0
+        ],
+        [
+          103108,
+          "RESETN",
+          0
+        ],
+        [
+          103111,
+          "RESETN",
+          0
+        ],
+        [
+          103114,
+          "RESETN",
+          0
+        ],
+        [
+          103117,
+          "RESETN",
+          0
+        ],
+        [
+          103120,
+          "RESETN",
+          0
+        ],
+        [
+          89853,
+          "RESETN",
+          0
+        ],
+        [
+          89856,
+          "RESETN",
+          0
+        ],
+        [
+          89859,
+          "RESETN",
+          0
+        ],
+        [
+          89862,
+          "RESETN",
+          0
+        ],
+        [
+          89865,
+          "RESETN",
+          0
+        ],
+        [
+          89868,
+          "RESETN",
+          0
+        ],
+        [
+          89871,
+          "RESETN",
+          0
+        ],
+        [
+          89874,
+          "RESETN",
+          0
+        ],
+        [
+          89877,
+          "RESETN",
+          0
+        ],
+        [
+          89880,
+          "RESETN",
+          0
+        ],
+        [
+          89883,
+          "RESETN",
+          0
+        ],
+        [
+          89886,
+          "RESETN",
+          0
+        ],
+        [
+          89889,
+          "RESETN",
+          0
+        ],
+        [
+          89892,
+          "RESETN",
+          0
+        ],
+        [
+          89895,
+          "RESETN",
+          0
+        ],
+        [
+          89898,
+          "RESETN",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c21$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_00112_",
+      "loads": 39,
+      "endpoints": [
+        [
+          103123,
+          "RESETN",
+          0
+        ],
+        [
+          113445,
+          "RESETN",
+          0
+        ],
+        [
+          116296,
+          "RESETN",
+          0
+        ],
+        [
+          116299,
+          "RESETN",
+          0
+        ],
+        [
+          116302,
+          "RESETN",
+          0
+        ],
+        [
+          116305,
+          "RESETN",
+          0
+        ],
+        [
+          116308,
+          "RESETN",
+          0
+        ],
+        [
+          116311,
+          "RESETN",
+          0
+        ],
+        [
+          116314,
+          "RESETN",
+          0
+        ],
+        [
+          116317,
+          "RESETN",
+          0
+        ],
+        [
+          116320,
+          "RESETN",
+          0
+        ],
+        [
+          116323,
+          "RESETN",
+          0
+        ],
+        [
+          116326,
+          "RESETN",
+          0
+        ],
+        [
+          116329,
+          "RESETN",
+          0
+        ],
+        [
+          116332,
+          "RESETN",
+          0
+        ],
+        [
+          116335,
+          "RESETN",
+          0
+        ],
+        [
+          116338,
+          "RESETN",
+          0
+        ],
+        [
+          116341,
+          "RESETN",
+          0
+        ],
+        [
+          116344,
+          "RESETN",
+          0
+        ],
+        [
+          116347,
+          "RESETN",
+          0
+        ],
+        [
+          116350,
+          "RESETN",
+          0
+        ],
+        [
+          116353,
+          "RESETN",
+          0
+        ],
+        [
+          126670,
+          "RESETN",
+          0
+        ],
+        [
+          129521,
+          "RESETN",
+          0
+        ],
+        [
+          129524,
+          "RESETN",
+          0
+        ],
+        [
+          129527,
+          "RESETN",
+          0
+        ],
+        [
+          129530,
+          "RESETN",
+          0
+        ],
+        [
+          129533,
+          "RESETN",
+          0
+        ],
+        [
+          129536,
+          "RESETN",
+          0
+        ],
+        [
+          129539,
+          "RESETN",
+          0
+        ],
+        [
+          129542,
+          "RESETN",
+          0
+        ],
+        [
+          129545,
+          "RESETN",
+          0
+        ],
+        [
+          129548,
+          "RESETN",
+          0
+        ],
+        [
+          129551,
+          "RESETN",
+          0
+        ],
+        [
+          129554,
+          "RESETN",
+          0
+        ],
+        [
+          129557,
+          "RESETN",
+          0
+        ],
+        [
+          129560,
+          "RESETN",
+          0
+        ],
+        [
+          129563,
+          "RESETN",
+          0
+        ],
+        [
+          129566,
+          "RESETN",
+          0
+        ]
+      ]
+    }
+  ],
+  "raw_report_sha256": "88a8bc165170ecc8a710b363aaf96801c876796b72598c8efb66f26488311c68",
+  "raw_report_path": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_qcore_r16a_1021-20261021-144824/routes/gate/work/orfs/native_census.json",
+  "source_commit": "4938042fc",
+  "source_archive_sha256": "62ab00bf166830792ba98ac2ab1f3a41fd74f2c04cb04ac91165ba484deed11e",
+  "placement_ran": false
+}

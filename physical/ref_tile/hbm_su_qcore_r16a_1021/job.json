@@ -53,7 +53,7 @@
     "cmd": "bash tools/hbm_static/qcore_r13_lockstep_run.sh {RUN}/bench/pos 0",
     "expect": "pass",
     "pass_regex": "QCORE_RG PASS",
-    "pass_witness": "results/rtl/hbm_qcore_r16_write_1021/source3_lockstep_pass.log",
+    "pass_witness": "results/rtl/hbm_qcore_r16_write_1021/source4_lockstep_pass.log",
     "threads": 8,
     "peak_ram_gb": 6,
     "needs": [
