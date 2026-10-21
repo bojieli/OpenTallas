@@ -4,6 +4,7 @@ Run after rp5_gen.py and lp.py gen; shared landing primitives stay unchanged.
 """
 from pathlib import Path
 import json
+import re
 ROOT=Path(__file__).resolve().parents[2]
 RTL="rtl/hbm_accel/sm/repack/h2a5/ot_rp5_land_reset_split.sv"
 
@@ -43,7 +44,16 @@ def main():
             base=ROOT/f"rtl/hbm_accel/sm/repack/h2a5/lp_{h}_{v}"
             p=base/f"ot_hbm_smh_rp5{h}_{v}.sv"
             s=p.read_text().replace("ot_rp5_land_vector_reset_w #(", "ot_pl_land_vector_reset_w #(")
+            # Existing reset mutant previously vanished before the bench's
+            # warm30 compare window. Use lp.py's documented mut4_stages knob;
+            # MUT0 remains identical, no positive latency/reset changes.
+            s,n=re.subn(r"(\.N\(\(MUT == 4\) \? )\d+( : 0\)\))",r"\g<1>64\2",s)
+            if n != 1: raise RuntimeError(f"Expected one reset mutant in {p}, found {n}")
+            s=s.replace("one stage long", "64 stage(s) long")
             p.write_text(s)
+            spec=ROOT/f"results/arch/hbm_smh_r5_1021/lp_spec_{h}_{v}.json"
+            d=json.loads(spec.read_text());d["mut4_stages"]=64
+            spec.write_text(json.dumps(d,indent=1)+"\n")
             for p in [base/f"ot_hbm_smh_rp5{h}_{v}_bench.sh"]:
                 s=p.read_text()
                 s=s.replace("rtl/common/landed_parent/ot_pl_land_reset_forest.sv",RTL)

@@ -1,0 +1,31 @@
+{
+  "old_result": "ALL4 existing LP MUT4 incorrectly PASS; retained, not qualified",
+  "cause": "One reset-slip edge is gone before warm30 output comparison. Existing documented lp.py mut4_stages64 makes intended reset interruption persist into compared window.",
+  "positive_invariant": "Only MUT==4 delay literal and comment differ; default MUT0 parent hardware, calendars, resets, data unchanged. Actual necessary positive and mutant witnesses still required.",
+  "sources": [
+    {
+      "source": "rtl/hbm_accel/sm/repack/h2a5/lp_n_m/ot_hbm_smh_rp5n_m.sv",
+      "before": "b3fbb8c99c9bf326d38cf5895bea60b728182a9567b6d0839bca0a2cfaf147f0",
+      "after": "33480b1e8a65d0bdb94adbd7744e7877f22e1b7f3fd2962eb2df9d4ec2d465c9",
+      "default_MUT0_body_equal": true
+    },
+    {
+      "source": "rtl/hbm_accel/sm/repack/h2a5/lp_n_f/ot_hbm_smh_rp5n_f.sv",
+      "before": "704a66fee3d82597277d2a41347d57eb736e1e700e857e12bf3ab4bd8cd57c05",
+      "after": "ae1e4e5b3c43b5edf67f3607cfbb1c28edc4c306c1cc38dcfec270a968c9df61",
+      "default_MUT0_body_equal": true
+    },
+    {
+      "source": "rtl/hbm_accel/sm/repack/h2a5/lp_s_m/ot_hbm_smh_rp5s_m.sv",
+      "before": "ae05bb73ad814cb37e541d1d37d2eb45be211c4c1aeb4c6d61d6b5ddacd71313",
+      "after": "474e047560422448f02ee5d9f5a54602f1c1c6ec070fad6453bba30f67dd36a8",
+      "default_MUT0_body_equal": true
+    },
+    {
+      "source": "rtl/hbm_accel/sm/repack/h2a5/lp_s_f/ot_hbm_smh_rp5s_f.sv",
+      "before": "0118fab1eb9131904a33b91fcf8e4b12b92c3b8276bba137e57685f550598683",
+      "after": "4669bf285ce85933077eb960073ce9f22e418a65281bd5bf2851259a9dbad660",
+      "default_MUT0_body_equal": true
+    }
+  ]
+}
