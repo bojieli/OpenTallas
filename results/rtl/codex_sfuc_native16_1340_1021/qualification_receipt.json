@@ -1,0 +1,27 @@
+{
+  "RTL_commit": "a14276941",
+  "operand_store_sha256": "0baee78d4138e114b2d972facb1fcb9bcac9ddaa9d3188a787925f8a1ff5e2b0",
+  "bench": {
+    "unit": "oth-ubuntu-3417225-1792625081",
+    "host": "ot-epyc9",
+    "exit_code": 0,
+    "default_checks": 143360,
+    "native_checks": 143360,
+    "mutants_rejected": [
+      "MUT_ADDR",
+      "MUT_RANGE",
+      "MUT_SCALAR_ADDR"
+    ]
+  },
+  "native": "RUNNING normal unpinned40GiB2thread, no verdict",
+  "native_framework": {
+    "published_commit": "45386657d47b3997fd1c019b85cd60bb98a01ea0",
+    "native_census_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+    "projection": [
+      "tools/ref_tile",
+      "tools/textbook_lint.py"
+    ],
+    "source": "src16_native immutable copy of bench src16 plus exact published framework projection; no admitted benchmark input mutated"
+  },
+  "preservation": "all earlier src/native/mapped/log artifacts unchanged; same root .keep"
+}
