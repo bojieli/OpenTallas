@@ -1,0 +1,29 @@
+{
+  "source_commit": "da03b99bb",
+  "fleet_unit": "oth-ubuntu-2538540-1792560001",
+  "host": "ot-epyc9",
+  "positive": {
+    "case": "dcfg",
+    "cycles": 121469,
+    "compared": 118485,
+    "episodes": 400,
+    "mismatches": 0
+  },
+  "causal_mutants": {
+    "m_dc6": {
+      "mismatches": 13538,
+      "fail_regex": "^FAIL KV_DCFG_A_C32"
+    },
+    "m_dc7": {
+      "mismatches": 116487,
+      "fail_regex": "^FAIL KV_DCFG_A_C32"
+    }
+  },
+  "source_sha256": {
+    "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh": "7c72ad0d8cb0ca777aa0994f5013bd33e81dd9c97890d06afd64cf316a653231",
+    "rtl/test/kv_ctl10_1020/tb_kv_dcfg_a_c32.sv": "3f8a651fdaad651a504ac6d0f06ebfc279b3f527643a2741bc8eb920193d21f2",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv": "39348623bfbfc7866ff4f2691c550ca297b01c07004f633e345d3da0607ac988",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv": "8cc5ef117227577678fee0f487b44b31d3a4a59a50dbca0fe09e12075c99faea"
+  }
+}
