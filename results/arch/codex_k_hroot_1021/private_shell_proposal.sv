@@ -159,8 +159,8 @@ module qkd_hr_native_qm_cdc #(
         $fatal(1, "qkd_hr_native_qm_cdc SRAM FIFOs: the 32 x 546 macro holds <= 32 entries of <= 546 b");
     wire         hx_nd;
     ot_link_afifo #(.W(1), .AW(HFA)) u_hx (
-        .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata(1'b0), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
-        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_nd), .rcount(hx_cnt));
+        .wclk(clk_h), .wrst_n(rb_h[1]), .wr(hv_q), .wdata(1'b0), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
+        .rclk(clk_i), .rrst_n(rb_i[2]), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_nd), .rcount(hx_cnt));
     // shadow binary pointers = u_hx wbin / rbin (same resets, push = wr && !wfull, pop = rd && !rempty)
     reg  [HFA:0] hx_wp, hx_rp;
     wire         hx_push = hv_q && !hx_full;
@@ -222,8 +222,8 @@ module qkd_hr_native_qm_cdc #(
         QKC_ENGINE_PARAMETER_BINDING_MISMATCH refuse();
     end endgenerate
     wire [16:0] eng_reset_a, eng_reset_b;
-    ot_host_reset_bank #(.N(17)) u_eng_reset_a (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(eng_reset_a));
-    ot_host_reset_bank #(.N(17)) u_eng_reset_b (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(eng_reset_b));
+    assign eng_reset_a = {17{rn_i}};
+    assign eng_reset_b = {17{rn_i}};
     wire take_p_a, take_p_b;
     qkc_ingest_take_copy u_take_a (.a(hv_i), .b(!f_any), .c(hcl==2'd2), .y(take_p_a));
     qkc_ingest_take_copy u_take_b (.a(hv_i), .b(!f_any), .c(hcl==2'd2), .y(take_p_b));
@@ -397,7 +397,7 @@ module qkd_hr_native_qm_cdc #(
 
     wire         ox_nd;
     ot_link_afifo #(.W(1), .AW(OFA)) u_ox (
-        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(1'b0), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .wclk(clk_i), .wrst_n(rb_i[1]), .wr(ox_wr), .wdata(1'b0), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_nd), .rcount(ox_cnt));
     reg  [OFA:0] ox_wp, ox_rp;
     wire         ox_push = ox_wr && !ox_full;
@@ -418,9 +418,16 @@ module qkd_hr_native_qm_cdc #(
         assign rx_full = 1'b0; assign rx_empty = 1'b1; assign rx_ovf = 1'b0; assign rx_freed = 0; assign rx_cnt = 0;
         assign rx_head = 256'd0;
     end endgenerate
-    ot_link_afifo #(.W(64), .AW(CFA), .RCOPY(24)) u_cx (
+    // ONE reviewed bank per domain; every allocated leaf has the original
+    // second-edge release and original asynchronous assertion. Mapped bank
+    // registers participate in primitive copying; no reset-role merger.
+    wire [63:0] cx_wreset={64{rn_i}};
+    wire [63:0] cx_rreset={64{rn_h}};
+    wire [63:0] cx_read_valid;
+    qkc_afifo_bits_1021 #(.W(64), .AW(CFA), .RESET_BUSES(1)) u_cx (
         .wclk(clk_i), .wrst_n(rn_i), .wr(cx_wr), .wdata(cx_w), .wfull(cx_full), .wfreed(cx_freed), .ovf(cx_ovf),
-        .rclk(clk_h), .rrst_n(rn_h), .rd(cx_pop), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt));
+        .rclk(clk_h), .rrst_n(rn_h), .rd(tcr != 0), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt),
+        .wrst_bits(cx_wreset), .rrst_bits(cx_rreset), .rd_valid(cx_read_valid));
 
     // =============================================================================================================
     // completion face (clk_h): host credits, pin flops
@@ -436,7 +443,11 @@ module qkd_hr_native_qm_cdc #(
             t_v <= cx_pop;
         end
     end
-    always @(posedge clk_h) if (cx_pop) t_d <= cx_head;     // data only, no reset (t_v is the valid)
+    // Local payload capture may precede coherent global availability; it is
+    // observable only when unchanged global cx_pop produces t_v.
+    for (genvar b=0; b<64; b=b+1) begin:g_cx_capture
+        always @(posedge clk_h) if (tcr != 0 && cx_read_valid[b]) t_d[b] <= cx_head[b];
+    end
 
     // =============================================================================================================
     // die face (ck): share CSR (toggle-qualified), pacer, credits, pin flops

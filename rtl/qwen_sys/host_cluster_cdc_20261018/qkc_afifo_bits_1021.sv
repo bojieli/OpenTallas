@@ -4,12 +4,13 @@
 module qkc_afifo_bits_1021 #(
     parameter integer W=64, AW=4, SYNC=2,
     parameter integer MUT_ROTATE=0,
-    parameter integer SKEW_SYNC=0, MUT_UNCOORD=0
+    parameter integer SKEW_SYNC=0, MUT_UNCOORD=0, RESET_BUSES=0
 )(
     input wire wclk,wrst_n,wr,
     input wire [W-1:0] wdata,
     output wire wfull,output wire [AW:0] wfreed,output wire ovf,
     input wire rclk,rrst_n,rd,
+    input wire [W-1:0] wrst_bits,rrst_bits,
     output wire rempty,output wire [W-1:0] rdata,output wire [W-1:0] rd_valid,output wire [AW:0] rcount
 );
     localparam integer LEAVES=1<<$clog2(W), CW=AW+2;
@@ -23,16 +24,16 @@ module qkc_afifo_bits_1021 #(
         // The release uses SYNC=2 on every original primitive.
         if(AW==4 && SYNC==2 && SKEW_SYNC==0)begin:g_fixed
         qkc_afifo_w1a4s2_1021 u_fifo(
-            .wclk(wclk),.wrst_n(wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
+            .wclk(wclk),.wrst_n(RESET_BUSES?wrst_bits[b]:wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
             .wfull(full_b[b]),.wfreed(freed_b[(AW+1)*b +: AW+1]),.ovf(ovf_b[b]),
-            .rclk(rclk),.rrst_n(rrst_n),.rd((MUT_UNCOORD!=0)?rd:all_pop),.rempty(empty_b[b]),
+            .rclk(rclk),.rrst_n(RESET_BUSES?rrst_bits[b]:rrst_n),.rd((MUT_UNCOORD!=0)?rd:all_pop),.rempty(empty_b[b]),
             .rdata(head[b]),.rcount(count_b[(AW+1)*b +: AW+1])
         );
         end else begin:g_generic
         ot_link_afifo #(.W(1),.AW(AW),.SYNC(SYNC+((SKEW_SYNC!=0)?b%2:0))) u_fifo(
-            .wclk(wclk),.wrst_n(wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
+            .wclk(wclk),.wrst_n(RESET_BUSES?wrst_bits[b]:wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
             .wfull(full_b[b]),.wfreed(freed_b[(AW+1)*b +: AW+1]),.ovf(ovf_b[b]),
-            .rclk(rclk),.rrst_n(rrst_n),.rd((MUT_UNCOORD!=0)?rd:all_pop),.rempty(empty_b[b]),
+            .rclk(rclk),.rrst_n(RESET_BUSES?rrst_bits[b]:rrst_n),.rd((MUT_UNCOORD!=0)?rd:all_pop),.rempty(empty_b[b]),
             .rdata(head[b]),.rcount(count_b[(AW+1)*b +: AW+1])
         );
         end

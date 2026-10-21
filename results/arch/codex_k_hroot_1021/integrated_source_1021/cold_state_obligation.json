@@ -1,0 +1,13 @@
+{
+ "qualified": false,
+ "record_sha256": "a91fdcfa74d16b1c6d3bc2cefe6861b1ea7e8481f8d8b3f05b1c4203c3105e87",
+ "copied_original_ff_drivers": {
+  "DFFHQNx1_ASAP7_75t_R": 425,
+  "DFFASRHQNx1_ASAP7_75t_R": 26
+ },
+ "additional_ff_replicas": {
+  "DFFHQNx1_ASAP7_75t_R": 481,
+  "DFFASRHQNx1_ASAP7_75t_R": 561
+ },
+ "remaining": "425 original unreset DFFHQN drivers yield481 extra independent states. Conditional pin correspondence alone does not prove cold/reset convergence. Admitted exact cell models and production-shape cold/occupied-reset paired standard equivalence remain required."
+}
