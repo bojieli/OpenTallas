@@ -207,9 +207,11 @@ module ot_s81sl_vs #(
     wire [3:0] gmask_after=!rs_eng?4'd0:(acc_cmd && c_op==OP_ENG && !c_ph)?4'd0:gv_c?(gmask | (4'b1<<gc_c)):gmask;
     wire [127:0] cmd_accept;
     wire [6:0] incoming_op={s_d[3:0]==OP_ENG,s_d[3:0]==OP_MOE,s_d[3:0]==OP_QR,s_d[3:0]==OP_RB,s_d[3:0]==OP_RA,s_d[3:0]==OP_QB,s_d[3:0]==OP_SW};
+    wire [1:0] stream_bad={(({5'd0,s_d[56:54]}+s_d[31:24]) > 8'd8),
+                         (s_d[24] || ({5'd0,s_d[56:54]}+{1'b0,s_d[31:25]}) > 8'd8)};
     genvar acr;
     generate for(acr=0;acr<4;acr=acr+1) begin:g_accept_region
-      ot_s81sl_vs_accept32 u_accept(.clk(clk),.rst_n(rsv[30+acr]),.packet(s_d),.incoming_op(incoming_op),.sv(s_v),.busy_after(busy_after),.gmask_after(gmask_after),.q(cmd_accept[32*acr+:32]));
+      ot_s81sl_vs_accept32 u_accept(.clk(clk),.rst_n(rsv[30+acr]),.packet(s_d),.incoming_op(incoming_op),.stream_bad(stream_bad),.sv(s_v),.busy_after(busy_after),.gmask_after(gmask_after),.q(cmd_accept[32*acr+:32]));
     end endgenerate
     (* keep="true" *) reg [3:0] regional_packet_op[0:19];
     integer cpr;
@@ -604,7 +606,7 @@ module ot_s81sl_vs #(
     generate for(hj=0;hj<4;hj=hj+1) begin:g_hcopy
       for(hp=0;hp<2;hp=hp+1) begin:g_parity
         wire [7:0] fill_b,add_b;
-        ot_s81sl_vs_bankctl8 #(.PARITY(hp),.COPY(hj)) u_ctl(.clk(clk),.rs(rsv[128+hj/2]),.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.ka_next(hka_n),.ov(ve_ov),.oc(ve_oc),.fill(fill_b),.add(add_b));
+        ot_s81sl_vs_bankctl8 #(.PARITY(hp),.COPY(hj)) u_ctl(.clk(clk),.rs(rsv[128+hj/2]),.qv(x_qv),.busy_next(hbusy_n),.op_next(hop_n),.ph_next(hph_n),.ka(region_ka_c[18+hj/2][23:16]),.arr(region_arr[18+hj/2]),.accept(cmd_accept[117]),.ov(ve_ov),.oc(ve_oc),.fill(fill_b),.add(add_b));
         wire we = fill_b[0] || add_b[0];
         wire [2:0] wa = fill_b[0] ? ka[3:1] : ko_e[2:0];
         wire [63:0] wd;
@@ -977,7 +979,7 @@ module ot_s81sl_vs_cmd8(input wire clk,accept,input wire[7:0]d,output reg[7:0]q)
   always @(posedge clk) if(accept) q<=d;
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_accept32(input wire clk,rst_n,sv,busy_after,input wire[159:0]packet,input wire[6:0]incoming_op,input wire[3:0]gmask_after,output wire[31:0]q);
+module ot_s81sl_vs_accept32(input wire clk,rst_n,sv,busy_after,input wire[159:0]packet,input wire[6:0]incoming_op,input wire[1:0]stream_bad,input wire[3:0]gmask_after,output wire[31:0]q);
     wire [159:0] sd_c=packet;
     wire [3:0] gmask=gmask_after;
     wire is_qb=incoming_op[1];
@@ -999,8 +1001,7 @@ module ot_s81sl_vs_accept32(input wire clk,rst_n,sv,busy_after,input wire[159:0]
                   !incoming_op[6]) ||
                  (incoming_op[6] && (c_ph ? (c_n != 8'd32 || gmask != 4'hF) : c_n != 8'd64)) ||
                  (c_n == 8'd0) || (incoming_op[0] && c_n > 8'd16) || (incoming_op[5] && c_n != 8'd8) ||
-                 (incoming_op[0] && c_imm[11] && (c_n[0] || ({5'd0,c_j0}+{1'b0,c_n[7:1]}) > 8'd8)) ||
-                 (is_qb && ({5'd0,c_j0}+c_n) > 8'd8);
+                 (incoming_op[0] && c_imm[11] && stream_bad[0]) || (is_qb && stream_bad[1]);
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_vs_pending #(parameter integer N=16)(input wire clk,rs,arr,input wire[3:0]op,input wire ph,input wire[7:0]ka,output wire[N-1:0]q);
@@ -1019,8 +1020,9 @@ module ot_s81sl_vs_swweight8 #(parameter integer BYTE=0,MUT=0)(input wire clk,in
   always @(posedge clk) q<=MUT==1?MUT_WEIGHT[8*BYTE+:8]:(kg >= 8'd8 ? w1 : w0);
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_s81sl_vs_bankctl8 #(parameter integer PARITY=0,COPY=0)(input wire clk,rs,qv,busy_next,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka_next,input wire ov,input wire[1:0]oc,output wire[7:0]fill,add);
+module ot_s81sl_vs_bankctl8 #(parameter integer PARITY=0,COPY=0)(input wire clk,rs,qv,busy_next,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka,input wire arr,accept,input wire ov,input wire[1:0]oc,output wire[7:0]fill,add);
   (* keep="true" *) reg [7:0] f,a;
+  wire[7:0] ka_next=(!rs || accept)?8'd0:ka+{7'd0,arr};
   always @(posedge clk) begin
     f<={8{rs && qv && busy_next && op_next==4'd14 && !ph_next && ka_next<8'd16 && ka_next[0]==PARITY}};
     a<={8{rs && ov && op_next==4'd14 && ph_next && oc==COPY}};
