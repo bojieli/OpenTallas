@@ -1,0 +1,275 @@
+{
+ "name": "qfd_dv_s5_xhead3b",
+ "top": "qfd_dv_s5_xhead3",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 518.4,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pins": {
+  "N": [
+   "n_d",
+   "cid",
+   "ck",
+   "rst_n",
+   "l_rst_n",
+   "fault",
+   "s_d"
+  ],
+  "E": [
+   "fault_i",
+   "a_d"
+  ],
+  "W": [
+   "lc_v",
+   "lc_ep",
+   "lw_v",
+   "lw_ep",
+   "lw_off",
+   "lw_ctl",
+   "lw_m",
+   "lw_d"
+  ],
+  "S": [
+   "lr_v",
+   "lr_t",
+   "lr_ep",
+   "lr_p",
+   "lq_v",
+   "lq_bad",
+   "lq"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input at its pin (stage P) and drives every output from a flop; flow pin registers would add unpriced cycles"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in ot_rst_relay (2 sync stages + 12 kept regional relay copies)"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "period_ps": 833.333,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "fill_reason": {
+  "pin_bound": "5,726 signal pins (a_d 1,567 E, lw 2,340 W, corridor 1,032 N, leaf read 776 S) set the outline; logic ~12k flops"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: every input lands in a pin flop (stage P: p_g/p_ib/p_f/p_foff x3, cid_q, lqp/lqvp/lqbp, fi_q); every output is a flop Q (lw/lc kept per-chain regs, lr0_*, n_q/s_q with the retag moved before them, fault_r, l_rst_n = relay copy); rst_n -> ot_rst_relay 2 sync + 1 kept relay stage",
+  "2_reach": "PASS: 259.2 x 518.4 tile, every hop < 405 um",
+  "3_fanout": "PASS (mapped census): native census PASS 0 drivers > 32 (max 32, was 75 / 2,585), rst_n 14 sinks (ot_rst_relay), 12,136 flops, 6,174 um2 mapped; depth 408.4 ps / 12 levels; kept register copies, no buffer trees",
+  "4_depth": "PASS (mapped textbook depth): see census; no adder after adder in one stage, registered one-hot selects",
+  "5_storage": "PASS: largest indexed arrays: windows e_W[2][16] x 18 + e_lo[2][16] x 6 = 768 b, epoch fields 2 x 71 b: < 2 kb",
+  "6_floorplan": "pin-bound leaf (no macros, full std-cell area): pins spread over whole faces by pin_ranges ({'N': 4.16, 'E': 3.08, 'W': 4.59, 'S': 3.1} pins/um); aspect 2.0:1",
+  "7_clock": "one centre-fed TritonCTS root (~12k sinks, one region); io_hold_margin 0.03",
+  "8_schedule": "+1 edge on every a_d path (fill -> leaf write, go/ib -> corridor DX 14 -> 15, read request issue), +1 reset release (3 edges incl. l_rst_n); lq answers and fault_i -> fault latency unchanged; all intra-column relative timing (FILL_LEAD 5, QD 8, TDM) unchanged; throughput unchanged (a go every >= 8 k tiles edges as before)"
+ },
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:QW-S5-XHEAD",
+  "branch": "claude/qw-s5-xhead-1021",
+  "tag": "xh3b",
+  "purpose": "QW-S5-XHEAD parallel fallback of qfd_dv_s5_xhead3: 259.2 x 518.4 (+44% area), lower pin density",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+   "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+   "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+   "rtl/test/qwen_dv/s5/xhead3",
+   "results/arch/qw_s5_xhead_1021"
+  ],
+  "benches": [
+   {
+    "name": "xh3_eq",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead3/run.sh {RUN}/xh3_eq pass",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "S5_XH3_EQ ALL PASS"
+   },
+   {
+    "name": "xh3_mut_retag",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead3/run.sh {RUN}/xh3_mut_retag retag",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_XH3_EQ FAIL",
+    "fail_witness": "results/arch/qw_s5_xhead_1021/witness/mut_retag.log"
+   },
+   {
+    "name": "xh3_mut_rot",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead3/run.sh {RUN}/xh3_mut_rot rot",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_XH3_EQ FAIL",
+    "fail_witness": "results/arch/qw_s5_xhead_1021/witness/mut_rot.log"
+   },
+   {
+    "name": "xh3_mut_poolw",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead3/run.sh {RUN}/xh3_mut_poolw poolw",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_XH3_EQ FAIL",
+    "fail_witness": "results/arch/qw_s5_xhead_1021/witness/mut_poolw.log"
+   },
+   {
+    "name": "xh3_mut_fwd",
+    "cmd": "bash rtl/test/qwen_dv/s5/xhead3/run.sh {RUN}/xh3_mut_fwd fwd",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_XH3_EQ FAIL",
+    "fail_witness": "results/arch/qw_s5_xhead_1021/witness/mut_fwd.log"
+   }
+  ]
+ },
+ "structural_change": "fallback: 259.2 x 518.4 (W 4.6 / N 4.2 pins/um vs 5.5 / 5.0) for pin access and placement room",
+ "pin_ranges": {
+  "n_d": [
+   4.32,
+   125.811
+  ],
+  "cid": [
+   126.061,
+   127.227
+  ],
+  "ck": [
+   127.477,
+   128.642
+  ],
+  "rst_n": [
+   128.892,
+   130.058
+  ],
+  "l_rst_n": [
+   130.308,
+   131.473
+  ],
+  "fault": [
+   131.723,
+   132.889
+  ],
+  "s_d": [
+   133.139,
+   254.63
+  ],
+  "fault_i": [
+   4.32,
+   6.014
+  ],
+  "a_d": [
+   6.264,
+   513.83
+  ],
+  "lc_v": [
+   4.32,
+   5.368
+  ],
+  "lc_ep": [
+   5.618,
+   6.666
+  ],
+  "lw_v": [
+   6.916,
+   7.965
+  ],
+  "lw_ep": [
+   8.215,
+   9.263
+  ],
+  "lw_off": [
+   9.513,
+   11.859
+  ],
+  "lw_ctl": [
+   12.109,
+   43.016
+  ],
+  "lw_m": [
+   43.266,
+   70.711
+  ],
+  "lw_d": [
+   70.961,
+   513.83
+  ],
+  "lr_v": [
+   4.32,
+   6.653
+  ],
+  "lr_t": [
+   6.903,
+   9.236
+  ],
+  "lr_ep": [
+   9.486,
+   11.819
+  ],
+  "lr_p": [
+   12.069,
+   84.146
+  ],
+  "lq_v": [
+   84.396,
+   86.729
+  ],
+  "lq_bad": [
+   86.979,
+   89.312
+  ],
+  "lq": [
+   89.562,
+   254.63
+  ]
+ }
+}

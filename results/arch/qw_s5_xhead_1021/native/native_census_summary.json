@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "liberty": [
+  {
+   "path": "out/nat/cells.lib",
+   "sha256": "a6b168919a54be4540109ae6bea1c41070e9b57ea286872a74531f13d6d4cc36"
+  }
+ ],
+ "netlist": {
+  "path": "out/nat/mapped.v",
+  "sha256": "9cffb6d0373387e821730eeaaabad709e8a94294867ae732a664fca7e2fecfbe"
+ },
+ "top": "qfd_dv_s5_xhead3",
+ "status": "PASS",
+ "limit": 32,
+ "roots_examined": 40878,
+ "max_dynamic_loads": 32,
+ "constant_output_bits": [
+  {
+   "port_bit": "n_d[510]",
+   "source": {
+    "kind": "literal",
+    "net": "1'0"
+   },
+   "transparent_path": []
+  },
+  {
+   "port_bit": "s_d[514]",
+   "source": {
+    "kind": "literal",
+    "net": "1'0"
+   },
+   "transparent_path": []
+  }
+ ],
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true,
+ "role_errors": [],
+ "violations": [],
+ "driver_counts_note": "dropped (13 MB); max_dynamic_loads/violations retained"
+}
