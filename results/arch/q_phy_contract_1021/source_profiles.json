@@ -224,5 +224,85 @@
       "ot_qfd_ucie_x64_phy_tt.lib": "083e34158c1b8a6f65727075994fb51e3a803f2326a3ec0322529498b37655f9",
       "ot_qfd_ucie_x64_phy_model.sv": "e14e655ed48b14e596823a6298a91cf4f94b7c81edf843b64b25e1b97060c010"
     }
+  },
+  {
+    "source": "physical/qwen_missing_phy/nface_0030/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+    "sha256": "76a5022bc0a259de84c70856568d9e836a79a0d7d42eb2a0b358099de4ebfd66",
+    "size_um": [
+      2320.056,
+      1563.57
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pins": {
+      "pin_block_x_um": [
+        1131.252,
+        1188.804
+      ],
+      "pin_edge": "top (core-facing)",
+      "pin_layer": "M5",
+      "pin_pitch_um": 0.048,
+      "signal_pins": 1199
+    },
+    "derived_from": "ot_qfd_serdes_112g_x12_phy tp8_1013 revision: same footprint, latency, timing; FDI block on the top edge",
+    "clock_ghz": 1.0,
+    "fdi": {
+      "clock_ghz": 1.0,
+      "flit_bits": 597,
+      "latency_fdi_cycles_one_way": 223,
+      "payload_bits": 1024,
+      "rx_buffer_flits": 512
+    },
+    "bundle_hashes": {
+      "ot_qfd_serdes_112g_x12_phy_s597_tt.lib": "b32b5383483b0bb6b0c825f50697f179731d7b27863d7f010c35ce04b0388c2e",
+      "ot_qfd_serdes_112g_x12_phy_s597.json": "e34fb889a690a600f445e3be5d55876861820dcdadbdf7535fbf6e597455b150",
+      "ot_qfd_serdes_112g_x12_phy_s597_model.sv": "0cd793f260b3ef9e91ea42cd7b6883e5e7571d5a9797b8e9aab30ff98fd4201e",
+      "ot_qfd_serdes_112g_x12_phy_s597_ss.lib": "d158a374117fbfb87ba4e465d9a59d95a2ab3a2dc53e29e16469aac40852bea5",
+      "ot_qfd_serdes_112g_x12_phy_s597_bb.v": "e06197be1fbf7f7c815f1115d393db1aed7674d07e0dd72adce6324bb593cf7e",
+      "ot_qfd_serdes_112g_x12_phy_s597_ff.lib": "68c07a17b74bccb67b1f2f77403ada6846b28ad96d8e46193c462442e4c396b2",
+      "ot_qfd_serdes_112g_x12_phy_s597.lef": "76a5022bc0a259de84c70856568d9e836a79a0d7d42eb2a0b358099de4ebfd66"
+    }
+  },
+  {
+    "source": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+    "sha256": "4c62ffde575d234fef5ab6dde33f09b3ddda9f9ab8d7cc7501f5a60e75c4cc55",
+    "size_um": [
+      1563.57,
+      2320.056
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pins": {
+      "pin_block_x_um": [
+        753.006,
+        810.558
+      ],
+      "pin_edge": "top (core-facing)",
+      "pin_layer": "M5",
+      "pin_pitch_um": 0.048,
+      "signal_pins": 1199
+    },
+    "derived_from": "ot_qfd_serdes_112g_x12_phy tp8_1013 revision: same latency, timing; FDI block on the top edge; TALL edge variant (long side vertical), modeled PHY",
+    "clock_ghz": 1.0,
+    "fdi": {
+      "clock_ghz": 1.0,
+      "flit_bits": 597,
+      "latency_fdi_cycles_one_way": 223,
+      "payload_bits": 1024,
+      "rx_buffer_flits": 512
+    },
+    "bundle_hashes": {
+      "ot_qfd_serdes_112g_x12_phy_s597_tt.lib": "b32b5383483b0bb6b0c825f50697f179731d7b27863d7f010c35ce04b0388c2e",
+      "ot_qfd_serdes_112g_x12_phy_s597.json": "56f67bdf1982b6efcc99c48fce8082bad7d86fcc142bb2691989ffeb6fea04c8",
+      "ot_qfd_serdes_112g_x12_phy_s597_model.sv": "0cd793f260b3ef9e91ea42cd7b6883e5e7571d5a9797b8e9aab30ff98fd4201e",
+      "ot_qfd_serdes_112g_x12_phy_s597_ss.lib": "d158a374117fbfb87ba4e465d9a59d95a2ab3a2dc53e29e16469aac40852bea5",
+      "ot_qfd_serdes_112g_x12_phy_s597_bb.v": "e06197be1fbf7f7c815f1115d393db1aed7674d07e0dd72adce6324bb593cf7e",
+      "ot_qfd_serdes_112g_x12_phy_s597_ff.lib": "68c07a17b74bccb67b1f2f77403ada6846b28ad96d8e46193c462442e4c396b2",
+      "ot_qfd_serdes_112g_x12_phy_s597.lef": "4c62ffde575d234fef5ab6dde33f09b3ddda9f9ab8d7cc7501f5a60e75c4cc55"
+    }
   }
 ]
