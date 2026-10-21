@@ -157,12 +157,12 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   ot_hbm_svc_local_and2 u_fire(.a(fire),.b(1'b1),.y(fire_valid_local[vg]));
  end
  // next valid (allocate at fire, free at the last beat)
- reg [ENTRIES-1:0] valid_n;integer e;
+ reg [ENTRIES-1:0] valid_n;integer e,ve;
  always @*begin
   valid_n=valid_q;
-  for(e=0;e<ENTRIES;e=e+1)begin
-   if(fire_valid_local[e/8]&&alloc==e)valid_n[e]=1;
-   if(ret_done_local[e/8]&&ret==e)valid_n[e]=0;
+  for(ve=0;ve<ENTRIES;ve=ve+1)begin
+   if(fire_valid_local[ve/8]&&alloc==ve)valid_n[ve]=1;
+   if(ret_done_local[ve/8]&&ret==ve)valid_n[ve]=0;
   end
  end
  // rst_n[0]: ticket / sticky / issuing (19); rst_n[1]: valid (32); rst_n[2]: !valid copy a (32)
