@@ -1,0 +1,229 @@
+{
+  "status": "PARTIAL_PLANNED_PIN_MODEL_NOT_CLOSED",
+  "source": {
+    "endpoint_spec": "physical/ref_tile/s81sl_lepab_r2a/spec.json",
+    "lane_spec": "f5bcbdfbe:physical/ref_tile/dscoll_lane_w_s12g/spec.json",
+    "note": "No aliases of physical views"
+  },
+  "reserve": [
+    2592,
+    2592
+  ],
+  "endpoint": {
+    "x": 786.24,
+    "y": 345.6,
+    "w": 561.6,
+    "h": 1900.8,
+    "orientation": "R0"
+  },
+  "lane_to_core_gap_um": 17.28,
+  "method": "Every corner of each full declared base-port window, stronger than one-to-one bit pairing; MX transforms lane Eface; all rectangles have >=2.16um separation. Actual closed LEF pins, PG, access, congestion and CTS remain authoritative.",
+  "lanes": [
+    {
+      "lane": 0,
+      "x": 43.2,
+      "y": 127.44,
+      "w": 725.76,
+      "h": 583.2,
+      "orientation": "MX",
+      "y_feasible": [
+        126.72,
+        341.28
+      ],
+      "max_hop_um": 404.28,
+      "ports": [
+        {
+          "core_port": "lo0_d",
+          "lane_port": "li_d",
+          "max_window_to_window_um": 404.28
+        },
+        {
+          "core_port": "lo0_v",
+          "lane_port": "li_v",
+          "max_window_to_window_um": 134.04
+        },
+        {
+          "core_port": "lo0_r",
+          "lane_port": "li_r",
+          "max_window_to_window_um": 139.2
+        },
+        {
+          "core_port": "li0_d",
+          "lane_port": "lo_d",
+          "max_window_to_window_um": 266.56
+        },
+        {
+          "core_port": "li0_v",
+          "lane_port": "lo_v",
+          "max_window_to_window_um": 115.8
+        },
+        {
+          "core_port": "li0_r",
+          "lane_port": "lo_r",
+          "max_window_to_window_um": 120.96
+        },
+        {
+          "core_port": "l0_f",
+          "lane_port": "flt",
+          "max_window_to_window_um": 150.6
+        }
+      ]
+    },
+    {
+      "lane": 1,
+      "x": 43.2,
+      "y": 747.36,
+      "w": 725.76,
+      "h": 583.2,
+      "orientation": "MX",
+      "y_feasible": [
+        746.72,
+        961.28
+      ],
+      "max_hop_um": 404.36,
+      "ports": [
+        {
+          "core_port": "lo1_d",
+          "lane_port": "li_d",
+          "max_window_to_window_um": 404.36
+        },
+        {
+          "core_port": "lo1_v",
+          "lane_port": "li_v",
+          "max_window_to_window_um": 134.12
+        },
+        {
+          "core_port": "lo1_r",
+          "lane_port": "li_r",
+          "max_window_to_window_um": 139.28
+        },
+        {
+          "core_port": "li1_d",
+          "lane_port": "lo_d",
+          "max_window_to_window_um": 266.64
+        },
+        {
+          "core_port": "li1_v",
+          "lane_port": "lo_v",
+          "max_window_to_window_um": 115.88
+        },
+        {
+          "core_port": "li1_r",
+          "lane_port": "lo_r",
+          "max_window_to_window_um": 121.04
+        },
+        {
+          "core_port": "l1_f",
+          "lane_port": "flt",
+          "max_window_to_window_um": 150.68
+        }
+      ]
+    },
+    {
+      "lane": 2,
+      "x": 43.2,
+      "y": 1332.72,
+      "w": 725.76,
+      "h": 583.2,
+      "orientation": "MX",
+      "y_feasible": [
+        1126.72,
+        1341.28
+      ],
+      "max_hop_um": 396.44,
+      "ports": [
+        {
+          "core_port": "lo2_d",
+          "lane_port": "li_d",
+          "max_window_to_window_um": 250.08
+        },
+        {
+          "core_port": "lo2_v",
+          "lane_port": "li_v",
+          "max_window_to_window_um": 109.88
+        },
+        {
+          "core_port": "lo2_r",
+          "lane_port": "li_r",
+          "max_window_to_window_um": 104.72
+        },
+        {
+          "core_port": "li2_d",
+          "lane_port": "lo_d",
+          "max_window_to_window_um": 396.44
+        },
+        {
+          "core_port": "li2_v",
+          "lane_port": "lo_v",
+          "max_window_to_window_um": 128.12
+        },
+        {
+          "core_port": "li2_r",
+          "lane_port": "lo_r",
+          "max_window_to_window_um": 122.96
+        },
+        {
+          "core_port": "l2_f",
+          "lane_port": "flt",
+          "max_window_to_window_um": 98.48
+        }
+      ]
+    },
+    {
+      "lane": 3,
+      "x": 43.2,
+      "y": 1918.08,
+      "w": 725.76,
+      "h": 583.2,
+      "orientation": "MX",
+      "y_feasible": [
+        1711.72,
+        1926.28
+      ],
+      "max_hop_um": 396.8,
+      "ports": [
+        {
+          "core_port": "lo3_d",
+          "lane_port": "li_d",
+          "max_window_to_window_um": 205.44
+        },
+        {
+          "core_port": "lo3_v",
+          "lane_port": "li_v",
+          "max_window_to_window_um": 110.24
+        },
+        {
+          "core_port": "lo3_r",
+          "lane_port": "li_r",
+          "max_window_to_window_um": 105.08
+        },
+        {
+          "core_port": "li3_d",
+          "lane_port": "lo_d",
+          "max_window_to_window_um": 396.8
+        },
+        {
+          "core_port": "li3_v",
+          "lane_port": "lo_v",
+          "max_window_to_window_um": 128.48
+        },
+        {
+          "core_port": "li3_r",
+          "lane_port": "lo_r",
+          "max_window_to_window_um": 123.32
+        },
+        {
+          "core_port": "l3_f",
+          "lane_port": "flt",
+          "max_window_to_window_um": 98.84
+        }
+      ]
+    }
+  ],
+  "max_data_control_window_hop_um": 404.36,
+  "excluded_owed": [
+    "rxv/rxvb startup-enable flops reach opposite W lane RX[0] face (>725um), requires real source disposition",
+    "actual ML E2/land placement bound ecdd507d1 must be instantiated and reprojected",
+    "actual macro routing/channel/clock closure; this pin model does not qualify physical fit"
+  ]
+}
