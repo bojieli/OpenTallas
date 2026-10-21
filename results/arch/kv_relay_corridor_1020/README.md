@@ -88,3 +88,45 @@ fleet admission process did not retain stdin. No result directory or job was
 created. The actual launches above carry the script as a quoted bash argument;
 worktree creation and running source were verified. No failed design verdict
 was overwritten or rerun by this setup correction.
+
+## Resumed 22:40 takeover: A/B failures and concrete corrections
+
+Both original c641da67d trials are terminal PREP FAIL, preserved unchanged.
+A ultimately failed attention TX payload relay stage2 with460um remaining;
+its first failed placement attempt is captured in A_endpoint_failure.json
+(stage3,380um remaining). B failed the final actual pin-hop check:
+`rly_ks_pvst__f0_3.b -> pvw_1.st` spans12945um, before equalization.
+No GRT, timing, IR or strict-die PASS resulted from either run.
+
+The A snapshot demonstrates genuine legal sites between the existing HOST
+record relay frames, around x6627..6633 and y27227..27238. The existing fine
+fallback perturbs Y alone, so its X grid misses the narrow gap. Source5465e3357
+adds default-off OT_KV_RLY_FINE_XY=1; all GX/GY, halo, predecessor and farthest
+bit checks remain active. endpoint_xy_regression.py executes the source's
+actual nested _spot AST and actual refinement AST on the captured occupancy:
+legacyY-only refuses; XY accepts6630.336,27239.76 with185.770um predecessor
+and287.256um farthest-view-bit distance. Moving the predecessor out of reach
+still refuses. Original snapshot and log are committed.
+
+Sourcee0dc985f1 additionally adds default-off OT_KV_PV_CONTROL_PIN=1.
+The PV control inputs use canonical N-face positions from the existing PV
+plan, transformed by the actual instance orientation before first-pass
+routing. pvw_1 is MX, putting st on its SOUTH end; the previous first pass
+aimed at the nearest frame edge and left the12.945mm terminal wire when
+later full replans failed elsewhere. No drawn pin, port, leaf RTL or reach
+check changes. Actual resulting relay stages must be recompiled and priced.
+
+mechanism_check_final.log (ep6unit809610-1792561918, session10135):
+- PV st hints match actual masters()/pin_xy() positions: pvw_0 R0
+  (6575.136,12065.736), pvw_1 MX(6575.136,13171.680). The projection explicitly
+  supplies the two existing start-fork endpoint edges because this hook runs
+  before the relay pass has installed its fork buses in m['buses'].
+- With both optional fixes enabled, the actual A relay planner completes the
+  attention TX chain in3stages, last output6675.696,27280.8 and farthest
+  realized D2D view bit287.286um (<=340). It stops immediately after that
+  chain; this is a mechanism proof, not a full-plan or strict-bind PASS.
+
+No duplicate full chain was launched while paused d24pa/b/c and CTL11 portrait
+preps progressed. The next integrated source must take the die owner's
+actual source-direction/clock qualification fixes before another strict trial.
+Unbound dual-clock PC roots and other GEN failures remain explicit HOLDs.

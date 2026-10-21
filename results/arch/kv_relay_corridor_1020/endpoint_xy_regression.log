@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-epyc6       admits   188 GB (avail 245, growth 113, headroom 0, waiters 0/0 GB) load 90/128 running 49 disk 1890 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-768671-1792561679 after 0 s
+LEGACY_Y_ONLY_EXPECTED_FAIL
+{"XY": "PASS", "x": 6630.336, "y": 27239.760000000002, "path_index": 20, "previous_um": 185.77000000000135, "farthest_pin_um": 287.2559999999967}
+UNREACHABLE_PREDECESSOR_EXPECTED_FAIL
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-768671-1792561679): exit 0
