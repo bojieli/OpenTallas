@@ -38,7 +38,7 @@ Replaces: s81sl_xgxo / s81sl_xgxo_b (FAILED: control net 4,050 loads, reset 2,51
   one registered hop (input flop -> output flop, 0 added edges, as the original xg slot 648 um) over 648 um > 405 um planning
   reach (measured repeated reach 600-750 um; route period 0.77 ns); the --cts gate times it.  If that reg->reg path fails, the
   successor adds the rs-style RELAY (+1 edge per ring stop, priced in MU.S81.CAL as xg5 did), not a squeeze.
-3 Fanout: PASS -- mapped native census (tools/ref_tile/native_census.py origin/main, ORFS keep-regs hook, TT RVT) of the whole
+3 Fanout: FIXED -- first full-top census (my census.sh, r1) FAIL max 72: BF arrival-line decode in xs4 g_bl (shared AND3 par/bu, 72 loads x 4 groups) + calendar due act (39). Fix: 2 kept ot_s81sl_xs4_bdec predecodes per group (SYNTH_KEEP_MODULES) + kept act_g copy for the age update; value-preserving, benches re-PASS. Mapped native census (tools/ref_tile/native_census.py origin/main, ORFS keep-regs hook, TT RVT) of the whole
   top: full-top census running at gate time (pre_route_gate refuses the floorplan on any driver > 32) and in results/rtl/s81_xgtxo_1021/scripts/census.sh (ot-epyc5, pending_results); parents: rstopt_xo PASS below, xs4 PASS in the xg5 lineage after XG5d.  rstopt_xo alone: PASS max 32, 0 drivers > 32, rst_n 10 loads, 6,899 um2 (rstopt 6,848).  Kept copies survive (keep regs hook; xs4 helper modules
   non-parameterised and in SYNTH_KEEP_MODULES so no paramod rename).
   Full-top census round 1 (@6aac44322, ep5 c_xgtxo.log): FAIL max 72, 5 drivers > 32 (4 x 72 = shared AND3 BF arrival-line

@@ -56,5 +56,5 @@ RSTOP_XO R2 egress 40 gather min 40 other_out 100
 FAIL rstop_xo 89 of 138 checks
 - /srv/opentallas-scratch/claude/s81-xgtxo-1021/bench/rstopt_xo/tb_s81sl_rstop_xo_txo_tiercol.sv:215: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 7us; walltime 5.365 s; speed 1.232 us/s
-- Verilator: cpu 5.363 s on 1 threads; allocated 11 MB
+- Verilator: $finish at 7us; walltime 5.941 s; speed 1.112 us/s
+- Verilator: cpu 5.936 s on 1 threads; allocated 11 MB
