@@ -39,6 +39,12 @@ P4G = False                       # p4g (10-17, coordinator 0cw+ (3)): the 8500 
                                   # 2-PC controllers on the PHY face + explicit registered svc <-> controller links
 CTRL_N, CTRL_H = 16, 250.0        # p4g: 16 x (531.25 x 250 um, 2.1:1), same 2.125 mm2 as the strip
 CTRL_VIEW_W = None               # opt-in actual closed/prospective controller body, centered in unchanged PHY pitch
+BKCOL_VIEW = None                 # --bkcol-view-size W H (S81-DIESTA-BKCOL 10-20, p4l MU tier plan; None = byte-identical): the
+                                  # bk_col unit is the closed dsdv_bk_col BODY (W x H) hugging s_1S, not a 680 x 4179 area slot;
+                                  # its tier lanes end on the view's real pin faces (BKCOL_PINS) and the void rungs re-derive
+                                  # (relays at <= HOP_UM on the long s_1N rung instead of a 4-mm in-slot jump)
+BKCOL_PINS = {'vi_s': 475.05, 'vo_s': 560.95, 'vi_n': 500.35, 'vo_n': 581.2}   # x centroid of each 276-b bus on its face,
+                                  # closed view 12c132d60:physical/ref_tile/s81dvbk_colv/views/dsdv_bk_col.lef (673.92 x 648)
 PC_RQ, PC_RD, PC_DFI = 341, 280, 695   # per pseudo-channel: rq {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v};
                                   # rd {data 256, tag 17, beat 4, v} + rk + wd; PHY DFI 22,238 / 32 ~ 695 (dsfd_ctrl.sv)
 P4H = False                       # p4h (10-17, coordinator COORD ~11:15): the two service halves -> 16 REGIONAL service slices, one
@@ -852,6 +858,8 @@ def build():
           for j, (nm, master, h) in enumerate(us):
               wu = UNIT_WE if c in (0, NCOL - 1) else UNIT_W    # end columns leave room to the ring end link
               hh = h * (980.0 if c not in (0, NCOL - 1) else 680.0) / wu   # keep the unit area at the narrower width
+              if nm == 'bk_col' and BKCOL_VIEW is not None:
+                  wu, hh = BKCOL_VIEW      # the closed body itself (y stays the S-hugging slot origin)
               yy = y if y is not None else (lo_ if j == 0 else hi_ - hh)
               if y is not None and tier.get(nm) == 'N' and len(us) == 1:
                   yy = hi_ - hh
@@ -907,9 +915,21 @@ def build():
                 U, V = P.blocks[P.idx[u]], P.blocks[P.idx[v]]
                 y0, y1 = U['y'] + U['h'], V['y']
                 tq = 15 if P4F else 12     # p4f: the two tier lanes 30 um apart (street / column lane pitch)
-                P.link(f'tvN_{u}', 'xtier', TIER_W, (u, 'vN', (x - tq, y0)), (v, 'vS', (x - tq, y1)), [(x - tq, y0), (x - tq, y1)], 'per-column tier exchange (through the column units)')
-                P.link(f'tvS_{v}', 'xtier', TIER_W, (v, 'vS', (x + tq, y1)), (u, 'vN', (x + tq, y0)), [(x + tq, y1), (x + tq, y0)], 'per-column tier exchange (through the column units)')
+                xn, xs = x - tq, x + tq
+                if BKCOL_VIEW is not None and 'bk_col' in (u, v):
+                    # --bkcol-view-size: each lane runs straight at its bus's real pin centroid on the bk_col face
+                    # (N face: vo_n -> tvN, vi_n <- tvS; S face: vi_s <- tvN, vo_s -> tvS)
+                    B = P.blocks[P.idx['bk_col']]
+                    xn, xs = ((B['x'] + BKCOL_PINS['vo_n'], B['x'] + BKCOL_PINS['vi_n']) if u == 'bk_col'
+                              else (B['x'] + BKCOL_PINS['vi_s'], B['x'] + BKCOL_PINS['vo_s']))
+                P.link(f'tvN_{u}', 'xtier', TIER_W, (u, 'vN', (xn, y0)), (v, 'vS', (xn, y1)), [(xn, y0), (xn, y1)], 'per-column tier exchange (through the column units)')
+                P.link(f'tvS_{v}', 'xtier', TIER_W, (v, 'vS', (xs, y1)), (u, 'vN', (xs, y0)), [(xs, y1), (xs, y0)], 'per-column tier exchange (through the column units)')
         facts['tier_w'] = TIER_W
+        if BKCOL_VIEW is not None:
+            B = P.blocks[P.idx['bk_col']]
+            facts['bkcol_view'] = dict(um=list(BKCOL_VIEW), xy=[round(B['x'], 3), round(B['y'], 3)], pins_x=BKCOL_PINS,
+                                       view='12c132d60:physical/ref_tile/s81dvbk_colv/views/dsdv_bk_col.lef',
+                                       why='S81-DIESTA-BKCOL: lane end points on the closed body faces (mu7v2 hop-0 moved 3,988.8 um)')
     elif LAYOUT == 'p4':
         # p4b: the end-column vertical ring segment runs THROUGH the collective edge engines (ring stops):
         # s_cS V -> coll_xS -> coll_xN -> s_cN V and back; the engines fold / inject collective traffic on it
@@ -1453,6 +1473,7 @@ def main():
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
     ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped (0 default, byte-identical)')
     ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='MODEL ONLY: actual controller body centered in each unchanged 531.25-um PHY pitch; rederive reader/service rows and all links')
+    ap.add_argument('--bkcol-view-size', nargs=2, type=float, metavar=('W', 'H'), help='S81-DIESTA-BKCOL (p4l MU): bk_col = the closed dsdv_bk_col body (673.92 648) hugging s_1S; tier lanes end on its real pin faces and re-derive their relays (absent = byte-identical)')
     ap.add_argument('--rsv-vcol', type=int, default=0, help='S81-DIE11 mu7 (p4l MU): add K x 43.2-um lattice columns to every svc_rs column gap (V die channels)')
     ap.add_argument('--array-y-shift', type=float, default=0.0, help='MODEL ONLY: move the array/street origins north, retaining die outline and the 250-um north frame guard')
     ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
@@ -1467,6 +1488,11 @@ def main():
         assert a.p4l and a.mu, '--ctrl-view-size needs --p4l --mu'
         CTRL_VIEW_W, CTRL_H = a.ctrl_view_size
         assert CTRL_VIEW_W > 0 and CTRL_H > 0, '--ctrl-view-size must be positive'
+    global BKCOL_VIEW
+    if a.bkcol_view_size:
+        assert a.p4l and a.mu and a.tier_w, '--bkcol-view-size needs --p4l --mu --tier-w'
+        assert tuple(a.bkcol_view_size) == (673.92, 648.0), 'BKCOL_PINS are the 12c132d60 dsdv_bk_col view (673.92 x 648) faces'
+        BKCOL_VIEW = tuple(a.bkcol_view_size)
     assert a.array_y_shift >= 0, '--array-y-shift must be nonnegative'
     BAND += a.array_y_shift
     global ROW0_MX, TIER_W, LANES, P4F
