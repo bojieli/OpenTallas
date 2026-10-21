@@ -1,0 +1,9 @@
+TAP_GRACE_COLD_NEGATIVE D8 raw_binary_aliases_differ_before_capture
+TAP_GRACE_COLD_NEGATIVE D4 raw_binary_aliases_differ_before_capture
+TAP_GRACE_PASS D4 K2 independent_binary_coldcopies full1567 actual_n32_split writer_reader checks100 resetclears27 firstvalid29
+TAP_GRACE_PASS D8 K4 independent_binary_coldcopies full1567 actual_n32_split writer_reader checks98 resetclears27 firstvalid31
+TAP_COPY_GRACE_BOTH_PASS conditional_existing_parent_reset_only
+- rtl/test/qwen_dv/s8/tb_tap_copy_grace.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.005 s; speed 255.234 us/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 8 MB

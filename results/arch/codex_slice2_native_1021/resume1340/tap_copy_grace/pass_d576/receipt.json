@@ -1,0 +1,33 @@
+{
+  "observed_at": "2026-10-21T15:42:37.615080-07:00",
+  "verdict": "PASS required bounded cold-copy landing cut",
+  "source": "d57646017",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1748324-1792622503",
+  "ot_run_rc": 0,
+  "backend": "Verilator5.050 timed simulation; explicit independent binary initial prospective-copy states, not allX/equalinit",
+  "existing_parent_reset": "rst low until cycle16, source rootN1+regionalN8+same-edge resetcopies; no new reset/mask/idle",
+  "topology": "Actual W1567 n32 splitwriter/splitreader, sole hw writer and representative same-source receiver; original production TAP unchanged",
+  "MAIN": {
+    "D": 4,
+    "K": 2,
+    "valid_exposure_checks": 100,
+    "first_valid_edge": 29
+  },
+  "FALLBACK": {
+    "D": 8,
+    "K": 4,
+    "valid_exposure_checks": 98,
+    "first_valid_edge": 31
+  },
+  "negative": "Directly exposing independent raw binary aliases before first common capture yields mismatch, observed both cases; no hardware bypass added",
+  "proof_boundary": "After existing writer rq0 valid clear and reader reset epoch; not unrestricted pre-reset raw equivalence/fullparentcold. Prospective copies share exact same D/C and unreset semantics, coherent after first capture.",
+  "prior_attempts": "Both incomplete Icarus scheduling runs preserved separately; no PASS credit from rc0 signal exit or timeout124.",
+  "files_sha256": {
+    "sources.sha256": "7915784ea0c481e5656c726990029ec17244792778227a28cadcb761ae0110ec",
+    "build.log.gz": "f795097f39dc480833d38d8293f24092c8d3513dbd2d50de68b3bb9a3684e34c",
+    "primary.log": "6444de2044803e3c0adc5c714fdbc966fbe2b6c2804cead33f48cc298ab24dcc",
+    "version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "binary.sha256": "0e43e16a7804ec4d9c5f5accf2ce18f3787e2dd1173246e6349296fa5ebe7f84"
+  }
+}
