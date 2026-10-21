@@ -67,7 +67,7 @@ fi
 PG=()
 NATIVE=()
 if [ "$REF_GATE_NATIVE_CENSUS" = --native-census ]; then
-  NATIVE=(--step-tcl PRE_FLOORPLAN=tools/ref_tile/native_census.tcl)
+  NATIVE=(--step-tcl PRE_FLOORPLAN=tools/ref_tile/native_census.tcl --orfs-var OT_NATIVE_KIT=$(basename "$KIT"))
 fi
 if [ "${OT_PG_STRICT:-0}" = 1 ]; then
   PG=(--orfs-var OT_PG_STRICT=1 --orfs-var OT_PG_HELPER=/src/physical/common_flow/native_pg_binding.tcl --step-tcl PRE_FINAL_REPORT=physical/common_flow/native_pg_bootstrap.tcl)

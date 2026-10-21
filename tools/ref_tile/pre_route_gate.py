@@ -1653,7 +1653,7 @@ def check_textbook_execution(g: Gate, out: str):
     return True
 
 
-def check_native_census(g: Gate, out: str):
+def check_native_census(g: Gate, out: str, kit: str | None = None):
     """Missing native admission is an execution failure, never a WARN."""
     rows = re.findall(r'^GATE_NATIVE_CENSUS_RESULT (\{.*\})$', out, re.M)
     try:
@@ -1665,6 +1665,11 @@ def check_native_census(g: Gate, out: str):
             g.add('WARN', 'native_census',
                   'raw native census FAIL max34; exact coordinator waiver for 15 library-adder nodes',
                   NC.KTREE_SCOPE + '; all other drivers retain limit32; timing and physical checks required')
+            return True
+        if kit is not None and NC.mc3c7_scoped_admission(report, kit):
+            g.add('WARN', 'native_census',
+                  f"raw native census FAIL max{report['max_dynamic_loads']}; scoped coordinator waiver <={NC.MC3C7_MAX} for kit {kit}",
+                  NC.MC3C7_SCOPE + '; guidance under rule freeze; route timing decides')
             return True
         if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
                 or report.get('status') != 'PASS' or report.get('limit') != 32
@@ -1681,13 +1686,23 @@ def check_native_census(g: Gate, out: str):
     return True
 
 
+def native_scope_kit(kd: Path, spec: dict) -> str | None:
+    """Kit identity for kit-scoped census waivers: bound to the gated tile's spec (its name is the kit dir and,
+    for the MC3c7 scope, its top is the waived top); otherwise no scoped waiver can apply."""
+    if not isinstance(spec, dict) or spec.get("name") != kd.name:
+        return None
+    if kd.name in NC.MC3C7_KITS and spec.get("top") != NC.MC3C7_TOP:
+        return None
+    return kd.name
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     check_textbook_execution(g,out)
-    check_native_census(g,out)
+    check_native_census(g,out,native_scope_kit(kd, spec))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
@@ -1856,7 +1871,15 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
             if graph is None:
                 issues.append("landed cluster: the parent RTL cannot be read, cross-region links not verified")
             else:
-                bad, landed = cross_region_links(graph)
+                cdc = None
+                if spec.get("landed_record"):
+                    try:
+                        lrec = json.loads((ROOT / spec["landed_record"]).read_text())
+                        cdc = {c["inst"]: {p: f"ck_{r}" for p, r in c.get("pin_regions", {}).items()
+                                           if f"ck_{r}" in expected} for c in lrec.get("cdc_children") or []}
+                    except (OSError, ValueError, KeyError, TypeError):
+                        cdc = None
+                bad, landed = cross_region_links(graph, cdc)
                 issues += bad
                 rec["landed_child_links"] = [dict(a=a.lstrip("*"), b=b.lstrip("*"), landing=n) for a, b, n in landed]
         if not cts:
@@ -2054,8 +2077,11 @@ def linked_child_pairs(spec: dict | None) -> list | None:
     for mod, inst, conns in inst_re.findall(body):
         if mod in VLOG_KEYWORDS:
             continue
+        # FRH10 10-20: a child bound inside a wires-only wrapper (spec inst "u_e1e.u_view": Yosys-flattened name of
+        # ot_v41_bf_col u_view inside dsfd_bf_col u_e1e) is the parent RTL's top-level instance u_e1e
         kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
-                    or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+                    or fnmatch.fnmatchcase(inst, ch["inst"])
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid is None:
             continue
         seen.add(kid["inst"])
@@ -2164,7 +2190,7 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             if ids and not set(ids) & ports:        # a port assign (z = y2) is the boundary, not a link
                 for a in ids[1:]:
                     parent[find(a)] = find(ids[0])
-    insts, nets, seen = {}, {}, set()
+    insts, nets, seen, pinsof = {}, {}, set(), {}
     for st in stmts:
         m = re.match(r"([A-Za-z_]\w*)\s*", st)
         if not m or m[1] in VLOG_KEYWORDS:
@@ -2183,38 +2209,51 @@ def parent_link_graph(spec: dict | None) -> dict | None:
         if e is None or st[e:].strip():
             continue
         # top-level names: the pattern without its hierarchy '*' (else "*u0" would claim reset run u_lprc_u0)
-        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
+        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid:
             seen.add(kid)
-        conns, exprs, j = st[k + 1:e - 1], [], 0
+        conns, exprs, pnames, j = st[k + 1:e - 1], [], [], 0
         while True:
-            pm = re.compile(r"\.\s*\w+\s*\(").search(conns, j)
+            pm = re.compile(r"\.\s*(\w+)\s*\(").search(conns, j)
             if not pm:
                 break
             q = balanced(conns, pm.end() - 1)
             if q is None:
                 break
             exprs.append(conns[pm.end():q - 1])
+            pnames.append(pm[1])
             j = q
         root = sorted({x.strip() for x in exprs if x.strip() in cks})
         insts[inst] = dict(kid=kid, root=root[0] if len(root) == 1 else None, module=mod)
-        for expr in exprs:
+        for pname, expr in zip(pnames, exprs):
             for n in set(ident.findall(expr)) - ports - VLOG_KEYWORDS:
                 nets.setdefault(find(n), set()).add(inst)
+                pinsof.setdefault((find(n), inst), set()).add(pname)
     if seen != {ch["inst"] for ch in kids}:
         return None
-    return dict(insts=insts, nets=nets)
+    return dict(insts=insts, nets=nets, pinsof=pinsof)
 
 
-def cross_region_links(graph: dict) -> tuple:
+def cross_region_links(graph: dict, cdc: dict | None = None) -> tuple:
     """(issues, landed) of a landed parent's link graph: every net class whose instances sit on DIFFERENT clock roots must
     be a landing (only the two halves u_lpl_<n>_w / u_lpl_<n>_r of one landing on it) or a regional reset run
     (u_lpr_* / u_lprc_*); anything else is an "unlanded cross-region link".  landed = [(child A, child B, landing)]:
     hard-child pairs linked through one landing (A -> <n>_w ... <n>_r -> B)."""
     insts, nets = graph["insts"], graph["nets"]
     issues, halves = [], {}
+    # LEAD2-S81/LINK 10-19: a declared lp.py CDC child (landed record cdc_children: inst -> {pin: clock root}, e.g. the
+    # SerDes column rate matcher u_rm / status sync u_sts) owns the only crossing between its pin regions; on each net
+    # it sits on the root of the pins it connects there (all of one root, else it stays unresolved = FAIL)
+    def root_on(i, net):
+        r = insts[i]["root"]
+        if r is None and cdc and i in cdc:
+            rs = {cdc[i].get(p) for p in graph.get("pinsof", {}).get((net, i), ())}
+            if len(rs) == 1 and None not in rs:
+                return rs.pop()
+        return r
     for net, members in sorted(nets.items()):
-        roots = {insts[i]["root"] for i in members}
+        roots = {root_on(i, net) for i in members}
         if len(roots) < 2:
             continue
         mm = sorted(members)
@@ -2783,7 +2822,8 @@ def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
     items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
     if not isinstance(w, dict) or not items:
         return
-    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w,
+                                          tile=spec.get("block"))
     if not applied:
         for i in items:
             i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"

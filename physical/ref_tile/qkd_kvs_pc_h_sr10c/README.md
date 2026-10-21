@@ -1,0 +1,6 @@
+
+## SAFE review, PC_H sr10c/d successor
+
+1 Pins PASS: identical source-bound sr10b ports and RTL face registers; no added schedule edge. 2 Reach PASS: same23-bank frame under405um, fallback width280.8um; no unpriced relay. 3 Fanout PASS source-unmodified: original exact gate census max32; current gate rechecks mapped implementation. 4 Depth unchanged: exact sr10b RTL; actual route TT+63.19ps, FF failed from late capture leaves. 5 Storage PASS:23 native dual-clock32x64 SRAM banks unchanged. 6 Floorplan: existing4/4/3 and3/2/3/2 bank groups, >=21um channels,5.4um placement halo; inward2.4/outward1.2um top-layer GCell guard blocks the failing SRAM edge bridge; no export obstruction retained. Main267.84x300.24; fallback280.8x300.24 requires parent slot update. 7 Clock repair: smaller register-sink clusters/20um buffer spacing, preserve both original ck/hck domains; target final within-region spread<=80ps, leaf delay must be measured;50ps hold margins. Gate starts with no inherited OT_HOLD_STOP; daemon stop policy is publisher-owned and no exemption is claimed. 8 Schedule PASS unchanged exact RTL/ports/cycles.
+
+Preserve admitted sr10b daemon finishing variants arg1/arg2. These are independent structural kits; no reuse of sr10b geometry approval. ROOT critical PNG review and exclusive publisher required before submission/adoption.

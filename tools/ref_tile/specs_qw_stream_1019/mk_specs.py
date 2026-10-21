@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 """QW-CLUSTER3/STREAM 2026-10-19: ref_tile specs for qfd_dv_stream_tile (primary + parallel fallback outline).
 QW-STREAM2 2026-10-19 21:40: structural successor after route s1-2c97be786 NEEDS_RTL (TT -47.5 ps, packer cone):
-kits qfd_dv_stream_t2_1019 (same outline) + parallel compact fallback qfd_dv_stream_t2c_1019; the s1 kits are history."""
+kits qfd_dv_stream_t2_1019 (same outline) + parallel compact fallback qfd_dv_stream_t2c_1019; the s1 kits are history.
+QW-STREAM3 2026-10-20: both CLOSED t2/t2c FAIL the actual mapped native census (211 drivers > 32, max 69, packet
+0017710ea): native-32 successor (root/leaf select banks, 9 complete trees); kits qfd_dv_stream_t3_1020 + fallback t3c_1020."""
 import json, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
-WIT = "results/rtl/qw_stream2_1019/bench"
+WIT = "results/rtl/qw_stream3_1020/bench"
 MUTS = {2: "BF16 truncation instead of RNE", 21: "no highest-lane priority", 22: "no duplicate-address fault",
-        31: "relay group 17 selects on the E valid copy", 32: "table-tap group 5 drops the SID match",
-        33: "emit copy of relay group 9 stuck 0", 34: "write-any copy of xb group 3 stuck 0"}
+        31: "relay leaf 17 selects on the E valid root", 32: "table-tap leaf 5 drops the SID match",
+        33: "insertion leaf E 9 stuck 0", 34: "tree 3 write-any leaf stuck 0 (its open copy never updates)",
+        35: "tree 5 mask copy never updates", 37: "eword enable leaf 7 stuck 0 (held x-tap word)",
+        38: "tag high-half config leaf never enables"}
 
 def bench(m):
     b = {"name": f"stream_tile_m{m}", "cmd": f"bash rtl/test/qwen_dv/static_stream/run_tile.sh {{RUN}}/bench/m{m} {m}",
@@ -50,20 +54,20 @@ def spec(name, w, h, tag, why_outline):
         "params": {"MUT": 0},
         "clock_port": "ck", "reset_ports": ["rst_n"],
         "recipe": 4,
-        "reset_landing": {"enable": True, "stages": 2, "copies": {"rst_n": 20},
-                          "why": "2 registered face stages, last stage 20 kept copies (~545 control reset loads incl. the packer complete copies, <=28 each); payload registers carry no reset"},
+        "reset_landing": {"enable": True, "stages": 2, "copies": {"rst_n": 28},
+                          "why": "2 registered face stages, last stage 28 kept copies (725 control reset loads in the yosys 0.68 keep-regs mapped census: roots, select leaves, P2 insertion leaves, open copies, config, valids, faults; <= 26 each); payload, derived pipeline words and held-word enables carry no reset"},
         "reset_relay_split": {"max_loads": 32},
         "pin_regs": {"enable": False, "reason": (
             "The RTL registers every pin: every input bit is captured at its face in qfd_dv_stream_tile (sw/se payload, "
-            "sid, cfg, SU write ports; the valid / tap-hit / write-any / config-enable bits as (* keep *) per-32-bit-group "
-            "copies decoded from the pins), every output is driven directly by a register (so_e/so_w relay, tw_*/xt_* tap "
+            "sid, cfg, SU write ports; the valid / tap-hit / write-any / config-enable bits as (* keep *) ROOT copies, "
+            "which feed kept 14-bit select LEAF banks one edge later), every output is driven directly by a register (so_e/so_w relay, tw_*/xt_* tap "
             "output registers after the interior tap relay, fault).  A flow pin stage would add a second edge and fold the "
             "kept select copies into one flop per pin (1,088-load relay select).")},
         "keep_pin_regs": True,
         "io_flop_at_pins": {"cols": 4, "allow_none": True},
         "inhold": False, "outhold": False,
         "outline": {"w": w, "h": h},
-        "std_area_um2": 7000,
+        "std_area_um2": 7100,
         "fill_reason": {"pin_bound": (
             "6,946 external pins: W/E 2,176 each (1,088-bit relay in + out), S 1,482 (low tap halves + SU write ports), "
             "N 1,113; <= 6 pins/um needs >= 371 um on W/E, so a 40-60 % outline (~120 x 120 um) cannot carry them. "
@@ -74,14 +78,16 @@ def spec(name, w, h, tag, why_outline):
                   "io_hold_margin_ns": 0.03, "pin_h": "M4", "pin_v": "M3 M5",
                   "pin_balance": {"h": "M4", "v": "M3 M5", "group_max": 1}},
         "structural_change": (
-            "QW-STREAM2 10-19: structural successor of qfd_dv_stream_t_1019 (route s1-2c97be786 TT -47.5 ps on the "
-            "packer cone wa_q -> decode -> priority -> OR8 -> &nm -> 1,024-bit eword enable, 17 levels + ~1,100-load "
-            "combinational enable): packer pipelined P1 (BF16 RNE + registered slot x lane one-hot select + slot hit + "
-            "partial faults, kept 2x lane copies <=32 loads) / P2 (state from the one-hot select, complete into 69 kept "
-            "copies) / P3 (eword on its own copy, emit copies); +2 edges on the SU own-write path xw_* (priced, static, "
-            "II unchanged); relay / taps / cfg timing unchanged."),
+            "QW-STREAM3 10-20: native-32 successor of qfd_dv_stream_t2_1019 (CLOSED s2/c2-49ac29c7e FAIL the actual "
+            "mapped native census: 211 drivers > 32, max 69 -- 32-bit select groups at 2 mux pins per bit, raw valid "
+            "pins, combinational tap predicates, the complete AND driving 69 copies, lane-1 decode): every wide select "
+            "is a kept 14-bit LEAF (<= 28 pins), pass-side leaves fed by kept ROOT banks at the face (+1 pass / tap "
+            "edge), own-write completion from 9 independent complete trees on kept mask / open / slot-hit copies "
+            "(<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), four decoder "
+            "copies; yosys 0.68 keep-regs mapped census (14-bit leaves): 39,042 roots, max 30 apart from rst_n (397 "
+            "drivers at 28, zero role errors), rst_n 725 loads -> 28 landed copies."),
         "job": {
-            "owner": "Claude:LEAD3-QW/QW-STREAM2", "branch": "claude/qw-stream2-1019", "tag": tag,
+            "owner": "Claude:LEAD4-QW/QW-STREAM3", "branch": "claude/qw-stream3-1020", "tag": tag,
             "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
             "record_to": f"results/rtl/ref_tile/{name}", "views_to": f"physical/ref_tile/{name}/views",
             "auto_merge": False,
@@ -90,9 +96,9 @@ def spec(name, w, h, tag, why_outline):
             "benches": [bench(m) for m in [0] + sorted(MUTS)]},
     }
 
-S = [spec("qfd_dv_stream_t2_1019", 302.4, 380.16, "s2",
+S = [spec("qfd_dv_stream_t3_1020", 302.4, 380.16, "s3",
           "302.4 x 380.16 (aspect 1.26): W/E 5.85 pins/um, S 5.0, N 3.8; relay W->E 302 um, every tap / packer hop <= ~345 um."),
-     spec("qfd_dv_stream_t2c_1019", 259.2, 380.16, "c2",
+     spec("qfd_dv_stream_t3c_1020", 259.2, 380.16, "c3",
           "Compact fallback 259.2 x 380.16 (aspect 1.47): W/E 5.85 pins/um, S 5.9, N 4.4; relay W->E 259 um, shorter "
           "packer / tap wires (the larger s1 fallback 345.6 x 440.64 stretched the pin-flop ring to 147 ps spread).")]
 for s in S:

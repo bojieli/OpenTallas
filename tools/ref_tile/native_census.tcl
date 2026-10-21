@@ -18,6 +18,7 @@ if {[info exists ::env(AUTO_MEMORIES)] && $::env(AUTO_MEMORIES) eq "1"} {
 set native_cmd [list python3 /src/tools/ref_tile/native_census.py \
   --netlist $::env(RESULTS_DIR)/1_2_yosys.v --top $::env(DESIGN_NAME) \
   --out /work/native_census.json]
+if {[info exists ::env(OT_NATIVE_KIT)] && $::env(OT_NATIVE_KIT) ne ""} {lappend native_cmd --kit $::env(OT_NATIVE_KIT)}
 foreach p [lsort -unique $native_libs] {lappend native_cmd --liberty $p}
 set native_rc [catch {exec {*}$native_cmd 2>@1} native_message]
 puts $native_message
