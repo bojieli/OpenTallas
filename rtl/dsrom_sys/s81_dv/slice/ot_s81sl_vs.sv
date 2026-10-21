@@ -131,8 +131,8 @@ module ot_s81sl_vs #(
 );
     localparam [3:0] OP_SW = 4'd8, OP_QB = 4'd9, OP_RA = 4'd10, OP_RB = 4'd11, OP_QR = 4'd12, OP_MOE = 4'd13, OP_ENG = 4'd14;
 `ifdef OT_S81SL_VS_SRAM
-    wire [31:0] rsv;
-    ot_rst_relay_tree3 #(.REGIONS(32),.LEAVES(8)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rsv));
+    wire [39:0] rsv;
+    ot_rst_relay_tree3 #(.REGIONS(40),.LEAVES(8)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rsv));
 `else
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
@@ -312,7 +312,12 @@ module ot_s81sl_vs #(
     // adder operand registers (one stage after the source mux): RB lanes 0..3, QR lanes 0..1, MOE lanes 0..7
     wire moe_in = arr && op == OP_MOE;
     wire [2:0] moe_e = ka[5:3];                      // expert of this arrival (8 e + c)
-    reg  [31:0] xa [0:7], xb [0:7]; reg x_iv;
+`ifdef OT_S81SL_VS_SRAM
+    wire [31:0] xa [0:7],xb [0:7];
+`else
+    reg [31:0] xa [0:7],xb [0:7];
+`endif
+    reg x_iv;
     wire [31:0] ay [0:7]; wire [7:0] af; wire [XL:0] vx;
     reg  [31:0] acc1 [0:7];
     // (MUT 4 rounds every partial to BF16, the hub moe leaf's EARLY_BF16 control; an expert-order reversal is NOT
@@ -320,6 +325,21 @@ module ot_s81sl_vs #(
     always @(posedge clk or negedge rs_x)
         if (!rs_x) x_iv <= 1'b0;
         else x_iv <= (arr && op == OP_RB) || vmq[XL] || moe_in;
+`ifdef OT_S81SL_VS_SRAM
+    genvar ol,obn;
+    generate for(ol=0;ol<8;ol=ol+1) begin:g_operand_lane
+      wire [3:0] lane_op;
+      wire [7:0] lane_ka;
+      wire [31:0] lane_acc=(MUT==4)?bf16(acc1[ol]):acc1[ol];
+      ot_s81sl_vs_lane_ctl u_ctl(.clk(clk),.rst_n(rsv[26+ol]),.sv(sv_c),.busy(busy),.bad(c_bad),.cop(c_op),.xqv(xqv_c),.op(lane_op),.ka(lane_ka));
+      for(obn=0;obn<8;obn=obn+1) begin:g_nibble
+        ot_s81sl_vs_operand4 #(.NEG(obn==7?4'h8:4'h0),.MUT(MUT)) u_sel(
+          .clk(clk),.op(lane_op),.expert(lane_ka[5:3]),.ra(xw[ol&3][4*obn+:4]),.rb(xw[4+(ol&3)][4*obn+:4]),
+          .m0(mp[2*(ol&1)][4*obn+:4]),.m1(mp[2*(ol&1)+1][4*obn+:4]),.x(xw[ol][4*obn+:4]),.acc(lane_acc[4*obn+:4]),
+          .a(xa[ol][4*obn+:4]),.b(xb[ol][4*obn+:4]));
+      end
+    end endgenerate
+`else
     always @(posedge clk)
         for (i = 0; i < 8; i = i + 1)
             if (op == OP_RB) begin
@@ -330,6 +350,7 @@ module ot_s81sl_vs #(
                 xa[i] <= (moe_e == 3'd0) ? xw[i] : (MUT == 4) ? bf16(acc1[i]) : acc1[i];
                 xb[i] <= (moe_e == 3'd0) ? 32'h80000000 : xw[i];
             end
+`endif
     ot_hdc_vline #(.D(XL)) u_vx (.clk(clk), .rst_n(rs_x), .v(x_iv), .vd(vx));
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_xa
 `ifdef OT_S81SL_VS_SRAM
@@ -463,7 +484,7 @@ module ot_s81sl_vs #(
     endfunction
     always @(posedge clk or negedge rs_eng)
         if (!rs_eng) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
-                         
+
 `ifndef OT_S81SL_VS_SRAM
 for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
 `endif
@@ -471,7 +492,7 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
         else begin
             ve_rv <= (eng_r && ka >= 8'd16 && er[0]) || epend;
             epend <= eng_r && ka >= 8'd16 && er[0];
-            
+
 `ifndef OT_S81SL_VS_SRAM
 for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
 `endif
@@ -491,7 +512,7 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
         if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
         if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
         eqp <= eq0 | 6'd1;
-        
+
 `ifndef OT_S81SL_VS_SRAM
 for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
 `endif
@@ -527,7 +548,7 @@ for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
     // partial triples out; result / flush counters
     always @(posedge clk or negedge rs_flush)
         if (!rs_flush) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
-                         
+
 `ifndef OT_S81SL_VS_SRAM
 for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
 `endif
@@ -535,7 +556,7 @@ for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
         else begin
             e_v <= vpv_c;
             if (acc_cmd) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
-                               
+
 `ifndef OT_S81SL_VS_SRAM
 for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
 `endif
@@ -544,7 +565,7 @@ for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
                 if (vpv_c) kp_e <= kp_e + 3'd1;
                 if (vov_c) begin ko_e <= ko_e + 6'd1; if (ko_e == 6'd31) fl_on <= 1'b1; end
                 if (fl_on) begin fl_e <= fl_e + 5'd1; if (fl_e == 5'd15) fl_on <= 1'b0; end
-                
+
 `ifndef OT_S81SL_VS_SRAM
 if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
 `endif
@@ -629,3 +650,29 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
 `undef S81_VS_CONTROL_KEEP
 endmodule
 
+
+`ifdef OT_S81SL_VS_SRAM
+// Regional state and nibble operators remain separate synthesis hierarchies:
+// equivalent source decodes must not merge into a single 512-bit mux select.
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_lane_ctl(input wire clk,rst_n,sv,busy,bad,xqv,input wire[3:0]cop,output wire[3:0]op,output wire[7:0]ka);
+  (* keep="true" *) reg [3:0] op_q;
+  (* keep="true" *) reg [7:0] ka_q;
+  wire accept=sv && !busy && !bad;
+  wire arrive=xqv && busy;
+  always @(posedge clk or negedge rst_n)
+    if(!rst_n) begin op_q<=0;ka_q<=0;end
+    else begin
+      if(accept) begin op_q<=cop;ka_q<=0;end
+      else if(arrive) ka_q<=ka_q+1'b1;
+    end
+  assign op=op_q;assign ka=ka_q;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_operand4 #(parameter [3:0]NEG=0,parameter integer MUT=0)(input wire clk,input wire[3:0]op,input wire[2:0]expert,input wire[3:0]ra,rb,m0,m1,x,acc,output reg[3:0]a,b);
+  always @(posedge clk)
+    if(op==4'd11) begin a<=ra;b<=(MUT==2)?4'd0:rb;end
+    else if(op==4'd12) begin a<=m0;b<=m1;end
+    else begin a<=expert==0?x:acc;b<=expert==0?NEG:x;end
+endmodule
+`endif
