@@ -209,12 +209,12 @@ endmodule
 endmodule
 
 // one 22-b bit slice of both lanes' hold rings and of the response-chain payload register
-(* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0) (
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
     input  wire        ck, input wire rn0, input wire rn1, input wire [3:0] sid,
     input  wire        pv_in, input wire [3:0] own,
     input  wire        bv0, input wire [9:0] bt0, input wire bv1, input wire [9:0] bt1,
-    input  wire [21:0] hin0, input wire [21:0] hin1, input wire [21:0] pci_d,
-    output reg  [21:0] pco_d
+    input  wire [W-1:0] hin0, input wire [W-1:0] hin1, input wire [W-1:0] pci_d,
+    output reg  [W-1:0] pco_d
 );
     localparam integer EH = 6;
     reg [3:0] sq;
@@ -246,29 +246,29 @@ endmodule
     wire [EH-1:0] we0, we1;
     dsdv_eng_tap_we u_w0 (.eng(e0), .hw(hw0), .we(we0));
     dsdv_eng_tap_we u_w1 (.eng(e1), .hw(hw1), .we(we1));
-    reg [21:0] he0 [0:EH-1];
-    reg [21:0] he1 [0:EH-1];
+    reg [W-1:0] he0 [0:EH-1];
+    reg [W-1:0] he1 [0:EH-1];
     integer e;
     always @(posedge ck)
         for (e = 0; e < EH; e = e + 1) begin
             if (we0[e]) he0[e] <= hin0;
             if (we1[e]) he1[e] <= hin1;
         end
-    reg [21:0] hs0, hs1;
+    reg [W-1:0] hs0, hs1;
     always @* begin
         hs0 = '0; hs1 = '0;
         for (e = 0; e < EH; e = e + 1) begin
-            hs0 = hs0 | ({22{hr0[e]}} & he0[e]);
-            hs1 = hs1 | ({22{hr1[e]}} & he1[e]);
+            hs0 = hs0 | ({W{hr0[e]}} & he0[e]);
+            hs1 = hs1 | ({W{hr1[e]}} & he1[e]);
         end
     end
     always @(posedge ck) pco_d <= tk_d[0] ? hs0 : tk_d[1] ? hs1 : pci_d;
 endmodule
 
 // 22 b of a lane's request data register (reader word, or the injected Engram word on a hit)
-(* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0) (
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
     input wire ck, input wire [3:0] sid, input wire [5:0] rci,
-    input wire [21:0] ew_d, input wire [21:0] rq_d, output reg [21:0] rqo_d
+    input wire [W-1:0] ew_d, input wire [W-1:0] rq_d, output reg [W-1:0] rqo_d
 );
     reg [3:0] sq;
     always @(posedge ck) sq <= sid;
@@ -280,7 +280,7 @@ endmodule
 // one 8-entry bank (entries 8 B .. 8 B + 7) of a lane's 32-entry owner FIFO, with its own write-pointer copy
 (* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
     input wire ck, input wire rn, input wire [3:0] sid, input wire [5:0] rci, input wire rv,
-    input wire [2:0] orp_lo, output wire rd
+    input wire [2:0] orp_lo, input wire popv, output wire rd
 );
     reg [3:0] sq;
     always @(posedge ck) sq <= sid;
@@ -291,7 +291,13 @@ endmodule
     reg [7:0] ofi;
     always @(posedge ck or negedge rn) if (!rn) owp <= 5'd0; else if (out_v) owp <= owp + 5'd1;
     always @(posedge ck) if (out_v && owp[4:3] == 2'(B)) ofi[owp[2:0]] <= hit;
+`ifdef OT_S81ENG_TAP_N32R2
+    reg [2:0] rp;
+    always @(posedge ck or negedge rn) if (!rn) rp <= 3'd0; else if (popv) rp <= rp + 3'd1;
+    assign rd = ofi[rp];
+`else
     assign rd = ofi[orp_lo];
+`endif
 endmodule
 
 // a lane's request control: Engram-outstanding count, lane occupancy, owner FIFO read pointer, pops, request faults
@@ -299,7 +305,7 @@ endmodule
                                                   parameter integer MUT = 0) (
     input  wire ck, input wire rn, input wire [3:0] sid, input wire [5:0] rci,
     input  wire rv, input wire rsl, input wire pop, input wire [3:0] bank_rd,
-    output reg  rqo_v, output reg rqo_sl, output reg rro_pop, output wire [4:0] orp_o, output reg fl
+    output reg  rqo_v, output reg rqo_sl, output reg rro_pop, output wire [4:0] orp_o, output wire popv_o, output reg fl
 );
     localparam integer OQ = 32;
     reg [3:0] sq;
@@ -312,6 +318,7 @@ endmodule
     assign orp_o = orp;
     wire nz    = on_ != 6'd0;
     wire popv  = pop && nz;
+    assign popv_o = popv;
     wire ofr   = bank_rd[orp[4:3]];
     wire pop_e = popv && ofr;
     wire pop_r = (MUT == 2) ? pop : (pop && !(nz && ofr));
@@ -363,6 +370,12 @@ endmodule
         end
 endmodule
 
+// The configuration strap settles one edge earlier in this tree than in its existing
+// per-consumer captures. No protocol data/control pipeline age changes.
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+ always @(posedge ck)q<=d;
+endmodule
+
 module dsdv_eng_tap_c #(
     parameter bit WEST = 0,
     parameter integer RFD = 24,
@@ -382,10 +395,21 @@ module dsdv_eng_tap_c #(
     output wire [543:0]  rro,         // to the reader
     output reg           fault
 );
+`ifdef OT_S81ENG_TAP_N32R2
+    localparam integer NS = 24, NR = 62, SW = 11, RDCH = 4;
+    wire [3:0] sd [0:3];
+    for(genvar sg=0;sg<4;sg=sg+1)begin:g_sid
+        dsdv_eng_tap_sid4 u_s(.ck(ck),.d(sid),.q(sd[sg]));
+    end
+`else
+    localparam integer NR = 30, SW = 22, RDCH = 2;
+    wire [3:0] sd [0:3];
+    for(genvar sg=0;sg<4;sg=sg+1)begin:g_sid_direct assign sd[sg]=sid; end
     localparam integer NS = 12;       // hold-ring / payload bit slices of 22 b (12 x 22 = 264 >= 263)
+`endif
     generate if (EH != 6) begin : bad_eh dsdv_eng_tap_c_EH_must_be_6 trap(); end endgenerate
-    wire [29:0] rl;
-    ot_rst_relay_bounded32 #(.REGIONS(30)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+    wire [NR-1:0] rl;
+    ot_rst_relay_bounded32 #(.REGIONS(NR)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
     // request chain forward
     always @(posedge ck or negedge rl[0]) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
     always @(posedge ck) rco[42:1] <= rci[42:1];
@@ -402,16 +426,17 @@ module dsdv_eng_tap_c #(
     generate for (p = 0; p < 2; p = p + 1) begin : g_ln
         wire [3:0] brd;
         wire [4:0] orp;
-        dsdv_eng_tap_rqc #(.P(p), .RFD(RFD), .MUT(MUT)) u_c (.ck(ck), .rn(rl[1 + p]), .sid(sid), .rci(rci[5:0]),
+        wire popv;
+        dsdv_eng_tap_rqc #(.P(p), .RFD(RFD), .MUT(MUT)) u_c (.ck(ck), .rn(rl[1 + p]), .sid(sd[0]), .rci(rci[5:0]),
             .rv(rqi[46 * p]), .rsl(rqi[46 * p + 1]), .pop(rri[272 * p + 1]), .bank_rd(brd),
-            .rqo_v(rqo[46 * p]), .rqo_sl(rqo[46 * p + 1]), .rro_pop(rro[272 * p + 1]), .orp_o(orp), .fl(fl[p]));
+            .rqo_v(rqo[46 * p]), .rqo_sl(rqo[46 * p + 1]), .rro_pop(rro[272 * p + 1]), .orp_o(orp), .popv_o(popv), .fl(fl[p]));
         for (b = 0; b < 4; b = b + 1) begin : g_ob
-            dsdv_eng_tap_ofb #(.P(p), .B(b)) u_b (.ck(ck), .rn(rl[3 + p]), .sid(sid), .rci(rci[5:0]),
-                .rv(rqi[46 * p]), .orp_lo(orp[2:0]), .rd(brd[b]));
+            dsdv_eng_tap_ofb #(.P(p), .B(b)) u_b (.ck(ck), .rn(rl[(NR==62)?54+4*p+b:3+p]), .sid(sd[1]), .rci(rci[5:0]),
+                .rv(rqi[46 * p]), .orp_lo(orp[2:0]), .popv(popv), .rd(brd[b]));
         end
-        for (b = 0; b < 2; b = b + 1) begin : g_rd
-            dsdv_eng_tap_rqd #(.P(p)) u_d (.ck(ck), .sid(sid), .rci(rci[5:0]), .ew_d(ew[22 * b +: 22]),
-                .rq_d(rqi[46 * p + 2 + 22 * b +: 22]), .rqo_d(rqo[46 * p + 2 + 22 * b +: 22]));
+        for (b = 0; b < RDCH; b = b + 1) begin : g_rd
+            dsdv_eng_tap_rqd #(.P(p),.W(SW)) u_d (.ck(ck), .sid(sd[2]), .rci(rci[5:0]), .ew_d(ew[SW * b +: SW]),
+                .rq_d(rqi[46 * p + 2 + SW * b +: SW]), .rqo_d(rqo[46 * p + 2 + SW * b +: SW]));
         end
         reg [269:0] rro_d;
         always @(posedge ck) rro_d <= rri[272 * p + 2 +: 270];
@@ -420,7 +445,7 @@ module dsdv_eng_tap_c #(
     wire rro_v0, rro_v1, pco_v;
     assign rro[0] = rro_v0;
     assign rro[272] = rro_v1;
-    dsdv_eng_tap_rsc #(.MUT(MUT)) u_rs (.ck(ck), .rn(rl[5]), .sid(sid), .rci(rci[5:0]), .pv_in(pv_in), .own(own),
+    dsdv_eng_tap_rsc #(.MUT(MUT)) u_rs (.ck(ck), .rn(rl[5]), .sid(sd[3]), .rci(rci[5:0]), .pv_in(pv_in), .own(own),
         .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .rro_v0(rro_v0), .rro_v1(rro_v1), .pco_v(pco_v), .fxl(fxl));
     // hold-ring entries {d 256, col 3, atom 4} = {rri d, cell - 1, s3, slot3}
     wire [3:0]   colp0 = bt0[5:2] - 4'd1, colp1 = bt1[5:2] - 4'd1;
@@ -429,9 +454,9 @@ module dsdv_eng_tap_c #(
     wire [263:0] pcd  = {1'b0, pci[267:5]};
     wire [263:0] pcq;
     generate for (b = 0; b < NS; b = b + 1) begin : g_hs
-        dsdv_eng_tap_hs #(.MUT(MUT)) u_s (.ck(ck), .rn0(rl[6 + 2 * b]), .rn1(rl[7 + 2 * b]), .sid(sid), .pv_in(pv_in),
-            .own(own), .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .hin0(hin0[22 * b +: 22]),
-            .hin1(hin1[22 * b +: 22]), .pci_d(pcd[22 * b +: 22]), .pco_d(pcq[22 * b +: 22]));
+        dsdv_eng_tap_hs #(.MUT(MUT),.W(SW)) u_s (.ck(ck), .rn0(rl[6 + 2 * b]), .rn1(rl[7 + 2 * b]), .sid(sd[b%4]), .pv_in(pv_in),
+            .own(own), .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .hin0(hin0[SW * b +: SW]),
+            .hin1(hin1[SW * b +: SW]), .pci_d(pcd[SW * b +: SW]), .pco_d(pcq[SW * b +: SW]));
     end endgenerate
     reg [3:0] own_q;
     always @(posedge ck) own_q <= own;

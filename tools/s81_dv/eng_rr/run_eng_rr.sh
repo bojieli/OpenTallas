@@ -37,7 +37,7 @@ python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom
 build() {  # name, -G params
   local n=$1; shift
   /usr/bin/time -v -o $W/$n.build.time $VL --binary --timing -j ${J:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH \
-    -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 +define+OT_ENGRAM_CRCMAT \
+    -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 ${TAP_N32R2:+ +define+OT_S81ENG_TAP_N32R2} +define+OT_ENGRAM_CRCMAT \
     --top-module tb_dsdv_eng_rr "$@" "${F[@]}" --Mdir $W/obj_$n -o sim > $W/$n.build.log 2>&1
   echo "$n build rc $?" >> $W/status
 }

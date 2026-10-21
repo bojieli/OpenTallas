@@ -54,10 +54,10 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "TOK-FUNC2-ENG_TAP_W 10-21: kit of the G8IQ stand-in master dsdv_eng_tap_w (u_etap_00, west end of the Engram request/response chains: no rco / pci ports) on the shared SAFE core successor 3f93b69ab (TOK-FUNC2-ENG_TAP: kept-hierarchy native32 slices, bounded32 reset, cycle-identical, same ports/edges/faults). MAIN: same outline / face plan as the 15 middle taps (dsdv_eng_tap MAIN 138.24 x 86.4: reader N, controller S, chain E; W empty = chain end) so the 16-tap row is uniform for G9.",
+ "structural_change": "Opt-in TAP_N32R2 successor: 24x11b real payload slices, 4x11b request slices per lane; same-edge per-FIFO-bank read pointer; 62 same-depth bounded reset leaves; four strap roots then existing per-consumer strap captures. No payload/protocol added edges; static sid must settle two clocks before traffic (within existing reset hold).",
  "job": {
-  "owner": "Claude:TOK-FUNC2-ENG_TAP_W",
-  "branch": "claude/tokf2-etapw2-1021",
+  "owner": "Codex:S81-ENG-RELEASE",
+  "branch": "codex/s81-eng-release-1021",
   "tag": "etapw_m",
   "purpose": "S81 G8IQ stand-in master dsdv_eng_tap_w (1 inst, Engram west-end tap) to closure: TT setup / FF hold / DRC 0 + native census 32 -> S81-DIE9 G9 bind",
   "extra_paths": [
@@ -145,5 +145,8 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "defines": [
+  "OT_S81ENG_TAP_N32R2"
+ ]
 }

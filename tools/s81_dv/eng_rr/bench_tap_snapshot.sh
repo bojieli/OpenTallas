@@ -17,7 +17,7 @@ case $V in base) G=();; tap1) G=(-GTAP_MUT=1);; tap2) G=(-GTAP_MUT=2);; *) echo 
 python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom > $W/prep.log 2>&1 || { echo "ENG_TAP_BENCH FAIL prep_rom"; exit 1; }
 $VL --version
 $VL --binary --timing -j ${J:-8} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
-    -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 +define+OT_ENGRAM_CRCMAT --top-module tb_dsdv_eng_rr "${G[@]}" "${F[@]}" \
+    -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 ${TAP_N32R2:+ +define+OT_S81ENG_TAP_N32R2} +define+OT_ENGRAM_CRCMAT --top-module tb_dsdv_eng_rr "${G[@]}" "${F[@]}" \
     --Mdir $W/obj -o sim > $W/build.log 2>&1 || { tail -20 $W/build.log; echo "ENG_TAP_BENCH FAIL build"; exit 1; }
 $W/obj/sim +OT_ROM_DIR=$W/rom "$@" > $W/run.log 2>&1
 python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/run.log $PWD >> $W/run.log 2>&1
