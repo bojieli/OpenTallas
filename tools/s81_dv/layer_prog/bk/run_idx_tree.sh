@@ -34,25 +34,30 @@ rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv
 rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv
 rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv
 rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv
+rtl/lib/ot_rst_relay.sv
+rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv
 tools/s81_dv/layer_prog/bk/tb_idx_tree.sv"
 TXS=${TXS:-0}; XINIT=${XINIT:-0}
+# S81-RTLGAP/RG-L20 (10-21): DIEM=1 builds each die as the 72-frame die master dsdv_bk_sel_vmtx (vmux + bk_sel +
+# dsdv_idx_tx_n32) instead of the 3 separate units; same stimulus, same checker.
+DIEM=${DIEM:-0}; DF=""; [ "$DIEM" = 1 ] && DF="-DTREE_DIEM"
 XF=""; RF=""
 [ "$XINIT" = 1 ] && { XF="-DOT_MEM_NO_INIT --x-initial unique --x-assign unique"; RF="+verilator+rand+reset+2 +verilator+seed+${SEED:-7}"; }
-B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}"
+B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}"
 mkdir -p "$B"
 ( sha256sum $SRC tools/s81_dv/layer_prog/lower_bk.py; $VL --version ) > "$B/sources.sha256"
 if [ ! -x "$B/obj/Vtb_idx_tree" ]; then
   /usr/bin/time -v -o "$B/build.time" $VL --binary --timing -j "${J:-16}" -Wno-fatal -Wno-lint -Wno-style \
-    -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -DTX_MUT=$TXM -DTX_SRAM=$TXS $XF \
+    -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -DTX_MUT=$TXM -DTX_SRAM=$TXS $DF $XF \
     --top-module tb_idx_tree $SRC -Mdir "$B/obj" > "$B/build.log" 2>&1 || {
     grep -q 'pch' "$B/build.log" && $VL --binary --timing -j "${J:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH \
-      -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -DTX_MUT=$TXM -DTX_SRAM=$TXS $XF --top-module tb_idx_tree \
+      -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -DTX_MUT=$TXM -DTX_SRAM=$TXS $DF $XF --top-module tb_idx_tree \
       $SRC -Mdir "$B/obj" > "$B/build.log" 2>&1; } || { tail -20 "$B/build.log"; echo "IDX_TREE BUILD FAIL"; exit 2; }
 fi
 rc=0
 for D in "$@"; do
-  /usr/bin/time -v -o "$D/run_m${TXM}_s${TXS}_x${XINIT}.time" "$B/obj/Vtb_idx_tree" +STIM=$D/stim.txt $(cat "$D/args.txt") $RF > "$D/run_m${TXM}_s${TXS}_x${XINIT}.log" 2>&1
-  python3 tools/s81_dv/layer_prog/lower_bk.py tree-rd-check --run "$D/run_m${TXM}_s${TXS}_x${XINIT}.log" --dir "$D" | tee "$D/verdict_m${TXM}_s${TXS}_x${XINIT}.txt" || rc=1
-  cp "$D/check_result.json" "$D/check_result_m${TXM}_s${TXS}_x${XINIT}.json"
+  /usr/bin/time -v -o "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.time" "$B/obj/Vtb_idx_tree" +STIM=$D/stim.txt $(cat "$D/args.txt") $RF > "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.log" 2>&1
+  python3 tools/s81_dv/layer_prog/lower_bk.py tree-rd-check --run "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.log" --dir "$D" | tee "$D/verdict_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.txt" || rc=1
+  cp "$D/check_result.json" "$D/check_result_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.json"
 done
 exit $rc
