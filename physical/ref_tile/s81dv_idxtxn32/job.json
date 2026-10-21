@@ -2,17 +2,46 @@
  "name": "s81dv_idxtxn32-s81dv_idxtxn32-COMMIT",
  "block": "dsdv_idx_tx_n32",
  "ref_tile": true,
- "owner": "Claude:TOK-FUNC2-BK_SEL",
+ "owner": "Codex:CODEX-S81-1021/HOST_TRANSPORT",
  "purpose": "S81 72-frame die master dsdv_bk_sel_vmtx child u_tx = dsdv_idx_tx_n32 (tree transmit, 10 SRAM) hardened",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81-bksel-vtx-1021",
+  "branch": "codex/s81-idxtx-local-1358",
   "commit": "COMMIT",
   "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "results/rtl/codex_idxtx_local_1021",
+   "rtl/common/ot_fwd_link_stage.sv",
    "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+   "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
    "rtl/lib",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/s81_dv/layer_prog",
+   "tools/s81_dv/layer_prog/bk/tb_idx_tree.sv"
   ]
  },
  "stages": {
@@ -26,6 +55,41 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "tree_existing_m0",
+    "cmd": "bash results/rtl/codex_idxtx_local_1021/run_existing.sh {RUN}/tree_m0 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "pass_regex": "^TREE_RD PASS "
+   },
+   {
+    "name": "tree_existing_m1",
+    "cmd": "bash results/rtl/codex_idxtx_local_1021/run_existing.sh {RUN}/tree_m1 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "fail_regex": "^TREE_RD FAIL ",
+    "fail_witness": "results/rtl/codex_idxtx_local_1021/m1/client.log"
+   },
+   {
+    "name": "tree_existing_m2",
+    "cmd": "bash results/rtl/codex_idxtx_local_1021/run_existing.sh {RUN}/tree_m2 2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "fail_regex": "^TREE_RD FAIL ",
+    "fail_witness": "results/rtl/codex_idxtx_local_1021/m2/client.log"
+   },
+   {
+    "name": "tree_existing_m3",
+    "cmd": "bash results/rtl/codex_idxtx_local_1021/run_existing.sh {RUN}/tree_m3 3",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "fail_regex": "^TREE_RD FAIL ",
+    "fail_witness": "results/rtl/codex_idxtx_local_1021/m3/client.log"
    }
   ],
   "calibrate": {
