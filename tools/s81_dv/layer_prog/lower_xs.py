@@ -177,7 +177,8 @@ def dense_split2():
     v = os.environ.get('OT_XS_DENSE_SPLIT2', '')
     assert v in ('', 'A', 'B', 'X'), ('OT_XS_DENSE_SPLIT2', v)
     assert not v or aproj_topology_enabled(), 'DENSE2 split requires the actual topology owner map (OT_XS_APROJ_TOPO=1)'
-    assert not (v and aproj_rank_tags_enabled()), 'DENSE2 split: rank-tag CAP contract not extended to split halves'
+    assert not (v and aproj_rank_tags_enabled()) or os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1', \
+        'DENSE2 rank-tag CAP requires the aligned native-row ownership contract'
     return v or None
 
 
@@ -220,10 +221,19 @@ def placement(die, sl, fx=None):
             starts = [a for _, a, _ in rng]
             tensors = [(name, n) for name, _, n in rng]
         total = sum(n for _, n in tensors)
-        numer = [n * len(all_frames) for _, n in tensors]
-        counts = [n // total for n in numer]
-        for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
-            counts[i] += 1
+        align4 = os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1'
+        if align4:
+            # Whole native SRAM rows: four captured FP32/BF16-expanded values.
+            # Real frames beyond this subset are idle, never phantom owners.
+            assert own is not None, 'aligned a_proj map requires a selected DENSE2 stage'
+            assert all(n % 4 == 0 and start % 4 == 0 for (_, n), start in zip(tensors, starts))
+            counts = [n // 4 for _, n in tensors]
+            assert sum(counts) <= len(all_frames), ('aligned a_proj actual capacity', counts, len(all_frames))
+        else:
+            numer = [n * len(all_frames) for _, n in tensors]
+            counts = [n // total for n in numer]
+            for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
+                counts[i] += 1
         assigned, row0, fi = {}, 0, 0
         for (name, nrows), nf, start in zip(tensors, counts, starts):
             assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
@@ -238,7 +248,9 @@ def placement(die, sl, fx=None):
                 fi += 1
             assert off == row0 + nrows
             row0 += nrows
-        assert fi == len(all_frames) and row0 == (total if own is None else own[1])
+        assert fi == sum(counts) and row0 == (total if own is None else own[1])
+        for frame in all_frames[fi:]:
+            assigned[frame] = []
         return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
@@ -416,7 +428,7 @@ def lower(die, op, ctx):
     frames = []
     for p in pl:
         if not p['rows']:
-            frames.append(dict(p, phase=None, note='no a_proj rows (28 rows / slice = 7 frames x 4)'))
+            frames.append(dict(p, phase=None, note='idle actual frame: no a_proj rows in selected ownership map'))
             continue
         mats, gidx = frame_mats(fx, p['rows'])
         field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
