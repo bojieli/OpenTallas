@@ -1,4 +1,4 @@
-import os,sys,json,hashlib,ast
+import os,sys,json,hashlib,ast,copy,importlib.util,re
 from pathlib import Path
 from types import SimpleNamespace
 B=Path(__file__).parent
@@ -28,10 +28,39 @@ node=next(n for n in wrap.body if isinstance(n,ast.FunctionDef) and n.name=='pin
 ns=dict(base_pr=V.pin_rects,split={},v=v,join_plan=m['port_join'],VIEWS={})
 exec(compile(ast.Module(body=[node],type_ignores=[]),str(pin_source),'exec'),ns)
 v.pin_rects=ns['pin_rects']
+selected=masters()
+# Actual dv_case.apply_dv stage: fixed physical masters are selected BEFORE
+# fault_emit.pre. Later port_join mutations cannot regenerate these objects.
+v.masters=lambda *a:dict(selected)
 old=G._pin_pos(v,m)
 open_xy=old('io_collective','fault_code')
 hard={'io_collective':['fault_code','transport_cdc_fault','transport_abort','transport_fault_cause']}
+spec=importlib.util.spec_from_file_location('fault_emit_old',B/'fault_emit_old.py')
+oldF=importlib.util.module_from_spec(spec);spec.loader.exec_module(oldF)
+old_model=copy.deepcopy(m)
+oldv=SimpleNamespace(masters=lambda *a:dict(selected),port_widths=v.port_widths,pin_rects=v.pin_rects)
+try:oldF.source_bit_geometry(oldv,old_model,G,hard)
+except ValueError as err:
+ assert 'fragment missing from master' in str(err)
+ print('ORIGINAL_FROZEN_STAGE_FAILURE_REPRODUCED',str(err))
+else:raise AssertionError('original fullGEN frozen-stage failure not reproduced')
 M,pos,entries=F.source_bit_geometry(v,m,G,hard)
+assert 'fault_code' in selected[N.MASTER].ports
+assert 'flt_fault_code_0' not in selected[N.MASTER].ports
+assert M[N.MASTER] is not selected[N.MASTER]
+def canonical(q):
+ points={}
+ for name,L,r in v.pin_rects(q,1,{p:sp[1] for p,sp in q.ports.items()}):
+  z=re.fullmatch(r'(.*?)(?:\[(\d+)\])?',name);p,b=z[1],int(z[2] or 0)
+  real,indexes=m['port_join'][N.MASTER].get(p,(p,None))
+  key=(real,indexes[b] if indexes is not None else b)
+  assert key not in points,key
+  points[key]=(L,tuple(r))
+ return points
+before=canonical(selected[N.MASTER]);after=canonical(M[N.MASTER])
+assert before==after,('selected master physical pins changed',len(before),len(after))
+print('FROZEN_NATIVE_PIN_RECTANGLES_UNCHANGED',len(before))
+
 assert entries
 assert all(e['port'] in M[N.MASTER].ports for e in entries)
 assert 'fault_code' not in M[N.MASTER].ports
@@ -59,6 +88,8 @@ v.EMIT_SPLIT=True
 emitted=G._pin_pos(v,m,strict=True)
 for e in entries:
  assert tuple(e['xy'])==F._source_bit_point(emitted,e)
+rec['all_selected_collective_pin_rectangles_unchanged']=len(before)
+rec['actual_stage']='dv_case fixed master snapshot before fault_emit.pre; original missing-fragment error reproduced, copy projection passes without changing original selected master'
 rec['emission_modes']=['scalar alias fragment','real emitted numeric bit']
 e=entries[0]
 for bad in (SimpleNamespace(bits=lambda *a:None),

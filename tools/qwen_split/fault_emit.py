@@ -343,6 +343,32 @@ def source_bit_geometry(v, m, G, hard=None):
                         join[alias] = value
                     entries.append(dict(inst=inst, port=alias, real=port, bit=bit))
         m['fault_source_bit_contract'] = entries
+    if getattr(v, '_fault_source_master_projection_model', None) is not m:
+        # DV has already frozen its selected physical master set. Updating
+        # port_join cannot rebuild that set. Project the new fragments onto
+        # copies of the selected native pin rectangles instead of regenerating
+        # a master from peers or assuming a later wrapper will see aliases.
+        import copy
+        from qwen_split.direct_up4 import partition_master
+        selected = v.masters(m, 1)
+        projected = {}
+        for name in {by[e['inst']].master for e in entries}:
+            q = copy.deepcopy(selected[name])
+            source_ports = {e['port'] for e in entries if by[e['inst']].master == name}
+            pending = {a: rb for a, rb in m.get('port_join', {}).get(name, {}).items()
+                       if a in source_ports and rb[0] in q.ports}
+            if pending:
+                rects = v.pin_rects(q, 1, {p: sp[1] for p, sp in q.ports.items()})
+                partition_master(q, pending, rects)
+            projected[name] = q
+        base_masters = v.masters
+        def projected_masters(model, k=1, port_bits=None):
+            out = base_masters(model, k, port_bits)
+            out.update(projected)
+            return out
+        v.masters = projected_masters
+        v._fault_source_master_projection = projected
+        v._fault_source_master_projection_model = m
     masters = v.masters(m, 1)
     # Unconnected outputs have no bus width yet. Their source-native scalar
     # fragment must still exist while choosing the first capture node.

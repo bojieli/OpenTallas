@@ -1061,6 +1061,8 @@
     }
   ],
   "checks": "unique exact emitted scalar bit fragments; whole port removed; strict actual endpoint preserved after buses connected; former audit centroid substitution reproduced",
+  "all_selected_collective_pin_rectangles_unchanged": 6980,
+  "actual_stage": "dv_case fixed master snapshot before fault_emit.pre; original missing-fragment error reproduced, copy projection passes without changing original selected master",
   "emission_modes": [
     "scalar alias fragment",
     "real emitted numeric bit"
