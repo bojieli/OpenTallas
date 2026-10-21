@@ -102,7 +102,11 @@ endmodule
 endmodule
 // S81-FIX2/XG: BF arrival-line one-hot (80 = parity x 40 units) through a kept 2-level predecode, one instance per lookup
 // copy (the shared AND3 decode of par / bu mapped to 72 loads in the xgt_xo census)
-(* keep_hierarchy = 1 *) module ot_s81sl_xs4_bdec (input wire par, input wire [5:0] bu, output wire [79:0] ln);
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_bdec (input wire [8:0] h, output wire [79:0] ln);
+    // Keep each lookup copy's parity/subtract cone local: a shared par root
+    // reached 33 mapped loads through the two copy predecoders. No new edge.
+    wire par = h >= 9'd48;
+    wire [5:0] bu = 6'(h - (par ? 9'd48 : 9'd0));
     wire [9:0] hi; wire [7:0] lo;
     genvar j;
     generate for (j = 0; j < 10; j = j + 1) begin : g_hi
@@ -985,8 +989,8 @@ module ot_s81sl_xs4 (
         wire gate = hwb[gc] && bcs;
         (* keep = "true" *) reg [79:0] ln0, ln1;   // [40 parity + bu]
         wire [79:0] ld0, ld1;                       // S81-FIX2/XG: one kept predecode per copy
-        ot_s81sl_xs4_bdec u_bd0 (.par(par), .bu(bu), .ln(ld0));
-        ot_s81sl_xs4_bdec u_bd1 (.par(par), .bu(bu), .ln(ld1));
+        ot_s81sl_xs4_bdec u_bd0 (.h(h), .ln(ld0));
+        ot_s81sl_xs4_bdec u_bd1 (.h(h), .ln(ld1));
         (* keep = "true" *) reg [7:0] ms0, ms1, mr;
         reg [6:0] rw; reg bb, gf;
         integer x;
