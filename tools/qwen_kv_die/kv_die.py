@@ -904,6 +904,7 @@ SLICE_GAP = 21.6
 # subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
 HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
 HOST_RT_MODULE = 'qkd_host_root_admission'
+STATUS_OBS1 = os.environ.get('OT_KV_STATUS_OBS1', '0') == '1'
 # KV-BIND4-GUARD 10-19 (OT_KV_MU=1, OT_KV_HOST_MU default 1 under MU): the frame binds the MU 1 release HOST root
 # qkd_host_root_admission_mu (tools/qwen_kv_die/mu_peer/gen_host_root_mu.py; same ports + parameters, MU default 1):
 # the RTL of the CLOSED guard core qkd_hr_core_guard-mu1s-d222ef261 (u_rank.u_native = endpoint_cancel_mu, guard
@@ -937,6 +938,13 @@ HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
 if HOST_RT_OBSX:
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
     HOST_RT_MODULE = 'qkd_host_root_admission_obsx'
+if STATUS_OBS1:
+    if not HOST_RT_MU or HOST_RT_OBS or os.environ.get('OT_KV_HOST_OBSX', '0') != '0':
+        raise ValueError('STATUS_OBS1 requires the MU non-OBS host partition (dedicated CSR window)')
+    if os.environ.get('OT_KV_ROPE_OVL', '0') != '1':
+        raise ValueError('STATUS_OBS1 requires the explicit coherent ROPE_OVL source contract')
+    HOST_RT_FILE = 'rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_status_obs1'
 OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done', 'obs_dcal_cal_ready', 'obs_dcal_running'], odl=['obs_dcal_layer'],
                         odr=['obs_d2d_recovery_cycles'])       # = gen_host_root_obs.OBSX_HOST_GROUPS
 OBSX_DCAL_DOB = ['adm_done', 'cal_ready', 'running']
@@ -987,6 +995,10 @@ def host_rt_binding():
         ports[die_port] = ports.pop(rtl_port)
     ports.update(fdi=['phy_up', 'phy_tx_v', 'phy_tx_flit', 'phy_rx_v', 'phy_rx_flit'], hb=['hb', 'hb_cr'],
                  tk=['local_tk'], kst=['local_kst'])
+    if STATUS_OBS1:
+        for p in ('status_obs_v', 'status_obs_epoch16', 'status_obs_payload'):
+            ports.pop(p)
+        ports['sobs'] = ['status_obs_v', 'status_obs_epoch16', 'status_obs_payload']
     return dict(module=HOST_RT_MODULE, file=HOST_RT_FILE, ports=ports, sliced=sliced,
                 parameters=dict(ENABLE_SERVICE=1, ENABLE_NATIVE=1, ENABLE_TOKEN=1, NL=2),   # NL: 2 real link ends (static D2D + host SerDes)
                 classed={'die_id': 'by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly',
@@ -1060,19 +1072,25 @@ D2DS_SFM_PARAMS = ('SAFE_RC', 'SRAMV', 'FEG')
 # the mandatory native census (72 roots > 32, max 152); sfm3 census PASS 32.
 D2DS_SFM_TOPS = {'qkd_d2d_static_sfm': D2DS_SFM_FILE,
                  'qkd_d2d_static_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv',
-                 'qkd_d2d_static_ovl_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'}
+                 'qkd_d2d_static_ovl_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv',
+                 'qkd_d2d_static_ovl_sfm3_obs1': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv'}
 
 
 def d2ds_kit():
     """(module, file, extra params) of the d2ds RTL selected by OT_KV_D2DS_KIT; qkd_d2d_static unless the kit's top is sfm"""
     kit = os.environ.get('OT_KV_D2DS_KIT', '')
     if os.environ.get('OT_KV_D2DS_VIEW', '0') in ('0', '', 'off') or not kit:
+        if STATUS_OBS1:
+            raise ValueError('STATUS_OBS1 needs its exact source/view kit; no legacy end fallback')
         return 'qkd_d2d_static', D2DS_FILE, {}
     sp = ROOT / 'physical/ref_tile' / kit / 'spec.json'
     if not sp.is_file():
+        if STATUS_OBS1:
+            raise ValueError('STATUS_OBS1 kit does not exist; no legacy end fallback')
         return 'qkd_d2d_static', D2DS_FILE, {}
     spec = json.loads(sp.read_text())
-    if ROPE_OVL and spec.get('top') != 'qkd_d2d_static_ovl_sfm3':
+    expected_ovl = 'qkd_d2d_static_ovl_sfm3_obs1' if STATUS_OBS1 else 'qkd_d2d_static_ovl_sfm3'
+    if ROPE_OVL and spec.get('top') != expected_ovl:
         raise ValueError('RoPE OVL needs its actual OVL sfm3 end, not a single-user stand-in')
     if spec.get('top') not in D2DS_SFM_TOPS:
         return 'qkd_d2d_static', D2DS_FILE, {}
@@ -1256,7 +1274,7 @@ def _d2d_view_pins(m, M):
 
 def d2ds_binding():
     mod, fil, extra = d2ds_kit()
-    return dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
+    b = dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1265,6 +1283,9 @@ def d2ds_binding():
                            host_boot_begin=['host_boot_begin'], lpf=['fault']),
                 sliced={},
                 classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
+    if STATUS_OBS1:
+        b['ports']['sobs'] = ['status_obs_v', 'status_obs_epoch16', 'status_obs_payload']
+    return b
 
 
 def _host_rt_v14(b):
@@ -2946,6 +2967,10 @@ def _d2ds_swap(m):
     add = B.append
     add(('rst_phyd2d', 'reset', 1, [('d2d_kv', 'phy_rst_n'), ('ucie_rom', 'rst_n')]))
     add(('hsvc', 'spine_local', 8 + 3 + 4 + 9 + 1 + 1 + 1 + 4 + 59 + 2 + 18 + 32 + 32, [('d2d_kv', 'svc'), ('host', 'svc')]))
+    if STATUS_OBS1:
+        # Accepted pulse, receipt epoch and full schema travel as one equally
+        # registered record. HOST owns the real atomic CSR snapshot/delta reader.
+        add(('hstatus_obs', 'kv_oneway', 225, [('d2d_kv', 'sobs'), ('host', 'sobs')]))
     add(('hlup', 'spine_local', 2, [('d2d_kv', 'lup'), ('host', 'lup')]))
     add(('hrec_tx', 'spine_local', 1 + 548, [('host', 'rec_tx'), ('d2d_kv', 'rec_tx')]))
     add(('hrec_rx', 'spine_local', 2 + 1 + 1 + 548, [('d2d_kv', 'rec_rx'), ('host', 'rec_rx')]))

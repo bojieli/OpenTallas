@@ -497,6 +497,9 @@ module qkd_d2d_static_core_sfm3_obs1 #(parameter integer MUT = 0, parameter inte
     localparam integer NEB = 18;   // epoch_begin copies (KV-D2D3): [11:0] slot link, [16:12] end, [17] STATUS / KVN
     localparam integer RCP = 12;   // reset copies per region (ot_rst_pipe COPIES; OT_RST_COPIES_MAX spreads the loads)
     localparam integer NG2=24;   // STATUS capture groups (KV-D2D3: 13 x 12 b, own header copies)
+    wire [NG2+1:0] status_rst_k;
+    ot_qwen_status_cold_reset_forest_v1 #(.REGIONS(NG2+2)) u_status_reset
+      (.ck(ck),.rst_n_in(rst_n),.rst_n(status_rst_k));
     wire [NEB-1:0] ebc;
     wire [NG2-1:0] st_ev_c, st_rs_c, st_hk_c;
     wire [16*NG2-1:0] st_he_c;
@@ -553,7 +556,7 @@ module qkd_d2d_static_core_sfm3_obs1 #(parameter integer MUT = 0, parameter inte
     if (NTX == 4) begin : g_tx3_idle
         assign tv[3] = 1'b0; assign tp[4*FW-1:3*FW] = {FW{1'b0}};
     end
-    ot_qwen_d2d_status_rx_sfm3_obs1 #(.NG(NG2)) u_st (.ck(ck), .rst_n(local_rst_n[2]), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
+    ot_qwen_d2d_status_rx_sfm3_obs1 #(.NG(NG2)) u_st (.ck(ck), .rst_n(local_rst_n[2]), .rst_k(status_rst_k), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
         .ev_c(st_ev_c), .rs_c(st_rs_c), .hk_c(st_hk_c), .he_c(st_he_c),
         .rx_payload(rxp), .vm_drained(s_vm), .collective_drained(s_co), .collective_busy(s_cb), .crom_fault(s_cf),
         .execution_active(s_ea), .admit_ready(s_ar), .status_fresh(s_fr), .result_v(engine_result_v),
@@ -1070,4 +1073,26 @@ module qkd_d2d_static_ovl_sfm3_obs1 #(parameter integer MUT = 0, parameter integ
     always @(posedge ck) q_fault <= c_fault;
     assign fault = PR ? q_fault : c_fault;
     qkd_d2d_static_core_sfm3_obs1 #(.SRAMV(SRAMV), .FEG(FEG), .OVL(1), .MUT(MUT), .MUTFO(MUTFO), .SAFE_RC(SAFE_RC), .NL(NL), .NTX(NTX), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .cal_start_rx(c_cal_start_rx), .cal_seg_rx(c_cal_seg_rx), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault), .status_obs_v(c_status_obs_v), .status_obs_epoch16(c_status_obs_epoch16), .status_obs_payload(c_status_obs_payload), .sf_start(q_sf_start), .sf_seg(q_sf_seg), .sf_cfg_addr(q_sf_cfg_addr), .sf_cfg_data(q_sf_cfg_data), .sf_cfg_base(q_sf_cfg_base), .fg_we(q_fg_we), .fg_addr(q_fg_addr));
+endmodule
+
+// Exact old reset release: two asynchronous-assert synchronizer stages followed
+// by two plain distribution stages. The root drives26 real first-stage FFs;
+// retained hierarchy prevents equivalent leaf registers collapsing together.
+(* keep_hierarchy=1 *)module ot_qwen_status_reset_region_v1(
+ input wire ck,d,output wire q
+);
+ reg a,b;
+ always @(posedge ck)begin a<=d;b<=a;end
+ assign q=b;
+endmodule
+module ot_qwen_status_cold_reset_forest_v1 #(parameter integer REGIONS=26)(
+ input wire ck,rst_n_in,output wire[REGIONS-1:0]rst_n
+);
+ reg s0,s1;
+ always @(posedge ck or negedge rst_n_in)
+   if(!rst_n_in)begin s0<=0;s1<=0;end else begin s0<=1;s1<=s0;end
+ genvar r;
+ for(r=0;r<REGIONS;r=r+1)begin:g_region
+   ot_qwen_status_reset_region_v1 u_region(.ck(ck),.d(s1),.q(rst_n[r]));
+ end
 endmodule

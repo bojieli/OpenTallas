@@ -1,0 +1,39 @@
+{
+  "source": "rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv",
+  "source_sha256": "57b403d7ecbdf0aad0b112f6bd34101c9e89cad6e51372b92341770f67b83949",
+  "output": "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv",
+  "output_sha256": "ba0c21ae738e1c5fd4e22672bb0e09a944d9b761e59610c63c7527c6414d4fe2",
+  "top": "qkd_host_root_admission_status_obs1",
+  "status_input_bits": 225,
+  "window": "0x1800-0x19FF",
+  "snapshot_bits": 293,
+  "snapshot_fields": {
+    "payload208": [
+      0,
+      207
+    ],
+    "receipt_epoch16": [
+      208,
+      223
+    ],
+    "record_seq32": [
+      224,
+      255
+    ],
+    "completion_delta32": [
+      256,
+      287
+    ],
+    "errors4": [
+      288,
+      291
+    ],
+    "seen": [
+      292,
+      292
+    ]
+  },
+  "semantics": "operation epoch/owner are carried inside raw schema208 and independent from receipt epoch; same-epoch completion count must be monotonic; changed receipt epoch starts new delta window",
+  "latency": "accepted STATUS commit2samples; CAPTURE commit2samples; CSR read3samples after AR; off token schedule",
+  "physical_qualification": "NOTRUN; new exact wrapper/frame/native source proof required"
+}

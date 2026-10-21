@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   782 GB (avail 660, growth 113, headroom 0, waiters 0/0 GB) load 51/128 running 34 disk 2170 GB 
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host
+ot-run: ot-epyc9       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host
+ot-run: ot-gold2       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host
+ot-run: ot-gold1       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-919250-1792606955 after 0 s
+good expected verdict PASS
+count_level expected verdict PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-919250-1792606955): exit 0

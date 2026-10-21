@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS",
+  "scope": "actual K header+RX26 API+samephase reset forest and legacy-mask mutant",
+  "source_sha256": {
+    "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_status_obs.sv": "a0fc17bc7fff580cddc8996d070267cdf96291c961416373488f840884ca03c5",
+    "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv": "ba0c21ae738e1c5fd4e22672bb0e09a944d9b761e59610c63c7527c6414d4fe2",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv": "93e498afb8800f16d7828c314012bee38cd578218d03719dff0892852917df07",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "928ec8c3d5754daec2f06f0aa7572bcf6da69e1215dbeb8353fabc8821f99ecc"
+  },
+  "native_host": "NOTRUN",
+  "physical": "NOTRUN",
+  "compiled_programme": "UNKNOWN final GEN ages; no new image",
+  "semantics": "raw208 actual operation epoch/owner independent from receipt STATUS epoch; delta is count difference within receipt window, frozen293bit CSR snapshot"
+}

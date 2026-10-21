@@ -1,0 +1,5 @@
+STATUS_HOST_PASS atomic208+epoch+seq delta_count regression fence identity readonly pass_through latency3
+- tb_status_host.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.000 s; speed 12.935 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
