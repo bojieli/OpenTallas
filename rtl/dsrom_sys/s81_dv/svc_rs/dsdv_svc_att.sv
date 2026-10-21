@@ -72,7 +72,8 @@ module dsdv_svc_att #(
     parameter integer PFIFO = 512,
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    parameter integer NTP = 0                    // 0: four physical tiles; 1: G4 (one tile, four groups)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -325,7 +326,14 @@ module dsdv_svc_att #(
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
     wire pvown = tile[3:2] == st_r;
-    wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
+    // NTP changes physical replication only. The current ABI, dynamic stack CFG,
+    // PIO/PVO counters and valid-only schedule remain intact. The compiler offers
+    // one p step per physical-engine issue slot, never a ready-driven retry.
+    localparam integer NTX = NTP > 0 ? NTP : 4;
+    localparam integer PACE = 4 / NTX;
+    wire [15:0] jpo = jc - po;
+    wire ep_v = job_active && p_left != 0 && jc >= po &&
+                (PACE == 1 || jpo % PACE == 0);
     wire ep_ready;
     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
 
@@ -340,7 +348,7 @@ module dsdv_svc_att #(
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(0), .PV_CRED(0)) u_eng (
+                         .SC_CRED(0), .PV_CRED(0), .NTP(NTP)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
