@@ -2,7 +2,7 @@
 # One immutable available-view diagnostic chain. Original G8 inputs/jobs untouched.
 set -euo pipefail
 D=$(cd "$(dirname "$0")" && pwd)
-PREP=7ec9b5e2faeb9d7caec112470701f59a70777f94
+PREP=3be5b0ff784590d406f4a1d79c7a7624bac33040
 RTL_BASE=553741303923ab6bab36d67d17f914b1f11896c5
 TOOLS=1a872af33c8d10d8123f8d4c69198e09cc04fd43
 CREF=12c132d60a8f0300056abb216d48ff9588e7f620
@@ -24,7 +24,7 @@ mapfile -t PF < "$W/phys.lst"
 git --git-dir="$G" archive "$RTL_BASE" -- "${PF[@]}" | tar -xf - -C "$W/src"
 # Published helpers are independently pinned; never copy candidate-era shared helpers.
 git --git-dir="$G" archive "$TOOLS" tools | tar -xf - -C "$W/src"
-git --git-dir="$G" archive "$PREP" results/arch/s81_die72_1021/g9_assembly/pre_gen results/arch/s81_die72_1021/relay_bodies.json | tar -xf - -C "$W/src"
+git --git-dir="$G" archive "$PREP" results/arch/s81_die72_1021/g9_assembly/pre_gen results/arch/s81_die72_1021/relay_bodies.json physical/ref_tile/s81_mu72_assembly | tar -xf - -C "$W/src"
 cd "$W/src"
 cp results/arch/s81_die72_1021/g9_assembly/pre_gen/plan_unrouted_g9.json "$W/plan_unrouted_g9.json"
 cp results/arch/s81_die72_1021/g9_assembly/pre_gen/bind_table_g9.json "$W/bind_table_g9.json"
@@ -50,7 +50,7 @@ python3 tools/s81_dv/release72/mk_land_plan_g7.py "$BASE/landing/p4l3/land_plan.
 # These are explicit landing MODELS; no inherited stage-map/calendar dates are qualified.
 python3 tools/s81_dv/dv_diecase.py --plan "$P" --out "$W/bind" --bind real --bind-table "$T" --land-plan "$LAND" > "$W/bind.log" 2>&1
 printf 'BIND_RC 0 %s\n' "$(date -Is)" >> "$W/steps.log"
-python3 tools/s81_dv/dv_rvcase.py --plan "$P" --bind-dir "$W/bind/bind" --bind-table "$T" --land-plan "$LAND" --out "$W/case" --view-refs "$CREF" "$RTL_BASE" "$PREP" --die-repair --dieflow-ref "$TOOLS" --dcc-ref "$TOOLS" --corners tt ff ss --macro-views --signal-top-layer M8 --gen-safety-diag 'G9 selected available-view diagnostic: exact configured CTRL16/QF1/TAP16 CLOSED views; W6 children beneath unhardened MU parents; unique KV512 master and all other unqualified parents remain explicit stand-ins. No whole-die physical, full programme, token, stage-map or calendar qualification.' > "$W/case_gen.log" 2>&1
+python3 tools/s81_dv/dv_rvcase.py --plan "$P" --bind-dir "$W/bind/bind" --bind-table "$T" --land-plan "$LAND" --out "$W/case" --view-refs "$CREF" "$RTL_BASE" "$PREP" --die-repair --dieflow-ref "$TOOLS" --dcc-ref "$TOOLS" --corners tt ff ss --macro-views --signal-top-layer M8 --gen-safety-diag 'G9 selected available-view diagnostic: exact configured CTRL16/QF1/TAP16 CLOSED views; W6/E4 children beneath unhardened MU parents; unique KV512 master and all other unqualified parents remain explicit stand-ins. No whole-die physical, full programme, token, stage-map or calendar qualification.' > "$W/case_gen.log" 2>&1
 printf 'CASE_RC 0 %s\n' "$(date -Is)" >> "$W/steps.log"
 CPUS=16 MEMG_GRT=96 MEMG_STA=64 bash "$W/case/run_all.sh" > "$W/chain.log" 2>&1
 printf 'CHAIN_RC 0 %s\n' "$(date -Is)" >> "$W/steps.log"
