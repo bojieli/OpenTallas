@@ -1,0 +1,27 @@
+{
+  "state": "LIVE_STRICT_BIND_NOT_QUALIFIED",
+  "source_ref": "0aab02169f816db4fcbb1e62cc77458bde3b8625",
+  "unit": "oth-ubuntu-1723665-1792603559",
+  "host": "ot-gold1",
+  "run": "/srv/opentallas-scratch/claude/codex-s81-g8-fast-1021/die72-g8fast",
+  "original_source_ref": "d74894719a4b31b03ed67855728087380f063209",
+  "original_run_preserved": "/srv/opentallas-scratch/claude/codex-s81-g8-bindfix-1021/die72-g8r4",
+  "authorization": "ROOT via lead authorizes one fresh immutable chain, same source/pins/bind inputs except linear emitter census; original R4 preserved",
+  "source_emitter_cpu_seconds_observed": 19,
+  "reset_reach": {
+    "status": "PASS",
+    "sinks": 19993,
+    "errors": 0
+  },
+  "input_sha256_equal_to_R4": {
+    "plan_routed_g8.json": "6674ac57a36fcc2f81c3a24289dfe0eab8fd8e12822a8bf194d03cc29721f114",
+    "bind_table72.json": "00a720e2ec6619b91d80491e99eff257e7ad8b94b4461f10ba614796d00336cb",
+    "land_plan_g8.json": "0179a7504abcc0d1a74a776a93bbadbb3a74fb0086bb25f9fc91018421b200a9"
+  },
+  "remaining": [
+    "strict bind",
+    "GEN/GRT/STA/clock available-view chain",
+    "actual old/new output comparison when original R4 emits"
+  ],
+  "note": "No new KV functional assembly in this run. Snapshot live status is not closure evidence."
+}
