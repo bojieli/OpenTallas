@@ -1,0 +1,38 @@
+{
+  "source_base": "146012ea179b25f25759b86999d93ff70862c470",
+  "wrapper_commit": "963640b19",
+  "reuse_request_only": true,
+  "frozen_artifacts_modified": false,
+  "kits": {
+    "hbm_hcq_tree16_c1": {
+      "gate_result_sha256": "fa426652750a27712281cc52488e0498181b0de659d4429440b41a0232aead14",
+      "manifest_sha256": "da64865e3d805ac53930470a02337054f29256c3f6e0da7592bb805381de4246",
+      "consumed_count": 624,
+      "source_differences": [
+        {
+          "path": "rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+          "staged_sha256": "14367ffb347ca66d58588eaa345ff20981fe066af60278492f2a74ec78b6e2e0",
+          "proposed_sha256": "5d63e91835e6a7590c86a1b0d15fe50e8e94bcfcf0e19df703afb3a980d61b4a"
+        }
+      ],
+      "gate_verdict": "PASS",
+      "remote_host": "ot-agidock128",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_tree16_c1-20261020-051846"
+    },
+    "hbm_hcq_tree16_c1b": {
+      "gate_result_sha256": "418af6cd166773687248af3170b1f6e66abeed36d93d974010662caf503046c1",
+      "manifest_sha256": "6073f82243d1906da399ed4ad834e475af9e5e28c7ffcd1559fadd38fa231ef0",
+      "consumed_count": 624,
+      "source_differences": [
+        {
+          "path": "rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+          "staged_sha256": "14367ffb347ca66d58588eaa345ff20981fe066af60278492f2a74ec78b6e2e0",
+          "proposed_sha256": "5d63e91835e6a7590c86a1b0d15fe50e8e94bcfcf0e19df703afb3a980d61b4a"
+        }
+      ],
+      "gate_verdict": "WARN",
+      "remote_host": "ot-agidock128",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_tree16_c1b-20261020-051846"
+    }
+  }
+}
