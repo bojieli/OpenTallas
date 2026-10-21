@@ -26,7 +26,18 @@
   },
   "cap": "32GiB actualhardcap/resmetadata verified Diskfleet; peakelab21.44GB",
   "prior8and16": "MEMCG_OOM infrastructure retained, noRTLverdict",
-  "scope": "completion-byte + FP96 candidate source only; later bank partition/FP normalization requires current exact proofs",
+  "scope": "All3 existing positives PASS exact source46e completion-byte+FP96 candidate; later current source/causal/native obligations separate",
   "native": "r9 failed infrastructure16GiB before mappednetlist; no nativequalification",
-  "raw_logs": "direct remote terminal simulator logs; local ot-run admission-only logs lag actual results"
+  "raw_logs": "direct remote terminal simulator logs; local ot-run admission-only logs lag actual results",
+  "NORM": {
+    "verdict": "PASS",
+    "slices": 16,
+    "y_vecs": 80,
+    "y_err": 0,
+    "rstd": 16,
+    "rstd_hex": "3fbf858b",
+    "fault": 0,
+    "last_partial_to_first_rstd": 234,
+    "rstd_spread": 13
+  }
 }
