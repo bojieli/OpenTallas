@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hidx_rootctl_am_g2ef_1020",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T07:26:00-07:00",
+ "gate_commit": "40128835b",
+ "checklist": {
+  "lattice": "1 SRAM on the lattice",
+  "std_cell_band": "pin-bound tile, fill 20%, local hot spots but trial GRT overflow 0 (M2 28%)",
+  "pin_spread": "6029 pins on full faces",
+  "clock_entry": "spread g2e 46.3/48.0, g2ef 70.9/71.8 ps; one root 15.6k sinks (guidance)",
+  "shape": "410.4x216 (g2ef 432x216)"
+ },
+ "notes": "COORD 10-21 07:30 APPROVED rootctl_am g2e main + g2ef fallback; first CLOSED binds as hb_idx__ctl",
+ "geometry_sha256": "d2e9965136619eff9435a9157d28aefec3ccb6d45fe62168d3d78ffc3a96e30a"
+}
