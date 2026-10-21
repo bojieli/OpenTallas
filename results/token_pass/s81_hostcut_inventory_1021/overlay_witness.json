@@ -192,17 +192,27 @@
   "cells_used.v": "75d25f65ac2083fad70903298674324531664fd1a3e978c037f0c707f56863f9"
  },
  "schema": "opentallas.s81.hostcut_prebuild_overlay.v1",
- "status": "KNOWN_PREBUILD_689_OVERLAY_COMPILER_RECORD_METADATA_MATCH",
- "source_consumption": "SOURCE_CONSUMPTION_UNVERIFIED_CRYPTOGRAPHIC_BYTES",
+ "status": "PREBUILD_689_OVERLAY_COMPILER_CACHE_CONTENT_IDENTITY_MATCH",
+ "source_consumption": "RECORDED_COMPILER_CACHE_IDENTITY_MATCH_WITH_RETAINED_CURRENT_SHA256",
  "recorded_manifest_unchanged": true,
  "actual_git_ref": "6893686b3a6c8b4d5400b9845052b97c6046be75",
  "recorded_git_ref": "cca31efaf951ad62a72c3a40442cf6aefa60e0dc",
  "compiler_command_record": "C \"--binary --timing -j 32 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE --unroll-count 4 -fno-dfg -CFLAGS -O1 --top-module tb_slice_top -f kit.f tb/tb_slice_top.sv --Mdir /srv/opentallas-scratch/claude/tokfunc2-s81/out_cut_3S_ctl_xrt_idle/obj -o sim\"",
  "compiler_source_record": "S     18053 111935788  1792611339   688326046  1792611339   688326046 \"QYe2otDjFBK30FnBcBtDAPCa3kY4Vm2JlGuhAROn\" \"src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv\"",
  "compiler_verFiles_sha256": "daaa13b314c2e79e4e996942dfe39dabe0bd09fe3080b1ee0e3c8413fce71a1f",
- "compiler_source_evidence": "Recorded path/18053-byte size/mtime agree with prebuild689overlay and differ from18050byte historicalsource. Compilerfingerprint preserved opaque; no claim independently captured consumed-source SHA256.",
+ "compiler_source_evidence": "Actual recorded compiler source path/18053-byte size/mtime and complete40-character cache-content identity match current exact git689body. Full currentSHA256 retained separately; historical fullSHA256 not proved. Historical kit remains unchanged; no runtime or G8 equivalence claimed.",
  "runtime_result": "PENDING",
  "shipping_G8_equivalence": false,
  "full_stage": false,
- "full_token": false
+ "full_token": false,
+ "compiler_content_fingerprint": {
+  "expression": "base64.b64encode(hashlib.sha256(source_bytes).digest()).decode().replace('+','A').replace('/','B')[:40]",
+  "expected_from_current_sha256": "QYe2otDjFBK30FnBcBtDAPCa3kY4Vm2JlGuhAROn",
+  "recorded": "QYe2otDjFBK30FnBcBtDAPCa3kY4Vm2JlGuhAROn",
+  "full40_char_match": true,
+  "algorithm_attribution": "Empirically verified existing QW Verilator5.050 content-record expression, 31 S-record matches; no upstream source attribution",
+  "prior_verification_commit": "1b29dcd2867962e8cc82ff7955659f78fa8e7e55",
+  "qualification": "Lossy identifier sanitization; measured compiler cache-content identity, not reversible or full cryptographic SHA240/256",
+  "historical_full_sha256_proved": false
+ }
 }
