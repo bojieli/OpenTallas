@@ -86,7 +86,8 @@ def view_source(vdir):
     p = vdir / 'provenance' / 'view_export.abstract.json'
     if not p.exists():
         return None, None
-    m = re.search(r'closure-loop/([^/"]+)-([0-9a-f]{9})/', p.read_text(errors='replace'))
+    # QKC-GRP 10-21: the run dir may carry a stage suffix after the sha (qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b-bench)
+    m = re.search(r'closure-loop/([^/"]+?)-([0-9a-f]{9})(?:-[A-Za-z0-9_]+)?/', p.read_text(errors='replace'))
     if not m:
         return None, None
     full = git('rev-parse', '--verify', '-q', m.group(2) + '^{commit}')
