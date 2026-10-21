@@ -1,0 +1,10 @@
+{
+  "qualification": "PREPARATION_ONLY_NO_RUNTIME",
+  "change": "Only generated TB NEV capacity2513->4168; MAXW2470 and every other TB byte identical",
+  "old_tb_sha256": "4e26a5054c903532fbb9478296a3466f7aa89c9e5ba1be83f71246f3a1cf546c",
+  "new_tb_sha256": "0adaed3fc1f5c896f08c1cd0d15b8647149c9fdd1522513dbaee5951fd557cca",
+  "old_binary_reuse_allowed": false,
+  "child_reuse": "After original terminal only, verify actual20master source hashes+actual child params and completed object/library digests before top-only conversion/link",
+  "scope": "ActualVM SRAMendstate24C +19fault0; excludes normaldrain timing/liveness/fulltokenqualification",
+  "stimulus": "Original pre-opA/B/D M only; in-place originalA/O alias legitimate, goldenO comparison-only"
+}
