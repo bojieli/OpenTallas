@@ -24,7 +24,7 @@ module ot_hbm_svc_async_fifo_oh #(parameter integer WIDTH=32,DEPTH=8,parameter i
  (* async_reg="true" *)reg [PW-1:0] rd_gray_w1,rd_gray_w2,wr_gray_r1,wr_gray_r2;
  reg wr_online,rd_online;
  (* async_reg="true" *)reg rd_online_w1,rd_online_w2,wr_online_r1,wr_online_r2;
- (* keep="true",dont_touch="true" *) reg[DEPTH*NS-1:0]wsel_k,rsel_k;   // [slot*NS+slice]
+ wire[DEPTH*NS-1:0]wsel_k,rsel_k;   // [slot*NS+slice]: KEPT per-bit flops below
  wire full=wr_gray=={~rd_gray_w2[PW-1:PW-2],rd_gray_w2[PW-3:0]};
  wire empty=rd_gray==wr_gray_r2;
  assign wr_ready=wr_rst_n[0]&&rd_online_w2&&!full;
@@ -55,12 +55,14 @@ module ot_hbm_svc_async_fifo_oh #(parameter integer WIDTH=32,DEPTH=8,parameter i
   end
  end
  generate for(s=0;s<DEPTH*NS;s=s+1)begin:g_wk
+  (* keep="true",dont_touch="true" *) reg w,r;
+  assign wsel_k[s]=w;assign rsel_k[s]=r;
   always @(posedge wr_clk or negedge wr_rst_n[1+s/32])
-   if(!wr_rst_n[1+s/32])wsel_k[s]<=(s/NS==0);
-   else wsel_k[s]<=(wr_next[AW-1:0]==(s/NS))&&!full_next;
+   if(!wr_rst_n[1+s/32])w<=(s/NS==0);
+   else w<=(wr_next[AW-1:0]==(s/NS))&&!full_next;
   always @(posedge rd_clk or negedge rd_rst_n[1+s/32])
-   if(!rd_rst_n[1+s/32])rsel_k[s]<=(s/NS==0);
-   else rsel_k[s]<=(rd_next[AW-1:0]==(s/NS));
+   if(!rd_rst_n[1+s/32])r<=(s/NS==0);
+   else r<=(rd_next[AW-1:0]==(s/NS));
  end endgenerate
  always @(posedge rd_clk or negedge rd_rst_n[0])begin
   if(!rd_rst_n[0])begin

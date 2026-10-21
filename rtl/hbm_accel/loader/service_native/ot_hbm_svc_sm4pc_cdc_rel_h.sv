@@ -82,7 +82,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  reg h_active;reg h_fresh;
  (* keep="true",dont_touch="true" *) reg [3:0] hidle_k;   // = !h_active (block-field capture enables, <= 32 b each)
  reg [LB-1:0] h_bank;reg [15:0] h_epoch;reg [29:0] h_base;reg [11:0] h_total;reg [19:0] h_pcs;reg [14:0] h_row_base;
- reg [11:0] rx_left[0:LBANKS-1];wire [3:0] issue_done;integer rb;
+ wire [11:0] rx_left[0:LBANKS-1];wire [3:0] issue_done;integer rb;
  wire [3:0] pc_fault,response_ok;wire [LB-1:0] response_bank[0:3];
  wire [10:0] response_ordinal[0:3];wire [15:0] response_epoch[0:3];
  wire descriptor_fire=desc_rd_valid&&desc_rd_ready;
@@ -152,9 +152,10 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   end
  end
  generate for(g=0;g<LBANKS;g=g+1)begin:g_rx
+  reg [11:0] q;assign rx_left[g]=q;
   always @(posedge hbm_clk or negedge hc[1+g/2])
-   if(!hc[1+g/2])rx_left[g]<=0;
-   else rx_left[g]<=((descriptor_fire&&desc_data[T0-1:16]==g)?desc_data[T0+11:T0]:rx_left[g])-12'(h_take_b[g]);
+   if(!hc[1+g/2])q<=0;
+   else q<=((descriptor_fire&&desc_data[T0-1:16]==g)?desc_data[T0+11:T0]:q)-12'(h_take_b[g]);
  end endgenerate
  // ---------------- stream side: registered per-bank reserve copies, landing banks, drain
  reg [7:0] rsv_v_k;reg [LB-1:0] rsv_bank_k[0:7];reg [15:0] rsv_epoch_k[0:7];reg [11:0] rsv_total_k[0:7];
