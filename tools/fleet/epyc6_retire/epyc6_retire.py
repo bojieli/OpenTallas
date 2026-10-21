@@ -594,20 +594,28 @@ def note_pending(roots_map, summ):
 def check_required_archive_inputs():
     """Known recovered source/input sets are part of C3, including their exact hashes."""
     cfg = jload(f"{STATE}/required_archive_inputs.json", None)
-    if not isinstance(cfg, dict) or not cfg.get("jobs"):
-        return ["required recovered source/input manifest absent or empty"]
+    expected_jobs = {"hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
+                     "qfd_dv_s5_sc2b-sc2bk-dc13647fb",
+                     "s81sl_ve_r5-s81sl_ve_r5-f51f4ec42"}
+    if (not isinstance(cfg, dict) or not isinstance(cfg.get("jobs"), dict) or
+            set(cfg["jobs"]) != expected_jobs):
+        return ["required recovered source/input manifest must contain exactly E86, SC2b and VE"]
     payload = {}
     try:
         for job, entry in cfg["jobs"].items():
-            if entry.get("missing_inputs") or not entry.get("roots"):
+            if (not isinstance(entry, dict) or not isinstance(entry.get("missing_inputs"), list) or
+                    entry["missing_inputs"] or not isinstance(entry.get("roots"), dict) or not entry["roots"]):
                 raise ValueError(f"{job}: required input closure incomplete")
             for root, rows in entry["roots"].items():
-                if (not root.startswith(DEST.rstrip("/") + "/") or
-                        os.path.normpath(root) != root or not rows):
+                if (not isinstance(root, str) or not root.startswith(DEST.rstrip("/") + "/") or
+                        os.path.normpath(root) != root or not isinstance(rows, list) or not rows):
                     raise ValueError(f"{job}: invalid/empty archive root")
-                for rel, size, digest in rows:
-                    if (os.path.isabs(rel) or ".." in rel.split("/") or
-                            not isinstance(size, int) or size < 0 or
+                for row in rows:
+                    if not isinstance(row, (list, tuple)) or len(row) != 3:
+                        raise ValueError(f"{job}: malformed required file row")
+                    rel, size, digest = row
+                    if (not isinstance(rel, str) or not rel or os.path.isabs(rel) or ".." in rel.split("/") or
+                            type(size) is not int or size < 0 or
                             not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
                         raise ValueError(f"{job}: invalid required file identity")
                 if root in payload:
