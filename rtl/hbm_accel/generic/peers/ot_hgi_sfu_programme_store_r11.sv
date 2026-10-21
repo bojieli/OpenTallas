@@ -35,7 +35,12 @@
 // copies of equal depth (a uniform time shift is exact). Benches: tb_sfu_store_r11_lockstep (r7c vs r11, every output
 // every edge, ISHIFT=6 / PSHIFT=11) + tb_hgi_sfu_split_equiv STORE11=1 (D=10, DS=8, io_store_r11.hex).
 module ot_hgi_sfu_programme_store_r11 #(
- parameter integer PAGE_AW=1, AW=10+PAGE_AW
+ parameter integer PAGE_AW=1, AW=10+PAGE_AW,
+`ifdef OT_SFU_STORE14
+ parameter integer FAULT_PIPE=1
+`else
+ parameter integer FAULT_PIPE=0
+`endif
 )(
  input wire clk,rst_n,
  input wire cfg_we,
@@ -261,20 +266,68 @@ module ot_hgi_sfu_programme_store_r11 #(
   io_dis=(|vio && !(&vio)) || (|dio && !(&dio)) || (|aio && !(&aio));
   for(integer s=1;s<3;s=s+1)if(vio[s] && so[8+s]!=so[8])io_dis=1;
  end
- reg p_fault,io_fault;
- always @(posedge clk)begin
-  if(!rb_s[S_ST])p_fault<=0; else if(p_dis || |pf)p_fault<=1;
-  if(!rb_s[S_ST])io_fault<=0; else if(io_dis || |iof)io_fault<=1;
- end
- reg c_ia,c_id,c_pa,c_pd,c_f;
+ // r14: split agreement comparison and sticky update across existing fault latency.
+ // Captured partials replace one of the two final fault pads; all externally
+ // visible edges, including reset and sticky-fault release, remain unchanged.
+ wire fault_value;
+ generate if(FAULT_PIPE)begin:g_fault14
+  reg [7:0] p_cmp;
+  reg p_flags,i_flags,p_bad,i_bad,rb_d;
+  for(genvar k=0;k<4;k=k+1)begin:g_cmp
+   always @(posedge clk)begin
+    p_cmp[k] <= (pv[1] && so[1][k*8+:8]!=so[0][k*8+:8]) ||
+                (pv[2] && so[2][k*8+:8]!=so[0][k*8+:8]) ||
+                (pv[3] && so[3][k*8+:8]!=so[0][k*8+:8]);
+    p_cmp[4+k] <= (pv[4] && so[4][k*8+:8]!=so[0][k*8+:8]) ||
+                  (pv[5] && so[5][k*8+:8]!=so[0][k*8+:8]) ||
+                  (pv[6] && so[6][k*8+:8]!=so[0][k*8+:8]) ||
+                  (pv[7] && so[7][k*8+:8]!=so[0][k*8+:8]);
+   end
+  end
+  // Four chunks per IO comparison; independent leaves keep the comparator local.
+  reg [7:0] io_cmp;
+  for(genvar k=0;k<4;k=k+1)begin:g_icmp
+   always @(posedge clk)begin
+    io_cmp[k] <= vio[1] && so[9][k*8+:8]!=so[8][k*8+:8];
+    io_cmp[4+k] <= vio[2] && so[10][k*8+:8]!=so[8][k*8+:8];
+   end
+  end
+  always @(posedge clk)begin
+   rb_d<=rb_s[S_ST];
+   p_flags <= (|pv && !(&pv)) || (|pd && !(&pd)) || (|pa && !(&pa)) || |pf;
+   i_flags <= (|vio && !(&vio)) || (|dio && !(&dio)) || (|aio && !(&aio)) || |iof;
+   if(!rb_d)begin p_bad<=0;i_bad<=0;end
+   else begin
+    if(p_flags || |p_cmp)p_bad<=1;
+    if(i_flags || |io_cmp)i_bad<=1;
+   end
+  end
+  reg f;
+  always @(posedge clk)
+   if(!rb_d)f<=0;else if(i_bad || p_bad)f<=1;
+  // KP=2 in this vehicle: one pad is now the comparison-partial stage.
+  reg pin_fault;
+  always @(posedge clk)pin_fault<=f;
+  assign fault_value=pin_fault;
+ end else begin:g_fault11
+  reg p_fault,io_fault,c_f;
+  always @(posedge clk)begin
+   if(!rb_s[S_ST])p_fault<=0; else if(p_dis || |pf)p_fault<=1;
+   if(!rb_s[S_ST])io_fault<=0; else if(io_dis || |iof)io_fault<=1;
+   if(!rb_s[S_ST])c_f<=0;else if(io_fault||p_fault)c_f<=1;
+  end
+  reg [KP-1:0] fault_pad;
+  always @(posedge clk)fault_pad<={fault_pad[KP-2:0],c_f};
+  assign fault_value=fault_pad[KP-1];
+ end endgenerate
+ reg c_ia,c_id,c_pa,c_pd;
  reg [31:0] c_io_o,c_po;
  always @(posedge clk)
   if(!rb_s[S_ST])begin
-   c_ia<=0;c_id<=0;c_pa<=0;c_pd<=0;c_f<=0;
+   c_ia<=0;c_id<=0;c_pa<=0;c_pd<=0;
   end else begin
    c_ia<=|aio;c_id<=&dio;
    c_pa<=|pa;c_pd<=&pd;
-   if(io_fault||p_fault)c_f<=1;
   end
  // Preserve each ordinal bit capture edge; local reset leaves bound all drivers.
  for(genvar h=0;h<2;h=h+1)begin:g_status_word
@@ -288,8 +341,10 @@ module ot_hgi_sfu_programme_store_r11 #(
  // KP pad stages (pure delay; the last is the S-face pin register) so the status keeps the io_word shift
  localparam integer TW=1+1+32+1+1+32+1;
  (* keep = "true", dont_touch = "true" *) reg [KP*TW-1:0] st_pad;
- always @(posedge clk)st_pad<={st_pad[(KP-1)*TW-1:0],c_ia,c_id,c_io_o,c_pa,c_pd,c_po,c_f};
- assign {io_active,io_done,io_ordinal,programme_active,programme_done,programme_ordinal,fault}=st_pad[KP*TW-1-:TW];
+ always @(posedge clk)st_pad<={st_pad[(KP-1)*TW-1:0],c_ia,c_id,c_io_o,c_pa,c_pd,c_po,1'b0};
+ wire unused_fault;
+ assign fault=fault_value;
+ assign {io_active,io_done,io_ordinal,programme_active,programme_done,programme_ordinal,unused_fault}=st_pad[KP*TW-1-:TW];
  // ---- outputs: per-leaf calendar relays (KO-1 stages, placed toward the pins) + the pin registers
  wire [221:0] oc[0:NL-1];
  for(genvar l=0;l<NL;l=l+1)begin:g_oc

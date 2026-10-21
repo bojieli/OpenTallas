@@ -60,6 +60,7 @@ if [ "${STORE11:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r11.sv $
 if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
+if [ "${STORE14:-0}" = 1 ]; then defs+=(-DOT_SFU_STORE14); fi
 case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; flip11) defs+=(-DOT_SFU_PSTORE11_MUT_FLIP);; chain11) defs+=(-DOT_SFU_PSTORE11_MUT_CHAIN);; noshift11) defs+=(-DOT_SFU_PSTORE11_MUT_NOSHIFT);; rowskew11) defs+=(-DOT_SFU_PSTORE11_MUT_ROWSKEW);; ioskew11) defs+=(-DOT_SFU_PSTORE11_MUT_IOSKEW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")

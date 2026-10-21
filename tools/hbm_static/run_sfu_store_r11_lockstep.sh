@@ -14,6 +14,7 @@ src=($P/ot_hgi_sfu_programme_store_r7c.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/
  physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v
  rtl/test/hbm_accel/generic/tb_sfu_store_r11_lockstep.sv)
 defs=()   # EQ_MUT=flip uses OT_SFU_PSTORE11_MUT_FLIP: r11 only (the r7c reference reads OT_SFU_PSTORE_MUT_FLIP)
+if [ "${STORE14:-0}" = 1 ]; then defs+=(-DOT_SFU_STORE14); fi
 case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE11_MUT_FLIP);; chain) defs+=(-DOT_SFU_PSTORE11_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE11_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE11_MUT_ROWSKEW);; ioskew) defs+=(-DOT_SFU_PSTORE11_MUT_IOSKEW);; fwd1) defs+=(-DOT_SFU_LEAF10_MUT_FWD);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 sha256sum "${src[@]}" "$0" > "$OUT/sources.sha256"
 "${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --version > "$OUT/verilator_version.txt"
