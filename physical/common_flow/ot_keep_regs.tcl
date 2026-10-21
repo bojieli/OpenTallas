@@ -30,6 +30,15 @@ if {[info exists ::env(OT_FSM_NONE_WIRES)] && [string trim $::env(OT_FSM_NONE_WI
   yosys setattr -set fsm_encoding {"none"} @ot_fn
   puts "OT_FSM_NONE: fsm_encoding none on wires named [join $::env(OT_FSM_NONE_WIRES) {, }]"
 }
+# HBM-OWN/SVG 2026-10-21: OpenROAD 26Q3 link_design reads the Verilog dont_touch attribute as an integer (std::stoi)
+# and aborts on a string value: RTL (* dont_touch = "true" *) (1195 sites in rtl/) -> mapped `(* dont_touch = "true" *)`
+# -> "Error: synth_odb.tcl, 4 stoi" before floorplan (hdie_svg_rel8e/f 4a581f01c, packet 91e933ca3; stripping only
+# that attribute links, as 32'd1 it links with 5718 dont_touch insts).  Normalise the boolean spellings to the
+# integer form the other 37k RTL sites already use (dont_touch = 1); the declared intent is unchanged.
+foreach {ot_dt_v ot_dt_i} {true 1 TRUE 1 yes 1 false 0 FALSE 0 no 0} {
+  yosys setattr -set dont_touch $ot_dt_i a:dont_touch=$ot_dt_v
+  yosys setattr -mod -set dont_touch $ot_dt_i A:dont_touch=$ot_dt_v
+}
 yosys proc
 yosys select -set ot_kw {*}{w:* a:keep %i}
 yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i}

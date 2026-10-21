@@ -31,6 +31,13 @@ module tb_dsdv_seq_host;
 `else
     localparam integer HSH = 2;                     // S81-SHLK 10-18: APIPE 7 registered host head (+1) on top of APIPE 6 (+1)
 `endif
+    // ELEM-SHLK 10-21: HSC = the unit's t_host completion shift vs the golden (default HSH).  OT_S81_SH_ACKP registers the
+    // svc ack sum (dsdv_sh_sd asum_q): host_ack_n -> visibility fence one edge later, so completions run HSH + 1 (TB_HSC).
+`ifdef TB_HSC
+    localparam integer HSC = `TB_HSC;
+`else
+    localparam integer HSC = HSH;
+`endif
                         // unit host path (f_host -> s_hw / t_host completion) = golden + HSH     // calendar done row = issue + DV (V beat posted / svc chain done)
 `ifndef MUT
     localparam integer MUT = 0;
@@ -177,8 +184,8 @@ module tb_dsdv_seq_host;
     integer ncmd_g, ncw, mism_cw, fr_n, fr_s, mism_n, mism_s, mism_j, mism_k, mism_hw, mism_tc, seen_jobs;
     reg [V-1:0] a; reg [83:0] c;
     reg [291:0] g_hw_p = 0; reg [64:0] g_tc_p = 0;  // the golden's hw / completion HSH edges earlier
-    reg [291:0] g_hw_d [0:7]; reg [64:0] g_tc_d [0:7];  // golden delay line: g_hw_d[k] = g_hw k + 1 edges ago
-    initial for (int k = 0; k < 8; k++) begin g_hw_d[k] = 0; g_tc_d[k] = 0; end
+    reg [291:0] g_hw_d [0:15]; reg [64:0] g_tc_d [0:15];  // golden delay line: g_hw_d[k] = g_hw k + 1 edges ago
+    initial for (int k = 0; k < 16; k++) begin g_hw_d[k] = 0; g_tc_d[k] = 0; end
     initial begin
         cyc = 0; hsp = 0; jobs = 0; gjobs = 0; launch0 = -1; ncmd_n = 0; ncmd_s = 0; ncmd_j = 0; nkit = 0; nhw = 0; ncomp = 0;
         narr = 0; ncmd_g = 0; ncw = 0; mism_cw = 0; fr_n = 0; fr_s = 0; mism_n = 0; mism_s = 0; mism_j = 0; mism_k = 0; mism_hw = 0; mism_tc = 0;
@@ -221,14 +228,14 @@ module tb_dsdv_seq_host;
                 if (mism_hw < 4) $display("MISMATCH s_hw_e edge %0d", cyc); end
             if (gw[0] && mk) nmk = nmk + 1;
         end
-        if (t_host[64:0] !== (HSH != 0 ? g_tc_p : g_tc[64:0])) begin mism_tc = mism_tc + 1; if (mism_tc < 4) $display("MISMATCH t_host completion edge %0d", cyc); end
+        if (t_host[64:0] !== (HSC != 0 ? g_tc_p : g_tc[64:0])) begin mism_tc = mism_tc + 1; if (mism_tc < 4) $display("MISMATCH t_host completion edge %0d", cyc); end
         if (s_hw_w[0]) begin SHC[cyc + 3] = 9'b000000011; nhw = nhw + 1; nhw_w = nhw_w + 1; end
         if (s_hw_e[0]) begin SHE[cyc + 3] = (s_hw_e[288:257] == 32'hffffffff) ? 9'b000000001 : 9'b000000011;
             if (!s_hw_w[0]) nhw = nhw + 1; nhw_e = nhw_e + 1; end
         if (g_hw[0]) GHC[cyc + 3] = 9'b000000011;
-        for (int k = 7; k > 0; k--) begin g_hw_d[k] = g_hw_d[k-1]; g_tc_d[k] = g_tc_d[k-1]; end
+        for (int k = 15; k > 0; k--) begin g_hw_d[k] = g_hw_d[k-1]; g_tc_d[k] = g_tc_d[k-1]; end
         g_hw_d[0] = g_hw; g_tc_d[0] = g_tc[64:0];
-        g_hw_p = g_hw_d[(HSH > 0) ? HSH - 1 : 0]; g_tc_p = g_tc_d[(HSH > 0) ? HSH - 1 : 0];
+        g_hw_p = g_hw_d[(HSH > 0) ? HSH - 1 : 0]; g_tc_p = g_tc_d[(HSC > 0) ? HSC - 1 : 0];
         if (t_host[64]) ncomp = ncomp + 1;
         if (s_j[32]) begin SJD[cyc + LS] = 1; SJE[cyc + LS - LSD] = 1; end
     end

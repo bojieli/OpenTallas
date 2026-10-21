@@ -266,6 +266,18 @@ module dsdv_sh_sd #(
 `endif
     reg [8:0] asum;
     always @* begin asum = 9'd0; for (s = 0; s < NS; s = s + 1) asum = asum + hc_q[9*s + 1 +: 8]; end
+    // ELEM-SHLK 10-21 (OT_S81_SH_ACKP, default off): route dsdv_sh_lk_s10gq-649101c0d TT -0.84 ps on hc_q (S / E face pin
+    // flops) -> 8+8-b ripple add + saturate -> host_ack_n (15 levels + ~240 ps of face-to-core wire).  The sum is
+    // registered (asum_q) and saturate / fault act one edge later: host_ack_n (the host visibility-fence ack count) is +1
+    // edge; credits (hc_q[9*s]) and every other path are unchanged.
+    wire [8:0] asum_a;
+`ifdef OT_S81_SH_ACKP
+    reg [8:0] asum_q;
+    always @(posedge ck or negedge rn) if (!rn) asum_q <= 9'd0; else asum_q <= asum;
+    assign asum_a = asum_q;
+`else
+    assign asum_a = asum;
+`endif
     always @(posedge ck or negedge rn)
         if (!rn) begin
             wp <= 0; rp <= 0; n <= 0; o_cr <= 1'b0; fault <= 1'b0; host_ack_n <= 8'd0; crn <= 0;
@@ -299,8 +311,8 @@ module dsdv_sh_sd #(
             end
 `endif
             if (hc_q[0]) crn <= (crn == 49) ? 0 : crn + 1'b1;
-            host_ack_n <= asum[8] ? 8'hff : asum[7:0];
-            if (asum[8]) fault <= 1'b1;
+            host_ack_n <= asum_a[8] ? 8'hff : asum_a[7:0];
+            if (asum_a[8]) fault <= 1'b1;
         end
 `ifdef OT_S81_SH_APIPE10
 `ifdef OT_S81_SH_S10D
