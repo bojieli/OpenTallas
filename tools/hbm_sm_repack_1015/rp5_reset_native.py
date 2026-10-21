@@ -20,10 +20,11 @@ def main():
     for v in report["liberty"]:args += ["--liberty",v["path"]]
     # Original immutable source/config/old failure remain untouched. New work
     # contains no prior mapped netlist, so synthesis must really execute.
-    image="openroad/orfs:latest"
+    image=subprocess.check_output(["docker","image","inspect","openroad/orfs:latest","--format","{{.Id}}"]).decode().strip()
+    print("RESET_NATIVE_IMAGE",image,flush=True)
     cmd=["docker","run","--rm","--user",f"{os.getuid()}:{os.getgid()}","-v",f"{src}:/src:ro",
          "-v",f"{work}:/work","-w","/OpenROAD-flow-scripts/flow",image,"bash","-lc",
-         "make DESIGN_CONFIG=/work/config.mk NUM_CORES=4 synth && "+__import__("shlex").join(args)]
+         "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=4 synth && "+__import__("shlex").join(args)]
     rc=subprocess.call(cmd)
     print("RESET_NATIVE_EXIT",a.form,rc,flush=True)
     if (work/"native_census.json").exists():
