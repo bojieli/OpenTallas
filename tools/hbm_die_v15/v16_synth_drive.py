@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # LH-GEN2E 10-19: ot-epyc6 (GEN2e2 data host) added so push_prefer reaches it
 # HBM-SYNTHSPREAD 10-20: ot-epyc7/9 added (the chain stages src there; a retry placed there needs the prefer list)
 HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1', 'ot-epyc5': 'ot-epyc5', 'ot-epyc6': 'ot-epyc6',
-         'ot-epyc7': 'ot-epyc7', 'ot-epyc9': 'ot-epyc9'}
+         'ot-epyc7': 'ot-epyc7', 'ot-epyc9': 'ot-epyc9', 'ot-gold1': 'ot-gold1', 'ot-gold2': 'ot-gold2'}
 PREFER = {'ot_hbm_lk_ep': ['rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv',
                            'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv',
                            'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv'],

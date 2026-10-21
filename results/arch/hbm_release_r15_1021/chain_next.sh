@@ -146,8 +146,10 @@ p|={str(f) for f in Path('physical').rglob('*')
 p|={'results/arch/hbm_release_r14_1021/planB_margin','results/arch/die_reach_1016.json',
  'results/arch/hbm_die_v15/compact660_v5','results/arch/hbm_die_v15/source_contract',
  'results/arch/hbm_die_v16','results/arch/hier_contract_1015','results/arch/die_clock_method_1016',
- 'results/arch/hbm_unread_gen2e3_1019','results/arch/hbm_native_1013/sm_own_logic/retention_cell_models.sv'}
+ 'results/arch/hbm_unread_gen2e3_1019','results/arch/hbm_native_1013/sm_own_logic/retention_cell_models.sv',
+ 'physical/hbm_pll_views','physical/ref_tile/hdie_pc_ctrl/floorplan.json'}
 p|={v['view_dir'] for v in V.values() if v.get('view_dir')}
+p|=set(Path('results/arch/hbm_release_r15_1021/relay_view_dirs.txt').read_text().splitlines())
 print('\n'.join(sorted(p)))
 PY
   (grep -v -e "^#" -e "^ *$" $AC/views/extra_src_paths.txt 2>/dev/null; for x in $FOREST_SRC_PATHS; do [ -e $x ] && echo $x; done) >> $A/src_paths_$3.txt
