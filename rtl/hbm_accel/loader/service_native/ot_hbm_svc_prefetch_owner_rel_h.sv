@@ -151,12 +151,19 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   ot_hbm_svc_local_and2 u_buf(.a(response_take),.b(1'b1),.y(response_take_local[rt]));
  end endgenerate
  wire ret_done=response_take&&seen_ret==mask_for(length_r);
+ wire[3:0] ret_done_local,fire_valid_local;
+ for(genvar vg=0;vg<4;vg=vg+1)begin:g_valid_control
+  ot_hbm_svc_local_and2 u_ret(.a(ret_done),.b(1'b1),.y(ret_done_local[vg]));
+  ot_hbm_svc_local_and2 u_fire(.a(fire),.b(1'b1),.y(fire_valid_local[vg]));
+ end
  // next valid (allocate at fire, free at the last beat)
  reg [ENTRIES-1:0] valid_n;integer e;
  always @*begin
   valid_n=valid_q;
-  if(fire)valid_n[alloc]=1;
-  if(ret_done)valid_n[ret]=0;
+  for(e=0;e<ENTRIES;e=e+1)begin
+   if(fire_valid_local[e/8]&&alloc==e)valid_n[e]=1;
+   if(ret_done_local[e/8]&&ret==e)valid_n[e]=0;
+  end
  end
  // rst_n[0]: ticket / sticky / issuing (19); rst_n[1]: valid (32); rst_n[2]: !valid copy a (32)
  always @(posedge clk or negedge rst_n[0])begin
