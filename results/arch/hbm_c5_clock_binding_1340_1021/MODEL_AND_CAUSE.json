@@ -1,0 +1,52 @@
+{
+  "time": "2026-10-21T13:53:59.924661-07:00",
+  "scope": "Necessary exact raw SRAM clock contract repair; no gate or timing qualification",
+  "original_source": "e6c44aa64d6e1e80054d065aaba973188f0c8b5e",
+  "original_gate_archive": "b699e3bd7da08d8baf9ce6923b63dc2084f065e15e6a18ab61ce348059ceb8ac",
+  "original_cause": "OT_HYBRID CTS source clk must reach only standard-cell clock pins; actual mapped raw SRAM omitted from grant",
+  "actual_mapped_instance": "u_ot_pr_core.u_q.g_qcal.programme.u_program",
+  "actual_mapped_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "actual_mapped_connection": ".clk(clk)",
+  "validated_bindings": {
+    "u_q.g_qcal.programme.u_program": {
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "clock_pin": "clk",
+      "root": "clk"
+    }
+  },
+  "liberty_files": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": "6d043397b0f7a42ce63a02796f2fdc17c6e155adea56bad12c1e7cf7696962e0",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib": "51240a0ad457c0290788a03f7ce3d2675257dd1dc6e9a16a3333c4cf899e97fb"
+  },
+  "architecture_model": {
+    "hard_tree_children": 4,
+    "hard_tree_tt_refs_ps": [
+      186.6,
+      194.5,
+      199.6
+    ],
+    "controller_clock": "clk",
+    "separate_child_entries": [
+      "clk_t[0]",
+      "clk_t[1]",
+      "clk_t[2]",
+      "clk_t[3]"
+    ],
+    "raw_sram_clock": "clk",
+    "outline_um": [
+      734.4,
+      734.4
+    ],
+    "ports_cycles_and_compute_inventory_change": false,
+    "prior_controller_flops": 14990,
+    "prior_native_max": 32,
+    "prior_std_um2": 8052,
+    "prior_macro_um2": 62706,
+    "prior_fill": 0.133
+  },
+  "open_obligations": [
+    "Replay actual existing placed ODB with exact validated binding to qualify CTS integration; actual clock-boundary gate still required.",
+    "Preserve original native/bench source and all four child refs; no source/view alias for actual selected-parent parameter changes.",
+    "C5s GPL divergence remains separate; no unchanged retry."
+  ]
+}
