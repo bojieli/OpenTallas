@@ -36,6 +36,8 @@ import json
 import math
 import os
 import subprocess
+
+from frame_bind import instance_clocks
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,9 +61,18 @@ endmodule
 '''
 
 
-def block_clock(table, master, region):
+def block_clock(table, master, region, instance=None):
     """Use the physical master's declared domain, including peer-clock ports."""
+    if instance is not None and instance in table.get('instance_clock_ports', {}):
+        return dict(instance_clocks(table, dict(name=instance, master=master), region))[table['masters'][master]['clk']]
     return table['masters'][master].get('clock_port', f'ck_{region}')
+
+
+def regional_clock(table, blocks, regions, name):
+    """Legacy regional source unless this instance explicitly declares its root."""
+    if name in table.get('instance_clock_ports', {}):
+        return block_clock(table, blocks[name]['master'], regions[name], name)
+    return f'ck_{regions[name]}'
 
 
 def region_of(bl, pitch):
@@ -414,7 +425,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # tree releases many receivers BEFORE their source (the x chain runs toward the tree root), and no net beside the
     # source releases earlier than the source's own leaf, so the RECEIVER's frame reset is delayed by calendar stations
     # (dsfd_rly_1 on the frame root, beside its reset pin): rst_n(frame) = max over its x lanes of G + h - FRAME_RSYNC.
-    FRAME_RSYNC = 2
+    FRAME_RSYNC = T.get('frame_wrapper', {}).get('receiver_reset_edges', 2)
     frame_rst, frame_cal_lines, frame_cal_place, frame_delay = {}, [], [], {}
     lsrc0 = {l['i'].replace('-', '_'): l for l in plan['links']}
     bname = {b['name']: b for b in blocks}
@@ -439,7 +450,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             up = rl0
             for k_ in range(need):
                 wn = f'rsx_{n_}_{k_}'
-                frame_cal_lines += [f'  wire {wn};', f'  {rm_} st_{wn} (.ck(ck_{reg[n_]}), .rs({up}), .i({up}), .o({wn}));   '
+                frame_cal_lines += [f'  wire {wn};', f'  {rm_} st_{wn} (.ck({regional_clock(T, bname, reg, n_)}), .rs({up}), .i({up}), .o({wn}));   '
                                     f'// frame x-chain read epoch (TOK-S81-GAPS/G8R): {n_} released after its x source']
                 xy_ = rst['block_pin'][n_]
                 frame_cal_place.append(dict(inst=f'st_{wn}', master=rm_, orient='R0', xy=[round(xy_[0], 3), round(xy_[1], 3)],
@@ -530,11 +541,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             v.append(f'  {bl["master"]} u_{n} ({", ".join(cs)});')
             continue
         mod = m.get('inst_module', {}).get(n, m['module'])
-        bc_ = block_clock(T, bl['master'], r)
-        cs = [f'.{m["clk"]}({bc_})'] + [f'.{x}({bc_})' for x in m.get('clk_extra', [])]
+        bc_ = block_clock(T, bl['master'], r, n)
+        cs = [f'.{port}({net})' for port, net in instance_clocks(T, bl, r)]
         for cp in m.get('clk_peer', []):     # a port clocked by a peer block's root (e.g. ckh = the PHY clock)
             pb_ = [b for b in blocks if b['master'] == cp['master']]
-            cs.append(f".{cp['port']}({block_clock(T, cp['master'], reg[pb_[0]['name']])})")
+            cs.append(f".{cp['port']}({block_clock(T, cp['master'], reg[pb_[0]['name']], pb_[0]['name'])})")
         cs += abut_conn.get(n, []) + peer_conn.get(n, [])
         for cport, lanes in ckin.get(n, {}).items():
             wd_ = rtl_widths.get(mod, {}).get(cport, max(lanes) + 1)
@@ -550,8 +561,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                     bits_.append(link_src[lk][1])               # 0-stage: the source's forwarded clock
                 else:
                     src_ = [l for l in plan['links'] if l['i'].replace('-', '_') == lk][0]
-                    sreg = reg[blocks[src_['e'][0][0]]['name']]
-                    v.append(f'  wire ckf_{lk}; {FWD} fwdi_{lk} (.A(ck_{sreg}), .Y(ckf_{lk}));')
+                    sn = blocks[src_['e'][0][0]]['name']
+                    source_clock = regional_clock(T, bname, reg, sn)
+                    v.append(f'  wire ckf_{lk}; {FWD} fwdi_{lk} (.A({source_clock}), .Y(ckf_{lk}));')
                     bits_.append(f'ckf_{lk}')
             cs.append(f'.{cport}({{{", ".join(reversed(bits_))}}})')
         if m.get('rst'):
@@ -736,7 +748,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
-        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({land_rs[nm]}), '
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck({regional_clock(T, bname, reg, n)}), .rs({land_rs[nm]}), '
                  f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
@@ -827,14 +839,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         gen = gate_en.get(nm)
         if gen:
             # S81-LBGAP/G1: landed lane -> hop-0 clock gate opened by the released reset on the calendar edge G = R0 - (N mod 2)
-            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or "ck_" + reg[a]}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
+            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or regional_clock(T, bname, reg, a)}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
                      f'// hop 0: clock gate (LANDING-CONTRACT L3) on {"the source master forwarded clock" if ck else "the source region root"}')
             gate_cells += 1
             ck = None
         elif ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')
         else:
-            v.append(f'  {FWD} fwd_{nm} (.A(ck_{reg[a]}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
+            v.append(f'  {FWD} fwd_{nm} (.A({regional_clock(T, bname, reg, a)}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
             fwd_cells += 1
         prev = src
         for k in range(st):
@@ -886,6 +898,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     lrc = landing_reset_check(T, {r['master'] for r in land_rows})
     (out / 'landing_reset_check.json').write_text(json.dumps(lrc, indent=1))
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
+               instance_clock_ports=T.get('instance_clock_ports', {}),
+               clock_source_entries=T.get('clock_domains', {}),
+               instance_orientations=T.get('instance_orientations', {}),
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
                hop0_clock_gates=gate_cells, gate_calendar_stations=len(cal_place),
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
@@ -898,8 +913,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
                              calendar_needs=[r for r in land_rows if r['calendar_stations']['n']],
                              bundle_age_unequal=bundle_age_unequal(land_rows), rows=land_rows),
-               frame_hop0_gates=dict(count=len(frame_gate_rows), rule='TOK-S81-GAPS/G8R: R0 = frame rst_n depth + 2 '
-                                     '(crs4 rsync), G = R0 - N mod 2', rows=frame_gate_rows,
+               frame_hop0_gates=dict(count=len(frame_gate_rows), rule=f'TOK-S81-GAPS/G8R: R0 = frame rst_n depth + {FRAME_RSYNC} '
+                                     '(receiver reset stages), G = R0 - N mod 2', rows=frame_gate_rows,
                                      frame_epoch_delay=frame_delay, frame_epoch_stations=len(frame_cal_place)),
                frame_lk=dict(count=len(frame_lk_val), source=str(lp) if lp else None,
                              rule='K = max land-plan K over the frame x lanes (no-station lanes 1), every lane at K',
