@@ -1,0 +1,61 @@
+{
+  "source_commit": "312cb42b6",
+  "cause": "Main/fallback trial GRT overflow471496/271601; macro stack at x43.2 splits W input logic from E gather/sort consumers, broad congestion across standard rows. Redesign places both SRAMs in E bank, leaving contiguous full-height W logic plane and full-width top/bottom channels. No RTL or cycle change.",
+  "native_census": {
+    "max_loads": 32,
+    "violations": 0,
+    "source": "results/rtl/drives81_gunit_l1f_1020/gunit2/native_census.json"
+  },
+  "synth_std_area_um2": 36915,
+  "macro_area_um2": 7788,
+  "variants": [
+    {
+      "kit": "dsdv_gunit_l1f_c",
+      "outline": [
+        388.8,
+        302.4
+      ],
+      "macro_origins": [
+        [
+          259.2,
+          43.2
+        ],
+        [
+          259.2,
+          84.288
+        ]
+      ],
+      "full_height_logic_band": [
+        0,
+        248.4
+      ],
+      "planned_max_reach_um": 388.8,
+      "fill_using_native_area": 0.38021445718204977
+    },
+    {
+      "kit": "dsdv_gunit_l1f_d",
+      "outline": [
+        388.8,
+        345.6
+      ],
+      "macro_origins": [
+        [
+          259.2,
+          43.2
+        ],
+        [
+          259.2,
+          84.288
+        ]
+      ],
+      "full_height_logic_band": [
+        0,
+        248.4
+      ],
+      "planned_max_reach_um": 388.8,
+      "fill_using_native_area": 0.33268765003429357
+    }
+  ],
+  "schedule_delta_cycles": 0,
+  "parent_obligation": "L1f hardened four times, selected winner requires parent outline/slots enlargement; latestL5_n32 closure exactparams separate integration required."
+}
