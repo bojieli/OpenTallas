@@ -13,7 +13,7 @@ printf '%s\n' "$flow_rc" > "$ROOT/native982/launcher.rc"
 # Intentional early exit after canonical mapped census means floorplan metrics do not exist.
 # Preserve that wrapper verdict; only a real canonical native receipt can satisfy this recipe.
 grep -Rq 'PG982_NATIVE_ONLY_DONE_NO_LAYOUT' "$ROOT/native982/pg982_synth_native/work/orfs/logs"
-python3 - "$ROOT/native982/pg982_synth_native/work/native_census.json" <<'CHECK'
+python3 - "$ROOT/native982/pg982_synth_native/work/orfs/native_census.json" <<'CHECK'
 import json,sys
 p=sys.argv[1];d=json.load(open(p))
 assert d['schema']=='opentallas.pre_gate_native_census.v1'
