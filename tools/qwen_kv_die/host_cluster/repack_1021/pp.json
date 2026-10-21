@@ -1,0 +1,2806 @@
+{
+"u_cdc_host": {
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"ck_host": {
+"u_ingest_qm__u_qm": 1,
+"PORT:ck_host": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"service_faults_core": {
+"PORT:service_faults": 2,
+"u_core_guard": 2
+},
+"service_faults_host": {
+"PORT:service_faults": 4,
+"u_core_guard": 4
+},
+"u_rank__done_cr": {
+"u_core_tx": 1
+},
+"u_rank__done_d": {
+"u_core_tx": 64,
+"u_core_guard": 64
+},
+"u_rank__done_v": {
+"u_core_tx": 1,
+"u_core_guard": 1
+},
+"u_rank__global_prefix_v": {
+"u_core_order": 1
+},
+"u_rank__qm_cls": {
+"u_ingest_qm__u_qm": 2
+},
+"u_rank__qm_crn": {
+"u_ingest_qm__u_qm": 5
+},
+"u_rank__qm_d": {
+"u_ingest_qm__u_qm": 512
+},
+"u_rank__qm_t_cr": {
+"u_ingest_qm__u_qm": 1
+},
+"u_rank__qm_t_d": {
+"u_ingest_qm__u_qm": 64
+},
+"u_rank__qm_t_v": {
+"u_ingest_qm__u_qm": 1
+},
+"u_rank__qm_v": {
+"u_ingest_qm__u_qm": 1
+},
+"u_rank__u_bridge__qcr": {
+"u_core_queue": 1
+},
+"u_rank__u_bridge__qd": {
+"u_core_queue": 546
+},
+"u_rank__u_bridge__qv": {
+"u_core_queue": 1
+}
+},
+"u_cdc_pc": {
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_ingest_qm__u_qm": 1
+},
+"ck_phy_fam": {
+"u_rank__u_phy__u_pad": 1,
+"PORT:ck_phy_fam": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"service_faults_core": {
+"u_core_guard": 2,
+"PORT:service_faults": 2
+},
+"service_faults_phy": {
+"u_core_guard": 2,
+"PORT:service_faults": 2
+},
+"u_rank__d_ccr": {
+"u_rank__u_adapter__g_slice_0___u_slice": 1
+},
+"u_rank__d_cd": {
+"u_rank__u_adapter__g_slice_0___u_slice": 128,
+"u_rank__u_adapter__g_slice_1___u_slice": 128,
+"u_rank__u_adapter__g_slice_2___u_slice": 128,
+"u_rank__u_adapter__g_slice_3___u_slice": 128,
+"u_rank__u_adapter__g_slice_4___u_slice": 34
+},
+"u_rank__d_cv": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"u_rank__physical_tx_cr": {
+"u_core_peer": 1
+},
+"u_rank__physical_tx_d": {
+"u_core_peer": 528
+},
+"u_rank__physical_tx_v": {
+"u_core_peer": 1
+},
+"u_rank__raw_rx_cr": {
+"u_core_peer": 1
+},
+"u_rank__raw_rx_d": {
+"u_core_peer": 528
+},
+"u_rank__raw_rx_v": {
+"u_core_peer": 1
+},
+"u_rank__u_phy__pad_cr": {
+"u_rank__u_phy__u_pad": 1
+},
+"u_rank__u_phy__pad_d": {
+"u_rank__u_phy__u_pad": 546
+},
+"u_rank__u_phy__pad_v": {
+"u_rank__u_phy__u_pad": 1
+}
+},
+"u_core_guard": {
+"cancel_release_gen": {
+"u_core_peer": 2
+},
+"cancel_release_tag": {
+"u_core_peer": 59
+},
+"cancel_release_v": {
+"u_core_peer": 1
+},
+"cancel_released": {
+"u_core_peer": 1
+},
+"certificate_prefix": {
+"u_core_peer": 32,
+"u_core_queue": 32
+},
+"certificate_v": {
+"u_core_peer": 1,
+"u_core_queue": 1
+},
+"ck_core": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"coordinator_fault": {
+"u_core_peer": 1,
+"PORT:coordinator_fault": 1
+},
+"ctrl_completion_fault": {
+"PORT:ctrl_completion_fault": 1
+},
+"die_id": {
+"u_core_peer": 3,
+"u_rank__u_control__u_packet__u_rx": 3,
+"u_core_prompt": 3,
+"PORT:die_id": 3
+},
+"est": {
+"u_core_queue": 1,
+"PORT:est": 1
+},
+"hc": {
+"u_core_peer": 39,
+"PORT:hc": 182,
+"u_core_prompt": 143
+},
+"host_observer_fault": {
+"u_core_prompt": 1
+},
+"host_recovery_clear": {
+"PORT:host_recovery_clear": 1,
+"u_core_peer": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"link_physical_fault": {
+"PORT:link_physical_fault": 1
+},
+"local_service_epoch": {
+"u_core_peer": 16,
+"PORT:local_service_epoch": 16
+},
+"local_tk": {
+"PORT:local_tk": 93
+},
+"native_collective_busy": {
+"PORT:native_collective_busy": 1
+},
+"native_collective_drained": {
+"u_core_peer": 1,
+"PORT:native_collective_drained": 1
+},
+"native_context_owned": {
+"u_core_peer": 1,
+"u_core_prompt": 1
+},
+"native_host_drained": {
+"PORT:native_host_drained": 1,
+"u_core_peer": 1
+},
+"native_kv_drained": {
+"u_core_peer": 1,
+"PORT:native_kv_drained": 1
+},
+"native_kv_flush": {
+"PORT:native_kv_flush": 1
+},
+"native_pr": {
+"PORT:native_pr": 143
+},
+"native_request_cr": {
+"u_core_peer": 1
+},
+"native_request_gen": {
+"u_core_peer": 2,
+"u_core_prompt": 2
+},
+"native_request_pos": {
+"u_core_peer": 18,
+"u_core_prompt": 18
+},
+"native_request_tag": {
+"u_core_peer": 59,
+"u_core_prompt": 59
+},
+"native_request_token": {
+"u_core_peer": 18,
+"u_core_prompt": 18
+},
+"native_request_trace": {
+"u_core_peer": 32
+},
+"native_request_v": {
+"u_core_peer": 1,
+"u_core_prompt": 1
+},
+"native_result_cause": {
+"u_core_peer": 4
+},
+"native_result_cr": {
+"u_core_peer": 1
+},
+"native_result_cycles": {
+"u_core_peer": 32
+},
+"native_result_done": {
+"u_core_peer": 1
+},
+"native_result_fault": {
+"u_core_peer": 1
+},
+"native_result_gen": {
+"u_core_peer": 2
+},
+"native_result_tag": {
+"u_core_peer": 59
+},
+"native_result_token": {
+"u_core_peer": 18
+},
+"native_result_v": {
+"u_core_peer": 1
+},
+"native_result_value": {
+"u_core_peer": 32
+},
+"native_vm_drained": {
+"u_core_peer": 1,
+"PORT:native_vm_drained": 1
+},
+"peer_protocol_fault": {
+"u_core_peer": 1,
+"PORT:peer_protocol_fault": 1
+},
+"pll_locked": {
+"u_core_peer": 1,
+"PORT:pll_locked": 1
+},
+"por_n": {
+"u_core_peer": 1,
+"PORT:por_n": 1
+},
+"program_ready": {
+"u_core_peer": 1,
+"u_core_prompt": 1,
+"PORT:program_ready": 1
+},
+"record_fault": {
+"PORT:record_fault": 1,
+"u_core_prompt": 1
+},
+"root_mux_fault": {
+"u_core_peer": 1
+},
+"service_abort": {
+"PORT:service_abort": 1,
+"u_core_prompt": 1
+},
+"service_diag_raw": {
+"PORT:service_diag_raw": 26,
+"u_core_prompt": 26
+},
+"service_faults": {
+"PORT:service_faults": 24,
+"u_core_order": 6,
+"u_cdc_host": 6,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_core_tx": 1,
+"u_core_peer": 1,
+"u_core_prompt": 1,
+"u_ingest_qm__u_qm": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_cdc_pc": 4,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1
+},
+"service_faults_o": {
+"PORT:service_faults": 1
+},
+"service_ready": {
+"u_core_peer": 1,
+"PORT:service_ready": 1
+},
+"service_status": {
+"PORT:service_status": 32,
+"u_core_prompt": 32
+},
+"slice_boot_fault": {
+"PORT:slice_boot_fault": 128
+},
+"token_epoch": {
+"u_core_peer": 16,
+"u_core_prompt": 16,
+"PORT:token_epoch": 16
+},
+"token_epoch_valid": {
+"PORT:token_epoch_valid": 1,
+"u_core_peer": 1,
+"u_core_prompt": 1
+},
+"transport_fault": {
+"PORT:transport_fault": 8
+},
+"u_rank__begin_fault": {
+"u_core_prompt": 1
+},
+"u_rank__bootbarrier_fault": {
+"u_core_queue": 1
+},
+"u_rank__commit_fault": {
+"u_core_prompt": 1
+},
+"u_rank__dispatch_fault": {
+"u_core_order": 1
+},
+"u_rank__done_d": {
+"u_core_tx": 64,
+"u_cdc_host": 64
+},
+"u_rank__done_v": {
+"u_core_tx": 1,
+"u_cdc_host": 1
+},
+"u_rank__guarded_physical": {
+"u_core_prompt": 8
+},
+"u_rank__guarded_tk": {
+"u_core_peer": 93
+},
+"u_rank__guarded_transport": {
+"u_core_prompt": 8
+},
+"u_rank__ing_cls": {
+"u_rank__u_control__u_packet__u_rx": 2,
+"u_core_queue": 2
+},
+"u_rank__ing_d": {
+"u_rank__u_control__u_packet__u_rx": 16,
+"u_core_queue": 16
+},
+"u_rank__ing_v": {
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_core_queue": 1
+},
+"u_rank__ingress_fault": {
+"u_core_prompt": 1
+},
+"u_rank__marker_consumer_fault": {
+"u_core_queue": 1
+},
+"u_rank__peer_link_fault": {
+"u_core_peer": 1
+},
+"u_rank__pending_advertised": {
+"u_core_peer": 1
+},
+"u_rank__pending_epoch": {
+"u_core_peer": 16
+},
+"u_rank__program_fault": {
+"u_core_prompt": 1
+},
+"u_rank__service_begin_epoch": {
+"u_core_peer": 16
+},
+"u_rank__service_begin_v": {
+"u_core_peer": 1
+},
+"u_rank__source_fault": {
+"u_core_queue": 1,
+"u_core_prompt": 1
+},
+"u_rank__u_control__service_ready": {
+"u_core_peer": 1,
+"u_core_prompt": 1
+}
+},
+"u_core_order": {
+"chain_a": {
+"PORT:chain_a": 128
+},
+"chain_c": {
+"PORT:chain_c": 128
+},
+"chain_f": {
+"PORT:chain_f": 1164
+},
+"chain_fault_i": {
+"PORT:chain_fault_i": 4
+},
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"hb": {
+"PORT:hb": 283
+},
+"hb_cr": {
+"PORT:hb_cr": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"host_upstream_quiet": {
+"PORT:host_upstream_quiet": 2
+},
+"issued": {
+"u_core_queue": 32,
+"PORT:issued": 32
+},
+"landed": {
+"PORT:landed": 32,
+"u_core_queue": 32
+},
+"physical_ack_n": {
+"PORT:physical_ack_n": 8
+},
+"service_faults": {
+"PORT:service_faults": 6,
+"u_core_guard": 6
+},
+"slice_ack": {
+"PORT:slice_ack": 128
+},
+"u_rank__dispatch_fault": {
+"u_core_guard": 1
+},
+"u_rank__global_prefix_v": {
+"u_cdc_host": 1
+},
+"u_rank__image_check": {
+"u_core_queue": 1
+},
+"u_rank__local_marker": {
+"u_core_queue": 66
+},
+"u_rank__local_marker_cr": {
+"u_core_queue": 1
+},
+"u_rank__local_marker_v": {
+"u_core_queue": 1
+},
+"u_rank__oa": {
+"u_ingest_qm__u_qm": 32
+},
+"u_rank__ocr": {
+"u_ingest_qm__u_qm": 1
+},
+"u_rank__od": {
+"u_ingest_qm__u_qm": 256
+},
+"u_rank__ov": {
+"u_ingest_qm__u_qm": 1
+},
+"u_rank__owe": {
+"u_ingest_qm__u_qm": 1
+}
+},
+"u_core_peer": {
+"abort_drained": {
+"PORT:abort_drained": 4
+},
+"accepted_ranks": {
+"PORT:accepted_ranks": 8
+},
+"allocated_valid": {
+"u_core_prompt": 1
+},
+"cancel_release_gen": {
+"u_core_guard": 2
+},
+"cancel_release_tag": {
+"u_core_guard": 59
+},
+"cancel_release_v": {
+"u_core_guard": 1
+},
+"cancel_released": {
+"u_core_guard": 1
+},
+"certificate": {
+"u_core_queue": 66
+},
+"certificate_prefix": {
+"u_core_guard": 32,
+"u_core_queue": 32
+},
+"certificate_v": {
+"u_core_guard": 1,
+"u_core_queue": 1
+},
+"ck_core": {
+"u_core_guard": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"cohort_gen": {
+"PORT:cohort_gen": 2
+},
+"cohort_tag": {
+"PORT:cohort_tag": 59
+},
+"coordinator_fault": {
+"u_core_guard": 1,
+"PORT:coordinator_fault": 1
+},
+"cq_client_tag": {
+"u_core_prompt": 16
+},
+"cq_commit_v": {
+"u_core_prompt": 1
+},
+"cq_pos": {
+"u_core_prompt": 18
+},
+"cq_slot": {
+"u_core_prompt": 8
+},
+"cq_token": {
+"u_core_prompt": 18
+},
+"die_id": {
+"u_core_guard": 3,
+"u_rank__u_control__u_packet__u_rx": 3,
+"u_core_prompt": 3,
+"PORT:die_id": 3
+},
+"dispatch_valid": {
+"PORT:dispatch_valid": 1
+},
+"dispatched": {
+"PORT:dispatched": 1
+},
+"engine_result_cause": {
+"PORT:engine_result_cause": 4
+},
+"engine_result_cr": {
+"PORT:engine_result_cr": 1
+},
+"engine_result_cycles": {
+"PORT:engine_result_cycles": 32
+},
+"engine_result_done": {
+"PORT:engine_result_done": 1
+},
+"engine_result_fault": {
+"PORT:engine_result_fault": 1
+},
+"engine_result_gen": {
+"PORT:engine_result_gen": 2
+},
+"engine_result_tag": {
+"PORT:engine_result_tag": 59
+},
+"engine_result_token": {
+"PORT:engine_result_token": 18
+},
+"engine_result_v": {
+"PORT:engine_result_v": 1
+},
+"engine_result_value": {
+"PORT:engine_result_value": 32
+},
+"hc": {
+"u_core_guard": 39,
+"PORT:hc": 39
+},
+"host_link_reset_req": {
+"PORT:host_link_reset_req": 1,
+"u_core_prompt": 1
+},
+"host_recovery_clear": {
+"PORT:host_recovery_clear": 1,
+"u_core_guard": 1
+},
+"host_rst_n": {
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"ingest_permission": {
+"u_core_queue": 1,
+"u_core_prompt": 1,
+"PORT:ingest_permission": 1
+},
+"local_kst": {
+"PORT:local_kst": 10
+},
+"local_service_epoch": {
+"u_core_guard": 16,
+"PORT:local_service_epoch": 16
+},
+"native_admit_ready": {
+"PORT:native_admit_ready": 1
+},
+"native_collective_drained": {
+"u_core_guard": 1,
+"PORT:native_collective_drained": 1
+},
+"native_context_owned": {
+"u_core_guard": 1,
+"u_core_prompt": 1
+},
+"native_host_drained": {
+"PORT:native_host_drained": 1,
+"u_core_guard": 1
+},
+"native_kv_drained": {
+"u_core_guard": 1,
+"PORT:native_kv_drained": 1
+},
+"native_link_reset_seen": {
+"PORT:native_link_reset_seen": 1
+},
+"native_links_drained": {
+"PORT:native_links_drained": 1
+},
+"native_request_cr": {
+"u_core_guard": 1
+},
+"native_request_gen": {
+"u_core_guard": 2,
+"u_core_prompt": 2
+},
+"native_request_pos": {
+"u_core_guard": 18,
+"u_core_prompt": 18
+},
+"native_request_tag": {
+"u_core_guard": 59,
+"u_core_prompt": 59
+},
+"native_request_token": {
+"u_core_guard": 18,
+"u_core_prompt": 18
+},
+"native_request_trace": {
+"u_core_guard": 32
+},
+"native_request_v": {
+"u_core_guard": 1,
+"u_core_prompt": 1
+},
+"native_result_cause": {
+"u_core_guard": 4
+},
+"native_result_cr": {
+"u_core_guard": 1
+},
+"native_result_cycles": {
+"u_core_guard": 32
+},
+"native_result_done": {
+"u_core_guard": 1
+},
+"native_result_fault": {
+"u_core_guard": 1
+},
+"native_result_gen": {
+"u_core_guard": 2
+},
+"native_result_tag": {
+"u_core_guard": 59
+},
+"native_result_token": {
+"u_core_guard": 18
+},
+"native_result_v": {
+"u_core_guard": 1
+},
+"native_result_value": {
+"u_core_guard": 32
+},
+"native_retrained": {
+"PORT:native_retrained": 1
+},
+"native_vm_drained": {
+"u_core_guard": 1,
+"PORT:native_vm_drained": 1
+},
+"package_abort": {
+"PORT:package_abort": 1,
+"u_core_prompt": 1
+},
+"participant_pos": {
+"PORT:participant_pos": 144
+},
+"participant_token": {
+"PORT:participant_token": 144
+},
+"participant_trace": {
+"PORT:participant_trace": 256
+},
+"peer_protocol_fault": {
+"u_core_guard": 1,
+"PORT:peer_protocol_fault": 1
+},
+"pll_locked": {
+"u_core_guard": 1,
+"PORT:pll_locked": 1
+},
+"por_n": {
+"u_core_guard": 1,
+"PORT:por_n": 1
+},
+"program_consensus": {
+"PORT:program_consensus": 1
+},
+"program_digest": {
+"PORT:boot_image_digest": 64,
+"PORT:program_digest": 64,
+"u_core_prompt": 64
+},
+"program_epoch": {
+"PORT:program_epoch": 16,
+"PORT:boot_image_epoch": 16,
+"u_core_prompt": 16
+},
+"program_ready": {
+"u_core_guard": 1,
+"u_core_prompt": 1,
+"PORT:program_ready": 1
+},
+"recovery_complete": {
+"PORT:recovery_complete": 1
+},
+"root_mux_fault": {
+"u_core_guard": 1
+},
+"seen": {
+"PORT:seen": 8
+},
+"service_faults": {
+"PORT:service_faults": 1,
+"u_core_guard": 1
+},
+"service_ready": {
+"u_core_guard": 1,
+"PORT:service_ready": 1
+},
+"slice_boot_done": {
+"PORT:slice_boot_done": 128
+},
+"slice_boot_ok": {
+"PORT:slice_boot_ok": 128
+},
+"step_client_tag": {
+"u_core_prompt": 16
+},
+"step_issue_v": {
+"u_core_prompt": 1
+},
+"step_pos": {
+"u_core_prompt": 18
+},
+"step_retire_client_tag": {
+"u_core_prompt": 16
+},
+"step_retire_cq": {
+"u_core_prompt": 1
+},
+"step_retire_pos": {
+"u_core_prompt": 18
+},
+"step_retire_slot": {
+"u_core_prompt": 8
+},
+"step_retire_token": {
+"u_core_prompt": 18
+},
+"step_retire_v": {
+"u_core_prompt": 1
+},
+"step_slot": {
+"u_core_prompt": 8
+},
+"token_epoch": {
+"u_core_guard": 16,
+"u_core_prompt": 16,
+"PORT:token_epoch": 16
+},
+"token_epoch_valid": {
+"PORT:token_epoch_valid": 1,
+"u_core_guard": 1,
+"u_core_prompt": 1
+},
+"u_rank__guarded_tk": {
+"u_core_guard": 93
+},
+"u_rank__peer_link_fault": {
+"u_core_guard": 1
+},
+"u_rank__peer_pending_ack": {
+"u_core_prompt": 8
+},
+"u_rank__peer_service_epoch": {
+"u_core_prompt": 128
+},
+"u_rank__peer_service_ready": {
+"u_core_prompt": 8
+},
+"u_rank__pending_advertised": {
+"u_core_guard": 1
+},
+"u_rank__pending_epoch": {
+"u_core_guard": 16
+},
+"u_rank__physical_tx_cr": {
+"u_cdc_pc": 1
+},
+"u_rank__physical_tx_d": {
+"u_cdc_pc": 528
+},
+"u_rank__physical_tx_v": {
+"u_cdc_pc": 1
+},
+"u_rank__program_rx_cr": {
+"u_core_prompt": 1
+},
+"u_rank__program_rx_d": {
+"u_core_prompt": 528
+},
+"u_rank__program_rx_v": {
+"u_core_prompt": 1
+},
+"u_rank__raw_rx_cr": {
+"u_cdc_pc": 1
+},
+"u_rank__raw_rx_d": {
+"u_cdc_pc": 528
+},
+"u_rank__raw_rx_v": {
+"u_cdc_pc": 1
+},
+"u_rank__service_begin_epoch": {
+"u_core_guard": 16
+},
+"u_rank__service_begin_v": {
+"u_core_guard": 1
+},
+"u_rank__tx_cr": {
+"u_core_tx": 1
+},
+"u_rank__tx_d": {
+"u_core_tx": 528
+},
+"u_rank__tx_v": {
+"u_core_tx": 1
+},
+"u_rank__u_control__begin_cr": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__begin_epoch": {
+"u_core_prompt": 16
+},
+"u_rank__u_control__begin_v": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__boot8": {
+"u_core_prompt": 16
+},
+"u_rank__u_control__cmd_cr": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__cmd_hc": {
+"u_core_prompt": 182
+},
+"u_rank__u_control__cmd_v": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__ctrl_begin_available": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__kst8": {
+"u_core_prompt": 80
+},
+"u_rank__u_control__por_n": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__service_ready": {
+"u_core_guard": 1,
+"u_core_prompt": 1
+},
+"u_rank__u_control__startup_allowed": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__tk8": {
+"u_core_prompt": 744
+},
+"u_rank__u_control__u_packet__cd": {
+"u_rank__u_control__u_packet__u_rx": 512
+},
+"u_rank__u_control__u_packet__cr": {
+"u_rank__u_control__u_packet__u_rx": 1
+},
+"u_rank__u_control__u_packet__ct": {
+"u_core_tx": 1
+},
+"u_rank__u_control__u_packet__ctc": {
+"u_core_tx": 1
+},
+"u_rank__u_control__u_packet__ctd": {
+"u_core_tx": 512
+},
+"u_rank__u_control__u_packet__cv": {
+"u_rank__u_control__u_packet__u_rx": 1
+}
+},
+"u_core_prompt": {
+"allocated_valid": {
+"u_core_peer": 1
+},
+"available": {
+"PORT:available": 1
+},
+"boot_go": {
+"PORT:boot_go": 1
+},
+"boot_image_fault": {
+"PORT:boot_image_fault": 1
+},
+"boot_image_ready": {
+"PORT:boot_image_ready": 1
+},
+"boot_image_target": {
+"PORT:boot_image_target": 4
+},
+"boot_pr": {
+"PORT:boot_pr": 143
+},
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"cq_client_tag": {
+"u_core_peer": 16
+},
+"cq_commit_v": {
+"u_core_peer": 1
+},
+"cq_pos": {
+"u_core_peer": 18
+},
+"cq_slot": {
+"u_core_peer": 8
+},
+"cq_token": {
+"u_core_peer": 18
+},
+"crom_fault": {
+"PORT:crom_fault": 1
+},
+"die_id": {
+"u_core_guard": 3,
+"u_core_peer": 3,
+"u_rank__u_control__u_packet__u_rx": 3,
+"PORT:die_id": 3
+},
+"die_rst_n": {
+"PORT:die_rst_n": 1
+},
+"execution_active": {
+"PORT:execution_active": 1
+},
+"fault_src": {
+"PORT:fault_src": 32
+},
+"hbm_rst_n": {
+"PORT:hbm_rst_n": 1
+},
+"hc": {
+"u_core_guard": 143,
+"PORT:hc": 143
+},
+"host_interface_idle": {
+"PORT:host_interface_idle": 1
+},
+"host_link_reset_req": {
+"PORT:host_link_reset_req": 1,
+"u_core_peer": 1
+},
+"host_observer_fault": {
+"u_core_guard": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"ingest_permission": {
+"u_core_peer": 1,
+"u_core_queue": 1,
+"PORT:ingest_permission": 1
+},
+"irq": {
+"u_core_tx": 1,
+"PORT:irq": 1
+},
+"link_rst_n": {
+"PORT:link_rst_n": 1
+},
+"link_up": {
+"PORT:link_up": 2
+},
+"native_context_owned": {
+"u_core_guard": 1,
+"u_core_peer": 1
+},
+"native_request_gen": {
+"u_core_guard": 2,
+"u_core_peer": 2
+},
+"native_request_pos": {
+"u_core_guard": 18,
+"u_core_peer": 18
+},
+"native_request_tag": {
+"u_core_guard": 59,
+"u_core_peer": 59
+},
+"native_request_token": {
+"u_core_guard": 18,
+"u_core_peer": 18
+},
+"native_request_v": {
+"u_core_guard": 1,
+"u_core_peer": 1
+},
+"package_abort": {
+"u_core_peer": 1,
+"PORT:package_abort": 1
+},
+"program_auth_digest": {
+"PORT:program_auth_digest": 64
+},
+"program_auth_epoch": {
+"PORT:program_auth_epoch": 16
+},
+"program_auth_v": {
+"PORT:program_auth_v": 1
+},
+"program_authorized_footer64": {
+"PORT:program_authorized_footer64": 64
+},
+"program_authorized_footer_v": {
+"PORT:program_authorized_footer_v": 1
+},
+"program_begin_v": {
+"PORT:program_begin_v": 1
+},
+"program_digest": {
+"PORT:boot_image_digest": 64,
+"u_core_peer": 64,
+"PORT:program_digest": 64
+},
+"program_epoch": {
+"PORT:program_epoch": 16,
+"u_core_peer": 16,
+"PORT:boot_image_epoch": 16
+},
+"program_expected_dw": {
+"PORT:program_expected_dw": 4
+},
+"program_expected_pw": {
+"PORT:program_expected_pw": 11
+},
+"program_ready": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"PORT:program_ready": 1
+},
+"record_fault": {
+"u_core_guard": 1,
+"PORT:record_fault": 1
+},
+"record_rx": {
+"PORT:record_rx": 548
+},
+"record_rx_v": {
+"PORT:record_rx_v": 1
+},
+"record_send_kind": {
+"PORT:record_send_kind": 2
+},
+"record_tx": {
+"PORT:record_tx": 548
+},
+"record_tx_observed_v": {
+"PORT:record_tx_observed_v": 1
+},
+"record_tx_v": {
+"PORT:record_tx_v": 1
+},
+"record_witness_slot": {
+"PORT:record_witness_slot": 1
+},
+"service_abort": {
+"u_core_guard": 1,
+"PORT:service_abort": 1
+},
+"service_diag_raw": {
+"u_core_guard": 26,
+"PORT:service_diag_raw": 26
+},
+"service_faults": {
+"PORT:service_faults": 1,
+"u_core_guard": 1
+},
+"service_status": {
+"PORT:service_status": 32,
+"u_core_guard": 32
+},
+"source_cr": {
+"PORT:source_cr": 1
+},
+"static_setup_ready": {
+"PORT:static_setup_ready": 1
+},
+"step_client_tag": {
+"u_core_peer": 16
+},
+"step_issue_v": {
+"u_core_peer": 1
+},
+"step_pos": {
+"u_core_peer": 18
+},
+"step_retire_client_tag": {
+"u_core_peer": 16
+},
+"step_retire_cq": {
+"u_core_peer": 1
+},
+"step_retire_pos": {
+"u_core_peer": 18
+},
+"step_retire_slot": {
+"u_core_peer": 8
+},
+"step_retire_token": {
+"u_core_peer": 18
+},
+"step_retire_v": {
+"u_core_peer": 1
+},
+"step_slot": {
+"u_core_peer": 8
+},
+"sys_ready": {
+"PORT:sys_ready": 1
+},
+"token_epoch": {
+"u_core_guard": 16,
+"u_core_peer": 16,
+"PORT:token_epoch": 16
+},
+"token_epoch_valid": {
+"PORT:token_epoch_valid": 1,
+"u_core_guard": 1,
+"u_core_peer": 1
+},
+"u_rank__begin_fault": {
+"u_core_guard": 1
+},
+"u_rank__commit_fault": {
+"u_core_guard": 1
+},
+"u_rank__guarded_physical": {
+"u_core_guard": 8
+},
+"u_rank__guarded_transport": {
+"u_core_guard": 8
+},
+"u_rank__ingress_fault": {
+"u_core_guard": 1
+},
+"u_rank__peer_pending_ack": {
+"u_core_peer": 8
+},
+"u_rank__peer_service_epoch": {
+"u_core_peer": 128
+},
+"u_rank__peer_service_ready": {
+"u_core_peer": 8
+},
+"u_rank__program_fault": {
+"u_core_guard": 1
+},
+"u_rank__program_rx_cr": {
+"u_core_peer": 1
+},
+"u_rank__program_rx_d": {
+"u_core_peer": 528
+},
+"u_rank__program_rx_v": {
+"u_core_peer": 1
+},
+"u_rank__rx_cr": {
+"u_rank__u_control__u_packet__u_rx": 1
+},
+"u_rank__rx_d": {
+"u_rank__u_control__u_packet__u_rx": 528
+},
+"u_rank__rx_v": {
+"u_rank__u_control__u_packet__u_rx": 1
+},
+"u_rank__source_fault": {
+"u_core_guard": 1,
+"u_core_queue": 1
+},
+"u_rank__u_control__begin_cr": {
+"u_core_peer": 1
+},
+"u_rank__u_control__begin_epoch": {
+"u_core_peer": 16
+},
+"u_rank__u_control__begin_v": {
+"u_core_peer": 1
+},
+"u_rank__u_control__boot8": {
+"u_core_peer": 16
+},
+"u_rank__u_control__cmd_cr": {
+"u_core_peer": 1
+},
+"u_rank__u_control__cmd_hc": {
+"u_core_peer": 182
+},
+"u_rank__u_control__cmd_v": {
+"u_core_peer": 1
+},
+"u_rank__u_control__ctrl_begin_available": {
+"u_core_peer": 1
+},
+"u_rank__u_control__kst8": {
+"u_core_peer": 80
+},
+"u_rank__u_control__por_n": {
+"u_core_peer": 1
+},
+"u_rank__u_control__service_ready": {
+"u_core_guard": 1,
+"u_core_peer": 1
+},
+"u_rank__u_control__startup_allowed": {
+"u_core_peer": 1
+},
+"u_rank__u_control__tk8": {
+"u_core_peer": 744
+},
+"u_rank__u_control__u_packet__hd": {
+"u_rank__u_control__u_packet__u_rx": 512
+},
+"u_rank__u_control__u_packet__hr": {
+"u_rank__u_control__u_packet__u_rx": 1
+},
+"u_rank__u_control__u_packet__ht": {
+"u_core_tx": 1
+},
+"u_rank__u_control__u_packet__htc": {
+"u_core_tx": 1
+},
+"u_rank__u_control__u_packet__htd": {
+"u_core_tx": 512
+},
+"u_rank__u_control__u_packet__hv": {
+"u_rank__u_control__u_packet__u_rx": 1
+}
+},
+"u_core_queue": {
+"certificate": {
+"u_core_peer": 66
+},
+"certificate_prefix": {
+"u_core_guard": 32,
+"u_core_peer": 32
+},
+"certificate_v": {
+"u_core_guard": 1,
+"u_core_peer": 1
+},
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"est": {
+"PORT:est": 13,
+"u_core_guard": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"host_upstream_quiet": {
+"PORT:host_upstream_quiet": 1
+},
+"ingest_permission": {
+"u_core_peer": 1,
+"u_core_prompt": 1,
+"PORT:ingest_permission": 1
+},
+"issued": {
+"u_core_order": 32,
+"PORT:issued": 32
+},
+"landed": {
+"PORT:landed": 32,
+"u_core_order": 32
+},
+"marker": {
+"PORT:marker": 66
+},
+"marker_v": {
+"PORT:marker_v": 1
+},
+"service_faults": {
+"PORT:service_faults": 1,
+"u_core_guard": 1
+},
+"u_rank__bootbarrier_fault": {
+"u_core_guard": 1
+},
+"u_rank__image_check": {
+"u_core_order": 1
+},
+"u_rank__ing_cls": {
+"u_core_guard": 2,
+"u_rank__u_control__u_packet__u_rx": 2
+},
+"u_rank__ing_crn": {
+"u_rank__u_control__u_packet__u_rx": 5
+},
+"u_rank__ing_d": {
+"u_core_guard": 16,
+"u_rank__u_control__u_packet__u_rx": 512
+},
+"u_rank__ing_v": {
+"u_core_guard": 1,
+"u_rank__u_control__u_packet__u_rx": 1
+},
+"u_rank__local_marker": {
+"u_core_order": 66
+},
+"u_rank__local_marker_cr": {
+"u_core_order": 1
+},
+"u_rank__local_marker_v": {
+"u_core_order": 1
+},
+"u_rank__marker_consumer_fault": {
+"u_core_guard": 1
+},
+"u_rank__source_fault": {
+"u_core_guard": 1,
+"u_core_prompt": 1
+},
+"u_rank__u_bridge__qcr": {
+"u_cdc_host": 1
+},
+"u_rank__u_bridge__qd": {
+"u_cdc_host": 546
+},
+"u_rank__u_bridge__qv": {
+"u_cdc_host": 1
+}
+},
+"u_core_tx": {
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"irq": {
+"PORT:irq": 1,
+"u_core_prompt": 1
+},
+"service_faults": {
+"u_core_guard": 1,
+"PORT:service_faults": 1
+},
+"u_rank__done_cr": {
+"u_cdc_host": 1
+},
+"u_rank__done_d": {
+"u_core_guard": 64,
+"u_cdc_host": 64
+},
+"u_rank__done_v": {
+"u_core_guard": 1,
+"u_cdc_host": 1
+},
+"u_rank__tx_cr": {
+"u_core_peer": 1
+},
+"u_rank__tx_d": {
+"u_core_peer": 528
+},
+"u_rank__tx_v": {
+"u_core_peer": 1
+},
+"u_rank__u_control__u_packet__credit_return": {
+"u_rank__u_control__u_packet__u_rx": 24
+},
+"u_rank__u_control__u_packet__ct": {
+"u_core_peer": 1
+},
+"u_rank__u_control__u_packet__ctc": {
+"u_core_peer": 1
+},
+"u_rank__u_control__u_packet__ctd": {
+"u_core_peer": 512
+},
+"u_rank__u_control__u_packet__ht": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__u_packet__htc": {
+"u_core_prompt": 1
+},
+"u_rank__u_control__u_packet__htd": {
+"u_core_prompt": 512
+},
+"u_rank__u_control__u_packet__peer_credit": {
+"u_rank__u_control__u_packet__u_rx": 24
+}
+},
+"u_ingest_qm__u_qm": {
+"ck_core": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1
+},
+"ck_host": {
+"PORT:ck_host": 1,
+"u_cdc_host": 1
+},
+"ck_ingest": {
+"PORT:ck_ingest": 1,
+"u_ingest_qm__u_eng": 1
+},
+"host_rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"host_upstream_quiet_core": {
+"PORT:host_upstream_quiet": 1
+},
+"host_upstream_quiet_host": {
+"PORT:host_upstream_quiet": 1
+},
+"host_upstream_quiet_ingest": {
+"PORT:host_upstream_quiet": 1
+},
+"service_faults": {
+"PORT:service_faults": 1,
+"u_core_guard": 1
+},
+"u_rank__oa": {
+"u_core_order": 32
+},
+"u_rank__ocr": {
+"u_core_order": 1
+},
+"u_rank__od": {
+"u_core_order": 256
+},
+"u_rank__ov": {
+"u_core_order": 1
+},
+"u_rank__owe": {
+"u_core_order": 1
+},
+"u_rank__qm_cls": {
+"u_cdc_host": 2
+},
+"u_rank__qm_crn": {
+"u_cdc_host": 5
+},
+"u_rank__qm_d": {
+"u_cdc_host": 512
+},
+"u_rank__qm_t_cr": {
+"u_cdc_host": 1
+},
+"u_rank__qm_t_d": {
+"u_cdc_host": 64
+},
+"u_rank__qm_t_v": {
+"u_cdc_host": 1
+},
+"u_rank__qm_v": {
+"u_cdc_host": 1
+},
+"eng_rst_n": {
+"u_ingest_qm__u_eng": 2
+},
+"eng_dv": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_ddata": {
+"u_ingest_qm__u_eng": 256
+},
+"eng_inv_a": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_inv_b": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_indata": {
+"u_ingest_qm__u_eng": 512
+},
+"eng_wrdy": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_drdy": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_inrdy": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_wv": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_wv_c": {
+"u_ingest_qm__u_eng": 20
+},
+"eng_waddr": {
+"u_ingest_qm__u_eng": 32
+},
+"eng_wdata": {
+"u_ingest_qm__u_eng": 256
+},
+"eng_rv": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_raddr": {
+"u_ingest_qm__u_eng": 32
+},
+"eng_done": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_done_a": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_done_b": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_done_c": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_tag": {
+"u_ingest_qm__u_eng": 8
+},
+"eng_busy": {
+"u_ingest_qm__u_eng": 1
+},
+"eng_nsec": {
+"u_ingest_qm__u_eng": 32
+}
+},
+"u_ingest_qm__u_eng": {
+"ck_ingest": {
+"PORT:ck_ingest": 1,
+"u_ingest_qm__u_qm": 1
+},
+"ck_rl": {
+"PORT:ck_ingest": 1,
+"u_ingest_qm__u_qm": 1
+},
+"eng_rst_n": {
+"u_ingest_qm__u_qm": 2
+},
+"eng_dv": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_ddata": {
+"u_ingest_qm__u_qm": 256
+},
+"eng_inv_a": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_inv_b": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_indata": {
+"u_ingest_qm__u_qm": 512
+},
+"eng_wrdy": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_drdy": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_inrdy": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_wv": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_wv_c": {
+"u_ingest_qm__u_qm": 20
+},
+"eng_waddr": {
+"u_ingest_qm__u_qm": 32
+},
+"eng_wdata": {
+"u_ingest_qm__u_qm": 256
+},
+"eng_rv": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_raddr": {
+"u_ingest_qm__u_qm": 32
+},
+"eng_done": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_done_a": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_done_b": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_done_c": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_tag": {
+"u_ingest_qm__u_qm": 8
+},
+"eng_busy": {
+"u_ingest_qm__u_qm": 1
+},
+"eng_nsec": {
+"u_ingest_qm__u_qm": 32
+}
+},
+"u_rank__u_adapter__g_slice_0___u_slice": {
+"c_cr": {
+"u_cdc_pc": 1
+},
+"c_d": {
+"u_cdc_pc": 128
+},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {
+"u_core_guard": 1,
+"PORT:service_faults": 1
+},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {
+"u_rank__u_phy__u_pad": 1
+},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 147
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {
+"PORT:phy_tx_v": 1
+}
+},
+"u_rank__u_adapter__g_slice_1___u_slice": {
+"c_cr": {},
+"c_d": {
+"u_cdc_pc": 128
+},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_adapter__g_slice_2___u_slice": {
+"c_cr": {},
+"c_d": {
+"u_cdc_pc": 128
+},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_adapter__g_slice_3___u_slice": {
+"c_cr": {},
+"c_d": {
+"u_cdc_pc": 128
+},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_adapter__g_slice_4___u_slice": {
+"c_cr": {},
+"c_d": {
+"u_cdc_pc": 34
+},
+"c_v": {
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_adapter__g_slice_5___u_slice": {
+"c_cr": {},
+"c_d": {},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_adapter__g_slice_6___u_slice": {
+"c_cr": {},
+"c_d": {},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_7___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_adapter__g_slice_7___u_slice": {
+"c_cr": {},
+"c_d": {},
+"c_v": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"ck": {
+"PORT:ck_phy": 1
+},
+"fault": {},
+"r_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_phy__u_pad": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"r_d": {
+"u_rank__u_phy__u_pad": 128
+},
+"r_v": {},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_flit": {
+"PORT:phy_rx_flit": 147,
+"u_rank__u_adapter__g_slice_4___u_slice": 19,
+"u_rank__u_adapter__g_slice_3___u_slice": 19,
+"u_rank__u_adapter__g_slice_2___u_slice": 19,
+"u_rank__u_adapter__g_slice_0___u_slice": 19,
+"u_rank__u_adapter__g_slice_5___u_slice": 19,
+"u_rank__u_adapter__g_slice_1___u_slice": 19,
+"u_rank__u_adapter__g_slice_6___u_slice": 19
+},
+"rx_v": {
+"PORT:phy_rx_v": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_flit": {
+"PORT:phy_tx_flit": 128
+},
+"tx_up": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"PORT:phy_up": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"tx_v": {}
+},
+"u_rank__u_control__u_packet__u_rx": {
+"admission_open": {
+"PORT:host_admission_open": 1
+},
+"ck": {
+"u_core_guard": 1,
+"u_core_peer": 1,
+"PORT:ck_core": 1,
+"u_core_order": 1,
+"u_core_prompt": 1,
+"u_core_tx": 1,
+"u_cdc_host": 1,
+"u_core_queue": 1,
+"u_cdc_pc": 1,
+"u_ingest_qm__u_qm": 1
+},
+"credit_return": {
+"u_core_tx": 24
+},
+"ctrl_cr": {
+"u_core_peer": 1
+},
+"ctrl_d": {
+"u_core_peer": 512
+},
+"ctrl_v": {
+"u_core_peer": 1
+},
+"deferred": {
+"PORT:host_deferred": 1
+},
+"die_id": {
+"u_core_guard": 3,
+"u_core_peer": 3,
+"u_core_prompt": 3,
+"PORT:die_id": 3
+},
+"fault": {
+"PORT:service_faults": 1,
+"u_core_guard": 1
+},
+"host_cr": {
+"u_core_prompt": 1
+},
+"host_d": {
+"u_core_prompt": 512
+},
+"host_v": {
+"u_core_prompt": 1
+},
+"ing_cls": {
+"u_core_guard": 2,
+"u_core_queue": 2
+},
+"ing_crn": {
+"u_core_queue": 5
+},
+"ing_d": {
+"u_core_guard": 16,
+"u_core_queue": 512
+},
+"ing_v": {
+"u_core_guard": 1,
+"u_core_queue": 1
+},
+"launch_quiet": {
+"PORT:host_launch_quiet": 1
+},
+"native_reserved": {
+"PORT:native_reserved": 1
+},
+"ownership_valid": {
+"PORT:ownership_valid": 1
+},
+"peer_credit": {
+"u_core_tx": 24
+},
+"rst_n": {
+"u_core_peer": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1,
+"u_rank__u_phy__u_pad": 1
+},
+"rx_cr": {
+"u_core_prompt": 1
+},
+"rx_d": {
+"u_core_prompt": 528
+},
+"rx_v": {
+"u_core_prompt": 1
+}
+},
+"u_rank__u_phy__u_pad": {
+"clk": {
+"u_cdc_pc": 1,
+"PORT:ck_phy_fam": 1
+},
+"fault": {
+"PORT:service_faults": 1,
+"u_core_guard": 1
+},
+"in_cr": {
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1
+},
+"in_d": {
+"u_rank__u_adapter__g_slice_0___u_slice": 128,
+"u_rank__u_adapter__g_slice_1___u_slice": 128,
+"u_rank__u_adapter__g_slice_2___u_slice": 128,
+"u_rank__u_adapter__g_slice_3___u_slice": 128,
+"u_rank__u_adapter__g_slice_4___u_slice": 128,
+"u_rank__u_adapter__g_slice_5___u_slice": 128,
+"u_rank__u_adapter__g_slice_6___u_slice": 128,
+"u_rank__u_adapter__g_slice_7___u_slice": 128
+},
+"in_v": {
+"u_rank__u_adapter__g_slice_0___u_slice": 1
+},
+"out_cr": {
+"u_cdc_pc": 1
+},
+"out_d": {
+"u_cdc_pc": 546
+},
+"out_v": {
+"u_cdc_pc": 1
+},
+"rst_n": {
+"u_core_peer": 1,
+"u_rank__u_control__u_packet__u_rx": 1,
+"u_cdc_host": 1,
+"u_rank__u_adapter__g_slice_0___u_slice": 1,
+"u_cdc_pc": 1,
+"u_rank__u_adapter__g_slice_7___u_slice": 1,
+"u_ingest_qm__u_qm": 1,
+"u_core_guard": 1,
+"u_core_order": 1,
+"u_core_tx": 1,
+"u_rank__u_adapter__g_slice_2___u_slice": 1,
+"u_rank__u_adapter__g_slice_5___u_slice": 1,
+"u_rank__u_adapter__g_slice_1___u_slice": 1,
+"u_rank__u_adapter__g_slice_6___u_slice": 1,
+"u_rank__u_adapter__g_slice_3___u_slice": 1,
+"u_core_prompt": 1,
+"u_core_queue": 1,
+"u_rank__u_adapter__g_slice_4___u_slice": 1,
+"PORT:host_rst_n": 1
+}
+}
+}
