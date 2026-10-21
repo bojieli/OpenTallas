@@ -130,9 +130,19 @@ module ot_s81sl_vs #(
     output reg           fault
 );
     localparam [3:0] OP_SW = 4'd8, OP_QB = 4'd9, OP_RA = 4'd10, OP_RB = 4'd11, OP_QR = 4'd12, OP_MOE = 4'd13, OP_ENG = 4'd14;
+`ifdef OT_S81SL_VS_SRAM
+    wire [31:0] rsv;
+    ot_rst_relay_tree3 #(.REGIONS(32),.LEAVES(8)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rsv));
+`else
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
+`endif
     wire rs_c = rsv[0], rs_r = rsv[1], rs_x = rsv[2], rs_o = rsv[3];
+`ifdef OT_S81SL_VS_SRAM
+    wire rs_ra=rsv[4],rs_kra=rsv[5],rs_eng=rsv[6],rs_flush=rsv[7],rs_out=rsv[24],rs_fault=rsv[25];
+`else
+    wire rs_ra=rs_o,rs_kra=rs_o,rs_eng=rs_o,rs_flush=rs_o,rs_out=rs_o,rs_fault=rs_o;
+`endif
     integer i, k, e2;
     function automatic [31:0] bf16(input [31:0] x);
         reg [32:0] s;
@@ -237,16 +247,18 @@ module ot_s81sl_vs #(
         else if (arr) ka <= ka + 8'd1;
     // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
     // copies of the arrival and flush counters, one per 64-b column group of the stash (keep: not merged by synthesis)
+    integer rq;
+`ifndef OT_S81SL_VS_SRAM
     (* keep = "true" *) reg [7:0] ka_q [0:3];
     (* keep = "true" *) reg [3:0] fl_q [0:3];
     (* keep = "true" *) reg [3:0] eqp_q [0:3];
     (* keep = "true" *) reg       ep_q [0:3];
-    integer rq;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) for (rq = 0; rq < 4; rq = rq + 1) ka_q[rq] <= 8'd0;
         else for (rq = 0; rq < 4; rq = rq + 1)
             if (acc_cmd) ka_q[rq] <= 8'd0; else if (arr) ka_q[rq] <= ka_q[rq] + 8'd1;
 
+`endif
     // ================================================================ SW: groups to the lane sub-leaf
     assign w_arr = arr && op == OP_SW && wr && ka == 8'd0;
     wire [7:0] kg = ka - {7'd0, wr};                 // SW group index of this arrival (wr: arrival 0 = the weight row)
@@ -289,8 +301,13 @@ module ot_s81sl_vs #(
     generate for (gl = 0; gl < 2; gl = gl + 1) begin : g_qm
         wire [31:0] mine = gl ? qm1 : qm0, pair = gl ? qm0 : qm1;
         wire [31:0] sg = ((gl != 0) ^ (MUT == 3)) ? qs : {~qs[31], qs[30:0]};
-        ot_hdc_qmul_lat #(XL) u_p (clk, rs_x, qr_in, mine, qc, mp[2 * gl], mf[2 * gl]);
-        ot_hdc_qmul_lat #(XL) u_q (clk, rs_x, qr_in, pair, sg, mp[2 * gl + 1], mf[2 * gl + 1]);
+`ifdef OT_S81SL_VS_SRAM
+        wire qm_rst0=rsv[8+2*gl],qm_rst1=rsv[9+2*gl];
+`else
+        wire qm_rst0=rs_x,qm_rst1=rs_x;
+`endif
+        ot_hdc_qmul_lat #(XL) u_p (clk, qm_rst0, qr_in, mine, qc, mp[2 * gl], mf[2 * gl]);
+        ot_hdc_qmul_lat #(XL) u_q (clk, qm_rst1, qr_in, pair, sg, mp[2 * gl + 1], mf[2 * gl + 1]);
     end endgenerate
     // adder operand registers (one stage after the source mux): RB lanes 0..3, QR lanes 0..1, MOE lanes 0..7
     wire moe_in = arr && op == OP_MOE;
@@ -315,7 +332,12 @@ module ot_s81sl_vs #(
             end
     ot_hdc_vline #(.D(XL)) u_vx (.clk(clk), .rst_n(rs_x), .v(x_iv), .vd(vx));
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_xa
-        ot_dsrom_qadd #(.LAT(XL)) u_a (clk, rs_x, x_iv, xa[gl], xb[gl], ay[gl], af[gl]);
+`ifdef OT_S81SL_VS_SRAM
+        wire xa_rst=rsv[16+gl];
+`else
+        wire xa_rst=rs_x;
+`endif
+        ot_dsrom_qadd #(.LAT(XL)) u_a (clk, xa_rst, x_iv, xa[gl], xb[gl], ay[gl], af[gl]);
     end endgenerate
     // adder results: MOE phases 0..5 loop back (acc1 -> operand register: 8 cycles a turn), phase 6 / RB / QR leave
     reg [7:0] k_xo;
@@ -338,8 +360,8 @@ module ot_s81sl_vs #(
     reg [223:0] ras; reg [3:0] rasn; reg [7:0] ra_left;
     wire ra_ld = arr && op == OP_RA;
     wire ra_go = (rasn != 4'd0 || ra_ld) && ra_left != 8'd0;
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin ra_v <= 1'b0; rasn <= 4'd0; ra_left <= 8'd0; end
+    always @(posedge clk or negedge rs_ra)
+        if (!rs_ra) begin ra_v <= 1'b0; rasn <= 4'd0; ra_left <= 8'd0; end
         else begin
             if (acc_cmd) ra_left <= (c_op == OP_RA) ? c_n : 8'd0;
             else if (ra_go) ra_left <= ra_left - 8'd1;
@@ -351,8 +373,8 @@ module ot_s81sl_vs #(
         else begin ras <= {32'd0, ras[223:32]}; ra_x <= ras[31:0]; end
     end
     `S81_VS_CONTROL_KEEP reg [7:0] k_ra; reg [95:0] rad;                // results returned; the row being assembled (words 0..2)
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) k_ra <= 8'd0;
+    always @(posedge clk or negedge rs_kra)
+        if (!rs_kra) k_ra <= 8'd0;
         else if (acc_cmd) k_ra <= 8'd0;
         else if (rav_c) k_ra <= k_ra + 8'd1;
     always @(posedge clk) if (rav_c) for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) rad[32 * i +: 32] <= rar_c;
@@ -439,13 +461,21 @@ module ot_s81sl_vs #(
     function automatic [31:0] hw32(input [255:0] r, input [1:0] j, input [1:0] e);
         hw32 = {r[(4 * j + e) * 16 +: 16], 16'd0};
     endfunction
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
-                         for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0; end
+    always @(posedge clk or negedge rs_eng)
+        if (!rs_eng) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
+                         
+`ifndef OT_S81SL_VS_SRAM
+for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
+`endif
+ end
         else begin
             ve_rv <= (eng_r && ka >= 8'd16 && er[0]) || epend;
             epend <= eng_r && ka >= 8'd16 && er[0];
-            for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
+            
+`ifndef OT_S81SL_VS_SRAM
+for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
+`endif
+
             ve_av <= eng_a;
             if (acc_cmd && c_op == OP_ENG && !c_ph) gmask <= 4'd0;
             else if (gv_c) gmask <= gmask | (4'd1 << gc_c);
@@ -461,7 +491,11 @@ module ot_s81sl_vs #(
         if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
         if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
         eqp <= eq0 | 6'd1;
-        for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
+        
+`ifndef OT_S81SL_VS_SRAM
+for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
+`endif
+
 `ifdef OT_S81SL_VS_SRAM
         for(i=0;i<16;i=i+1) begin
           ve_rk[8*i+:8] <= hpend_data[i] ? kst[128+8*i+:8] : kst[8*i+:8];
@@ -491,18 +525,30 @@ module ot_s81sl_vs #(
 `endif
     end
     // partial triples out; result / flush counters
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
-                         for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0; end
+    always @(posedge clk or negedge rs_flush)
+        if (!rs_flush) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
+                         
+`ifndef OT_S81SL_VS_SRAM
+for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
+`endif
+ end
         else begin
             e_v <= vpv_c;
             if (acc_cmd) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
-                               for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0; end
+                               
+`ifndef OT_S81SL_VS_SRAM
+for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
+`endif
+ end
             else begin
                 if (vpv_c) kp_e <= kp_e + 3'd1;
                 if (vov_c) begin ko_e <= ko_e + 6'd1; if (ko_e == 6'd31) fl_on <= 1'b1; end
                 if (fl_on) begin fl_e <= fl_e + 5'd1; if (fl_e == 5'd15) fl_on <= 1'b0; end
-                if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
+                
+`ifndef OT_S81SL_VS_SRAM
+if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
+`endif
+
             end
         end
     always @(posedge clk) begin e_c <= vpc_c; e_d <= vpd_c; end
@@ -510,8 +556,8 @@ module ot_s81sl_vs #(
     // ================================================================ results: leaf-store write port, vq stream, done
     `S81_VS_CONTROL_KEEP reg [7:0] k_out; reg [127:0] sw_prev;
     wire [127:0] sw_w32 = {swr_c[63:48], 16'd0, swr_c[47:32], 16'd0, swr_c[31:16], 16'd0, swr_c[15:0], 16'd0};
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin x_wv <= 1'b0; u_v <= 1'b0; um_v <= 1'b0; k_out <= 8'd0; done <= 1'b0; end
+    always @(posedge clk or negedge rs_out)
+        if (!rs_out) begin x_wv <= 1'b0; u_v <= 1'b0; um_v <= 1'b0; k_out <= 8'd0; done <= 1'b0; end
         else begin
             x_wv <= 1'b0; u_v <= 1'b0; done <= 1'b0;
             um_v <= acc_cmd && c_uq && (c_op == OP_SW || c_op == OP_QB);
@@ -571,8 +617,8 @@ module ot_s81sl_vs #(
 
     // ---------------------------------------------------------------- faults (sticky)
     reg f_cmd, f_unit;
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin fault <= 1'b0; f_cmd <= 1'b0; f_unit <= 1'b0; end
+    always @(posedge clk or negedge rs_fault)
+        if (!rs_fault) begin fault <= 1'b0; f_cmd <= 1'b0; f_unit <= 1'b0; end
         else begin
             f_cmd <= (sv_c && (busy || c_bad)) || (xqv_c && !busy) || (swv_c && op != OP_SW) || (rav_c && op != OP_RA) ||
                      (vpv_c && !(busy && op == OP_ENG && !ph)) || (vov_c && !(busy && op == OP_ENG && ph)) ||
