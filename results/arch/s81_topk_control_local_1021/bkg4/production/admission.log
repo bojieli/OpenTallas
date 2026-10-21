@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-epyc7       admits   530 GB (avail 457, growth 86, headroom 0, waiters 0/0 GB) load 55/96 running 27 disk 4644 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4049702-1792614281 after 0 s
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 73, "got_beats": 73}
+BKG1_prod_RC=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4049702-1792614281): exit 0
