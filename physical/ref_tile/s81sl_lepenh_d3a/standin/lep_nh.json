@@ -1,0 +1,68 @@
+{
+ "name": "standin_ot_s81sl_lep_nh",
+ "top": "ot_s81sl_lep_nh",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 475.2,
+  "h": 561.6
+ },
+ "pins": {
+  "W": [
+   "ro",
+   "ri"
+  ],
+  "E": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f",
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "sl_f",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "ro": [
+   4.0,
+   280.0
+  ],
+  "ri": [
+   282.0,
+   557.6
+  ],
+  "clk": [
+   272.8,
+   280.8
+  ],
+  "rst_n": [
+   280.8,
+   288.8
+  ],
+  "sl_f": [
+   3.0,
+   10.0
+  ],
+  "fault": [
+   455.0,
+   472.0
+  ]
+ },
+ "_note": "DRIVE-S81-LEPENH d3 stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) at the real r5a outline 475.2 x 561.6, drawn in the E-end (MY) orientation. Pin REQUEST for the real E-end lep_nh view: ro W 4-280, ri W 282-557.6 (bit i meets slice ro_e/ri_e bit i across the 172.8-um landing channel), sl_f on S at the channel corner, fault on S at the lane corner, clk/rst_n on the lane face as r5a."
+}

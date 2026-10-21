@@ -125,6 +125,9 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+# S81-LEPENH2 10-20: landing_kept_enable writer (slot enable = registered one-hot only; rq off the data capture muxes)
+KEPT_ENABLE_RTL = "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"
+LIB_PORTS['ot_pl_land_vector_reset_kw_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 
 
 
@@ -517,6 +520,15 @@ class Parent:
             raise SystemExit("landing_mcp must be an explicit boolean")
         if type(self.reset_forest) is not bool:
             raise SystemExit("landing_reset_forest must be an explicit boolean")
+        # S81-LEPENH2 10-20: landing_kept_enable (opt-in, needs landing_reset_forest; absent = byte-identical): the ring
+        # writer ot_pl_land_vector_reset_kw_w (rtl/common/landed_parent/ot_pl_land_kept_enable.sv) enables each slot
+        # with the registered one-hot alone; ot_pl_land_local_w's (rq && write_oh) put rq on every data capture mux
+        # (120 actual loads per chunk at CHUNK_BITS 24, pre-gate native census).  Reader unchanged.
+        self.kept_enable = spec.get("landing_kept_enable", False)
+        if type(self.kept_enable) is not bool:
+            raise SystemExit("landing_kept_enable must be an explicit boolean")
+        if self.kept_enable and not self.reset_forest:
+            raise SystemExit("landing_kept_enable requires landing_reset_forest")
         if self.reset_forest and not self.chunk_bits:
             raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
@@ -682,6 +694,9 @@ class Parent:
                     t[v] = min(outs)
                 elif any(a == v for a, *_ in lagged):
                     t[v] = min(t[b] for a, b, *_ in lagged if a == v)
+        if resched:     # S81-LEPENH2 10-20: out_regs stages are port offsets in reschedule mode too (children keep t = 0)
+            for p, k in oregs.items():
+                t[f"port:{p}"] = max(t[d] for d in out_drv[p]) + k
         for p, ds in out_drv.items():
             ts = {t[d] for d in ds}
             if len(ts) > 1:
@@ -870,7 +885,7 @@ class Parent:
             raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
         return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
                     incremental_FFs=sum(v['FFs']-depth for v in regions.values()),
-                    required_rtl_sources=RESET_FOREST_RTL,
+                    required_rtl_sources=RESET_FOREST_RTL + ([KEPT_ENABLE_RTL] if self.kept_enable else []),
                     scope='Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.')
 
     def emit(self, P, top_lp, mut=True):
@@ -969,7 +984,7 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
+                w(f"    {primitive}{'_kw' if self.kept_enable else ''}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
                 w(f"    wire {decl} {out}, lpl_{n}_o;")
@@ -1313,7 +1328,10 @@ class Parent:
         L.append(f"    {top_lp} #({(pv + ', ') if pv else ''}.MUT(MUT)) u_lp (" + ", ".join(lc) + ");")
         L.append("    function [31:0] rnd; input integer k; rnd = $urandom; endfunction")
         if S.get("tb_stimulus"):
-            return self.tb_scripted(L, outs, t, warm, sticky, W)
+            # S81-LEPENH2 10-20: a scripted bench of a RESCHEDULE parent needs the <top>_rsref reference module too (it was
+            # only appended on the random-word path: MODMISSING ot_s81sl_slice_lepe_nh_x_rsref)
+            txt = self.tb_scripted(L, outs, t, warm, sticky, W)
+            return txt + self.rsref(P) + "\n" if P.get("resched") else txt
         L.append("    integer cyc, nc, bad;")
         L.append("    initial begin")
         L.append("        nc = 0; bad = 0;")
@@ -1406,7 +1424,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
-                        (RESET_FOREST_RTL if self.reset_forest else []) +
+                        (RESET_FOREST_RTL if self.reset_forest else []) + ([KEPT_ENABLE_RTL] if self.kept_enable else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
@@ -1511,7 +1529,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_vector_reset_kw_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

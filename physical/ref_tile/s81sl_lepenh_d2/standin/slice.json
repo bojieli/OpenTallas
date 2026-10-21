@@ -1,0 +1,115 @@
+{
+ "name": "standin_ot_s81sl_slice",
+ "top": "ot_s81sl_slice",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 1252.8,
+  "h": 5702.4
+ },
+ "pins": {
+  "E": [
+   "rst_n",
+   "clk",
+   "fault",
+   "ro_e",
+   "ri_e"
+  ],
+  "W": [
+   "ri_w",
+   "ro_w"
+  ],
+  "N": [
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "pin_ranges": {
+  "bi": [
+   10.0,
+   213.921
+  ],
+  "bo": [
+   214.921,
+   309.678
+  ],
+  "xc": [
+   310.678,
+   1126.362
+  ],
+  "rt": [
+   1127.362,
+   1230.8
+  ],
+  "ck_line": [
+   1231.8,
+   1235.8
+  ],
+  "ck_v": [
+   1236.8,
+   1237.8
+  ],
+  "ck_xc": [
+   1238.8,
+   1242.8
+  ],
+  "ck_rt": [
+   1243.8,
+   1245.8
+  ],
+  "rst_n": [
+   2520.0,
+   2525.0
+  ],
+  "clk": [
+   2540.0,
+   2552.0
+  ],
+  "fault": [
+   2575.0,
+   2580.0
+  ],
+  "ro_e": [
+   2596.0,
+   2828.0
+  ],
+  "ri_e": [
+   2831.0,
+   3063.0
+  ],
+  "ri_w": [
+   2160.0,
+   2851.2
+  ],
+  "ro_w": [
+   2851.2,
+   3542.4
+  ],
+  "sid": [
+   100.0,
+   120.0
+  ],
+  "vi": [
+   130.0,
+   590.0
+  ],
+  "vo": [
+   640.0,
+   1100.0
+  ]
+ },
+ "_note": "S81-LEPENH2 10-20 d2 stand-in pin plan (DIAGNOSTIC, STANDIN_NOT_A_VIEW): every pin the parent connects is ranged so the parent net is a straight abutment hop: slice E line ports (ro_e/ri_e) inside the lep W window (bit i meets bit i), slice clk/rst_n on its E face beside the landings, slice S/N buses ranged and mirrored by the parent face pins (+43.2 um), lane tf/rx/tx ranged. This is the pin REQUEST for the real views (PL-SLICE slice cluster, lep_nh E-end, lane_e). DIAGNOSTIC stand-in input (S81-SLICE3-LEPENH 10-19): ot_s81sl_slice has no hardened view (PL-SLICE kit draft, 31/46 children open). Line ports on the centre band (ring stop region C). Pin plan provisional: the die tool assigns."
+}

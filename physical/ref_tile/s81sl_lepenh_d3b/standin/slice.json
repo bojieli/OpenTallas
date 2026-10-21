@@ -1,0 +1,115 @@
+{
+ "name": "standin_ot_s81sl_slice",
+ "top": "ot_s81sl_slice",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 1252.8,
+  "h": 5702.4
+ },
+ "pins": {
+  "E": [
+   "rst_n",
+   "clk",
+   "fault",
+   "ro_e",
+   "ri_e"
+  ],
+  "W": [
+   "ri_w",
+   "ro_w"
+  ],
+  "N": [
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "pin_ranges": {
+  "bi": [
+   10.0,
+   213.921
+  ],
+  "bo": [
+   214.921,
+   309.678
+  ],
+  "xc": [
+   310.678,
+   1126.362
+  ],
+  "rt": [
+   1127.362,
+   1230.8
+  ],
+  "ck_line": [
+   1231.8,
+   1235.8
+  ],
+  "ck_v": [
+   1236.8,
+   1237.8
+  ],
+  "ck_xc": [
+   1238.8,
+   1242.8
+  ],
+  "ck_rt": [
+   1243.8,
+   1245.8
+  ],
+  "rst_n": [
+   2496.8,
+   2500.8
+  ],
+  "clk": [
+   2504.8,
+   2516.8
+  ],
+  "fault": [
+   2520.8,
+   2524.8
+  ],
+  "ro_e": [
+   2552.8,
+   2828.8
+  ],
+  "ri_e": [
+   2830.8,
+   3106.4
+  ],
+  "ri_w": [
+   2160.0,
+   2851.2
+  ],
+  "ro_w": [
+   2851.2,
+   3542.4
+  ],
+  "sid": [
+   100.0,
+   120.0
+  ],
+  "vi": [
+   130.0,
+   590.0
+  ],
+  "vo": [
+   640.0,
+   1100.0
+  ]
+ },
+ "_note": "DRIVE-S81-LEPENH d3 stand-in (DIAGNOSTIC): PL-SLICE pin REQUEST, E face ro_e/ri_e bit-aligned with the d3 lep_nh window (lep y 2592), rst_n/clk/fault just below it."
+}
