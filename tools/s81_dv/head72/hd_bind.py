@@ -185,6 +185,26 @@ def main():
         rw['dsfd_mtp_seq']=dict(ck=1,**{n:w for dr,w,n,net in PORTS})
         T.setdefault('rtl_files',[]).append('rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv')
         T['rtl_files'].append('rtl/dsrom_sys/s81_head/physical/fan32_cells.v')
+    if facts.get('lep_regional'):
+        # New source master: never alias the old single-root endpoint or CRED8 views.
+        lm=copy.deepcopy(M['ot_s81hd_lep'])
+        lm.update(module='ot_s81hd_lep_regional', view=None, clock_ports=['ck','ck_A','ck_B'],
+                  view_note='Three explicit real roots; regional LEP and CORE_CRED12 lane sources; physical packing/closed views pending')
+        for port,rule in lm['ports'].items():
+            stem=port.split('.')[0]
+            rule['clock_port']=('ck_A' if int(stem[-1])<2 else 'ck_B') if stem.startswith(('tx','rx')) else 'ck'
+        lm['port_clock_required']=list(lm['ports'])
+        M['ot_s81hd_lep_regional']=lm
+        rw[lm['module']]=dict(pw['ot_s81hd_lep'],ck_A=1,ck_B=1)
+        T.setdefault('rtl_files',[]).append('rtl/dsrom_sys/s81_head/ot_s81hd_lep_regional.sv')
+        for b in (b for b in blocks if b['master']=='ot_s81hd_lep_regional'):
+            row={cp:f'ck_head_{b["name"]}_{r}' for cp,r in [('ck','C'),('ck_A','A'),('ck_B','B')]}
+            T.setdefault('instance_clock_ports',{})[b['name']]=row
+            for cp,net in row.items():
+                T.setdefault('clock_domains',{})[net]=dict(period_ps=833.333,asynchronous_to_core=False,
+                    relationship='same_pll_fixed_phase',source_kind='die_top_input',
+                    receiver_instance=f'u_{b["name"]}',receiver_clock_port=cp,
+                    receiver_region=cp,source_ref=facts['lep_regional']['source'])
     T['masters'] = M
     T['instance_orientations'] = dict(facts['instance_orientations'])
     T['unbound'] = {k: v['view_note'] for k, v in M.items()}
