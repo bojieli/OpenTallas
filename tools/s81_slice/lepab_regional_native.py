@@ -11,12 +11,20 @@ macros=[Path('physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1'),Path('physic
 srcs += [p/(p.name+'_bb.v') for p in macros]
 keep=['ot_sram_showahead_hit5','ot_s81sl_lep_rx_control','ot_s81sl_lep_host_event','ot_s81sl_lep_tx_push','ot_s81sl_lep_stamp','ot_s81sl_lep_vcopy','ot_s81sl_lep_pair_ready','ot_s81sl_lep_return8','ot_sram_showahead_readptr','ot_s81sl_lepab_select']
 top='ot_s81sl_lep_mu_ab_regional'
-script=['read_verilog -sv '+str(root/p) for p in srcs]
-script += ['hierarchy -check -top '+top]+['setattr -mod -set keep_hierarchy 1 '+m for m in keep]
+params={};defines=[]
+if len(sys.argv)>2:
+ spec=json.loads(Path(sys.argv[2]).read_text())
+ top=spec['top'];params=spec.get('params',{});defines=spec.get('defines',[])
+ srcs=[Path(p) for p in spec['sources']]
+ macros=sorted({Path(m['view']) for m in spec['macros']})
+ srcs += [p/(p.name+'_bb.v') for p in macros]
+ keep=spec.get('route',{}).get('synth_keep_modules',[])
+script=['read_verilog -sv '+''.join('-D'+d+' ' for d in defines)+str(root/p) for p in srcs]
+script += ['hierarchy -check -top '+top+''.join(' -chparam '+k+' '+str(v) for k,v in sorted(params.items()))]+['setattr -mod -set keep_hierarchy 1 '+m for m in keep]
 script += ['tcl '+str(root/'physical/common_flow/ot_keep_regs.tcl'),'synth -top '+top+' -flatten','dfflibmap -liberty '+str(dff),'abc '+ ' '.join('-liberty '+str(p) for p in libs)+' -D 833.333','splitnets -ports','opt_clean -purge','write_verilog -noattr '+str(out/'mapped.v'),'tee -o '+str(out/'stat.txt')+' stat '+ ' '.join('-liberty '+str(p) for p in libs)]
 (out/'synth.ys').write_text('\n'.join(script)+'\n')
 h=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-(out/'inputs.json').write_text(json.dumps({'top':top,'sources':{str(p):h(root/p) for p in srcs},'libs':{str(p):h(p) for p in libs},'keep_modules':keep,'keep_regs_hook_sha256':h(root/'physical/common_flow/ot_keep_regs.tcl')},indent=2)+'\n')
+(out/'inputs.json').write_text(json.dumps({'top':top,'sources':{str(p):h(root/p) for p in srcs},'libs':{str(p):h(p) for p in libs},'keep_modules':keep,'parameters':params,'defines':defines,'keep_regs_hook_sha256':h(root/'physical/common_flow/ot_keep_regs.tcl')},indent=2)+'\n')
 with (out/'synth.log').open('w') as f:
  subprocess.run([str(Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys'),'-s',str(out/'synth.ys')],stdout=f,stderr=subprocess.STDOUT,check=True)
 cmd=[sys.executable,'tools/ref_tile/native_census.py','--netlist',str(out/'mapped.v'),'--top',top,'--out',str(out/'native_census.json')]

@@ -743,20 +743,11 @@
    }
   ],
   "extra_paths": [
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
-   "physical/dscoll_cx/coll_s5_cell_band.tcl",
-   "physical/ref_tile/dscoll_lane_w_ltr/kit.env",
-   "results/rtl/s81_coll_native32_1020/native_v8/bench",
-   "results/rtl/s81_coll_native32_1020/reach7/bench",
-   "results/rtl/s81_coll_native32_1020/reach8n/bench",
-   "rtl",
-   "tools/xdie_s81",
    "tools/s81_slice/coll_reach12.sh",
    "results/rtl/s81_lepab_regional_1021",
-   "rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv"
+   "rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v"
   ]
  },
  "recipe": 1,
