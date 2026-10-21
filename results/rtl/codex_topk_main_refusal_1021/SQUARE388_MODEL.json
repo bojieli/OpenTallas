@@ -1,0 +1,181 @@
+{
+  "status": "SOURCE_MODEL_ONLY_NO_GATE_OR_QUALIFIED_SUBMIT",
+  "source_ref": "cb73b3e99a77afc0ea65e847fb5509b3da664b87",
+  "kit": "physical/ref_tile/s81dvbk_selcpn_e",
+  "master": "dsdv_bksel_c_pa_n32",
+  "params": {},
+  "defines": [
+    "OT_S81PH_SEL_INDEXED13",
+    "OT_S81PH_FIFO_SRAM",
+    "OT_SRAM_P192",
+    "OT_S81PH_SEL_SUCC",
+    "OT_S81PH_SEL_FAN32",
+    "OT_S81PH_SEL_ACC32",
+    "OT_S81PH_SEL_HQ",
+    "OT_HARD_CHILDREN",
+    "OT_S81PH_HQ_INPUT_RAW",
+    "OT_S81PH_SEL_ILD",
+    "OT_S81PH_SEL_FRPR"
+  ],
+  "RTL_changed": false,
+  "new_pipeline_edges": 0,
+  "faces": {
+    "S": {
+      "pins": 1508,
+      "pins_per_um": 3.8786008230452675,
+      "capacity_at4": 1555.2
+    },
+    "N": {
+      "pins": 1509,
+      "pins_per_um": 3.881172839506173,
+      "capacity_at4": 1555.2
+    },
+    "W": {
+      "pins": 1544,
+      "pins_per_um": 3.97119341563786,
+      "capacity_at4": 1555.2
+    },
+    "E": {
+      "pins": 1511,
+      "pins_per_um": 3.8863168724279835,
+      "capacity_at4": 1555.2
+    }
+  },
+  "source_contract": {
+    "landing_segments_each_direction": 7,
+    "landing_edges_each_direction": 14,
+    "XR": 34,
+    "XD": 17,
+    "VD_edges": 1,
+    "external_tail_edges": 796,
+    "clock_route_period_ps": 770,
+    "clock_signoff_period_ps": 833.333,
+    "clock_uncertainty_setup_hold_ps": [
+      60,
+      25
+    ],
+    "new_pipeline_edges": 0
+  },
+  "clock_topology": {
+    "input": "ck",
+    "face": "W",
+    "coordinate_range_um": [
+      194.184,
+      194.616
+    ],
+    "nominal_y_um": 194.4,
+    "old_measured_CTS_ARGS": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75",
+    "proposed_CTS_ARGS": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -balance_levels",
+    "API_verified": "OpenROAD26Q3-1510-g6cb3f2b704 help; no design or gate loaded",
+    "criterion": "TT/FF pin-flop spread<=80ps; all-internal spread is diagnostic, not a blanket80ps rule"
+  },
+  "macro_grid": {
+    "x_um": [
+      43.2,
+      129.6,
+      216,
+      302.4
+    ],
+    "old_y_um": [
+      43.2,
+      129.6,
+      216
+    ],
+    "new_y_um": [
+      43.2,
+      172.8,
+      302.4
+    ],
+    "macro_wh_um": [
+      51.408,
+      39.96
+    ],
+    "halo_xy_um": [
+      6.48,
+      2.16
+    ],
+    "old_vertical_clear_after_halo_um": 42.12,
+    "new_vertical_clear_after_halo_um": 85.32
+  },
+  "parent": {
+    "outline_um": [
+      907.2,
+      3499.2
+    ],
+    "control": [
+      216,
+      1555.2,
+      388.8,
+      388.8
+    ],
+    "glue": [
+      648,
+      1771.2,
+      216,
+      172.8
+    ],
+    "quarter_origins": [
+      [
+        216,
+        43.2
+      ],
+      [
+        216,
+        864
+      ],
+      [
+        216,
+        1987.2
+      ],
+      [
+        216,
+        2764.8
+      ]
+    ],
+    "north_relay_origin": [
+      129.6,
+      3456
+    ],
+    "north_relay_size": [
+      25.92,
+      17.28
+    ],
+    "retained_top_band_um": 86.4,
+    "growth_vs_old_um": 216,
+    "vmtx_band_um": 4190.4,
+    "remaining_after_parent_TX540_one_gap43p2_um": 108
+  },
+  "cut_lower_bound": {
+    "horizontal_preferred_tracks_per_um": 62.38425925925925,
+    "band_um": 43.2,
+    "core_usable_band_um": 41.04,
+    "raw_core_tracks": 2560.2499999999995,
+    "far_bundle_2banks_payload_plus_valid_wires": 2016,
+    "central_east_approach_N_wires": 1252,
+    "central_east_approach_S_wires": 624,
+    "qualification": "Entry-cut lower bounds only; no simultaneous all-cut routing, layer grant or body placement proof."
+  },
+  "gate_admitted": false,
+  "qualified_submit": false,
+  "generated_files": {
+    "physical/ref_tile/s81dvbk_selcpn_e/kit.env": "079d8cc02b0e70403eba8f221bed00178f8273d7ba11fabbbabeebfa7fd36550",
+    "physical/ref_tile/s81dvbk_selcpn_e/pre_cts.tcl": "103a4e4c541f0d2e10f10224fb13a2b6a1fbb5977cab7921420f9ceaaefb50fe",
+    "physical/ref_tile/s81dvbk_selcpn_e/floorplan.json": "e58b83d5bf465eba47f54518849043e61ff7150965b12c042e79ba07147d1794",
+    "physical/ref_tile/s81dvbk_selcpn_e/spec.json": "31bde2011fe3b8143164c5747bc70c7a7c441427b2edb8640d908c5fa16ad6e6",
+    "physical/ref_tile/s81dvbk_selcpn_e/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/s81dvbk_selcpn_e/job.json": "ff184076579c80dd77026d2e89ba537218651370cf253029482dae8e128f9e0c",
+    "physical/ref_tile/s81dvbk_selcpn_e/clock.sdc": "b4771e2a45ffaf879ccb932e4943da1ca93b133331a07944fd65b7b145657cba",
+    "physical/ref_tile/s81dvbk_selcpn_e/pre_fill.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/s81dvbk_selcpn_e/post_grt.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/s81dvbk_selcpn_e/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/s81dvbk_selcpn_e/pre_drt.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/s81dvbk_selcpn_e/place.tcl": "7b44d93962660a4865e0e67d6774bbe8eb242a34c19ee970bda17287ff18496b",
+    "physical/ref_tile/s81dvbk_selcpn_e/pdn.tcl": "d1b415a710f6b87adc0c4ddf96479751e1d7acdaa542bbb15e7a8f27ebc5857a",
+    "physical/ref_tile/s81dvbk_selcpn_e/pin_regs.json": "6f81897268462a628c4a31f01923dd3ae1a20abae98a122b9ef8e5ce34b34273",
+    "physical/ref_tile/s81dvbk_selcpn_e/reset_landing.json": "99bc04de5ef7733aab1365ababd33fc33a855d0deab8e8cc382786da93b7e183",
+    "physical/ref_tile/s81dvbk_selcpn_e/signoff_ffrepair.sdc": "0750e3933531b051f297acf8fabec4203570ce3090cd22353d62c5bc6f0a2744",
+    "physical/ref_tile/s81dvbk_selcpn_e/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
+    "physical/ref_tile/s81dvbk_selcpn_e/post_drt.tcl": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
+    "physical/ref_tile/s81dvbk_selcpn_e/signoff.sdc": "63aa7902bf170dfce501ec9fc70294ee30e2876aaef586ca23f44c7a27c53dcd"
+  }
+}
