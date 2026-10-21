@@ -144,6 +144,29 @@ module ot_hbm_hc_qeng_static #(
         .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
     `undef OT_HCQ_B0CK
     `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RL
+    // HBM-HCBANK9 10-20: one root per compact register mass (_rl) / capture per SRAM row (+define+HC_BANK_RM: _rm)
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rl_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rl_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rl_static
+    `define OT_HCQ_RLW .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), .clk_x1(clk), .clk_x2(clk), \
+        .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_a(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RLW
+    `define OT_HCQ_BQCK `OT_HCQ_BCK .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), .clk_a(clk), `OT_HCQ_RLW
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RM
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rm_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rm_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rm_static
+    `define OT_HCQ_RMW .clk_r0(clk), .clk_r1(clk), .clk_r2(clk), .clk_r3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), \
+        .clk_e3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RMW
+    `define OT_HCQ_BQCK `OT_HCQ_BCK .clk_a(clk), .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), .clk_a(clk), `OT_HCQ_RMW
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
  `elsif HC_BANK_RH
     `define OT_HCQ_B0 ot_hbm_hc_bankq0_rh_static
     `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rh_static
@@ -172,6 +195,12 @@ module ot_hbm_hc_qeng_static #(
     `define OT_HCQ_B0CK
     `define OT_HCQ_M3(KC) ((MUT == 1 && (KC) == 3) ? 1 : 0)
 `endif
+`ifndef OT_HCQ_BQCK
+    `define OT_HCQ_BQCK `OT_HCQ_BCK
+`endif
+`ifndef OT_HCQ_BFCK
+    `define OT_HCQ_BFCK `OT_HCQ_BCK
+`endif
     `OT_HCQ_B0 #(.MUT(0), .DRLY(DRLY - XRLY), .CPO(CP)) u_b0 (.clk(clk), `OT_HCQ_BCK `OT_HCQ_B0CK .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
         .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[0 +: 256]),
         .wv(wc_w[12]), .xv(wc_w[11]), .j(wc_w[10]), .wa(wc_w[9:0]), .wfault(wf[0]),
@@ -179,7 +208,7 @@ module ot_hbm_hc_qeng_static #(
     for (genvar e = 0; e < 2; e = e + 1) begin : g_ft          // e 0: bank 2 (N, wc_n), e 1: bank 6 (S, wc_s)
         localparam integer K0 = 2 + 4 * e;
         wire [12:0] wc = (e == 0) ? wc_n : wc_s;
-        `OT_HCQ_BF #(.MUT(0)) u_b (.clk(clk), `OT_HCQ_BCK .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
+        `OT_HCQ_BF #(.MUT(0)) u_b (.clk(clk), `OT_HCQ_BFCK .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
             .sum_in(jsum[K0*2048 +: 2048]), .f_in(jf[K0]),
             .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[K0*256 +: 256]),
             .wv(wc[12]), .xv(wc[11]), .j(wc[10]), .wa(wc[9:0]), .wfault(wf[K0]),
@@ -197,12 +226,12 @@ module ot_hbm_hc_qeng_static #(
     // corners 1, 3, 5, 7 (feed index c = 0..3) and bank 4 (E edge, wc_e)
     for (genvar c = 0; c < 4; c = c + 1) begin : g_cn
         localparam integer KC = 2 * c + 1;
-        `OT_HCQ_BQ #(.MUT(`OT_HCQ_M3(KC)), .CPI(CP), .CPO(CP)) u_b (.clk(clk), `OT_HCQ_BCK .rst_n(frst[c]), `OT_HCQ_CHAIN(KC),
+        `OT_HCQ_BQ #(.MUT(`OT_HCQ_M3(KC)), .CPI(CP), .CPO(CP)) u_b (.clk(clk), `OT_HCQ_BQCK .rst_n(frst[c]), `OT_HCQ_CHAIN(KC),
             .sum_in(jsum[KC*2048 +: 2048]), .f_in(jf[KC]),
             .xb_v(fx_v[c]), .xb_beat(fx_b[2*c +: 2]), .xb_d(fx_d[c*256 +: 256]),
             .wv(fwv[c]), .xv(fxv[c]), .j(fj[c]), .wa(fwa[c*10 +: 10]), .wfault(fwf_c[c]));
     end
-    `OT_HCQ_BQ #(.MUT(0), .CPI(CP), .CPO(CP)) u_b4 (.clk(clk), `OT_HCQ_BCK .rst_n(rb[4]), `OT_HCQ_CHAIN(4),
+    `OT_HCQ_BQ #(.MUT(0), .CPI(CP), .CPO(CP)) u_b4 (.clk(clk), `OT_HCQ_BQCK .rst_n(rb[4]), `OT_HCQ_CHAIN(4),
         .sum_in(jsum[4*2048 +: 2048]), .f_in(jf[4]),
         .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[4*256 +: 256]),
         .wv(wc_e[12]), .xv(wc_e[11]), .j(wc_e[10]), .wa(wc_e[9:0]), .wfault(wf[4]));
@@ -211,6 +240,14 @@ module ot_hbm_hc_qeng_static #(
     `undef OT_HCQ_BF
     `undef OT_HCQ_BQ
     `undef OT_HCQ_BCK
+    `undef OT_HCQ_BQCK
+    `undef OT_HCQ_BFCK
+`ifdef OT_HCQ_RLW
+    `undef OT_HCQ_RLW
+`endif
+`ifdef OT_HCQ_RMW
+    `undef OT_HCQ_RMW
+`endif
     `undef OT_HCQ_B0CK
     `undef OT_HCQ_M3
 endmodule
