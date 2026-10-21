@@ -2,7 +2,10 @@
   "status": "SOURCE_COMPONENT_CAUSAL_PASS_NOT_ASSEMBLED_OR_PHYSICAL",
   "unit": "oth-ubuntu-2113541-1792617479",
   "host": "ot-epyc5",
-  "positive": {"ticks": 36, "consumer_checks": 20},
+  "positive": {
+    "ticks": 36,
+    "consumer_checks": 20
+  },
   "mutant": "omitted actual sticky capture rejected at 11.510ns",
   "command": "python3 results/arch/qw_fault_face1_1021/prepare_unit.py EMPTY_DIR; cp results/arch/qw_fault_face1_1021/run_unit.sh EMPTY_DIR/run.sh; ot-run --mem 4 --threads 1 --disk 20 --dir EMPTY_DIR -- bash run.sh",
   "canonical_default": "qfd_sys_face_ovl.sv byte-identical; new qfd_sys_face_ovl_fault1 master opt-in only",
@@ -13,5 +16,12 @@
   "normal_programme_edges_added": 0,
   "actual_GEN_transport_edges": null,
   "test_cuts": "Other fault contributors and boot/event controls explicitly forced; MU1/MU_HEAD1/ROPE0. Immutable e18 historical calendar constants parse existing producer only. No current calendar/programme or transport qualification.",
-  "remaining": ["actual coherent73 source-stage clock and endpoint binding", "final GEN actual bus transport and landing receipts", "new native/physical master and closure", "actual view no old595 alias", "whole fault tree/root sink/reset/clock qualification"]
+  "remaining": [
+    "actual coherent73 source-stage clock and endpoint binding",
+    "final GEN actual bus transport and landing receipts",
+    "new native/physical master and closure",
+    "actual view no old595 alias",
+    "whole fault tree/root sink/reset/clock qualification"
+  ],
+  "additional_source": "Opt-in fault1 includes actual tt_ctlm.cf scalar in existing hard source tree: cf=core_fault|c_fault differs in phase from registered dc[52]/dc[51]; no prune or alias."
 }

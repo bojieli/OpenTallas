@@ -78,6 +78,12 @@ def _hard(s=None):
         if part.strip():
             inst, ports = part.split(':')
             out[inst.strip()] = [p.strip() for p in ports.split(',') if p.strip()]
+    if os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1':
+        # cf is the actual combinational core/calendar fault. Its registered
+        # dc status carries a different phase, so it is a genuine tree source.
+        ports = out.setdefault('tt_ctlm', [])
+        if 'cf' not in ports:
+            ports.append('cf')
     return out
 
 
