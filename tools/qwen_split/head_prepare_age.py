@@ -13,11 +13,44 @@ os.environ['OT_QWEN_HEAD_PREP']='1'
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import record_bundles as RB
 
-def measure(case):
+def measure(case, tt_source_receipt=None):
     case=Path(case)
     die=case/'die.v'
     lanes=case/'fwd_lanes.json'
     text=die.read_text()
+    tt_names=set(re.findall(r'\b(qfd_tt_ctlm\w*)\s+tt_ctlm\s*\(',text))
+    if len(tt_names)!=1:
+        raise ValueError('actual selected TT master required: '+str(sorted(tt_names)))
+    tt_master=next(iter(tt_names))
+    tt_local=1
+    tt_source=dict(master=tt_master,calendar_sample_edges=1,output_offset_edges=0,
+                   scope='raw qfd_tt_ctlm_dv source: existing c_emb bank capture at output')
+    if tt_master!='qfd_tt_ctlm_dv':
+        if tt_source_receipt is None:
+            raise ValueError('selected LP/native TT requires its source-bound embedding output-offset receipt; raw-TT edge 1 is not inherited')
+        receipt=Path(tt_source_receipt)
+        row=json.loads(receipt.read_text())
+        if row.get('schema')!='opentallas.qwen.tt_emb_source.v1' or row.get('master')!=tt_master or row.get('calendar_sample_edges')!=1:
+            raise ValueError('TT embedding source receipt identity/sample edge mismatch')
+        root=(case.parents[1]/'src').resolve()
+        def bound_file(field, sha_field):
+            path=(root/row[field]).resolve()
+            if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=row[sha_field]:
+                raise ValueError('TT embedding source receipt hash/path mismatch: '+field)
+            return path
+        rtl=bound_file('rtl','rtl_sha256')
+        if not re.search(r'\bmodule\s+'+re.escape(tt_master)+r'\b',rtl.read_text()):
+            raise ValueError('TT embedding RTL does not define selected master')
+        lp=bound_file('lp_record','lp_record_sha256')
+        record=json.loads(lp.read_text())
+        offsets=record['compiler']['output_port_offset_edges']
+        values=[offsets[p] for p in ('emb_start','emb_token','emb_position','emb_user')]
+        if record['audit']['ok'] is not True or any(type(n)!=int or n<0 for n in values) or len(set(values))!=1:
+            raise ValueError('TT embedding LP output offsets are missing/unequal/unqualified')
+        tt_local=1+values[0]
+        tt_source=dict(master=tt_master,calendar_sample_edges=1,output_offset_edges=values[0],
+                       receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                       rtl_sha256=row['rtl_sha256'],lp_record_sha256=row['lp_record_sha256'])
     selected=[]
     for base in ('qfd_native59_dv_headprep','qfd_sys_face_ovl','qfd_d2d_static_ovl_sf7'):
         names=set(re.findall(r'\b'+base+r'(?:_obs1)?\b',text))
@@ -33,21 +66,24 @@ def measure(case):
         if row is None or len(row['members'])!=n or not row['consistent'] or len(row['cycles'])!=1:
             raise ValueError('incomplete or unequal actual bundle '+name)
         ages[name]=int(row['cycles'][0])
-    total=1+ages['TT.head_prepare']+3+ages['SF.head_descriptor']+1
+    total=tt_local+ages['TT.head_prepare']+3+ages['SF.head_descriptor']+1
     return dict(schema='opentallas.qwen.head_prepare_age.v1',
       source='actual CTLM c_emb stored token/position/user; source epoch from per-user prepare or matching HOST',
       die_sha256=hashlib.sha256(die.read_bytes()).hexdigest(),
       selected_masters=selected,
       lanes_sha256=hashlib.sha256(lanes.read_bytes()).hexdigest(),
-      source_intrinsic_edges=dict(ct_lm_sample=1,native_prepare_descriptor=3,face_held_bank=1),
+      source_intrinsic_edges=dict(ct_lm_sample=tt_local,native_prepare_descriptor=3,face_held_bank=1),
+      tt_source=tt_source,
       actual_transport_edges=ages,head_prepare_edges=total,
       host_user0_contract='HOST O61 token/position/epoch must match actual prepare before publication; compiler must price actual HOST availability',
       scope='GEN-derived fixed schedule age; physical timing and final sole calendar qualification remain separate',
       bundles={k:audit['bundles'][k] for k in ages})
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('case');p.add_argument('--out',required=True);a=p.parse_args()
-    try: result=measure(a.case)
+    p=argparse.ArgumentParser();p.add_argument('case');p.add_argument('--out',required=True)
+    p.add_argument('--tt-source-receipt',help='source/LP-record hash-bound local embedding output ages for a selected LP/native TT')
+    a=p.parse_args()
+    try: result=measure(a.case,a.tt_source_receipt)
     except (ValueError,OSError,KeyError) as e:
         result=dict(verdict='FAIL',reason=str(e));Path(a.out).write_text(json.dumps(result,indent=2)+'\n');print(result['reason']);return 1
     result['verdict']='PASS';Path(a.out).write_text(json.dumps(result,indent=2)+'\n');print('HEAD_PREPARE_EDGES='+str(result['head_prepare_edges']));return 0
