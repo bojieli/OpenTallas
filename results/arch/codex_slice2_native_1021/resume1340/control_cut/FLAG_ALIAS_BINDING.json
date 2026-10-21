@@ -1,0 +1,33 @@
+{
+  "scope": "Exact source static alias proof, not an additional executed alias simulation",
+  "leaves_path": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "leaves_sha256": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036",
+  "source_ref": "83bbc1da3",
+  "equations": [
+    "assign rs_n_r0 = {rs_n[1027:1026], rs_n[513:512], rs_n[577:514], rs_n[63:0]};",
+    "assign rs_n_r1 = {rs_n[1027:1026], rs_n[513:512], rs_n[641:578], rs_n[127:64]};",
+    "assign rs_n_r2 = {rs_n[1027:1026], rs_n[513:512], rs_n[705:642], rs_n[191:128]};",
+    "assign rs_n_r3 = {rs_n[1027:1026], rs_n[513:512], rs_n[769:706], rs_n[255:192]};",
+    "assign rs_n_r4 = {rs_n[1027:1026], rs_n[513:512], rs_n[833:770], rs_n[319:256]};",
+    "assign rs_n_r5 = {rs_n[1027:1026], rs_n[513:512], rs_n[897:834], rs_n[383:320]};",
+    "assign rs_n_r6 = {rs_n[1027:1026], rs_n[513:512], rs_n[961:898], rs_n[447:384]};",
+    "assign rs_n_r7 = {rs_n[1027:1026], rs_n[513:512], rs_n[1025:962], rs_n[511:448]};",
+    "assign rs_s_r0 = {rs_s[1027:1026], rs_s[513:512], rs_s[577:514], rs_s[63:0]};",
+    "assign rs_s_r1 = {rs_s[1027:1026], rs_s[513:512], rs_s[641:578], rs_s[127:64]};",
+    "assign rs_s_r2 = {rs_s[1027:1026], rs_s[513:512], rs_s[705:642], rs_s[191:128]};",
+    "assign rs_s_r3 = {rs_s[1027:1026], rs_s[513:512], rs_s[769:706], rs_s[255:192]};",
+    "assign rs_s_r4 = {rs_s[1027:1026], rs_s[513:512], rs_s[833:770], rs_s[319:256]};",
+    "assign rs_s_r5 = {rs_s[1027:1026], rs_s[513:512], rs_s[897:834], rs_s[383:320]};",
+    "assign rs_s_r6 = {rs_s[1027:1026], rs_s[513:512], rs_s[961:898], rs_s[447:384]};",
+    "assign rs_s_r7 = {rs_s[1027:1026], rs_s[513:512], rs_s[1025:962], rs_s[511:448]};",
+    "assign l9_r0 = {l9_i[513:512], l9_i[63:0]};",
+    "assign l9_r1 = {l9_i[513:512], l9_i[127:64]};",
+    "assign l9_r2 = {l9_i[513:512], l9_i[191:128]};",
+    "assign l9_r3 = {l9_i[513:512], l9_i[255:192]};",
+    "assign l9_r4 = {l9_i[513:512], l9_i[319:256]};",
+    "assign l9_r5 = {l9_i[513:512], l9_i[383:320]};",
+    "assign l9_r6 = {l9_i[513:512], l9_i[447:384]};",
+    "assign l9_r7 = {l9_i[513:512], l9_i[511:448]};"
+  ],
+  "meaning": "All regional RSS/RSN[131:128] equal raw top {port[1027:1026],port[513:512]}; NB[65:64] equals l9_i[513:512], no state/clock/latency. This establishes the shared-data premise of the actual writer cut."
+}

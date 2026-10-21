@@ -1,0 +1,49 @@
+{
+  "observed_at": "2026-10-21T15:59:18.645322-07:00",
+  "status": "HOLD native until actual exact new pfx CLOSED hardbind",
+  "source_ref": "83bbc1da3",
+  "source_manifest": {
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv": "f7d4364f15b84f1edb92e43dd90c5193d5909e643c15c500c8a70a6555076395",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": "7473ca01737c663fd00746bbc01a3a185158fcc276b6d5fe69b9ddc83bf71fdd",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv": "6329a06edf462a113bc995d1b85642c13dc281191e864d4d6a10c71ac73f62c8",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv": "6a62fadc7e6239e14a7e4bd2183faa85a4edf2148f57cf9ff1b3f1abb451c135",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv": "ed6a647b87a4e97c69ed3687d6f4d5b1b2bcca45b0085ba535158d0bff049d69",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv": "6f9fc2569768cc770e229a0a154bce77e60d5555c65766403d5cbc1bf87615e2",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv": "cb43b22f2a48a1af0eb175981266441df8b2d236b9127774a2a94a34e3cb557a",
+    "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8_lp.sv": "4f8c7e89e1444d1a866981177819a3b62bf7377b04afd0538e674987a9c3933f",
+    "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8b_lp.sv": "c6be1d2f1813b94e91641c8342ab65d7c36ff4f7ddb686827c9b5f7a8287e6d0",
+    "tools/qwen_dv/gen_slice8_lp_spec.py": "d87fd952db9a158460970aa7fd929571751582d4bfa7a849d693777b8bfd9365",
+    "tools/qwen_dv/gen_slice8_rp_source.py": "3e92cec54a681fd3bf9cc86afe70b249314e21bcd1820c2e8f1833db4a3307c8",
+    "tools/qwen_dv/build_s8_tap_bounded.sh": "ecd54b56baa1ca6900f314f79db0e8b21d9e3d93c57cd9cf4e9405a3822d93d3",
+    "tools/qwen_dv/s8_tap_alias_copies.py": "bfa9e3ab2b9a6461b7cc23ee0be4e5f89a23c3ea4af592242a41f7e149d45507",
+    "tools/qwen_dv/s8_landing_masks.py": "02f2f706eda3c23f174294f81ffa655d6bde7b6a9f6e4df5d0e3b9086cebfda3",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5"
+  },
+  "covered_roots": {
+    "RP": [
+      526,
+      1053
+    ],
+    "FDN": [
+      69,
+      81,
+      33
+    ],
+    "TAP": "five48/96 roots now four retained same-edge producers each3aliases; predicted12/24 actualnativepending",
+    "FBtopflags": "ten57/64 roots,23writers shared exact conditional masks; predicted24/25 actualnativepending"
+  },
+  "remaining_expected_native_violations": "Exactly three old soft math OAI35/36/35, unchanged production cb43 station math; remove only by real source/params/ports/latency-matching newpfx CLOSED child hardbinding, never old5de alias.",
+  "decision": "Wait real closed child; a strict census now knowinglyfails these3 roots and would require another expensive continuation. No native/gate admitted.",
+  "next": [
+    "Collect actual pfxa/b corrected423018c29 routed terminal; INVALID1d68 history retained.",
+    "If CLOSED, verify exact source cb43+PIN_IN1/BT_LAT1/MUT0, complete child source/port/reset/latency/clock contract and legal existing parent station slot/pin reach before hardbinding.",
+    "Persist exact hardbind/generator and source manifest; lightweight readset duplicate/missing module inventory.",
+    "Run ONE strict MAIN/FB native continuation with exact source+view packet. No parentlayout until actual all<=32 and geometry/reach checks."
+  ],
+  "functional_receipts": [
+    "tap_copy_grace/pass_d576/receipt.json",
+    "tap_copy_grace/body_d93/receipt.json",
+    "control_cut/pass_83bbc/receipt.json"
+  ],
+  "limits": "Known source-model predictions are not native PASS. Full selected LP/programme ages and wholeparent functional qualification remain separate debt."
+}

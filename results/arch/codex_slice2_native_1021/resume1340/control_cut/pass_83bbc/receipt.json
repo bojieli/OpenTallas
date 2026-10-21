@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-21T15:59:18.645322-07:00",
+  "verdict": "PASS bounded executed actual four-state control source cuts",
+  "source_ref": "83bbc1da3",
+  "production_source_base": "fe27f8a6a (TAP d93+qclass191/97c)",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1843727-1792623491",
+  "ot_run_rc": 0,
+  "simulator": "Icarus Verilog four-state",
+  "guard_equivalence": {
+    "cycles": 256,
+    "unknown_output_cycles": 65,
+    "compared": "All RP/FDN output ports and original internal state fields vs exact363295685 references; startup, reset reassert, directed ARM/tag/counter commands, X/Z payload/selectors"
+  },
+  "masked_writer_equivalence": {
+    "D4": {
+      "cycles": 256,
+      "actual_AND_mutant_bank_differences": 658
+    },
+    "D8": {
+      "cycles": 256,
+      "actual_AND_mutant_bank_differences": 724
+    },
+    "compared": "Actual old/new production localwriter all bank bits, valid, epoch, rq and OH; independent X/Z selector cold states, independent bank data, changing X/Z input, independent reset phases",
+    "mutation": "Same fixture instantiates actual new production writer with only mask OR replaced by AND; changed bank state is observed, not inferred from exit status"
+  },
+  "source_data_alias_premise": "../FLAG_ALIAS_BINDING.json exact source-static equations, not an extra alias simulation",
+  "scope": "Only required bounded source equivalence/causal evidence. No fullparent sim, arbitrary coldstart guarantee, native/timing/reach claim.",
+  "files_sha256": {
+    "sources.sha256": "4b82d58e89109515598e101c0c622a15dbd62383aa5bc7b4f417d4b12ab6ada4",
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "primary.log": "cf98ac50809b51606e3fef695298b44b8f9a48a4616f4ad401a09a45d82eafbf",
+    "version.txt": "f9199cc8658f4afcec3edeb93f29f23bb2aebf66d3eeb217cdc728aaa692f946",
+    "binary.sha256": "626ae09befeb8669f05c0e4ff031c96f0ef29eb417ea206de8d89c26e5532140"
+  }
+}

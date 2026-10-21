@@ -1,0 +1,5 @@
+GUARD_EQ_PASS cycles256 unknown_outputs65 all_ports_all_state startup_reset_XZ
+MASKED_EQ_PASS D4 checks256 actual_writer_allbank_state_XZ independent_OH coldbanks resetreassert ANDmutant_differences486 actual_bank_mutant_differences658
+MASKED_EQ_PASS D8 checks256 actual_writer_allbank_state_XZ independent_OH coldbanks resetreassert ANDmutant_differences596 actual_bank_mutant_differences724
+S8_CONTROL_CUT_PASS required_bounded_actual_source_only
+rtl/test/qwen_dv/s8/control_cut/masked_cut.sv:63: $finish called at 2557000 (1ps)
