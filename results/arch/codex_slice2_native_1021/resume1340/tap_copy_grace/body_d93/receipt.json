@@ -1,0 +1,29 @@
+{
+  "observed_at": "2026-10-21T15:44:15.535668-07:00",
+  "verdict": "PASS actual copied TAP body + samebinary causal mutant",
+  "source": "d93cd8016",
+  "tap_sha256": "6329a06edf462a113bc995d1b85642c13dc281191e864d4d6a10c71ac73f62c8",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1757227-1792622619",
+  "ot_run_rc": 0,
+  "positive": {
+    "checks": 19950,
+    "reset_windows": 2,
+    "same_existing_edge": true
+  },
+  "negative": {
+    "same_binary": true,
+    "only_change": "+mutant=1 inverts existing six xt valid copies",
+    "actual_failure": "TAP_BOUNDED_MISMATCH cycle51 mutant1 hw1 cid0 fault0"
+  },
+  "prior_required_coldproof": "960731e95/pass_d576; independent binary states under existing16edge parent reset. No unrestricted coldstate equivalence claim.",
+  "scope": "Component source body only; parent actual native<=32 remains NOTRUN on this successor; no physical qualification/source alias.",
+  "files_sha256": {
+    "sources.sha256": "47d15003b6958935b18ea6624e7ff9f11cf044322208e7e1f151ff2a8f09bb10",
+    "build.log.gz": "ed49332b224e7d611670cc777e4319f87b0e2722b4a28e0159c88d04129d4936",
+    "mutant.log": "2df2f3c40cd0882cd8ba5847e0ce59406a4b987492b798d2827def263191dcbb",
+    "primary.log": "5caedbbfed758b65beb990c7dd18f14cd73733e353932ed285f8f4d2c9c24d88",
+    "version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "binary.sha256": "b29fb9dbbd6ab205ba681381005a2feb7a672266a3dcfa21ed77dc83763bdb24"
+  }
+}

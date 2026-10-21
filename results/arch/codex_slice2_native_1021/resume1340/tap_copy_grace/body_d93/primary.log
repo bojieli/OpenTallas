@@ -1,0 +1,5 @@
+PASS TAP exact source bounded sameedge checks19950 two resets
+- rtl/test/qwen_dv/s8/tb_tap_bounded.sv:20: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.068 s; speed 2.945 ms/s
+- Verilator: cpu 0.068 s on 1 threads; allocated 7 MB
