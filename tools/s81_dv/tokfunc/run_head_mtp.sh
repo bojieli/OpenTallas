@@ -14,7 +14,7 @@ mkdir -p $LOCAL
 python3 tools/s81_dv/tokfunc/head_mtp_gold.py --head $HEAD_FIX --out $LOCAL/prep
 if [ "${NOFLEET:-0}" != 1 ]; then
   ssh $HOST "mkdir -p $LANE_DIR/src $LANE_DIR/fix/HEAD/ops $LANE_DIR/fix/HEAD/io $LANE_DIR/fix/HEAD/weights $LANE_DIR/fix/MTP/ops"
-  tar -C $R -cf - --exclude=.git rtl tools physical results/arch compiler | ssh $HOST "tar -C $LANE_DIR/src -xf -"
+  tar -C $R -cf - --exclude=.git rtl tools physical results/arch results/rtl/dsrom_markov_row_20261008 compiler | ssh $HOST "tar -C $LANE_DIR/src -xf -"
   rsync -a --delete $LOCAL/prep/ $HOST:$LANE_DIR/prep/
   rsync -a $HEAD_FIX/files.json $HEAD_FIX/meta.json $HOST:$LANE_DIR/fix/HEAD/
   rsync -a $HEAD_FIX/ops/head.norm.scale.bin $HEAD_FIX/ops/head.lm_head.bin $HOST:$LANE_DIR/fix/HEAD/ops/

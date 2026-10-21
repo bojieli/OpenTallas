@@ -42,8 +42,8 @@ def leg_xfin(run):
         out[m] = dict(verdict=verdict, line=line, kv=kv)
     ok = out["base"]["verdict"] == "PASS" and out["mutleaf"]["verdict"] == "FAIL"
     kv = out["base"]["kv"]
-    cyc = dict(stream_in_beats=80, last_partial_to_first_rstd=int(kv.get("last_partial_to_first_rstd", -1)),
-               rstd_spread=int(kv.get("rstd_spread", -1)))
+    cyc = dict(stream_in_beats=80, last_partial_to_first_rstd=int(kv["last_partial_to_first_rstd"]) if "last_partial_to_first_rstd" in kv else None,
+               rstd_spread=int(kv["rstd_spread"]) if "rstd_spread" in kv else None)
     return dict(ok=ok, kind="MEASURED", what="head hc_pre + RMSNorm exchange: ot_hbm_norm_grp G64 (80 beat partials) + 16 x "
                 "ot_s81dv_xfin (collector, snake ring LS 9 / LE 29, replicated finish) -> rstd at all 16 slices; all 80 y vectors "
                 "vs HEAD head.norm.scale", cycles=cyc, runs=out,

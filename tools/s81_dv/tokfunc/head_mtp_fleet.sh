@@ -76,7 +76,7 @@ leg_tp4() {
 }
 
 leg_wave() {
-  python3 tools/mtp_wave_bench.py run --out $OUT/wave --case wave mut_sseq_earlydone mut_hep_stale -j 4 --sim verilator \
+  python3 tools/mtp_wave_bench.py run --out $OUT/wave --case wave --case mut_sseq_earlydone --case mut_hep_stale -j 4 --sim verilator \
     > $OUT/wave.log 2>&1; echo "rc $?" >> $OUT/wave.log
   rm -rf $OUT/wave/*/obj
 }
