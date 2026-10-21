@@ -1,0 +1,17 @@
+N59RND_PROBE_ERR cycle 29 (ph 29): bank internals != r1 2 edges earlier; qctx 1/1 qrow diff bits 26
+N59RND_PROBE_ERR cycle 30 (ph 30): bank internals != r1 2 edges earlier; qctx 1/1 qrow diff bits 26
+N59RND_PROBE_ERR cycle 31 (ph 31): bank internals != r1 2 edges earlier; qctx 1/1 qrow diff bits 26
+N59RND_PROBE_ERR cycle 32 (ph 32): bank internals != r1 2 edges earlier; qctx 1/1 qrow diff bits 47
+N59RND_PROBE_ERR cycle 33 (ph 33): service internals != r1 6 edges earlier; diff bits 26, first diff bit 5124 of 5206
+N59RND_PROBE_ERR cycle 33 (ph 33): bank internals != r1 2 edges earlier; qctx 1/1 qrow diff bits 47
+N59RND_PROBE_ERR cycle 34 (ph 34): bank internals != r1 2 edges earlier; qctx 1/1 qrow diff bits 47
+N59RND_PROBE_ERR cycle 36 (ph 36): service internals != r1 6 edges earlier; diff bits 47, first diff bit 5027 of 5206
+N59RND_PROBE_ERR cycle 54 (ph 54): service internals != r1 6 edges earlier; diff bits 49, first diff bit 5026 of 5206
+N59RND_PROBE_ERR cycle 56 (ph 56): service internals != r1 6 edges earlier; diff bits 15, first diff bit 4898 of 5206
+N59RND_PROBE_ERR cycle 58 (ph 58): service internals != r1 6 edges earlier; diff bits 80, first diff bit 5187 of 5206
+N59RND_PROBE_ERR cycle 61 (ph 61): service internals != r1 6 edges earlier; diff bits 50, first diff bit 5154 of 5206
+N59RND activity: tx 0 x3 0 dr0 0 dr1 7379 done 0 fault-edges 37200 ret-changes 1 q-words 9068 kv-writes 7984 bad-dd 8126; compared 37200 mism 0 probes 9239/37172 (svc/bank mism) of 37200
+N59RND_FAIL seed 1: 0 of 37200 edges differ (outputs), probes 9239/37172
+[0] %Fatal: tb_n59_split_random.sv:125: Assertion failed in TOP.tb_n59_split_random
+%Error: /srv/opentallas-scratch/claude/qko-n59/src/rtl/test/qwen_split/tb_n59_split_random.sv:125: Verilog $stop
+Aborting...

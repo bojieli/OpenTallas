@@ -7,6 +7,7 @@ root=$(cd "$(dirname "$0")/../../.." && pwd)
 unit=$1;run=$2;mkdir -p "$run"
 export VERILATOR=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 export N59_RECV=1 N59_RECV_MUT=0 N59_QB_ALIGN=1 N59_QB_LOCAL32=1 N59_QB_LOCAL_MUT=0 N59_QB_STAGE=1 N59_QB_M546=1
+export N59_QB_WLOCAL=${N59_QB_WLOCAL:-0}   # qbank12 (QKO-N59 10-21): 1 = macro-local write-port registers, 2 = its mutant
 export SPL_SOFF=${SPL_SOFF:-5} SPL_BOFF=${SPL_BOFF:-0} SPL_ROFF=${SPL_ROFF:-6} SPLIT_ONLY=rnd_s1
 expect=0; log=rnd_s1
 case "$unit" in
@@ -21,6 +22,7 @@ case "$unit" in
  mut_qb1) SPLIT_ONLY=rnd_qb1_unreg; log=rnd_qb1_unreg; expect=2;;
  mut_mask) N59_QB_LOCAL_MUT=1; expect=1;;
  mut_select) N59_QB_LOCAL_MUT=2; expect=1;;
+ mut_wl) N59_QB_WLOCAL=2; expect=1;;
  *) exit 2;;
 esac
 bash "$root/rtl/test/qwen_split/run_native59_split_bench.sh" "$run" > "$run/wrapper.log" 2>&1

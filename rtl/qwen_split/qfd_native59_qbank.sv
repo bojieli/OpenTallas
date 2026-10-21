@@ -104,7 +104,7 @@ endmodule
 
 // ----------------------------------------------------------------------------------------------------------------------
 // Q-seat store (v2): 16 lane slices + the 8 masked-writer SRAMs + the read gather (function of qfd_native59_qseat_sram).
-module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,M546=0)(
+module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,M546=0,WLOCAL=0)(
  input wire ck,rst_n,clear,
  input wire[7:0]write_v,input wire[71:0]write_element,input wire[255:0]write_data,
  input wire[1151:0]elem_l,input wire[127:0]valid_l,input wire[15:0]seen_clear_l,
@@ -112,6 +112,8 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,
  input wire[15:0]read_v_l,input wire[511:0]read_oh_l,input wire[79:0]read_beat_l,   // per lane slice read copies
  input wire[7:0]read_v_m,input wire[39:0]read_beat_m,input wire[39:0]bypass_beat_c,
  input wire[71:0]write_element_nx,   // M546: the next-edge write_element (source of the kept lane-15 mask copies)
+ // WLOCAL (qbank12): macro-local kept write-port registers, same edge as write_v/write_element/write_data (see the bank)
+ input wire[1023:0]wl_data,input wire[127:0]wl_oh,input wire[39:0]wl_addr,input wire[7:0]wl_ce,
  output wire[511:0]read_data,output wire[15:0]seen_rd_l,output wire[15:0]all_seen_l,output wire[15:0]dup_l,
  output wire[1023:0]read_part   // qbank10: {writers 4..7 partial, writers 0..3 partial}; read_data = their OR
 );
@@ -144,9 +146,23 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,
    (* keep = "true" *) reg[1:0]xm;
    always @(posedge ck)xm<={2{(wex_q[9*w+:4]==4'd15)}};
    wire[545:0]rd546;
+   if(WLOCAL)begin:g_wl
+    // qbank12: every write pin is driven by a macro-local kept register (wl_*), loaded on the same edge as the p_*-derived
+    // write_v / write_element / write_data it replaces (bit-exact while not in reset; ce copy carries the p_* reset).
+    // Data: 4 kept copies per writer, copy k drives replicas 4k..4k+3 (copy 3 also the spare columns): <= 6 pins per flop.
+    wire[545:0]wd546;wire[511:0]mask_wl;
+    for(genvar rl=0;rl<16;rl=rl+1)begin:g_rep
+     assign wd546[32*rl+:32]=wl_data[128*w+32*(rl/4)+:32];
+     assign mask_wl[32*rl+:32]={32{wl_oh[16*w+rl]}};
+    end
+    assign wd546[543:512]=wl_data[128*w+96+:32];assign wd546[545:544]=wl_data[128*w+96+:2];
+    ot_sram_1r1w_32x546_m1_p192_mir u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(rd546),
+     .w_ce_in(wl_ce[w]),.w_addr_in(wl_addr[5*w+:5]),.wd_in(wd546),.w_mask_in({{17{xm[1]}},{17{xm[0]}},mask_wl}));
+   end else begin:g_wg
    ot_sram_1r1w_32x546_m1_p192_mir u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(rd546),
     .w_ce_in(write_v[w]&&!clear),.w_addr_in(write_element[9*w+4+:5]),
     .wd_in({write_data[32*w+:2],write_data[32*w+:32],{16{write_data[32*w+:32]}}}),.w_mask_in({{17{xm[1]}},{17{xm[0]}},mask}));
+   end
    assign bank_data[w]=rd546[511:0];
   end else begin:g_m512
   ot_sram_1r1w_32x512_m1 u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(bank_data[w]),
@@ -188,7 +204,7 @@ endmodule
 // qfd_native59_dv_service then runs on them exactly as it ran on the raw pins (one edge later), with its kept same-edge
 // replicas now per LANE SLICE.  Outputs registered (see the file header).
 // QB_MUT (split-only mutants, lockstep must FAIL): 1 qb_row leaves unregistered (one edge early), 2 dd_o relay one stage short.
-module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,QB_STAGE=0,QB_M546=0)(
+module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,QB_STAGE=0,QB_M546=0,QB_WLOCAL=0)(
  input wire ck,rst_n,
  input wire[547:0]dd_i,input wire layer_context_v,input wire[5:0]command_stage,
  input wire q_slot,input wire[4:0]q_slot_beat,
@@ -340,12 +356,42 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  // p_dd is held in reset, when no write can fire (dd_q = p_dd[547] = 0); it only steers never-read columns 512..545.
  wire[71:0]qe_nx;
  generate for(gl=0;gl<8;gl=gl+1)begin:g_qe_nx assign qe_nx[9*gl+:9]=f_dd[345+24*gl+:9]^((MUT==1)?9'd1:9'd0); end endgenerate
- qfd_native59_qseat_lanes #(.MUT(MUT),.LOCAL32(QB_LOCAL32),.LOCAL_MUT(QB_LOCAL_MUT),.M546(QB_M546)) u_qseat(
+ // ---------------------------------------------------------------- QB_WLOCAL (qbank12, QKO-N59 10-21)
+ // qbank11a route (pve1, CTS): TT setup -400 ps p_dd[244] -> writer 4 wd_in[283]: ONE p_dd bit drove the 17 replicated wd pins
+ // spread along the 160-um macro face (~920 ps buffer daisy chain), and p_dd sits where its other loads (bypass, S face) pull
+ // it.  Fix (0 edges): per writer, a kept relay stage w1 (== f_*, loaded from the input capture dd_x) and a kept macro-local
+ // stage w2 (== the p_*-derived write_v / write_element / write_data) that drives every write pin: 4 data copies (<= 6 pins
+ // each), 16 one-hot mask flops (32 pins each), 5 address, 1 enable (reset by rst_pin exactly as p_*).  Hops: S face -> w1
+ // -> w2 (beside the macro) -> pins, each <= ~360 um on the 950 x 475 outline.  Benched bit-exact (bench.sh QB_WLOCAL=1).
+ wire[1023:0]wl_data;wire[127:0]wl_oh;wire[39:0]wl_addr;wire[7:0]wl_ce;
+ generate if(QB_WLOCAL!=0)begin:g_wlocal
+  for(genvar ww=0;ww<8;ww=ww+1)begin:g_w
+   (* keep = "true" *) reg[31:0]d1;(* keep = "true" *) reg[8:0]e1;(* keep = "true" *) reg[3:0]v1;(* keep = "true" *) reg[6:0]s1;
+   always @(posedge ck)begin d1<=dd_x[89+32*ww+:32];e1<=dd_x[345+24*ww+:9]^9'(MUT==1);v1<={dd_x[547:545],dd_x[537+ww]};s1<={lcv_x,stage_x};end
+   for(genvar wk=0;wk<4;wk=wk+1)begin:g_d
+    (* keep = "true" *) reg[31:0]q;
+    always @(posedge ck)q<=d1;
+    assign wl_data[128*ww+32*wk+:32]=q;
+   end
+   (* keep = "true" *) reg[15:0]oh;(* keep = "true" *) reg[4:0]ad;(* keep = "true" *) reg ce;
+   always @(posedge ck)begin
+    for(integer li=0;li<16;li=li+1)oh[li]<=(e1[3:0]==4'((QB_WLOCAL==2)?li+1:li));   // QB_WLOCAL 2 = bench mutant (mask one lane off)
+    ad<=e1[8:4];
+   end
+   always @(posedge ck or negedge rst_pin)
+    if(!rst_pin)ce<=0;
+    else ce<=(v1[3:1]==3'b100)&&v1[0]&&!(s1[6]&&s1[5:0]>=1&&s1[5:0]<=36);
+   assign wl_oh[16*ww+:16]=oh;assign wl_addr[5*ww+:5]=ad;assign wl_ce[ww]=ce;
+  end
+ end else begin:g_wglobal
+  assign wl_data='0;assign wl_oh='0;assign wl_addr='0;assign wl_ce='0;
+ end endgenerate
+ qfd_native59_qseat_lanes #(.MUT(MUT),.LOCAL32(QB_LOCAL32),.LOCAL_MUT(QB_LOCAL_MUT),.M546(QB_M546),.WLOCAL(QB_WLOCAL)) u_qseat(
   .ck(ck),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),.write_element(qe_all),.write_data(p_dd[344:89]),
   .elem_l(elem_l),.valid_l(valid_l),.seen_clear_l(clr_l),
   .valid_s_l(valid_s_l),.seen_clear_s_l(clear_s_l),.valid_override_l(valid_override_l),.elem_hi_s_l(elem_hi_s_l),.write_element_bp(bp_element),.read_v_l(rv_l),.read_oh_l(roh_l),.read_beat_l(rb_l),
   .read_v_m(rv_m),.read_beat_m(rb_m),.bypass_beat_c(bb_c),
-  .write_element_nx(qe_nx),.read_part(qrow_part),
+  .write_element_nx(qe_nx),.read_part(qrow_part),.wl_data(wl_data),.wl_oh(wl_oh),.wl_addr(wl_addr),.wl_ce(wl_ce),
   .read_data(qrow),.seen_rd_l(seen_rd_l),.all_seen_l(all_seen_l),.dup_l(dup_l));
  reg q_read_valid;reg[4:0]q_read_beat;
  always @(posedge ck or negedge rst_pin)
@@ -396,5 +442,6 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
   assign qb_full=qb_full_n;assign qb_committed=qb_committed_n;assign qb_bad=qb_bad_n;
  end endgenerate
  initial if(QB_LOCAL_MUT<0||QB_LOCAL_MUT>2||(QB_LOCAL_MUT!=0&&QB_LOCAL32==0))$fatal(1,"QB_LOCAL_MUT requires local publications (0 clean,1 write-mask,2 select-word)");
+ initial if(QB_WLOCAL!=0&&QB_M546==0)$fatal(1,"QB_WLOCAL requires QB_M546");
  initial if(MUT!=0&&MUT!=1&&MUT!=7)$fatal(1,"qfd_native59_qbank: MUT %0d (bank mutants 1 Q lane packing, 7 owner)",MUT);
 endmodule
