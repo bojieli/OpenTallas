@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.head.tile-reset-successor.v1",
+  "old_source": {
+    "ot_s81hd_elem.sv": "f2ac91efe9862aae9edae274b3cbd2a68589dfb52c1727140c7cb7c7259c7b49",
+    "ot_s81hd_bundle.sv": "d61bad344fcd38e3ddbfa2fe93e019fae52d7517d0d0126b196d8e2b13740bb5",
+    "ot_s81hd_tile.sv": "d9ba09832577a44d31c0df3cc88d88b2473c3d4155fbc16fb97b25dc93d74cdb"
+  },
+  "new_source_sha256": "f7a6e854adb4849e3c09aac0638aa039a44daa7c2996e0ee18a86eed2f8d25cf",
+  "reset_stages_old": 2,
+  "reset_stages_new": 3,
+  "reset_age_delta_edges": 1,
+  "traffic_cycles_delta": 0,
+  "reset_families": [
+    2,
+    64,
+    1536
+  ],
+  "coarse_reset_loads_failed": 38663,
+  "old_native_max": 121,
+  "four_join_valid_same_edge_copies_old": 1,
+  "four_join_valid_same_edge_copies_new": 5,
+  "status": "SOURCE_PROPOSAL_NATIVE_PENDING"
+}
