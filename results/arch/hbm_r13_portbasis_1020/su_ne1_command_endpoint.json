@@ -1,0 +1,30 @@
+{
+ "master": "ot_hbm_su_static_pgslice_lg__pv7",
+ "placed": {
+  "m": "ot_hbm_su_static_pgslice_lg__pv7",
+  "x": 16057.44,
+  "y": 20082.6,
+  "o": "R0",
+  "w": 1797.12,
+  "h": 2825.28,
+  "rule": "grant slot su_NE1"
+ },
+ "pins": 1892,
+ "missing": [],
+ "ports": [
+  "control",
+  "red_sel",
+  "vmr_cmd",
+  "vmw_cmd"
+ ],
+ "lef_files": [
+  "/srv/opentallas-scratch/claude/hbm-die11-1020/planA/x12_q/views/ot_hbm_su_static_pgslice_lg__pv7.lef"
+ ],
+ "bbox": [
+  16057.536,
+  22038.66,
+  16057.536,
+  22531.043999999998
+ ],
+ "contract_sha256": "9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8"
+}

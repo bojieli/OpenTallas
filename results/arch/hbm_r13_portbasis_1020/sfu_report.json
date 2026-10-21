@@ -1,0 +1,326 @@
+{
+ "stats": {
+  "kept_no_pins": 3,
+  "replanned": 15
+ },
+ "depth_delta_hist": {
+  "-5": 1,
+  "-2": 1,
+  "1": 5,
+  "2": 2,
+  "3": 2,
+  "4": 1,
+  "8": 2,
+  "9": 1
+ },
+ "hop_violations": 0,
+ "capacity": {
+  "util": 0.5,
+  "bin_um": 50.0,
+  "radius": 2,
+  "halo": 1.2,
+  "forced": 0,
+  "windows": {
+   "window_um": 550.0,
+   "windows": 30,
+   "over_1": 0,
+   "worst": [
+    [
+     0.185,
+     [
+      14850,
+      11000
+     ],
+     5301,
+     28650
+    ],
+    [
+     0.08,
+     [
+      7150,
+      11000
+     ],
+     3786,
+     47500
+    ],
+    [
+     0.063,
+     [
+      13750,
+      9900
+     ],
+     7572,
+     121000
+    ],
+    [
+     0.061,
+     [
+      6600,
+      9900
+     ],
+     3022,
+     49500
+    ],
+    [
+     0.057,
+     [
+      14300,
+      11000
+     ],
+     3029,
+     53200
+    ],
+    [
+     0.055,
+     [
+      15400,
+      9900
+     ],
+     2272,
+     41250
+    ],
+    [
+     0.054,
+     [
+      15400,
+      11000
+     ],
+     4543,
+     84650
+    ],
+    [
+     0.05,
+     [
+      7700,
+      11000
+     ],
+     3029,
+     60500
+    ],
+    [
+     0.042,
+     [
+      8250,
+      11000
+     ],
+     3029,
+     71450
+    ],
+    [
+     0.039,
+     [
+      13200,
+      9900
+     ],
+     5301,
+     136750
+    ],
+    [
+     0.038,
+     [
+      9350,
+      10450
+     ],
+     4543,
+     120600
+    ],
+    [
+     0.037,
+     [
+      15400,
+      10450
+     ],
+     1514,
+     41250
+    ],
+    [
+     0.035,
+     [
+      6600,
+      11000
+     ],
+     2272,
+     65700
+    ],
+    [
+     0.032,
+     [
+      8800,
+      11000
+     ],
+     3029,
+     93500
+    ],
+    [
+     0.031,
+     [
+      6600,
+      10450
+     ],
+     1514,
+     49500
+    ],
+    [
+     0.03,
+     [
+      13750,
+      11000
+     ],
+     2272,
+     75350
+    ],
+    [
+     0.025,
+     [
+      13750,
+      10450
+     ],
+     3029,
+     121000
+    ],
+    [
+     0.021,
+     [
+      8800,
+      9350
+     ],
+     2272,
+     108450
+    ],
+    [
+     0.02,
+     [
+      9350,
+      11000
+     ],
+     3029,
+     151250
+    ],
+    [
+     0.019,
+     [
+      9350,
+      9900
+     ],
+     2272,
+     122450
+    ],
+    [
+     0.019,
+     [
+      15400,
+      9350
+     ],
+     1514,
+     81250
+    ],
+    [
+     0.018,
+     [
+      6600,
+      9350
+     ],
+     1522,
+     86500
+    ],
+    [
+     0.014,
+     [
+      7150,
+      9350
+     ],
+     757,
+     55000
+    ],
+    [
+     0.014,
+     [
+      12650,
+      9900
+     ],
+     1514,
+     108150
+    ],
+    [
+     0.014,
+     [
+      14850,
+      9350
+     ],
+     757,
+     55000
+    ]
+   ]
+  }
+ },
+ "worst_violations": [],
+ "stations_before": 20,
+ "stations_after": 102,
+ "port_face_split": [
+  {
+   "driver": "sfucore_SE.kv_waddr_e+kv_waddr_n+kv_waddr_s+kv_waddr_w+kv_wdata_e+kv_wdata_n+kv_wdata_s+kv_wdata_w+kv_we_e+kv_we_n+kv_we_s+kv_we_w+vi_addr_e+vi_addr_n+vi_addr_s+vi_addr_w+vi_re_e+vi_re_s+vi_re_w",
+   "status": "split",
+   "groups": [
+    "sfucore_SE.kv_waddr_e+kv_wdata_e+kv_we_e+vi_addr_e+vi_re_e",
+    "sfucore_SE.kv_waddr_n+kv_wdata_n+kv_we_n+vi_addr_n",
+    "sfucore_SE.kv_waddr_s+kv_wdata_s+kv_we_s+vi_addr_s+vi_re_s",
+    "sfucore_SE.kv_waddr_w+kv_wdata_w+kv_we_w+vi_addr_w+vi_re_w"
+   ],
+   "bits": 1085,
+   "contract_bits": 1308
+  },
+  {
+   "driver": "sfucore_SW.kv_waddr_e+kv_waddr_n+kv_waddr_s+kv_wdata_e+kv_wdata_n+kv_wdata_s+kv_we_e+kv_we_n+kv_we_s+vi_addr_e+vi_addr_n+vi_addr_s+vi_re_e+vi_re_n+vi_re_s",
+   "status": "split",
+   "groups": [
+    "sfucore_SW.kv_waddr_e+kv_wdata_e+kv_we_e+vi_addr_e+vi_re_e",
+    "sfucore_SW.kv_waddr_n+kv_wdata_n+kv_we_n+vi_addr_n+vi_re_n",
+    "sfucore_SW.kv_waddr_s+kv_wdata_s+kv_we_s+vi_addr_s+vi_re_s"
+   ],
+   "bits": 832,
+   "contract_bits": 984
+  },
+  {
+   "driver": "sfucore_SE.local_wq",
+   "status": "kept_unresolved",
+   "bits": 562,
+   "matched_bits": 562
+  },
+  {
+   "driver": "sfucore_SW.local_wq",
+   "status": "kept_unresolved",
+   "bits": 562,
+   "matched_bits": 562
+  },
+  {
+   "driver": "sfucore_SE.ro_v_e+ro_v_n+ro_v_s+ro_v_w+ro_x_e+ro_x_n+ro_x_s+ro_x_w",
+   "status": "split",
+   "groups": [
+    "sfucore_SE.ro_v_e+ro_x_e",
+    "sfucore_SE.ro_v_n+ro_x_n",
+    "sfucore_SE.ro_v_s+ro_x_s",
+    "sfucore_SE.ro_v_w+ro_x_w"
+   ],
+   "bits": 528,
+   "contract_bits": 528
+  },
+  {
+   "driver": "sfucore_SW.ro_v_e+ro_v_n+ro_v_s+ro_v_w+ro_x_e+ro_x_n+ro_x_s+ro_x_w",
+   "status": "split",
+   "groups": [
+    "sfucore_SW.ro_v_e+ro_x_e",
+    "sfucore_SW.ro_v_n+ro_x_n",
+    "sfucore_SW.ro_v_s+ro_x_s",
+    "sfucore_SW.ro_v_w+ro_x_w"
+   ],
+   "bits": 528,
+   "contract_bits": 528
+  },
+  {
+   "driver": "sfucore_SW.local_wq",
+   "status": "kept_unresolved",
+   "bits": 101,
+   "matched_bits": 562
+  }
+ ]
+}

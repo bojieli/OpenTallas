@@ -1,0 +1,18 @@
+{
+ "positive": {
+  "exported_rows": 13501,
+  "assigned_rows": 13501,
+  "graph_sha256": "74dc37708b0b240580af67fe3636d7d3cb4f0cadb1afb70eb9a7fb504909257f",
+  "plan_sha256": "e4b2775dc65e1cc905cd50d9189cd8956a4eed4dc2272610cfe8cba2d8f8031a",
+  "geometry_qualified": false
+ },
+ "graph_before": "74dc37708b0b240580af67fe3636d7d3cb4f0cadb1afb70eb9a7fb504909257f",
+ "graph_after": "74dc37708b0b240580af67fe3636d7d3cb4f0cadb1afb70eb9a7fb504909257f",
+ "negative": {
+  "missing_stage": "ROW_SITES REFUSED: missing/extra landing or ordered pad stage",
+  "wrong_master": "ROW_SITES REFUSED: stage identity differs rf0002_k00_00.master",
+  "wrong_clock_graph": "ROW_SITES REFUSED: source/graph binding differs",
+  "foreign_source": "ROW_SITES REFUSED: source/graph binding differs"
+ },
+ "geometry_qualified": false
+}

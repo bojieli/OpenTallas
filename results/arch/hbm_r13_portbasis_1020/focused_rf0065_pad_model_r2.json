@@ -1,0 +1,92 @@
+{
+ "verdict": "FOCUSED_MODEL_FAIL",
+ "slot": "d4f_relay_sink:pgp_NE.command->su_NE1",
+ "bus": "rf0065",
+ "stages": 37,
+ "placed": 0,
+ "failure": {
+  "row": "rf0065_k01_36",
+  "reason": "no footprint-legal <=395um all-pin-envelope site",
+  "placed": 0
+ },
+ "selected": {},
+ "missing_master_dimensions": [],
+ "max_window_ratio": 0.0,
+ "conservative_family_dimension_fallbacks": {
+  "hbfd_lh0_48_EW": [
+   10.8,
+   10.8
+  ],
+  "hbfd_lh_48_WE": [
+   10.8,
+   10.8
+  ],
+  "hbfd_lh_48_SN": [
+   10.8,
+   10.8
+  ],
+  "hbfd_land_48_SN": [
+   13.824,
+   14.04
+  ],
+  "hbfd_lh_48_EW": [
+   10.8,
+   10.8
+  ],
+  "hbfd_lh0_48_NS": [
+   10.8,
+   10.8
+  ],
+  "hbfd_lh_48_NS": [
+   10.8,
+   10.8
+  ],
+  "hbfd_land_48_NS": [
+   13.824,
+   14.04
+  ],
+  "hbfd_lh0_48_WE": [
+   10.8,
+   10.8
+  ],
+  "hbfd_land_48_WE": [
+   13.824,
+   14.04
+  ],
+  "hbfd_lh0_48_SN": [
+   10.8,
+   10.8
+  ],
+  "hbfd_land_48_EW": [
+   13.824,
+   14.04
+  ],
+  "hbfd_lh0_136_NS_f3": [
+   21.6,
+   21.6
+  ],
+  "hbfd_land0_136_EW": [
+   23.328,
+   23.76
+  ],
+  "hbfd_land0_48_NS": [
+   10.8,
+   10.8
+  ],
+  "hbfd_lh0_136_NS_f2": [
+   21.6,
+   21.6
+  ]
+ },
+ "input_sha256": {
+  "sites": "e4b2775dc65e1cc905cd50d9189cd8956a4eed4dc2272610cfe8cba2d8f8031a",
+  "layer": "9599f63c50cf59e79d023560a0e87fb0b615a5c5fb00bd7963843a2036ab1272",
+  "manifest": "662228fe0bd54e345739b6f6c0d6e77d4613bfc1e73304c1aaa54de165d863d6",
+  "size_manifest": "cba8cc56142a28d8bab7e099a16a7368b507d76544eb7e17965002d7646c74ae",
+  "endpoint": "1926b3fdaa2d9b70c162e58bea6b1aa747c8dbe560f9bd278d0caf009b83b49b",
+  "stations": "a3aa178b5e826846844b6b615e76a61fc3c85aca4caaf336c0221834d4d0bd02"
+ },
+ "geometry_qualified": false,
+ "clock_phase_qualified": false,
+ "scope": "focused source-ordered chain only; prior full-master dimensions conservative; same stagecount; all-pin bounding envelopes; no whole-die/phase/native claim"
+}

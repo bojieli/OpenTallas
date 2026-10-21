@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS",
+ "before_bits": 5468,
+ "after_bits": 5468,
+ "lost_bits": 0,
+ "added_bits": 0,
+ "duplicate_bits": 0,
+ "population_sha256": "275a0a0e3824740fbf19222a7826d7ee3c117971c78ecd3242b4ed9100e785cd",
+ "input_sha256": {
+  "contract": "9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8",
+  "before": "00431e263d0b000fa326fc37337b37bd206620e2ff7da1d21f0476168563f2db",
+  "after": "b7293bdeeb39df1ff4d43db24e00ae7129af97d37e8a7e0349b7598a7aeb0145"
+ },
+ "examples": {
+  "lost": [],
+  "added": []
+ },
+ "scope": "exact current contract source-bit and full consumer tuple multiset; no physical/latency qualification"
+}

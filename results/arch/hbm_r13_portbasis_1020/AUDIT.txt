@@ -1,0 +1,13 @@
+HBM source and placement diagnostics, 2026-10-20. NOT A PHYSICAL OR RELEASE PASS.
+
+Source correction96833c292 plans current contract bit populations, matching the relay layer mapping, before splitting faces. SFU subset5468 source-bit/full-consumer tuples preserved exactly, no loss/addition/duplicate; actual rowdrop2436 and duplicate328 negatives caught. SFU20->102stations, scoped0plannerhop/forced/overfull. Whole A/B capacity plans still FAIL124/102hops and53/58overfull windows. The new station count/latencies require compiler/window integration before adoption.
+
+Actual13501 landing/pad ordered rows exported by source286e73104. Full graph identity transport passed on unit738481: no stage/master/clock/reset/edge/splice/ring change, four causal negatives rejected. This is coordinate transport correctness ONLY. Current row coordinates remain unqualified; raw graph/export and exact input snapshots retained ep6 /srv/opentallas-scratch/claude/codex-hbm-r13-portbasis-1020.
+
+Actual pinned SU_NE1 command endpoint probe:1892 pins,0missing, Wface bbox[16057.536,22038.66,16057.536,22531.044]. Source contract9d1a3f20...; x12_q abstract is a source-pinned SYNTH estimate, not a qualified hardened child.
+
+Worst pgp_NE.command->su_NE1 slot has TWO distinct ordered chains: rf0065=37landing/padstages*13lanes, rf1668=39*1; both have E=None/NO_E and no qualified latency. Initial combined76row greedy experiment is INVALID as an ordered chain proof and is preserved as a failed diagnostic remotely, not a design impossibility claim. Focused rf0065 searches preserve exact splice order; fixed-other-row and macro-only greedy failures do not prove impossibility. Partial32/37 is unqualified. Landing NS is303.264x23.76um while WE would be23.328x308.88um; direction change is an explicit source/master/native/layout proposal and cannot pass the existing row-site master binding without regeneration.
+
+Corridor model global flow cuts are payload lower bounds only (6-17% modeled tracks near highlighted hotspots). Local booking failures are padding/cell-row locality, not proof of global wire-capacity exhaustion. Per-window area attribution is current model booking, not immutable architectural lower bound. Prior full-master dimensions may conservatively bound model footprints; current source/native dimensions must be requalified.
+
+Required next: source-bound complete legal cell-row plan for every actual stage, all source/relay/consumer pin segments <=405um, no overlap/outside/hard-block sites, honest channel free-area budgets, actual source root/domain/ring phase and margin, fullGEN C1/C2/W1/W2 facts, actualM8routing+STA/repeaterRC, actual-GRT-ODB IR. No GRT launched by this work. Historical685aa6832 analytical IR PASS remains a separate scope.
