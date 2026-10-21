@@ -216,8 +216,10 @@ def verify_runtime(manifest):
 
 
 def prepare_runtime(manifest, parent):
-    if Path(manifest['runtime']['run']).resolve() == Path(parent['run']).resolve():
-        raise ValueError('runtime aliases immutable parent root')
+    root_resolved = Path(manifest['runtime']['run']).resolve()
+    parent_resolved = Path(parent['run']).resolve()
+    if root_resolved.is_relative_to(parent_resolved) or parent_resolved.is_relative_to(root_resolved):
+        raise ValueError('runtime aliases immutable parent tree or its ancestor')
     validate_source_readset(parent, manifest)
     result = verify_runtime(manifest)
     root = Path(manifest['runtime']['run']); dest = root/'cl/linked_infra_eco'; dest.mkdir()

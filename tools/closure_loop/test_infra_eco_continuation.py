@@ -121,6 +121,17 @@ class LinkedECOTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'restored input differs'):ie.prepare_runtime(self.manifest,self.parent)
         self.assertFalse((self.runtime/'cl/linked_infra_eco').exists())
 
+    def test_resolved_parent_subtree_and_ancestor_alias_refused_before_prepare(self):
+        old=Path(self.parent['run']);(old/'private').mkdir(parents=True)
+        alias=self.root/'new-alias';alias.symlink_to(old/'private',target_is_directory=True)
+        for runtime in (old,old/'private',alias,self.root):
+            m=copy.deepcopy(self.manifest);m['runtime']['run']=str(runtime)
+            with self.subTest(runtime=runtime),patch.object(ie,'verify_runtime') as verify:
+                with self.assertRaisesRegex(ValueError,'immutable parent tree'):
+                    ie.prepare_runtime(m,self.parent)
+                verify.assert_not_called()
+            self.assertFalse((runtime/'cl/linked_infra_eco').exists())
+
     def test_successful_preparation_seals_existing_guard_and_is_exclusive(self):
         with patch.object(ie.subprocess,'check_output',return_value=self.manifest['runtime']['image']+'\n'), \
              patch.object(ie.subprocess,'run'):
