@@ -84,7 +84,36 @@
         "INT8W": 0
       },
       "svg": "not instantiated",
-      "scope": "correct current-r15 standalone ATT required cases RUNNING in fresh workdirs; no old wrong-param exe reuse"
+      "scope": "PASS all7 required standalone ATT cases312operations at coherent5fsource; Python crossnode merge only; actual SU arithmetic merge pending; no fulltoken",
+      "receipt": "att_param1/receipt.json"
+    },
+    "smb_head320_param1": {
+      "result": "PASS66/66operations154exactgo301results0fault59460edges",
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 0
+      },
+      "actual_svg": {
+        "ID_COHORT": 1,
+        "XSLOT": 0,
+        "OPEN_IL": 0
+      },
+      "controller": "h9b",
+      "source": "all62onchip sourcebytes exact coherent5fbundle; preuniquification oldr14blob snapshot does not change mechanism",
+      "price": "head18310, +6360edges/5.3us perDShead; old53100budget FAIL(+11.98% beyond10%)",
+      "receipt": "smb_param1/receipt.json",
+      "scope": "selected-parameter fourkind service component functionalPASS only; actualprice consumers updated, no fulltoken or throughputPASS"
+    },
+    "qmv_L0_chain_pos_all": {
+      "result": "PASS original4cases: L0/chain positive plus4record/9984row allcases",
+      "actual_smh": {
+        "ENABLE_INT8": 1,
+        "INT8W": 0
+      },
+      "svg": "not instantiated",
+      "source": "historical r14 standalone source retained",
+      "receipt": "qmv_completed/receipt.json",
+      "scope": "standalone packedINT8 arithmetic; no HBMservice/cohort/fulltoken throughput qualification"
     }
   },
   "qualifies_full_token": false,
