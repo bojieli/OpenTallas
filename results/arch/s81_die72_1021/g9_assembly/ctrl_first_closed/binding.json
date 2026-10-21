@@ -1,0 +1,1078 @@
+{
+ "record": "bbc9c9b13",
+ "source_ref": "22595e8993ac83c9293f59ffb5fe6b4d7914589c",
+ "module": "dsfd_ctrl_rg3",
+ "params": {},
+ "defines": [
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32"
+ ],
+ "outline_um": [
+  388.8,
+  324
+ ],
+ "view": "physical/ref_tile/s81ctrl_rg3s/views/dsfd_ctrl_rg3",
+ "source_sha256": {
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv": "f75f3f412fa921bdf5cfeb1f3da47918ca6f3ff9a40ff66238c2b7159c907835",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv": "423ba178ccb86d579537b5c5042ea147a31e936b09f7e8b71a537aa00f4a2f8b",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv": "59e47d7bc797ab9468c95a623bf0685ba2e9d104f7357f87c488834d21d5b1fd",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv": "f1debd8433581a648f0515e5b1118303beba2a061392a8a3c5c35fcf6f99c7e3",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v": "95a51229978f485676bb6fb3cc93f3a7b561b93b3f179cbac7defc7ae1c8714b",
+  "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv": "f11d62833f3ef314b9b86de033cfa0337ec81fa9a4fd1a7c4738b76804c2e1b9"
+ },
+ "view_sha256": {
+  "dsfd_ctrl_rg3.lef": "f9f9e65d84bc2362431e5de97d038a03e9a0032eb7aa541d00e3260240880fc9",
+  "dsfd_ctrl_rg3_tt.lib": "456bbc3dcfdbeffe909cf460b9dcb18c7199f2f6c10d26d37b06d86b9c4942c3",
+  "dsfd_ctrl_rg3_ff.lib": "b1f4c0349dd421014b36cdee13fcb2966e5290c5967f5e69def63fc514194035",
+  "dsfd_ctrl_rg3_ss.lib": "2dc4a753f0a8ff11353cf9984b53a87ca7745082df62734e14fdcbc42c39941d",
+  "insertion.json": "acb969b94da93dd6c382ad93fa0bf5a29f34d52e2dce758f4e6e2c9040da2039",
+  "abstract.json": "aeb66de534ccc6a0aa4d43047207fd60f84a3fe6d5f335a5336c6dc1dcd25661",
+  "child_lint.json": "2e11ce4654dc0f0f66553dfede5c5b369d7c8b2032b9ce3fcfacab740995ed92"
+ },
+ "closed_metrics": {
+  "ss_ps": 67.84,
+  "ff_ps": 7.64,
+  "drc": 0,
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -108.07
+ },
+ "master_lattice": {
+  "x": [
+   144,
+   [
+    0
+   ]
+  ],
+  "y": [
+   48,
+   [
+    0
+   ]
+  ]
+ },
+ "placements": [
+  {
+   "instance": "ctrl_00",
+   "old_um": [
+    12321.225,
+    1406.6
+   ],
+   "candidate_um": [
+    12321.216,
+    1406.592
+   ],
+   "delta_nm": [
+    -9,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     12321225,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 9.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 9.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     12321216,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_01",
+   "old_um": [
+    12852.475,
+    1406.6
+   ],
+   "candidate_um": [
+    12852.432,
+    1406.592
+   ],
+   "delta_nm": [
+    -43,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     12852475,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 7.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 5.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     12852432,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_02",
+   "old_um": [
+    13383.725,
+    1406.6
+   ],
+   "candidate_um": [
+    13383.792,
+    1406.592
+   ],
+   "delta_nm": [
+    67,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     13383725,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 5.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 19.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     13383792,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_03",
+   "old_um": [
+    13914.975,
+    1406.6
+   ],
+   "candidate_um": [
+    13915.008,
+    1406.592
+   ],
+   "delta_nm": [
+    33,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     13914975,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 3.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 15.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     13915008,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_04",
+   "old_um": [
+    14446.225,
+    1406.6
+   ],
+   "candidate_um": [
+    14446.224,
+    1406.592
+   ],
+   "delta_nm": [
+    -1,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     14446225,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 1.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 1.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     14446224,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_05",
+   "old_um": [
+    14977.475,
+    1406.6
+   ],
+   "candidate_um": [
+    14977.44,
+    1406.592
+   ],
+   "delta_nm": [
+    -35,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     14977475,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 1.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 13.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     14977440,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_06",
+   "old_um": [
+    15508.725,
+    1406.6
+   ],
+   "candidate_um": [
+    15508.656,
+    1406.592
+   ],
+   "delta_nm": [
+    -69,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     15508725,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 3.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 21.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     15508656,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_07",
+   "old_um": [
+    16039.975,
+    1406.6
+   ],
+   "candidate_um": [
+    16040.016,
+    1406.592
+   ],
+   "delta_nm": [
+    41,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     16039975,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 5.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 7.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     16040016,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_08",
+   "old_um": [
+    16571.225,
+    1406.6
+   ],
+   "candidate_um": [
+    16571.232,
+    1406.592
+   ],
+   "delta_nm": [
+    7,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     16571225,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 7.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 7.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     16571232,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_09",
+   "old_um": [
+    17102.475,
+    1406.6
+   ],
+   "candidate_um": [
+    17102.448,
+    1406.592
+   ],
+   "delta_nm": [
+    -27,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     17102475,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 9.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 21.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     17102448,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_10",
+   "old_um": [
+    17633.725,
+    1406.6
+   ],
+   "candidate_um": [
+    17633.664,
+    1406.592
+   ],
+   "delta_nm": [
+    -61,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     17633725,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 11.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 13.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     17633664,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_11",
+   "old_um": [
+    18164.975,
+    1406.6
+   ],
+   "candidate_um": [
+    18165.024,
+    1406.592
+   ],
+   "delta_nm": [
+    49,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     18164975,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 13.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 1.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     18165024,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_12",
+   "old_um": [
+    18696.225,
+    1406.6
+   ],
+   "candidate_um": [
+    18696.24,
+    1406.592
+   ],
+   "delta_nm": [
+    15,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     18696225,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 15.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 15.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     18696240,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_13",
+   "old_um": [
+    19227.475,
+    1406.6
+   ],
+   "candidate_um": [
+    19227.456,
+    1406.592
+   ],
+   "delta_nm": [
+    -19,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     19227475,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 17.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 19.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     19227456,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_14",
+   "old_um": [
+    19758.725,
+    1406.6
+   ],
+   "candidate_um": [
+    19758.672,
+    1406.592
+   ],
+   "delta_nm": [
+    -53,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     19758725,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 17.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 5.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     19758672,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "ctrl_15",
+   "old_um": [
+    20289.975,
+    1406.6
+   ],
+   "candidate_um": [
+    20290.032,
+    1406.592
+   ],
+   "delta_nm": [
+    57,
+    -8
+   ],
+   "actual_before": {
+    "orient": "R0",
+    "origin_nm": [
+     20289975,
+     1406600
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 1246,
+      "max_offset_nm": 15.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 1245,
+      "max_offset_nm": 9.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 637,
+      "max_offset_nm": 8.0
+     }
+    }
+   },
+   "candidate_after": {
+    "orient": "R0",
+    "origin_nm": [
+     20290032,
+     1406592
+    ],
+    "layers": {
+     "M3": {
+      "pins": 1246,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 1245,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 637,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  }
+ ],
+ "scope": "ExactconfiguredCLOSED FB successor; no defaultG8 hardwarealias. Allactualwholehardview signalpins checked perinstance; candidatecoordinateadjustments are source-model only pendingplanapplication/fullcorridor andpeerPHY check.",
+ "reset_contract": "S81CTRL_NATIVE32 usesG12 copies andsrbank/hrbank resetdistribution release+1 localclk/ckh edge vsdefaultG8; derive diebootdates, no blanket runtimecycle",
+ "clock_contract": "clk core root; ckh peerPHYroot; ck_o forwardscoreclk; fullactualview/sourceclockroles preserved",
+ "applied_candidate_validation": {
+  "status": "PASS",
+  "changed_blocks": 16,
+  "existing_master_rows_unchanged": true,
+  "other145blocks_unchanged": true,
+  "all163body_seal_inside": true,
+  "minimum_body_separation_um": 86.39999999999714,
+  "scope": "Source-model + wholeCTRLview fullpins only, no wholeG9closure/PHYendpointSTAclaim"
+ }
+}

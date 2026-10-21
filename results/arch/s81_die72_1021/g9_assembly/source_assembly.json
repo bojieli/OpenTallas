@@ -158,7 +158,17 @@
    "native": "Both new candidate gates actualPASSmax32/zero viol/roles at14:17; physical not CLOSED",
    "original_MAIN": "NEEDS_RTL3RESETNremovals FF\u221213.28",
    "original_FB": "postrouteECO live; preECO FF\u221234.49 I2R/SRAMdata class, noRESETNviolations",
-   "physical_status": "Original65ed two gates nativePASS then pre-CTS Tclscopefailure; corrected29f procargument pair143225 preflight. No CTS/timing/closure verdict."
+   "physical_status": "OriginalFBformalCLOSED+exportbbc9; rootintegrationpublishingrecord only; MAIN29fcohortactualCTS auditoneCLK3\u21927PASS andtimingmeasurementslive. FailedzerochangeFB successor preserved/inapplicable.",
+   "first_closed_record": "bbc9c9b13",
+   "first_closed_source": "22595e8993ac83c9293f59ffb5fe6b4d7914589c",
+   "first_closed_view": "physical/ref_tile/s81ctrl_rg3s/views/dsfd_ctrl_rg3",
+   "first_closed_metrics": {
+    "TT_setup_ps": 67.84,
+    "FF_hold_ps": 7.64,
+    "DRC": 0
+   },
+   "binding": "apply_ctrl_g9.py exactvariantkey dsfd_ctrl_rg3_native32 binds16; all8RTL/SRAMhashes currentG9==actualclosedsource; global3S81CTRLdefines explicit; existingmasterrowsunchanged",
+   "grid": "Allwholehardview signalpins checked16R0translations; perinstance Xdelta[-69,+67]nm/Y\u22128nm, all163bodycorridors>=86.4um; exact8source/nativeconfiguredhardware. No parentfunctional/PHYendpointclock/wholeG9STAclaim."
   },
   "h10wide": {
    "source": "91dcb1c93",
