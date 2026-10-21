@@ -2,12 +2,12 @@
   "name": "dsdv_sh_lk_s10gs-dsdv_sh_lk_s10gs-COMMIT",
   "block": "dsdv_sh_lk",
   "ref_tile": true,
-  "owner": "Claude:S81-ELEM/ELEM-SHLK",
+  "owner": "Codex:S81-COLLECT2",
   "purpose": "ELEM-SHLK 10-21 MAIN structural successor of dsdv_sh_lk_s10gq-649101c0d (route NEEDS_RTL: TT -0.84 hc_q->host_ack_n 15-level add + face wire; FF hold -30.08 / s10hq -21.31: input pin flops on late k-means clusters + reset relays launched across clusters): OT_S81_SH_ACKP registered svc ack sum (+1 edge on host_ack_n -> visibility-fence completions, tb HSC 9), landing-ring clock roots for all input pin flops + reset relays on their loads' root (clock_km_landing.tcl). Same outline/macros/pins.",
   "threads": 8,
   "peak_ram_gb": 24,
   "source": {
-    "branch": "claude/s81-elemshlk-1021",
+    "branch": "codex/s81-shlk-source-recover-1021",
     "commit": "COMMIT",
     "extra_paths": [
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
