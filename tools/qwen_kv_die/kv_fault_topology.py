@@ -67,8 +67,9 @@ def propose(inv):
         xy=sites.find(points[a],[points[a]])
         if xy is None:raise ValueError('no legal sticky site near '+a)
         name='fault_'+str(len(nodes));return add(a,name,'sticky',xy,clock[a],reset[a])
-    def route(a,target):
+    def route(a,target,depth=0):
         if distance(points[a],target)<=REACH:return a
+        entry=a
         first=sites.find(points[a],[points[a],points[a]])
         if first is None:raise ValueError('no source escape site '+a)
         start=tuple(round(v/CELL) for v in first);queue=[];parent={start:None};cost={start:0}
@@ -96,6 +97,10 @@ def propose(inv):
             options=[j for j in range(cursor,len(path))
                      if distance(points[a],[path[j][0]*CELL+.042,path[j][1]*CELL+10.956])<=REACH
                      and sites.free(path[j][0]*CELL,path[j][1]*CELL)]
+            if not options and a!=entry and depth<16:
+                # The pipe just placed blocks the corridor's next detour cells (adjacent-cell halo):
+                # re-search from that pipe with it as an obstacle instead of giving up.
+                return route(a,target,depth+1)
             if not options:raise ValueError('search corridor cannot be realized as registered hops: '+str(dict(source=a,position=points[a],target=target,cursor=cursor,pathlen=len(path),remaining=path[cursor:cursor+4])))
             cursor=max(options);g=path[cursor]
             a=add(a,a,'pipe',[g[0]*CELL,g[1]*CELL],clock[a],reset[a]);cursor+=1

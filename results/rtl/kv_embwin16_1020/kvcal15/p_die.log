@@ -1,0 +1,6 @@
+PASS KVEMBWIN16_HEADER row_tx slot 490 >= last word + 1
+PASS KVCAL15_EMB_DIE 5 tokens x 65 words exact edges/data, LAT 92, DN 83/25/72/16 RT 67/21/77/32 SKEW 1 PJ 1, no fault
+- rtl/test/qwen_static_kv/tb_kvcal15_emb_die.sv:180: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 1.148 s; speed 8.248 us/s
+- Verilator: cpu 1.148 s on 1 threads; allocated 9 MB

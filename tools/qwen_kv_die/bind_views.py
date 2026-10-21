@@ -71,10 +71,22 @@ def bit_names(port, w):
     return [port] if w == 0 else [f'{port}[{i}]' for i in range(w)]
 
 
-def pin_map(master, frame_w, real_w):
+def pin_map(master, frame_w, real_w, connected_extra=()):
     """real pin bit -> die pin bit; raises ValueError on any frame bit with no real pin."""
     b = KV.BINDINGS[master]
     sliced = b.get('sliced', {})
+    # Some generator taps are extra_conns rather than frame ports (DCAL
+    # ego -> epoch_go). They still need the exact physical and timing alias.
+    # Only an actual connected scalar tap is admissible here: no fabricated
+    # pin geometry, guessed bus width or unmapped source port.
+    frame_w = dict(frame_w)
+    for dp in connected_extra:
+        if dp in frame_w:
+            continue
+        rps = b['ports'].get(dp)
+        if not rps or len(rps) != 1 or rps[0] not in real_w or real_w[rps[0]] not in (0, 1):
+            raise ValueError(f'{master}: extra connected port {dp} is not a mapped scalar real pin')
+        frame_w[dp] = 1
     groups = {}
     for dp in frame_w:
         base = dp if dp in b['ports'] else sliced.get(dp)
@@ -182,7 +194,24 @@ def bind(case, libs, master, vdir):
     rpins = lef_pins(real)
     real_w = widths(p for p in rpins if p not in ('VDD', 'VSS'))
     try:
-        pmap = pin_map(master, frame_w, real_w)
+        # Read the final generated connections, including extra_conns taps
+        # absent from the original frame pin list. Widths are checked against
+        # the real scalar pin and the net declaration before admitting them.
+        die_text = (case / 'die.v').read_text()
+        die_widths = {n: int(hi) + 1 for hi, n in re.findall(r'wire\s+\[(\d+):0\]\s+(\S+);', die_text)}
+        extra = set()
+        for body in re.findall(r'^\s+' + re.escape(master) + r'\s+\S+\s+\((.*?)\);', die_text, re.M):
+            for dp, expr in re.findall(r'\.(\w+)\(([^()]*)\)', body):
+                if dp in frame_w or not expr.strip():
+                    continue
+                expr = expr.strip()
+                if not (re.fullmatch(r'\w+\[\d+\]', expr) or die_widths.get(expr) == 1):
+                    raise ValueError(f'{master}: extra port {dp} connection is not a declared scalar: {expr}')
+                extra.add(dp)
+        pmap = pin_map(master, frame_w, real_w, extra)
+        for dp in extra:
+            frame_w[dp] = 1
+        rec['connected_extra_scalar_ports'] = sorted(extra)
     except ValueError as e:
         rec.update(bound=False, cls='interface', reason=str(e))
         return rec

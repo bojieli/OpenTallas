@@ -1,0 +1,24 @@
+{
+ "view": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4/views/qkd_d2d_cal_seq_pin_bc4",
+ "module": "qkd_d2d_cal_seq_pin_bc4",
+ "real_um": [
+  25.92,
+  34.56
+ ],
+ "slot_um": [
+  25.92,
+  34.56
+ ],
+ "lef_sha256": "6adca5b0e3544ceba9e820a756df8f78116ff9c6b354b450216589da3a40dabc",
+ "connected_extra_scalar_ports": [
+  "ego"
+ ],
+ "bound": true,
+ "mapped_bits": 98,
+ "unmapped_real_pins": 0,
+ "lib_sha256": {
+  "tt": "6ccace289b94d3da1071bdc952c38a6c791bdd68b8c45085096fef54607e0ddc",
+  "ff": "ec28065d5bd5f458414da0d560b1b83d7915f3ec01a5d1e6da3b050aad38c0ec",
+  "ss": "67e850f8489c0291eb3bf25a20eb5b52aaf525c8e8aa8fca6f4ec6dc59fe226b"
+ }
+}
