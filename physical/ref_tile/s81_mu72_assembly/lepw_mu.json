@@ -21,9 +21,23 @@
     "rtl/lib/ot_reset_sync.sv",
     "rtl/common/landed_parent/ot_pl_land_n32.sv",
     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "rtl/link/ot_link_crc32.sv",
+    "rtl/lib/ot_rst_relay_tree3.sv",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+    "rtl/lib/ot_sram_oldread_b64.sv",
+    "rtl/lib/ot_sram_showahead_b64.sv",
+    "rtl/common/ot_link_credit_rx_b64.sv",
+    "rtl/common/ot_link_credit_tx_rc.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
     "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
-    "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv"
+    "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
   ],
   "defines": [
     "DSFD_PQ_STATIC_X2",
@@ -288,22 +302,26 @@
       ]
     },
     {
-      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg",
       "count": 1,
       "inst": "u_sl.u_xg",
       "at": [
         86.4,
         3456.0
-      ]
+      ],
+      "master": "ot_s81sl_xg_xo",
+      "binding_state": "UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias"
     },
     {
-      "view": "physical/ref_tile/s81sl_capc5k/views/ot_s81sl_capc5c",
       "count": 1,
       "inst": "u_sl.u_cap",
       "at": [
         777.6,
         3456.0
-      ]
+      ],
+      "master": "ot_s81sl_capc5r",
+      "view": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r",
+      "params": {},
+      "binding_state": "CLOSED s81sl_capc5r-s81sl_capc5r-163d31541 (closure-loop record 4a4d275ee on main; kit physical/ref_tile/s81sl_capc5r, top ot_s81sl_capc5r, no params; GRT overflow 0, per-root spread TT<=77.6/FF<=68.9); exact: u_sl.u_cap in ot_s81sl_slice_c1x_k8_cap5r_lp is ot_s81sl_capc5r, all 8 kit source blobs (ot_s81sl_capc5r.sv 6461f44e3, ot_pl_land*, ot_rst_relay, ot_hdc_delay_rf, cap_ed, cap_ld) identical to 163d31541; replaces the old capc5c view (s81sl_capc5k) carried from the normal spec (S81-LINK5B G6 10-21)"
     },
     {
       "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
@@ -315,13 +333,14 @@
       ]
     },
     {
-      "view": "physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1",
       "count": 1,
       "inst": "u_sl.u_xr",
       "at": [
         86.4,
         4060.8
-      ]
+      ],
+      "master": "ot_s81sl_xrt1",
+      "binding_state": "UNBOUND: ot_s81sl_xrt1 view owed (S81-RTLGAP/ffn); never old ot_s81sl_xr1 alias"
     },
     {
       "view": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
@@ -534,7 +553,14 @@
       ],
       "count": 1,
       "orient": "R0",
-      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
+      "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+      "params": {
+        "W": 1104,
+        "NB": 80,
+        "NS": 1,
+        "SRAM": 1
+      },
+      "binding_state": "CLOSED dsdv_mu_land-dsdv_mu_land-263e13fc3 (TT +68.25 / FF +24.02, DRC 0, native PASS; kit physical/ref_tile/dsdv_mu_land, top dsdv_mu_land #(W 1104, NB 80, NS 1, SRAM 1)); exact: every MU72 top instantiates u_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)), source blob dsdv_mu_land.sv bc2ab551c + ot_rst_relay.sv 0259a9266 identical to the closing commit 263e13fc3 (S81-LINK5 10-21, lead-approved)"
     }
   ],
   "clock_ports": [

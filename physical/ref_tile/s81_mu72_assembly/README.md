@@ -93,3 +93,19 @@ was launched; ongoing die integration can exercise this next source generation.
   ri_e/ro_e pin range, so ro/ri face `u_sl`; `u_ln0` (2073.6, 2203.2) and `u_ln1` (2073.6, 2894.4) R0 beside the lep
   (W faces abut the lep lane face, 43.2 gap); `u_land` (1468.8, 3283.2) with the 172.8 ring corridor above the lep.
 - W-end `lepw_mu` keeps 2505.6 and the R0 right stack.
+
+## S81-LINK5 (owner 10-21 06:00): copy-A/B s_0N end `lepw_mab_mu`
+
+- Top `ot_s81sl_slice_lepw_mab_mu_72` = `ot_s81sl_slice_lepw_mu_72` (same landings, reset forests, `u_sl`, MU land) with
+  `u_lep` = `ot_s81sl_lep_mu_ab` (AB_EN 1, HOST_EN 0; kit s81sl_lepmu) and pair-B lanes `u_ln2`/`u_ln3`
+  (`dsfd_coll_lane_w_safe8_ntf`, HF-3 CH_BOARD 700, strap ch_b 1) on new ports `tx2`/`tx3` [511:0], `rx2`/`rx3` [513:0]
+  (die SerDes link_0_4 / link_0_5). Pair A = stage NEXT, pair B = stage PREV. No tied functional port.
+- Outline 2851.2 x 6825.6, the W-end mirror of the E-end G3 geometry: `u_sl` at (1555.2, 43.2) so its E face (ri_e/ro_e)
+  is the parent E face (ring to s_7N); `u_lep` R0 at (820.8, 1728) with its E face (ro/ri) facing the slice ri_w/ro_w
+  across the 172.8 landing-bank corridor; `u_ln0..3` R0 at x 43.2, y 1490.4 / 2116.8 / 2743.2 / 3369.6 (tx/rx on the
+  parent W face toward the die-W SerDes, lo/li E faces abutting the lep W face, 51.84 gap); `u_land` (820.8, 3888) with
+  the 172.8 ring corridor N of the lep. S-face xf/vS/ret and N-face mu/rt die pins sit under `u_sl` (x 1555.2..2808).
+- Four 583.2 lanes cannot abut a 691.2 lep face, so the lep reservation is tall: 561.6 x 1987.2 (kit outline
+  475.2 x 1900.8 + halo, pair A and pair B lane pins all on the W face, ~2.3 pins/um). The s81sl_lepmu kit
+  (475.2 x 691.2, pair B on S) must be re-floorplanned to this shape before its gate. Lane and lep views: UNBOUND.
+- S81-LINK5 (lead-approved): every MU72 top instantiates `u_land` as `dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1))`, which binds the CLOSED view dsdv_mu_land-263e13fc3 exactly (`bindings.json`, regenerated with `--bindings`). Source blobs are identical to the closing commit.

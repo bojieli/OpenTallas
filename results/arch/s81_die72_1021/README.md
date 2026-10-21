@@ -23,3 +23,35 @@ Slot fixes: real SerDes 518.4 x 3844.8 (4 per side in column A from y 86.4) + 2 
 lane pair + copy-A/B; blockage only, owner decision pending); die 32302.4 x 25200 (was 32000 x 25000) so every block keeps
 >= 86.4 streets; service 1728 x 3801.6 x16 with the ctrl row +43.2; lepe MU72 parents 2851.2 wide; idx readers
 1036.8 x 1209.6; seqhost 475.2 x 993.6. The route (dv_route72 + dv_station_dirs72) runs inside `release72/run_die72_g3.sh`.
+
+## G4 (S81-LINK5 L5-G4 10-21, owner-approved 5th lane pair)
+
+`g4/placement_g4.json` from `tools/s81_dv/dv_floorplan72_g4.py` (G3 template): W column B link_0_4/0_5 are REAL
+ot_pdie_serdes slots 518.4 x 3844.8 (plan lk_WN2/lk_WN3); E column B link_1_4/1_5 stay copy-A/B blockage reserves;
+end_parent_1 (s_0N) = ot_s81sl_slice_lepw_mab_mu_72 2851.2 x 6825.6 (s_0S stays 2505.6); die 32302.4 -> 32648.0 x 25200
+(column 1 + E side +345.6, centre blocks +172.8; every G3 street/channel unchanged). `g4/plan_unrouted_g4.json` from
+`tools/s81_dv/dv_plan72_g4.py` (G3 base + lk_WN2/3 + links lt/lr_lk_WN2/3: s_0N tx2/tx3 512 b -> SerDes tx, SerDes rx
+562 b -> s_0N rx2/rx3, copied from lt/lr_lk_WN0/1); 144 blocks, 752 links, 2 blockages. Route + chain in
+`release72/run_die72_g4.sh` (land plan + 4 sibling rows via `release72/mk_land_plan_g4.py`).
+
+## G5 (S81-LINK5B L5B-G4 10-21)
+
+`g5/placement_g5.json` = `dv_floorplan72_g4.py --wb-rows 2 3`: the W column-B real SerDes slots link_0_4/0_5 (lk_WN2/3)
+move from rows 0/1 (y 86.4 / 4017.6) to rows 2/3 (y 7948.8 / 11880), beside lk_WN0/1 (column A rows 2/3) and nearest
+s_0N; every other block/street identical to G4 (overlap/street asserts pass). `g5/plan_unrouted_g5.json` (dv_plan72_g4.py,
+144 blocks, 752 links): s_0N <-> lk_WN2/3 seed Manhattan 24.8-24.9 mm -> 16.9-17.1 mm (= pair A lk_WN0/1). Source adds
+L5-RTL e93685328 (u_land #(SRAM 1) = CLOSED dsdv_mu_land 263e13fc3) and S81-RTLGAP/head 589110357 (end-slice
+u_xg -> ot_s81sl_xg_xo; assembly specs list ot_s81sl_xg_xo/rstop_xo sources, u_sl.u_xg UNBOUND until the xg_xo view gates).
+UNBOUND: s_0N u_lep ot_s81sl_lep_mu_ab (kit s81sl_lepmu; binds in G6), safe8_ntf lanes. Chain: `release72/run_die72_g5.sh`.
+
+## G7 (S81-LINK5B L5B-G7 10-21)
+
+`g7/placement_g7.json` = `tools/s81_dv/dv_floorplan72_g7.py` (G5 construction + moves/enlargements only): everything above the
+ctrl row +907.2, die 32648 x 25952.4 (reticle 26000). COORD 4.4: the 8 L2 index readers sit in the two south pockets beside
+the PHY (W: x >= 8307.36 = column B freed by G5; E: from the PHY right edge, E column-B copy-A/B reserves moved to rows 2/3),
+2 x 2 per side, far-controller readers in the column nearer the PHY; iqf in the W pocket. S81-RTLGAP/eng: 16 reader taps
+216 x 648 in the new ctrl/service strip (y 1976.2), eng 1296 x 1209.6 above s_6S. L20: bk_sel 907.2 x 4190.4.
+`g7/plan_unrouted_g7.json` = `tools/s81_dv/dv_plan72_g7.py` (161 blocks, 819 links): reader links through the taps, tap chains,
+s_7N f_ks second sink, column-6 rung via eng. Local route: 0 failures, 19684 stations (G5 20832), bit-mm 1.82 M (G5 2.02 M);
+reader <-> tap <= 11 stations, tap <-> ctrl <= 7 (G5 reader <-> ctrl 70-75); iq_qf 35 -> 6, iq_src 45 -> 59, is_tail 41 -> 95;
+svc hrq/hrd +3 stations (strip); eng <-> etap_15 chains 72 stations. Chain `release72/run_die72_g7.sh`.
