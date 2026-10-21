@@ -7,19 +7,19 @@
  "result": {
   "1u": {
    "users": 1,
-   "cycles_per_token": 272675,
-   "tok_s": 4402.6,
+   "cycles_per_token": 279731,
+   "tok_s": 4291.6,
    "clock_ps": 833.0,
    "layer": {
-    "chained": 7471,
-    "l0_cold": 8005,
-    "layer_latency": 7505,
+    "chained": 7667,
+    "l0_cold": 8201,
+    "layer_latency": 7701,
     "priced_chained_ctlm": 6843,
     "dv_layer_priced_chained": 6031,
     "calendar": {
      "ok": true,
      "entries": 406,
-     "last_issue": 7366
+     "last_issue": 7562
     },
     "calendar_clashes": [],
     "stages": [
@@ -74,251 +74,251 @@
      {
       "stage": "qkv matvec L9 -> VM QKV (column tiles + STN)",
       "start": 138,
-      "end": 455,
-      "cycles": 317,
+      "end": 504,
+      "cycles": 366,
       "priced_cycles": 259,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "die edge @pre_qk: die landing rs reduction: far cluster crosses 2 n1/E2 landings (rsi + rs_b, +3 each) = +6 per priced phase",
-      "start": 457,
-      "end": 463,
+      "start": 506,
+      "end": 512,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "REL"
      },
      {
       "stage": "QK-norm / RoPE / v*r -> D2D q,k,v (DV)",
-      "start": 463,
-      "end": 1007,
+      "start": 512,
+      "end": 1056,
       "cycles": 544,
       "priced_cycles": 235,
       "grade": "DIAG"
      },
      {
       "stage": "die edge @pre_attn: native59 hardened split service +5 (N59-4 landed parent)",
-      "start": 1015,
-      "end": 1020,
+      "start": 1064,
+      "end": 1069,
       "cycles": 5,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "attention D2D C2K: cmd issue -> KV land (REL pair RTL)",
-      "start": 1020,
-      "end": 1052,
+      "start": 1069,
+      "end": 1101,
       "cycles": 32,
       "priced_cycles": null,
       "grade": "REL"
      },
      {
       "stage": "attention KV die service: cmd land -> r31 issue",
-      "start": 1052,
-      "end": 2831,
+      "start": 1101,
+      "end": 2880,
       "cycles": 1779,
       "priced_cycles": null,
       "grade": "DIAG"
      },
      {
       "stage": "attention D2D K2C: r31 issue -> landing tail (plan done)",
-      "start": 2831,
-      "end": 2847,
+      "start": 2880,
+      "end": 2896,
       "cycles": 16,
       "priced_cycles": null,
       "grade": "REL"
      },
      {
       "stage": "attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)",
-      "start": 2847,
-      "end": 2945,
+      "start": 2896,
+      "end": 2994,
       "cycles": 98,
       "priced_cycles": 16,
       "grade": "DIAG"
      },
      {
       "stage": "die edge @pre_o: ctlm8 hr output landing +6 (qfd_tt_ctlm_dv_np_lp lp record: hr 6, was CTLM3 +4) on each matvec go",
-      "start": 2953,
-      "end": 2959,
+      "start": 3002,
+      "end": 3008,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "die edge @pre_o: ctlm8 native_ret input landing +6 (native59 completion -> ctlm before the o-proj go)",
-      "start": 2959,
-      "end": 2965,
+      "start": 3008,
+      "end": 3014,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "die edge @pre_o: attention return lane native59 -> dvs_W5 (dvw_dr_wi E 19 -> 20 vs the dh2 pair) +1",
-      "start": 2965,
-      "end": 2966,
+      "start": 3014,
+      "end": 3015,
       "cycles": 1,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "die edge @pre_o: XDIE current-die pair link law (codec2, attn TX shift 1, STATUS_DELAY 213): attention window X +8 (L1..L35) + KV STATUS tail 213 (KV-HEALTH reserve) per layer, priced serial on the attention -> o_proj dependency; L0 window X -214",
-      "start": 2966,
-      "end": 3187,
+      "start": 3015,
+      "end": 3236,
       "cycles": 221,
       "priced_cycles": 0,
       "grade": "NEWEST"
      },
      {
       "stage": "o_proj matvec L8 -> AR words + XC (column tiles + STN)",
-      "start": 3187,
-      "end": 3719,
-      "cycles": 532,
+      "start": 3236,
+      "end": 3817,
+      "cycles": 581,
       "priced_cycles": 375,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "all-reduce 1 (TP8 collective)",
-      "start": 3464,
-      "end": 4007,
+      "start": 3562,
+      "end": 4105,
       "cycles": 543,
       "priced_cycles": 856,
       "grade": "DIAG"
      },
      {
       "stage": "residual 1: AR landing + post-scale + add + SSQ + x stream (DV)",
-      "start": 4007,
-      "end": 4590,
+      "start": 4105,
+      "end": 4688,
       "cycles": 583,
       "priced_cycles": 411,
       "grade": "DIAG"
      },
      {
       "stage": "die edge @pre_gu: ctlm8 hr output landing +6 (qfd_tt_ctlm_dv_np_lp lp record: hr 6, was CTLM3 +4) on each matvec go",
-      "start": 4598,
-      "end": 4604,
+      "start": 4696,
+      "end": 4702,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "die edge @pre_gu: die landing q3h broadcast: far cluster crosses 2 n1/E2 landings (col bcast + far bcast, +3 each) = +6 per priced phase",
-      "start": 4604,
-      "end": 4610,
+      "start": 4702,
+      "end": 4708,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "REL"
      },
      {
       "stage": "gate/up matvec L7 -> VM GU (column tiles + STN)",
-      "start": 4610,
-      "end": 5105,
-      "cycles": 495,
+      "start": 4708,
+      "end": 5252,
+      "cycles": 544,
       "priced_cycles": 562,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "die edge @pre_silu: die landing rs reduction: far cluster crosses 2 n1/E2 landings (rsi + rs_b, +3 each) = +6 per priced phase",
-      "start": 5107,
-      "end": 5113,
+      "start": 5254,
+      "end": 5260,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "REL"
      },
      {
       "stage": "SiLU x up (GU*r, act stream) (DV)",
-      "start": 5113,
-      "end": 5487,
+      "start": 5260,
+      "end": 5634,
       "cycles": 374,
       "priced_cycles": 114,
       "grade": "DIAG"
      },
      {
       "stage": "die edge @pre_down: ctlm8 hr output landing +6 (qfd_tt_ctlm_dv_np_lp lp record: hr 6, was CTLM3 +4) on each matvec go",
-      "start": 5495,
-      "end": 5501,
+      "start": 5642,
+      "end": 5648,
       "cycles": 6,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "down matvec L8 -> AR words + XC (column tiles + STN)",
-      "start": 5501,
-      "end": 6065,
-      "cycles": 564,
+      "start": 5648,
+      "end": 6261,
+      "cycles": 613,
       "priced_cycles": 256,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "all-reduce 2 (TP8 collective)",
-      "start": 5810,
-      "end": 6353,
+      "start": 6006,
+      "end": 6549,
       "cycles": 543,
       "priced_cycles": 714,
       "grade": "DIAG"
      },
      {
       "stage": "die edge @pre_r2: die landing dv chain slice<->slice hops (11 x +3, built on g5r2b)",
-      "start": 6353,
-      "end": 6386,
+      "start": 6549,
+      "end": 6582,
       "cycles": 33,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "die edge @pre_r2: slice2 landed-parent forwarded lanes + taps (accepted bound)",
-      "start": 6386,
-      "end": 6922,
+      "start": 6582,
+      "end": 7118,
       "cycles": 536,
       "priced_cycles": 0,
       "grade": "PRICED"
      },
      {
       "stage": "residual 2 + SSQ + x stream (DV)",
-      "start": 6922,
-      "end": 7505,
+      "start": 7118,
+      "end": 7701,
       "cycles": 583,
       "priced_cycles": 411,
       "grade": "DIAG"
      }
     ],
     "critical_path_cycles_by_grade": {
-     "DIAG": 6556,
+     "DIAG": 5158,
+     "REL": 1660,
      "PLAN_GAP": 36,
-     "REL": 66,
      "PRICED": 599,
      "NEWEST": 221
     },
     "tile": [
      {
       "matvec": "qkv",
-      "tile_first_eff": 255,
+      "tile_first_eff": 304,
       "dv_tail": 40,
-      "land": 455,
-      "priced_done": 455,
+      "land": 504,
+      "priced_done": 504,
       "go_w5": 160
      },
      {
       "matvec": "o",
-      "tile_first_eff": 207,
-      "priced_done": 3554,
-      "go_w5": 3209
+      "tile_first_eff": 256,
+      "priced_done": 3603,
+      "go_w5": 3258
      },
      {
       "matvec": "gu",
-      "tile_first_eff": 447,
+      "tile_first_eff": 496,
       "dv_tail": 26,
-      "land": 5105,
-      "priced_done": 5105,
-      "go_w5": 4632
+      "land": 5252,
+      "priced_done": 5252,
+      "go_w5": 4730
      },
      {
       "matvec": "down",
-      "tile_first_eff": 239,
-      "priced_done": 5749,
-      "go_w5": 5523
+      "tile_first_eff": 288,
+      "priced_done": 5896,
+      "go_w5": 5670
      }
     ],
     "die_edges_per_layer": 934,
-    "noedge_chained": 6328,
+    "noedge_chained": 6524,
     "sched_added_per_layer": 1143,
     "lane_ages": "results/token_pass/measured_qwen_1019/sched/lane_ages_dv2f20g5r2b.json",
     "dv_age_deltas": {
@@ -399,20 +399,20 @@
       "replaces": "DIAG"
      }
     ],
-    "dv_base_chained": 7009
+    "dv_base_chained": 7205
    },
    "terms": [
     {
      "term": "L0 cold layer (stage-0 embedding landing + layer)",
      "n": 1,
-     "cycles": 8005,
+     "cycles": 8201,
      "grade": "composed",
      "by_grade": null
     },
     {
      "term": "L1..L35 chained layer period",
      "n": 35,
-     "cycles": 7471,
+     "cycles": 7667,
      "grade": "composed",
      "by_grade": null
     },
@@ -446,21 +446,21 @@
     }
    ],
    "token_cycles_by_grade": {
-    "DIAG": 228865,
+    "DIAG": 178480,
+    "REL": 62956,
     "PLAN_GAP": 1297,
-    "REL": 5513,
-    "PRICED": 29257,
+    "PRICED": 29256,
     "NEWEST": 7742
    },
-   "pct_measured": 4.9,
-   "pct_rel": 2.0,
+   "pct_measured": 25.3,
+   "pct_rel": 22.5,
    "pct_newest": 2.8,
    "price_of_record": {
     "tok_s": 4810.9,
     "cycles": 249431,
     "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"
    },
-   "vs_price_pct": -8.49,
+   "vs_price_pct": -10.8,
    "gaps": [
     "ATTENTION RETURN: measured span 98 != compiled 137 (re-bench the attn family)",
     "IMAGE CAPACITY: the full layer needs 13942 PW words (calendar 854 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
@@ -523,34 +523,34 @@
    "aggregate_tok_s": 11750.6
   },
   "variant_plan": {
-   "cycles_per_token": 265151,
-   "tok_s": 4527.5,
+   "cycles_per_token": 272207,
+   "tok_s": 4410.2,
    "token_cycles_by_grade": {
-    "DIAG": 228872,
+    "DIAG": 178485,
+    "REL": 62958,
     "PLAN_GAP": 1297,
-    "REL": 5514,
     "PRICED": 21725,
-    "NEWEST": 7743
+    "NEWEST": 7742
    },
-   "pct_rel": 2.1,
-   "vs_price_pct": -5.89,
-   "chained": 7262,
+   "pct_rel": 23.1,
+   "vs_price_pct": -8.33,
+   "chained": 7458,
    "sched_added_per_layer": 934,
    "4u_aggregate_tok_s": 12066.5
   },
   "variant_asbuilt": {
-   "cycles_per_token": 261821,
-   "tok_s": 4585.1,
+   "cycles_per_token": 268877,
+   "tok_s": 4464.8,
    "token_cycles_by_grade": {
-    "DIAG": 225843,
+    "DIAG": 175458,
+    "REL": 62954,
     "PLAN_GAP": 1297,
-    "REL": 5513,
-    "PRICED": 21426,
+    "PRICED": 21425,
     "NEWEST": 7742
    },
-   "pct_rel": 2.1,
-   "vs_price_pct": -4.69,
-   "chained": 7170,
+   "pct_rel": 23.4,
+   "vs_price_pct": -7.19,
+   "chained": 7366,
    "sched_added_per_layer": 842,
    "4u_aggregate_tok_s": 12210.9
   }
