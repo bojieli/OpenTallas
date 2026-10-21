@@ -16,7 +16,7 @@
   559.44
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 20880.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -168,8 +168,8 @@
   [
    "WARN",
    "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+   "fill 35% = (macros/children 106588 + std 20880) / outline 365040 um2 (pin-bound: r5x gate ot-epyc9 hidx_link_r5x-20261020-214701: S face 2400 pins over 629.7/650 um (97%), N 2219 pins over 629.8/650 um (97%); the 650-um width is set by the 2x2400-bit pin faces at M4/M5 pitch, not by area; fill 34.7% (macros 106588 + std 20232 / 365040); GRT overflow 0, TT spread 44.6)",
+   ""
   ]
  ],
  "referenced": [
