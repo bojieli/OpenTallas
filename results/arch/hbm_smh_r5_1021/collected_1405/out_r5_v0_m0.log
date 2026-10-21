@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+R5_ACTIVITY bdc_out=1994 qk_out=1218 pv_events=223 publications=6850 pv_inputs=986
+R5_LOCKSTEP PASS VAR=0 HMUT=0 compared=12796 cycles=4000 warm=800 DG=8 ATTN=13
+- rtl/hbm_accel/sm/repack/h2a5/tb_ot_hbm_smh_rp5_2.sv:116: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 6.412 s; speed 623.844 ns/s
+- Verilator: cpu 5.855 s on 1 threads; allocated 20 MB

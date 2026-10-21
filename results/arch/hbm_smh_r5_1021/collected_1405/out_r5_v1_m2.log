@@ -1,0 +1,12 @@
+Verilator 5.050 2026-07-01 rev v5.050
+R5_MISMATCH port=gout cycle=801 flat=f41ebadddbc6c1c126694df19da72c100025a3000000000258 landed=a8a3bdd1ac9895525deac124ada72c100025a3000000000258
+R5_MISMATCH port=gout cycle=802 flat=a8a3bdd1ac9895525deac124afb203b40025e3e68cdf480268 landed=442e570a60804261ac0979d8dfb203b40025e3e68cdf480268
+R5_MISMATCH port=gout cycle=803 flat=442e570a60804261ac0979d8dcccb794002623551ff9c00208 landed=e2e7a8e216b4592ae46504414cccb794002623551ff9c00208
+R5_MISMATCH port=gout cycle=804 flat=e2e7a8e216b4592ae46504414d54287800266346554d000218 landed=6c7b455ab8a6da95a781c42b3d54287800266346554d000218
+R5_MISMATCH port=gout cycle=805 flat=6c7b455ab8a6da95a781c42b3e737f300026a3649964e80228 landed=eeb394a9b1686fa351cb40a71e737f300026a3649964e80228
+R5_ACTIVITY bdc_out=1994 qk_out=1218 pv_events=223 publications=6850 pv_inputs=986
+R5_LOCKSTEP FAIL VAR=1 HMUT=2 mismatches=3199 of 12796
+- rtl/hbm_accel/sm/repack/h2a5/tb_ot_hbm_smh_rp5_2.sv:116: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 3.921 s; speed 1.020 us/s
+- Verilator: cpu 3.576 s on 1 threads; allocated 20 MB

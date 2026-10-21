@@ -1,0 +1,94 @@
+{
+  "status": "FAIL_ACTUAL_NATIVE_BEFORE_LAYOUT",
+  "declared_gate_ref": "cbbe8b3d0",
+  "source_caution": "HC recovered actual staged source differences versus committed cbbe generatedfiles (e.g. n_f landing hierarchy). Actualshippingmanifests/native netlist hashes authoritative; no claim committedRTL exactlymatchesstagedgate. Source-resetrepair owned HC, notthiscollector.",
+  "variants": {
+    "s_m": {
+      "status": "FAIL",
+      "roots_examined": 94078,
+      "max_dynamic_loads": 120,
+      "role_errors": [],
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_ot_hbm_smh_rp5s_m_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "16fd4746ad5911a450b92a1366cbe92bcd6384802e369b544cc6dbfee689a0de"
+      },
+      "violation_count": 146,
+      "raw_sha256": "e44c79e0a1359e892eb757ab556c4e920b1d7f63e3cc915eb4192cd33fee3395"
+    },
+    "s_f": {
+      "status": "FAIL",
+      "roots_examined": 79954,
+      "max_dynamic_loads": 120,
+      "role_errors": [],
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_ot_hbm_smh_rp5s_f_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "dbc3395fc77a2657e8cb21521f3351bc9a46476c70cb3457a80ff09ddd515239"
+      },
+      "violation_count": 114,
+      "raw_sha256": "49136b2248fa6017cbdfd3f241c7ea440bd4d766ce07687694bf63e659b89b71"
+    },
+    "n_m": {
+      "status": "FAIL",
+      "roots_examined": 147920,
+      "max_dynamic_loads": 120,
+      "role_errors": [],
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_ot_hbm_smh_rp5n_m_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "142588db3f5ac2aad7793dbbddb6a8133645184a262e883cf0f0965b76762d92"
+      },
+      "violation_count": 230,
+      "raw_sha256": "9f59e01e8929edc20c24ccf20773ccc4c4d1419be1a4491e3e11a5b9d039c3ba"
+    },
+    "n_f": {
+      "status": "FAIL",
+      "roots_examined": 134002,
+      "max_dynamic_loads": 120,
+      "role_errors": [],
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_ot_hbm_smh_rp5n_f_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "dcd02d382e5d807c33604a3ee0102bc3d8c423344f187016bc77b562eb4e953e"
+      },
+      "violation_count": 199,
+      "raw_sha256": "459f86aed4dd307216892ed276e19fba71a8c2b375a1993dd844e70163fb8e62"
+    }
+  },
+  "functional": {
+    "out_r5_v0_m0.log": [
+      "R5_LOCKSTEP PASS VAR=0 HMUT=0 compared=12796 cycles=4000 warm=800 DG=8 ATTN=13"
+    ],
+    "out_r5_v0_m1.log": [
+      "R5_LOCKSTEP FAIL VAR=0 HMUT=1 mismatches=785 of 12796"
+    ],
+    "out_r5_v0_m2.log": [
+      "R5_LOCKSTEP FAIL VAR=0 HMUT=2 mismatches=3199 of 12796"
+    ],
+    "out_r5_v0_m3.log": [
+      "R5_LOCKSTEP FAIL VAR=0 HMUT=3 mismatches=3185 of 12796"
+    ],
+    "out_r5_v0_m5.log": [
+      "R5_LOCKSTEP FAIL VAR=0 HMUT=5 mismatches=3163 of 12796"
+    ],
+    "out_r5_v0_m6.log": [
+      "R5_LOCKSTEP FAIL VAR=0 HMUT=6 mismatches=3185 of 12796"
+    ],
+    "out_r5_v1_m0.log": [
+      "R5_LOCKSTEP PASS VAR=1 HMUT=0 compared=12796 cycles=4000 warm=800 DG=5 ATTN=13"
+    ],
+    "out_r5_v1_m1.log": [
+      "R5_LOCKSTEP FAIL VAR=1 HMUT=1 mismatches=786 of 12796"
+    ],
+    "out_r5_v1_m2.log": [
+      "R5_LOCKSTEP FAIL VAR=1 HMUT=2 mismatches=3199 of 12796"
+    ],
+    "out_r5_v1_m3.log": [
+      "R5_LOCKSTEP FAIL VAR=1 HMUT=3 mismatches=3185 of 12796"
+    ],
+    "out_r5_v1_m5.log": [
+      "R5_LOCKSTEP FAIL VAR=1 HMUT=5 mismatches=3163 of 12796"
+    ],
+    "out_r5_v1_m6.log": [
+      "R5_LOCKSTEP FAIL VAR=1 HMUT=6 mismatches=3185 of 12796"
+    ]
+  },
+  "lp_coverage_gap": "All four LP runs have MUT4 LP_LOCKSTEP PASS despite pending expectationFAIL; no negativepromotion/newqualification."
+}
