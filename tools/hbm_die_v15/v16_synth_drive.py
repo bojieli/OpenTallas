@@ -89,9 +89,22 @@ def run(cell, row, a, idx, lock, summary):
     for k in range(8):
         prefer = push_prefer()
         out = f'{a.remote_root}/syn/{cell}'
-        cmd = (f'echo HOST $(hostname); rm -rf {out}; env MEMG={mem} HIER=1 EXTRA={",".join(extra)} WTOP={w} {env} '
-               f'bash tools/hbm_die_v15/synth_master.sh . {out} {cell} {m} - {bb}{prefer} && '
-               f'MEMG={mem} bash tools/hbm_die_v15/synth_etm.sh . {out} {cell}')
+        # Keep exact-source synthesis objects when only their timing export needs
+        # retrying. Older objects and failure logs remain available in history.
+        legacy_ok = 'true' if a.legacy_source_commit == a.commit else 'false'
+        compatible = (f'if [ -f {out}/.source_commit ]; then [ "$(cat {out}/.source_commit)" = {a.commit} ]; '
+                      f'else {legacy_ok} && {{ sources=({a.remote_root}/src_*); [ ${{#sources[@]}} = 1 ] && [ "${{sources[0]}}" = {S} ]; }}; fi')
+        cmd = (f'echo HOST $(hostname); die_retry_stamp=$(date +%s%N); '
+               f'if [ -s {out}/{cell}.netlist.v ] && [ -s {out}/{cell}.stat ] && ( {compatible} ); then '
+               f'echo REUSE_SYNTH_OBJECT {cell}; else '
+               f'if [ -e {out} ]; then mkdir -p {a.remote_root}/syn_history; '
+               f'mv {out} {a.remote_root}/syn_history/{cell}.$die_retry_stamp; fi; '
+               f'env MEMG={mem} HIER=1 EXTRA={",".join(extra)} WTOP={w} {env} '
+               f'bash tools/hbm_die_v15/synth_master.sh . {out} {cell} {m} - {bb}{prefer}; fi && '
+               f'echo {a.commit} > {out}/.source_commit && '
+               f'mkdir -p {out}/export_history && {{ '
+               f'for f in etm.log etm_tt.tcl etm_ff.tcl; do [ ! -e {out}/$f ] || cp {out}/$f {out}/export_history/$f.$die_retry_stamp; done; '
+               f'MEMG={mem} bash tools/hbm_die_v15/synth_etm.sh . {out} {cell}; }}')
         log = drive / f'{cell}.r{k}.log'
         with open(log, 'w') as f:
             rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--priority', 'die', '--dir', S,
@@ -139,18 +152,21 @@ def run(cell, row, a, idx, lock, summary):
         print(cell, 'OK' if rec.get('ok') else 'FAIL', rec['rounds'][-1].get('errors', [])[:2], flush=True)
 
 
-def remote_state(host, remote_root, commit):
+def remote_state(host, remote_root, commit, legacy_commit=None):
     """Collect existing outputs and admitted commands before dispatching work."""
     script = r'''
 import json, pathlib, re, subprocess, sys
-root=pathlib.Path(sys.argv[1]); src=root/('src_'+sys.argv[2])
+root=pathlib.Path(sys.argv[1]); commit=sys.argv[2]; src=root/('src_'+commit)
 if not src.is_dir():
  print(json.dumps(dict(ready=False, complete=[], running=[]))); raise SystemExit
 complete=[]
+legacy_source=sys.argv[3]==commit and list(root.glob('src_*')) == [src]
 for d in (root/'syn').glob('*'):
  if d.is_dir() and any(d.glob('*_synth_tt.lib')) and any(d.glob('*_synth_ff.lib')):
   log=d/'etm.log'
-  if log.is_file() and 'OT_ETM_DONE_ff' in log.read_text(errors='replace'):
+  marker=d/'.source_commit'
+  same_source=marker.read_text().strip()==commit if marker.is_file() else legacy_source
+  if same_source and log.is_file() and 'OT_ETM_DONE_ff' in log.read_text(errors='replace'):
    complete.append(d.name)
 running=set()
 for line in subprocess.check_output(['ps','-eo','args='],text=True).splitlines():
@@ -159,7 +175,7 @@ for line in subprocess.check_output(['ps','-eo','args='],text=True).splitlines()
 print(json.dumps(dict(ready=True,complete=complete,running=sorted(running))))
 '''
     p = subprocess.run(['ssh', '-o', 'ConnectTimeout=8', host,
-                        'python3 - ' + remote_root + ' ' + commit],
+                        'python3 - ' + remote_root + ' ' + commit + ' ' + (legacy_commit or '-')],
                        input=script, capture_output=True, text=True)
     if p.returncode:
         raise RuntimeError(f'{host} existing-job collection failed: {p.stderr[-300:]}')
@@ -175,6 +191,7 @@ def main():
     ap.add_argument('--source-root', type=Path, help='immutable source checkout when dispatcher code lives separately')
     ap.add_argument('--workers', type=int, choices=range(1, 9), default=8)
     ap.add_argument('--resume-remote', action='store_true', help='collect and preserve admitted builds and completed objects')
+    ap.add_argument('--legacy-source-commit', help='known original source tag for pre-marker objects in a single-source run directory')
     ap.add_argument('cells', nargs='+')
     a = ap.parse_args()
     if a.source_root:
@@ -188,7 +205,7 @@ def main():
     while pending:
         states = {}
         with ThreadPoolExecutor(max_workers=a.workers) as pool:
-            futures = {pool.submit(remote_state, h, a.remote_root, a.commit): h for h in hosts}
+            futures = {pool.submit(remote_state, h, a.remote_root, a.commit, a.legacy_source_commit): h for h in hosts}
             for future in as_completed(futures):
                 states[futures[future]] = future.result()
         a.ready_hosts = {h for h, state in states.items() if state['ready']}
