@@ -64,6 +64,8 @@ def capture_links():
 
 
 def plans(cal, L, hops, mode):
+    if cal.get('checker', {}).get('result') != 'PASS':
+        raise ValueError('Calendar checker failed; hop plans cannot qualify it')
     P = cal['period']
     copyb = set(cal['copy_b_stages'])
     st = L['stages']
@@ -84,19 +86,16 @@ def plans(cal, L, hops, mode):
                                                       (f' pos {p}' if mode == 'mtp' else ''), length=ln))
         for r, ms in sorted(res.items()):
             ms.sort(key=lambda x: x['T'])
-            # one serial stage-hop circuit (LINK5): a user's next message waits for its previous one.  The calendar
-            # checker skips same-user overlaps (dv_mu_calendar_phys.check: `if u2 != u`), and the MTP x6 link window is
-            # the AR send cycle x 6, so x (6 x 652) can still occupy the circuit when the partial is ready: serialise
-            # here and record the delay (a calendar finding, not hidden)
-            free, delays = {}, []
-            for x in ms:
-                f = free.get(x['user'])
-                if f is not None and x['T'] < f:
-                    delays.append(dict(user=x['user'], label=x['label'], delay=round(f - x['T'], 1)))
-                    x['serial_delay'] = round(f - x['T'], 1)
-                    x['T'] = f
-                free[x['user']] = x['T'] + x['length']
-            ms.sort(key=lambda x: x['T'])
+            # Preserve the admitted absolute timeline. A local TX delay would leave
+            # receiver owner/engine arrivals and every downstream stage stale.
+            sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
+            from dv_mu_calendar_phys import interval_collisions
+            bad = interval_collisions({r: [(x['T'], x['length'], x['user']) for x in ms]}, P)
+            if bad:
+                raise ValueError(json.dumps(dict(verdict='FAILED', mode=mode, resource=r,
+                    reason='Calendar occupancy collision; no local serialization permitted',
+                    first=bad[0], collisions=len(bad))))
+            delays = []
             t, comp = 0.0, 0
             for k, x in enumerate(ms):
                 if k:
@@ -135,7 +134,14 @@ def main():
         cal = json.loads((ROOT / a.cal_dir / f'calendar_rel241_G4_{mode}.json').read_text()
                          if not Path(a.cal_dir).is_absolute() else (Path(a.cal_dir) / f'calendar_rel241_G4_{mode}.json').read_text())
         assert cal['map_sha256'] == L['map_sha256']
-        for (i, r), pl in plans(cal, L, hops, mode).items():
+        try:
+            mode_plans = plans(cal, L, hops, mode)
+        except ValueError as error:
+            (o / 'FAILED.json').write_text(json.dumps(dict(verdict='FAILED', mode=mode, reason=str(error),
+                full_calendar_qualified=False), indent=2) + '\n')
+            print(error, file=sys.stderr)
+            return 2
+        for (i, r), pl in mode_plans.items():
             name = f'{mode}_h{i:03d}_{r.split(".", 1)[1].replace(".", "").replace("-", "_")}'
             (o / f'{name}.json').write_text(json.dumps(pl, indent=0) + '\n')
             index.append(dict(name=name, mode=mode, hop=pl['hop'], resource=r, users=len(pl['users']),
@@ -148,4 +154,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

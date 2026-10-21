@@ -444,26 +444,50 @@ def windows(model, user, shift, kind, col):
     return ws
 
 
+def interval_collisions(by, P):
+    """Exact half-open circuit/engine occupancy, including a sender's own messages.
+
+    Compare distinct reservations against adjacent periods, and each reservation
+    against its own next period. Equal user identity never exempts occupancy.
+    """
+    bad = []
+    for resource, reservations in by.items():
+        rows = sorted(reservations)
+        for i, (a, length, user) in enumerate(rows):
+            if length > P:
+                bad.append(dict(resource=resource, users=[user, user], overlap=length - P,
+                                intervals=[[a, a + length], [a + P, a + P + length]],
+                                same_user=True, periodic_self=True))
+            for b, length2, user2 in rows[i + 1:]:
+                for cycle in (-P, 0, P):
+                    start = max(a, b + cycle)
+                    end = min(a + length, b + cycle + length2)
+                    if end > start:
+                        bad.append(dict(resource=resource, users=[user, user2],
+                                        overlap=round(end - start, 6),
+                                        intervals=[[a, a + length], [b + cycle, b + cycle + length2]],
+                                        same_user=user == user2))
+    return bad
+
+
+def intrinsic_calendar_failure(model, mode, P, contexts=1):
+    """A shift/copy search cannot repair a user's collisions with itself."""
+    user = [dict(user=0, shift=0, kind=mode)]
+    bad, resources = (check(model, user, P, {}) if contexts == 1 else
+                      check2(model, user, P, {}, mode, contexts))
+    if not bad:
+        return None
+    return dict(P=P, users=[], col={}, bad=bad, nres=resources, nonrep=0,
+                tried=[dict(users=1, result='FAULT', collisions=len(bad), first=bad[0],
+                            why='Intrinsic same-user occupancy; shift/copy search cannot repair it')])
+
+
 def check(model, users, P, col):
     by = collections.defaultdict(list)
     for u in users:
         for r, s, e in windows(model, u['user'], u['shift'], u['kind'], col):
             by[r].append((s % P, e - s, u['user']))
-    bad = []
-    for r, lst in by.items():
-        lst.sort()
-        n = len(lst)
-        for i in range(n):
-            s, L, u = lst[i]
-            if L > P:
-                bad.append(dict(resource=r, users=[u, u], overlap=L - P))
-            for j in range(1, n):
-                s2, L2, u2 = lst[(i + j) % n]
-                gap = (s2 - s) % P
-                if gap >= L:
-                    break
-                if u2 != u:
-                    bad.append(dict(resource=r, users=[u, u2], overlap=round(L - gap, 1)))
+    bad = interval_collisions(by, P)
     # a user's own windows on one link must not overlap each other either (x and partial on the same link)
     return bad, {r: len(v) for r, v in by.items()}
 
@@ -504,6 +528,9 @@ def colour(model, shifts, P, mode):
 
 def calendar(model, mode, N=None):
     P = qup(model['T_ar'] if mode == 'ar' else model['T_mtp_step'])
+    intrinsic = intrinsic_calendar_failure(model, mode, P, 1)
+    if intrinsic:
+        return intrinsic
     key = 'step' if mode == 'mtp' else 'occ'
     nonrep = max(st[key] for st in model['stages'] if st['copies'] == 1)
     nonrep = max(nonrep, model['head_mtp'] if mode == 'mtp' else model['head_ar'])
@@ -588,21 +615,7 @@ def check2(model, users, P, col, mode, cap=2):
             by[r].append((s % P, e - s, u['user']))
         for r, s, e in ctx:
             cx[r].append((s % P, e - s, u['user']))
-    bad = []
-    for r, lst in by.items():
-        lst.sort()
-        n = len(lst)
-        for i in range(n):
-            s, L, u = lst[i]
-            if L > P:
-                bad.append(dict(resource=r, users=[u, u], overlap=L - P))
-            for j in range(1, n):
-                s2, L2, u2 = lst[(i + j) % n]
-                gap = (s2 - s) % P
-                if gap >= L:
-                    break
-                if u2 != u:
-                    bad.append(dict(resource=r, users=[u, u2], overlap=round(L - gap, 1)))
+    bad = interval_collisions(by, P)
     for r, lst in cx.items():                       # at most two users hold a stage copy at any edge
         ev = []
         for s, L, u in lst:
@@ -623,6 +636,9 @@ def check2(model, users, P, col, mode, cap=2):
 
 def calendar2(model, mode, N=None):
     P = qup(model['T_ar'] if mode == 'ar' else model['T_mtp_step'])
+    intrinsic = intrinsic_calendar_failure(model, mode, P, 2)
+    if intrinsic:
+        return intrinsic
     reps = 6 if mode == 'mtp' else 1
     lb = 1
     for st in model['stages']:
@@ -727,6 +743,9 @@ def shift_search(model, mode, P, cap=2):
 def calendar3(model, mode, N=None, users=None, cap=2):
     """two job contexts with searched shifts; N + 1 control = every grid shift for one more user FAULTS (greedy-maximal)"""
     P = qup(model['T_ar'] if mode == 'ar' else model['T_mtp_step'])
+    intrinsic = intrinsic_calendar_failure(model, mode, P, cap)
+    if intrinsic:
+        return intrinsic
     if users is None:
         users = shift_search(model, mode, P, cap)
     if N is not None:
@@ -878,7 +897,12 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
         recs[mode] = dict(
             schema=SCHEMA, lane='S81-MUCAL140' if REL == REL0 else 'S81-CAL241', mode=mode, map=str(Path(mapp).resolve().relative_to(ROOT)), compose=cmode, map_sha256=sha, alap=alap, job_contexts=contexts, map_capacity_verdict='PASS' if qualified else 'UNQUALIFIED (model only)',
             stages=len(stages), copy_b_stages=[s['stage'] for s in st_rec if s['copies'] > 1],
-            period=cal['P'], users=n, per_user_tok_s=round(per, 1), aggregate_tok_s=round(n * per),
+            period=cal['P'], users=n, per_user_tok_s=round(per, 1) if n and not cal['bad'] else None,
+            aggregate_tok_s=round(n * per) if n and not cal['bad'] else None,
+            rate_qualified=bool(n and not cal['bad']),
+            collision_witnesses=cal['bad'][:20],
+            calendar_failure=('Same-user occupancy must be fixed by a dependency-propagated per-position timeline; '
+                              'TX-only serialization does not update downstream arrivals/owners/head.' if cal['bad'] else None),
             bound_window=dict(cycles=int(cal.get('nonrep') or 0),
                               stage=max((s for s in st_rec if s['copies'] == 1),
                                         key=lambda s: s['step' if mode == 'mtp' else 'occ'])['stage']),
@@ -897,6 +921,10 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
             stage_windows=[{k: s[k] for k in ('stage', 'dense_layer', 'copies', 't', 'occ', 'step', 'busy_total', 'eng_off') if k in s}
                            for s in st_rec],
             composition=comp, grade='node cycles: composer grades; stage split / reservation / forward-x / MTP law: MODEL')
+    if not recs['mtp']['rate_qualified']:
+        comp['mtp']['unqualified_original_T'] = comp['mtp'].pop('T')
+        comp['mtp']['tok_s'] = None
+        comp['mtp']['schedule_verdict'] = 'FAILED: MTP dependency/occupancy timeline'
     recs['ar']['layer_segments'] = {f'L{l}': {k: round(v, 1) for k, v in seg[l].items()} for l in range(40)}
     recs['ar']['timeline_log'] = [dict({k: v for k, v in x.items() if k != 'busy'}, start=round(x['start'], 1),
                                        end=round(x['end'], 1)) for x in log]
