@@ -15,3 +15,5 @@ R3actualef1eb MAIN/FB refusal3/max45/0role retained: ctl1bank0=35, entry3hitbank
 R4sourced31abfbf6 existingfunctional unit1567440-1792617983 ep9 terminal0: basePASS,MUT1/2caught. IndependentG8eq unit1538961-1792617967 all6seedszero mismatch PASS. ActualsourceSHA d7b9c86b044f3074e71cb5a2ddabcfdf428c1135993391c8ce62bbb3ab0a760d verified beforeadmission. Changed-source MAIN/FB next; allthreeoldernativefailuresimmutable.
 
 R4actualbb66 MAIN/FB refusal2/max43/0role retained: s1countervalid37 and inf_counter43 sharedleft12+nsl4 control. R5splits leftcounter intoitsownalwaysblock and2same-edge kept1bit consumer copies (valid,inf), originalresetedge unchanged. Nslcounter/header retainoldconsumer. +2controlFF onresetleaf4(old18->20); nootherprofile/edge/portchange. Repeatonlyexistingfunctional/mutants+6seedref before changed-sourceadmission.
+
+R5sourcef7412b6c2 existingfunctional unit2063696-1792618263 ep9 terminal0 basePASS/MUT1+2caught; independentG8eq unit2063694-1792618263 all6seedzero mismatch PASS. ExactsourceSHA fe754d62b5ef2030c3fac28f479792bc2a1287a60b00942fdedf06a90374b283 verified beforeadmission. Changed-sourceMAIN/FB next; no nativePASS/closure inferred.
