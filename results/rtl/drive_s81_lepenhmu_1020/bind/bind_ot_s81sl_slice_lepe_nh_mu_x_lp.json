@@ -1,0 +1,419 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "out_bind_enh2/ot_s81sl_slice_lepe_nh_mu_x_lp.v",
+ "top": "ot_s81sl_slice_lepe_nh_mu_x_lp",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 8,
+  "instances": 20,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0,
+  "pad_bits": 0,
+  "spare_out_bits": 0,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 7
+ },
+ "masters": {
+  "dsdv_mu_land": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_land"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_coll_lane_e_safe8_ntf": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_ln0",
+    "u_ln1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_land_reset_forest": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpr_S",
+    "u_lpr_K"
+   ],
+   "param_sets": {
+    "{\"DEPTH\": \"3\", \"LEAVES\": \"278\", \"ROOT_LOADS\": \"2\"}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_land_vector_reset_kw_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpl_0_w",
+    "u_lpl_1_w",
+    "u_lpl_2_w"
+   ],
+   "param_sets": {
+    "{\"CHUNK_BITS\": \"8\", \"D\": \"4\", \"W\": \"1104\"}": 2,
+    "{\"CHUNK_BITS\": \"8\", \"D\": \"4\", \"W\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_land_vector_reset_r": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpl_0_r",
+    "u_lpl_1_r",
+    "u_lpl_2_r"
+   ],
+   "param_sets": {
+    "{\"CHUNK_BITS\": \"8\", \"D\": \"4\", \"K\": \"2\", \"W\": \"1104\"}": 2,
+    "{\"CHUNK_BITS\": \"8\", \"D\": \"4\", \"K\": \"2\", \"W\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pl_pad": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "rtl/common/landed_parent/ot_pl_land.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lpo_fault",
+    "u_lpr_root",
+    "u_lprc_u_sl"
+   ],
+   "param_sets": {
+    "{\"N\": \"2\", \"W\": \"1\"}": 1,
+    "{\"N\": \"1\", \"W\": \"1\"}": 1,
+    "{\"N\": \"0\", \"W\": \"1\"}": 5
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_lep_mu_a": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lep"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_sl"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 160,
+  "unresolved_children": {},
+  "model_children": {},
+  "variant_children": {
+   "ot_hdc_fp32_mul_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ]
+   },
+   "ot_hdc_fsqrt": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ]
+   },
+   "ot_hdc_qadd_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "by": "first",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_qmul_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "by": "first",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_v41x_fdiv": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+    "by": "first",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192bs.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192bs.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+    ]
+   },
+   "ot_sram_1r1w_512x128_m4_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192bs.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192bs.sv"
+    ]
+   }
+  },
+  "ambiguous_children": {},
+  "elab_traps": {
+   "OT_LAND_RESET_FOREST_REQUIRES_DEPTH2_LEAVES1_TO1024": [
+    "ot_pl_land_reset_forest"
+   ],
+   "OT_LAND_VECTOR_RESET_KW_REQUIRES_EXACT_CHUNKS": [
+    "ot_pl_land_vector_reset_kw_w"
+   ],
+   "OT_LAND_VECTOR_RESET_REQUIRES_EXACT_CHUNKS": [
+    "ot_pl_land_vector_reset_r"
+   ],
+   "ot_hdc_fp32_add_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_add_lat"
+   ],
+   "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_mul_lat"
+   ]
+  },
+  "prefer_lists": [
+   "tools/s81_slice/slice_lep_bench.sh"
+  ],
+  "ref_tile_specs_used": []
+ },
+ "pads_declared": [],
+ "die_sha256": "3b04a1c320bd708e4516770c8c7635c3fdf4f1630d87f3c670398f9049dbb9c1",
+ "straps_declared": [],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl",
+  "physical/asap7_memory_macros_v2"
+ ],
+ "rtl_files": [
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/lib/ot_sram_oldread_b64.sv",
+  "rtl/lib/ot_sram_showahead_b64.sv",
+  "rtl/common/ot_link_credit_rx_b64.sv",
+  "rtl/common/ot_link_credit_tx_rc.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/ot_hdc_delay_rf.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/v41rom/ot_v41_kreg.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/common/ot_prefix.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/link/ot_link_crc32.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/common/ot_link_credit.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "/srv/opentallas-scratch/claude/drives81-lepenhmu/src/rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv"
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81PH_LANE_CR",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF"
+ ]
+}
