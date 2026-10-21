@@ -20,7 +20,7 @@
 //   candidate from the bench's own key table before the job; the chain output is decoded by the selector's REAL V
 //   ingress decoder dsdv_bk_vin (dsdv_bk_v.sv) and every lane word is compared bit-exact: headers (type 1, tag, base, k,
 //   qslot), BEAT words (type 2, tag, 16 BF16 scores, lane valid, last, fault flag 0), the 3 empty quarters.
-//   Also checked: qo == qi delayed 16 edges (8 hops) (every frame forwarded), a non-index frame skipped, slice traffic passing
+//   Also checked: qo == qi delayed (2 + OH) x 8 edges + XD (every frame forwarded), a non-index frame skipped, slice traffic passing
 //   the station both ways (data / beat / tag, rk count == slice requests) before the job and NO response / rk leaking
 //   to the slice during it, every region's sticky fault 0 after the window end.
 //   S81-L20RD3: nopen counts mismatching lane words whose in-band fault flag is 0 (a fail-OPEN word); closed_* campaign
@@ -64,6 +64,8 @@ module tb_dsdv_idx_rg3;
     parameter integer SDX = 0;             // extra lane stations (latency sweep)
     parameter integer SQD = 256;
     parameter integer IQD = 512;
+    parameter integer OH = 2;              // reader output relay hops (S81-COLLECT2/L20KIT): q / s chain +OH a reader
+    parameter integer RH = 2;              // reader response relay hops (lane latency +RH, absorbed by T0)
     localparam integer NRD = 8;
     localparam integer R = 16, MW = 1 << 20, NWMAX = 16384, IK = 5, TAG = 8'h5A, SL0 = 20000, NS = 6;
 
@@ -150,7 +152,7 @@ module tb_dsdv_idx_rg3;
     generate for (r = 0; r < NRD; r = r + 1) begin : g_p
         wire [512:0] qi_ = (r == 4) ? qx : qch[r];
         wire [275:0] si_ = (r == 4) ? sx : sch[r];
-        dsdv_idx_rg3 #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .SQD(SQD), .IQD(IQD)) u (
+        dsdv_idx_rg3 #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .SQD(SQD), .IQD(IQD), .OH(OH), .RH(RH)) u (
             .ck(ck), .rst(rst), .sid(4'(2 * r)), .qi(qi_), .qo(qch[r + 1]), .si(si_), .so(sch[r + 1]),
             .rqo({lrq_r[2 * r + 1], lrq_r[2 * r]}), .rri({lrd_r[2 * r + 1], lrd_r[2 * r]}), .st(st[r]));
         // relay stations (registered hops) on the lanes of both controllers of the pair
@@ -277,7 +279,7 @@ module tb_dsdv_idx_rg3;
     always @(posedge ck) begin : g_qf
         integer i;
         qdl[0] <= qin; for (i = 1; i < 64; i = i + 1) qdl[i] <= qdl[i - 1];
-        if (rst && cyc > 80 && qch[NRD][0] !== qdl[2 * NRD + XD - 1][0] || (qch[NRD][0] && qch[NRD] !== qdl[2 * NRD + XD - 1])) qerr = qerr + 1;
+        if (rst && cyc > 80 && qch[NRD][0] !== qdl[(2 + OH) * NRD + XD - 1][0] || (qch[NRD][0] && qch[NRD] !== qdl[(2 + OH) * NRD + XD - 1])) qerr = qerr + 1;
     end
 
     // ------------------------------------------------------------------ slice traffic (station pass-through)

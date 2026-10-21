@@ -37,3 +37,16 @@ SAFE checklist (pre-gate):
 8 Schedule PASS: no RTL change (rg3 = S81-IDX3R 8ccaf446f).
 Benches: idxrd3 b3 campaign PASS (witness results/rtl/s81_idx3r_1020/receipts/bench_b3.log) + m1-m6 FAIL witnesses
 (receipts/bench_m*.log), Verilator 5.050.
+
+## S81-COLLECT2/L20KIT successor (10-21, branch claude/s81-l20kit-fs-1021; tree MU.S81.L20.KIT)
+Predecessor gates (S81-IDXRD 7dc7fbf3b, native PASS max 32) both died in GPL-0305: timing-driven repair 19,249 buffers / 5,371
+long wires / slack -425 ps, routability top-0.5% congestion 1.76, overflow stuck 0.6-0.76 -> NaN. Cause = ~1 mm unregistered spans
+inside the kit: the W->E qi->qo / si->so pass-through (789 b) and N-face rri pins -> landing SRAMs (y 203-910).
+Structural fix (reach <= 405 um, no density/flow tweak):
+- RTL dsdv_idx_rg3 OH=2 (kept relay hops on qo/so: 3 segments ~345 um) and RH=2 (kept relay hops rri pin flop -> landing logic);
+  hops are datapath-only, no reset. Price: +2 edges a reader on the q/s chains (uniform shift, slot alignment unchanged; 8-reader
+  chain +16), +2 edges on the response lane (absorbed by the run-ahead T0 like the die relay stations s). TB qo check = (2+OH)*8+XD.
+- SRAM column reordered: 8 landing macros on top (y 475.2-1181 main / 499-1220 b) right under the rri pins; sq/mq bottom beside the
+  chunk tails; iq + 2 list macros in the middle.
+- Pin spans: rri x 97.2-518.4 (main, 2.6/um) / 97.2-691.2 (b, 1.8/um), rqo x 0-86.4 (was 1,272 pins clustered over 294 um).
+Die bind obligation: dsdv_idx_rg3 OH=2 RH=2 (the defaults) and these pin spans.

@@ -31,15 +31,23 @@ module dsdv_idx_rg3 #(
     parameter integer IQD = 512,        // items in flight (item queue macro: <= 1024)
     parameter integer SQD = 256,        // keys in the engine + scores waiting for the assembler (<= 1024)
     parameter integer LFD = 256,        // candidate-list words (gather)
-    parameter integer EL = 124          // engine latency: key presented -> score valid (chunk 106 + tail 18 edges)
+    parameter integer EL = 124,         // engine latency: key presented -> score valid (chunk 106 + tail 18 edges)
+    // S81-COLLECT2/L20KIT (10-21, reach <= 405 um inside the 1036.8 x 1209.6 kit): registered relay hops, datapath only,
+    // no reset (they flush while rst holds every source valid at 0).  OH: qo / so leave through OH extra kept stages
+    // (W -> E pass-through of 513 + 276 b over ~1 mm = 3 segments of ~345 um); RH: every rri lane crosses RH extra kept
+    // stages from its pin flop to the landing logic (N-face pins -> landing SRAMs up to ~700 um away).  Cost: +OH edges
+    // a reader on the q / s chains, +RH edges on the response lane (both static; the lane latency is absorbed by the
+    // run-ahead window T0 like the die's relay stations s; the chain shift is uniform, so slot alignment is unchanged).
+    parameter integer OH = 2,
+    parameter integer RH = 2
 ) (
     input  wire          ck,
     input  wire          rst,
     input  wire [3:0]    sid,           // region A = sid (even), region B = sid + 1
     input  wire [512:0]  qi,
-    output reg  [512:0]  qo,
+    output wire [512:0]  qo,
     input  wire [275:0]  si,
-    output reg  [275:0]  so,
+    output wire [275:0]  so,
     output reg  [183:0]  rqo,           // 4 x 46-b request lanes, u = 2 r + q: {tag10, len 4, addr 30, sl, v}
     input  wire [1087:0] rri,           // 4 x 272-b response lanes, u = 2 r + q: {data 256, tag10, beat 4, pop, v}
     output reg  [9:0]    st
@@ -75,22 +83,48 @@ module dsdv_idx_rg3 #(
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin qr[0] <= 1'b0; sr[0] <= 1'b0; end
         else begin qr[0] <= qi[0]; sr[0] <= si[0]; end
+    // S81-COLLECT2/L20KIT: RH response relay hops (rh[0] = the pin flops, rh[RH-1] -> rrr at the landing logic)
+    wire [1087:0] rrh;
+    generate if (RH == 0) begin : g_khrz
+        assign rrh = rri;
+    end else begin : g_khrp
+        (* keep = "true" *) reg [1087:0] rh [0:RH-1];
+        always @(posedge ck) begin
+            rh[0] <= rri;
+            for (int k = 1; k < RH; k++) rh[k] <= rh[k - 1];
+        end
+        assign rrh = rh[RH - 1];
+    end endgenerate
     always @(posedge ck or negedge rl[1])
         if (!rl[1]) begin rrr[0][1:0] <= 2'd0; rrr[1][1:0] <= 2'd0; rrr[2][1:0] <= 2'd0; rrr[3][1:0] <= 2'd0; end
         else begin
-            rrr[0][1:0] <= rri[1:0]; rrr[1][1:0] <= rri[273:272]; rrr[2][1:0] <= rri[545:544]; rrr[3][1:0] <= rri[817:816];
+            rrr[0][1:0] <= rrh[1:0]; rrr[1][1:0] <= rrh[273:272]; rrr[2][1:0] <= rrh[545:544]; rrr[3][1:0] <= rrh[817:816];
         end
     always @(posedge ck) begin
         qr[512:1] <= qi[512:1]; sr[275:1] <= si[275:1];
-        rrr[0][271:2] <= rri[271:2]; rrr[1][271:2] <= rri[543:274]; rrr[2][271:2] <= rri[815:546]; rrr[3][271:2] <= rri[1087:818];
+        rrr[0][271:2] <= rrh[271:2]; rrr[1][271:2] <= rrh[543:274]; rrr[2][271:2] <= rrh[815:546]; rrr[3][271:2] <= rrh[1087:818];
     end
     // pin copies: pop (budget counter + copies), query valid (payload counters)
     (* keep = "true" *) reg [3:0]  rkc;
     (* keep = "true" *) reg [2:0]  qvk;             // [2]: leftk replica (S81-IDXRD-1021)
     always @(posedge ck) begin
-        rkc <= {rri[817], rri[545], rri[273], rri[1]};
+        rkc <= {rrh[817], rrh[545], rrh[273], rrh[1]};
         qvk <= {3{qi[0]}};
     end
+    // S81-COLLECT2/L20KIT: qo / so internal stages (unchanged logic) + OH output relay hops (oh[OH-1] = the pin flops)
+    reg [512:0] qoi;
+    reg [275:0] soi;
+    generate if (OH == 0) begin : g_khz
+        assign qo = qoi; assign so = soi;
+    end else begin : g_khop
+        (* keep = "true" *) reg [512:0] qh [0:OH-1];
+        (* keep = "true" *) reg [275:0] sh [0:OH-1];
+        always @(posedge ck) begin
+            qh[0] <= qoi; sh[0] <= soi;
+            for (int k = 1; k < OH; k++) begin qh[k] <= qh[k - 1]; sh[k] <= sh[k - 1]; end
+        end
+        assign qo = qh[OH - 1]; assign so = sh[OH - 1];
+    end endgenerate
     wire [3:0] rk_in = {rrr[3][1], rrr[2][1], rrr[1][1], rrr[0][1]};   // a request left the controller's landing FIFO
     wire [3:0] rv_in = {rrr[3][0], rrr[2][0], rrr[1][0], rrr[0][0]};
     wire [3:0][16:0] rt;
@@ -156,21 +190,21 @@ module dsdv_idx_rg3 #(
     reg [2:0]  ik, om; reg [7:0] tg; reg [11:0] hlen;
     (* keep = "true" *) reg [7:0] gatd;             // gather bit copies for the derived values (8 bits a copy)
     always @(posedge ck) begin
-        if (hen[0])  begin gat <= qo[512]; jb[14:0] <= qo[15:1]; end
-        if (hen[1])  begin jb[19:15] <= qo[20:16]; jk <= qo[51:42]; end
-        if (hen[2])  jn[15:0] <= qo[36:21];
-        if (hen[3])  begin jn[20:16] <= qo[41:37]; pp <= qo[101:98]; ik <= qo[104:102]; om <= qo[107:105]; end
-        if (hen[4])  jbd[15:0] <= qo[16:1];
-        if (hen[5])  begin jbd[19:16] <= qo[20:17]; tg <= qo[503:496]; end
-        if (hen[6])  jnd[15:0] <= qo[36:21];
-        if (hen[7])  begin jnd[20:16] <= qo[41:37]; gatd <= {8{qo[512]}}; end
-        if (hen[8])  kb[15:0] <= qo[67:52];
-        if (hen[9])  kb[29:16] <= qo[81:68];
-        if (hen[10]) t0 <= qo[97:82];
-        if (hen[11]) hlen <= qo[492:481];
-        if (hen[12]) jbe[15:0] <= qo[16:1];
-        if (hen[13]) begin jbe[19:16] <= qo[20:17]; jne[11:0] <= qo[32:21]; end
-        if (hen[14]) jne[20:12] <= qo[41:33];
+        if (hen[0])  begin gat <= qoi[512]; jb[14:0] <= qoi[15:1]; end
+        if (hen[1])  begin jb[19:15] <= qoi[20:16]; jk <= qoi[51:42]; end
+        if (hen[2])  jn[15:0] <= qoi[36:21];
+        if (hen[3])  begin jn[20:16] <= qoi[41:37]; pp <= qoi[101:98]; ik <= qoi[104:102]; om <= qoi[107:105]; end
+        if (hen[4])  jbd[15:0] <= qoi[16:1];
+        if (hen[5])  begin jbd[19:16] <= qoi[20:17]; tg <= qoi[503:496]; end
+        if (hen[6])  jnd[15:0] <= qoi[36:21];
+        if (hen[7])  begin jnd[20:16] <= qoi[41:37]; gatd <= {8{qoi[512]}}; end
+        if (hen[8])  kb[15:0] <= qoi[67:52];
+        if (hen[9])  kb[29:16] <= qoi[81:68];
+        if (hen[10]) t0 <= qoi[97:82];
+        if (hen[11]) hlen <= qoi[492:481];
+        if (hen[12]) jbe[15:0] <= qoi[16:1];
+        if (hen[13]) begin jbe[19:16] <= qoi[20:17]; jne[11:0] <= qoi[32:21]; end
+        if (hen[14]) jne[20:12] <= qoi[41:33];
     end
     (* keep = "true" *) reg [10:0] gatk;             // gather-mode select copies (data muxes; [8] xq, [9]/[10] uvn/uve)
     always @(posedge ck) gatk <= {11{gat}};
@@ -211,18 +245,18 @@ module dsdv_idx_rg3 #(
     reg  [2:0]  qset;
     reg         q_done;
     reg  [1:0]  qst;
-    always @(posedge ck) begin ql_c <= qo[512:1]; ql_sw <= q_d[47:0]; ql_h <= 8'(pw[6:1]); end
+    always @(posedge ck) begin ql_c <= qoi[512:1]; ql_sw <= q_d[47:0]; ql_h <= 8'(pw[6:1]); end
     always @(posedge ck or negedge rl[3])
-        if (!rl[3]) begin ql_v <= 1'b0; qset <= 3'd0; q_done <= 1'b0; qst <= 2'd0; qo[0] <= 1'b0; end
+        if (!rl[3]) begin ql_v <= 1'b0; qset <= 3'd0; q_done <= 1'b0; qst <= 2'd0; qoi[0] <= 1'b0; end
         else begin
             ql_v <= pay_job && pw < 12'd64 && pw[0];
             if (hj1[0]) q_done <= 1'b0;
             if (ql_v && ql_h == 8'd31) qset <= 3'd5;
             else if (qset != 0) begin qset <= qset - 3'd1; if (qset == 3'd1) q_done <= 1'b1; end
             if (ql_v) qst <= 2'd3; else if (qst != 0) qst <= qst - 2'd1;
-            qo[0] <= qr[0];
+            qoi[0] <= qr[0];
         end
-    always @(posedge ck) qo[512:1] <= qr[512:1];
+    always @(posedge ck) qoi[512:1] <= qr[512:1];
 
     // ================================================================== list memory (gather): written as it arrives
     wire        lf_push = pay_job && pw >= 12'd64;
@@ -1070,8 +1104,8 @@ module dsdv_idx_rg3 #(
     wire         p1_due = (MUT == 4 && me == 4'd0) ? p1_d : p1_r;
     wire [275:0] ins1 = p1_due ? bk(ik, 2'd0, 1'b1, 1'b0, {11'd0, p1_f}, {4'd2, tg, 227'd0, p1_last, p1_lv}) : 276'd0;
     always @(posedge ck or negedge rl[0])
-        if (!rl[0]) so[0] <= 1'b0; else so[0] <= sr[0] | hb_r[0] | ins0[0] | ins1[0];
-    always @(posedge ck) so[275:1] <= sr[275:1] | hb_r[275:1] | ins0[275:1] | ins1[275:1];
+        if (!rl[0]) soi[0] <= 1'b0; else soi[0] <= sr[0] | hb_r[0] | ins0[0] | ins1[0];
+    always @(posedge ck) soi[275:1] <= sr[275:1] | hb_r[275:1] | ins0[275:1] | ins1[275:1];
 
     // ================================================================== window end, faults, status
     reg  [7:0] fc_set;
@@ -1085,7 +1119,7 @@ module dsdv_idx_rg3 #(
             if (k_v && (ql_v || qst != 0)) fc_set[4] <= 1'b1;
             if (hbad1) fc_set[5] <= 1'b1;
             if (hj4[0] && (spec_bad || (gat ? hlen != 12'(64 + nlw) : hlen != 12'd64))) fc_set[6] <= 1'b1;
-            if (pay_job && pw < 12'd64 && pw[0] && !qo[0]) fc_set[6] <= 1'b1;   // query word pair not contiguous
+            if (pay_job && pw < 12'd64 && pw[0] && !qoi[0]) fc_set[6] <= 1'b1;   // query word pair not contiguous
             if (ended && !wdone && ew == nw && !slot_r && !p1_r && !p1_d) begin
                 wdone <= 1'b1; wdone_p <= 1'b1;
                 if (iq_n != 0 || infl != 0 || bact != 2'b00 || (ws != 3'd6 && ws != 3'd0)) fc_set[7] <= 1'b1;

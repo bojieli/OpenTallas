@@ -18,7 +18,9 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
  ],
  "params": {
-  "SRAM_MACRO": 1
+  "SRAM_MACRO": 1,
+  "OH": 2,
+  "RH": 2
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -48,7 +50,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[0].u_h0.g_m.u_mem",
+   "inst": "u_iq.g_m.u_mem",
    "at": [
     86.4,
     203.04
@@ -56,7 +58,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[0].u_h1.g_m.u_mem",
+   "inst": "g_lm[0].u_mem.g_m.u_mem",
    "at": [
     86.4,
     293.76
@@ -64,7 +66,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[1].u_h0.g_m.u_mem",
+   "inst": "g_lm[1].u_mem.g_m.u_mem",
    "at": [
     86.4,
     384.48
@@ -72,7 +74,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[1].u_h1.g_m.u_mem",
+   "inst": "g_land[0].u_h0.g_m.u_mem",
    "at": [
     86.4,
     475.2
@@ -80,7 +82,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[2].u_h0.g_m.u_mem",
+   "inst": "g_land[0].u_h1.g_m.u_mem",
    "at": [
     86.4,
     565.92
@@ -88,7 +90,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[2].u_h1.g_m.u_mem",
+   "inst": "g_land[1].u_h0.g_m.u_mem",
    "at": [
     86.4,
     656.64
@@ -96,7 +98,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[3].u_h0.g_m.u_mem",
+   "inst": "g_land[1].u_h1.g_m.u_mem",
    "at": [
     86.4,
     747.36
@@ -104,7 +106,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[3].u_h1.g_m.u_mem",
+   "inst": "g_land[2].u_h0.g_m.u_mem",
    "at": [
     86.4,
     838.08
@@ -112,7 +114,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_iq.g_m.u_mem",
+   "inst": "g_land[2].u_h1.g_m.u_mem",
    "at": [
     86.4,
     928.8
@@ -120,7 +122,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_lm[0].u_mem.g_m.u_mem",
+   "inst": "g_land[3].u_h0.g_m.u_mem",
    "at": [
     86.4,
     1019.52
@@ -128,7 +130,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_lm[1].u_mem.g_m.u_mem",
+   "inst": "g_land[3].u_h1.g_m.u_mem",
    "at": [
     86.4,
     1110.24
@@ -440,11 +442,11 @@
  "inhold": false,
  "outhold": false,
  "inter": [],
- "structural_change": "DRIVE-S81-IDX4-KITS 10-20 (MU.BAL.SX.3, mu7i4 die --idxrd 4): first hard kit of the NON-INLINE paired index reader dsdv_idx_rg3 (32 hard ot_hdc_v41x_idx_hslice children = 4 chunk columns x 8, + 13 x ot_sram_1r1w_1024x256_m2_r2c2; census PASS 0 refusals, 11,598 FF). Macro+child area 733k um2: the 1036.8 x 1036.8 die slot is 68% hard area and cannot hold the 8-high chunk columns (pitch 129.6 on the 43.2 lattice = 1010.9 um) plus the k_key/ql broadcast channel (1,150 nets to 4 column heads) plus 20-um SRAM channels; outline grows in height only (width = the 1062.5 strip pitch): 1036.8 x 1209.6 (28 lattice cells), SRAM pitch 90.72 (20.25-um channels), top channel 155.5 um.",
+ "structural_change": "S81-COLLECT2/L20KIT 10-21 (MU.S81.L20.KIT): predecessor gate (S81-IDXRD 7dc7fbf3b, native PASS max32) died in GPL-0305 after timing-driven repair (19,249 buffers / 5,371 long wires, slack -425 ps) + routability inflation (top-0.5% congestion 1.76): ~1 mm unregistered spans inside the kit. Structural fix, reach <= 405 um: RTL OH=2 kept relay hops on the W->E qo/so pass-through (513+276 b, 3 segments ~345 um) and RH=2 kept relay hops from the N-face rri pin flops to the landing logic; SRAM column reordered so the 8 landing macros sit at the top under the rri pins (y 475-1181; queues sq/mq bottom beside the chunk tails, iq/lm middle); rri pins pinned to x 97.2-518.4 over the SRAM column, rqo 0-86.4. Cost +2 edges a reader on the q/s chains, +2 on the response lane (static; T0 absorbs). Main outline 1036.8 x 1209.6.",
  "why_floorplan": "W band 86.4 (tile W pins qi/si/sid/rst/ck + the walker / landing write logic beside the SRAM W faces); SRAM column x 86.4 (13 high, 20+ um channels, score/metadata queues at the bottom next to the chunk tails, landing in the middle, list / item queue on top); 41-um mid band; 4 abutted hslice chunk columns x 302.4-993.6, y 43.2-1054.1 (slice 0 on top, chain N->S through 25.9-um seams); top channel over the columns = the k_key / ql broadcast + chunk input registers; bottom 43.2 = chunk sums -> tail; E band 43.2 (qo/so/st). N face rqo / rri (1,272 pins, 1.2/um) toward the CTRL-top channel risers.",
  "job": {
-  "owner": "Claude:DRIVE-S81-IDX4-KITS",
-  "branch": "claude/s81-idx4kits-1020",
+  "owner": "Claude:S81-COLLECT2",
+  "branch": "claude/s81-l20kit-fs-1021",
   "tag": "s81dv_idxrg3",
   "purpose": "S81 mu7i4 non-inline paired index reader dsdv_idx_rg3 (x8 a die, MU.BAL.SX.3) hardened: 32 hslice children + 13 SRAM",
   "views_to": "physical/ref_tile/s81dv_idxrg3/views",
@@ -548,5 +550,15 @@
   ]
  },
  "hard_define": "OT_IDX_HSLICE_HARD",
- "std_area_um2": 12000
+ "std_area_um2": 12000,
+ "pin_ranges": {
+  "rqo": [
+   0.0,
+   86.4
+  ],
+  "rri": [
+   97.2,
+   518.4
+  ]
+ }
 }
