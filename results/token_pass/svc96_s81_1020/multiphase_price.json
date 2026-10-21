@@ -1,0 +1,214 @@
+{
+ "scope": "ALL_LAYER_COMPOSER_MODEL_SENSITIVITY_NOT_SERVICE_OR_DIE_QUALIFICATION",
+ "phase_budget": {
+  "work": 361,
+  "serial_config_guard": 1,
+  "cfg_lead": 52,
+  "conservative_added": 414
+ },
+ "excluded": [
+  "actual physical stage count and expert topology",
+  "new MU resource calendar",
+  "new CAP FIN/gather/landing ages",
+  "NT1/NT2 actual service throughput proof"
+ ],
+ "rows": [
+  {
+   "groups": 16,
+   "added_phase_cycles": 0,
+   "changed_node_calls": {},
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1417139.1,
+     "T_cycles_solved": 1438802.6,
+     "T_cycles": 1438802.6,
+     "tok_s": 834.0
+    },
+    "mtp": {
+     "T_cycles_fixed": 1883938.8,
+     "T_cycles_solved": 1883938.8,
+     "T_cycles": 1883938.8,
+     "tok_s": 2649.1
+    }
+   }
+  },
+  {
+   "groups": 16,
+   "added_phase_cycles": 361,
+   "changed_node_calls": {
+    "attn.a_proj": 166
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1431579.1,
+     "T_cycles_solved": 1453242.6,
+     "T_cycles": 1453242.6,
+     "tok_s": 825.7
+    },
+    "mtp": {
+     "T_cycles_fixed": 1901266.8,
+     "T_cycles_solved": 1901266.8,
+     "T_cycles": 1901266.8,
+     "tok_s": 2625.0
+    }
+   }
+  },
+  {
+   "groups": 16,
+   "added_phase_cycles": 414,
+   "changed_node_calls": {
+    "attn.a_proj": 166
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1433699.1,
+     "T_cycles_solved": 1455362.6,
+     "T_cycles": 1455362.6,
+     "tok_s": 824.5
+    },
+    "mtp": {
+     "T_cycles_fixed": 1903810.8,
+     "T_cycles_solved": 1903810.8,
+     "T_cycles": 1903810.8,
+     "tok_s": 2621.5
+    }
+   }
+  },
+  {
+   "groups": 8,
+   "added_phase_cycles": 0,
+   "changed_node_calls": {
+    "attn.scores": 160,
+    "attn.pv": 80
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1423539.1,
+     "T_cycles_solved": 1451602.6,
+     "T_cycles": 1451602.6,
+     "tok_s": 826.7
+    },
+    "mtp": {
+     "T_cycles_fixed": 1891138.8,
+     "T_cycles_solved": 1891138.8,
+     "T_cycles": 1891138.8,
+     "tok_s": 2639.0
+    }
+   }
+  },
+  {
+   "groups": 8,
+   "added_phase_cycles": 361,
+   "changed_node_calls": {
+    "attn.a_proj": 166,
+    "attn.scores": 160,
+    "attn.pv": 80
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1437979.1,
+     "T_cycles_solved": 1466042.6,
+     "T_cycles": 1466042.6,
+     "tok_s": 818.5
+    },
+    "mtp": {
+     "T_cycles_fixed": 1908466.8,
+     "T_cycles_solved": 1908466.8,
+     "T_cycles": 1908466.8,
+     "tok_s": 2615.1
+    }
+   }
+  },
+  {
+   "groups": 8,
+   "added_phase_cycles": 414,
+   "changed_node_calls": {
+    "attn.a_proj": 166,
+    "attn.scores": 160,
+    "attn.pv": 80
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1440099.1,
+     "T_cycles_solved": 1468162.6,
+     "T_cycles": 1468162.6,
+     "tok_s": 817.3
+    },
+    "mtp": {
+     "T_cycles_fixed": 1911010.8,
+     "T_cycles_solved": 1911010.8,
+     "T_cycles": 1911010.8,
+     "tok_s": 2611.6
+    }
+   }
+  },
+  {
+   "groups": 4,
+   "added_phase_cycles": 0,
+   "changed_node_calls": {
+    "attn.scores": 160,
+    "attn.pv": 80
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1436339.1,
+     "T_cycles_solved": 1477202.6,
+     "T_cycles": 1477202.6,
+     "tok_s": 812.3
+    },
+    "mtp": {
+     "T_cycles_fixed": 1905538.8,
+     "T_cycles_solved": 1905538.8,
+     "T_cycles": 1905538.8,
+     "tok_s": 2619.1
+    }
+   }
+  },
+  {
+   "groups": 4,
+   "added_phase_cycles": 361,
+   "changed_node_calls": {
+    "attn.a_proj": 166,
+    "attn.scores": 160,
+    "attn.pv": 80
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1450779.1,
+     "T_cycles_solved": 1491642.6,
+     "T_cycles": 1491642.6,
+     "tok_s": 804.5
+    },
+    "mtp": {
+     "T_cycles_fixed": 1922866.8,
+     "T_cycles_solved": 1922866.8,
+     "T_cycles": 1922866.8,
+     "tok_s": 2595.5
+    }
+   }
+  },
+  {
+   "groups": 4,
+   "added_phase_cycles": 414,
+   "changed_node_calls": {
+    "attn.a_proj": 166,
+    "attn.scores": 160,
+    "attn.pv": 80
+   },
+   "workloads": {
+    "ar": {
+     "T_cycles_fixed": 1452899.1,
+     "T_cycles_solved": 1493762.6,
+     "T_cycles": 1493762.6,
+     "tok_s": 803.3
+    },
+    "mtp": {
+     "T_cycles_fixed": 1925410.8,
+     "T_cycles_solved": 1925410.8,
+     "T_cycles": 1925410.8,
+     "tok_s": 2592.1
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-epyc9       admits  1082 GB (avail 861, growth 104, headroom 0, waiters 0/0 GB) load 86/128 running 38 disk 104 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2548867-1792560072 after 0 s
+MULTIPHASE_MODEL {"scope": "OPT_IN_MULTIPHASE_LOWERING_MODEL_NOT_A_DIE_RESULT", "inventory_sha256": "3ec8547d14da46bacc2534bcf572c8bf0691d118a46b23ef8369fae167297375", "frames": 96, "phases": 2, "active_frames": [96, 16], "chunks": 112, "rank_rows": 448, "faults": 0, "max_a_proj_only_rom_fill": 64, "max_phase_return_last": 424, "measured_phase_budget": 361, "added_token_ar_cycles": 14440, "added_token_verify_position_cycles": 86640, "full_stage_rom_capacity": "OWED: append second phase to actual dense+expert fields", "static_calendar": "OWED: price phase GO/stream/release and CAP/consumer age"}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2548867-1792560072): exit 0
