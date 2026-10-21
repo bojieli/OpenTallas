@@ -62,13 +62,19 @@ def main():
     sv = M.offchip_saving()
     assert sv['ar']['saved'] > 0 and sv['mtp']['saved'] > 0
     dr = M.build('ar')
-    assert dr['users'] == 42 and dr['lemma']['brute_force']['result'] == 'PASS', dr['users']
-    assert dr['circuits']['hop_windows']['land'] == 0
+    assert dr['users'] == 44 and dr['lemma']['brute_force']['result'] == 'PASS', dr['users']
+    assert dr['circuits']['hop_windows']['land'] == 0 and dr['offchip']['ar_tx_hold']['total'] > 0
+    M.HOLD_TX = False             # negative control: 44 users without the AR TX hold -> land FAULT at S005
+    assert M.build('ar')['circuits']['hop_windows']['land'] != 0
+    M.HOLD_TX = True
+    M.WINDOW_HOP_DIRECT = False   # 54b8de500 windows (switched hop inside every stage window) -> 42 users
+    assert M.build('ar')['users'] == 42
+    M.WINDOW_HOP_DIRECT = True
     M.OFFCHIP = 'switched'
     # layer compiler tables
     cal = json.loads((M.OUT / 'calendar_ar.json').read_text())
     t = C.mu_slot_tables(cal, 'L20')
-    assert len(t['rows']) == 42 and t['users_per_copy'] == {'A': 21, 'B': 21}
+    assert len(t['rows']) == 44 and t['users_per_copy'] == {'A': 22, 'B': 22}
     r1 = [r for r in t['rows'] if r['user'] == 1][0]
     assert (int(r1['ctx_body'], 16) >> 108) >> 42 == 1 and r1['copy'] == 'B' and r1['local'] == 0
     # L20 split: helper-die windows in the calendar check

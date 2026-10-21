@@ -133,10 +133,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S028",
    "downstream": "S030",
-   "occ_single": 38900,
+   "occ_single": 38701,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -161,10 +161,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S019",
    "downstream": "S021",
-   "occ_single": 35325,
+   "occ_single": 35126,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -189,10 +189,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S010",
    "downstream": "S012",
-   "occ_single": 34394,
+   "occ_single": 34195,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -217,10 +217,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S001",
    "downstream": "S003",
-   "occ_single": 31144,
+   "occ_single": 30945,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -245,10 +245,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S033",
    "downstream": "S035",
-   "occ_single": 23170,
+   "occ_single": 22971,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -273,10 +273,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S039",
    "downstream": "S041",
-   "occ_single": 23190,
+   "occ_single": 22992,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -301,10 +301,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S045",
    "downstream": "S047",
-   "occ_single": 23190,
+   "occ_single": 22992,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   },
   {
@@ -329,10 +329,10 @@
    "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
    "upstream": "S051",
    "downstream": "S053",
-   "occ_single": 23190,
+   "occ_single": 22992,
    "occ_per_copy_users": {
-    "A": 21,
-    "B": 21
+    "A": 22,
+    "B": 22
    }
   }
  ],
@@ -345,8 +345,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -357,8 +357,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -377,8 +377,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -389,8 +389,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -409,8 +409,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -421,8 +421,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -441,8 +441,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -453,8 +453,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -473,8 +473,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -485,8 +485,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -505,8 +505,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -517,8 +517,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -537,8 +537,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -549,8 +549,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -569,8 +569,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -581,8 +581,8 @@
    "circuits": 4,
    "bytes_per_user_pos": 163904,
    "cycles_per_user_pos": 652,
-   "slot": 21570.1,
-   "occupancy": 0.0302,
+   "slot": 20701.5,
+   "occupancy": 0.0315,
    "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
@@ -595,8 +595,8 @@
   }
  ],
  "calendar": {
-  "ar_users": 42,
-  "ar_agg_model": 55633,
+  "ar_users": 44,
+  "ar_agg_model": 57967,
   "record": "calendar_ar.json"
  }
 }

@@ -284,6 +284,17 @@ def hop_cycles(m):
     return math.ceil(m.HOP) - (SWITCHED_LEG - leg('stage_hop'))
 
 
+def hop_window_saving(m, g):
+    """cycles (10-18 scale) a group's span / occ loses when its 'hop' class (HOP each, switched leg inside) takes the
+    direct stage_hop leg: (453 - 265) x K per HOP; x 6 on the MTP step (step1 = 6 (occ1 - hbm) + hbm_mtp_step)"""
+    if OFFCHIP != 'direct' or not WINDOW_HOP_DIRECT:
+        return 0.0
+    return g['by_class'].get('hop', 0.0) / m.HOP * (SWITCHED_LEG - leg('stage_hop')) * m.K
+
+
+WINDOW_HOP_DIRECT = True      # False rebuilds the 54b8de500 windows (switched hop inside every stage window)
+
+
 def stage_windows(m, hold=None):
     """per stage group: span (single-user, cycles), occ (one position held, 1 job context), step (one MTP step,
     6 verify positions with the shared index read), start offset t in the reference pass, copies.
@@ -295,7 +306,11 @@ def stage_windows(m, hold=None):
     for i, g in enumerate(gs):
         o = m.group_occ(g, shard=m.sh_all.get(g['id'], 4), mtp_share=True, expert_imb=m.IMB_BAL)
         # integer cycles (a calendar is integer): windows rounded UP, offsets accumulate rounded-up spans + hop
-        span, occ, step = (math.ceil(o[k]) for k in ('span', 'occ', 'step'))
+        # direct cabling (L5B-CAL 10-21): the stage group's own 'hop' class (10-09 HOP = 1006 incl. the 453 switched
+        # leg) is re-priced at the stage_hop leg like every other crossing; the period already carries this saving
+        # (offchip_saving stage_hop), the windows did not -> that kept 44 AR users out (S005-class occ 20,754 > 20,588)
+        dh = hop_window_saving(m, g)
+        span, occ, step = (math.ceil(o[k] - f * dh) for k, f in (('span', 1), ('occ', 1), ('step', 6)))
         ht = hold.get(gs[i + 1]['id'], 0) if i + 1 < len(gs) else 0
         out.append(dict(id=g['id'], label=g['label'], t=t, span=span, occ=occ, step=step,
                         copies=2 if g['id'] in DUP else 1, idx=g['idx_score_cycles'] > 0))
@@ -664,6 +679,21 @@ def mtp_hold(st):
     return out
 
 
+def ar_hold(st, P, n):
+    """AR twin of mtp_hold at n users (L5B-CAL 10-21): the per-copy spacing is the calendar's smallest slot gap on the
+    phase grid ((P / 4) // n x 4), so every hop window cuts through (land 0) when the predecessor holds its h TX by the
+    receiver's deficit; computed at the unheld period (a held period only widens the slots -> margins >= 0)"""
+    S = (P // PHASE_Q) // n * PHASE_Q
+    lead = HOP_NOW - x_flat('stage_hop')
+    out = {}
+    for g in st[1:]:
+        sp = S * (2 if g['copies'] > 1 else 1)
+        deficit = g['occ'] + lead - sp
+        if deficit > 0:
+            out[g['id']] = int(math.ceil(deficit))
+    return out
+
+
 def build(mode, users=None, fillers=None, split=False):
     """split: False | True (SPLIT_L20) | a SPLIT_L20-shaped dict (e.g. with compiled helper windows)"""
     sp = (split if isinstance(split, dict) else SPLIT_L20) if split else None
@@ -685,6 +715,20 @@ def build(mode, users=None, fillers=None, split=False):
     if p.exists():
         svc = {k: v for k, v in json.loads(p.read_text()).items() if k.endswith('_per_user')}
     cal = calendar_ar(m, st, d, users) if mode == 'ar' else calendar_mtp(m, st, d, users, fillers)
+    if mode == 'ar' and OFFCHIP == 'direct' and HOLD_TX and cal['S']:
+        # L5B-CAL 10-21: 44 users (windows re-priced) leave the stage-hop h 408 cycles early at the 12 S005-class
+        # receivers -> the same sender TX hold as MTP (NS stays 1, closed land view); the period grows by the hold
+        hold = ar_hold(st, cal['P'], len(cal['users']))
+        if hold:
+            st = stage_windows(m, hold)
+            d = dict(d, T_ar_before_hold=d['T_ar'], T_ar=d['T_ar'] + sum(hold.values()))
+            d['offchip'] = dict(d['offchip'], ar_tx_hold=dict(per_receiver=hold, total=sum(hold.values()),
+                                users=len(cal['users']), decision='L5B-CAL 10-21: sender h TX hold as the lead\'s MTP '
+                                'pick (NS stays 1, closed land view); 44 users > 42 users net of the hold'))
+            n0, tried0 = len(cal['users']), cal['tried']
+            cal = calendar_ar(m, st, d, users or n0)
+            cal['tried'] = [dict(t, phase='windows, before the hold') for t in tried0] + \
+                [dict(t, phase=f"with the {sum(hold.values())}-cycle TX hold") for t in cal['tried']]
     rec = record(mode, m, st, d, cal, svc)
     if split:
         chk = split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp)

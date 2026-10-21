@@ -12,28 +12,31 @@
 >
 > | | switched (453) | direct | delta |
 > |---|---|---|---|
-> | AR period (cycles a token) | 980,428 | 905,944 | **-74,484** (tp_mesh 257 crossings -51,914; stage_hop 119 -22,372; head_hop 1 -196) |
-> | AR per user | 1,224.0 | 1,324.6 tok/s | +8.2% |
-> | AR users / aggregate | 46 / 56,302 | **42** / 55,633 | -1.2% |
-> | MTP step period | 1,303,400 | 1,229,056 (1,223,776 + 5,280 TX hold) | **-74,344** |
-> | MTP per user | 3,829.1 | 4,060.7 tok/s | +6.0% |
-> | MTP users / aggregate | 10 + 1 filler / 39,211 | 9 + 3 fillers / 39,475 | +0.7% |
+> | AR period (cycles a token) | 980,428 | 910,864 (905,944 + 4,920 TX hold, L5B-CAL) | **-69,564** (tp_mesh 257 crossings -51,914; stage_hop 119 -22,372; head_hop 1 -196; hold +4,920) |
+> | AR per user | 1,224.0 | 1,317.4 tok/s | +7.6% |
+> | AR users / aggregate | 46 / 56,302 | **44** / 57,967 | +3.0% |
+> | MTP step period | 1,303,400 | 1,229,092 (1,223,776 + 5,316 TX hold) | **-74,308** |
+> | MTP per user | 3,829.1 | 4,060.6 tok/s | +6.0% |
+> | MTP users / aggregate | 10 + 1 filler / 39,211 | 9 + 4 fillers / 40,450 | +3.2% |
 >
-> **Why AR drops to 42 users** (the calendar's own search):
-> - 44 users gives a slot of 20,590, which is below the largest non-replicated window of 20,754. It is short by 164 cycles.
-> - 43 is odd, and S002 cannot be 2-coloured.
-> - So 44 users would come back if the largest non-replicated window shrinks by 164 cycles or more.
-> - **Next optimisation (lead 10-21, not now):** shrink that window by at least 164 cycles to fit 44 users. The AR record stays at the 42 users the calendar admits.
->
-> **L20 split:** the MTP L20-split record keeps 1 filler. With 3 fillers the S030 helper collides, so the build drops fillers until the helper check passes.
+> **44 AR users (L5B-CAL 10-21; was 42 at 54b8de500).**
+> - **Why 42:** the period got the direct-cabling saving, but the stage windows did not. Every stage group's own `hop` class (10-09 HOP 1,006 cycles) still held the 453-cycle switched leg. So the twelve S005-class FFN-pair stages (S005..S027, non-replicated) kept a window of 20,754 cycles, while 44 users need a smallest slot gap of 20,588. The binding resource is that stage window, not a hop.
+> - **Fix (calendar only):** `stage_windows` re-prices that `hop` class at the stage_hop leg: (453 - 265) x K = 199 cycles off span and occ, and 6 x 199 off the MTP step. The non-replicated window becomes 20,555. `WINDOW_HOP_DIRECT = False` rebuilds the 42-user windows.
+> - **AR TX hold:** at 44 users the stage-hop h would arrive 408 cycles early at the 12 S005-class receivers (land FAULT with NS 1). The fix is the same sender TX hold the lead picked for MTP: 12 x 410 = 4,920 cycles (`ar_hold`, `offchip.ar_tx_hold`).
+> - **Result:** AR period 910,864 (+4,920 vs 905,944). **44 users x 1,317.4 = 57,967 tok/s** (42 x 1,324.6 = 55,633 before, +4.2%). 7,788 windows, 0 collisions, every hop window land 0 (tightest margin 113.5 at S005), NS 1. L20-split AR is also 44 users, 57,962.
+> - **MTP with the same windows:** slot 123,328, hold 12 x 443 = 5,316, step 1,229,092. That gives 9 users + 4 fillers = 40,450 tok/s (was 9 + 3 = 39,475). L20-split MTP is 9 + 1, 37,535.
+> - 45 is odd: S002 cannot be 2-coloured. 46 gives a slot of 19,694, below 20,555.
+> - Further headroom not taken: the stage `coll` class (TP4 collectives) still carries switched legs in the windows.
+
+> **L20 split:** the MTP L20-split record keeps 1 filler. With more fillers the S030 helper collides, so the build drops fillers until the helper check passes.
 >
 > **Stage hop on the wire:** NB stays 80 (lead 10-21: the existing lep and land masters; the closed land view 263e13fc3 has NS = 1).
 > - The 320-beat h goes out as 4 back-to-back 80-beat tag windows: 4 mu_c commands a hop, all ab 0.
 > - **AR:** every hop window cuts through with land = 0 (`circuits.hop_windows`). The tightest margin is 373 cycles at S005, so the NS = 1 landing slot is never used by stage hops.
-> - **MTP: fixed with a TX hold (lead pick 10-21).** At 12 groups (S005, S007, S008, S010, S014, S015, S017, S018, S023, S024, S026, S027) the MTP step fills the slot exactly. Without the hold, the h would reach the receiving stage 440 cycles before the previous user frees it, and a landing leaf with NS = 1 cannot hold 4 windows.
-> - The sender now holds the h TX 440 cycles (`stage_windows(hold)`, `hold_tx`). Those stages and every later one start later, and the step period grows by 5,280 (0.4%).
+> - **MTP: fixed with a TX hold (lead pick 10-21).** At 12 groups (S005, S007, S008, S010, S014, S015, S017, S018, S023, S024, S026, S027) the MTP step fills the slot exactly. Without the hold, the h would reach the receiving stage 443 cycles (440 before the L5B-CAL window re-pricing) before the previous user frees it, and a landing leaf with NS = 1 cannot hold 4 windows.
+> - The sender now holds the h TX 443 cycles (`stage_windows(hold)`, `hold_tx`). Those stages and every later one start later, and the step period grows by 5,316 (0.4%).
 > - Every MTP hop window now cuts through (land 0, margin 0). NS stays 1 and the hardware and the CLOSED land view are unchanged.
-> - L20-split MTP: 1,228,600 cycles a step, 9 users + 1 filler, 37,536 tok/s.
+> - L20-split MTP: 1,228,636 cycles a step, 9 users + 1 filler, 37,535 tok/s.
 >
 > **Rack wiring mismatch.** `connections_s81.csv` @5a1c6dcea does not wire the LINK5 lane plan:
 > - It puts TP d+2 on WN<->WN (lk_WN0/1 at both ends) and the stage hop on EN0/1 -> WN2/3.
@@ -44,7 +47,21 @@
 > **Downstream copies not regenerated here:**
 > - `calendar_*_q4.json` (TOK bench copies).
 > - `token_path_1018/ds_rom.json` `multi_user`, which still says 46 x 1,224.1.
-> - the xs_field_calendar MU check inputs. They read 42 users from `calendar_ar.json` the next time they run.
+> - the xs_field_calendar MU check inputs. They read 44 users from `calendar_ar.json` the next time they run.
+
+> **Host plane, coordinator decision S81.HOST (10-21): BLOCKED on RTL (L5B-CAL). Not implemented in the plan or the calendar.**
+> The decision: the host attaches to the head dies only, and stage-die host traffic rides in-band on the stage circuits (HOST_EN 0 on the stage-die s_7N). The calendar side is cheap, but the die cannot receive it:
+> - **The stage die's sequencer needs a host frame for every job.** `dsdv_seq_host` starts a job only on an `f_ks` KS frame {start, user, tok, pos} (f_ks capture at t -> issuer job_v at t + 3; `ot_dsdv_walk_issue` job_v). That is one KS per user-token per stage die. Its calendar, CTL templates, gunit config (0x10/0x11/0x13/0x14) and host HBM writes (KV ingest, `dsfd_host_sd`) arrive only as `f_host` HOST frames. Both come from the s_7N lep, and only at HOST_EN 1.
+> - **Gap 1:** the s_0N stage-PREV receiver (`ot_s81sl_lep_mu_ab`, pair B, HOST_EN 0) faults on HOST/KS frames. `hacc = HOST_EN && !rpb && ...` (`ot_s81sl_slice_lep.sv` ~l.748, perr ~l.934), and the mab top has no f_ks / f_host ports.
+> - **Gap 2:** there is no forward path from a received frame to TX. A frame for stage k must cross k dies, but pair-B RX releases only into ri, and pair-A TX sends only ring beats plus the local THOST/TKD. The lep never emits KS or HOST types.
+> - **Gap 3:** the die wiring takes seq_host f_ks / f_host / f_lf and t_host / t_kd from the s_7N lep only.
+> - **Minimum RTL to make in-band work:** accept HOST/KS on s_0N pair B, with f_ks / f_host ports routed to seq_host. Then either a pair-B -> pair-A host-frame forward with a static hop count, or the sender's seq_host emits the successor's KS from its KIT (t_kd + hslot user/pos) as a type-2 frame on s_0N pair A.
+> - **Budget once the RTL exists (modelled):**
+>   - **Stage circuit:** 1 KS beat a user-token a hop, about 1.3 lane cycles in a 20,702-cycle slot (0.006%). The h uses 652 cycles (3.1%).
+>   - **Head die host SerDes:** HOST_TOK 134 cycles a token a user, 0.65% of a slot.
+>   - **KV ingest:** a prefill-time HOST stream in the free 96.9% of each stage circuit.
+>   - **Effect:** neither changes the AR or MTP period.
+> - Until then finding 2 below stands (THOST/TKD -> peer perr).
 
 > **S81-LINK5 (owner-approved 10-21 06:00): 5 static circuits a stage die; the stage hop gets its own circuit.**
 > The chain plan and calendars now use the real stage die. The stale "6 SerDes + 2 UCIe" p4l count is gone.

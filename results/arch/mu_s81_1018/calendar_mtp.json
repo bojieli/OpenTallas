@@ -58,24 +58,24 @@
   },
   "mtp_tx_hold": {
    "per_receiver": {
-    "S005": 440,
-    "S007": 440,
-    "S008": 440,
-    "S010": 440,
-    "S014": 440,
-    "S015": 440,
-    "S017": 440,
-    "S018": 440,
-    "S023": 440,
-    "S024": 440,
-    "S026": 440,
-    "S027": 440
+    "S005": 443,
+    "S007": 443,
+    "S008": 443,
+    "S010": 443,
+    "S014": 443,
+    "S015": 443,
+    "S017": 443,
+    "S018": 443,
+    "S023": 443,
+    "S024": 443,
+    "S026": 443,
+    "S027": 443
    },
-   "total": 5280,
+   "total": 5316,
    "decision": "lead 10-21: hold the h TX on the sender (NS stays 1, closed land view)"
   },
   "T_switched": 1303398.0,
-  "T_now": 1229056.0
+  "T_now": 1229092.0
  },
  "config": {
   "dup_groups": [
@@ -105,13 +105,13 @@
   "model_agg_ar": 57526,
   "model_agg_mtp": 38291
  },
- "period": 1229056,
- "slot": 124524,
+ "period": 1229092,
+ "slot": 123328,
  "users": 9,
- "fillers": 3,
- "per_user_tok_s": 4060.7,
- "filler_tok_s": 976.4,
- "aggregate_tok_s": 39475,
+ "fillers": 4,
+ "per_user_tok_s": 4060.6,
+ "filler_tok_s": 976.3,
+ "aggregate_tok_s": 40450,
  "search": null,
  "slots": [
   {
@@ -134,7 +134,7 @@
    "slot": 1,
    "user": 1,
    "kind": "mtp",
-   "shift": 124524,
+   "shift": 123328,
    "copy": {
     "S002": "B",
     "S011": "B",
@@ -150,7 +150,7 @@
    "slot": 2,
    "user": 2,
    "kind": "mtp",
-   "shift": 249048,
+   "shift": 246656,
    "copy": {
     "S002": "A",
     "S011": "A",
@@ -166,7 +166,7 @@
    "slot": 3,
    "user": 3,
    "kind": "mtp",
-   "shift": 373572,
+   "shift": 369984,
    "copy": {
     "S002": "B",
     "S011": "B",
@@ -182,7 +182,7 @@
    "slot": 4,
    "user": 4,
    "kind": "mtp",
-   "shift": 498096,
+   "shift": 493312,
    "copy": {
     "S002": "A",
     "S011": "A",
@@ -198,7 +198,7 @@
    "slot": 5,
    "user": 5,
    "kind": "mtp",
-   "shift": 622620,
+   "shift": 616640,
    "copy": {
     "S002": "B",
     "S011": "B",
@@ -214,7 +214,7 @@
    "slot": 6,
    "user": 6,
    "kind": "mtp",
-   "shift": 747144,
+   "shift": 739968,
    "copy": {
     "S002": "A",
     "S011": "A",
@@ -230,7 +230,7 @@
    "slot": 7,
    "user": 7,
    "kind": "mtp",
-   "shift": 871668,
+   "shift": 863296,
    "copy": {
     "S002": "B",
     "S011": "B",
@@ -246,7 +246,7 @@
    "slot": 8,
    "user": 8,
    "kind": "mtp",
-   "shift": 996192,
+   "shift": 986624,
    "copy": {
     "S002": "A",
     "S011": "A",
@@ -262,7 +262,7 @@
    "slot": 9,
    "user": 9,
    "kind": "filler",
-   "shift": 1120716,
+   "shift": 1109952,
    "copy": {
     "S002": "B",
     "S011": "B",
@@ -278,7 +278,7 @@
    "slot": 10,
    "user": 10,
    "kind": "filler",
-   "shift": 1159648,
+   "shift": 1148684,
    "copy": {
     "S002": "B",
     "S011": "B",
@@ -294,7 +294,7 @@
    "slot": 11,
    "user": 11,
    "kind": "filler",
-   "shift": 1187572,
+   "shift": 1176920,
    "copy": {
     "S002": "A",
     "S011": "A",
@@ -304,6 +304,22 @@
     "S040": "A",
     "S046": "A",
     "S052": "A"
+   }
+  },
+  {
+   "slot": 12,
+   "user": 12,
+   "kind": "filler",
+   "shift": 1197476,
+   "copy": {
+    "S002": "B",
+    "S011": "B",
+    "S020": "B",
+    "S029": "B",
+    "S034": "B",
+    "S040": "B",
+    "S046": "B",
+    "S052": "B"
    }
   }
  ],
@@ -323,7 +339,7 @@
    "label": "Stage 0: embed, L0",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -341,7 +357,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 124524,
+     "start": 123328,
      "wb": 68,
      "sb": 18432
     },
@@ -350,7 +366,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 249048,
+     "start": 246656,
      "wb": 136,
      "sb": 36864
     },
@@ -359,7 +375,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 373572,
+     "start": 369984,
      "wb": 204,
      "sb": 55296
     },
@@ -368,7 +384,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 498096,
+     "start": 493312,
      "wb": 272,
      "sb": 73728
     },
@@ -377,7 +393,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 622620,
+     "start": 616640,
      "wb": 340,
      "sb": 92160
     },
@@ -386,7 +402,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 747144,
+     "start": 739968,
      "wb": 408,
      "sb": 110592
     },
@@ -395,7 +411,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 871668,
+     "start": 863296,
      "wb": 476,
      "sb": 129024
     },
@@ -404,7 +420,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 996192,
+     "start": 986624,
      "wb": 544,
      "sb": 147456
     },
@@ -413,7 +429,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1120716,
+     "start": 1109952,
      "wb": 612,
      "sb": 165888
     },
@@ -422,7 +438,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1159648,
+     "start": 1148684,
      "wb": 680,
      "sb": 184320
     },
@@ -431,9 +447,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1187572,
+     "start": 1176920,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1197476,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -441,7 +466,7 @@
    "label": "Stage 1: L0, L1.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -450,7 +475,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 11446,
+     "start": 11247,
      "wb": 0,
      "sb": 0
     },
@@ -459,7 +484,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 135970,
+     "start": 134575,
      "wb": 68,
      "sb": 18432
     },
@@ -468,7 +493,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 260494,
+     "start": 257903,
      "wb": 136,
      "sb": 36864
     },
@@ -477,7 +502,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 385018,
+     "start": 381231,
      "wb": 204,
      "sb": 55296
     },
@@ -486,7 +511,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 509542,
+     "start": 504559,
      "wb": 272,
      "sb": 73728
     },
@@ -495,7 +520,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 634066,
+     "start": 627887,
      "wb": 340,
      "sb": 92160
     },
@@ -504,7 +529,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 758590,
+     "start": 751215,
      "wb": 408,
      "sb": 110592
     },
@@ -513,7 +538,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 883114,
+     "start": 874543,
      "wb": 476,
      "sb": 129024
     },
@@ -522,7 +547,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1007638,
+     "start": 997871,
      "wb": 544,
      "sb": 147456
     },
@@ -531,7 +556,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1132162,
+     "start": 1121199,
      "wb": 612,
      "sb": 165888
     },
@@ -540,7 +565,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1171094,
+     "start": 1159931,
      "wb": 680,
      "sb": 184320
     },
@@ -549,9 +574,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1199018,
+     "start": 1188167,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1208723,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -560,7 +594,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 6,
-    "B": 6
+    "B": 7
    },
    "rows": [
     {
@@ -568,7 +602,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 28991,
+     "start": 28593,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -578,7 +612,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 153515,
+     "start": 151921,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -588,7 +622,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 278039,
+     "start": 275249,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -598,7 +632,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 402563,
+     "start": 398577,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -608,7 +642,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 527087,
+     "start": 521905,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -618,7 +652,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 651611,
+     "start": 645233,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -628,7 +662,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 776135,
+     "start": 768561,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -638,7 +672,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 900659,
+     "start": 891889,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -648,7 +682,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1025183,
+     "start": 1015217,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -658,7 +692,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1149707,
+     "start": 1138545,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -668,7 +702,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 5,
-     "start": 1188639,
+     "start": 1177277,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -678,10 +712,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1216563,
+     "start": 1205513,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 6,
+     "start": 1226069,
+     "wb": 408,
+     "sb": 110592,
+     "ikb": 837120
     }
    ]
   },
@@ -689,7 +733,7 @@
    "label": "Stage 3",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -698,7 +742,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 60158,
+     "start": 59561,
      "wb": 0,
      "sb": 0
     },
@@ -707,7 +751,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 184682,
+     "start": 182889,
      "wb": 68,
      "sb": 18432
     },
@@ -716,7 +760,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 309206,
+     "start": 306217,
      "wb": 136,
      "sb": 36864
     },
@@ -725,7 +769,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 433730,
+     "start": 429545,
      "wb": 204,
      "sb": 55296
     },
@@ -734,7 +778,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 558254,
+     "start": 552873,
      "wb": 272,
      "sb": 73728
     },
@@ -743,7 +787,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 682778,
+     "start": 676201,
      "wb": 340,
      "sb": 92160
     },
@@ -752,7 +796,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 807302,
+     "start": 799529,
      "wb": 408,
      "sb": 110592
     },
@@ -761,7 +805,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 931826,
+     "start": 922857,
      "wb": 476,
      "sb": 129024
     },
@@ -770,7 +814,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1056350,
+     "start": 1046185,
      "wb": 544,
      "sb": 147456
     },
@@ -779,7 +823,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1180874,
+     "start": 1169513,
      "wb": 612,
      "sb": 165888
     },
@@ -788,7 +832,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1219806,
+     "start": 1208245,
      "wb": 680,
      "sb": 184320
     },
@@ -797,9 +841,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1247730,
+     "start": 1236481,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1257037,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -807,7 +860,7 @@
    "label": "Stage 4: L2, L3.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -816,7 +869,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 62040,
+     "start": 61245,
      "wb": 0,
      "sb": 0
     },
@@ -825,7 +878,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 186564,
+     "start": 184573,
      "wb": 68,
      "sb": 18432
     },
@@ -834,7 +887,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 311088,
+     "start": 307901,
      "wb": 136,
      "sb": 36864
     },
@@ -843,7 +896,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 435612,
+     "start": 431229,
      "wb": 204,
      "sb": 55296
     },
@@ -852,7 +905,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 560136,
+     "start": 554557,
      "wb": 272,
      "sb": 73728
     },
@@ -861,7 +914,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 684660,
+     "start": 677885,
      "wb": 340,
      "sb": 92160
     },
@@ -870,7 +923,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 809184,
+     "start": 801213,
      "wb": 408,
      "sb": 110592
     },
@@ -879,7 +932,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 933708,
+     "start": 924541,
      "wb": 476,
      "sb": 129024
     },
@@ -888,7 +941,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1058232,
+     "start": 1047869,
      "wb": 544,
      "sb": 147456
     },
@@ -897,7 +950,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1182756,
+     "start": 1171197,
      "wb": 612,
      "sb": 165888
     },
@@ -906,7 +959,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1221688,
+     "start": 1209929,
      "wb": 680,
      "sb": 184320
     },
@@ -915,9 +968,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1249612,
+     "start": 1238165,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1258721,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -925,7 +987,7 @@
    "label": "Stage 5: L3, L4.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -934,7 +996,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 80210,
+     "start": 79220,
      "wb": 0,
      "sb": 0
     },
@@ -943,7 +1005,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 204734,
+     "start": 202548,
      "wb": 68,
      "sb": 18432
     },
@@ -952,7 +1014,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 329258,
+     "start": 325876,
      "wb": 136,
      "sb": 36864
     },
@@ -961,7 +1023,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 453782,
+     "start": 449204,
      "wb": 204,
      "sb": 55296
     },
@@ -970,7 +1032,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 578306,
+     "start": 572532,
      "wb": 272,
      "sb": 73728
     },
@@ -979,7 +1041,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 702830,
+     "start": 695860,
      "wb": 340,
      "sb": 92160
     },
@@ -988,7 +1050,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 827354,
+     "start": 819188,
      "wb": 408,
      "sb": 110592
     },
@@ -997,7 +1059,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 951878,
+     "start": 942516,
      "wb": 476,
      "sb": 129024
     },
@@ -1006,7 +1068,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1076402,
+     "start": 1065844,
      "wb": 544,
      "sb": 147456
     },
@@ -1015,7 +1077,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1200926,
+     "start": 1189172,
      "wb": 612,
      "sb": 165888
     },
@@ -1024,7 +1086,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1239858,
+     "start": 1227904,
      "wb": 680,
      "sb": 184320
     },
@@ -1033,9 +1095,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1267782,
+     "start": 1256140,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1276696,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1043,7 +1114,7 @@
    "label": "Stage 6",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1052,7 +1123,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 100999,
+     "start": 99810,
      "wb": 0,
      "sb": 0
     },
@@ -1061,7 +1132,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 225523,
+     "start": 223138,
      "wb": 68,
      "sb": 18432
     },
@@ -1070,7 +1141,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 350047,
+     "start": 346466,
      "wb": 136,
      "sb": 36864
     },
@@ -1079,7 +1150,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 474571,
+     "start": 469794,
      "wb": 204,
      "sb": 55296
     },
@@ -1088,7 +1159,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 599095,
+     "start": 593122,
      "wb": 272,
      "sb": 73728
     },
@@ -1097,7 +1168,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 723619,
+     "start": 716450,
      "wb": 340,
      "sb": 92160
     },
@@ -1106,7 +1177,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 848143,
+     "start": 839778,
      "wb": 408,
      "sb": 110592
     },
@@ -1115,7 +1186,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 972667,
+     "start": 963106,
      "wb": 476,
      "sb": 129024
     },
@@ -1124,7 +1195,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1097191,
+     "start": 1086434,
      "wb": 544,
      "sb": 147456
     },
@@ -1133,7 +1204,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1221715,
+     "start": 1209762,
      "wb": 612,
      "sb": 165888
     },
@@ -1142,7 +1213,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1260647,
+     "start": 1248494,
      "wb": 680,
      "sb": 184320
     },
@@ -1151,9 +1222,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1288571,
+     "start": 1276730,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1297286,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1161,7 +1241,7 @@
    "label": "Stage 7: L4, L5.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1170,7 +1250,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 103321,
+     "start": 101937,
      "wb": 0,
      "sb": 0
     },
@@ -1179,7 +1259,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 227845,
+     "start": 225265,
      "wb": 68,
      "sb": 18432
     },
@@ -1188,7 +1268,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 352369,
+     "start": 348593,
      "wb": 136,
      "sb": 36864
     },
@@ -1197,7 +1277,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 476893,
+     "start": 471921,
      "wb": 204,
      "sb": 55296
     },
@@ -1206,7 +1286,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 601417,
+     "start": 595249,
      "wb": 272,
      "sb": 73728
     },
@@ -1215,7 +1295,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 725941,
+     "start": 718577,
      "wb": 340,
      "sb": 92160
     },
@@ -1224,7 +1304,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 850465,
+     "start": 841905,
      "wb": 408,
      "sb": 110592
     },
@@ -1233,7 +1313,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 974989,
+     "start": 965233,
      "wb": 476,
      "sb": 129024
     },
@@ -1242,7 +1322,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1099513,
+     "start": 1088561,
      "wb": 544,
      "sb": 147456
     },
@@ -1251,7 +1331,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1224037,
+     "start": 1211889,
      "wb": 612,
      "sb": 165888
     },
@@ -1260,7 +1340,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1262969,
+     "start": 1250621,
      "wb": 680,
      "sb": 184320
     },
@@ -1269,9 +1349,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1290893,
+     "start": 1278857,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1299413,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1279,7 +1368,7 @@
    "label": "Stage 8: L5, L6.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1288,7 +1377,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 124550,
+     "start": 122970,
      "wb": 0,
      "sb": 0
     },
@@ -1297,7 +1386,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 249074,
+     "start": 246298,
      "wb": 68,
      "sb": 18432
     },
@@ -1306,7 +1395,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 373598,
+     "start": 369626,
      "wb": 136,
      "sb": 36864
     },
@@ -1315,7 +1404,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 498122,
+     "start": 492954,
      "wb": 204,
      "sb": 55296
     },
@@ -1324,7 +1413,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 622646,
+     "start": 616282,
      "wb": 272,
      "sb": 73728
     },
@@ -1333,7 +1422,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 747170,
+     "start": 739610,
      "wb": 340,
      "sb": 92160
     },
@@ -1342,7 +1431,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 871694,
+     "start": 862938,
      "wb": 408,
      "sb": 110592
     },
@@ -1351,7 +1440,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 996218,
+     "start": 986266,
      "wb": 476,
      "sb": 129024
     },
@@ -1360,7 +1449,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1120742,
+     "start": 1109594,
      "wb": 544,
      "sb": 147456
     },
@@ -1369,7 +1458,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1245266,
+     "start": 1232922,
      "wb": 612,
      "sb": 165888
     },
@@ -1378,7 +1467,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1284198,
+     "start": 1271654,
      "wb": 680,
      "sb": 184320
     },
@@ -1387,9 +1476,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1312122,
+     "start": 1299890,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1320446,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1397,7 +1495,7 @@
    "label": "Stage 9",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1406,7 +1504,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 145339,
+     "start": 143560,
      "wb": 0,
      "sb": 0
     },
@@ -1415,7 +1513,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 269863,
+     "start": 266888,
      "wb": 68,
      "sb": 18432
     },
@@ -1424,7 +1522,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 394387,
+     "start": 390216,
      "wb": 136,
      "sb": 36864
     },
@@ -1433,7 +1531,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 518911,
+     "start": 513544,
      "wb": 204,
      "sb": 55296
     },
@@ -1442,7 +1540,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 643435,
+     "start": 636872,
      "wb": 272,
      "sb": 73728
     },
@@ -1451,7 +1549,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 767959,
+     "start": 760200,
      "wb": 340,
      "sb": 92160
     },
@@ -1460,7 +1558,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 892483,
+     "start": 883528,
      "wb": 408,
      "sb": 110592
     },
@@ -1469,7 +1567,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1017007,
+     "start": 1006856,
      "wb": 476,
      "sb": 129024
     },
@@ -1478,7 +1576,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1141531,
+     "start": 1130184,
      "wb": 544,
      "sb": 147456
     },
@@ -1487,7 +1585,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1266055,
+     "start": 1253512,
      "wb": 612,
      "sb": 165888
     },
@@ -1496,7 +1594,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1304987,
+     "start": 1292244,
      "wb": 680,
      "sb": 184320
     },
@@ -1505,9 +1603,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1332911,
+     "start": 1320480,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1341036,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1515,7 +1622,7 @@
    "label": "Stage 10: L6, L7.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1524,7 +1631,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 147661,
+     "start": 145687,
      "wb": 0,
      "sb": 0
     },
@@ -1533,7 +1640,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 272185,
+     "start": 269015,
      "wb": 68,
      "sb": 18432
     },
@@ -1542,7 +1649,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 396709,
+     "start": 392343,
      "wb": 136,
      "sb": 36864
     },
@@ -1551,7 +1658,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 521233,
+     "start": 515671,
      "wb": 204,
      "sb": 55296
     },
@@ -1560,7 +1667,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 645757,
+     "start": 638999,
      "wb": 272,
      "sb": 73728
     },
@@ -1569,7 +1676,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 770281,
+     "start": 762327,
      "wb": 340,
      "sb": 92160
     },
@@ -1578,7 +1685,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 894805,
+     "start": 885655,
      "wb": 408,
      "sb": 110592
     },
@@ -1587,7 +1694,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1019329,
+     "start": 1008983,
      "wb": 476,
      "sb": 129024
     },
@@ -1596,7 +1703,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1143853,
+     "start": 1132311,
      "wb": 544,
      "sb": 147456
     },
@@ -1605,7 +1712,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1268377,
+     "start": 1255639,
      "wb": 612,
      "sb": 165888
     },
@@ -1614,7 +1721,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1307309,
+     "start": 1294371,
      "wb": 680,
      "sb": 184320
     },
@@ -1623,9 +1730,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1335233,
+     "start": 1322607,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1343163,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1634,7 +1750,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 6,
-    "B": 6
+    "B": 7
    },
    "rows": [
     {
@@ -1642,7 +1758,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 168450,
+     "start": 166277,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -1652,7 +1768,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 292974,
+     "start": 289605,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -1662,7 +1778,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 417498,
+     "start": 412933,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -1672,7 +1788,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 542022,
+     "start": 536261,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -1682,7 +1798,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 666546,
+     "start": 659589,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -1692,7 +1808,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 791070,
+     "start": 782917,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -1702,7 +1818,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 915594,
+     "start": 906245,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -1712,7 +1828,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1040118,
+     "start": 1029573,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -1722,7 +1838,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1164642,
+     "start": 1152901,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -1732,7 +1848,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1289166,
+     "start": 1276229,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -1742,7 +1858,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 5,
-     "start": 1328098,
+     "start": 1314961,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -1752,10 +1868,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1356022,
+     "start": 1343197,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 6,
+     "start": 1363753,
+     "wb": 408,
+     "sb": 110592,
+     "ikb": 837120
     }
    ]
   },
@@ -1763,7 +1889,7 @@
    "label": "Stage 12",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1772,7 +1898,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 202681,
+     "start": 200309,
      "wb": 0,
      "sb": 0
     },
@@ -1781,7 +1907,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 327205,
+     "start": 323637,
      "wb": 68,
      "sb": 18432
     },
@@ -1790,7 +1916,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 451729,
+     "start": 446965,
      "wb": 136,
      "sb": 36864
     },
@@ -1799,7 +1925,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 576253,
+     "start": 570293,
      "wb": 204,
      "sb": 55296
     },
@@ -1808,7 +1934,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 700777,
+     "start": 693621,
      "wb": 272,
      "sb": 73728
     },
@@ -1817,7 +1943,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 825301,
+     "start": 816949,
      "wb": 340,
      "sb": 92160
     },
@@ -1826,7 +1952,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 949825,
+     "start": 940277,
      "wb": 408,
      "sb": 110592
     },
@@ -1835,7 +1961,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1074349,
+     "start": 1063605,
      "wb": 476,
      "sb": 129024
     },
@@ -1844,7 +1970,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1198873,
+     "start": 1186933,
      "wb": 544,
      "sb": 147456
     },
@@ -1853,7 +1979,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1323397,
+     "start": 1310261,
      "wb": 612,
      "sb": 165888
     },
@@ -1862,7 +1988,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1362329,
+     "start": 1348993,
      "wb": 680,
      "sb": 184320
     },
@@ -1871,9 +1997,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1390253,
+     "start": 1377229,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1397785,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1881,7 +2016,7 @@
    "label": "Stage 13: L8, L9.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -1890,7 +2025,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 204563,
+     "start": 201993,
      "wb": 0,
      "sb": 0
     },
@@ -1899,7 +2034,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 329087,
+     "start": 325321,
      "wb": 68,
      "sb": 18432
     },
@@ -1908,7 +2043,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 453611,
+     "start": 448649,
      "wb": 136,
      "sb": 36864
     },
@@ -1917,7 +2052,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 578135,
+     "start": 571977,
      "wb": 204,
      "sb": 55296
     },
@@ -1926,7 +2061,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 702659,
+     "start": 695305,
      "wb": 272,
      "sb": 73728
     },
@@ -1935,7 +2070,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 827183,
+     "start": 818633,
      "wb": 340,
      "sb": 92160
     },
@@ -1944,7 +2079,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 951707,
+     "start": 941961,
      "wb": 408,
      "sb": 110592
     },
@@ -1953,7 +2088,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1076231,
+     "start": 1065289,
      "wb": 476,
      "sb": 129024
     },
@@ -1962,7 +2097,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1200755,
+     "start": 1188617,
      "wb": 544,
      "sb": 147456
     },
@@ -1971,7 +2106,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1325279,
+     "start": 1311945,
      "wb": 612,
      "sb": 165888
     },
@@ -1980,7 +2115,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1364211,
+     "start": 1350677,
      "wb": 680,
      "sb": 184320
     },
@@ -1989,9 +2124,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1392135,
+     "start": 1378913,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1399469,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -1999,7 +2143,7 @@
    "label": "Stage 14: L9, L10.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2008,7 +2152,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 222733,
+     "start": 219968,
      "wb": 0,
      "sb": 0
     },
@@ -2017,7 +2161,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 347257,
+     "start": 343296,
      "wb": 68,
      "sb": 18432
     },
@@ -2026,7 +2170,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 471781,
+     "start": 466624,
      "wb": 136,
      "sb": 36864
     },
@@ -2035,7 +2179,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 596305,
+     "start": 589952,
      "wb": 204,
      "sb": 55296
     },
@@ -2044,7 +2188,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 720829,
+     "start": 713280,
      "wb": 272,
      "sb": 73728
     },
@@ -2053,7 +2197,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 845353,
+     "start": 836608,
      "wb": 340,
      "sb": 92160
     },
@@ -2062,7 +2206,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 969877,
+     "start": 959936,
      "wb": 408,
      "sb": 110592
     },
@@ -2071,7 +2215,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1094401,
+     "start": 1083264,
      "wb": 476,
      "sb": 129024
     },
@@ -2080,7 +2224,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1218925,
+     "start": 1206592,
      "wb": 544,
      "sb": 147456
     },
@@ -2089,7 +2233,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1343449,
+     "start": 1329920,
      "wb": 612,
      "sb": 165888
     },
@@ -2098,7 +2242,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1382381,
+     "start": 1368652,
      "wb": 680,
      "sb": 184320
     },
@@ -2107,9 +2251,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1410305,
+     "start": 1396888,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1417444,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2117,7 +2270,7 @@
    "label": "Stage 15: L10, L11.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2126,7 +2279,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 243962,
+     "start": 241001,
      "wb": 0,
      "sb": 0
     },
@@ -2135,7 +2288,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 368486,
+     "start": 364329,
      "wb": 68,
      "sb": 18432
     },
@@ -2144,7 +2297,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 493010,
+     "start": 487657,
      "wb": 136,
      "sb": 36864
     },
@@ -2153,7 +2306,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 617534,
+     "start": 610985,
      "wb": 204,
      "sb": 55296
     },
@@ -2162,7 +2315,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 742058,
+     "start": 734313,
      "wb": 272,
      "sb": 73728
     },
@@ -2171,7 +2324,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 866582,
+     "start": 857641,
      "wb": 340,
      "sb": 92160
     },
@@ -2180,7 +2333,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 991106,
+     "start": 980969,
      "wb": 408,
      "sb": 110592
     },
@@ -2189,7 +2342,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1115630,
+     "start": 1104297,
      "wb": 476,
      "sb": 129024
     },
@@ -2198,7 +2351,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1240154,
+     "start": 1227625,
      "wb": 544,
      "sb": 147456
     },
@@ -2207,7 +2360,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1364678,
+     "start": 1350953,
      "wb": 612,
      "sb": 165888
     },
@@ -2216,7 +2369,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1403610,
+     "start": 1389685,
      "wb": 680,
      "sb": 184320
     },
@@ -2225,9 +2378,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1431534,
+     "start": 1417921,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1438477,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2235,7 +2397,7 @@
    "label": "Stage 16",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2244,7 +2406,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 264751,
+     "start": 261591,
      "wb": 0,
      "sb": 0
     },
@@ -2253,7 +2415,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 389275,
+     "start": 384919,
      "wb": 68,
      "sb": 18432
     },
@@ -2262,7 +2424,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 513799,
+     "start": 508247,
      "wb": 136,
      "sb": 36864
     },
@@ -2271,7 +2433,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 638323,
+     "start": 631575,
      "wb": 204,
      "sb": 55296
     },
@@ -2280,7 +2442,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 762847,
+     "start": 754903,
      "wb": 272,
      "sb": 73728
     },
@@ -2289,7 +2451,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 887371,
+     "start": 878231,
      "wb": 340,
      "sb": 92160
     },
@@ -2298,7 +2460,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1011895,
+     "start": 1001559,
      "wb": 408,
      "sb": 110592
     },
@@ -2307,7 +2469,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1136419,
+     "start": 1124887,
      "wb": 476,
      "sb": 129024
     },
@@ -2316,7 +2478,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1260943,
+     "start": 1248215,
      "wb": 544,
      "sb": 147456
     },
@@ -2325,7 +2487,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1385467,
+     "start": 1371543,
      "wb": 612,
      "sb": 165888
     },
@@ -2334,7 +2496,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1424399,
+     "start": 1410275,
      "wb": 680,
      "sb": 184320
     },
@@ -2343,9 +2505,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1452323,
+     "start": 1438511,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1459067,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2353,7 +2524,7 @@
    "label": "Stage 17: L11, L12.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2362,7 +2533,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 267073,
+     "start": 263718,
      "wb": 0,
      "sb": 0
     },
@@ -2371,7 +2542,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 391597,
+     "start": 387046,
      "wb": 68,
      "sb": 18432
     },
@@ -2380,7 +2551,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 516121,
+     "start": 510374,
      "wb": 136,
      "sb": 36864
     },
@@ -2389,7 +2560,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 640645,
+     "start": 633702,
      "wb": 204,
      "sb": 55296
     },
@@ -2398,7 +2569,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 765169,
+     "start": 757030,
      "wb": 272,
      "sb": 73728
     },
@@ -2407,7 +2578,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 889693,
+     "start": 880358,
      "wb": 340,
      "sb": 92160
     },
@@ -2416,7 +2587,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1014217,
+     "start": 1003686,
      "wb": 408,
      "sb": 110592
     },
@@ -2425,7 +2596,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1138741,
+     "start": 1127014,
      "wb": 476,
      "sb": 129024
     },
@@ -2434,7 +2605,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1263265,
+     "start": 1250342,
      "wb": 544,
      "sb": 147456
     },
@@ -2443,7 +2614,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1387789,
+     "start": 1373670,
      "wb": 612,
      "sb": 165888
     },
@@ -2452,7 +2623,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1426721,
+     "start": 1412402,
      "wb": 680,
      "sb": 184320
     },
@@ -2461,9 +2632,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1454645,
+     "start": 1440638,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1461194,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2471,7 +2651,7 @@
    "label": "Stage 18: L12, L13.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2480,7 +2660,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 288302,
+     "start": 284751,
      "wb": 0,
      "sb": 0
     },
@@ -2489,7 +2669,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 412826,
+     "start": 408079,
      "wb": 68,
      "sb": 18432
     },
@@ -2498,7 +2678,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 537350,
+     "start": 531407,
      "wb": 136,
      "sb": 36864
     },
@@ -2507,7 +2687,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 661874,
+     "start": 654735,
      "wb": 204,
      "sb": 55296
     },
@@ -2516,7 +2696,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 786398,
+     "start": 778063,
      "wb": 272,
      "sb": 73728
     },
@@ -2525,7 +2705,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 910922,
+     "start": 901391,
      "wb": 340,
      "sb": 92160
     },
@@ -2534,7 +2714,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1035446,
+     "start": 1024719,
      "wb": 408,
      "sb": 110592
     },
@@ -2543,7 +2723,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1159970,
+     "start": 1148047,
      "wb": 476,
      "sb": 129024
     },
@@ -2552,7 +2732,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1284494,
+     "start": 1271375,
      "wb": 544,
      "sb": 147456
     },
@@ -2561,7 +2741,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1409018,
+     "start": 1394703,
      "wb": 612,
      "sb": 165888
     },
@@ -2570,7 +2750,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1447950,
+     "start": 1433435,
      "wb": 680,
      "sb": 184320
     },
@@ -2579,9 +2759,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1475874,
+     "start": 1461671,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1482227,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2589,7 +2778,7 @@
    "label": "Stage 19",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2598,7 +2787,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 309091,
+     "start": 305341,
      "wb": 0,
      "sb": 0
     },
@@ -2607,7 +2796,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 433615,
+     "start": 428669,
      "wb": 68,
      "sb": 18432
     },
@@ -2616,7 +2805,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 558139,
+     "start": 551997,
      "wb": 136,
      "sb": 36864
     },
@@ -2625,7 +2814,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 682663,
+     "start": 675325,
      "wb": 204,
      "sb": 55296
     },
@@ -2634,7 +2823,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 807187,
+     "start": 798653,
      "wb": 272,
      "sb": 73728
     },
@@ -2643,7 +2832,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 931711,
+     "start": 921981,
      "wb": 340,
      "sb": 92160
     },
@@ -2652,7 +2841,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1056235,
+     "start": 1045309,
      "wb": 408,
      "sb": 110592
     },
@@ -2661,7 +2850,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1180759,
+     "start": 1168637,
      "wb": 476,
      "sb": 129024
     },
@@ -2670,7 +2859,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1305283,
+     "start": 1291965,
      "wb": 544,
      "sb": 147456
     },
@@ -2679,7 +2868,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1429807,
+     "start": 1415293,
      "wb": 612,
      "sb": 165888
     },
@@ -2688,7 +2877,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1468739,
+     "start": 1454025,
      "wb": 680,
      "sb": 184320
     },
@@ -2697,9 +2886,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1496663,
+     "start": 1482261,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1502817,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2708,7 +2906,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 6,
-    "B": 6
+    "B": 7
    },
    "rows": [
     {
@@ -2716,7 +2914,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 310973,
+     "start": 307025,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -2726,7 +2924,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 435497,
+     "start": 430353,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -2736,7 +2934,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 560021,
+     "start": 553681,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -2746,7 +2944,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 684545,
+     "start": 677009,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -2756,7 +2954,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 809069,
+     "start": 800337,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -2766,7 +2964,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 933593,
+     "start": 923665,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -2776,7 +2974,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1058117,
+     "start": 1046993,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -2786,7 +2984,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1182641,
+     "start": 1170321,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -2796,7 +2994,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1307165,
+     "start": 1293649,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -2806,7 +3004,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1431689,
+     "start": 1416977,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -2816,7 +3014,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 5,
-     "start": 1470621,
+     "start": 1455709,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -2826,10 +3024,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1498545,
+     "start": 1483945,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 6,
+     "start": 1504501,
+     "wb": 408,
+     "sb": 110592,
+     "ikb": 837120
     }
    ]
   },
@@ -2837,7 +3045,7 @@
    "label": "Stage 21: L14, L15.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2846,7 +3054,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 346118,
+     "start": 341971,
      "wb": 0,
      "sb": 0
     },
@@ -2855,7 +3063,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 470642,
+     "start": 465299,
      "wb": 68,
      "sb": 18432
     },
@@ -2864,7 +3072,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 595166,
+     "start": 588627,
      "wb": 136,
      "sb": 36864
     },
@@ -2873,7 +3081,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 719690,
+     "start": 711955,
      "wb": 204,
      "sb": 55296
     },
@@ -2882,7 +3090,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 844214,
+     "start": 835283,
      "wb": 272,
      "sb": 73728
     },
@@ -2891,7 +3099,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 968738,
+     "start": 958611,
      "wb": 340,
      "sb": 92160
     },
@@ -2900,7 +3108,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1093262,
+     "start": 1081939,
      "wb": 408,
      "sb": 110592
     },
@@ -2909,7 +3117,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1217786,
+     "start": 1205267,
      "wb": 476,
      "sb": 129024
     },
@@ -2918,7 +3126,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1342310,
+     "start": 1328595,
      "wb": 544,
      "sb": 147456
     },
@@ -2927,7 +3135,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1466834,
+     "start": 1451923,
      "wb": 612,
      "sb": 165888
     },
@@ -2936,7 +3144,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1505766,
+     "start": 1490655,
      "wb": 680,
      "sb": 184320
     },
@@ -2945,9 +3153,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1533690,
+     "start": 1518891,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1539447,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -2955,7 +3172,7 @@
    "label": "Stage 22",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -2964,7 +3181,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 363848,
+     "start": 359503,
      "wb": 0,
      "sb": 0
     },
@@ -2973,7 +3190,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 488372,
+     "start": 482831,
      "wb": 68,
      "sb": 18432
     },
@@ -2982,7 +3199,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 612896,
+     "start": 606159,
      "wb": 136,
      "sb": 36864
     },
@@ -2991,7 +3208,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 737420,
+     "start": 729487,
      "wb": 204,
      "sb": 55296
     },
@@ -3000,7 +3217,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 861944,
+     "start": 852815,
      "wb": 272,
      "sb": 73728
     },
@@ -3009,7 +3226,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 986468,
+     "start": 976143,
      "wb": 340,
      "sb": 92160
     },
@@ -3018,7 +3235,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1110992,
+     "start": 1099471,
      "wb": 408,
      "sb": 110592
     },
@@ -3027,7 +3244,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1235516,
+     "start": 1222799,
      "wb": 476,
      "sb": 129024
     },
@@ -3036,7 +3253,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1360040,
+     "start": 1346127,
      "wb": 544,
      "sb": 147456
     },
@@ -3045,7 +3262,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1484564,
+     "start": 1469455,
      "wb": 612,
      "sb": 165888
     },
@@ -3054,7 +3271,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1523496,
+     "start": 1508187,
      "wb": 680,
      "sb": 184320
     },
@@ -3063,9 +3280,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1551420,
+     "start": 1536423,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1556979,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3073,7 +3299,7 @@
    "label": "Stage 23: L15, L16.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3082,7 +3308,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 366170,
+     "start": 361630,
      "wb": 0,
      "sb": 0
     },
@@ -3091,7 +3317,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 490694,
+     "start": 484958,
      "wb": 68,
      "sb": 18432
     },
@@ -3100,7 +3326,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 615218,
+     "start": 608286,
      "wb": 136,
      "sb": 36864
     },
@@ -3109,7 +3335,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 739742,
+     "start": 731614,
      "wb": 204,
      "sb": 55296
     },
@@ -3118,7 +3344,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 864266,
+     "start": 854942,
      "wb": 272,
      "sb": 73728
     },
@@ -3127,7 +3353,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 988790,
+     "start": 978270,
      "wb": 340,
      "sb": 92160
     },
@@ -3136,7 +3362,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1113314,
+     "start": 1101598,
      "wb": 408,
      "sb": 110592
     },
@@ -3145,7 +3371,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1237838,
+     "start": 1224926,
      "wb": 476,
      "sb": 129024
     },
@@ -3154,7 +3380,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1362362,
+     "start": 1348254,
      "wb": 544,
      "sb": 147456
     },
@@ -3163,7 +3389,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1486886,
+     "start": 1471582,
      "wb": 612,
      "sb": 165888
     },
@@ -3172,7 +3398,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1525818,
+     "start": 1510314,
      "wb": 680,
      "sb": 184320
     },
@@ -3181,9 +3407,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1553742,
+     "start": 1538550,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1559106,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3191,7 +3426,7 @@
    "label": "Stage 24: L16, L17.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3200,7 +3435,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 387399,
+     "start": 382663,
      "wb": 0,
      "sb": 0
     },
@@ -3209,7 +3444,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 511923,
+     "start": 505991,
      "wb": 68,
      "sb": 18432
     },
@@ -3218,7 +3453,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 636447,
+     "start": 629319,
      "wb": 136,
      "sb": 36864
     },
@@ -3227,7 +3462,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 760971,
+     "start": 752647,
      "wb": 204,
      "sb": 55296
     },
@@ -3236,7 +3471,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 885495,
+     "start": 875975,
      "wb": 272,
      "sb": 73728
     },
@@ -3245,7 +3480,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1010019,
+     "start": 999303,
      "wb": 340,
      "sb": 92160
     },
@@ -3254,7 +3489,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1134543,
+     "start": 1122631,
      "wb": 408,
      "sb": 110592
     },
@@ -3263,7 +3498,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1259067,
+     "start": 1245959,
      "wb": 476,
      "sb": 129024
     },
@@ -3272,7 +3507,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1383591,
+     "start": 1369287,
      "wb": 544,
      "sb": 147456
     },
@@ -3281,7 +3516,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1508115,
+     "start": 1492615,
      "wb": 612,
      "sb": 165888
     },
@@ -3290,7 +3525,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1547047,
+     "start": 1531347,
      "wb": 680,
      "sb": 184320
     },
@@ -3299,9 +3534,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1574971,
+     "start": 1559583,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1580139,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3309,7 +3553,7 @@
    "label": "Stage 25",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3318,7 +3562,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 408188,
+     "start": 403253,
      "wb": 0,
      "sb": 0
     },
@@ -3327,7 +3571,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 532712,
+     "start": 526581,
      "wb": 68,
      "sb": 18432
     },
@@ -3336,7 +3580,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 657236,
+     "start": 649909,
      "wb": 136,
      "sb": 36864
     },
@@ -3345,7 +3589,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 781760,
+     "start": 773237,
      "wb": 204,
      "sb": 55296
     },
@@ -3354,7 +3598,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 906284,
+     "start": 896565,
      "wb": 272,
      "sb": 73728
     },
@@ -3363,7 +3607,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1030808,
+     "start": 1019893,
      "wb": 340,
      "sb": 92160
     },
@@ -3372,7 +3616,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1155332,
+     "start": 1143221,
      "wb": 408,
      "sb": 110592
     },
@@ -3381,7 +3625,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1279856,
+     "start": 1266549,
      "wb": 476,
      "sb": 129024
     },
@@ -3390,7 +3634,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1404380,
+     "start": 1389877,
      "wb": 544,
      "sb": 147456
     },
@@ -3399,7 +3643,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1528904,
+     "start": 1513205,
      "wb": 612,
      "sb": 165888
     },
@@ -3408,7 +3652,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1567836,
+     "start": 1551937,
      "wb": 680,
      "sb": 184320
     },
@@ -3417,9 +3661,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1595760,
+     "start": 1580173,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1600729,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3427,7 +3680,7 @@
    "label": "Stage 26: L17, L18.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3436,7 +3689,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 410510,
+     "start": 405380,
      "wb": 0,
      "sb": 0
     },
@@ -3445,7 +3698,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 535034,
+     "start": 528708,
      "wb": 68,
      "sb": 18432
     },
@@ -3454,7 +3707,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 659558,
+     "start": 652036,
      "wb": 136,
      "sb": 36864
     },
@@ -3463,7 +3716,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 784082,
+     "start": 775364,
      "wb": 204,
      "sb": 55296
     },
@@ -3472,7 +3725,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 908606,
+     "start": 898692,
      "wb": 272,
      "sb": 73728
     },
@@ -3481,7 +3734,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1033130,
+     "start": 1022020,
      "wb": 340,
      "sb": 92160
     },
@@ -3490,7 +3743,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1157654,
+     "start": 1145348,
      "wb": 408,
      "sb": 110592
     },
@@ -3499,7 +3752,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1282178,
+     "start": 1268676,
      "wb": 476,
      "sb": 129024
     },
@@ -3508,7 +3761,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1406702,
+     "start": 1392004,
      "wb": 544,
      "sb": 147456
     },
@@ -3517,7 +3770,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1531226,
+     "start": 1515332,
      "wb": 612,
      "sb": 165888
     },
@@ -3526,7 +3779,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1570158,
+     "start": 1554064,
      "wb": 680,
      "sb": 184320
     },
@@ -3535,9 +3788,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1598082,
+     "start": 1582300,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1602856,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3545,7 +3807,7 @@
    "label": "Stage 27: L18, L19.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3554,7 +3816,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 431739,
+     "start": 426413,
      "wb": 0,
      "sb": 0
     },
@@ -3563,7 +3825,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 556263,
+     "start": 549741,
      "wb": 68,
      "sb": 18432
     },
@@ -3572,7 +3834,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 680787,
+     "start": 673069,
      "wb": 136,
      "sb": 36864
     },
@@ -3581,7 +3843,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 805311,
+     "start": 796397,
      "wb": 204,
      "sb": 55296
     },
@@ -3590,7 +3852,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 929835,
+     "start": 919725,
      "wb": 272,
      "sb": 73728
     },
@@ -3599,7 +3861,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1054359,
+     "start": 1043053,
      "wb": 340,
      "sb": 92160
     },
@@ -3608,7 +3870,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1178883,
+     "start": 1166381,
      "wb": 408,
      "sb": 110592
     },
@@ -3617,7 +3879,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1303407,
+     "start": 1289709,
      "wb": 476,
      "sb": 129024
     },
@@ -3626,7 +3888,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1427931,
+     "start": 1413037,
      "wb": 544,
      "sb": 147456
     },
@@ -3635,7 +3897,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1552455,
+     "start": 1536365,
      "wb": 612,
      "sb": 165888
     },
@@ -3644,7 +3906,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1591387,
+     "start": 1575097,
      "wb": 680,
      "sb": 184320
     },
@@ -3653,9 +3915,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1619311,
+     "start": 1603333,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1623889,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3663,7 +3934,7 @@
    "label": "Stage 28",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3672,7 +3943,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 452528,
+     "start": 447003,
      "wb": 0,
      "sb": 0
     },
@@ -3681,7 +3952,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 577052,
+     "start": 570331,
      "wb": 68,
      "sb": 18432
     },
@@ -3690,7 +3961,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 701576,
+     "start": 693659,
      "wb": 136,
      "sb": 36864
     },
@@ -3699,7 +3970,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 826100,
+     "start": 816987,
      "wb": 204,
      "sb": 55296
     },
@@ -3708,7 +3979,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 950624,
+     "start": 940315,
      "wb": 272,
      "sb": 73728
     },
@@ -3717,7 +3988,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1075148,
+     "start": 1063643,
      "wb": 340,
      "sb": 92160
     },
@@ -3726,7 +3997,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1199672,
+     "start": 1186971,
      "wb": 408,
      "sb": 110592
     },
@@ -3735,7 +4006,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1324196,
+     "start": 1310299,
      "wb": 476,
      "sb": 129024
     },
@@ -3744,7 +4015,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1448720,
+     "start": 1433627,
      "wb": 544,
      "sb": 147456
     },
@@ -3753,7 +4024,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1573244,
+     "start": 1556955,
      "wb": 612,
      "sb": 165888
     },
@@ -3762,7 +4033,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1612176,
+     "start": 1595687,
      "wb": 680,
      "sb": 184320
     },
@@ -3771,9 +4042,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1640100,
+     "start": 1623923,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1644479,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -3782,7 +4062,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 6,
-    "B": 6
+    "B": 7
    },
    "rows": [
     {
@@ -3790,7 +4070,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 454410,
+     "start": 448687,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -3800,7 +4080,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 578934,
+     "start": 572015,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -3810,7 +4090,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 703458,
+     "start": 695343,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -3820,7 +4100,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 827982,
+     "start": 818671,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -3830,7 +4110,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 952506,
+     "start": 941999,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -3840,7 +4120,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1077030,
+     "start": 1065327,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -3850,7 +4130,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1201554,
+     "start": 1188655,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -3860,7 +4140,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1326078,
+     "start": 1311983,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -3870,7 +4150,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1450602,
+     "start": 1435311,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -3880,7 +4160,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1575126,
+     "start": 1558639,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -3890,7 +4170,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 5,
-     "start": 1614058,
+     "start": 1597371,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -3900,10 +4180,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1641982,
+     "start": 1625607,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 6,
+     "start": 1646163,
+     "wb": 408,
+     "sb": 110592,
+     "ikb": 837120
     }
    ]
   },
@@ -3911,7 +4201,7 @@
    "label": "Stage 30: L20, L21.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -3920,7 +4210,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 493227,
+     "start": 487305,
      "wb": 0,
      "sb": 0
     },
@@ -3929,7 +4219,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 617751,
+     "start": 610633,
      "wb": 68,
      "sb": 18432
     },
@@ -3938,7 +4228,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 742275,
+     "start": 733961,
      "wb": 136,
      "sb": 36864
     },
@@ -3947,7 +4237,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 866799,
+     "start": 857289,
      "wb": 204,
      "sb": 55296
     },
@@ -3956,7 +4246,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 991323,
+     "start": 980617,
      "wb": 272,
      "sb": 73728
     },
@@ -3965,7 +4255,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1115847,
+     "start": 1103945,
      "wb": 340,
      "sb": 92160
     },
@@ -3974,7 +4264,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1240371,
+     "start": 1227273,
      "wb": 408,
      "sb": 110592
     },
@@ -3983,7 +4273,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1364895,
+     "start": 1350601,
      "wb": 476,
      "sb": 129024
     },
@@ -3992,7 +4282,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1489419,
+     "start": 1473929,
      "wb": 544,
      "sb": 147456
     },
@@ -4001,7 +4291,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1613943,
+     "start": 1597257,
      "wb": 612,
      "sb": 165888
     },
@@ -4010,7 +4300,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1652875,
+     "start": 1635989,
      "wb": 680,
      "sb": 184320
     },
@@ -4019,9 +4309,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1680799,
+     "start": 1664225,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1684781,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4029,7 +4328,7 @@
    "label": "Stage 31: L21, L22.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4038,7 +4337,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 510438,
+     "start": 504317,
      "wb": 0,
      "sb": 0
     },
@@ -4047,7 +4346,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 634962,
+     "start": 627645,
      "wb": 68,
      "sb": 18432
     },
@@ -4056,7 +4355,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 759486,
+     "start": 750973,
      "wb": 136,
      "sb": 36864
     },
@@ -4065,7 +4364,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 884010,
+     "start": 874301,
      "wb": 204,
      "sb": 55296
     },
@@ -4074,7 +4373,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1008534,
+     "start": 997629,
      "wb": 272,
      "sb": 73728
     },
@@ -4083,7 +4382,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1133058,
+     "start": 1120957,
      "wb": 340,
      "sb": 92160
     },
@@ -4092,7 +4391,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1257582,
+     "start": 1244285,
      "wb": 408,
      "sb": 110592
     },
@@ -4101,7 +4400,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1382106,
+     "start": 1367613,
      "wb": 476,
      "sb": 129024
     },
@@ -4110,7 +4409,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1506630,
+     "start": 1490941,
      "wb": 544,
      "sb": 147456
     },
@@ -4119,7 +4418,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1631154,
+     "start": 1614269,
      "wb": 612,
      "sb": 165888
     },
@@ -4128,7 +4427,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1670086,
+     "start": 1653001,
      "wb": 680,
      "sb": 184320
     },
@@ -4137,9 +4436,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1698010,
+     "start": 1681237,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1701793,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4147,7 +4455,7 @@
    "label": "Stage 32",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4156,7 +4464,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 526974,
+     "start": 520654,
      "wb": 0,
      "sb": 0
     },
@@ -4165,7 +4473,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 651498,
+     "start": 643982,
      "wb": 68,
      "sb": 18432
     },
@@ -4174,7 +4482,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 776022,
+     "start": 767310,
      "wb": 136,
      "sb": 36864
     },
@@ -4183,7 +4491,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 900546,
+     "start": 890638,
      "wb": 204,
      "sb": 55296
     },
@@ -4192,7 +4500,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1025070,
+     "start": 1013966,
      "wb": 272,
      "sb": 73728
     },
@@ -4201,7 +4509,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1149594,
+     "start": 1137294,
      "wb": 340,
      "sb": 92160
     },
@@ -4210,7 +4518,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1274118,
+     "start": 1260622,
      "wb": 408,
      "sb": 110592
     },
@@ -4219,7 +4527,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1398642,
+     "start": 1383950,
      "wb": 476,
      "sb": 129024
     },
@@ -4228,7 +4536,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1523166,
+     "start": 1507278,
      "wb": 544,
      "sb": 147456
     },
@@ -4237,7 +4545,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1647690,
+     "start": 1630606,
      "wb": 612,
      "sb": 165888
     },
@@ -4246,7 +4554,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1686622,
+     "start": 1669338,
      "wb": 680,
      "sb": 184320
     },
@@ -4255,9 +4563,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1714546,
+     "start": 1697574,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1718130,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4265,7 +4582,7 @@
    "label": "Stage 33: L22, L23.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4274,7 +4591,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 528856,
+     "start": 522338,
      "wb": 0,
      "sb": 0
     },
@@ -4283,7 +4600,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 653380,
+     "start": 645666,
      "wb": 68,
      "sb": 18432
     },
@@ -4292,7 +4609,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 777904,
+     "start": 768994,
      "wb": 136,
      "sb": 36864
     },
@@ -4301,7 +4618,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 902428,
+     "start": 892322,
      "wb": 204,
      "sb": 55296
     },
@@ -4310,7 +4627,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1026952,
+     "start": 1015650,
      "wb": 272,
      "sb": 73728
     },
@@ -4319,7 +4636,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1151476,
+     "start": 1138978,
      "wb": 340,
      "sb": 92160
     },
@@ -4328,7 +4645,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1276000,
+     "start": 1262306,
      "wb": 408,
      "sb": 110592
     },
@@ -4337,7 +4654,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1400524,
+     "start": 1385634,
      "wb": 476,
      "sb": 129024
     },
@@ -4346,7 +4663,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1525048,
+     "start": 1508962,
      "wb": 544,
      "sb": 147456
     },
@@ -4355,7 +4672,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1649572,
+     "start": 1632290,
      "wb": 612,
      "sb": 165888
     },
@@ -4364,7 +4681,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1688504,
+     "start": 1671022,
      "wb": 680,
      "sb": 184320
     },
@@ -4373,9 +4690,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1716428,
+     "start": 1699258,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1719814,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4384,7 +4710,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 7,
-    "B": 5
+    "B": 6
    },
    "rows": [
     {
@@ -4392,7 +4718,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 545392,
+     "start": 538675,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -4402,7 +4728,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 669916,
+     "start": 662003,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -4412,7 +4738,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 794440,
+     "start": 785331,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -4422,7 +4748,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 918964,
+     "start": 908659,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -4432,7 +4758,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1043488,
+     "start": 1031987,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -4442,7 +4768,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1168012,
+     "start": 1155315,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -4452,7 +4778,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1292536,
+     "start": 1278643,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -4462,7 +4788,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1417060,
+     "start": 1401971,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -4472,7 +4798,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1541584,
+     "start": 1525299,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -4482,7 +4808,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1666108,
+     "start": 1648627,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -4492,7 +4818,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1705040,
+     "start": 1687359,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -4502,10 +4828,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 6,
-     "start": 1732964,
+     "start": 1715595,
      "wb": 408,
      "sb": 110592,
      "ikb": 837120
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 5,
+     "start": 1736151,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
     }
    ]
   },
@@ -4513,7 +4849,7 @@
    "label": "Stage 35",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4522,7 +4858,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 568737,
+     "start": 561821,
      "wb": 0,
      "sb": 0
     },
@@ -4531,7 +4867,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 693261,
+     "start": 685149,
      "wb": 68,
      "sb": 18432
     },
@@ -4540,7 +4876,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 817785,
+     "start": 808477,
      "wb": 136,
      "sb": 36864
     },
@@ -4549,7 +4885,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 942309,
+     "start": 931805,
      "wb": 204,
      "sb": 55296
     },
@@ -4558,7 +4894,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1066833,
+     "start": 1055133,
      "wb": 272,
      "sb": 73728
     },
@@ -4567,7 +4903,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1191357,
+     "start": 1178461,
      "wb": 340,
      "sb": 92160
     },
@@ -4576,7 +4912,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1315881,
+     "start": 1301789,
      "wb": 408,
      "sb": 110592
     },
@@ -4585,7 +4921,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1440405,
+     "start": 1425117,
      "wb": 476,
      "sb": 129024
     },
@@ -4594,7 +4930,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1564929,
+     "start": 1548445,
      "wb": 544,
      "sb": 147456
     },
@@ -4603,7 +4939,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1689453,
+     "start": 1671773,
      "wb": 612,
      "sb": 165888
     },
@@ -4612,7 +4948,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1728385,
+     "start": 1710505,
      "wb": 680,
      "sb": 184320
     },
@@ -4621,9 +4957,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1756309,
+     "start": 1738741,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1759297,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4631,7 +4976,7 @@
    "label": "Stage 36: L24, L25.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4640,7 +4985,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 570619,
+     "start": 563505,
      "wb": 0,
      "sb": 0
     },
@@ -4649,7 +4994,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 695143,
+     "start": 686833,
      "wb": 68,
      "sb": 18432
     },
@@ -4658,7 +5003,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 819667,
+     "start": 810161,
      "wb": 136,
      "sb": 36864
     },
@@ -4667,7 +5012,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 944191,
+     "start": 933489,
      "wb": 204,
      "sb": 55296
     },
@@ -4676,7 +5021,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1068715,
+     "start": 1056817,
      "wb": 272,
      "sb": 73728
     },
@@ -4685,7 +5030,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1193239,
+     "start": 1180145,
      "wb": 340,
      "sb": 92160
     },
@@ -4694,7 +5039,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1317763,
+     "start": 1303473,
      "wb": 408,
      "sb": 110592
     },
@@ -4703,7 +5048,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1442287,
+     "start": 1426801,
      "wb": 476,
      "sb": 129024
     },
@@ -4712,7 +5057,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1566811,
+     "start": 1550129,
      "wb": 544,
      "sb": 147456
     },
@@ -4721,7 +5066,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1691335,
+     "start": 1673457,
      "wb": 612,
      "sb": 165888
     },
@@ -4730,7 +5075,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1730267,
+     "start": 1712189,
      "wb": 680,
      "sb": 184320
     },
@@ -4739,9 +5084,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1758191,
+     "start": 1740425,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1760981,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4749,7 +5103,7 @@
    "label": "Stage 37: L25, L26.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4758,7 +5112,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 589022,
+     "start": 581710,
      "wb": 0,
      "sb": 0
     },
@@ -4767,7 +5121,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 713546,
+     "start": 705038,
      "wb": 68,
      "sb": 18432
     },
@@ -4776,7 +5130,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 838070,
+     "start": 828366,
      "wb": 136,
      "sb": 36864
     },
@@ -4785,7 +5139,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 962594,
+     "start": 951694,
      "wb": 204,
      "sb": 55296
     },
@@ -4794,7 +5148,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1087118,
+     "start": 1075022,
      "wb": 272,
      "sb": 73728
     },
@@ -4803,7 +5157,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1211642,
+     "start": 1198350,
      "wb": 340,
      "sb": 92160
     },
@@ -4812,7 +5166,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1336166,
+     "start": 1321678,
      "wb": 408,
      "sb": 110592
     },
@@ -4821,7 +5175,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1460690,
+     "start": 1445006,
      "wb": 476,
      "sb": 129024
     },
@@ -4830,7 +5184,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1585214,
+     "start": 1568334,
      "wb": 544,
      "sb": 147456
     },
@@ -4839,7 +5193,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1709738,
+     "start": 1691662,
      "wb": 612,
      "sb": 165888
     },
@@ -4848,7 +5202,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1748670,
+     "start": 1730394,
      "wb": 680,
      "sb": 184320
     },
@@ -4857,9 +5211,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1776594,
+     "start": 1758630,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1779186,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4867,7 +5230,7 @@
    "label": "Stage 38",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4876,7 +5239,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 605558,
+     "start": 598047,
      "wb": 0,
      "sb": 0
     },
@@ -4885,7 +5248,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 730082,
+     "start": 721375,
      "wb": 68,
      "sb": 18432
     },
@@ -4894,7 +5257,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 854606,
+     "start": 844703,
      "wb": 136,
      "sb": 36864
     },
@@ -4903,7 +5266,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 979130,
+     "start": 968031,
      "wb": 204,
      "sb": 55296
     },
@@ -4912,7 +5275,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1103654,
+     "start": 1091359,
      "wb": 272,
      "sb": 73728
     },
@@ -4921,7 +5284,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1228178,
+     "start": 1214687,
      "wb": 340,
      "sb": 92160
     },
@@ -4930,7 +5293,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1352702,
+     "start": 1338015,
      "wb": 408,
      "sb": 110592
     },
@@ -4939,7 +5302,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1477226,
+     "start": 1461343,
      "wb": 476,
      "sb": 129024
     },
@@ -4948,7 +5311,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1601750,
+     "start": 1584671,
      "wb": 544,
      "sb": 147456
     },
@@ -4957,7 +5320,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1726274,
+     "start": 1707999,
      "wb": 612,
      "sb": 165888
     },
@@ -4966,7 +5329,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1765206,
+     "start": 1746731,
      "wb": 680,
      "sb": 184320
     },
@@ -4975,9 +5338,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1793130,
+     "start": 1774967,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1795523,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -4985,7 +5357,7 @@
    "label": "Stage 39: L26, L27.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -4994,7 +5366,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 607440,
+     "start": 599731,
      "wb": 0,
      "sb": 0
     },
@@ -5003,7 +5375,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 731964,
+     "start": 723059,
      "wb": 68,
      "sb": 18432
     },
@@ -5012,7 +5384,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 856488,
+     "start": 846387,
      "wb": 136,
      "sb": 36864
     },
@@ -5021,7 +5393,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 981012,
+     "start": 969715,
      "wb": 204,
      "sb": 55296
     },
@@ -5030,7 +5402,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1105536,
+     "start": 1093043,
      "wb": 272,
      "sb": 73728
     },
@@ -5039,7 +5411,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1230060,
+     "start": 1216371,
      "wb": 340,
      "sb": 92160
     },
@@ -5048,7 +5420,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1354584,
+     "start": 1339699,
      "wb": 408,
      "sb": 110592
     },
@@ -5057,7 +5429,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1479108,
+     "start": 1463027,
      "wb": 476,
      "sb": 129024
     },
@@ -5066,7 +5438,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1603632,
+     "start": 1586355,
      "wb": 544,
      "sb": 147456
     },
@@ -5075,7 +5447,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1728156,
+     "start": 1709683,
      "wb": 612,
      "sb": 165888
     },
@@ -5084,7 +5456,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1767088,
+     "start": 1748415,
      "wb": 680,
      "sb": 184320
     },
@@ -5093,9 +5465,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1795012,
+     "start": 1776651,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1797207,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -5104,7 +5485,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 7,
-    "B": 5
+    "B": 6
    },
    "rows": [
     {
@@ -5112,7 +5493,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 623976,
+     "start": 616068,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -5122,7 +5503,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 748500,
+     "start": 739396,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -5132,7 +5513,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 873024,
+     "start": 862724,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -5142,7 +5523,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 997548,
+     "start": 986052,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -5152,7 +5533,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1122072,
+     "start": 1109380,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5162,7 +5543,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1246596,
+     "start": 1232708,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5172,7 +5553,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1371120,
+     "start": 1356036,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5182,7 +5563,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1495644,
+     "start": 1479364,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5192,7 +5573,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1620168,
+     "start": 1602692,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5202,7 +5583,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1744692,
+     "start": 1726020,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5212,7 +5593,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1783624,
+     "start": 1764752,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -5222,10 +5603,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 6,
-     "start": 1811548,
+     "start": 1792988,
      "wb": 408,
      "sb": 110592,
      "ikb": 837120
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 5,
+     "start": 1813544,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
     }
    ]
   },
@@ -5233,7 +5624,7 @@
    "label": "Stage 41",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -5242,7 +5633,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 647341,
+     "start": 639234,
      "wb": 0,
      "sb": 0
     },
@@ -5251,7 +5642,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 771865,
+     "start": 762562,
      "wb": 68,
      "sb": 18432
     },
@@ -5260,7 +5651,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 896389,
+     "start": 885890,
      "wb": 136,
      "sb": 36864
     },
@@ -5269,7 +5660,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1020913,
+     "start": 1009218,
      "wb": 204,
      "sb": 55296
     },
@@ -5278,7 +5669,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1145437,
+     "start": 1132546,
      "wb": 272,
      "sb": 73728
     },
@@ -5287,7 +5678,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1269961,
+     "start": 1255874,
      "wb": 340,
      "sb": 92160
     },
@@ -5296,7 +5687,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1394485,
+     "start": 1379202,
      "wb": 408,
      "sb": 110592
     },
@@ -5305,7 +5696,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1519009,
+     "start": 1502530,
      "wb": 476,
      "sb": 129024
     },
@@ -5314,7 +5705,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1643533,
+     "start": 1625858,
      "wb": 544,
      "sb": 147456
     },
@@ -5323,7 +5714,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1768057,
+     "start": 1749186,
      "wb": 612,
      "sb": 165888
     },
@@ -5332,7 +5723,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1806989,
+     "start": 1787918,
      "wb": 680,
      "sb": 184320
     },
@@ -5341,9 +5732,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1834913,
+     "start": 1816154,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1836710,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -5351,7 +5751,7 @@
    "label": "Stage 42: L28, L29.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -5360,7 +5760,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 649223,
+     "start": 640918,
      "wb": 0,
      "sb": 0
     },
@@ -5369,7 +5769,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 773747,
+     "start": 764246,
      "wb": 68,
      "sb": 18432
     },
@@ -5378,7 +5778,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 898271,
+     "start": 887574,
      "wb": 136,
      "sb": 36864
     },
@@ -5387,7 +5787,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1022795,
+     "start": 1010902,
      "wb": 204,
      "sb": 55296
     },
@@ -5396,7 +5796,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1147319,
+     "start": 1134230,
      "wb": 272,
      "sb": 73728
     },
@@ -5405,7 +5805,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1271843,
+     "start": 1257558,
      "wb": 340,
      "sb": 92160
     },
@@ -5414,7 +5814,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1396367,
+     "start": 1380886,
      "wb": 408,
      "sb": 110592
     },
@@ -5423,7 +5823,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1520891,
+     "start": 1504214,
      "wb": 476,
      "sb": 129024
     },
@@ -5432,7 +5832,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1645415,
+     "start": 1627542,
      "wb": 544,
      "sb": 147456
     },
@@ -5441,7 +5841,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1769939,
+     "start": 1750870,
      "wb": 612,
      "sb": 165888
     },
@@ -5450,7 +5850,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1808871,
+     "start": 1789602,
      "wb": 680,
      "sb": 184320
     },
@@ -5459,9 +5859,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1836795,
+     "start": 1817838,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1838394,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -5469,7 +5878,7 @@
    "label": "Stage 43: L29, L30.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -5478,7 +5887,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 667626,
+     "start": 659123,
      "wb": 0,
      "sb": 0
     },
@@ -5487,7 +5896,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 792150,
+     "start": 782451,
      "wb": 68,
      "sb": 18432
     },
@@ -5496,7 +5905,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 916674,
+     "start": 905779,
      "wb": 136,
      "sb": 36864
     },
@@ -5505,7 +5914,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1041198,
+     "start": 1029107,
      "wb": 204,
      "sb": 55296
     },
@@ -5514,7 +5923,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1165722,
+     "start": 1152435,
      "wb": 272,
      "sb": 73728
     },
@@ -5523,7 +5932,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1290246,
+     "start": 1275763,
      "wb": 340,
      "sb": 92160
     },
@@ -5532,7 +5941,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1414770,
+     "start": 1399091,
      "wb": 408,
      "sb": 110592
     },
@@ -5541,7 +5950,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1539294,
+     "start": 1522419,
      "wb": 476,
      "sb": 129024
     },
@@ -5550,7 +5959,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1663818,
+     "start": 1645747,
      "wb": 544,
      "sb": 147456
     },
@@ -5559,7 +5968,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1788342,
+     "start": 1769075,
      "wb": 612,
      "sb": 165888
     },
@@ -5568,7 +5977,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1827274,
+     "start": 1807807,
      "wb": 680,
      "sb": 184320
     },
@@ -5577,9 +5986,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1855198,
+     "start": 1836043,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1856599,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -5587,7 +6005,7 @@
    "label": "Stage 44: L30, L31.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -5596,7 +6014,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 684162,
+     "start": 675460,
      "wb": 0,
      "sb": 0
     },
@@ -5605,7 +6023,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 808686,
+     "start": 798788,
      "wb": 68,
      "sb": 18432
     },
@@ -5614,7 +6032,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 933210,
+     "start": 922116,
      "wb": 136,
      "sb": 36864
     },
@@ -5623,7 +6041,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1057734,
+     "start": 1045444,
      "wb": 204,
      "sb": 55296
     },
@@ -5632,7 +6050,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1182258,
+     "start": 1168772,
      "wb": 272,
      "sb": 73728
     },
@@ -5641,7 +6059,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1306782,
+     "start": 1292100,
      "wb": 340,
      "sb": 92160
     },
@@ -5650,7 +6068,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1431306,
+     "start": 1415428,
      "wb": 408,
      "sb": 110592
     },
@@ -5659,7 +6077,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1555830,
+     "start": 1538756,
      "wb": 476,
      "sb": 129024
     },
@@ -5668,7 +6086,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1680354,
+     "start": 1662084,
      "wb": 544,
      "sb": 147456
     },
@@ -5677,7 +6095,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1804878,
+     "start": 1785412,
      "wb": 612,
      "sb": 165888
     },
@@ -5686,7 +6104,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1843810,
+     "start": 1824144,
      "wb": 680,
      "sb": 184320
     },
@@ -5695,9 +6113,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1871734,
+     "start": 1852380,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1872936,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -5705,7 +6132,7 @@
    "label": "Stage 45",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -5714,7 +6141,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 700698,
+     "start": 691797,
      "wb": 0,
      "sb": 0
     },
@@ -5723,7 +6150,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 825222,
+     "start": 815125,
      "wb": 68,
      "sb": 18432
     },
@@ -5732,7 +6159,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 949746,
+     "start": 938453,
      "wb": 136,
      "sb": 36864
     },
@@ -5741,7 +6168,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1074270,
+     "start": 1061781,
      "wb": 204,
      "sb": 55296
     },
@@ -5750,7 +6177,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1198794,
+     "start": 1185109,
      "wb": 272,
      "sb": 73728
     },
@@ -5759,7 +6186,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1323318,
+     "start": 1308437,
      "wb": 340,
      "sb": 92160
     },
@@ -5768,7 +6195,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1447842,
+     "start": 1431765,
      "wb": 408,
      "sb": 110592
     },
@@ -5777,7 +6204,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1572366,
+     "start": 1555093,
      "wb": 476,
      "sb": 129024
     },
@@ -5786,7 +6213,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1696890,
+     "start": 1678421,
      "wb": 544,
      "sb": 147456
     },
@@ -5795,7 +6222,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1821414,
+     "start": 1801749,
      "wb": 612,
      "sb": 165888
     },
@@ -5804,7 +6231,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1860346,
+     "start": 1840481,
      "wb": 680,
      "sb": 184320
     },
@@ -5813,9 +6240,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1888270,
+     "start": 1868717,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1889273,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -5824,7 +6260,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 7,
-    "B": 5
+    "B": 6
    },
    "rows": [
     {
@@ -5832,7 +6268,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 702580,
+     "start": 693481,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -5842,7 +6278,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 827104,
+     "start": 816809,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -5852,7 +6288,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 951628,
+     "start": 940137,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -5862,7 +6298,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 1076152,
+     "start": 1063465,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -5872,7 +6308,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1200676,
+     "start": 1186793,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5882,7 +6318,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1325200,
+     "start": 1310121,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -5892,7 +6328,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1449724,
+     "start": 1433449,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5902,7 +6338,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1574248,
+     "start": 1556777,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -5912,7 +6348,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1698772,
+     "start": 1680105,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5922,7 +6358,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1823296,
+     "start": 1803433,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -5932,7 +6368,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1862228,
+     "start": 1842165,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -5942,10 +6378,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 6,
-     "start": 1890152,
+     "start": 1870401,
      "wb": 408,
      "sb": 110592,
      "ikb": 837120
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 5,
+     "start": 1890957,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
     }
    ]
   },
@@ -5953,7 +6399,7 @@
    "label": "Stage 47: L32, L33.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -5962,7 +6408,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 725945,
+     "start": 716647,
      "wb": 0,
      "sb": 0
     },
@@ -5971,7 +6417,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 850469,
+     "start": 839975,
      "wb": 68,
      "sb": 18432
     },
@@ -5980,7 +6426,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 974993,
+     "start": 963303,
      "wb": 136,
      "sb": 36864
     },
@@ -5989,7 +6435,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1099517,
+     "start": 1086631,
      "wb": 204,
      "sb": 55296
     },
@@ -5998,7 +6444,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1224041,
+     "start": 1209959,
      "wb": 272,
      "sb": 73728
     },
@@ -6007,7 +6453,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1348565,
+     "start": 1333287,
      "wb": 340,
      "sb": 92160
     },
@@ -6016,7 +6462,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1473089,
+     "start": 1456615,
      "wb": 408,
      "sb": 110592
     },
@@ -6025,7 +6471,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1597613,
+     "start": 1579943,
      "wb": 476,
      "sb": 129024
     },
@@ -6034,7 +6480,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1722137,
+     "start": 1703271,
      "wb": 544,
      "sb": 147456
     },
@@ -6043,7 +6489,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1846661,
+     "start": 1826599,
      "wb": 612,
      "sb": 165888
     },
@@ -6052,7 +6498,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1885593,
+     "start": 1865331,
      "wb": 680,
      "sb": 184320
     },
@@ -6061,9 +6507,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1913517,
+     "start": 1893567,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1914123,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6071,7 +6526,7 @@
    "label": "Stage 48",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6080,7 +6535,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 744348,
+     "start": 734852,
      "wb": 0,
      "sb": 0
     },
@@ -6089,7 +6544,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 868872,
+     "start": 858180,
      "wb": 68,
      "sb": 18432
     },
@@ -6098,7 +6553,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 993396,
+     "start": 981508,
      "wb": 136,
      "sb": 36864
     },
@@ -6107,7 +6562,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1117920,
+     "start": 1104836,
      "wb": 204,
      "sb": 55296
     },
@@ -6116,7 +6571,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1242444,
+     "start": 1228164,
      "wb": 272,
      "sb": 73728
     },
@@ -6125,7 +6580,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1366968,
+     "start": 1351492,
      "wb": 340,
      "sb": 92160
     },
@@ -6134,7 +6589,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1491492,
+     "start": 1474820,
      "wb": 408,
      "sb": 110592
     },
@@ -6143,7 +6598,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1616016,
+     "start": 1598148,
      "wb": 476,
      "sb": 129024
     },
@@ -6152,7 +6607,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1740540,
+     "start": 1721476,
      "wb": 544,
      "sb": 147456
     },
@@ -6161,7 +6616,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1865064,
+     "start": 1844804,
      "wb": 612,
      "sb": 165888
     },
@@ -6170,7 +6625,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1903996,
+     "start": 1883536,
      "wb": 680,
      "sb": 184320
     },
@@ -6179,9 +6634,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1931920,
+     "start": 1911772,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1932328,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6189,7 +6653,7 @@
    "label": "Stage 49: L33, L34.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6198,7 +6662,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 746230,
+     "start": 736536,
      "wb": 0,
      "sb": 0
     },
@@ -6207,7 +6671,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 870754,
+     "start": 859864,
      "wb": 68,
      "sb": 18432
     },
@@ -6216,7 +6680,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 995278,
+     "start": 983192,
      "wb": 136,
      "sb": 36864
     },
@@ -6225,7 +6689,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1119802,
+     "start": 1106520,
      "wb": 204,
      "sb": 55296
     },
@@ -6234,7 +6698,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1244326,
+     "start": 1229848,
      "wb": 272,
      "sb": 73728
     },
@@ -6243,7 +6707,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1368850,
+     "start": 1353176,
      "wb": 340,
      "sb": 92160
     },
@@ -6252,7 +6716,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1493374,
+     "start": 1476504,
      "wb": 408,
      "sb": 110592
     },
@@ -6261,7 +6725,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1617898,
+     "start": 1599832,
      "wb": 476,
      "sb": 129024
     },
@@ -6270,7 +6734,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1742422,
+     "start": 1723160,
      "wb": 544,
      "sb": 147456
     },
@@ -6279,7 +6743,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1866946,
+     "start": 1846488,
      "wb": 612,
      "sb": 165888
     },
@@ -6288,7 +6752,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1905878,
+     "start": 1885220,
      "wb": 680,
      "sb": 184320
     },
@@ -6297,9 +6761,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1933802,
+     "start": 1913456,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1934012,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6307,7 +6780,7 @@
    "label": "Stage 50: L34, L35.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6316,7 +6789,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 762766,
+     "start": 752873,
      "wb": 0,
      "sb": 0
     },
@@ -6325,7 +6798,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 887290,
+     "start": 876201,
      "wb": 68,
      "sb": 18432
     },
@@ -6334,7 +6807,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1011814,
+     "start": 999529,
      "wb": 136,
      "sb": 36864
     },
@@ -6343,7 +6816,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1136338,
+     "start": 1122857,
      "wb": 204,
      "sb": 55296
     },
@@ -6352,7 +6825,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1260862,
+     "start": 1246185,
      "wb": 272,
      "sb": 73728
     },
@@ -6361,7 +6834,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1385386,
+     "start": 1369513,
      "wb": 340,
      "sb": 92160
     },
@@ -6370,7 +6843,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1509910,
+     "start": 1492841,
      "wb": 408,
      "sb": 110592
     },
@@ -6379,7 +6852,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1634434,
+     "start": 1616169,
      "wb": 476,
      "sb": 129024
     },
@@ -6388,7 +6861,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1758958,
+     "start": 1739497,
      "wb": 544,
      "sb": 147456
     },
@@ -6397,7 +6870,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1883482,
+     "start": 1862825,
      "wb": 612,
      "sb": 165888
     },
@@ -6406,7 +6879,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1922414,
+     "start": 1901557,
      "wb": 680,
      "sb": 184320
     },
@@ -6415,9 +6888,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1950338,
+     "start": 1929793,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1950349,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6425,7 +6907,7 @@
    "label": "Stage 51",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6434,7 +6916,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 779302,
+     "start": 769210,
      "wb": 0,
      "sb": 0
     },
@@ -6443,7 +6925,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 903826,
+     "start": 892538,
      "wb": 68,
      "sb": 18432
     },
@@ -6452,7 +6934,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1028350,
+     "start": 1015866,
      "wb": 136,
      "sb": 36864
     },
@@ -6461,7 +6943,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1152874,
+     "start": 1139194,
      "wb": 204,
      "sb": 55296
     },
@@ -6470,7 +6952,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1277398,
+     "start": 1262522,
      "wb": 272,
      "sb": 73728
     },
@@ -6479,7 +6961,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1401922,
+     "start": 1385850,
      "wb": 340,
      "sb": 92160
     },
@@ -6488,7 +6970,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1526446,
+     "start": 1509178,
      "wb": 408,
      "sb": 110592
     },
@@ -6497,7 +6979,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1650970,
+     "start": 1632506,
      "wb": 476,
      "sb": 129024
     },
@@ -6506,7 +6988,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1775494,
+     "start": 1755834,
      "wb": 544,
      "sb": 147456
     },
@@ -6515,7 +6997,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1900018,
+     "start": 1879162,
      "wb": 612,
      "sb": 165888
     },
@@ -6524,7 +7006,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1938950,
+     "start": 1917894,
      "wb": 680,
      "sb": 184320
     },
@@ -6533,9 +7015,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1966874,
+     "start": 1946130,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1966686,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6544,7 +7035,7 @@
    "copies": 2,
    "users_per_copy": {
     "A": 7,
-    "B": 5
+    "B": 6
    },
    "rows": [
     {
@@ -6552,7 +7043,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 781184,
+     "start": 770894,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -6562,7 +7053,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 0,
-     "start": 905708,
+     "start": 894222,
      "wb": 0,
      "sb": 0,
      "ikb": 0
@@ -6572,7 +7063,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 1030232,
+     "start": 1017550,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -6582,7 +7073,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 1,
-     "start": 1154756,
+     "start": 1140878,
      "wb": 68,
      "sb": 18432,
      "ikb": 139520
@@ -6592,7 +7083,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1279280,
+     "start": 1264206,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -6602,7 +7093,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 2,
-     "start": 1403804,
+     "start": 1387534,
      "wb": 136,
      "sb": 36864,
      "ikb": 279040
@@ -6612,7 +7103,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1528328,
+     "start": 1510862,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -6622,7 +7113,7 @@
      "kind": "mtp",
      "copy": "B",
      "local": 3,
-     "start": 1652852,
+     "start": 1634190,
      "wb": 204,
      "sb": 55296,
      "ikb": 418560
@@ -6632,7 +7123,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1777376,
+     "start": 1757518,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -6642,7 +7133,7 @@
      "kind": "filler",
      "copy": "B",
      "local": 4,
-     "start": 1901900,
+     "start": 1880846,
      "wb": 272,
      "sb": 73728,
      "ikb": 558080
@@ -6652,7 +7143,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 5,
-     "start": 1940832,
+     "start": 1919578,
      "wb": 340,
      "sb": 92160,
      "ikb": 697600
@@ -6662,10 +7153,20 @@
      "kind": "filler",
      "copy": "A",
      "local": 6,
-     "start": 1968756,
+     "start": 1947814,
      "wb": 408,
      "sb": 110592,
      "ikb": 837120
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "B",
+     "local": 5,
+     "start": 1968370,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
     }
    ]
   },
@@ -6673,7 +7174,7 @@
    "label": "Stage 53: L36, L37.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6682,7 +7183,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 804549,
+     "start": 794060,
      "wb": 0,
      "sb": 0
     },
@@ -6691,7 +7192,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 929073,
+     "start": 917388,
      "wb": 68,
      "sb": 18432
     },
@@ -6700,7 +7201,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1053597,
+     "start": 1040716,
      "wb": 136,
      "sb": 36864
     },
@@ -6709,7 +7210,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1178121,
+     "start": 1164044,
      "wb": 204,
      "sb": 55296
     },
@@ -6718,7 +7219,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1302645,
+     "start": 1287372,
      "wb": 272,
      "sb": 73728
     },
@@ -6727,7 +7228,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1427169,
+     "start": 1410700,
      "wb": 340,
      "sb": 92160
     },
@@ -6736,7 +7237,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1551693,
+     "start": 1534028,
      "wb": 408,
      "sb": 110592
     },
@@ -6745,7 +7246,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1676217,
+     "start": 1657356,
      "wb": 476,
      "sb": 129024
     },
@@ -6754,7 +7255,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1800741,
+     "start": 1780684,
      "wb": 544,
      "sb": 147456
     },
@@ -6763,7 +7264,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1925265,
+     "start": 1904012,
      "wb": 612,
      "sb": 165888
     },
@@ -6772,7 +7273,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1964197,
+     "start": 1942744,
      "wb": 680,
      "sb": 184320
     },
@@ -6781,9 +7282,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 1992121,
+     "start": 1970980,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 1991536,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6791,7 +7301,7 @@
    "label": "Stage 54",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6800,7 +7310,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 822952,
+     "start": 812265,
      "wb": 0,
      "sb": 0
     },
@@ -6809,7 +7319,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 947476,
+     "start": 935593,
      "wb": 68,
      "sb": 18432
     },
@@ -6818,7 +7328,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1072000,
+     "start": 1058921,
      "wb": 136,
      "sb": 36864
     },
@@ -6827,7 +7337,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1196524,
+     "start": 1182249,
      "wb": 204,
      "sb": 55296
     },
@@ -6836,7 +7346,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1321048,
+     "start": 1305577,
      "wb": 272,
      "sb": 73728
     },
@@ -6845,7 +7355,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1445572,
+     "start": 1428905,
      "wb": 340,
      "sb": 92160
     },
@@ -6854,7 +7364,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1570096,
+     "start": 1552233,
      "wb": 408,
      "sb": 110592
     },
@@ -6863,7 +7373,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1694620,
+     "start": 1675561,
      "wb": 476,
      "sb": 129024
     },
@@ -6872,7 +7382,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1819144,
+     "start": 1798889,
      "wb": 544,
      "sb": 147456
     },
@@ -6881,7 +7391,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1943668,
+     "start": 1922217,
      "wb": 612,
      "sb": 165888
     },
@@ -6890,7 +7400,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1982600,
+     "start": 1960949,
      "wb": 680,
      "sb": 184320
     },
@@ -6899,9 +7409,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 2010524,
+     "start": 1989185,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 2009741,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -6909,7 +7428,7 @@
    "label": "Stage 55: L37, L38.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -6918,7 +7437,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 824834,
+     "start": 813949,
      "wb": 0,
      "sb": 0
     },
@@ -6927,7 +7446,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 949358,
+     "start": 937277,
      "wb": 68,
      "sb": 18432
     },
@@ -6936,7 +7455,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1073882,
+     "start": 1060605,
      "wb": 136,
      "sb": 36864
     },
@@ -6945,7 +7464,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1198406,
+     "start": 1183933,
      "wb": 204,
      "sb": 55296
     },
@@ -6954,7 +7473,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1322930,
+     "start": 1307261,
      "wb": 272,
      "sb": 73728
     },
@@ -6963,7 +7482,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1447454,
+     "start": 1430589,
      "wb": 340,
      "sb": 92160
     },
@@ -6972,7 +7491,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1571978,
+     "start": 1553917,
      "wb": 408,
      "sb": 110592
     },
@@ -6981,7 +7500,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1696502,
+     "start": 1677245,
      "wb": 476,
      "sb": 129024
     },
@@ -6990,7 +7509,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1821026,
+     "start": 1800573,
      "wb": 544,
      "sb": 147456
     },
@@ -6999,7 +7518,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1945550,
+     "start": 1923901,
      "wb": 612,
      "sb": 165888
     },
@@ -7008,7 +7527,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 1984482,
+     "start": 1962633,
      "wb": 680,
      "sb": 184320
     },
@@ -7017,9 +7536,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 2012406,
+     "start": 1990869,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 2011425,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -7027,7 +7555,7 @@
    "label": "Stage 56: L38, L39.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -7036,7 +7564,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 841370,
+     "start": 830286,
      "wb": 0,
      "sb": 0
     },
@@ -7045,7 +7573,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 965894,
+     "start": 953614,
      "wb": 68,
      "sb": 18432
     },
@@ -7054,7 +7582,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1090418,
+     "start": 1076942,
      "wb": 136,
      "sb": 36864
     },
@@ -7063,7 +7591,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1214942,
+     "start": 1200270,
      "wb": 204,
      "sb": 55296
     },
@@ -7072,7 +7600,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1339466,
+     "start": 1323598,
      "wb": 272,
      "sb": 73728
     },
@@ -7081,7 +7609,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1463990,
+     "start": 1446926,
      "wb": 340,
      "sb": 92160
     },
@@ -7090,7 +7618,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1588514,
+     "start": 1570254,
      "wb": 408,
      "sb": 110592
     },
@@ -7099,7 +7627,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1713038,
+     "start": 1693582,
      "wb": 476,
      "sb": 129024
     },
@@ -7108,7 +7636,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1837562,
+     "start": 1816910,
      "wb": 544,
      "sb": 147456
     },
@@ -7117,7 +7645,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1962086,
+     "start": 1940238,
      "wb": 612,
      "sb": 165888
     },
@@ -7126,7 +7654,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 2001018,
+     "start": 1978970,
      "wb": 680,
      "sb": 184320
     },
@@ -7135,9 +7663,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 2028942,
+     "start": 2007206,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 2027762,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -7145,7 +7682,7 @@
    "label": "Stage 57: L39.ffn",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -7154,7 +7691,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 857906,
+     "start": 846623,
      "wb": 0,
      "sb": 0
     },
@@ -7163,7 +7700,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 982430,
+     "start": 969951,
      "wb": 68,
      "sb": 18432
     },
@@ -7172,7 +7709,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1106954,
+     "start": 1093279,
      "wb": 136,
      "sb": 36864
     },
@@ -7181,7 +7718,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1231478,
+     "start": 1216607,
      "wb": 204,
      "sb": 55296
     },
@@ -7190,7 +7727,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1356002,
+     "start": 1339935,
      "wb": 272,
      "sb": 73728
     },
@@ -7199,7 +7736,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1480526,
+     "start": 1463263,
      "wb": 340,
      "sb": 92160
     },
@@ -7208,7 +7745,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1605050,
+     "start": 1586591,
      "wb": 408,
      "sb": 110592
     },
@@ -7217,7 +7754,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1729574,
+     "start": 1709919,
      "wb": 476,
      "sb": 129024
     },
@@ -7226,7 +7763,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1854098,
+     "start": 1833247,
      "wb": 544,
      "sb": 147456
     },
@@ -7235,7 +7772,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1978622,
+     "start": 1956575,
      "wb": 612,
      "sb": 165888
     },
@@ -7244,7 +7781,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 2017554,
+     "start": 1995307,
      "wb": 680,
      "sb": 184320
     },
@@ -7253,9 +7790,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 2045478,
+     "start": 2023543,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 2044099,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   },
@@ -7263,7 +7809,7 @@
    "label": "Stage 58: head die (LM head, argmax)",
    "copies": 1,
    "users_per_copy": {
-    "A": 12,
+    "A": 13,
     "B": 0
    },
    "rows": [
@@ -7272,7 +7818,7 @@
      "kind": "latency",
      "copy": "A",
      "local": 0,
-     "start": 866097,
+     "start": 854615,
      "wb": 0,
      "sb": 0
     },
@@ -7281,7 +7827,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 1,
-     "start": 990621,
+     "start": 977943,
      "wb": 68,
      "sb": 18432
     },
@@ -7290,7 +7836,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 2,
-     "start": 1115145,
+     "start": 1101271,
      "wb": 136,
      "sb": 36864
     },
@@ -7299,7 +7845,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 3,
-     "start": 1239669,
+     "start": 1224599,
      "wb": 204,
      "sb": 55296
     },
@@ -7308,7 +7854,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 4,
-     "start": 1364193,
+     "start": 1347927,
      "wb": 272,
      "sb": 73728
     },
@@ -7317,7 +7863,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 5,
-     "start": 1488717,
+     "start": 1471255,
      "wb": 340,
      "sb": 92160
     },
@@ -7326,7 +7872,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 6,
-     "start": 1613241,
+     "start": 1594583,
      "wb": 408,
      "sb": 110592
     },
@@ -7335,7 +7881,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 7,
-     "start": 1737765,
+     "start": 1717911,
      "wb": 476,
      "sb": 129024
     },
@@ -7344,7 +7890,7 @@
      "kind": "mtp",
      "copy": "A",
      "local": 8,
-     "start": 1862289,
+     "start": 1841239,
      "wb": 544,
      "sb": 147456
     },
@@ -7353,7 +7899,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 9,
-     "start": 1986813,
+     "start": 1964567,
      "wb": 612,
      "sb": 165888
     },
@@ -7362,7 +7908,7 @@
      "kind": "filler",
      "copy": "A",
      "local": 10,
-     "start": 2025745,
+     "start": 2003299,
      "wb": 680,
      "sb": 184320
     },
@@ -7371,9 +7917,18 @@
      "kind": "filler",
      "copy": "A",
      "local": 11,
-     "start": 2053669,
+     "start": 2031535,
      "wb": 748,
      "sb": 202752
+    },
+    {
+     "user": 12,
+     "kind": "filler",
+     "copy": "A",
+     "local": 12,
+     "start": 2052091,
+     "wb": 816,
+     "sb": 221184
     }
    ]
   }
@@ -7381,13 +7936,13 @@
  "lemma": {
   "premise": {
    "rule": "every non-replicated window <= slot spacing; every duplicated window <= per-copy spacing",
-   "nonrep_window_max": 124521,
-   "slot": 124524,
+   "nonrep_window_max": 123328,
+   "slot": 123328,
    "holds": true
   },
   "brute_force": {
    "resources": 217,
-   "windows": 2124,
+   "windows": 2301,
    "collisions": [],
    "n_collisions": 0,
    "result": "PASS"
@@ -7489,601 +8044,601 @@
     "id": "S000",
     "label": "Stage 0: embed, L0",
     "t": 0,
-    "span": 10628,
-    "occ": 10913,
-    "step": 65476,
+    "span": 10429,
+    "occ": 10714,
+    "step": 64283,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S001",
     "label": "Stage 1: L0, L1.ffn",
-    "t": 11446,
-    "span": 16727,
-    "occ": 17269,
-    "step": 103612,
+    "t": 11247,
+    "span": 16528,
+    "occ": 17070,
+    "step": 102419,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S002",
     "label": "Stage 2: L1, L2.ffn",
-    "t": 28991,
-    "span": 30349,
-    "occ": 31144,
-    "step": 165774,
+    "t": 28593,
+    "span": 30150,
+    "occ": 30945,
+    "step": 164582,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S003",
     "label": "Stage 3",
-    "t": 60158,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 59561,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S004",
     "label": "Stage 4: L2, L3.ffn",
-    "t": 62040,
-    "span": 16912,
-    "occ": 17510,
-    "step": 105057,
+    "t": 61245,
+    "span": 16714,
+    "occ": 17311,
+    "step": 103864,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S005",
     "label": "Stage 5: L3, L4.ffn",
-    "t": 80210,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 79220,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S006",
     "label": "Stage 6",
-    "t": 100999,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 99810,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S007",
     "label": "Stage 7: L4, L5.ffn",
-    "t": 103321,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 101937,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S008",
     "label": "Stage 8: L5, L6.ffn",
-    "t": 124550,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 122970,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S009",
     "label": "Stage 9",
-    "t": 145339,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 143560,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S010",
     "label": "Stage 10: L6, L7.ffn",
-    "t": 147661,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 145687,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S011",
     "label": "Stage 11: L7, L8.ffn",
-    "t": 168450,
-    "span": 33413,
-    "occ": 34394,
-    "step": 185275,
+    "t": 166277,
+    "span": 33214,
+    "occ": 34195,
+    "step": 184082,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S012",
     "label": "Stage 12",
-    "t": 202681,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 200309,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S013",
     "label": "Stage 13: L8, L9.ffn",
-    "t": 204563,
-    "span": 16912,
-    "occ": 17510,
-    "step": 105057,
+    "t": 201993,
+    "span": 16714,
+    "occ": 17311,
+    "step": 103864,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S014",
     "label": "Stage 14: L9, L10.ffn",
-    "t": 222733,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 219968,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S015",
     "label": "Stage 15: L10, L11.ffn",
-    "t": 243962,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 241001,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S016",
     "label": "Stage 16",
-    "t": 264751,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 261591,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S017",
     "label": "Stage 17: L11, L12.ffn",
-    "t": 267073,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 263718,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S018",
     "label": "Stage 18: L12, L13.ffn",
-    "t": 288302,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 284751,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S019",
     "label": "Stage 19",
-    "t": 309091,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 305341,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S020",
     "label": "Stage 20: L13, L14.ffn",
-    "t": 310973,
-    "span": 34327,
-    "occ": 35325,
-    "step": 190861,
+    "t": 307025,
+    "span": 34128,
+    "occ": 35126,
+    "step": 189668,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S021",
     "label": "Stage 21: L14, L15.ffn",
-    "t": 346118,
-    "span": 16912,
-    "occ": 17510,
-    "step": 105057,
+    "t": 341971,
+    "span": 16714,
+    "occ": 17311,
+    "step": 103864,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S022",
     "label": "Stage 22",
-    "t": 363848,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 359503,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S023",
     "label": "Stage 23: L15, L16.ffn",
-    "t": 366170,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 361630,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S024",
     "label": "Stage 24: L16, L17.ffn",
-    "t": 387399,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 382663,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S025",
     "label": "Stage 25",
-    "t": 408188,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 403253,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S026",
     "label": "Stage 26: L17, L18.ffn",
-    "t": 410510,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 405380,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false,
-    "hold_tx": 440
+    "hold_tx": 443
    },
    {
     "id": "S027",
     "label": "Stage 27: L18, L19.ffn",
-    "t": 431739,
-    "span": 19971,
-    "occ": 20754,
-    "step": 124521,
+    "t": 426413,
+    "span": 19772,
+    "occ": 20555,
+    "step": 123328,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S028",
     "label": "Stage 28",
-    "t": 452528,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 447003,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S029",
     "label": "Stage 29: L19, L20.ffn",
-    "t": 454410,
-    "span": 37999,
-    "occ": 38900,
-    "step": 191318,
+    "t": 448687,
+    "span": 37800,
+    "occ": 38701,
+    "step": 190125,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S030",
     "label": "Stage 30: L20, L21.ffn",
-    "t": 493227,
-    "span": 16393,
-    "occ": 16958,
-    "step": 101748,
+    "t": 487305,
+    "span": 16194,
+    "occ": 16760,
+    "step": 100555,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S031",
     "label": "Stage 31: L21, L22.ffn",
-    "t": 510438,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 504317,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S032",
     "label": "Stage 32",
-    "t": 526974,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 520654,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S033",
     "label": "Stage 33: L22, L23.ffn",
-    "t": 528856,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 522338,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S034",
     "label": "Stage 34: L23, L24.ffn",
-    "t": 545392,
-    "span": 22527,
-    "occ": 23170,
-    "step": 139018,
+    "t": 538675,
+    "span": 22328,
+    "occ": 22971,
+    "step": 137825,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S035",
     "label": "Stage 35",
-    "t": 568737,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 561821,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S036",
     "label": "Stage 36: L24, L25.ffn",
-    "t": 570619,
-    "span": 17585,
-    "occ": 18224,
-    "step": 109339,
+    "t": 563505,
+    "span": 17387,
+    "occ": 18025,
+    "step": 108146,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S037",
     "label": "Stage 37: L25, L26.ffn",
-    "t": 589022,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 581710,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S038",
     "label": "Stage 38",
-    "t": 605558,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 598047,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S039",
     "label": "Stage 39: L26, L27.ffn",
-    "t": 607440,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 599731,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S040",
     "label": "Stage 40: L27, L28.ffn",
-    "t": 623976,
-    "span": 22547,
-    "occ": 23190,
-    "step": 139140,
+    "t": 616068,
+    "span": 22348,
+    "occ": 22992,
+    "step": 137947,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S041",
     "label": "Stage 41",
-    "t": 647341,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 639234,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S042",
     "label": "Stage 42: L28, L29.ffn",
-    "t": 649223,
-    "span": 17585,
-    "occ": 18224,
-    "step": 109339,
+    "t": 640918,
+    "span": 17387,
+    "occ": 18025,
+    "step": 108146,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S043",
     "label": "Stage 43: L29, L30.ffn",
-    "t": 667626,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 659123,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S044",
     "label": "Stage 44: L30, L31.ffn",
-    "t": 684162,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 675460,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S045",
     "label": "Stage 45",
-    "t": 700698,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 691797,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S046",
     "label": "Stage 46: L31, L32.ffn",
-    "t": 702580,
-    "span": 22547,
-    "occ": 23190,
-    "step": 139140,
+    "t": 693481,
+    "span": 22348,
+    "occ": 22992,
+    "step": 137947,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S047",
     "label": "Stage 47: L32, L33.ffn",
-    "t": 725945,
-    "span": 17585,
-    "occ": 18224,
-    "step": 109339,
+    "t": 716647,
+    "span": 17387,
+    "occ": 18025,
+    "step": 108146,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S048",
     "label": "Stage 48",
-    "t": 744348,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 734852,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S049",
     "label": "Stage 49: L33, L34.ffn",
-    "t": 746230,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 736536,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S050",
     "label": "Stage 50: L34, L35.ffn",
-    "t": 762766,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 752873,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S051",
     "label": "Stage 51",
-    "t": 779302,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 769210,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S052",
     "label": "Stage 52: L35, L36.ffn",
-    "t": 781184,
-    "span": 22547,
-    "occ": 23190,
-    "step": 139140,
+    "t": 770894,
+    "span": 22348,
+    "occ": 22992,
+    "step": 137947,
     "copies": 2,
     "idx": true
    },
    {
     "id": "S053",
     "label": "Stage 53: L36, L37.ffn",
-    "t": 804549,
-    "span": 17585,
-    "occ": 18224,
-    "step": 109339,
+    "t": 794060,
+    "span": 17387,
+    "occ": 18025,
+    "step": 108146,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S054",
     "label": "Stage 54",
-    "t": 822952,
-    "span": 1064,
-    "occ": 1064,
-    "step": 6384,
+    "t": 812265,
+    "span": 866,
+    "occ": 866,
+    "step": 5191,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S055",
     "label": "Stage 55: L37, L38.ffn",
-    "t": 824834,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 813949,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S056",
     "label": "Stage 56: L38, L39.ffn",
-    "t": 841370,
-    "span": 15718,
-    "occ": 16242,
-    "step": 97452,
+    "t": 830286,
+    "span": 15519,
+    "occ": 16044,
+    "step": 96259,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S057",
     "label": "Stage 57: L39.ffn",
-    "t": 857906,
-    "span": 7373,
-    "occ": 7612,
-    "step": 45671,
+    "t": 846623,
+    "span": 7174,
+    "occ": 7413,
+    "step": 44478,
     "copies": 1,
     "idx": false
    },
    {
     "id": "S058",
     "label": "Stage 58: head die (LM head, argmax)",
-    "t": 866097,
-    "span": 11987,
-    "occ": 11987,
-    "step": 71918,
+    "t": 854615,
+    "span": 11553,
+    "occ": 11553,
+    "step": 69317,
     "copies": 1,
     "idx": false
    }
