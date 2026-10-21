@@ -1,0 +1,28 @@
+{
+  "a": {
+    "status": "PASS",
+    "limit": 32,
+    "roots_examined": 230734,
+    "max_dynamic_loads": 32,
+    "role_errors": [],
+    "raw_path": "/srv/opentallas-scratch/claude/ref_gate/s81sl_lepab_r2a-20261021-105251/routes/gate/work/orfs/native_census.json",
+    "raw_sha256": "1593834c86df10f8f99e151549ef2723fe3387746f5558403a743afc8886152b",
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_s81sl_lep_mu_ab_regional_r3r_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "10cdab776fdc0e0af98f545dae880fcd51a53a827ab9e2a53b6aec5a3fd90f58"
+    }
+  },
+  "b": {
+    "status": "PASS",
+    "limit": 32,
+    "roots_examined": 230734,
+    "max_dynamic_loads": 32,
+    "role_errors": [],
+    "raw_path": "/srv/opentallas-scratch/claude/ref_gate/s81sl_lepab_r2b-20261021-105251/routes/gate/work/orfs/native_census.json",
+    "raw_sha256": "a470466916cad6f91a1d1fb42297e740d1be104f97fed21b87210fcfd1f74591",
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_s81sl_lep_mu_ab_regional_r3r_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "10cdab776fdc0e0af98f545dae880fcd51a53a827ab9e2a53b6aec5a3fd90f58"
+    }
+  }
+}
