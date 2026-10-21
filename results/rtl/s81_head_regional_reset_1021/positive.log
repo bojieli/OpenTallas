@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-epyc7       admits   339 GB (avail 338, growth 101, headroom 0, waiters 0/0 GB) load 80/96 running 19 disk 4676 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2085684-1792605161 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LANE 0 tx240 echo240 rxcredit240
+LANE 1 tx240 echo240 rxcredit240
+LANE 2 tx240 echo240 rxcredit240
+LANE 3 tx240 echo240 rxcredit240
+PASS lepab_regional: received400 landed160 NB80 bothpairs replay phases80/160ps first151 last2537
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2085684-1792605161): exit 0
