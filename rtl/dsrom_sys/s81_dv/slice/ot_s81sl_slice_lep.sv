@@ -907,7 +907,7 @@ module ot_s81sl_lep_core #(
     end
     always @(posedge clk) begin
         rid <= nrid;
-        mwd <= {mwd_n[1103:1], rbx[0]};
+        mwd[1103:1] <= mwd_n[1103:1];
 
     end
     // L5B-LEPMU: the return tag / code bits and mwd[0] take the released frame through their own kept copies of rpb
@@ -926,6 +926,7 @@ module ot_s81sl_lep_core #(
     end else begin:g_nrbx
       assign rbx=rb;
     end
+    always @(posedge clk) mwd[0] <= rbx[0];
     if(NATIVE32!=0 && RX_SRAM!=0) begin:g_native_return
       wire [31:0] ring_tag={1'b1,rbx[TG+2+:10],rbx[TG+12+:21]};
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
