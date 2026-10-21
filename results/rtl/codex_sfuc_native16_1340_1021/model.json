@@ -1,0 +1,12 @@
+{
+  "scope": "Minimal source15 remaining stage valid/group decode isolation, existing component only",
+  "before": "ABC shared NAND3(~stage_group[12],stage_v[6],stage_group[13]) drives35 actual contacts; native15 FAIL1/max35/210351",
+  "change": "32 kept combinational two-bit group decoders (8 sectors x4 groups); each output drives16 bank-hit terms through existing WPIPE capture",
+  "FF_delta": 0,
+  "SRAM_delta": 0,
+  "port_and_datapath_bits_per_edge": "unchanged: stage2048, operandread2048, outputwrite512, drain512",
+  "latency_delta_edges": 0,
+  "replica_cost": "32 tiny combinational boundaries, same32 original gv functions; actual mapped count/area pending synthesis; no physical slot fit claim",
+  "reach": "unchanged component-local control; no new external wire/channel",
+  "single_user_latency_delta": 0
+}

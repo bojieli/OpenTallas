@@ -281,7 +281,9 @@ module ot_hgi_sfu_static_operand_store #(
   if(PS)begin:g_presel
    (* keep=1 *) wire [7:0] gv;      // sector s is valid and targets this group
    for(genvar s=0;s<8;s=s+1)begin:g_gv
-    assign gv[s]=stage_v[s] && stage_group[2*s+:2]==g;
+    // Keep this sector/group decode local: shared ABC factors exceeded32 loads.
+    ot_hgi_sfu_stage_group_decode #(.GROUP(g)) u_decode(
+      .v(stage_v[s]),.group_id(stage_group[2*s+:2]),.hit(gv[s]));
    end
    // s10: kept per-(bank, sector) hit nodes and per-bank collision nodes keep every decode term bank-local.
    (* keep=1 *) wire [127:0] hg;                     // [8*b+s]
@@ -398,3 +400,9 @@ endmodule
  assign e=re && en;
 endmodule
 `default_nettype wire
+
+// Combinational boundary prevents cross-group factoring of the sixteen-bank enable.
+(* keep_hierarchy=1 *) module ot_hgi_sfu_stage_group_decode #(parameter integer GROUP=0)(
+ input wire v,input wire[1:0]group_id,output wire hit);
+ assign hit=v && group_id==GROUP;
+endmodule

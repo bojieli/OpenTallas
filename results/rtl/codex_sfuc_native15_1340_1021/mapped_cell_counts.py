@@ -9,7 +9,10 @@ for f in a.liberty:
  for kind,name,body in nc.groups(text):
   if kind!='library':continue
   for k,n,b in nc.groups(body):
-   if k=='cell':areas[n]=float(nc.attr(b,'area') or 0)
+   if k=='cell':
+    m=re.search(r'(?m)^\s*area\s*:\s*([0-9.eE+-]+)',b)
+    if not m:raise ValueError('missing actual Liberty area '+n)
+    areas[n]=float(m.group(1))
 mods={};module=None
 with open(a.netlist) as f:
  for line in f:
