@@ -24,5 +24,14 @@
  "same_RTL": {
   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv": "1b2d00fd1193a4343f38145e370649457468e0364b11276173a19933c6f86887",
   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tile_e86_v5.sv": "b52d71989e6d8d86ed5c90f4bbd4099d9824aa50285ebdeae6a9a8ee9a1c19c7"
+ },
+ "actual_staged_readback": {
+  "source_tar_sha256": "564f4d73fa5ffb2f3ea27ae208a27878dc754e79f4757e783c447bdf74836bb1",
+  "two_RTL_sha256": {
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv": "1b2d00fd1193a4343f38145e370649457468e0364b11276173a19933c6f86887",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tile_e86_v5.sv": "b52d71989e6d8d86ed5c90f4bbd4099d9824aa50285ebdeae6a9a8ee9a1c19c7"
+  },
+  "all_match_local_committed_source": true,
+  "scope": "actual EP5 source.tar plus two RTL byte readback; not a physical gate archive verification flag"
  }
 }
