@@ -1,0 +1,40 @@
+{
+  "verdict": "FAIL",
+  "start_commit": "a153761f95cee63943c1c363ec80ccc9c4344b8a",
+  "source_snapshot_manifest_sha256": "ae8905c2f959a570b247c345334f36c533fefb1c4bda27a6435dbbee0dfb87a7",
+  "source_snapshot_archive_sha256": "6028344d48bda422bb0360cb89a502af8c25a6001bb9da6f1138679869c7acac",
+  "geometry_kit_files": {
+    "physical/ref_tile/qfd_coll_split_q8a/README.md": "81f4906a3a43faf2f47d344225fd9936806a44b97df73d7855283347b756e9a1",
+    "physical/ref_tile/qfd_coll_split_q8a/clock.sdc": "c8e81c804aae001276d34509d920c7389b3344b3f318e416577dd05012ef35bd",
+    "physical/ref_tile/qfd_coll_split_q8a/floorplan.json": "dfbe0cc61799a9882b50683e9592be7e4e3ca1e292b5bc3fbb231a47db348e11",
+    "physical/ref_tile/qfd_coll_split_q8a/job.json": "69e87a959556c18c7266054e49af8f5a368f34bb20a6b5a6de4faba3bfa398ea",
+    "physical/ref_tile/qfd_coll_split_q8a/kit.env": "901dde577a0641e007ddf862f88c404d3b621db09f9db236ce71dbfd6246fb78",
+    "physical/ref_tile/qfd_coll_split_q8a/native_release_tie.tcl": "3cf770d33a324cfadf96066c879993b10b235f24636622f92a61de2df3f7b669",
+    "physical/ref_tile/qfd_coll_split_q8a/pdn.tcl": "30795416b0cb8b55ff5481ef1e28652f30c1272323102097a75db1072ee6007c",
+    "physical/ref_tile/qfd_coll_split_q8a/pin_regs.json": "92610250ca40a893a16acbbbebe599a28f7fa72c6addb9bc9f27af413437e56b",
+    "physical/ref_tile/qfd_coll_split_q8a/place.tcl": "fe9c467618dd94bf6b3a4b5bd3fb3c5506c10c1261a214e3a4b152c32275f78d",
+    "physical/ref_tile/qfd_coll_split_q8a/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/qfd_coll_split_q8a/post_drt.tcl": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
+    "physical/ref_tile/qfd_coll_split_q8a/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/qfd_coll_split_q8a/post_grt.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/qfd_coll_split_q8a/pre_cts.tcl": "0a65683e2d55c3d9b73b223b0cce2c82661f867874f5ba89be023ac0b69c57e3",
+    "physical/ref_tile/qfd_coll_split_q8a/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+    "physical/ref_tile/qfd_coll_split_q8a/pre_drt.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/qfd_coll_split_q8a/pre_fill.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/qfd_coll_split_q8a/pre_gpl.tcl": "1677fb21c339efca7de25d3fcb4e6314469c6d83c7ecffef0014e2b57e8853bc",
+    "physical/ref_tile/qfd_coll_split_q8a/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
+    "physical/ref_tile/qfd_coll_split_q8a/reset_landing.json": "9711441446cbf6cc50144d0937ca0ea4ebb1bb3492849f09ebbc6cc4b2ec6edb",
+    "physical/ref_tile/qfd_coll_split_q8a/signoff.sdc": "d4f9a75c53f682f2f36ab33c4d593327193300231797819e9f6617e484c9deab",
+    "physical/ref_tile/qfd_coll_split_q8a/spec.json": "73d7b458342406b98e0281c0fbffe1ce820f24534d2fe2ed24a2b0a1d18ca1e7",
+    "physical/ref_tile/qfd_coll_split_q8a/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed"
+  },
+  "geometry_sha256": "813912b54b227005639eda9eb1af6e99f6c7a16e9d9a7c89f185dac5bc880a18",
+  "gate_result_sha256": "d49dde272301ea96b146361ed75e46d1256c64fa9522a4fe3c28bedad1a8754c",
+  "images": {
+    "floorplan.png": "7215e7a0bd2c36403bbabc824236693e4a18b37ebeec22192039ecbedca4c5a8",
+    "density.png": "19dd5843993cd9a93e077dcf61470e925abd622a48e2164c2b99a3fd392b422c"
+  },
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_split_q8a-20261021-133920",
+  "failure": "GRT-0183 net42538 boxed in during hold repair, final GATE_GRT_RC=2",
+  "review": "Personally viewed both PNGs. Floorplan has intended alternating gaps between macro groups; density concentrated in central channel with localized orange/red bins and sparse outer margins. No geometry acceptance follows: local maze path fails despite summary overflow0. S/N face bus demand99% retained as warning. No successor launched; q8b preserved."
+}
