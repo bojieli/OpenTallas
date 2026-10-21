@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-hroot-engine-1021/engine_copy_certificate.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-hroot-engine-1021/engine_copy_certificate.py", line 99, in main
+    result = check(a.original, a.mapped, a.parser, json.loads(a.record.read_text()))
+  File "/srv/opentallas-scratch/claude/codex-hroot-engine-1021/engine_copy_certificate.py", line 80, in check
+    assert logical_new(got) == resolve(old, oa, want), ('input relation changed', name, pn)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('input relation changed', 'u25887_c8.u_cell', 'A')
