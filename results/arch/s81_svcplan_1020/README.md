@@ -29,3 +29,19 @@ Base: Codex codex/s81-service-plan-1020 @39419dd43 (G4_split112 geometry). MODEL
   Fewer than 112 frames breaks today's dense allocator (448 a_proj rows / 4 per frame), so dense layers need a 2-die or
   multiphase split -> architecture decision (owner accepts more dies).
 ## Not done (by design): dv_plan GEN / gen_safety / trial GRT -- DRIVE-S81: no trial GRT with undersized slice slots.
+
+## (3) 23:59 DRIVE-S81 ask: fewer frame columns + dense split (MODEL + actual allocator)
+- The compiler (xs_place.py NSLICE 16; heads/dims dealt per slice) and the dim-sliced RTL need 16 slices: a 7/6-column die
+  (14/12 slices) fails the allocator outright (IndexError in xs_topo.nfr). So "7 col" = keep 8 slice columns (16 slices) with
+  14 frame columns: 840 + 14 x 1445.5 + 8 x 1302.8 = 31.5 mm with compact ends (fits); "6 col" = 12 frame columns, MU end
+  slices 2512.4: 31.2 mm (fits). Service band then as today's width -> co-located G4 16 services, all row-0 frames dropped.
+- Frames: 7-equiv 98 (112 positions - 14 row-0); 6-equiv 84 (96 - 12). Actual allocator (capacity_cols.py, probes_lt112.txt):
+  FAIL at 98 / 84 and even at 108 frames: 'a_proj one-phase capacity wq_a 320 rows' vs 70 / 60 / 77 -> one-phase dense needs 112.
+- Dense split over 2 consecutive stage die-groups (dense_split_model.py, scaled from the actual 112 probes, validated: F112 = 139):
+  | frames | stages | dies | AR/user G16 -> G4 | MTP/user G16 -> G4 |
+  | 112 one-phase | 139 | 640 | 1,011.8 -> 978.4 | 2,991.2 -> 2,949.9 |
+  | 98 split | 161 | 728 | 1,003.3 -> 970.2 | 2,973.3 -> 2,932.3 |
+  | 84 split | 201 | 888 | 988.2 -> 955.6 | 2,941.4 -> 2,900.8 |
+  Inter-die traffic: the A group forwards its half of the a_proj outputs (q_a/kv_a latent ~1.06 k values ~2.1 KB/token/layer) on
+  the existing stage link with x; no new link class. MU users not modelled. MTP < 3,000 floor in every G4 row (already at 112).
+- Needs a compiler feature (dense ownership over 2 die-groups / multiphase a_proj) before any exact receipt; not built here.

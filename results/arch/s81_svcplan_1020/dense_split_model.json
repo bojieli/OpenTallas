@@ -1,0 +1,46 @@
+{
+ "F112": {
+  "frames": 112,
+  "dense_split_2": false,
+  "stages": 139,
+  "layer_dies": 556,
+  "total_dies": 640,
+  "ar_per_user_G16": 1011.8,
+  "mtp_per_user_G16": 2991.2,
+  "ar_per_user_G4": 978.4,
+  "mtp_per_user_G4": 2949.9
+ },
+ "F112_split": {
+  "frames": 112,
+  "dense_split_2": true,
+  "stages": 161,
+  "layer_dies": 644,
+  "total_dies": 728,
+  "ar_per_user_G16": 1003.3,
+  "mtp_per_user_G16": 2973.3,
+  "ar_per_user_G4": 970.2,
+  "mtp_per_user_G4": 2932.3
+ },
+ "F98_split": {
+  "frames": 98,
+  "dense_split_2": true,
+  "stages": 161,
+  "layer_dies": 644,
+  "total_dies": 728,
+  "ar_per_user_G16": 1003.3,
+  "mtp_per_user_G16": 2973.3,
+  "ar_per_user_G4": 970.2,
+  "mtp_per_user_G4": 2932.3
+ },
+ "F84_split": {
+  "frames": 84,
+  "dense_split_2": true,
+  "stages": 201,
+  "layer_dies": 804,
+  "total_dies": 888,
+  "ar_per_user_G16": 988.2,
+  "mtp_per_user_G16": 2941.4,
+  "ar_per_user_G4": 955.6,
+  "mtp_per_user_G4": 2900.8
+ }
+}

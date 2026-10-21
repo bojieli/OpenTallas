@@ -1,0 +1,6 @@
+SVCPLAN_INVENTORY {"cols": 8, "drop_frame_columns": [[3, "R"], [4, "L"]], "row0_dropped": false, "frames": 108, "slices": 16, "topo": [8, 8, 8, 8, 7, 8, 3, 4, 3, 4, 7, 8, 8, 8, 8, 8]}
+XS_CAP {"id": "exp_n1", "vdepth": null, "experts": 1, "dense_layer": null, "frames": 108, "faults": 108, "first_fault": {"frame": "u_f_0L10", "fault": "AssertionError(('a_proj one-phase capacity', 'wq_a', 320, 77))", "seconds": 0.1}, "q_max_fill": null, "q_max
+SVCPLAN_INVENTORY {"cols": 8, "drop_frame_columns": [[3, "R"], [4, "L"]], "row0_dropped": true, "frames": 98, "slices": 16, "topo": [6, 8, 6, 8, 6, 8, 3, 4, 3, 4, 6, 8, 6, 8, 6, 8]}
+XS_CAP {"id": "exp_n1", "vdepth": null, "experts": 1, "dense_layer": null, "frames": 98, "faults": 98, "first_fault": {"frame": "u_f_0L10", "fault": "AssertionError(('a_proj one-phase capacity', 'wq_a', 320, 70))", "seconds": 0.1}, "q_max_fill": null, "q_max_f
+SVCPLAN_INVENTORY {"cols": 8, "drop_frame_columns": [[1, "R"], [3, "R"], [4, "L"], [6, "L"]], "row0_dropped": true, "frames": 84, "slices": 16, "topo": [6, 8, 3, 4, 6, 8, 3, 4, 3, 4, 6, 8, 3, 4, 6, 8]}
+XS_CAP {"id": "exp_n1", "vdepth": null, "experts": 1, "dense_layer": null, "frames": 84, "faults": 84, "first_fault": {"frame": "u_f_0L10", "fault": "AssertionError(('a_proj one-phase capacity', 'wq_a', 320, 60))", "seconds": 0.1}, "q_max_fill": null, "q_max_f
