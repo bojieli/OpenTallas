@@ -20,7 +20,7 @@ set ::ot_rtb_cell BUFx4_ASAP7_75t_R
 set ::ot_rtb_tol 6.0
 set ::ot_rtb_stage 22.0   ;# ~TT delay of one BUFx4 stage in front of a leaf buffer (offline replay)
 set ::ot_rtb_max 12
-set ::ot_rtb_n 0
+if {![info exists ::ot_rtb_n]} { set ::ot_rtb_n 0 }
 
 proc ot_rtb_arr {p} {
   set a [get_property $p arrival_max_rise]
@@ -163,6 +163,70 @@ proc ot_rtb_balance {} {
   foreach reg $::ot_rtb_regions {
     lassign $reg clock children
     if {[catch {ot_rtb_balance_region $clock $children} e]} { puts "OT_RTB ERROR $clock (left as built): $e" }
+  }
+}
+
+# ---- post-CTS REFINE (run from post_cts.tcl, after DPL + hold repair, before write_db; the gate measures this db).
+# capc5i/j gate: after the in-CTS balance, DPL + repair moved the region (rt soft 512..536 -> 470..497) while the u_rt
+# chain did not follow (u_rt 493..556: pair 86).  Here each hard child's centre is brought to its region's soft centre:
+# delay stages the in-CTS pass put in front of the child pin are REMOVED when the child is late, stages are ADDED when
+# it is early; then legalise and re-measure (the same measurement the gate makes: offline replay matched it to 0.1 ps).
+proc ot_rtb_soft_centre {res} {
+  set lo 1e9; set hi -1e9
+  dict for {k v} $res { if {[string match child:* $k]} continue; lassign $v c l h; if {$l < $lo} { set lo $l }; if {$h > $hi} { set hi $h } }
+  return [expr {($lo + $hi) / 2.0}]
+}
+proc ot_rtb_remove_stage {sink} {
+  # sink's driver must be one of our delay buffers; reconnect sink to that buffer's input net and delete it
+  set blk [ord::get_db_block]
+  set n1 [$sink getNet]
+  set d [$n1 getFirstOutput]
+  if {$d eq "NULL" || $d eq ""} { return 0 }
+  set b [$d getInst]
+  if {![string match "delaybuf_otrtb_*" [$b getName]]} { return 0 }
+  if {[llength [$n1 getITerms]] != 2} { return 0 }
+  set n0 [[$b findITerm A] getNet]
+  set inst [$sink getInst]
+  set dt_i [$inst isDoNotTouch]; set dt_n0 [$n0 isDoNotTouch]
+  $inst setDoNotTouch 0; $n0 setDoNotTouch 0; $b setDoNotTouch 0; $n1 setDoNotTouch 0
+  $sink disconnect
+  odb::dbInst_destroy $b
+  odb::dbNet_destroy $n1
+  $sink connect $n0
+  $inst setDoNotTouch $dt_i; $n0 setDoNotTouch $dt_n0
+  return 1
+}
+proc ot_rtb_refine {} {
+  set blk [ord::get_db_block]
+  set_propagated_clock [all_clocks]
+  foreach reg $::ot_rtb_regions {
+    lassign $reg clock children
+    if {![llength $children]} continue
+    lassign [ot_rtb_groups $clock] keep skipped
+    for {set r 0} {$r < 6} {incr r} {
+      estimate_parasitics -placement
+      set res [ot_rtb_measure $keep $children]
+      set sc [ot_rtb_soft_centre $res]
+      puts "OT_RTB_REFINE $clock round $r: [ot_rtb_span $res] (soft centre [format %.1f $sc])"
+      set moved 0
+      foreach ch $children {
+        set pin [lindex $ch 0]
+        if {![dict exists $res child:$pin]} continue
+        set err [expr {[lindex [dict get $res child:$pin] 0] - $sc}]
+        set sink [$blk findITerm $pin]
+        if {$err > 12.0} {
+          incr moved [ot_rtb_remove_stage $sink]
+        } elseif {$err < -16.0} {
+          set ib [$sink getBBox]; set bb [[$sink getInst] getBBox]
+          set x [expr {([$ib xMin] + [$ib xMax]) / 2}]
+          set y [expr {abs([$ib yMax] - [$bb yMax]) < abs([$ib yMin] - [$bb yMin]) ? [$bb yMax] + 8000 : [$bb yMin] - 8000}]
+          set nb [ot_rtb_insert $sink $x $y]; $nb setDoNotTouch 1; incr moved
+        }
+      }
+      if {!$moved} break
+      if {[llength [info procs ot_pg_standard_bind]]} { ot_pg_standard_bind rt_leaf_refine } else { global_connect }
+      detailed_placement
+    }
   }
 }
 
