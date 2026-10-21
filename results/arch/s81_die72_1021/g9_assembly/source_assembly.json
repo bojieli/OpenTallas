@@ -39,7 +39,8 @@
       "ot_s81sl_rstopt.sv",
       "ot_s81sl_xrt.sv"
     ],
-    "qualification": "existing source action6893686b3; not whole slice CLOSED"
+    "qualification": "existing source action6893686b3; not whole slice CLOSED",
+    "source_pins_scope": "Baseline689 transport replacement; current materialized slice incorporates KV fold hashes below"
   },
   "endcap_xgt": {
     "module": "ot_s81sl_xgt_xo",
@@ -90,9 +91,24 @@
       "commit": "286841a838132f393f3b387f2ecce0e20111c73b",
       "master": "ot_s81sl_kv_leaf",
       "qualification": "functional real VP/SRAM component PASS; not bound/physical",
-      "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open"
+      "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open",
+      "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist"
     }
   },
   "selection": "Only actual CLOSED exactmaster/source/params/defines views may be added; source repair and available-view progression continue independently; no old-master aliases",
-  "physical_scope": "G8 original case remains diagnostic159standins21masters; no selected G9 launched"
+  "physical_scope": "G8 original case remains diagnostic159standins21masters; no selected G9 launched",
+  "kv_source_fold": {
+    "source": "286841a838132f393f3b387f2ecce0e20111c73b",
+    "materialized_sha256": {
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "9f37084c7bfb27fc3c7b1a658b035c518544517f5f3b98d598228356b2daffa8",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81"
+    },
+    "slice_delta": "Existing286 KV_ENABLE bridge plus689 always-xgt/xrt; legacy conditional transport removed",
+    "overlay": "tools/s81_dv/release72/apply_kv_g9.py",
+    "production_inventory_same_as_real_VP_component": 64,
+    "inventory_receipt": "kv_real_vp_component.json",
+    "overlay_smoke": "PASS on actual G8 plan/table copies; only s3N changed, existing rows unchanged; wrongmaster/activeview/duplicate rejected",
+    "qualification": "SOURCE_ONLY; KV_ENABLE1 actual hardware has no inherited native/physical qualification; producer/programme still OPEN"
+  }
 }
