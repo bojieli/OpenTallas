@@ -14,9 +14,16 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
    $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
    $R/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_walk_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
+   $R/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv
+   $R/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_afifo_n32.sv $R/rtl/dsrom_sys/s81_ingest/ot_s81_fence_n32.sv $R/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv
+   $R/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_n32.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv
+   $R/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v
+   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v
+   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1.v
+   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1.v
    $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 build() { l=$1; shift
-  verilator --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
+  verilator ${VL_EXTRA:-} --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
     --top-module tb_static_ks6 "$@" --Mdir "$O/$l" -o tb $F $U/dsdv_static_ks6.sv $U/test/tb_static_ks6.sv > "$O/build_$l.log" 2>&1 \
     || { echo "BUILD_FAIL $l (see $O/build_$l.log)"; return 2; }
 }

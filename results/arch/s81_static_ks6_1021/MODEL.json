@@ -26,7 +26,7 @@
     "program_metadata_approx": 48,
     "control_and_indices_approx": 32
   },
-  "area": "Control-only candidate ~470FF upper inventory before mapped synthesis; no >2kbit RAM, no arithmetic engine. Actual cell/native measurement pending.",
+  "area": "Coarse actual noABC6485cells/511FF(312unreset payload+199reset)/3260mux. No mapped area/native/clock/fit qualification yet.",
   "bandwidth": {
     "descriptor_input_bits_per_edge": 53,
     "launch_output_bits_per_edge": 53,
@@ -36,5 +36,5 @@
   },
   "latency": "No extra original seqhost pipeline edges: registered timedKS sampled at declared original f_ks pin edge; original source +3 issuer sample/+4+issueage command stays. Boot seal guardNOPS+16 only.",
   "physical_status": "No gate/adoption. New parent source params cannot alias old closed source. Whole barrier/token claim requires actual host timestamp producer and correct current stage programme anchors.",
-  "qualification": "UNQUALIFIED source candidate; actual S10E HOST/walker mechanism with six opaque descriptors and explicit CSR epoch/phase under fleet test; default-off mux hierarchy lint/native cell budget still owed. No actual production programme anchors or host transport authority fabricated."
+  "qualification": "Selected1bf actualS10E HOST/walker six-descriptor mechanism PASS unit2679171; actualmux enabled0/1 lintPASS unit2686762. Candidatebranch0aab olderhost not full release composition; production programme/descriptor/epoch authorities remain OPEN."
 }
