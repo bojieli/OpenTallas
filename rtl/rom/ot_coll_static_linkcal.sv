@@ -170,7 +170,7 @@ module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, par
     // must adjust the expected PHY slot rather than invent a same-R path.
     if(LAND_CORE)begin:g_land_rx
         wire landed;
-        ot_coll_token_landing u_land(.ck_w(clk),.ck_r(lck),.rs_w(rs_c),.rs_r(rs_l2),.d(exp),.q(landed));
+        ot_coll_token_landing u_land(.ck_w(clk),.ck_r(lck),.rs_w(rs_c2),.rs_r(rs_l2),.d(exp),.q(landed));
 `ifdef OT_LCAL_MUT_PEER_AGE
         ot_coll_dly1 #(.N(KC+4+KW+4+PHY-3),.SAFE_RING(SAFE_RING))u_tail(
 `else
