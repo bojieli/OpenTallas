@@ -1,0 +1,3 @@
+r4 = 1a36d451e (r1 go_t/ivl/ahc copies + r2 bank control copies/leafw/predecode + r3 xstop/top copies + r4 n32 adder), Verilator 5.050 on ot-epyc7 stage elem-xfin-sram-n32r4.
+All positives PASS with baseline-equal dates/data (NORM 234/13 rstd 3fbf858b; ENG s1 526/464; ENG s7 542/362); 4 mutants FAILED_AS_EXPECTED.
+Native r1(6c64a2b7c) FAIL 1423/935; r5(f44ca1e76) FAIL 879/920 (r6 r_v copies and r7 reset forests not yet in r5).
