@@ -1,0 +1,19 @@
+{
+  "status": "SOURCE_MODEL_BEFORE_BUILD_NO_GATE",
+  "trigger": "r7 native1af86cead FAIL1473/max471;768readselectors64 and51primaryinputs>32",
+  "read_representation": "Global factored4+5bit onehotdecode256words pernormalclass, eachword drives16capturebits (one per2outputbits); class5 factored3+3bit decoder32sectorrows.",
+  "valid_hold_preservation": "8global pairs/class capture {v xor addresskey,addresskey} at sameoldedge; actualtwo-inputXOR leaf decodes valid in localregions, then SAME ifvalid readregister hold semantics. No invalidvalue clearing. No addededge.",
+  "fanout_model": "raw9commandinput only boundedfactoreddecoder and8encodedcapturepairs; low/highpredecode16combloads; finalworddecode16FFloads; encodedq <=32XORloads; localvalid <=8FFenables. Actual ORFSnative decides.",
+  "read_capture_ff_normal": 20480,
+  "read_capture_ff_class5": 512,
+  "encoded_valid_ff": 96,
+  "selector_total_ff": 21088,
+  "delta_vs_r7": 14560,
+  "throughput": "5normalword+one256bsector read/clock,4relay+COLLwriters unchanged;8192RFstoragebits; externalports/latency unchanged.",
+  "validation": "Strengthened fullshape5.050 directr5reference compares ALL outputdata on everyedge, incl invalidreadhold; positive and latency mutant. Native fullproductionPRETREE1 census required.",
+  "still_owed": [
+    "writer/reset/reducer/pretree nativeoffenders",
+    "exactnativearea/dieprice",
+    "physicaloneband/fanoutreach/PGclockproof"
+  ]
+}

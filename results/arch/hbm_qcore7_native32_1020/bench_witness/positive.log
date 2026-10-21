@@ -1,0 +1,5 @@
+QCORE_RG PASS checks=9104 scalars=312 valid_reads=5946 fault_lags=4 fault_edges=9093
+- rtl/test/hbm_qcore_physical_1016/tb_qcore_r7_lockstep.sv:67: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 91us; walltime 0.103 s; speed 890.152 us/s
+- Verilator: cpu 0.103 s on 1 threads; allocated 8 MB

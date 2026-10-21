@@ -1,0 +1,28 @@
+{
+  "before_sha256": "97c99f0313a0d8984113fa2e666dea1f35897884e71b1c38b262ae2d9d27ffe6",
+  "after_sha256": "fbb397315d9513ea2fc4927c47ca787464c62782b9cd15debfc85db4a16ba4e2",
+  "positive": "PASS 7411 cells",
+  "cause": "write_json renumbers unused wire IDs; compare all original named-wire bit contacts in addition to cell/port graph and constants. A singleton unused bit has no distinguishable identity beyond its name; shared unused aliases must retain equivalence.",
+  "negative": [
+    {
+      "mutation": "unused_shared_alias_disconnect",
+      "status": "REJECTED",
+      "returncode": 1
+    },
+    {
+      "mutation": "live_cell_disconnect",
+      "status": "REJECTED",
+      "returncode": 1
+    },
+    {
+      "mutation": "constant_change",
+      "status": "REJECTED",
+      "returncode": 1
+    },
+    {
+      "mutation": "cell_property_change",
+      "status": "REJECTED",
+      "returncode": 1
+    }
+  ]
+}

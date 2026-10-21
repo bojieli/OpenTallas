@@ -1,0 +1,53 @@
+{
+  "status": "PRIMITIVE_SOURCE_ONLY_PASS",
+  "source": "d73bee5f7",
+  "params": {
+    "LAT": 6,
+    "DRST": 0
+  },
+  "native": {
+    "status": "PASS",
+    "max": 32,
+    "roots": 3246,
+    "role_errors": 0,
+    "constant_output_bits": 0
+  },
+  "bench": {
+    "nominal_checks": [
+      20030,
+      20030,
+      20030
+    ],
+    "nominal_valid": [
+      14789,
+      14791,
+      14868
+    ],
+    "seeds": [
+      1,
+      17,
+      91
+    ],
+    "compare": "every y/err/valid edge including invalid and repeatedreset",
+    "LAT5_negative_errors": [
+      19634,
+      19617,
+      19641
+    ],
+    "wrong_stage_select_errors": 8021,
+    "wrong_stage_select_checks": 20030
+  },
+  "area_um2": 442,
+  "area_vs_FP4_um2": 22,
+  "extra_clock_edges": 0,
+  "extra_FF_vs_FP4": 0,
+  "copy_families": 14,
+  "shared_arithmetic_unchanged": true,
+  "qcore_composed": false,
+  "physical_qualified": false,
+  "notes": [
+    "TT RVT libs real mapped census only; no timing/clock/PG/layout/throughput credit",
+    "FP5 wrongcount rawFAIL8021 but wrapper exit1 due hostmissingrg; preserved, not rerun or reclassified cleanjob",
+    "Only LAT6DRST0 primitive qualified; other parameters and production-qcore composition not claimed"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "original_run": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_programme_store_r12_clg-20261020-023606",
+  "status": "FAIL",
+  "cause": "clock_rule TT136.0ps FF143.8ps >80ps; GRT0/native18 do not qualify",
+  "placement_diagnostic_ps": {
+    "reg_setup": -94.4,
+    "macro_setup": -22.3,
+    "hold": -95.77871828980733
+  },
+  "sha256": {
+    "spec.json": "2a9ef55beb06a1d16a5b934a04125c610dd04ea2fc6b9c0c4ed118d8bc80758e",
+    "client_gate.json": "8a14a7f8f4e051feb0235dbd43690cc2d26eea6417a3fae51ced7960f1be0e27",
+    "gate_result.json": "9c42ec27f479c9d8536c241247c6694a0be8ae18ee1cdd5988e618fcaa6f0171",
+    "README.md": "632eb5d7259cf2a6be522dad084d8909be4a2a5b2a7476c899c0846686486471",
+    "gate_layout/density.png": "d9d86dfefbfaebb5ccf5aa2ff2109ba6bbef192b7c7e6b04a37f7a7271de8387",
+    "gate_layout/floorplan.png": "010c8dabfab6909fe1815027af8461a07eec39546a4911f568e0037efe1fedca"
+  },
+  "source_snapshot_manifest_sha256": "63619dcbae7584705510479419c83dbfed20b8197e2fc64d618f94d61451a059",
+  "PNGs_personally_viewed": true,
+  "image_observation": "11 hard leaves,3 columns; sparse std logic mainly perimeter and vertical channels; no full-width40\u201360%band proof",
+  "source_start_commit": "8d12be477",
+  "source_identity": "exact_content_snapshot; start commit is not complete runtime identity",
+  "source_archive_sha256": "bd620de25c59878b70ceb5e7ecca8f179bc1efa906192c43448a62fda24998fb"
+}

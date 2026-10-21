@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_ONLY_PRE_NATIVE_NO_GATE",
+  "reference": "r6n cfb59e890 actual3478driverrows/1061nonunary>32,max512;55reach>405",
+  "change": "Keep16 copies of raw address perclass/sector/2bitgroup, replace2 copies per16bitgroup; no new pipeline stage, no portchange.",
+  "original_read_select_ff": 816,
+  "successor_read_select_ff": 6528,
+  "delta_read_select_ff": 5712,
+  "bound_model": "32:1 mux select lowbit=16pairs*2bits=32data terminals per kept capture; class5 row mux firstselect2pairs*2bits*8banks=32. Real native census required.",
+  "throughput": "Unchanged 5word reads+1x256b sector read/cycle;4relay writers+1COLL writer; same 8192storagebits, same edge contracts.",
+  "next": [
+    "5.050 full lockstep+causal mut256",
+    "ORFS exactproduction params native census; structural successor if any >32 before gate",
+    "native area and die model price; oneband floorplan+PG composition before any gate"
+  ]
+}

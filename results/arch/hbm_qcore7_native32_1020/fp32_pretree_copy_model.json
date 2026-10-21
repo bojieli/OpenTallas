@@ -1,0 +1,41 @@
+{
+  "status": "SOURCE_MODEL_BEFORE_BUILD_NO_GATE",
+  "trigger": "r7 realnative LAT6/DRST0 cutflags A119135loads,B99~66/B55~56,C0~58/C69~35;FPvalidout119;join mode563observedr8",
+  "method": "Additive newnamed FP32+pretree sources retain originalarithmetic/cycles/invalidvalues. Real kept identical FF copies carry ot_rst_split family metadata; existing sameedge canonicalizer proves perbit type/D/clock/reset identity then repartitions actual loads. No newtoolcode/ties or removedloads.",
+  "fp_per_adder_extraFF": 98,
+  "qcore_adders": 8,
+  "join_input_extraFF": 87,
+  "join_modepipe_extraFF": 105,
+  "total_extraFF_estimate": 976,
+  "requirements": [
+    "allclonefamily TSV statusOK and exactnativecensus, no blanket equalityassumption",
+    "5.050 LAT6/DRST0 all-edge y/err/validlockstep+causal mutant",
+    "qcore everyoutputedge proof+productionparams native",
+    "no layouts orclosure claim before sourceall32 plusarea/PG/clock/oneband"
+  ],
+  "native_iteration": "Baseline earlytechmap+unaddressablecopyfamily FAIL18/max80; includes six additional jam shift bits now explicitly copied. Safe aliases do not alter originalnetnames or cellgraph; runtime graph proof required before unchanged split.",
+  "fp4_bypass_model": {
+    "trigger": "FP3 actual native sole failure !nonfinite root34 loads (32 bypass data + error)",
+    "change": "4 kept byte-local bypass decodes, identical function and pipeline edges; full dynamic operands",
+    "additional_ff": 0,
+    "additional_cycles": 0,
+    "logic_cost_upper_bound": "Three extra pairs of 8-bit exponent equality and 31-bit zero reductions plus four local 8-bit selectors; actual mapped area/cell delta required",
+    "scope": "standalone FP prototype only; no physical admission"
+  },
+  "fp5_LZC_split_model": {
+    "trigger": "FP4 actual native3 B2 control roots33/41/42 feed s2_val wide shift and s2_exp consumers",
+    "method": "Two independent kept LZC trees when CUT_D=0: original count for exponent, separate count for shift; cut-D path retains existing registered count. No arithmetic/capture edge changes, original shared files byte-identical.",
+    "added_ff": 0,
+    "added_cycles": 0,
+    "extra_logic": "At most one duplicate32-bit5-level LZC tree (31 merge nodes,5 count bits/node before optimization); actual mapped area required",
+    "qualification": "Full all-edge FP primitive bench+causal latency mutation+actual native required before any composition"
+  },
+  "fp6_shift_group_model": {
+    "trigger": "FP5 actualnative onlyLZCshiftoutputs bits0..3 drive75/52/50/39loads",
+    "method": "5one-bit barrelshiftstages, each3kept9-bit outputgroups;3independent exactLZCtrees supply one selectbit pergroup perstage; eachselectcontrols atmost9muxbits, rather than all27+intermediatemuxes",
+    "extra_ff": 0,
+    "extra_edges": 0,
+    "extra_logic": "two extraLZCtrees vsFP5 (three vsFP4); same135logicalshiftmuxbitpositions beforepruning;actual areaandallnative rolesmustbemeasured",
+    "scope": "privateprimitive only, no qcorecomposition/layout"
+  }
+}

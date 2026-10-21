@@ -1,0 +1,82 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc9       admits  1021 GB (avail 820, growth 105, headroom 0, waiters 0/0 GB) load 53/128 running 36 disk 128 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2991309-1792496916 after 0 s
+mkdir -p /work/results/asap7/qcore_fp32_n32_native/base/
+echo 770.0 > /work/results/asap7/qcore_fp32_n32_native/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/qcore_fp32_n32_native/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/qcore_fp32_n32_native/base/clock_period.txt
+Setting clock period to 770.0
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_add_n32.sv
+12. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_prefix.sv
+13. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fastfp.sv
+14. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_n32'.
+16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_n32'.
+17. Executing HIERARCHY pass (managing design hierarchy).
+18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_n32'.
+18.1. Analyzing design hierarchy..
+18.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut_n32'.
+18.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+18.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+18.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut_n32'.
+18.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_lzc32'.
+18.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut_n32'.
+18.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+18.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut_n32'.
+18.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+18.11. Analyzing design hierarchy..
+18.12. Analyzing design hierarchy..
+source /src/results/arch/hbm_qcore7_native32_1020/fp32_copy_canonicalize.tcl
+19. Executing PROC pass (convert processes to netlists).
+19.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+19.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+19.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+19.4. Executing PROC_INIT pass (extract init attributes).
+19.5. Executing PROC_ARST pass (detect async resets in processes).
+19.6. Executing PROC_ROM pass (convert switches to ROMs).
+19.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+19.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+19.9. Executing PROC_DFF pass (convert process syncs to FFs).
+19.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+19.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+19.12. Executing OPT_EXPR pass (perform const folding).
+20. Executing TECHMAP pass (map to technology primitives).
+20.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+20.2. Continuing TECHMAP pass.
+OT_KEEP_REGS: keep set on 98 register cells driving keep wires
+21. Executing FLATTEN pass (flatten design).
+22. Executing TECHMAP pass (map to technology primitives).
+22.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+22.2. Continuing TECHMAP pass.
+22.14. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+22.15. Executing OPT_EXPR pass (perform const folding).
+23. Executing OPT_CLEAN pass (remove unused cells and wires).
+24. Executing JSON backend.
+COPY_ALIASES 14
+25. Executing JSON backend.
+ERROR: TCL interpreter returned an error: Traceback (most recent call last):
+  File "/src/results/arch/hbm_qcore7_native32_1020/copy_aliases.py", line 50, in <module>
+    if __name__=="__main__":main()
+  File "/src/results/arch/hbm_qcore7_native32_1020/copy_aliases.py", line 47, in main
+    assert [og.get(v,("const",v)) for v in x["bits"]]==[ng.get(v,("const",v)) for v in y["bits"]],(mn,nn)
+AssertionError: ('ot_hdc_fp32_add_n32', '$flatten\\u_lzc.$or$/src/rtl/hdc/ot_hdc_fastfp.sv:70$5273_Y')
+Elapsed time: 0:02.62[h:]min:sec. CPU time: user 2.36 sys 0.47 (107%). Peak memory: 83680KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/qcore_fp32_n32_native/base/1_1_yosys_canonicalize.rtlil] Error 2
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2991309-1792496916): exit 2

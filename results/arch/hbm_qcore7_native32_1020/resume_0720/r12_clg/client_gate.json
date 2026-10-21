@@ -1,0 +1,155 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_hgi_sfu_store_stripe_leaf_r10': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_sfu_programme_store_r12_clg_20261020-023606.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_sfu_programme_store_r12_clg_20261020-023606.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_programme_store_r12_clg-20261020-023606",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=18",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 126 s (gate total 13647 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2904, 'pin_rectangles': 2904, 'pin_track_checked': 2904, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4036d5ed99783a24b257cd2452c400a0260fe0db6081b01b0e63b8e67ebd4096",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 5103 um2 + macros 609701 in core 1017679: util 1% (std-cell density 1.5% of placeable 349729 um2; total fill 60.4%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hgi_sfu_programme_store_r11 cells 30,661 flops 14,929 depth 273.4 ps util 0.6041 reach 0.0 um (1.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 14,929 flops > 8,000 spread over a 1076 x 946 um outline (> 600 um) (+0 ICGs, 11 macro clock pins; e.g. c_f$_SDFFE_PN0P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 1994.5..2535.4 ps (spread 540.9), boundary mean 2388.4; tt insertion all 1466.1..2004.4 ps (spread 538.3), boundary mean 1740.7; ff insertion all 1155.7..1664.0 ps (spread 508.3), boundary mean 1361.8; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "spine built on port clk",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 4 (fine) leaves 1925 sinks 14900 cells 33729 leaf arrival 1510.0..1539.8 ps (spread 29.9) pad 57.1 / 16.3 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 5 (fine) leaves 1925 sinks 14900 cells 33730 leaf arrival 1511.7..1539.8 ps (spread 28.2) pad 57.1 / 16.1 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hbm_sfu_programme_store_r12_clg/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg       23 paths, worst slack -94.4 ps (e.g. p_fault$_SDFFE_PN0P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg     45 paths, worst slack -22.3 ps (e.g. p_sv_q$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->macro  232 paths, worst slack 68.6 ps (e.g. g_leaf[9].u_leaf/in_data[37])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -9.441847304003659e-11 hold WNS -9.577871828980733e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "14,940 sinks on the largest root; measured TT insertion 2047.8 ps, FF insertion 1732.7 ps, TT pin-flop spread 136.0 ps, FF pin-flop spread 143.8 ps; TT pin-flop spread 136.0 ps > 80 and FF pin-flop spread 143.8 ps > 80 (declared clock 'spine' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/hbm-su6-sfups12-1020/physical/ref_tile/hbm_sfu_programme_store_r12_clg/gate_layout/floorplan.png; density /home/ubuntu/wt/hbm-su6-sfups12-1020/physical/ref_tile/hbm_sfu_programme_store_r12_clg/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "fill",
+   "message": "fill 60% = (hard macros 609700.6 + synthesized std cells 5072.4) / outline 1026432.0 um2; pin demand per face: S 2307 pins over 583.3/1080.0 um (54%), N 0 pins over 0.0/1080.0 um (0%), W 88 pins over 0.0/950.4 um (0%), E 709 pins over 946.8/950.4 um (100%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 15.01% used; GRT 12300 s",
+   "fix": ""
+  }
+ ]
+}

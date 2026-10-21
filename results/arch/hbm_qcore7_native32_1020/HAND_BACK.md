@@ -1,0 +1,38 @@
+# STOP on CLAUDE IS BACK (10-20)
+
+No further launch, submit, merge or task after STOP. Original k9xr / r12_clg / pslice r9b jobs preserved. No own currently live client found at seal; do not terminate any unrelated job.
+
+Source WT /home/ubuntu/wt/codex-hbm-qcore7-native32-1020, branch codex/hbm-qcore7-native32-1020. Original shared RTL unchanged: all qcore r7/r8/r9, reducer_r32 and FP32_n32 are additive prototypes, NOT global native-qualified / NOT merge-ready. Source refs: r7 54e442413; r8 c19c13f8a; r9 9a278fec5 plus reset recipe18d85579e; FP first64f69ed1a, latest source/alias65906642c. Final seal commit supersedes these for evidence only.
+
+- r7: 5.050 lockstep9104checks PASS / MUT256 FAIL; actual native FAIL1473/max471; preserved1af86cead.
+- r8: directr5 every-output EVERY-edge inclinvalid-hold PASS9104, fault_lags0; MUT256 FAIL12150. Actual native FAIL628/max563/no roleerrors, but ALL20992onehotread roots max16 and zero primaryinput violations. Native/source evidence145a0e18a.
+- r9: same strong bench PASS9104 / MUT256 FAIL12150. Actual native FAIL634/max437/no roleerrors; target read3072roots max16, reset35active roots max32, reducer32onehot word roots max16, primaryinputviolations0. Same2resetstages: first2copies->32Dloads each; final64family TSVOK. Writers+pretree+FP still fail; no physicalgate. ReadselectorFF3168 (r8 21088) vsr6baseline816. Full native report9ecad0577.
+- FP first prototype: nominalRTL LAT6/DRST0 all-edge3seeds*20030checks PASS, but actual native FAIL18/max80 and copy TSVREFUSED unaddressable generated[bit]names. Evidence fp_native_no_alias_fail.json + fp_copy_refused_generate_names.tsv.
+- FP2 latest: new safe-alias prototype performs earlybittechmap before UNCHANGED copy splitter, then validates cellgraph/properties/ports/originalnamednets. TERMINAL FAIL-CLOSED: alias verify AssertionError on original named net $flatten\u_lzc.$or$/src/rtl/hdc/ot_hdc_fastfp.sv:70$5273_Y. No splitter/native successor ran; do NOT waive assertion or call this qualified. Session97964/unitoth-ubuntu-2991309-1792496916 exit2. FP2nominalRTL positive3seeds PASS20030each; causal LAT5 negative3seeds FAIL (last19641errors), session92334/unitoth-ubuntu-2991864-1792496917 exit0. Both terminal, preservedlogs. NO repair after STOP.
+
+Remote prefix ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020/. Immutable outputs synth, synth_r8, synth_r9, fp_native (oldrefused), fp_native2 (aliasverifyfail). FP2 src_fp2 frozen separate from original src. Native/bench sessions r7 89627/13254/70649/63321; r8 17840/21876/71513/91837; r9 77129/13115/82316/28082; FP22507/49874/62855; FP2 97964/92334 all known terminal at seal. No new stage launched.
+
+Collector WT /home/ubuntu/wt/codex-hbm-mc3-su-collect-1020, PUSHED d17c1d80c. MC3 t242/s350 exact GRT native max32/zero>405, reach303.255/332.458; after canonical existing global_connect in-memory BOTH retain2456 DNT IOhold PGterms/1228cells. Ordinary intermediate unbound PG clears. Original ODB untouched; off43.2 stacks NOT approved / no submit. Literal475.2square channelmodel only: min52.704um channels, fill12.11%,64outline14.45mm2; no native role/fence/parent price proof or gateGO. Oldqcore r6n native rejection and exact fourPNG recovery committed; originalCX ep8 ODB unavailable, no approval.
+
+Full root8path helpermanifest /home/ubuntu/scratch/codex-root5-runtime/paths.json runtime68b9cad6c must be adopted/sourcefingerprinted for ANY future physicalgate. Current source-only mappings used their pinned canonicalizers; do not relabel frozen outputs with later helpers. Root owns PG/raw_macro_clocks integration. Critical programme-store no REVIEW/no submit.
+
+
+## Resumed 04:58–05:09; stopped on CLAUDE IS BACK
+
+- Branch `codex/hbm-qcore7-native32-1020`, source FP4 `f528f6d18`; root owns any merge. No physical gate/submission.
+- Causal FP2 verifier repair `5a8a66872`: original named-wire bit contacts prove unused aliases across JSON renumbering. Actual 7411-cell graph PASS; four mutations rejected (unused shared alias disconnect, live-cell disconnect, constant, property). Failure original unchanged.
+- FP3 exact fourteen copied FF families OK; SYNTH session42367/unit3020744 exit0; native71795/unit3024443 exit1, sole !nonfinite root34 loads (32 bypass bits+errors). Preserved `fp3_native_census_fail.json` and copy TSV.
+- FP4 source byte-local kept bypass decode, no FF/cycle change; mapped area420um2 vs413 FP3 (+7um2, 1.7%). Native fails three roots (33/41/42), no role errors. SYNTH91816/unit3035864 exit0; census21045/unit3041624 exit1. Nominal benchmark3 seeds20030 checks each PASS, all-edge y/err/valid including invalid/reset; LAT5 causal negatives errors19634/19617/19641. Bench3477/unit3038252 exit0.
+- FP4 remaining roots `_2540_/Y`, `_3368_/Y`, `_3399_/Y` are B2 normalization combinational cones from sentinel/LZC, shared by barrelshift `s2_val` and `s2_exp` consumers. No successor changes/launches. Native reports and local logs committed; remote immutable `src_fp3/fp_native3`, `src_fp4/fp_native4`, `fp4_bench_pos/neg` under ep9 `/srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020`.
+- Additive pretree `rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_n32.sv` is UNBUILT WIP ONLY: mode/inputvalid exact-copy controls, existing priced976extraFF model; no bench or native, no qcore integration. Preserve for inspection, do not adopt.
+- R9 still global native FAIL634/max437; targeted reads/reset/reducer PASS. Writer max437 traced sector2 AND4 `_16270_/Y` = captured COLL valid+sector decode (`rrb`), not approved. Runtime-indexed8192b flop RF violates current SRAM rule before any gate; production port/stage/bandwidth/staticcalendar model and legal SRAM shape required BEFORE storage RTL. No storage successor started; no calendar duration inferred.
+- Claude MC3F e6dfdb4e2 inspected read-only, no git/edit: literal l531/l358 models have no gates/jobs, approval/band confinement missing. No duplication. Original k9xr/r12_clg/r9b and superseded k9x preserved; last collection k9xr preGPL io_flop hook, r12_clg holdrepair WNS−5.401ps advancing, r9b GRT100k. No termination. Previous MC3 offlattice/2456protectedPG and original R9 limitations unchanged.
+
+
+## 07:20 continuation: current scoped results
+
+Read `resume_0720/README.md`. Initial readonly reconciliation found no SU7/VMG8/new qcore jobs or MC3F changes. Source/model ed1716b99 and FP6 source d73bee5f7 are on this branch. RF model30macros general/6or24calendar-restricted, persistent768b ownership, production traffic NOTPROVEN (old7116image vscurrent7111). Regional source model alternatives: +5read/+3write edges at43.2gap with assumed channel arithmeticFAIL; +9read/+5write at86.4gap/1296sq/16673transportFF, arithmeticcapacityonly. No storage RTL or qcore layout.
+
+FP6 actualnativePASSmax32/3246roots/role0/constant0; 14copyfamiliesOK/7895graphcellsPASS. Full LAT6DRST0 bench3x20030 every-edgePASS; LAT5neg3caught; actualwrongshiftselect8021FAIL caught. TTmapped area442vsFP4 420 (+22); zero extraFF/edges. Own FP5 sessions44877/28595/31743/54283 allterminal (FP5 nativeFAIL4max75; directnegative wrapperINFRA rgabsent/rawFAIL8021). FP6 sessions92097/95042/60728/40731 allterminal. Source snapshot paths on ep9 retained, actualsource hashes copied. No composition/physical qualification.
+
+Original r12_clg terminalFAIL clockruleTT136/FF143.8ps despiteGRT0/native18; exactshipping contentmanifest archivebd620de2, gate/spec/PNGs/rawGRTlog preserved, images personallyviewed; no fullband/reach/PGapproval. k9xr/r9b original progressingjobs preserved. MC3F e6df models remainheld/noapproval/bandmechanism. Parent/root owns merges.

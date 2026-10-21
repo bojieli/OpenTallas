@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.hbm.qcore-rf-port-age-source-ledger.v1",
+  "status": "SOURCE_LEDGER_ONLY",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r9.sv": "4cd476a91ab5f183907d2ba3a79449ed48efb312f8798f89711482cfba80d305",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "f07cc356f3985450f47922db99106808abd393dcd510118ff0ab4f2a9775c2e1",
+    "tools/hbm_static/su_top_compile.py": "4a423adb15c29316a53fae23ee6baa2ec384cbd46fb80f064e952c8e83018fee"
+  },
+  "convention": "E is qcore RF command/write sample edge; values visible after edge. Consumer capture on same edge sees previous FF values.",
+  "ports": [
+    {
+      "name": "rf_bcmd",
+      "width": 36,
+      "source_edge": 0,
+      "source": "alwaysposedge rf_bcmd<=rf_rd_cmd[0+:36]",
+      "RF_LOCAL_consumer_edge": 1,
+      "role": "address/valid fault check, not a data-read tag with3edge delay"
+    },
+    {
+      "name": "rf_bword",
+      "width": 128,
+      "source_edge": 3,
+      "RF_LOCAL_consumer_edge": 4,
+      "role": "normalclasses0..3 read data, valid/hold exact"
+    },
+    {
+      "name": "rf_dsec",
+      "width": 256,
+      "source_edge": 3,
+      "RF_LOCAL_consumer_edge": 4,
+      "role": "class5 eight-word drain data"
+    },
+    {
+      "name": "rf_word[4]",
+      "width": 32,
+      "source_edge": 2,
+      "consumer": "rc_x captures nextedge when red e_os/e_sfu/e_tr chooseRF",
+      "conditional_consumer_edge": 3
+    }
+  ],
+  "writes": {
+    "pin_capture": 0,
+    "RF_memory_commit": 1,
+    "conflict_status_fault": 2,
+    "priority": "highestrelayport perbank; COLL wins matchingsector8banks"
+  },
+  "consumer": "RF_LOCAL copies rf_bword/rf_dsec and every bcmd address/valid separately; rf_src_bad compares valid/address of current command against lane rd_addr",
+  "compiler_fixture": "su_top_compile holds AB_RF class1 over op; class5 leads drain byrf_local; this is fixture behavior, not production proof",
+  "regional_proposals": {
+    "data_delta_edges": [
+      5,
+      9
+    ],
+    "write_commit_delta": [
+      3,
+      5
+    ],
+    "metadata_delta": "NOT ADOPTED; must explicitly price0or+dataDelta against actual consumers",
+    "owner_tokens": "selected from read-before-write ownership edge and transported with matching macro data"
+  },
+  "qualification": false
+}

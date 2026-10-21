@@ -1,0 +1,516 @@
+{
+  "schema": "opentallas.hbm.qcore-rf-regional-planning-paths.v1",
+  "status": "MODEL_ONLY_PATH_LENGTH_CHECK_PASS",
+  "source_geometry": "rf_sram_model.json regional_transport",
+  "paths": [
+    {
+      "gap_um": 43.2,
+      "leaf": [
+        0,
+        0
+      ],
+      "command_edges": 3,
+      "return_segments": 3,
+      "points_um": [
+        [
+          604.8,
+          604.8
+        ],
+        [
+          216.0,
+          604.8
+        ],
+        [
+          216.0,
+          216.0
+        ],
+        [
+          43.2,
+          216.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        388.8,
+        388.8,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 5,
+      "write_delta_edges": 3,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 43.2,
+      "leaf": [
+        1,
+        0
+      ],
+      "command_edges": 3,
+      "return_segments": 3,
+      "points_um": [
+        [
+          604.8,
+          604.8
+        ],
+        [
+          604.8,
+          216.0
+        ],
+        [
+          432.0,
+          216.0
+        ],
+        [
+          432.0,
+          216.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        388.8,
+        172.8,
+        0.0
+      ],
+      "pad_edges": 1,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 5,
+      "write_delta_edges": 3,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 43.2,
+      "leaf": [
+        2,
+        0
+      ],
+      "command_edges": 3,
+      "return_segments": 3,
+      "points_um": [
+        [
+          604.8,
+          604.8
+        ],
+        [
+          993.6,
+          604.8
+        ],
+        [
+          993.6,
+          216.0
+        ],
+        [
+          820.8,
+          216.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        388.8,
+        388.8,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 5,
+      "write_delta_edges": 3,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 43.2,
+      "leaf": [
+        0,
+        2
+      ],
+      "command_edges": 3,
+      "return_segments": 3,
+      "points_um": [
+        [
+          604.8,
+          604.8
+        ],
+        [
+          216.0,
+          604.8
+        ],
+        [
+          216.0,
+          993.6
+        ],
+        [
+          43.2,
+          993.6
+        ]
+      ],
+      "segment_Manhattan_um": [
+        388.8,
+        388.8,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 5,
+      "write_delta_edges": 3,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 43.2,
+      "leaf": [
+        1,
+        2
+      ],
+      "command_edges": 3,
+      "return_segments": 3,
+      "points_um": [
+        [
+          604.8,
+          604.8
+        ],
+        [
+          604.8,
+          993.6
+        ],
+        [
+          432.0,
+          993.6
+        ],
+        [
+          432.0,
+          993.6
+        ]
+      ],
+      "segment_Manhattan_um": [
+        388.8,
+        172.8,
+        0.0
+      ],
+      "pad_edges": 1,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 5,
+      "write_delta_edges": 3,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 43.2,
+      "leaf": [
+        2,
+        2
+      ],
+      "command_edges": 3,
+      "return_segments": 3,
+      "points_um": [
+        [
+          604.8,
+          604.8
+        ],
+        [
+          993.6,
+          604.8
+        ],
+        [
+          993.6,
+          993.6
+        ],
+        [
+          820.8,
+          993.6
+        ]
+      ],
+      "segment_Manhattan_um": [
+        388.8,
+        388.8,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 5,
+      "write_delta_edges": 3,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 86.4,
+      "leaf": [
+        0,
+        0
+      ],
+      "command_edges": 5,
+      "return_segments": 5,
+      "points_um": [
+        [
+          648.0,
+          648.0
+        ],
+        [
+          432.0,
+          648.0
+        ],
+        [
+          216.0,
+          648.0
+        ],
+        [
+          216.0,
+          432.0
+        ],
+        [
+          216.0,
+          216.0
+        ],
+        [
+          43.2,
+          216.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        216.0,
+        216.0,
+        216.0,
+        216.0,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 9,
+      "write_delta_edges": 5,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 86.4,
+      "leaf": [
+        1,
+        0
+      ],
+      "command_edges": 5,
+      "return_segments": 5,
+      "points_um": [
+        [
+          648.0,
+          648.0
+        ],
+        [
+          648.0,
+          432.0
+        ],
+        [
+          648.0,
+          216.0
+        ],
+        [
+          475.2,
+          216.0
+        ],
+        [
+          475.2,
+          216.0
+        ],
+        [
+          475.2,
+          216.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        216.0,
+        216.0,
+        172.8,
+        0.0,
+        0.0
+      ],
+      "pad_edges": 2,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 9,
+      "write_delta_edges": 5,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 86.4,
+      "leaf": [
+        2,
+        0
+      ],
+      "command_edges": 5,
+      "return_segments": 5,
+      "points_um": [
+        [
+          648.0,
+          648.0
+        ],
+        [
+          864.0,
+          648.0
+        ],
+        [
+          1080.0,
+          648.0
+        ],
+        [
+          1080.0,
+          432.0
+        ],
+        [
+          1080.0,
+          216.0
+        ],
+        [
+          907.2,
+          216.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        216.0,
+        216.0,
+        216.0,
+        216.0,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 9,
+      "write_delta_edges": 5,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 86.4,
+      "leaf": [
+        0,
+        2
+      ],
+      "command_edges": 5,
+      "return_segments": 5,
+      "points_um": [
+        [
+          648.0,
+          648.0
+        ],
+        [
+          432.0,
+          648.0
+        ],
+        [
+          216.0,
+          648.0
+        ],
+        [
+          216.0,
+          864.0
+        ],
+        [
+          216.0,
+          1080.0
+        ],
+        [
+          43.2,
+          1080.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        216.0,
+        216.0,
+        216.0,
+        216.0,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 9,
+      "write_delta_edges": 5,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 86.4,
+      "leaf": [
+        1,
+        2
+      ],
+      "command_edges": 5,
+      "return_segments": 5,
+      "points_um": [
+        [
+          648.0,
+          648.0
+        ],
+        [
+          648.0,
+          864.0
+        ],
+        [
+          648.0,
+          1080.0
+        ],
+        [
+          475.2,
+          1080.0
+        ],
+        [
+          475.2,
+          1080.0
+        ],
+        [
+          475.2,
+          1080.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        216.0,
+        216.0,
+        172.8,
+        0.0,
+        0.0
+      ],
+      "pad_edges": 2,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 9,
+      "write_delta_edges": 5,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    },
+    {
+      "gap_um": 86.4,
+      "leaf": [
+        2,
+        2
+      ],
+      "command_edges": 5,
+      "return_segments": 5,
+      "points_um": [
+        [
+          648.0,
+          648.0
+        ],
+        [
+          864.0,
+          648.0
+        ],
+        [
+          1080.0,
+          648.0
+        ],
+        [
+          1080.0,
+          864.0
+        ],
+        [
+          1080.0,
+          1080.0
+        ],
+        [
+          907.2,
+          1080.0
+        ]
+      ],
+      "segment_Manhattan_um": [
+        216.0,
+        216.0,
+        216.0,
+        216.0,
+        172.8
+      ],
+      "pad_edges": 0,
+      "padding_note": "0..2 balancing edges only; explicit staticcalendar price, not free wire/credit",
+      "data_read_delta_edges": 9,
+      "write_delta_edges": 5,
+      "command_metadata_age": "baseline rf_bcmdE; future placement/consumerbinding NOTPROVEN"
+    }
+  ],
+  "scope": "Named root-to-reader-leaf W-centre point witness and balanced fixed-stage budget. L1 lengths and43.2origins only. Not actual pin, obstruction, clock, PG, band, native or route proof.",
+  "reticle_fit": "NOT RUN",
+  "RF_bcmd_source_baseline_edge": 0,
+  "RF_data_source_baseline_edge": 3,
+  "metadata_obligation": "DATA deltas+5/+9 cannot transfer to directlycapturedE rf_bcmd. Derive each consumer port age separately in actual compiler/staticcalendar."
+}

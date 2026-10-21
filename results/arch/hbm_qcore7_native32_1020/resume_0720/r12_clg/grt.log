@@ -1,0 +1,1878 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/4_cts.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/4_cts.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_grt_ot_grt183.tcl
+QDM PINFLOP reference: 621 input pin flops (0 hard-child clock pins at +insertion), median arrival 1780.347656 (range 1757.667847 .. 1836.155762)
+QDM reference pin p_io_cfg_data[191]$_DFF_P_/CLK clock arrival max 1780.347656 min 1347.919678 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_PIN_KEEPOUT created 2: {M6 21624 0 605088 42} {M5 1079958 1704 1080000 948720}
+OT_GRT_TOP_SHADOW: 11 macros; GRT layers M2-M8 with M8 at zero capacity (detailed route stays <= M7)
+Took 10 seconds: source /work/hooks/pre_grt_ot_grt183.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       19
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_hgi_sfu_programme_store_r11
+Die area:                 ( 0 0 ) ( 1080000 950400 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     151556
+Number of terminals:      2906
+Number of snets:          2
+Number of nets:           107800
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+[INFO DRT-0164] Number of unique instances = 169.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 1869614.
+[INFO DRT-0033] V1 shape region query size = 39908511.
+[INFO DRT-0033] M2 shape region query size = 345358.
+[INFO DRT-0033] V2 shape region query size = 817485.
+[INFO DRT-0033] M3 shape region query size = 888292.
+[INFO DRT-0033] V3 shape region query size = 544990.
+[INFO DRT-0033] M4 shape region query size = 574871.
+[INFO DRT-0033] V4 shape region query size = 544990.
+[INFO DRT-0033] M5 shape region query size = 371561.
+[INFO DRT-0033] V5 shape region query size = 142296.
+[INFO DRT-0033] M6 shape region query size = 106701.
+[INFO DRT-0033] V6 shape region query size = 140800.
+[INFO DRT-0033] M7 shape region query size = 35600.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1734 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 168 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0084]   Complete 71540 groups.
+#scanned instances     = 151556
+#unique  instances     = 169
+#stdCellGenAp          = 4389
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 3926
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 218750
+#instTermValidViaApCnt = 0
+#macroGenAp            = 15826
+#macroValidPlanarAp    = 15698
+#macroValidViaAp       = 13427
+#macroNoAp             = 21
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:35:03, elapsed time = 00:04:31, memory = 2663.36 (MB), peak = 4114.43 (MB)
+Took 282 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M8
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 11
+[INFO GRT-0004] Blockages: 143163
+[INFO GRT-0019] Found 33731 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 17
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   18263494      12970017          28.98%
+M3         Vertical     23759352      17656259          25.69%
+M4         Horizontal   21133640      15701337          25.70%
+M5         Vertical     26000684      18873511          27.41%
+M6         Horizontal   23093449      15732228          31.88%
+M7         Vertical     26366903      17854785          32.28%
+M8         Horizontal   22486947             0          100.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0197] Via related to pin nodes: 647470
+[INFO GRT-0198] Via related Steiner nodes: 2851
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1002693
+[INFO GRT-0112] Final usage 3D: 9391265
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2            12970017       1946554           15.01%             0 /  0 /  0
+M3            17656259       1869488           10.59%             0 /  0 /  0
+M4            15701337       1107504            7.05%             0 /  0 /  0
+M5            18873511        661006            3.50%             0 /  0 /  0
+M6            15732228        388230            2.47%             0 /  0 /  0
+M7            17854785        410404            2.30%             0 /  0 /  0
+M8                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         98788137       6383186            6.46%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 3802753 um
+[INFO GRT-0014] Routed nets: 106473
+[INFO GRT-0303] Global routing runtime = 00:14:45
+Took 885 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+estimate_parasitics -global_routing
+Took 8 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    107800
+     1000 |     +0.0% |       0 |       0 |             0 |    106800
+     2000 |     +0.0% |       0 |       1 |             1 |    105800
+     3000 |     +0.0% |       0 |       1 |             1 |    104800
+     4000 |     +0.0% |       0 |       6 |             6 |    103800
+     5000 |     +0.0% |       0 |       6 |             6 |    102800
+     6000 |     +0.0% |       0 |      16 |            16 |    101800
+     7000 |     +0.0% |       0 |      19 |            19 |    100800
+     8000 |     +0.0% |       0 |      19 |            19 |     99800
+     9000 |     +0.0% |       0 |      19 |            19 |     98800
+    10000 |     +0.0% |       0 |      20 |            20 |     97800
+    11000 |     +0.0% |       0 |      28 |            28 |     96800
+    12000 |     +0.0% |       0 |      39 |            39 |     95800
+    13000 |     +0.0% |       0 |      48 |            48 |     94800
+    14000 |     +0.0% |       0 |      49 |            49 |     93800
+    15000 |     +0.0% |       0 |      49 |            49 |     92800
+    16000 |     +0.0% |       0 |      49 |            49 |     91800
+    17000 |     +0.0% |       0 |      67 |            67 |     90800
+    18000 |     +0.0% |      10 |     128 |           118 |     89800
+    19000 |     +0.0% |      10 |     143 |           133 |     88800
+    20000 |     +0.0% |      10 |     149 |           139 |     87800
+    21000 |     +0.0% |      10 |     165 |           155 |     86800
+    22000 |     +0.0% |      10 |     165 |           155 |     85800
+    23000 |     +0.0% |      10 |     165 |           155 |     84800
+    24000 |     +0.0% |      10 |     165 |           155 |     83800
+    25000 |     +0.0% |      10 |     172 |           162 |     82800
+    26000 |     +0.0% |      20 |     352 |           317 |     81800
+    27000 |     +0.0% |      20 |     368 |           327 |     80800
+    28000 |     +0.0% |      20 |     388 |           344 |     79800
+    29000 |     +0.0% |      27 |     405 |           361 |     78800
+    30000 |     +0.0% |      27 |     415 |           371 |     77800
+    31000 |     +0.0% |      27 |     418 |           374 |     76800
+    32000 |     +0.0% |      27 |     418 |           374 |     75800
+    33000 |     +0.0% |      27 |     418 |           374 |     74800
+    34000 |     +0.0% |      27 |     418 |           374 |     73800
+    35000 |     +0.0% |      27 |     434 |           390 |     72800
+    36000 |     +0.0% |      27 |     439 |           395 |     71800
+    37000 |     +0.0% |      27 |     446 |           402 |     70800
+    38000 |     +0.0% |      28 |     494 |           445 |     69800
+    39000 |     +0.0% |      28 |     502 |           453 |     68800
+    40000 |     +0.0% |      28 |     521 |           471 |     67800
+    41000 |     +0.0% |      30 |     548 |           498 |     66800
+    42000 |     +0.0% |      30 |     552 |           502 |     65800
+    43000 |     +0.0% |      30 |     553 |           503 |     64800
+    44000 |     +0.0% |      30 |     553 |           503 |     63800
+    45000 |     +0.0% |      30 |     558 |           508 |     62800
+    46000 |     +0.0% |      30 |     563 |           513 |     61800
+    47000 |     +0.0% |      30 |     583 |           533 |     60800
+    48000 |     +0.0% |      30 |     596 |           546 |     59800
+    49000 |     +0.0% |      30 |     611 |           561 |     58800
+    50000 |     +0.0% |      30 |     614 |           564 |     57800
+    51000 |     +0.0% |      31 |     644 |           591 |     56800
+    52000 |     +0.0% |      31 |     738 |           685 |     55800
+    53000 |     +0.0% |      31 |     739 |           686 |     54800
+    54000 |     +0.0% |      31 |     749 |           696 |     53800
+    55000 |     +0.0% |      31 |     764 |           711 |     52800
+    56000 |     +0.0% |      31 |     764 |           711 |     51800
+    57000 |     +0.0% |      31 |     791 |           736 |     50800
+    58000 |     +0.0% |      31 |     805 |           750 |     49800
+    59000 |     +0.0% |      33 |     928 |           873 |     48800
+    60000 |     +0.0% |      33 |     942 |           887 |     47800
+    61000 |     +0.0% |      33 |     942 |           887 |     46800
+    62000 |     +0.0% |      33 |     943 |           888 |     45800
+    63000 |     +0.0% |      33 |     943 |           888 |     44800
+    64000 |     +0.0% |      33 |     943 |           888 |     43800
+    65000 |     +0.0% |      33 |     964 |           909 |     42800
+[WARNING RSZ-0104] Net hz\[2\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[2\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[99\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[98\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[97\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[96\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[95\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[94\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[93\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[92\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[91\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[90\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[89\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[88\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[87\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[86\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[85\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[84\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[83\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[82\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[81\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[80\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[79\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[78\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[77\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[76\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[75\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[74\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[73\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[72\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[71\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[70\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[69\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[68\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[67\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[66\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[65\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[64\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[63\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[62\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[61\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[60\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[59\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[58\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[57\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[56\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[55\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[54\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[53\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[52\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[51\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[50\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[49\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[48\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[47\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[46\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[45\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[44\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[43\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[42\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[41\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[40\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[39\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[38\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[37\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[36\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[35\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[34\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[33\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[32\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[31\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[30\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[29\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[28\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[27\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[26\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[25\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[255\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[254\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[253\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[252\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[251\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[250\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[24\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[249\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[248\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[247\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[246\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[245\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[244\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[243\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[242\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[241\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[240\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[23\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[239\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[238\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[237\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[236\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[235\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[234\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[233\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[232\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[231\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[230\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[22\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[229\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[228\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[227\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[226\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[225\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[224\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[223\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[222\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[221\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[220\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[21\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[219\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[218\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[217\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[216\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[215\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[214\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[213\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[212\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[211\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[210\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[20\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[209\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[208\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[207\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[206\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[205\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[204\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[203\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[202\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[201\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[200\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[19\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[199\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[198\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[197\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[196\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[195\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[194\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[193\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[192\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[191\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[190\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[18\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[189\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[188\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[187\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[186\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[185\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[184\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[183\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[182\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[181\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[180\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[17\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[179\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[178\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[177\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[176\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[175\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[174\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[173\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[172\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[171\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[170\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[16\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[169\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[168\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[167\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[166\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[165\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[164\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[163\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[162\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[161\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[160\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[15\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[159\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[158\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[157\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[156\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[155\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[154\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[153\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[152\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[151\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[150\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[14\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[149\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[148\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[147\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[146\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[145\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[144\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[143\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[142\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[141\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[140\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[13\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[139\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[138\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[137\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[136\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[135\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[134\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[133\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[132\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[131\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[130\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[12\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[129\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[128\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[127\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[126\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[125\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[124\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[123\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[122\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[121\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[120\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[11\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[119\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[118\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[117\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[116\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[115\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[114\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[113\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[112\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[111\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[110\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[10\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[109\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[108\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[107\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[106\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[105\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[104\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[103\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[102\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[101\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[100\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[2\]\[0\] only has one pin. Check if it is intended to be dangling.
+    66000 |     +0.0% |      33 |     972 |           917 |     41800
+[WARNING RSZ-0104] Net b26\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[10\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[2\]\[0\] only has one pin. Check if it is intended to be dangling.
+    67000 |     +0.0% |      33 |     978 |           923 |     40800
+    68000 |     +0.0% |      33 |     978 |           923 |     39800
+[WARNING RSZ-0104] Net hz\[7\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[99\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[98\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[97\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[96\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[95\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[94\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[93\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[92\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[91\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[90\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[89\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[88\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[87\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[86\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[85\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[84\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[83\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[82\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[81\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[80\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[79\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[78\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[77\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[76\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[75\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[74\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[73\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[72\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[71\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[70\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[69\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[68\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[67\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[66\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[65\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[64\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[63\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[62\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[61\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[60\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[59\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[58\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[57\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[56\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[55\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[54\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[53\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[52\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[51\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[50\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[49\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[48\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[47\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[46\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[45\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[44\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[43\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[42\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[41\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[40\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[39\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[38\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[37\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[36\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[35\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[34\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[33\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[32\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[31\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[30\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[29\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[28\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[27\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[26\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[25\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[255\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[254\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[253\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[252\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[251\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[250\] only has one pin. Check if it is intended to be dangling.
+    69000 |     +0.0% |      33 |    1069 |          1014 |     38800
+[WARNING RSZ-0104] Net c_data\[7\]\[24\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[249\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[248\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[247\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[246\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[245\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[244\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[243\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[242\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[241\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[240\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[23\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[239\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[238\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[237\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[236\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[235\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[234\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[233\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[232\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[231\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[230\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[22\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[229\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[228\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[227\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[226\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[225\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[224\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[223\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[222\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[221\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[220\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[21\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[219\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[218\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[217\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[216\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[215\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[214\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[213\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[212\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[211\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[210\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[20\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[209\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[208\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[207\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[206\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[205\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[204\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[203\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[202\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[201\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[200\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[19\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[199\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[198\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[197\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[196\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[195\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[194\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[193\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[192\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[191\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[190\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[18\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[189\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[188\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[187\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[186\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[185\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[184\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[183\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[182\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[181\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[180\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[17\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[179\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[178\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[177\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[176\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[175\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[174\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[173\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[172\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[171\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[170\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[16\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[169\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[168\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[167\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[166\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[165\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[164\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[163\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[162\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[161\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[160\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[15\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[159\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[158\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[157\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[156\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[155\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[154\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[153\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[152\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[151\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[150\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[14\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[149\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[148\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[147\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[146\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[145\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[144\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[143\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[142\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[141\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[140\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[13\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[139\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[138\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[137\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[136\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[135\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[134\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[133\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[132\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[131\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[130\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[12\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[129\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[128\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[127\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[126\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[125\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[124\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[123\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[122\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[121\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[120\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[11\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[119\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[118\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[117\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[116\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[115\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[114\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[113\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[112\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[111\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[110\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[10\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[109\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[108\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[107\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[106\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[105\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[104\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[103\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[102\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[101\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[100\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[7\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[221\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[220\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[219\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[218\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[217\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[216\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[215\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[214\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[213\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[212\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[211\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[210\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[209\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[208\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[207\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[206\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[205\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[204\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[203\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[202\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[201\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[200\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[199\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[198\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[197\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[196\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[195\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[194\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[193\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[192\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[191\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[190\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[189\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net cal\[7\]\[188\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net b26\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[10\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[7\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[6\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[6\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net b26\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[5\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[5\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[99\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[98\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[97\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[96\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[95\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[94\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[93\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[92\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[91\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[90\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[89\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[88\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[87\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[86\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[85\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[84\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[83\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[82\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[81\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[80\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[79\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[78\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[77\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[76\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[75\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[74\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[73\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[72\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[71\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[70\] only has one pin. Check if it is intended to be dangling.
+    70000 |     +0.1% |      33 |    1176 |          1121 |     37800
+[WARNING RSZ-0104] Net c_data\[5\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[69\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[68\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[67\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[66\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[65\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[64\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[63\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[62\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[61\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[60\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[59\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[58\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[57\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[56\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[55\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[54\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[53\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[52\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[51\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[50\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[49\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[48\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[47\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[46\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[45\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[44\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[43\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[42\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[41\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[40\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[39\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[38\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[37\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[36\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[35\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[34\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[33\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[32\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[31\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[30\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[29\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[28\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[27\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[26\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[25\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[255\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[254\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[253\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[252\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[251\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[250\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[24\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[249\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[248\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[247\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[246\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[245\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[244\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[243\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[242\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[241\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[240\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[23\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[239\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[238\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[237\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[236\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[235\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[234\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[233\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[232\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[231\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[230\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[22\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[229\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[228\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[227\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[226\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[225\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[224\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[223\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[222\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[221\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[220\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[21\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[219\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[218\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[217\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[216\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[215\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[214\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[213\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[212\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[211\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[210\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[20\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[209\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[208\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[207\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[206\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[205\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[204\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[203\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[202\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[201\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[200\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[19\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[199\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[198\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[197\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[196\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[195\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[194\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[193\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[192\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[191\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[190\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[18\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[189\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[188\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[187\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[186\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[185\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[184\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[183\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[182\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[181\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[180\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[17\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[179\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[178\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[177\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[176\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[175\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[174\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[173\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[172\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[171\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[170\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[16\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[169\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[168\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[167\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[166\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[165\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[164\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[163\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[162\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[161\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[160\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[15\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[159\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[158\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[157\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[156\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[155\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[154\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[153\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[152\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[151\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[150\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[14\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[149\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[148\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[147\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[146\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[145\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[144\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[143\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[142\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[141\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[140\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[13\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[139\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[138\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[137\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[136\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[135\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[134\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[133\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[132\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[131\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[130\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[12\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[129\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[128\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[127\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[126\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[125\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[124\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[123\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[122\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[121\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[120\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[11\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[119\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[118\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[117\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[116\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[115\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[114\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[113\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[112\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[111\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[110\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[10\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[109\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[108\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[107\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[106\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[105\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[104\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[103\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[102\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[101\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[100\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[5\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net b26\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[10\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_addr\[5\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[1\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net hz\[1\]\[0\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net b26\[1\] only has one pin. Check if it is intended to be dangling.
+    71000 |     +0.1% |      33 |    1193 |          1138 |     36800
+    72000 |     +0.1% |      33 |    1193 |          1138 |     35800
+    73000 |     +0.1% |      33 |    1226 |          1171 |     34800
+    74000 |     +0.1% |      33 |    1303 |          1248 |     33800
+[WARNING RSZ-0104] Net hz\[10\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[9\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[99\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[98\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[97\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[96\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[95\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[94\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[93\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[92\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[91\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[90\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[8\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[89\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[88\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[87\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[86\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[85\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[84\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[83\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[82\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[81\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[80\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[7\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[79\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[78\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[77\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[76\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[75\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[74\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[73\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[72\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[71\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[70\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[6\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[69\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[68\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[67\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[66\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[65\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[64\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[63\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[62\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[61\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[60\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[5\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[59\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[58\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[57\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[56\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[55\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[54\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[53\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[52\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[51\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[50\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[4\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[49\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[48\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[47\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[46\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[45\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[44\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[43\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[42\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[41\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[40\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[3\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[39\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[38\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[37\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[36\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[35\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[34\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[33\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[32\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[31\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[30\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[2\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[29\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[28\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[27\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[26\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[25\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[255\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[254\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[253\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[252\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[251\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[250\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[24\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[249\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[248\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[247\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[246\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[245\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[244\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[243\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[242\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[241\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[240\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[23\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[239\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[238\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[237\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[236\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[235\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[234\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[233\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[232\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[231\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[230\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[22\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[229\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[228\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[227\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[226\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[225\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[224\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[223\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[222\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[221\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[220\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[21\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[219\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[218\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[217\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[216\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[215\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[214\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[213\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[212\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[211\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[210\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[20\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[209\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[208\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[207\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[206\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[205\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[204\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[203\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[202\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[201\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[200\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[1\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[19\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[199\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[198\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[197\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net c_data\[10\]\[196\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] message limit (1000) reached. This message will no longer print.
+    75000 |     +0.1% |      33 |    1312 |          1257 |     32800
+    76000 |     +0.1% |      33 |    1312 |          1257 |     31800
+    77000 |     +0.1% |      33 |    1315 |          1260 |     30800
+    78000 |     +0.1% |      33 |    1323 |          1268 |     29800
+    79000 |     +0.1% |      33 |    1336 |          1281 |     28800
+    80000 |     +0.1% |      33 |    1336 |          1281 |     27800
+    81000 |     +0.1% |      33 |    1337 |          1282 |     26800
+    82000 |     +0.1% |      33 |    1346 |          1291 |     25800
+    83000 |     +0.1% |      33 |    1363 |          1308 |     24800
+    84000 |     +0.1% |      33 |    1363 |          1308 |     23800
+    85000 |     +0.1% |      33 |    1374 |          1319 |     22800
+    86000 |     +0.1% |      33 |    1383 |          1328 |     21800
+    87000 |     +0.1% |      33 |    1383 |          1328 |     20800
+    88000 |     +0.1% |      33 |    1383 |          1328 |     19800
+    89000 |     +0.1% |      33 |    1383 |          1328 |     18800
+    90000 |     +0.1% |      33 |    1383 |          1328 |     17800
+    91000 |     +0.1% |      33 |    1383 |          1328 |     16800
+    92000 |     +0.1% |      33 |    1383 |          1328 |     15800
+    93000 |     +0.1% |      33 |    1383 |          1328 |     14800
+    94000 |     +0.1% |      33 |    1383 |          1328 |     13800
+    95000 |     +0.1% |      33 |    1383 |          1328 |     12800
+    96000 |     +0.1% |      33 |    1383 |          1328 |     11800
+    97000 |     +0.1% |      33 |    1383 |          1328 |     10800
+    98000 |     +0.1% |      33 |    1383 |          1328 |      9800
+    99000 |     +0.1% |      33 |    1383 |          1328 |      8800
+   100000 |     +0.1% |      33 |    1383 |          1328 |      7800
+   101000 |     +0.1% |      33 |    1383 |          1328 |      6800
+   102000 |     +0.1% |      33 |    1383 |          1328 |      5800
+   103000 |     +0.1% |      33 |    1383 |          1328 |      4800
+   104000 |     +0.1% |      33 |    1383 |          1328 |      3800
+   105000 |     +0.1% |      33 |    1383 |          1328 |      2800
+   106000 |     +0.1% |      33 |    1383 |          1328 |      1800
+   107000 |     +0.1% |      33 |    1383 |          1328 |       800
+    final |     +0.1% |      33 |    1383 |          1328 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1361 slew violations.
+[INFO RSZ-0039] Resized 33 instances.
+[INFO RSZ-0038] Inserted 1383 buffers in 1328 nets.
+[INFO RSZ-0504] Runtime: 246.20s
+Took 246 seconds: repair_design -verbose -slew_margin 30
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 1017679.33 um^2
+[INFO DPL-0007] Movable instances area: 9853.13 um^2
+[INFO DPL-0008] Fixed instances area within core: 615769.69 um^2
+[INFO DPL-0009] Utilization: 61.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 152928 cells
+[INFO DPL-0393]   height 720 row(s): 11 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        508 |        74 |       434
+        1 |        440 |        60 |       380
+        2 |        346 |        56 |       290
+        3 |        327 |        45 |       282
+        4 |        288 |        43 |       245
+        5 |        275 |        42 |       233
+        6 |        261 |        39 |       222
+        7 |        219 |        40 |       179
+        8 |        256 |        41 |       215
+        9 |        194 |        34 |       160
+       10 |        248 |        48 |       200
+       20 |        258 |        40 |       194
+       30 |        181 |        28 |       153
+       40 |        203 |        23 |       180
+       50 |        187 |        25 |       162
+       60 |        247 |        37 |       210
+       70 |        204 |        33 |       171
+       80 |        242 |        35 |       207
+       90 |        291 |        38 |       253
+      100 |        297 |        39 |       250
+      110 |        387 |        55 |       332
+      120 |        323 |        51 |       272
+      130 |        323 |        45 |       269
+      140 |        302 |        43 |       259
+      150 |        341 |        47 |       294
+      160 |        375 |        60 |       315
+      170 |        353 |        56 |       297
+      180 |        380 |        60 |       320
+      190 |        408 |        66 |       342
+      200 |        419 |        55 |       364
+      210 |        429 |        65 |       364
+      220 |        212 |        32 |       180
+      230 |        205 |        34 |       171
+      240 |         78 |        17 |        61
+      250 |        113 |        20 |        93
+      260 |        170 |        15 |       155
+      270 |        211 |        28 |       175
+      280 |        210 |        41 |       169
+      290 |        158 |        28 |       130
+      300 |        126 |        21 |       105
+      310 |         91 |        18 |        73
+      320 |         83 |        12 |        71
+      330 |        105 |        16 |        89
+      340 |         82 |        10 |        72
+      350 |         84 |        14 |        67
+      360 |         48 |         9 |        39
+      370 |         73 |        14 |        59
+      380 |         89 |        15 |        74
+      390 |         78 |        16 |        62
+      399 |         74 |        12 |        60
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |         67 |        10 |        57
+      410 |         68 |        12 |        56
+      420 |         94 |        12 |        82
+      430 |        116 |        14 |       102
+      440 |        208 |        25 |       183
+      450 |        223 |        30 |       193
+      460 |        240 |        36 |       204
+      470 |        370 |        53 |       317
+      480 |        333 |        54 |       279
+      490 |        386 |        49 |       337
+      500 |        372 |        64 |       308
+      510 |        369 |        56 |       313
+      520 |        402 |        68 |       332
+      530 |        481 |        75 |       396
+      540 |        357 |        72 |       285
+      550 |        187 |        43 |       144
+      560 |        232 |        40 |       192
+      570 |        181 |        37 |       144
+      580 |        251 |        45 |       206
+      590 |        191 |        42 |       149
+      600 |        182 |        42 |       140
+      610 |        113 |        21 |        92
+      620 |         80 |        22 |        58
+      630 |         81 |        15 |        66
+      640 |         68 |        10 |        58
+      650 |         44 |         8 |        36
+      660 |         46 |        12 |        34
+      670 |         43 |        11 |        32
+      680 |         54 |        12 |        42
+      690 |         30 |         4 |        26
+      700 |          9 |         3 |         6
+      710 |         25 |         3 |        22
+      720 |         45 |         7 |        38
+      730 |          8 |         4 |         4
+      740 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 340.
+[INFO DPL-0500] Runtime: 261.40s
+Placement Analysis
+---------------------------------
+total displacement       5208.0 u
+average displacement        0.0 u
+max displacement            6.0 u
+original HPWL         3547221.4 u
+legalized HPWL        3549091.2 u
+delta HPWL                    0 %
+
+Took 262 seconds: detailed_placement
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/congestion_post_repair_design.rpt
+Took 377 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+Took 8 seconds: estimate_parasitics -global_routing
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hbm_sfu_programme_store_r12_clg/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 621 input pin flops (0 hard-child clock pins at +insertion), median arrival 1336.453 (range 1319.5781 .. 1382.5881)
+QDM reference pin p_io_cfg_data[191]$_DFF_P_/CLK clock arrival max 1336.453 min 1285.7063 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM sync: SS setup ws -46.63 / FF hold ws -91.58 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 1 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 1 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -46.626 |     -581.9 |      -46.6 |      1 | p_fault$_SDFFE_PN0P_/D
+      10* |       3 |       2 |        1 |      0 |     3 |    -0.0% |  -31.796 |     -617.2 |      -31.8 |      1 | p_fault$_SDFFE_PN0P_/D
+      20* |       7 |       5 |        3 |      0 |     4 |    -0.0% |  -25.673 |     -419.7 |      -25.7 |      1 | p_fault$_SDFFE_PN0P_/D
+      30* |       8 |      10 |        4 |      0 |     7 |    +0.0% |  -24.070 |     -394.4 |      -24.1 |      1 | p_fault$_SDFFE_PN0P_/D
+      40* |      12 |      13 |        6 |      0 |     8 |    +0.0% |  -18.494 |     -339.0 |      -18.5 |      1 | p_fault$_SDFFE_PN0P_/D
+      50* |      15 |      16 |        7 |      0 |    11 |    -0.0% |  -20.520 |     -353.7 |      -20.5 |      1 | p_fault$_SDFFE_PN0P_/D
+      60* |      18 |      18 |       11 |      0 |    13 |    -0.0% |  -18.507 |     -314.6 |      -18.5 |      1 | p_fault$_SDFFE_PN0P_/D
+      70* |      22 |      19 |       14 |      0 |    16 |    -0.0% |  -13.589 |     -257.2 |      -13.6 |      1 | p_fault$_SDFFE_PN0P_/D
+      80* |      24 |      22 |       17 |      0 |    19 |    +0.0% |  -12.961 |     -242.9 |      -13.0 |      1 | p_fault$_SDFFE_PN0P_/D
+      90* |      27 |      25 |       17 |      0 |    23 |    -0.0% |  -19.018 |     -223.0 |      -19.0 |      1 | p_fault$_SDFFE_PN0P_/D
+     100* |      29 |      30 |       21 |      0 |    24 |    +0.0% |  -10.316 |     -180.6 |      -10.3 |      1 | p_fault$_SDFFE_PN0P_/D
+     110* |      32 |      33 |       26 |      0 |    25 |    +0.0% |  -20.408 |     -151.7 |      -20.4 |      1 | p_fault$_SDFFE_PN0P_/D
+     120* |      33 |      36 |       34 |      0 |    26 |    +0.0% |  -11.962 |     -111.2 |      -12.0 |      1 | p_fault$_SDFFE_PN0P_/D
+     130* |      35 |      40 |       40 |      0 |    26 |    +0.0% |   -5.679 |      -57.6 |       -5.7 |      1 | p_fault$_SDFFE_PN0P_/D
+     140* |      35 |      43 |       45 |      0 |    28 |    +0.0% |   -4.055 |      -23.2 |       -4.1 |      1 | p_fault$_SDFFE_PN0P_/D
+     150* |      37 |      46 |       52 |      0 |    29 |    +0.0% |   -0.441 |       -0.4 |       -0.4 |      1 | p_fault$_SDFFE_PN0P_/D
+     151* |      37 |      46 |       53 |      0 |    29 |    +0.0% |    0.108 |        0.0 |        0.0 |      1 | p_fault$_SDFFE_PN0P_/D
+     151* |      37 |      46 |       53 |      0 |    29 |    +0.0% |    0.108 |        0.0 |        0.0 |      1 | p_fault$_SDFFE_PN0P_/D
+    final |      37 |      46 |       53 |      0 |    29 |    +0.0% |    0.108 |        0.0 |        0.0 |      0 | p_fault$_SDFFE_PN0P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 37 buffers.
+[INFO RSZ-0040] Inserted 53 buffers.
+[INFO RSZ-0051] Resized 46 instances: 46 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 29 instances.
+[INFO RSZ-0505] Runtime: 162.11s
+Took 162 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_RC_CAL hold: -global_routing layers M6 M7 R 0.014 C 0.105 (RCX-calibrated upper-layer RC; platform setRC restored after)
+OT_HOLD_MM after repair: SS setup ws 61.73 / FF hold ws -70.55 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hbm_sfu_programme_store_r12_clg/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 621 input pin flops (0 hard-child clock pins at +insertion), median arrival 1228.1534 (range 1211.6049 .. 1250.8132)
+QDM reference pin p_io_cfg_data[171]$_DFF_P_/CLK clock arrival max 1228.1534 min 1175.0002 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM sync: SS setup ws 61.73 / FF hold ws -40.68 ps
+OT_HM_GUARD: margin 30 kept: 1138 endpoints in margin, ~2393 buffers, +0.0 util pts (within limits)
+OT_HOLD_GUARD start: hold ws -40.68 tns -12050.8 viol 621 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 1138 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -40.676 | -12050.767 | p_cfg_data[101]$_DFF_P_/D
+       10 |       0 |       9 |            0 |    +0.0% | -38.807 | -11944.100 | p_cfg_data[104]$_DFF_P_/D
+       20 |       0 |      19 |            0 |    +0.0% | -37.815 | -11825.666 | p_cfg_data[145]$_DFF_P_/D
+       30 |       0 |      29 |            0 |    +0.0% | -36.867 | -11707.162 | p_cfg_data[15]$_DFF_P_/D
+       40 |       0 |      39 |            0 |    +0.0% | -34.960 | -11589.829 | p_cfg_data[48]$_DFF_P_/D
+       50 |       0 |      49 |            0 |    +0.0% | -34.020 | -11470.515 | p_cfg_data[56]$_DFF_P_/D
+       60 |       0 |      59 |            0 |    +0.0% | -33.051 | -11352.140 | p_cfg_addr[4]$_DFF_P_/D
+       70 |       0 |      69 |            0 |    +0.0% | -32.294 | -11233.562 | p_cfg_data[177]$_DFF_P_/D
+       80 |       0 |      79 |            0 |    +0.0% | -31.039 | -11114.828 | p_cfg_addr[7]$_DFF_P_/D
+       90 |       0 |      89 |            0 |    +0.0% | -30.552 | -10994.783 | p_cfg_data[225]$_DFF_P_/D
+      100 |       0 |      99 |            0 |    +0.0% | -30.163 | -10875.027 | p_cfg_data[50]$_DFF_P_/D
+      110 |       0 |     109 |            0 |    +0.0% | -29.666 | -10755.651 | p_io_cfg_addr[1]$_DFF_P_/D
+      120 |       0 |     119 |            0 |    +0.0% | -29.310 | -10637.477 | p_cfg_data[34]$_DFF_P_/D
+      130 |       0 |     129 |            0 |    +0.0% | -28.898 | -10518.702 | p_cfg_data[117]$_DFF_P_/D
+      140 |       0 |     139 |            0 |    +0.0% | -28.545 | -10400.115 | p_cfg_data[105]$_DFF_P_/D
+      150 |       0 |     149 |            0 |    +0.0% | -28.545 | -10281.746 | p_cfg_data[105]$_DFF_P_/D
+      160 |       0 |     159 |            0 |    +0.0% | -28.545 | -10163.584 | p_cfg_data[105]$_DFF_P_/D
+      170 |       0 |     169 |            0 |    +0.0% | -28.545 | -10045.166 | p_cfg_data[105]$_DFF_P_/D
+      180 |       0 |     179 |            0 |    +0.0% | -28.545 | -9926.247 | p_cfg_data[105]$_DFF_P_/D
+      190 |       0 |     189 |            0 |    +0.0% | -28.545 | -9807.177 | p_cfg_data[105]$_DFF_P_/D
+      200 |       0 |     199 |            0 |    +0.0% | -28.545 | -9688.220 | p_cfg_data[105]$_DFF_P_/D
+      210 |       0 |     209 |            0 |    +0.0% | -28.545 | -9568.562 | p_cfg_data[105]$_DFF_P_/D
+      220 |       0 |     219 |            0 |    +0.0% | -28.545 | -9449.430 | p_cfg_data[105]$_DFF_P_/D
+      230 |       0 |     229 |            0 |    +0.0% | -28.545 | -9330.333 | p_cfg_data[105]$_DFF_P_/D
+      240 |       0 |     239 |            0 |    +0.0% | -28.545 | -9211.229 | p_cfg_data[105]$_DFF_P_/D
+      250 |       0 |     249 |            0 |    +0.0% | -28.545 | -9092.952 | p_cfg_data[105]$_DFF_P_/D
+      260 |       0 |     259 |            0 |    +0.0% | -28.545 | -8973.597 | p_cfg_data[105]$_DFF_P_/D
+      270 |       0 |     269 |            0 |    +0.0% | -28.545 | -8854.875 | p_cfg_data[105]$_DFF_P_/D
+      280 |       0 |     279 |            0 |    +0.0% | -28.545 | -8736.689 | p_cfg_data[105]$_DFF_P_/D
+      290 |       0 |     289 |            0 |    +0.0% | -28.545 | -8616.980 | p_cfg_data[105]$_DFF_P_/D
+      300 |       0 |     299 |            0 |    +0.0% | -28.545 | -8498.492 | p_cfg_data[105]$_DFF_P_/D
+      310 |       0 |     309 |            0 |    +0.0% | -28.545 | -8380.973 | p_cfg_data[105]$_DFF_P_/D
+      320 |       0 |     319 |            0 |    +0.0% | -28.545 | -8261.585 | p_cfg_data[105]$_DFF_P_/D
+      330 |       0 |     329 |            0 |    +0.0% | -28.545 | -8143.802 | p_cfg_data[105]$_DFF_P_/D
+      340 |       0 |     339 |            0 |    +0.0% | -28.545 | -8024.238 | p_cfg_data[105]$_DFF_P_/D
+      350 |       0 |     349 |            0 |    +0.0% | -28.545 | -7905.752 | p_cfg_data[105]$_DFF_P_/D
+      360 |       0 |     359 |            0 |    +0.0% | -28.545 | -7786.238 | p_cfg_data[105]$_DFF_P_/D
+      370 |       0 |     369 |            0 |    +0.0% | -28.545 | -7667.162 | p_cfg_data[105]$_DFF_P_/D
+      380 |       0 |     379 |            0 |    +0.0% | -28.545 | -7549.449 | p_cfg_data[105]$_DFF_P_/D
+      390 |       0 |     389 |            0 |    +0.0% | -28.545 | -7429.300 | p_cfg_data[105]$_DFF_P_/D
+      400 |       0 |     399 |            0 |    +0.0% | -28.545 | -7310.669 | p_cfg_data[105]$_DFF_P_/D
+      410 |       0 |     409 |            0 |    +0.0% | -28.545 | -7192.269 | p_cfg_data[105]$_DFF_P_/D
+      420 |       0 |     419 |            0 |    +0.0% | -28.545 | -7072.378 | p_cfg_data[105]$_DFF_P_/D
+      430 |       0 |     429 |            0 |    +0.0% | -28.545 | -6955.466 | p_cfg_data[105]$_DFF_P_/D
+      440 |       0 |     439 |            0 |    +0.0% | -28.545 | -6836.200 | p_cfg_data[105]$_DFF_P_/D
+      450 |       0 |     449 |            0 |    +0.0% | -28.545 | -6718.905 | p_cfg_data[105]$_DFF_P_/D
+      460 |       0 |     459 |            0 |    +0.0% | -28.545 | -6601.972 | p_cfg_data[105]$_DFF_P_/D
+      470 |       0 |     469 |            0 |    +0.0% | -28.545 | -6487.404 | p_cfg_data[105]$_DFF_P_/D
+      480 |       0 |     479 |            0 |    +0.0% | -28.545 | -6375.200 | p_cfg_data[105]$_DFF_P_/D
+      490 |       0 |     489 |            0 |    +0.0% | -28.545 | -6265.484 | p_cfg_data[105]$_DFF_P_/D
+      500 |       0 |     499 |            0 |    +0.0% | -28.545 | -6159.000 | p_cfg_data[105]$_DFF_P_/D
+      510 |       0 |     509 |            0 |    +0.0% | -28.545 | -6054.434 | p_cfg_data[105]$_DFF_P_/D
+      520 |       0 |     519 |            0 |    +0.0% | -28.545 | -5952.237 | p_cfg_data[105]$_DFF_P_/D
+      530 |       0 |     529 |            0 |    +0.0% | -28.545 | -5852.640 | p_cfg_data[105]$_DFF_P_/D
+      540 |       0 |     539 |            0 |    +0.0% | -28.545 | -5754.915 | p_cfg_data[105]$_DFF_P_/D
+      550 |       0 |     549 |            0 |    +0.0% | -28.545 | -5659.461 | p_cfg_data[105]$_DFF_P_/D
+      560 |       0 |     559 |            0 |    +0.0% | -28.545 | -5567.847 | p_cfg_data[105]$_DFF_P_/D
+      570 |       0 |     569 |            0 |    +0.0% | -28.545 | -5481.035 | p_cfg_data[105]$_DFF_P_/D
+      580 |       0 |     579 |            0 |    +0.0% | -28.545 | -5399.422 | p_cfg_data[105]$_DFF_P_/D
+      590 |       0 |     589 |            0 |    +0.0% | -28.545 | -5324.008 | p_cfg_data[105]$_DFF_P_/D
+      600 |       0 |     599 |            0 |    +0.0% | -28.545 | -5252.250 | p_cfg_data[105]$_DFF_P_/D
+      610 |       0 |     609 |            0 |    +0.0% | -28.545 | -5184.060 | p_cfg_data[105]$_DFF_P_/D
+      620 |       0 |     619 |            0 |    +0.0% | -28.545 | -5129.902 | p_cfg_data[105]$_DFF_P_/D
+      630 |       0 |     640 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      640 |       0 |     661 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      650 |       0 |     682 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      660 |       0 |     703 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      670 |       0 |     724 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      680 |       0 |     744 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      690 |       0 |     761 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      700 |       0 |     777 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      710 |       0 |     792 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      720 |       0 |     807 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      730 |       0 |     821 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      740 |       0 |     839 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      750 |       0 |     852 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      760 |       0 |     863 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      770 |       0 |     879 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      780 |       0 |     893 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      790 |       0 |     909 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      800 |       0 |     922 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      810 |       0 |     934 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      820 |       0 |     947 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      830 |       0 |     958 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      840 |       0 |     970 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      850 |       0 |     980 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      860 |       0 |     990 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      870 |       0 |    1003 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      880 |       0 |    1018 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      890 |       0 |    1028 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      900 |       0 |    1044 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      910 |       0 |    1055 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      920 |       0 |    1067 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      930 |       0 |    1080 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      940 |       0 |    1093 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      950 |       0 |    1107 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      960 |       0 |    1119 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      970 |       0 |    1131 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      980 |       0 |    1144 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+      990 |       0 |    1155 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1000 |       0 |    1168 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1010 |       0 |    1178 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1020 |       0 |    1191 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1030 |       0 |    1200 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1040 |       0 |    1211 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1050 |       0 |    1223 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1060 |       0 |    1234 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1070 |       0 |    1246 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1080 |       0 |    1256 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1090 |       0 |    1266 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1100 |       0 |    1278 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1110 |       0 |    1289 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1120 |       0 |    1301 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+     1130 |       0 |    1312 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+    final |       0 |    1324 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 1324 hold buffers.
+[INFO RSZ-0506] Runtime: 3412.28s
+Took 3412 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws -28.54 (+12.13) tns -5128.1 (+57.4%) viol 448, 3412 s
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 666 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -28.545 | -5128.085 | p_cfg_data[105]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -26.923 | -4919.320 | p_cfg_data[80]$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -26.126 | -4683.710 | p_cfg_data[14]$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.0% | -24.860 | -4450.236 | p_cfg_data[15]$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.0% | -23.150 | -4216.578 | p_cfg_data[52]$_DFF_P_/D
+       50 |       0 |      98 |            0 |    +0.0% | -22.165 | -3990.630 | p_cfg_addr[0]$_DFF_P_/D
+       60 |       0 |     118 |            0 |    +0.0% | -21.170 | -3773.162 | p_cfg_data[154]$_DFF_P_/D
+       70 |       0 |     138 |            0 |    +0.0% | -20.540 | -3564.641 | p_io_cfg_addr[5]$_DFF_P_/D
+       80 |       0 |     158 |            0 |    +0.0% | -19.220 | -3364.488 | p_cfg_data[3]$_DFF_P_/D
+       90 |       0 |     178 |            0 |    +0.0% | -18.520 | -3176.081 | p_cfg_data[142]$_DFF_P_/D
+      100 |       0 |     198 |            0 |    +0.0% | -18.228 | -2992.146 | p_cfg_data[231]$_DFF_P_/D
+      110 |       0 |     218 |            0 |    +0.0% | -17.803 | -2811.741 | p_cfg_data[29]$_DFF_P_/D
+      120 |       0 |     238 |            0 |    +0.0% | -17.430 | -2635.366 | p_cfg_data[34]$_DFF_P_/D
+      130 |       0 |     258 |            0 |    +0.0% | -16.913 | -2462.847 | p_cfg_data[62]$_DFF_P_/D
+      140 |       0 |     278 |            0 |    +0.0% | -16.284 | -2295.594 | p_cfg_data[207]$_DFF_P_/D
+      150 |       0 |     298 |            0 |    +0.0% | -15.701 | -2135.418 | p_cfg_data[57]$_DFF_P_/D
+      160 |       0 |     318 |            0 |    +0.0% | -14.937 | -1982.480 | p_cfg_data[10]$_DFF_P_/D
+      170 |       0 |     338 |            0 |    +0.0% | -14.220 | -1835.185 | p_cfg_data[251]$_DFF_P_/D
+      180 |       0 |     358 |            0 |    +0.0% | -13.580 | -1695.289 | p_cfg_data[97]$_DFF_P_/D
+      190 |       0 |     378 |            0 |    +0.0% | -13.212 | -1561.619 | p_cfg_data[232]$_DFF_P_/D
+      200 |       0 |     398 |            0 |    +0.0% | -12.618 | -1432.069 | p_cfg_data[194]$_DFF_P_/D
+      210 |       0 |     418 |            0 |    +0.0% | -12.302 | -1307.609 | p_cfg_data[32]$_DFF_P_/D
+      220 |       0 |     438 |            0 |    +0.0% | -11.785 | -1186.755 | p_cfg_data[243]$_DFF_P_/D
+      230 |       0 |     458 |            0 |    +0.0% | -11.246 | -1070.984 | p_io_cfg_data[11]$_DFF_P_/D
+      240 |       0 |     478 |            0 |    +0.0% | -10.600 | -960.594 | p_io_cfg_data[15]$_DFF_P_/D
+      250 |       0 |     498 |            0 |    +0.0% |  -9.896 | -857.202 | p_cfg_data[193]$_DFF_P_/D
+      260 |       0 |     518 |            0 |    +0.0% |  -9.507 | -760.172 | p_cfg_data[124]$_DFF_P_/D
+      270 |       0 |     538 |            0 |    +0.0% |  -8.921 | -668.818 | p_io_start_limit[9]$_DFF_P_/D
+      280 |       0 |     558 |            0 |    +0.0% |  -8.132 | -581.773 | p_cfg_data[168]$_DFF_P_/D
+      290 |       0 |     578 |            0 |    +0.0% |  -6.099 | -511.786 | p_io_cfg_data[28]$_DFF_P_/D
+      300 |       0 |     598 |            0 |    +0.0% |  -5.537 | -452.484 | p_io_cfg_data[179]$_DFF_P_/D
+      310 |       0 |     618 |            0 |    +0.0% |  -5.401 | -398.959 | p_cfg_data[101]$_DFF_P_/D
+      320 |       0 |     638 |            0 |    +0.0% |  -5.401 | -352.080 | p_cfg_data[101]$_DFF_P_/D
+      330 |       0 |     658 |            0 |    +0.0% |  -5.401 | -308.506 | p_cfg_data[101]$_DFF_P_/D
+      340 |       0 |     678 |            0 |    +0.0% |  -5.401 | -268.603 | p_cfg_data[101]$_DFF_P_/D
+      350 |       0 |     698 |            0 |    +0.0% |  -5.401 | -233.266 | p_cfg_data[101]$_DFF_P_/D
+      360 |       0 |     718 |            0 |    +0.0% |  -5.401 | -204.639 | p_cfg_data[101]$_DFF_P_/D
+      370 |       0 |     738 |            0 |    +0.0% |  -5.401 | -179.750 | p_cfg_data[101]$_DFF_P_/D
+      380 |       0 |     758 |            0 |    +0.0% |  -5.401 | -157.550 | p_cfg_data[101]$_DFF_P_/D
+      390 |       0 |     778 |            0 |    +0.0% |  -5.401 | -141.130 | p_cfg_data[101]$_DFF_P_/D
+      400 |       0 |     798 |            0 |    +0.0% |  -5.401 | -127.586 | p_cfg_data[101]$_DFF_P_/D
+      410 |       0 |     818 |            0 |    +0.0% |  -5.401 | -116.670 | p_cfg_data[101]$_DFF_P_/D
+      420 |       0 |     838 |            0 |    +0.0% |  -5.401 | -108.268 | p_cfg_data[101]$_DFF_P_/D
+      430 |       0 |     858 |            0 |    +0.0% |  -5.401 | -102.103 | p_cfg_data[101]$_DFF_P_/D
+      440 |       0 |     878 |            0 |    +0.0% |  -5.401 | -99.228 | p_cfg_data[101]$_DFF_P_/D
+      450 |       0 |     898 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      460 |       0 |     918 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      470 |       0 |     938 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      480 |       0 |     958 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      490 |       0 |     978 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      500 |       0 |     998 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      510 |       0 |    1018 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      520 |       0 |    1038 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      530 |       0 |    1058 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      540 |       0 |    1078 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      550 |       0 |    1098 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      560 |       0 |    1118 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      570 |       0 |    1138 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      580 |       0 |    1158 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      590 |       0 |    1178 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      600 |       0 |    1198 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      610 |       0 |    1218 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      620 |       0 |    1239 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      630 |       0 |    1259 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      640 |       0 |    1275 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      650 |       0 |    1285 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      660 |       0 |    1295 |            0 |    +0.0% |  -5.401 | -98.460 | p_cfg_data[101]$_DFF_P_/D
+      670 |       0 |    1313 |            0 |    +0.0% |  -4.566 | -83.294 | p_cfg_data[74]$_DFF_P_/D
+      680 |       0 |    1343 |            0 |    +0.0% |  -3.256 | -45.308 | p_cfg_data[73]$_DFF_P_/D
+      690 |       0 |    1373 |            0 |    +0.0% |  -2.148 | -17.450 | p_cfg_data[129]$_DFF_P_/D
+      700 |       0 |    1403 |            0 |    +0.0% |  -0.497 |  -1.086 | p_cfg_data[178]$_DFF_P_/D
+      710 |       0 |    1433 |            0 |    +0.0% |   0.533 |   0.000 | p_cfg_data[171]$_DFF_P_/D
+      720 |       0 |    1463 |            0 |    +0.0% |   1.494 |   0.000 | p_cfg_addr[4]$_DFF_P_/D
+      730 |       0 |    1493 |            0 |    +0.0% |   2.515 |   0.000 | p_cfg_data[164]$_DFF_P_/D
+      740 |       0 |    1523 |            0 |    +0.0% |   3.174 |   0.000 | p_cfg_data[18]$_DFF_P_/D
+      750 |       0 |    1553 |            0 |    +0.0% |   4.519 |   0.000 | p_cfg_data[58]$_DFF_P_/D
+      760 |       0 |    1583 |            0 |    +0.0% |   5.021 |   0.000 | p_cfg_data[234]$_DFF_P_/D
+      770 |       0 |    1613 |            0 |    +0.0% |   5.313 |   0.000 | p_cfg_data[245]$_DFF_P_/D
+      780 |       0 |    1643 |            0 |    +0.0% |   5.832 |   0.000 | p_cfg_data[138]$_DFF_P_/D
+      790 |       0 |    1672 |            0 |    +0.0% |   6.117 |   0.000 | p_cfg_data[119]$_DFF_P_/D
+      800 |       0 |    1702 |            0 |    +0.0% |   6.546 |   0.000 | p_cfg_data[135]$_DFF_P_/D
+      810 |       0 |    1727 |            0 |    +0.0% |   7.170 |   0.000 | p_cfg_data[207]$_DFF_P_/D
+      820 |       0 |    1747 |            0 |    +0.0% |   7.932 |   0.000 | p_cfg_data[10]$_DFF_P_/D
+      830 |       0 |    1767 |            0 |    +0.0% |   8.620 |   0.000 | p_cfg_data[230]$_DFF_P_/D
+      840 |       0 |    1787 |            0 |    +0.0% |   9.298 |   0.000 | p_cfg_data[97]$_DFF_P_/D
+      850 |       0 |    1807 |            0 |    +0.0% |   9.974 |   0.000 | p_cfg_data[77]$_DFF_P_/D
+      860 |       0 |    1827 |            0 |    +0.0% |  10.368 |   0.000 | p_cfg_data[35]$_DFF_P_/D
+      870 |       0 |    1847 |            0 |    +0.0% |  10.788 |   0.000 | p_cfg_data[46]$_DFF_P_/D
+      880 |       0 |    1867 |            0 |    +0.0% |  11.438 |   0.000 | p_io_start_base[0]$_DFF_P_/D
+      890 |       0 |    1887 |            0 |    +0.0% |  11.890 |   0.000 | p_cfg_data[75]$_DFF_P_/D
+      900 |       0 |    1907 |            0 |    +0.0% |  12.315 |   0.000 | p_cfg_data[219]$_DFF_P_/D
+      910 |       0 |    1927 |            0 |    +0.0% |  13.190 |   0.000 | p_io_start_base[8]$_DFF_P_/D
+      920 |       0 |    1947 |            0 |    +0.0% |  14.051 |   0.000 | p_cfg_data[195]$_DFF_P_/D
+      930 |       0 |    1967 |            0 |    +0.0% |  14.318 |   0.000 | p_io_start_limit[5]$_DFF_P_/D
+      940 |       0 |    1987 |            0 |    +0.0% |  14.950 |   0.000 | p_cfg_data[155]$_DFF_P_/D
+      950 |       0 |    2007 |            0 |    +0.0% |  16.650 |   0.000 | p_io_start_limit[2]$_DFF_P_/D
+      960 |       0 |    2027 |            0 |    +0.0% |  17.560 |   0.000 | p_io_cfg_data[165]$_DFF_P_/D
+      970 |       0 |    2047 |            0 |    +0.0% |  18.226 |   0.000 | p_io_start_loops[9]$_DFF_P_/D
+      980 |       0 |    2065 |            0 |    +0.0% |  18.518 |   0.000 | p_cfg_data[239]$_DFF_P_/D
+      990 |       0 |    2079 |            0 |    +0.0% |  19.060 |   0.000 | p_cfg_data[226]$_DFF_P_/D
+     1000 |       0 |    2089 |            0 |    +0.0% |  19.507 |   0.000 | p_io_cfg_data[85]$_DFF_P_/D
+     1010 |       0 |    2099 |            0 |    +0.0% |  20.014 |   0.000 | p_io_start_loops[15]$_DFF_P_/D
+     1020 |       0 |    2109 |            0 |    +0.0% |  20.334 |   0.000 | p_io_cfg_data[126]$_DFF_P_/D
+     1030 |       0 |    2119 |            0 |    +0.0% |  20.819 |   0.000 | p_io_cfg_data[72]$_DFF_P_/D
+     1040 |       0 |    2129 |            0 |    +0.0% |  21.276 |   0.000 | p_io_cfg_data[131]$_DFF_P_/D
+     1050 |       0 |    2139 |            0 |    +0.0% |  21.753 |   0.000 | p_io_cfg_data[224]$_DFF_P_/D
+     1060 |       0 |    2149 |            0 |    +0.0% |  22.117 |   0.000 | p_io_cfg_data[195]$_DFF_P_/D
+     1070 |       0 |    2159 |            0 |    +0.0% |  22.446 |   0.000 | p_io_cfg_data[41]$_DFF_P_/D
+     1080 |       0 |    2169 |            0 |    +0.0% |  22.706 |   0.000 | p_io_cfg_data[63]$_DFF_P_/D
+     1090 |       0 |    2179 |            0 |    +0.0% |  22.896 |   0.000 | p_io_cfg_data[39]$_DFF_P_/D
+     1100 |       0 |    2189 |            0 |    +0.0% |  23.050 |   0.000 | p_io_cfg_data[62]$_DFF_P_/D
+     1110 |       0 |    2199 |            0 |    +0.0% |  23.286 |   0.000 | p_io_cfg_stripe[0]$_DFF_P_/D
+     1120 |       0 |    2209 |            0 |    +0.0% |  23.458 |   0.000 | p_io_cfg_data[66]$_DFF_P_/D
+     1130 |       0 |    2219 |            0 |    +0.0% |  23.634 |   0.000 | p_start_loops[5]$_DFF_P_/D
+     1140 |       0 |    2229 |            0 |    +0.0% |  23.858 |   0.000 | p_start_limit[10]$_DFF_P_/D
+     1150 |       0 |    2239 |            0 |    +0.0% |  24.213 |   0.000 | p_start_loops[0]$_DFF_P_/D
+     1160 |       0 |    2249 |            0 |    +0.0% |  24.440 |   0.000 | p_io_cfg_data[81]$_DFF_P_/D
+     1170 |       0 |    2259 |            0 |    +0.0% |  24.891 |   0.000 | p_io_cfg_data[57]$_DFF_P_/D
+     1180 |       0 |    2269 |            0 |    +0.0% |  25.107 |   0.000 | p_io_cfg_data[68]$_DFF_P_/D
+     1190 |       0 |    2279 |            0 |    +0.0% |  25.341 |   0.000 | p_io_cfg_data[6]$_DFF_P_/D
+     1200 |       0 |    2289 |            0 |    +0.0% |  25.529 |   0.000 | p_start_base[7]$_DFF_P_/D
+     1210 |       0 |    2299 |            0 |    +0.0% |  25.795 |   0.000 | p_io_cfg_data[58]$_DFF_P_/D
+     1220 |       0 |    2309 |            0 |    +0.0% |  26.168 |   0.000 | p_io_cfg_data[84]$_DFF_P_/D
+     1230 |       0 |    2319 |            0 |    +0.0% |  26.628 |   0.000 | p_io_cfg_data[217]$_DFF_P_/D
+     1240 |       0 |    2329 |            0 |    +0.0% |  27.079 |   0.000 | p_io_cfg_data[213]$_DFF_P_/D
+     1250 |       0 |    2339 |            0 |    +0.0% |  27.595 |   0.000 | p_io_cfg_data[212]$_DFF_P_/D
+     1260 |       0 |    2349 |            0 |    +0.0% |  27.947 |   0.000 | p_io_cfg_data[173]$_DFF_P_/D
+     1270 |       0 |    2359 |            0 |    +0.0% |  28.225 |   0.000 | p_io_cfg_data[19]$_DFF_P_/D
+     1280 |       0 |    2369 |            0 |    +0.0% |  28.750 |   0.000 | g_il[2].a[23]$_DFF_P_/D
+    final |       0 |    2373 |            0 |    +0.0% |  30.003 |   0.000 | g_oc[2].q[525]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 2373 hold buffers.
+[INFO RSZ-0506] Runtime: 6304.37s
+Took 6305 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 2: hold ws 30.00 (+58.55) tns 0.0 (+100.0%) viol 0, 9717 s
+OT_RC_CAL restored platform setRC.tcl
+OT_HOLD_MM after repair: SS setup ws 0.11 / FF hold ws -103.80 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hbm_sfu_programme_store_r12_clg/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 621 input pin flops (0 hard-child clock pins at +insertion), median arrival 1336.453 (range 1319.5781 .. 1382.5881)
+QDM reference pin p_io_cfg_data[191]$_DFF_P_/CLK clock arrival max 1336.453 min 1285.7063 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM sync: SS setup ws 0.11 / FF hold ws -89.20 ps
+OT_HOLD_MM after repair: SS setup ws 0.11 / FF hold ws -89.20 ps
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 1017679.33 um^2
+[INFO DPL-0007] Movable instances area: 10126.45 um^2
+[INFO DPL-0008] Fixed instances area within core: 615769.69 um^2
+[INFO DPL-0009] Utilization: 61.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 156641 cells
+[INFO DPL-0393]   height 720 row(s): 11 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2482 |       478 |      2004
+        1 |       1908 |       368 |      1537
+        2 |       1622 |       263 |      1359
+        3 |       1918 |       216 |      1702
+        4 |       2096 |       212 |      1884
+        5 |       2065 |       197 |      1865
+        6 |       2061 |       214 |      1847
+        7 |       2068 |       224 |      1844
+        8 |       1968 |       217 |      1751
+        9 |       1914 |       210 |      1704
+       10 |       1962 |       206 |      1740
+       20 |       2041 |       236 |      1738
+       30 |       2227 |       252 |      1826
+       40 |       2056 |       287 |      1711
+       50 |       1549 |       229 |      1320
+       60 |       1574 |       210 |      1288
+       70 |       1431 |       207 |      1215
+       80 |       1382 |       197 |      1146
+       90 |       1227 |       190 |      1037
+      100 |       1191 |       175 |       996
+      110 |        866 |       151 |       700
+      120 |        783 |       133 |       648
+      130 |        677 |       103 |       571
+      140 |        523 |       108 |       415
+      150 |        319 |        43 |       276
+      160 |        245 |        42 |       203
+      170 |        146 |        22 |       124
+      180 |        112 |        17 |        85
+      190 |        144 |        18 |       126
+      200 |         10 |         2 |         8
+      210 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 210.
+[INFO DPL-0500] Runtime: 76.59s
+Placement Analysis
+---------------------------------
+total displacement       6825.8 u
+average displacement        0.0 u
+max displacement            8.1 u
+original HPWL         3550365.3 u
+legalized HPWL        3552503.8 u
+delta HPWL                    0 %
+
+Took 77 seconds: detailed_placement
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/congestion_post_repair_timing.rpt
+Took 96 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+Took 8 seconds: estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0094] Found 1 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 1 (0.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |   -0.103 |       -0.1 |       -0.1 |      1 | p_fault$_SDFFE_PN0P_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% |   -0.103 |       -0.1 |       -0.1 |      1 | p_fault$_SDFFE_PN0P_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% |   -0.103 |       -0.1 |       -0.1 |      1 | p_fault$_SDFFE_PN0P_/D
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% |   -0.103 |       -0.1 |       -0.1 |      1 | p_fault$_SDFFE_PN0P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 6.48s
+Took 7 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Took 9 seconds: estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 625896 um^2 62% utilization.
+[INFO FLW-0007] clock core_clk period 833.333008
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 21930
+source /src/physical/common_flow/grt_macro_top_layer_post.tcl
+OT_GRT_TOP_SHADOW: block max routing layer restored to M7 (level 7) for detailed routing
+write_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_gate/base/5_1_grt.sdc
+Elapsed time: 3:24:58.98[h:]min:sec. CPU time: user 15213.73 sys 56.22 (124%). Peak memory: 11491556KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb        12298          11222 ddf3ec7bff39d59af95c
+5_1_grt                   .sdc                             babaf74269191a04c1ff
