@@ -1,0 +1,23 @@
+{
+  "result": "PASS_COMPONENT_PHASE0_ONLY",
+  "reference": "wn_phase0_receipt.json",
+  "run": {
+    "host": "ot-gold1",
+    "unit": "oth-ubuntu-1838090-1792604911",
+    "exit": 0,
+    "wall_seconds": 3950.515
+  },
+  "stats": [
+    "WN_STATS beats 3840 landed 3840 mismatch 0 extra 0 late 0 tags 3840/3840 tagbad 0 fault 0 live 1111 minage 378 maxage 439 last_cycle 6315335"
+  ],
+  "all_3840_land_records_equal_reference": true,
+  "compiler_flags": {
+    "OPT_FAST": "-O3",
+    "OPT_SLOW": "-O0",
+    "OPT_GLOBAL": "-O2"
+  },
+  "generated_source_identity_sha256": "482d893f2f67981880cbb8bfdd9c1c2e5978c74a73dcf5e4e8221b8f0dc6da91",
+  "run_log_sha256": "775b3b3a6ede75dc299051e56f89ea2922104dc1cc6a032ff054756999404147",
+  "qualification": "Same source/inputs/full6 clock timeline as O1 reference; phase0 diagnostic, no runtime deadlines, no selected graphphase2/HOST/PW/token qualification. Correctphase2 unit2084494 pending.",
+  "binary_sha256": "937f2e8940bf5be37bcc46cb51e5d47940d7935c2090f53105dc05374bb24db3"
+}
