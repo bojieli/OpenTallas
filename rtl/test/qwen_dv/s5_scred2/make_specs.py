@@ -41,7 +41,7 @@ def spec(kind,name,w,h,cfgname):
           {"name":f"{kind}2_kit_mut","cmd":f"bash rtl/test/qwen_dv/s5_scred2/run_kit.sh {{RUN}}/bench/mut {kind} mut","expect":"fail","fail_regex":("RED2_EQ FAIL errors=" if kind=='red' else "SC2_EQ FAIL errors="),"threads":16,"peak_ram_gb":96,"needs":["verilator"],"fail_witness":wit}],
         "views_to":f"physical/ref_tile/{name}/views","record_to":f"results/rtl/ref_tile/{name}"}}
 out=Path('tools/ref_tile/specs_qw_slice7');out.mkdir(parents=True,exist_ok=True)
-for kind,area in (('red',ra),('sc',sa)):
+for kind,area in [(k,a) for k,a in (("red",ra),("sc",sa)) if a>0]:
     cn=f"qfd_dv_s5_{kind}2_k{cfg}"
     for suf,util,asp in (('',0.55,1.0),('b',0.42,1.5)):
         w,h=side(area,util,asp); n=f"qfd_dv_s5_{kind}2{suf}"

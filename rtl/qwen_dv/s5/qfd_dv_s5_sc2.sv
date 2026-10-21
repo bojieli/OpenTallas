@@ -15,6 +15,7 @@
 //   root argmax merge -> tok_* and the TOK broadcast word: +1 (candidate stage)
 //   root total -> w1 (fuse 0): +5 (LA - 3)                       (LA 4)
 //   root fused r -> RB broadcast word + w1: +5(LA-3) + (LM-3) + (LA-3) + 3 (3(LM-3) + (LA-3))   (LA 4, LM 4: 19)
+//   config (sc_cfg -> cfg registers): +1 (two face landing stages, QW-S5-SCRED 10-21)
 //   boot only: reset release +1 (third reset stage rc) and ring phase reset release +2.
 // OT_S5_SC2_MUT (bench witness, must FAIL): the broadcast scalar tap reads window 10.
 // =====================================================================================================================
@@ -355,14 +356,18 @@ module qfd_dv_s5_sc2 #(parameter integer MU_NU = 4, parameter integer LA = 4, pa
     always @(posedge ck or negedge rst_f) if (!rst_f) rc <= 1'b0; else rc <= 1'b1;
     wire rst = rc;
     // face input registers: valid / strobe bits reset, data plain
+    // sc_cfg lands in TWO face stages (QW-S5-SCRED 10-21): cfg_v enables the clear/load of ~1.2k root-slot and cfg bits,
+    // so its landed register needs >32 kept copies; a single face register would put all of them on the raw input pin
+    // (bound_math_netlist: "input bit exceeds 32 loads").  Price: config apply +1 edge (config only, static schedule).
+    reg [100:0] f_cfg0;
     reg [100:0] f_cfg; reg [47:0] f_dn, f_up; reg f_rwe; reg [23:0] f_raddr; reg [31:0] f_rdata;
     reg [7:0] f_vwe; reg [1:0] f_vwin; reg [31:0] f_vwd; reg f_amv; reg [23:0] f_ami; reg [31:0] f_amval; reg [1:0] f_amu;
     always @(posedge ck or negedge rst)
-        if (!rst) begin f_cfg[100] <= 1'b0; f_dn[47] <= 1'b0; f_up[47] <= 1'b0; f_rwe <= 1'b0; f_vwe <= 8'd0; f_amv <= 1'b0; end
-        else begin f_cfg[100] <= sc_cfg[100]; f_dn[47] <= dn_i[47]; f_up[47] <= up_i[47]; f_rwe <= red_we; f_vwe <= vm_we;
+        if (!rst) begin f_cfg0[100] <= 1'b0; f_cfg[100] <= 1'b0; f_dn[47] <= 1'b0; f_up[47] <= 1'b0; f_rwe <= 1'b0; f_vwe <= 8'd0; f_amv <= 1'b0; end
+        else begin f_cfg0[100] <= sc_cfg[100]; f_cfg[100] <= f_cfg0[100]; f_dn[47] <= dn_i[47]; f_up[47] <= up_i[47]; f_rwe <= red_we; f_vwe <= vm_we;
                    f_amv <= am_v; end
     always @(posedge ck) begin
-        f_cfg[99:0] <= sc_cfg[99:0]; f_dn[46:0] <= dn_i[46:0]; f_up[46:0] <= up_i[46:0]; f_raddr <= red_addr;
+        f_cfg0[99:0] <= sc_cfg[99:0]; f_cfg[99:0] <= f_cfg0[99:0]; f_dn[46:0] <= dn_i[46:0]; f_up[46:0] <= up_i[46:0]; f_raddr <= red_addr;
         f_rdata <= red_data; f_vwin <= vm_win0; f_vwd <= vm_wdata0; f_ami <= am_idx; f_amval <= am_val; f_amu <= am_u;
     end
     wire red_ps = f_rwe && f_raddr[23:22] == 2'b11;
