@@ -13,17 +13,25 @@ module dsdv_hostb_return(input wire ck,rst_n,configured,
  output reg [1103:0] return_ring,output reg [3:0] fault);
  wire rn;ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  reg pending;reg [511:0] held;
- wire sample_good=sample_slot && configured && context_valid && stage_id<241 && !(require_kit&&(!t_kd[53]||t_kd[52:32]!=token));
- reg [511:0] record;
- always @* begin
-   record=0;record[31:0]=32'h31454248;record[35:32]=2;record[39:36]=3;
-   record[47:40]=stage_id;record[49:48]=rank_id;record[65:50]=tid;record[75:66]=131;
-   record[87:78]=user_id;record[108:88]=position;record[129:109]=token;
-   record[161:130]=epoch_id;record[209:162]=arrival_deadline;record[273:210]=programme_id;
-   record[350:274]=t_host;record[404:351]=t_kd;
+ wire [352:0] payload={stage_id,rank_id,tid,user_id,position,token,epoch_id,arrival_deadline,programme_id,t_host,t_kd};
+ wire [352:0] saved;
+ wire permit=configured&&context_valid&&stage_id<241&&!(require_kit&&(!t_kd[53]||t_kd[52:32]!=token));
+ genvar b;
+ generate for(b=0;b<24;b=b+1)begin:g_hold
+  localparam integer W=(353-15*b<15)?353-15*b:15;
+  (* keep_hierarchy="yes" *) dsdv_hostb_return_bank #(.ID(b),.W(W)) u_bank(.ck(ck),.sample(sample_slot),.permit(permit),.d(payload[15*b+:W]),.q(saved[15*b+:W]));
+ end endgenerate
+ wire [7:0] hs;wire [1:0] hr;wire [15:0] ht;wire [9:0] hu;wire [20:0] hp,hk;wire [31:0] he;wire [47:0] hd;wire [63:0] hg;wire [76:0] hh;wire [53:0] hkd;
+ assign {hs,hr,ht,hu,hp,hk,he,hd,hg,hh,hkd}=saved;
+ wire sample_good=sample_slot&&permit;
+ always @*begin
+   held=0;held[31:0]=32'h31454248;held[35:32]=2;held[39:36]=3;
+   held[47:40]=hs;held[49:48]=hr;held[65:50]=ht;held[75:66]=131;
+   held[87:78]=hu;held[108:88]=hp;held[129:109]=hk;
+   held[161:130]=he;held[209:162]=hd;held[273:210]=hg;
+   held[350:274]=hh;held[404:351]=hkd;
  end
  always @(posedge ck)begin
-   if(sample_good)held<=record;
    return_ring[1103:1]<={571'd0,held,8'd0,4'd0,5'd1,3'd6};
  end
  always @(posedge ck or negedge rn)begin

@@ -1,13 +1,14 @@
 {
   "scope": "UNBUILT_SOURCE_MODEL_ONLY; productionroute/clock/epoch/programme/physicalOPEN",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv": "3ed3650819f4468049d5217612d62e8053de7216c446eac16a2746b8ddab127a",
-    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv": "56200cf4fdef13662b35a8b03fc53b42291ccdebd03cb8e178494030b5813bed",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv": "c866c2d9b9d5d672cda854afb2b3db49d310e39d79260874177274a21739e6af",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv": "4f41d59a4bb6df178421371cb61c2e377e70306b24ea25a345f60320e9b77cca",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv": "4e946fd055c8ddef2046cf5077edcf98ca35cad4f7770583dfd70696b7078315",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost.sv": "e6bed5460bca19be3a2a9990f4d3fefc207f7422b85511a5404ca8c630ccb017",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_crc512.sv": "24a41becc4b4de26f957b6d58f92c8415d78d0f86676f44131c180596f31b921",
-    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv": "708e4ad147f1d24b80f674b223ce1d03e687c1af8ab1c4c34dbd89f9920b9809",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv": "6638c92c3ea489cfca76ab0a666b55ae6eedaba5e3f15fcf85f0ff7f7db1fee2",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_head.sv": "43c4ea83d3a02b18de1a30cf14b1b176743ff58601cbd59a8adea39b87ce8440",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_hold.sv": "d69174a79d668c17a81cd93065b75c2e54c28d4842d1e6a7cdcdb4cf5951cd1a",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "ab2345cfab6981548fc6fdd6b70ff21bd7d6c91005beb04f90fe2e024e1c1140",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage.sv": "4e660e2c58dea4648bed0564c2b4b1fbdd39cabf97899204abcab153eeaa3acb",
     "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce"
@@ -23,5 +24,6 @@
     "seqhost": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce",
     "issuer": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
     "scope": "selectedG7 HOSTcut3142195 consumer source, not G8/G9wholearray equivalence; newmuxwrapper has allactualMU/statuspins; baselegacywrapper preserved sourcehistory but notselectedconsumerqualification."
-  }
+  },
+  "holding_repair": "native_r2/MODEL_REPAIR.md; seven12bitmetadata banks,24<=15bitreturn banks; sourceholdingFF/edges unchanged, separateexistingresetroots retained"
 }

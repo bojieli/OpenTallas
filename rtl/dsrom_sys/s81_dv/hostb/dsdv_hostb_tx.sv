@@ -8,7 +8,7 @@ module dsdv_hostb_tx(input wire ck,rst_n,
  input wire [1103:0] local_ro,forward_ro,return_ro,
  input wire forward_slot,return_slot,
  output wire [1103:0] next_ro, output reg [3:0] fault);
- wire rn;ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
+ wire rn;(* keep_hierarchy="yes" *) ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  wire fw=forward_ro[0]&&forward_slot;
  wire rv=return_ro[0]&&return_slot;
  wire input_collision=fw&&rv;

@@ -23,7 +23,7 @@ H=rtl/dsrom_sys/s81_dv/hostb
 "$V" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_hostb \
  +define+HBE_REAL_CONSUMER +define+DSFD_PQ_STATIC_X2 +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF \
  +incdir+tools/s81_dv/hostb_1021 -Mdir "$O/obj" -f "$O/selected.f" \
- "$H/dsdv_hostb_crc512.sv" "$H/dsdv_hostb_rx.sv" "$H/dsdv_hostb_tx.sv" "$H/dsdv_hostb_stage.sv" \
+ "$H/dsdv_hostb_hold.sv" "$H/dsdv_hostb_crc512.sv" "$H/dsdv_hostb_rx.sv" "$H/dsdv_hostb_tx.sv" "$H/dsdv_hostb_stage.sv" \
  "$H/dsdv_hostb_return.sv" "$H/dsdv_hostb_head.sv" "$H/dsdv_hostb_landing.sv" tools/s81_dv/hostb_1021/tb_hostb.sv \
  --build-jobs 4 -MAKEFLAGS 'OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0' >"$O/build.log" 2>&1
 n=$(python3 tools/s81_dv/hostb_1021/prepare_bench.py --vectors "$B" --out "$O/v0" --mode 0)

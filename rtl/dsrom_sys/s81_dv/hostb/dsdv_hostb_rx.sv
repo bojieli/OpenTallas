@@ -22,7 +22,7 @@ module dsdv_hostb_rx (
  output reg [7:0] fault
 );
  wire rn;
- ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
+ (* keep_hierarchy="yes" *) ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  wire hv=ring_i[0] && ring_i[3:1]==3'd6;
  wire [511:0] p=ring_i[532:21];
  wire [3:0] op=p[39:36];
@@ -31,9 +31,23 @@ module dsdv_hostb_rx (
  wire identity=configured && p[161:130]==epoch_id && p[273:210]==programme_id && p[65:50]==expected_tid &&
  p[87:78]==expected_user && p[108:88]==expected_position && p[129:109]==expected_token;
  reg pending, target;
- reg [47:0] body_edge;
- reg [31:0] expected_crc;
- reg [1:0] body_class;
+ wire [47:0] body_edge;
+ wire [31:0] expected_crc;
+ wire [1:0] body_class;
+ wire [33:0] class_crc;assign {body_class,expected_crc}=class_crc;
+ genvar hb;
+ generate for(hb=0;hb<4;hb=hb+1)begin:g_date
+  (* keep_hierarchy="yes" *) dsdv_hostb_header_bank #(.ID(hb),.W(12)) u_bank(.ck(ck),.hv(hv),.pending(pending),.host0(op==0),
+   .stage_id(p[47:40]),.local_stage(local_stage),.rank_id(p[49:48]),.local_rank(local_rank),
+   .local_d(p[162+12*hb+:12]),.transit_d(transit_body_edge[12*hb+:12]),.q(body_edge[12*hb+:12]));
+ end
+ for(hb=0;hb<3;hb=hb+1)begin:g_crc_class
+  localparam integer W=(34-12*hb<12)?34-12*hb:12;
+  wire [33:0] field_d={p[77:76],p[305:274]};
+  (* keep_hierarchy="yes" *) dsdv_hostb_header_bank #(.ID(4+hb),.W(W),.LOCAL_ONLY(1)) u_bank(.ck(ck),.hv(hv),.pending(pending),.host0(op==0),
+   .stage_id(p[47:40]),.local_stage(local_stage),.rank_id(p[49:48]),.local_rank(local_rank),
+   .local_d(field_d[12*hb+:W]),.transit_d({W{1'b0}}),.q(class_crc[12*hb+:W]));
+ end endgenerate
  reg [511:0] b0,b1,b2;
  reg [31:0] crc1,expect0,expect1;
  reg [1:0] cl0,cl1,cl2;
@@ -49,8 +63,6 @@ module dsdv_hostb_rx (
                  b1[7:0]==8'h14 || b1[7:0]==8'h17 || b1[7:0]==8'h19);
  // Unreset data pipes; each payload is aligned to its independently reset valid.
  always @(posedge ck) begin
-   if(hv && !pending && addressed && op==0) begin body_edge<=p[209:162];expected_crc<=p[305:274];body_class<=p[77:76];end
-   else if(hv && !pending && !addressed && op==0) body_edge<=transit_body_edge;
    b0<=p;b1<=b0;b2<=b1;
    crc1<=crc_value;expect0<=expected_crc;expect1<=expect0;
    cl0<=body_class;cl1<=cl0;cl2<=cl1;
