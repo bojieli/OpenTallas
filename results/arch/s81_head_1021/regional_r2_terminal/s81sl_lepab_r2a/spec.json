@@ -1,0 +1,881 @@
+{
+ "name": "s81sl_lepab_r2a",
+ "top": "ot_s81sl_lep_mu_ab_regional_r3r",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_sram_oldread_wreg.sv",
+  "rtl/lib/ot_sram_showahead_1r1w.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv"
+ ],
+ "params": {
+  "DR": 12,
+  "CRED": 12,
+  "RX_SRAM": 1,
+  "IN_PIPE": 1,
+  "NATIVE32": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n",
+  "rst_n_a",
+  "rst_n_b"
+ ],
+ "outline": {
+  "w": 561.6,
+  "h": 1900.8
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?4?.u_m",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    129.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    172.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    216.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?4?.u_m",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?2?.u_m",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?3?.u_m",
+   "at": [
+    259.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?0?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?4?.u_m",
+   "at": [
+    259.2,
+    475.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    345.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    388.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    432.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    475.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?0?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?4?.u_m",
+   "at": [
+    475.2,
+    518.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    1339.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    1425.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    1512.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    1598.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?0?.g_safe_write.u_m.g_bank?4?.u_m",
+   "at": [
+    43.2,
+    1684.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    1339.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    1382.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    1425.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    1468.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?4?.u_m",
+   "at": [
+    475.2,
+    1512.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    1339.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    1425.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?2?.u_m",
+   "at": [
+    259.2,
+    1512.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?3?.u_m",
+   "at": [
+    259.2,
+    1598.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_pair?1?.u_core.u.g_tx?1?.g_safe_write.u_m.g_bank?4?.u_m",
+   "at": [
+    259.2,
+    1684.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    1555.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    1598.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    1641.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    1684.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_pair?1?.u_core.u.g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?4?.u_m",
+   "at": [
+    475.2,
+    1728.0
+   ],
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "W": [
+   "lo0_r",
+   "lo1_r",
+   "li0_v",
+   "li0_d",
+   "li1_v",
+   "li1_d",
+   "l0_f",
+   "l1_f",
+   "lo0_v",
+   "lo0_d",
+   "lo1_v",
+   "lo1_d",
+   "li0_r",
+   "li1_r",
+   "rxv",
+   "lo2_r",
+   "lo3_r",
+   "li2_v",
+   "li2_d",
+   "li3_v",
+   "li3_d",
+   "l2_f",
+   "l3_f",
+   "lo2_v",
+   "lo2_d",
+   "lo3_v",
+   "lo3_d",
+   "li2_r",
+   "li3_r",
+   "rxvb"
+  ],
+  "E": [
+   "ro",
+   "ri",
+   "mu_c",
+   "mu_rt",
+   "sl_f",
+   "ml_wv",
+   "ml_wd",
+   "ml_rv",
+   "ml_rd",
+   "ml_f",
+   "fault",
+   "clk",
+   "clk_a",
+   "clk_b",
+   "rst_n",
+   "rst_n_a",
+   "rst_n_b"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "multiple_cts_roots",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.045,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_sram_showahead_hit5",
+   "ot_s81sl_lep_rx_control",
+   "ot_s81sl_lep_host_event",
+   "ot_s81sl_lep_tx_push",
+   "ot_s81sl_lep_stamp",
+   "ot_s81sl_lep_vcopy",
+   "ot_s81sl_lep_pair_ready",
+   "ot_s81sl_lep_return8",
+   "ot_sram_showahead_readptr",
+   "ot_s81sl_lepab_select",
+   "ot_s81sl_lepab_replay_slice",
+   "ot_s81sl_lepab_replay_decode"
+  ],
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15 -balance_levels"
+  }
+ },
+ "structural_change": "Regional structural successor after t5c/t5d one-root/1.6mm setup -0.9ns. Two native32 pair-A cores, C dispatch/registered onehot merge; all C<->A/B buses real D4K2 rings, three independent related CTS roots. Every path receives ordinary same-frequency STA (no data multicycle or async cuts). Two-edge matched outer lane payload/valid and reverse return relays; endpoint DR/CRED12 and peer CORE_CRED12. New ML E-face matched bus bands, old N-face fit invalid. Parent R0 land and existing ML E2 landing chunk placement pending, with +1 eachway owed if those stages cannot cover<=405um segments. Cycle model: +4 centre-to-pair, +5 pair-to-centre, +2 lane data/valid and +2 reverse returns, RTT+4. New strict view/ports required, no alias of old AB or CRED8.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source registers at all interfaces/region crossings, existing two-stage lane relays; adding generic pin registers would change priced ages."
+ },
+ "job": {
+  "owner": "Codex:CODEX-S81-1021/LEPAB",
+  "branch": "codex/s81-head-chain-1021",
+  "tag": "s81sl_lepab_r2a",
+  "purpose": "Regional structural successor after t5c/t5d one-root/1.6mm setup -0.9ns. Two native32 pair-A cores, C dispatch/registered onehot merge; all C<->A/B buses real D4K2 rings, three independent related CTS roots. Every path receives ordinary same-frequency STA (no data multicycle or async cuts). Two-edge matched outer lane payload/valid and reverse return relays; endpoint DR/CRED12 and peer CORE_CRED12. New ML E-face matched bus bands, old N-face fit invalid. Parent R0 land and existing ML E2 landing chunk placement pending, with +1 eachway owed if those stages cannot cover<=405um segments. Cycle model: +4 centre-to-pair, +5 pair-to-centre, +2 lane data/valid and +2 reverse returns, RTT+4. New strict view/ports required, no alias of old AB or CRED8.",
+  "extra_paths": [
+   "tools/s81_head/regional_reset_bench.sh",
+   "results/rtl/s81_lepab_regional_1021",
+   "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lepab_regional_r3r.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "tools/orfs_allcorner_spef.py",
+   "tools/s81_head/regional_reset_sources.f"
+  ],
+  "benches": [
+   {
+    "name": "lepab_none",
+    "cmd": "bash tools/s81_head/regional_reset_bench.sh {RUN}/none none 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160"
+   },
+   {
+    "name": "lepab_tagdrop",
+    "cmd": "bash tools/s81_head/regional_reset_bench.sh {RUN}/TAGDROP TAGDROP 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_TAGDROP.log"
+   },
+   {
+    "name": "lepab_wrongcopy",
+    "cmd": "bash tools/s81_head/regional_reset_bench.sh {RUN}/WRONGCOPY WRONGCOPY 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_WRONGCOPY.log"
+   },
+   {
+    "name": "lepab_landcut",
+    "cmd": "bash tools/s81_head/regional_reset_bench.sh {RUN}/LANDCUT LANDCUT 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_LANDCUT.log"
+   },
+   {
+    "name": "lepab_stalehd",
+    "cmd": "bash tools/s81_head/regional_reset_bench.sh {RUN}/STALEHD STALEHD 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lepab_regional: received400 landed160",
+    "fail_regex": "^FAIL lepab_regional: received",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/mut_STALEHD.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_lepab_r2a/views",
+  "record_to": "results/rtl/ref_tile/s81sl_lepab_r2a"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": false,
+ "keep_pin_regs": true,
+ "pre_cts_extra": [],
+ "orfs_vars": {},
+ "fill_reason": {
+  "pin_bound": "Four lane-pitch W bands plus paired E buses (RO/MLWD and RI/MLRD each2208pins/432um=5.11/um) fix the outline. Std native42390.81054um2, macros40; RULE FREEZE low fill/aspect guidance, actual die GRT/STA and reticlefit decide."
+ },
+ "pin_reg_split": false,
+ "pin_ranges": {
+  "lo0_d": [
+   20,
+   171.0
+  ],
+  "lo0_v": [
+   171.0,
+   174.0
+  ],
+  "lo0_r": [
+   174.0,
+   177.0
+  ],
+  "l0_f": [
+   177.0,
+   183.0
+  ],
+  "li0_v": [
+   183.0,
+   186.0
+  ],
+  "li0_r": [
+   186.0,
+   189.0
+  ],
+  "li0_d": [
+   189.0,
+   340
+  ],
+  "lo1_d": [
+   640,
+   791.0
+  ],
+  "lo1_v": [
+   791.0,
+   794.0
+  ],
+  "lo1_r": [
+   794.0,
+   797.0
+  ],
+  "l1_f": [
+   797.0,
+   803.0
+  ],
+  "li1_v": [
+   803.0,
+   806.0
+  ],
+  "li1_r": [
+   806.0,
+   809.0
+  ],
+  "li1_d": [
+   809.0,
+   960
+  ],
+  "lo2_d": [
+   1020,
+   1171.0
+  ],
+  "lo2_v": [
+   1171.0,
+   1174.0
+  ],
+  "lo2_r": [
+   1174.0,
+   1177.0
+  ],
+  "l2_f": [
+   1177.0,
+   1183.0
+  ],
+  "li2_v": [
+   1183.0,
+   1186.0
+  ],
+  "li2_r": [
+   1186.0,
+   1189.0
+  ],
+  "li2_d": [
+   1189.0,
+   1340
+  ],
+  "lo3_d": [
+   1650,
+   1756.0
+  ],
+  "lo3_v": [
+   1756.0,
+   1759.0
+  ],
+  "lo3_r": [
+   1759.0,
+   1762.0
+  ],
+  "l3_f": [
+   1762.0,
+   1768.0
+  ],
+  "li3_v": [
+   1768.0,
+   1771.0
+  ],
+  "li3_r": [
+   1771.0,
+   1774.0
+  ],
+  "li3_d": [
+   1774.0,
+   1880
+  ],
+  "rxv": [
+   345,
+   351
+  ],
+  "rxvb": [
+   1345,
+   1351
+  ],
+  "ro": [
+   432,
+   864
+  ],
+  "ml_wd": [
+   432,
+   864
+  ],
+  "ri": [
+   907.2,
+   1339.2
+  ],
+  "ml_rd": [
+   907.2,
+   1339.2
+  ],
+  "mu_c": [
+   866,
+   875
+  ],
+  "mu_rt": [
+   877,
+   886
+  ],
+  "clk": [
+   888,
+   890
+  ],
+  "rst_n": [
+   892,
+   894
+  ],
+  "ml_wv": [
+   895,
+   896
+  ],
+  "ml_rv": [
+   897,
+   898
+  ],
+  "ml_f": [
+   899,
+   900
+  ],
+  "sl_f": [
+   901,
+   902
+  ],
+  "fault": [
+   903,
+   904
+  ],
+  "clk_a": [
+   377,
+   380
+  ],
+  "clk_b": [
+   1458,
+   1461
+  ],
+  "rst_n_a": [
+   382,
+   384
+  ],
+  "rst_n_b": [
+   1463,
+   1465
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Source has independent ot_rst_relay_tree3 on every clock root and equal-depth 7-stage bounded landing reset forests; all control/valid reset locally. No extra generated primary-root reset wrapper."
+ },
+ "std_area_um2": 42390.81054,
+ "clock_ports": [
+  "clk",
+  "clk_a",
+  "clk_b"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "ro",
+    "mu_c",
+    "sl_f",
+    "ml_rv",
+    "ml_rd",
+    "ml_f"
+   ],
+   "outputs": [
+    "ri",
+    "mu_rt",
+    "ml_wv",
+    "ml_wd",
+    "fault"
+   ]
+  },
+  "pairA": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_a"
+   ],
+   "inputs": [
+    "lo0_r",
+    "lo1_r",
+    "li0_v",
+    "li0_d",
+    "li1_v",
+    "li1_d",
+    "l0_f",
+    "l1_f",
+    "rst_n_a"
+   ],
+   "outputs": [
+    "lo0_v",
+    "lo0_d",
+    "lo1_v",
+    "lo1_d",
+    "li0_r",
+    "li1_r",
+    "rxv"
+   ]
+  },
+  "pairB": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_b"
+   ],
+   "inputs": [
+    "lo2_r",
+    "lo3_r",
+    "li2_v",
+    "li2_d",
+    "li3_v",
+    "li3_d",
+    "l2_f",
+    "l3_f",
+    "rst_n_b"
+   ],
+   "outputs": [
+    "lo2_v",
+    "lo2_d",
+    "lo3_v",
+    "lo3_d",
+    "li2_r",
+    "li3_r",
+    "rxvb"
+   ]
+  }
+ },
+ "sdc_extra": []
+}

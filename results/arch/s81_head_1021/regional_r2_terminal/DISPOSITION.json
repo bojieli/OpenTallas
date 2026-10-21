@@ -1,0 +1,7 @@
+{
+  "source": "42796762d",
+  "native": "PASS32 and strict three reset domains; separate from textbook landing check",
+  "terminal": "Both CTS stopped: clk_a macro sinks lack exact raw-memory binding",
+  "other_failures": "All3 reset input ports reach4/5reset-sinks before local landing; nativefanout32 does not waive mandatory face landing",
+  "next": "Use existing explicit raw-memory instance/master/clk/root contract for all40SRAMs; resolve source-local two-stage C/A/B reset entrance landing with resetstartup+2 priced and exact NB80 reset/reassert mechanism proof before gate. No data/credit edge change proposed. No helper waiver/newrule."
+}
