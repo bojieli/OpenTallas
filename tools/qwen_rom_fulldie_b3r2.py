@@ -3879,7 +3879,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     ripped = set()
     rounds = 0
     RIP_ROUNDS = int(_os.environ.get('OT_RELAY_RIP_ROUNDS', '40'))   # QW-G5F2: rip-up budget (default the historical 40)
-    _fl_done = [not _flt_defer]
+    _fl_done = [not _flt_defer, False]
     _flt_late = []
 
     def _fault_land():
@@ -4190,44 +4190,49 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                               auto_hard=sorted(_auto), owed_in_face=sorted(_owed), in_face_prefix=_inf)
         print(f'LAND_LIST {len(_ll["links"])} listed: {_added} landing stations added (+{len(_auto)} hard<->hard auto), {len(_framed)} already framed, '
               f'{len(_same)} on one GEN trunk root (regional die clock splits them), {len(_bad)} not on this GEN, {len(_owed)} owed in-face ({_inf})', flush=True)
-    # QW-G5FROOT 10-20: only now -- every data frame, jog and data landing (LAND_CROSS / LAND_LIST) placed exactly as
-    # in the data-only GEN -- the fault roots land on the grid and the fault-tree edges are searched (no rip-up)
-    # (rfs try 5: roots landed before LAND_LIST pushed q3h_col_42_2's landing 705 um off its 43 um pins)
-    if _flt_defer:
-        _fault_land()
-        _late_bad = []
-        for idx in _flt_late:
-            pl = plans[idx]
-            if needs_repair(pl) and not (repair(idx, pl) or repair(idx, pl, True)):
-                _late_bad.append(pl['bid'])
-        m.setdefault('fault_emit', {})['late_unrepaired'] = _late_bad
-        print(f'FAULT_EMIT late: {len(_flt_late)} fault-tree edges searched after the data landings, {len(_late_bad)} open: {_late_bad[:8]}', flush=True)
-        unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
-    # QW-G5F2 10-20 (OT_SPLIT_FAULT_EMIT): every zero-stage fault-tree edge between two region roots on different clock
-    # roots gets the same one-frame landing station (forwarded lanes: landh0), so no fault wire crosses a root unlanded
-    from qwen_split import fault_emit as _FE2
-    _fle = _FE2.land_edges(m)
-    if _fle:
-        _ckf2 = {}
-        for _b in m['buses']:
-            if _b[1] == 'clock_trunk':
-                for _e in _b[3][1:]:
-                    _ckf2.setdefault(_e[0], _b[0])
-        _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
-        _fl_n = 0
-        for idx, (bid, cl, bits, eps) in buses:
-            if bid not in _fle or (idx in plans and plans[idx]['frames']) or bid in tpads:
-                continue
-            if _ckf2.get(eps[0][0]) == _ckf2.get(eps[1][0]):
-                continue
-            tpads[bid] = 1
-            _fl_n += 1
-            _lcr['rows'].append(dict(bid=bid, cl=cl, bits=bits, src=eps[0][0], dst=eps[1][0], src_ck=_ckf2.get(eps[0][0]),
-                                     dst_ck=_ckf2.get(eps[1][0]), why='QW-G5F2 fault-tree cross-root edge'))
-        _lcr['buses'] = len(_lcr['rows'])
-        _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
-        m['fault_emit']['zero_stage_landed'] = _fl_n
-        print(f'FAULT_EMIT land: {_fl_n} zero-stage cross-root fault edges get a landing station', flush=True)
+    def _fault_late_block():
+        # QW-G5FROOT 10-20 (OT_SPLIT_FAULT_DEFER): runs inside the pad stage after every DATA pad (see _pad_iter)
+        # QW-G5FROOT 10-20: only now -- every data frame, jog and data landing (LAND_CROSS / LAND_LIST) placed exactly as
+        # in the data-only GEN -- the fault roots land on the grid and the fault-tree edges are searched (no rip-up)
+        # (rfs try 5: roots landed before LAND_LIST pushed q3h_col_42_2's landing 705 um off its 43 um pins)
+        if _flt_defer:
+            _fault_land()
+            _late_bad = []
+            for idx in _flt_late:
+                pl = plans[idx]
+                if needs_repair(pl) and not (repair(idx, pl) or repair(idx, pl, True)):
+                    _late_bad.append(pl['bid'])
+            m.setdefault('fault_emit', {})['late_unrepaired'] = _late_bad
+            print(f'FAULT_EMIT late: {len(_flt_late)} fault-tree edges searched after the data landings, {len(_late_bad)} open: {_late_bad[:8]}', flush=True)
+            unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
+        # QW-G5F2 10-20 (OT_SPLIT_FAULT_EMIT): every zero-stage fault-tree edge between two region roots on different clock
+        # roots gets the same one-frame landing station (forwarded lanes: landh0), so no fault wire crosses a root unlanded
+        from qwen_split import fault_emit as _FE2
+        _fle = _FE2.land_edges(m)
+        if _fle:
+            _ckf2 = {}
+            for _b in m['buses']:
+                if _b[1] == 'clock_trunk':
+                    for _e in _b[3][1:]:
+                        _ckf2.setdefault(_e[0], _b[0])
+            _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
+            _fl_n = 0
+            for idx, (bid, cl, bits, eps) in buses:
+                if bid not in _fle or (idx in plans and plans[idx]['frames']) or bid in tpads:
+                    continue
+                if _ckf2.get(eps[0][0]) == _ckf2.get(eps[1][0]):
+                    continue
+                tpads[bid] = 1
+                _fl_n += 1
+                _lcr['rows'].append(dict(bid=bid, cl=cl, bits=bits, src=eps[0][0], dst=eps[1][0], src_ck=_ckf2.get(eps[0][0]),
+                                         dst_ck=_ckf2.get(eps[1][0]), why='QW-G5F2 fault-tree cross-root edge'))
+            _lcr['buses'] = len(_lcr['rows'])
+            _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
+            m['fault_emit']['zero_stage_landed'] = _fl_n
+            print(f'FAULT_EMIT land: {_fl_n} zero-stage cross-root fault edges get a landing station', flush=True)
+
+    if not _flt_defer:
+        _fault_late_block()
     # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5 + LAYERBENCH-QWEN G-C2): LAND_CROSS and the lane pass worked BUS by bus, so a
     # record crossed the seam torn: dv2f14bn d2d_rom -> native59 rx_payload a 1-frame landing (K 2, +3 edges) beside
     # direct native_rx_v / slot / kind / beat (+0) -> rx_record fault at the first RESULT; d2d_rom -> sys_face
@@ -4367,7 +4372,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # 1088-b st stations take the channel spots at their pin window (dv2f20g5l try 2: alphabetical order placed
         # st_u last, 400 um off its pins: 779 / 838-um hops); every other pad keeps the alphabetical order after them
         _bits_of = {b_[0]: b_[2] for b_ in m['buses']}
-        for bid, npad in sorted(tpads.items(), key=lambda t: ((-_bits_of.get(t[0], 0) if t[0] in _ew_bids else 1), t[0])):
+        def _pad_iter():
+            # QW-G5FROOT 10-20 (OT_SPLIT_FAULT_DEFER): every DATA pad first on the data-only grid; then the fault roots land,
+            # the fault-tree edges are searched and their zero-stage landings join tpads; then the fault pads
+            for t_ in sorted(tpads.items(), key=lambda t: ((-_bits_of.get(t[0], 0) if t[0] in _ew_bids else 1), t[0])):
+                if not (_flt_defer and str(t_[0]).startswith('flt_')):
+                    yield t_
+            if _flt_defer:
+                _fault_late_block()
+                _fl_done[1] = True
+                _lc_bids.update(r_['bid'] for r_ in (m.get('land_cross') or {}).get('rows', ()))
+                for t_ in sorted((t for t in tpads.items() if str(t[0]).startswith('flt_')), key=lambda t: t[0]):
+                    yield t_
+        for bid, npad in _pad_iter():
             if bid not in bidx:
                 raise ValueError(f'tree pads: no bus {bid}')
             idx = bidx[bid]
@@ -4494,11 +4511,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done),
         centre_sink_buses=len(pad_hop_centre), centre_max_hop_um=max(pad_hop_centre.values(), default=None),
         centre_hops_over_reach=sorted(b_ for b_, h_ in pad_hop_centre.items() if h_ > RELAY_REACH_OK))
-    if _flt_defer:
-        # QW-G5FROOT 10-20: the arrival / landing pads were placed on the data-only grid (rfs try 6: with the roots on the
-        # rebuilt grid, q3h_col_42_2's pad went 705 um off its 43 um pins); a root a pad now covers moves to the nearest
-        # free box (its fault edges' pin-to-pin hops are audited with every die wire below)
-        _fault_land()
+    if _flt_defer and not _fl_done[1]:
+        raise ValueError('relays: OT_SPLIT_FAULT_DEFER: the pad stage never ran, the fault roots / edges were not placed')
     # ---- emit relays and hops
     from qwen_split.relay_clock import assigned_clock, collective_core_clock
     # Q-DIE11-RLY 2026-10-18 (coordinator HANDOFF 0ea item 1, lanes/LANDING-CONTRACT.md): OT_SPLIT_FWD_LANES=1 turns every
