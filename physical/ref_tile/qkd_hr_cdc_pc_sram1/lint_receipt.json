@@ -152,9 +152,9 @@
      "top": "qkd_hr_cdc_pc_sram"
     },
     "tool": {
-     "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
+     "cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
      "clock_entry_constraints.py": "d782579180eda6d032dc25cec1ceba9a56da00d0b28825468ce459a9e37d5464",
-     "gray_fifo_cdc_constraints.py": "57830c60b72d53d4adf5ca971823f5b443fc13e54823fd3534138dcd630af406",
+     "gray_fifo_cdc_constraints.py": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
      "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
     },
     "tool_data": {
@@ -162,9 +162,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-20T01:11:00-0700",
+   "created": "2026-10-20T02:04:32-0700",
    "host": "ot-epyc5",
-   "key": "6b4d07d43c3f0a07a3d00346f4965da3894e6b5c262dfd848a8234b78e84cad0",
+   "key": "58463d5d75baf8e52f72b0e3458a2d912d59224cb6a55ae6b68e4069c8343993",
    "record": {
     "counts": {
      "consumer": 0,
@@ -177,6 +177,50 @@
      "src": 20,
      "stage": 20,
      "sync1": 20
+    },
+    "dual_clock_macros": {
+     "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m": {
+      "clocks": {
+       "rclk": [
+        "ck_core",
+        "core"
+       ],
+       "wclk": [
+        "ck_phy_fam",
+        "phy"
+       ]
+      },
+      "input_clocks": {
+       "r_addr_in": "rclk",
+       "r_ce_in": "rclk",
+       "w_addr_in": "wclk",
+       "w_ce_in": "wclk",
+       "w_mask_in": "wclk",
+       "wd_in": "wclk"
+      },
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir"
+     },
+     "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m": {
+      "clocks": {
+       "rclk": [
+        "ck_phy_fam",
+        "phy"
+       ],
+       "wclk": [
+        "ck_core",
+        "core"
+       ]
+      },
+      "input_clocks": {
+       "r_addr_in": "rclk",
+       "r_ce_in": "rclk",
+       "w_addr_in": "wclk",
+       "w_ce_in": "wclk",
+       "w_mask_in": "wclk",
+       "wd_in": "wclk"
+      },
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir"
+     }
     },
     "fifos": {
      "f0": {
@@ -1014,7 +1058,7 @@
     "strap_crossings": [],
     "straps": []
    },
-   "seconds": 6
+   "seconds": 5
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"

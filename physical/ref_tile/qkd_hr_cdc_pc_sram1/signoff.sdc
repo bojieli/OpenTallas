@@ -31,6 +31,7 @@ set ::ot_gf_roles [dict create {u_rank__u_phy__u_rx.g_afw.u_af.rd_bin[3]} {src f
 set ::ot_gf_fifos [dict create {f0} {writer phy reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f1} {writer core reader phy ptr 773.333 store 983.0 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}}]
 set ::ot_gf_periods [dict create core 833.333 phy 1043.0]
 set ::ot_gf_uncertainty 60.0
+set ::ot_gf_dual_macros [dict create {u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m} {master {ot_sram_1r1w2c_32x546_m1_p192_mir} clocks {{rclk} {{ck_core} {core}} {wclk} {{ck_phy_fam} {phy}}} inputs {{r_addr_in} {rclk} {r_ce_in} {rclk} {w_addr_in} {wclk} {w_ce_in} {wclk} {w_mask_in} {wclk} {wd_in} {wclk}}} {u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m} {master {ot_sram_1r1w2c_32x546_m1_p192_mir} clocks {{rclk} {{ck_phy_fam} {phy}} {wclk} {{ck_core} {core}}} inputs {{r_addr_in} {rclk} {r_ce_in} {rclk} {w_addr_in} {wclk} {w_ce_in} {wclk} {w_mask_in} {wclk} {wd_in} {wclk}}}]
 set ::ot_gf_levels [dict create ]
 set ::ot_gf_gated [dict create ]
 set ::ot_gf_straps [dict create ]
@@ -311,6 +312,109 @@ proc ot_gf_ext_final {} {
   }
 }
 
+
+proc ot_gf_dual_root_port {pin} {
+  set block [ord::get_db_block]
+  set instance [$block findInst [get_full_name [get_cells -of_objects $pin]]]
+  if {$instance in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock instance"}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock pin"}
+  set net [$iterm getNet];set seen {}
+  for {set step 0} {$step < 256 && $net ni {"" NULL}} {incr step} {
+    set n [$net getName]
+    if {[dict exists $seen $n]} {error "OT_GF: cyclic dual SRAM clock cone"}
+    dict set seen $n 1
+    set ports [$net getBTerms]
+    if {[llength $ports]} {
+      if {[llength $ports] != 1 || [[lindex $ports 0] getIoType] ne "INPUT"} {
+        error "OT_GF: ambiguous dual SRAM clock port"
+      }
+      return [[lindex $ports 0] getName]
+    }
+    set drivers {}
+    foreach term [$net getITerms] {if {[$term isOutputSignal]} {lappend drivers $term}}
+    if {[llength $drivers] != 1} {error "OT_GF: missing unique dual SRAM clock driver"}
+    set driver [lindex $drivers 0];set cell [$driver getInst];set inputs {};set outputs {}
+    foreach term [$cell getITerms] {
+      if {[$term isInputSignal]} {lappend inputs $term}
+      if {[$term isOutputSignal]} {lappend outputs $term}
+    }
+    if {[llength $inputs] != 1 || [llength $outputs] != 1} {
+      error "OT_GF: dual SRAM clock cone must contain only actual unary BUF/INV functions"
+    }
+    set input [lindex $inputs 0];set input_name [[$input getMTerm] getName]
+    set master [[$cell getMaster] getName];set output_name [[$driver getMTerm] getName]
+    set truth {};set matched 0
+    foreach library [get_libs -quiet *] {
+      set lc [$library find_liberty_cell $master]
+      if {$lc in {"" NULL}} continue
+      set lp [$lc find_liberty_port $output_name]
+      if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {
+        error "OT_GF: dual SRAM clock buffer lacks actual Liberty output role"
+      }
+      set function [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$lp function]]
+      if {$function eq $input_name} {set value 1} elseif {$function in [list !$input_name ~$input_name ${input_name}']} {
+        set value -1
+      } else {error "OT_GF: dual SRAM clock cone is not Liberty-functional BUF/INV"}
+      dict set truth $value 1;incr matched
+    }
+    if {!$matched || [dict size $truth] != 1} {error "OT_GF: dual SRAM clock buffer Liberty corners disagree"}
+    set net [$input getNet]
+  }
+  error "OT_GF: dual SRAM clock root is not a unique declared input"
+}
+proc ot_gf_dual_constant_self {start pin} {
+  # OpenSTA constant-prunes an input's upstream graph and can return that input
+  # itself as the startpoint. Prove its OpenDB NET from actual Liberty functions;
+  # never infer constancy from a pin/cell name, clock absence, or case analysis.
+  if {[sta::object_type $start] ne "Pin" || [get_full_name $start] ne [get_full_name $pin]} {return 0}
+  set cell [get_cells -of_objects $pin];set full [string map {\\ {}} [get_full_name $cell]]
+  set reviewed 0
+  foreach n [ot_gf_names [list $full]] {if {[dict exists $::ot_gf_dual_macros $n]} {set reviewed 1}}
+  if {!$reviewed} {return 0}
+  set instance [[ord::get_db_block] findInst [get_full_name $cell]]
+  if {$instance in {"" NULL}} {return 0}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL} || ![$iterm isInputSignal]} {return 0}
+  if {![ot_ce_constant_net [$iterm getNet] {} 64]} {return 0}
+  set base [get_property $pin lib_pin_name];regsub {\[[0-9]+\]$} $base {} base
+  dict incr ::ot_gf_dual_constant_counts "$full/$base" 1
+  return 1
+}
+proc ot_gf_dual_input_domain {cell pin fallback} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set found {}
+  foreach n [ot_gf_names [list $full]] {
+    if {[dict exists $::ot_gf_dual_macros $n]} {lappend found $n}
+  }
+  if {![llength $found]} {return $fallback}
+  if {[llength $found] != 1} {error "OT_GF: ambiguous reviewed dual SRAM identity"}
+  set info [dict get $::ot_gf_dual_macros [lindex $found 0]]
+  if {[get_property [get_cells $cell] ref_name] ne [dict get $info master]} {
+    error "OT_GF: mapped dual SRAM master differs from reviewed source/Liberty role"
+  }
+  if {![dict exists $::ot_gf_dual_checked $full]} {
+    dict for {cp role} [dict get $info clocks] {
+      lassign $role root domain
+      set pins [get_pins -quiet $cell/$cp]
+      if {[llength $pins] != 1 || [ot_gf_dual_root_port [lindex $pins 0]] ne $root} {
+        error "OT_GF: mapped dual SRAM clock $cell/$cp differs from its exact reviewed root $root"
+      }
+    }
+    if {$fallback ne [lindex [dict get $info clocks rclk] 1]} {
+      error "OT_GF: mapped dual SRAM output ownership differs from its reviewed read-clock family"
+    }
+    dict set ::ot_gf_dual_checked $full 1
+  }
+  set base [get_property $pin lib_pin_name]
+  regsub {\[[0-9]+\]$} $base {} base
+  if {![dict exists $info inputs $base] || [get_property $pin direction] ne "input"} {
+    error "OT_GF: unreviewed actual dual SRAM input pin [get_full_name $pin]"
+  }
+  set cp [dict get $info inputs $base]
+  return [lindex [dict get $info clocks $cp] 1]
+}
+
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in
@@ -550,6 +654,8 @@ proc ot_ce_startpoint_class {start purpose memo_name} {
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
+  set ::ot_gf_dual_checked {}
+  set ::ot_gf_dual_constant_counts {}
   ot_cf_refresh
   set expected {}
   dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
@@ -587,7 +693,9 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     if {[dict exists $async_pins [get_full_name $pin]]} {ot_gf_async $pin $cells $inputs; continue}
     set cell [get_full_name [get_cells -of_objects $pin]]
     set expected [dict get $cells $cell]
+    set expected [ot_gf_dual_input_domain $cell $pin $expected]
     foreach start [get_fanin -flat -startpoints_only -to $pin] {
+      if {[ot_gf_dual_constant_self $start $pin]} continue
       lassign [ot_ce_startpoint_class $start input startpoint_classes] source_kind source
       if {$source_kind eq "port"} {
         set name [get_full_name $start]
@@ -660,6 +768,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     }
   }
   ot_gf_complete $cells
+  puts "OT_GF DUAL_LIBERTY_CONSTANT_INPUTS $::ot_gf_dual_constant_counts"
   puts "OT_MULTI_ROOT OWNERSHIP PASS roots=[llength $::ot_ce_cts_roots] registers=[dict size $cells] inputs=[dict size $inputs] outputs=[dict size $outputs] async_control_pins=[dict size $async_pins]"
 }
 
