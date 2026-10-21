@@ -1,6 +1,7 @@
 {
   "verdict": "PASS",
-  "scope": "Actual emitted RTL/LEF canonical bits, with exact SOURCE_BITS transport_fault scalar projection",
+  "source_bits": 3658,
+  "identical_instance_contracts": "PASS",
   "negative_controls": [
     {
       "mode": "missing",
@@ -25,6 +26,10 @@
     {
       "mode": "wrong_contract",
       "rejected": "static link fault fragment differs from actual source-bit contract: flt_transport_fault_7"
+    },
+    {
+      "mode": "conflicting_contract",
+      "rejected": "static link conflicting source-bit contracts: flt_transport_fault_0"
     }
   ]
 }

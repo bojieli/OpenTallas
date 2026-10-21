@@ -148,7 +148,12 @@ def validate_source_partition(physical_ports, source_ports, joins, fault_bits):
     alone therefore cannot be compared with the unpartitioned RTL port names.
     """
     coverage = {p: set() for p in source_ports}
-    aliases = {e['port']: (e['real'], e['bit']) for e in fault_bits}
+    aliases = {}
+    for e in fault_bits:
+        value = (e['real'], e['bit'])
+        if e['port'] in aliases and aliases[e['port']] != value:
+            raise ValueError(f'static link conflicting source-bit contracts: {e["port"]}')
+        aliases[e['port']] = value
     for pin, spec in physical_ports.items():
         width = spec[1]
         if pin in source_ports:
