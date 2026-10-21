@@ -7,7 +7,7 @@
 #     layer (tools/hbm_die_v16/d4g_layers/l12_banklat.py of SRC_REV) is applied so every fixed-latency VM client gets
 #     its compiler budget (pads fill the short lanes: the static schedule is the one the post-relay die runs), then
 #     contract_die_v.py emits die.v.  OVERLAY="path[@rev] ..." replaces bundle files by another revision's (pending RTL
-#     the release source needs; default: main's per-bank RD_LAT x-load ctlx, which l12 requires).
+#     the release source needs; default empty. Historical r14 needs an explicit per-bank RD_LAT ctlx overlay).
 #   MODE=gen_rtl (GEN-composed RTL only, source children): DIE_V=<GEN die.v of record> CONTRACT=<its contract>
 #     SRC_REV=<its source rev>; no l12 (already in the GEN contract), no overlay unless given.
 #
@@ -30,11 +30,7 @@ FIX_DS=${FIX_DS:?FIX_DS (dir with L00 L02 L14 fixtures: records.json operands.np
 QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_images snap)}
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
 STAGE_HOSTS=${STAGE_HOSTS:-"ot-gold1 ot-gold2"}
-if [ "$MODE" = source ]; then
-  OVERLAY=${OVERLAY-"rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv@origin/main"}
-else
-  OVERLAY=${OVERLAY-}
-fi
+OVERLAY=${OVERLAY-} # current coherent source defaults to no moving-main overlays
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 SRC_REV=$(git -C "$REPO" rev-parse --verify "$SRC_REV^{commit}") || exit 2
 TAG=${TAG:-$(basename "$OUT")}
