@@ -1,0 +1,523 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "sfuc_operand_component",
+  "liberty": [
+    {
+      "path": "libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+    },
+    {
+      "path": "libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+    },
+    {
+      "path": "libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+    },
+    {
+      "path": "libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    },
+    {
+      "path": "src14/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+      "sha256": "fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4"
+    },
+    {
+      "path": "src14/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+    },
+    {
+      "path": "src14/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
+      "sha256": "267e994041e8d97e6ff1a470e618058a8c790b7e71be52d9ba83e94be9f5816a"
+    }
+  ],
+  "netlist": {
+    "path": "mapped14.v",
+    "sha256": "7b7af9397ccce3891c8d3b68dfd09b9e39c9ec18413c968d66c554f972227830"
+  },
+  "top": "ot_hgi_sfu_static_operand_store",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 168168,
+  "max_dynamic_loads": 35,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "g_operand[0].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_C_AOI31xp33_ASAP7_75t_R_Y_A3_NOR5xp2_ASAP7_75t_R_Y_C_NOR4xp25_ASAP7_75t_R_Y_D_NAND4xp25_ASAP7_75t_R_Y_D_NOR5xp2_ASAP7_75t_R_Y_D_NOR4xp25_ASAP7_75t_R_Y_D_NOR3xp33_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[0].u_group.g_bank[1].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_B_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI22xp33_ASAP7_75t_R_B1_A2_AOI221xp5_ASAP7_75t_R_B1_A1",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          10040,
+          "A2",
+          0
+        ],
+        [
+          10158,
+          "A2",
+          0
+        ],
+        [
+          10636,
+          "B",
+          0
+        ],
+        [
+          10667,
+          "A2",
+          0
+        ],
+        [
+          11124,
+          "A2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[0].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_Y_NAND4xp25_ASAP7_75t_R_A_D_NOR4xp25_ASAP7_75t_R_Y_D_AOI31xp33_ASAP7_75t_R_Y_A2_AND3x1_ASAP7_75t_R_Y_A_OAI31xp33_ASAP7_75t_R_Y_A2_OR3x1_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y_A2_NAND3xp33_ASAP7_75t_R_Y_C_AND3x1_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[0].u_group.g_bank[1].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_B_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI22xp33_ASAP7_75t_R_B1_Y_AND5x1_ASAP7_75t_R_E_C_AOI221xp5_ASAP7_75t_R_Y_A2_AOI222xp33_ASAP7_75t_R_C1_B2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          10193,
+          "B2",
+          0
+        ],
+        [
+          10382,
+          "B2",
+          0
+        ],
+        [
+          10420,
+          "B2",
+          0
+        ],
+        [
+          10917,
+          "B2",
+          0
+        ],
+        [
+          10982,
+          "B2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[1].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A2_NOR5xp2_ASAP7_75t_R_Y_B_OAI211xp5_ASAP7_75t_R_Y_C_OR3x1_ASAP7_75t_R_Y_C_NAND4xp25_ASAP7_75t_R_Y_B_NOR4xp25_ASAP7_75t_R_Y_B_NOR4xp25_ASAP7_75t_R_Y_B_NOR4xp25_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[1].u_group.g_bank[10].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_A2_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI222xp33_ASAP7_75t_R_A1_2_B1",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          5276,
+          "A2",
+          0
+        ],
+        [
+          52872,
+          "A2",
+          0
+        ],
+        [
+          5332,
+          "B1",
+          0
+        ],
+        [
+          58478,
+          "B1",
+          0
+        ],
+        [
+          58561,
+          "B1",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[1].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_C_AOI31xp33_ASAP7_75t_R_Y_A2_NOR4xp25_ASAP7_75t_R_Y_B_OA21x2_ASAP7_75t_R_Y_A2_OAI221xp5_ASAP7_75t_R_Y_C_AOI221xp5_ASAP7_75t_R_Y_B2_AOI32xp33_ASAP7_75t_R_B2_A3_NAND3xp33_ASAP7_75t_R_C_1_B_NOR4xp25_ASAP7_75t_R_D/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[1].u_group.g_bank[10].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_A2_B_OA21x2_ASAP7_75t_R_B_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI222xp33_ASAP7_75t_R_A2_C2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          5187,
+          "A1",
+          0
+        ],
+        [
+          53326,
+          "B1",
+          0
+        ],
+        [
+          5351,
+          "A1",
+          0
+        ],
+        [
+          58521,
+          "C2",
+          0
+        ],
+        [
+          58557,
+          "B2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[1].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_C_AOI31xp33_ASAP7_75t_R_Y_A2_NOR4xp25_ASAP7_75t_R_Y_C_NOR3xp33_ASAP7_75t_R_Y_B_OR4x1_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y_A2_NAND4xp25_ASAP7_75t_R_Y_B_NOR4xp25_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[1].u_group.g_bank[10].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_A2_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI222xp33_ASAP7_75t_R_A1_1_A2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          5190,
+          "A2",
+          0
+        ],
+        [
+          53324,
+          "A2",
+          0
+        ],
+        [
+          5337,
+          "A2",
+          0
+        ],
+        [
+          58476,
+          "A2",
+          0
+        ],
+        [
+          58555,
+          "A2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[1].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_C_AOI31xp33_ASAP7_75t_R_Y_A2_NOR4xp25_ASAP7_75t_R_Y_C_NOR3xp33_ASAP7_75t_R_Y_B_OR4x1_ASAP7_75t_R_Y_C_OAI22xp33_ASAP7_75t_R_Y_A2_NAND4xp25_ASAP7_75t_R_Y_B_OR3x1_ASAP7_75t_R_A_C_NOR2xp33_ASAP7_75t_R_B_A_NOR3xp33_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[1].u_group.g_bank[2].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_B_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI222xp33_ASAP7_75t_R_B2_1_A2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          5192,
+          "A2",
+          0
+        ],
+        [
+          53324,
+          "B1",
+          0
+        ],
+        [
+          5337,
+          "C1",
+          0
+        ],
+        [
+          58450,
+          "A2",
+          0
+        ],
+        [
+          58553,
+          "A2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_B_OAI222xp33_ASAP7_75t_R_Y_A2_OR3x1_ASAP7_75t_R_Y_B_DFFHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_B_OAI222xp33_ASAP7_75t_R_Y_A2_OR3x1_ASAP7_75t_R_Y_B",
+      "loads": 35,
+      "sample_endpoints": [
+        [
+          73157,
+          "B",
+          0
+        ],
+        [
+          73160,
+          "A1",
+          0
+        ],
+        [
+          73164,
+          "B",
+          0
+        ],
+        [
+          73165,
+          "B",
+          0
+        ],
+        [
+          73167,
+          "C",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_B_OAI222xp33_ASAP7_75t_R_Y_B1_NAND4xp25_ASAP7_75t_R_Y_D_DFFHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_B_OAI222xp33_ASAP7_75t_R_Y_B1_NAND4xp25_ASAP7_75t_R_Y_D",
+      "loads": 34,
+      "sample_endpoints": [
+        [
+          73162,
+          "B",
+          0
+        ],
+        [
+          73167,
+          "D",
+          0
+        ],
+        [
+          73170,
+          "A1",
+          0
+        ],
+        [
+          73176,
+          "D",
+          0
+        ],
+        [
+          73177,
+          "B",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_C_OAI222xp33_ASAP7_75t_R_Y_C1_NAND4xp25_ASAP7_75t_R_Y_A_DFFHQNx1_ASAP7_75t_R_QN/QN",
+      "driver_role": "sequential",
+      "net": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_C_OAI222xp33_ASAP7_75t_R_Y_C1_NAND4xp25_ASAP7_75t_R_Y_A",
+      "loads": 34,
+      "sample_endpoints": [
+        [
+          73162,
+          "A",
+          0
+        ],
+        [
+          73167,
+          "A",
+          0
+        ],
+        [
+          73176,
+          "A",
+          0
+        ],
+        [
+          73177,
+          "A",
+          0
+        ],
+        [
+          73178,
+          "A",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[2].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_A1_AND4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_D_OR4x1_ASAP7_75t_R_Y_B_OAI222xp33_ASAP7_75t_R_Y_B1_OR3x1_ASAP7_75t_R_Y_C_NOR3xp33_ASAP7_75t_R_C/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[2].u_group.g_bank[1].u_b.re_NOR2xp33_ASAP7_75t_R_B_A_OA21x2_ASAP7_75t_R_B_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI221xp5_ASAP7_75t_R_B2_A2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          107716,
+          "A2",
+          0
+        ],
+        [
+          107740,
+          "A2",
+          0
+        ],
+        [
+          108655,
+          "A2",
+          0
+        ],
+        [
+          108740,
+          "A2",
+          0
+        ],
+        [
+          108880,
+          "A2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[2].u_group.g_bank[0].u_b.re_AO21x1_ASAP7_75t_R_Y_B_NOR5xp2_ASAP7_75t_R_Y_E_NOR2xp33_ASAP7_75t_R_B_Y_AOI21xp33_ASAP7_75t_R_B_Y_DFFHQNx1_ASAP7_75t_R_D/QN",
+      "driver_role": "sequential",
+      "net": "g_operand[2].u_group.g_bank[0].u_b.re_AO21x1_ASAP7_75t_R_Y_B_NOR5xp2_ASAP7_75t_R_Y_E_NOR2xp33_ASAP7_75t_R_B_Y_AOI21xp33_ASAP7_75t_R_B_A1",
+      "loads": 35,
+      "sample_endpoints": [
+        [
+          108177,
+          "A1",
+          0
+        ],
+        [
+          73157,
+          "A",
+          0
+        ],
+        [
+          73164,
+          "A",
+          0
+        ],
+        [
+          73165,
+          "A",
+          0
+        ],
+        [
+          73167,
+          "B",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[3].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_Y_NAND4xp25_ASAP7_75t_R_A_C_NOR4xp25_ASAP7_75t_R_Y_D_AOI31xp33_ASAP7_75t_R_Y_A2_NOR4xp25_ASAP7_75t_R_Y_D_NOR3xp33_ASAP7_75t_R_Y_C_NAND4xp25_ASAP7_75t_R_Y_B_NOR4xp25_ASAP7_75t_R_Y_A_NOR3xp33_ASAP7_75t_R_Y_C_NOR2xp33_ASAP7_75t_R_B_A_NOR2xp33_ASAP7_75t_R_B_1_A_NOR2xp33_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[3].u_group.g_bank[1].u_b.re_OAI21xp33_ASAP7_75t_R_A2_2_A1_OA21x2_ASAP7_75t_R_A2_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AO22x1_ASAP7_75t_R_A1_Y_AOI221xp5_ASAP7_75t_R_C_A2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          120963,
+          "A2",
+          0
+        ],
+        [
+          124268,
+          "A2",
+          0
+        ],
+        [
+          124413,
+          "A2",
+          0
+        ],
+        [
+          124616,
+          "A2",
+          0
+        ],
+        [
+          124804,
+          "A2",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[3].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_Y_NAND4xp25_ASAP7_75t_R_A_C_NOR4xp25_ASAP7_75t_R_Y_D_AOI31xp33_ASAP7_75t_R_Y_A2_NOR4xp25_ASAP7_75t_R_Y_D_NOR3xp33_ASAP7_75t_R_Y_C_NAND4xp25_ASAP7_75t_R_Y_B_NOR4xp25_ASAP7_75t_R_Y_A_NOR3xp33_ASAP7_75t_R_Y_C_NOR2xp33_ASAP7_75t_R_B_A_NOR2xp33_ASAP7_75t_R_B_A_NOR2xp33_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[3].u_group.g_bank[5].u_b.re_OAI221xp5_ASAP7_75t_R_B1_B2_OA21x2_ASAP7_75t_R_B_Y_O2A1O1Ixp33_ASAP7_75t_R_B_Y_AOI22xp33_ASAP7_75t_R_A2_Y_AOI22xp33_ASAP7_75t_R_A1_A2",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          120963,
+          "B1",
+          0
+        ],
+        [
+          124010,
+          "B1",
+          0
+        ],
+        [
+          124413,
+          "B1",
+          0
+        ],
+        [
+          124517,
+          "B1",
+          0
+        ],
+        [
+          124934,
+          "B1",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "g_operand[3].g_presel.coll_q_DFFHQNx1_ASAP7_75t_R_D_QN_AND2x2_ASAP7_75t_R_A_Y_A2O1A1Ixp33_ASAP7_75t_R_C_Y_NOR5xp2_ASAP7_75t_R_A_Y_NAND4xp25_ASAP7_75t_R_A_D_AND4x1_ASAP7_75t_R_Y_D_OAI31xp33_ASAP7_75t_R_Y_A2_NAND3xp33_ASAP7_75t_R_Y_A_XNOR2xp5_ASAP7_75t_R_Y_B_NOR3xp33_ASAP7_75t_R_Y_A_OAI222xp33_ASAP7_75t_R_Y_A2_NAND4xp25_ASAP7_75t_R_Y_C_NAND4xp25_ASAP7_75t_R_C_B_NOR4xp25_ASAP7_75t_R_B/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "g_operand[3].u_group.g_bank[0].u_b.re_OAI221xp5_ASAP7_75t_R_B1_B2_AOI211xp5_ASAP7_75t_R_A1_Y_AOI221xp5_ASAP7_75t_R_C_B2_AOI222xp33_ASAP7_75t_R_C1_B1",
+      "loads": 33,
+      "sample_endpoints": [
+        [
+          121499,
+          "A2",
+          0
+        ],
+        [
+          124227,
+          "A2",
+          0
+        ],
+        [
+          124255,
+          "A2",
+          0
+        ],
+        [
+          124577,
+          "A2",
+          0
+        ],
+        [
+          124949,
+          "B1",
+          0
+        ]
+      ]
+    }
+  ],
+  "driver_role_counts": {
+    "input_port": 6213,
+    "sequential": 17311,
+    "combinational_or_macro": 143555
+  },
+  "raw_census_sha256": "867cb10f188cb69b2475ac56116cece9830aea9cd48f033e69acc8b6f5e97564",
+  "qualification": "UNSELECTED_READ_GUARD_DIAGNOSTIC_FAIL_NO_NATIVEPASS"
+}

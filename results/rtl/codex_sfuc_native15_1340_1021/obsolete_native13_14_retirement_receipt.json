@@ -1,0 +1,97 @@
+{
+  "authority": "ROOT via HBMlead authorizes EXACT13/14 obsolete-only unit retirement, preserveallartifacts",
+  "time": "2026-10-21T15:42:43.406992-07:00",
+  "mem_before": "MemAvailable:   421455808 kB",
+  "jobs": [
+    {
+      "unit": "oth-ubuntu-1446871-1792620731.scope",
+      "source_sha256": "b0d805febd0e7e8b5119faa8b6bd5149aaa30306d3b248190dfe133968edecf2",
+      "before": {
+        "ActiveState": "active",
+        "SubState": "running",
+        "Result": "success",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1446871-1792620731.scope",
+        "MemoryCurrent": "23659438080",
+        "MemoryPeak": "25674010624"
+      },
+      "action": "systemctl --user stop exactscope (ROOT authorized obsolete retirement)",
+      "identity": [
+        {
+          "pid": "1446871",
+          "cmd": "bash run_native13.sh ",
+          "cwd": "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021"
+        },
+        {
+          "pid": "1447485",
+          "cmd": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -Q -T -s synth13.ys ",
+          "cwd": "/srv/opentallas-scratch/claude/codex-sfuc-native32-1021"
+        }
+      ],
+      "after": {
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "Result": "success",
+        "ControlGroup": "",
+        "MemoryCurrent": "[not set]",
+        "MemoryPeak": "[not set]"
+      },
+      "artifacts": {
+        "synth13.log": {
+          "bytes": 9271142,
+          "sha256": "90180c6611f7b7a94ee63ca7efeeb11393f9398e8fb1f252a1bafd3c106b17ed"
+        }
+      },
+      "terminal_rc": 143,
+      "qualification": "CANCELLED_NO_NATIVE_VERDICT"
+    },
+    {
+      "unit": "oth-ubuntu-1564231-1792620811.scope",
+      "source_sha256": "c6d84be353a01c6cbafcb449487964ab15e5612954766c3565a47b6e34e6c134",
+      "before": {
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "Result": "success",
+        "ControlGroup": "",
+        "MemoryCurrent": "[not set]",
+        "MemoryPeak": "[not set]"
+      },
+      "action": "none alreadyterminal",
+      "after": {
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "Result": "success",
+        "ControlGroup": "",
+        "MemoryCurrent": "[not set]",
+        "MemoryPeak": "[not set]"
+      },
+      "artifacts": {
+        "synth14.log": {
+          "bytes": 9289608,
+          "sha256": "6c6099d201fdc8c0e7a8bdd8c838ebd5048a9cadf29ec2acaf0e6cdf87e5f080"
+        },
+        "native14.log": {
+          "bytes": 49,
+          "sha256": "711528a2e93e6264c1b5f0072695c5fc4bb684e954666655409a95cdc4dbea99"
+        },
+        "mapped14.v": {
+          "bytes": 390876093,
+          "sha256": "7b7af9397ccce3891c8d3b68dfd09b9e39c9ec18413c968d66c554f972227830"
+        },
+        "native14.json": {
+          "bytes": 157620826,
+          "sha256": "867cb10f188cb69b2475ac56116cece9830aea9cd48f033e69acc8b6f5e97564"
+        }
+      },
+      "terminal_rc": 1,
+      "census": {
+        "status": "FAIL",
+        "violations": 14,
+        "max_dynamic_loads": 35,
+        "roots_examined": 168168
+      },
+      "qualification": "WRONG_SELECTED_GUARD_DIAGNOSTIC_FAIL"
+    }
+  ],
+  "mem_after": "MemAvailable:   443162172 kB",
+  "keep_verified": true
+}
