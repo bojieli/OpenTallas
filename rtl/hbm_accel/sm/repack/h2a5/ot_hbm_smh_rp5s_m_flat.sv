@@ -22,9 +22,13 @@ module ot_hbm_smh_rp5s_m_flat #(parameter integer HMUT = 0) (
     wire [2068:0] bk1_s;
     wire [49:0] xg, xg2o, g1p;
     wire [99:0] xp, xp2;
+    wire [4:0] at_s0;
     wire [4:0] at_x;
+    assign at_x = at_s0;
     wire [4:0] at_c;
+    assign at_c = at_s0;
     wire [4:0] at_m;
+    assign at_m = at_s0;
     wire [25:0] st_r1;
     wire [817:0] rl1_r1;
     wire [2068:0] bk1_r1;
@@ -63,9 +67,7 @@ module ot_hbm_smh_rp5s_m_flat #(parameter integer HMUT = 0) (
     ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpi (.clk(clk), .rst_n(rst_n), .d(xi_gp), .q(xp));
     ot_rp4a_relay #(.W(100), .N((HMUT == 2) ? 0 : 1), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xp2 (.clk(clk), .rst_n(rst_n), .d(xp), .q(xp2));
     ot_rp4l_strap u_sr_s (.clk(clk), .d({xss_g2, xss_a2, xss_g1, xss_a1}), .q(st_s));
-    ot_rp4a_astrap u_as_x (.clk(clk), .d({attn[4:3] + 2'd1, attn[2:0]}), .q(at_x));
-    ot_rp4a_astrap u_as_c (.clk(clk), .d({attn[4:3] + 2'd1, attn[2:0]}), .q(at_c));
-    ot_rp4a_astrap u_as_m (.clk(clk), .d({attn[4:3] + 2'd1, attn[2:0]}), .q(at_m));
+    ot_rp4a_astrap u_as (.clk(clk), .d({attn[4:3] + 2'd1, attn[2:0]}), .q(at_s0));
     ot_rp4l_pinrow u_pr_s (.clk(clk), .rst_n(rst_n), .d(rin_s), .q(rl_s));
     ot_smh_tr_group_row_w u_row1 (.clk(clk), .rst_a(rst_n), .d(rl_s), .first(rl1_s), .last(rpm_s));
     ot_smh_tr_group_row_e u_rowe1 (.clk(clk), .rst_a(rst_n), .d(rpm_s), .last(rout_s));

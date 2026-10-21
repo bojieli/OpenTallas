@@ -126,12 +126,14 @@ class Half:
                                 f".rst_n(rst_n), .r(r_{region}{depth}));"))
         return out
 
-    def straps(self, d):
-        """the STATIC attention strap (attn: identity strap, case-analysed) lands in 2 kept stages in EVERY region that
-        reads it (lp: a static port is read directly per region; a strap net crossing regions would be unlanded)"""
+    def straps(self, d, region):
+        """the static attention strap lands in 2 kept stages beside its pins (one region, OT_MULTI_ROOT: a port has ONE
+        domain); the other regions read it through landings (5 b; static, so the +3 edges are invisible)"""
+        self.W("wire [4:0] at_s0;")
+        self.I(region, f"ot_rp4a_astrap u_as (.clk(clk), .d({d}), .q(at_s0));")
         for r in dict.fromkeys(["x", "c", self.M]):
             self.W(f"wire [4:0] at_{r};")
-            self.I(r, f"ot_rp4a_astrap u_as_{r} (.clk(clk), .d({d}), .q(at_{r}));")
+            self.W(f"assign at_{r} = at_s0;")
 
     # ---------------------------------------------------------------------------------------------- the attention leaf
     def leaf(self, j, st, at, rl1, bk1, rl1_relays, st_relays, bk_relays, dx):
@@ -205,7 +207,7 @@ class Half:
                   "wire [49:0] g0m, g0r;"]:
             self.W(w)
         self.I("x", "ot_rp4l_strap u_sr_n (.clk(clk), .d({xs_g2, xs_a2, xs_g1, xs_a1}), .q(st_n));")
-        self.straps("(HMUT == 5) ? {attn[4:3] + 2'd1, attn[2:0]} : attn")
+        self.straps("(HMUT == 5) ? {attn[4:3] + 2'd1, attn[2:0]} : attn", "x")
         self.I("c", f"ot_rp4l_pinrow u_pr_n (.clk(clk), .rst_n({self.R('c', 3)}), .d(rin_n), .q(rl_n));")
         self.I("x", f"ot_rp4l_pinbeat u_pb (.clk(clk), .rst_n({self.R('x', 3)}), .d(bin), .q(bin_l));")
         self.I("c", f"ot_smh_tr_group_row_w u_row0 (.clk(clk), .rst_a({self.R('c', 3)}), .d(rl_n), .first(rl1_n), .last(rpm_n));")
@@ -245,7 +247,7 @@ class Half:
         self.I("x", f"ot_rp4a_relay #(.W(100), .N((HMUT == 2) ? 0 : 1), .VMASK({V100})) u_xp2 (.clk(clk), .rst_n({self.R('x', 3)}), .d(xp), .q(xp2));")
         # S-face straps (MAIN: m region; FB: c)
         self.I(M, "ot_rp4l_strap u_sr_s (.clk(clk), .d({xss_g2, xss_a2, xss_g1, xss_a1}), .q(st_s));")
-        self.straps("{attn[4:3] + 2'd1, attn[2:0]}")
+        self.straps("{attn[4:3] + 2'd1, attn[2:0]}", M)
         self.I("c", f"ot_rp4l_pinrow u_pr_s (.clk(clk), .rst_n({self.R('c', 3)}), .d(rin_s), .q(rl_s));")
         self.I("c", f"ot_smh_tr_group_row_w u_row1 (.clk(clk), .rst_a({self.R('c', 3)}), .d(rl_s), .first(rl1_s), .last(rpm_s));")
         self.I("c", f"ot_smh_tr_group_row_e u_rowe1 (.clk(clk), .rst_a({self.R('c', 3)}), .d(rpm_s), .last(rout_s));")
@@ -288,9 +290,9 @@ class Half:
             out_dir=f"{RTL}/lp_{self.h}_{self.v}", record_dir=REC,
             clock_ports=["clk"], clock_pins=["clk"], reset_port="rst_n", reset_pins=["rst_n", "rst_a"],
             regions=[dict(name=r, insts=sorted(names.get(r, [])), centre=c[r]) for r in self.regions],
-            reset_region="c", static=self.static, D=4, E=2, reschedule=True, landing_chunk_bits=24,
+            reset_region="c", D=4, E=2, reschedule=True, landing_chunk_bits=24,
             landing_reset_forest=True,
-            bench=dict(cycles=3000, reset_cycles=16, sim="verilator"),
+            bench=dict(cycles=3000, reset_cycles=16, sim="verilator", expr={"attn": "5'd13"}),
             tb_static={"attn": "5'd13"},
             mut_child=f"u_rst_c{(6 if self.h == 'n' else 11) + SIGMA + 3 - 1}",   # the publication line's reset (stateful)
         )
