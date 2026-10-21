@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.qwen.seam-status-pricing-diag.v1",
+  "grade": "DIAG",
+  "adopted": false,
+  "baseline_commit": "23314a50c18e3fc0d01b3309dd96eca9f27bde2e",
+  "proof_commit": "880c8c651",
+  "scope": "conditional 1u serial native-completion barrier overlay; no full-token RTL or release qualification",
+  "clock_ps": 833,
+  "raw_status_tail": 213,
+  "old": {
+    "cmd_to_first_result": 1809,
+    "cmd_to_last_result": 1840,
+    "cmd_to_completion": 1854,
+    "composer_attention": 1825,
+    "attention_return": 98,
+    "data_return_end": 1923,
+    "release_gate": 1923
+  },
+  "current": {
+    "cmd_to_first_result": 1811,
+    "cmd_to_last_result": 1842,
+    "cmd_to_completion": 2061,
+    "composer_attention_equivalent": 1827,
+    "attention_return_unchanged_diag": 98,
+    "data_return_end": 1925,
+    "completion_gate": 2061
+  },
+  "delta": {
+    "data": 2,
+    "completion_wait_after_data_return": 136,
+    "per_layer": 138,
+    "layers": 36,
+    "per_token": 4968
+  },
+  "native_ret": "Existing +6 successor / +0 asbuilt pre_o ledger term retained once; not added again.",
+  "status20": "No explicit 20-cycle STATUS serial charge exists in exact23314 inputs/composer/ledger; no subtraction invented.",
+  "assumptions": [
+    "The existing composer CMD anchor and 98-cycle return span remain the DIAG baseline.",
+    "Dependent o_proj waits for both returned operands and native completion.",
+    "Existing dependency gap and die edge charges apply after this max gate unchanged.",
+    "No next-layer/4u OVL credit: current bound master/sysface overlap is unproven."
+  ],
+  "holds": [
+    "Both die DCALs must adopt matched r17 codec2/TX_SHIFT1/STATUS_DELAY213 law.",
+    "Bound-image/compute-codec1 cases remain failing causal negatives.",
+    "KV K22 natural13>image9 geometry is unresolved.",
+    "98-cycle return span and complete token remain DIAG; new complete schedule must be qualified."
+  ],
+  "variants": {
+    "1u": {
+      "baseline_token_cycles": 261667,
+      "conditional_token_cycles": 266635,
+      "conditional_tok_s": 4502.3,
+      "rate_delta_pct": -1.863
+    },
+    "variant_asbuilt": {
+      "baseline_token_cycles": 253549,
+      "conditional_token_cycles": 258517,
+      "conditional_tok_s": 4643.7,
+      "rate_delta_pct": -1.922
+    }
+  },
+  "sources": {
+    "baseline23314a50c/results/token_pass/measured_qwen_1019/inputs.json": "1cc4d3f6cc02529ac5edfa6b163036f7201b7fcfae1f8e37b20492966b599aff",
+    "baseline23314a50c/results/token_pass/measured_qwen_1019/cycles.json": "67a409b5112595bc613238ce81be76b5ae43c95320b2f111787df00e439e2ab1",
+    "baseline23314a50c/results/token_pass/measured_qwen_1019/sched/ledger.json": "1894ed0fc7aa37a644ba8d56e476cadc9196a368acc9e841cc82e4c7ac127dc2",
+    "baseline23314a50c/results/token_pass/measured_qwen_1019/link/d2d_1u/pair_img_SUMMARY.txt": "db8571c8d9900c6fbbae3d6406710ceccce5a695eaec160c9d568c495a0da5f2",
+    "baseline23314a50c/tools/qwen_layerbench/dv_layer.py": "12f57f49357561a5ba55219be0b119e7182b9399a1a29f38b801ce0160895e25",
+    "baseline23314a50c/tools/qwen_layerbench/toksim_compose.py": "6d995f16b419bd9a10b910a3d0582baad3d1597f916b3721c4e4b79d802383c8",
+    "baseline23314a50c/tools/qwen_layerbench/ctlm_image.py": "46b5958034ab46ddcef6ad13c9856a64636253aae744a6289eceb589fb0f2bc0"
+  },
+  "proof_log_sha256": "fafde62e120c1bdb982044a7e15dced7a7c567217bec7d0c03271a951af0798c"
+}
