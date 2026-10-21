@@ -24,6 +24,16 @@ MX at x 172.8), and io_flop_at_pins stacked the 2,069 u_lands flops against the 
 cut ran in the top rows.  Fix (structural, no squeeze): s frame +43.2 tall (top channel 86.4 -> 129.6) and u_lands FIRM in
 a band directly above bk1 (centre x 414.7, y 1150 +-14), so the jog uses the whole channel above it (pin -> flop wire
 <= ~300 um < 405, flop -> bk1 short vertical).  No RTL / cycle change.
+r3 (SAFE-HBM-SMH 10-21, both halves; `rp4a_r1_kit.py r3`): the r2 s gates measured pin-flop spread TT 596 (one root) /
+251 ps (K=8) at CTS and the n r1 gates TT ~690 / ~634, so r2 (frame only) cannot pass clock_rule; the gather-lane FIRM
+stations never matched (generate prefix g_grel. missing: "no DFFs matched" for xpr/xgr/xg3/xp3) so the lane relays floated
+(placement STA s reg->reg -913 at u_gs.u_god0, n -731 at g_grel.u_xpr, s in->reg -296 at u_xgi).  Fix (structural):
+  * clock: k-means K=64 regional roots (the sibling rp4h south a_km64 measured 33.5 / 28 ps, GRT 0);
+  * gather lanes down the E channel with FIRM stations every <= ~390 um (patterns with g_grel.), the n S / s N lane pins
+    (xo_g0/xo_gp = xi_g0/xi_gp) moved to x 604.8-650.2 above the E channel, s gout moved to S x 604.8-669.6 (lane end),
+    u_xgi/u_xpi FIRM at their pins; s GS 1 -> 2 (N->S 1,253 um needs 4 hops): gout +8 uniform (PRICED, was +7);
+  * s keeps the r2 frame (+43.2 top, u_lands band), n keeps the r1 frame (GRT 0 on r1b);
+  * r3a = W 691.2 (E channel 43.2), r3b = W 734.4 (E channel 86.4: lane + E-face routing margin), both K=64.
 x-store / block-dot MX as before (track-legal per the L2H-SM9 / L2H-SMATT orientation notes; tct R0 only).
     python3 tools/hbm_sm_repack_1015/rp4a_r1_kit.py
 """
@@ -239,7 +249,53 @@ def write_readme(name, half, K, s):
         gs=GN + GS, lr=LR, gn=GN, xb=XB, wit=WIT))
 
 
+R3 = {"r3a": 691.2, "r3b": 734.4}
+GS3 = 2
+LANE_X = {"g0": [604.8, 617.76], "gp": [619.92, 650.16]}
+GOUT_X = [604.8, 669.6]
+
+
+def pins_r3(half, h):
+    p, rng = pins(half, h)
+    c = H.CROSS[half]
+    rng[c["g0"]] = list(LANE_X["g0"])
+    rng[c["gp"]] = list(LANE_X["gp"])
+    if half == "s":
+        rng["gout"] = list(GOUT_X)
+    return p, rng
+
+
+def stations_r3(name, half, h, w):
+    """r1 stations with the gather lanes re-planned down the E channel (x 648 .. w)."""
+    src = stations(name, half, h)
+    keep = [ln for ln in src.splitlines(True) if not ln.startswith("st_group ") and not ln.startswith('puts "RP4_STATION fixed')]
+    cx = round((648.0 + w) / 2, 1)
+    hw = round((w - 648.0) / 2 - 6.0, 1)
+    def bx(nm, pats, x, y, a, b, n):
+        return f"st_box {nm} {{{' '.join(pats)}}} {x} {y} {a} {b} {n}\n"
+    g = ""
+    if half == "n":
+        g += bx("gl", ["u_gn.g_gl[0].u_v2/", "u_gn.g_gl[0].u_d2/", "u_gn.g_gl[1].u_v2/", "u_gn.g_gl[1].u_d2/"], cx, 1160, hw, 12, 100)
+        for k, y in ((0, 775), (1, 390)):
+            g += bx(f"xpr{k}", [f"g_grel.u_xpr.g_s[{k}].", f"u_xpr.g_s[{k}]."], cx, y, hw, 12, 100)
+            g += bx(f"xgr{k}", [f"g_grel.u_xgr.g_s[{k}].", f"u_xgr.g_s[{k}]."], cx, y + 26, hw, 8, 50)
+        g += bx("xo_gl", ["u_xgo.", "u_xpo."], 627.5, 21.6, 22, 12, 150)
+    else:
+        g += bx("xi_gl", ["u_xgi.", "u_xpi."], 627.5, 1231, 22, 10, 150)
+        g += bx("x2", ["u_xg2.", "u_xp2."], cx, 925, hw, 14, 150)
+        for k, y in ((0, 620), (1, 315)):
+            g += bx(f"x3_{k}", [f"g_grel.u_xg3.g_s[{k}].", f"g_grel.u_xp3.g_s[{k}]."], cx, y, hw, 14, 150)
+        g += bx("gout", ["u_gs.u_god0/", "u_gs.u_gov0/", "u_gs.u_god1/", "u_gs.u_gov1/", "u_gs.g_gl[0].u_d3/",
+                         "u_gs.g_gl[0].u_v3/", "u_gs.g_gl[1].u_d3/", "u_gs.g_gl[1].u_v3/"], 637.2, 21.6, 30, 12, 200)
+    hdr = (f"# SAFE-HBM-SMH r3 {name}: gather lanes FIRM down the E channel (cx {cx}, hops <= ~390 um), patterns with the\n"
+           "# g_grel. generate prefix (the r1/r2 lane groups matched no DFF).\n")
+    return hdr + "".join(keep) + g + 'puts "RP4_STATION fixed $::sr_fixed"\n'
+
+
 def main():
+    if sys.argv[1:] == ["r3"]:
+        return main_r3()
+
     base = json.loads(H.BASE.read_text())
     r2 = sys.argv[1:] == ["r2"]
     for var, K in (R2 if r2 else VARIANTS).items():
@@ -255,6 +311,39 @@ def main():
             (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
             write_readme(name, half, K, s)
             print(f"{kd / 'spec.json'}: {len(s['children'])} children, outline {W} x {s['outline']['h']}")
+
+
+def main_r3():
+    global W, GS
+    base = json.loads(H.BASE.read_text())
+    GS = GS3
+    for var, w in R3.items():
+        W = w
+        A.W = w
+        for half in ("n", "s"):
+            name = f"smh_rp4ah{half}_{var}"
+            h = HN if half == "n" else HS_R2
+            s = spec(name, half, 64, base, h)
+            s["outline"] = {"w": w, "h": h}
+            s["pins"], s["pin_ranges"] = pins_r3(half, h)
+            st = f"physical/ref_tile_specs/smh/{name}_stations.tcl"
+            (ROOT / st).write_text(stations_r3(name, half, h, w))
+            s["job"]["owner"] = "Claude SAFE-HBM/SAFE-HBM-SMH"
+            s["job"]["branch"] = "claude/hbm-smatt10-1020"
+            s["job"]["structural_change"] += (
+                " r3 (SAFE review lanes/SAFE-HBM.md): K=64 k-means regional roots (r2 CTS spread TT 596/251, n r1 ~690/634); "
+                "gather lanes FIRM down the E channel (r1/r2 lane stations matched no DFF: g_grel. prefix), lane pins above the "
+                f"E channel, s gout at the lane end, s GS 2 (gout +8 priced); frame w {w} (E channel {round(w - 648.0, 1)}).")
+            for b in s["job"]["benches"]:
+                b["cmd"] = b["cmd"].replace(f" {GN} 1 {XB} ", f" {GN} {GS} {XB} ")
+                for kk in ("pass_witness", "fail_witness"):
+                    if kk in b:
+                        b[kk] = b[kk].replace(WIT, WIT + "_r3gs2")
+            kd = ROOT / "physical/ref_tile" / name
+            kd.mkdir(parents=True, exist_ok=True)
+            (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
+            write_readme(name, half, 64, s)
+            print(f"{kd / 'spec.json'}: {len(s['children'])} children, outline {w} x {h}")
 
 
 if __name__ == "__main__":
