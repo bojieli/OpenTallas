@@ -337,7 +337,9 @@ module ot_s81sl_vs #(
     wire ra_row = rav_c && op == OP_RA && (k_ra[1:0] == 2'd3 || k_ra + 8'd1 == n);
 
     // ================================================================ ENG: h stash, ve feeder, gate latch, write-back
+`ifndef OT_S81SL_VS_SRAM
     reg [255:0] hst [0:15];                          // the beat's h half rows (vn layout), updated in place by ADD
+`endif
     reg [2:0] kp_e; reg [5:0] ko_e; reg [4:0] fl_e; reg fl_on;
     reg [31:0]  gate [0:3];
     wire eng_r = arr && op == OP_ENG && !ph, eng_a = arr && op == OP_ENG && ph;
@@ -346,6 +348,54 @@ module ot_s81sl_vs #(
     wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
     wire [5:0] eq = epend ? eqp : eq0;              // quad 16 j + i (W arrival: even quad; next cycle: odd)
     reg [255:0] hrow, hra, hrb, xwsel; reg [31:0] gsel;
+`ifdef OT_S81SL_VS_SRAM
+    // Eight parity/copy banks replace the runtime-indexed 4 kb flop stash.
+    // Addresses predict the counters at this edge, absorbing the SRAM read
+    // into the existing counter edge; external ENG latency is unchanged.
+    wire [7:0] hka_n = !rs_c || acc_cmd ? 8'd0 : ka + {7'd0,arr};
+    wire hep_n = rs_o && eng_r && ka >= 8'd16 && er[0];
+    wire hfl_start = vov_c && ko_e == 6'd31;
+    wire hfl_on_n = rs_o && !acc_cmd && (hfl_start || (fl_on && fl_e != 5'd15));
+    wire [4:0] hfl_n = !rs_o || acc_cmd ? 5'd0 : fl_e + {4'd0,fl_on};
+    wire hph_n = acc_cmd ? c_ph : ph;
+    wire [2:0] haddr_n = hfl_on_n ? hfl_n[3:1] :
+                               hph_n ? hka_n[2:0] : hep_n ? ka[3:1] : hka_n[3:1];
+    wire [63:0] hbank [0:7];
+    (* keep="true" *) reg [15:0] hep_s;
+    always @(posedge clk) hep_s <= {16{hep_n}};
+    genvar hj,hp,hs;
+    generate for(hj=0;hj<4;hj=hj+1) begin:g_hcopy
+      for(hp=0;hp<2;hp=hp+1) begin:g_parity
+        wire fill = eng_r && ka < 8'd16 && ka[0] == hp;
+        wire addw = vov_c && op == OP_ENG && ph && voc_c == hj;
+        wire we = fill || addw;
+        wire [2:0] wa = fill ? ka[3:1] : ko_e[2:0];
+        wire [63:0] wd;
+        for(hs=0;hs<4;hs=hs+1) begin:g_word
+          assign wd[16*hs+:16] = fill ? xq_c[64*hj+16*hs+:16] : voy_c[32*(4*hp+hs)+16+:16];
+        end
+        wire [127:0] raw;
+        ot_sram_1r1w_32x128_m1 u_hst(.clk(clk),.r_ce_in(1'b1),.r_addr_in({2'd0,haddr_n}),.rd_out(raw),
+          .w_ce_in(we),.w_addr_in({2'd0,wa}),.wd_in({64'd0,wd}),.w_mask_in({64'd0,64'hffffffffffffffff}));
+        // Read-during-write bypass reproduces the original post-edge stash.
+        for(hs=0;hs<4;hs=hs+1) begin:g_bypass
+          (* keep="true" *) reg hit;
+          reg [15:0] forwarded;
+          always @(posedge clk) begin hit <= we && wa == haddr_n; forwarded <= wd[16*hs+:16]; end
+          assign hbank[2*hj+hp][16*hs+:16] = hit ? forwarded : raw[16*hs+:16];
+        end
+      end
+      for(hs=0;hs<4;hs=hs+1) begin:g_read
+        always @(*) begin
+          hrow[64*hj+16*hs+:16] = hep_s[4*hj+hs] ? hbank[2*hj+1][16*hs+:16] : hbank[2*hj][16*hs+:16];
+          hra[64*hj+16*hs+:16] = hbank[2*hj][16*hs+:16];
+          hrb[64*hj+16*hs+:16] = hbank[2*hj+1][16*hs+:16];
+          xwsel[64*hj+16*hs+:16] = fl_e[0] ? hbank[2*hj+1][16*hs+:16] : hbank[2*hj][16*hs+:16];
+        end
+      end
+    end endgenerate
+    always @(*) gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
+`else
     always @(*) begin
         for (rq = 0; rq < 4; rq = rq + 1) begin
             hrow[64 * rq +: 64] = hst[ep_q[rq] ? eqp_q[rq] : {ka_q[rq][3:1], 1'b0}][64 * rq +: 64];
@@ -355,6 +405,7 @@ module ot_s81sl_vs #(
         end
         gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
     end
+`endif
     function automatic [31:0] hw32(input [255:0] r, input [1:0] j, input [1:0] e);
         hw32 = {r[(4 * j + e) * 16 +: 16], 16'd0};
     endfunction
@@ -372,7 +423,9 @@ module ot_s81sl_vs #(
     always @(posedge clk) begin
         if (gv_c) gate[gc_c] <= gd_c;
         // REDUCE: arrivals 0..15 = h half rows into the stash; 16..79 = K / W of quad q -> ve
+`ifndef OT_S81SL_VS_SRAM
         if (eng_r && ka < 8'd16) hst[ka[3:0]] <= xq_c;
+`endif
         ve_rc <= eq[5:4];
         for (i = 0; i < 4; i = i + 1) ve_rh[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
         if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
@@ -390,12 +443,14 @@ module ot_s81sl_vs #(
         ve_ag <= gsel;
         // ADD results: copy j's slots of half rows 2 s, 2 s + 1
         // (decoded constant-index slices: one-hot row pair x copy, no runtime part-select)
+`ifndef OT_S81SL_VS_SRAM
         if (vov_c && op == OP_ENG && ph)
             for (i = 0; i < 16; i = i + 1)
                 for (k = 0; k < 4; k = k + 1)
                     if ((i >> 1) == ko_e[2:0] && k == voc_c)
                         for (e2 = 0; e2 < 4; e2 = e2 + 1)
                             hst[i][(4 * k + e2) * 16 +: 16] <= voy_c[32 * (4 * (i & 1) + e2) + 16 +: 16];
+`endif
     end
     // partial triples out; result / flush counters
     always @(posedge clk or negedge rs_o)
