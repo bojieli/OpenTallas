@@ -19,7 +19,7 @@ module tb_status_obs_v1 #(parameter integer MUT=0);
  ot_qwen_status_obs_v1_valid valid(.x(payload[511:304]),.good(good));
  assign hk={24{payload[547:543]==0&&payload[542:539]==15&&payload[538:533]==63&&payload[516:512]==0&&payload[303:156]==0&&good}};
  wire vd,cd,cb,cf,ea,ar,sf,orv,rd,er;wire[3:0]rc;wire[58:0]tag;wire[1:0]gen;wire[17:0]tok;wire[31:0]val,cyc;
- ot_qwen_d2d_status_rx_sfm3_obs1 #(.NG(24)) u_rx(.ck(ck),.rst_n(rrx),.epoch16(epoch),.rx_event(re),.rx_slot(rs),.ev_c({24{re}}),.rs_c({24{rs}}),.hk_c(hk),.he_c({24{payload[532:517]}}),.rx_payload(payload),
+ ot_qwen_d2d_status_rx_sfm3_obs1 #(.NG(24)) u_rx(.ck(ck),.rst_n(rrx),.rst_k({26{rrx}}),.epoch16(epoch),.rx_event(re),.rx_slot(rs),.ev_c({24{re}}),.rs_c({24{rs}}),.hk_c(hk),.he_c({24{payload[532:517]}}),.rx_payload(payload),
  .vm_drained(vd),.collective_drained(cd),.collective_busy(cb),.crom_fault(cf),.execution_active(ea),.admit_ready(ar),.status_fresh(sf),.result_v(orv),.result_done(rd),.result_fault(er),.result_cause(rc),.result_tag(tag),.result_gen(gen),.result_token(tok),.result_value(val),.result_cycles(cyc),.epoch_begin(eb),.status_obs_v(ov),.status_obs_epoch16(oe),.status_obs_payload(ox),.fault(rf));
  integer checks=0;integer bad=0;reg[547:0]saved;
  function automatic[58:0] mk(input[13:0]seq,input[1:0]user,input[17:0]token);
