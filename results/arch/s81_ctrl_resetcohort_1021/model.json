@@ -24,5 +24,43 @@
     "No new route",
     "No source adoption",
     "No whole CTRL closure claim"
-  ]
+  ],
+  "actual_metadata_model": {
+    "unit": "oth-ubuntu-3646767-1792616411",
+    "host": "ot-epyc9",
+    "status": "PASS_REPORT_ONLY",
+    "original": "s81ctrl_rg3-rg3x-d040f8ae6 original4_1_cts.odb copy",
+    "sources": 2,
+    "RESETN_loads": 28,
+    "loads_each": 14,
+    "max_reset_reach_manhattan_um": 273.51,
+    "direct_net_loads": "<=32 all traversednets",
+    "sourceclock": "all traced through positive BUFs to actualckh",
+    "PC0": {
+      "old": "ot_hckkm_0_clk",
+      "proposed": "ot_hckkm_7_clk",
+      "votes": {
+        "7": 8,
+        "0": 3,
+        "2": 3
+      },
+      "final_violation_endpoints_in_proposed_region": [
+        "pend",
+        "u_wd.sbin[2]",
+        "u_wd.sbin[3]"
+      ]
+    },
+    "PC1": {
+      "old": "ot_hckkm_7_clk",
+      "proposed": "ot_hckkm_7_clk",
+      "votes": {
+        "7": 9,
+        "3": 2,
+        "5": 3
+      }
+    },
+    "mutation": false,
+    "failed_queries_retained": "r1 expectedexactsourcecount0 because OpenDB escapes busbrackets; r2 confirmednames; r3 normalizesbracketescapes only and passes",
+    "physical": "No apply, CTS, STA, route, or savedDB; majoritypolicy still has minorityregionloads, actualsuccessor timing required"
+  }
 }

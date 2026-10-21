@@ -44,7 +44,10 @@ proc rc_clk {inst} {
 set rc_plans {}
 foreach inst [$rc_block getInsts] {
   set name [$inst getName]
-  if {![regexp {^u_ot_pr_core\.g_pc\[[01]\]\.u_pc\.u_hrbank\.q\[0\]\$_DFF_PN0_$} $name]} continue
+  # OpenDB escapes bus brackets; STA renders the same exact identifiers without
+  # those escape characters. Normalize brackets only, never hierarchy/suffixes.
+  regsub -all {\\([\[\]])} $name {\1} normalized
+  if {![regexp {^u_ot_pr_core\.g_pc\[[01]\]\.u_pc\.u_hrbank\.q\[0\]\$_DFF_PN0_$} $normalized]} continue
   set old [rc_clk $inst]
   set front {}; set seen {}; set loads {}; set votes [dict create]
   foreach t [$inst getITerms] {
