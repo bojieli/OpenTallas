@@ -9,11 +9,11 @@
 //            returned / positions do not change on phase RP-2 / RP-1 edges; the end-of-stream drop happens on a phase
 //            RP-1 edge with returned == positions, where the prediction is already false): pred2 -> ld1 (2 kept) ->
 //            ld2 (kept copies, one per <= 16 loaded bits);
-//   request  request_slot(t) is predicted one edge early (rq copies): a launch, or phase 23 -> 0 with issued < positions;
+//   request  request_slot(t) is predicted one edge early (rq copies): a launch, or phase PERIOD-1 -> 0 with issued < positions;
 //   landing  load-only rows 1..23 (row 0 leaves on the response edge itself); the streamed row is picked by a ONE-HOT row
 //            register (2 kept copies per row, 16 AND loads each) instead of a 24:1 next_row mux; streaming has kept copies.
 // MUT (bench): 1 = response prediction one edge late (ld from pred one edge after LD; must FAIL).
-module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=23, parameter integer GL=16,
+module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=23, parameter integer PERIOD=24, parameter integer GL=16,
                                                    parameter integer MUT=0)(
     input wire clk,rst_n,launch,
     input wire [GL-1:0] launch_c,
@@ -29,8 +29,9 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     output reg [31:0] gathered_mix_data,
     output reg done,fault
 );
-    localparam integer RP=RESP_PHASE, RSC=24;
-    initial if(RP<2||RP>23)$fatal(1,"f32 reader: RESP_PHASE 2..23 (two-edge response prediction)");
+    localparam integer RP=RESP_PHASE, RSC=24, PHW=(PERIOD<=32)?5:$clog2(PERIOD);
+    initial if(PERIOD<24||PERIOD>65536)$fatal(1,"f32 reader: PERIOD must be 24..65536");
+    initial if(RP<2||RP>=PERIOD)$fatal(1,"f32 reader: RESP_PHASE 2..PERIOD-1 (two-edge response prediction)");
     initial if(GL!=16)$fatal(1,"f32 reader: GL 16 launch copies");
     reg active,streaming;
     reg [15:0] return_sector,stride;
@@ -44,7 +45,8 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     (* keep = "true", dont_touch = "true" *) reg [16*RSC-1:0] rs_oh;
     (* keep = "true", dont_touch = "true" *) reg [3*RSC-1:0] rs_c;
     reg [3:0] positions,issued,returned;
-    reg [4:0] phase,next_row;
+    reg [PHW-1:0] phase;
+    reg [4:0] next_row;
     reg [2:0] output_pos;
     wire bounds_ok=bounds_i;
     // launch accept, one per group: 0 issue_sector, 1 return_sector, 2 stride, 3..7 rs_c (15 b each), 8 phase/positions/
@@ -56,7 +58,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
         assign la[k]=w;
     end
     // ---- response prediction (two edges early) and copies
-    wire pred2=active&&phase==5'(RP-2)&&returned<positions;
+    wire pred2=active&&phase==PHW'(RP-2)&&returned<positions;
     (* keep = "true", dont_touch = "true" *) reg [2:0] ld1;
     // ld2 copies: 0..45 landing rows 1..23 (2 x 16 b), 46..50 rs_c groups, 51 return_sector, 52..54 output data thirds,
     // 55/60 row-select state halves, 56/61 copy a halves, 57/62 copy b halves, 58 control A (returned, gathered_mix_*),
@@ -73,7 +75,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     wire response_slot=ld2[58];
     // ---- request prediction (one edge early)
     (* keep = "true", dont_touch = "true" *) reg [3:0] rq;   // 0 is_c0 + issued, 1 lanes 0..3, 2 lanes 4..7, 3 is_c1
-    wire rq_d=(la[10]&&npos!=4'd0)||(active&&phase==5'd23&&issued<positions);
+    wire rq_d=(la[10]&&npos!=4'd0)||(active&&phase==PHW'(PERIOD-1)&&issued<positions);
     always @(posedge clk or negedge rst_n) if(!rst_n)rq<=0; else rq<={4{rq_d}};
     wire request_slot=rq[0];
     // ---- streaming copies (same next state as streaming)
@@ -158,7 +160,7 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
             gathered_mix_v<=0;done<=0;
             active<=active_n;act_c<={2{active_n}};
             if(actual_valid!==expected_valid)fault<=1;
-            if(active)phase<=phase==23?5'd0:phase+5'd1;
+            if(active)phase<=phase==PHW'(PERIOD-1)?PHW'(0):phase+PHW'(1);
             if(request_slot)issued<=issued+1'b1;
             if(respA)begin
                 returned<=returned+1'b1;

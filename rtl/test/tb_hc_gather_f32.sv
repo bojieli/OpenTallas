@@ -6,15 +6,21 @@
 `ifndef MUT
 `define MUT 0
 `endif
+`ifndef GATHER_PERIOD
+`define GATHER_PERIOD 24
+`endif
+`ifndef GATHER_RESPONSE
+`define GATHER_RESPONSE 23
+`endif
 module tb_hc_gather_f32;
     reg clk = 0, rst_n = 0; always #1 clk = ~clk;
     reg launch = 0, bnd = 0; reg [3:0] npos = 0; reg [15:0] base = 0, stride = 0;
     reg [2055:0] rr;
     wire [135:0] rq0, rq1; wire [7:0] rd0, rd1; wire v0, v1, d0, d1, f0, f1; wire [4:0] r0, r1; wire [2:0] p0, p1; wire [31:0] g0, g1;
-    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(23), .EXTB(1), .RSC(24)) ref0 (.clk(clk), .rst_n(rst_n), .launch(launch),
+    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(`GATHER_RESPONSE), .PERIOD(`GATHER_PERIOD), .EXTB(1), .RSC(24)) ref0 (.clk(clk), .rst_n(rst_n), .launch(launch),
         .npos(npos), .base_sector(base), .position_stride_sector(stride), .bounds_i(bnd), .local_rq(rq0), .local_read(rd0),
         .local_rr(rr), .gathered_mix_v(v0), .gathered_mix_row(r0), .gathered_mix_pos(p0), .gathered_mix_data(g0), .done(d0), .fault(f0));
-    ot_hgi_hc_gathered_mix_reader_f32_static #(.RESP_PHASE(23), .MUT(`MUT)) dut (.clk(clk), .rst_n(rst_n), .launch(launch),
+    ot_hgi_hc_gathered_mix_reader_f32_static #(.RESP_PHASE(`GATHER_RESPONSE), .PERIOD(`GATHER_PERIOD), .MUT(`MUT)) dut (.clk(clk), .rst_n(rst_n), .launch(launch),
         .launch_c({16{launch}}), .npos(npos), .base_sector(base), .position_stride_sector(stride), .bounds_i(bnd), .local_rq(rq1),
         .local_read(rd1), .local_rr(rr), .gathered_mix_v(v1), .gathered_mix_row(r1), .gathered_mix_pos(p1), .gathered_mix_data(g1),
         .done(d1), .fault(f1));

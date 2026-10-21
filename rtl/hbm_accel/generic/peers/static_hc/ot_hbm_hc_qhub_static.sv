@@ -16,6 +16,7 @@ module ot_hbm_hc_qhub_static #(
     parameter integer CHX = 0,       // HH-9 10-19: extra bank-chain edges (ot_hbm_hc_qcen_static CHX; 11 with the CPR ring)
     parameter integer RD_CAPTURE = 23,
     parameter integer GATHER_PHASE = 23,
+    parameter integer GATHER_PERIOD = (GATHER_PHASE>=24)?GATHER_PHASE+1:24,
     parameter integer DONE_LAT = 19,
     // QHUB-S1 10-19 (kit hbm_hcq_hub_s1, SAFE-DESIGN checklist): SAFE 1 = ot_hbm_hc_q_static SAFE (reset copies, bounds
     // precompute, valid-only LG steering, ECOP capture-enable copies, per-face beat-control copies) + ot_hbm_hc_qcen_static
@@ -66,7 +67,7 @@ module ot_hbm_hc_qhub_static #(
 );
     wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb; wire [4:0] xfv; wire [9:0] xfb;
     assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
-    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE)) u_q (
+    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .GATHER_PERIOD(GATHER_PERIOD), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .configured(configured), .lg_rq(lg_rq), .lg_wq(lg_wq), .lg_rr(lg_rr), .lg_w_done(lg_w_done),

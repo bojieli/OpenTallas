@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Compiler-fixed 3-sector read per HC position,24 edges apart. Request pins
+// Compiler-fixed 3-sector read per HC position, PERIOD edges apart (default 24). Request pins
 // are functions of captured control state; far-HC tap samples launch+1.
 // Its registered return is launch+19; this reader captures and emits word0
 // at launch+20, downstream engine samples launch+21. No queues/ready/stalls.
-// RESP_PHASE (H-NETLIST 2026-10-15): edge of the fixed 24-edge period at which the
+// RESP_PHASE (H-NETLIST 2026-10-15): edge of the compiler-priced PERIOD-edge cadence at which the
 // return is captured; 19 = direct tap connection (default, unchanged). A parent that
 // adds pin/leaf register edges on the request and return paths adds them here.
 // EXTB (QHUB-S1 10-19, SAFE-DESIGN item 4): 1 = the launch bounds check arrives precomputed on bounds_i (registered by
@@ -15,7 +15,7 @@
 // same edges), copy j*8+c selects the 32-b chunk c of return sector j through a decoded one-hot AND-OR (the single
 // return_sector register drove the 768-b 8:1 return mux, 3,088 loads).  Needs RSC = 24.  Default 0 = unchanged function
 // (rs_c is then one unused 3-b kept register).
-module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,parameter integer EXTB=0,parameter integer RSC=0)(
+module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,parameter integer PERIOD=24,parameter integer EXTB=0,parameter integer RSC=0)(
     input wire clk,rst_n,launch,
     input wire [3:0] npos,
     input wire [15:0] base_sector,position_stride_sector,
@@ -29,8 +29,10 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
     output reg [31:0] gathered_mix_data,
     output reg done,fault
 );
+    localparam integer PHW=(PERIOD<=32)?5:$clog2(PERIOD);
     reg active,streaming;
-    initial if(RESP_PHASE<1||RESP_PHASE>23)$fatal(1,"RESP_PHASE must lie inside the 24-edge period");
+    initial if(PERIOD<24||PERIOD>65536)$fatal(1,"PERIOD must be 24..65536");
+    initial if(RESP_PHASE<1||RESP_PHASE>=PERIOD)$fatal(1,"RESP_PHASE must lie inside PERIOD");
     reg [767:0] landing;
     reg [15:0] issue_sector,return_sector,stride;
     initial if(RSC!=0&&RSC!=24)$fatal(1,"RSC must be 0 or 24");
@@ -52,10 +54,11 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
         assign arrived_c=768'd0;
     end endgenerate
     reg [3:0] positions,issued,returned;
-    reg [4:0] phase,next_row;
+    reg [PHW-1:0] phase;
+    reg [4:0] next_row;
     reg [2:0] output_pos;
     wire request_slot=active&&phase==0&&issued<positions;
-    wire response_slot=active&&phase==5'(RESP_PHASE)&&returned<positions;
+    wire response_slot=active&&phase==PHW'(RESP_PHASE)&&returned<positions;
     wire [32:0] last_sector={17'd0,base_sector}+(npos-1)*{17'd0,position_stride_sector}+2;
     wire bounds_int=npos>=1&&npos<=8&&!base_sector[15]&&last_sector<32768&&last_sector[14:13]==base_sector[14:13];
     wire bounds_ok=(EXTB!=0)?bounds_i:bounds_int;
@@ -82,7 +85,7 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
             gathered_mix_v<=0;done<=0;
             if(actual_valid!==expected_valid)fault<=1;
             if(active)begin
-                phase<=phase==23?5'd0:phase+5'd1;
+                phase<=phase==PHW'(PERIOD-1)?PHW'(0):phase+PHW'(1);
                 if(request_slot)begin issue_sector<=issue_sector+stride;issued<=issued+1'b1;end
                 if(response_slot)begin
                     landing<=arr;returned<=returned+1'b1;return_sector<=return_sector+stride;

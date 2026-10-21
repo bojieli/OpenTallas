@@ -29,6 +29,7 @@
 module ot_hbm_hc_q_static #(
     parameter integer RD_CAPTURE=23,
     parameter integer GATHER_PHASE=23,
+    parameter integer GATHER_PERIOD = (GATHER_PHASE>=24)?GATHER_PHASE+1:24,
     parameter integer DONE_LAT=19,
     parameter integer XW_BEATS=4,
     parameter integer MUT=0, // 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
@@ -177,14 +178,14 @@ module ot_hbm_hc_q_static #(
     // MUT 6 (SAFE): bounds from the previous word (a stale precompute must FAIL the bench via its out-of-range vector)
     reg gb_prev; always @(posedge clk) gb_prev<=gb;
     generate if(SAFE>=2)begin:g_gat2
-        ot_hgi_hc_gathered_mix_reader_f32_static #(.RESP_PHASE(GATHER_PHASE),.GL(GLC)) gather(
+        ot_hgi_hc_gathered_mix_reader_f32_static #(.RESP_PHASE(GATHER_PHASE),.PERIOD(GATHER_PERIOD),.GL(GLC)) gather(
             .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.launch_c(gl),.npos(gather_npos),
             .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
             .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
             .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
             .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
     end else begin:g_gat1
-    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.EXTB((SAFE!=0)?1:0),.RSC((SAFE!=0)?24:0)) gather(
+    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.PERIOD(GATHER_PERIOD),.EXTB((SAFE!=0)?1:0),.RSC((SAFE!=0)?24:0)) gather(
             .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
             .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
             .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),

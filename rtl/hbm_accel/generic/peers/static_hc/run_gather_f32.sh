@@ -6,7 +6,7 @@ root=$(cd "$(dirname "$0")/../../../../.." && pwd); cd "$root"
 out=$(realpath -m "${1:?OUT}"); mut=${2:-0}; mkdir -p "$out"
 vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x "$vl" ] || vl=verilator
 H=rtl/hbm_accel/generic/peers/static_hc
-"$vl" --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hc_gather_f32 +define+MUT=$mut -Mdir "$out/obj" -o Vg \
+"$vl" --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hc_gather_f32 +define+MUT=$mut +define+GATHER_PERIOD=${GATHER_PERIOD:-24} +define+GATHER_RESPONSE=${GATHER_RESPONSE:-23} -Mdir "$out/obj" -o Vg \
   rtl/test/tb_hc_gather_f32.sv $H/ot_hgi_hc_gathered_mix_reader_static.sv $H/ot_hgi_hc_gathered_mix_reader_f32_static.sv > "$out/build.log" 2>&1
 set +e; "$out/obj/Vg" > "$out/run.log" 2>&1; set -e
 grep -E "GATHER_F32|MISMATCH" "$out/run.log" | head -6
