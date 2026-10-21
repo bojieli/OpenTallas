@@ -2091,6 +2091,19 @@ proc ot_ce_forwarded_soft_visit {corner groups_name} {
 
 def forwarded_soft_body(body):
     substitutions = [
+        # Only explicit real-clock ports have propagated clock tags. Their hard
+        # and soft sinks must use the same phase-normalized clock metric. The
+        # legacy data-only forwarded class keeps its existing arrival query.
+        ('      set arr [ot_ce_fwd_arrival $pin]',
+         '      if {[dict exists $::ot_ce_fwd_soft $port]} {\n'
+         '        set info [dict get $::ot_ce_fwd_soft $port]\n'
+         '        set clock [get_clocks [dict get $info clock]]\n'
+         '        if {[llength $clock] != 1} {error "OT_FORWARDED_SOFT: missing clock $port"}\n'
+         '        set arr [ot_ce_clock_wire $pin $clock]\n'
+         '        puts "OT_FORWARDED_SOFT HARD_CLOCK_BASIS $corner $port $full clock=[get_full_name $clock] metric=phase_normalized_clock wire=$arr"\n'
+         '      } else {\n'
+         '        set arr [ot_ce_fwd_arrival $pin]\n'
+         '      }'),
         ('  set_propagated_clock [get_clocks ot_entry_*]',
          '  set_propagated_clock [get_clocks ot_entry_*]\n  set_propagated_clock [get_clocks ot_forwarded_*]'),
         ('  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}',

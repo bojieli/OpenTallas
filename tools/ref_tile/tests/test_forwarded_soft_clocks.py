@@ -26,6 +26,8 @@ class Spec(unittest.TestCase):
             self.assertIn('missing or wrong-source register', text)
             self.assertIn('set_propagated_clock [get_clocks ot_forwarded_*]', text)
             self.assertIn('ot_ce_forwarded_soft_visit $corner groups', text)
+            self.assertIn('set arr [ot_ce_clock_wire $pin $clock]', text)
+            self.assertIn('set arr [ot_ce_fwd_arrival $pin]', text)
             self.assertNotIn('set_false_path', text)
 
     def test_default_bytes(self):
@@ -78,6 +80,7 @@ class Spec(unittest.TestCase):
 class Actual(unittest.TestCase):
     def flow(self, mutant=''):
         original_fixture, original_rtl = F.fixture, F.RTL
+        original_soft_body = CE.forwarded_soft_body
         def fixture(root, fwd2=None):
             s = original_fixture(root, fwd2)
             for m in ('fwd', 'fwd2'):
@@ -96,10 +99,18 @@ class Actual(unittest.TestCase):
             F.RTL = original_rtl.replace('endmodule', '''DFFHQNx1_ASAP7_75t_R rs0 (.CLK(xk[0]), .D(d), .QN(rq));
 DFFHQNx1_ASAP7_75t_R rs1 (.CLK(xk[0]), .D(rq), .QN(rq1));
 endmodule''')
+            if mutant == 'mixed_phase':
+                def legacy_metric(body):
+                    text = original_soft_body(body)
+                    old = '        set arr [ot_ce_clock_wire $pin $clock]'
+                    assert text.count(old) == 1
+                    return text.replace(old, '        set arr [ot_ce_fwd_arrival $pin]')
+                CE.forwarded_soft_body = legacy_metric
             restart = (mutant == 'stage_restart') if mutant.startswith('stage_restart') else None
             return F.ForwardedOpenroad().run_flow('pre_cts' if mutant == 'pre_cts' else '', restart_pre_cts=restart)
         finally:
             F.fixture, F.RTL = original_fixture, original_rtl
+            CE.forwarded_soft_body = original_soft_body
 
     def test_actual_clock_ownership_and_regional_cts(self):
         rc, out = self.flow()
@@ -120,6 +131,11 @@ endmodule''')
         self.assertEqual(rc, 0, out[-9000:])
         self.assertIn('OT_FORWARDED_SOFT preserved xk[0]', out)
         self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
+
+    def test_mixed_phase_metric_reproduces_spread_failure(self):
+        rc, out = self.flow('mixed_phase')
+        self.assertNotEqual(rc, 0, out[-9000:])
+        self.assertRegex(out, r'OT_LANDED: forwarded clock .*child-flop spread.*>')
 
     def test_missing_pre_cts_metadata_reproduces_failure(self):
         rc, out = self.flow('stage_restart_omit')
