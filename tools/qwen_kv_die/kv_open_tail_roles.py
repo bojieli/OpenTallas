@@ -77,8 +77,9 @@ SOURCES = {
 # (kvs_emb anchor + a per-placement keep-out in free_spot); no instance, port or chain-end text changed. KV-ATTN7 7a25d7bf9:
 # face-land kit qkd_kvs_attn_rv3 -> rv5 (same ports/edges/params; view selection only).
 # KV-EMB4 10-20: re-pinned (was d06d0424...).  Change: default-off OT_KV_EMB_N32 (tile-file suffix '_n32'; kv_static
-# emb_join NATIVE32=1 in the kvs_emb u_join instance only); default design point byte-identical (kv_static_die --check).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'f6e076b8749c4982fb0f148f512f0be188e1eb258c4069364314da18a3aa6e7c')
+# emb_join NATIVE32=1 in the kvs_emb u_join instance only) + OT_KV_EMB_PJ (suffix '_pj': PIPE_JOIN=1); default design point
+# byte-identical (kv_static_die --check).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'aaf61290080dd332d4292ba2a77ae987e0e75ae597405939c8b25795d721e471')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -236,8 +237,9 @@ if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1':
     if TILES != 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv' or __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
         raise ValueError('kv_open_tail_roles: OT_KV_EMB_N32=1 is pinned for the route A _k_mu_ba point only')
     _T0 = TILES
-    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv'
-    SOURCES[TILES] = '4047711625373efe03586417dc76de58e2c560cd43a8afe18dd1bc643e33ec11'
+    _PJ = __import__('os').environ.get('OT_KV_EMB_PJ', '0') == '1'   # + u_join PIPE_JOIN=1 (+1 word-stream edge)
+    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32' + ('_pj' if _PJ else '') + '.sv'
+    SOURCES[TILES] = '803a35892afe2dc55f9dc5bc7c0b612c89ebab0513a2664fb227970335ad7e7e' if _PJ else '4047711625373efe03586417dc76de58e2c560cd43a8afe18dd1bc643e33ec11'
     SOURCES.pop(_T0)
     for _k, _items in ASSERT.items():
         ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
