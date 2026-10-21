@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_xg5",
+ "enable": false,
+ "reason": "Source-registered merged leaf: every rs input lands in a pin flop (iw / ie / iv / xf_q / neo_q / nwo_q / ci_q / sid_c and the capture copies) and every rs output leaves a relay flop (ro_* / vo / dl_* / nx_*); the x streamer's issuer input lands in the xg5 issuer relay then xs4 capture flops, xw_v / xw_d / fault leave flops. A recipe pin_regs stage would add an unpriced ring-hop edge (~8 cycles per traversal)."
+}

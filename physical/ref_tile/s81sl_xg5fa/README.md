@@ -1,6 +1,6 @@
 # s81sl_xg5fa -- structural floorplan successor of s81sl_xg5 (S81-XG5FP-1021, S81.STA.LEAF.5, 10-21)
 
-Same RTL / pins / clock / census fixes as s81sl_xg5 @ xg5c e1c24fa0a; only the macro floorplan and outline change.
+Same RTL / pins / clock as s81sl_xg5 @ xg5c e1c24fa0a plus the XG5d census fix (below); macro floorplan and outline changed.
 
 ```
 S81-XG5FP (10-21, LEAD-S81): STRUCTURAL floorplan successor of s81sl_xg5 after both xg5/xg5k routes crashed at
@@ -21,7 +21,14 @@ RTL, pins (faces/order), clock K=16, census fixes = xg5c e1c24fa0a unchanged.
 
 ```
 
-## SAFE-DESIGN checklist delta vs s81sl_xg5 (items 1-5, 7, 8 unchanged = xg5 README below)
+## SAFE-DESIGN checklist delta vs s81sl_xg5 (items 1, 2 (except below), 4, 5, 7, 8 unchanged = xg5 README below)
+3 Fanout: FIXED (XG5d, S81-COLLECT/XG 10-21) -- xg5fa/xg5fb gate census REFUSED: 1 root > 32 (max 36) = the shared prime-refusal
+  term `bad` in ot_s81sl_xs4_cal (AO22 _177889_ -> base_q 12 / nrows 13 / count / fetch_index / primed / rpt / rpa enables).
+  Range check on base_p/len_p now computed once in kept `ot_s81sl_xs4_rng` (pin flops keep their load count); the state OR is
+  replicated in 6 kept `ot_s81sl_xs4_bad` instances, one per pok group (pok[0], pok[1], pok[2] base_q 12, pok[3]+pq[3] control,
+  pok[4] nrows 13, pok[5] consume_index 13) -> each <= ~16 loads. Both modules non-parameterised and listed in
+  SYNTH_KEEP_MODULES (kit.env + spec route.synth_keep_modules), so Yosys keeps the instances (no paramod rename, no merge).
+  Value-preserving, no cycle change. Census numbers: recorded from the regate (native_census.json max_dynamic_loads).
 6 Floorplan: FIXED -- macros on the track lattice (offtrack 0, x on 43.2 / 21.6 grid as xg5), stacks <= 4 SRAMs / 2 ROMs per column
   half, full-width macro-free centre band (>= 420 um free height for W<->E wires at every x), 56-70 um channels between
   4-stack pin faces, W/E pin faces >= 43 um from any macro face; fill ~26% recorded as routing/perimeter-bound.

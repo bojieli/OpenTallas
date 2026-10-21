@@ -104,6 +104,16 @@ endmodule
 (* keep_hierarchy = 1 *) module ot_s81sl_xs4_due (input wire act, input wire cnz, input wire [23:0] t, input wire [23:0] age, output wire due);
     assign due = act && cnz && t == age;
 endmodule
+// calendar reader prime-refusal terms (XG5d; the shared bad mapped to 36 loads): the range check on the captured
+// base / length is computed ONCE (ot_s81sl_xs4_rng, its 13-b add + compares stay single so the base_p / len_p pin flops
+// keep their load count) and the cheap state OR is replicated per pok consumer group (ot_s81sl_xs4_bad)
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_rng (input wire [11:0] base, input wire [12:0] len, output wire rbad);
+    assign rbad = len == 13'd0 || len > 13'd4096 || {1'b0, base} + len > 13'd4096;
+endmodule
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_bad (input wire active, input wire priming, input wire [2:0] fv,
+                                                  input wire rbad, output wire bad);
+    assign bad = active || priming || fv != 3'd0 || rbad;
+endmodule
 // calendar reader fetch term (one instance per consumer group)
 (* keep_hierarchy = 1 *) module ot_s81sl_xs4_fetch (input wire priming, input wire due5, input wire [12:0] fi, input wire [12:0] nrows,
                                                     output wire fetch);
@@ -157,9 +167,18 @@ module ot_s81sl_xs4_cal (
     wire [23:0] tsm [0:5], agew [0:5];
     wire cons_last = consume_index + 13'd1 == nrows;
     wire cnz = count != 3'd0;
-    wire bad = active || priming || fetch_valid != 3'd0 || len_p == 13'd0 || len_p > 13'd4096 ||
-               {1'b0, base_p} + len_p > 13'd4096;
-    wire [5:0] pok = pq & {6{!bad}};
+    // XG5d: bad from six kept term instances (the single shared term mapped to 36 loads > 32):
+    //   bad_r0 / bad_r1 -> pok[0] / pok[1] (rpt / rpa reloads of copies 0-2 / 3-5), bad_b -> pok[2] (base_q 12 b), bad_n -> pok[4] (nrows 13 b),
+    //   bad_c -> pok[5] (consume_index 13 b), bad -> pok[3] / pq[3] control (fetch_index, wp, fault, count, priming, primed)
+    wire bad, bad_r0, bad_r1, bad_b, bad_n, bad_c, rbad;
+    ot_s81sl_xs4_rng u_rng (.base(base_p), .len(len_p), .rbad(rbad));
+    ot_s81sl_xs4_bad u_bad   (.active(active), .priming(priming), .fv(fetch_valid), .rbad(rbad), .bad(bad));
+    ot_s81sl_xs4_bad u_bad_r0 (.active(active), .priming(priming), .fv(fetch_valid), .rbad(rbad), .bad(bad_r0));
+    ot_s81sl_xs4_bad u_bad_r1 (.active(active), .priming(priming), .fv(fetch_valid), .rbad(rbad), .bad(bad_r1));
+    ot_s81sl_xs4_bad u_bad_b (.active(active), .priming(priming), .fv(fetch_valid), .rbad(rbad), .bad(bad_b));
+    ot_s81sl_xs4_bad u_bad_n (.active(active), .priming(priming), .fv(fetch_valid), .rbad(rbad), .bad(bad_n));
+    ot_s81sl_xs4_bad u_bad_c (.active(active), .priming(priming), .fv(fetch_valid), .rbad(rbad), .bad(bad_c));
+    wire [5:0] pok = pq & {!bad_c, !bad_n, !bad, !bad_b, !bad_r1, !bad_r0};
     wire [74:0] act_nx;
     generate for (gk = 0; gk < 6; gk = gk + 1) begin : g_due
         (* keep = "true" *) reg [3:0] rpt;
