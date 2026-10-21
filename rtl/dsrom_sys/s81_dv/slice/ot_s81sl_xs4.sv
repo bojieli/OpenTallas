@@ -440,9 +440,9 @@ module ot_s81sl_xs4_ctl (
         if (rh[31]) hb_q[31:22] <= hb_d[31:22];
         if (rx[19]) hb_q[42:32] <= hb_d[42:32];
         if (rh[30]) hb_q1[10:7]  <= hb_d[10:7];
-        if (rx[18]) hb_q1[21:11] <= hb_d[21:11];
+        if (rx[22]) hb_q1[21:11] <= hb_d[21:11];   // spare same-release hold leaf (rx[18] reached 33 with both copies)
         if (rh[31]) hb_q1[31:22] <= hb_d[31:22];
-        if (rx[19]) hb_q1[42:32] <= hb_d[42:32];
+        if (rx[23]) hb_q1[42:32] <= hb_d[42:32];   // spare same-release hold leaf (rx[19] reached 33 with both copies)
     end
     (* keep = "true" *) reg bc_c;
     always @(posedge clk or negedge rc[3]) if (!rc[3]) bc_c <= 1'b0; else bc_c <= bc_d;
@@ -853,7 +853,8 @@ module ot_s81sl_xs4 (
         localparam integer FB = gc >= 12 ? 1 : 0, G = gc >= 12 ? gc - 12 : gc;
         wire gwx = o_gw[gc % NG], gwf = o_gwf[gc % NG], gwp = o_gwp[gc % NG];
         (* keep = "true" *) reg wp, wpv;   // main wpar_q (FB 0) / wpar_b (FB 1): wpv for the valid sets, wp the rest
-        (* keep = "true" *) reg wps;       // XG5: kept copy of wp for the s0 / s1 source writes (wp mapped to 39-50 loads)
+        (* keep = "true" *) reg wps, wps0; // XG5: kept copies of wp for the s1 (wps) / s0 (wps0) source writes (wp mapped to
+                                           // 39-50 loads; one shared wps reached 33 in the native census)
 `ifdef OT_S81SL_XS4_MUT_TPAR
         wire open_f = (gc == 5) ? 1'b0 : (gwx && gwf == FB[0]);
 `else
@@ -867,9 +868,9 @@ module ot_s81sl_xs4 (
         wire [7:0] vc = wp ? v1 : v0;
         wire cl0 = open_f && !gwp, cl1 = open_f && gwp;
         always @(posedge clk or negedge rst_l[6 + gc]) begin
-            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; wps <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
+            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; wps <= 1'b0; wps0 <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
             else begin
-                if (open_f) begin wp <= gwp; wpv <= gwp; wps <= gwp; end
+                if (open_f) begin wp <= gwp; wpv <= gwp; wps <= gwp; wps0 <= gwp; end
                 v0 <= cl0 ? (any & {8{!wpv}} & ~v0) : (v0 | (any & {8{!wpv}}));
                 v1 <= cl1 ? (any & {8{wpv}} & ~v1) : (v1 | (any & {8{wpv}}));
             end
@@ -878,8 +879,8 @@ module ot_s81sl_xs4 (
         always @(posedge clk)
             for (i = 0; i < 8; i = i + 1)
                 if (!vc[i] && any[i]) begin
-                    if (wps) s1[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
-                    else    s0[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
+                    if (wps)   s1[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
+                    if (!wps0) s0[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
                 end
         wire [2:0] hit = {|(o2 & vc), |(o1 & vc), |(o0 & vc)};
         if (FB) begin : g_fb
