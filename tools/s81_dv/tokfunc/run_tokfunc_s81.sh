@@ -7,6 +7,7 @@ REF=; WORK=; FIX=; DIE=; PB=; PLAN=; LAND=; REPORT=0; ASM=; SRC=
 HEAD_PREP=; HEAD_FIX=; MU_STAGE=; HEAD_JSON=; MU_JSON=; LAYERS_JSON=
 CAL_AR=; CAL_MTP=; MU_LINK_JSON=
 FOLD_JSON=
+HEAD_DIE_SRC=; HEAD_DIE_BIND=; HEAD_DIE_IMG=; HEAD_DIE_JSON=; GAPS_JSON=
 KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
 while (($#)); do
   case "$1" in
@@ -21,6 +22,9 @@ while (($#)); do
     --layers-json) LAYERS_JSON=$2; shift 2;; --report-only) REPORT=1; shift;;
     --calendar-ar) CAL_AR=$2; shift 2;; --calendar-mtp) CAL_MTP=$2; shift 2;;
     --owner-fold-json) FOLD_JSON=$2; shift 2;;
+    --head-die-src) HEAD_DIE_SRC=$2; shift 2;; --head-die-bind) HEAD_DIE_BIND=$2; shift 2;;
+    --head-die-img) HEAD_DIE_IMG=$2; shift 2;; --head-die-json) HEAD_DIE_JSON=$2; shift 2;;
+    --layer-gaps-json) GAPS_JSON=$2; shift 2;;
     --kv-baseline) KV_BASELINE=$2; shift 2;; --kv-json) KV_JSON=$2; shift 2;;
     --dense-source-vectors) DENSE_VECTORS=$2; shift 2;; --dense-source-json) DENSE_JSON=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
@@ -74,6 +78,18 @@ if [ "$REPORT" = 0 ]; then
       > "$WORK/dense_source.log" 2>&1 || true
     DENSE_JSON=$WORK/dense_source/check.json
   fi
+  # LAYER.2-4 GAP classes against the die.v the layers compiled on (TOK-FUNC2-S81-LX gap_classify.py)
+  LW=(); for L in L2 L14 L20; do [ -f "$WORK/layers/prog_${L}_su/lowering.json" ] && LW+=("$WORK/layers/prog_${L}_su/lowering.json"); done
+  if [ ${#LW[@]} -gt 0 ]; then
+    python3 "$H/gap_classify.py" --die-v "$DIE" --lowering "${LW[@]}" --out "$WORK/layer_gaps.json" > "$WORK/layer_gaps.log" 2>&1 || true
+    GAPS_JSON=$WORK/layer_gaps.json
+  fi
+  # LAYER.5: the LM head on the whole bound head die (its own bind: --head-die-bind = strict-bind dir of the head die
+  # GEN or source assembly; images from head_die_images.py).  At closure pass the head die GEN bind dir here.
+  if [ -n "$HEAD_DIE_SRC" ] && [ -n "$HEAD_DIE_BIND" ] && [ -n "$HEAD_DIE_IMG" ]; then
+    bash "$H/head_die/run_head_die.sh" "$HEAD_DIE_SRC" "$HEAD_DIE_BIND" "$HEAD_DIE_IMG" "$WORK/head_die" > "$WORK/head_die.log" 2>&1 || true
+    HEAD_DIE_JSON=$WORK/head_die/result.json
+  fi
   # These component benches use their source-pinned RTL, even in netlist mode.
   if [ -n "$HEAD_PREP" ] && [ -n "$HEAD_FIX" ]; then
     (cd "$SRC"; bash "$H/head_mtp_fleet.sh" "$HEAD_PREP" "$HEAD_FIX" "$WORK/head") > "$WORK/head.log" 2>&1 || true
@@ -102,5 +118,7 @@ ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$FOLD_JSON" ] || ARGS+=(--owner-fold "$FOLD_JSON")
 [ -z "$KV_JSON" ] || ARGS+=(--kv-consumer "$KV_JSON")
 [ -z "$DENSE_JSON" ] || ARGS+=(--dense-source "$DENSE_JSON")
+[ -z "$HEAD_DIE_JSON" ] || ARGS+=(--head-die "$HEAD_DIE_JSON")
+[ -z "$GAPS_JSON" ] || ARGS+=(--layer-gaps "$GAPS_JSON")
 [ -z "$DIE" ] || ARGS+=(--die-v "$DIE")
 python3 "$H/token_report.py" "${ARGS[@]}"

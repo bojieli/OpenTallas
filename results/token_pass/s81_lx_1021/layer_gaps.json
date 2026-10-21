@@ -1,0 +1,1393 @@
+{
+ "schema": "opentallas.tokfunc_s81.gap_classes.v1",
+ "die_v": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/tree/results/arch/s81_dv_1016/bind9/die.v.gz",
+ "die_masters": {
+  "col_h10_l4_lp": 12,
+  "col_h9_l4_lp": 60,
+  "dsdv_bk_col": 1,
+  "dsdv_bk_sel_vmtx": 1,
+  "dsdv_eng_rr": 1,
+  "dsdv_eng_tap": 15,
+  "dsdv_eng_tap_w": 1,
+  "dsdv_gunit": 1,
+  "dsdv_idx_qf": 1,
+  "dsdv_idx_rg3": 7,
+  "dsdv_idx_rg3_nq": 1,
+  "dsdv_seq_host_mux": 1,
+  "dsdv_svc_rs": 14,
+  "dsdv_svc_rs_entry": 2,
+  "dsfd_ctrl_rg3": 16,
+  "ot_hbm3e_phy_v41x_aw30_e8p5_k": 1,
+  "ot_pdie_serdes_col": 10,
+  "ot_s81sl_slice": 11,
+  "ot_s81sl_slice_iq": 1,
+  "ot_s81sl_slice_lepe_mu_72": 1,
+  "ot_s81sl_slice_lepe_nh_mu_72": 1,
+  "ot_s81sl_slice_lepw_mab_mu_72": 1,
+  "ot_s81sl_slice_lepw_mu_72": 1
+ },
+ "layers": {
+  "L2": {
+   "lowering": "prog_L2_su/lowering.json",
+   "status_counts": {
+    "PARTIAL": 52,
+    "GAP": 31
+   },
+   "classes": {
+    "HW_GAP": 13,
+    "COMPILER": 12,
+    "SHARED_L0B": 6
+   },
+   "gaps": [
+    {
+     "id": "L2.attn.cmp.pool",
+     "op": "attn.cmp.pool",
+     "cls": "HW_GAP",
+     "unit": "compressor pooling (gate-softmax weighted sum of RATIO rows)",
+     "die_instances": {},
+     "next": "no vs/vp op computes the compressor softmax-pool (vs ops SW/QB/RA/RB/QR/MOE/ENG); needs an su op or unit",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.kv_norm.sumsq",
+     "op": "attn.kv_norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.kv_norm.rsqrt",
+     "op": "attn.kv_norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.kv_norm.scale",
+     "op": "attn.kv_norm.scale",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.kv_rope_qdq",
+     "op": "attn.kv_rope_qdq",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.own_row_write",
+     "op": "attn.own_row_write",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.norm.sumsq",
+     "op": "attn.cmp.norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.norm.rsqrt",
+     "op": "attn.cmp.norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.norm.scale",
+     "op": "attn.cmp.norm.scale",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.row_qdq",
+     "op": "attn.cmp.row_qdq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.k_norm.sumsq",
+     "op": "attn.cmp.k_norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.k_norm.rsqrt",
+     "op": "attn.cmp.k_norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.k_norm.scale",
+     "op": "attn.cmp.k_norm.scale",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.cmp.k_rope_qdq",
+     "op": "attn.cmp.k_rope_qdq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L2.attn.idx.newkey",
+     "op": "attn.idx.newkey",
+     "cls": "COMPILER",
+     "unit": "index-key row append to HBM",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "svc_rs job writing the new index key row: job ABI not documented as a compiler ABI",
+     "compiler_gap": {
+      "module": "dsdv_svc_rs",
+      "port": "s_j job (index-key row write)",
+      "missing": "no svc job writes the new index key row into the HBM index cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op"
+     }
+    },
+    {
+     "id": "L2.attn.idx.score",
+     "op": "attn.idx.score",
+     "cls": "COMPILER",
+     "unit": "index-key scan q.k -> scores",
+     "die_instances": {
+      "dsdv_idx_rg3": 7
+     },
+     "next": "die has the readers (score engine EL 124 a key); owed: reader job header emission (qi) + walker windows in the svc/controller calendar, bound to the idxrd3 bench (S81-IDXRD-1021 campaign PASS / MUT FAIL)",
+     "compiler_gap": {
+      "module": "bind_p4l3_g8 (no index-score unit)",
+      "port": "HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s",
+      "missing": "no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats (lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges"
+     }
+    },
+    {
+     "id": "L2.attn.idx.topk_merge",
+     "op": "attn.idx.topk_merge",
+     "cls": "SHARED_L0B",
+     "unit": "TP4 merge of local selections (end-slice lep)",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "cross-die collective rows (same endpoint ABI as the vpx all-gathers, TOK.DS.XDIE)",
+     "compiler_gap": {
+      "module": "u_s_4S rstop V receive -> end-slice lep",
+      "port": "bk_sel egress kind 5 words",
+      "missing": "no path carries the bk_sel IDX words to an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81"
+     }
+    },
+    {
+     "id": "L2.attn.gather",
+     "op": "attn.gather",
+     "cls": "COMPILER",
+     "unit": "selected-row gather (svc HBM read by index, bk_col frames)",
+     "die_instances": {
+      "dsdv_bk_col": 1,
+      "dsdv_svc_rs": 14
+     },
+     "next": "bk_col + svc_rs on die; owed: index-list row-read job + bk_col frame emission (TOK.DS.BENCH.4.4)",
+     "compiler_gap": {
+      "module": "dsdv_svc_rs / dsdv_bk_col",
+      "port": "svc row-read job by index list + bk_col frames",
+      "missing": "no svc job reads HBM rows by a runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)"
+     }
+    },
+    {
+     "id": "L2.attn.window_load",
+     "op": "attn.window_load",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.rows_allgather",
+     "op": "attn.rows_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L2.attn.scores",
+     "op": "attn.scores",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.max",
+     "op": "attn.max",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.exp",
+     "op": "attn.exp",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.den",
+     "op": "attn.den",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.pv",
+     "op": "attn.pv",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.sink",
+     "op": "attn.sink",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.normalize",
+     "op": "attn.normalize",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L2.attn.out_allreduce",
+     "op": "attn.out_allreduce",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+      "port": "owner fold ((p0+p1)+(p2+p3))",
+      "missing": "RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has no encoder yet (vs fork) and the RS row ownership is not placed"
+     }
+    },
+    {
+     "id": "L2.substage_hop0",
+     "op": "substage_hop0",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L2.substage_hop1",
+     "op": "substage_hop1",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L2.ffn.router_allgather",
+     "op": "ffn.router_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    }
+   ]
+  },
+  "L14": {
+   "lowering": "prog_L14_su/lowering.json",
+   "status_counts": {
+    "PARTIAL": 59,
+    "GAP": 33
+   },
+   "classes": {
+    "SHARED_L0B": 6,
+    "HW_GAP": 14,
+    "COMPILER": 13
+   },
+   "gaps": [
+    {
+     "id": "E14.rows_allgather",
+     "op": "eng.rows_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "E14.knorm",
+     "op": "eng.knorm",
+     "cls": "HW_GAP",
+     "unit": "Engram key RMSNorm",
+     "die_instances": {},
+     "next": "no RMSNorm of an Engram key row on G7 (vn is the hc_pre-mixed h norm); same su_kv-class unit or a vs RMS op",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.eng.gate",
+     "op": "eng.gate",
+     "cls": "COMPILER",
+     "unit": "slice vs op 14 ENG (Engram gate / mix)",
+     "die_instances": {
+      "ot_s81sl_slice": 11
+     },
+     "next": "encoder exists only inside tb_s81sl_slice_eng; owed: vs ENG op words in lower_vs",
+     "compiler_gap": {
+      "module": "ot_s81sl_vs",
+      "port": "op 14 REDUCE / ADD words (tb_s81sl_slice_eng)",
+      "missing": "encoder exists only inside the slice bench; HBM Engram rows via svc not lowered"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.pool",
+     "op": "attn.cmp.pool",
+     "cls": "HW_GAP",
+     "unit": "compressor pooling (gate-softmax weighted sum of RATIO rows)",
+     "die_instances": {},
+     "next": "no vs/vp op computes the compressor softmax-pool (vs ops SW/QB/RA/RB/QR/MOE/ENG); needs an su op or unit",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.kv_norm.sumsq",
+     "op": "attn.kv_norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.kv_norm.rsqrt",
+     "op": "attn.kv_norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.kv_norm.scale",
+     "op": "attn.kv_norm.scale",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.kv_rope_qdq",
+     "op": "attn.kv_rope_qdq",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.own_row_write",
+     "op": "attn.own_row_write",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.norm.sumsq",
+     "op": "attn.cmp.norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.norm.rsqrt",
+     "op": "attn.cmp.norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.norm.scale",
+     "op": "attn.cmp.norm.scale",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.row_qdq",
+     "op": "attn.cmp.row_qdq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.k_norm.sumsq",
+     "op": "attn.cmp.k_norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.k_norm.rsqrt",
+     "op": "attn.cmp.k_norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.k_norm.scale",
+     "op": "attn.cmp.k_norm.scale",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.cmp.k_rope_qdq",
+     "op": "attn.cmp.k_rope_qdq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L14.attn.idx.newkey",
+     "op": "attn.idx.newkey",
+     "cls": "COMPILER",
+     "unit": "index-key row append to HBM",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "svc_rs job writing the new index key row: job ABI not documented as a compiler ABI",
+     "compiler_gap": {
+      "module": "dsdv_svc_rs",
+      "port": "s_j job (index-key row write)",
+      "missing": "no svc job writes the new index key row into the HBM index cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op"
+     }
+    },
+    {
+     "id": "L14.attn.idx.score",
+     "op": "attn.idx.score",
+     "cls": "COMPILER",
+     "unit": "index-key scan q.k -> scores",
+     "die_instances": {
+      "dsdv_idx_rg3": 7
+     },
+     "next": "die has the readers (score engine EL 124 a key); owed: reader job header emission (qi) + walker windows in the svc/controller calendar, bound to the idxrd3 bench (S81-IDXRD-1021 campaign PASS / MUT FAIL)",
+     "compiler_gap": {
+      "module": "bind_p4l3_g8 (no index-score unit)",
+      "port": "HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s",
+      "missing": "no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats (lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges"
+     }
+    },
+    {
+     "id": "L14.attn.idx.topk_merge",
+     "op": "attn.idx.topk_merge",
+     "cls": "SHARED_L0B",
+     "unit": "TP4 merge of local selections (end-slice lep)",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "cross-die collective rows (same endpoint ABI as the vpx all-gathers, TOK.DS.XDIE)",
+     "compiler_gap": {
+      "module": "u_s_4S rstop V receive -> end-slice lep",
+      "port": "bk_sel egress kind 5 words",
+      "missing": "no path carries the bk_sel IDX words to an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81"
+     }
+    },
+    {
+     "id": "L14.attn.gather",
+     "op": "attn.gather",
+     "cls": "COMPILER",
+     "unit": "selected-row gather (svc HBM read by index, bk_col frames)",
+     "die_instances": {
+      "dsdv_bk_col": 1,
+      "dsdv_svc_rs": 14
+     },
+     "next": "bk_col + svc_rs on die; owed: index-list row-read job + bk_col frame emission (TOK.DS.BENCH.4.4)",
+     "compiler_gap": {
+      "module": "dsdv_svc_rs / dsdv_bk_col",
+      "port": "svc row-read job by index list + bk_col frames",
+      "missing": "no svc job reads HBM rows by a runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)"
+     }
+    },
+    {
+     "id": "L14.attn.window_load",
+     "op": "attn.window_load",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.rows_allgather",
+     "op": "attn.rows_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L14.attn.scores",
+     "op": "attn.scores",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.max",
+     "op": "attn.max",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.exp",
+     "op": "attn.exp",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.den",
+     "op": "attn.den",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.pv",
+     "op": "attn.pv",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.sink",
+     "op": "attn.sink",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.normalize",
+     "op": "attn.normalize",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L14.attn.out_allreduce",
+     "op": "attn.out_allreduce",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+      "port": "owner fold ((p0+p1)+(p2+p3))",
+      "missing": "RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has no encoder yet (vs fork) and the RS row ownership is not placed"
+     }
+    },
+    {
+     "id": "L14.substage_hop0",
+     "op": "substage_hop0",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L14.ffn.router_allgather",
+     "op": "ffn.router_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    }
+   ]
+  },
+  "L20": {
+   "lowering": "prog_L20_su/lowering.json",
+   "status_counts": {
+    "PARTIAL": 55,
+    "GAP": 29
+   },
+   "classes": {
+    "HW_GAP": 12,
+    "COMPILER": 12,
+    "SHARED_L0B": 5
+   },
+   "gaps": [
+    {
+     "id": "L20.attn.cmp.norm.sumsq",
+     "op": "attn.cmp.norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.kv_norm.sumsq",
+     "op": "attn.kv_norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.kv_norm.rsqrt",
+     "op": "attn.kv_norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.kv_norm.scale",
+     "op": "attn.kv_norm.scale",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.kv_rope_qdq",
+     "op": "attn.kv_rope_qdq",
+     "cls": "HW_GAP",
+     "unit": "KV RMSNorm(D 512) -> RoPE(64) -> FP8 QDQ",
+     "die_instances": {},
+     "next": "no unit on G7: vn y feeds only vq, xfin rstd finish is fixed D 5120 (L0B finding). Structural fix exists: codex/s81-kvq-bind-1021 KV_ENABLE (ot_s81_su_kv kvt/kve/qnh/qnr/kvq at s_3N leaf0 op 15), not in die.v",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.norm.rsqrt",
+     "op": "attn.cmp.norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.own_row_write",
+     "op": "attn.own_row_write",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.norm.scale",
+     "op": "attn.cmp.norm.scale",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.row_qdq",
+     "op": "attn.cmp.row_qdq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.k_norm.sumsq",
+     "op": "attn.cmp.k_norm.sumsq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.k_norm.rsqrt",
+     "op": "attn.cmp.k_norm.rsqrt",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.k_norm.scale",
+     "op": "attn.cmp.k_norm.scale",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.cmp.k_rope_qdq",
+     "op": "attn.cmp.k_rope_qdq",
+     "cls": "HW_GAP",
+     "unit": "compressor-row RMSNorm(D 512) / RoPE / FP8 QDQ",
+     "die_instances": {},
+     "next": "same missing unit class as KV: the su_kv job table must also accept the compressed rows (cmp k_norm/k_rope_qdq/row_qdq, cmp norm); nothing on G7 computes them",
+     "compiler_gap": {
+      "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+      "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+      "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+     }
+    },
+    {
+     "id": "L20.attn.idx.newkey",
+     "op": "attn.idx.newkey",
+     "cls": "COMPILER",
+     "unit": "index-key row append to HBM",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "svc_rs job writing the new index key row: job ABI not documented as a compiler ABI",
+     "compiler_gap": {
+      "module": "dsdv_svc_rs",
+      "port": "s_j job (index-key row write)",
+      "missing": "no svc job writes the new index key row into the HBM index cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op"
+     }
+    },
+    {
+     "id": "L20.attn.idx.score",
+     "op": "attn.idx.score",
+     "cls": "COMPILER",
+     "unit": "index-key scan q.k -> scores",
+     "die_instances": {
+      "dsdv_idx_rg3": 7
+     },
+     "next": "die has the readers (score engine EL 124 a key); owed: reader job header emission (qi) + walker windows in the svc/controller calendar, bound to the idxrd3 bench (S81-IDXRD-1021 campaign PASS / MUT FAIL)",
+     "compiler_gap": {
+      "module": "bind_p4l3_g8 (no index-score unit)",
+      "port": "HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s",
+      "missing": "no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats (lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges"
+     }
+    },
+    {
+     "id": "L20.attn.idx.topk_merge",
+     "op": "attn.idx.topk_merge",
+     "cls": "SHARED_L0B",
+     "unit": "TP4 merge of local selections (end-slice lep)",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "cross-die collective rows (same endpoint ABI as the vpx all-gathers, TOK.DS.XDIE)",
+     "compiler_gap": {
+      "module": "u_s_4S rstop V receive -> end-slice lep",
+      "port": "bk_sel egress kind 5 words",
+      "missing": "no path carries the bk_sel IDX words to an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81"
+     }
+    },
+    {
+     "id": "L20.attn.gather",
+     "op": "attn.gather",
+     "cls": "COMPILER",
+     "unit": "selected-row gather (svc HBM read by index, bk_col frames)",
+     "die_instances": {
+      "dsdv_bk_col": 1,
+      "dsdv_svc_rs": 14
+     },
+     "next": "bk_col + svc_rs on die; owed: index-list row-read job + bk_col frame emission (TOK.DS.BENCH.4.4)",
+     "compiler_gap": {
+      "module": "dsdv_svc_rs / dsdv_bk_col",
+      "port": "svc row-read job by index list + bk_col frames",
+      "missing": "no svc job reads HBM rows by a runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)"
+     }
+    },
+    {
+     "id": "L20.attn.window_load",
+     "op": "attn.window_load",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.rows_allgather",
+     "op": "attn.rows_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L20.attn.scores",
+     "op": "attn.scores",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.max",
+     "op": "attn.max",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.exp",
+     "op": "attn.exp",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.den",
+     "op": "attn.den",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.pv",
+     "op": "attn.pv",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.sink",
+     "op": "attn.sink",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.normalize",
+     "op": "attn.normalize",
+     "cls": "COMPILER",
+     "unit": "svc_rs attention over window + compressed/selected rows",
+     "die_instances": {
+      "dsdv_svc_rs": 14
+     },
+     "next": "lower_svc lowers sliding-window layers only; owed: compressed-row selection (index list from the readers) in the svc job table",
+     "compiler_gap": {
+      "module": "lower_svc",
+      "port": "fixtures",
+      "missing": "window-only layers (compressed-row selection not lowered here)"
+     }
+    },
+    {
+     "id": "L20.attn.out_allreduce",
+     "op": "attn.out_allreduce",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+      "port": "owner fold ((p0+p1)+(p2+p3))",
+      "missing": "RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has no encoder yet (vs fork) and the RS row ownership is not placed"
+     }
+    },
+    {
+     "id": "L20.substage_hop0",
+     "op": "substage_hop0",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    },
+    {
+     "id": "L20.ffn.router_allgather",
+     "op": "ffn.router_allgather",
+     "cls": "SHARED_L0B",
+     "unit": "end-slice lep rows / owner fold",
+     "die_instances": {
+      "ot_s81sl_slice_lepw_mab_mu_72": 1
+     },
+     "next": "production row placement of the vpx endpoint ABI + out_allreduce fold: L0B lowers it for L0, reused here",
+     "compiler_gap": {
+      "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+      "port": "a_proj capture rows -> end slices",
+      "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+     }
+    }
+   ]
+  }
+ }
+}
