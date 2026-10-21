@@ -51,10 +51,17 @@ module ot_hbm_su_pgrg_pair #(
  assign {frow_l,fdat_l,rv5_l,ra5_l,dwr_l,dwd_l}=dl;
  wire [10:0] lid; wire [127:0] rdq; wire [281:0] lo; wire [5:0] brv; wire [53:0] bra; wire [0:0] bwv; wire [8:0] bwa;
  wire [31:0] bwd; wire [191:0] bq;
- wire [1:0] q_id=pos[3:2];
- wire [1:0] g_id=(MUT!=11)?pos[1:0]:2'(G);
- assign lid={4'd0,rpos[1],g_id,rpos[0],jpos};
- wire [6:0] st_lid={rpos[1],g_id,rpos[0],jpos};
+ // Static physical identity lands locally before the two-stage reset release.
+ // No transaction edge is added. An illegal runtime strap update is observed
+ // after this one capture edge, rather than through a long raw-input fault cone.
+ (* keep=1 *) reg [3:0] pos_q;
+ (* keep=1 *) reg [1:0] rpos_q;
+ (* keep=1 *) reg [2:0] jpos_q;
+ always @(posedge ck)begin pos_q<=pos;rpos_q<=rpos;jpos_q<=jpos;end
+ wire [1:0] q_id=pos_q[3:2];
+ wire [1:0] g_id=(MUT!=11)?pos_q[1:0]:2'(G);
+ assign lid={4'd0,rpos_q[1],g_id,rpos_q[0],jpos_q};
+ wire [6:0] st_lid={rpos_q[1],g_id,rpos_q[0],jpos_q};
  wire vi_re,vm_we,kv_we,ro_v,l_fault,l_coll; wire [23:0] vi_addr,vm_waddr,kv_waddr; wire [95:0] rd_addr; wire [3:0] rd_re;
  wire [7:0] rd_src; wire [31:0] vm_wdata,kv_wdata,ro_x;
  assign {vi_re,vm_we,kv_we,ro_v,l_fault,l_coll,vi_addr,vm_waddr,kv_waddr,rd_addr,rd_re,rd_src,vm_wdata,kv_wdata,ro_x}=lo;
