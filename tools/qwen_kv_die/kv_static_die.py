@@ -1660,7 +1660,6 @@ def rope_context_tiles(tiles):
     if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
         raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
     emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
-    emb['ports'].pop('d2d__svc', None)
     emb['ports']['i_host_record'] = dict(dir='input', width=549, cls='special', src=None)
     emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
                      '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
@@ -1682,17 +1681,16 @@ def rope_context_tiles(tiles):
         if pn not in emb['ports']:
             raise ValueError(f'KV RoPE: missing existing PC owner face {pn}')
         emb['ports'][pn]['expr'] = expr
-    emb['ports']['o_rope_px'] = dict(dir='output', width=35, cls='bundle', peer='kvs_ctl',
-        peer_port='i_rope_px', consumers=[], expr='{w_rope_epoch,w_rope_token,w_rope_start}')
+    # The CTL hardened module keeps its original service-word interface.
+    # Route the actual context fields through the embedding tile while every
+    # other D2D service field remains a real wire from that same service word.
+    emb['ports']['o_ctx_svc'] = dict(dir='output', width=174, cls='bundle', peer='kvs_ctl',
+        peer_port='d2d__svc', consumers=[],
+        expr='{d2d__svc[173:110],w_rope_token,d2d__svc[91:90],w_rope_epoch,d2d__svc[73:25],w_rope_start,d2d__svc[23:0]}')
     emb['ports']['emb_fault'] = dict(dir='output', width=1, cls='export', consumers=[], die=True, expr='w_rope_fault')
-    ctl['ports']['i_rope_px'] = dict(dir='input', width=35, cls='bundle', peer='kvs_emb')
-    replacements = {'.emb_start(d2d__svc[24:24])': '.emb_start(i_rope_px[0])',
-                    '.emb_token(d2d__svc[109:92])': '.emb_token(i_rope_px[18:1])',
-                    '.emb_epoch(d2d__svc[89:74])': '.emb_epoch(i_rope_px[34:19])'}
-    for old, new in replacements.items():
-        if sum(x.count(old) for x in ctl['body']) != 1:
-            raise ValueError(f'KV RoPE: actual fan root input not found once: {old}')
-        ctl['body'] = [x.replace(old, new) for x in ctl['body']]
+    if ctl['ports']['d2d__svc']['width'] != 174:
+        raise ValueError('KV RoPE: unexpected actual CTL service-word width')
+    ctl['ports']['d2d__svc'].update(cls='bundle', peer='kvs_emb')
     return tiles
 
 
@@ -1980,7 +1978,7 @@ def inject(m, K):
     if ROPE:
         fk.setdefault('hrec_tx', []).append(('kvs_emb', 'i_host_record'))
         rec['rope_context'] = dict(source='HOST rec_tx observed accepted CONTEXT', width=549,
-            owner='record[60:0]', position='owner[18:6]', start='kvs_emb -> kvs_ctl fanr', bundle=35)
+            owner='record[60:0]', position='owner[18:6]', start='kvs_emb.o_ctx_svc -> kvs_ctl.d2d__svc', bundle=174)
     for (dinst, dport), loads in nets.items():
         if dport == 'rsp':
             for (cd, cp) in loads:
