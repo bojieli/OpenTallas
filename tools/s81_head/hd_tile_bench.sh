@@ -31,7 +31,10 @@ fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
   for e in a0 a1 a2 a3 b; do for k in 0 1; do ln -sf $IMG/$3${e}_$k.viamap.hex $1/$2${e}_$k.viamap.hex; done; done
 }
-EXP_CYC_A=${EXP_CYC_A:-8381}   # measured go (spo input) -> spr output, 2-tile chain (bundle 8,357 + IOREG/SAFE 2 + spo + pins + 2 x tile fire (4) + spr (6))
+# Native successor: old measured 8375 -18 (8 systolic+1 pair+8 tree+1 join,
+# LAT/SK 8 -> 7) +1 element key +2 bundle tree +4 two tile keys +2 SPR key =8366.
+# Keep the strict cycle check; results/arch/s81_head_1021/NATIVE_TIMING.md records provenance.
+EXP_CYC_A=${EXP_CYC_A:-8366}
 run() {    # run NAME T0SRC T1SRC args...
   local N=$1 a=$2 b=$3; shift 3; local W=$O/scen_${N}_$M; mkdir -p $W
   ln -sf $IMG/xa.hex $W/xa.hex; ln -sf $IMG/xb.hex $W/xb.hex; link $W t0 $a; link $W t1 $b
