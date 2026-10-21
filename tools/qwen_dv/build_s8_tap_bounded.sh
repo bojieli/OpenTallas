@@ -23,3 +23,5 @@ python3 tools/qwen_dv/ctlm6_bound_macro.py "$out/tap.json" --top qfd_dv_s8_tap_s
 
 # Private TAP helper namespace avoids collision with existing red/sc bounded math.
 sed -i "s/qfd_bmath_/qfd_s8tap_bmath_/g" "$out/qfd_dv_s8_tap_bounded.sv" "$out/qfd_dv_s8_tap_bounded_helpers.sv"
+# Measured parent hw alias weights: retain existing edge/no-reset producer copies.
+python3 tools/qwen_dv/s8_tap_alias_copies.py "$out/qfd_dv_s8_tap_bounded.sv" --record "$out/hw_alias_copies.json"

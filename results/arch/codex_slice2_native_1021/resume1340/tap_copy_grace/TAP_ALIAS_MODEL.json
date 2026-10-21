@@ -1,0 +1,162 @@
+{
+  "groups": [
+    {
+      "original_instance": "u_114",
+      "original_q": "n_2028",
+      "C": "n_2",
+      "D": "n_3177",
+      "reset": null,
+      "hw_bits": [
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490
+      ],
+      "copies": [
+        "n_2028",
+        "n_2028_hwcopy1",
+        "n_2028_hwcopy2",
+        "n_2028_hwcopy3"
+      ],
+      "aliases_per_copy": 3,
+      "predicted_MAIN_loads": 12,
+      "predicted_FALLBACK_loads": 24
+    },
+    {
+      "original_instance": "u_115",
+      "original_q": "n_2029",
+      "C": "n_2",
+      "D": "n_3178",
+      "reset": null,
+      "hw_bits": [
+        491,
+        492,
+        493,
+        494,
+        495,
+        496,
+        497,
+        498,
+        499,
+        500,
+        501,
+        502
+      ],
+      "copies": [
+        "n_2029",
+        "n_2029_hwcopy1",
+        "n_2029_hwcopy2",
+        "n_2029_hwcopy3"
+      ],
+      "aliases_per_copy": 3,
+      "predicted_MAIN_loads": 12,
+      "predicted_FALLBACK_loads": 24
+    },
+    {
+      "original_instance": "u_116",
+      "original_q": "n_2030",
+      "C": "n_2",
+      "D": "n_3179",
+      "reset": null,
+      "hw_bits": [
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        510,
+        511,
+        512,
+        513,
+        514
+      ],
+      "copies": [
+        "n_2030",
+        "n_2030_hwcopy1",
+        "n_2030_hwcopy2",
+        "n_2030_hwcopy3"
+      ],
+      "aliases_per_copy": 3,
+      "predicted_MAIN_loads": 12,
+      "predicted_FALLBACK_loads": 24
+    },
+    {
+      "original_instance": "u_117",
+      "original_q": "n_2031",
+      "C": "n_2",
+      "D": "n_3180",
+      "reset": null,
+      "hw_bits": [
+        515,
+        516,
+        517,
+        518,
+        519,
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526
+      ],
+      "copies": [
+        "n_2031",
+        "n_2031_hwcopy1",
+        "n_2031_hwcopy2",
+        "n_2031_hwcopy3"
+      ],
+      "aliases_per_copy": 3,
+      "predicted_MAIN_loads": 12,
+      "predicted_FALLBACK_loads": 24
+    },
+    {
+      "original_instance": "u_118",
+      "original_q": "n_2032",
+      "C": "n_2",
+      "D": "n_3181",
+      "reset": null,
+      "hw_bits": [
+        527,
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535,
+        536,
+        537,
+        538
+      ],
+      "copies": [
+        "n_2032",
+        "n_2032_hwcopy1",
+        "n_2032_hwcopy2",
+        "n_2032_hwcopy3"
+      ],
+      "aliases_per_copy": 3,
+      "predicted_MAIN_loads": 12,
+      "predicted_FALLBACK_loads": 24
+    }
+  ],
+  "added_scalar_unreset_flops": 15,
+  "added_cycles": 0,
+  "original_C_D_Q_equations_preserved": true,
+  "exact_delta_restoration_byte_identical": true,
+  "qualification": "CONSTRUCTION_ONLY; requires executed source body/causal proof and combined actual native census",
+  "cold_grace_receipt": "results/arch/codex_slice2_native_1021/resume1340/tap_copy_grace/pass_d576/receipt.json",
+  "input_sha256": "bc7d1047d0f159855320900342be7e7832d2c11cacd60b698a2116067332cbd4",
+  "output_sha256": "6329a06edf462a113bc995d1b85642c13dc281191e864d4d6a10c71ac73f62c8"
+}
