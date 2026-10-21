@@ -1,0 +1,16 @@
+{
+ "source_commit": "f102e8cbcb36e0c5f757bb57c44267ee8ea45b38",
+ "design_reference": "02f43ebef existing independent ck,hck spines, read-only",
+ "sha256": {
+  "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v": "f25c44385d7e6a7aa5f5585fb08b96e0e0ccf8a03899ac6f08eb1c2d70018b2a",
+  "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": "6a295b47916004bd6fcb7b59cb075c46367a448301acec3dac34254084f0f337",
+  "physical/ref_tile/qkd_hr_ingest_shell_s3a/spec.json": "da5f858d47dac7438fd596e46294cb364561c883e6a99a517a22169dc6c853b1",
+  "physical/ref_tile/qkd_hr_ingest_shell_s3b/spec.json": "fd7ebb0f66ff8a89121b34b5beddb07277c55abced6b0c3d2088e3737011236b",
+  "physical/common_flow/clock_entries.tcl": "38031bf732132b5460c36a17f0273e9d577e0c76a8fe53ecc8df518643af9f9b",
+  "physical/common_flow/clock_spine.tcl": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+  "tools/ref_tile/clock_entry_constraints.py": "10d74860727b5c77288666ef4c86b2e1a40865a3951038d050692447a5a220c7",
+  "tools/ref_tile/ref_tile.py": "a50ad1284686eab73e644330de7d75bad9f945cf0302f5028e235c8a5a3e5937",
+  "reference02f43ebef:physical/qkd_kvs_kits/pc_sr11a_spine.tcl": "af0b521797e656d5f82ae30a09cc19b25bc24c3f836f0eb2146a5c32ca8c61c5",
+  "reference02f43ebef:physical/qkd_kvs_kits/pc_sr11b_spine.tcl": "d1e2493722276e8b4cf1cd3b125219c3b417efea979f4d9827473cf913e7196c"
+ }
+}
