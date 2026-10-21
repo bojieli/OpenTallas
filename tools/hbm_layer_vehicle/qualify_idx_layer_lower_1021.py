@@ -44,10 +44,13 @@ endmodule
 """.replace('SCALAR',f'{scalar:08x}').replace('SELECTED_Q_NORM_B_'+f'{scalar:08x}'+'_PASS','SELECTED_Q_NORM_B_SCALAR_PASS')
 (root/'selected_scalar_tb.sv').write_text(tb)
 rtl='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_vm_scalar_runtime_1021.sv'
-subprocess.run(['iverilog','-g2012','-s','tb','-o','scalar.vvp',rtl,'selected_scalar_tb.sv'],check=True)
-subprocess.run(['vvp','scalar.vvp'],check=True)
+vl=pathlib.Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
+version=subprocess.check_output([str(vl),'--version'],text=True).strip()
+assert '5.050' in version,version
+subprocess.run([str(vl),'--binary','--timing','-O1','-j','1','-Wno-fatal','--top-module','tb','--Mdir','obj_selected',rtl,'selected_scalar_tb.sv'],check=True)
+subprocess.run(['./obj_selected/Vtb'],check=True)
 report=dict(scope='selected_i10_scalar_bridge_component_only',qualifies_native_layer=False,qualifies_native_chain=False,
  i10=dict(status=x['status'],issues=x['issue_edges'],commands=x['commands'],reservations=x['reservations']),
- i42=g,fixture_O_used_as_stimulus=False,remaining=['selected_contract_binding','actual_VM_return_age','IDX_produced_index','native_SU_numerical_connected_run'])
+ i42=g,fixture_O_used_as_stimulus=False,verilator=version,remaining=['selected_contract_binding','actual_VM_return_age','IDX_produced_index','native_SU_numerical_connected_run'])
 (root/'qualification.json').write_text(json.dumps(report,indent=2)+'\n')
 print('IDX_LOWER_COMPONENT_PASS')

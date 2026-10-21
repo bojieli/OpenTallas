@@ -66,19 +66,21 @@
     "qualifies_native_chain": false
   },
   "fixture_O_used_as_stimulus": false,
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
   "remaining": [
     "selected_contract_binding",
     "actual_VM_return_age",
     "IDX_produced_index",
     "native_SU_numerical_connected_run"
   ],
+  "source_commit": "7bf0349aa",
   "source_sha256": {
     "tools/hbm_layer_vehicle/idx_layer_lower_1021.py": "238591afb43746fbf40e481b218c68b20419245aa0c0bdb14aa8c7387c17ae19",
     "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_vm_scalar_runtime_1021.sv": "f8a448841ad5df916304c92870532c8cd826b1c3f601bafde4f477610fb4828b",
-    "tools/hbm_layer_vehicle/qualify_idx_layer_lower_1021.py": "49b18ef57ce228eb6241a7f16db1a4315c7e64a578e58587ce2d999bd6375d94"
+    "tools/hbm_layer_vehicle/qualify_idx_layer_lower_1021.py": "fcb002405231c7bc13f4f79a59930ef25d2a1f55dfeeefc577ced70a4ccc1b4d"
   },
   "fixture_programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
-  "run": "/srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3",
+  "run": "/srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src4",
   "vm_bus_test_R": 4,
-  "test_R_note": "component interface test age4 only; selected die actual VMreturn age not established"
+  "test_R_note": "selected input component interface age4 only; actualselected VMreturn age unresolved"
 }
