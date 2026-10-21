@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.head.ctl-peer-bench.v1",
+  "source": "eb58f5989",
+  "fleet": "ot-epyc7",
+  "unit": "oth-ubuntu-432417-1792601893",
+  "result": "PASS",
+  "base": "2positions/2tokens,8248slices per stream exact at original cycles",
+  "mutants": {
+    "SLICE": "FAIL xa slice mismatch cycle191",
+    "TIE": "FAIL local best cycle9016; token/tie mismatches retained"
+  },
+  "added_cycles": 0,
+  "source_regeneration": "tools/s81_head/split_ctl_peer.py"
+}
