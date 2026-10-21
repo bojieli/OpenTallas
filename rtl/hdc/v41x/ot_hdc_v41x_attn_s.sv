@@ -1187,6 +1187,11 @@ module ot_hdc_v41x_attn_tr_x #(
     output wire [TD*18-1:0]  col,
     output wire [TD*18-1:0]  eib
 );
+`ifdef OT_SVC_TR_SRAM
+    ot_hdc_v41x_attn_tr_sram #(.TD(TD),.DPT(DPT),.NL(NL),.XOFF(XOFF)) u_sram (
+        .clk(clk),.rst_n(rst_n),.w_en_i(w_en_i),.w_half_i(w_half_i),.w_cnt_i(w_cnt_i),
+        .w_pad_i(w_pad_i),.w_g(w_g),.r_half_i(r_half_i),.r_c_i(r_c_i),.sel_i(sel_i),.qk_ib(qk_ib),.col(col),.eib(eib));
+`else
     localparam integer GW = 265;
     localparam integer NS = 2 * DPT;          // read positions (half, dim)
     localparam integer NR = 2 * TD;           // stored rows (half, row)
@@ -1240,4 +1245,5 @@ module ot_hdc_v41x_attn_tr_x #(
             assign eib[gs*18 +: 18] = e;
         end
     endgenerate
+`endif
 endmodule
