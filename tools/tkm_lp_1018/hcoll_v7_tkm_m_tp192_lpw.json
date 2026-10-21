@@ -1,0 +1,647 @@
+{
+ "name": "hcoll_v7_tkm_m_tp192_lpw",
+ "top": "ot_hgi_coll_tkm_m_tp192_lp",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_ctl.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86/ot_hgi_coll_tkm_tile_e86_bb.v"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_SW",
+ "clock_ports": [
+  "ck_SW",
+  "ck_NW",
+  "ck_NE",
+  "ck_SE"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_SW"
+   ],
+   "inputs": [
+    "rst_n",
+    "start",
+    "arg_mode",
+    "cfg_n",
+    "cfg_k",
+    "cfg_nout",
+    "cfg_g",
+    "cfg_gbase",
+    "cfg_pf",
+    "cfg_obase",
+    "cfg_rbase",
+    "cfg_has_r",
+    "del_slot",
+    "del_valid",
+    "del_flit"
+   ],
+   "outputs": [
+    "w_v",
+    "w_addr",
+    "w_mask",
+    "w_data",
+    "busy",
+    "done",
+    "fault",
+    "stat_cycles"
+   ]
+  },
+  "NW": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_NW"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "NE": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_NE"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "SE": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_SE"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/pl_tp192_1018/ot_hgi_coll_tkm_m_tp192_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck_SW"
+ },
+ "outline": {
+  "w": 2160.0,
+  "h": 2160.0,
+  "exact": true
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t0",
+   "at": [
+    86.4,
+    432.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t1",
+   "at": [
+    86.4,
+    777.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t2",
+   "at": [
+    86.4,
+    1123.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t3",
+   "at": [
+    86.4,
+    1468.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t4",
+   "at": [
+    86.4,
+    1814.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t5",
+   "at": [
+    432.0,
+    1814.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t6",
+   "at": [
+    432.0,
+    1468.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t7",
+   "at": [
+    432.0,
+    1123.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t8",
+   "at": [
+    432.0,
+    777.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t9",
+   "at": [
+    432.0,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t10",
+   "at": [
+    777.6,
+    432.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t11",
+   "at": [
+    777.6,
+    777.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t12",
+   "at": [
+    777.6,
+    1123.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t13",
+   "at": [
+    777.6,
+    1468.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t14",
+   "at": [
+    777.6,
+    1814.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t15",
+   "at": [
+    1123.2,
+    1814.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t16",
+   "at": [
+    1123.2,
+    1468.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t17",
+   "at": [
+    1123.2,
+    1123.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t18",
+   "at": [
+    1123.2,
+    777.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t19",
+   "at": [
+    1123.2,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t20",
+   "at": [
+    1123.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t21",
+   "at": [
+    1468.8,
+    86.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t22",
+   "at": [
+    1468.8,
+    432.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t23",
+   "at": [
+    1468.8,
+    777.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t24",
+   "at": [
+    1468.8,
+    1123.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t25",
+   "at": [
+    1468.8,
+    1468.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t26",
+   "at": [
+    1468.8,
+    1814.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t27",
+   "at": [
+    1814.4,
+    1814.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t28",
+   "at": [
+    1814.4,
+    1468.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t29",
+   "at": [
+    1814.4,
+    1123.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t30",
+   "at": [
+    1814.4,
+    777.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v7_tkm_m_tp192_lp/standin/ot_hgi_coll_tkm_tile_e86",
+   "count": 1,
+   "inst": "u_t31",
+   "at": [
+    1814.4,
+    432.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    820.8,
+    108.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    820.8,
+    216.0
+   ]
+  }
+ ],
+ "pins": {
+  "S": [
+   "w_data",
+   "w_mask",
+   "w_addr",
+   "w_v",
+   "busy",
+   "done",
+   "fault",
+   "stat_cycles",
+   "del_flit",
+   "del_valid",
+   "del_slot",
+   "start",
+   "arg_mode",
+   "rst_n",
+   "cfg_n",
+   "cfg_k",
+   "cfg_nout",
+   "cfg_g",
+   "cfg_gbase",
+   "cfg_pf",
+   "cfg_obase",
+   "cfg_rbase",
+   "cfg_has_r",
+   "ck_SE"
+  ],
+  "W": [
+   "ck_SW"
+  ],
+  "N": [
+   "ck_NW",
+   "ck_NE"
+  ],
+  "E": []
+ },
+ "pin_ranges": {
+  "w_data": [
+   90.0,
+   250.0
+  ],
+  "w_mask": [
+   252.0,
+   258.0
+  ],
+  "w_addr": [
+   260.0,
+   276.0
+  ],
+  "w_v": [
+   277.0,
+   277.5
+  ],
+  "busy": [
+   278.0,
+   278.5
+  ],
+  "done": [
+   279.0,
+   279.5
+  ],
+  "fault": [
+   280.0,
+   280.5
+  ],
+  "stat_cycles": [
+   282.0,
+   298.0
+  ],
+  "del_flit": [
+   305.0,
+   845.0
+  ],
+  "del_valid": [
+   847.0,
+   849.0
+  ],
+  "del_slot": [
+   850.0,
+   852.0
+  ],
+  "start": [
+   853.0,
+   853.5
+  ],
+  "arg_mode": [
+   854.0,
+   854.5
+  ],
+  "rst_n": [
+   855.0,
+   855.5
+  ],
+  "cfg_n": [
+   857.0,
+   863.0
+  ],
+  "cfg_k": [
+   864.0,
+   871.0
+  ],
+  "cfg_nout": [
+   872.0,
+   879.0
+  ],
+  "cfg_g": [
+   880.0,
+   884.0
+  ],
+  "cfg_gbase": [
+   885.0,
+   889.0
+  ],
+  "cfg_pf": [
+   890.0,
+   898.0
+  ],
+  "cfg_obase": [
+   899.0,
+   919.0
+  ],
+  "cfg_rbase": [
+   920.0,
+   940.0
+  ],
+  "cfg_has_r": [
+   941.0,
+   941.5
+  ],
+  "ck_SE": [
+   1652.6,
+   1652.8999999999999
+  ],
+  "ck_SW": [
+   517.7,
+   518.0
+  ],
+  "ck_NW": [
+   616.0,
+   616.3
+  ],
+  "ck_NE": [
+   1652.6,
+   1652.8999999999999
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 256,
+  "pin_v": "M5",
+  "pin_h": "M4 M6",
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "HBM-TP192 10-20: every data/control port has a face flop inside the ctl leaf (ot_hgi_coll_tkm_ctl pin stage: in + out); the rest are region clocks / reset"
+ },
+ "structural_change": "PL-TP192 10-18 landed-regions standard: tkm_static's 32-tile chain + buffer + calendar body re-built as a landed parent (lp.py): 4 quadrant regions (842-um, one TritonCTS tree each), 7 chain seams pre-scheduled in the ctl calendar (SETTLE+42, per-segment conv strobes) and LANDED (14 landings, 4-slot, +3 edges, no backpressure); flat lockstep + golden benches. HBM-TP192 10-20 after gate4 FAIL 8: ctl face flops on every port + all IO on the S face (reach), ctl ingress/re-read pipeline PIPE 4 (depth), kept registered enables/selects (4,226-load capture net)",
+ "job": {
+  "owner": "Claude HBM-TP192 1020",
+  "branch": "claude/hbm-tp192-1020",
+  "tag": "tp192_1020",
+  "purpose": "HBM d4g tkm_SW sub-cluster (TP192 top-k merge, 32 x e86) as a landed parent",
+  "submit": false,
+  "extra_paths": [
+   "results/arch/pl_tp192_1018"
+  ],
+  "hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until hcoll_v7_tkm_tile_e86 closes",
+  "benches": [
+   {
+    "name": "tkm_tp192_lp_lockstep",
+    "expect": "pass",
+    "cmd": "LP_ROOT=$PWD SIM=verilator MAKEFLAGS='--eval=.NOTPARALLEL: hier_build' LP_VFLAGS='--timing --hierarchical rtl/hbm_accel/generic/collective/tkm/tkm_tp192_hier.vlt -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT' bash rtl/hbm_accel/generic/collective/tkm/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"
+   },
+   {
+    "name": "tkm_tp192_seg_golden",
+    "expect": "pass",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_seg.sh bench_out/golden"
+   }
+  ]
+ },
+ "inter": []
+}

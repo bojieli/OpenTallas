@@ -1,0 +1,83 @@
+{
+  "scope": "Saved repaired CTS ODB diagnostic; no new candidate gate, repair, or adoption. Actual single-corner FF STA plus separate Tcl scene-copy negatives; full multi-scene route regression remains ROOT review.",
+  "source": "2647ca5e8",
+  "remote_root": "ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1_die_candidate-20261019-090447",
+  "odb_sha256": "c09e9cfada896e0f321e01d0e75b49e4219608de1552a9f950f009180f07aea8",
+  "signoff_sdc_sha256": "8fd489371c707e2902325c977bdcbdca718abd66f20de8147919ea3d84dc2dd8",
+  "probe_sha256": "b4f76232cd8be21173ac42051794d48e82a94fe992ecaa86b4bafa45f4a0f0a1",
+  "measurements": {
+    "platform": {
+      "internal_hold": 15.867085,
+      "refmax": 605.486816,
+      "refmin": 581.743103,
+      "live_min": 581.743103,
+      "out_hold": 108.839714,
+      "inputs": 722.0,
+      "outputs": 451.0,
+      "C": 25.0,
+      "U": 25.0,
+      "relief": 0.0
+    },
+    "calibrated_stale_negative": {
+      "internal_hold": 30.159374,
+      "refmax": 605.486816,
+      "refmin": 581.743103,
+      "live_min": 502.827545,
+      "out_hold": 30.318581,
+      "inputs": 722.0,
+      "outputs": 451.0,
+      "C": 25.0,
+      "U": 25.0,
+      "relief": 0.0
+    },
+    "calibrated_fresh": {
+      "internal_hold": 30.159374,
+      "refmax": 522.309875,
+      "refmin": 500.491913,
+      "live_min": 500.491913,
+      "out_hold": 111.569756,
+      "inputs": 722.0,
+      "outputs": 451.0,
+      "C": 25.0,
+      "U": 25.0,
+      "relief": 0.0
+    },
+    "restored": {
+      "internal_hold": 15.867085,
+      "refmax": 605.486816,
+      "refmin": 581.743103,
+      "live_min": 581.743103,
+      "out_hold": 108.839714,
+      "inputs": 722.0,
+      "outputs": 451.0,
+      "C": 25.0,
+      "U": 25.0,
+      "relief": 0.0
+    }
+  },
+  "unchanged_budgets": {
+    "launch_C_ps": 25,
+    "hold_U_ps": 25,
+    "setup_uncertainty_ps": 60,
+    "route_relief_ps": 0,
+    "repair_margin_ps": 30
+  },
+  "original_pre_repair_log": {
+    "reference_max_ps": 605.486816,
+    "reference_min_ps": 581.743103,
+    "before_RC_WNS_ps": -8.44,
+    "after_RC_stale_WNS_ps": -64.19,
+    "inserted_hold_buffers": 3645
+  },
+  "no_change": [
+    "RTL",
+    "geometry",
+    "native TT/FF reference census",
+    "guard admission policy",
+    "child clock boundary references",
+    "reset landing2",
+    "hold uncertainty",
+    "setup uncertainty",
+    "repair margin"
+  ]
+}

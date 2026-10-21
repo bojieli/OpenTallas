@@ -1,0 +1,87 @@
+{
+  "top": "ot_s81_kp4_dec_native_flat",
+  "sources": [
+    "rtl/dsrom_sys/s81_link/native/ot_s81_kp4_dec_native_flat.sv"
+  ],
+  "child_sources": [
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+    "rtl/common/landed_parent/ot_pl_land.sv"
+  ],
+  "out_dir": "rtl/dsrom_sys/s81_link/lp",
+  "record_dir": "results/arch/serdes_native_1019",
+  "clock_ports": [
+    "clk"
+  ],
+  "clock_pins": [
+    "clk",
+    "ck"
+  ],
+  "reset_port": "rst_n",
+  "reset_pins": [
+    "rst_n"
+  ],
+  "D": 4,
+  "E": 2,
+  "regions": [
+    {
+      "name": "syn",
+      "insts": [
+        "u_syn",
+        "u_face_p_v",
+        "u_face_p_d",
+        "u_face_lock",
+        "u_face_n_relock"
+      ],
+      "centre": [
+        151.2,
+        151.2
+      ]
+    },
+    {
+      "name": "dly",
+      "insts": [
+        "u_dly"
+      ],
+      "centre": [
+        162,
+        376
+      ]
+    },
+    {
+      "name": "chn",
+      "insts": [
+        "u_chn",
+        "u_face_n_corr",
+        "u_face_n_unc"
+      ],
+      "centre": [
+        410.4,
+        140.4
+      ]
+    },
+    {
+      "name": "out",
+      "insts": [
+        "u_out",
+        "u_face_q*"
+      ],
+      "centre": [
+        469.8,
+        375.8
+      ]
+    }
+  ],
+  "bench": {
+    "cycles": 1500,
+    "reset_cycles": 16,
+    "sim": "verilator"
+  },
+  "mut_child": "u_syn"
+}

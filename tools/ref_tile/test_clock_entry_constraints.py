@@ -65,3 +65,36 @@ class BoundData(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class SeamWindows(unittest.TestCase):
+    """HBM-PGSTREAM-B 10-19: opt-in landed seam windows of a related_pll_ratio leaf ('' without the key)."""
+    def spec(self):
+        return {'kind': 'tile', 'clock': 'multiple_cts_roots', 'clock_port': 'pg_clk', 'clock_ports': ['pg_clk', 'clk_ctl'],
+                'clock_data_paths': 'related_pll_ratio',
+                'clock_relationship': {'kind': 'same_pll_fixed_phase', 'ratio': [4, 3], 'phase_ps': 0},
+                'seam_windows': [{'name': 'req', 'launch': 'clk_ctl', 'capture': 'pg_clk', 'from': ['*u_bq.rq_b0*'],
+                                  'setup_q': 4, 'hold_q': 2, 'why': 'bank n written 4n, read 4n+4..6'}]}
+
+    def test_absent_is_empty_and_present_emits_path_delays(self):
+        s = self.spec()
+        sdc = C.seam_window_sdc(s)
+        self.assertIn('set_max_delay [expr {4 * $ot_sw_q}] -from $ot_sw_f -to $ot_sw_t', sdc)
+        self.assertIn('set_min_delay [expr {-2 * $ot_sw_q}] -from $ot_sw_f -to $ot_sw_t', sdc)
+        self.assertIn('get_clocks ot_entry_0', sdc)
+        self.assertIn('OT_SEAM_WINDOW: req bank patterns match no cell', sdc)
+        self.assertEqual(C.landed_sdc(s, '.'), sdc)
+        del s['seam_windows']
+        self.assertEqual(C.seam_window_sdc(s), '')
+        self.assertEqual(C.landed_sdc(s, '.'), '')
+
+    def test_rejects(self):
+        for mut, rx in [(lambda s: s.update(clock_data_paths='independent'), 'related_pll_ratio'),
+                        (lambda s: s['seam_windows'][0].update(setup_q=1), 'setup_q'),
+                        (lambda s: s['seam_windows'][0].update(hold_q=1), 'hold_q'),
+                        (lambda s: s['seam_windows'][0].update(capture='clk_ctl'), 'two different'),
+                        (lambda s: s['seam_windows'][0].update(**{'from': ['u_bq.rq_b0[0]']}), 'cell globs'),
+                        (lambda s: s['seam_windows'][0].pop('why'), 'exactly')]:
+            s = self.spec(); mut(s)
+            with self.assertRaisesRegex(ValueError, rx):
+                C.seam_window_sdc(s)

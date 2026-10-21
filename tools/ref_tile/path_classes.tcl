@@ -1,6 +1,8 @@
 # pre_route_gate.py --cts: worst setup path classes after CTS (placement parasitics).  Run in the ORFS image with the
 # case dir at /work: groups the 300 worst setup endpoints by (start kind -> end kind), kind = in (port), reg, macro,
 # out (port), and prints one GATE_PC line per class with the count and the worst slack.
+# CROSS-CLOCK GATE (CX-IJ-ROOT 10-18): exception recorders first, so every read_sdc below is seen; GATE_XCLK at the end
+source [file join [file dirname [file normalize [info script]]] cross_clock_paths.tcl]
 set base [lindex [glob /work/results/asap7/*/base] 0]
 set plat /OpenROAD-flow-scripts/flow/platforms/asap7
 read_lef $plat/lef/asap7_tech_1x_201209.lef
@@ -45,3 +47,5 @@ foreach p [find_timing_paths -path_delay max -group_path_count 300 -endpoint_pat
 }
 dict for {k v} $cls { lassign $v n w e; puts [format "GATE_PC %-12s %4d paths, worst slack %.1f ps (e.g. %s)" $k $n $w $e] }
 puts "GATE_PC setup WNS [sta::worst_slack_cmd max] hold WNS [sta::worst_slack_cmd min]"
+# Same-tile reg->reg crossings between two clocks, under the signoff SDC just read (multi-clock tiles; one clock: scope only)
+ot_xclk_report

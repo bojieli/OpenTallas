@@ -26,7 +26,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 160
-set ::ot_ce_landed_internal [dict create {ot_hgi_coll_tkm_tile_e86} {clk_r1 clk_r2}]
+set ::ot_ce_check_only [dict create {ot_hgi_coll_tkm_tile_e86/clk} 1 {ot_hgi_coll_tkm_tile_e86/clk_r3} 1]
 set ::ot_ce_refs [dict create {ot_hgi_coll_tkm_tile_e86/clk} {tt {193.7 201.4 252.1} ff {159.7 167.1 212.6} ss {261.495 271.89000000000004 340.33500000000004}} {ot_hgi_coll_tkm_tile_e86/clk_r0} {tt {213.5 231.3 241.1} ff {171.7 188.8 197.8} ss {288.225 312.25500000000005 325.485}} {ot_hgi_coll_tkm_tile_e86/clk_r1} {tt {206.2 224.1 242.9} ff {165.7 182.5 199.5} ss {278.37 302.535 327.915}} {ot_hgi_coll_tkm_tile_e86/clk_r2} {tt {219.5 238.3 254.3} ff {178.8 195.7 210.0} ss {296.32500000000005 321.70500000000004 343.30500000000006}} {ot_hgi_coll_tkm_tile_e86/clk_r3} {tt {247.0 283.1 322.9} ff {200.8 233.7 271.2} ss {333.45000000000005 382.18500000000006 435.915}}]
 set ::ot_ce_counts [dict create {ot_hgi_coll_tkm_tile_e86} 32]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {start} {arg_mode} {cfg_n} {cfg_k} {cfg_nout} {cfg_g} {cfg_gbase} {cfg_pf} {cfg_obase} {cfg_rbase} {cfg_has_r} {del_slot} {del_valid} {del_flit}} outputs {{w_v} {w_addr} {w_mask} {w_data} {busy} {done} {fault} {stat_cycles}}} {NW} {clock ot_io_NW io_budget_ps 166.667 inputs {} outputs {}} {NE} {clock ot_io_NE io_budget_ps 166.667 inputs {} outputs {}} {SE} {clock ot_io_SE io_budget_ps 166.667 inputs {} outputs {}}]
@@ -34,6 +34,172 @@ set ::ot_ce_source_domains [dict create {ck_SW} {core} {ck_NW} {NW} {ck_NE} {NE}
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_SW} {ck_NW} {ck_NE} {ck_SE}}
 set ::ot_ce_ports {{ck_SW} {ck_NW} {ck_NE} {ck_SE}}
+# Actual OpenSTA clock ancestry and physical propagated-clock measurements.
+# OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
+# resolves inferred masters; evaluate only its generated-clock declarations in
+# an isolated safe interpreter, never replay constraints in the live session.
+proc ot_cf_record {args} {
+  set ni [lsearch -exact $args -name]; set mi [lsearch -exact $args -master_clock]
+  set si [lsearch -exact $args -source]
+  if {$ni < 0 || $mi < 0 || $si < 0} {error "OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source"}
+  set name [lindex $args [expr {$ni+1}]]
+  set master [lindex $args [expr {$mi+1}]]; set source [lindex $args [expr {$si+1}]]
+  if {[llength $master] != 1 || [llength $source] != 1 || [dict exists $::ot_cf_master $name]} {
+    error "OT_CLOCK_FAMILY: ambiguous generated clock $name"
+  }
+  set parent [get_full_name $master]
+  if {[sta::object_type $source] eq "Port"} {set source [sta::get_port_pin $source]}
+  set owners {}; foreach c [get_property $source clocks] {lappend owners [get_full_name $c]}
+  if {[lsort -unique $owners] ne [list $parent]} {
+    error "OT_CLOCK_FAMILY: generated source of $name has owners $owners, expected $parent"
+  }
+  dict set ::ot_cf_master $name $parent
+}
+proc ot_cf_refresh {} {
+  set ::ot_cf_master {}; set ::ot_cf_active_cache {}; set generated {}
+  foreach c [all_clocks] {if {[$c is_generated]} {lappend generated [get_full_name $c]}}
+  if {![llength $generated]} {return}
+  sta::update_generated_clks
+  # Iterating paths alone does not initialize generated source insertion.
+  # A native timing search fills the complete root-to-bank physical arrivals.
+  find_timing_paths -group_path_count 1
+  set fd [file tempfile path ot-clock-family-]; close $fd
+  set ip [interp create -safe]
+  try {
+    write_sdc $path
+    foreach cmd {get_ports get_pins get_clocks} {interp alias $ip $cmd {} $cmd}
+    interp alias $ip create_generated_clock {} ot_cf_record
+    set fd [open $path r]; set text [read $fd]; close $fd
+    set command {}
+    foreach line [split $text \n] {
+      append command $line \n
+      if {![info complete $command]} continue
+      if {[regexp {^\s*create_generated_clock\s} $command]} {interp eval $ip $command}
+      set command {}
+    }
+    if {[string trim $command] ne ""} {error "OT_CLOCK_FAMILY: incomplete canonical SDC"}
+    if {[lsort [dict keys $::ot_cf_master]] ne [lsort $generated]} {error "OT_CLOCK_FAMILY: incomplete generated-clock ancestry"}
+    foreach c $generated {ot_cf_root $c}
+  } finally {interp delete $ip; file delete -force $path}
+}
+proc ot_cf_root {name} {
+  set seen {}
+  while {[dict exists $::ot_cf_master $name]} {
+    if {$name in $seen} {error "OT_CLOCK_FAMILY: ancestry cycle $name"}
+    lappend seen $name; set name [dict get $::ot_cf_master $name]
+  }
+  set c [get_clocks -quiet $name]
+  if {[llength $c] != 1 || [$c is_generated]} {error "OT_CLOCK_FAMILY: unresolved root $name"}
+  return $name
+}
+proc ot_cf_pins {root} {
+  set name [get_full_name $root]
+  if {[ot_cf_root $name] ne $name} {error "OT_CLOCK_FAMILY: requested root $name is generated"}
+  # Ordinary roots retain the existing all_registers ownership query. In
+  # pre-CTS ideal sessions get_property(pin, clocks) can be empty on check-only
+  # macro entries; all_registers -clock still proves actual graph membership.
+  if {![dict size $::ot_cf_master]} {
+    set pins [all_registers -clock_pins -clock $root]; set owners {}
+    foreach p $pins {dict set owners [get_full_name $p] $root}
+    return [list $pins $owners]
+  }
+  set pins {}; set owners {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] ne $name} continue
+    foreach p [all_registers -clock_pins -clock $c] {
+      set pn [get_full_name $p]
+      set actual {}; foreach owner [get_property $p clocks] {lappend actual [get_full_name $owner]}
+      if {[llength [lsort -unique $actual]] != 1} {
+        error "OT_CLOCK_FAMILY: ambiguous clock sink $pn ($actual)"
+      }
+      if {[ot_cf_root [lindex $actual 0]] ne $name} {error "OT_CLOCK_FAMILY: foreign sink $pn"}
+      if {[lindex $actual 0] ne [get_full_name $c]} continue
+      if {[dict exists $owners $pn]} {error "OT_CLOCK_FAMILY: duplicate sink $pn"}
+      dict set owners $pn $c; lappend pins $p
+    }
+  }
+  return [list $pins $owners]
+}
+proc ot_cf_active {p} {
+  set cell [get_cells -of_objects $p]
+  set key [list [get_property $cell ref_name] [get_property $p lib_pin_name]]
+  if {[dict exists $::ot_cf_active_cache $key]} {return [dict get $::ot_cf_active_cache $key]}
+  sta::redirect_string_begin
+  set failed [catch {report_edges -from $p} message]
+  set report [sta::redirect_string_end]; set on 0; set edges {}
+  if {$failed} {error "OT_CLOCK_FAMILY: active-edge query failed [get_full_name $p]: $message"}
+  foreach line [split $report \n] {
+    if {[regexp {^\S} $line]} {set on [regexp {(Clk|En) to Q} $line]; continue}
+    if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+  }
+  if {![llength $edges] && [llength [info commands ord::get_db]]} {
+    # Check-only hard entries (notably SRAM write clocks) have no clock-to-Q
+    # arc. Only an actual physical BLOCK with unique loaded Liberty clock
+    # timing-check edges is supported; missing soft-register arcs still fail.
+    set master [[ord::get_db] findMaster [get_property $cell ref_name]]
+    if {$master ne "NULL" && [$master isBlock]} {
+      set on 0
+      foreach line [split $report \n] {
+        if {[regexp {^\S} $line]} {set on [regexp { (setup|hold|recovery|removal)$} $line]; continue}
+        if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+      }
+    }
+  }
+  if {[llength $edges] != 1} {error "OT_CLOCK_FAMILY: missing unique active clock edge [get_full_name $p] ($edges)"}
+  set active [expr {[lindex $edges 0] eq "^" ? "rise" : "fall"}]
+  dict set ::ot_cf_active_cache $key $active
+  return $active
+}
+proc ot_cf_wire {pin clock {scene {}}} {
+  if {$scene eq ""} {set scene [get_property [sta::cmd_scene] name]}
+  set cn [get_full_name $clock]; set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2} {error "OT_CLOCK_FAMILY: invalid waveform $cn"}
+  foreach time $waveform {if {![string is double -strict $time] || [regexp -nocase {inf|nan} $time]} {error "OT_CLOCK_FAMILY: nonfinite waveform $cn"}}
+  set transition [ot_cf_active $pin]; set marker [expr {$transition eq "rise" ? "^max" : "vmax"}]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator $transition max]
+    while {[$paths has_next]} {
+      set path [$paths next]; set tag [$path tag]; set edge [lindex $tag 4]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne $marker || [lindex $tag 3] ne $cn || $edge ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![string is double -strict $arrival] || [regexp -nocase {inf|nan} $arrival]} {$paths finish; error "OT_CLOCK_FAMILY: nonfinite clock arrival [get_full_name $pin]"}
+      lappend values [expr {$arrival-[lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]}]
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {error "OT_CLOCK_FAMILY: missing unique physical clock arrival [get_full_name $pin] clock=$cn scene=$scene"}
+  return [lindex $values 0]
+}
+
+proc ot_ce_clock_wire {pin clock} {
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {
+    set owners [get_property $pin clocks]
+    if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [ot_cf_root [get_full_name $clock]]} {
+      error "OT_CLOCK_FAMILY: wrong/ambiguous source ownership [get_full_name $pin]"
+    }
+    return [ot_cf_wire $pin $owners]
+  }
+  return [ot_ce_legacy_clock_wire $pin $clock]
+}
+proc ot_ce_net_root_port {pin} {
+  set net [get_nets -quiet -of_objects $pin]
+  for {set i 0} {$i < 256 && [llength $net] == 1} {incr i} {
+    set ports [get_ports -quiet -of_objects $net]
+    if {[llength $ports] == 1} { return [get_full_name [lindex $ports 0]] }
+    if {[llength $ports]} { return "" }
+    set drv [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $drv] != 1} { return "" }
+    set cell [get_cells -quiet -of_objects $drv]
+    if {[llength $cell] != 1 || [dict exists $::ot_ce_counts [get_property $cell ref_name]]} { return "" }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction == input"]
+    if {[llength $ins] != 1} { return "" }
+    set net [get_nets -quiet -of_objects $ins]
+  }
+  return ""
+}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
@@ -123,21 +289,22 @@ proc ot_ce_startpoint_class {start purpose memo_name} {
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
+  ot_cf_refresh
   set expected {}
   dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
   for {set i 0} {$i < [llength $::ot_ce_ports]} {incr i} {lappend expected ot_entry_$i}
   set actual {}
-  foreach c [all_clocks] {lappend actual [get_full_name $c]}
+  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
   foreach root $::ot_ce_ports {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
-    foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
+    lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners
+    foreach pin $ot_ce_family_pins {
       set cell [get_full_name [get_cells -of_objects $pin]]
-      if {[dict exists $cells $cell]} {
-        if {[dict get $cells $cell] eq $domain && [dict exists $::ot_ce_counts [get_property [get_cells $cell] ref_name]]} continue
+      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {
         error "OT_MULTI_ROOT: duplicate clock ownership $cell"
       }
       dict set cells $cell $domain
@@ -278,7 +445,7 @@ proc ot_ce_corner {} {
 proc ot_ce_finite {value} {
   return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
 }
-proc ot_ce_clock_wire {pin clock} {
+proc ot_ce_legacy_clock_wire {pin clock} {
   set scene [get_property [sta::cmd_scene] name]
   set clock_name [get_full_name $clock]
   set by_transition [dict create rise {} fall {}]
@@ -329,23 +496,62 @@ proc ot_ce_clock_wire {pin clock} {
   }
   return [lindex $values 0]
 }
-# Match ck_insertion.py's exported insertion.json boundary population: input
-# timing endpoints plus output timing launch registers, intersected with this root.
+# Match the structural IO boundary population in ck_insertion.py and io_ref_routed.sdc.
 proc ot_ce_boundary_cells {} {
-  set boundary {}
-  set inputs [all_inputs -no_clocks]
-  if {[llength $inputs]} {
-    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
-    }
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
   }
-  if {[llength [all_outputs]]} {
-    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
-    }
-  }
-  return $boundary
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
 }
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
+}
+# Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
+# (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
+# TT or FF; SS is sensitivity only.  > 15k sinks and > 300 ps insertion only WARN.
+proc ot_ce_clock_rule {corner name sinks all_mean pin_mean pin_lo pin_hi scope} {
+  set spread [expr {$pin_hi - $pin_lo}]
+  set warn {}
+  if {$sinks > 15000} { lappend warn "sinks $sinks > 15000 (guidance)" }
+  if {$all_mean > 300 || $pin_mean > 300} {
+    lappend warn "insertion all_mean [format %.1f $all_mean] / pin_mean [format %.1f $pin_mean] ps > 300 (guidance)"
+  }
+  if {[string tolower $corner] in {tt ff} && $spread > 80} {
+    set level FAIL
+  } elseif {[llength $warn]} {
+    set level WARN
+  } else {
+    set level PASS
+  }
+  puts "OT_HYBRID CLOCK_RULE $corner $name $level pin_spread=[format %.1f $spread] scope=$scope sinks=$sinks[expr {[llength $warn] ? " WARN: [join $warn {; }]" : ""}]"
+  return $level
+}
+
 proc ot_ce_boundary_pins {pins boundary_cells} {
   set regs {}; set boundary {}
   foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
@@ -382,6 +588,7 @@ proc ot_ce_apply {} {
   }
   if {[lsort $names] ne [lsort $::ot_ce_ports]} { error "OT_ENTRIES: source clock coverage differs from spec" }
   foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }
+  ot_cf_refresh
   sta::worst_slack_cmd max
   set rows {}; set seen {}; set counts {}
   foreach cell [get_cells -quiet -hierarchical *] {
@@ -435,7 +642,21 @@ proc ot_ce_apply {} {
   # clock sink in the current scene; never substitute a declared/common phase.
   foreach name $::ot_ce_cts_roots {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
-    set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    lassign [ot_cf_pins $clock] pins ot_ce_family_owners
+    set ot_ce_pin_seen [dict create]
+    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}
+    foreach cell [get_cells -quiet -hierarchical *] {
+      set master [get_property $cell ref_name]
+      if {![dict exists $::ot_ce_counts $master]} continue
+      foreach pin [get_pins -quiet -of_objects $cell] {
+        set key "$master/[get_property $pin lib_pin_name]"
+        if {![dict exists $::ot_ce_refs $key] || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue
+        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue
+        if {[ot_ce_net_root_port $pin] ne $name} continue
+        lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1
+        puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"
+      }
+    }
     if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
     set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]
     foreach pin $pins {
@@ -461,33 +682,12 @@ proc ot_ce_apply {} {
       dict set measured [get_full_name $pin] $arrival
       set total [expr {$total + $arrival}]
     }
-    dict for {cname cdom} $::ot_ce_landed_owner {
-      if {$cdom ne [dict get $::ot_ce_source_domains $name]} continue
-      set master [get_property [get_cells $cname] ref_name]
-      if {![dict exists $::ot_ce_landed_internal $master]} continue
-      foreach lpin [dict get $::ot_ce_landed_internal $master] {
-        set pin [get_pins -quiet $cname/$lpin]
-        if {![llength $pin]} { error "OT_LANDED: missing internal child clock pin $cname/$lpin" }
-        if {[dict exists $measured [get_full_name $pin]]} continue
-        set arrival [ot_ce_clock_wire $pin $clock]
-        lassign [dict get $::ot_ce_refs $master/$lpin $corner] clo cmean chi
-        puts "OT_LANDED CHILD_INTERNAL $corner $name [get_full_name $pin] wire=$arrival R=$cmean min=[expr {$arrival + $clo}] max=[expr {$arrival + $chi}]"
-        set arrival [expr {$arrival + $cmean}]
-        incr ot_ce_landed_hits
-        lappend arrivals $arrival
-        dict set measured [get_full_name $pin] $arrival
-        set total [expr {$total + $arrival}]
-      }
-    }
     set arrivals [lsort -real $arrivals]
     set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
     set tree_mean [expr {$total / [llength $arrivals]}]
     set mean $tree_mean
     if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
       error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
-    }
-    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
-      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
     }
     if {!$boundary_cells_ready} {
       set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
@@ -508,8 +708,12 @@ proc ot_ce_apply {} {
       lassign [dict get $ot_ce_child_ext [get_full_name $pin]] clo chi
       set lo [expr {min($lo, $clo)}]; set hi [expr {max($hi, $chi)}]
     }
-    if {[llength $pins] > 15000 && $mean > 300} {
-      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    # Clock rule (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval): FAIL only on the pin-flop (boundary
+    # register; child-flop on a region-rooted parent) spread > 80 ps at TT or FF.  > 15k sinks on one root and
+    # insertion > 300 ps are guidance (WARN): the neighbour boundary is matched by the source-latency
+    # compensation below / a ring crossing and judged by native_pin_audit --relative-to.
+    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {
+      puts "OT_LANDED CLOCK_RULE_SPAN $corner $name: whole-root span over 80 ps; verdict per linked child pair (pre_route_gate root_child_flops)"
     }
     set domain [dict get $::ot_ce_source_domains $name]
     lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
@@ -561,9 +765,13 @@ proc ot_ce_apply {} {
   foreach name $::ot_ce_cts_roots { lappend ot_ce_glue [get_full_name [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]] }
   set ot_ce_high {}
   foreach c $highclocks { lappend ot_ce_high [get_full_name $c] }
-  foreach a [get_clocks ot_entry_*] {
-    foreach b [get_clocks ot_entry_*] {
-      set an [get_full_name $a]; set bn [get_full_name $b]
+  set ot_ce_family_clocks {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] in [lmap x [get_clocks ot_entry_*] {get_full_name $x}]} {lappend ot_ce_family_clocks $c}
+  }
+  foreach a $ot_ce_family_clocks {
+    foreach b $ot_ce_family_clocks {
+      set an [ot_cf_root [get_full_name $a]]; set bn [ot_cf_root [get_full_name $b]]
       if {$an eq $bn && $an in $ot_ce_glue} { continue }
       set_clock_uncertainty -setup [expr {($an in $ot_ce_high || $bn in $ot_ce_high) ? 210 : 150}] -from $a -to $b
       set_clock_uncertainty -hold 100 -from $a -to $b

@@ -30,6 +30,14 @@
  },
  "pins": {
   "S": [
+   "w_data",
+   "w_mask",
+   "w_addr",
+   "w_v",
+   "busy",
+   "done",
+   "fault",
+   "stat_cycles",
    "del_flit",
    "del_valid",
    "del_slot",
@@ -48,15 +56,7 @@
    "ck_SE"
   ],
   "W": [
-   "w_v",
-   "w_addr",
-   "w_mask",
-   "w_data",
-   "ck_SW",
-   "busy",
-   "done",
-   "fault",
-   "stat_cycles"
+   "ck_SW"
   ],
   "N": [
    "ck_NW",

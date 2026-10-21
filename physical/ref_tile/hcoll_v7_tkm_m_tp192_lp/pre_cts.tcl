@@ -1,7 +1,7 @@
 # ref_tile PRE_CTS: independent related leaf CTS roots; measure each domain boundary after CTS
 set ::ot_ce_cts_roots {ck_SW ck_NW ck_NE ck_SE}
 set ::ot_ce_landed_cluster 1
-set ::ot_ce_landed_internal [dict create {ot_hgi_coll_tkm_tile_e86} {clk_r1 clk_r2}]
+set ::ot_ce_counts [dict create {ot_hgi_coll_tkm_tile_e86} 32]
 source /src/physical/common_flow/clock_entries.tcl
 source /src/physical/qwen_die_masters/repair_budget.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_tkm_m_tp192_lp",
+ "enable": false,
+ "reason": "HBM-TP192 10-20: every data/control port has a face flop inside the ctl leaf (ot_hgi_coll_tkm_ctl pin stage: in + out); the rest are region clocks / reset"
+}

@@ -4,6 +4,9 @@ default of main 6cd79a9f8 (physical/qwen_die_masters/pinflop_ref.tcl) whatever t
 tt_overlay.py brings the corner rule.  Patches, idempotently, in <SRC>:
   physical/qwen_die_masters/io_ref_skew.sdc        no / unmatched REFGLOB -> median input pin flop (else first register)
   physical/qwen_die_masters/mc/*/io_ref_skew.sdc   per clock: median pin flop of that clock's inputs
+PF-HOLDPAD (NATIVE-REF 2026-10-18): a file already carrying an older generation of the procs (3-hop search, raw
+hard-child clock pin arrival) has them replaced by PROCS_TCL's, and its reference arrival reads go through ot_pf_arr
+(pin arrival + a hard child's internal insertion).
 Sign-off SDCs are untouched.  usage: pinflop_overlay.py SRC PROCS_TCL   (prints one line per patched file)"""
 import sys
 from pathlib import Path
@@ -42,7 +45,46 @@ GLOB_NEW = 'if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference
 FALLBACK = "if {[llength $qdm_ref] == 0} { set qdm_ref [lindex [all_registers -clock_pins] 0] }"
 
 
+MARK = "PF-HOLDPAD"
+ARR = [("get_property $qdm_ref arrival_max_rise", "ot_pf_arr $qdm_ref max"),
+       ("get_property $qdm_ref arrival_min_rise", "ot_pf_arr $qdm_ref min"),
+       ("get_property $ref arrival_max_rise", "ot_pf_arr $ref max"),
+       ("get_property $ref arrival_min_rise", "ot_pf_arr $ref min")]
+
+
+def proc_end(lines, i):
+    """index of the closing column-0 brace of the proc whose header is lines[i]"""
+    return next(k for k in range(i + 1, len(lines)) if lines[k] == "}")
+
+
+def refresh(text, procs):
+    """PF-HOLDPAD: replace an older generation of the ot_pf_* procs by PROCS' and route the reference arrival reads
+    through ot_pf_arr; None when nothing changes"""
+    if MARK in text or "proc ot_pf_clks" not in text:
+        return None
+    lines = text.split("\n")
+    i = next(k for k, l in enumerate(lines) if l.startswith("proc ot_pf_clks"))
+    a = next((k for k in range(i - 1, -1, -1) if lines[k].startswith("# PINFLOP-REF (drive")), i)
+    last = max(k for k, l in enumerate(lines) if l.startswith(("proc ot_pf_ref", "proc ot_pf_median")))
+    b = proc_end(lines, last)
+    out = "\n".join(lines[:a] + procs.rstrip("\n").split("\n") + lines[b + 1:])
+    for o, n in ARR:
+        out = out.replace(o, n)
+    return out
+
+
 def patch(text, procs):
+    new = patch_gen(text, procs)
+    if new is not None:
+        r = refresh(new, procs)
+        if MARK in procs and MARK in new:     # procs inserted by patch_gen: arrival reads only
+            for o, n in ARR:
+                new = new.replace(o, n)
+        return new if r is None else r
+    return refresh(text, procs)
+
+
+def patch_gen(text, procs):
     lines = text.split("\n")
     if "proc ot_pf_median" not in text and "set qdm_ref {}" in lines and FALLBACK in lines:
         # the main die-master SDC, any generation (original / 6cd79a9f8 / e353cae1b): replace everything from the

@@ -31,29 +31,38 @@ OUTS = ["w_v", "w_addr", "w_mask", "w_data", "busy", "done", "fault", "stat_cycl
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--view", default=STANDIN)
+    ap.add_argument("--name", default=NAME, help="kit name (fallback: hcoll_v7_tkm_m_tp192_lpw)")
+    ap.add_argument("--pitch", type=float, default=P, help="child pitch um (fallback 345.6: 86.4-um channels)")
+    ap.add_argument("--tile", type=float, default=TILE, help="child outline um (259.2 e86v4; 302.4 e86v4b)")
     a = ap.parse_args()
+    P_, TILE_ = a.pitch, a.tile
+    W_ = round(2 * O + 5 * P_ + TILE_, 3)
+    sc = P_ / P
     lp = json.loads((ROOT / "tools/tkm_lp_1018/tkm_m_tp192_seg_lp.json").read_text())
     sites = lp["plan"]["sites"]
     standin = a.view == STANDIN
     kids = []
     for inst, (c, r) in sorted(sites.items(), key=lambda kv: int(kv[0][3:])):
-        kids.append(dict(view=a.view, count=1, inst=inst, at=[round(O + c * P, 3), round(O + r * P, 3)],
+        kids.append(dict(view=a.view, count=1, inst=inst, at=[round(O + c * P_, 3), round(O + r * P_, 3)],
                          orient="MX" if c % 2 == 0 else "R0"))
     sram = "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
-    pins = {"S": ["del_flit", "del_valid", "del_slot", "start", "arg_mode", "rst_n", "cfg_n", "cfg_k", "cfg_nout", "cfg_g",
-                  "cfg_gbase", "cfg_pf", "cfg_obase", "cfg_rbase", "cfg_has_r", "ck_SE"],
-            "W": ["w_v", "w_addr", "w_mask", "w_data", "ck_SW", "busy", "done", "fault", "stat_cycles"],
-            "N": ["ck_NW", "ck_NE"], "E": []}
-    rng = {"del_flit": [90.0, 640.0], "del_valid": [645.0, 650.0], "del_slot": [652.0, 657.0], "start": [660.0, 661.0],
-           "arg_mode": [662.0, 663.0], "rst_n": [664.0, 665.0], "cfg_n": [670.0, 700.0], "cfg_k": [702.0, 730.0],
-           "cfg_nout": [732.0, 760.0], "cfg_g": [762.0, 780.0], "cfg_gbase": [782.0, 800.0], "cfg_pf": [802.0, 840.0],
-           "cfg_obase": [842.0, 940.0], "cfg_rbase": [942.0, 1040.0], "cfg_has_r": [1042.0, 1043.0],
-           "ck_SE": [1446.0, 1446.3],
-           "w_v": [100.0, 101.0], "w_addr": [105.0, 200.0], "w_mask": [205.0, 245.0], "w_data": [250.0, 520.0],
-           "ck_SW": [539.0, 539.3], "busy": [560.0, 561.0], "done": [563.0, 564.0], "fault": [566.0, 567.0],
-           "stat_cycles": [570.0, 650.0], "ck_NW": [539.0, 539.3], "ck_NE": [1446.0, 1446.3]}
+    # HBM-TP192 10-20: every IO port on the S face under the SW core region (tkm_SW's die neighbour coll_SW is S), in
+    # data-flow order: egress (w_*, status) beside tile 0 / the output cell, ingress (del_*), then start / cfg.  The ctl
+    # registers every port at the face (face flops), so no register has two far fixed terminals (gate4: 754 um).
+    pins = {"S": ["w_data", "w_mask", "w_addr", "w_v", "busy", "done", "fault", "stat_cycles", "del_flit", "del_valid",
+                  "del_slot", "start", "arg_mode", "rst_n", "cfg_n", "cfg_k", "cfg_nout", "cfg_g", "cfg_gbase", "cfg_pf",
+                  "cfg_obase", "cfg_rbase", "cfg_has_r", "ck_SE"],
+            "W": ["ck_SW"], "N": ["ck_NW", "ck_NE"], "E": []}
+    rng = {"w_data": [90.0, 250.0], "w_mask": [252.0, 258.0], "w_addr": [260.0, 276.0], "w_v": [277.0, 277.5],
+           "busy": [278.0, 278.5], "done": [279.0, 279.5], "fault": [280.0, 280.5], "stat_cycles": [282.0, 298.0],
+           "del_flit": [305.0, 845.0], "del_valid": [847.0, 849.0], "del_slot": [850.0, 852.0], "start": [853.0, 853.5],
+           "arg_mode": [854.0, 854.5], "rst_n": [855.0, 855.5], "cfg_n": [857.0, 863.0], "cfg_k": [864.0, 871.0],
+           "cfg_nout": [872.0, 879.0], "cfg_g": [880.0, 884.0], "cfg_gbase": [885.0, 889.0], "cfg_pf": [890.0, 898.0],
+           "cfg_obase": [899.0, 919.0], "cfg_rbase": [920.0, 940.0], "cfg_has_r": [941.0, 941.5],
+           "ck_SE": [round(1446.0 * sc, 1), round(1446.0 * sc, 1) + 0.3], "ck_SW": [round(453.0 * sc, 1), round(453.0 * sc, 1) + 0.3],
+           "ck_NW": [round(539.0 * sc, 1), round(539.0 * sc, 1) + 0.3], "ck_NE": [round(1446.0 * sc, 1), round(1446.0 * sc, 1) + 0.3]}
     spec = dict(
-        name=NAME, top="ot_hgi_coll_tkm_m_tp192_lp", kind="cluster", diagnostic=standin,
+        name=a.name, top="ot_hgi_coll_tkm_m_tp192_lp", kind="cluster", diagnostic=standin,
         sources=[f"{C}/lp/ot_hgi_coll_tkm_m_tp192_lp.sv", f"{C}/ot_hgi_coll_tkm_ctl.sv", f"{C}/ot_hgi_coll_tkm_buffer.sv",
                  "rtl/lib/ot_rst_relay.sv", "rtl/common/landed_parent/ot_pl_land.sv", f"{sram}/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                  f"{a.view}/ot_hgi_coll_tkm_tile_e86_bb.v" if standin else f"{C}/ot_hgi_coll_tkm_static.sv"],
@@ -63,20 +72,22 @@ def main():
         clock_entry_domains=dict(
             core=dict(ratio=[1, 1], ports=["ck_SW"], inputs=[p for p in INS], outputs=[p for p in OUTS]),
             **{r: dict(ratio=[1, 1], ports=[f"ck_{r}"], inputs=[], outputs=[]) for r in ("NW", "NE", "SE")}),
-        landed_record=REC, reset_ports=["rst_n"],
-        outline=dict(w=1944.0, h=1944.0, exact=True), child_lattice_um=43.2, children=kids,
-        macros=[dict(view=sram, count=1, at=[734.4, 108.0]), dict(view=sram, count=1, at=[734.4, 216.0])],
+        landed_record=REC, reset_ports=["rst_n"], reset_landing=dict(enable=True, stages=2, clock="ck_SW"),
+        outline=dict(w=W_, h=W_, exact=True), child_lattice_um=43.2, children=kids,
+        macros=[dict(view=sram, count=1, at=[round(O + 2 * P_ + 43.2, 3), 108.0]), dict(view=sram, count=1, at=[round(O + 2 * P_ + 43.2, 3), 216.0])],
         pins=pins, pin_ranges=rng,
         route=dict(pd=0.5, threads=32, peak_ram_gb=256, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4, hold_margin_ns=0.03,
                    io_hold_margin_ns=0.03),
         recipe=4, inhold=False, outhold=False,
-        pin_regs=dict(enable=False, reason="every port is registered in the ctl leaf (del_flit beat / cfg capture / w_* "
-                                           "output regs) or is a region clock / reset"),
+        pin_regs=dict(enable=False, reason="HBM-TP192 10-20: every data/control port has a face flop inside the ctl leaf "
+                                           "(ot_hgi_coll_tkm_ctl pin stage: in + out); the rest are region clocks / reset"),
         structural_change="PL-TP192 10-18 landed-regions standard: tkm_static's 32-tile chain + buffer + calendar body "
                           "re-built as a landed parent (lp.py): 4 quadrant regions (842-um, one TritonCTS tree each), 7 "
                           "chain seams pre-scheduled in the ctl calendar (SETTLE+42, per-segment conv strobes) and LANDED "
-                          "(14 landings, 4-slot, +3 edges, no backpressure); flat lockstep + golden benches",
-        job=dict(owner="Claude PL-TP192 1018", branch="claude/pl-tp192-1018", tag="pl1018",
+                          "(14 landings, 4-slot, +3 edges, no backpressure); flat lockstep + golden benches. HBM-TP192 "
+                          "10-20 after gate4 FAIL 8: ctl face flops on every port + all IO on the S face (reach), ctl "
+                          "ingress/re-read pipeline PIPE 4 (depth), kept registered enables/selects (4,226-load capture net)",
+        job=dict(owner="Claude HBM-TP192 1020", branch="claude/hbm-tp192-1020", tag="tp192_1020",
                  purpose="HBM d4g tkm_SW sub-cluster (TP192 top-k merge, 32 x e86) as a landed parent",
                  submit=not standin, extra_paths=[str(Path(REC).parent)],   # the landed_record (ref_tile reads it in the loop)
                  **({"hold_merge": "diagnostic: e86 stand-in abstract (standin_from_gate.py) until "
@@ -87,7 +98,7 @@ def main():
                                    f"bash {C}/lp/ot_hgi_coll_tkm_m_tp192_lp_bench.sh bench_out/lockstep"),
                           dict(name="tkm_tp192_seg_golden", expect="pass", cmd=f"bash {C}/run_tp192_seg.sh bench_out/golden")]),
         inter=[])
-    out = ROOT / f"tools/tkm_lp_1018/{NAME}.json"
+    out = ROOT / f"tools/tkm_lp_1018/{a.name}.json"
     out.write_text(json.dumps(spec, indent=1) + "\n")
     print(out, len(kids), "children", "STANDIN (diagnostic)" if standin else a.view)
 

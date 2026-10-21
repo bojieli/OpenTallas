@@ -1,0 +1,168 @@
+{
+ "name": "s81dv_land_682",
+ "top": "dsfd_dvland_682",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+  "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_f"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rs",
+    "k"
+   ],
+   "outputs": [
+    "o",
+    "fault"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_f"
+   ],
+   "inputs": [
+    "i"
+   ],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 41.04,
+  "h": 114.48,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "i",
+   "ck_f"
+  ],
+  "W": [
+   "o",
+   "ck",
+   "fault"
+  ],
+  "N": [
+   "rs",
+   "k"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays / cfifo / Qwen qfd_landh): the RTL registers every data pin -- i is captured flop-first into the 4 ring slots on ck_f (the slots ARE the landing's capture flops, LANDING-CONTRACT L1), o and fault are flops on ck (flop-last, L2/L6); k is a static identity strap tied by the die binder (L7, case-analysed at die STA), rs the regional reset. A flow pin register would add a stage the die calendar (N + 1 + E + 1) does not price and, on i, would capture the lane on one clock before the ring, which is the stage the landing exists to replace."
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-DIE7/LAND 10-18: first hardened view of the S81 p4l lane-tail LANDING dsfd_dvland_682 (ot_s81_land W=682 D=4 KW=3; LANDING-CONTRACT L1-L7): ring of 4 slots written on the lane's forwarded clock ck_f (the slots ARE the capture flops, flop-first), read on the block root ck at slot (rc - K) mod 4 into the registered o (flop-last); k[2:0] = the per-lane identity strap K tied by the die binder; no ready / credit / occupancy (static calendar).  bind9 (claude/s81-die7-1018 3923ae6de, STRICT PASS): 12 inst: last station dsfd_dvrlyh_682_EW 4 / _WE 4 (MY) / _NS 4.  Faces: lane i + ck_f on E (from the last relay station, as the _EW relays), o + ck + fault on W (abutted to the receiving block), rs / k strap on N; one master per width, the die mirrors it (MY / MX) for the opposite lane direction.  Outline 41.04 x 114.48 um: data faces E/W sized from 683 pins at <= 6 pins/um (5.97/um on 114.48 um), depth from the estimated std area (~3432 flops + read mux) at util ~0.45.  Two CTS roots (multiple_cts_roots): ck_f (lane domain: i, ring slots, wc, epochs) and ck (core: rs, k, rc / warm / fault / o), related same frequency (one PLL, fixed-phase; the lane phase dL is the die's, checked by the die STA as the landing window MCP -setup E -hold D-1).  Slot write enables stay enable muxes as the RTL (the contract's per-slot ICG note is not adopted: no RTL change under the closed bind9; the Qwen qfd_landh kits do the same).  Recipe 4 flop-first, hold_budget die, M5 cap.",
+ "job": {
+  "owner": "Claude:S81-DIE7/LAND",
+  "branch": "claude/s81-die7-land-1018",
+  "tag": "l1",
+  "purpose": "S81 p4l lane-tail landing tile dsfd_dvland_682 (forwarded-clock ring D 4, read on the block root; 12 inst in bind9)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_dvland_682 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "landing_exact_sweep",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_682 --variant base --out {RUN}/bench_base/bench.json",
+    "expect": "pass",
+    "pass_regex": "LAND_BENCH PASS dsfd_dvland_682 base D=4 KW=3 sweep 36/36 slip-fault 4/4",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "naive_retime_mutant",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_682 --variant mut_naive --out {RUN}/bench_naive/bench.json",
+    "expect": "fail",
+    "fail_regex": "LAND_BENCH FAIL dsfd_dvland_682 mut_naive",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land/dsfd_dvland_682_mut_naive.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "read_slot_mutant",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_682 --variant mut_sel --out {RUN}/bench_sel/bench.json",
+    "expect": "fail",
+    "fail_regex": "LAND_BENCH FAIL dsfd_dvland_682 mut_sel",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land/dsfd_dvland_682_mut_sel.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81dv_land_682/views",
+  "record_to": "results/rtl/ref_tile/s81dv_land_682",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/land",
+   "tools/s81_dv/land_bench.py",
+   "results/arch/s81_dv_1016/landing/witness_land"
+  ]
+ }
+}
