@@ -1,0 +1,62 @@
+{
+ "status": "GEOMETRY_MODEL_ONLY",
+ "policy": {
+  "owner": "10-21~08:45",
+  "allowed_die_um": [
+   26000.0,
+   33000.0
+  ],
+  "allowed_mm2": 858.0,
+  "external_margin_required_um": 0.0,
+  "seal_ring": "approximately0.1mm INSIDEoutline; no further guesseddimension subtraction",
+  "evidence": "/home/ubuntu/.claude/projects/-home-ubuntu-OpenTallas/memory/owner-full-reticle-1021.md"
+ },
+ "source_base": "367859fca/dM",
+ "before_die_um": [
+  25470.4,
+  32464.72
+ ],
+ "die_um": [
+  25988.8,
+  32983.12
+ ],
+ "before_mm2": 826.8894042880002,
+ "die_mm2": 857.191709056,
+ "area_delta_pct": 3.664613987174259,
+ "remaining_lattice_slack_um": [
+  11.200000000000728,
+  16.87999999999738
+ ],
+ "block_shapes_changed": 0,
+ "compute_storage_inventory": "unchanged",
+ "added_vertical_corridors": [
+  [
+   3950.0,
+   129.6
+  ],
+  [
+   4800.0,
+   129.6
+  ],
+  [
+   20300.0,
+   129.6
+  ],
+  [
+   21170.0,
+   129.6
+  ]
+ ],
+ "added_horizontal_corridors": [
+  [
+   12480.0,
+   259.2
+  ],
+  [
+   19980.0,
+   259.2
+  ]
+ ],
+ "static_latency": "No cycle claim. ActualGEN/S4 required to price every moved source/sink and relay/landing",
+ "remaining": "S4 hop/capacity mustPASS; exactnewSU S2 source reuse thenstrictbind/clockreset/STA/IR, no failedgeometryroute"
+}

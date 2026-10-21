@@ -1,0 +1,884 @@
+{
+ "status": "GEOMETRY_MODEL_ONLY",
+ "reason": "Actual E VMS_SW uncarved428square blocks 1080um flaghop; SVG uncarved430square spans worst1.880 PCwindow",
+ "base": "88ba1e4de/planiM",
+ "die_um": [
+  25988.8,
+  32983.12
+ ],
+ "slots": [
+  {
+   "instance": "hb_vms_SW",
+   "slot": "grid_hb_vms_SW",
+   "master": "hfd_hgi_vms_glue_sw_t",
+   "before": [
+    12015.0,
+    10940.4,
+    428.112,
+    428.76
+   ],
+   "after": [
+    11993.4,
+    10918.8,
+    471.312,
+    471.96
+   ],
+   "old_usable_um2": 183557.30112000002,
+   "new_usable_um2": 183557.30112000002,
+   "segments_um": [
+    214.056,
+    214.38
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      214.056,
+      257.256
+     ],
+     "y_um": [
+      0,
+      471.96
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      471.312
+     ],
+     "y_um": [
+      214.38,
+      257.58
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW0",
+   "slot": "grid_svg_NW0",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    8800.272,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    8778.672,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW1",
+   "slot": "grid_svg_NW1",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    9937.08,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    9915.48,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW2",
+   "slot": "grid_svg_NW2",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    11073.888,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    11052.288,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW3",
+   "slot": "grid_svg_NW3",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    12210.696,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    12189.096,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW4",
+   "slot": "grid_svg_NW4",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    13347.504,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    13325.904,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW5",
+   "slot": "grid_svg_NW5",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    14484.312,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    14462.712,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW6",
+   "slot": "grid_svg_NW6",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    15621.12,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    15599.52,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_NW7",
+   "slot": "grid_svg_NW7",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    16757.928,
+    31131.44,
+    430.704,
+    430.92
+   ],
+   "after": [
+    16736.328,
+    31131.44,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW0",
+   "slot": "grid_svg_SW0",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    8800.272,
+    1420.76,
+    430.704,
+    430.92
+   ],
+   "after": [
+    8778.672,
+    1377.56,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW1",
+   "slot": "grid_svg_SW1",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    9937.08,
+    1420.76,
+    430.704,
+    430.92
+   ],
+   "after": [
+    9915.48,
+    1377.56,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW2",
+   "slot": "grid_svg_SW2",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    11073.888,
+    1420.76,
+    430.704,
+    430.92
+   ],
+   "after": [
+    11052.288,
+    1377.56,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW3",
+   "slot": "grid_svg_SW3",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    12210.696,
+    1420.76,
+    430.704,
+    430.92
+   ],
+   "after": [
+    12189.096,
+    1377.56,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW4",
+   "slot": "grid_svg_SW4",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    13347.504,
+    1420.76,
+    430.704,
+    430.92
+   ],
+   "after": [
+    13325.904,
+    1377.56,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW5",
+   "slot": "grid_svg_SW5",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    14484.312,
+    1615.16,
+    430.704,
+    430.92
+   ],
+   "after": [
+    14462.712,
+    1571.96,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW6",
+   "slot": "grid_svg_SW6",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    15621.12,
+    1615.16,
+    430.704,
+    430.92
+   ],
+   "after": [
+    15599.52,
+    1571.96,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  },
+  {
+   "instance": "svg_SW7",
+   "slot": "grid_svg_SW7",
+   "master": "ot_hbm_svc_sm_group_rel_id",
+   "before": [
+    16757.928,
+    1420.76,
+    430.704,
+    430.92
+   ],
+   "after": [
+    16736.328,
+    1377.56,
+    473.904,
+    474.12
+   ],
+   "old_usable_um2": 185598.96768,
+   "new_usable_um2": 185598.96768,
+   "segments_um": [
+    215.352,
+    215.46
+   ],
+   "reserved_channels": [
+    {
+     "kind": "feedthrough_relay_column",
+     "x_um": [
+      215.352,
+      258.552
+     ],
+     "y_um": [
+      0,
+      474.12
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    },
+    {
+     "kind": "feedthrough_relay_row",
+     "x_um": [
+      0,
+      473.904
+     ],
+     "y_um": [
+      215.46,
+      258.66
+     ],
+     "owner": "die",
+     "master_keepout": "hard placement + M5/M6 route"
+    }
+   ]
+  }
+ ],
+ "rtl_source": "unchanged",
+ "usable_area_change_um2": 0,
+ "hard_view_alias": false,
+ "dynamic_relocation": "Normal GEN first-fit rehomes XC/VMKS/smallfaults around grownSVG. Actual GEN placementcheck mandatory; not a static placementPASS.",
+ "physical_obligation": "Real hardened component must implement identical cross keepout and source/clock/latency; no synthetic CLOSED claim",
+ "remaining": "ActualGEN/P/Q/S4; no failedgeometry route"
+}

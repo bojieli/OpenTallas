@@ -1,0 +1,240 @@
+{
+ "status": "ACTUAL_FAILURE_GEOMETRY_REPAIR_MODEL",
+ "base_source": "5e0e107d5/Kcolh",
+ "why": "I/J max2.122/2.460 northSVG/WBK window9900/30800 plus VMflag1080/1120 hops across split rows",
+ "die_um": [
+  25988.8,
+  32983.12
+ ],
+ "northern_PC_and_CP_dy_um": -194.4,
+ "northern_WBK_dy_um": -432.0,
+ "actual10box_checks": [
+  {
+   "name": "wbk_NW",
+   "before": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 9785.448,
+    "y": 30543.912,
+    "o": "R0",
+    "w": 475.2,
+    "h": 475.2,
+    "rule": "grant slot wbk_NW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 9785.448,
+    "y": 30111.912,
+    "o": "R0",
+    "w": 475.2,
+    "h": 475.2,
+    "rule": "grant slot wbk_NW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "wbk_NE",
+   "before": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 15728.04,
+    "y": 30543.912,
+    "o": "R0",
+    "w": 475.2,
+    "h": 475.2,
+    "rule": "grant slot wbk_NE"
+   },
+   "after": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 15728.04,
+    "y": 30111.912,
+    "o": "R0",
+    "w": 475.2,
+    "h": 475.2,
+    "rule": "grant slot wbk_NE"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW2",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 11793.6,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 11793.6,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW0",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12101.4,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12101.4,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW1",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12403.8,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12403.8,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW3",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12101.4,
+    "y": 10783.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12711.6,
+    "y": 11415.6,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW4",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12403.8,
+    "y": 10783.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 11793.6,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW6",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12101.4,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12101.4,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW7",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12403.8,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12403.8,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "vmdel_SW5",
+   "before": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 11793.6,
+    "y": 10783.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "after": {
+    "m": "ot_hbm_svc_vmdel_lane_n",
+    "x": 12711.6,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 257.04,
+    "h": 108.0,
+    "rule": "region vmh_SW"
+   },
+   "overlaps": []
+  }
+ ],
+ "SW_VMDEL": "Eight actual leaves dedicated2x4 aboveVMS;3 lowerrow leaves moved. Same actual shapes/source/ports/clocks",
+ "north": "SVG/XC/VMKS normal regionplacement plus8matching reservedSVGframes; smallleaves keepout handled explicitly. Actual GEN channelaware legality mandatory",
+ "WBK": "OLD CURRENT SOURCE475.2 only; mandatory c9a189d12 newbody native/area/functional pending. Never reuse this box as qualified newbody.",
+ "WBK_newbody_selected": false,
+ "rtl_changes": 0,
+ "extra_cycle_credit": 0,
+ "remaining": "FreshactualsourceGEN/P/Q/S4; no failedgeometryroute. RequirednewWBK source/realmeasuredframe must be adopted later explicitly"
+}
