@@ -49,6 +49,10 @@ WIRE = re.compile(r'^\s*wire\s*(?:\[(\d+):(\d+)\])?\s*(\w+)\s*;')
 
 def width_of(expr, wires):
     expr = expr.strip()
+    if expr.startswith('{') and expr.endswith('}'):
+        # Class composition emits explicit bit concatenations, including spare
+        # tie inputs and distinct open-output nets; never infer these as 1 bit.
+        return sum(width_of(e, wires) for e in expr[1:-1].split(','))
     m = re.fullmatch(r"(\d+)'[dbh]\w+", expr)
     if m:
         return int(m.group(1))

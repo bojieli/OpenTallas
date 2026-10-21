@@ -2020,6 +2020,10 @@ def _relays_fanout(v, m, pitch=RELAY_PITCH_UM):
     _relays(v, m, pitch)
     if not legs:
         return
+    if _os_r.environ.get('OT_SPLIT_FWD_CLASSES') == '1':
+        from qwen_split.fwd_class_emit import merge_fanout
+        merge_fanout(m, legs)
+        return
     first = {ln: o for o, (_, _, _, ns) in legs.items() for ln in ns}
     merged, B = {}, []
     for bid, cl, bits, eps in m['buses']:
@@ -2916,6 +2920,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def relay_frame(bits, cl, bid=None):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
+        if _os_r.environ.get('OT_SPLIT_FWD_CLASSES') == '1':
+            from qwen_split.fwd_class_emit import reservation
+            return reservation(bits)
         span1 = bits * 0.048 + 4.0
         if (bid is not None and bid in _ew_bids and _os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1'
                 and bits > int(_os_r.environ.get('OT_SPLIT_FWD_LAND_BITS', '136'))):
@@ -4734,6 +4741,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             o[mn] = M
         return o
     v.masters = masters
+    if _os_r.environ.get('OT_SPLIT_FWD_CLASSES') == '1':
+        from qwen_split.fwd_class_emit import install
+        install(v, m)
     if GATE:
         # relay-data 2026-10-13: the release rule checked on the emitted die (the audit's measure: bounding box of the
         # net's pin centroids): no data net over RELAY_REACH_UM; a miss is an error, never a kept 'unrepaired' chain
@@ -5401,7 +5411,7 @@ def _pin_pos(v, m):
         if (inst, port) in extra:
             return extra[(inst, port)]
         i = by[inst]
-        c = cen.get(i.master, {}).get(port.lstrip('*'))
+        c = cen.get(i.master, {}).get(port.lstrip('*').split('[')[0])
         if c is None:
             return (i.cx, i.cy)
         x, y = c
@@ -5413,7 +5423,7 @@ def _pin_pos(v, m):
 
     def pin_ext(inst, port):
         """r10: half extents (x, y) of the port's pin group (a relay in front of it must leave the difference room)"""
-        return ext.get(by[inst].master, {}).get(port.lstrip('*'), (0.0, 0.0))
+        return ext.get(by[inst].master, {}).get(port.lstrip('*').split('[')[0], (0.0, 0.0))
     pos.ext = pin_ext
 
     def pin_face(inst, port):
