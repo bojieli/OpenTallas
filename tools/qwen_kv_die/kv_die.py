@@ -4074,6 +4074,12 @@ def _krs_top_lane(m, bid):
         ly = max(g[st][1], ak.y + ak.h) + (dy if e == 7 else dy - 216.0)
     rs_x = ec.x + (ec.w if ec.orient in ('MY', 'R180') else 0.0)
     off = dch if e in (4, 7) else dch + 216.0
+    # LEAD-KV 10-21: the ES6 K round trip is natural 81 > hardened 80 (a556); its lane overshoots the rs face by 864 um
+    # and comes back.  The ECTL must stay beside its stack (re-homing it broke the 1559-b stack-local tp words, 7 mm);
+    # OT_KV_KRS_TOP_CH_<st><g> sets that one word's lane offset, OT_KV_KRS_TOP_LANE_<st><g>=0 drops its lane.
+    if _os.environ.get(f'OT_KV_KRS_TOP_LANE_{st}{e}', '1') != '1':
+        return None
+    off = float(_os.environ.get(f'OT_KV_KRS_TOP_CH_{st}{e}', off))
     cx = rs_x + (off if rs_x > ak.x + ak.w / 2 else -off)
     ry = ec.y + ec.h / 2
     return [(ak.x + ak.w / 2, ly), (cx, ly), (cx, ry)]
