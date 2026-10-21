@@ -25,5 +25,21 @@
     "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_reset9.sv": "417d968d6baf230fd03d20695689ec05983827c730bb968639b27604690cb7f3",
     "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_attw1_r9.sv": "d9205908c2b6a3ab6a070de90b5f4404ba237f09655e3476736f030c67de584a",
     "rtl/dsrom_sys/s81_dv/svc_rs/attw/lp/dsdv_svc_attw_n1_r9_lp.sv": "e2ee4dff8d64b33749a2ea56b1ed1b759d8059088bb334572ed614e3f69d772d"
+  },
+  "mapped_actual_ASR_load_fixture": {
+    "unit": "1669915-1792621889 ep7",
+    "baseline": {
+      "status": "FAIL",
+      "max": 16384,
+      "violations": 1,
+      "roles": 0
+    },
+    "candidate": {
+      "status": "PASS",
+      "max": 32,
+      "violations": 0,
+      "roles": 0
+    },
+    "scope": "Actual asynchronous-assert/two-edge-release helper plus16384realRESETN loads; component only, not actualwholecore native."
   }
 }

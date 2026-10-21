@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_reset_asr_native
+ot-run: ot-epyc7       admits    84 GB (avail 353, growth 294, headroom 0, waiters 0/0 GB) load 44/96 running 13 disk 4432 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_reset_asr_native
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_reset_asr_native
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_reset_asr_native
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_reset_asr_native
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_reset_asr_native
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1669915-1792621889 after 1 s
+RESET9_NATIVE baseline FAIL 16384 1 0
+RESET9_NATIVE candidate PASS 32 0 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1669915-1792621889): exit 0
