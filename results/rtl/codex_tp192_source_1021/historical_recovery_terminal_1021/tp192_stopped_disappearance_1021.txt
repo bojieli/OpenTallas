@@ -1,0 +1,16 @@
+2026-10-21T11:56:19-07:00
+    PID    PPID STAT   RSS COMMAND
+ActiveState=inactive
+Result=success
+MemoryCurrent=[not set]
+MemoryPeak=[not set]
+MemoryMax=infinity
+Oct 21 11:56:20 ot-epyc7 sudo[3150367]: ubuntu :  PWD=/home/ubuntu ; USER=root ; COMMAND=/usr/bin/journalctl --since 2026-10-21 11:25:00 --no-pager --grep 1575411|1575733|earlyoom|sending SIGTERM -n 55
+Oct 21 11:54:33 ot-epyc7 earlyoom[10622]: process 1575733 exited after 57.205 seconds
+Oct 21 11:54:33 ot-epyc7 systemd[10858]: oth-ubuntu-1575411-1792603778.scope: Consumed 56min 9.742s CPU time over 1h 24min 54.545s wall clock time, 490.2G memory peak.
+Oct 21 11:54:33 ot-epyc7 earlyoom[10622]: kill_release: pid=1575733: process_mrelease pidfd=4 success
+Oct 21 11:54:13 ot-epyc7 sudo[3112993]: ubuntu :  PWD=/srv/opentallas-scratch/claude/closure-loop/hbm_pdie_ucie_colf-ucie5f-b5f0313fd/src ; USER=root ; COMMAND=/usr/bin/journalctl -u earlyoom --since @1792608823 --no-pager -q -o json
+Oct 21 11:53:36 ot-epyc7 earlyoom[10622]: kill_release: pid=1575733: process_mrelease pidfd=4 failed: Invalid argument
+Oct 21 11:53:36 ot-epyc7 earlyoom[10622]: sending SIGTERM to process 1575733 uid 1000 "verilator_bin": oom_score 1252, oom_score_adj 0, VmRSS 501011 MiB, cmdline "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin -f /srv/opentallas-scratch/claude/hbm-tp192/out_lockstep_29586c/obj0/Vtb_ot_hgi_coll_tkm_m_tp192_lp__hierMkArgs.f"
+Oct 21 11:51:12 ot-epyc7 sudo[3044773]: ubuntu :  PWD=/srv/opentallas-scratch/claude/closure-loop/hbm_pdie_ucie_colf-ucie5f-b5f0313fd/src ; USER=root ; COMMAND=/usr/bin/journalctl -u earlyoom --since @1792605201 --no-pager -q -o json
+Oct 21 11:49:39 ot-epyc7 sudo[2998461]: ubuntu :  PWD=/srv/opentallas-scratch/claude/closure-loop/dscoll_lane_e_s8nq-s8nq-67cd98218/src ; USER=root ; COMMAND=/usr/bin/journalctl -u earlyoom --since @1792589638 --no-pager -q -o json

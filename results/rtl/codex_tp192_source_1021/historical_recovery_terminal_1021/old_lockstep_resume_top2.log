@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-tp192-lockstep-resume-1021
+ot-run: ot-epyc7       admits   713 GB (avail 586, growth 87, headroom 0, waiters 0/0 GB) load 61/96 running 21 disk 4664 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-tp192-lockstep-resume-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-tp192-lockstep-resume-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-tp192-lockstep-resume-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-tp192-lockstep-resume-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-tp192-lockstep-resume-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1575411-1792603778 after 1 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1575411-1792603778): exit 137

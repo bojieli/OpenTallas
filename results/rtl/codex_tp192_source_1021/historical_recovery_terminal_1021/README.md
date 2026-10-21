@@ -1,0 +1,5 @@
+Historical old-source full-parent recovery terminated by infrastructure; no functional verdict.
+
+Exact EP7 scope oth-ubuntu-1575411-1792603778, Verilator1575733, oldsource src_29586fca9, output out_lockstep_29586c/obj0. Original partial child objects retained. In-place resource cap400→512GiB did not restart build. Guarded SIGSTOP11:25:19 at490.25GiB; lastverifiedT11:52:50. Hostearlyoom sentTERM11:53:36 atmemavail2.97%, SIGKILL11:53:40, exit11:54:33. No CONT or cancellation by source owner/fleet. Client exit137, Verilator signal9 receipt. No positivebench executed. Five subsequent64GiB replays on samehost matured38.5GiBeach;512GiBsoftreservation and aggregatecappedgrowth did not protect futureheadroom. Fleet audit/accounting cleaned terminal11:56:01. No restart authorized.
+
+This historical unselected source vehicle is separate from source candidate native32 controller and its completed exactedge minimumcomponent benchmark. No hardware functional failure or new closure claim follows from this resource termination.
