@@ -126,6 +126,9 @@ module dsdv_svc_att_core #(
     input  wire [1:0]           qrv,
     input  wire [2*256-1:0]     qr_data,
     input  wire [2*17-1:0]      qr_tag,
+`ifdef OT_SVC_TAG_N32
+    input wire[143:0]qr_offset_codes_i,
+`endif
     input  wire [2*4-1:0]       qr_beat,
     // score beat -> score exchange leaf
     output wire                 l_v,
@@ -447,6 +450,13 @@ module dsdv_svc_att_core #(
     // the engine sees the identical word on the identical cycle (0 cycles added).  Side information (lane mask, window /
     // need / scale byte, live copy) is registered on the same edge.
     reg [2:0] lw_v; reg [9:0] lw_a [0:2]; reg [255:0] lw_d [0:2];
+`ifdef OT_SVC_TAG_N32
+    wire[143:0]offset_one[0:1],offset_two[0:1];
+    for(genvar tp=0;tp<2;tp=tp+1)begin:g_offset144
+      dsdv_svc_offset144_n32 u_one(.codes(qr_offset_codes_i[72*tp+:72]),.banks({256'd0,qr_data[256*tp+:256]}),.word_out(offset_one[tp]));
+      dsdv_svc_offset144_n32 u_two(.codes(qr_offset_codes_i[72*tp+:72]),.banks({qr_data[256*tp+:256],hold[tp]}),.word_out(offset_two[tp]));
+    end
+`endif
     integer lk;
     always @(*) begin
         lw_v = '0;
@@ -461,9 +471,19 @@ module dsdv_svc_att_core #(
             end else if (qrv[lk] && tg[16:15] == 2'd2) begin
                 lw_a[lk] = 10'(wcount) + tg[9:0];
                 if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*lk +: 4] == 4'd0) begin
-                    lw_v[lk] = 1'b1; lw_d[lk] = {112'd0, 144'(qr_data[256*lk +: 256] >> o144[7:0])};
+                    lw_v[lk] = 1'b1;
+`ifdef OT_SVC_TAG_N32
+                    lw_d[lk]={112'd0,offset_one[lk]};
+`else
+                    lw_d[lk] = {112'd0, 144'(qr_data[256*lk +: 256] >> o144[7:0])};
+`endif
                 end else if (qr_beat[4*lk +: 4] == 4'd1) begin
-                    lw_v[lk] = 1'b1; lw_d[lk] = {112'd0, 144'(two >> o144[7:0])};
+                    lw_v[lk] = 1'b1;
+`ifdef OT_SVC_TAG_N32
+                    lw_d[lk]={112'd0,offset_two[lk]};
+`else
+                    lw_d[lk] = {112'd0, 144'(two >> o144[7:0])};
+`endif
                 end
             end
         end
@@ -933,6 +953,22 @@ module dsdv_svc_att #(
     output wire [15:0] pio_o, pvo_o, jc_o, output wire [1:0] st_o,
     output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
 );
+`ifdef OT_SVC_TAG_N32
+    wire[143:0]pqr_offset_codes;
+`ifndef OT_SVC_LAND_SRAM
+    initial $error("TAG_N32 requires actual landing SRAM");
+`endif
+`ifdef OT_SVC_ATT_PINREG
+    for(genvar tp=0;tp<2;tp=tp+1)begin:g_tag_port
+      for(genvar b=0;b<18;b=b+1)begin:g_code_copy
+        ot_hdc_v41x_kreg #(.W(4),.R(0))u_c(.clk(clk),.rst_n(1'b1),.d(qr_tag[17*tp+10+:4]),.q(pqr_offset_codes[72*tp+4*b+:4]));
+      end
+    end
+`else
+    initial $error("TAG_N32 requires existing ATT PINREG edge");
+    assign pqr_offset_codes=144'd0;
+`endif
+`endif
 `ifdef OT_SVC_ATT_PINREG
     reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
     reg [1:0] pqrk, pqwd, pqrv; reg [2*256-1:0] pqr_data; reg [2*17-1:0] pqr_tag; reg [2*4-1:0] pqr_beat;
@@ -954,6 +990,9 @@ module dsdv_svc_att #(
         .clk(clk), .rst_n(rst_n), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
         .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
         .qrq(qrq), .qrk(pqrk), .qwd(pqwd), .qrv(pqrv), .qr_data(pqr_data), .qr_tag(pqr_tag), .qr_beat(pqr_beat),
+`ifdef OT_SVC_TAG_N32
+        .qr_offset_codes_i(pqr_offset_codes),
+`endif
         .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault_c),

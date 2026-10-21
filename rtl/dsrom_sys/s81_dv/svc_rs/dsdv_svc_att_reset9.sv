@@ -22,6 +22,22 @@ module dsdv_svc_att_reset9 #(
     output wire [15:0] pio_o, pvo_o, jc_o, output wire [1:0] st_o,
     output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
 );
+`ifdef OT_SVC_TAG_N32
+    wire[143:0]pqr_offset_codes;
+`ifndef OT_SVC_LAND_SRAM
+    initial $error("TAG_N32 requires actual landing SRAM");
+`endif
+`ifdef OT_SVC_ATT_PINREG
+    for(genvar tp=0;tp<2;tp=tp+1)begin:g_tag_port
+      for(genvar b=0;b<18;b=b+1)begin:g_code_copy
+        ot_hdc_v41x_kreg #(.W(4),.R(0))u_c(.clk(clk),.rst_n(1'b1),.d(qr_tag[17*tp+10+:4]),.q(pqr_offset_codes[72*tp+4*b+:4]));
+      end
+    end
+`else
+    initial $error("TAG_N32 requires existing ATT PINREG edge");
+    assign pqr_offset_codes=144'd0;
+`endif
+`endif
 `ifdef OT_SVC_ATT_PINREG
     reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
     reg [1:0] pqrk, pqwd, pqrv; reg [2*256-1:0] pqr_data; reg [2*17-1:0] pqr_tag; reg [2*4-1:0] pqr_beat;
@@ -45,6 +61,9 @@ module dsdv_svc_att_reset9 #(
         .clk(clk), .rst_n(rst_n), .reset_leaf(reset_leaf9), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
         .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
         .qrq(qrq), .qrk(pqrk), .qwd(pqwd), .qrv(pqrv), .qr_data(pqr_data), .qr_tag(pqr_tag), .qr_beat(pqr_beat),
+`ifdef OT_SVC_TAG_N32
+        .qr_offset_codes_i(pqr_offset_codes),
+`endif
         .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault_c),

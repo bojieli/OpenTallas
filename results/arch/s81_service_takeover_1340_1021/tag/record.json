@@ -1,0 +1,41 @@
+{
+  "status": "ACTUAL_EXTRACT_MECHANISM_PASS_NOT_FULLCORE",
+  "model_before_source": "9462e1812 TAG_MODEL.md",
+  "source_flag": "OT_SVC_TAG_N32 defaultabsent; requires existingOT_SVC_ATT_PINREG+OT_SVC_LAND_SRAM; actualexternalATTportsunchanged",
+  "mechanism": "18kept4bit offsetcodecopies perPC at existingpin-registeredge; fixedbyte-local onehotdecode/extract forone/twosectors; canonicaltype/beat/bounds/hold/writepriority untouched. No added edge or responseformat change.",
+  "proof": {
+    "unit": "1752922-1792622572 ep7",
+    "comparisons": 32000,
+    "codes": "all16/ffff",
+    "errors": 0,
+    "stimulus": "back-to-backcodeupdates, zero/fullscale/random new+held sectors; originalarithoffset/rightshift independentreference including unusedoutofbound-one-sector cases"
+  },
+  "paired_native": {
+    "baseline": {
+      "max": 1307,
+      "violations": 8,
+      "roles": 0,
+      "status": "FAIL"
+    },
+    "candidate": {
+      "max": 18,
+      "violations": 0,
+      "roles": 0,
+      "status": "PASS"
+    }
+  },
+  "actual_lib_component_area_um2": {
+    "baseline": 373.78746,
+    "candidate": 438.59556,
+    "delta_per_PC": 64.8081,
+    "scope": "All5actualLibs used; includes equal512data-capture FF. TwoPC mechanismdelta129.6162 +retaining8canonicalcodeFF~2.3328 =model131.949um2 before fullcoremapping. Notphysicalslot/geometry proof."
+  },
+  "open": [
+    "actual selectedPINREG1 LP hierarchy terminal",
+    "actual caller/PINREG numerical mechanism and fullcore native",
+    "restcontrol/reset/math source repairs",
+    "physical/clock/calendar/G4slot fit with actualsource"
+  ],
+  "immutable_prior": "7a reset-source fullATTunit3097102 continues unchanged; cannot qualify this TAG/PSELsource",
+  "helper_sha256": "9e8fddd36b13312610e370ff81262881c96baf846918f51fbb13431d6b3c9084"
+}

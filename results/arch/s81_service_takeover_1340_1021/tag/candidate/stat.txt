@@ -1,0 +1,37 @@
+
+17. Printing statistics.
+
+=== tag_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     3514        - wires
+     6163        - wire bits
+      152        - public wires
+     2801        - public wire bits
+        6        - ports
+      805        - port bits
+     3742  438.596 cells
+       20        -   $scopeinfo
+      584  170.294   DFFHQNx1_ASAP7_75t_R
+      156    6.823   INVx1_ASAP7_75t_R
+      205   11.956   NAND2xp33_ASAP7_75t_R
+      108    7.873   NAND3xp33_ASAP7_75t_R
+      162   14.172   NAND4xp25_ASAP7_75t_R
+       45    2.624   NOR2xp33_ASAP7_75t_R
+       45    3.281   NOR3xp33_ASAP7_75t_R
+      345   30.181   NOR4xp25_ASAP7_75t_R
+       36    6.299   OA222x2_ASAP7_75t_R
+       25    2.187   OAI211xp5_ASAP7_75t_R
+       22    2.245   OAI221xp5_ASAP7_75t_R
+      100    14.58   OAI222xp33_ASAP7_75t_R
+     1777  155.452   OAI22xp33_ASAP7_75t_R
+       55    4.811   OR3x1_ASAP7_75t_R
+       57    5.817   OR4x1_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\tag_gate': 438.595560
+     of which used for sequential elements: 170.294400 (38.83%)
+

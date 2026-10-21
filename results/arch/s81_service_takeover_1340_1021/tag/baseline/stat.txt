@@ -1,0 +1,40 @@
+
+17. Printing statistics.
+
+=== tag_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     3314        - wires
+     4120        - wire bits
+        7        - public wires
+      813        - public wire bits
+        6        - ports
+      805        - port bits
+     3595  373.787 cells
+      149   13.035   A2O1A1Ixp33_ASAP7_75t_R
+        5    0.656   A2O1A1O1Ixp25_ASAP7_75t_R
+       38    3.324   AO21x1_ASAP7_75t_R
+        5    0.583   AO32x1_ASAP7_75t_R
+      143    12.51   AOI211xp5_ASAP7_75t_R
+      356   25.952   AOI21xp33_ASAP7_75t_R
+       91    7.961   AOI22xp33_ASAP7_75t_R
+       11    0.962   AOI31xp33_ASAP7_75t_R
+       32    3.266   AOI32xp33_ASAP7_75t_R
+      516  150.466   DFFHQNx1_ASAP7_75t_R
+      338   14.784   INVx1_ASAP7_75t_R
+      384   22.395   NAND2xp33_ASAP7_75t_R
+       32    2.333   NAND3xp33_ASAP7_75t_R
+      222   12.947   NOR2xp33_ASAP7_75t_R
+        4    0.292   NOR3xp33_ASAP7_75t_R
+      218   19.071   O2A1O1Ixp33_ASAP7_75t_R
+        5     0.51   OA21x2_ASAP7_75t_R
+      437   38.229   OAI211xp5_ASAP7_75t_R
+      607    44.25   OAI21xp33_ASAP7_75t_R
+        1    0.131   XNOR2xp5_ASAP7_75t_R
+        1    0.131   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\tag_gate': 373.787460
+     of which used for sequential elements: 150.465600 (40.25%)
+
