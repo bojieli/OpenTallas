@@ -1,0 +1,16 @@
+{
+  "wrapper_source": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_bsplit.sv",
+  "wrapper_sha256": "64117ff3e79d5b2ee0cc281f63aa2e5e05f7766a65159c7dc12901f4239b5fe6",
+  "mechanism": "ot_s81sl_slice_iq has exactly one unchanged ot_s81sl_slice u_sl with entire xc(xc) passthrough; index splitter alters bo/iq only",
+  "changes": "existing source-guarded unlinked_out_bits fanout-face declaration extended to exact IQwrapper; no die.v, RTL, connectivity, order, clocks or cycle change",
+  "live_copies": [
+    0,
+    2
+  ],
+  "unused_copies": [
+    1,
+    3
+  ],
+  "guard": "base source g_xc four registered identical xw4 copies plus exact wrapper passthrough and width checks; all frame chain lane checks unchanged",
+  "review": "root source-policy review required before next chain"
+}

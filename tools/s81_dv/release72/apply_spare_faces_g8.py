@@ -13,6 +13,15 @@ root=Path(__file__).resolve().parents[3]
 sl=(root/'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv').read_text()
 assert re.search(r'for \(c = 0; c < 4; c = c \+ 1\)',sl)
 assert '.d(xw4), .q(xc[1104 * c +: 1104])' in sl
+# The index-query wrapper alters only bo/iq; its entire xc vector is the
+# existing base slice output. Keep this check exact before applying the same
+# unused registered-fanout-face declaration to this one additional master.
+iq=(root/'rtl/dsrom_sys/s81_dv/idx/dsdv_idx_bsplit.sv').read_text()
+iq_body=iq.split('module ot_s81sl_slice_iq #(',1)[1].split('endmodule',1)[0]
+assert iq_body.count('ot_s81sl_slice #(')==1
+assert iq_body.count('.xc(xc)')==1
+assert not re.search(r'\bassign\s+xc\b|\.xc\s*\((?!xc\))',iq_body)
+assert 'output wire [4*1104-1:0] xc' in iq_body
 frames={b['name']:b for b in plan['blocks'] if b['master'] in ('col_h9','col_h9_MX','col_h10')}
 assert len(frames)==72
 incoming={}
@@ -46,14 +55,15 @@ for h in (9,10):
 for key,m in t['masters'].items():
  if key in ('col_h9','col_h9_MX','col_h10'):
   ports=('xo','xok'); reason='selected72 frame X-chain end: only unlinked forwarded-copy bits have no downstream frame; source-checked u_xo0..3'
- elif m.get('module')=='ot_s81sl_slice':
+ elif m.get('module') in ('ot_s81sl_slice', 'ot_s81sl_slice_iq'):
   ports=('xc',); reason='slice xc g_xc: four identical registered xw4 copies; only built fanout faces consumed'
  else: continue
  for port in ports:
   assert port in t['rtl_widths'][m['module']], (key,port)
   m.setdefault('mode_unused',[]).append(dict(when='unlinked_out_bits',port=port,reason=reason))
 t['selected72_spare_faces_g8']=dict(frame_instances=sorted(frames),frame_source_proofs=proofs,
- slice_source_sha256=hashlib.sha256(sl.encode()).hexdigest(),policy='Only unlinked output bit ranges; no functional-input ties or unread waiver')
+ slice_source_sha256=hashlib.sha256(sl.encode()).hexdigest(),
+ iq_wrapper_source_sha256=hashlib.sha256(iq.encode()).hexdigest(),policy='Only unlinked output bit ranges; no functional-input ties or unread waiver')
 t['prune_unused_reset_leaves']=True
 p.write_text(json.dumps(t,indent=1)+'\n')
 print('SPARE_FACES_G8 source-checked frame-chain-end copies and slice fanout; actual linked bits remain strict')

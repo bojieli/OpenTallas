@@ -1,0 +1,56 @@
+{
+  "die_sha256": "8ef3b748e5b14da4446d29576702d2828a056943481c650a65b5f5b18bf84838",
+  "copies": [
+    {
+      "copy": 0,
+      "lo": 0,
+      "hi": 1103,
+      "bits": 1104,
+      "consumer_count_histogram": {
+        "1": 1104
+      },
+      "sink_instances": [
+        "st_x_f_3L01_l0_0",
+        "st_x_f_3L01_l1_0",
+        "st_x_f_3L01_l2_0",
+        "st_x_f_3L01_l3_0"
+      ]
+    },
+    {
+      "copy": 1,
+      "lo": 1104,
+      "hi": 2207,
+      "bits": 1104,
+      "consumer_count_histogram": {
+        "0": 1104
+      },
+      "sink_instances": []
+    },
+    {
+      "copy": 2,
+      "lo": 2208,
+      "hi": 3311,
+      "bits": 1104,
+      "consumer_count_histogram": {
+        "1": 1104
+      },
+      "sink_instances": [
+        "st_x_f_3L02_l0_0",
+        "st_x_f_3L02_l1_0",
+        "st_x_f_3L02_l2_0",
+        "st_x_f_3L02_l3_0"
+      ]
+    },
+    {
+      "copy": 3,
+      "lo": 3312,
+      "hi": 4415,
+      "bits": 1104,
+      "consumer_count_histogram": {
+        "0": 1104
+      },
+      "sink_instances": []
+    }
+  ],
+  "scope": "actual generated per-bit non-source port occurrences; strict report separately proves no multidrivers"
+}
