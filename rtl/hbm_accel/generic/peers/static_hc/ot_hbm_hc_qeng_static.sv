@@ -174,6 +174,12 @@ module ot_hbm_hc_qeng_static #(
     `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RLW
     `define OT_HCQ_BQCK `OT_HCQ_BCK `OT_HCQ_RWA .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
     `define OT_HCQ_BFCK .clk_c(clk), `OT_HCQ_RWA `OT_HCQ_RLW
+  `ifdef HC_BANK_RW4
+    `undef OT_HCQ_BF
+    `undef OT_HCQ_BFCK
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw4_static
+    `define OT_HCQ_BFCK .clk_c(clk), `OT_HCQ_RLW
+  `endif
     `undef OT_HCQ_B0CK
     `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
  `elsif HC_BANK_RM

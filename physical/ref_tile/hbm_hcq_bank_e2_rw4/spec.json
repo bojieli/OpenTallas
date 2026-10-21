@@ -1,0 +1,883 @@
+{
+ "name": "hbm_hcq_bank_e2_rw4",
+ "top": "ot_hbm_hc_bankq_ft_rw4_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankrc_static.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n",
+  "fa_rst_n",
+  "fb_rst_n",
+  "fa_rst_n_o",
+  "fb_rst_n_o"
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?0?.u_lg",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?1?.u_lg",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?2?.u_lg",
+   "at": [
+    259.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?3?.u_lg",
+   "at": [
+    432.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?4?.u_lg",
+   "at": [
+    259.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?5?.u_lg",
+   "at": [
+    432.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?6?.u_lg",
+   "at": [
+    259.2,
+    561.6000000000001
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?7?.u_lg",
+   "at": [
+    432.0,
+    561.6000000000001
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?0?.u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?1?.u_m",
+   "at": [
+    43.2,
+    156.912
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?2?.u_m",
+   "at": [
+    43.2,
+    227.424
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?3?.u_m",
+   "at": [
+    43.2,
+    297.936
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[3]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?4?.u_m",
+   "at": [
+    43.2,
+    368.448
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[4]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?5?.u_m",
+   "at": [
+    43.2,
+    438.96
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[5]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?6?.u_m",
+   "at": [
+    43.2,
+    509.472
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[6]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?7?.u_m",
+   "at": [
+    43.2,
+    579.984
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "clock_entry": {
+    "port": "ck_w[7]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?0?.u_m",
+   "at": [
+    600.48,
+    92.016
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ck_x[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?1?.u_m",
+   "at": [
+    600.48,
+    264.816
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ck_x[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?2?.u_m",
+   "at": [
+    600.48,
+    437.616
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ck_x[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?3?.u_m",
+   "at": [
+    600.48,
+    610.416
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ck_x[3]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "pins": {
+  "W": [
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "sum_in",
+   "f_in",
+   "fa_xb_v_o",
+   "fa_xb_beat_o",
+   "fa_xb_d_o",
+   "fa_wv_o",
+   "fa_xv_o",
+   "fa_j_o",
+   "fa_wa_o",
+   "fa_rst_n_o",
+   "fa_wfault"
+  ],
+  "E": [
+   "o_v",
+   "o_ss",
+   "o_nv",
+   "o_wa",
+   "o_xa",
+   "sum_out",
+   "f_out",
+   "fb_xb_v_o",
+   "fb_xb_beat_o",
+   "fb_xb_d_o",
+   "fb_wv_o",
+   "fb_xv_o",
+   "fb_j_o",
+   "fb_wa_o",
+   "fb_rst_n_o",
+   "fb_wfault"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "xb_v",
+   "xb_beat",
+   "xb_d",
+   "wv",
+   "xv",
+   "j",
+   "wa",
+   "wfault",
+   "fa_xb_v",
+   "fa_xb_beat",
+   "fa_xb_d",
+   "fa_wv",
+   "fa_xv",
+   "fa_j",
+   "fa_wa",
+   "fa_rst_n",
+   "fa_wfault_o",
+   "fb_xb_v",
+   "fb_xb_beat",
+   "fb_xb_d",
+   "fb_wv",
+   "fb_xv",
+   "fb_j",
+   "fb_wa",
+   "fb_rst_n",
+   "fb_wfault_o"
+  ],
+  "ANY": [
+   "ck_l",
+   "ck_w",
+   "ck_x"
+  ],
+  "N": [
+   "clk_c",
+   "clk_w0",
+   "clk_w1",
+   "clk_w2",
+   "clk_w3",
+   "clk_x0",
+   "clk_x1",
+   "clk_x2",
+   "clk_x3",
+   "clk_e0",
+   "clk_e1",
+   "clk_e2",
+   "clk_e3",
+   "clk_d0",
+   "clk_d1",
+   "clk_d2",
+   "clk_d3"
+  ]
+ },
+ "inter": [],
+ "refglob": "*",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 128,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true,
+  "macro_out_pins": [
+   "rd_out"
+  ]
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every bank-tile input lands in RTL pin flops (beat landing v/beat/data, the stage's descriptor/partial-sum seam flops, the write-port flops wv_q/xv_q/j_q/wa_q in ot_hbm_hc_bank_static, feed registers) and every output is a flop (stage SOR seam register, feed registers, wfault); a kit flop stage would shift the compiled systolic schedule"
+ },
+ "structural_change": "e2 rw4 after actualf423rw2 CTSclk_a1793sinks247.8psTTFAIL. Per-row kept hold/asm plussame-edge localbadflag; existing rowwrite registers. WROW2 makesglobalhold/asm/lb unused; clk_a removed, no boundarymask. Same intendedhold->asm->write/faultages. OriginalWROW0/1unchanged. Unqualified until existingnative/physical/mandatorybenchflow passes.",
+ "job": {
+  "owner": "Claude:DRIVE-HBM/HBM-HCBANK9",
+  "branch": "codex/hcbank-row-assembler-1021",
+  "tag": "rw4",
+  "purpose": "Only edge-bank successor after actual rw2 clk_a247.8FAIL: row-local hold/assembler/badflag, same ages, no shared clk_a mass",
+  "views_to": "physical/ref_tile/hbm_hcq_bank_e2_rw4/views",
+  "record_to": "results/rtl/ref_tile/hbm_hcq_bank_e2_rw4",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/hbm_hc_ring_1019_cpr",
+   "results/rtl/hbm_hc_ring_1019_joint",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "rtl/test/tb_hbm_hc_eng4_static_hier_rc.vlt",
+   "results/rtl/hbm_hc_ring_1020_bankrc",
+   "results/rtl/hbm_hc_ring_1020_bankrl"
+  ],
+  "benches": [
+   {
+    "name": "hc_ring_rw4_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_BANK_RC +define+HC_BANK_RW2 +define+HC_BANK_RW4' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0"
+   },
+   {
+    "name": "hc_ring_rw4_mut1",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_BANK_RC +define+HC_BANK_RW2 +define+HC_BANK_RW4' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m1 1",
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=1 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "note": "bank 3 (rw2 corner tile) weight slice rotated",
+    "fail_witness": "results/rtl/hbm_hc_ring_1020_bankrl/ring_rw4_mut1.log"
+   },
+   {
+    "name": "hc_ring_rw4_mut5",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_BANK_RC +define+HC_BANK_RW2 +define+HC_BANK_RW4' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m5 5",
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=5 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "note": "bank 3 landing kept copy 5 writes the next hold slot",
+    "fail_witness": "results/rtl/hbm_hc_ring_1020_bankrl/ring_rw4_mut5.log"
+   }
+  ]
+ },
+ "pin_ranges": {
+  "fa_xb_v": [
+   3,
+   4.0
+  ],
+  "fa_xb_beat": [
+   4.0,
+   5.0
+  ],
+  "fa_xb_d": [
+   5.0,
+   110.865
+  ],
+  "fa_wv": [
+   110.865,
+   111.865
+  ],
+  "fa_xv": [
+   111.865,
+   112.865
+  ],
+  "fa_j": [
+   112.865,
+   113.865
+  ],
+  "fa_wa": [
+   113.865,
+   118.0
+  ],
+  "fa_rst_n": [
+   118.0,
+   119.0
+  ],
+  "fa_wfault_o": [
+   119.0,
+   120.0
+  ],
+  "clk": [
+   180,
+   181.0
+  ],
+  "rst_n": [
+   181.0,
+   182.0
+  ],
+  "xb_v": [
+   182.0,
+   183.0
+  ],
+  "xb_beat": [
+   183.0,
+   184.0
+  ],
+  "xb_d": [
+   184.0,
+   536.241
+  ],
+  "wv": [
+   536.241,
+   537.241
+  ],
+  "xv": [
+   537.241,
+   538.241
+  ],
+  "j": [
+   538.241,
+   539.241
+  ],
+  "wa": [
+   539.241,
+   553.0
+  ],
+  "wfault": [
+   553.0,
+   554.0
+  ],
+  "fb_xb_v": [
+   730.4,
+   731.4
+  ],
+  "fb_xb_beat": [
+   729.4,
+   730.4
+  ],
+  "fb_xb_d": [
+   623.535,
+   729.4
+  ],
+  "fb_wv": [
+   622.535,
+   623.535
+  ],
+  "fb_xv": [
+   621.535,
+   622.535
+  ],
+  "fb_j": [
+   620.535,
+   621.535
+  ],
+  "fb_wa": [
+   616.4,
+   620.535
+  ],
+  "fb_rst_n": [
+   615.4,
+   616.4
+  ],
+  "fb_wfault_o": [
+   614.4,
+   615.4
+  ],
+  "fa_xb_v_o": [
+   3,
+   4.0
+  ],
+  "fa_xb_beat_o": [
+   4.0,
+   5.0
+  ],
+  "fa_xb_d_o": [
+   5.0,
+   110.865
+  ],
+  "fa_wv_o": [
+   110.865,
+   111.865
+  ],
+  "fa_xv_o": [
+   111.865,
+   112.865
+  ],
+  "fa_j_o": [
+   112.865,
+   113.865
+  ],
+  "fa_wa_o": [
+   113.865,
+   118.0
+  ],
+  "fa_rst_n_o": [
+   118.0,
+   119.0
+  ],
+  "fa_wfault": [
+   119.0,
+   120.0
+  ],
+  "d_v": [
+   130,
+   131.0
+  ],
+  "d_ss": [
+   131.0,
+   132.0
+  ],
+  "d_nv": [
+   132.0,
+   134.019
+  ],
+  "d_wa": [
+   134.019,
+   136.903
+  ],
+  "d_xa": [
+   136.903,
+   139.786
+  ],
+  "sum_in": [
+   139.786,
+   730.4
+  ],
+  "f_in": [
+   730.4,
+   731.4
+  ],
+  "fb_xb_v_o": [
+   3,
+   4.0
+  ],
+  "fb_xb_beat_o": [
+   4.0,
+   5.0
+  ],
+  "fb_xb_d_o": [
+   5.0,
+   110.865
+  ],
+  "fb_wv_o": [
+   110.865,
+   111.865
+  ],
+  "fb_xv_o": [
+   111.865,
+   112.865
+  ],
+  "fb_j_o": [
+   112.865,
+   113.865
+  ],
+  "fb_wa_o": [
+   113.865,
+   118.0
+  ],
+  "fb_rst_n_o": [
+   118.0,
+   119.0
+  ],
+  "fb_wfault": [
+   119.0,
+   120.0
+  ],
+  "o_v": [
+   130,
+   131.0
+  ],
+  "o_ss": [
+   131.0,
+   132.0
+  ],
+  "o_nv": [
+   132.0,
+   134.019
+  ],
+  "o_wa": [
+   134.019,
+   136.903
+  ],
+  "o_xa": [
+   136.903,
+   139.786
+  ],
+  "sum_out": [
+   139.786,
+   730.4
+  ],
+  "f_out": [
+   730.4,
+   731.4
+  ],
+  "clk_w0": [
+   99.5,
+   100.5
+  ],
+  "clk_x0": [
+   619.5,
+   620.5
+  ],
+  "clk_e0": [
+   299.5,
+   300.5
+  ],
+  "clk_w1": [
+   123.5,
+   124.5
+  ],
+  "clk_x1": [
+   643.5,
+   644.5
+  ],
+  "clk_e1": [
+   323.5,
+   324.5
+  ],
+  "clk_w2": [
+   147.5,
+   148.5
+  ],
+  "clk_x2": [
+   667.5,
+   668.5
+  ],
+  "clk_e2": [
+   347.5,
+   348.5
+  ],
+  "clk_w3": [
+   171.5,
+   172.5
+  ],
+  "clk_x3": [
+   691.5,
+   692.5
+  ],
+  "clk_e3": [
+   371.5,
+   372.5
+  ],
+  "clk_c": [
+   449.5,
+   450.5
+  ],
+  "clk_d0": [
+   219.5,
+   220.5
+  ],
+  "clk_d1": [
+   231.5,
+   232.5
+  ],
+  "clk_d2": [
+   243.5,
+   244.5
+  ],
+  "clk_d3": [
+   255.5,
+   256.5
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk",
+  "why": "rst_n lands at the S face in 2 clk stages, then the RTL ot_rst_relay copies (bankrc u_rst / u_rst_b, feed u_rst)"
+ },
+ "clock": "hybrid_entries",
+ "clock_cts_roots": [
+  "clk",
+  "clk_c",
+  "clk_w0",
+  "clk_w1",
+  "clk_w2",
+  "clk_w3",
+  "clk_x0",
+  "clk_x1",
+  "clk_x2",
+  "clk_x3",
+  "clk_d0",
+  "clk_d1",
+  "clk_d2",
+  "clk_d3",
+  "clk_e0",
+  "clk_e1",
+  "clk_e2",
+  "clk_e3"
+ ],
+ "clock_ports": [
+  "clk",
+  "clk_c",
+  "clk_w0",
+  "clk_w1",
+  "clk_w2",
+  "clk_w3",
+  "clk_x0",
+  "clk_x1",
+  "clk_x2",
+  "clk_x3",
+  "clk_d0",
+  "clk_d1",
+  "clk_d2",
+  "clk_d3",
+  "clk_e0",
+  "clk_e1",
+  "clk_e2",
+  "clk_e3",
+  "ck_l[0]",
+  "ck_l[1]",
+  "ck_l[2]",
+  "ck_l[3]",
+  "ck_l[4]",
+  "ck_l[5]",
+  "ck_l[6]",
+  "ck_l[7]",
+  "ck_w[0]",
+  "ck_w[1]",
+  "ck_w[2]",
+  "ck_w[3]",
+  "ck_w[4]",
+  "ck_w[5]",
+  "ck_w[6]",
+  "ck_w[7]",
+  "ck_x[0]",
+  "ck_x[1]",
+  "ck_x[2]",
+  "ck_x[3]"
+ ],
+ "slot_change_request": "HC edge row-assembler successor734.4x734.4: clk,clk_c,clk_w0..3,clk_x0..3,clk_d0..3,clk_e0..3,rawck_l[7:0]/ck_w[7:0]/ck_x[3:0]; clk_a eliminated, intendeddata/faultages unchanged",
+ "reroute_reason": {
+  "kind": "structural",
+  "failed_job": "ref_gate hbm_hcq_bank_e2_rw2 f4230cae1",
+  "why": "Residual shared hold/asm clk_a247.8ps; move actual data and badflag stages into row masses, remove sharedroot"
+ },
+ "orfs_vars": {},
+ "pin_hook_before_flops": [
+  "physical/ref_tile/hbm_hcq_bank_e2_rw4/write_pin_names.tcl"
+ ]
+}
