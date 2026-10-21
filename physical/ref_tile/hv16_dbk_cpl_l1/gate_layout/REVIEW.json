@@ -1,7 +1,7 @@
 {
   "reviewer": "codex coordinator takeover 2026-10-20",
   "time": "2026-10-20T22:12:50.337897-07:00",
-  "gate_commit": "3bf5ab5aed0567126f1beaf45a706c50aee8f911",
+  "gate_commit": "25dae6096",
   "verdict": "APPROVED",
   "geometry_sha256": "d789c51d69b87bbefb67fc756a6e0bf14f50005dba887239b0d36d8370ec7931",
   "geometry": {
@@ -31,7 +31,8 @@
       "floorplan.png": "6bafa0fe6da06fb1121f4fc56f5244a7d1d12a9fe1d46cfbf8244335a1f5de69",
       "density.png": "8f21531cff59a0fe0431aca448c063f82edca98bbf6d13b04b20b0c748e69f6b"
     },
-    "scope": "Geometry approval for route submission only; _cpl die binding requires 8clk_land+3clk_rly and RR_RT-1=79 pad. l1c gate FAIL trial_route remains separate, not approved."
+    "scope": "Geometry approval for route submission only; _cpl die binding requires 8clk_land+3clk_rly and RR_RT-1=79 pad. l1c gate FAIL trial_route remains separate, not approved.",
+    "gate_result_auto_commit": "submit_exact committed exact new regate and source_binding_history in25dae6096 before submitting"
   },
   "gate_generated": "2026-10-20T21:49:27-0700"
 }
