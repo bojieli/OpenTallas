@@ -1,0 +1,34 @@
+{
+  "source_commit": "d28d855e2",
+  "original_census": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_hub_c3r-20261021-095858/routes/gate/work/orfs/native_census.json",
+  "original_sha256": "b3c730f0be06e0935e092310dbc07bd055bd4cad39aafaded64292abbf9db7e8",
+  "status": "FAIL",
+  "max_dynamic_loads": 48,
+  "roots_examined": 46060,
+  "violations": [
+    {
+      "driver": "_53506_/Y",
+      "loads": 33
+    },
+    {
+      "driver": "_56241_/Y",
+      "loads": 48
+    },
+    {
+      "driver": "_56253_/Y",
+      "loads": 48
+    },
+    {
+      "driver": "_56263_/Y",
+      "loads": 48
+    },
+    {
+      "driver": "_56280_/Y",
+      "loads": 48
+    },
+    {
+      "driver": "_56290_/Y",
+      "loads": 48
+    }
+  ]
+}
