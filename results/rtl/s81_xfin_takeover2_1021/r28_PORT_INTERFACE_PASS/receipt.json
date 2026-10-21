@@ -1,0 +1,44 @@
+{
+  "source_deltas": [
+    "7ebe3958e",
+    "8f11a8749"
+  ],
+  "base_for_ENG": "560abe5d2; cherry-pick ONLY bothdeltas, notwholelaterfile",
+  "helper_sha256": "d686a767c2d1b9a79d6ca742104639f39064290a3c1994aa809d66f5c87a91d0",
+  "whole_FP_file_sha256": "bc1c6f8bc71ad312f6fb6e3f1e90870c22802c850bac75423b9afdbb48dc6305",
+  "verdict": "PASS scoped signedtype parser/math equivalence",
+  "exhaustive": {
+    "all_power_bits": 4096,
+    "LO": [
+      0,
+      8,
+      16,
+      24,
+      32,
+      40
+    ],
+    "comparisons": 24576,
+    "mismatches": 0,
+    "reference": "verbatim mask8 source from560abe5d2"
+  },
+  "parser": {
+    "current_kept_mapped_helpers": "PASS OpenROAD26Q3-1510-g6cb3f2b704",
+    "old_production_ENG_R5": "expectedSTA0171; exactmappedSHA6ba230c427f66a9a7852dccc1c04b54f7f6d83035a67185ce9414c83ff230800"
+  },
+  "preserved_earlier_failure": "7ebe standalonemapped stillnamedsignedsub; corrected8f11; originaloldflattenedproxy lacksporttype andwaswrongnegativefixture; exactENGmappedusedforfinalnegative",
+  "unit": "oth-ubuntu-1952011-1792624709",
+  "native_scope": "GenericMUL560 nativePASS32 remains priorcomponent; actualnewparent/source native required, no wholequalificationclaim",
+  "unchanged": "all bitoutputs proven; no LAT/reset/dataedge/parameter change",
+  "files_sha256": {
+    "parser_current.log": "ce3238dc4cae9d5e46b5f2f67596703dd7f558a69f54a41a356b0104e94c608c",
+    "mask_tb.sv": "cb16aded3f3cdc520fb13cf79810dd7b7030c0761021262a13321c913df3533f",
+    "runner.sh": "b9c7dfa7e2893455ba8d0454a32ce8608dd41a4c6936b3e5970dc84f3208b7e1",
+    "mask_map.sv": "bb5edb53b487b05f87a22424da1404700af5d67a008e2d019c9239c3abe82287",
+    "build.log": "718757ec3d5e4325c40c734d19124196eceb5b251d900700902ba898ebb424b4",
+    "synth.log": "d2557128aa799c7ccbfd15e51872a424c65bf51b1da53695b52d48f0b0f3b655",
+    "fleet.log": "d5cbd607c404fa941a6a7e6b9ab4175293f0449e016beb101dd8a0a16ca3a718",
+    "mapped.v": "9df409bc04fdc1eab660019ca009095d7084bc50b4f93dc9d01eb44da0689f22",
+    "run.log": "a2fd9f7f9159e10da8be3b33f96c433ffd38c5f1f4143adb780b519213bd537e",
+    "parser_old.log": "0d12ab368d701076e87f25fc0077fea9000256cfb95fdb395112726934da7967"
+  }
+}

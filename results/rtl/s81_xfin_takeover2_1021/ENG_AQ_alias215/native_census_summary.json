@@ -1,0 +1,1074 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+      "sha256": "741933894777f2020a8a0cedfa6607f7850642a397a85aa59fe8c50b005cb0d0"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+      "sha256": "bed56e6769daf014adb1204d953c9696ae6aeab2ea3a55891d79e718878faaf6"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+      "sha256": "18a3127431ea348a3e87052ac5160fc2b46d748f9e70aef454da217102ea7864"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+      "sha256": "d9f3087065c69688adcf23efa793fc8adc20e284692241622ad4bf6fdd3e87eb"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+      "sha256": "85b4a968d61b464fba5cda0954b638999b6178c220e76b4708fa5cc6c69659c1"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "sha256": "6b00b7c554b89a7d24e02281ebef210c45b9de8b659130daeb852fd159c43d54"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+      "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48"
+    }
+  ],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_dsdv_eng_rr_asap7_native/base/1_2_yosys.v",
+    "sha256": "6ba230c427f66a9a7852dccc1c04b54f7f6d83035a67185ce9414c83ff230800"
+  },
+  "top": "dsdv_eng_rr",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 314343,
+  "max_dynamic_loads": 215,
+  "constant_output_bits": [
+    {
+      "port_bit": "rco[35]",
+      "source": {
+        "kind": "liberty_function",
+        "instance": "_297616_",
+        "master": "TIELOx1_ASAP7_75t_R",
+        "pin": "L",
+        "function": "0"
+      },
+      "transparent_path": [
+        "_297933_"
+      ]
+    },
+    {
+      "port_bit": "rco[32]",
+      "source": {
+        "kind": "liberty_function",
+        "instance": "_297616_",
+        "master": "TIELOx1_ASAP7_75t_R",
+        "pin": "L",
+        "function": "0"
+      },
+      "transparent_path": [
+        "_297930_"
+      ]
+    },
+    {
+      "port_bit": "rco[33]",
+      "source": {
+        "kind": "liberty_function",
+        "instance": "_297616_",
+        "master": "TIELOx1_ASAP7_75t_R",
+        "pin": "L",
+        "function": "0"
+      },
+      "transparent_path": [
+        "_297931_"
+      ]
+    },
+    {
+      "port_bit": "rco[34]",
+      "source": {
+        "kind": "liberty_function",
+        "instance": "_297616_",
+        "master": "TIELOx1_ASAP7_75t_R",
+        "pin": "L",
+        "function": "0"
+      },
+      "transparent_path": [
+        "_297932_"
+      ]
+    }
+  ],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "u_c.u_xq.bc[0]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_016646_",
+      "loads": 33,
+      "endpoints": [
+        [
+          111765,
+          "B",
+          0
+        ],
+        [
+          111776,
+          "A1",
+          0
+        ],
+        [
+          111778,
+          "A",
+          0
+        ],
+        [
+          14295,
+          "B",
+          0
+        ],
+        [
+          389589,
+          "A",
+          0
+        ],
+        [
+          389596,
+          "A",
+          0
+        ],
+        [
+          389601,
+          "B",
+          0
+        ],
+        [
+          389604,
+          "A",
+          0
+        ],
+        [
+          389606,
+          "A",
+          0
+        ],
+        [
+          389608,
+          "B",
+          0
+        ],
+        [
+          389611,
+          "B",
+          0
+        ],
+        [
+          389639,
+          "A",
+          0
+        ],
+        [
+          389643,
+          "A",
+          0
+        ],
+        [
+          389648,
+          "A",
+          0
+        ],
+        [
+          389653,
+          "A",
+          0
+        ],
+        [
+          389659,
+          "A",
+          0
+        ],
+        [
+          389686,
+          "A",
+          0
+        ],
+        [
+          389690,
+          "A",
+          0
+        ],
+        [
+          389695,
+          "A",
+          0
+        ],
+        [
+          389700,
+          "A",
+          0
+        ],
+        [
+          389705,
+          "A",
+          0
+        ],
+        [
+          389727,
+          "A",
+          0
+        ],
+        [
+          389734,
+          "A",
+          0
+        ],
+        [
+          389741,
+          "B",
+          0
+        ],
+        [
+          389743,
+          "B",
+          0
+        ],
+        [
+          389745,
+          "A",
+          0
+        ],
+        [
+          389747,
+          "A",
+          0
+        ],
+        [
+          389749,
+          "B",
+          0
+        ],
+        [
+          389751,
+          "A",
+          0
+        ],
+        [
+          399866,
+          "w_addr_in",
+          5
+        ],
+        [
+          399867,
+          "w_addr_in",
+          5
+        ],
+        [
+          68831,
+          "B",
+          0
+        ],
+        [
+          76329,
+          "C",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "u_c.u_xq.bc[2]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_016648_",
+      "loads": 34,
+      "endpoints": [
+        [
+          111766,
+          "A",
+          0
+        ],
+        [
+          111768,
+          "A",
+          0
+        ],
+        [
+          111773,
+          "A",
+          0
+        ],
+        [
+          14296,
+          "A",
+          0
+        ],
+        [
+          389589,
+          "B",
+          0
+        ],
+        [
+          389596,
+          "B",
+          0
+        ],
+        [
+          389601,
+          "C",
+          0
+        ],
+        [
+          389604,
+          "B",
+          0
+        ],
+        [
+          389606,
+          "B",
+          0
+        ],
+        [
+          389608,
+          "C",
+          0
+        ],
+        [
+          389611,
+          "D",
+          0
+        ],
+        [
+          389635,
+          "B",
+          0
+        ],
+        [
+          389646,
+          "B",
+          0
+        ],
+        [
+          389648,
+          "C",
+          0
+        ],
+        [
+          389651,
+          "B",
+          0
+        ],
+        [
+          389653,
+          "C",
+          0
+        ],
+        [
+          389655,
+          "B",
+          0
+        ],
+        [
+          389658,
+          "B",
+          0
+        ],
+        [
+          389682,
+          "B",
+          0
+        ],
+        [
+          389693,
+          "B",
+          0
+        ],
+        [
+          389695,
+          "C",
+          0
+        ],
+        [
+          389698,
+          "B",
+          0
+        ],
+        [
+          389700,
+          "C",
+          0
+        ],
+        [
+          389702,
+          "B",
+          0
+        ],
+        [
+          389705,
+          "D",
+          0
+        ],
+        [
+          389727,
+          "B",
+          0
+        ],
+        [
+          389734,
+          "B",
+          0
+        ],
+        [
+          389741,
+          "C",
+          0
+        ],
+        [
+          389743,
+          "C",
+          0
+        ],
+        [
+          389745,
+          "B",
+          0
+        ],
+        [
+          389747,
+          "B",
+          0
+        ],
+        [
+          389749,
+          "C",
+          0
+        ],
+        [
+          389751,
+          "B",
+          0
+        ],
+        [
+          76329,
+          "A",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "u_c.u_xq.fc[0]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_016644_",
+      "loads": 34,
+      "endpoints": [
+        [
+          111760,
+          "A",
+          0
+        ],
+        [
+          115145,
+          "A",
+          0
+        ],
+        [
+          115148,
+          "A1",
+          0
+        ],
+        [
+          115150,
+          "A",
+          0
+        ],
+        [
+          115151,
+          "A1",
+          0
+        ],
+        [
+          122999,
+          "A",
+          0
+        ],
+        [
+          363688,
+          "A",
+          0
+        ],
+        [
+          363740,
+          "C",
+          0
+        ],
+        [
+          363743,
+          "A1",
+          0
+        ],
+        [
+          363744,
+          "A",
+          0
+        ],
+        [
+          363848,
+          "A",
+          0
+        ],
+        [
+          363900,
+          "C",
+          0
+        ],
+        [
+          363903,
+          "A1",
+          0
+        ],
+        [
+          363904,
+          "A",
+          0
+        ],
+        [
+          364008,
+          "A",
+          0
+        ],
+        [
+          364060,
+          "C",
+          0
+        ],
+        [
+          364063,
+          "A1",
+          0
+        ],
+        [
+          364064,
+          "A",
+          0
+        ],
+        [
+          364168,
+          "A",
+          0
+        ],
+        [
+          364220,
+          "C",
+          0
+        ],
+        [
+          364223,
+          "A1",
+          0
+        ],
+        [
+          364224,
+          "A",
+          0
+        ],
+        [
+          364328,
+          "A",
+          0
+        ],
+        [
+          364380,
+          "C",
+          0
+        ],
+        [
+          364383,
+          "A1",
+          0
+        ],
+        [
+          364384,
+          "A",
+          0
+        ],
+        [
+          364488,
+          "A",
+          0
+        ],
+        [
+          364540,
+          "C",
+          0
+        ],
+        [
+          364543,
+          "A1",
+          0
+        ],
+        [
+          364544,
+          "A",
+          0
+        ],
+        [
+          389586,
+          "B",
+          0
+        ],
+        [
+          389632,
+          "B",
+          0
+        ],
+        [
+          389679,
+          "B",
+          0
+        ],
+        [
+          389729,
+          "B",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "u_c.u_xq.fc_probe[3]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_017504_",
+      "loads": 36,
+      "endpoints": [
+        [
+          115114,
+          "A",
+          0
+        ],
+        [
+          115120,
+          "A1",
+          0
+        ],
+        [
+          115125,
+          "B",
+          0
+        ],
+        [
+          115126,
+          "A1",
+          0
+        ],
+        [
+          122937,
+          "A",
+          0
+        ],
+        [
+          122938,
+          "A1",
+          0
+        ],
+        [
+          122940,
+          "A",
+          0
+        ],
+        [
+          122941,
+          "A1",
+          0
+        ],
+        [
+          122944,
+          "A",
+          0
+        ],
+        [
+          122945,
+          "A1",
+          0
+        ],
+        [
+          122948,
+          "A",
+          0
+        ],
+        [
+          122949,
+          "A1",
+          0
+        ],
+        [
+          122953,
+          "A",
+          0
+        ],
+        [
+          122954,
+          "A1",
+          0
+        ],
+        [
+          122956,
+          "A",
+          0
+        ],
+        [
+          122957,
+          "A1",
+          0
+        ],
+        [
+          122960,
+          "A",
+          0
+        ],
+        [
+          122961,
+          "A1",
+          0
+        ],
+        [
+          122963,
+          "A",
+          0
+        ],
+        [
+          122964,
+          "A1",
+          0
+        ],
+        [
+          122969,
+          "A",
+          0
+        ],
+        [
+          122970,
+          "A1",
+          0
+        ],
+        [
+          122972,
+          "A",
+          0
+        ],
+        [
+          122973,
+          "A1",
+          0
+        ],
+        [
+          122976,
+          "A",
+          0
+        ],
+        [
+          122977,
+          "A1",
+          0
+        ],
+        [
+          122979,
+          "A",
+          0
+        ],
+        [
+          122980,
+          "A1",
+          0
+        ],
+        [
+          122984,
+          "A",
+          0
+        ],
+        [
+          122985,
+          "A1",
+          0
+        ],
+        [
+          122987,
+          "A",
+          0
+        ],
+        [
+          122988,
+          "A1",
+          0
+        ],
+        [
+          122991,
+          "A",
+          0
+        ],
+        [
+          122992,
+          "A1",
+          0
+        ],
+        [
+          122994,
+          "A",
+          0
+        ],
+        [
+          122995,
+          "A1",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "u_c.u_xq.u_aq.amax[15]$_SDFF_PP0_/QN",
+      "driver_role": "sequential",
+      "net": "_045984_",
+      "loads": 215,
+      "endpoints": [
+        [
+          110133,
+          "B",
+          0
+        ],
+        [
+          396164,
+          "B",
+          0
+        ],
+        [
+          396166,
+          "B",
+          0
+        ],
+        [
+          396170,
+          "B",
+          0
+        ],
+        [
+          396192,
+          "B",
+          0
+        ],
+        [
+          396208,
+          "B",
+          0
+        ],
+        [
+          396210,
+          "B",
+          0
+        ],
+        [
+          396214,
+          "B",
+          0
+        ],
+        [
+          396230,
+          "B",
+          0
+        ],
+        [
+          396234,
+          "B",
+          0
+        ],
+        [
+          396236,
+          "B",
+          0
+        ],
+        [
+          396295,
+          "B",
+          0
+        ],
+        [
+          396296,
+          "A1",
+          0
+        ],
+        [
+          396296,
+          "B1",
+          0
+        ],
+        [
+          396297,
+          "A2",
+          0
+        ],
+        [
+          396297,
+          "B2",
+          0
+        ],
+        [
+          396297,
+          "C2",
+          0
+        ],
+        [
+          396298,
+          "A1",
+          0
+        ],
+        [
+          396298,
+          "B2",
+          0
+        ],
+        [
+          396299,
+          "A2",
+          0
+        ],
+        [
+          396300,
+          "A2",
+          0
+        ],
+        [
+          396300,
+          "B2",
+          0
+        ],
+        [
+          396300,
+          "C2",
+          0
+        ],
+        [
+          396301,
+          "A1",
+          0
+        ],
+        [
+          396302,
+          "B2",
+          0
+        ],
+        [
+          396303,
+          "A2",
+          0
+        ],
+        [
+          396303,
+          "B2",
+          0
+        ],
+        [
+          396304,
+          "A1",
+          0
+        ],
+        [
+          396305,
+          "A1",
+          0
+        ],
+        [
+          396305,
+          "B2",
+          0
+        ],
+        [
+          396307,
+          "A2",
+          0
+        ],
+        [
+          396307,
+          "B2",
+          0
+        ],
+        [
+          396309,
+          "A2",
+          0
+        ],
+        [
+          396310,
+          "B2",
+          0
+        ],
+        [
+          396311,
+          "B2",
+          0
+        ],
+        [
+          396312,
+          "A1",
+          0
+        ],
+        [
+          396314,
+          "A2",
+          0
+        ],
+        [
+          396314,
+          "B2",
+          0
+        ],
+        [
+          396315,
+          "A1",
+          0
+        ],
+        [
+          396315,
+          "C1",
+          0
+        ]
+      ]
+    }
+  ],
+  "full_report_sha256": "4fc4b7ba23ce7b44af817c8587b7bf9880ffa32e93433eafc568b16d70977300",
+  "full_report_path": "ot-epyc7:/srv/opentallas-scratch/claude/codex-s81-engrr-fanout-native-1021/native_r5/native/native_census.json"
+}
