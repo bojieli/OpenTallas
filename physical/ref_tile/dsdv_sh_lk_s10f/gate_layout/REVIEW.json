@@ -1,7 +1,7 @@
 {
   "reviewer": "codex coordinator takeover 2026-10-20",
   "time": "2026-10-20T22:17:15.976642-07:00",
-  "gate_commit": "1ff6b81c9",
+  "gate_commit": "051663d06d2f8795a52fa4f25e19ebda2f3e5e1f",
   "verdict": "APPROVED",
   "geometry_sha256": "a6b0aef4a33acec6911bbe24ce442e71905277d418d99735f54cec1f59457394",
   "geometry": {
@@ -28,10 +28,12 @@
     ],
     "grt_overflow": 0,
     "native_max_loads": 32,
-    "gate_setup_ps": 46,
-    "gate_hold_ps": 35,
+    "gate_setup_ps": 46.235,
+    "gate_hold_ps": 34.533,
     "depth_warning": "610ps/17levels judged by gate/route per owner09:14 freeze",
-    "scope": "ROOT signed off exact unchanged geometry after original floorplan+density viewing. Timing/census metrics here refer to old gate2026-10-20T05:59:24-0700; update to exact new terminal regate before submit. Geometry approval does not override failed new gate.",
-    "metrics_basis": "old gate2026-10-20T05:59:24-0700"
+    "scope": "ROOT signed off exact unchanged geometry after originalPNG viewing. Exact new terminal gate WARN0FAIL GRT0 native32 and76.3/66.5ps spread; actual consumed helper bytes preserved from immutable shipped snapshot, no receipt rewriting. Route qualification remains owed.",
+    "metrics_basis": "new exact terminal gate2026-10-20T22:20:48-0700",
+    "gate_generated": "2026-10-20T22:20:48-0700",
+    "source_manifest_sha256": "9c812cbe10277ce6694cd1c8e8a9038783d78ec966d8c468ef7ff9e468afbd2a"
   }
 }
