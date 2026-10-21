@@ -282,8 +282,68 @@ def _free(m, near, x, y, w, h, gap=4.32, bgap=21.6):
     return True
 
 
+def _place_pad_bank(K, m, staged, prev_pt, sink_pt, n, w, h, cap):
+    """A real row bank for long equalizers, with an alternating W/E data path.
+
+    Sink-greedy placement can fill its own approach after a few cells even when
+    an adjacent rectangle holds the complete delay. Reserve the entire bank
+    before choosing any cell; every cell and both endpoint wires are checked.
+    This changes placement only: each word still traverses exactly n flops.
+    """
+    import math
+    near = list(m['insts']) + staged + [K.F.Inst(kn, 'keepout', kx, ky, kw, kh, 'R0')
+                                       for kn, kx, ky, kw, kh in m.get('keepouts', [])]
+    px, py = K.up(w + 4.32, K.GX), K.up(h + 4.32, K.GY)
+    shapes = sorted({max(1, min(n, c)) for c in
+                     (math.isqrt(n), math.isqrt(n) + 1, 4, 8, 12, 16)},
+                    key=lambda c: abs(c * px - math.ceil(n / c) * py))
+    for cols in shapes:
+        rows = math.ceil(n / cols)
+        bw, bh = (cols - 1) * px + w, (rows - 1) * py + h
+        layout = [(col * px, row * py, 'R0' if row % 2 == 0 else 'MY')
+                  for row in range(rows)
+                  for col in (range(cols) if row % 2 == 0 else range(cols - 1, -1, -1))][:n]
+        fx, fy, fo = layout[0]
+        lx, ly, lo = layout[-1]
+        entry = (fx + (w if fo == 'MY' else 0), fy + h / 2)
+        exit_ = (lx + (0 if lo == 'MY' else w), ly + h / 2)
+        # Intersect endpoint reach boxes before enumerating row-grid origins.
+        xlo = max(4.32, prev_pt[0] - cap - entry[0], sink_pt[0] - cap - exit_[0])
+        xhi = min(m['die']['w'] - bw - 4.32, prev_pt[0] + cap - entry[0], sink_pt[0] + cap - exit_[0])
+        ylo = max(4.32, prev_pt[1] - cap - entry[1], sink_pt[1] - cap - exit_[1])
+        yhi = min(m['die']['h'] - bh - 4.32, prev_pt[1] + cap - entry[1], sink_pt[1] + cap - exit_[1])
+        candidates = []
+        step = 10.8
+        for ix in range(math.ceil(xlo / step), math.floor(xhi / step) + 1):
+            for iy in range(math.ceil(ylo / step), math.floor(yhi / step) + 1):
+                x, y = K.up(ix * step, K.GX), K.up(iy * step, K.GY)
+                din = abs(x + entry[0] - prev_pt[0]) + abs(y + entry[1] - prev_pt[1])
+                dout = abs(x + exit_[0] - sink_pt[0]) + abs(y + exit_[1] - sink_pt[1])
+                if max(din, dout) <= cap:
+                    candidates.append((din + dout, x, y))
+        for _, x, y in sorted(candidates):
+            if not _free(m, near, x, y, bw, bh):
+                continue
+            out, pt = [], prev_pt
+            for dx, dy, orient in layout:
+                a = (x + dx + (w if orient == 'MY' else 0), y + dy + h / 2)
+                b = (x + dx + (0 if orient == 'MY' else w), y + dy + h / 2)
+                if abs(a[0] - pt[0]) + abs(a[1] - pt[1]) > cap:
+                    break
+                out.append(K.F.Inst('', '', x + dx, y + dy, w - K.SHAVE, h - K.SHAVE,
+                                    orient, kind='relay', region='relay'))
+                pt = b
+            if len(out) == n and abs(pt[0] - sink_pt[0]) + abs(pt[1] - sink_pt[1]) <= cap:
+                return out
+    return None
+
+
 def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60):
     """n pad frames: each within cap of the previous point, the last within cap of the sink pin; nearest the sink first"""
+    if n >= 8 and os.environ.get('OT_KV_EQ_ROW_BANK', '0') == '1':
+        bank = _place_pad_bank(K, m, staged, prev_pt, sink_pt, n, w, h, cap)
+        if bank is not None:
+            return bank
     out, pt = [], prev_pt
     span = rmax * grid + 2 * cap + 400.0
     lo_x, hi_x = min(prev_pt[0], sink_pt[0]) - span, max(prev_pt[0], sink_pt[0]) + span
