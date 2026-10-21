@@ -18,6 +18,7 @@
     "rtl/lib/ot_reset_sync.sv",
     "rtl/common/landed_parent/ot_pl_land_n32.sv",
     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
     "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv"
   ],
@@ -536,6 +537,7 @@
   "clock_ports": [
     "ck_S",
     "ck_K",
+    "ck_ML",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -561,15 +563,55 @@
     "u_ln0.ck": "ck_K",
     "u_ln1.ck": "ck_K",
     "u_lep.clk": "ck_K",
-    "u_land.clk": "ck_K"
+    "u_land.clk": "ck_ML"
   },
   "transport": {
     "existing_S_to_K_cycles": 3,
     "existing_K_to_S_cycles": 3,
     "existing_fault_output_cycles": 2,
     "CAP5_capture_increment_vs_CAPC2": 12,
-    "new_K_transport_cycles": null
+    "new_K_transport_cycles": null,
+    "MU_land_write_cycles": 3,
+    "MU_land_command_cycles": 3,
+    "MU_land_return_cycles": 3,
+    "MU_rc_to_first_return_cycles": 10,
+    "MU_rc_to_first_return_increment": 6
   },
+  "soft_transport": [
+    {
+      "inst": "u_ml_wr",
+      "bank_cell_corridor": [
+        1468.8,
+        2116.8,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    },
+    {
+      "inst": "u_ml_cmd",
+      "bank_cell_corridor": [
+        1468.8,
+        2116.8,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    },
+    {
+      "inst": "u_ml_ret",
+      "bank_cell_corridor": [
+        1468.8,
+        2116.8,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    }
+  ],
   "unclosed_bundles": [
     {
       "ends": [
@@ -629,13 +671,14 @@
         43.2,
         561.6
       ],
-      "state": "UNLANDED long K transport; write/read calendar alignment owed"
+      "state": "SOURCE FIXED: D4/K2 wr/cmd/ret +3 each; physical ring placement/STA and compiler +6 return remain open"
     }
   ],
   "physical_holds": [
     "No parent CLOSED record or SS/FF/GRT claim",
     "K clock is an explicit diagnostic implementation root; no balanced-region closure assumption",
-    "Actual lane/endpoint/MU-land relay and regional landing geometry pending",
+    "Actual lane/endpoint relay geometry pending; MU-land three real rings occupy172.8um face gap",
+    "Compiler replay return and identity-use calendar must add6 cycles before release",
     "Actual child pins, clock/reset placement and PG composition feed ongoing die flow",
     "External ports and source widths preserved; no tied functional ports or false paths",
     "No copy-B/AB physical release alias: this two-lane envelope is copy-A only"

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Selected72 actual unhardened MU assembly. Original existing LP transport retained;
 // CAP5 normal source has its real 10 clock roots, externally supplied here.
-// UNQUALIFIED: long K-domain lane/endpoint/landing connections still owe actual
+// UNQUALIFIED: long K-domain lane/endpoint connections still owe actual
 // relay/landing transport and protocol age alignment. No old parent CLOSED alias.
 // Original LP +3 crossings and +2 fault output stages remain unchanged.
 module ot_s81sl_slice_lepw_mu_72 #(
@@ -31,7 +31,7 @@ module ot_s81sl_slice_lepw_mu_72 #(
     output wire [31:0] mu_rt,
     output wire fault,
     input wire ck_S,
-    input wire ck_K,
+    input wire ck_K, ck_ML,
     input wire ck_L0, ck_L1, ck_L3, ck_L4,
     input wire ck_CAP_RT, ck_CAP_CW, ck_CAP_CE, ck_CAP_RN, ck_CAP_RS
 );
@@ -71,12 +71,25 @@ module ot_s81sl_slice_lepw_mu_72 #(
     wire lpr_c_u_ln0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln0 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln0));   // t(u_ln0) = 0
     wire lpr_c_u_ln1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln1 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln1));   // t(u_ln1) = 0
     wire lpr_c_u_lep;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lep (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_lep));   // t(u_lep) = 0
-    wire lpr_c_u_land;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_land (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_land));   // t(u_land) = 0
+    wire [0:0] lpr_ML_v;
+    ot_pl_land_reset_forest #(.DEPTH(3),.LEAVES(1),.ROOT_LOADS(2)) u_lpr_ML(
+        .ck(ck_ML),.d(lpr_root),.q(lpr_ML_v));
+    wire lpr_c_u_land=lpr_ML_v[0];
+    // Real endpoint K -> memory ML transport. Every valid shares its data age.
+    wire mwv_ml, mrv_ml, mf_ml;
+    wire [1103:0] mwd_ml, mrd_ml;
+    wire [10:0] mu_rc_ml;
+    ot_s81_mu72_land #(.W(1105)) u_ml_wr (.ck_w(ck_K),.ck_r(ck_ML),
+        .rs_w(lpr_K),.rs_r(lpr_c_u_land),.i({mwv,mwd}),.o({mwv_ml,mwd_ml}));
+    ot_s81_mu72_land #(.W(11)) u_ml_cmd (.ck_w(ck_K),.ck_r(ck_ML),
+        .rs_w(lpr_K),.rs_r(lpr_c_u_land),.i(mu_rc),.o(mu_rc_ml));
+    ot_s81_mu72_land #(.W(1106)) u_ml_ret (.ck_w(ck_ML),.ck_r(ck_K),
+        .rs_w(lpr_c_u_land),.rs_r(lpr_K),.i({mf_ml,mrv_ml,mrd_ml}),.o({mf,mrv,mrd}));
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     ot_s81sl_slice_c1x_k8_cap5_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
         .ck_CAP_RT(ck_CAP_RT), .ck_CAP_CW(ck_CAP_CW), .ck_CAP_CE(ck_CAP_CE), .ck_CAP_RN(ck_CAP_RN), .ck_CAP_RS(ck_CAP_RS), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(lri__l_S), .ri_e(ri_e), .ro_e(ro_e), .ro_w(lro), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));   // region S, t = 0
     dsfd_coll_lane_w_safe8_ntf u_ln0 (.ck(ck_K), .rs(lpr_c_u_ln0), .chb(ch_b), .rx(lrx0), .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));   // region K, t = 0
     dsfd_coll_lane_w_safe8_ntf u_ln1 (.ck(ck_K), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));   // region K, t = 0
     ot_s81sl_lep_mu_a u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault__o));   // region K, t = 0
-    dsdv_mu_land u_land (.clk(ck_K), .rst_n(lpr_c_u_land), .wv(mwv), .wd(mwd), .rc(mu_rc), .rv(mrv), .rd(mrd), .fault(mf));   // region K, t = 0
+    dsdv_mu_land u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule

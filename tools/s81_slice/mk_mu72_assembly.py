@@ -10,7 +10,7 @@ import copy
 import json
 from pathlib import Path
 
-CLOCKS = ["ck_S", "ck_K", "ck_L0", "ck_L1", "ck_L3", "ck_L4",
+CLOCKS = ["ck_S", "ck_K", "ck_ML", "ck_L0", "ck_L1", "ck_L3", "ck_L4",
           "ck_CAP_RT", "ck_CAP_CW", "ck_CAP_CE", "ck_CAP_RN", "ck_CAP_RS"]
 ROLES = {
     "u_ln0": ([1468.8,43.2], [725.76,583.2]),
@@ -44,6 +44,7 @@ def assemble(normal, flavor, bindings):
         source=f"rtl/dsrom_sys/s81_dv/slice/mu72/{top}.sv",
         sources=[f"rtl/dsrom_sys/s81_dv/slice/mu72/{top}.sv"]+normal["sources"]+[
             "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+            "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
             "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
             "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv"],
         defines=normal.get("defines", []),
@@ -58,21 +59,27 @@ def assemble(normal, flavor, bindings):
         normal_source_envelope=dict(inst="u_sl",at=[43.2,43.2],outline=[1252.8,6739.2],
             hardened=False, note="Use actual hard descendants below; normal parent closure is not required for diagnostic integration"),
         children=children, clock_ports=CLOCKS, reset_port="rst_n",
-        clock_connections={"u_sl.ck_C":"ck_S",**{f"u_sl.{c}":c for c in CLOCKS if c not in ("ck_S","ck_K")},
-                           **{f"{i}."+("ck" if i.startswith("u_ln") else "clk"):"ck_K" for i in ROLES}},
+        clock_connections={"u_sl.ck_C":"ck_S",**{f"u_sl.{c}":c for c in CLOCKS if c not in ("ck_S","ck_K","ck_ML")},
+                           **{f"{i}."+("ck" if i.startswith("u_ln") else "clk"):"ck_K" for i in ROLES if i != "u_land"}, "u_land.clk":"ck_ML"},
         transport=dict(existing_S_to_K_cycles=3,existing_K_to_S_cycles=3,
                        existing_fault_output_cycles=2,CAP5_capture_increment_vs_CAPC2=12,
-                       new_K_transport_cycles=None),
+                       new_K_transport_cycles=None, MU_land_write_cycles=3, MU_land_command_cycles=3,
+                       MU_land_return_cycles=3, MU_rc_to_first_return_cycles=10,
+                       MU_rc_to_first_return_increment=6),
+        soft_transport=[dict(inst=i, bank_cell_corridor=[1468.8,2116.8,561.6,172.8],
+                             kind="existing_D4_K2_landing", physical_status="UNROUTED real gap reservation")
+                        for i in ("u_ml_wr","u_ml_cmd","u_ml_ret")],
         unclosed_bundles=[
             dict(ends=["u_ln0","u_lep"],nets=["l0v","l0r","l0d[552:0]","i0v","i0r","i0d[552:0]","f0[2:0]","rxv[0]"],
                  centre_distance_um=[82.08,1501.2],state="UNLANDED long K transport; ready/data/status ages must align"),
             dict(ends=["u_ln1","u_lep"],nets=["l1v","l1r","l1d[552:0]","i1v","i1r","i1d[552:0]","f1[2:0]","rxv[1]"],
                  centre_distance_um=[82.08,745.2],state="UNLANDED long K transport; ready/data/status ages must align"),
             dict(ends=["u_lep","u_land"],nets=["mwv","mwd[1103:0]","mrv","mrd[1103:0]","mf"],
-                 centre_distance_um=[43.2,561.6],state="UNLANDED long K transport; write/read calendar alignment owed")],
+                 centre_distance_um=[43.2,561.6],state="SOURCE FIXED: D4/K2 wr/cmd/ret +3 each; physical ring placement/STA and compiler +6 return remain open")],
         physical_holds=["No parent CLOSED record or SS/FF/GRT claim",
                         "K clock is an explicit diagnostic implementation root; no balanced-region closure assumption",
-                        "Actual lane/endpoint/MU-land relay and regional landing geometry pending",
+                        "Actual lane/endpoint relay geometry pending; MU-land three real rings occupy172.8um face gap",
+                        "Compiler replay return and identity-use calendar must add6 cycles before release",
                         "Actual child pins, clock/reset placement and PG composition feed ongoing die flow",
                         "External ports and source widths preserved; no tied functional ports or false paths",
                         "No copy-B/AB physical release alias: this two-lane envelope is copy-A only"])
