@@ -162,7 +162,8 @@ module ot_hgi_coll_reduce_lane(
  reg [31:0] op_raw,acc_h,op_h,pa_h,pb_h;
  (* keep = 1 *) reg [1:0] rv_c;
  (* keep = 1 *) reg [1:0] pv_c;
- always @(posedge clk or negedge rst_n)if(!rst_n)begin rv_c<=0;pv_c<=0;end else begin rv_c<={2{add_read}};pv_c<={2{pub_read}};end
+ // no reset: the enabled registers they replace are unreset data registers that also load during reset
+ always @(posedge clk)begin rv_c<={2{add_read}};pv_c<={2{pub_read}};end
  wire [31:0] acc=rv_c[0]?acc_raw:acc_h;
  wire [31:0] operand=rv_c[1]?op_raw:op_h;
  assign pub_a=pv_c[0]?pa_raw:pa_h;
