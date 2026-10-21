@@ -34,6 +34,13 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     parameter integer SLATE = 0,  // fixed-issue sched_q late start select (h14d -86.9)
     parameter integer AMWC = 0,   // controller am_wins kept copies (h14d -107.5)
     parameter integer RRH = 0,    // RRG 8 -> 12 reset copies, the 4 new ones for the controller's head-fill slices (h14d -47.8)
+    // QW-H16X (10-20, default 0 = h16v): H16X = 1 (needs PSRAM, FQWE, PMUT 0, IS 1): (a) the program-store read is issued one
+    //   edge EARLY (controller fetch condition prog_ce_pre, address prog_base + fpc = the values q_prog_base + prog_addr take on
+    //   the fetch edge) and the macro output lands in a raw capture register p_cap (no logic between rd_out and the flop);
+    //   prog_q <= p_cap on the unchanged edge (h16v: rd_out -> wire -> prog_q -321.5 ps TT, 263 paths).  prog_q timing,
+    //   the FIFO and every consumer are unchanged: exact, 0 edges.  (b) controller PQP (dts quotient from pos one edge
+    //   early).  (c) fixed-issue H16X decode / compare cuts (ot_qwen_fixed_issue_ld.sv).
+    parameter integer H16X = 0,
     parameter integer PSRAM = 1, parameter integer PMUT = 0, parameter integer HQ2 = 1,
     parameter integer MEREG = 3,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 1,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
@@ -134,6 +141,10 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .q({q_token, q_pos, q_prog_base, q_pw_addr, q_pw_data, q_x_oacc, q_x_oprog, q_x_orows}));
     // program-store copy (the sequencer master's semantics)
     wire prog_re; wire [1:0] prog_re_copy; wire [11:0] prog_addr; reg [1023:0] prog_q;
+    wire prog_ce_pre; wire [11:0] prog_fpc;            // QW-H16X: early read condition / address (controller)
+    if (H16X != 0 && (PSRAM == 0 || FQWE == 0 || PMUT != 0 || IS != 1)) begin : g_h16x_bad
+        initial $error("H16X needs PSRAM 1, FQWE 1, PMUT 0, IS 1");
+    end
     wire [11:0] prog_a;                   // QW-H16V: q_prog_base + prog_addr (12-bit wrap) as a kept Kogge-Stone
     ot_hdc_add_ks #(.W(12)) u_prog_a (.a(12'(q_prog_base)),.b(12'(prog_addr)),.s(prog_a),.cout());
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
@@ -163,8 +174,33 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         always @(posedge clk) rng_c <= {PRN{(prog_a < 64)}};
 `endif
         wire [1023:0] p_rd;
-        wire [1:0] p_rce = (PMUT != 0) ? {2{prog_re_r}} : prog_re_copy;
-        wire [5:0] p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];
+        wire [1:0] p_rce; wire [5:0] p_ra;
+        wire [1023:0] p_src;                             // what prog_q captures: p_rd, or (H16X) the raw capture register
+        if (H16X != 0) begin : g_early
+            //: QW-H16X: read one edge early; p_ra = (prog_base + fpc) mod 64 = prog_a[5:0] of the next cycle when fetching
+            //: (q_prog_base = prog_base one edge later, u_isd has no reset; prog_addr <= fpc on the fetch edge)
+            wire [5:0] ea;
+            ot_hdc_add_ks #(.W(6)) u_ea (.a(prog_base[5:0]),.b(prog_fpc[5:0]),.s(ea),.cout());
+            assign p_rce = {2{prog_ce_pre}}; assign p_ra = ea;
+            (* keep *) reg [1023:0] p_cap;               // raw rd_out capture, one flop per macro output bit, no logic
+            always @(posedge clk) p_cap <= p_rd;
+            assign p_src = p_cap;
+`ifndef SYNTHESIS
+            reg [5:0] ea_r; reg ce_r, wcol_r;
+            always @(posedge clk) begin ea_r <= ea; ce_r <= prog_ce_pre; wcol_r <= prog_ce_pre && pw_v2 && pw_row2 == ea; end
+            // the early read must be the read the as-built issue would make one edge later
+            always @(posedge clk) if (rsv[7] && prog_re && (!ce_r || ea_r !== prog_a[5:0]))
+                $fatal(1, "H16X early read %b/%0d != as-built %b/%0d", ce_r, ea_r, prog_re, prog_a[5:0]);
+            // contract: no program write of the row being read (early read: same edge as a write of that row)
+            //: (the as-built read one edge later would see that write; the early read returns the old word)
+            always @(posedge clk) if (rsv[7] && prog_re && wcol_r)
+                $fatal(1, "H16X early read of row %0d collides with a program write", ea_r);
+`endif
+        end else begin : g_asbuilt
+            assign p_rce = (PMUT != 0) ? {2{prog_re_r}} : prog_re_copy;
+            assign p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];
+            assign p_src = p_rd;
+        end
         wire [511:0] w_mask;
         genvar m, s;
         for (s = 0; s < 8; s = s + 1) begin : g_s
@@ -237,7 +273,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         end else if (FQWE != 0) begin : g_pqc
             genvar pk;
             for (pk = 0; pk < PRN; pk = pk + 1) begin : g_k
-                always @(posedge clk) if (prog_re_c[pk]) prog_q[32*pk +: 32] <= rng_c[pk] ? p_rd[32*pk +: 32] : 32'd0;
+                always @(posedge clk) if (prog_re_c[pk]) prog_q[32*pk +: 32] <= rng_c[pk] ? p_src[32*pk +: 32] : 32'd0;
             end
 `ifndef SYNTHESIS
 `ifndef OT_PREC_MUT
@@ -332,8 +368,8 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     // fixed-issue fault 27 levels).  Exact (12-bit wrap, as q_prog_base+candidate_pc in the 12-bit port), 0 edges.
     wire [11:0] fi_cand_pc;
     ot_hdc_add_ks #(.W(12)) u_fi_cand_pc (.a(12'(q_prog_base)),.b(12'(candidate_pc)),.s(fi_cand_pc),.cout());
-    ot_qwen_fixed_issue_pw_ld #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE),.SEG(SEGCAL)) u_fixed_issue (   // QW-H16V: safe32 log-depth copy
-      .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
+    ot_qwen_fixed_issue_pw_ld #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE),.SEG(SEGCAL),.H16X(H16X)) u_fixed_issue (   // QW-H16V: safe32 log-depth copy
+      .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.pw_addr_pre(pw_addr),
       .start(q_h_start && (q_prog_base==0 || SEGCAL!=0)),.stage(schedule_stage),.start_base(q_prog_base),
       .candidate_v(candidate_v),.candidate_pc(fi_cand_pc),.candidate_unit(candidate_unit),
       .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
@@ -341,7 +377,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
       .active(schedule_active),.done(),.cycle(),.image_ready(me_image_ready),.fault(schedule_fault));
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
     ot_qwen_rom_core_ctrl_static_safe32 #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G((TPMUT == 2) ? 6144 : G), .DG((TPMUT != 0) ? 6144 : G), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1), .HFC(32), .DPRE(DPRE), .DSEL(DSEL),
-        .FQWE(FQWE), .OINC(OINC), .DTIL(DTIL), .AMWC(AMWC), .RRH(RRH)) u_ctrl_me (
+        .FQWE(FQWE), .OINC(OINC), .DTIL(DTIL), .AMWC(AMWC), .RRH(RRH), .PQP(H16X)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
@@ -350,6 +386,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .candidate_available(candidate_available),.candidate_end_ok(candidate_end_ok),
         .token(q_token),
         .pos(q_pos),
+        .pos_pre(pos),
         .done(),
         .next_token(),
         .next_val(),
@@ -358,6 +395,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .prog_re(prog_re),.prog_re_copy(prog_re_copy),
         .prog_addr(prog_addr),
         .prog_q(prog_q),
+        .prog_ce_pre(prog_ce_pre),.prog_fpc(prog_fpc),
         .wrom_re(),
         .wrom_addr(),
         .wrom_q('0),

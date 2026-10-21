@@ -20,10 +20,14 @@ module ot_qwen_fixed_issue_pw_ld #(
  // the base named by the image's CALB word [993] runs the segment-G rows [984..991] with their own stop (CALG [992]).
  // Any other start_base is not a calendar start (the decode stage's later segments continue the base-0 calendar).
  // See ot_qwen_fixed_issue_seg_pw (ot_qwen_fixed_issue_dense_pw.sv).  start_base is ignored when SEG = 0.
- parameter integer SEG=0
+ parameter integer SEG=0,
+ // QW-H16X (10-20, default 0 = h16v; SEG only): pre-registered calendar row write decode (from pw_addr_pre = pw_addr one
+ // edge earlier), g_present registered with gdesc_q, the next-row compare as a late select.  Exact, 0 edges.
+ parameter integer H16X=0
 )(
  input wire clk,input wire rst_n,
  input wire pw_v,input wire [9:0]pw_addr,input wire[63:0]pw_data,
+ input wire [9:0]pw_addr_pre,
  input wire start,input wire[5:0]stage,
  input wire[11:0]start_base,
  input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
@@ -33,7 +37,7 @@ module ot_qwen_fixed_issue_pw_ld #(
 );
  generate if(SEG!=0)begin:g_seg
  if(DENSE_IMAGE==0||OWN!=1)begin:g_bad initial $error("ot_qwen_fixed_issue_pw SEG needs DENSE_IMAGE 1, OWN 1"); end
- ot_qwen_fixed_issue_seg_pw_ld #(.DEPTH(DEPTH),.BASE(BASE),.SREG(SREG),.SLATE(SLATE))u_store(.*);
+ ot_qwen_fixed_issue_seg_pw_ld #(.DEPTH(DEPTH),.BASE(BASE),.SREG(SREG),.SLATE(SLATE),.H16X(H16X))u_store(.*);
  end else if(DENSE_IMAGE!=0)begin:g_dense
  ot_qwen_fixed_issue_dense_pw #(.OWN(OWN),.DEPTH(DEPTH),.BASE(BASE),.SREG(SREG),.SLATE(SLATE))u_store(.*);
  end else begin:g_stream
@@ -45,10 +49,12 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  parameter integer DEPTH=8,
  parameter integer BASE=976,
  parameter integer SREG=0,
- parameter integer SLATE=0
+ parameter integer SLATE=0,
+ parameter integer H16X=0
 )(
  input wire clk,input wire rst_n,
  input wire pw_v,input wire [9:0]pw_addr,input wire[63:0]pw_data,
+ input wire [9:0]pw_addr_pre,
  input wire start,input wire[5:0]stage,
  input wire[11:0]start_base,
  input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
@@ -72,7 +78,23 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  wire g_row=pw_addr>=GBASE&&pw_addr<GBASE+DEPTH;
  wire cp_row=pw_addr>=1019&&pw_addr<=1021;
  wire[5:0]count=meta_q[5:0];
- wire g_present=gdesc_q[63:32]==32'h43414c42;
+ reg gp_r;                                    // QW-H16X: gdesc_q[63:32]==CALB, loaded with gdesc_q (reset 0 = 0 != CALB)
+ wire g_present=(H16X!=0)?gp_r:(gdesc_q[63:32]==32'h43414c42);
+ // QW-H16X: the calendar row write decode one edge early (pw_addr = pw_addr_pre delayed one edge, no reset: u_isd), so
+ // the 2 x 8 x 47 row registers take a registered one-hot write select (h16v: q_pw_addr -> decode -> 376 enables, -151 ps)
+ reg[DEPTH-1:0] own_oh_r,g_oh_r;
+ always @(posedge clk)begin:b_oh
+  integer j;
+  for(j=0;j<DEPTH;j=j+1)begin own_oh_r[j]<=pw_addr_pre==BASE+j; g_oh_r[j]<=pw_addr_pre==BASE+DEPTH+j; end
+ end
+`ifndef SYNTHESIS
+ always @(posedge clk) if(H16X!=0&&rst_n)begin:b_ohchk
+  integer j;
+  for(j=0;j<DEPTH;j=j+1) if(own_oh_r[j]!==(pw_addr==BASE+j)||g_oh_r[j]!==(pw_addr==BASE+DEPTH+j))
+   $fatal(1,"H16X calendar write decode %0d diverged",j);
+  if(gp_r!==(gdesc_q[63:32]==32'h43414c42)) $fatal(1,"H16X g_present diverged");
+ end
+`endif
  wire[3:0]g_count=gdesc_q[27:24];
  wire[11:0]g_base=gdesc_q[11:0];
  // calendar start selection (registered start; the selection is combinational on that edge, as the core's first read)
@@ -169,7 +191,7 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
 `endif
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin valid<=0;gvalid<=0;cp_valid<=0;q<=0;stop_q<=0;meta_q<=0;gstop_q<=0;gdesc_q<=0;gstop_seen<=0;gdesc_seen<=0;
-   loading<=0;sealed<=0;stop_seen<=0;meta_seen<=0;cfg_fault<=0;read_fault<=0;seg_q<=0;end
+   loading<=0;sealed<=0;stop_seen<=0;meta_seen<=0;cfg_fault<=0;read_fault<=0;seg_q<=0;gp_r<=0;end
   else begin
    if(read_en)begin
 `ifdef OT_SEG_MUT
@@ -191,14 +213,14 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
       cfg_fault<=0;read_fault<=0;end
     end else if(own_row)begin
      if(!loading||valid[pw_addr-BASE]||pw_data[63:47]!=0)cfg_fault<=1;
-     rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+     if(H16X==0)rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
     end else if(g_row)begin
      if(!loading||gvalid[pw_addr-GBASE]||pw_data[63:47]!=0)cfg_fault<=1;
-     grows[pw_addr-GBASE]<=pw_data[46:0];gvalid[pw_addr-GBASE]<=1;
+     if(H16X==0)grows[pw_addr-GBASE]<=pw_data[46:0];gvalid[pw_addr-GBASE]<=1;
     end else if(pw_addr==GSTOP)begin
      if(!loading||gstop_seen)cfg_fault<=1;gstop_q<=pw_data;gstop_seen<=1;
     end else if(pw_addr==GDESC)begin
-     if(!loading||gdesc_seen)cfg_fault<=1;gdesc_q<=pw_data;gdesc_seen<=1;
+     if(!loading||gdesc_seen)cfg_fault<=1;gdesc_q<=pw_data;gdesc_seen<=1;gp_r<=pw_data[63:32]==32'h43414c42;
     end else if(pw_addr==1016)begin
      if(!loading||stop_seen||pw_data[63:32]!=32'h43414c31||pw_data[31:0]==0)cfg_fault<=1;
      stop_q<=pw_data[31:0];stop_seen<=1;
@@ -216,7 +238,19 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
    if(start_cal&&(!sealed||meta_q[17:12]!=stage))cfg_fault<=1;
   end
  end
- ot_qwen_fixed_issue_ld #(.ROW_AW(RAW),.OWN(1),.SREG(SREG),.SLATE(SLATE))u_issue(
+ // QW-H16X: the row data writes of the own_row / g_row branches above (reached iff pw_v && !active && the row decode;
+ // pw_addr 0 / GSTOP / GDESC / 1016.. never decode to a row).  Row data carries no reset (as built: not in the reset branch;
+ // pw_v is 0 under reset).
+ generate if(H16X!=0)begin:g_rw
+  genvar rk;
+  for(rk=0;rk<DEPTH;rk=rk+1)begin:g_r
+   always @(posedge clk)begin
+    if(pw_v&&!active&&own_oh_r[rk])rows[rk]<=pw_data[46:0];
+    if(pw_v&&!active&&g_oh_r[rk])grows[rk]<=pw_data[46:0];
+   end
+  end
+ end endgenerate
+ ot_qwen_fixed_issue_ld #(.ROW_AW(RAW),.OWN(1),.SREG(SREG),.SLATE(SLATE),.NRL(H16X))u_issue(
  .clk(clk),.rst_n(rst_n),.start(start_cal),.stop_cycle((start_base!=12'd0)?gstop_q[31:0]:stop_q),.slot_re(read_en),.slot_addr(read_addr),.slot_q(q),
  .candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),.available(available),.end_ok(end_ok),.cp_available(cp_available),
  .issue_v(issue_v),.end_v(end_v),.cp_v(cp_v),.cp_index(cp_index),.issue_pc(issue_pc),.issue_unit(issue_unit),.active(active),.done(done),.cycle(cycle),.fault(core_fault));
@@ -247,7 +281,10 @@ module ot_qwen_fixed_issue_ld #(
     // head_v_n = 0, so 0) and the run case (the active branch's next state, computed without start) in parallel, start selecting
     // last (h14d: u_is1(h_start) -> start decode fo19 -> 32-b compare -> sched_q -86.9).  Exact, 0 edges.
     // OT_SLATE_MUT: the run case compares the current cycle (negative control)
-    parameter integer SLATE=0
+    parameter integer SLATE=0,
+    // NRL=1 (QW-H16X): next_row[31:0] > cycle as a late select of the two parallel compares (slot_q / tail), so the
+    // pending_index==index+1 select no longer precedes the 32-bit compare (h16v index -> fault -282 ps).  Exact, 0 edges.
+    parameter integer NRL=0
 )(
     input wire clk, input wire rst_n,
     input wire start, input wire [31:0] stop_cycle,
@@ -286,7 +323,14 @@ module ot_qwen_fixed_issue_ld #(
     wire next_from_rom=pending && pending_index==index+1'b1;
     wire next_present=tail_v || next_from_rom;
     wire [46:0] next_row=next_from_rom ? slot_q : tail;
-    ot_hdc_gt_ks #(.W(32)) u_nrow_gt (.a(next_row[31:0]), .b(cycle), .gt(nrow_gt_cyc));
+    generate if(NRL!=0)begin:g_nrl
+      wire gt_slot, gt_tail;
+      ot_hdc_gt_ks #(.W(32)) u_slot_gt (.a(slot_q[31:0]), .b(cycle), .gt(gt_slot));
+      ot_hdc_gt_ks #(.W(32)) u_tail_gt (.a(tail[31:0]), .b(cycle), .gt(gt_tail));
+      assign nrow_gt_cyc=next_from_rom ? gt_slot : gt_tail;
+    end else begin:g_nrow
+      ot_hdc_gt_ks #(.W(32)) u_nrow_gt (.a(next_row[31:0]), .b(cycle), .gt(nrow_gt_cyc));
+    end endgenerate
     // Exact next-state of active/cycle/head_v/head[31:0] (mirrors the always block).
     reg        active_n, head_v_n;
     reg [31:0] cycle_n, head_lo_n;

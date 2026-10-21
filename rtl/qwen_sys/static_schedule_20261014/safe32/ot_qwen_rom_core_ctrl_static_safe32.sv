@@ -95,6 +95,8 @@ module ot_qwen_rom_core_ctrl_static_safe32 #(
                                       //   -103.6).  Needs DSEL, PCUT.  OT_DTIL_MUT: the registered select reads dts[split ^ 1]
     parameter integer AMWC = 0,       // argmax merge: am_wins as 3 kept_hierarchy copies (run_key / run_idx / run_val) besides the original
                                       //   (run_any + the fin outputs).  OT_AMWC_MUT: the run_val copy ignores run_any (negative control)
+    parameter integer PQP = 0,        // QW-H16X: the dts quotient from pos_pre (the head's pos one edge before pos), registered
+                                      //   every edge as pq_p; pq_r <= pq_p on start (exact, 0 edges; h16v pq_r <- q_pos -157.6 ps)
     parameter integer RRH = 0,        // the HFC / DSEL / FQWE slice state resets from rst_hfc_n[k * 4 / HFC] (4 more kept reset copies of
                                       //   the same function as rst_n) instead of rst_n (h14d recovery g_rrg r[1] fo717 -> hcf_c -47.8)
     parameter integer EMB_CODE_LANES = 64,
@@ -129,6 +131,7 @@ module ot_qwen_rom_core_ctrl_static_safe32 #(
     output wire candidate_available, output wire candidate_end_ok,
     input  wire [NW-1:0]     token,
     input  wire [NW-1:0]     pos,
+    input  wire [NW-1:0]     pos_pre,   // QW-H16X PQP: pos one edge earlier (pos = pos_pre delayed one edge, no reset)
     output reg               done,
     output reg  [NW-1:0]     next_token,
     output reg  [31:0]       next_val,        // its logit (for an argmax combined across packages)
@@ -144,6 +147,10 @@ module ot_qwen_rom_core_ctrl_static_safe32 #(
     output wire [1:0] prog_re_copy,
     output reg  [PAW-1:0]    prog_addr,
     input  wire [INSTR_BITS-1:0] prog_q,
+    // QW-H16X (10-20): the program-store read one edge EARLY for the head's raw rd_out capture register (H16X).
+    // prog_ce_pre = the fetch condition without !fin (an extra read when fin is never captured: prog_q loads on the
+    // registered fetch only); prog_fpc = fpc, the address the fetch registers into prog_addr.  Unused when H16X = 0.
+    output wire prog_ce_pre, output wire [PAW-1:0] prog_fpc,
     // weight ROM
     output wire              wrom_re,
     output wire [AW-1:0]     wrom_addr,
@@ -547,7 +554,14 @@ localparam integer W_ME_AMC = 1;
         // The quotient is a function of pos_r alone: registered with pos_r (same edge, same next value pos), so the
         // S_DYN capture sees only the constant shifts + increments.  Exact, 0 edges.
         wire [NW-1:0] pq_n; reg [NW-1:0] pq_r;
-        ot_hdc_dyn_ttiles_q #(.W(W),.G(DG),.NW(NW)) u_q (.pos(pos),.quot(pq_n));
+        if (PQP != 0) begin : g_pqp
+            wire [NW-1:0] pq_pn; reg [NW-1:0] pq_p;
+            ot_hdc_dyn_ttiles_q #(.W(W),.G(DG),.NW(NW)) u_q (.pos(pos_pre),.quot(pq_pn));
+            always @(posedge clk) pq_p <= pq_pn;
+            assign pq_n = pq_p;
+        end else begin : g_pqn
+            ot_hdc_dyn_ttiles_q #(.W(W),.G(DG),.NW(NW)) u_q (.pos(pos),.quot(pq_n));
+        end
         always @(posedge clk) if (rst_n && st == S_IDLE && start) pq_r <= pq_n;
 `ifndef SYNTHESIS
         wire [NW-1:0] pq_ref;
@@ -728,6 +742,9 @@ localparam integer W_ME_AMC = 1;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)read_ce_copy<=0;else read_ce_copy<={2{fetch_next}};
     assign prog_re_copy=read_ce_copy;
+    assign prog_ce_pre=(st==S_RUN) &&
+        ({1'b0,fq_n}+((FQ_HEAD>=2)?hc:(FQ_HEAD!=0)?{1'b0,hq_v}:2'd0)+prog_re+pend1+((PRL>1)?pend2:1'b0)<NFQ);
+    assign prog_fpc=fpc;
 `ifndef SYNTHESIS
     always @(posedge clk)if(rst_n && prog_re_copy !== {2{prog_re}})
         $fatal(1,"safe32 program read-enable replicas diverged");
