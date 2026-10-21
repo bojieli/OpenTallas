@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_v7_tkm_tile_e86v4b",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T06:40:00-07:00",
+ "gate_commit": "4e044422f",
+ "checklist": {
+  "lattice": "no macros (std-cell tile)",
+  "std_cell_band": "uniform std density ~0.5-0.6, no hot spots",
+  "pin_spread": "pins on faces per parent tp192 contract",
+  "clock_entry": "clk_r3 11.5k sinks spread TT 17.3 / FF 15.7 ps",
+  "shape": "302.4 square fallback (main e86v4 util FAIL)"
+ },
+ "notes": "COORD 10-21 07:05 APPROVED e86v4b; unblocks parent tp192",
+ "geometry_sha256": "2c9c69d2dd36d29516b726c026b5b5b4003b15d2d51a754e71aa1cb67b4499ec"
+}
