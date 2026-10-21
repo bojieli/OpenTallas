@@ -219,7 +219,12 @@
   "macro_halo_um": 10.8,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03,
-  "pin_min_tracks": 3
+  "pin_min_tracks": 3,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "children": [],
  "inter": [],
