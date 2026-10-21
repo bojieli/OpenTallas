@@ -1,0 +1,60 @@
+{
+  "name": "qfd_n59_svc4-sv4-b8740cb8a",
+  "status": "CLOSED",
+  "source_commit": "b8740cb8a",
+  "record_commit": "e748fc9b66658143beac5c73671adee98324293a",
+  "publish": {
+    "record_branch": "codex/closure-record-qfd_n59_svc4-sv4-b8740cb8a",
+    "branch_commit": "e748fc9b66658143beac5c73671adee98324293a",
+    "files": 32,
+    "merge": "AUTO-MERGE CONFLICT (27 files: physical/common_flow/clk_net_protect.tcl, physical/common_flow/clock_entries.tcl, physical/common_flow/clock_spine.tcl, physical/common_flow/icg_dont_touch.tcl, physical/common_flow/landed_raw_tap.tcl, physical/common_flow/native_pg_binding.tcl)"
+  },
+  "view": "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc",
+  "closure_record": "results/closure_loop/qfd_n59_svc4-sv4-b8740cb8a/verdict.json",
+  "params": {
+    "NU": 4,
+    "MCTX": 1,
+    "EMB_RELAY": 1,
+    "RECV_INPUTS": 1,
+    "LOCAL32": 1
+  },
+  "params_sha256": "b138f0b28996a689358c91faa7eb6d4ddc5a1b0e76b5279cf906aa12b1c95321",
+  "source_hashes": {
+    "rtl/qwen_split/qfd_native59_svc.sv": "d7afd98268483709b962e5e597ef2d12e205a402c88fcf15b568d8afee828b0a",
+    "rtl/qwen_split/qfd_native59_dv_service.sv": "c53c9c2ef2561ce693a42bfb93bed6c5ab9f190e38dce2d3dc43d56d914d67ef",
+    "rtl/qwen_split/qfd_native59_command_context.sv": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20",
+    "rtl/qwen_split/qfd_native59_q_export_control.sv": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d",
+    "rtl/qwen_split/qfd_native59_static_service.sv": "bdd1fe7bbc14dc527e9b5d3086507351a17c1e5e3f54aefbda25e1547bfa4fa8",
+    "rtl/qwen_split/qfd_native59_record_endpoint.sv": "5a524a230d3605cd5d1c88488a002954c8e7ec2a9aa198ccd8e362d51bfe09ce",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "a1276d4a8d2534e3df6cd408a67c8468042681ebcfd17955771b85a1c9d1bab7",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "340d9c5d7b614bcf652956291ae45282b200ba092cd495a903b617adc4e2a77f",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "ca8dceffb315d2f0d91760f87cf9fb1477f200739b4dd28703b8877278fb1393",
+    "physical/ref_tile/qfd_n59_svc4/spec.json": "80e029ee0b3e77777df704fe0644b121d872e06e859c3aeaefcd810ae660637d"
+  },
+  "view_hashes": {
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/abstract.json": "782c99a63dbc61be52376cbb03ad236b1664df060c00b4dd941bcd2c8bf19383",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/child_lint.json": "b5652547d795bf65aff7d958e8f2447b705b80e118741d0526c2040303421224",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/export_ff.log": "534b4b54f0a216958944863c2d2a8f857ddc526e84b0870406aed71c21ab336d",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/export_ff.tcl": "3411e823bb308827fd84682182c6ecada4b99e0ae7d4af5dca01821ce3a1ed53",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/export_ss.log": "8c37d4230fbec27d4efc16355925e80ca2ed578a4667bea13a4db118fd7cb15e",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/export_ss.tcl": "97e39e3bbc7aba7e5e475f8d0911ae6f21dfba6bd4d5fd98c22d9db396e2613a",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/export_tt.log": "2d848f700140ac3bc6436a02727840012cc16cae53975957fcc87ce87c7331bb",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/export_tt.tcl": "fcdf6f6b1a03b53cc92efbb7a5d3975f52cbe1b6e81908033e7e1f34b3e5efef",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/insertion.json": "a1eb1bbb7cb1fb9cc3af773fb2d0952677663c12a69cc3a37acc7f5504e739b2",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/provenance/abstract_pin_stub.json": "360425ce327850c7e76f43e8c08f1d049f6472e52ac54929e3d0711747a0e37c",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/provenance/raw/qfd_native59_svc.lef": "266fd015f8c3449a6c9c79c3aa5178c79b9c1f95d131c4b4450cb771667f5689",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/provenance/view_export.abstract.json": "35ed2c4dd637d43211a2dddc91a73f102b639a9ed35bdc233b75376bbe173c09",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/qfd_native59_svc.lef": "a262226fd9dbf367729e22c5ba6ced19b1cb96a21aac66766433f63f01ce5165",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/qfd_native59_svc_ff.lib": "73660a1cbd5d3c45193571b2837956efc7328c31dd63c5de1329d9100caeb192",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/qfd_native59_svc_ss.lib": "12dd12b3b12002949fcbd3231eee0928146ec8828464d23f4216367bee497a60",
+    "physical/ref_tile/qfd_n59_svc4/views/qfd_native59_svc/qfd_native59_svc_tt.lib": "d4b5857d3ff92cf2abfe8bddfc4418e850d9e6a243cee499166519b3ce58a6fd"
+  },
+  "result": {
+    "TT_ps": 21.16,
+    "FF_ps": 14.5,
+    "DRC": 0,
+    "SS_sensitivity_ps": -312.03
+  },
+  "source_scope": "Existing old svc4 source and exact parameters only. Not qualified for newer HEAD_PREP/USER_BIND/OBS1 implementations or changed source/ABI. TT pathfinding CLOSED, SS sensitivity negative. Original route and prior ECO retained in daemon snapshot.",
+  "publication": "Record-only projection owned ROOTintegration; no old helper restoration or lane merge/audit"
+}
