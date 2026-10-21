@@ -574,7 +574,8 @@ def main():
                         # that lane's clock: its pin sits beside the lane's data launch point (was: projected toward the
                         # centroid of all its loads -> 16 ck_xc on one face, up to 4.8 mm of unrepeated clock wire to
                         # the gate on the far face, and a rising_edge DATA arc that left the whole lane unclocked).
-                        fw_ = [o[4:] for o in touch.get(n_, ()) if o.startswith('fwd_')]
+                        fw_ = [o[4:] for o in touch.get(n_, ()) if o.startswith('fwd_')
+                               and (n_, bi) in {tuple(x) for pp_ in ('CLK', 'A') for x in ibits.get(o, {}).get(pp_, [])}]
                         ln = fw_[0] if len(fw_) == 1 else None
                     L = links.get(ln)
                     if L and bname in (L['src'], L['dst']):
