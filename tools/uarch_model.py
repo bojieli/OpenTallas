@@ -17413,3 +17413,44 @@ def qwen_release_programme_store_candidate_model():
     """Finite SU/MU programme storage; physical/native gates remain mandatory."""
     from uarch_model_qwen_programme_store import model
     return model()
+
+
+def hbm_tkm_e86_v4_adoption_model(kmax=2048, nout=2048, g=192, pf=64):
+    """Selected old three-edge chain -> PRE1 E86 four-edge physical candidate.
+
+    Exact calendar equations in ot_hgi_coll_tkm_static.sv. This is a source
+    adoption model, not qualification of the archived candidate or the die.
+    FAN32=2/SEAM=1 preserve PRE1's output edges; the legacy->PRE1 change is priced.
+    """
+    nt = (kmax + 63) // 64
+    cells = (nout + 3) // 4
+    ingress = 8 + ((g * pf + 3) // 4) * 8
+    def calendar(tlat):
+        settle = tlat * nt + 8
+        first = ingress + settle
+        clear2 = first + cells + 5
+        read2 = clear2 + 5
+        second = read2 + cells + 6 + settle
+        return dict(tlat=tlat, settle=settle, ingress_end=ingress, first=first,
+                    clear2=clear2, read2=read2, second=second, finish=second+cells+8)
+    old, new = calendar(3), calendar(4)
+    return dict(schema='opentallas.hbm_tkm_e86_adoption_model.v1',
+                kind='SOURCE_MODEL_NOT_ADOPTED', tp=192, ew=86, pt=64, tiles=nt,
+                old=old, candidate=new,
+                delta={k:new[k]-old[k] for k in old}, capture_tap_delta=1,
+                tile_params=dict(PRE=1, CREP=1, FAN32=2, SEAM=1),
+                macs_per_cycle=0, algorithm='exact integer compare/select of FP32 total-order keys',
+                boundary_payload_bits_per_edge=dict(ins=344, overflow=344, up_in=344, up_out=344),
+                payload_bytes_per_edge_per_direction=43,
+                measured_sustainable_throughput='not qualified by this model',
+                legacy_tile_clock_refs=nt, candidate_tile_clock_refs=5*nt,
+                tile_footprint_um=dict(w=302.4,h=302.4),
+                replicated_tile_envelope_um2=nt*302.4*302.4,
+                new_arithmetic_datapath=False, added_external_data_ports=0,
+                new_clock_refs=4*nt, ss_ff_parent_route_capacity='must be measured; no slot or track fit claimed',
+                completion_delta_stream_ns=(new['finish']-old['finish'])/1.2,
+                token_latency_credit=False,
+                obligations=['real five-entry per-tile parent clock delivery and boundary matching',
+                             'actual static programme/calendar uses new phases and capture tap',
+                             'source+ports+FAN32/SEAM bound to physical leaf before any route continuation',
+                             'existing TP192 static and causal calendar mutation receipts must match new source'])

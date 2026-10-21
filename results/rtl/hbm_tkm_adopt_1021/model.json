@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.hbm_tkm_e86_adoption_model.v1",
+ "kind": "SOURCE_MODEL_NOT_ADOPTED",
+ "tp": 192,
+ "ew": 86,
+ "pt": 64,
+ "tiles": 32,
+ "old": {
+  "tlat": 3,
+  "settle": 104,
+  "ingress_end": 24584,
+  "first": 24688,
+  "clear2": 25205,
+  "read2": 25210,
+  "second": 25832,
+  "finish": 26352
+ },
+ "candidate": {
+  "tlat": 4,
+  "settle": 136,
+  "ingress_end": 24584,
+  "first": 24720,
+  "clear2": 25237,
+  "read2": 25242,
+  "second": 25896,
+  "finish": 26416
+ },
+ "delta": {
+  "tlat": 1,
+  "settle": 32,
+  "ingress_end": 0,
+  "first": 32,
+  "clear2": 32,
+  "read2": 32,
+  "second": 64,
+  "finish": 64
+ },
+ "capture_tap_delta": 1,
+ "tile_params": {
+  "PRE": 1,
+  "CREP": 1,
+  "FAN32": 2,
+  "SEAM": 1
+ },
+ "macs_per_cycle": 0,
+ "algorithm": "exact integer compare/select of FP32 total-order keys",
+ "boundary_payload_bits_per_edge": {
+  "ins": 344,
+  "overflow": 344,
+  "up_in": 344,
+  "up_out": 344
+ },
+ "payload_bytes_per_edge_per_direction": 43,
+ "measured_sustainable_throughput": "not qualified by this model",
+ "legacy_tile_clock_refs": 32,
+ "candidate_tile_clock_refs": 160,
+ "tile_footprint_um": {
+  "w": 302.4,
+  "h": 302.4
+ },
+ "replicated_tile_envelope_um2": 2926264.3199999994,
+ "new_arithmetic_datapath": false,
+ "added_external_data_ports": 0,
+ "new_clock_refs": 128,
+ "ss_ff_parent_route_capacity": "must be measured; no slot or track fit claimed",
+ "completion_delta_stream_ns": 53.333333333333336,
+ "token_latency_credit": false,
+ "obligations": [
+  "real five-entry per-tile parent clock delivery and boundary matching",
+  "actual static programme/calendar uses new phases and capture tap",
+  "source+ports+FAN32/SEAM bound to physical leaf before any route continuation",
+  "existing TP192 static and causal calendar mutation receipts must match new source"
+ ]
+}
