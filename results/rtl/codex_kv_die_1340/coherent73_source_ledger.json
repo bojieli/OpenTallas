@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.kv_coherent73_source_ledger.v1",
+  "source_commit": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+  "source_sha256": {
+    "tools/qwen_kv_die/kv_die.py": "64d45dd0dea71c80be56ccfb41fdd058f5fe233904da1c8e363401ca19e16921",
+    "tools/qwen_kv_die/kv_static_die.py": "054f249dffbd9c77828041443c70ec1d21afd6bf6e7a138a71b711db480db00e",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv": "dd07c5a54416ba67fef0a49d33b19915861b6938cdcb7f70fc3b259a4c211dac",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv": "bee876907f161315740a28d7643c28284ccd359d3b6d883cbc5634b4e6002b2d",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv": "93e498afb8800f16d7828c314012bee38cd578218d03719dff0892852917df07",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "928ec8c3d5754daec2f06f0aa7572bcf6da69e1215dbeb8353fabc8821f99ecc",
+    "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": "a6f4eddc78419adb14dc6618b22cb906b8af113461017fe842abb0c1b7c3af65",
+    "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_rope.sv": "438fac1cac5cf76a3b2c7bf81613f96e97904e0932864632c07c7fb9f6aad25a",
+    "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv": "ba0c21ae738e1c5fd4e22672bb0e09a944d9b761e59610c63c7527c6414d4fe2",
+    "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_status_obs.sv": "8004e0c7db8ca2cb1bd6f56a315eecd9731b9062e6d2791dea941e056594d4d5"
+  },
+  "adoption": "source-only; selected captured F remains EMB595 diagnostic, not coherent73 GEN",
+  "flags": {
+    "OT_KV_ROPE": "1",
+    "OT_KV_MU": "1",
+    "OT_KV_EMB_WIN": "1627",
+    "OT_KV_ATTN_R16": "1",
+    "OT_KV_DCAL_BC4": "1",
+    "OT_KV_ROPE_OVL": "1",
+    "OT_KV_STATUS_OBS1": "1",
+    "OT_KV_HOST_OBS": "0",
+    "OT_KV_HOST_OBSX": "0",
+    "OT_KV_EMB_N32": "1",
+    "OT_KV_EMB_PJ": "1",
+    "OT_KV_ROPE_DELAY": "1024"
+  },
+  "head_authority": {
+    "record_bits": 552,
+    "owner": "O61[44:43]",
+    "recurring": "Ckind12 after actual adm_done, exact scheduled RX owner and held O61",
+    "admission": "SEG2/base16 cal_user0 may carry filler owners1..3 before adm_done",
+    "kvn": "four held owner banks; legal kind12/layer63/beat0/stage0/segment0; header epoch equals O61 operation epoch; no live modulo sequence wrap",
+    "kvn_reset": "registered cold-reset forest; reseed clears have/stage, sticky fault only cold reset; no blanket token-epoch reset",
+    "emb": "raw552 record source identity enters qkd_kvs_emb_ctx; own accepted context token/epoch/start replaces legacy RESULT service fields; second HBM sweep delay1024"
+  },
+  "status": {
+    "version": 1,
+    "outputs": [
+      "status_obs_v",
+      "status_obs_epoch16",
+      "status_obs_payload[207:0]"
+    ],
+    "transport_bits": 225,
+    "rx": "NG24 with 26 same-phase regional cold resets, <=16bit kept capture leaves",
+    "csr_window": "0x1800-0x19ff",
+    "atomic_fields_msb_to_lsb": [
+      "seen1",
+      "errors4",
+      "delta32",
+      "seq_hi16",
+      "seq_lo16",
+      "receipt_epoch16",
+      "payload208"
+    ],
+    "errors": [
+      "same receipt epoch count regression",
+      "overflow",
+      "sequence full",
+      "schema invalid"
+    ],
+    "delta": "first/new receipt epoch=count; same epoch nondecreasing=count-prior; regression delta0 plus sticky fault",
+    "identity": "actual ctx user+TAG59, result user+dh_run44, native count+actual last optag59; operation epoch/owner independent of receipt epoch",
+    "native_count_reset": "cold reset or outer STATUS receipt epoch change only; unchanged-epoch link/token starts do not clear; saturating count, no TX clear"
+  },
+  "ages": {
+    "head_prepare_source_intrinsic": "CTLM sample1 + native prepare3 + held bank1; final selected source must revalidate",
+    "tt_to_native_transport": null,
+    "native_to_sysface_transport": null,
+    "kv_descriptor_to_header_edges": null,
+    "kv_descriptor_to_kvn_expected_edges": null,
+    "status225_transport": null,
+    "host_stages": null,
+    "die_stages": null,
+    "note": "local expected-bank cut4 and health retirement STATUS1913 are not full rawHEAD->HBM/header age; no old595/zero substitution"
+  },
+  "pending_bindings": [
+    "final coherent GEN actual source/readset/clock/interface transports",
+    "CTL c32d and PVFIN r16w not CLOSED; no source/view alias",
+    "actual PR wrapper boundary parameter/edges",
+    "sole paired 73 image and fourROM playback from actual GEN facts"
+  ]
+}
